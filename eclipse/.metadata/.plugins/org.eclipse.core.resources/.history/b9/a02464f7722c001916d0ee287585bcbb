@@ -1,0 +1,7 @@
+package net.modificationstation.stationloader;
+
+public class StationHooks {
+    public static void onMainCalled(String args[]) {
+        
+    }
+}

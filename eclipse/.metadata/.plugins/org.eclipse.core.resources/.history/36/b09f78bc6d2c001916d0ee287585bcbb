@@ -1,0 +1,6 @@
+package net.mine_diver.testmod;
+
+@Mod
+public class TestMod {
+
+}

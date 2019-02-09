@@ -1,0 +1,13 @@
+package net.mine_diver.testmod;
+
+import net.modificationstation.stationloader.events.SLMainCalled;
+import net.modificationstation.stationloader.util.Mod;
+import net.modificationstation.stationloader.util.Mod.EventHandler;
+
+@Mod(name = "testmod", modid = "tstmd")
+public class TestMod {
+	@EventHandler
+	public static void onMainCalled(SLMainCalled event) {
+		System.out.println("Success");
+	}
+}

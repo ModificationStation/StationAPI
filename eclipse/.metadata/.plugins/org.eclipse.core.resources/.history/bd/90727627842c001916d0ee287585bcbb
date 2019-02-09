@@ -1,0 +1,10 @@
+package net.modificationstation.stationloader.util;
+
+import java.lang.reflect.Method;
+
+public class MinecraftMethods {
+    public static Method craftingManager_addRecipe;
+    static {
+        
+    }
+}

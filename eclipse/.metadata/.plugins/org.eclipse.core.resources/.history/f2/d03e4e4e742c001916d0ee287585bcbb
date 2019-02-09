@@ -1,0 +1,5 @@
+package net.modificationstation.stationloader.util;
+
+public class AnnotationParser {
+
+}

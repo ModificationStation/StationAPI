@@ -1,0 +1,11 @@
+package net.mine_diver.testmod;
+
+import net.modificationstation.stationloader.Mod;
+
+@Mod(name = "testmod", id = "tstmd")
+public class TestMod {
+	@EventHandler
+	public static void onPreInitialization(MCPreInitializationEvent event) {
+		
+	}
+}

@@ -1,0 +1,9 @@
+package net.modificationstation.stationloader;
+
+public class Snippet {
+    public static void main(String[] args) {
+        
+        CraftingManager.getInstance().addRecipe(new ItemStack(Item.diamond), new Object[] {"#", Character.valueOf('#'), Block.dirt});
+    }
+}
+

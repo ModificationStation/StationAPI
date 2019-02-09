@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="minecraft"/>
+	<classpathentry kind="lib" path="C:/Users/ABLPHA/Desktop/mods/StationLoader/StationLoader beta 1.7.3/jars/bin/client (5).jar"/>
+	<classpathentry kind="lib" path="C:/Users/ABLPHA/Desktop/mods/StationLoader/StationLoader beta 1.7.3/jars/bin/jinput.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ABLPHA/Desktop/mods/StationLoader/StationLoader beta 1.7.3/jars/bin/lwjgl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/ABLPHA/Desktop/mods/StationLoader/StationLoader beta 1.7.3/jars/bin/natives"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/ABLPHA/Desktop/mods/StationLoader/StationLoader beta 1.7.3/jars/bin/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="C:/Users/ABLPHA/Desktop/mods/StationLoader/StationLoader beta 1.7.3/jars/bin/minecraft.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

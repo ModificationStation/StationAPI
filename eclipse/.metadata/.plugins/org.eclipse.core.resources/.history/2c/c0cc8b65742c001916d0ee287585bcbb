@@ -1,0 +1,7 @@
+package net.modificationstation.stationloader.util;
+
+public class AnnotationParser {
+    public static Object getClassAnnotation(Annotation annotation) {
+        
+    }
+}
