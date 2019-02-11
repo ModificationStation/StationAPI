@@ -11,10 +11,10 @@ public class Event {
 		return getClass().getSimpleName();
 	}
     public void process() {
-        for (Iterator<Class<?>> mods = StationLoader.loadedMods.iterator();mods.hasNext();){
-            Class<?> mod = mods.next();
+        for (Iterator<Object> mods = StationLoader.loadedMods.iterator();mods.hasNext();){
+            Object mod = mods.next();
             try {
-                ReflectionHelper.getMethodAnnotation(mod, Mod.EventHandler.class, getClass()).invoke(null, this);
+                ReflectionHelper.getMethodAnnotation(mod.getClass(), Mod.EventHandler.class, getClass()).invoke(mod, this);
             } catch (Exception e) {}
         }
     }

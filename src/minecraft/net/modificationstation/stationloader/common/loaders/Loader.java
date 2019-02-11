@@ -1,6 +1,7 @@
 package net.modificationstation.stationloader.common.loaders;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
@@ -10,6 +11,7 @@ import java.util.jar.JarFile;
 import net.minecraft.client.Minecraft;
 import net.modificationstation.stationloader.common.StationLoader;
 import net.modificationstation.stationloader.common.util.Mod;
+import net.modificationstation.stationloader.common.util.ReflectionHelper;
 
 public class Loader {
     private Loader() {
@@ -31,9 +33,16 @@ public class Loader {
 			        while (modClasses.hasMoreElements()) {
 			            JarEntry modClass = modClasses.nextElement();
 			            try {
-			                Class<?> clazz = Class.forName(modClass.getName().replace(".class", "").replace("/", "."), true, loader);
+			                Class<?> clazz = Class.forName(modClass.getName().replace(".class", "").replace("/", "."), false, loader);
 			                if (clazz.isAnnotationPresent(Mod.class)) {
-		                        StationLoader.addMod(clazz);
+			                    Object instance = clazz.newInstance();
+		                        StationLoader.addMod(instance);
+		                        Field[] fields = ReflectionHelper.getFieldsAnnotation(clazz, Mod.Instance.class);
+		                        for (int k = 0; k < fields.length;k++) {
+		                            try {
+		                                fields[k].set(instance, instance);
+		                            } catch (Exception e) {}
+		                        }
 			                }
 			            } catch (Exception e) {}
 			        }

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class StationLoader {
-	public static boolean addMod(Class<?> mod){
+	public static boolean addMod(Object mod){
 		if(!loadedMods.contains(mod)){
 			loadedMods.add(mod);
 			return true;
@@ -13,14 +13,14 @@ public class StationLoader {
 		return false;
 	}
 	
-    public static void addEventListener(Class<?> clazz) {
-        if (!eventBusSubscriptors.contains(clazz)) {
+    public static void addEventListener(Object eventListener) {
+        if (!eventListeners.contains(eventListener)) {
             LOGGER.info("Added EventListener");
-            eventBusSubscriptors.add(clazz);
+            eventListeners.add(eventListener);
         }
     }
     public static final String VERISON = "0.0.1";
 	public static Logger LOGGER = Logger.getLogger("StationLoader");
-	public static List<Class<?>> loadedMods = new ArrayList<Class<?>>();
-	public static List<Class<?>> eventBusSubscriptors = new ArrayList<Class<?>>(); 
+	public static List<Object> loadedMods = new ArrayList<Object>();
+	public static List<Object> eventListeners = new ArrayList<Object>(); 
 }

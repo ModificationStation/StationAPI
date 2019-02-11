@@ -3,7 +3,9 @@ package net.modificationstation.stationloader.common.util;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import net.modificationstation.stationloader.events.common.Event;
 
@@ -177,5 +179,17 @@ public class ReflectionHelper
             }
         }
         return method;
+    }
+    
+    public static Field[] getFieldsAnnotation(final Class<?> clazz, final Class<? extends Annotation> annotation) {
+        List<Field> fields = new ArrayList<Field>();
+        for (Field f : clazz.getDeclaredFields()) {
+            for (Annotation a : f.getAnnotations()) {
+                if (a.annotationType().equals(annotation)){
+                    fields.add(f);
+                }
+            }
+        }
+        return (Field[])fields.toArray(new Field[fields.size()]);
     }
 }

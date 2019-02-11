@@ -9,10 +9,10 @@ import net.modificationstation.stationloader.common.util.SubscribeEvent;
 public class MCEvent extends Event{
     @Override
     public void process() {
-        for (Iterator<Class<?>> subscriptors = StationLoader.eventBusSubscriptors.iterator();subscriptors.hasNext();){
-            Class<?> subscriptor = subscriptors.next();
+        for (Iterator<Object> listeners = StationLoader.eventListeners.iterator();listeners.hasNext();){
+            Object listener = listeners.next();
             try {
-                ReflectionHelper.getMethodAnnotation(subscriptor, SubscribeEvent.class, getClass()).invoke(null, this);
+                ReflectionHelper.getMethodAnnotation(listener.getClass(), SubscribeEvent.class, getClass()).invoke(listener, this);
             } catch (NullPointerException e) {continue;} catch (Exception e) {e.printStackTrace();}
         }
     }
