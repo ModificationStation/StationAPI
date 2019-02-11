@@ -1,0 +1,19 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+import org.lwjgl.input.Mouse;
+
+public class ThreadLoadingScreen implements Runnable{
+    public ThreadLoadingScreen(GuiScreenLoading gui) {
+        guisl = gui;
+    }
+    @Override
+    public void run() {
+        while (true) {
+
+            int k = (Mouse.getX() * i) / mc.displayWidth;
+            int i1 = j - (Mouse.getY() * j) / mc.displayHeight - 1;
+            guisl.drawScreen(i, j, f);
+        }
+    }
+    public GuiScreenLoading guisl;
+}

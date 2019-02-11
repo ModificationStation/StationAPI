@@ -8,6 +8,8 @@ public @interface Mod {
 	public String name() default "";
 	public String version() default "";
 	public String modid();
+	boolean clientSideOnly() default false;
+	boolean serverSideOnly() default false;
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.METHOD)
 	public @interface EventHandler {}

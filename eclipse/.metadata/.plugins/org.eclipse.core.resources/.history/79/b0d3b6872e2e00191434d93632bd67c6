@@ -1,0 +1,13 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+import net.minecraft.src.GuiScreen;
+
+public class GuiScreenLoading extends GuiScreen{
+    public GuiScreenLoading(Minecraft minecraft) {
+        
+    }
+    @Override
+    public void drawScreen(int i, int j, float f) {
+        drawString();
+    }
+}

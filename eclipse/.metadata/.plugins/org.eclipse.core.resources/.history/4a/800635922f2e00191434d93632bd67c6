@@ -1,0 +1,12 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+public class ThreadLoadingScreen implements Runnable{
+
+    @Override
+    public void run() {
+        while (true) {
+            
+        }
+    }
+
+}

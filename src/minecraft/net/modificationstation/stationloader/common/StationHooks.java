@@ -28,12 +28,11 @@ public class StationHooks {
             threadgroup.enumerate(athread);
             for(int j = 0; j < athread.length; j++)
             {
-                if(!athread[j].getName().equals("Minecraft main thread"))
+                if(athread[j].getName().equals("Minecraft main thread"))
                 {
-                    continue;
+                    minecraft = (Minecraft)ReflectionHelper.getPrivateValue(java.lang.Thread.class, athread[j], "target");
+                    break;
                 }
-                minecraft = (Minecraft)ReflectionHelper.getPrivateValue(java.lang.Thread.class, athread[j], "target");
-                break;
             }
         } catch (Exception e) {e.printStackTrace();}
         Event event = new SLInitializationEvent(minecraft);

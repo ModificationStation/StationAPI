@@ -1,0 +1,21 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.src.GuiScreen;
+import net.minecraft.src.Timer;
+
+public class GuiScreenLoading extends GuiScreen{
+    public GuiScreenLoading(Minecraft minecraft, Timer timer) {
+        super();
+        mc = minecraft;
+        tmr = timer;
+        new ThreadLoadingScreen(this);
+    }
+    @Override
+    public void drawScreen(int i, int j, float f) {
+        System.out.println("okay...");
+        drawString(mc.fontRenderer, "StationLoader", 0, 0, 0x000000);
+    }
+    public Minecraft mc;
+    public Timer tmr;
+}

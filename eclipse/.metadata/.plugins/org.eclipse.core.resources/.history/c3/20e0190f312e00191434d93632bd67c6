@@ -1,0 +1,25 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+import org.lwjgl.input.Mouse;
+
+import net.minecraft.src.ScaledResolution;
+
+public class ThreadLoadingScreen extends Thread{
+    public ThreadLoadingScreen(GuiScreenLoading gui) {
+        guisl = gui;
+    }
+    @Override
+    public void run() {
+        while (true) {
+            System.out.println("started");
+            ScaledResolution scaledresolution = new ScaledResolution(guisl.mc.gameSettings, guisl.mc.displayWidth, guisl.mc.displayHeight);
+            int i = scaledresolution.getScaledWidth();
+            int j = scaledresolution.getScaledHeight();
+            int k = (Mouse.getX() * i) / guisl.mc.displayWidth;
+            int i1 = j - (Mouse.getY() * j) / guisl.mc.displayHeight - 1;
+            guisl.drawScreen(k, i1, guisl.tmr.renderPartialTicks);
+            System.out.println("updated");
+        }
+    }
+    public GuiScreenLoading guisl;
+}

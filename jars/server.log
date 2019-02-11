@@ -257,3 +257,31 @@ java.lang.NoClassDefFoundError: Could not initialize class net.minecraft.src.Blo
 2019-02-10 00:00:31 [INFO] Stopping server
 2019-02-10 00:00:31 [INFO] Saving chunks
 2019-02-10 00:00:31 [INFO] Saving chunks
+2019-02-11 23:45:36 [INFO] Starting minecraft server version Beta 1.7.3
+2019-02-11 23:45:36 [INFO] Loading properties
+2019-02-11 23:45:36 [INFO] Starting Minecraft server on *:25565
+2019-02-11 23:45:36 [WARNING] **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+2019-02-11 23:45:36 [WARNING] The server will make no attempt to authenticate usernames. Beware.
+2019-02-11 23:45:36 [WARNING] While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+2019-02-11 23:45:36 [WARNING] To change this, set "online-mode" to "true" in the server.settings file.
+2019-02-11 23:45:36 [INFO] Preparing level "world"
+2019-02-11 23:45:37 [INFO] Preparing start region for level 0
+2019-02-11 23:45:37 [INFO] Preparing start region for level 1
+2019-02-11 23:45:37 [INFO] Done (807396932ns)! For help, type "help" or "?"
+2019-02-11 23:46:03 [INFO] Stopping server
+2019-02-11 23:46:03 [INFO] Saving chunks
+2019-02-11 23:46:03 [INFO] Saving chunks
+2019-02-11 23:58:40 [INFO] Starting minecraft server version Beta 1.7.3
+2019-02-11 23:58:40 [INFO] Loading properties
+2019-02-11 23:58:40 [INFO] Starting Minecraft server on *:25565
+2019-02-11 23:58:40 [WARNING] **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+2019-02-11 23:58:40 [WARNING] The server will make no attempt to authenticate usernames. Beware.
+2019-02-11 23:58:40 [WARNING] While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+2019-02-11 23:58:40 [WARNING] To change this, set "online-mode" to "true" in the server.settings file.
+2019-02-11 23:58:40 [INFO] Preparing level "world"
+2019-02-11 23:58:40 [INFO] Preparing start region for level 0
+2019-02-11 23:58:40 [INFO] Preparing start region for level 1
+2019-02-11 23:58:40 [INFO] Done (796558559ns)! For help, type "help" or "?"
+2019-02-11 23:58:41 [INFO] Stopping server
+2019-02-11 23:58:41 [INFO] Saving chunks
+2019-02-11 23:58:42 [INFO] Saving chunks

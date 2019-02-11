@@ -1,5 +1,6 @@
 package net.modificationstation.stationloader.events.common;
 
+import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import net.modificationstation.stationloader.common.StationLoader;
@@ -11,9 +12,12 @@ public class MCEvent extends Event{
     public void process() {
         for (Iterator<Object> listeners = StationLoader.eventListeners.iterator();listeners.hasNext();){
             Object listener = listeners.next();
-            try {
-                ReflectionHelper.getMethodAnnotation(listener.getClass(), SubscribeEvent.class, getClass()).invoke(listener, this);
-            } catch (NullPointerException e) {continue;} catch (Exception e) {e.printStackTrace();}
+            Method[] methods = ReflectionHelper.getMethodsAnnotation(listener.getClass(), SubscribeEvent.class, getClass());
+            for (Method m : methods) {
+                try {
+                    m.invoke(listener, this);
+                } catch (NullPointerException e) {continue;} catch (Exception e) {e.printStackTrace();}
+            }
         }
     }
 }

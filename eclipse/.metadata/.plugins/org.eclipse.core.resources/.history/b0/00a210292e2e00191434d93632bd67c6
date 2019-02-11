@@ -1,0 +1,4 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+public class GuiScreenLoading extends GuiScreen{
+}

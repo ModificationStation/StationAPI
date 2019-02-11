@@ -18,5 +18,4 @@ public class TestMod {
 	    System.out.println(INSTANCE == this);
         CraftingManager.getInstance().addRecipe(new ItemStack(Item.diamond), new Object[] {"#", Character.valueOf('#'), Block.dirt});
 	}
-	
 }

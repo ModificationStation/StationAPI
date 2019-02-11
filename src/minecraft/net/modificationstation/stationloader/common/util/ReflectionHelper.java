@@ -169,16 +169,16 @@ public class ReflectionHelper
         throw new UnableToFindMethodException(methodNames, failed);
     }
 
-    public static Method getMethodAnnotation(final Class<?> clazz, final Class<? extends Annotation> annotation, final Class<?>...parameterTypes) {
-        Method method = null;
+    public static Method[] getMethodsAnnotation(final Class<?> clazz, final Class<? extends Annotation> annotation, final Class<?>...parameterTypes) {
+        List<Method> methods = new ArrayList<Method>();
         for (Method m : clazz.getDeclaredMethods()) {
             for (Annotation a : m.getAnnotations()) {
                 if (a.annotationType().equals(annotation) && m.getParameterTypes().length == parameterTypes.length && Arrays.asList(m.getParameterTypes()).equals(Arrays.asList(parameterTypes))){
-                    method = m;
+                    methods.add(m);
                 }
             }
         }
-        return method;
+        return (Method[])methods.toArray(new Method[methods.size()]);
     }
     
     public static Field[] getFieldsAnnotation(final Class<?> clazz, final Class<? extends Annotation> annotation) {
