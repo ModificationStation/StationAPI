@@ -1,0 +1,25 @@
+package net.modificationstation.stationloader.client;
+
+import net.minecraft.src.GuiMainMenu;
+import net.minecraft.src.GuiScreen;
+import net.minecraft.src.ScaledResolution;
+import net.modificationstation.stationloader.client.minecraft.gui.GuiMainMenuStationLoader;
+import net.modificationstation.stationloader.common.StationHooks;
+import net.modificationstation.stationloader.events.client.MCGuiScreenDisplayedEvent;
+import net.modificationstation.stationloader.events.client.MCPreDisplayGuiScreen;
+import net.modificationstation.stationloader.events.common.Event;
+
+public class StationClientHooks extends StationHooks{
+
+    public static GuiScreen preDisplayGuiScreen(GuiScreen guiscreen) {
+        MCPreDisplayGuiScreen event = new MCPreDisplayGuiScreen(guiscreen);
+        event.process();
+        return event.getGuiScreen();
+    }
+    public static void guiScreenDisplayed(GuiScreen guiscreen, ScaledResolution scaledresolution, int i, int j) {
+        /*if (guiscreen instanceof GuiMainMenu)
+            new GuiMainMenuStationLoader().drawScreen();*/
+        Event event = new MCGuiScreenDisplayedEvent(guiscreen, scaledresolution, i, j);
+        event.process();
+    }
+}

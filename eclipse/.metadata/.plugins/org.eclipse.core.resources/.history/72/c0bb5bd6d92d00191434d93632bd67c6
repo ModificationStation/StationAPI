@@ -1,0 +1,5 @@
+package net.modificationstation.stationloader.events.common;
+
+public class SLInitializationEvent extends Event{
+    
+}

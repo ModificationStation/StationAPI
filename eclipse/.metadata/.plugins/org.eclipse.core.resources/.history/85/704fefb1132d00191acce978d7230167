@@ -1,0 +1,34 @@
+package net.modificationstation.stationloader.loaders;
+
+import java.applet.Applet;
+import java.lang.reflect.Method;
+
+public class SLReloader {
+    public static void relaunchMC(String mcargs[]) {
+        args = mcargs;
+        try {
+            Class<?> minecraft = Class.forName("net.minecraft.client.Minecraft", false, slClassloader);
+            Method method = minecraft.getDeclaredMethod("relaunch");
+            method.invoke(null);
+        } catch (Exception e) {e.printStackTrace();}
+    }
+    public static void relaunchApplet(Applet minecraftApplet) {
+        applet = minecraftApplet;
+        try {
+            Class<?> minecraft = Class.forName("net.minecraft.client.MinecraftApplet", false, slClassloader);
+            Method method = minecraft.getDeclaredMethod("relaunch");
+            method.invoke(minecraftApplet);
+        } catch (Exception e) {e.printStackTrace();}
+    }
+
+    public static void restartApplet() {
+        try {
+            Class<?> minecraft = Class.forName("net.minecraft.client.MinecraftApplet", false, slClassloader);
+            Method method = minecraft.getDeclaredMethod("relaunch");
+            method.invoke(applet);
+        } catch (Exception e) {e.printStackTrace();}
+    }
+    public static final ClassLoader slClassloader = new StationClassLoader();
+    public static Applet applet;
+    public static String args[];
+}

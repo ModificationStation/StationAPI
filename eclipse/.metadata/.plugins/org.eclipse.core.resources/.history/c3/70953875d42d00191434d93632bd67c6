@@ -1,0 +1,54 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import net.minecraft.src.GuiButton;
+import net.minecraft.src.GuiMainMenu;
+import net.minecraft.src.GuiMultiplayer;
+import net.minecraft.src.GuiOptions;
+import net.minecraft.src.GuiSelectWorld;
+import net.minecraft.src.GuiTexturePacks;
+import net.minecraft.src.StringTranslate;
+import net.modificationstation.stationloader.common.StationLoader;
+
+public class GuiMainMenuSL extends GuiMainMenu{
+    @SuppressWarnings("unchecked")
+    @Override
+    public void initGui() {
+        super.initGui();
+        if (!!guiMainMenus.isEmpty()) {
+            try {
+                translateTable.load((getClass()).getResourceAsStream("/lang/en_US.lang"));
+                translateTable.load((getClass()).getResourceAsStream("/lang/stats_US.lang"));
+            } catch (IOException e) {e.printStackTrace();}
+            controlList.add(new GuiButton(5, width - 90, 0, 90, 20, translateTable.getProperty("menu.mainmenulist", "Main Menus List")));
+        }
+    }
+    @Override
+    public void drawScreen(int i, int j, float f) {
+        super.drawScreen(i, j, f);
+        drawString(fontRenderer, "StationLoader version " + StationLoader.VERISON, 2, 12, 0x505050);
+        drawString(fontRenderer, "(" + StationLoader.loadedMods.size() + (StationLoader.loadedMods.size() == 1 ? " mod is" : " mods are") + " loaded)", 2, 22, 0x505050);
+    }
+    @Override
+    protected void actionPerformed(GuiButton guibutton)
+    {
+        super.actionPerformed(guibutton);
+        if(guibutton.id == 5)
+        {
+            
+        }
+            
+    }
+    public static void refresh(Set<Entry<Integer, GuiMainMenu>> set) {
+        guiMainMenus.addAll(set);
+    }
+    private GuiMainMenu currentMainMenu;
+    private Properties translateTable = new Properties();
+    private static Set<Entry<Integer, GuiMainMenu>> guiMainMenus = new HashSet<Entry<Integer, GuiMainMenu>>();
+}

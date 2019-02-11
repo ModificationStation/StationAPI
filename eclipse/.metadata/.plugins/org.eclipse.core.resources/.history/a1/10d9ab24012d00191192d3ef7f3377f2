@@ -1,0 +1,16 @@
+package net.modificationstation.stationloader.loaders;
+
+public class StationClassLoader extends ClassLoader{
+    @Override
+    public Class<?> loadClass(String name) throws ClassNotFoundException {
+        if (name.equals("net.minecraft.src.MinecraftImpl")) {
+            System.out.println("Yeah");
+        }
+        System.out.println(name);
+        return getParent().loadClass(name);
+    }
+    public Class<?> getResource(String name) {
+        
+    }
+    
+}

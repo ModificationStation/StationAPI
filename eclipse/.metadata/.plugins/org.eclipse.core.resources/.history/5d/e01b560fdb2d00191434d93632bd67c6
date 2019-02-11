@@ -1,0 +1,10 @@
+package net.modificationstation.stationloader.events.common;
+
+import java.util.Iterator;
+
+import net.modificationstation.stationloader.common.StationLoader;
+import net.modificationstation.stationloader.common.util.Mod;
+import net.modificationstation.stationloader.common.util.ReflectionHelper;
+
+public class SLInitializationEvent extends Event{
+}

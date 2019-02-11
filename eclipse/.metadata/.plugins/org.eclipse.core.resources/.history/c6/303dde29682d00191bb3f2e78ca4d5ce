@@ -1,0 +1,28 @@
+package net.modificationstation.stationloader;
+
+import net.minecraft.src.GuiScreen;
+import net.minecraft.src.ScaledResolution;
+import net.modificationstation.stationloader.events.SLMainCalledEvent;
+import net.modificationstation.stationloader.events.SLPostInitializationEvent;
+import net.modificationstation.stationloader.loaders.Loader;
+
+public class StationHooks {
+    public static void onMainCalled(String args[]) {
+        Loader.INSTANCE.loadMods();
+        StationLoader.startEvent(new SLMainCalledEvent(args));
+    }
+    public static void onInit() {
+        
+    }
+    public static void postInit() {
+        StationLoader.startEvent(new SLPostInitializationEvent());
+    }
+    public static GuiScreen preDisplayGuiScreen(GuiScreen guiscreen) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    public static void guiScreenDisplayed(GuiScreen guiscreen, ScaledResolution scaledresolution, int i, int j) {
+        // TODO Auto-generated method stub
+        
+    }
+}

@@ -1,0 +1,5 @@
+package net.modificationstation.stationloader.loaders;
+
+public class StationClassLoader {
+
+}

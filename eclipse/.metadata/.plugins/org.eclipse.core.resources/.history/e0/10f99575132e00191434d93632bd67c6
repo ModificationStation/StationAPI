@@ -1,0 +1,32 @@
+package net.modificationstation.stationloader.events.client;
+
+import net.minecraft.src.GuiScreen;
+import net.modificationstation.stationloader.events.common.Event;
+import net.modificationstation.stationloader.events.common.MCEvent;
+
+public class MCGuiDrawScreenEvent extends MCEvent{
+
+    public MCGuiDrawScreenEvent(GuiScreen guiscreen, int i, int j, float f) {
+        eventData = new Object[] {guiscreen, i, j, f};
+    }
+    public boolean continueExecution() {
+        return !cancelled;
+    }
+    public void cancel() {
+        cancelled = true;
+    }
+    public GuiScreen getGuiScreen() {
+        return (GuiScreen) eventData[0];
+    }
+    public int getX() {
+        return (Integer) eventData[1];
+    }
+    public int getY() {
+        return (Integer) eventData[2];
+    }
+    public float getPartialTicks() {
+        return (Float) eventData[3];
+    }
+    private Object eventData[];
+    private boolean cancelled = false;
+}

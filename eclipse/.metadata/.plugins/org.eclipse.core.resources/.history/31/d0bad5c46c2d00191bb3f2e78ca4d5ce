@@ -1,0 +1,5 @@
+package net.modificationstation.stationloader.client.events;
+
+public class MCPreDisplayGuiScreen {
+
+}

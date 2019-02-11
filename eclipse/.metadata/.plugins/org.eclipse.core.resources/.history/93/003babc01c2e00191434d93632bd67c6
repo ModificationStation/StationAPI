@@ -1,0 +1,5 @@
+package net.rek.oldmainmenu.gui;
+
+public class GuiMainMenu extends net.minecraft.src.GuiMainMenu{
+
+}

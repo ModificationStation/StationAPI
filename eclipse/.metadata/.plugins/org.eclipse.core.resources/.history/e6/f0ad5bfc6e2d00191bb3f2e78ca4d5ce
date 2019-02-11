@@ -1,0 +1,9 @@
+package net.modificationstation.stationloader.client.events;
+
+import net.modificationstation.stationloader.common.events.Event;
+
+public class MCGuiScreenDisplayed extends Event{
+    public MCGuiScreenDisplayed() {
+        
+    }
+}

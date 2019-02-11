@@ -1,0 +1,4 @@
+package net.modificationstation.stationloader.events.common;
+
+public class SLPostInitializationEvent extends Event{
+}

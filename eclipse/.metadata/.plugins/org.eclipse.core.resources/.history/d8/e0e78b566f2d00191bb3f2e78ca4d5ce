@@ -1,0 +1,18 @@
+package net.modificationstation.stationloader.client.events;
+
+import net.minecraft.src.GuiScreen;
+import net.minecraft.src.ScaledResolution;
+import net.modificationstation.stationloader.common.events.Event;
+
+public class MCGuiScreenDisplayedEvent extends Event{
+    public MCGuiScreenDisplayedEvent(GuiScreen guiscreen, ScaledResolution scaledresolution, int i, int j) {
+        eventData = new Object[] {guiscreen, scaledresolution, i, j};
+    }
+    public GuiScreen getGuiScreen() {
+        return eventData[0];
+    }
+    public void getScaledResolution() {
+        return eventData[1];
+    }
+    private Object eventData[];
+}

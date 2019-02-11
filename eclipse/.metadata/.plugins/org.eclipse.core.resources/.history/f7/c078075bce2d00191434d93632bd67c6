@@ -1,0 +1,10 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+import net.minecraft.src.GuiMainMenu;
+
+public class GuiMainMenuManager {
+    public static void addMainMenuHandler(GuiMainMenu guimainmenu, int priority, boolean startOnLaunch) {
+        
+    }
+    private static Map<GuiMainMenu, Integer> priorities = new HashMap<GuiMainMenu, Integer>();
+}

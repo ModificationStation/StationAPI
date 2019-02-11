@@ -1,0 +1,18 @@
+package net.modificationstation.stationloader.common;
+
+import net.modificationstation.stationloader.common.events.SLMainCalledEvent;
+import net.modificationstation.stationloader.common.events.SLPostInitializationEvent;
+import net.modificationstation.stationloader.common.loaders.Loader;
+
+public class StationHooks {
+    public static void onMainCalled(String args[]) {
+        Loader.INSTANCE.loadMods();
+        StationLoader.startModEvent(new SLMainCalledEvent(args));
+    }
+    public static void onInit() {
+        
+    }
+    public static void postInit() {
+        Event event = new SLPostInitializationEvent());
+    }
+}

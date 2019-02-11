@@ -1,0 +1,11 @@
+package net.rek.oldmainmenu.eventlisteners;
+
+import net.modificationstation.stationloader.common.util.SubscribeEvent;
+import net.modificationstation.stationloader.events.client.MCGuiDrawScreenEvent;
+
+public class GuiMainMenuListener {
+    @SubscribeEvent
+    public static void drawScreen(MCGuiDrawScreenEvent event) {
+        
+    }
+}

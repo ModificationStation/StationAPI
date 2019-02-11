@@ -7,6 +7,8 @@ package net.minecraft.src;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Minecraft;
+import net.modificationstation.stationloader.client.StationClientHooks;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -27,10 +29,15 @@ public class GuiScreen extends Gui
 
     public void drawScreen(int i, int j, float f)
     {
-        for(int k = 0; k < controlList.size(); k++)
+        /** v StationLoader v*/
+        if (StationClientHooks.onDrawScreen(this, i, j, f, "GuiScreen"))
+        /** ^ StationLoader ^*/
         {
-            GuiButton guibutton = (GuiButton)controlList.get(k);
-            guibutton.drawButton(mc, i, j);
+            for(int k = 0; k < controlList.size(); k++)
+            {
+                GuiButton guibutton = (GuiButton)controlList.get(k);
+                guibutton.drawButton(mc, i, j);
+            }
         }
 
     }

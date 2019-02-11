@@ -1,0 +1,47 @@
+package net.modificationstation.stationloader;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Logger;
+
+import net.modificationstation.stationloader.common.util.Mod;
+import net.modificationstation.stationloader.common.util.ReflectionHelper;
+import net.modificationstation.stationloader.common.util.SubscribeEvent;
+import net.modificationstation.stationloader.events.Event;
+
+public class StationLoader {
+    public static void startModEvent(Event event){
+		for (Iterator<Class<?>> mods = loadedMods.iterator();mods.hasNext();){
+			Class<?> mod = mods.next();
+			try {
+			    ReflectionHelper.getMethodAnnotation(mod, Mod.EventHandler.class, event.getClass()).invoke(null, event);
+			} catch (Exception e) {e.printStackTrace();}
+		}
+	}
+    public static void startEvent(Event event) {
+        for (Iterator<Class<?>> subscriptors = eventBusSubscriptors.iterator();subscriptors.hasNext();){
+            Class<?> subscriptor = subscriptors.next();
+            try {
+                ReflectionHelper.getMethodAnnotation(mod, SubscribeEvent.class, event.getClass()).invoke(null, event);
+            } catch (Exception e) {e.printStackTrace();}
+        }
+    }
+	public static boolean addMod(Class<?> mod){
+		if(!loadedMods.contains(mod)){
+			loadedMods.add(mod);
+			return true;
+		}
+		return false;
+	}
+
+
+    public static void addEventListener(Class<?> clazz) {
+        if (!eventBusSubscriptors.contains(clazz)) {
+            eventBusSubscriptors.add(clazz);
+        }
+    }
+	public static Logger LOGGER = Logger.getLogger("StationLoader");
+	public static List<Class<?>> loadedMods = new ArrayList<Class<?>>();
+	public static List<Class<?>> eventBusSubscriptors = new ArrayList<Class<?>>(); 
+}

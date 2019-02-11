@@ -1,0 +1,19 @@
+package net.modificationstation.stationloader.events.client;
+
+import java.util.Iterator;
+
+import net.modificationstation.stationloader.common.StationLoader;
+import net.modificationstation.stationloader.common.util.Mod;
+import net.modificationstation.stationloader.common.util.ReflectionHelper;
+
+public class MCEvent extends Event{
+    @Override
+    public void process() {
+        for (Iterator<Class<?>> subscriptors = StationLoader.eventBusSubscriptors.iterator();subscriptors.hasNext();){
+            Class<?> subscriptor = subscriptors.next();
+            try {
+                ReflectionHelper.getMethodAnnotation(subscriptor, Mod.EventHandler.class, getClass()).invoke(null, this);
+            } catch (NullPointerException e) {continue;} catch (Exception e) {e.printStackTrace();}
+        }
+    }
+}

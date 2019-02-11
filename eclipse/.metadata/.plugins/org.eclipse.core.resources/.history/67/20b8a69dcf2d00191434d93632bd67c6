@@ -1,0 +1,13 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import net.minecraft.src.GuiMainMenu;
+
+public class GuiMainMenuManager {
+    public static void addMainMenuHandler(GuiMainMenu guimainmenu, int priority) {
+        priorities.put(priority, guimainmenu);
+    }
+    private static Map<Integer, GuiMainMenu> priorities = new HashMap<Integer, GuiMainMenu>();
+}

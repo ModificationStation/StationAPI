@@ -1,0 +1,9 @@
+package net.modificationstation.stationloader.events.client;
+
+import net.modificationstation.stationloader.events.common.MCEvent;
+
+public class MCGuiMainMenuDrawScreenEvent extends MCEvent{
+    public MCGuiMainMenuDrawScreenEvent() {
+        
+    }
+}

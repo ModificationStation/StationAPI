@@ -1,0 +1,20 @@
+package net.modificationstation.stationloader.common.events;
+
+import java.util.Iterator;
+
+import net.modificationstation.stationloader.common.util.ReflectionHelper;
+import net.modificationstation.stationloader.common.util.SubscribeEvent;
+
+public class Event {
+	public final String getEventType(){
+		return getClass().getSimpleName();
+	}
+	public void proccess() {
+        for (Iterator<Class<?>> subscriptors = StationLoader.eventBusSubscriptors.iterator();subscriptors.hasNext();){
+            Class<?> subscriptor = subscriptors.next();
+            try {
+                ReflectionHelper.getMethodAnnotation(subscriptor, SubscribeEvent.class, getClass()).invoke(null, this);
+            } catch (NullPointerException e) {continue;} catch (Exception e) {e.printStackTrace();}
+        }
+	}
+}

@@ -1,0 +1,5 @@
+package net.rek.oldmainmenu;
+@Mod
+public class OldCustomLogoCore {
+
+}

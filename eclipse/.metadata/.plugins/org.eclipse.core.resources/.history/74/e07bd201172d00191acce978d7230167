@@ -1,0 +1,26 @@
+package net.modificationstation.stationloader.loaders;
+
+import java.net.URL;
+import java.net.URLClassLoader;
+
+public class StationClassLoader extends URLClassLoader{
+    public StationClassLoader(URL[] arg0) {
+        super(arg0);
+    }
+    @Override
+    public Class<?> loadClass(String name) throws ClassNotFoundException {
+        System.out.println("LoadClass");
+        System.out.println(name);
+        return getParent().loadClass(name);
+    }
+    @Override
+    public Class<?> findClass(String name) throws ClassNotFoundException {
+        System.out.println("FindClass");
+        System.out.println(name);
+        return getParent().loadClass(name);
+    }
+    @Override
+    public void addURL() {
+        
+    }
+}

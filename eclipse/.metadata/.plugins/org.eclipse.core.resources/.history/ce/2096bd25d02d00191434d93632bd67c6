@@ -1,0 +1,30 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import net.minecraft.src.GuiButton;
+import net.minecraft.src.GuiMainMenu;
+import net.modificationstation.stationloader.common.StationLoader;
+
+public class GuiMainMenuSL extends GuiMainMenu{
+    @SuppressWarnings("unchecked")
+    public void initGui() {
+        super.initGui();
+        if (!guiMainMenus.isEmpty()) {
+            controlList.add(new GuiButton(5, width - 20, 0, 20, 20, ">"));
+            controlList.add(new GuiButton(6, width - 40, 0, 20, 20, "<"));
+        }
+    }
+    public void drawScreen(int i, int j, float f) {
+        super.drawScreen(i, j, f);
+        drawString(fontRenderer, "StationLoader version " + StationLoader.VERISON, 2, 12, 0x505050);
+        drawString(fontRenderer, "(" + StationLoader.loadedMods.size() + (StationLoader.loadedMods.size() == 1 ? " mod is" : " mods are") + " loaded)", 2, 22, 0x505050);
+    }
+    public static void refresh(Set<Entry<Integer, GuiMainMenu>> set) {
+        guiMainMenus.addAll(set);
+    }
+    private static Set<Entry<Integer, GuiMainMenu>> guiMainMenus = new HashSet<Entry<Integer, GuiMainMenu>>();
+}

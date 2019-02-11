@@ -1,0 +1,37 @@
+package net.modificationstation.stationloader.loaders;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+
+public class StationClassLoader extends URLClassLoader{
+    public StationClassLoader(URL[] arg0) {
+        super(arg0);
+    }
+    @Override
+    public Class<?> loadClass(String name) throws ClassNotFoundException {
+        System.out.println("LoadClass");
+        System.out.println(name);
+        try {
+            System.out.println(loadClassData(name));
+        } catch (IOException e) {e.printStackTrace();}
+        return getParent().loadClass(name);
+    }
+    @Override
+    public Class<?> findClass(String name) throws ClassNotFoundException {
+        System.out.println("FindClass");
+        System.out.println(name);
+        return getParent().loadClass(name);
+    }
+    
+    private byte[] loadClassData(String name) throws IOException {
+        BufferedInputStream in = new BufferedInputStream(
+                ClassLoader.getSystemResourceAsStream(name.replace(".", "/")
+                        + ".class"));
+        return in.read();
+    }
+    public void addURL(URL url) {
+        super.addURL(url);
+    }
+}

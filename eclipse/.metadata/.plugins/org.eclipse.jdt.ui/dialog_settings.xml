@@ -14,6 +14,7 @@
 	<item value="C:\Users\ABLPHA\Desktop\mods\StationLoader\StationLoader beta 1.7.3\src\minecraft" key="org.eclipse.jdt.ui.last.external.project"/>
 	<item value="636" key="org.eclipse.jdt.uiformatter_pagemodify_dialog.sash_form_rigth_width"/>
 	<section name="org.eclipse.ltk.ui.refactoring.settings">
+		<item value="false" key="renameSubpackages"/>
 		<item value="false" key="updateQualifiedNames"/>
 		<item value="*" key="patterns"/>
 		<item value="false" key="updateSimilarElements"/>
@@ -37,9 +38,26 @@
 	<section name="OptionalMessageDialog.hide.">
 		<item value="true" key="org.eclipse.jdt.ui.typecomment.deprecated"/>
 	</section>
+	<section name="NewAnnotationWizardPage">
+		<item value="false" key="add_documented"/>
+		<section name="AddTarget">
+			<item value="true" key="enabled"/>
+			<list key="selectedEnums">
+				<item value="TYPE"/>
+			</list>
+		</section>
+		<section name="AddRetention">
+			<item value="true" key="enabled"/>
+			<list key="selectedEnums">
+				<item value="RUNTIME"/>
+			</list>
+		</section>
+	</section>
 	<section name="RefactoringWizard.preview">
 		<item value="600" key="width"/>
 		<item value="400" key="height"/>
+	</section>
+	<section name="RenameInformationPopup">
 	</section>
 	<section name="quick_assist_proposal_size">
 	</section>

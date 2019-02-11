@@ -1,0 +1,22 @@
+package net.modificationstation.stationloader;
+
+import net.modificationstation.stationloader.events.SLMainCalledEvent;
+import net.modificationstation.stationloader.events.SLPostInitializationEvent;
+import net.modificationstation.stationloader.loaders.Loader;
+import net.modificationstation.stationloader.loaders.StationClassLoader;
+
+public class StationHooks {
+    public static void onMainCalled(String args[]) {
+        try {
+            ClassLoader stationLoader = new StationClassLoader();
+            Class<?> minecraft = Class.forName("net.minecraft.client.Minecraft", false, stationLoader);
+            Method method = minecraft.getDeclaredMethod("relaunch");
+        } catch (Exception e) {e.printStackTrace();}
+        Loader.INSTANCE.loadMods();
+        StationLoader.startEvent(new SLMainCalledEvent(args));
+    }
+    
+    public static void postInit() {
+        StationLoader.startEvent(new SLPostInitializationEvent());
+    }
+}

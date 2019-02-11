@@ -1,0 +1,17 @@
+package net.modificationstation.stationloader.client;
+
+import net.minecraft.src.GuiScreen;
+import net.minecraft.src.ScaledResolution;
+import net.modificationstation.stationloader.client.events.MCPreDisplayGuiScreen;
+import net.modificationstation.stationloader.common.StationHooks;
+import net.modificationstation.stationloader.common.events.Event;
+
+public class StationClientHooks extends StationHooks{
+
+    public static GuiScreen preDisplayGuiScreen(GuiScreen guiscreen) {
+        Event event = new MCPreDisplayGuiScreen(guiscreen);
+        return ;
+    }
+    public static void guiScreenDisplayed(GuiScreen guiscreen, ScaledResolution scaledresolution, int i, int j) {
+    }
+}

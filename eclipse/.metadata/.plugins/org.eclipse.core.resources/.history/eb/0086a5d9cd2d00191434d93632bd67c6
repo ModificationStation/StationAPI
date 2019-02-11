@@ -1,0 +1,7 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+public class GuiMainMenuManager {
+    public static void addMainMenuHandler() {
+        
+    }
+}

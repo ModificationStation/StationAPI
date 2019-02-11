@@ -1,0 +1,10 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+import net.minecraft.src.GuiMainMenu;
+
+public class GuiMainMenuManager {
+    public static void addMainMenuHandler(GuiMainMenu guimainmenu, boolean startOnLaucnh) {
+        
+    }
+    private static GuiMainMenu mainMenuHandlers = new 
+}

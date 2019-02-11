@@ -1,0 +1,20 @@
+package net.modificationstation.stationloader;
+
+import java.lang.reflect.Method;
+import java.util.List;
+
+import net.modificationstation.stationloader.events.SLMainCalledEvent;
+import net.modificationstation.stationloader.events.SLPostInitializationEvent;
+import net.modificationstation.stationloader.loaders.Loader;
+import net.modificationstation.stationloader.loaders.StationClassLoader;
+
+public class StationHooks {
+    public static void onMainCalled(String args[]) {
+        Loader.INSTANCE.loadMods();
+        StationLoader.startEvent(new SLMainCalledEvent(args));
+    }
+    
+    public static void postInit() {
+        StationLoader.startEvent(new SLPostInitializationEvent());
+    }
+}

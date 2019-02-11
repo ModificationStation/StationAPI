@@ -1,0 +1,11 @@
+package net.rek.oldmainmenu;
+
+import net.modificationstation.stationloader.common.util.Mod;
+
+@Mod(name = "Old Logo", modid = "oldlogo")
+public class OldLogoCore {
+    @EventHandler
+    public static void onInit(SLInitializationEvent event) {
+        
+    }
+}

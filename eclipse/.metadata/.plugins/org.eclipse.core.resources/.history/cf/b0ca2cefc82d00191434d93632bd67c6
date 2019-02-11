@@ -1,0 +1,16 @@
+package net.modificationstation.stationloader.client.minecraft.gui;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.src.FontRenderer;
+import net.minecraft.src.GuiScreen;
+import net.modificationstation.stationloader.common.StationLoader;
+
+public class GuiMainMenuSL extends GuiMainMenu{
+    public GuiMainMenuSL() {
+        fontRenderer = Minecraft.theMinecraft.fontRenderer;
+    }
+    public void drawScreen() {
+        drawString(fontRenderer, "StationLoader version 0.0.1", 2, 12, 0x505050);
+        drawString(fontRenderer, "(" + StationLoader.loadedMods.size() + (StationLoader.loadedMods.size() == 1 ? " mod is" : " mods are") + " loaded)", 2, 22, 0x505050);
+    }
+}

@@ -1,0 +1,8 @@
+package net.rek.oldmainmenu.eventlisteners;
+
+public class GuiMainMenuListener {
+    @SubscribeEvent
+    public static void drawScreen(MCGuiDrawScreenEvent event) {
+        
+    }
+}

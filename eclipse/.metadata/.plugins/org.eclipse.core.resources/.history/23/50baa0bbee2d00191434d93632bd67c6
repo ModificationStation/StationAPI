@@ -1,0 +1,5 @@
+package net.rek.oldmainmenu.eventlisteners;
+
+public class GuiMainMenuListener {
+
+}
