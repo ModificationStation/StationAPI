@@ -15,7 +15,6 @@ public class StationLoader {
 	
     public static void addEventListener(Object eventListener) {
         if (!eventListeners.contains(eventListener)) {
-            LOGGER.info("Added EventListener");
             eventListeners.add(eventListener);
         }
     }

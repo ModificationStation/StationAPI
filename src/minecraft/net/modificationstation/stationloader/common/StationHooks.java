@@ -20,22 +20,7 @@ public class StationHooks {
         event.process();
     }
     public static void onInit() {
-        Minecraft minecraft = null;
-        try {
-            ThreadGroup threadgroup = Thread.currentThread().getThreadGroup();
-            int i = threadgroup.activeCount();
-            Thread athread[] = new Thread[i];
-            threadgroup.enumerate(athread);
-            for(int j = 0; j < athread.length; j++)
-            {
-                if(athread[j].getName().equals("Minecraft main thread"))
-                {
-                    minecraft = (Minecraft)ReflectionHelper.getPrivateValue(java.lang.Thread.class, athread[j], "target");
-                    break;
-                }
-            }
-        } catch (Exception e) {e.printStackTrace();}
-        Event event = new SLInitializationEvent(minecraft);
+        Event event = new SLInitializationEvent();
         event.process();
     }
     public static void postInit() {
