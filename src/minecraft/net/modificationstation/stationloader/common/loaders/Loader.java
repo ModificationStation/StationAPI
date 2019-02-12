@@ -10,8 +10,11 @@ import java.util.jar.JarFile;
 
 import net.minecraft.client.Minecraft;
 import net.modificationstation.stationloader.common.StationLoader;
+import net.modificationstation.stationloader.common.util.EventListener;
 import net.modificationstation.stationloader.common.util.Mod;
 import net.modificationstation.stationloader.common.util.ReflectionHelper;
+import net.modificationstation.stationloader.common.util.Side;
+import net.modificationstation.stationloader.common.util.SidedProxy;
 
 public class Loader {
     private Loader() {
@@ -43,6 +46,21 @@ public class Loader {
 		                                fields[k].set(instance, instance);
 		                            } catch (Exception e) {}
 		                        }
+		                        fields = ReflectionHelper.getFieldsAnnotation(clazz, SidedProxy.class);
+		                        for (int k = 0; k < fields.length;k++) {
+                                    try {
+                                        SidedProxy sidedProxy = fields[k].getAnnotation(SidedProxy.class);
+                                        if (StationLoader.SIDE == Side.CLIENT)
+                                            fields[k].set(instance, Class.forName(sidedProxy.clientSide(), false, loader).newInstance());
+                                        if (StationLoader.SIDE == Side.SERVER) {
+                                            fields[k].set(instance, Class.forName(sidedProxy.serverSide(), false, loader).newInstance());
+                                        }
+                                    } catch (Exception e) {}
+                                }
+			                }
+			                if (clazz.isAnnotationPresent(EventListener.class)) {
+                                Object instance = clazz.newInstance();
+                                StationLoader.addEventListener(instance);
 			                }
 			            } catch (Exception e) {}
 			        }
