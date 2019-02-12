@@ -4,8 +4,8 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 
 import net.modificationstation.stationloader.common.StationLoader;
-import net.modificationstation.stationloader.common.util.Mod;
 import net.modificationstation.stationloader.common.util.ReflectionHelper;
+import net.modificationstation.stationloader.common.util.annotation.Mod;
 
 public class Event {
 	public final String getEventType(){

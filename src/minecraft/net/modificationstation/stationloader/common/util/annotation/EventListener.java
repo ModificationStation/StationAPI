@@ -1,4 +1,4 @@
-package net.modificationstation.stationloader.common.util;
+package net.modificationstation.stationloader.common.util.annotation;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

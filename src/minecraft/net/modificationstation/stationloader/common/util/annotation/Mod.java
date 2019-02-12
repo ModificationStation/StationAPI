@@ -1,4 +1,4 @@
-package net.modificationstation.stationloader.common.util;
+package net.modificationstation.stationloader.common.util.annotation;
 
 import java.lang.annotation.*;
 

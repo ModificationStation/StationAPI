@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import net.modificationstation.stationloader.common.StationLoader;
 import net.modificationstation.stationloader.common.util.ReflectionHelper;
-import net.modificationstation.stationloader.common.util.SubscribeEvent;
+import net.modificationstation.stationloader.common.util.annotation.SubscribeEvent;
 
 public class MCEvent extends Event{
     @Override
