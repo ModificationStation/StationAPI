@@ -1,16 +1,13 @@
-/tests/
-/jars/
-/logs/
-/docs/
-/conf/
-/bin/
-/runtime/
-cleanup.bat
-decompile.bat
-recompile.bat
-reobfuscate.bat
-startclient.bat
-startserver.bat
-updatemcp.bat
-updatemd5.bat
-updatenames.bat
+# Block folders that MCP generates 
+jars/
+logs/
+reobf/
+temp/
+src/
+eclipse/.metadata
+
+# Allow server.properties
+!jars/server.properties
+
+# Block StationLoader tests
+tests/

@@ -1,7 +1,0 @@
-package net.modificationstation.stationloader.events.client;
-
-import net.modificationstation.stationloader.events.common.Event;
-
-public class MCEvent extends Event{
-    
-}

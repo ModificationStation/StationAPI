@@ -1,5 +1,0 @@
-package net.modificationstation.stationloader.events.common;
-
-public class SLPreInitializationEvent extends Event{
-
-}

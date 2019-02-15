@@ -1,8 +1,0 @@
-package net.modificationstation.stationloader.loaders;
-
-public class SLReloader {
-    public static void relaunchMC(String[] mcargs) {
-        args = mcargs;
-    }
-    private static String[] args;
-}

@@ -1,7 +1,0 @@
-package net.modificationstation.stationloader.common.events;
-
-public class Event {
-	public final String getEventType(){
-		return getClass().getSimpleName();
-	}
-}

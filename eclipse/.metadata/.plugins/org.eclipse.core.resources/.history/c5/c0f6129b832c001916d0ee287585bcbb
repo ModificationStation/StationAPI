@@ -1,7 +1,0 @@
-package net.modificationstation.stationloader.minecraft.crafting;
-
-public class CraftingManager {
-    public static void addRecipe() {
-        
-    }
-}

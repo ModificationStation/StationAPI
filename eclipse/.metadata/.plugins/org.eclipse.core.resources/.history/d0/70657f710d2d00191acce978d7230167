@@ -1,9 +1,0 @@
-package net.modificationstation.stationloader.loaders;
-
-public class StationClassLoader extends ClassLoader{
-    @Override
-    public Class<?> loadClass(String name) {
-        
-        return getParent().loadClass(name);
-    }
-}

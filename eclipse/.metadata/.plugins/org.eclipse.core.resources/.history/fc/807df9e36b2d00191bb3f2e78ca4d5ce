@@ -1,7 +1,0 @@
-package net.modificationstation.stationloader.minecraft.dimension;
-
-public class DimensionType {
-    public DimensionType(int DimensionID) {
-        
-    }
-}

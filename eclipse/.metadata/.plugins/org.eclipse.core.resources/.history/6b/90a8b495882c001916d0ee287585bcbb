@@ -1,4 +1,0 @@
-package net.modificationstation.stationloader.events;
-
-public class SLMainCalled extends Event {
-}

@@ -1,9 +1,0 @@
-package net.modificationstation.stationloader.minecraft.crafting;
-
-import net.minecraft.src.ItemStack;
-
-public class CraftingManager {
-    public static void addRecipe(ItemStack itemstack, Object aobj[]) {
-        net.minecraft.src.CraftingManager.addRecipe(itemstack, aobj);
-    }
-}

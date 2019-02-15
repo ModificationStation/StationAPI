@@ -1,9 +1,0 @@
-package net.modificationstation.stationloader.util;
-
-import java.lang.annotation.Annotation;
-
-public class AnnotationParser {
-    public static Object getClassAnnotation(Annotation annotation, Class calss) {
-        
-    }
-}

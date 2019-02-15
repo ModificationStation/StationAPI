@@ -1,5 +1,0 @@
-package net.modificationstation.stationloader.util;
-
-public class AnnotationParser {
-    public static getClassAnnotation(Annotation annotation)
-}

@@ -1,5 +1,0 @@
-package net.modificationstation.stationloader.minecraft.dimension;
-
-public class DimensionManager {
-    
-}

@@ -1,5 +1,0 @@
-package net.modificationstation.stationloader.client.minecraft.gui;
-
-public class GuiMainMenusList extends Guicreen{
-
-}

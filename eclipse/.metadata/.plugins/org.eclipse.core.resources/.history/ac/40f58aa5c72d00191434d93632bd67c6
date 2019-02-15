@@ -1,5 +1,0 @@
-package net.modificationstation.stationloader.events.client;
-
-public class MCEvent extends Event{
-
-}

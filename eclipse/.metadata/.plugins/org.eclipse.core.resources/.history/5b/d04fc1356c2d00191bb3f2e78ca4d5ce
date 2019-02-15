@@ -1,5 +1,0 @@
-package net.modificationstation.stationloader.client;
-
-public class StationClientHooks extends StationHooks{
-    
-}

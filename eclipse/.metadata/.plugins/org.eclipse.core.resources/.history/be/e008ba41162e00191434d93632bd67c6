@@ -1,9 +1,0 @@
-package net.modificationstation.stationloader.events.client;
-
-import net.minecraft.src.GuiScreen;
-
-public class MCGuiMainMenuDrawScreenEvent extends MCGuiScreenDrawScreenEvent {
-    public MCGuiMainMenuDrawScreenEvent(GuiScreen guiscreen, int i, int j, float f) {
-        super(guiscreen, i, j, f);
-    }
-}

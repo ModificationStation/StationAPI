@@ -1,8 +1,0 @@
-package net.modificationstation.stationloader.events.client;
-
-import net.modificationstation.stationloader.events.common.ICancellable;
-import net.modificationstation.stationloader.events.common.MCEvent;
-
-public class MCGuiMainMenuDrawScreenEvent extends MCGuiScreenDrawScreenEvent implements ICancellable{
-
-}

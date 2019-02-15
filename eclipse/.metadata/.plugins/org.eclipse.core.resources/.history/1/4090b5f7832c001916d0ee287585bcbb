@@ -1,5 +1,0 @@
-package net.modificationstation.stationloader.util;
-
-public class MinecraftMethods {
-    public static Method craftingManager_addRecipe;
-}
