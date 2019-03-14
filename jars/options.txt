@@ -6,13 +6,13 @@ viewDistance:0
 guiScale:0
 bobView:true
 anaglyph3d:false
-advancedOpengl:false
-fpsLimit:1
-difficulty:2
+advancedOpengl:true
+fpsLimit:0
+difficulty:0
 fancyGraphics:true
 ao:true
 skin:Default
-lastServer:_25565
+lastServer:betalands.com
 key_key.forward:17
 key_key.left:30
 key_key.back:31

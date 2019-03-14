@@ -1,14 +1,10 @@
 package net.mine_diver.testmod.events;
 
-import net.mine_diver.testmod.TestMod;
-import net.modificationstation.stationloader.common.util.annotation.EventListener;
-import net.modificationstation.stationloader.common.util.annotation.SubscribeEvent;
-import net.modificationstation.stationloader.events.client.gui.MCPreDisplayGuiScreenEvent;
+import net.minecraft.src.GuiScreen;
+import net.modificationstation.stationloader.events.client.gui.guiscreen.DrawScreen;
 
-@EventListener
-public class EventHandler {
-    @SubscribeEvent
-    public void onGuiDisplay(MCPreDisplayGuiScreenEvent event) {
-        TestMod.INSTANCE.LOGGER.info("GuiDisplayed");
-    }
+public class EventHandler implements DrawScreen{
+	public boolean drawScreen(GuiScreen guiscreen, int x, int y, float partialTicks, String screenType) {
+		return true;
+	}
 }

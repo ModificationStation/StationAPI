@@ -75,12 +75,6 @@ public class Loader {
                                 }
                                 StationLoader.LOGGER.info("Loaded " + clazz.getAnnotation(Mod.class).name() + " mod");
 			                }
-			                if (clazz.isAnnotationPresent(EventListener.class)) {
-			                    StationLoader.LOGGER.info("Found EventListener (" + clazz.getName() +")");
-                                Object instance = clazz.newInstance();
-                                StationLoader.LOGGER.info("Instanced");
-                                StationLoader.addEventListener(instance);
-			                }
 			            } catch (Exception e) {}
 			        }
 			        modJar.close();

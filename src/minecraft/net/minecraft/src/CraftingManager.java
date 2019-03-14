@@ -208,8 +208,7 @@ public class CraftingManager
         System.out.println((new StringBuilder()).append(recipes.size()).append(" recipes").toString());
     }
 
-    /** v StationLoader v: +public*/
-    public void addRecipe(ItemStack itemstack, Object aobj[])
+    void addRecipe(ItemStack itemstack, Object aobj[])
     {
         String s = "";
         int i = 0;
@@ -272,8 +271,7 @@ public class CraftingManager
         recipes.add(new ShapedRecipes(j, k, aitemstack, itemstack));
     }
 
-    /** v StationLoader v: +public*/
-    public void addShapelessRecipe(ItemStack itemstack, Object aobj[])
+    void addShapelessRecipe(ItemStack itemstack, Object aobj[])
     {
         ArrayList arraylist = new ArrayList();
         Object aobj1[] = aobj;

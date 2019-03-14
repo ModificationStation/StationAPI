@@ -9,7 +9,9 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.io.PrintStream;
 import java.net.URL;
+
 import net.minecraft.src.*;
+import net.modificationstation.classloader.ClassLoaderReplacer;
 
 // Referenced classes of package net.minecraft.client:
 //            Minecraft
@@ -24,7 +26,11 @@ public class MinecraftApplet extends Applet
 
     public void init()
     {
-        mcCanvas = new CanvasMinecraftApplet(this);
+        ClassLoaderReplacer.appletEntry(this);
+    }
+    
+    public void fmlInitReentry() {
+    	mcCanvas = new CanvasMinecraftApplet(this);
         boolean flag = false;
         if(getParameter("fullscreen") != null)
         {
@@ -75,7 +81,11 @@ public class MinecraftApplet extends Applet
 
     public void start()
     {
-        if(mc != null)
+        ClassLoaderReplacer.appletStart(this);
+    }
+    
+    public void fmlStartReentry() {
+    	if(mc != null)
         {
             mc.isGamePaused = false;
         }

@@ -9,9 +9,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.*;
 import net.minecraft.client.Minecraft;
-import net.modificationstation.stationloader.client.StationClientHooks;
-import net.modificationstation.stationloader.common.StationLoader;
-
 import org.lwjgl.opengl.GL11;
 
 // Referenced classes of package net.minecraft.src:
@@ -123,33 +120,28 @@ public class GuiMainMenu extends GuiScreen
 
     public void drawScreen(int i, int j, float f)
     {
-        /** v StationLoader v*/
-        if (StationClientHooks.onDrawScreen(this, i, j, f, "GuiMainMenu"))
-        /** ^ StationLoader ^*/
-        {
-            drawDefaultBackground();
-            Tessellator tessellator = Tessellator.instance;
-            char c = '\u0112';
-            int k = width / 2 - c / 2;
-            byte byte0 = 30;
-            GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, mc.renderEngine.getTexture("/title/mclogo.png"));
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            drawTexturedModalRect(k + 0, byte0 + 0, 0, 0, 155, 44);
-            drawTexturedModalRect(k + 155, byte0 + 0, 0, 45, 155, 44);
-            tessellator.setColorOpaque_I(0xffffff);
-            GL11.glPushMatrix();
-            GL11.glTranslatef(width / 2 + 90, 70F, 0.0F);
-            GL11.glRotatef(-20F, 0.0F, 0.0F, 1.0F);
-            float f1 = 1.8F - MathHelper.abs(MathHelper.sin(((float)(System.currentTimeMillis() % 1000L) / 1000F) * 3.141593F * 2.0F) * 0.1F);
-            f1 = (f1 * 100F) / (float)(fontRenderer.getStringWidth(splashText) + 32);
-            GL11.glScalef(f1, f1, f1);
-            drawCenteredString(fontRenderer, splashText, 0, -8, 0xffff00);
-            GL11.glPopMatrix();
-            drawString(fontRenderer, "Minecraft Beta 1.7.3", 2, 2, 0x505050);
-            String s = "Copyright Mojang AB. Do not distribute.";
-            drawString(fontRenderer, s, width - fontRenderer.getStringWidth(s) - 2, height - 10, 0xffffff);
-            super.drawScreen(i, j, f);
-        }
+        drawDefaultBackground();
+        Tessellator tessellator = Tessellator.instance;
+        char c = '\u0112';
+        int k = width / 2 - c / 2;
+        byte byte0 = 30;
+        GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, mc.renderEngine.getTexture("/title/mclogo.png"));
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        drawTexturedModalRect(k + 0, byte0 + 0, 0, 0, 155, 44);
+        drawTexturedModalRect(k + 155, byte0 + 0, 0, 45, 155, 44);
+        tessellator.setColorOpaque_I(0xffffff);
+        GL11.glPushMatrix();
+        GL11.glTranslatef(width / 2 + 90, 70F, 0.0F);
+        GL11.glRotatef(-20F, 0.0F, 0.0F, 1.0F);
+        float f1 = 1.8F - MathHelper.abs(MathHelper.sin(((float)(System.currentTimeMillis() % 1000L) / 1000F) * 3.141593F * 2.0F) * 0.1F);
+        f1 = (f1 * 100F) / (float)(fontRenderer.getStringWidth(splashText) + 32);
+        GL11.glScalef(f1, f1, f1);
+        drawCenteredString(fontRenderer, splashText, 0, -8, 0xffff00);
+        GL11.glPopMatrix();
+        drawString(fontRenderer, "Minecraft Beta 1.7.3", 2, 2, 0x505050);
+        String s = "Copyright Mojang AB. Do not distribute.";
+        drawString(fontRenderer, s, width - fontRenderer.getStringWidth(s) - 2, height - 10, 0xffffff);
+        super.drawScreen(i, j, f);
     }
 
     private static final Random rand = new Random();

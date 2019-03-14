@@ -7,8 +7,13 @@ package net.minecraft.client;
 import java.awt.*;
 import java.io.File;
 import net.minecraft.src.*;
-import net.modificationstation.stationloader.client.StationClientHooks;
-import net.modificationstation.stationloader.common.StationHooks;
+import net.modificationstation.classloader.ClassLoaderReplacer;
+import net.modificationstation.stationloader.events.client.gui.guiscreen.PostGuiScreenDisplay;
+import net.modificationstation.stationloader.events.client.gui.guiscreen.PreDisplayGuiScreen;
+import net.modificationstation.stationmodloader.StationModLoader;
+import net.modificationstation.stationmodloader.events.MCInitializationEvent;
+import net.modificationstation.stationmodloader.events.MCPostInitializationEvent;
+import net.modificationstation.stationmodloader.events.MCPreInitializationEvent;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.*;
@@ -66,7 +71,7 @@ public abstract class Minecraft
         }
         theMinecraft = this;
         /** v StationLoader v*/
-        StationHooks.preInit();
+        new MCPreInitializationEvent().process();
         /** ^ StationLoader ^*/
     }
 
@@ -88,7 +93,7 @@ public abstract class Minecraft
         throws LWJGLException
     {
         /** v StationLoader v*/
-        StationHooks.onInit();
+        new MCInitializationEvent().process();
         /** ^ StationLoader ^*/
         if(mcCanvas != null)
         {
@@ -201,7 +206,7 @@ public abstract class Minecraft
             displayGuiScreen(new GuiMainMenu());
         }
         /** v StationLoader v*/
-        StationHooks.postInit();
+        new MCPostInitializationEvent().process();
         /** ^ StationLoader ^*/
     }
 
@@ -343,7 +348,7 @@ public abstract class Minecraft
     public void displayGuiScreen(GuiScreen guiscreen)
     {
         /** v StationLoader v*/
-        guiscreen = StationClientHooks.preDisplayGuiScreen(guiscreen);
+        guiscreen = PreDisplayGuiScreen.EVENT.getInvoker().preDisplayGuiScreen(guiscreen);
         /** ^ StationLoader ^*/
         if(currentScreen instanceof GuiUnused)
         {
@@ -380,7 +385,7 @@ public abstract class Minecraft
             guiscreen.setWorldAndResolution(this, i, j);
             skipRenderWorld = false;
             /** v StationLoader v*/
-            StationClientHooks.guiScreenDisplayed(guiscreen, scaledresolution, i, j);
+            PostGuiScreenDisplay.EVENT.getInvoker().postGuiScreenDisplay(guiscreen, scaledresolution, i, j);
             /** ^ StationLoader ^*/
         } else
         {
@@ -1601,11 +1606,15 @@ public abstract class Minecraft
             return null;
         }
     }
-
+    /** v StationLoader v: we're hooking into classloading process here, so we can transform classes in runtime, redirect classes calls, etc*/
     public static void main(String args[])
     {
-        /** v StationLoader v*/
-    	StationHooks.onMainCalled(args);
+        ClassLoaderReplacer.launchedFromMinecraft(args);
+    }
+    
+    public static void actualMain(String args[]) {
+    	/** v StationLoader v*/
+    	StationModLoader.init();
         /** ^ StationLoader ^*/
         String s = null;
         String s1 = null;
