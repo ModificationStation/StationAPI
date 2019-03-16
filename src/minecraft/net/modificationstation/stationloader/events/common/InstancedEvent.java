@@ -4,6 +4,14 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.function.Function;
 
+/**
+ * Actual event class that contains all registered handlers, eventFunc that will be executed if there are more than 1 handlers
+ * registered (if there is only 1 handler registered, it'll be executed directly), and it's type
+ * 
+ * @author mine_diver
+ *
+ * @param <T>
+ */
 public class InstancedEvent<T> extends Event<T> {
 	private T[] handlers;
 	private final Class<T> type;

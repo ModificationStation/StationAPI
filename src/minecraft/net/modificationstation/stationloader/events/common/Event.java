@@ -1,9 +1,13 @@
 package net.modificationstation.stationloader.events.common;
 
+/**
+ * Abstract event class so you can make your own events registering method
+ * 
+ * @author mine_diver
+ *
+ * @param <T>
+ */
 public abstract class Event<T> {
-	public final String getEventType(){
-		return getClass().getSimpleName();
-	}
     public T getInvoker() {
     	return invoker;
     }

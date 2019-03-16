@@ -14,6 +14,22 @@ import net.modificationstation.stationloader.events.client.gui.guiscreen.GuiScre
 import net.modificationstation.stationmodloader.StationModLoader;
 import net.modificationstation.stationmodloader.util.Mod;
 
+/**
+ * This class handles two GUI events for StationLoader: DrawScreen and GuiScreenInit
+ * 
+ * On DrawScreen it checks if it's GuiMainMenu and if event is called from super class GuiScreen
+ * (we need exactly super class GuiScreen because it's called when screen wants to render buttons,
+ *  or in other words after the most render is done)
+ *  and if it's, GuiHandler draws two strings under "Minecraft Beta 1.7.3" with StationLoader's version
+ *  and the count of loaded mods (excluding StationLoader)
+ *  
+ *  On GuiScreenInit it checks if it's GuiTexturePacks, and if it's, GuiHandler adds new button "Texture Packs"
+ *  (currently not used, will be used to separate texture packs menu into two categories:
+ *  Mods and Texture packs, as it's written on the button in GuiMainMenu)
+ * 
+ * @author mine_diver
+ *
+ */
 public class GuiHandler implements DrawScreen, GuiScreenInit{
 	public GuiHandler() {
 		DrawScreen.EVENT.register(this::drawScreen);

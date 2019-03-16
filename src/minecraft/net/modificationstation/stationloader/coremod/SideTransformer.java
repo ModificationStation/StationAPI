@@ -15,7 +15,12 @@ import net.modificationstation.classloader.ClassLoaderReplacer;
 import net.modificationstation.classloader.IClassTransformer;
 import net.modificationstation.classloader.Side;
 
-
+/**
+ * The class that removes anything with SideOnly's value isn't matching the current side
+ * 
+ * @author mine_diver
+ *
+ */
 public class SideTransformer implements IClassTransformer
 {
     private static Side SIDE = ClassLoaderReplacer.side();

@@ -5,7 +5,21 @@ import java.lang.reflect.Method;
 import net.minecraft.src.ItemStack;
 import net.modificationstation.classloader.ReflectionHelper;
 
+/**
+ * The class that makes it able to access package-protected things (protected or without modifier)
+ * 
+ * @author mine_diver
+ *
+ */
 public class PackageAccess {
+    
+    /**
+     * CraftingManager access class so mods can register recipes (original CraftingManager has functions without modifiers
+     * so we can't access it outside net.minecraft.src)
+     * 
+     * @author mine_diver
+     *
+     */
 	public static class CraftingManager {
 		public static final CraftingManager getInstance() {
 			return instance;

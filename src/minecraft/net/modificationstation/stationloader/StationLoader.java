@@ -10,6 +10,12 @@ import net.modificationstation.stationmodloader.util.Mod.EventHandler;
 import net.modificationstation.stationmodloader.util.Mod.Instance;
 import net.modificationstation.stationmodloader.util.Mod.SidedProxy;
 
+/**
+ * StationLoader's mod (it's loaded with StationModLoader)
+ * 
+ * @author mine_diver
+ *
+ */
 @Mod(name = Reference.NAME, modid = Reference.MODID, version = Reference.VERSION)
 public class StationLoader {
 	

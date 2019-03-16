@@ -10,17 +10,31 @@ import org.objectweb.asm.tree.ClassNode;
 
 import net.modificationstation.classloader.IClassTransformer;
 
+/**
+ * The class transformer that checks for class's name and then patches it (if needed)
+ * 
+ * @author mine_diver
+ *
+ */
 public class EventsInjectorTransformer implements IClassTransformer{
     
+    /**
+     * List of patched classes
+     */
     public static final List<String> transformedClasses = Arrays.asList(new String[] {
             "net.minecraft.src.GuiScreen"
     });
     
+    /**
+     * EventsInjector's instance
+     */
     private final EventsInjector injector = new EventsInjector();
 
 	@Override
 	public byte[] transform(String name, byte[] bytes) {
+	    //Checking for class's name
 		if (transformedClasses.contains(name)) {
+		    //If it's a class that we need to patch, call the EventsInjector to patch it
 			try {
 				ClassNode classNode = new ClassNode();
 				ClassReader classReader = new ClassReader(bytes);

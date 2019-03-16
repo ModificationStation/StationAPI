@@ -6,6 +6,13 @@ import java.lang.reflect.Modifier;
 import net.modificationstation.stationloader.StationLoader;
 import net.modificationstation.stationmodloader.events.MCPreInitializationEvent;
 
+/**
+ * CommonProxy for StationLoader that does "common" things :D like registering StationLoader's logger (it's final for safety
+ * purposes, so we use reflection here to set it)
+ * 
+ * @author mine_diver
+ *
+ */
 public class CommonProxy {
 	public void preInit(MCPreInitializationEvent event) {
 	    try {

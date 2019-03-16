@@ -19,17 +19,34 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+/**
+ * The class that patches StationLoader's events into Minecraft's bytecode, so we don't need to edit anything
+ * 
+ * @author mine_diver
+ *
+ */
+
 @SuppressWarnings("unchecked")
 public class EventsInjector {    
     
+    /**
+     * List of patch functions, so we can access them by numbers
+     */
     final Consumer<ClassNode> patch[];
     
+    /**
+     * Closed constructor that sets patch[]
+     */
     EventsInjector() {
         final List<Consumer<ClassNode>> list = new ArrayList<Consumer<ClassNode>>();
         list.add(this::patchGuiScreen);
         patch = list.toArray(new Consumer[]{});
     }
     
+    /**
+     * Function that patches given GuiScreen's ClassNode
+     * @param classNode
+     */
     public void patchGuiScreen(ClassNode classNode) {
         Iterator<MethodNode> methodIt = classNode.methods.iterator();
         for (MethodNode method = methodIt.next();methodIt.hasNext();method = methodIt.next()) {
@@ -67,13 +84,31 @@ public class EventsInjector {
         }
     }
     
+    /**
+     * Function that adds event by event path into InsnList
+     * (It's not event CALL, it's just event. You need to call it for yourself.)
+     * @param toAdd
+     * @param eventPath
+     */
     private static void addEvent(InsnList toAdd, String eventPath) {
         toAdd.add(new FieldInsnNode(GETSTATIC, eventPath, "EVENT", "Lnet/modificationstation/stationloader/events/common/Event;"));
         toAdd.add(new MethodInsnNode(INVOKEVIRTUAL, "net/modificationstation/stationloader/events/common/Event", "getInvoker", "()Ljava/lang/Object;", false));
         toAdd.add(new TypeInsnNode(CHECKCAST, eventPath));
     }
     
+    /**
+     * The class that provides patch info for Minecraft classes.
+     * 
+     * @author mine_diver
+     *
+     */
     private static class ClassesInfo {
+        /**
+         * Class Info for GuiScreen
+         * 
+         * @author mine_diver
+         *
+         */
         static class GuiScreen {
             static final InsnList DrawScreen_before = new InsnList();
             static final InsnList DrawScreen = new InsnList();
@@ -82,6 +117,10 @@ public class EventsInjector {
             static final InsnList GuiScreenInit_before = new InsnList();
             static final InsnList PostGuiScreenInit = new InsnList();
             static final InsnList GuiScreenInit = new InsnList();
+            
+            /**
+             * Initializing patch instructions
+             */
             
             static {
                 LabelNode DrawScreen_pass = new LabelNode();

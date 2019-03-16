@@ -7,6 +7,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.ScaledResolution;
 import net.modificationstation.stationloader.events.client.gui.guiscreen.DrawScreen;
 
+/**
+ * EntityRenderer proxy that is used to hook into "updateCameraAndRender" function
+ * Original EntityRenderer is replaced with this one on MCPostInitializationEvent by StationLoader's mod
+ * 
+ * Will be replaced with ASM patch later.
+ * 
+ * @author mine_diver
+ *
+ */
 public class EntityRenderer extends net.minecraft.src.EntityRenderer{
 
     public EntityRenderer(Minecraft minecraft) {
