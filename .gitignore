@@ -3,7 +3,8 @@ jars/
 logs/
 reobf/
 temp/
-src/
+src/minecraft/net/minecraft/src
+src/minecraft_server/net/minecraft/src
 eclipse/.metadata
 
 # Allow server.properties
