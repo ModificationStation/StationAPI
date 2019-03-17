@@ -1,4 +1,5 @@
 # Block folders that MCP generates 
+bin/
 jars/
 logs/
 reobf/
