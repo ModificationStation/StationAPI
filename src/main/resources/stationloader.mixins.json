@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationloader.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "common.MixinItemBase",
+    "common.MixinRecipeRegistry",
+    "common.RecipeRegistryAccessor"
+  ],
+  "server": [
+  ],
+  "client": [
+    "client.Mixinclass_556",
+    "client.MixinItemRenderer",
+    "client.MixinMinecraft",
+    "client.MixinMinecraftApplet",
+    "client.MixinTextureManager",
+    "client.MixinTranslationStorage",
+    "client.TextureManagerAccessor",
+    "client.TranslationStorageAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
