@@ -1,4 +1,4 @@
-# Fabric Example Mod with BIN Mappings for beta 1.7.3 server + client
+# StationLoader API for Minecraft beta 1.7.3 BIN Fabric
 
 ## Setup
 
