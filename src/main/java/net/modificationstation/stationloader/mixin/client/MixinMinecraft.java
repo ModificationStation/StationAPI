@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.texture.TextureManager;
-import net.modificationstation.stationloader.client.event.texture.TextureRegister;
+import net.modificationstation.stationloader.api.client.event.texture.TextureRegister;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

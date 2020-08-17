@@ -18,6 +18,11 @@
   "icon": "assets/stationloader/icon.png",
 
   "environment": "*",
+  "entrypoints": {
+    "stationloader": [
+      "net.modificationstation.stationloader.impl.common.StationLoader"
+    ]
+  },
   "mixins": [
     "stationloader.mixins.json"
   ],

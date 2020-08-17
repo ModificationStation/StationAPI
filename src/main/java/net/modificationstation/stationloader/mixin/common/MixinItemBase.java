@@ -1,7 +1,7 @@
 package net.modificationstation.stationloader.mixin.common;
 
 import net.minecraft.item.ItemBase;
-import net.modificationstation.stationloader.common.event.item.ItemRegister;
+import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

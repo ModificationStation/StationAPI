@@ -4,9 +4,10 @@
   "package": "net.modificationstation.stationloader.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "common.MixinBlockBase",
     "common.MixinItemBase",
     "common.MixinRecipeRegistry",
-    "common.RecipeRegistryAccessor"
+    "common.accessor.RecipeRegistryAccessor"
   ],
   "server": [
   ],
@@ -17,8 +18,8 @@
     "client.MixinMinecraftApplet",
     "client.MixinTextureManager",
     "client.MixinTranslationStorage",
-    "client.TextureManagerAccessor",
-    "client.TranslationStorageAccessor"
+    "client.accessor.TextureManagerAccessor",
+    "client.accessor.TranslationStorageAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
