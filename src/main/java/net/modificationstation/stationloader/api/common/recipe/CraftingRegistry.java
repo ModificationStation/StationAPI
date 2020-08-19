@@ -1,8 +1,9 @@
 package net.modificationstation.stationloader.api.common.recipe;
 
 import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationloader.api.common.util.HasHandler;
 
-public interface CraftingRegistry {
+public interface CraftingRegistry extends HasHandler<CraftingRegistry> {
 
     CraftingRegistry INSTANCE = new CraftingRegistry() {
 
@@ -29,8 +30,6 @@ public interface CraftingRegistry {
                 handler.addShapelessRecipe(itemInstance, o);
         }
     };
-
-    void setHandler(CraftingRegistry handler);
 
     void addShapedRecipe(ItemInstance itemInstance, Object... o);
 

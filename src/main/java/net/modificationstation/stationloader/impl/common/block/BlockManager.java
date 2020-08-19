@@ -9,11 +9,6 @@ import java.util.function.Function;
 public class BlockManager implements net.modificationstation.stationloader.api.common.block.BlockManager {
 
     @Override
-    public void setHandler(net.modificationstation.stationloader.api.common.block.BlockManager handler) {
-        throw new RuntimeException("You shouldn't be able to access this!");
-    }
-
-    @Override
     public PlaceableTileEntity getBlockItem(BlockBase block) {
         int shiftedID = block.id - BlockBase.BY_ID.length;
         if (block instanceof BlockItemProvider)

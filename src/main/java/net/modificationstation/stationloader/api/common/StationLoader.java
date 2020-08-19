@@ -38,9 +38,15 @@ public interface StationLoader {
 
     void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException;
 
+    void setupAPI();
+
+    void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException;
+
     void addMod(ModMetadata data, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, URISyntaxException, IOException;
 
     Collection<StationMod> getAllMods();
+
+    Collection<Class<? extends StationMod>> getAllModsClasses();
 
     StationMod getModInstance(Class<? extends StationMod> modClass);
 

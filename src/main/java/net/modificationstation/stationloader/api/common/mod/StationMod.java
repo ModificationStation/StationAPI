@@ -1,7 +1,7 @@
 package net.modificationstation.stationloader.api.common.mod;
 
+import net.modificationstation.stationloader.api.common.config.Configuration;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
-import net.modificationstation.stationloader.impl.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;

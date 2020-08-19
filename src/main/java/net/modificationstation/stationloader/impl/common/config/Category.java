@@ -1,32 +1,49 @@
 package net.modificationstation.stationloader.impl.common.config;
 
+import net.modificationstation.stationloader.api.common.config.Property;
+import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Category implements Comparable<Category> {
+public class Category implements net.modificationstation.stationloader.api.common.config.Category {
 
     public Category(String name) {
         this.name = name;
     }
 
-    public Property getProperty(String name) {
-        for (Property property : properties)
-            if (name.equals(property.name))
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public net.modificationstation.stationloader.api.common.config.Property getProperty(String name) {
+        for (net.modificationstation.stationloader.api.common.config.Property property : properties)
+            if (name.equals(property.getName()))
                 return property;
-        Property property = new Property(name);
+        net.modificationstation.stationloader.api.common.config.Property property = GeneralFactory.INSTANCE.newInst(net.modificationstation.stationloader.api.common.config.Property.class, name);
         properties.add(property);
         return property;
     }
 
+    @Override
+    public Collection<Property> getProperties() {
+        return Collections.unmodifiableCollection(properties);
+    }
+
+    @Override
     public void save(BufferedWriter buffer) {
         try {
             buffer.write(name + " {\r\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        for (Property property : properties)
+        for (net.modificationstation.stationloader.api.common.config.Property property : properties)
             property.save(buffer);
         try {
             buffer.write("}\r\n");
@@ -36,15 +53,15 @@ public class Category implements Comparable<Category> {
     }
 
     @Override
-    public int compareTo(Category o) {
-        return name.compareTo(o.name);
+    public int compareTo(net.modificationstation.stationloader.api.common.config.Category o) {
+        return getName().compareTo(o.getName());
     }
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof Category && name.equals(((Category) o).name);
+        return o instanceof net.modificationstation.stationloader.api.common.config.Category && getName().equals(((net.modificationstation.stationloader.api.common.config.Category) o).getName());
     }
 
-    public final String name;
-    public final Set<Property> properties = new TreeSet<>();
+    private final String name;
+    private final Set<net.modificationstation.stationloader.api.common.config.Property> properties = new TreeSet<>();
 }

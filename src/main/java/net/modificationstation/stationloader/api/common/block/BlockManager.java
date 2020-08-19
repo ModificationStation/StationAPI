@@ -2,10 +2,11 @@ package net.modificationstation.stationloader.api.common.block;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.PlaceableTileEntity;
+import net.modificationstation.stationloader.api.common.util.HasHandler;
 
 import java.util.function.Function;
 
-public interface BlockManager {
+public interface BlockManager extends HasHandler<BlockManager> {
 
     BlockManager INSTANCE = new BlockManager() {
 
@@ -40,8 +41,6 @@ public interface BlockManager {
                 return handler.getDefaultBlockItemFactory();
         }
     };
-
-    void setHandler(BlockManager handler);
 
     PlaceableTileEntity getBlockItem(BlockBase block);
 

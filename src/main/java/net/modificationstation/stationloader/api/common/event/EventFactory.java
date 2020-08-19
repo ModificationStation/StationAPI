@@ -1,8 +1,10 @@
 package net.modificationstation.stationloader.api.common.event;
 
+import net.modificationstation.stationloader.api.common.util.HasHandler;
+
 import java.util.function.Function;
 
-public interface EventFactory {
+public interface EventFactory extends HasHandler<EventFactory> {
 
     EventFactory INSTANCE = new EventFactory() {
 
@@ -21,8 +23,6 @@ public interface EventFactory {
                 return handler.newEvent(type, eventFunc);
         }
     };
-
-    void setHandler(EventFactory handler);
 
     <T> Event<T> newEvent(Class<T> type, Function<T[], T> eventFunc);
 }
