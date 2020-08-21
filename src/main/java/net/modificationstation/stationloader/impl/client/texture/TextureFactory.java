@@ -20,45 +20,35 @@ import java.util.Map;
 import java.util.TreeMap;
 
 @Environment(EnvType.CLIENT)
-public class TextureFactory {
+public class TextureFactory implements net.modificationstation.stationloader.api.client.texture.TextureFactory {
 
-    public static int addTexture(TextureRegistry type, String pathToImage) {
+    @Override
+    public int addTexture(net.modificationstation.stationloader.api.client.texture.TextureRegistry type, String pathToImage) {
         StaticTexture texture = new StaticTexture(type, pathToImage);
-        //if (setup)
-            try {
-                setupTexture(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, texture);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        try {
+            setupTexture(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, texture);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         textures = Arrays.copyOf(textures, textures.length + 1);
         textures[textures.length - 1] = texture;
         return texture.atlasID * type.texturesPerFile() + texture.index;
     }
 
-    /*public static void setupAllTextures(TextureManager textureManager) throws IOException {
-        if (!setup) {
-            setup = true;
-            for (TextureRegistries type : spriteIDs.keySet())
-                for (int atlas : spriteIDs.get(type).keySet())
-                    createAtlasCopy(type, stationOriginalAtlas, atlas, String.format(stationCopiedAtlas, "%s", "%d"));
-            for (StaticTexture texture : textures)
-                setupTexture(textureManager, texture);
-        }
-    }*/
-
-    private static void setupTexture(TextureManager textureManager, StaticTexture texture) throws IOException {
+    private void setupTexture(TextureManager textureManager, StaticTexture texture) throws IOException {
         texture.prepareTexture();
         textureManager.add(texture);
     }
 
-    public static int createNewAtlas(TextureRegistry type, String originalAtlas, String path) {
+    @Override
+    public int createNewAtlas(net.modificationstation.stationloader.api.client.texture.TextureRegistry type, String originalAtlas, String path) {
         int ret = type.addAtlas(String.format(path, type.name().toLowerCase(), "%d"));
-        //if (setup)
-            createAtlasCopy(type, originalAtlas, ret, path);
+        createAtlasCopy(type, originalAtlas, ret, path);
         return ret;
     }
 
-    public static int createAtlasCopy(TextureRegistry type, String originalAtlas, int ID, String path) {
+    @Override
+    public int createAtlasCopy(net.modificationstation.stationloader.api.client.texture.TextureRegistry type, String originalAtlas, int ID, String path) {
         originalAtlas = String.format(originalAtlas, type.name().toLowerCase());
         path = String.format(path, type.name().toLowerCase(), ID);
         Minecraft mc = (Minecraft) FabricLoader.getInstance().getGameInstance();
@@ -67,7 +57,7 @@ public class TextureFactory {
         Map<String, Integer> textureMap = ((TextureManagerAccessor) textureManager).getField_1246();
         IntBuffer singleIntBuffer = ((TextureManagerAccessor) textureManager).getField_1249();
         BufferedImage missingTextureImage = ((TextureManagerAccessor) textureManager).getField_1257();
-        ((Buffer) singleIntBuffer).clear();
+        singleIntBuffer.clear();
         class_214.method_742(singleIntBuffer);
         int var6 = singleIntBuffer.get(0);
         InputStream var7 = texturePack.method_976(originalAtlas);
@@ -79,7 +69,8 @@ public class TextureFactory {
         return var6;
     }
 
-    public static int nextSpriteID(TextureRegistry type) {
+    @Override
+    public int nextSpriteID(net.modificationstation.stationloader.api.client.texture.TextureRegistry type) {
         if (!spriteIDs.containsKey(type)) {
             TreeMap<Integer, Integer> treeMap = new TreeMap<>();
             int atlasID = createNewAtlas(type, stationOriginalAtlas, stationCopiedAtlas);
@@ -97,7 +88,6 @@ public class TextureFactory {
 
     public static String stationOriginalAtlas = "/assets/stationloader/atlases/station.%s.png";
     public static String stationCopiedAtlas = "/assets/stationloader/atlases/station.%s.%s.png";
-    //private static boolean setup;
     private static StaticTexture[] textures = new StaticTexture[0];
-    private static final Map<TextureRegistry, TreeMap<Integer, Integer>> spriteIDs = new HashMap<>();
+    private static final Map<net.modificationstation.stationloader.api.client.texture.TextureRegistry, TreeMap<Integer, Integer>> spriteIDs = new HashMap<>();
 }

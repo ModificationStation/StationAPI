@@ -19,8 +19,11 @@
 
   "environment": "*",
   "entrypoints": {
-    "stationloader": [
-      "net.modificationstation.stationloader.impl.common.StationLoader"
+    "stationloader_client": [
+      "net.modificationstation.stationloader.impl.client.StationLoader"
+    ],
+    "stationloader_server": [
+      "net.modificationstation.stationloader.impl.server.StationLoader"
     ]
   },
   "mixins": [

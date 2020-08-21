@@ -10,9 +10,9 @@ import org.lwjgl.opengl.GL11;
 import java.util.*;
 
 @Environment(EnvType.CLIENT)
-public class TextureRegistry implements Comparable<TextureRegistry> {
+public class TextureRegistry implements net.modificationstation.stationloader.api.client.texture.TextureRegistry {
 
-    private static final NavigableSet<TextureRegistry> registries = new TreeSet<>();
+    private static final Set<TextureRegistry> registries = new TreeSet<>();
 
     public static final TextureRegistry
             TERRAIN = new TextureRegistry("TERRAIN", "/terrain.png", 16, 16),
@@ -23,7 +23,7 @@ public class TextureRegistry implements Comparable<TextureRegistry> {
     private static TextureRegistry currentRegistry;
     private static int nextRegistryID = 0;
 
-    TextureRegistry(String name, String path, int texturesInLine, int texturesInColumn) {
+    public TextureRegistry(String name, String path, int texturesInLine, int texturesInColumn) {
         this.name = name;
         this.ordinal = nextRegistryID;
         registries.add(this);
@@ -33,34 +33,42 @@ public class TextureRegistry implements Comparable<TextureRegistry> {
         nextRegistryID++;
     }
 
+    @Override
     public String name() {
         return name;
     }
 
+    @Override
     public int ordinal() {
         return ordinal;
     }
 
+    @Override
     public int texturesInLine() {
         return Short.toUnsignedInt(texturesInLine);
     }
 
+    @Override
     public int texturesInColumn() {
         return Short.toUnsignedInt(texturesInColumn);
     }
 
+    @Override
     public int texturesPerFile() {
         return texturesInLine() * texturesInColumn();
     }
 
+    @Override
     public String getAtlas(int ID) {
         return atlasIDToPath.get(ID);
     }
 
-    public Integer getAtlasID(String path) {
+    @Override
+    public int getAtlasID(String path) {
         return atlasPathToID.get(path);
     }
 
+    @Override
     public int addAtlas(String atlas) {
         atlas = String.format(atlas, nextAtlasID);
         atlasPathToID.put(atlas, nextAtlasID);
@@ -70,6 +78,7 @@ public class TextureRegistry implements Comparable<TextureRegistry> {
         return ret;
     }
 
+    @Override
     public void setTexturesInLine(int texturesInLine) {
         if (this.texturesInLine != (short) texturesInLine) {
             this.texturesInLine = (short) texturesInLine;
@@ -77,6 +86,7 @@ public class TextureRegistry implements Comparable<TextureRegistry> {
         }
     }
 
+    @Override
     public void setTexturesInColumn(int texturesInColumn) {
         if (this.texturesInColumn != (short) texturesInColumn) {
             this.texturesInColumn = (short) texturesInColumn;
@@ -84,10 +94,12 @@ public class TextureRegistry implements Comparable<TextureRegistry> {
         }
     }
 
+    @Override
     public int getAtlasTexture(TextureManager textureManager, int ID) {
         return textureManager.getTextureId(getAtlas(ID));
     }
 
+    @Override
     public void bindAtlas(TextureManager textureManager, int ID) {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, getAtlasTexture(textureManager, ID));
         currentTexture = ID;
@@ -99,20 +111,28 @@ public class TextureRegistry implements Comparable<TextureRegistry> {
         currentRegistry = null;
     }
 
+    @Override
     public int currentTexture() {
         return currentTexture;
     }
 
-    public static TextureRegistry currentRegistry() {
+    public static Object getRegistry(Object name) {
+        for (net.modificationstation.stationloader.api.client.texture.TextureRegistry registry : registries())
+            if (name.equals(registry.name()))
+                return registry;
+        return null;
+    }
+
+    public static net.modificationstation.stationloader.api.client.texture.TextureRegistry currentRegistry() {
         return currentRegistry;
     }
 
-    public static NavigableSet<TextureRegistry> registries() {
-        return Sets.unmodifiableNavigableSet(registries);
+    public static Collection<net.modificationstation.stationloader.api.client.texture.TextureRegistry> registries() {
+        return Collections.unmodifiableCollection(registries);
     }
 
     @Override
-    public int compareTo(TextureRegistry o) {
+    public int compareTo(net.modificationstation.stationloader.api.client.texture.TextureRegistry o) {
         return -Integer.compare(ordinal(), o.ordinal());
     }
 

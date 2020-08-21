@@ -5,6 +5,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.TextureBinder;
+import net.minecraft.client.texture.TextureManager;
+import net.modificationstation.stationloader.api.client.texture.TextureFactory;
 import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
@@ -15,12 +17,12 @@ import java.io.IOException;
 @Environment(EnvType.CLIENT)
 public class StaticTexture extends TextureBinder {
 
-    public StaticTexture(TextureRegistry type, String pathToImage) {
+    public StaticTexture(net.modificationstation.stationloader.api.client.texture.TextureRegistry type, String pathToImage) {
         this(type, 1, pathToImage);
     }
 
-    public StaticTexture(TextureRegistry type, int size, String pathToImage) {
-        super(TextureFactory.nextSpriteID(type));
+    public StaticTexture(net.modificationstation.stationloader.api.client.texture.TextureRegistry type, int size, String pathToImage) {
+        super(TextureFactory.INSTANCE.nextSpriteID(type));
         this.type = type;
         atlasID = index / this.type.texturesPerFile();
         index %= this.type.texturesPerFile();
@@ -77,11 +79,11 @@ public class StaticTexture extends TextureBinder {
     }
 
     @Override
-    public void bindTexture(net.minecraft.client.texture.TextureManager textureManager) {
+    public void bindTexture(TextureManager textureManager) {
         type.bindAtlas(textureManager, atlasID);
     }
 
-    private final TextureRegistry type;
+    private final net.modificationstation.stationloader.api.client.texture.TextureRegistry type;
     public final int atlasID;
     private final String pathToImage;
     private boolean prevRender3d;

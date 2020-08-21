@@ -22,7 +22,7 @@ public interface StationLoader {
             try {
                 Optional<ModContainer> modContainerOptional =  FabricLoader.getInstance().getModContainer("stationloader");
                 if (modContainerOptional.isPresent()) {
-                    Class<?> slClass = Class.forName(((LoaderModMetadata) modContainerOptional.get().getMetadata()).getEntrypoints("stationloader").get(0).getValue());
+                    Class<?> slClass = Class.forName(((LoaderModMetadata) modContainerOptional.get().getMetadata()).getEntrypoints("stationloader_" + FabricLoader.getInstance().getEnvironmentType().name().toLowerCase()).get(0).getValue());
                     if (StationLoader.class.isAssignableFrom(slClass))
                         return (StationLoader) slClass.newInstance();
                     else
@@ -37,10 +37,6 @@ public interface StationLoader {
     }
 
     void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException;
-
-    void setupAPI();
-
-    void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException;
 
     void addMod(ModMetadata data, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, URISyntaxException, IOException;
 

@@ -14,8 +14,7 @@ import java.util.HashMap;
 public interface TextureManagerAccessor {
 
     @Accessor
-    @SuppressWarnings("rawtypes")
-    HashMap getField_1246();
+    HashMap<String, Integer> getField_1246();
     @Accessor
     IntBuffer getField_1249();
     @Accessor
