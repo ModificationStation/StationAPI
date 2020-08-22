@@ -9,6 +9,7 @@ import net.fabricmc.loader.metadata.NestedJarEntry;
 import net.minecraft.client.MinecraftApplet;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
+import net.modificationstation.stationloader.impl.common.item.CustomReach;
 import net.modificationstation.stationloader.impl.common.lang.I18n;
 import net.modificationstation.stationloader.impl.common.block.BlockManager;
 import net.modificationstation.stationloader.impl.common.config.Category;
@@ -61,6 +62,11 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         BlockManager.INSTANCE.setHandler(new BlockManager());
         getLogger().info("Setting up CraftingRegistry...");
         CraftingRegistry.INSTANCE.setHandler(new CraftingRegistry());
+        getLogger().info("Setting up CustomReach...");
+        net.modificationstation.stationloader.api.common.item.CustomReach.CONSUMERS.put("setDefaultBlockReach", CustomReach::setDefaultBlockReach);
+        net.modificationstation.stationloader.api.common.item.CustomReach.CONSUMERS.put("setHandBlockReach", CustomReach::setHandBlockReach);
+        net.modificationstation.stationloader.api.common.item.CustomReach.SUPPLIERS.put("getDefaultBlockReach", CustomReach::getDefaultBlockReach);
+        net.modificationstation.stationloader.api.common.item.CustomReach.SUPPLIERS.put("getHandBlockReach", CustomReach::getHandBlockReach);
     }
 
     public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException {

@@ -13,6 +13,7 @@
   "server": [
   ],
   "client": [
+    "client.MixinRemoteClientInteractionManager",
     "client.Mixinclass_556",
     "client.MixinItemRenderer",
     "client.MixinMinecraft",
