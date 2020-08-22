@@ -1,4 +1,4 @@
-package net.modificationstation.stationloader.impl.client.lang;
+package net.modificationstation.stationloader.impl.common.lang;
 
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationloader.mixin.client.accessor.TranslationStorageAccessor;
@@ -9,13 +9,19 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-public class I18n {
+public class I18n implements net.modificationstation.stationloader.api.common.lang.I18n {
 
-    public static void addLangFolder(String langFolder) {
+    public I18n() {
+        addLangFolder("/lang");
+    }
+
+    @Override
+    public void addLangFolder(String langFolder) {
         langFolders.add(langFolder);
     }
 
-    public static void changeLang(String region) {
+    @Override
+    public void changeLang(String region) {
         Properties translations = ((TranslationStorageAccessor) TranslationStorage.getInstance()).getTranslations();
         translations.clear();
         InputStream inputStream;
@@ -37,8 +43,5 @@ public class I18n {
         }
     }
 
-    private static final Set<String> langFolders = new HashSet<>();
-    static {
-        addLangFolder("/lang");
-    }
+    private final Set<String> langFolders = new HashSet<>();
 }

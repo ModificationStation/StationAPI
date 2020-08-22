@@ -7,6 +7,7 @@
     "common.MixinBlockBase",
     "common.MixinItemBase",
     "common.MixinRecipeRegistry",
+    "common.MixinTranslationStorage",
     "common.accessor.RecipeRegistryAccessor"
   ],
   "server": [
@@ -17,7 +18,6 @@
     "client.MixinMinecraft",
     "client.MixinMinecraftApplet",
     "client.MixinTextureManager",
-    "client.MixinTranslationStorage",
     "client.accessor.TextureManagerAccessor",
     "client.accessor.TranslationStorageAccessor"
   ],

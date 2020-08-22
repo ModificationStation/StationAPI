@@ -1,7 +1,7 @@
-package net.modificationstation.stationloader.mixin.client;
+package net.modificationstation.stationloader.mixin.common;
 
 import net.minecraft.client.resource.language.TranslationStorage;
-import net.modificationstation.stationloader.impl.client.lang.I18n;
+import net.modificationstation.stationloader.api.common.lang.I18n;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,7 +16,7 @@ public class MixinTranslationStorage {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void afterLangLoaded(CallbackInfo ci) {
         instance = (TranslationStorage) (Object) this;
-        I18n.changeLang("en_US");
+        I18n.INSTANCE.changeLang("en_US");
         instance = null;
     }
 }

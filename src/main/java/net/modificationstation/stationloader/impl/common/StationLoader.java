@@ -1,6 +1,5 @@
 package net.modificationstation.stationloader.impl.common;
 
-import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -10,9 +9,7 @@ import net.fabricmc.loader.metadata.NestedJarEntry;
 import net.minecraft.client.MinecraftApplet;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
-import net.modificationstation.stationloader.impl.client.lang.I18n;
-import net.modificationstation.stationloader.impl.client.texture.TextureFactory;
-import net.modificationstation.stationloader.impl.client.texture.TextureRegistry;
+import net.modificationstation.stationloader.impl.common.lang.I18n;
 import net.modificationstation.stationloader.impl.common.block.BlockManager;
 import net.modificationstation.stationloader.impl.common.config.Category;
 import net.modificationstation.stationloader.impl.common.config.Configuration;
@@ -29,7 +26,6 @@ import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.Function;
 
 public class StationLoader implements net.modificationstation.stationloader.api.common.StationLoader {
 
@@ -59,6 +55,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.addFactory(net.modificationstation.stationloader.api.common.config.Property.class, (args) -> new Property((String) args[0]));
         getLogger().info("Setting up EventFactory...");
         EventFactory.INSTANCE.setHandler(new EventFactory());
+        getLogger().info("Setting up I18n...");
+        net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.setHandler(new I18n());
         getLogger().info("Setting up BlockManager...");
         BlockManager.INSTANCE.setHandler(new BlockManager());
         getLogger().info("Setting up CraftingRegistry...");
@@ -121,7 +119,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         String langPathName = "/assets/" + data.getId() + "/lang";
         URL langPath = getClass().getResource(langPathName);
         if (langPath != null) {
-            I18n.addLangFolder(langPathName);
+            net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder(langPathName);
             getLogger().info("Registered lang path");
         }
         PreInit.EVENT.register(mod);
