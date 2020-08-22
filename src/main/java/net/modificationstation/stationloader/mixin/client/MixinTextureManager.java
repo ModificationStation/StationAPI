@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Environment(EnvType.CLIENT)
 public class MixinTextureManager {
 
-    @Redirect(method = "bindTexture(I)V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glBindTexture(II)V"))
+    @Redirect(method = "bindTexture(I)V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glBindTexture(II)V", remap = false))
     private void onBindTexture1(int target, int texture) {
         for (TextureRegistry registry : TextureRegistry.registries())
             if (registry.getAtlasTexture((TextureManager) (Object) this, 0) == texture) {
