@@ -13,11 +13,12 @@
   "server": [
   ],
   "client": [
-    "client.MixinRemoteClientInteractionManager",
+    "client.MixinGameRenderer",
     "client.Mixinclass_556",
     "client.MixinItemRenderer",
     "client.MixinMinecraft",
     "client.MixinMinecraftApplet",
+    "client.MixinRemoteClientInteractionManager",
     "client.MixinTextureManager",
     "client.accessor.TextureManagerAccessor",
     "client.accessor.TranslationStorageAccessor"

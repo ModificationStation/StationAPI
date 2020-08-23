@@ -11,12 +11,14 @@ public interface CustomReach {
 
     float getCustomBlockReach(ItemInstance itemInstance, float defaultReach);
 
-    static void setDefaultBlockReach(Float defaultReach) {
-        CONSUMERS.get("setDefaultBlockReach").accept(defaultReach);
+    double getCustomEntityReach(ItemInstance itemInstance, double defaultReach);
+
+    static void setDefaultBlockReach(Float defaultBlockReach) {
+        CONSUMERS.get("setDefaultBlockReach").accept(defaultBlockReach);
     }
 
-    static void setHandBlockReach(Float handReach) {
-        CONSUMERS.get("setHandBlockReach").accept(handReach);
+    static void setHandBlockReach(Float handBlockReach) {
+        CONSUMERS.get("setHandBlockReach").accept(handBlockReach);
     }
 
     static Float getDefaultBlockReach() {
@@ -25,6 +27,22 @@ public interface CustomReach {
 
     static Float getHandBlockReach() {
         return (Float) SUPPLIERS.get("getHandBlockReach").get();
+    }
+
+    static void setDefaultEntityReach(Double defaultEntityReach) {
+        CONSUMERS.get("setDefaultEntityReach").accept(defaultEntityReach);
+    }
+
+    static void setHandEntityReach(Double handEntityReach) {
+        CONSUMERS.get("setHandEntityReach").accept(handEntityReach);
+    }
+
+    static Double getDefaultEntityReach() {
+        return (Double) SUPPLIERS.get("getDefaultEntityReach").get();
+    }
+
+    static Double getHandEntityReach() {
+        return (Double) SUPPLIERS.get("getHandEntityReach").get();
     }
 
     Map<String, Consumer<Object>> CONSUMERS = new HashMap<>();

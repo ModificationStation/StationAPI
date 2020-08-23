@@ -19,20 +19,19 @@ public abstract class MixinRemoteClientInteractionManager extends ClientInteract
     }
 
     @Inject(method = "method_1715()F", at = @At("RETURN"), cancellable = true)
-    private void onReach(CallbackInfoReturnable<Float> cir) {
+    private void getBlockReach(CallbackInfoReturnable<Float> cir) {
+        Float defaultBlockReach = CustomReach.getDefaultBlockReach();
+        Float handBlockReach = CustomReach.getHandBlockReach();
+        if (defaultBlockReach != null)
+            cir.setReturnValue(defaultBlockReach);
         ItemInstance itemInstance = minecraft.player.getHeldItem();
         if (itemInstance == null) {
-            if (CustomReach.getHandBlockReach() == null) {
-                if (CustomReach.getDefaultBlockReach() != null)
-                    cir.setReturnValue(CustomReach.getDefaultBlockReach());
-            } else
-                cir.setReturnValue(CustomReach.getHandBlockReach());
+            if(handBlockReach != null)
+                cir.setReturnValue(handBlockReach);
         } else {
             ItemBase itemBase = itemInstance.getType();
             if (itemBase instanceof CustomReach)
                 cir.setReturnValue(((CustomReach) itemBase).getCustomBlockReach(itemInstance, cir.getReturnValue()));
-            else if (CustomReach.getDefaultBlockReach() != null)
-                cir.setReturnValue(CustomReach.getDefaultBlockReach());
-        }
+            }
     }
 }
