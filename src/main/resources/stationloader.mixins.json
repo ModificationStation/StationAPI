@@ -13,8 +13,9 @@
   "server": [
   ],
   "client": [
-    "client.MixinGameRenderer",
     "client.Mixinclass_556",
+    "client.MixinGameOptions",
+    "client.MixinGameRenderer",
     "client.MixinItemRenderer",
     "client.MixinMinecraft",
     "client.MixinMinecraftApplet",

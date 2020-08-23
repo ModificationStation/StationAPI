@@ -1,6 +1,5 @@
 package net.modificationstation.stationloader.impl.client.texture;
 
-import com.google.common.collect.Sets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureManager;
