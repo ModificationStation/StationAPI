@@ -27,7 +27,3 @@ bin/
 # fabric
 
 run/
-
-# custom
-
-build.gradle
