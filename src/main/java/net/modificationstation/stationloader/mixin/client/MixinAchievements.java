@@ -39,6 +39,7 @@ public class MixinAchievements extends ScreenBase {
     @Shadow protected int field_2619;
     @Shadow private StatsFileWriter field_2633;
 
+    @SuppressWarnings("unchecked")
     @Inject(method = "init", at = @At(value = "TAIL"))
     public void initPrevNext(CallbackInfo ci) {
         // Prev and next buttons.

@@ -1,7 +1,7 @@
 package net.modificationstation.stationloader.impl.common.lang;
 
 import net.minecraft.client.resource.language.TranslationStorage;
-import net.modificationstation.stationloader.mixin.client.accessor.TranslationStorageAccessor;
+import net.modificationstation.stationloader.mixin.common.accessor.TranslationStorageAccessor;
 
 import java.io.IOException;
 import java.io.InputStream;

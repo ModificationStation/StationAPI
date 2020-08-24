@@ -8,9 +8,11 @@
     "common.MixinItemBase",
     "common.MixinRecipeRegistry",
     "common.MixinTranslationStorage",
-    "common.accessor.RecipeRegistryAccessor"
+    "common.accessor.RecipeRegistryAccessor",
+    "common.accessor.TranslationStorageAccessor"
   ],
   "server": [
+    "server.MixinMinecraftServer"
   ],
   "client": [
     "client.MixinAchievements",
@@ -22,8 +24,7 @@
     "client.MixinMinecraftApplet",
     "client.MixinRemoteClientInteractionManager",
     "client.MixinTextureManager",
-    "client.accessor.TextureManagerAccessor",
-    "client.accessor.TranslationStorageAccessor"
+    "client.accessor.TextureManagerAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

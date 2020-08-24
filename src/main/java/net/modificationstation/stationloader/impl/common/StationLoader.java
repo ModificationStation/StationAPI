@@ -34,7 +34,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
 
     @Override
     public void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException {
-        if (new Exception().getStackTrace()[1].getClassName().equals(MinecraftApplet.class.getName())) {
             getLogger().info("Initializing StationLoader...");
             Configurator.setLevel("mixin", Level.TRACE);
             Configurator.setLevel("Fabric|Loader", Level.INFO);
@@ -44,8 +43,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
             getLogger().info("Loading mods...");
             loadMods();
             getLogger().info("Finished StationLoader setup");
-        } else
-            throw new IllegalAccessException("Tried running StationLoader.setup() from an unknown source!");
     }
 
     public void setupAPI() {

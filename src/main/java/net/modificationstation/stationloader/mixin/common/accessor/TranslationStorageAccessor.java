@@ -1,4 +1,4 @@
-package net.modificationstation.stationloader.mixin.client.accessor;
+package net.modificationstation.stationloader.mixin.common.accessor;
 
 import net.minecraft.client.resource.language.TranslationStorage;
 import org.spongepowered.asm.mixin.Mixin;
