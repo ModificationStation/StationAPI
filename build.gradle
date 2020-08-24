@@ -35,6 +35,7 @@ repositories {
 		name = "Jitpack"
 		url "https://jitpack.io/"
 	}
+	maven { url "https://maven.glass-launcher.net/repo"}
 }
 
 minecraft {
@@ -104,6 +105,7 @@ publishing {
 
 	publications {
 		mavenJava(MavenPublication) {
+			artifactId project.archives_base_name
 			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}.jar") {
 				classifier null
 				builtBy remapJar

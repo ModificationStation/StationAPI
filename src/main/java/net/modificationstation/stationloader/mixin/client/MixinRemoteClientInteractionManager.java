@@ -18,7 +18,7 @@ public abstract class MixinRemoteClientInteractionManager extends ClientInteract
         super(minecraft);
     }
 
-    @Inject(method = "method_1715()F", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getBlockReachDistance()F", at = @At("RETURN"), cancellable = true)
     private void getBlockReach(CallbackInfoReturnable<Float> cir) {
         Float defaultBlockReach = CustomReach.getDefaultBlockReach();
         Float handBlockReach = CustomReach.getHandBlockReach();
