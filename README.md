@@ -2,9 +2,7 @@
 
 ## Setup
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
-
-NOTE: There is no Fabric-API for beta 1.7.3!
+For general project setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
 
 Extra steps for better mixin making in IntelliJ:
 
@@ -17,12 +15,26 @@ Extra steps for better mixin making in IntelliJ:
 4. Refresh the plugin repo (restarting will do the trick).
 5. Go back to plugins and install the `Minecraft Development` plugin.
 6. Restart again.
+7. Follow the instructions in [Using This to Make Mods](#using-this-to-make-mods).
 7. Profit!
 
-## Using a Mod
+## Using This to Run Mods
 
-You will want to use the [Cursed Fabric MultiMC Instance](https://github.com/calmilamsy/Cursed-Fabric-MultiMC)
+You will want to install the [Cursed Fabric MultiMC Instance](https://github.com/calmilamsy/Cursed-Fabric-MultiMC) and [download the latest release of StationLoader](https://github.com/modificationstation/StationLoader/releases/latest).  
+Put the downloaded StationLoader jar into your mods folder, do NOT add as a jar mod.
+
+## Using This to Make Mods
+
+Add this to your build.gradle in the SECOND repositories entry (~line 33):  
+`maven { url "https://maven.glass-launcher.net/repo"}`
+
+Then add this to the end of your dependencies (~line 68):  
+`modImplementation "net.modificationstation:StationLoader:1.+:dev"`
+
+Then reimport your gradle project.
+
+Proper documentation coming soon.
 
 ## License
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+This API is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
