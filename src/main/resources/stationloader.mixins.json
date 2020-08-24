@@ -13,6 +13,7 @@
   "server": [
   ],
   "client": [
+    "client.MixinAchievements",
     "client.Mixinclass_556",
     "client.MixinGameOptions",
     "client.MixinGameRenderer",
