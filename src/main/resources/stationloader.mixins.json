@@ -4,6 +4,7 @@
   "package": "net.modificationstation.stationloader.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "common.MixinAchievements",
     "common.MixinBlockBase",
     "common.MixinItemBase",
     "common.MixinRecipeRegistry",
@@ -16,9 +17,9 @@
     "server.MixinServerPlayerPacketHandler"
   ],
   "client": [
-    "client.Mixinclass_608",
     "client.MixinAchievements",
     "client.Mixinclass_556",
+    "client.Mixinclass_608",
     "client.MixinGameOptions",
     "client.MixinGameRenderer",
     "client.MixinItemRenderer",

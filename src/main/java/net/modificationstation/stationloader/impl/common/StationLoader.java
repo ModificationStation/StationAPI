@@ -6,9 +6,10 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.metadata.EntrypointMetadata;
 import net.fabricmc.loader.metadata.LoaderModMetadata;
 import net.fabricmc.loader.metadata.NestedJarEntry;
-import net.minecraft.client.MinecraftApplet;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
+import net.modificationstation.stationloader.impl.common.achievement.AchievementPage;
+import net.modificationstation.stationloader.impl.common.achievement.AchievementPageManager;
 import net.modificationstation.stationloader.impl.common.block.BlockManager;
 import net.modificationstation.stationloader.impl.common.config.Category;
 import net.modificationstation.stationloader.impl.common.config.Configuration;
@@ -51,6 +52,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.addFactory(net.modificationstation.stationloader.api.common.config.Configuration.class, (args) -> new Configuration((File) args[0]));
         net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.addFactory(net.modificationstation.stationloader.api.common.config.Category.class, (args) -> new Category((String) args[0]));
         net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.addFactory(net.modificationstation.stationloader.api.common.config.Property.class, (args) -> new Property((String) args[0]));
+        net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.addFactory(net.modificationstation.stationloader.api.common.achievement.AchievementPage.class, (args) -> new AchievementPage((String) args[0]));
         getLogger().info("Setting up EventFactory...");
         EventFactory.INSTANCE.setHandler(new EventFactory());
         getLogger().info("Setting up I18n...");
@@ -68,6 +70,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.item.CustomReach.CONSUMERS.put("setHandEntityReach", CustomReach::setHandEntityReach);
         net.modificationstation.stationloader.api.common.item.CustomReach.SUPPLIERS.put("getDefaultEntityReach", CustomReach::getDefaultEntityReach);
         net.modificationstation.stationloader.api.common.item.CustomReach.SUPPLIERS.put("getHandEntityReach", CustomReach::getHandEntityReach);
+        getLogger().info("Setting up AchievementPageManager...");
+        net.modificationstation.stationloader.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(new AchievementPageManager());
     }
 
     public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException {

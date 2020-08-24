@@ -19,7 +19,7 @@ public class MixinBlockBase {
     @Shadow @Final public static BlockBase[] BY_ID;
 
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/block/BlockBase;TRAPDOOR:Lnet/minecraft/block/BlockBase;", opcode = Opcodes.PUTSTATIC, shift = At.Shift.AFTER))
-    private static void onBlockRegister(CallbackInfo ci) {
+    private static void afterBlockRegister(CallbackInfo ci) {
         BlockRegister.EVENT.getInvoker().registerBlocks();
     }
 

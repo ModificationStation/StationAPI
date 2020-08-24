@@ -1,6 +1,5 @@
 package net.modificationstation.stationloader.impl.server;
 
-import net.minecraft.client.MinecraftApplet;
 import net.minecraft.server.MinecraftServer;
 
 public class StationLoader extends net.modificationstation.stationloader.impl.common.StationLoader {

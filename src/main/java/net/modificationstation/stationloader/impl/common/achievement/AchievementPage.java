@@ -1,7 +1,6 @@
-package net.modificationstation.stationloader.impl.client.achievement;
+package net.modificationstation.stationloader.impl.common.achievement;
 
 import net.minecraft.achievement.Achievement;
-import net.minecraft.achievement.Achievements;
 import net.minecraft.block.BlockBase;
 
 import java.util.ArrayList;
@@ -10,8 +9,8 @@ import java.util.Random;
 /**
  * Instantiates and adds an achievement page to the achievement page list.
  */
-public class AchievementPage {
-    public final String pageName;
+public class AchievementPage implements net.modificationstation.stationloader.api.common.achievement.AchievementPage {
+    private final String pageName;
     private ArrayList<Integer> achievementIds = new ArrayList<>();
 
     /**
@@ -19,7 +18,7 @@ public class AchievementPage {
      */
     public AchievementPage(String pageName) {
         this.pageName = pageName;
-        AchievementPageManager.addPage(this);
+        net.modificationstation.stationloader.api.common.achievement.AchievementPageManager.INSTANCE.addPage(this);
     }
 
     /**
@@ -27,21 +26,10 @@ public class AchievementPage {
      * @param achievements The achievements to be added. Must be properly configured before adding.
      * @see Achievement
      */
+    @Override
     public void addAchievements(Achievement... achievements) {
         for (Achievement achievement : achievements) {
             achievementIds.add(achievement.ID);
-            Achievements.ACHIEVEMENTS.add(achievement);
-        }
-    }
-
-    /**
-     * Adds all provided achievement objects to the achievement page.
-     * @param achievements The achievements to be added. Must be properly configured before adding.
-     * @see Achievement
-     */
-    void addAchievements(Object... achievements) {
-        for (Object achievement : achievements) {
-            achievementIds.add(((Achievement) achievement).ID);
         }
     }
 
@@ -55,7 +43,7 @@ public class AchievementPage {
     }*/
 
 
-
+    @Override
     public int getBackgroundTexture(Random random, int i, int j)
     {
         int k = BlockBase.SAND.texture;
@@ -85,6 +73,11 @@ public class AchievementPage {
             k = BlockBase.DIRT.texture;
         }
         return k;
+    }
+
+    @Override
+    public String getName() {
+        return pageName;
     }
 
     public ArrayList<Integer> getAchievementIds() {

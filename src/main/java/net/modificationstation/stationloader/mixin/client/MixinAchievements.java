@@ -10,7 +10,7 @@ import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.util.io.StatsFileWriter;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationloader.api.client.texture.TextureRegistry;
-import net.modificationstation.stationloader.impl.client.achievement.AchievementPageManager;
+import net.modificationstation.stationloader.api.common.achievement.AchievementPageManager;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,7 +43,7 @@ public class MixinAchievements extends ScreenBase {
     @Inject(method = "init", at = @At(value = "TAIL"))
     public void initPrevNext(CallbackInfo ci) {
         // Prev and next buttons.
-        if (AchievementPageManager.getPageCount() > 1) {
+        if (AchievementPageManager.INSTANCE.getPageCount() > 1) {
             this.buttons.add(new Button(11, this.width / 2 - 113, this.height / 2 + 74, 20, 20, "<"));
             this.buttons.add(new Button(12, this.width / 2 - 93, this.height / 2 + 74, 20, 20, ">"));
         }
@@ -52,9 +52,9 @@ public class MixinAchievements extends ScreenBase {
     @Redirect(method = "buttonClicked", at = @At(target = "Lnet/minecraft/client/gui/screen/ScreenBase;buttonClicked(Lnet/minecraft/client/gui/widgets/Button;)V", value = "INVOKE"))
     public void buttonClickedNextPrev(ScreenBase screenBase, Button button) {
         if(button.id == 11) {
-            AchievementPageManager.prevPage();
+            AchievementPageManager.INSTANCE.prevPage();
         } else if(button.id == 12) {
-            AchievementPageManager.nextPage();
+            AchievementPageManager.INSTANCE.nextPage();
         }
         else {
             super.buttonClicked(button);
@@ -63,12 +63,12 @@ public class MixinAchievements extends ScreenBase {
 
     @Inject(method = "method_1999", at = @At(value = "TAIL"))
     public void doDrawTitle(CallbackInfo ci) {
-        if (AchievementPageManager.getPageCount() > 1) {
-            if (AchievementPageManager.getCurrentPageName().equals("Minecraft")) {
+        if (AchievementPageManager.INSTANCE.getPageCount() > 1) {
+            if (AchievementPageManager.INSTANCE.getCurrentPageName().equals("Minecraft")) {
                 this.textManager.drawText("Minecraft", this.width / 2 - 69, this.height / 2 + 80, 0);
             }
             else {
-                this.textManager.drawText(TranslationStorage.getInstance().translate("achievement.page." + AchievementPageManager.getCurrentPageName()), this.width / 2 - 69, this.height / 2 + 80, 0);
+                this.textManager.drawText(TranslationStorage.getInstance().translate("achievement.page." + AchievementPageManager.INSTANCE.getCurrentPageName()), this.width / 2 - 69, this.height / 2 + 80, 0);
             }
         }
     }
@@ -131,7 +131,7 @@ public class MixinAchievements extends ScreenBase {
             for(adjustedCol = 0; adjustedCol * 16 - j4 < 224; ++adjustedCol) {
                 random.setSeed(1234 + k3 + adjustedCol);
                 random.nextInt();
-                adjustedRow = AchievementPageManager.getCurrentPage().getBackgroundTexture(random, k3+adjustedCol, i4+ny1);
+                adjustedRow = AchievementPageManager.INSTANCE.getCurrentPage().getBackgroundTexture(random, k3+adjustedCol, i4+ny1);
                 if(adjustedRow != -1) {
                     this.blit(i3 + adjustedCol * 16 - j4, j3 + ny1 * 16 - i5, adjustedRow % 16 << 4, adjustedRow >> 4 << 4, 16, 16);
                 }
@@ -293,7 +293,7 @@ public class MixinAchievements extends ScreenBase {
         if(this.checkHidden(achievement)) {
             return false;
         }
-        else if(!AchievementPageManager.getCurrentPage().getAchievementIds().contains(achievement.ID)) {
+        else if(!AchievementPageManager.INSTANCE.getCurrentPage().getAchievementIds().contains(achievement.ID)) {
             return false;
         }
         else if (achievement.parent != null && !checkHidden(achievement.parent)) {
