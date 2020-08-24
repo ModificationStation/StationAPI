@@ -1,8 +1,8 @@
 package net.modificationstation.stationloader.mixin.client;
 
+import net.minecraft.class_608;
 import net.minecraft.client.ClientInteractionManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.RemoteClientInteractionManager;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationloader.api.common.item.CustomReach;
@@ -11,10 +11,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(RemoteClientInteractionManager.class)
-public class MixinRemoteClientInteractionManager extends ClientInteractionManager {
+@Mixin(class_608.class)
+public class Mixinclass_608 extends ClientInteractionManager {
 
-    public MixinRemoteClientInteractionManager(Minecraft minecraft) {
+    public Mixinclass_608(Minecraft minecraft) {
         super(minecraft);
     }
 
@@ -32,6 +32,6 @@ public class MixinRemoteClientInteractionManager extends ClientInteractionManage
             ItemBase itemBase = itemInstance.getType();
             if (itemBase instanceof CustomReach)
                 cir.setReturnValue(((CustomReach) itemBase).getCustomBlockReach(itemInstance, cir.getReturnValue()));
-            }
+        }
     }
 }

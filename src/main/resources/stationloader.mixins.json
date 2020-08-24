@@ -12,9 +12,11 @@
     "common.accessor.TranslationStorageAccessor"
   ],
   "server": [
-    "server.MixinMinecraftServer"
+    "server.MixinMinecraftServer",
+    "server.MixinServerPlayerPacketHandler"
   ],
   "client": [
+    "client.Mixinclass_608",
     "client.MixinAchievements",
     "client.Mixinclass_556",
     "client.MixinGameOptions",
