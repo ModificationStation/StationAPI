@@ -49,7 +49,7 @@ public class MixinAchievements extends ScreenBase {
         }
     }
 
-    @Redirect(method = "buttonClicked", at = @At(target = "Lnet/minecraft/client/gui/screen/ScreenBase;keyPressed(CI)V", value = "INVOKE"))
+    @Redirect(method = "keyPressed", at = @At(target = "Lnet/minecraft/client/gui/screen/ScreenBase;keyPressed(CI)V", value = "INVOKE"))
     public void buttonClickedNextPrev(ScreenBase screenBase, char character, int key) {
         if(key == 11) {
             AchievementPageManager.prevPage();
