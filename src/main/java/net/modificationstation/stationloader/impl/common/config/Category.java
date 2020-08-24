@@ -32,6 +32,33 @@ public class Category implements net.modificationstation.stationloader.api.commo
     }
 
     @Override
+    public net.modificationstation.stationloader.api.common.config.Property getProperty(String name, String defaultValue) {
+        Property property = getProperty(name);
+        if (property.getStringValue() == null) {
+            property.setValue(defaultValue);
+        }
+        return property;
+    }
+
+    @Override
+    public net.modificationstation.stationloader.api.common.config.Property getProperty(String name, int defaultValue) {
+        Property property = getProperty(name);
+        if (property.getStringValue() == null) {
+            property.setValue(defaultValue);
+        }
+        return property;
+    }
+
+    @Override
+    public net.modificationstation.stationloader.api.common.config.Property getProperty(String name, boolean defaultValue) {
+        Property property = getProperty(name);
+        if (property.getStringValue() == null) {
+            property.setValue(defaultValue);
+        }
+        return property;
+    }
+
+    @Override
     public Collection<Property> getProperties() {
         return Collections.unmodifiableCollection(properties);
     }
