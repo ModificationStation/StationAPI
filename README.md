@@ -1,10 +1,13 @@
-# StationLoader API for Minecraft beta 1.7.3 BIN Fabric
+# StationLoader API for Minecraft Beta 1.7.3 BIN Fabric
+
+StationLoader is a new mod loader for Legacy Minecraft that aims to make mods compatible on both client and server without needing
+seperate verisons for each, along with tools so mod developers no longer need to edit Minecraft's base classes.
 
 ## Setup
 
-For general project setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+For general project setup instructions please see the [Fabric Wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
 
-Extra steps for better mixin making in IntelliJ:
+Extra steps for better Mixin making in IntelliJ IDEA:
 
 1. Go to `File > Settings...`
 2. Go to `Plugins > The gear in the top middle > Manage Plugin Repositories...`
@@ -31,10 +34,10 @@ Add this to your build.gradle in the SECOND repositories entry (~line 33):
 Then add this to the end of your dependencies (~line 68):  
 `modImplementation "net.modificationstation:StationLoader:1.+:dev"`
 
-Then reimport your gradle project.
+Then reimport your Gradle project.
 
-Proper documentation coming soon.
+Proper documentation coming soon...
 
 ## License
 
-This API is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+StationLoader is available under the [CC0 1.0 Universal License](LICENSE). Feel free to learn from it and incorporate it in your own projects.
