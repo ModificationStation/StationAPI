@@ -27,7 +27,12 @@
     "client.MixinMinecraftApplet",
     "client.MixinRemoteClientInteractionManager",
     "client.MixinTextureManager",
-    "client.accessor.TextureManagerAccessor"
+    "client.accessor.TextureManagerAccessor",
+    "client.debugfixes.DestroyErrors",
+    "client.debugfixes.MixinFixDepthBuffer",
+    "client.debugfixes.MixinFixThreadCheckHasPaid",
+    "common.MixinEntityPlayerSP",
+    "common.accessor.EntityPlayerAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
