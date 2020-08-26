@@ -63,7 +63,7 @@ public class TextureRegistry implements net.modificationstation.stationloader.ap
     }
 
     @Override
-    public int getAtlasID(String path) {
+    public Integer getAtlasID(String path) {
         return atlasPathToID.get(path);
     }
 

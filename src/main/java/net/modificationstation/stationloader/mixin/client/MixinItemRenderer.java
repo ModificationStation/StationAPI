@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import static net.modificationstation.stationloader.impl.client.texture.TextureRegistry.GUI_ITEMS;
+import static net.modificationstation.stationloader.impl.client.texture.TextureRegistry.TERRAIN;
 
 @Mixin(ItemRenderer.class)
 @Environment(EnvType.CLIENT)

@@ -22,7 +22,7 @@ public interface TextureRegistry extends Comparable<TextureRegistry> {
 
     String getAtlas(int ID);
 
-    int getAtlasID(String path);
+    Integer getAtlasID(String path);
 
     int addAtlas(String atlas);
 
