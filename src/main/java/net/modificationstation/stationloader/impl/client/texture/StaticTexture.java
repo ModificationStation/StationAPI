@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationloader.api.client.texture.TextureFactory;
+import net.modificationstation.stationloader.api.client.texture.TextureRegistry;
 import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
@@ -15,41 +16,24 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 @Environment(EnvType.CLIENT)
-public class StaticTexture extends TextureBinder {
+public class StaticTexture extends Texture {
 
-    public StaticTexture(net.modificationstation.stationloader.api.client.texture.TextureRegistry type, String pathToImage) {
-        this(type, 1, pathToImage);
+    public StaticTexture(TextureRegistry textureRegistry, String pathToImage) {
+        super(textureRegistry, pathToImage);
     }
 
-    public StaticTexture(net.modificationstation.stationloader.api.client.texture.TextureRegistry type, int size, String pathToImage) {
-        super(TextureFactory.INSTANCE.nextSpriteID(type));
-        this.type = type;
-        atlasID = index / this.type.texturesPerFile();
-        index %= this.type.texturesPerFile();
-        this.pathToImage = pathToImage;
-        pixels = null;
-        textureSize = size;
-        renderMode = this.type.ordinal();
-    }
-
-    public void prepareTexture() throws IOException {
-        Minecraft mc = (Minecraft) FabricLoader.getInstance().getGameInstance();
-        this.bindTexture(mc.textureManager);
-        int l = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, 4096 /*GL_TEXTURE_WIDTH*/) / 16;
-        int i1 = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D /*GL_TEXTURE_2D*/, 0, 4097 /*GL_TEXTURE_HEIGHT*/) / 16;
-        BufferedImage bufferedimage = ImageIO.read(mc.texturePackManager.texturePack.method_976(pathToImage));
-        int j1 = bufferedimage.getWidth();
-        int k1 = bufferedimage.getHeight();
-        pixels = new int[l * i1];
-        grid = new byte[l * i1 * 4];
-        if(j1 != k1 || j1 != l) {
-            BufferedImage bufferedimage1 = new BufferedImage(l, i1, 6);
-            Graphics2D graphics2d = bufferedimage1.createGraphics();
-            graphics2d.drawImage(bufferedimage, 0, 0, l, i1, 0, 0, j1, k1, null);
-            bufferedimage1.getRGB(0, 0, l, i1, pixels, 0, l);
+    @Override
+    protected void setImage(BufferedImage image, int targetWidth, int targetHeight, int width, int height) {
+        pixels = new int[targetWidth * targetHeight];
+        grid = new byte[targetWidth * targetHeight * 4];
+        if(width != height || width != targetWidth) {
+            BufferedImage image1 = new BufferedImage(targetWidth, targetHeight, 6);
+            Graphics2D graphics2d = image1.createGraphics();
+            graphics2d.drawImage(image, 0, 0, targetWidth, targetHeight, 0, 0, width, height, null);
+            image1.getRGB(0, 0, targetWidth, targetHeight, pixels, 0, targetWidth);
             graphics2d.dispose();
         } else
-            bufferedimage.getRGB(0, 0, j1, k1, pixels, 0, j1);
+            image.getRGB(0, 0, width, height, pixels, 0, width);
         update();
     }
 
@@ -78,14 +62,6 @@ public class StaticTexture extends TextureBinder {
             update();
     }
 
-    @Override
-    public void bindTexture(TextureManager textureManager) {
-        type.bindAtlas(textureManager, atlasID);
-    }
-
-    private final net.modificationstation.stationloader.api.client.texture.TextureRegistry type;
-    public final int atlasID;
-    private final String pathToImage;
     private boolean prevRender3d;
     private int[] pixels;
 }

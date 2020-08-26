@@ -22,6 +22,14 @@ public interface TextureFactory extends HasHandler<TextureFactory> {
         }
 
         @Override
+        public int addAnimatedTexture(TextureRegistry type, String pathToImage, int animationRate) {
+            if (handler == null)
+                throw new RuntimeException("Accessed StationLoader too early!");
+            else
+                return handler.addAnimatedTexture(type, pathToImage, animationRate);
+        }
+
+        @Override
         public int createNewAtlas(TextureRegistry type, String originalAtlas, String path) {
             if (handler == null)
                 throw new RuntimeException("Accessed StationLoader too early!");
@@ -47,6 +55,8 @@ public interface TextureFactory extends HasHandler<TextureFactory> {
     };
 
     int addTexture(TextureRegistry type, String pathToImage);
+
+    int addAnimatedTexture(TextureRegistry type, String pathToImage, int animationRate);
 
     int createNewAtlas(TextureRegistry type, String originalAtlas, String path);
 

@@ -7,6 +7,7 @@ import net.minecraft.class_214;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
+import net.modificationstation.stationloader.api.client.texture.TextureRegistry;
 import net.modificationstation.stationloader.mixin.client.accessor.TextureManagerAccessor;
 
 import java.awt.image.BufferedImage;
@@ -22,8 +23,8 @@ import java.util.TreeMap;
 public class TextureFactory implements net.modificationstation.stationloader.api.client.texture.TextureFactory {
 
     @Override
-    public int addTexture(net.modificationstation.stationloader.api.client.texture.TextureRegistry type, String pathToImage) {
-        StaticTexture texture = new StaticTexture(type, pathToImage);
+    public int addTexture(TextureRegistry type, String pathToImage) {
+        Texture texture = new StaticTexture(type, pathToImage);
         try {
             setupTexture(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, texture);
         } catch (IOException e) {
@@ -34,20 +35,33 @@ public class TextureFactory implements net.modificationstation.stationloader.api
         return texture.atlasID * type.texturesPerFile() + texture.index;
     }
 
-    private void setupTexture(TextureManager textureManager, StaticTexture texture) throws IOException {
+    @Override
+    public int addAnimatedTexture(TextureRegistry type, String pathToImage, int animationRate) {
+        Texture texture = new AnimatedTexture(type, pathToImage, animationRate);
+        try {
+            setupTexture(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, texture);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        textures = Arrays.copyOf(textures, textures.length + 1);
+        textures[textures.length - 1] = texture;
+        return texture.atlasID * type.texturesPerFile() + texture.index;
+    }
+
+    private void setupTexture(TextureManager textureManager, Texture texture) throws IOException {
         texture.prepareTexture();
         textureManager.add(texture);
     }
 
     @Override
-    public int createNewAtlas(net.modificationstation.stationloader.api.client.texture.TextureRegistry type, String originalAtlas, String path) {
+    public int createNewAtlas(TextureRegistry type, String originalAtlas, String path) {
         int ret = type.addAtlas(String.format(path, type.name().toLowerCase(), "%d"));
         createAtlasCopy(type, originalAtlas, ret, path);
         return ret;
     }
 
     @Override
-    public int createAtlasCopy(net.modificationstation.stationloader.api.client.texture.TextureRegistry type, String originalAtlas, int ID, String path) {
+    public int createAtlasCopy(TextureRegistry type, String originalAtlas, int ID, String path) {
         originalAtlas = String.format(originalAtlas, type.name().toLowerCase());
         path = String.format(path, type.name().toLowerCase(), ID);
         Minecraft mc = (Minecraft) FabricLoader.getInstance().getGameInstance();
@@ -69,7 +83,7 @@ public class TextureFactory implements net.modificationstation.stationloader.api
     }
 
     @Override
-    public int nextSpriteID(net.modificationstation.stationloader.api.client.texture.TextureRegistry type) {
+    public int nextSpriteID(TextureRegistry type) {
         if (!spriteIDs.containsKey(type)) {
             TreeMap<Integer, Integer> treeMap = new TreeMap<>();
             int atlasID = createNewAtlas(type, stationOriginalAtlas, stationCopiedAtlas);
@@ -87,6 +101,6 @@ public class TextureFactory implements net.modificationstation.stationloader.api
 
     public static String stationOriginalAtlas = "/assets/stationloader/atlases/station.%s.png";
     public static String stationCopiedAtlas = "/assets/stationloader/atlases/station.%s.%s.png";
-    private static StaticTexture[] textures = new StaticTexture[0];
-    private static final Map<net.modificationstation.stationloader.api.client.texture.TextureRegistry, TreeMap<Integer, Integer>> spriteIDs = new HashMap<>();
+    private static Texture[] textures = new Texture[0];
+    private static final Map<TextureRegistry, TreeMap<Integer, Integer>> spriteIDs = new HashMap<>();
 }
