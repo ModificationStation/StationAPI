@@ -7,8 +7,10 @@
     "common.MixinAchievements",
     "common.MixinBlockBase",
     "common.MixinItemBase",
+    "common.MixinPlayerBase",
     "common.MixinRecipeRegistry",
     "common.MixinTranslationStorage",
+    "common.accessor.PlayerBaseAccessor",
     "common.accessor.RecipeRegistryAccessor",
     "common.accessor.TranslationStorageAccessor"
   ],
@@ -35,9 +37,7 @@
     "client.accessor.TextureManagerAccessor",
     "client.debugfixes.DestroyErrors",
     "client.debugfixes.MixinFixDepthBuffer",
-    "client.debugfixes.MixinFixThreadCheckHasPaid",
-    "common.MixinEntityPlayerSP",
-    "common.accessor.EntityPlayerAccessor"
+    "client.debugfixes.MixinFixThreadCheckHasPaid"
   ],
   "injectors": {
     "defaultRequire": 1

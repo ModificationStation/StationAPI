@@ -4,7 +4,7 @@ import net.modificationstation.stationloader.api.common.entity.player.PlayerHand
 
 import java.util.List;
 
-public interface ClientPlayerAccessor {
+public interface HasPlayerHandlers {
 
     List<PlayerHandler> getPlayerBases();
 }

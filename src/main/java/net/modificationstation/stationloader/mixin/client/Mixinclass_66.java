@@ -16,7 +16,7 @@ import static net.modificationstation.stationloader.impl.client.texture.TextureR
 @Mixin(class_66.class)
 public class Mixinclass_66 {
 
-    @Inject(method = "method_296()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/Tessellator;draw()V", shift = At.Shift.AFTER))
+    @Inject(method = "method_296()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/Tessellator;start()V", shift = At.Shift.BEFORE))
     private void tempFix(CallbackInfo ci) {
         TERRAIN.bindAtlas(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, 0);
     }
