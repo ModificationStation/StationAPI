@@ -78,7 +78,9 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         for (ModContainer mod : FabricLoader.getInstance().getAllMods())
             if (mod.getMetadata() instanceof LoaderModMetadata) {
                 LoaderModMetadata loaderData = ((LoaderModMetadata) mod.getMetadata());
-                List<EntrypointMetadata> entries = loaderData.getEntrypoints("stationmod");
+                List<EntrypointMetadata> entries = loaderData.getEntrypoints("stationmod_" + FabricLoader.getInstance().getEnvironmentType().name().toLowerCase());
+                if (entries.isEmpty())
+                    entries = loaderData.getEntrypoints("stationmod");
                 if (!entries.isEmpty()) {
                     Collection<NestedJarEntry> jars = loaderData.getJars();
                     String[] files = new String[jars.size()];
