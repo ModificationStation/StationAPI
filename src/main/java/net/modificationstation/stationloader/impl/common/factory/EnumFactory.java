@@ -4,6 +4,7 @@ import sun.reflect.ConstructorAccessor;
 import sun.reflect.FieldAccessor;
 import sun.reflect.ReflectionFactory;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -96,7 +97,9 @@ public class EnumFactory implements net.modificationstation.stationloader.api.co
                 values.add(enumType.cast(previousValue));
             T newValue = makeEnum(enumType, enumName, values.size(), paramTypes, paramValues);
             values.add(newValue);
-            setFailsafeFieldValue(valuesField, null, values.toArray());
+            @SuppressWarnings("unchecked")
+            T[] valuesArray = values.toArray((T[]) Array.newInstance(enumType, 0));
+            setFailsafeFieldValue(valuesField, null, valuesArray);
             cleanEnumCache(enumType);
             return enumType.cast(newValue);
         } catch (Exception e) {
