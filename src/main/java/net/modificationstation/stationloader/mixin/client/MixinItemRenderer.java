@@ -18,7 +18,11 @@ import static net.modificationstation.stationloader.impl.client.texture.TextureR
 @Environment(EnvType.CLIENT)
 public class MixinItemRenderer {
 
-    @Redirect(method = {"render(Lnet/minecraft/entity/Item;DDDFF)V", "method_1487(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;Lnet/minecraft/item/ItemInstance;II)V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemInstance;method_725()I"))
+    @SuppressWarnings("InvalidMemberReference")
+    @Redirect(method = {
+            "render(Lnet/minecraft/entity/Item;DDDFF)V",
+            "method_1487(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;Lnet/minecraft/item/ItemInstance;II)V"
+    }, at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemInstance;method_725()I"))
     private int itemTexture(ItemInstance itemInstance) {
         int texID = itemInstance.method_725();
         atlasToBind = texID / GUI_ITEMS.texturesPerFile();

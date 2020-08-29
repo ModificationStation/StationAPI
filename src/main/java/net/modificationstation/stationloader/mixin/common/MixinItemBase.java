@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemBase.class)
 public class MixinItemBase {
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/Stats;onItemsRegistered()V", shift = At.Shift.BEFORE))
     private static void afterItemRegister(CallbackInfo ci) {
         ItemRegister.EVENT.getInvoker().registerItems();

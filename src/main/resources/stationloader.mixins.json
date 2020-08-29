@@ -35,7 +35,7 @@
     "client.accessor.ParticleBaseAccessor",
     "client.accessor.TessellatorAccessor",
     "client.accessor.TextureManagerAccessor",
-    "client.debugfixes.DestroyErrors",
+    "client.debugfixes.DestroyStupidResource404Errors",
     "client.debugfixes.MixinFixDepthBuffer",
     "client.debugfixes.MixinFixThreadCheckHasPaid"
   ],

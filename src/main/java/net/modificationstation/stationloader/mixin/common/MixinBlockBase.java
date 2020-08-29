@@ -18,11 +18,13 @@ public class MixinBlockBase {
 
     @Shadow @Final public static BlockBase[] BY_ID;
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/block/BlockBase;TRAPDOOR:Lnet/minecraft/block/BlockBase;", opcode = Opcodes.PUTSTATIC, shift = At.Shift.AFTER))
     private static void afterBlockRegister(CallbackInfo ci) {
         BlockRegister.EVENT.getInvoker().registerBlocks();
     }
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(I)Lnet/minecraft/item/PlaceableTileEntity;"))
     private static PlaceableTileEntity getBlockItem(int blockID) {
         return BlockManager.INSTANCE.getBlockItem(BY_ID[blockID + BY_ID.length]);
