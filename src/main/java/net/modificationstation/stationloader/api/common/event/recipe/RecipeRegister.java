@@ -17,7 +17,8 @@ public interface RecipeRegister {
 
     enum Type {
 
-        CRAFTING
+        CRAFTING,
+        SMELTING
     }
 
     Event<RecipeRegister> EVENT = EventFactory.INSTANCE.newEvent(RecipeRegister.class, (listeners) ->
