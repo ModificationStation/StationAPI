@@ -22,6 +22,7 @@
     "server.MixinServerPlayerPacketHandler"
   ],
   "client": [
+    "client.MixinWorldRenderer",
     "client.MixinAchievements",
     "client.Mixinclass_556",
     "client.Mixinclass_608",
