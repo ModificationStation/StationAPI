@@ -2,18 +2,10 @@ package net.modificationstation.stationloader.impl.client.texture;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.TextureBinder;
-import net.minecraft.client.texture.TextureManager;
-import net.modificationstation.stationloader.api.client.texture.TextureFactory;
 import net.modificationstation.stationloader.api.client.texture.TextureRegistry;
-import org.lwjgl.opengl.GL11;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 @Environment(EnvType.CLIENT)
 public class StaticTexture extends Texture {

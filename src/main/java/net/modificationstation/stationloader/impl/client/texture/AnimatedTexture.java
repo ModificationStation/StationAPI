@@ -1,17 +1,11 @@
 package net.modificationstation.stationloader.impl.client.texture;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.TextureBinder;
 import net.modificationstation.stationloader.api.client.texture.TextureRegistry;
-import org.lwjgl.opengl.GL11;
 
-import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 @Environment(EnvType.CLIENT)
 public class AnimatedTexture extends Texture {

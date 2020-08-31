@@ -1,7 +1,5 @@
 package net.modificationstation.stationloader.mixin.client;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.player.AbstractClientPlayer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.modificationstation.stationloader.impl.common.entity.player.PlayerAPI;

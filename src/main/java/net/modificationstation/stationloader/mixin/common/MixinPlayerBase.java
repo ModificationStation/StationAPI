@@ -4,12 +4,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.util.Smoother;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
@@ -17,17 +14,16 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.SleepStatus;
 import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationloader.api.common.entity.player.HasPlayerHandlers;
+import net.modificationstation.stationloader.api.common.entity.player.PlayerBaseSuper;
 import net.modificationstation.stationloader.api.common.entity.player.PlayerHandler;
 import net.modificationstation.stationloader.api.common.event.entity.player.PlayerHandlerRegister;
 import net.modificationstation.stationloader.impl.common.entity.player.PlayerAPI;
-import net.modificationstation.stationloader.api.common.entity.player.HasPlayerHandlers;
 import net.modificationstation.stationloader.mixin.common.accessor.PlayerBaseAccessor;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -36,7 +32,7 @@ import java.util.List;
 import java.util.Random;
 
 @Mixin(PlayerBase.class)
-public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPlayerHandlers {
+public abstract class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPlayerHandlers, PlayerBaseSuper {
 
     @Shadow protected boolean sleeping;
     private List<PlayerHandler> playerBases;
@@ -145,6 +141,7 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
         PlayerAPI.afterUpdate((PlayerBase) (Object) this);
     }
 
+    @Override
     public void superMoveFlying(float f, float f1, float f2) {
         super.movementInputToVelocity(f, f1, f2);
     }
@@ -166,34 +163,42 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
             cir.setReturnValue(enumstatus);
     }
 
+    @Override
     public void doFall(float fallDist) {
-        super.handleFallDamage(fallDist);
+        this.handleFallDamage(fallDist);
     }
 
+    @Override
     public float getFallDistance() {
         return fallDistance;
     }
 
+    @Override
     public void setFallDistance(float f) {
         fallDistance = f;
     }
 
+    @Override
     public boolean getSleeping() {
         return sleeping;
     }
 
+    @Override
     public boolean getJumping() {
         return jumping;
     }
 
+    @Override
     public void doJump() {
         jump();
     }
 
+    @Override
     public Random getRandom() {
         return rand;
     }
 
+    @Override
     public void setYSize(float f) {
         standingEyeHeight = f;
     }
@@ -204,18 +209,17 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
             ci.cancel();
     }
 
-
     @Override
     public boolean method_932() {
         return PlayerAPI.isOnLadder((PlayerBase) (Object) this, super.method_932());
     }
 
+    @Override
     public void setActionState(float newMoveStrafing, float newMoveForward, boolean newIsJumping) {
         setMoveStrafing(newMoveStrafing);
         setMoveForward(newMoveForward);
         setIsJumping(newIsJumping);
     }
-
 
     @Override
     public boolean isInFluid(Material material) {
@@ -234,10 +238,12 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
             ci.cancel();
     }
 
+    @Override
     public boolean superIsInsideOfMaterial(Material material) {
         return super.isInFluid(material);
     }
 
+    @Override
     public float superGetEntityBrightness(float f) {
         return super.getBrightnessAtEyes(f);
     }
@@ -251,6 +257,7 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
         return super.getHurtSound();
     }
 
+    @Override
     public String superGetHurtSound() {
         return super.getHurtSound();
     }
@@ -275,6 +282,7 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
             ci.cancel();
     }
 
+    @Override
     public void superFall(float f) {
         super.handleFallDamage(f);
     }
@@ -285,6 +293,7 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
             ci.cancel();
     }
 
+    @Override
     public void superJump() {
         super.jump();
     }
@@ -295,6 +304,7 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
             ci.cancel();
     }
 
+    @Override
     public void superDamageEntity(int i) {
         super.applyDamage(i);
     }
@@ -307,6 +317,7 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
         return super.method_1352(entity);
     }
 
+    @Override
     public double superGetDistanceSqToEntity(EntityBase entity) {
         return super.method_1352(entity);
     }
@@ -330,6 +341,7 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
         return super.method_1393();
     }
 
+    @Override
     public boolean superHandleWaterMovement() {
         return super.method_1393();
     }
@@ -342,6 +354,7 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
         return super.method_1335();
     }
 
+    @Override
     public boolean superHandleLavaMovement() {
         return super.method_1335();
     }
@@ -357,18 +370,22 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
         super.dropItem(itemstack, flag);
     }*/
 
+    @Override
     public void superUpdatePlayerActionState() {
         super.tickHandSwing();
     }
 
+    @Override
     public void setMoveForward(float value) {
         this.field_1060 = value;
     }
 
+    @Override
     public void setMoveStrafing(float value) {
         this.field_1029 = value;
     }
 
+    @Override
     public void setIsJumping(boolean value) {
         this.jumping = value;
     }

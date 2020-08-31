@@ -4,7 +4,6 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.block.Sign;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityBase;
-import net.minecraft.entity.player.ClientPlayer;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.tileentity.TileEntityDispenser;
