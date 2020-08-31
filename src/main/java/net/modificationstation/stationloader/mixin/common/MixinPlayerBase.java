@@ -60,14 +60,6 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
             ci.cancel();
     }
 
-    // move to client
-    /*@Inject(method = "method_136", at = @At("HEAD"), cancellable = true)
-    private void onHandleKeyPress(int i, boolean b, CallbackInfo ci) {
-        if (PlayerAPI.handleKeyPress((PlayerBase) (Object) this, i, b)) {
-            ci.cancel();
-        }
-    }*/
-
     @Inject(method = "writeCustomDataToTag", at = @At("HEAD"), cancellable = true)
     private void onWriteEntityToNBT(CompoundTag nbtTagCompound, CallbackInfo ci) {
         if (PlayerAPI.writeEntityToNBT((PlayerBase) (Object) this, nbtTagCompound))
@@ -110,32 +102,12 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
             ci.cancel();
     }
 
-    // move to client
-    /*@Inject(method = "method_491", at = @At("HEAD"), cancellable = true)
-    private void onOnItemPickup(EntityBase entity, int i, CallbackInfo ci) {
-        if (PlayerAPI.onItemPickup((EntityPlayerSP) (Object) this, entity, i)) {
-            ci.cancel();
-        }
-    }*/
-
     @Override
     public void setPosition(double v, double v1, double v2) {
         if (PlayerAPI.moveEntity((PlayerBase) (Object) this, v, v1, v2))
             return;
         super.setPosition(v, v1, v2);
     }
-
-    // move to client
-    /*@Redirect(method = "method_141", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;method_687()I"))
-    private int redirectGetPlayerArmorValue(PlayerInventory inventoryPlayer) {
-        return PlayerAPI.getPlayerArmorValue((PlayerBase) (Object) this, inventoryPlayer.method_687());
-    }*/
-
-    // move to client
-    /*@Inject(method = "method_1373", at = @At("RETURN"), cancellable = true)
-    private void isSneaking(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(PlayerAPI.isSneaking((PlayerBase) (Object) this, cir.getReturnValue()));
-    }*/
 
     @Inject(method = "getStrengh(Lnet/minecraft/block/BlockBase;)F", at = @At("RETURN"), cancellable = true)
     private void getStrength(BlockBase arg, CallbackInfoReturnable<Float> cir) {
@@ -155,14 +127,6 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
             ci.cancel();
     }
 
-    // move to client
-    /*@Inject(method = "method_1372", at = @At("HEAD"), cancellable = true)
-    private void injectPushOutOfBlocks(double v, double v1, double v2, CallbackInfoReturnable<Boolean> cir) {
-        if (PlayerAPI.pushOutOfBlocks((PlayerBase) (Object) this, v, v1, v2)) {
-            cir.setReturnValue(false);
-        }
-    }*/
-
     @Inject(method = "updateDespawnCounter", at = @At("HEAD"), cancellable = true)
     private void onLivingUpdate(CallbackInfo ci) {
         if (PlayerAPI.onLivingUpdate((PlayerBase) (Object) this))
@@ -181,10 +145,9 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
         PlayerAPI.afterUpdate((PlayerBase) (Object) this);
     }
 
-    // move to client
-    /*public void superMoveFlying(float f, float f1, float f2) {
+    public void superMoveFlying(float f, float f1, float f2) {
         super.movementInputToVelocity(f, f1, f2);
-    }*/
+    }
 
     @Override
     public void move(double v, double v1, double v2) {
@@ -203,10 +166,9 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
             cir.setReturnValue(enumstatus);
     }
 
-    // ???
-    /*public void doFall(float fallDist) {
+    public void doFall(float fallDist) {
         super.handleFallDamage(fallDist);
-    }*/
+    }
 
     public float getFallDistance() {
         return fallDistance;
@@ -280,11 +242,6 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
         return super.getBrightnessAtEyes(f);
     }
 
-    // move to client or server (never called in common)
-    /*public void sendChatMessage(String s) {
-        PlayerAPI.sendChatMessage((PlayerBase) (Object) this, s);
-    }*/
-
     @Override
     public String getHurtSound() {
         String hurtSound = PlayerAPI.getHurtSound((PlayerBase) (Object) this);
@@ -297,11 +254,6 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
     public String superGetHurtSound() {
         return super.getHurtSound();
     }
-
-    // move to client
-    /*public float superGetCurrentPlayerStrVsBlock(BlockBase block) {
-        return super.getStrengh(block);
-    }*/
 
     @Inject(method = "canRemoveBlock(Lnet/minecraft/block/BlockBase;)Z", at = @At("HEAD"))
     private void canRemoveBlock(BlockBase arg, CallbackInfoReturnable<Boolean> cir) {
@@ -326,13 +278,6 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
     public void superFall(float f) {
         super.handleFallDamage(f);
     }
-//
-//    @Override
-//    public void jump() {
-//        if (!PlayerAPI.jump((PlayerBase) (Object) this)) {
-//            super.jump();
-//        }
-//    }
 
     @Inject(method = "jump()V", at = @At("HEAD"), cancellable = true)
     private void jump(CallbackInfo ci) {
@@ -343,13 +288,6 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
     public void superJump() {
         super.jump();
     }
-
-//    @Override
-//    public void applyDamage(int i) {
-//        if (!PlayerAPI.damageEntity((PlayerBase) (Object) this, i)) {
-//            super.applyDamage(i);
-//        }
-//    }
 
     @Inject(method = "applyDamage(I)V", at = @At("HEAD"), cancellable = true)
     private void applyDamage(int damageAmount, CallbackInfo ci) {
@@ -379,7 +317,7 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
             ci.cancel();
     }
 
-    // move to client
+    // ???
     /*public void superAttackTargetEntityWithCurrentItem(EntityBase entity) {
         super.attack(entity);
     }*/
@@ -414,7 +352,7 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
             ci.cancel();
     }
 
-    // move to client
+    // ???
     /*public void superDropPlayerItemWithRandomChoice(ItemInstance itemstack, boolean flag) {
         super.dropItem(itemstack, flag);
     }*/
