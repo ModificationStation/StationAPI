@@ -7,7 +7,6 @@ import net.modificationstation.stationloader.impl.common.StationLoader;
 import org.lwjgl.opengl.GL11;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;

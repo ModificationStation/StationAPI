@@ -20,7 +20,7 @@ public class ModelTranslator {
             //double[] newRotation = rotateVector(new double[]{from[0], from[2]}, rads);
             double[] newRotation = new double[]{from[0], from[2]};
 
-            cuboid.setupCuboid((float)newRotation[0], (float)from[1], (float)newRotation[1], (int)Math.floor(to[0]-(float)from[0]), (int)Math.floor(to[1]-(float)from[1]), (int)Math.floor(to[2]-(float)from[2]), 0F); // Starting point, Pixels to extend by, scale
+            cuboid.setupCuboid((float)newRotation[0], (float)from[1], (float)newRotation[1], (int)Math.floor(to[0]-(float)from[0]), (int)Math.floor(to[1]-(float)from[1]), (int)Math.floor(to[2]-(float)from[2]), 0F, modelJson.getTextures()); // Starting point, Pixels to extend by, scale
             cuboid.setRotationPoint(0F, 0F, 0F);
             cuboids[i] = cuboid;
         }

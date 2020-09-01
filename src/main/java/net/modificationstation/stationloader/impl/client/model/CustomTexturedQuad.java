@@ -1,5 +1,6 @@
 package net.modificationstation.stationloader.impl.client.model;
 
+import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -11,10 +12,10 @@ import net.modificationstation.stationloader.api.common.util.BlockFaces;
 import org.lwjgl.opengl.GL11;
 
 public class CustomTexturedQuad {
-    public QuadPoint[] quadPoints;
+    @Getter private QuadPoint[] quadPoints;
     private boolean mirror;
-    private BlockFaces side;
-    private String textureName;
+    @Getter private BlockFaces side;
+    @Getter private String texture;
 
     public CustomTexturedQuad(QuadPoint[] args) {
         this.mirror = false;
@@ -22,7 +23,7 @@ public class CustomTexturedQuad {
     }
 
     @Environment(EnvType.CLIENT)
-    public CustomTexturedQuad(QuadPoint[] args, int textureU1, int textureV1, int textureU2, int textureV2, int textureWidth, int textureHeight, BlockFaces side, String textureName) {
+    public CustomTexturedQuad(QuadPoint[] args, int textureU1, int textureV1, int textureU2, int textureV2, int textureWidth, int textureHeight, BlockFaces side, String texture) {
         this(args);
         float var6 = 0.0015625F;
         float var7 = 0.003125F;
@@ -31,7 +32,7 @@ public class CustomTexturedQuad {
         args[2] = args[2].method_983((float)textureU1 / textureWidth + var6, (float)textureV2 / textureHeight - var7);
         args[3] = args[3].method_983((float)textureU2 / textureWidth - var6, (float)textureV2 / textureHeight - var7);
         this.side = side;
-        this.textureName = textureName;
+        this.texture = texture;
     }
 
     // I dont really know what the purpose of this method is, but it makes the models work properly.
@@ -52,7 +53,7 @@ public class CustomTexturedQuad {
         Vec3f var4 = this.quadPoints[1].pointVector.method_1307(this.quadPoints[2].pointVector);
         Vec3f var5 = var4.method_1309(var3).method_1296();
 
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId("/assets/" + modid + "/models/textures/" + textureName));
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId("/assets/" + modid + "/models/textures/" + texture + ".png"));
         arg.start();
         if (this.mirror) {
             arg.method_1697(-((float)var5.x), -((float)var5.y), -((float)var5.z));
@@ -66,13 +67,5 @@ public class CustomTexturedQuad {
         }
 
         arg.draw();
-    }
-
-    public QuadPoint[] getQuadPoints() {
-        return quadPoints;
-    }
-
-    public BlockFaces getSide() {
-        return side;
     }
 }

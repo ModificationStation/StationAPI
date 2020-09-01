@@ -87,17 +87,19 @@ public abstract class MixinTileRenderer {
     @Inject(method = "method_57(Lnet/minecraft/block/BlockBase;III)Z", at = @At(value = "HEAD"), cancellable = true)
     public void hijackModels(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         if (block instanceof BlockModelProvider && ((BlockModelProvider) block).getCustomModel()!=null) {
-            GL11.glPushMatrix();
-            Tessellator.INSTANCE.draw();
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId("/assets/stationloader/Untitle44d.png"));
-            Tessellator.INSTANCE.start();
-
             Tessellator tessellator = Tessellator.INSTANCE;
 
-            Tessellator.INSTANCE.colour(1.0F, 1.0F, 1.0F);
+            tessellator.draw();
+            GL11.glPushMatrix();
+
             for (CustomCuboidRenderer cuboid : ((BlockModelProvider) block).getCustomModel().getCuboids()) {
                 for (CustomTexturedQuad texturedQuad : cuboid.getCubeQuads()) {
-                    for(QuadPoint var7 : texturedQuad.getQuadPoints()) {
+                    if (texturedQuad.getTexture() != null) {
+                        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId("/assets/" + cuboid.modid + "/models/textures/" + texturedQuad.getTexture() + ".png"));
+                    }
+                    tessellator.start();
+                    tessellator.colour(1.0F, 1.0F, 1.0F);
+                    for(QuadPoint quadPoint : texturedQuad.getQuadPoints()) {
                         int var5 = block.method_1600(this.field_82, x, y, z);
                         float var6 = (float)(var5 >> 16 & 255) / 255.0F;
                         float var77 = (float)(var5 >> 8 & 255) / 255.0F;
@@ -137,6 +139,7 @@ public abstract class MixinTileRenderer {
                         this.field_69 = BlockBase.field_1942[this.field_82.getTileId(x, y + 1, z - 1)];
                         this.field_80 = BlockBase.field_1942[this.field_82.getTileId(x, y - 1, z + 1)];
                         this.field_77 = BlockBase.field_1942[this.field_82.getTileId(x, y - 1, z - 1)];
+                        //<editor-fold desc="320 lines of rendering code.">
                         if (texturedQuad.getSide() == BlockFaces.DOWN) {
                             int yTemp = y;
                             if (this.field_55 <= 0) {
@@ -478,16 +481,21 @@ public abstract class MixinTileRenderer {
                             this.field_63 *= var12;
                             this.field_68 *= var12;
                         }
+                        //</editor-fold>
+                        // TODO: Make tessellator.colour be called with correct params for each vertex.
+                        // TODO: Add a base 3d model class that handles rotations.
                         tessellator.colour(this.field_56, this.field_60, this.field_64);
-                        tessellator.vertex(x + (float)var7.pointVector.x * 0.0625F, y + (float)var7.pointVector.y * 0.0625F, z + (float)var7.pointVector.z * 0.0625F, var7.field_1147, var7.field_1148);
+                        tessellator.vertex(x + (float)quadPoint.pointVector.x * 0.0625F, y + (float)quadPoint.pointVector.y * 0.0625F, z + (float)quadPoint.pointVector.z * 0.0625F, quadPoint.field_1147, quadPoint.field_1148);
                     }
+
+                    tessellator.draw();
                 }
             }
 
             GL11.glPopMatrix();
-            Tessellator.INSTANCE.draw();
+            //Tessellator.INSTANCE.draw();
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) net.fabricmc.loader.FabricLoader.INSTANCE.getGameInstance()).textureManager.getTextureId("/terrain.png"));
-            Tessellator.INSTANCE.start();
+            tessellator.start();
             cir.setReturnValue(true);
             cir.cancel();
         }
@@ -588,14 +596,14 @@ public abstract class MixinTileRenderer {
 
         if (block instanceof BlockModelProvider && ((BlockModelProvider) block).getCustomModel()!=null) {
             GL11.glPushMatrix();
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId("/assets/stationloader/Untitle44d.png"));
-            Tessellator.INSTANCE.start();
 
             Tessellator tessellator = Tessellator.INSTANCE;
 
             Tessellator.INSTANCE.colour(1.0F, 1.0F, 1.0F);
             for (CustomCuboidRenderer cuboid : ((BlockModelProvider) block).getCustomModel().getCuboids()) {
                 for (CustomTexturedQuad texturedQuad : cuboid.getCubeQuads()) {
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId("/assets/" + cuboid.modid + "/models/textures/" + texturedQuad.getTexture() + ".png"));
+                    Tessellator.INSTANCE.start();
                     for(QuadPoint var7 : texturedQuad.getQuadPoints()) {
                         if (texturedQuad.getSide() == BlockFaces.DOWN) {
                             tessellator.method_1697(0F, -1F, 0F);
@@ -617,11 +625,11 @@ public abstract class MixinTileRenderer {
                         }
                         tessellator.vertex(((float)var7.pointVector.x * 0.0625F)-.5, ((float)var7.pointVector.y * 0.0625F)-.5, ((float)var7.pointVector.z * 0.0625F)-.5, var7.field_1147, var7.field_1148);
                     }
+                    Tessellator.INSTANCE.draw();
                 }
             }
 
             GL11.glPopMatrix();
-            Tessellator.INSTANCE.draw();
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) net.fabricmc.loader.FabricLoader.INSTANCE.getGameInstance()).textureManager.getTextureId("/terrain.png"));
             inventory = false;
             ci.cancel();

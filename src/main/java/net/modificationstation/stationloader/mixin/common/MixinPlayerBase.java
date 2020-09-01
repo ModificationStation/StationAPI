@@ -155,6 +155,7 @@ public class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPl
 //        }
 //    }
 
+    @Environment(EnvType.CLIENT)
     @Inject(method = "respawn", at = @At("HEAD"), cancellable = true)
     private void onRespawnPlayer(CallbackInfo ci) {
         if (PlayerAPI.respawn((PlayerBase) (Object) this)) {
