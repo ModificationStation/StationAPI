@@ -36,7 +36,7 @@ Then add this to the end of your dependencies (~line 68):
 
 Then reimport your Gradle project.
 
-Proper documentation coming soon...
+Proper documentation coming soon.
 
 ## License
 
