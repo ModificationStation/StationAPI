@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.SleepStatus;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationloader.api.common.entity.player.HasPlayerHandlers;
+import net.modificationstation.stationloader.api.common.entity.player.PlayerBaseSettersGettersInvokers;
 import net.modificationstation.stationloader.api.common.entity.player.PlayerBaseSuper;
 import net.modificationstation.stationloader.api.common.entity.player.PlayerHandler;
 import net.modificationstation.stationloader.api.common.event.entity.player.PlayerHandlerRegister;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.Random;
 
 @Mixin(PlayerBase.class)
-public abstract class MixinPlayerBase extends Living implements PlayerBaseAccessor, HasPlayerHandlers, PlayerBaseSuper {
+public abstract class MixinPlayerBase extends Living implements PlayerBaseAccessor, PlayerBaseSettersGettersInvokers, HasPlayerHandlers, PlayerBaseSuper {
 
     @Shadow protected boolean sleeping;
     private List<PlayerHandler> playerBases;
