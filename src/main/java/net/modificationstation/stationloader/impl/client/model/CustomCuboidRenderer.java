@@ -7,7 +7,6 @@ import net.minecraft.client.render.QuadPoint;
 import net.minecraft.client.render.Tessellator;
 import net.modificationstation.stationloader.api.common.StationLoader;
 import net.modificationstation.stationloader.api.common.util.BlockFaces;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;

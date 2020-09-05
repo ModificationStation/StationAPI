@@ -6,9 +6,11 @@
   "mixins": [
     "common.MixinAchievements",
     "common.MixinBlockBase",
+    "common.MixinChunkCache",
     "common.MixinItemBase",
     "common.MixinPlayerBase",
     "common.MixinRecipeRegistry",
+    "common.MixinServerChunkCache",
     "common.MixinSmeltingRecipeRegistry",
     "common.MixinTileEntityFurnace",
     "common.MixinTranslationStorage",
