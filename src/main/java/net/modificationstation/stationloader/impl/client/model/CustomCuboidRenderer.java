@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
 
-public class CustomCuboidRenderer {
+public class CustomCuboidRenderer implements net.modificationstation.stationloader.api.client.model.CustomCuboidRenderer {
 
     private QuadPoint[] quadPoints;
     private CustomTexturedQuad[] cubeQuads;
@@ -166,7 +166,12 @@ public class CustomCuboidRenderer {
         this.compiled = true;
     }
 
+    @Override
     public CustomTexturedQuad[] getCubeQuads() {
         return cubeQuads;
+    }
+
+    public String getModID() {
+        return modid;
     }
 }

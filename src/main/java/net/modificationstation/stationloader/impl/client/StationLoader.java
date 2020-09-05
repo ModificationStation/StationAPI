@@ -3,6 +3,8 @@ package net.modificationstation.stationloader.impl.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftApplet;
+import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
+import net.modificationstation.stationloader.impl.client.model.CustomModelRenderer;
 import net.modificationstation.stationloader.impl.client.texture.TextureFactory;
 import net.modificationstation.stationloader.impl.client.texture.TextureRegistry;
 
@@ -20,6 +22,8 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
     @Override
     public void setupAPI() {
         super.setupAPI();
+        getLogger().info("Setting up client GeneralFactory...");
+        GeneralFactory.INSTANCE.addFactory(net.modificationstation.stationloader.api.client.model.CustomModelRenderer.class, (args) -> new CustomModelRenderer((String) args[0], (String) args[1]));
         getLogger().info("Setting up TextureFactory...");
         net.modificationstation.stationloader.api.client.texture.TextureFactory.INSTANCE.setHandler(new TextureFactory());
         getLogger().info("Setting up TextureRegistry...");

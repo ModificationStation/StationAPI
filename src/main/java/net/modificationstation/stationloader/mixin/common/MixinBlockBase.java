@@ -2,6 +2,7 @@ package net.modificationstation.stationloader.mixin.common;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.PlaceableTileEntity;
+import net.modificationstation.stationloader.api.client.event.model.ModelRegister;
 import net.modificationstation.stationloader.api.common.block.BlockManager;
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
 import org.objectweb.asm.Opcodes;
@@ -17,6 +18,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinBlockBase {
 
     @Shadow @Final public static BlockBase[] BY_ID;
+
+    @SuppressWarnings("UnresolvedMixinReference")
+    @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(II)Lnet/minecraft/block/Stone;", ordinal = 0, shift = At.Shift.BEFORE))
+    private static void beforeBlockRegister(CallbackInfo ci) {
+        ModelRegister.EVENT.getInvoker().registerModels(ModelRegister.Type.BLOCKS);
+    }
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/block/BlockBase;TRAPDOOR:Lnet/minecraft/block/BlockBase;", opcode = Opcodes.PUTSTATIC, shift = At.Shift.AFTER))

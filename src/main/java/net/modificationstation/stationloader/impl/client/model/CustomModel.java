@@ -2,7 +2,7 @@ package net.modificationstation.stationloader.impl.client.model;
 
 import net.minecraft.client.render.entity.model.EntityModelBase;
 
-public class CustomModel extends EntityModelBase {
+public class CustomModel extends EntityModelBase implements net.modificationstation.stationloader.api.client.model.CustomModel {
     private CustomCuboidRenderer[] cuboids;
 
     public CustomModel(CustomCuboidRenderer[] cuboids) {
@@ -16,6 +16,7 @@ public class CustomModel extends EntityModelBase {
         }
     }
 
+    @Override
     public CustomCuboidRenderer[] getCuboids() {
         return cuboids;
     }

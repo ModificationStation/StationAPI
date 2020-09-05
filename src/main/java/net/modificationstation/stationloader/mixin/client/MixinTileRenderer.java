@@ -11,10 +11,10 @@ import net.minecraft.client.render.TileRenderer;
 import net.minecraft.level.TileView;
 import net.minecraft.sortme.GameRenderer;
 import net.modificationstation.stationloader.api.client.model.BlockModelProvider;
+import net.modificationstation.stationloader.api.client.model.CustomCuboidRenderer;
+import net.modificationstation.stationloader.api.client.model.CustomTexturedQuad;
 import net.modificationstation.stationloader.api.client.texture.TextureRegistry;
 import net.modificationstation.stationloader.api.common.util.BlockFaces;
-import net.modificationstation.stationloader.impl.client.model.CustomCuboidRenderer;
-import net.modificationstation.stationloader.impl.client.model.CustomTexturedQuad;
 import net.modificationstation.stationloader.mixin.client.accessor.TessellatorAccessor;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -92,10 +92,10 @@ public abstract class MixinTileRenderer {
             tessellator.draw();
             GL11.glPushMatrix();
 
-            for (CustomCuboidRenderer cuboid : ((BlockModelProvider) block).getCustomModel().getCuboids()) {
-                for (CustomTexturedQuad texturedQuad : cuboid.getCubeQuads()) {
+            for (net.modificationstation.stationloader.api.client.model.CustomCuboidRenderer cuboid : ((BlockModelProvider) block).getCustomModel().getCuboids()) {
+                for (net.modificationstation.stationloader.api.client.model.CustomTexturedQuad texturedQuad : cuboid.getCubeQuads()) {
                     if (texturedQuad.getTexture() != null) {
-                        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId("/assets/" + cuboid.modid + "/models/textures/" + texturedQuad.getTexture() + ".png"));
+                        GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId("/assets/" + cuboid.getModID() + "/models/textures/" + texturedQuad.getTexture() + ".png"));
                     }
                     tessellator.start();
                     tessellator.colour(1.0F, 1.0F, 1.0F);
@@ -602,7 +602,7 @@ public abstract class MixinTileRenderer {
             Tessellator.INSTANCE.colour(1.0F, 1.0F, 1.0F);
             for (CustomCuboidRenderer cuboid : ((BlockModelProvider) block).getCustomModel().getCuboids()) {
                 for (CustomTexturedQuad texturedQuad : cuboid.getCubeQuads()) {
-                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId("/assets/" + cuboid.modid + "/models/textures/" + texturedQuad.getTexture() + ".png"));
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId("/assets/" + cuboid.getModID() + "/models/textures/" + texturedQuad.getTexture() + ".png"));
                     Tessellator.INSTANCE.start();
                     for(QuadPoint var7 : texturedQuad.getQuadPoints()) {
                         if (texturedQuad.getSide() == BlockFaces.DOWN) {

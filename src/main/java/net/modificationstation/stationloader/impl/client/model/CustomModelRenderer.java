@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
-public class CustomModelRenderer extends EntityRenderer {
+public class CustomModelRenderer extends EntityRenderer implements net.modificationstation.stationloader.api.client.model.CustomModelRenderer {
     CustomModel entityModelBase;
 
     /*public CustomModelRenderer(String testModel) {
@@ -41,6 +41,7 @@ public class CustomModelRenderer extends EntityRenderer {
         GL11.glPopMatrix();
     }
 
+    @Override
     public CustomModel getEntityModelBase() {
         return entityModelBase;
     }

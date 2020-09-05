@@ -11,7 +11,7 @@ import net.minecraft.util.maths.Vec3f;
 import net.modificationstation.stationloader.api.common.util.BlockFaces;
 import org.lwjgl.opengl.GL11;
 
-public class CustomTexturedQuad {
+public class CustomTexturedQuad implements net.modificationstation.stationloader.api.client.model.CustomTexturedQuad {
     @Getter private QuadPoint[] quadPoints;
     private boolean mirror;
     @Getter private BlockFaces side;
