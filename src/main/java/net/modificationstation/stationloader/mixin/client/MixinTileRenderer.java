@@ -509,22 +509,22 @@ public abstract class MixinTileRenderer {
             "method_65(Lnet/minecraft/block/BlockBase;DDDI)V",
             "method_67(Lnet/minecraft/block/BlockBase;DDDI)V",
             "method_69(Lnet/minecraft/block/BlockBase;DDDI)V"
-    }, index = 8, at = @At(value = "CONSTANT", args = "intValue=4", ordinal = 0, shift = At.Shift.BEFORE))
+    }, index = 8, at = @At(value = "CONSTANT", args = "intValue=15", ordinal = 0, shift = At.Shift.BEFORE, by = 2))
     private int getTextureID(int texID) {
         return overrideTexture(texID);
     }
 
-    @ModifyVariable(method = "method_45(Lnet/minecraft/block/BlockBase;DDDDD)V", index = 13, at = @At(value = "CONSTANT", args = "intValue=4", ordinal = 0, shift = At.Shift.BEFORE))
+    @ModifyVariable(method = "method_45(Lnet/minecraft/block/BlockBase;DDDDD)V", index = 13, at = @At(value = "CONSTANT", args = "intValue=15", ordinal = 0, shift = At.Shift.BEFORE, by = 2))
     private int getTorchTextureID(int texID) {
         return overrideTexture(texID);
     }
 
-    @ModifyVariable(method = "method_47(Lnet/minecraft/block/BlockBase;IDDD)V", index = 10, at = @At(value = "CONSTANT", args = "intValue=4", ordinal = 0, shift = At.Shift.BEFORE))
+    @ModifyVariable(method = "method_47(Lnet/minecraft/block/BlockBase;IDDD)V", index = 10, at = @At(value = "CONSTANT", args = "intValue=15", ordinal = 0, shift = At.Shift.BEFORE, by = 2))
     private int getCrossedTextureID(int texID) {
         return overrideTexture(texID);
     }
 
-    @ModifyVariable(method = "method_56(Lnet/minecraft/block/BlockBase;IDDD)V", index = 10, at = @At(value = "CONSTANT", args = "intValue=4", ordinal = 0, shift = At.Shift.BEFORE))
+    @ModifyVariable(method = "method_56(Lnet/minecraft/block/BlockBase;IDDD)V", index = 10, at = @At(value = "CONSTANT", args = "intValue=15", ordinal = 0, shift = At.Shift.BEFORE, by = 2))
     private int getCropsTextureID(int texID) {
         return overrideTexture(texID);
     }
@@ -549,7 +549,7 @@ public abstract class MixinTileRenderer {
         return overrideTexture(texID);
     }
 
-    @ModifyVariable(method = "method_75(Lnet/minecraft/block/BlockBase;III)Z", index = 28, at = @At(value = "CONSTANT", args = "intValue=4", ordinal = 2, shift = At.Shift.BEFORE))
+    @ModifyVariable(method = "method_75(Lnet/minecraft/block/BlockBase;III)Z", index = 28, at = @At(value = "CONSTANT", args = "intValue=15", ordinal = 0, shift = At.Shift.BEFORE, by = 2))
     private int getFluidTextureID(int texID) {
         return overrideTexture(texID);
     }
