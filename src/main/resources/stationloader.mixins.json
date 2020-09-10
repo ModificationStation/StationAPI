@@ -8,6 +8,7 @@
     "common.MixinBlockBase",
     "common.MixinChunkCache",
     "common.MixinItemBase",
+    "common.MixinItemInstance",
     "common.MixinPlayerBase",
     "common.MixinRecipeRegistry",
     "common.MixinServerChunkCache",
