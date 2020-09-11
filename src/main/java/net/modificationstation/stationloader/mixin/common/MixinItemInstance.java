@@ -42,15 +42,13 @@ public class MixinItemInstance implements HasItemEntity {
     @Inject(method = "split(I)Lnet/minecraft/item/ItemInstance;", at = @At("RETURN"))
     private void onSplit(int countToTake, CallbackInfoReturnable<ItemInstance> cir) {
         if (itemEntity != null)
-            //noinspection ConstantConditions
-            ((HasItemEntity) (Object) cir.getReturnValue()).setItemEntity(itemEntity.split(countToTake));
+            HasItemEntity.cast(cir.getReturnValue()).setItemEntity(itemEntity.split(countToTake));
     }
 
     @Inject(method = "copy()Lnet/minecraft/item/ItemInstance;", at = @At("RETURN"))
     private void onCopy(CallbackInfoReturnable<ItemInstance> cir) {
         if (itemEntity != null)
-            //noinspection ConstantConditions
-            ((HasItemEntity) (Object) cir.getReturnValue()).setItemEntity(itemEntity.copy());
+            HasItemEntity.cast(cir.getReturnValue()).setItemEntity(itemEntity.copy());
     }
 
     @Override
