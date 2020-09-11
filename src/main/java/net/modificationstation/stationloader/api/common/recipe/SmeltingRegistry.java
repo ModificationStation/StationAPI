@@ -16,26 +16,20 @@ public interface SmeltingRegistry extends HasHandler<SmeltingRegistry> {
 
         @Override
         public void addSmeltingRecipe(int input, ItemInstance output) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                handler.addSmeltingRecipe(input, output);
+            checkAccess(handler);
+            handler.addSmeltingRecipe(input, output);
         }
 
         @Override
         public void addSmeltingRecipe(ItemInstance input, ItemInstance output) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                handler.addSmeltingRecipe(input, output);
+            checkAccess(handler);
+            handler.addSmeltingRecipe(input, output);
         }
 
         @Override
         public ItemInstance getResultFor(ItemInstance itemInstance) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.getResultFor(itemInstance);
+            checkAccess(handler);
+            return handler.getResultFor(itemInstance);
         }
     };
 

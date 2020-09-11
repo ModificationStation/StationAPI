@@ -20,66 +20,50 @@ public interface AchievementPageManager extends HasHandler<AchievementPageManage
 
         @Override
         public void registerAchievements(List<Achievement> achievements) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                handler.registerAchievements(achievements);
+            checkAccess(handler);
+            handler.registerAchievements(achievements);
         }
 
         @Override
         public void addPage(AchievementPage achievementPage) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                handler.addPage(achievementPage);
+            checkAccess(handler);
+            handler.addPage(achievementPage);
         }
 
         @Override
         public AchievementPage nextPage() {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.nextPage();
+            checkAccess(handler);
+            return handler.nextPage();
         }
 
         @Override
         public AchievementPage prevPage() {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.prevPage();
+            checkAccess(handler);
+            return handler.prevPage();
         }
 
         @Override
         public AchievementPage getCurrentPage() {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.getCurrentPage();
+            checkAccess(handler);
+            return handler.getCurrentPage();
         }
 
         @Override
         public String getCurrentPageName() {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.getCurrentPageName();
+            checkAccess(handler);
+            return handler.getCurrentPageName();
         }
 
         @Override
         public int getCurrentPageIndex() {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.getCurrentPageIndex();
+            checkAccess(handler);
+            return handler.getCurrentPageIndex();
         }
 
         @Override
         public int getPageCount() {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.getPageCount();
+            checkAccess(handler);
+            return handler.getPageCount();
         }
     };
 

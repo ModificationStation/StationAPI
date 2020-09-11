@@ -16,18 +16,14 @@ public interface CraftingRegistry extends HasHandler<CraftingRegistry> {
 
         @Override
         public void addShapedRecipe(ItemInstance itemInstance, Object... o) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                handler.addShapedRecipe(itemInstance, o);
+            checkAccess(handler);
+            handler.addShapedRecipe(itemInstance, o);
         }
 
         @Override
         public void addShapelessRecipe(ItemInstance itemInstance, Object... o) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                handler.addShapelessRecipe(itemInstance, o);
+            checkAccess(handler);
+            handler.addShapelessRecipe(itemInstance, o);
         }
     };
 

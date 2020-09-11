@@ -17,10 +17,8 @@ public interface EventFactory extends HasHandler<EventFactory> {
 
         @Override
         public <T> Event<T> newEvent(Class<T> type, Function<T[], T> eventFunc) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.newEvent(type, eventFunc);
+            checkAccess(handler);
+            return handler.newEvent(type, eventFunc);
         }
     };
 

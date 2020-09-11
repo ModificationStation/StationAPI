@@ -17,26 +17,20 @@ public interface GeneralFactory extends HasHandler<GeneralFactory> {
 
         @Override
         public boolean hasFactory(Class<?> clazz) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.hasFactory(clazz);
+            checkAccess(handler);
+            return handler.hasFactory(clazz);
         }
 
         @Override
         public <T> T newInst(Class<T> clazz, Object... args) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.newInst(clazz, args);
+            checkAccess(handler);
+            return handler.newInst(clazz, args);
         }
 
         @Override
         public void addFactory(Class<?> clazz, Function<Object[], Object> factory) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                handler.addFactory(clazz, factory);
+            checkAccess(handler);
+            handler.addFactory(clazz, factory);
         }
     };
 

@@ -15,42 +15,32 @@ public interface TextureFactory extends HasHandler<TextureFactory> {
 
         @Override
         public int addTexture(TextureRegistry type, String pathToImage) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.addTexture(type, pathToImage);
+            checkAccess(handler);
+            return handler.addTexture(type, pathToImage);
         }
 
         @Override
         public int addAnimatedTexture(TextureRegistry type, String pathToImage, int animationRate) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.addAnimatedTexture(type, pathToImage, animationRate);
+            checkAccess(handler);
+            return handler.addAnimatedTexture(type, pathToImage, animationRate);
         }
 
         @Override
         public int createNewAtlas(TextureRegistry type, String originalAtlas, String path) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.createNewAtlas(type, originalAtlas, path);
+            checkAccess(handler);
+            return handler.createNewAtlas(type, originalAtlas, path);
         }
 
         @Override
         public int createAtlasCopy(TextureRegistry type, String originalAtlas, int ID, String path) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.createAtlasCopy(type, originalAtlas, ID, path);
+            checkAccess(handler);
+            return handler.createAtlasCopy(type, originalAtlas, ID, path);
         }
 
         @Override
         public int nextSpriteID(TextureRegistry type) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.nextSpriteID(type);
+            checkAccess(handler);
+            return handler.nextSpriteID(type);
         }
     };
 

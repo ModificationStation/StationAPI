@@ -14,18 +14,14 @@ public interface I18n  extends HasHandler<I18n> {
 
         @Override
         public void addLangFolder(String langFolder) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                handler.addLangFolder(langFolder);
+            checkAccess(handler);
+            handler.addLangFolder(langFolder);
         }
 
         @Override
         public void changeLang(String region) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                handler.changeLang(region);
+            checkAccess(handler);
+            handler.changeLang(region);
         }
     };
 

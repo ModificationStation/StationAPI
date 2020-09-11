@@ -15,10 +15,8 @@ public interface EnumFactory extends HasHandler<EnumFactory> {
 
         @Override
         public <T extends Enum<?>> T addEnum(Class<T> enumType, String enumName, Class<?>[] paramTypes, Object[] paramValues) {
-            if (handler == null)
-                throw new RuntimeException("Accessed StationLoader too early!");
-            else
-                return handler.addEnum(enumType, enumName, paramTypes, paramValues);
+            checkAccess(handler);
+            return handler.addEnum(enumType, enumName, paramTypes, paramValues);
         }
     };
 
