@@ -10,6 +10,7 @@
     "common.MixinItemBase",
     "common.MixinItemInstance",
     "common.MixinPlayerBase",
+    "common.MixinPlayerInventory",
     "common.MixinRecipeRegistry",
     "common.MixinServerChunkCache",
     "common.MixinSmeltingRecipeRegistry",
