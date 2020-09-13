@@ -5,7 +5,7 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationloader.api.common.item.HasItemEntity;
 import net.modificationstation.stationloader.api.common.item.ItemEntity;
-import net.modificationstation.stationloader.api.common.item.ItemEntityProvider;
+import net.modificationstation.stationloader.api.common.item.ItemWithEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,22 +21,22 @@ public class MixinItemInstance implements HasItemEntity {
     @Inject(method = "<init>(III)V", at = @At("RETURN"))
     private void onFreshInstance(int id, int count, int damage, CallbackInfo ci) {
         ItemBase itemBase = ItemBase.byId[id];
-        if (itemBase instanceof ItemEntityProvider)
-            itemEntity = ((ItemEntityProvider) itemBase).newItemEntity();
+        if (itemBase instanceof ItemWithEntity)
+            itemEntity = ((ItemWithEntity) itemBase).getItemEntityFactory().get();
     }
 
     @Inject(method = "fromTag(Lnet/minecraft/util/io/CompoundTag;)V", at = @At("RETURN"))
     private void fromTag(CompoundTag tag, CallbackInfo ci) {
         ItemBase itemBase = ItemBase.byId[itemId];
-        if (itemBase instanceof ItemEntityProvider)
-            itemEntity = ((ItemEntityProvider) itemBase).readFromNBT(tag);
+        if (itemBase instanceof ItemWithEntity)
+            itemEntity = ((ItemWithEntity) itemBase).getItemEntityNBTFactory().apply(tag);
     }
 
     @Inject(method = "toTag(Lnet/minecraft/util/io/CompoundTag;)Lnet/minecraft/util/io/CompoundTag;", at = @At("RETURN"))
     private void toTag(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
         ItemBase itemBase = ItemBase.byId[itemId];
-        if (itemBase instanceof ItemEntityProvider)
-            ((ItemEntityProvider) itemBase).writeToNBT(tag, itemEntity);
+        if (itemBase instanceof ItemWithEntity)
+            itemEntity.writeToNBT(tag);
     }
 
     @Inject(method = "split(I)Lnet/minecraft/item/ItemInstance;", at = @At("RETURN"))
