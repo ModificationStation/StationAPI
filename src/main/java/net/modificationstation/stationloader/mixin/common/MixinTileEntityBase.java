@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.HashMap;
 
 @Mixin(TileEntityBase.class)
-public abstract class MixinTileEntityBase {
+public class MixinTileEntityBase {
 
     @Shadow
     private static void register(Class arg, String string) {
