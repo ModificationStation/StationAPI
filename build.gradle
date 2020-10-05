@@ -54,7 +54,7 @@ dependencies {
 	implementation 'org.ow2.asm:asm-tree:8.0'
 	implementation 'org.ow2.asm:asm-util:8.0'
 
-	//to change the versions see the gradle.properties file
+	// to change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
 	mappings loom.fromCommit("calmilamsy/BIN-Mappings", "${project.yarn_mappings}") {spec ->
@@ -64,6 +64,8 @@ dependencies {
 	// for config api
 	compile "tk.valoeghese:ZoesteriaConfig:1.3.2"
 
+	// convenience stuff
+	// adds some useful annotations for data classes. does not add any dependencies
 	compileOnly 'org.projectlombok:lombok:1.18.10'
 	annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
