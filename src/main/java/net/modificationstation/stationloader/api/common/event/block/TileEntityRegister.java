@@ -3,7 +3,7 @@ package net.modificationstation.stationloader.api.common.event.block;
 import net.modificationstation.stationloader.api.common.event.Event;
 import net.modificationstation.stationloader.api.common.event.EventFactory;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public interface TileEntityRegister {
 
@@ -13,5 +13,5 @@ public interface TileEntityRegister {
                     event.registerTileEntities(tileEntityList);
             });
 
-    void registerTileEntities(HashMap<String, Class> tileEntityList);
+    void registerTileEntities(Map<Class<?>, String> tileEntityList);
 }

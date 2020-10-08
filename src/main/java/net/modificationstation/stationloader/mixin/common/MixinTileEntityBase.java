@@ -9,21 +9,22 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Mixin(TileEntityBase.class)
 public class MixinTileEntityBase {
 
     @Shadow
-    private static void register(Class arg, String string) {
+    private static void register(Class<?> arg, String string) {
     }
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method="<clinit>", at=@At(value = "TAIL"))
     private static void registerModdedTileEntities(CallbackInfo ci) {
-        HashMap<String, Class> moddedTileEntities = new HashMap<>();
+        Map<Class<?>, String> moddedTileEntities = new HashMap<>();
         TileEntityRegister.EVENT.getInvoker().registerTileEntities(moddedTileEntities);
-        for (String moddedTileEntity : moddedTileEntities.keySet()) {
-            register(moddedTileEntities.get(moddedTileEntity), moddedTileEntity);
+        for (Map.Entry<Class<?>, String> moddedTileEntity : moddedTileEntities.entrySet()) {
+            register(moddedTileEntity.getKey(), moddedTileEntity.getValue());
         }
     }
 }
