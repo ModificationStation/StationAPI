@@ -23,8 +23,6 @@ public class MixinTileEntityBase {
     private static void registerModdedTileEntities(CallbackInfo ci) {
         Map<Class<?>, String> moddedTileEntities = new HashMap<>();
         TileEntityRegister.EVENT.getInvoker().registerTileEntities(moddedTileEntities);
-        for (Map.Entry<Class<?>, String> moddedTileEntity : moddedTileEntities.entrySet()) {
-            register(moddedTileEntity.getKey(), moddedTileEntity.getValue());
-        }
+        moddedTileEntities.forEach(MixinTileEntityBase::register);
     }
 }
