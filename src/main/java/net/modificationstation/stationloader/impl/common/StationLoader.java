@@ -130,6 +130,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         } else
             throw new RuntimeException("Corrupted mod " + data.getId() + " at " + className);
         getLogger().info("Created an instance");
+        mod.setData(data);
+        getLogger().info("Set mod's metadata");
         String name = data.getName() + "|StationMod";
         mod.setLogger(LogManager.getFormatterLogger(name));
         Configurator.setLevel(name, Level.INFO);

@@ -1,5 +1,6 @@
 package net.modificationstation.stationloader.api.common.mod;
 
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.modificationstation.stationloader.api.common.config.Configuration;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
 import org.apache.logging.log4j.Logger;
@@ -39,4 +40,14 @@ public interface StationMod extends PreInit {
     }
 
     Map<StationMod, Configuration> defaultConfigs = new HashMap<>();
+
+    default ModMetadata getData() {
+        return metadatas.get(this);
+    }
+
+    default void setData(ModMetadata data) {
+        metadatas.put(this, data);
+    }
+
+    Map<StationMod, ModMetadata> metadatas = new HashMap<>();
 }
