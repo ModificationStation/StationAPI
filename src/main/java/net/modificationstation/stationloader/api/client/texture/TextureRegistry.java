@@ -1,6 +1,7 @@
 package net.modificationstation.stationloader.api.client.texture;
 
 import net.minecraft.client.texture.TextureManager;
+import org.intellij.lang.annotations.MagicConstant;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ public interface TextureRegistry extends Comparable<TextureRegistry> {
         RUNNABLES.get("unbind").run();
     };
 
-    static TextureRegistry getRegistry(String name) {
+    static TextureRegistry getRegistry(@MagicConstant(stringValues = {"GUI_ITEMS", "TERRAIN", "GUI_PARTICLES", "PARTICLES"}) String name) {
         return (TextureRegistry) FUNCTIONS.get("getRegistry").apply(name);
     }
 
