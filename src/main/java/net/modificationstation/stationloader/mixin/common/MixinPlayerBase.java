@@ -112,9 +112,9 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
     }
 
     @Override
-    public void method_1392(int i) {
+    public void addHealth(int i) {
         if (!PlayerAPI.heal(((PlayerBase) (Object) this), i))
-            super.method_1392(i);
+            super.addHealth(i);
     }
 
     @Environment(EnvType.CLIENT)

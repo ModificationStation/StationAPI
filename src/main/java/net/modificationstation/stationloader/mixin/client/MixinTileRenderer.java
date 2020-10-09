@@ -106,7 +106,7 @@ public abstract class MixinTileRenderer {
                         tessellator.start();
                         tessellator.colour(1.0F, 1.0F, 1.0F);
                         for (QuadPoint quadPoint : texturedQuad.getQuadPoints()) {
-                            int var5 = block.method_1600(this.field_82, x, y, z);
+                            int var5 = block.getColor(this.field_82, x, y, z);
                             float var6 = (float) (var5 >> 16 & 255) / 255.0F;
                             float var77 = (float) (var5 >> 8 & 255) / 255.0F;
                             float var88 = (float) (var5 & 255) / 255.0F;
