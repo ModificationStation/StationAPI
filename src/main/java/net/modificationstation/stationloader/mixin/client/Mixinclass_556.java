@@ -12,9 +12,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import static net.modificationstation.stationloader.impl.client.texture.TextureRegistry.GUI_ITEMS;
-import static net.modificationstation.stationloader.impl.client.texture.TextureRegistry.TERRAIN;
-
 @Mixin(class_556.class)
 @Environment(EnvType.CLIENT)
 public class Mixinclass_556 {
@@ -23,17 +20,17 @@ public class Mixinclass_556 {
 
     @Redirect(method = "method_1862(Lnet/minecraft/entity/Living;Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glBindTexture(II)V", ordinal = 0, remap = false))
     private void bindBlockTexture1(int target, int texture) {
-        TERRAIN.bindAtlas(field_2401.textureManager, 0);
+        TextureRegistry.getRegistry(TextureRegistry.Vanilla.TERRAIN).bindAtlas(field_2401.textureManager, 0);
     }
 
     @Redirect(method = "method_1862(Lnet/minecraft/entity/Living;Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glBindTexture(II)V", ordinal = 1, remap = false))
     private void bindBlockTexture2(int target, int texture) {
-        TERRAIN.bindAtlas(field_2401.textureManager, 0);
+        TextureRegistry.getRegistry(TextureRegistry.Vanilla.TERRAIN).bindAtlas(field_2401.textureManager, 0);
     }
 
     @Redirect(method = "method_1862(Lnet/minecraft/entity/Living;Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glBindTexture(II)V", ordinal = 2, remap = false))
     private void bindItemTexture(int target, int texture) {
-        GUI_ITEMS.bindAtlas(field_2401.textureManager, 0);
+        TextureRegistry.getRegistry(TextureRegistry.Vanilla.GUI_ITEMS).bindAtlas(field_2401.textureManager, 0);
     }
 
     @Redirect(method = "method_1862(Lnet/minecraft/entity/Living;Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Living;method_917(Lnet/minecraft/item/ItemInstance;)I"))

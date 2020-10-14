@@ -114,7 +114,7 @@ public class MixinAchievements extends ScreenBase {
         GL11.glEnable(2903 /*GL_COLOR_MATERIAL*/);
 
         // DRAW ACHIEVEMENT PAGE DIRT BACKGROUND
-        TextureRegistry.getRegistry("TERRAIN").bindAtlas(this.minecraft.textureManager, 0);
+        TextureRegistry.getRegistry(TextureRegistry.Vanilla.TERRAIN).bindAtlas(this.minecraft.textureManager, 0);
         int k3 = k1 + 288 >> 4;
         int i4 = l1 + 288 >> 4;
         int j4 = (k1 + 288) % 16;

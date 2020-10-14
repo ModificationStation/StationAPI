@@ -14,7 +14,6 @@ public class MixinTileEntityFurnace {
 
     @Shadow private ItemInstance[] contents;
 
-    @SuppressWarnings("InvalidMemberReference")
     @Redirect(method = {"canAcceptRecipeOutput()Z", "craftRecipe()V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/SmeltingRecipeRegistry;getResult(I)Lnet/minecraft/item/ItemInstance;"))
     private ItemInstance getResult(SmeltingRecipeRegistry smeltingRecipeRegistry, int i) {
         return SmeltingRegistry.INSTANCE.getResultFor(contents[0]);

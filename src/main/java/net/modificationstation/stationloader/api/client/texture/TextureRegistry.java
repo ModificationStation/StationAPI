@@ -11,6 +11,14 @@ import java.util.function.Supplier;
 
 public interface TextureRegistry extends Comparable<TextureRegistry> {
 
+    enum Vanilla {
+
+        TERRAIN,
+        PARTICLES,
+        GUI_ITEMS,
+        GUI_PARTICLES
+    }
+
     String name();
 
     int ordinal();
@@ -41,8 +49,12 @@ public interface TextureRegistry extends Comparable<TextureRegistry> {
         RUNNABLES.get("unbind").run();
     };
 
-    static TextureRegistry getRegistry(@MagicConstant(stringValues = {"GUI_ITEMS", "TERRAIN", "GUI_PARTICLES", "PARTICLES"}) String name) {
+    static TextureRegistry getRegistry(String name) {
         return (TextureRegistry) FUNCTIONS.get("getRegistry").apply(name);
+    }
+
+    static TextureRegistry getRegistry(Vanilla registry) {
+        return getRegistry(registry.name());
     }
 
     static TextureRegistry currentRegistry() {

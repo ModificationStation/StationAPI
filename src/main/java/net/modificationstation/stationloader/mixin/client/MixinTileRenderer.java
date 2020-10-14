@@ -503,7 +503,6 @@ public abstract class MixinTileRenderer {
         }
     }
 
-    @SuppressWarnings("InvalidMemberReference")
     @ModifyVariable(method = {
             "method_46(Lnet/minecraft/block/BlockBase;DDDI)V",
             "method_55(Lnet/minecraft/block/BlockBase;DDDI)V",
