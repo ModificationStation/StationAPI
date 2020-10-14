@@ -7,6 +7,8 @@ import net.fabricmc.loader.metadata.EntrypointMetadata;
 import net.fabricmc.loader.metadata.LoaderModMetadata;
 import net.fabricmc.loader.metadata.NestedJarEntry;
 import net.minecraft.item.tool.ToolMaterial;
+import net.modificationstation.stationloader.api.common.event.mod.Init;
+import net.modificationstation.stationloader.api.common.event.mod.PostInit;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPage;
@@ -119,6 +121,10 @@ public class StationLoader implements net.modificationstation.stationloader.api.
             }
         getLogger().info("Invoking preInit event");
         PreInit.EVENT.getInvoker().preInit();
+        getLogger().info("Invoking init event");
+        Init.EVENT.getInvoker().init();
+        getLogger().info("Invoking postInit event");
+        PostInit.EVENT.getInvoker().postInit();
     }
 
     @Override
