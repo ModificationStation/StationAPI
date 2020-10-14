@@ -1,7 +1,5 @@
 package net.modificationstation.stationloader.impl.common.event;
 
-import net.modificationstation.stationloader.api.common.event.Event;
-
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.function.Function;
@@ -14,13 +12,13 @@ import java.util.function.Function;
  * @param <T>
  **/
 
-public class StationEvent<T> implements Event<T> {
+public class Event<T> implements net.modificationstation.stationloader.api.common.event.Event<T> {
 
 	protected T invoker;
 	private T[] handlers;
 	private final Class<T> type;
 	private final Function<T[], T> eventFunc;
-	public StationEvent(Class<T> type, Function<T[], T> eventFunc) {
+	public Event(Class<T> type, Function<T[], T> eventFunc) {
 		this.type = type;
 		this.eventFunc = eventFunc;
 		update();
@@ -61,5 +59,5 @@ public class StationEvent<T> implements Event<T> {
 		return invoker;
 	}
 
-    public static StationEvent<?>[] EVENTS = new StationEvent[0];
+    public static Event<?>[] EVENTS = new Event[0];
 }

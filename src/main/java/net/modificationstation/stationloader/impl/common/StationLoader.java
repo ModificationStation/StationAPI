@@ -15,7 +15,9 @@ import net.modificationstation.stationloader.impl.common.block.BlockManager;
 import net.modificationstation.stationloader.impl.common.config.Category;
 import net.modificationstation.stationloader.impl.common.config.Configuration;
 import net.modificationstation.stationloader.impl.common.config.Property;
+import net.modificationstation.stationloader.impl.common.event.Event;
 import net.modificationstation.stationloader.impl.common.event.EventFactory;
+import net.modificationstation.stationloader.impl.common.event.ModIDEvent;
 import net.modificationstation.stationloader.impl.common.factory.EnumFactory;
 import net.modificationstation.stationloader.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.impl.common.item.CustomReach;
@@ -61,6 +63,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.factory.EnumFactory.INSTANCE.setHandler(new EnumFactory());
         getLogger().info("Setting up EventFactory...");
         net.modificationstation.stationloader.api.common.event.EventFactory.INSTANCE.setHandler(new EventFactory());
+        net.modificationstation.stationloader.api.common.event.EventFactory.INSTANCE.addEvent(net.modificationstation.stationloader.api.common.event.Event.class, Event::new);
+        net.modificationstation.stationloader.api.common.event.EventFactory.INSTANCE.addEvent(net.modificationstation.stationloader.api.common.event.ModIDEvent.class, ModIDEvent::new);
         getLogger().info("Setting up I18n...");
         net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.setHandler(new I18n());
         getLogger().info("Setting up BlockManager...");
