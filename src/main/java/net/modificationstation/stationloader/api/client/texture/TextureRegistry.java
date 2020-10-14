@@ -1,7 +1,6 @@
 package net.modificationstation.stationloader.api.client.texture;
 
 import net.minecraft.client.texture.TextureManager;
-import org.intellij.lang.annotations.MagicConstant;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,7 +46,7 @@ public interface TextureRegistry extends Comparable<TextureRegistry> {
 
     static void unbind() {
         RUNNABLES.get("unbind").run();
-    };
+    }
 
     static TextureRegistry getRegistry(String name) {
         return (TextureRegistry) FUNCTIONS.get("getRegistry").apply(name);

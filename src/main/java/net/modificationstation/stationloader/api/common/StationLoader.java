@@ -36,7 +36,7 @@ public interface StationLoader {
             return INSTANCE;
     }
 
-    void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException;
+    void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException;
 
     void addMod(ModMetadata data, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, URISyntaxException, IOException;
 

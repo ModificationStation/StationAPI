@@ -8,11 +8,14 @@ import net.modificationstation.stationloader.impl.client.model.CustomModelRender
 import net.modificationstation.stationloader.impl.client.texture.TextureFactory;
 import net.modificationstation.stationloader.impl.client.texture.TextureRegistry;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 @Environment(EnvType.CLIENT)
 public class StationLoader extends net.modificationstation.stationloader.impl.common.StationLoader {
 
     @Override
-    public void setup() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+    public void setup() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
         if (new Exception().getStackTrace()[1].getClassName().equals(MinecraftApplet.class.getName())) {
             super.setup();
         } else

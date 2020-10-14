@@ -10,6 +10,7 @@ import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationloader.api.common.event.mod.Init;
 import net.modificationstation.stationloader.api.common.event.mod.PostInit;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
+import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPage;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPageManager;
@@ -25,13 +26,17 @@ import net.modificationstation.stationloader.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.impl.common.item.CustomReach;
 import net.modificationstation.stationloader.impl.common.lang.I18n;
 import net.modificationstation.stationloader.impl.common.recipe.CraftingRegistry;
+import net.modificationstation.stationloader.impl.common.recipe.RecipeManager;
 import net.modificationstation.stationloader.impl.common.recipe.SmeltingRegistry;
+import net.modificationstation.stationloader.impl.common.util.RecursiveReader;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.*;
@@ -41,7 +46,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
     protected static final Logger LOGGER = LogManager.getFormatterLogger("StationLoader|API");
 
     @Override
-    public void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException {
+    public void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException {
             getLogger().info("Initializing StationLoader...");
             Configurator.setLevel("mixin", Level.TRACE);
             Configurator.setLevel("Fabric|Loader", Level.INFO);
@@ -71,6 +76,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.setHandler(new I18n());
         getLogger().info("Setting up BlockManager...");
         net.modificationstation.stationloader.api.common.block.BlockManager.INSTANCE.setHandler(new BlockManager());
+        getLogger().info("Setting up RecipeRegister...");
+        RecipeRegister.EVENT.register(RecipeManager.INSTANCE);
         getLogger().info("Setting up CraftingRegistry...");
         net.modificationstation.stationloader.api.common.recipe.CraftingRegistry.INSTANCE.setHandler(new CraftingRegistry());
         getLogger().info("Setting up SmeltingRegistry...");
@@ -88,7 +95,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(new AchievementPageManager());
     }
 
-    public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+    public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
         for (ModContainer mod : FabricLoader.getInstance().getAllMods())
             if (mod.getMetadata() instanceof LoaderModMetadata) {
                 LoaderModMetadata loaderData = ((LoaderModMetadata) mod.getMetadata());
@@ -128,7 +135,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
     }
 
     @Override
-    public void addMod(ModMetadata data, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    public void addMod(ModMetadata data, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException {
         getLogger().info("Adding \"" + className + "\" mod");
         Class<?> clazz = Class.forName(className);
         getLogger().info("Found the class");
@@ -149,12 +156,16 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         mod.setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + data.getId()));
         mod.setDefaultConfig(net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.newInst(net.modificationstation.stationloader.api.common.config.Configuration.class, new File(mod.getConfigPath() + File.separator + data.getId() + ".cfg")));
         getLogger().info("Initialized default config");
-        String langPathName = "/assets/" + data.getId() + "/lang";
-        URL langPath = getClass().getResource(langPathName);
-        if (langPath != null) {
-            net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder(langPathName);
+        String pathName = "/assets/" + data.getId() + "/lang";
+        URL path = getClass().getResource(pathName);
+        if (path != null) {
+            net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder(pathName);
             getLogger().info("Registered lang path");
         }
+        pathName = "/assets/" +data.getId() + "/recipes";
+        path = getClass().getResource(pathName);
+        if (path != null)
+            new RecursiveReader(pathName, (file) -> file.endsWith(".json")).read().forEach(RecipeManager.INSTANCE::addJsonRecipe);
         PreInit.EVENT.register(mod);
         getLogger().info("Registered events");
         mods.put(modClass, mod);
