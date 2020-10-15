@@ -2,7 +2,7 @@ package net.modificationstation.stationloader.api.client.event.texture;
 
 import net.modificationstation.stationloader.api.client.texture.TextureFactory;
 import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.event.EventFactory;
+import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 /**
  * Used to register your mod textures.

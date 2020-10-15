@@ -2,7 +2,7 @@ package net.modificationstation.stationloader.api.client.event.model;
 
 import net.modificationstation.stationloader.api.client.model.BlockModelProvider;
 import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.event.EventFactory;
+import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 // TODO: Item and Entity model documentation.
 /**

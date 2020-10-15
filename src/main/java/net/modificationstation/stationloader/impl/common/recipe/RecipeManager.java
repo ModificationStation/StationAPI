@@ -16,7 +16,7 @@ public class RecipeManager implements RecipeRegister {
 
     public static final RecipeManager INSTANCE = new RecipeManager();
     private RecipeManager() {
-        addOrGetRecipeType("minecraft.crafting_shaped", (recipe) -> {
+        addOrGetRecipeType("minecraft:crafting_shaped", (recipe) -> {
             JsonElement rawJson = JsonParser.parseReader(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(recipe))));
             JsonCraftingShaped json = new Gson().fromJson(rawJson, JsonCraftingShaped.class);
             Set<Map.Entry<String, JsonElement>> rawKeys = rawJson.getAsJsonObject().getAsJsonObject("key").entrySet();
@@ -32,7 +32,7 @@ public class RecipeManager implements RecipeRegister {
             }
             CraftingRegistry.INSTANCE.addShapedRecipe(json.getResult().getItemInstance(), keys);
         });
-        addOrGetRecipeType("minecraft.crafting_shapeless", (recipe) -> {
+        addOrGetRecipeType("minecraft:crafting_shapeless", (recipe) -> {
             JsonCraftingShapeless json = new Gson().fromJson(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(recipe))), JsonCraftingShapeless.class);
             JsonItemKey[] ingredients = json.getIngredients();
             Object[] itemstacks = new Object[json.getIngredients().length];
@@ -47,7 +47,7 @@ public class RecipeManager implements RecipeRegister {
     }
 
     public Set<String> addOrGetRecipeType(String type, Consumer<String> register) {
-        String modid = type.split("\\.")[0];
+        String modid = type.split(":")[0];
         type = type.substring(modid.length() + 1);
         if (!recipes.containsKey(modid))
             recipes.put(modid, new HashMap<>());

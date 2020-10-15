@@ -58,7 +58,7 @@ public abstract class MixinBlockBase {
         Map<String, Map<String, Integer>> map = ModIDRegistry.registries.get(BlockBase.class);
         String modid = "minecraft";
         String blockName = ret;
-        String[] strings = ret == null ? new String[0] : ret.split("\\.");
+        String[] strings = ret == null ? new String[0] : ret.split(":");
         if (strings.length > 1 && FabricLoader.getInstance().getModContainer(strings[0]).isPresent()) {
             modid = strings[0];
             blockName = blockName.substring(modid.length() + 1);

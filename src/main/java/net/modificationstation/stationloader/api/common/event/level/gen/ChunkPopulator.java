@@ -4,7 +4,7 @@ import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.source.LevelSource;
 import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.event.EventFactory;
+import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 import java.util.Random;
 

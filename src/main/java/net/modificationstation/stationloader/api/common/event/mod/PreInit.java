@@ -1,7 +1,7 @@
 package net.modificationstation.stationloader.api.common.event.mod;
 
 import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.event.EventFactory;
+import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 /**
  * Event called before Minecraft launch

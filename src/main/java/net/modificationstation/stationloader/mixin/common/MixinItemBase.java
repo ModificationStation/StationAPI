@@ -45,7 +45,7 @@ public abstract class MixinItemBase {
         Map<String, Map<String, Integer>> map = ModIDRegistry.registries.get(ItemBase.class);
         String modid = "minecraft";
         String itemName = ret;
-        String[] strings = ret == null ? new String[0] : ret.split("\\.");
+        String[] strings = ret == null ? new String[0] : ret.split(":");
         if (strings.length > 1 && FabricLoader.getInstance().getModContainer(strings[0]).isPresent()) {
             modid = strings[0];
             itemName = itemName.substring(modid.length() + 1);

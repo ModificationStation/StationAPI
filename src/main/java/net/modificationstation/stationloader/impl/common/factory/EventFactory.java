@@ -1,4 +1,4 @@
-package net.modificationstation.stationloader.impl.common.event;
+package net.modificationstation.stationloader.impl.common.factory;
 
 import net.modificationstation.stationloader.api.common.event.Event;
 
@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public class EventFactory implements net.modificationstation.stationloader.api.common.event.EventFactory {
+public class EventFactory implements net.modificationstation.stationloader.api.common.factory.EventFactory {
 
     @Override
     @SuppressWarnings("rawtypes")

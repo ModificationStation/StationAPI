@@ -3,7 +3,7 @@ package net.modificationstation.stationloader.api.common.event.entity.player;
 import net.minecraft.entity.player.PlayerBase;
 import net.modificationstation.stationloader.api.common.entity.player.PlayerHandler;
 import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.event.EventFactory;
+import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 import java.util.List;
 

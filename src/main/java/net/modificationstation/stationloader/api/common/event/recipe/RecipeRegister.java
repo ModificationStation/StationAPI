@@ -1,7 +1,7 @@
 package net.modificationstation.stationloader.api.common.event.recipe;
 
 import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.event.EventFactory;
+import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 /**
  * Event called after one of vanilla recipes system got initialized (CRAFTING_TABLE, FURNACE, etc)

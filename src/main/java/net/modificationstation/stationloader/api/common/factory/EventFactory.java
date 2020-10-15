@@ -1,5 +1,6 @@
-package net.modificationstation.stationloader.api.common.event;
+package net.modificationstation.stationloader.api.common.factory;
 
+import net.modificationstation.stationloader.api.common.event.Event;
 import net.modificationstation.stationloader.api.common.util.HasHandler;
 
 import java.util.function.BiFunction;

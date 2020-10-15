@@ -13,7 +13,7 @@ public class JsonItemKey {
     private int damage = 0;
 
     public ItemInstance getItemInstance() {
-        String modid = item.split("\\.")[0];
+        String modid = item.split(":")[0];
         return new ItemInstance(ModIDRegistry.registries.get(BlockBase.class).get(modid).get(item.substring(modid.length() + 1)), count, damage);
     }
 }
