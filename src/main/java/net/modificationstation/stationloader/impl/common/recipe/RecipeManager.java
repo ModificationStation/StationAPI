@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationloader.api.common.recipe.CraftingRegistry;
+import net.modificationstation.stationloader.api.common.recipe.SmeltingRegistry;
 import net.modificationstation.stationloader.impl.common.item.JsonItemKey;
 
 import java.io.BufferedReader;
@@ -40,6 +41,10 @@ public class RecipeManager implements RecipeRegister {
                 itemstacks[i] = ingredients[i].getItemInstance();
             CraftingRegistry.INSTANCE.addShapelessRecipe(json.getResult().getItemInstance(), itemstacks);
         });
+        addOrGetRecipeType("minecraft:smelting", (recipe) -> {
+            JsonSmelting json = new Gson().fromJson(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(recipe))), JsonSmelting.class);
+            SmeltingRegistry.INSTANCE.addSmeltingRecipe(json.getIngredient().getItemInstance(), json.getResult().getItemInstance());
+        });
     }
 
     public void addJsonRecipe(String recipe) {
@@ -59,12 +64,18 @@ public class RecipeManager implements RecipeRegister {
 
     @Override
     public void registerRecipes(Type recipeType) {
+        Map<String, Map.Entry<Consumer<String>, Set<String>>> minecraftEntries = recipes.get("minecraft");
+        Map.Entry<Consumer<String>, Set<String>> entry;
         switch (recipeType) {
             case CRAFTING: {
-                Map<String, Map.Entry<Consumer<String>, Set<String>>> minecraftEntries = recipes.get("minecraft");
-                Map.Entry<Consumer<String>, Set<String>> entry = minecraftEntries.get("crafting_shaped");
+                entry = minecraftEntries.get("crafting_shaped");
                 entry.getValue().forEach(entry.getKey());
                 entry = minecraftEntries.get("crafting_shapeless");
+                entry.getValue().forEach(entry.getKey());
+                break;
+            }
+            case SMELTING: {
+                entry = minecraftEntries.get("smelting");
                 entry.getValue().forEach(entry.getKey());
                 break;
             }
