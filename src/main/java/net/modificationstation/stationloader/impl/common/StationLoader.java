@@ -76,8 +76,10 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.setHandler(new I18n());
         getLogger().info("Setting up BlockManager...");
         net.modificationstation.stationloader.api.common.block.BlockManager.INSTANCE.setHandler(new BlockManager());
-        getLogger().info("Setting up RecipeRegister...");
-        RecipeRegister.EVENT.register(RecipeManager.INSTANCE);
+        getLogger().info("Setting up RecipeManager...");
+        RecipeManager recipeManager = new RecipeManager();
+        net.modificationstation.stationloader.api.common.recipe.RecipeManager.INSTANCE.setHandler(recipeManager);
+        RecipeRegister.EVENT.register(recipeManager);
         getLogger().info("Setting up CraftingRegistry...");
         net.modificationstation.stationloader.api.common.recipe.CraftingRegistry.INSTANCE.setHandler(new CraftingRegistry());
         getLogger().info("Setting up SmeltingRegistry...");
@@ -165,7 +167,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         pathName = "/assets/" +data.getId() + "/recipes";
         path = getClass().getResource(pathName);
         if (path != null) {
-            new RecursiveReader(pathName, (file) -> file.endsWith(".json")).read().forEach(RecipeManager.INSTANCE::addJsonRecipe);
+            new RecursiveReader(pathName, (file) -> file.endsWith(".json")).read().forEach(net.modificationstation.stationloader.api.common.recipe.RecipeManager.INSTANCE::addJsonRecipe);
             getLogger().info("Listed recipes");
         }
         PreInit.EVENT.register(mod);

@@ -10,6 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister.Vanilla.SMELTING;
+
 @Mixin(SmeltingRecipeRegistry.class)
 public class MixinSmeltingRecipeRegistry {
 
@@ -19,7 +21,7 @@ public class MixinSmeltingRecipeRegistry {
     @Inject(method = "<init>()V", at = @At("RETURN"))
     private void afterRecipeRegister(CallbackInfo ci) {
         INSTANCE = (SmeltingRecipeRegistry) (Object) this;
-        RecipeRegister.EVENT.getInvoker().registerRecipes(RecipeRegister.Type.SMELTING);
+        RecipeRegister.EVENT.getInvoker().registerRecipes(SMELTING.type());
         INSTANCE = null;
     }
 }

@@ -15,10 +15,24 @@ import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 public interface RecipeRegister {
 
-    enum Type {
+    enum Vanilla {
 
-        CRAFTING,
-        SMELTING
+        CRAFTING_SHAPED,
+        CRAFTING_SHAPELESS,
+        SMELTING;
+
+        public String type() {
+            return modid + ":" + name().toLowerCase();
+        }
+
+        public static Vanilla fromType(String type) {
+            for (Vanilla recipe : values())
+                if (recipe.type().equals(type))
+                    return recipe;
+            return null;
+        }
+
+        private static final String modid = "minecraft";
     }
 
     Event<RecipeRegister> EVENT = EventFactory.INSTANCE.newEvent(RecipeRegister.class, (listeners) ->
@@ -27,5 +41,5 @@ public interface RecipeRegister {
             event.registerRecipes(type);
     });
 
-    void registerRecipes(Type recipeType);
+    void registerRecipes(String recipeType);
 }

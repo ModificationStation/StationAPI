@@ -13,10 +13,9 @@ import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class RecipeManager implements RecipeRegister {
+public class RecipeManager implements net.modificationstation.stationloader.api.common.recipe.RecipeManager, RecipeRegister {
 
-    public static final RecipeManager INSTANCE = new RecipeManager();
-    private RecipeManager() {
+    public RecipeManager() {
         addOrGetRecipeType("minecraft:crafting_shaped", (recipe) -> {
             JsonElement rawJson = JsonParser.parseReader(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(recipe))));
             JsonCraftingShaped json = new Gson().fromJson(rawJson, JsonCraftingShaped.class);
@@ -47,10 +46,12 @@ public class RecipeManager implements RecipeRegister {
         });
     }
 
+    @Override
     public void addJsonRecipe(String recipe) {
         addOrGetRecipeType(new Gson().fromJson(new BufferedReader(new InputStreamReader(RecipeManager.class.getResourceAsStream(recipe))), JsonRecipeType.class).getType(), null).add(recipe);
     }
 
+    @Override
     public Set<String> addOrGetRecipeType(String type, Consumer<String> register) {
         String modid = type.split(":")[0];
         type = type.substring(modid.length() + 1);
@@ -63,24 +64,9 @@ public class RecipeManager implements RecipeRegister {
     }
 
     @Override
-    public void registerRecipes(Type recipeType) {
-        Map<String, Map.Entry<Consumer<String>, Set<String>>> minecraftEntries = recipes.get("minecraft");
-        Map.Entry<Consumer<String>, Set<String>> entry;
-        switch (recipeType) {
-            case CRAFTING: {
-                entry = minecraftEntries.get("crafting_shaped");
-                entry.getValue().forEach(entry.getKey());
-                entry = minecraftEntries.get("crafting_shapeless");
-                entry.getValue().forEach(entry.getKey());
-                break;
-            }
-            case SMELTING: {
-                entry = minecraftEntries.get("smelting");
-                entry.getValue().forEach(entry.getKey());
-                break;
-            }
-        }
+    public void registerRecipes(String recipeType) {
+        String modid = recipeType.split(":")[0];
+        Map.Entry<Consumer<String>, Set<String>> recipe = recipes.get(modid).get(recipeType.substring(modid.length() + 1));
+        recipe.getValue().forEach(recipe.getKey());
     }
-
-    private final Map<String, Map<String, Map.Entry<Consumer<String>, Set<String>>>> recipes = new HashMap<>();
 }
