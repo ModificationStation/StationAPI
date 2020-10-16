@@ -60,7 +60,10 @@ public class RecipeManager implements net.modificationstation.stationloader.api.
         Map<String, Map.Entry<Consumer<String>, Set<String>>> map = recipes.get(modid);
         if (!map.containsKey(type))
             map.put(type, new AbstractMap.SimpleEntry<>(register, new HashSet<>()));
-        return map.get(type).getValue();
+        Map.Entry<Consumer<String>, Set<String>> entry = map.get(type);
+        if (entry.getKey() == null)
+            entry = new AbstractMap.SimpleEntry<>(register, entry.getValue());
+        return entry.getValue();
     }
 
     @Override
