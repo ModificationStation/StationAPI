@@ -32,7 +32,7 @@ Add this to your build.gradle in the SECOND repositories entry (~line 33):
 `maven { url "https://maven.glass-launcher.net/repo"}`
 
 Then add this to the end of your dependencies (~line 68):  
-`modImplementation "net.modificationstation:StationLoader:1.+:dev"`
+`modImplementation "net.modificationstation:StationLoader:1.2:dev"`
 
 Then reimport your Gradle project.
 
