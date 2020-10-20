@@ -34,6 +34,10 @@ Add this to your build.gradle in the SECOND repositories entry (~line 33):
 Then add this to the end of your dependencies (~line 68):  
 `modImplementation "net.modificationstation:StationLoader:1.2:dev"`
 
+You will likely also want to install HMI-Fabric (unofficial port to SL by calmilamsy) for debugging your items and recipes.
+If so, add this line after StationLoader's line:  
+`modImplementation "net.glasslauncher:HMI-Fabric:5.0.1-Unofficial:dev`
+
 Then reimport your Gradle project.
 
 Proper documentation coming soon.
