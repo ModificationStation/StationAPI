@@ -8,9 +8,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.QuadPoint;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.TileRenderer;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.level.Level;
 import net.minecraft.level.TileView;
 import net.minecraft.sortme.GameRenderer;
+import net.modificationstation.stationloader.api.client.event.texture.TextureRegister;
 import net.modificationstation.stationloader.api.client.model.BlockModelProvider;
 import net.modificationstation.stationloader.api.client.model.CustomCuboidRenderer;
 import net.modificationstation.stationloader.api.client.model.CustomModel;
@@ -96,7 +98,9 @@ public abstract class MixinTileRenderer {
                 Tessellator tessellator = Tessellator.INSTANCE;
 
                 tessellator.draw();
-                GL11.glPushMatrix();
+                TextureRegistry lastRegistry = TextureRegistry.currentRegistry();
+                int lastTex = lastRegistry.currentTexture();
+                TextureRegistry.unbind();
 
                 for (CustomCuboidRenderer cuboid : model.getCuboids()) {
                     for (CustomTexturedQuad texturedQuad : cuboid.getCubeQuads()) {
@@ -493,9 +497,7 @@ public abstract class MixinTileRenderer {
                     }
                 }
 
-                GL11.glPopMatrix();
-                //Tessellator.INSTANCE.draw();
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.textureManager.getTextureId("/terrain.png"));
+                lastRegistry.bindAtlas(minecraft.textureManager, lastTex);
                 tessellator.start();
                 cir.setReturnValue(true);
                 cir.cancel();
