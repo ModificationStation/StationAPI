@@ -6,6 +6,8 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.metadata.EntrypointMetadata;
 import net.fabricmc.loader.metadata.LoaderModMetadata;
 import net.fabricmc.loader.metadata.NestedJarEntry;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationloader.api.common.event.mod.Init;
 import net.modificationstation.stationloader.api.common.event.mod.PostInit;
@@ -60,14 +62,17 @@ public class StationLoader implements net.modificationstation.stationloader.api.
 
     public void setupAPI() {
         getLogger().info("Setting up GeneralFactory...");
-        net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.setHandler(new GeneralFactory());
-        net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.addFactory(net.modificationstation.stationloader.api.common.config.Configuration.class, (args) -> new Configuration((File) args[0]));
-        net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.addFactory(net.modificationstation.stationloader.api.common.config.Category.class, (args) -> new Category((String) args[0]));
-        net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.addFactory(net.modificationstation.stationloader.api.common.config.Property.class, (args) -> new Property((String) args[0]));
-        net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.addFactory(net.modificationstation.stationloader.api.common.achievement.AchievementPage.class, (args) -> new AchievementPage((String) args[0]));
-        net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.addFactory(ToolMaterial.class, (args) -> net.modificationstation.stationloader.api.common.factory.EnumFactory.INSTANCE.addEnum(ToolMaterial.class, (String) args[0], new Class[] {int.class, int.class, float.class, int.class}, new Object[] {args[1], args[2], args[3], args[4]}));
+        net.modificationstation.stationloader.api.common.factory.GeneralFactory generalFactory = net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE;
+        generalFactory.setHandler(new GeneralFactory());
+        generalFactory.addFactory(net.modificationstation.stationloader.api.common.config.Configuration.class, (args) -> new Configuration((File) args[0]));
+        generalFactory.addFactory(net.modificationstation.stationloader.api.common.config.Category.class, (args) -> new Category((String) args[0]));
+        generalFactory.addFactory(net.modificationstation.stationloader.api.common.config.Property.class, (args) -> new Property((String) args[0]));
+        generalFactory.INSTANCE.addFactory(net.modificationstation.stationloader.api.common.achievement.AchievementPage.class, (args) -> new AchievementPage((String) args[0]));
+        net.modificationstation.stationloader.api.common.factory.EnumFactory enumFactory = net.modificationstation.stationloader.api.common.factory.EnumFactory.INSTANCE;
+        generalFactory.INSTANCE.addFactory(ToolMaterial.class, (args) -> enumFactory.addEnum(ToolMaterial.class, (String) args[0], new Class[] {int.class, int.class, float.class, int.class}, new Object[] {args[1], args[2], args[3], args[4]}));
+        generalFactory.INSTANCE.addFactory(EntityType.class, (args) -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[] {Class.class, int.class, Material.class, boolean.class}, new Object[] {args[1], args[2], args[3], args[4]}));
         getLogger().info("Setting up EnumFactory...");
-        net.modificationstation.stationloader.api.common.factory.EnumFactory.INSTANCE.setHandler(new EnumFactory());
+        enumFactory.setHandler(new EnumFactory());
         getLogger().info("Setting up EventFactory...");
         net.modificationstation.stationloader.api.common.factory.EventFactory.INSTANCE.setHandler(new EventFactory());
         net.modificationstation.stationloader.api.common.factory.EventFactory.INSTANCE.addEvent(net.modificationstation.stationloader.api.common.event.Event.class, Event::new);

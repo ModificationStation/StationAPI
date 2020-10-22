@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "common.MixinAchievements",
+    "common.MixinBiome",
     "common.MixinBlockBase",
     "common.MixinChunkCache",
     "common.MixinEntityRegistry",
@@ -24,6 +25,7 @@
     "common.accessor.TranslationStorageAccessor"
   ],
   "server": [
+    "server.Mixinclass_488",
     "server.MixinMinecraftServer",
     "server.MixinServerPlayerPacketHandler"
   ],
@@ -33,6 +35,7 @@
     "client.Mixinclass_556",
     "client.Mixinclass_608",
     "client.Mixinclass_66",
+    "client.MixinEntityRenderDispatcher",
     "client.MixinGameOptions",
     "client.MixinGameRenderer",
     "client.MixinItemRenderer",
