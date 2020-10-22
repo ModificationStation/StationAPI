@@ -22,12 +22,6 @@ public abstract class MixinItemBase {
     @Shadow public abstract String getTranslationKey();
 
     @SuppressWarnings("UnresolvedMixinReference")
-    @Inject(method = "<clinit>", at = @At("HEAD"))
-    private static void beforeClinit(CallbackInfo ci) {
-        ModIDRegistry.registries.put(ItemBase.class, new HashMap<>());
-    }
-
-    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(ILnet/minecraft/item/tool/ToolMaterial;)Lnet/minecraft/item/tool/Shovel;", ordinal = 0, shift = At.Shift.BEFORE))
     private static void beforeItemRegister(CallbackInfo ci) {
         ModelRegister.EVENT.getInvoker().registerModels(ModelRegister.Type.ITEMS);
@@ -42,7 +36,9 @@ public abstract class MixinItemBase {
     @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/item/ItemBase;", at = @At("HEAD"))
     private String getName(String name) {
         String ret = ItemNameSet.EVENT.getInvoker().getName((ItemBase) (Object) this, name);
-        Map<String, Map<String, Integer>> map = ModIDRegistry.registries.get(ItemBase.class);
+        if (!ModIDRegistry.registries.containsKey("item"))
+            ModIDRegistry.registries.put("item", new HashMap<>());
+        Map<String, Map<String, Integer>> map = ModIDRegistry.registries.get("item");
         String modid = "minecraft";
         String itemName = ret;
         String[] strings = ret == null ? new String[0] : ret.split(":");

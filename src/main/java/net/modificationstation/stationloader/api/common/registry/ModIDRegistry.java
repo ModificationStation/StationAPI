@@ -5,5 +5,5 @@ import java.util.Map;
 
 public interface ModIDRegistry {
 
-    Map<Class<?>, Map<String, Map<String, Integer>>> registries = new HashMap<>();
+    Map<String, Map<String, Map<String, Integer>>> registries = new HashMap<>();
 }

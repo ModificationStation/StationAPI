@@ -1,7 +1,6 @@
 package net.modificationstation.stationloader.impl.common.item;
 
 import lombok.Data;
-import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 
@@ -14,6 +13,6 @@ public class JsonItemKey {
 
     public ItemInstance getItemInstance() {
         String modid = item.split(":")[0];
-        return new ItemInstance(ModIDRegistry.registries.get(BlockBase.class).get(modid).get(item.substring(modid.length() + 1)), count, damage);
+        return new ItemInstance(ModIDRegistry.registries.get("item").get(modid).get(item.substring(modid.length() + 1)), count, damage);
     }
 }

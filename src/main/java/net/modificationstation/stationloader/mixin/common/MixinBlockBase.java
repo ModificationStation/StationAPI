@@ -30,12 +30,6 @@ public abstract class MixinBlockBase {
     @Shadow public abstract String getName();
 
     @SuppressWarnings("UnresolvedMixinReference")
-    @Inject(method = "<clinit>", at = @At("HEAD"))
-    private static void beforeClinit(CallbackInfo ci) {
-        ModIDRegistry.registries.put(BlockBase.class, new HashMap<>());
-    }
-
-    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(II)Lnet/minecraft/block/Stone;", ordinal = 0, shift = At.Shift.BEFORE))
     private static void beforeBlockRegister(CallbackInfo ci) {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
@@ -57,7 +51,9 @@ public abstract class MixinBlockBase {
     @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;", at = @At("HEAD"))
     private String getName(String name) {
         String ret = BlockNameSet.EVENT.getInvoker().getName((BlockBase) (Object) this, name);
-        Map<String, Map<String, Integer>> map = ModIDRegistry.registries.get(BlockBase.class);
+        if (!ModIDRegistry.registries.containsKey("item"))
+            ModIDRegistry.registries.put("item", new HashMap<>());
+        Map<String, Map<String, Integer>> map = ModIDRegistry.registries.get("item");
         String modid = "minecraft";
         String blockName = ret;
         String[] strings = ret == null ? new String[0] : ret.split(":");
