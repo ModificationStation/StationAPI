@@ -6,7 +6,7 @@ import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 public interface ItemNameSet {
 
-    Event<ItemNameSet> EVENT = EventFactory.INSTANCE.newEvent(ItemNameSet.class, (listeners) ->
+    Event<ItemNameSet> EVENT = EventFactory.INSTANCE.newEvent(ItemNameSet.class, listeners ->
             (itemBase, name) -> {
                 String ret = name;
                 for (ItemNameSet event : listeners)

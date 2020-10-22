@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface AchievementRegister {
 
-    Event<AchievementRegister> EVENT = EventFactory.INSTANCE.newEvent(AchievementRegister.class, (listeners) ->
-            (achievements) -> {
+    Event<AchievementRegister> EVENT = EventFactory.INSTANCE.newEvent(AchievementRegister.class, listeners ->
+            achievements -> {
                 for (AchievementRegister event : listeners)
                     event.registerAchievements(achievements);
             });

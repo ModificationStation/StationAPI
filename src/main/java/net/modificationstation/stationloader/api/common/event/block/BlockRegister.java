@@ -5,7 +5,7 @@ import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 public interface BlockRegister {
 
-    Event<BlockRegister> EVENT = EventFactory.INSTANCE.newEvent(BlockRegister.class, (listeners) ->
+    Event<BlockRegister> EVENT = EventFactory.INSTANCE.newEvent(BlockRegister.class, listeners ->
             () -> {
                 for (BlockRegister event : listeners)
                     event.registerBlocks();

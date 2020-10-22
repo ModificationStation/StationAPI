@@ -35,8 +35,8 @@ public interface RecipeRegister {
         private static final String modid = "minecraft";
     }
 
-    Event<RecipeRegister> EVENT = EventFactory.INSTANCE.newEvent(RecipeRegister.class, (listeners) ->
-            (type) -> {
+    Event<RecipeRegister> EVENT = EventFactory.INSTANCE.newEvent(RecipeRegister.class, listeners ->
+            type -> {
         for (RecipeRegister event : listeners)
             event.registerRecipes(type);
     });

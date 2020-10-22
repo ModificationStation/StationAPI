@@ -5,7 +5,7 @@ import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 public interface ItemRegister {
 
-    Event<ItemRegister> EVENT = EventFactory.INSTANCE.newEvent(ItemRegister.class, (listeners) ->
+    Event<ItemRegister> EVENT = EventFactory.INSTANCE.newEvent(ItemRegister.class, listeners ->
             () -> {
                 for (ItemRegister event : listeners)
                     event.registerItems();

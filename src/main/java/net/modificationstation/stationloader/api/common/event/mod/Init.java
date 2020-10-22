@@ -5,7 +5,7 @@ import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 public interface Init {
 
-    Event<Init> EVENT = EventFactory.INSTANCE.newEvent(Init.class, (listeners) ->
+    Event<Init> EVENT = EventFactory.INSTANCE.newEvent(Init.class, listeners ->
             () -> {
                 for (Init event : listeners)
                     event.init();

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PlayerHandlerRegister {
 
-    Event<PlayerHandlerRegister> EVENT = EventFactory.INSTANCE.newEvent(PlayerHandlerRegister.class, (listeners) ->
+    Event<PlayerHandlerRegister> EVENT = EventFactory.INSTANCE.newEvent(PlayerHandlerRegister.class, listeners ->
             (playerHandlers, player) -> {
                 for (PlayerHandlerRegister event : listeners)
                     event.registerPlayerHandlers(playerHandlers, player);

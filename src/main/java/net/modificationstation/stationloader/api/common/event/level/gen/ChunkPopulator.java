@@ -10,7 +10,7 @@ import java.util.Random;
 
 public interface ChunkPopulator {
 
-    Event<ChunkPopulator> EVENT = EventFactory.INSTANCE.newEvent(ChunkPopulator.class, (listeners) ->
+    Event<ChunkPopulator> EVENT = EventFactory.INSTANCE.newEvent(ChunkPopulator.class, listeners ->
             (level, levelSource, biome, x, z, random) -> {
                 for (ChunkPopulator event : listeners)
                     event.populate(level, levelSource, biome, x, z, random);

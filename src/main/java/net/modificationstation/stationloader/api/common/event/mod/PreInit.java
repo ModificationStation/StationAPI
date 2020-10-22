@@ -15,7 +15,7 @@ import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 public interface PreInit {
 
-    Event<PreInit> EVENT = EventFactory.INSTANCE.newEvent(PreInit.class, (listeners) ->
+    Event<PreInit> EVENT = EventFactory.INSTANCE.newEvent(PreInit.class, listeners ->
             () -> {
         for (PreInit event : listeners)
             event.preInit();

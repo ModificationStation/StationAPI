@@ -6,7 +6,7 @@ import net.modificationstation.stationloader.api.common.factory.EventFactory;
 
 public interface BlockNameSet {
 
-    Event<BlockNameSet> EVENT = EventFactory.INSTANCE.newEvent(BlockNameSet.class, (listeners) ->
+    Event<BlockNameSet> EVENT = EventFactory.INSTANCE.newEvent(BlockNameSet.class, listeners ->
             (blockBase, name) -> {
                 String ret = name;
                 for (BlockNameSet event : listeners)

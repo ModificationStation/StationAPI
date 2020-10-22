@@ -12,6 +12,7 @@ import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationloader.api.common.event.mod.Init;
 import net.modificationstation.stationloader.api.common.event.mod.PostInit;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
+import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPage;
@@ -27,6 +28,7 @@ import net.modificationstation.stationloader.impl.common.factory.EventFactory;
 import net.modificationstation.stationloader.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.impl.common.item.CustomReach;
 import net.modificationstation.stationloader.impl.common.lang.I18n;
+import net.modificationstation.stationloader.impl.common.packet.CustomData;
 import net.modificationstation.stationloader.impl.common.recipe.CraftingRegistry;
 import net.modificationstation.stationloader.impl.common.recipe.RecipeManager;
 import net.modificationstation.stationloader.impl.common.recipe.SmeltingRegistry;
@@ -100,6 +102,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.item.CustomReach.SUPPLIERS.put("getHandEntityReach", CustomReach::getHandEntityReach);
         getLogger().info("Setting up AchievementPageManager...");
         net.modificationstation.stationloader.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(new AchievementPageManager());
+        getLogger().info("Setting up CustomData packet...");
+        PacketRegister.EVENT.register(register -> register.accept(254, true, true, CustomData.class));
     }
 
     public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {

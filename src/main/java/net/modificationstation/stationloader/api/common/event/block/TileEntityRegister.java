@@ -7,8 +7,8 @@ import java.util.Map;
 
 public interface TileEntityRegister {
 
-    Event<TileEntityRegister> EVENT = EventFactory.INSTANCE.newEvent(TileEntityRegister.class, (listeners) ->
-            (tileEntityList) -> {
+    Event<TileEntityRegister> EVENT = EventFactory.INSTANCE.newEvent(TileEntityRegister.class, listeners ->
+            tileEntityList -> {
                 for (TileEntityRegister event : listeners)
                     event.registerTileEntities(tileEntityList);
             });
