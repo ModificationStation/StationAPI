@@ -22,6 +22,8 @@ Put the downloaded StationLoader jar into your mods folder, do NOT add as a jar 
 
 ## Using This to Make Mods
 
+If you havent already, grab a copy of the [BIN Fabric Example Mod](https://github.com/calmilamsy/BIN-fabric-example-mod/), extract it somewhere and open it in InteliiJ.  
+
 Add this to your build.gradle in the SECOND repositories entry (~line 33):  
 `maven { url "https://maven.glass-launcher.net/repo"}`
 
@@ -34,6 +36,10 @@ If so, download the latest **-dev** jar for HMI from [here](https://maven.glass-
 Then reimport your Gradle project.
 
 Proper documentation coming soon.
+
+## Common Issues
+
+If you are having any issues with setting up StationLoader or the example mod, have a look at the [BIN Fabric Example Mod's readme entry for common issues](https://github.com/calmilamsy/BIN-fabric-example-mod/#common-issues).  
 
 ## License
 
