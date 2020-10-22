@@ -7,19 +7,13 @@ seperate verisons for each, along with tools so mod developers no longer need to
 
 For general project setup instructions please see the [Fabric Wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
 
-Extra steps for better Mixin making in IntelliJ IDEA:
+Extra steps for better Mixin making and Fabric configuring in IntelliJ IDEA:
 
 1. Go to `File > Settings...`
-2. Go to `Plugins > The gear in the top middle > Manage Plugin Repositories...`
-3. Press `+` and add one of these: (You can check your version in `Help > About`)
-    - If using 2019.2: https://raw.githubusercontent.com/Earthcomputer/MinecraftDev/dev_new/updates/updatePlugins-192.xml
-    - If using 2019.3: https://raw.githubusercontent.com/Earthcomputer/MinecraftDev/dev_new/updates/updatePlugins-193.xml
-    - If using 2020.1: https://raw.githubusercontent.com/Earthcomputer/MinecraftDev/dev_new/updates/updatePlugins-201.xml
-4. Refresh the plugin repo (restarting will do the trick).
-5. Go back to plugins and install the `Minecraft Development` plugin.
-6. Restart again.
-7. Follow the instructions in [Using This to Make Mods](#using-this-to-make-mods).
-7. Profit!
+2. Go to `Plugins` and install the `Minecraft Development` plugin.
+3. Restart IntelliJ IDEA.
+4. Follow the instructions in [Using This to Make Mods](#using-this-to-make-mods).
+5. Profit!
 
 ## Using This to Run Mods
 
