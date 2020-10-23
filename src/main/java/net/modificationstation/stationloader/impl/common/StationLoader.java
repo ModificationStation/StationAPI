@@ -107,7 +107,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(new AchievementPageManager());
         getLogger().info("Setting up CustomData packet...");
         net.modificationstation.stationloader.api.common.config.Category networkConfig = config.getCategory("Network");
-        PacketRegister.EVENT.register(register -> register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class));
+        PacketRegister.EVENT.register((register, customDataPackets) -> register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class));
         config.save();
     }
 

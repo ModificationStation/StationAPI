@@ -36,9 +36,7 @@ public abstract class MixinItemBase {
     @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/item/ItemBase;", at = @At("HEAD"))
     private String getName(String name) {
         String ret = ItemNameSet.EVENT.getInvoker().getName((ItemBase) (Object) this, name);
-        if (!ModIDRegistry.registries.containsKey("item"))
-            ModIDRegistry.registries.put("item", new HashMap<>());
-        Map<String, Map<String, Integer>> map = ModIDRegistry.registries.get("item");
+        Map<String, Map<String, Integer>> map = ModIDRegistry.item;
         String modid = "minecraft";
         String itemName = ret;
         String[] strings = ret == null ? new String[0] : ret.split(":");

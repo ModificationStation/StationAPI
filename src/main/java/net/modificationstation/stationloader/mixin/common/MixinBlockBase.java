@@ -51,9 +51,7 @@ public abstract class MixinBlockBase {
     @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;", at = @At("HEAD"))
     private String getName(String name) {
         String ret = BlockNameSet.EVENT.getInvoker().getName((BlockBase) (Object) this, name);
-        if (!ModIDRegistry.registries.containsKey("item"))
-            ModIDRegistry.registries.put("item", new HashMap<>());
-        Map<String, Map<String, Integer>> map = ModIDRegistry.registries.get("item");
+        Map<String, Map<String, Integer>> map = ModIDRegistry.item;
         String modid = "minecraft";
         String blockName = ret;
         String[] strings = ret == null ? new String[0] : ret.split(":");

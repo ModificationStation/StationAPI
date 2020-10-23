@@ -13,6 +13,6 @@ public class JsonItemKey {
 
     public ItemInstance getItemInstance() {
         String modid = item.split(":")[0];
-        return new ItemInstance(ModIDRegistry.registries.get("item").get(modid).get(item.substring(modid.length() + 1)), count, damage);
+        return new ItemInstance(ModIDRegistry.item.get(modid).get(item.substring(modid.length() + 1)), count, damage);
     }
 }
