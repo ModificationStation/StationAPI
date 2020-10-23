@@ -51,15 +51,15 @@ public class StationLoader implements net.modificationstation.stationloader.api.
 
     @Override
     public void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException {
-            getLogger().info("Initializing StationLoader...");
-            Configurator.setLevel("mixin", Level.TRACE);
-            Configurator.setLevel("Fabric|Loader", Level.INFO);
-            Configurator.setLevel("StationLoader|API", Level.INFO);
-            getLogger().info("Setting up API...");
-            setupAPI();
-            getLogger().info("Loading mods...");
-            loadMods();
-            getLogger().info("Finished StationLoader setup");
+        getLogger().info("Initializing StationLoader...");
+        Configurator.setLevel("mixin", Level.TRACE);
+        Configurator.setLevel("Fabric|Loader", Level.INFO);
+        Configurator.setLevel("StationLoader|API", Level.INFO);
+        getLogger().info("Setting up API...");
+        setupAPI();
+        getLogger().info("Loading mods...");
+        loadMods();
+        getLogger().info("Finished StationLoader setup");
     }
 
     public void setupAPI() {
@@ -69,16 +69,19 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.config.Configuration.class, (args) -> new Configuration((File) args[0]));
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.config.Category.class, (args) -> new Category((String) args[0]));
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.config.Property.class, (args) -> new Property((String) args[0]));
-        generalFactory.INSTANCE.addFactory(net.modificationstation.stationloader.api.common.achievement.AchievementPage.class, (args) -> new AchievementPage((String) args[0]));
+        generalFactory.addFactory(net.modificationstation.stationloader.api.common.achievement.AchievementPage.class, (args) -> new AchievementPage((String) args[0]));
         net.modificationstation.stationloader.api.common.factory.EnumFactory enumFactory = net.modificationstation.stationloader.api.common.factory.EnumFactory.INSTANCE;
-        generalFactory.INSTANCE.addFactory(ToolMaterial.class, (args) -> enumFactory.addEnum(ToolMaterial.class, (String) args[0], new Class[] {int.class, int.class, float.class, int.class}, new Object[] {args[1], args[2], args[3], args[4]}));
-        generalFactory.INSTANCE.addFactory(EntityType.class, (args) -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[] {Class.class, int.class, Material.class, boolean.class}, new Object[] {args[1], args[2], args[3], args[4]}));
+        generalFactory.addFactory(ToolMaterial.class, (args) -> enumFactory.addEnum(ToolMaterial.class, (String) args[0], new Class[] {int.class, int.class, float.class, int.class}, new Object[] {args[1], args[2], args[3], args[4]}));
+        generalFactory.addFactory(EntityType.class, (args) -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[] {Class.class, int.class, Material.class, boolean.class}, new Object[] {args[1], args[2], args[3], args[4]}));
         getLogger().info("Setting up EnumFactory...");
         enumFactory.setHandler(new EnumFactory());
         getLogger().info("Setting up EventFactory...");
         net.modificationstation.stationloader.api.common.factory.EventFactory.INSTANCE.setHandler(new EventFactory());
         net.modificationstation.stationloader.api.common.factory.EventFactory.INSTANCE.addEvent(net.modificationstation.stationloader.api.common.event.Event.class, Event::new);
         net.modificationstation.stationloader.api.common.factory.EventFactory.INSTANCE.addEvent(net.modificationstation.stationloader.api.common.event.ModIDEvent.class, ModIDEvent::new);
+        getLogger().info("Setting up config...");
+        net.modificationstation.stationloader.api.common.config.Configuration config = generalFactory.newInst(net.modificationstation.stationloader.api.common.config.Configuration.class, new File(FabricLoader.getInstance().getConfigDirectory() + File.separator + "stationloader" + File.separator + "stationloader.cfg"));
+        config.load();
         getLogger().info("Setting up I18n...");
         net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.setHandler(new I18n());
         getLogger().info("Setting up BlockManager...");
@@ -103,7 +106,9 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         getLogger().info("Setting up AchievementPageManager...");
         net.modificationstation.stationloader.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(new AchievementPageManager());
         getLogger().info("Setting up CustomData packet...");
-        PacketRegister.EVENT.register(register -> register.accept(254, true, true, CustomData.class));
+        net.modificationstation.stationloader.api.common.config.Category networkConfig = config.getCategory("Network");
+        PacketRegister.EVENT.register(register -> register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class));
+        config.save();
     }
 
     public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
