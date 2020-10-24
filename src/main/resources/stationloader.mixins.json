@@ -28,7 +28,8 @@
   "server": [
     "server.Mixinclass_488",
     "server.MixinMinecraftServer",
-    "server.MixinServerPlayerPacketHandler"
+    "server.MixinServerPlayerPacketHandler",
+    "server.accessor.ServerPlayerPacketHandlerAccessor"
   ],
   "client": [
     "client.MixinAbstractClientPlayer",

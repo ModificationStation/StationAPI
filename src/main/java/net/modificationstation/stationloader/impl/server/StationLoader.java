@@ -1,6 +1,7 @@
 package net.modificationstation.stationloader.impl.server;
 
 import net.minecraft.server.MinecraftServer;
+import net.modificationstation.stationloader.impl.server.entity.player.PlayerHelper;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -13,5 +14,12 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
             super.setup();
         } else
             throw new IllegalAccessException("Tried running StationLoader.setup() from an unknown source!");
+    }
+
+    @Override
+    public void setupAPI() {
+        super.setupAPI();
+        getLogger().info("Setting up PlayerHelper...");
+        net.modificationstation.stationloader.api.common.entity.player.PlayerHelper.INSTANCE.setHandler(new PlayerHelper());
     }
 }

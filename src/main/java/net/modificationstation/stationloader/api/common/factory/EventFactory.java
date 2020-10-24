@@ -1,6 +1,7 @@
 package net.modificationstation.stationloader.api.common.factory;
 
 import net.modificationstation.stationloader.api.common.event.Event;
+import net.modificationstation.stationloader.api.common.event.ModIDEvent;
 import net.modificationstation.stationloader.api.common.util.HasHandler;
 
 import java.util.function.BiFunction;
@@ -37,6 +38,11 @@ public interface EventFactory extends HasHandler<EventFactory> {
     @SuppressWarnings("unchecked")
     default <T> Event<T> newEvent(Class<T> type, Function<T[], T> eventFunc) {
         return newEvent(Event.class, type, eventFunc);
+    }
+
+    @SuppressWarnings("unchecked")
+    default <T> ModIDEvent<T> newModIDEvent(Class<T> type, Function<T[], T> eventFunc) {
+        return newEvent(ModIDEvent.class, type, eventFunc);
     }
 
     <T, U extends Event<T>> U newEvent(Class<U> event, Class<T> type, Function<T[], T> eventFunc);

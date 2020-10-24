@@ -1,21 +1,31 @@
 package net.modificationstation.stationloader.api.common.event.packet;
 
+import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.packet.AbstractPacket;
-import net.modificationstation.stationloader.api.common.event.Event;
+import net.modificationstation.stationloader.api.common.event.ModIDEvent;
 import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import net.modificationstation.stationloader.impl.common.packet.CustomData;
 import uk.co.benjiweber.expressions.functions.QuadConsumer;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 public interface PacketRegister {
 
-    Event<PacketRegister> EVENT = EventFactory.INSTANCE.newEvent(PacketRegister.class, listeners ->
+    ModIDEvent<PacketRegister> EVENT = EventFactory.INSTANCE.newModIDEvent(PacketRegister.class, listeners ->
             (register, customDataPackets) -> {
-                for (PacketRegister event : listeners)
+                Map<String, Map<String, BiConsumer<PlayerBase, CustomData>>> packets = ModIDRegistry.packet;
+                String modid;
+                for (PacketRegister event : listeners) {
+                    modid = PacketRegister.EVENT.getListenerModID(event);
+                    if (!packets.containsKey(modid))
+                        packets.put(modid, new HashMap<>());
+                    customDataPackets = packets.get(modid);
                     event.registerPackets(register, customDataPackets);
+                }
             });
 
-    void registerPackets(QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> register, Map<String, Map<String, Consumer<CustomData>>> customDataPackets);
+    void registerPackets(QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> register, Map<String, BiConsumer<PlayerBase, CustomData>> customDataPackets);
 }

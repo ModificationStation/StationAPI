@@ -22,7 +22,7 @@ public class ModIDEvent<T> extends Event<T> implements net.modificationstation.s
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        if (clazz.isAssignableFrom(StationMod.class)) {
+        if (StationMod.class.isAssignableFrom(clazz)) {
             Class<? extends StationMod> modClass = clazz.asSubclass(StationMod.class);
             StationMod mod = StationLoader.INSTANCE.getModInstance(modClass);
             if (mod != null)
@@ -35,6 +35,11 @@ public class ModIDEvent<T> extends Event<T> implements net.modificationstation.s
     public void register(T listener, ModMetadata data) {
         listenerToModID.put(listener, data.getId());
         super.register(listener);
+    }
+
+    @Override
+    public String getListenerModID(T listener) {
+        return listenerToModID.get(listener);
     }
 
     private final Map<T, String> listenerToModID = new HashMap<>();
