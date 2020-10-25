@@ -9,7 +9,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class CustomData extends AbstractPacket {
+public class CustomData extends AbstractPacket implements net.modificationstation.stationloader.api.common.packet.CustomData {
 
     public CustomData() {}
 
@@ -263,16 +263,106 @@ public class CustomData extends AbstractPacket {
         return stringBuilder.toString();
     }
 
+    @Override
+    public void set(boolean[] booleans) {
+        this.booleans = booleans;
+    }
+
+    @Override
+    public void set(byte[] bytes) {
+        this.bytes = bytes;
+    }
+
+    @Override
+    public void set(short[] shorts) {
+        this.shorts = shorts;
+    }
+
+    @Override
+    public void set(char[] chars) {
+        this.chars = chars;
+    }
+
+    @Override
+    public void set(int[] ints) {
+        this.ints = ints;
+    }
+
+    @Override
+    public void set(long[] longs) {
+        this.longs = longs;
+    }
+
+    @Override
+    public void set(float[] floats) {
+        this.floats = floats;
+    }
+
+    @Override
+    public void set(double[] doubles) {
+        this.doubles = doubles;
+    }
+
+    @Override
+    public void set(String[] strings) {
+        this.strings = strings;
+    }
+
+    @Override
+    public boolean[] booleans() {
+        return booleans;
+    }
+
+    @Override
+    public byte[] bytes() {
+        return bytes;
+    }
+
+    @Override
+    public short[] shorts() {
+        return shorts;
+    }
+
+    @Override
+    public char[] chars() {
+        return chars;
+    }
+
+    @Override
+    public int[] ints() {
+        return ints;
+    }
+
+    @Override
+    public long[] longs() {
+        return longs;
+    }
+
+    @Override
+    public float[] floats() {
+        return floats;
+    }
+
+    @Override
+    public double[] doubles() {
+        return doubles;
+    }
+
+    @Override
+    public String[] strings() {
+        return strings;
+    }
+
     private String modid;
     private String packetid;
 
-    public boolean[] booleans;
-    public byte[] bytes;
-    public short[] shorts;
-    public char[] chars;
-    public int[] ints;
-    public long[] longs;
-    public float[] floats;
-    public double[] doubles;
-    public String[] strings;
+    private boolean[] booleans;
+    private byte[] bytes;
+    private short[] shorts;
+    private char[] chars;
+    private int[] ints;
+    private long[] longs;
+    private float[] floats;
+    private double[] doubles;
+    private String[] strings;
 }

@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftApplet;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.impl.client.entity.player.PlayerHelper;
 import net.modificationstation.stationloader.impl.client.model.CustomModelRenderer;
+import net.modificationstation.stationloader.impl.client.packet.PacketHelper;
 import net.modificationstation.stationloader.impl.client.texture.TextureFactory;
 import net.modificationstation.stationloader.impl.client.texture.TextureRegistry;
 
@@ -37,5 +38,7 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
         net.modificationstation.stationloader.api.client.texture.TextureRegistry.SUPPLIERS.put("registries", TextureRegistry::registries);
         getLogger().info("Setting up PlayerHelper...");
         net.modificationstation.stationloader.api.common.entity.player.PlayerHelper.INSTANCE.setHandler(new PlayerHelper());
+        getLogger().info("Setting up PacketHelper...");
+        net.modificationstation.stationloader.api.common.packet.PacketHelper.INSTANCE.setHandler(new PacketHelper());
     }
 }

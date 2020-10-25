@@ -2,6 +2,7 @@ package net.modificationstation.stationloader.impl.server;
 
 import net.minecraft.server.MinecraftServer;
 import net.modificationstation.stationloader.impl.server.entity.player.PlayerHelper;
+import net.modificationstation.stationloader.impl.server.packet.PacketHelper;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -21,5 +22,7 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
         super.setupAPI();
         getLogger().info("Setting up PlayerHelper...");
         net.modificationstation.stationloader.api.common.entity.player.PlayerHelper.INSTANCE.setHandler(new PlayerHelper());
+        getLogger().info("Setting up PacketHelper...");
+        net.modificationstation.stationloader.api.common.packet.PacketHelper.INSTANCE.setHandler(new PacketHelper());
     }
 }

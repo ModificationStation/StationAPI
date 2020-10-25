@@ -4,8 +4,8 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationloader.api.common.event.ModIDEvent;
 import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.packet.CustomData;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
-import net.modificationstation.stationloader.impl.common.packet.CustomData;
 import uk.co.benjiweber.expressions.functions.QuadConsumer;
 
 import java.util.HashMap;

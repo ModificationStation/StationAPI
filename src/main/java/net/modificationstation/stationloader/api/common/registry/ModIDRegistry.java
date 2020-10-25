@@ -1,7 +1,7 @@
 package net.modificationstation.stationloader.api.common.registry;
 
 import net.minecraft.entity.player.PlayerBase;
-import net.modificationstation.stationloader.impl.common.packet.CustomData;
+import net.modificationstation.stationloader.api.common.packet.CustomData;
 
 import java.util.HashMap;
 import java.util.Map;

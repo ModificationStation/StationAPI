@@ -7,6 +7,7 @@ import net.modificationstation.stationloader.api.common.util.HasHandler;
 public interface PlayerHelper extends HasHandler<PlayerHelper> {
 
     PlayerHelper INSTANCE = new PlayerHelper() {
+
         private PlayerHelper handler;
 
         @Override
