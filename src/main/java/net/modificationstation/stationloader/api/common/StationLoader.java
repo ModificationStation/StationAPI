@@ -1,5 +1,6 @@
 package net.modificationstation.stationloader.api.common;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -38,7 +39,7 @@ public interface StationLoader {
 
     void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException;
 
-    void addMod(ModMetadata data, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, URISyntaxException, IOException;
+    void addMod(ModMetadata data, EnvType envType, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException;
 
     Collection<StationMod> getAllMods();
 

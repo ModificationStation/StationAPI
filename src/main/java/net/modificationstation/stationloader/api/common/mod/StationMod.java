@@ -1,5 +1,6 @@
 package net.modificationstation.stationloader.api.common.mod;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.modificationstation.stationloader.api.common.config.Configuration;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
@@ -50,4 +51,14 @@ public interface StationMod extends PreInit {
     }
 
     Map<StationMod, ModMetadata> metadatas = new HashMap<>();
+
+    default EnvType getSide() {
+        return sides.get(this);
+    }
+
+    default void setSide(EnvType envType) {
+        sides.put(this, envType);
+    }
+
+    Map<StationMod, EnvType> sides = new HashMap<>();
 }

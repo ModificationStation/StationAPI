@@ -1,5 +1,6 @@
 package net.modificationstation.stationloader.impl.common;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -116,9 +117,12 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         for (ModContainer mod : FabricLoader.getInstance().getAllMods())
             if (mod.getMetadata() instanceof LoaderModMetadata) {
                 LoaderModMetadata loaderData = ((LoaderModMetadata) mod.getMetadata());
-                List<EntrypointMetadata> entries = loaderData.getEntrypoints("stationmod_" + FabricLoader.getInstance().getEnvironmentType().name().toLowerCase());
-                if (entries.isEmpty())
+                EnvType envType = FabricLoader.getInstance().getEnvironmentType();
+                List<EntrypointMetadata> entries = loaderData.getEntrypoints("stationmod_" + envType.name().toLowerCase());
+                if (entries.isEmpty()) {
+                    envType = null;
                     entries = loaderData.getEntrypoints("stationmod");
+                }
                 if (!entries.isEmpty()) {
                     Collection<NestedJarEntry> jars = loaderData.getJars();
                     String[] files = new String[jars.size()];
@@ -140,7 +144,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
                         out.append(" }");
                     getLogger().info("Detected a StationMod in " + out);
                     for (EntrypointMetadata entry : entries)
-                        addMod(mod.getMetadata(), entry.getValue());
+                        addMod(mod.getMetadata(), envType, entry.getValue());
                 }
             }
         getLogger().info("Invoking preInit event");
@@ -152,7 +156,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
     }
 
     @Override
-    public void addMod(ModMetadata data, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException {
+    public void addMod(ModMetadata data, EnvType envType, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException {
         getLogger().info("Adding \"" + className + "\" mod");
         Class<?> clazz = Class.forName(className);
         getLogger().info("Found the class");
@@ -164,6 +168,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         } else
             throw new RuntimeException("Corrupted mod " + data.getId() + " at " + className);
         getLogger().info("Created an instance");
+        mod.setSide(envType);
+        getLogger().info("Set mod's side");
         mod.setData(data);
         getLogger().info("Set mod's metadata");
         String name = data.getName() + "|StationMod";
