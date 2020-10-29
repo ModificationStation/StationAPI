@@ -30,6 +30,8 @@ import net.modificationstation.stationloader.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.impl.common.item.CustomReach;
 import net.modificationstation.stationloader.impl.common.lang.I18n;
 import net.modificationstation.stationloader.impl.common.packet.CustomData;
+import net.modificationstation.stationloader.impl.common.preset.item.PlaceableTileEntityWithMeta;
+import net.modificationstation.stationloader.impl.common.preset.item.PlaceableTileEntityWithMetaAndName;
 import net.modificationstation.stationloader.impl.common.recipe.CraftingRegistry;
 import net.modificationstation.stationloader.impl.common.recipe.RecipeManager;
 import net.modificationstation.stationloader.impl.common.recipe.SmeltingRegistry;
@@ -74,6 +76,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.config.Property.class, args -> new Property((String) args[0]));
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.achievement.AchievementPage.class, args -> new AchievementPage((String) args[0]));
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.packet.CustomData.class, args -> new CustomData((String) args[0]));
+        generalFactory.addFactory(net.modificationstation.stationloader.api.common.preset.item.PlaceableTileEntityWithMeta.class, args -> new PlaceableTileEntityWithMeta((int) args[0]));
+        generalFactory.addFactory(net.modificationstation.stationloader.api.common.preset.item.PlaceableTileEntityWithMetaAndName.class, args -> new PlaceableTileEntityWithMetaAndName((int) args[0]));
         net.modificationstation.stationloader.api.common.factory.EnumFactory enumFactory = net.modificationstation.stationloader.api.common.factory.EnumFactory.INSTANCE;
         generalFactory.addFactory(ToolMaterial.class, args -> enumFactory.addEnum(ToolMaterial.class, (String) args[0], new Class[] {int.class, int.class, float.class, int.class}, new Object[] {args[1], args[2], args[3], args[4]}));
         generalFactory.addFactory(EntityType.class, args -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[] {Class.class, int.class, Material.class, boolean.class}, new Object[] {args[1], args[2], args[3], args[4]}));

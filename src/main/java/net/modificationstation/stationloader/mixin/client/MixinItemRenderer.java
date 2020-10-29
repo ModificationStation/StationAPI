@@ -32,9 +32,14 @@ public class MixinItemRenderer {
         TextureRegistry.getRegistry(TextureRegistry.Vanilla.GUI_ITEMS).bindAtlas(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, atlasToBind);
     }
 
+    @Redirect(method = "method_1486(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;IIIII)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(I)V", ordinal = 1))
+    private void rebindBlockTexture(TextureManager textureManager, int i) {
+        TextureRegistry.getRegistry(TextureRegistry.Vanilla.TERRAIN).bindAtlas(textureManager, atlasToBind);
+    }
+
     @Redirect(method = "method_1486(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;IIIII)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(I)V", ordinal = 2))
     private void rebindItemTexture(TextureManager textureManager, int i) {
-        TextureRegistry.getRegistry(TextureRegistry.Vanilla.GUI_ITEMS).bindAtlas(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, atlasToBind);
+        TextureRegistry.getRegistry(TextureRegistry.Vanilla.GUI_ITEMS).bindAtlas(textureManager, atlasToBind);
     }
 
     private int atlasToBind;
