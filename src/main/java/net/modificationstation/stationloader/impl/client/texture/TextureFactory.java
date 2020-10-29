@@ -1,5 +1,6 @@
 package net.modificationstation.stationloader.impl.client.texture;
 
+import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -14,10 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.IntBuffer;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class TextureFactory implements net.modificationstation.stationloader.api.client.texture.TextureFactory {
@@ -79,6 +77,7 @@ public class TextureFactory implements net.modificationstation.stationloader.api
         else
             textureManager.method_1089(((TextureManagerAccessor) textureManager).invokeMethod_1091(var7), var6);
         textureMap.put(path, var6);
+        fakedAtlases.put(path, originalAtlas);
         return var6;
     }
 
@@ -86,21 +85,29 @@ public class TextureFactory implements net.modificationstation.stationloader.api
     public int nextSpriteID(TextureRegistry type) {
         if (!spriteIDs.containsKey(type)) {
             TreeMap<Integer, Integer> treeMap = new TreeMap<>();
-            int atlasID = createNewAtlas(type, stationOriginalAtlas, stationCopiedAtlas);
+            int atlasID = createNewAtlas(type, originalStationAtlasFormat, copiedStationAtlasFormat);
             treeMap.put(atlasID, 0);
             spriteIDs.put(type, treeMap);
         }
         TreeMap<Integer, Integer> atlases = spriteIDs.get(type);
         if (atlases.get(atlases.lastKey()) >= type.texturesPerFile())
-            atlases.put(createNewAtlas(type, stationOriginalAtlas, stationCopiedAtlas), 0);
+            atlases.put(createNewAtlas(type, originalStationAtlasFormat, copiedStationAtlasFormat), 0);
         int atlasID = atlases.lastKey();
         int spriteID = atlasID * type.texturesPerFile() + atlases.get(atlasID);
         atlases.put(atlasID, atlases.get(atlasID) + 1);
         return spriteID;
     }
 
-    public static String stationOriginalAtlas = "/assets/stationloader/atlases/station.%s.png";
-    public static String stationCopiedAtlas = "/assets/stationloader/atlases/station.%s.%s.png";
-    private static Texture[] textures = new Texture[0];
-    private static final Map<TextureRegistry, TreeMap<Integer, Integer>> spriteIDs = new HashMap<>();
+    @Override
+    public Map<String, String> getFakedAtlases() {
+        return Collections.unmodifiableMap(fakedAtlases);
+    }
+
+    @Getter
+    private final String
+            originalStationAtlasFormat = "/assets/stationloader/atlases/station.%s.png",
+            copiedStationAtlasFormat = "/assets/stationloader/atlases/station.%s.%s.png";
+    private final Map<String, String> fakedAtlases = new HashMap<>();
+    private Texture[] textures = new Texture[0];
+    private final Map<TextureRegistry, TreeMap<Integer, Integer>> spriteIDs = new HashMap<>();
 }

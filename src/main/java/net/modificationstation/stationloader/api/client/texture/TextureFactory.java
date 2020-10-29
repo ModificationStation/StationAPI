@@ -4,6 +4,8 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationloader.api.common.util.HasHandler;
 
+import java.util.Map;
+
 /**
  * Used to add textures.
  * You want to reference this inside your registerTextures method.
@@ -68,6 +70,24 @@ public interface TextureFactory extends HasHandler<TextureFactory> {
             checkAccess(handler);
             return handler.nextSpriteID(type);
         }
+
+        @Override
+        public String getOriginalStationAtlasFormat() {
+            checkAccess(handler);
+            return handler.getOriginalStationAtlasFormat();
+        }
+
+        @Override
+        public String getCopiedStationAtlasFormat() {
+            checkAccess(handler);
+            return handler.getCopiedStationAtlasFormat();
+        }
+
+        @Override
+        public Map<String, String> getFakedAtlases() {
+            checkAccess(handler);
+            return handler.getFakedAtlases();
+        }
     };
 
     int addTexture(TextureRegistry type, String pathToImage);
@@ -79,4 +99,10 @@ public interface TextureFactory extends HasHandler<TextureFactory> {
     int createAtlasCopy(TextureRegistry type, String originalAtlas, int ID, String path);
 
     int nextSpriteID(TextureRegistry type);
+
+    String getOriginalStationAtlasFormat();
+
+    String getCopiedStationAtlasFormat();
+
+    Map<String, String> getFakedAtlases();
 }

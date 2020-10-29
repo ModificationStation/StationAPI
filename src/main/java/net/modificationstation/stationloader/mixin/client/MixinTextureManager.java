@@ -2,12 +2,16 @@ package net.modificationstation.stationloader.mixin.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
+import net.modificationstation.stationloader.api.client.texture.TextureFactory;
 import net.modificationstation.stationloader.api.client.texture.TextureRegistry;
 import net.modificationstation.stationloader.impl.client.texture.OpenGLHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+
+import java.io.InputStream;
 
 @Mixin(TextureManager.class)
 @Environment(EnvType.CLIENT)
@@ -21,5 +25,10 @@ public class MixinTextureManager {
                 return;
             }
         OpenGLHelper.bindTexture(target, texture);
+    }
+
+    @Redirect(method = "method_1096()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resource/TexturePack;method_976(Ljava/lang/String;)Ljava/io/InputStream;"))
+    private InputStream fixFakeAtlases(TexturePack texturePack, String string) {
+        return texturePack.method_976(TextureFactory.INSTANCE.getFakedAtlases().getOrDefault(string, string));
     }
 }
