@@ -10,6 +10,7 @@
     "common.MixinBlockBase",
     "common.MixinChunkCache",
     "common.MixinEntityRegistry",
+    "common.MixinHandshakeC2S",
     "common.MixinItemBase",
     "common.MixinItemInstance",
     "common.MixinPlayerBase",
@@ -28,6 +29,7 @@
   "server": [
     "server.Mixinclass_488",
     "server.MixinMinecraftServer",
+    "server.MixinPendingConnection",
     "server.MixinServerPlayerPacketHandler",
     "server.accessor.ServerPlayerPacketHandlerAccessor"
   ],

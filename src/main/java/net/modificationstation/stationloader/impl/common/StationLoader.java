@@ -58,6 +58,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         Configurator.setLevel("StationLoader|API", Level.INFO);
         getLogger().info("Setting up API...");
         setupAPI();
+        getLogger().info("Setting up lang folder...");
+        net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/stationloader/lang");
         getLogger().info("Loading mods...");
         loadMods();
         getLogger().info("Finished StationLoader setup");
