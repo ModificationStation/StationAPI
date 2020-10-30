@@ -12,30 +12,25 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public interface StationLoader {
 
-    StationLoader INSTANCE = getInstance();
-
-    @Deprecated
-    static StationLoader getInstance() {
-        if (INSTANCE == null) {
-            try {
-                Optional<ModContainer> modContainerOptional =  FabricLoader.getInstance().getModContainer("stationloader");
-                if (modContainerOptional.isPresent()) {
-                    Class<?> slClass = Class.forName(((LoaderModMetadata) modContainerOptional.get().getMetadata()).getEntrypoints("stationloader_" + FabricLoader.getInstance().getEnvironmentType().name().toLowerCase()).get(0).getValue());
-                    if (StationLoader.class.isAssignableFrom(slClass))
-                        return (StationLoader) slClass.newInstance();
-                    else
-                        throw new RuntimeException("Corrupted StationLoader class!");
-                } else
-                    throw new RuntimeException("Corrupted fabric.mod.json!");
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        } else
-            return INSTANCE;
-    }
+    StationLoader INSTANCE = ((Supplier<StationLoader>) () -> {
+        try {
+            Optional<ModContainer> modContainerOptional =  FabricLoader.getInstance().getModContainer("stationloader");
+            if (modContainerOptional.isPresent()) {
+                Class<?> slClass = Class.forName(((LoaderModMetadata) modContainerOptional.get().getMetadata()).getEntrypoints("stationloader_" + FabricLoader.getInstance().getEnvironmentType().name().toLowerCase()).get(0).getValue());
+                if (StationLoader.class.isAssignableFrom(slClass))
+                    return (StationLoader) slClass.newInstance();
+                else
+                    throw new RuntimeException("Corrupted StationLoader class!");
+            } else
+                throw new RuntimeException("Corrupted fabric.mod.json!");
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }).get();
 
     void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException;
 
