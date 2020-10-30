@@ -54,7 +54,7 @@ public class AchievementPage implements net.modificationstation.stationloader.ap
         } else
         if(l == 22)
         {
-            k = random.nextInt(2) != 0 ? BlockBase.REDSTONE_ORE.texture : BlockBase.ORE_DIAMOND.texture;
+            k = random.nextInt(2) != 0 ? BlockBase.REDSTONE_ORE.texture : BlockBase.DIAMOND_ORE.texture;
         } else
         if(l == 10)
         {
