@@ -11,6 +11,8 @@ import net.fabricmc.loader.metadata.NestedJarEntry;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.tool.ToolMaterial;
+import net.modificationstation.stationloader.api.common.event.block.BlockNameSet;
+import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
 import net.modificationstation.stationloader.api.common.event.mod.Init;
 import net.modificationstation.stationloader.api.common.event.mod.PostInit;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
@@ -121,6 +123,20 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         getLogger().info("Setting up CustomData packet...");
         net.modificationstation.stationloader.api.common.config.Category networkConfig = config.getCategory("Network");
         PacketRegister.EVENT.register((register, customDataPackets) -> register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class));
+        getLogger().info("Setting up BlockNameSet...");
+        BlockNameSet.EVENT.register((block, name) -> {
+            net.modificationstation.stationloader.api.common.event.ModIDEvent<BlockRegister> event = BlockRegister.EVENT;
+            BlockRegister listener = event.getCurrentListener();
+            if (listener != null) {
+                String modid = event.getListenerModID(listener);
+                if (modid != null) {
+                    modid += ":";
+                    if (!name.startsWith(modid) && !name.contains(":"))
+                        return modid + name;
+                }
+            }
+            return name;
+        });
         config.save();
     }
 

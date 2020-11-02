@@ -8,7 +8,7 @@ public interface ModIDEvent<T> extends Event<T> {
 
     T getCurrentListener();
 
-    T setCurrentListener(T listener);
+    void setCurrentListener(T listener);
 
     String getListenerModID(T listener);
 }

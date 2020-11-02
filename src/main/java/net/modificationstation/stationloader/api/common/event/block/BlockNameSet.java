@@ -8,10 +8,9 @@ public interface BlockNameSet {
 
     Event<BlockNameSet> EVENT = EventFactory.INSTANCE.newEvent(BlockNameSet.class, listeners ->
             (blockBase, name) -> {
-                String ret = name;
                 for (BlockNameSet event : listeners)
-                    ret = event.getName(blockBase, name);
-                return ret;
+                    name = event.getName(blockBase, name);
+                return name;
             });
 
     String getName(BlockBase blockBase, String name);

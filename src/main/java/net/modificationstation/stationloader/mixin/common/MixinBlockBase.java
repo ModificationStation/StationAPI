@@ -6,6 +6,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.PlaceableTileEntity;
 import net.modificationstation.stationloader.api.client.event.model.ModelRegister;
 import net.modificationstation.stationloader.api.common.block.BlockManager;
+import net.modificationstation.stationloader.api.common.event.ModIDEvent;
 import net.modificationstation.stationloader.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
@@ -39,7 +40,11 @@ public abstract class MixinBlockBase {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/block/BlockBase;TRAPDOOR:Lnet/minecraft/block/BlockBase;", opcode = Opcodes.PUTSTATIC, shift = At.Shift.AFTER))
     private static void afterBlockRegister(CallbackInfo ci) {
-        BlockRegister.EVENT.getInvoker().registerBlocks();
+        ModIDEvent<BlockRegister> event = BlockRegister.EVENT;
+        BlockRegister invoker = event.getInvoker();
+        event.setCurrentListener(invoker);
+        invoker.registerBlocks();
+        event.setCurrentListener(null);
     }
 
     @SuppressWarnings("UnresolvedMixinReference")
@@ -50,11 +55,11 @@ public abstract class MixinBlockBase {
 
     @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;", at = @At("HEAD"))
     private String getName(String name) {
-        String ret = BlockNameSet.EVENT.getInvoker().getName((BlockBase) (Object) this, name);
+        name = BlockNameSet.EVENT.getInvoker().getName((BlockBase) (Object) this, name);
         Map<String, Map<String, Integer>> map = ModIDRegistry.item;
         String modid = "minecraft";
-        String blockName = ret;
-        String[] strings = ret == null ? new String[0] : ret.split(":");
+        String blockName = name;
+        String[] strings = name == null ? new String[0] : name.split(":");
         if (strings.length > 1 && FabricLoader.getInstance().getModContainer(strings[0]).isPresent()) {
             modid = strings[0];
             blockName = blockName.substring(modid.length() + 1);
@@ -66,6 +71,6 @@ public abstract class MixinBlockBase {
         if (oldRawName != null)
             blockEntries.remove(oldRawName.substring("tile.".length()));
         blockEntries.put(blockName, ((BlockBase) (Object) this).id);
-        return ret;
+        return name;
     }
 }
