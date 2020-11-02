@@ -2,6 +2,7 @@ package net.modificationstation.stationloader.impl.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftApplet;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.impl.client.entity.player.PlayerHelper;
@@ -15,6 +16,10 @@ import java.net.URISyntaxException;
 
 @Environment(EnvType.CLIENT)
 public class StationLoader extends net.modificationstation.stationloader.impl.common.StationLoader {
+
+    protected StationLoader(ModMetadata data) {
+        super(data);
+    }
 
     @Override
     public void setup() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {

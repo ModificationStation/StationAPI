@@ -1,5 +1,6 @@
 package net.modificationstation.stationloader.impl.common;
 
+import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -51,6 +52,10 @@ import java.util.*;
 public class StationLoader implements net.modificationstation.stationloader.api.common.StationLoader {
 
     protected static final Logger LOGGER = LogManager.getFormatterLogger("StationLoader|API");
+
+    protected StationLoader(ModMetadata data) {
+        this.data = data;
+    }
 
     @Override
     public void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException {
@@ -223,5 +228,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         return LOGGER;
     }
 
+    @Getter
+    private final ModMetadata data;
     private final Map<Class<? extends StationMod>, StationMod> mods = new HashMap<>();
 }
