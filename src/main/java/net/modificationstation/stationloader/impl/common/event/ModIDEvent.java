@@ -1,5 +1,7 @@
 package net.modificationstation.stationloader.impl.common.event;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.modificationstation.stationloader.api.common.StationLoader;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
@@ -42,5 +44,7 @@ public class ModIDEvent<T> extends Event<T> implements net.modificationstation.s
         return listenerToModID.get(listener);
     }
 
+    @Getter @Setter
+    private T currentListener;
     private final Map<T, String> listenerToModID = new HashMap<>();
 }
