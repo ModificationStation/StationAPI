@@ -23,9 +23,9 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
 
     @Override
     public void setup() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
-        if (new Exception().getStackTrace()[1].getClassName().equals(MinecraftApplet.class.getName())) {
+        if (new Exception().getStackTrace()[1].getClassName().equals(MinecraftApplet.class.getName()))
             super.setup();
-        } else
+        else
             throw new IllegalAccessException("Tried running StationLoader.setup() from an unknown source!");
     }
 
