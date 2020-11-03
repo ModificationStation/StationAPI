@@ -1,8 +1,10 @@
 package net.modificationstation.stationloader.api.client.item;
 
+import net.minecraft.item.ItemInstance;
+
 public interface ArmorTextureProvider {
 
-    String getChestplateModelTexture();
+    String getChestplateModelTexture(ItemInstance itemInstance);
 
-    String getOtherModelTexture();
+    String getOtherModelTexture(ItemInstance itemInstance);
 }

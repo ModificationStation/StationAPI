@@ -25,7 +25,7 @@ public class MixinPlayerRenderer extends LivingEntityRenderer {
     private void onArmorTexture(PlayerBase arg, int i, float f, CallbackInfoReturnable<Boolean> cir, ItemInstance var4, ItemBase var5, Armour var6) {
         if (var6 instanceof ArmorTextureProvider) {
             ArmorTextureProvider var7 = (ArmorTextureProvider) var6;
-            bindTexture(i == 2 ? var7.getChestplateModelTexture() : var7.getOtherModelTexture());
+            bindTexture(i == 2 ? var7.getChestplateModelTexture(var4) : var7.getOtherModelTexture(var4));
         }
     }
 }
