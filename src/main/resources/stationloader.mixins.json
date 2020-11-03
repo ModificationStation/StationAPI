@@ -47,6 +47,7 @@
     "client.MixinMinecraft",
     "client.MixinMinecraftApplet",
     "client.MixinParticleManager",
+    "client.MixinPlayerRenderer",
     "client.MixinRemoteClientInteractionManager",
     "client.MixinTextureManager",
     "client.MixinTileRenderer",
