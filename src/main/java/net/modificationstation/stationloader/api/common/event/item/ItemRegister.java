@@ -7,12 +7,10 @@ public interface ItemRegister {
 
     ModIDEvent<ItemRegister> EVENT = EventFactory.INSTANCE.newModIDEvent(ItemRegister.class, listeners ->
             () -> {
-                ModIDEvent<ItemRegister> event = ItemRegister.EVENT;
                 for (ItemRegister listener : listeners) {
-                    event.setCurrentListener(listener);
+                    ItemRegister.EVENT.setCurrentListener(listener);
                     listener.registerItems();
                 }
-                event.setCurrentListener(null);
             });
 
     void registerItems();
