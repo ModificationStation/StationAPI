@@ -1,6 +1,7 @@
 package net.modificationstation.stationloader.mixin.common;
 
 import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.PlaceableTileEntity;
@@ -30,11 +31,11 @@ public abstract class MixinBlockBase {
 
     @Shadow public abstract String getName();
 
+    @Environment(EnvType.CLIENT)
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(II)Lnet/minecraft/block/Stone;", ordinal = 0, shift = At.Shift.BEFORE))
     private static void beforeBlockRegister(CallbackInfo ci) {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
-            ModelRegister.EVENT.getInvoker().registerModels(ModelRegister.Type.BLOCKS);
+        ModelRegister.EVENT.getInvoker().registerModels(ModelRegister.Type.BLOCKS);
     }
 
     @SuppressWarnings("UnresolvedMixinReference")

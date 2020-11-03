@@ -7,11 +7,12 @@ public interface BlockRegister {
 
     ModIDEvent<BlockRegister> EVENT = EventFactory.INSTANCE.newModIDEvent(BlockRegister.class, listeners ->
             () -> {
-                for (BlockRegister event : listeners) {
-                    BlockRegister.EVENT.setCurrentListener(event);
-                    event.registerBlocks();
+                ModIDEvent<BlockRegister> event = BlockRegister.EVENT;
+                for (BlockRegister listener : listeners) {
+                    event.setCurrentListener(listener);
+                    listener.registerBlocks();
                 }
-                BlockRegister.EVENT.setCurrentListener(null);
+                event.setCurrentListener(null);
             });
 
     void registerBlocks();

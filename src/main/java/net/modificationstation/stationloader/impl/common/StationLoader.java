@@ -13,6 +13,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationloader.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
+import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
+import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import net.modificationstation.stationloader.api.common.event.mod.Init;
 import net.modificationstation.stationloader.api.common.event.mod.PostInit;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
@@ -127,6 +129,19 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         BlockNameSet.EVENT.register((block, name) -> {
             net.modificationstation.stationloader.api.common.event.ModIDEvent<BlockRegister> event = BlockRegister.EVENT;
             BlockRegister listener = event.getCurrentListener();
+            if (listener != null) {
+                String modid = event.getListenerModID(listener);
+                if (modid != null) {
+                    modid += ":";
+                    if (!name.startsWith(modid) && !name.contains(":"))
+                        return modid + name;
+                }
+            }
+            return name;
+        });
+        ItemNameSet.EVENT.register((item, name) -> {
+            net.modificationstation.stationloader.api.common.event.ModIDEvent<ItemRegister> event = ItemRegister.EVENT;
+            ItemRegister listener = event.getCurrentListener();
             if (listener != null) {
                 String modid = event.getListenerModID(listener);
                 if (modid != null) {

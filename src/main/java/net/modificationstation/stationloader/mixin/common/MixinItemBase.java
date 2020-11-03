@@ -1,8 +1,11 @@
 package net.modificationstation.stationloader.mixin.common;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationloader.api.client.event.model.ModelRegister;
+import net.modificationstation.stationloader.api.common.event.ModIDEvent;
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
@@ -21,6 +24,7 @@ public abstract class MixinItemBase {
 
     @Shadow public abstract String getTranslationKey();
 
+    @Environment(EnvType.CLIENT)
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(ILnet/minecraft/item/tool/ToolMaterial;)Lnet/minecraft/item/tool/Shovel;", ordinal = 0, shift = At.Shift.BEFORE))
     private static void beforeItemRegister(CallbackInfo ci) {
@@ -30,7 +34,11 @@ public abstract class MixinItemBase {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/Stats;onItemsRegistered()V", shift = At.Shift.BEFORE))
     private static void afterItemRegister(CallbackInfo ci) {
-        ItemRegister.EVENT.getInvoker().registerItems();
+        ModIDEvent<ItemRegister> event = ItemRegister.EVENT;
+        ItemRegister invoker = event.getInvoker();
+        event.setCurrentListener(invoker);
+        invoker.registerItems();
+        event.setCurrentListener(null);
     }
 
     @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/item/ItemBase;", at = @At("HEAD"))
