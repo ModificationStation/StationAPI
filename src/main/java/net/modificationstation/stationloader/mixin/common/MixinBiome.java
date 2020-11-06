@@ -20,7 +20,7 @@ public class MixinBiome {
         BiomeRegister.EVENT.getInvoker().registerBiomes();
     }
 
-    @Inject(method = "getClimateBiome(FF)Lnet/minecraft/level/biome/Biome;", at = @At("RETURN"))
+    @Inject(method = "getClimateBiome(FF)Lnet/minecraft/level/biome/Biome;", at = @At("RETURN"), cancellable = true)
     private static void getBiome(float temperature, float rainfall, CallbackInfoReturnable<Biome> cir) {
         AtomicReference<Biome> biome = new AtomicReference<>(cir.getReturnValue());
         BiomeByClimateProvider.EVENT.getInvoker().getBiome(biome, temperature, rainfall);
