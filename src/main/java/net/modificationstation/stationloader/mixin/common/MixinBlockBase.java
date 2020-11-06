@@ -64,14 +64,22 @@ public abstract class MixinBlockBase {
         if (strings.length > 1 && FabricLoader.getInstance().getModContainer(strings[0]).isPresent()) {
             modid = strings[0];
             blockName = blockName.substring(modid.length() + 1);
+            blockName = specialCases.getOrDefault(blockName, blockName);
         }
         if (!map.containsKey(modid))
             map.put(modid, new HashMap<>());
         Map<String, Integer> blockEntries = map.get(modid);
-        String oldRawName = getName();
-        if (oldRawName != null)
-            blockEntries.remove(oldRawName.substring("tile.".length()));
+        if (actualName != null)
+            blockEntries.remove(actualName);
+        actualName = blockName;
         blockEntries.put(blockName, ((BlockBase) (Object) this).id);
         return name;
+    }
+
+    private String actualName;
+
+    private static final Map<String, String> specialCases = new HashMap<>();
+    static {
+        specialCases.put("brick", "brick_block");
     }
 }
