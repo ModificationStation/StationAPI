@@ -14,16 +14,19 @@ public class GeneralFactory implements net.modificationstation.stationloader.api
     @Override
     public <T> T newInst(Class<T> clazz, Object... args) {
         Object o = factories.get(clazz).apply(args);
-        if (clazz.isInstance(o))
-            return clazz.cast(o);
+        if (o == null)
+            throw new RuntimeException("Null instance for class " + clazz.getName() + "!");
         else
-            throw new RuntimeException("Corrupted factory for class " + clazz.getName() + "!");
+            if (clazz.isInstance(o))
+                return clazz.cast(o);
+            else
+                throw new RuntimeException("Corrupted factory for class " + clazz.getName() + "!");
     }
 
     @Override
-    public void addFactory(Class<?> clazz, Function<Object[], Object> factory) {
+    public <T> void addFactory(Class<T> clazz, Function<Object[], T> factory) {
         factories.put(clazz, factory);
     }
 
-    private final Map<Class<?>, Function<Object[], Object>> factories = new HashMap<>();
+    private final Map<Class<?>, Function<Object[], ?>> factories = new HashMap<>();
 }

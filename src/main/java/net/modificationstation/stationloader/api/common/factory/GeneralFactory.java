@@ -28,7 +28,7 @@ public interface GeneralFactory extends HasHandler<GeneralFactory> {
         }
 
         @Override
-        public void addFactory(Class<?> clazz, Function<Object[], Object> factory) {
+        public <T> void addFactory(Class<T> clazz, Function<Object[], T> factory) {
             checkAccess(handler);
             handler.addFactory(clazz, factory);
         }
@@ -38,5 +38,5 @@ public interface GeneralFactory extends HasHandler<GeneralFactory> {
 
     <T> T newInst(Class<T> clazz, Object... args);
 
-    void addFactory(Class<?> clazz, Function<Object[], Object> factory);
+    <T> void addFactory(Class<T> clazz, Function<Object[], T> factory);
 }
