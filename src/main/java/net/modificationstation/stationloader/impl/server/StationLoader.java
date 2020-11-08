@@ -4,7 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.server.MinecraftServer;
-import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.modificationstation.stationloader.api.common.packet.StationHandshake;
 import net.modificationstation.stationloader.api.server.event.network.HandleLogin;
 import net.modificationstation.stationloader.impl.server.entity.player.PlayerHelper;
@@ -53,23 +52,21 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
                     return;
                 }
                 Map<String, String> clientMods = handshake.getMods();
-                ModMetadata data;
                 String modid;
                 String clientVersion;
                 String serverVersion;
-                for (StationMod serverMod : getAllMods()) {
-                    if (serverMod.getSide() == null) {
-                        data = serverMod.getData();
-                        modid = data.getId();
-                        serverVersion = data.getVersion().getFriendlyString();
+                for (ModMetadata serverMod : getAllStationMods()) {
+                    if (getModSide(serverMod) == null) {
+                        modid = serverMod.getId();
+                        serverVersion = serverMod.getVersion().getFriendlyString();
                         if (clientMods.containsKey(modid)) {
                             clientVersion = clientMods.get(modid);
                             if (clientVersion == null || !clientVersion.equals(serverVersion)) {
-                                pendingConnection.drop(translationStorage.translate("disconnect.stationloader:mod_version_mismatch", data.getName(), modid, serverVersion, clientVersion == null ? "null" : clientVersion));
+                                pendingConnection.drop(translationStorage.translate("disconnect.stationloader:mod_version_mismatch", serverMod.getName(), modid, serverVersion, clientVersion == null ? "null" : clientVersion));
                                 return;
                             }
                         } else {
-                            pendingConnection.drop(translationStorage.translate("disconnect.stationloader:missing_mod", data.getName(), modid, serverVersion));
+                            pendingConnection.drop(translationStorage.translate("disconnect.stationloader:missing_mod", serverMod.getName(), modid, serverVersion));
                             return;
                         }
                     }

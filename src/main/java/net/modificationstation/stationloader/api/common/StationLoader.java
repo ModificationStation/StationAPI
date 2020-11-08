@@ -47,13 +47,21 @@ public interface StationLoader {
 
     void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException;
 
+    void addModAssets(ModMetadata data) throws IOException, URISyntaxException;
+
     void addMod(ModMetadata data, EnvType envType, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException;
 
-    Collection<StationMod> getAllMods();
+    Collection<ModMetadata> getAllStationMods();
 
-    Collection<Class<? extends StationMod>> getAllModsClasses();
+    Collection<Class<? extends StationMod>> getAllStationModsClasses();
+
+    Collection<StationMod> getAllStationModInstances();
+
+    Collection<Class<? extends StationMod>> getStationModClasses(ModMetadata data);
 
     StationMod getModInstance(Class<? extends StationMod> modClass);
+
+    EnvType getModSide(ModMetadata data);
 
     Logger getLogger();
 

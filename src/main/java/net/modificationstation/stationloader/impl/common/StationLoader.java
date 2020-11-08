@@ -185,9 +185,13 @@ public class StationLoader implements net.modificationstation.stationloader.api.
                     if (files.length > 1)
                         out.append(" }");
                     getLogger().info("Detected a StationMod in " + out);
+                    stationMods.put(loaderData, new HashSet<>());
+                    modSides.put(loaderData, envType);
                     for (EntrypointMetadata entry : entries)
                         addMod(mod.getMetadata(), envType, entry.getValue());
                 }
+                getLogger().info("Searching for StationLoader assets in " + loaderData.getName() + " (" + loaderData.getId() + ") mod");
+                addModAssets(loaderData);
             }
         getLogger().info("Invoking preInit event");
         PreInit.EVENT.getInvoker().preInit();
@@ -198,7 +202,33 @@ public class StationLoader implements net.modificationstation.stationloader.api.
     }
 
     @Override
+    public void addModAssets(ModMetadata data) throws IOException, URISyntaxException {
+        boolean hasAssets = false;
+        String modid = data.getId();
+        String pathName = "/assets/" + modid + "/" + getData().getId() + "/lang";
+        URL path = getClass().getResource(pathName);
+        if (path != null) {
+            hasAssets = true;
+            net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder(pathName);
+            getLogger().info("Registered lang path");
+        }
+        pathName = "/assets/" + modid + "/" + getData().getId() + "/recipes";
+        path = getClass().getResource(pathName);
+        if (path != null) {
+            hasAssets = true;
+            new RecursiveReader(pathName, (file) -> file.endsWith(".json")).read().forEach(net.modificationstation.stationloader.api.common.recipe.RecipeManager.INSTANCE::addJsonRecipe);
+            getLogger().info("Listed recipes");
+        }
+        if (!stationMods.containsKey(data) && !modSides.containsKey(data) && hasAssets) {
+            getLogger().info("Registering the mod as assets-only common mod.");
+            stationMods.put(data, new HashSet<>());
+            modSides.put(data, null);
+        }
+    }
+
+    @Override
     public void addMod(ModMetadata data, EnvType envType, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException {
+        String modid = data.getId();
         getLogger().info("Adding \"" + className + "\" mod");
         Class<?> clazz = Class.forName(className);
         getLogger().info("Found the class");
@@ -206,9 +236,10 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         StationMod mod;
         if (StationMod.class.isAssignableFrom(clazz)) {
             modClass = clazz.asSubclass(StationMod.class);
+            stationMods.get(data).add(modClass);
             mod = modClass.newInstance();
         } else
-            throw new RuntimeException("Corrupted mod " + data.getId() + " at " + className);
+            throw new RuntimeException("Corrupted mod " + modid + " at " + className);
         getLogger().info("Created an instance");
         mod.setSide(envType);
         getLogger().info("Set mod's side");
@@ -218,40 +249,43 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         mod.setLogger(LogManager.getFormatterLogger(name));
         Configurator.setLevel(name, Level.INFO);
         getLogger().info("Registered logger \"" + name + "\"");
-        mod.setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + data.getId()));
-        mod.setDefaultConfig(net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.newInst(net.modificationstation.stationloader.api.common.config.Configuration.class, new File(mod.getConfigPath() + File.separator + data.getId() + ".cfg")));
+        mod.setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + modid));
+        mod.setDefaultConfig(net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.newInst(net.modificationstation.stationloader.api.common.config.Configuration.class, new File(mod.getConfigPath() + File.separator + modid + ".cfg")));
         getLogger().info("Initialized default config");
-        String pathName = "/assets/" + data.getId() + "/lang";
-        URL path = getClass().getResource(pathName);
-        if (path != null) {
-            net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder(pathName);
-            getLogger().info("Registered lang path");
-        }
-        pathName = "/assets/" +data.getId() + "/recipes";
-        path = getClass().getResource(pathName);
-        if (path != null) {
-            new RecursiveReader(pathName, (file) -> file.endsWith(".json")).read().forEach(net.modificationstation.stationloader.api.common.recipe.RecipeManager.INSTANCE::addJsonRecipe);
-            getLogger().info("Listed recipes");
-        }
         PreInit.EVENT.register(mod);
         getLogger().info("Registered events");
-        mods.put(modClass, mod);
+        stationModInstances.put(modClass, mod);
         getLogger().info("Success");
     }
 
     @Override
-    public Collection<StationMod> getAllMods() {
-        return Collections.unmodifiableCollection(mods.values());
+    public Collection<ModMetadata> getAllStationMods() {
+        return Collections.unmodifiableCollection(stationMods.keySet());
     }
 
     @Override
-    public Collection<Class<? extends StationMod>> getAllModsClasses() {
-        return Collections.unmodifiableCollection(mods.keySet());
+    public Collection<Class<? extends StationMod>> getAllStationModsClasses() {
+        return Collections.unmodifiableCollection(stationModInstances.keySet());
+    }
+
+    @Override
+    public Collection<StationMod> getAllStationModInstances() {
+        return Collections.unmodifiableCollection(stationModInstances.values());
+    }
+
+    @Override
+    public Collection<Class<? extends StationMod>> getStationModClasses(ModMetadata data) {
+        return Collections.unmodifiableSet(stationMods.get(data));
     }
 
     @Override
     public StationMod getModInstance(Class<? extends StationMod> modClass) {
-        return mods.get(modClass);
+        return stationModInstances.get(modClass);
+    }
+
+    @Override
+    public EnvType getModSide(ModMetadata data) {
+        return modSides.get(data);
     }
 
     @Override
@@ -261,5 +295,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
 
     @Getter
     private final ModMetadata data;
-    private final Map<Class<? extends StationMod>, StationMod> mods = new HashMap<>();
+    private final Map<ModMetadata, Set<Class<? extends StationMod>>> stationMods = new HashMap<>();
+    private final Map<Class<? extends StationMod>, StationMod> stationModInstances = new HashMap<>();
+    private final Map<ModMetadata, EnvType> modSides = new HashMap<>();
 }

@@ -39,11 +39,9 @@ public abstract class MixinHandshakeC2S extends AbstractPacket implements Statio
         stationLoader = slData.getId();
         version = slData.getVersion().getFriendlyString();
         mods = new HashMap<>();
-        StationLoader.INSTANCE.getAllMods().forEach(mod -> {
-            if (mod.getSide() == null) {
-                ModMetadata data = mod.getData();
-                mods.put(data.getId(), data.getVersion().getFriendlyString());
-            }
+        StationLoader.INSTANCE.getAllStationMods().forEach(mod -> {
+            if (StationLoader.INSTANCE.getModSide(mod) == null)
+                mods.put(mod.getId(), mod.getVersion().getFriendlyString());
         });
     }
 
