@@ -8,6 +8,7 @@ import net.modificationstation.stationloader.api.client.event.model.ModelRegiste
 import net.modificationstation.stationloader.api.common.event.ModIDEvent;
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
+import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,7 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(ItemBase.class)
-public abstract class MixinItemBase {
+public class MixinItemBase {
+
+    public MixinItemBase(int i) {}
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At("HEAD"))
@@ -40,6 +43,7 @@ public abstract class MixinItemBase {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/Stats;onItemsRegistered()V", shift = At.Shift.BEFORE))
     private static void afterItemRegister(CallbackInfo ci) {
+        GeneralFactory.INSTANCE.addFactory(ItemBase.class, (args) -> ItemBase.class.cast(new MixinItemBase((int) args[0])));
         ModIDEvent<ItemRegister> event = ItemRegister.EVENT;
         ItemRegister invoker = event.getInvoker();
         event.setCurrentListener(invoker);
