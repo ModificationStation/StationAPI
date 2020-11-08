@@ -10,7 +10,6 @@ import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -22,7 +21,14 @@ import java.util.Map;
 @Mixin(ItemBase.class)
 public abstract class MixinItemBase {
 
-    @Shadow public abstract String getTranslationKey();
+    @SuppressWarnings("UnresolvedMixinReference")
+    @Inject(method = "<clinit>", at = @At("HEAD"))
+    private static void onStatic(CallbackInfo ci) {
+        specialCases = new HashMap<>();
+        Map<String, String> minecraft = new HashMap<>();
+        minecraft.put("clay", "clay_ball");
+        specialCases.put("minecraft", minecraft);
+    }
 
     @Environment(EnvType.CLIENT)
     @SuppressWarnings("UnresolvedMixinReference")
@@ -43,22 +49,27 @@ public abstract class MixinItemBase {
 
     @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/item/ItemBase;", at = @At("HEAD"))
     private String getName(String name) {
-        String ret = ItemNameSet.EVENT.getInvoker().getName((ItemBase) (Object) this, name);
+        name = ItemNameSet.EVENT.getInvoker().getName((ItemBase) (Object) this, name);
         Map<String, Map<String, Integer>> map = ModIDRegistry.item;
         String modid = "minecraft";
-        String itemName = ret;
-        String[] strings = ret == null ? new String[0] : ret.split(":");
+        String itemName = name;
+        String[] strings = name == null ? new String[0] : name.split(":");
         if (strings.length > 1 && FabricLoader.getInstance().getModContainer(strings[0]).isPresent()) {
             modid = strings[0];
             itemName = itemName.substring(modid.length() + 1);
         }
+        itemName = specialCases.containsKey(modid) ? specialCases.get(modid).getOrDefault(itemName, itemName) : itemName;
         if (!map.containsKey(modid))
             map.put(modid, new HashMap<>());
         Map<String, Integer> itemEntries = map.get(modid);
-        String oldRawName = getTranslationKey();
-        if (oldRawName != null)
-            itemEntries.remove(oldRawName.substring("item.".length()));
+        if (actualName != null)
+            itemEntries.remove(actualName);
+        actualName = itemName;
         itemEntries.put(itemName, ((ItemBase) (Object) this).id);
-        return ret;
+        return name;
     }
+
+    private String actualName;
+
+    private static Map<String, Map<String, String>> specialCases;
 }

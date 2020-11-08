@@ -37,15 +37,20 @@ public class MixinBlockBase {
 
     @Shadow public String getName() {return null;}
 
-    @Environment(EnvType.CLIENT)
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At("HEAD"))
-    private static void beforeBlockRegister(CallbackInfo ci) {
-        ModelRegister.EVENT.getInvoker().registerModels(ModelRegister.Type.BLOCKS);
+    private static void onStatic(CallbackInfo ci) {
         specialCases = new HashMap<>();
         Map<String, String> minecraft = new HashMap<>();
         minecraft.put("brick", "brick_block");
         specialCases.put("minecraft", minecraft);
+    }
+
+    @Environment(EnvType.CLIENT)
+    @SuppressWarnings("UnresolvedMixinReference")
+    @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(II)Lnet/minecraft/block/Stone;", ordinal = 0, shift = At.Shift.BEFORE))
+    private static void beforeBlockRegister(CallbackInfo ci) {
+        ModelRegister.EVENT.getInvoker().registerModels(ModelRegister.Type.BLOCKS);
     }
 
     @SuppressWarnings("UnresolvedMixinReference")
