@@ -9,6 +9,7 @@
     "common.MixinBiome",
     "common.MixinBlockBase",
     "common.MixinChunkCache",
+    "common.MixinCraftingResult",
     "common.MixinEntityRegistry",
     "common.MixinHandshakeC2S",
     "common.MixinItemBase",

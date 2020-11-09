@@ -8,10 +8,9 @@ public interface ItemNameSet {
 
     Event<ItemNameSet> EVENT = EventFactory.INSTANCE.newEvent(ItemNameSet.class, listeners ->
             (itemBase, name) -> {
-                String ret = name;
                 for (ItemNameSet event : listeners)
-                    ret = event.getName(itemBase, name);
-                return ret;
+                    name = event.getName(itemBase, name);
+                return name;
             });
 
     String getName(ItemBase itemBase, String name);
