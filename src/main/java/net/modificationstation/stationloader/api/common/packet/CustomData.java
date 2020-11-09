@@ -20,6 +20,8 @@ public interface CustomData {
 
     void set(String[] strings);
 
+    void set(Object[] objects);
+
     boolean[] booleans();
 
     byte[] bytes();
@@ -37,4 +39,6 @@ public interface CustomData {
     double[] doubles();
 
     String[] strings();
+
+    Object[] objects();
 }
