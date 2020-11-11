@@ -7,6 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.modificationstation.stationloader.api.common.packet.StationHandshake;
 import net.modificationstation.stationloader.api.server.event.network.HandleLogin;
 import net.modificationstation.stationloader.impl.server.entity.player.PlayerHelper;
+import net.modificationstation.stationloader.impl.server.gui.GuiHelper;
 import net.modificationstation.stationloader.impl.server.packet.PacketHelper;
 
 import java.io.IOException;
@@ -69,6 +70,8 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
                 }
             }
         });
+        getLogger().info("Setting up GuiHelper...");
+        net.modificationstation.stationloader.api.common.gui.GuiHelper.INSTANCE.setHandler(new GuiHelper());
     }
 
     @Override

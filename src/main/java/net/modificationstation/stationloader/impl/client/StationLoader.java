@@ -4,6 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftApplet;
 import net.minecraft.inventory.InventoryBase;
+import net.modificationstation.stationloader.api.client.event.gui.GuiRegister;
+import net.modificationstation.stationloader.api.common.event.ModIDEvent;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
@@ -16,6 +18,7 @@ import net.modificationstation.stationloader.impl.client.texture.TextureRegistry
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 @Environment(EnvType.CLIENT)
 public class StationLoader extends net.modificationstation.stationloader.impl.common.StationLoader {
@@ -46,6 +49,19 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
         net.modificationstation.stationloader.api.common.packet.PacketHelper.INSTANCE.setHandler(new PacketHelper());
         getLogger().info("Setting up GuiHelper...");
         net.modificationstation.stationloader.api.common.gui.GuiHelper.INSTANCE.setHandler(new GuiHelper());
-        PacketRegister.EVENT.register((register, customDataPackets) -> customDataPackets.put("open_gui", ((playerBase, customData) -> ModIDRegistry.gui.get(customData.strings()[0]).get((short) Byte.toUnsignedInt(customData.bytes()[0])).accept(playerBase, (InventoryBase) customData.objects()[0], customData))), getData());
+        PacketRegister.EVENT.register((register, customDataPackets) -> {
+            customDataPackets.put("open_gui", ((playerBase, customData) -> {
+                boolean isClient = playerBase.level.isClient;
+                ModIDRegistry.gui.get(customData.strings()[0]).get((short) Byte.toUnsignedInt(customData.bytes()[0])).accept(playerBase, isClient ? null : (InventoryBase) customData.objects()[0], customData);
+                if (isClient)
+                    playerBase.container.currentContainerId = customData.ints()[0];
+            }));
+            ModIDEvent<GuiRegister> event = GuiRegister.EVENT;
+            GuiRegister invoker = event.getInvoker();
+            String modid = event.getListenerModID(invoker);
+            if (modid != null)
+                ModIDRegistry.gui.put(modid, new HashMap<>());
+            invoker.registerGUIs(ModIDRegistry.gui.get(modid));
+        }, getData());
     }
 }

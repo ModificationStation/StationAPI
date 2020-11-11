@@ -101,7 +101,9 @@ public class CustomData extends AbstractPacket implements net.modificationstatio
                 Gson gson = new Gson();
                 for (int i = 0; i < length; i++)
                     try {
-                        objects[i] = gson.fromJson(method_802(in, 32767), Class.forName(method_802(in, 32767)));
+                        String objectJson = method_802(in, 32767);
+                        String className = method_802(in, 32767);
+                        objects[i] = className.equals("null") ? null : gson.fromJson(objectJson, Class.forName(className));
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
@@ -206,7 +208,7 @@ public class CustomData extends AbstractPacket implements net.modificationstatio
                 Gson gson = new Gson();
                 for (Object o : objects) {
                     writeString(gson.toJson(o), out);
-                    writeString(o.getClass().getName(), out);
+                    writeString(o == null ? "null" : o.getClass().getName(), out);
                 }
             }
         } catch (IOException e) {
@@ -279,7 +281,7 @@ public class CustomData extends AbstractPacket implements net.modificationstatio
         int size = Short.BYTES;
         Gson gson = new Gson();
         for (Object o : objects)
-            size += size(gson.toJson(o).toCharArray()) + size(o.getClass().getName().toCharArray());
+            size += size(gson.toJson(o).toCharArray()) + size(o == null ? "null".toCharArray() : o.getClass().getName().toCharArray());
         return size;
     }
 

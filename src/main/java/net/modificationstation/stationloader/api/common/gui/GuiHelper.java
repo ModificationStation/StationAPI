@@ -20,19 +20,21 @@ public interface GuiHelper extends HasHandler<GuiHelper> {
         }
 
         @Override
-        public void openGUI(PlayerBase playerBase, String modid, short guiID, InventoryBase inventory, ContainerBase container) {
+        public void openGUI(PlayerBase player, String modid, short guiID, InventoryBase inventory, ContainerBase container) {
             checkAccess(handler);
-            handler.openGUI(playerBase, modid, guiID, inventory, container);
+            handler.openGUI(player, modid, guiID, inventory, container);
         }
 
         @Override
-        public void openGUI(PlayerBase playerBase, String modid, short guiID, InventoryBase inventory, ContainerBase container, Consumer<CustomData> customData) {
+        public void openGUI(PlayerBase player, String modid, short guiID, InventoryBase inventory, ContainerBase container, Consumer<CustomData> customData) {
             checkAccess(handler);
-            handler.openGUI(playerBase, modid, guiID, inventory, container, customData);
+            handler.openGUI(player, modid, guiID, inventory, container, customData);
         }
     };
 
-    void openGUI(PlayerBase playerBase, String modid, short guiID, InventoryBase inventory, ContainerBase container);
+    default void openGUI(PlayerBase player, String modid, short guiID, InventoryBase inventory, ContainerBase container) {
+        openGUI(player, modid, guiID, inventory, container, customData -> {});
+    }
 
-    void openGUI(PlayerBase playerBase, String modid, short guiID, InventoryBase inventory, ContainerBase container, Consumer<CustomData> customData);
+    void openGUI(PlayerBase player, String modid, short guiID, InventoryBase inventory, ContainerBase container, Consumer<CustomData> customData);
 }

@@ -33,6 +33,7 @@
     "server.MixinMinecraftServer",
     "server.MixinPendingConnection",
     "server.MixinServerPlayerPacketHandler",
+    "server.accessor.ServerPlayerAccessor",
     "server.accessor.ServerPlayerPacketHandlerAccessor"
   ],
   "client": [

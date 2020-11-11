@@ -18,17 +18,22 @@ public class ModIDEvent<T> extends Event<T> implements net.modificationstation.s
 
     @Override
     public void register(T listener) {
+        StackTraceElement[] elements = new Exception().getStackTrace();
         Class<?> clazz;
-        try {
-            clazz = Class.forName(new Exception().getStackTrace()[1].getClassName());
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        if (StationMod.class.isAssignableFrom(clazz)) {
-            Class<? extends StationMod> modClass = clazz.asSubclass(StationMod.class);
-            StationMod mod = StationLoader.INSTANCE.getModInstance(modClass);
-            if (mod != null)
-                listenerToModID.put(listener, mod.getData().getId());
+        for (int i = 1; i < elements.length; i++) {
+            try {
+                clazz = Class.forName(elements[i].getClassName());
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            if (StationMod.class.isAssignableFrom(clazz)) {
+                Class<? extends StationMod> modClass = clazz.asSubclass(StationMod.class);
+                StationMod mod = StationLoader.INSTANCE.getModInstance(modClass);
+                if (mod != null) {
+                    listenerToModID.put(listener, mod.getData().getId());
+                    break;
+                }
+            }
         }
         super.register(listener);
     }
