@@ -15,10 +15,6 @@ import java.util.Map;
 
 public class StationLoader extends net.modificationstation.stationloader.impl.common.StationLoader {
 
-    protected StationLoader(ModMetadata data) {
-        super(data);
-    }
-
     @Override
     public void setup() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
         if (new Exception().getStackTrace()[1].getClassName().equals(MinecraftServer.class.getName()))

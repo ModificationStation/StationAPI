@@ -385,6 +385,11 @@ public class CustomData extends AbstractPacket implements net.modificationstatio
         return objects;
     }
 
+    @Override
+    public AbstractPacket getPacketInstance() {
+        return this;
+    }
+
     private String modid;
     private String packetid;
 

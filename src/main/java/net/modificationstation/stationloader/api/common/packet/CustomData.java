@@ -1,5 +1,7 @@
 package net.modificationstation.stationloader.api.common.packet;
 
+import net.minecraft.packet.AbstractPacket;
+
 public interface CustomData {
 
     void set(boolean[] booleans);
@@ -41,4 +43,6 @@ public interface CustomData {
     String[] strings();
 
     Object[] objects();
+
+    AbstractPacket getPacketInstance();
 }

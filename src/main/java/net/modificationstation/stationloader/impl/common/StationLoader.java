@@ -1,6 +1,5 @@
 package net.modificationstation.stationloader.impl.common;
 
-import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -43,7 +42,6 @@ import net.modificationstation.stationloader.impl.common.recipe.SmeltingRegistry
 import net.modificationstation.stationloader.impl.common.util.RecursiveReader;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.File;
@@ -55,22 +53,24 @@ import java.util.*;
 
 public class StationLoader implements net.modificationstation.stationloader.api.common.StationLoader {
 
-    protected static final Logger LOGGER = LogManager.getFormatterLogger("StationLoader|API");
-
-    protected StationLoader(ModMetadata data) {
-        this.data = data;
-    }
-
     @Override
     public void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException {
-        getLogger().info("Initializing StationLoader...");
+        setLogger(LogManager.getFormatterLogger("StationLoader|API"));
         Configurator.setLevel("mixin", Level.TRACE);
         Configurator.setLevel("Fabric|Loader", Level.INFO);
         Configurator.setLevel("StationLoader|API", Level.INFO);
+        getLogger().info("Initializing StationLoader...");
+        setSide(null);
+        String modid = getData().getId();
+        setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + modid));
+        setDefaultConfig(new Configuration(new File(getConfigPath() + File.separator + modid + ".cfg")));
+        net.modificationstation.stationloader.api.common.config.Configuration config = getDefaultConfig();
+        config.load();
         getLogger().info("Setting up API...");
         setupAPI();
+        config.save();
         getLogger().info("Setting up lang folder...");
-        net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/stationloader/lang");
+        net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/" + modid + "/lang");
         getLogger().info("Loading mods...");
         loadMods();
         getLogger().info("Finished StationLoader setup");
@@ -96,9 +96,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.factory.EventFactory.INSTANCE.setHandler(new EventFactory());
         net.modificationstation.stationloader.api.common.factory.EventFactory.INSTANCE.addEvent(net.modificationstation.stationloader.api.common.event.Event.class, Event::new);
         net.modificationstation.stationloader.api.common.factory.EventFactory.INSTANCE.addEvent(net.modificationstation.stationloader.api.common.event.ModIDEvent.class, ModIDEvent::new);
-        getLogger().info("Setting up config...");
-        net.modificationstation.stationloader.api.common.config.Configuration config = generalFactory.newInst(net.modificationstation.stationloader.api.common.config.Configuration.class, new File(FabricLoader.getInstance().getConfigDirectory() + File.separator + "stationloader" + File.separator + "stationloader.cfg"));
-        config.load();
         getLogger().info("Setting up I18n...");
         net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.setHandler(new I18n());
         getLogger().info("Setting up BlockManager...");
@@ -123,8 +120,9 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         getLogger().info("Setting up AchievementPageManager...");
         net.modificationstation.stationloader.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(new AchievementPageManager());
         getLogger().info("Setting up CustomData packet...");
+        net.modificationstation.stationloader.api.common.config.Configuration config = getDefaultConfig();
         net.modificationstation.stationloader.api.common.config.Category networkConfig = config.getCategory("Network");
-        PacketRegister.EVENT.register((register, customDataPackets) -> register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class));
+        PacketRegister.EVENT.register((register, customDataPackets) -> register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class), getData());
         getLogger().info("Setting up BlockNameSet...");
         BlockNameSet.EVENT.register((block, name) -> {
             net.modificationstation.stationloader.api.common.event.ModIDEvent<BlockRegister> event = BlockRegister.EVENT;
@@ -152,7 +150,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
             }
             return name;
         });
-        config.save();
     }
 
     public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
@@ -288,13 +285,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         return modSides.get(data);
     }
 
-    @Override
-    public Logger getLogger() {
-        return LOGGER;
-    }
-
-    @Getter
-    private final ModMetadata data;
     private final Map<ModMetadata, Set<Class<? extends StationMod>>> stationMods = new HashMap<>();
     private final Map<Class<? extends StationMod>, StationMod> stationModInstances = new HashMap<>();
     private final Map<ModMetadata, EnvType> modSides = new HashMap<>();

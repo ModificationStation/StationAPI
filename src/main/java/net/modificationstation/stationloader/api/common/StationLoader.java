@@ -6,17 +6,15 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.metadata.LoaderModMetadata;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
-import org.apache.logging.log4j.Logger;
+import net.modificationstation.stationloader.api.common.util.ModCore;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface StationLoader {
+public interface StationLoader extends ModCore {
 
     StationLoader INSTANCE = ((Supplier<StationLoader>) () -> {
         try {
@@ -27,12 +25,8 @@ public interface StationLoader {
                     Class<?> clazz = Class.forName(((LoaderModMetadata) data).getEntrypoints("stationloader_" + FabricLoader.getInstance().getEnvironmentType().name().toLowerCase()).get(0).getValue());
                     if (StationLoader.class.isAssignableFrom(clazz)) {
                         Class<? extends StationLoader> slClass = clazz.asSubclass(StationLoader.class);
-                        Constructor<? extends StationLoader> constructor = slClass.getDeclaredConstructor(ModMetadata.class);
-                        boolean accessible = constructor.isAccessible();
-                        if (!accessible)
-                            constructor.setAccessible(true);
-                        StationLoader stationLoader = constructor.newInstance(data);
-                        constructor.setAccessible(accessible);
+                        StationLoader stationLoader = slClass.newInstance();
+                        stationLoader.setData(data);
                         return stationLoader;
                     } else
                         throw new RuntimeException("Corrupted StationLoader class!");
@@ -40,7 +34,7 @@ public interface StationLoader {
                     throw new RuntimeException("Corrupted fabric.mod.json!");
             } else
                 throw new RuntimeException("Absent fabric.mod.json! (Impossible?)");
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }).get();
@@ -62,8 +56,4 @@ public interface StationLoader {
     StationMod getModInstance(Class<? extends StationMod> modClass);
 
     EnvType getModSide(ModMetadata data);
-
-    Logger getLogger();
-
-    ModMetadata getData();
 }

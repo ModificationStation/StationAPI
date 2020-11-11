@@ -2,10 +2,10 @@ package net.modificationstation.stationloader.impl.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftApplet;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.impl.client.entity.player.PlayerHelper;
+import net.modificationstation.stationloader.impl.client.gui.GuiHelper;
 import net.modificationstation.stationloader.impl.client.model.CustomModelRenderer;
 import net.modificationstation.stationloader.impl.client.packet.PacketHelper;
 import net.modificationstation.stationloader.impl.client.texture.TextureFactory;
@@ -16,10 +16,6 @@ import java.net.URISyntaxException;
 
 @Environment(EnvType.CLIENT)
 public class StationLoader extends net.modificationstation.stationloader.impl.common.StationLoader {
-
-    protected StationLoader(ModMetadata data) {
-        super(data);
-    }
 
     @Override
     public void setup() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
@@ -45,5 +41,7 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
         net.modificationstation.stationloader.api.common.entity.player.PlayerHelper.INSTANCE.setHandler(new PlayerHelper());
         getLogger().info("Setting up PacketHelper...");
         net.modificationstation.stationloader.api.common.packet.PacketHelper.INSTANCE.setHandler(new PacketHelper());
+        getLogger().info("Setting up GuiHelper...");
+        net.modificationstation.stationloader.api.common.gui.GuiHelper.INSTANCE.setHandler(new GuiHelper());
     }
 }
