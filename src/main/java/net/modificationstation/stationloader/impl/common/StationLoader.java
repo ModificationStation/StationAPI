@@ -64,11 +64,9 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         String modid = getData().getId();
         setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + modid));
         setDefaultConfig(new Configuration(new File(getConfigPath() + File.separator + modid + ".cfg")));
-        net.modificationstation.stationloader.api.common.config.Configuration config = getDefaultConfig();
-        config.load();
         getLogger().info("Setting up API...");
         setupAPI();
-        config.save();
+        getDefaultConfig().save();
         getLogger().info("Setting up lang folder...");
         net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/" + modid + "/lang");
         getLogger().info("Loading mods...");
@@ -121,6 +119,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(new AchievementPageManager());
         getLogger().info("Setting up CustomData packet...");
         net.modificationstation.stationloader.api.common.config.Configuration config = getDefaultConfig();
+        config.load();
         net.modificationstation.stationloader.api.common.config.Category networkConfig = config.getCategory("Network");
         PacketRegister.EVENT.register((register, customDataPackets) -> register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class), getData());
         getLogger().info("Setting up BlockNameSet...");
