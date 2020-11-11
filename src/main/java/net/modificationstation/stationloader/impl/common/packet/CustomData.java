@@ -198,10 +198,8 @@ public class CustomData extends AbstractPacket implements net.modificationstatio
             }
             if (!absent[8]) {
                 out.writeShort(strings.length);
-                for (String s : strings) {
-                    out.writeInt(s.length());
-                    out.writeChars(s);
-                }
+                for (String s : strings)
+                    writeString(s, out);
             }
             if (!absent[9]) {
                 out.writeShort(objects.length);

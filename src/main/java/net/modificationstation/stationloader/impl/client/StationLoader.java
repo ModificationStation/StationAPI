@@ -3,7 +3,10 @@ package net.modificationstation.stationloader.impl.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftApplet;
+import net.minecraft.inventory.InventoryBase;
+import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
+import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import net.modificationstation.stationloader.impl.client.entity.player.PlayerHelper;
 import net.modificationstation.stationloader.impl.client.gui.GuiHelper;
 import net.modificationstation.stationloader.impl.client.model.CustomModelRenderer;
@@ -43,5 +46,6 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
         net.modificationstation.stationloader.api.common.packet.PacketHelper.INSTANCE.setHandler(new PacketHelper());
         getLogger().info("Setting up GuiHelper...");
         net.modificationstation.stationloader.api.common.gui.GuiHelper.INSTANCE.setHandler(new GuiHelper());
+        PacketRegister.EVENT.register((register, customDataPackets) -> customDataPackets.put("open_gui", ((playerBase, customData) -> ModIDRegistry.gui.get(customData.strings()[0]).get((short) Byte.toUnsignedInt(customData.bytes()[0])).accept(playerBase, (InventoryBase) customData.objects()[0], customData))), getData());
     }
 }
