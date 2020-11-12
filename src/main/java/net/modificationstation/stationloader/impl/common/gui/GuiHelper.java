@@ -20,17 +20,14 @@ public abstract class GuiHelper implements net.modificationstation.stationloader
         packet.set(new byte[] {
                 (byte) guiID
         });
-        packet.set(new Object[] {
-                inventory
-        });
-        sideDependentPacket(player, packet);
+        sideDependentPacket(player, inventory, packet);
         customData.accept(packet);
         PacketHelper.INSTANCE.sendTo(player, packet.getPacketInstance());
         afterPacketSent(player, container);
 
     }
 
-    protected abstract void sideDependentPacket(PlayerBase player, CustomData packet);
+    protected abstract void sideDependentPacket(PlayerBase player, InventoryBase inventory, CustomData packet);
 
     protected abstract void afterPacketSent(PlayerBase player, ContainerBase container);
 }
