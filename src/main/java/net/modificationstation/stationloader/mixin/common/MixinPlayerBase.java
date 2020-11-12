@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
@@ -14,10 +15,7 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.SleepStatus;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationloader.api.common.entity.player.HasPlayerHandlers;
-import net.modificationstation.stationloader.api.common.entity.player.PlayerBaseSettersGettersInvokers;
-import net.modificationstation.stationloader.api.common.entity.player.PlayerBaseSuper;
-import net.modificationstation.stationloader.api.common.entity.player.PlayerHandler;
+import net.modificationstation.stationloader.api.common.entity.player.*;
 import net.modificationstation.stationloader.api.common.event.entity.player.PlayerHandlerRegister;
 import net.modificationstation.stationloader.impl.common.entity.player.PlayerAPI;
 import net.modificationstation.stationloader.mixin.common.accessor.PlayerBaseAccessor;
@@ -25,6 +23,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -33,9 +32,14 @@ import java.util.List;
 import java.util.Random;
 
 @Mixin(PlayerBase.class)
-public abstract class MixinPlayerBase extends Living implements PlayerBaseAccessor, PlayerBaseSettersGettersInvokers, HasPlayerHandlers, PlayerBaseSuper {
+public abstract class MixinPlayerBase extends Living implements PlayerBaseAccessor, PlayerBaseSettersGettersInvokers, HasPlayerHandlers, PlayerBaseSuper, StrengthOnMeta {
 
     @Shadow protected boolean sleeping;
+
+    @Shadow public abstract float getStrengh(BlockBase arg);
+
+    @Shadow public abstract ItemInstance getHeldItem();
+
     private List<PlayerHandler> playerBases;
 
     public MixinPlayerBase(Level world) {
@@ -390,4 +394,24 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
     public void setIsJumping(boolean value) {
         this.jumping = value;
     }
+
+    @Override
+    public float getStrengh(BlockBase arg, int meta) {
+        this.meta = meta;
+        return getStrengh(arg);
+    }
+
+    @Redirect(method = "getStrengh(Lnet/minecraft/block/BlockBase;)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;method_674(Lnet/minecraft/block/BlockBase;)F"))
+    private float getStrengthForMeta(PlayerInventory playerInventory, BlockBase arg) {
+        if (meta == null)
+            return playerInventory.method_674(arg);
+        else {
+            ItemInstance itemInstance = playerInventory.getHeldItem();
+            float ret = itemInstance == null ? playerInventory.method_674(arg) : ((net.modificationstation.stationloader.api.common.item.StrengthOnMeta) itemInstance.getType()).getStrengthOnBlock(itemInstance, arg, meta);
+            meta = null;
+            return ret;
+        }
+    }
+
+    private Integer meta;
 }

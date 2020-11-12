@@ -3,14 +3,19 @@ package net.modificationstation.stationloader.mixin.common;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
+import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationloader.api.client.event.model.ModelRegister;
 import net.modificationstation.stationloader.api.common.event.ModIDEvent;
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
+import net.modificationstation.stationloader.api.common.item.EffectiveOnMeta;
+import net.modificationstation.stationloader.api.common.item.StrengthOnMeta;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -20,7 +25,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(ItemBase.class)
-public class MixinItemBase {
+public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
+
+    @Shadow public boolean isEffectiveOn(BlockBase tile) { return false; }
+
+    @Shadow public float getStrengthOnBlock(ItemInstance item, BlockBase tile) { return 0; }
 
     public MixinItemBase(int i) {}
 
@@ -71,6 +80,16 @@ public class MixinItemBase {
         actualName = itemName;
         itemEntries.put(itemName, ((ItemBase) (Object) this).id);
         return name;
+    }
+
+    @Override
+    public boolean isEffectiveOn(BlockBase tile, int meta) {
+        return isEffectiveOn(tile);
+    }
+
+    @Override
+    public float getStrengthOnBlock(ItemInstance item, BlockBase tile, int meta) {
+        return getStrengthOnBlock(item, tile);
     }
 
     private String actualName;

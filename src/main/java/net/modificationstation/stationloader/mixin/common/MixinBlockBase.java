@@ -5,13 +5,17 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.PlaceableTileEntity;
 import net.modificationstation.stationloader.api.client.event.model.ModelRegister;
 import net.modificationstation.stationloader.api.common.block.BlockManager;
+import net.modificationstation.stationloader.api.common.block.BlockStrengthPerMeta;
+import net.modificationstation.stationloader.api.common.entity.player.StrengthOnMeta;
 import net.modificationstation.stationloader.api.common.event.ModIDEvent;
 import net.modificationstation.stationloader.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
+import net.modificationstation.stationloader.api.common.item.EffectiveOnMeta;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -27,7 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(BlockBase.class)
-public class MixinBlockBase {
+public class MixinBlockBase implements BlockStrengthPerMeta {
 
     public MixinBlockBase(int i, Material material) { }
 
@@ -36,6 +40,12 @@ public class MixinBlockBase {
     @Shadow @Final public static BlockBase[] BY_ID;
 
     @Shadow public String getName() {return null;}
+
+    @Shadow protected float hardness;
+
+    @Shadow @Final public Material material;
+
+    @Shadow public float getHardness() { return 0; }
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At("HEAD"))
@@ -98,6 +108,19 @@ public class MixinBlockBase {
         actualName = blockName;
         blockEntries.put(blockName, ((BlockBase) (Object) this).id);
         return name;
+    }
+
+    @Override
+    public float getBlockStrength(PlayerBase player, int meta) {
+        float ret = getHardness(meta);
+        if (ret < 0.0F)
+            return 0.0F;
+        return material.doesRequireTool() || player.getHeldItem() != null && ((EffectiveOnMeta) player.getHeldItem().getType()).isEffectiveOn((BlockBase) (Object) this, meta) ? ((StrengthOnMeta) player).getStrengh((BlockBase) (Object) this, meta) / ret / 30F : 1F / ret / 100F;
+    }
+
+    @Override
+    public float getHardness(int meta) {
+        return getHardness();
     }
 
     private String actualName;

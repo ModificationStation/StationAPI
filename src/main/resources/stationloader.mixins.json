@@ -30,6 +30,7 @@
   ],
   "server": [
     "server.Mixinclass_488",
+    "server.Mixinclass_70",
     "server.MixinMinecraftServer",
     "server.MixinPendingConnection",
     "server.MixinServerPlayerPacketHandler",

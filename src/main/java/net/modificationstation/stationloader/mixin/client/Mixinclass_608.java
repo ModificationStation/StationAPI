@@ -1,14 +1,18 @@
 package net.modificationstation.stationloader.mixin.client;
 
+import net.minecraft.block.BlockBase;
 import net.minecraft.class_608;
 import net.minecraft.client.ClientInteractionManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationloader.api.common.block.BlockStrengthPerMeta;
 import net.modificationstation.stationloader.api.common.item.CustomReach;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(class_608.class)
@@ -33,5 +37,10 @@ public class Mixinclass_608 extends ClientInteractionManager {
             if (itemBase instanceof CustomReach)
                 cir.setReturnValue(((CustomReach) itemBase).getCustomBlockReach(itemInstance, cir.getReturnValue()));
         }
+    }
+
+    @Redirect(method = {"method_1707(IIII)V", "method_1721(IIII)V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;getHardness(Lnet/minecraft/entity/player/PlayerBase;)F"))
+    private float getHardnessPerMeta(BlockBase blockBase, PlayerBase arg, int i, int j, int k, int i1) {
+        return ((BlockStrengthPerMeta) blockBase).getBlockStrength(arg, arg.level.getTileMeta(i, j, k));
     }
 }
