@@ -16,6 +16,7 @@ import net.modificationstation.stationloader.api.client.model.CustomCuboidRender
 import net.modificationstation.stationloader.api.client.model.CustomModel;
 import net.modificationstation.stationloader.api.client.model.CustomTexturedQuad;
 import net.modificationstation.stationloader.api.client.texture.TextureRegistry;
+import net.modificationstation.stationloader.api.common.StationLoader;
 import net.modificationstation.stationloader.api.common.util.BlockFaces;
 import net.modificationstation.stationloader.mixin.client.accessor.TessellatorAccessor;
 import org.lwjgl.opengl.GL11;
@@ -103,7 +104,7 @@ public abstract class MixinTileRenderer {
                 for (CustomCuboidRenderer cuboid : model.getCuboids()) {
                     for (CustomTexturedQuad texturedQuad : cuboid.getCubeQuads()) {
                         if (texturedQuad.getTexture() != null) {
-                            GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.textureManager.getTextureId("/assets/" + cuboid.getModID() + "/models/textures/" + texturedQuad.getTexture() + ".png"));
+                            GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.textureManager.getTextureId("/assets/" + StationLoader.INSTANCE.getData().getId() + "/" + cuboid.getModID() + "/models/textures/" + texturedQuad.getTexture() + ".png"));
                         }
                         tessellator.start();
                         tessellator.colour(1.0F, 1.0F, 1.0F);

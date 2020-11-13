@@ -55,10 +55,11 @@ public class StationLoader implements net.modificationstation.stationloader.api.
 
     @Override
     public void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException {
-        setLogger(LogManager.getFormatterLogger("StationLoader|API"));
+        String name = getData().getName();
+        setLogger(LogManager.getFormatterLogger(name + "|API"));
         Configurator.setLevel("mixin", Level.TRACE);
         Configurator.setLevel("Fabric|Loader", Level.INFO);
-        Configurator.setLevel("StationLoader|API", Level.INFO);
+        Configurator.setLevel(name + "|API", Level.INFO);
         getLogger().info("Initializing StationLoader...");
         setSide(null);
         String modid = getData().getId();
