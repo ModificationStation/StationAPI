@@ -25,7 +25,6 @@ public abstract class GuiHelper implements net.modificationstation.stationloader
         customData.accept(packet);
         PacketHelper.INSTANCE.sendTo(player, packet.getPacketInstance());
         afterPacketSent(player, container);
-
     }
 
     protected abstract void sideDependentPacket(PlayerBase player, InventoryBase inventory, CustomData packet);
