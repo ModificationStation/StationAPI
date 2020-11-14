@@ -5,9 +5,9 @@ import net.modificationstation.stationloader.mixin.common.accessor.TranslationSt
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 public class I18n implements net.modificationstation.stationloader.api.common.lang.I18n {
 
@@ -16,32 +16,46 @@ public class I18n implements net.modificationstation.stationloader.api.common.la
     }
 
     @Override
-    public void addLangFolder(String langFolder) {
-        langFolders.add(langFolder);
+    public void addLangFolder(String langFolder, String modid) {
+        langFolders.put(langFolder, modid);
     }
 
     @Override
     public void changeLang(String region) {
         Properties translations = ((TranslationStorageAccessor) TranslationStorage.getInstance()).getTranslations();
         translations.clear();
-        InputStream inputStream;
-        for (String langFolder : langFolders) {
-            inputStream = I18n.class.getResourceAsStream(langFolder + "/" + region + ".lang");
-            if (inputStream != null)
-                try {
-                    translations.load(inputStream);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            inputStream = I18n.class.getResourceAsStream(langFolder + "/stats_" + region.split("_")[1] + ".lang");
-            if (inputStream != null)
-                try {
-                    translations.load(inputStream);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        langFolders.forEach((key, value) -> {
+            try {
+                loadLang(translations, key + "/" + region + ".lang", value);
+                loadLang(translations, key + "/stats_" + region.split("_")[1] + ".lang", value);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private void loadLang(Properties translations, String path, String modid) throws IOException {
+        InputStream inputStream = I18n.class.getResourceAsStream(path);
+        if (inputStream != null) {
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            if (modid != null) {
+                Properties rawProp = properties;
+                properties = new Properties();
+                Properties finalProperties = properties;
+                rawProp.forEach((key, value) -> {
+                    if (key instanceof String) {
+                        String[] strings = ((String) key).split("\\.");
+                        if (strings.length > 1)
+                            strings[1] = modid + ":" + strings[1];
+                        key = String.join(".", strings);
+                    }
+                    finalProperties.put(key, value);
+                });
+            }
+            translations.putAll(properties);
         }
     }
 
-    private final Set<String> langFolders = new HashSet<>();
+    private final Map<String, String> langFolders = new HashMap<>();
 }

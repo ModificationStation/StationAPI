@@ -69,7 +69,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         setupAPI();
         getDefaultConfig().save();
         getLogger().info("Setting up lang folder...");
-        net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/" + modid + "/lang");
+        net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/" + modid + "/lang", modid);
         getLogger().info("Loading mods...");
         loadMods();
         getLogger().info("Finished StationLoader setup");
@@ -206,7 +206,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         URL path = getClass().getResource(pathName);
         if (path != null) {
             hasAssets = true;
-            net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder(pathName);
+            net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder(pathName, modid);
             getLogger().info("Registered lang path");
         }
         pathName = "/assets/" + modid + "/" + getData().getId() + "/recipes";
