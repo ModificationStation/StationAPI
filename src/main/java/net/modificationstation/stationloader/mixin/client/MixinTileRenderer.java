@@ -104,7 +104,7 @@ public abstract class MixinTileRenderer {
                 for (CustomCuboidRenderer cuboid : model.getCuboids()) {
                     for (CustomTexturedQuad texturedQuad : cuboid.getCubeQuads()) {
                         if (texturedQuad.getTexture() != null) {
-                            GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.textureManager.getTextureId("/assets/" + StationLoader.INSTANCE.getData().getId() + "/" + cuboid.getModID() + "/models/textures/" + texturedQuad.getTexture() + ".png"));
+                            GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.textureManager.getTextureId("/assets/" + cuboid.getModID() + "/" + StationLoader.INSTANCE.getData().getId() + "/models/textures/" + texturedQuad.getTexture() + ".png"));
                         }
                         tessellator.start();
                         tessellator.colour(1.0F, 1.0F, 1.0F);
