@@ -68,7 +68,7 @@ public class MixinAchievements extends ScreenBase {
                 this.textManager.drawText("Minecraft", this.width / 2 - 69, this.height / 2 + 80, 0);
             }
             else {
-                this.textManager.drawText(TranslationStorage.getInstance().translate("achievement.page." + AchievementPageManager.INSTANCE.getCurrentPageName()), this.width / 2 - 69, this.height / 2 + 80, 0);
+                this.textManager.drawText(TranslationStorage.getInstance().translate("achievementPage." + AchievementPageManager.INSTANCE.getCurrentPageName()), this.width / 2 - 69, this.height / 2 + 80, 0);
             }
         }
     }
