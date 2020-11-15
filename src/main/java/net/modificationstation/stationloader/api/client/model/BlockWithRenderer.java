@@ -1,6 +1,5 @@
 package net.modificationstation.stationloader.api.client.model;
 
-import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.TileRenderer;
 import net.minecraft.level.TileView;
 
