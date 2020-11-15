@@ -31,6 +31,12 @@ public interface SmeltingRegistry extends HasHandler<SmeltingRegistry> {
             checkAccess(handler);
             return handler.getResultFor(itemInstance);
         }
+
+        @Override
+        public int getFuelTime(ItemInstance itemInstance) {
+            checkAccess(handler);
+            return handler.getFuelTime(itemInstance);
+        }
     };
 
     void addSmeltingRecipe(int input, ItemInstance output);
@@ -38,4 +44,6 @@ public interface SmeltingRegistry extends HasHandler<SmeltingRegistry> {
     void addSmeltingRecipe(ItemInstance input, ItemInstance output);
 
     ItemInstance getResultFor(ItemInstance itemInstance);
+
+    int getFuelTime(ItemInstance itemInstance);
 }

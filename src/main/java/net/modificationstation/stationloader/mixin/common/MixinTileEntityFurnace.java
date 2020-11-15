@@ -7,7 +7,9 @@ import net.modificationstation.stationloader.api.common.recipe.SmeltingRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TileEntityFurnace.class)
 public class MixinTileEntityFurnace {
@@ -17,5 +19,10 @@ public class MixinTileEntityFurnace {
     @Redirect(method = {"canAcceptRecipeOutput()Z", "craftRecipe()V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/SmeltingRecipeRegistry;getResult(I)Lnet/minecraft/item/ItemInstance;"))
     private ItemInstance getResult(SmeltingRecipeRegistry smeltingRecipeRegistry, int i) {
         return SmeltingRegistry.INSTANCE.getResultFor(contents[0]);
+    }
+
+    @Inject(method = "getFuelTime(Lnet/minecraft/item/ItemInstance;)I", at = @At(value = "HEAD"), cancellable = true)
+    private void hijackBurnTime(ItemInstance arg, CallbackInfoReturnable<Integer> cir) {
+        cir.setReturnValue(SmeltingRegistry.INSTANCE.getFuelTime(arg));
     }
 }
