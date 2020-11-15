@@ -10,9 +10,11 @@ import net.modificationstation.stationloader.api.client.event.model.ModelRegiste
 import net.modificationstation.stationloader.api.common.event.ModIDEvent;
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
+import net.modificationstation.stationloader.api.common.event.item.tool.IsEffectiveOn;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.api.common.item.EffectiveOnMeta;
 import net.modificationstation.stationloader.api.common.item.StrengthOnMeta;
+import net.modificationstation.stationloader.api.common.item.tool.ToolLevel;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mixin(ItemBase.class)
 public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
@@ -84,7 +87,13 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
 
     @Override
     public boolean isEffectiveOn(BlockBase tile, int meta) {
-        return isEffectiveOn(tile);
+        boolean ret = isEffectiveOn(tile);
+        if (this instanceof ToolLevel) {
+            AtomicBoolean effective = new AtomicBoolean(ret);
+            IsEffectiveOn.EVENT.getInvoker().isEffectiveOn((ToolLevel) this, tile, meta, effective);
+            ret = effective.get();
+        }
+        return ret;
     }
 
     @Override

@@ -3,12 +3,17 @@ package net.modificationstation.stationloader.mixin.server;
 import net.minecraft.block.BlockBase;
 import net.minecraft.class_70;
 import net.minecraft.entity.player.PlayerBase;
+import net.minecraft.item.ItemInstance;
 import net.minecraft.server.level.ServerLevel;
 import net.modificationstation.stationloader.api.common.block.BlockStrengthPerMeta;
+import net.modificationstation.stationloader.api.common.item.EffectiveOnMeta;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(class_70.class)
 public class Mixinclass_70 {
@@ -35,4 +40,19 @@ public class Mixinclass_70 {
     private float getHardnessPerMeta3(BlockBase blockBase, PlayerBase arg, int i, int j, int k) {
         return ((BlockStrengthPerMeta) blockBase).getBlockStrength(arg, field_2310.getTileMeta(i, j, k));
     }
+
+    @Inject(method = "method_1834(III)Z", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/server/level/ServerLevel;getTileMeta(III)I", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void captureMeta(int i, int j, int k, CallbackInfoReturnable<Boolean> cir, int var4, int var5) {
+        capturedMeta = var5;
+    }
+
+    @Redirect(method = "method_1834(III)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerBase;canRemoveBlock(Lnet/minecraft/block/BlockBase;)Z"))
+    private boolean canRemoveBlock(PlayerBase playerBase, BlockBase arg) {
+        if (arg.material.doesRequireTool())
+            return true;
+        ItemInstance itemInstance = playerBase.getHeldItem();
+        return itemInstance != null && ((EffectiveOnMeta) itemInstance.getType()).isEffectiveOn(arg, capturedMeta);
+    }
+
+    private int capturedMeta;
 }
