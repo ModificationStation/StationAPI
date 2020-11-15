@@ -42,6 +42,7 @@ import net.modificationstation.stationloader.impl.common.recipe.CraftingRegistry
 import net.modificationstation.stationloader.impl.common.recipe.RecipeManager;
 import net.modificationstation.stationloader.impl.common.recipe.SmeltingRegistry;
 import net.modificationstation.stationloader.impl.common.util.RecursiveReader;
+import net.modificationstation.stationloader.impl.common.util.UnsafeProvider;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -158,6 +159,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
             if (arg instanceof EffectiveForTool)
                 effective.set(((EffectiveForTool) arg).isEffectiveFor(toolLevel, meta));
         });
+        getLogger().info("Setting up UnsafeProvider...");
+        net.modificationstation.stationloader.api.common.util.UnsafeProvider.INSTANCE.setHandler(new UnsafeProvider());
     }
 
     public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {

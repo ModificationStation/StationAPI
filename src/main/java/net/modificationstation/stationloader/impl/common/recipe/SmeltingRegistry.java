@@ -1,12 +1,11 @@
 package net.modificationstation.stationloader.impl.common.recipe;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
-import net.modificationstation.stationloader.api.common.event.item.Fuel;
+import net.minecraft.tileentity.TileEntityFurnace;
+import net.modificationstation.stationloader.api.common.util.UnsafeProvider;
 import net.modificationstation.stationloader.mixin.common.accessor.SmeltingRecipeRegistryAccessor;
+import net.modificationstation.stationloader.mixin.common.accessor.TileEntityFurnaceAccessor;
 
 public class SmeltingRegistry implements net.modificationstation.stationloader.api.common.recipe.SmeltingRegistry {
 
@@ -31,25 +30,15 @@ public class SmeltingRegistry implements net.modificationstation.stationloader.a
 
     @Override
     public int getFuelTime(ItemInstance itemInstance) {
-        if (itemInstance == null) {
-            return 0;
-        } else if (itemInstance.getType() instanceof Fuel) {
-            return ((Fuel) itemInstance.getType()).getFuelTime(itemInstance);
-        } else {
-            int itemId = itemInstance.getType().id;
-            if (itemId < 256 && BlockBase.BY_ID[itemId].material == Material.WOOD) {
-                return 300;
-            } else if (itemId == ItemBase.stick.id) {
-                return 100;
-            } else if (itemId == ItemBase.coal.id) {
-                return 1600;
-            } else if (itemId == ItemBase.lavaBucket.id) {
-                return 20000;
-            } else if (itemId == BlockBase.SAPLING.id) {
-                return 100;
-            } else {
-                return 0;
-            }
+        return DUMMY_TILE_ENTITY_FURNACE.invokeGetFuelTime(itemInstance);
+    }
+
+    private static final TileEntityFurnaceAccessor DUMMY_TILE_ENTITY_FURNACE;
+    static {
+        try {
+            DUMMY_TILE_ENTITY_FURNACE = (TileEntityFurnaceAccessor) UnsafeProvider.INSTANCE.getUnsafe().allocateInstance(TileEntityFurnace.class);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
         }
     }
 }
