@@ -108,6 +108,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         RecipeRegister.EVENT.register(recipeManager);
         getLogger().info("Setting up CraftingRegistry...");
         net.modificationstation.stationloader.api.common.recipe.CraftingRegistry.INSTANCE.setHandler(new CraftingRegistry());
+        getLogger().info("Setting up UnsafeProvider...");
+        net.modificationstation.stationloader.api.common.util.UnsafeProvider.INSTANCE.setHandler(new UnsafeProvider());
         getLogger().info("Setting up SmeltingRegistry...");
         net.modificationstation.stationloader.api.common.recipe.SmeltingRegistry.INSTANCE.setHandler(new SmeltingRegistry());
         getLogger().info("Setting up CustomReach...");
@@ -159,8 +161,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
             if (arg instanceof EffectiveForTool)
                 effective.set(((EffectiveForTool) arg).isEffectiveFor(toolLevel, meta));
         });
-        getLogger().info("Setting up UnsafeProvider...");
-        net.modificationstation.stationloader.api.common.util.UnsafeProvider.INSTANCE.setHandler(new UnsafeProvider());
     }
 
     public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
