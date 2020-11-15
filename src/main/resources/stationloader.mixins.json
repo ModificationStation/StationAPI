@@ -44,6 +44,7 @@
     "client.Mixinclass_556",
     "client.Mixinclass_608",
     "client.Mixinclass_66",
+    "client.MixinClientInteractionManager",
     "client.MixinEntityRenderDispatcher",
     "client.MixinGameOptions",
     "client.MixinGameRenderer",
