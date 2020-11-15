@@ -504,7 +504,7 @@ public abstract class MixinTileRenderer {
             }
         }
         else if (block instanceof BlockWithRenderer) {
-            ((BlockWithRenderer) block).renderWorld((TileRenderer) (Object) this, field_82, x, y, z, block, field_82.getTileMeta(x, y, z));
+            ((BlockWithRenderer) block).renderWorld((TileRenderer) (Object) this, field_82, x, y, z, field_82.getTileMeta(x, y, z));
             cir.cancel();
         }
     }
@@ -646,7 +646,7 @@ public abstract class MixinTileRenderer {
             }
         }
         else if (block instanceof BlockWithRenderer) {
-            ((BlockWithRenderer) block).renderInventory((TileRenderer) (Object) this, block, meta);
+            ((BlockWithRenderer) block).renderInventory((TileRenderer) (Object) this, meta);
             inventory = false;
             ci.cancel();
         }
