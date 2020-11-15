@@ -10,10 +10,12 @@ import net.fabricmc.loader.metadata.NestedJarEntry;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.tool.ToolMaterial;
+import net.modificationstation.stationloader.api.common.block.EffectiveForTool;
 import net.modificationstation.stationloader.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
+import net.modificationstation.stationloader.api.common.event.item.tool.IsEffectiveOn;
 import net.modificationstation.stationloader.api.common.event.mod.Init;
 import net.modificationstation.stationloader.api.common.event.mod.PostInit;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
@@ -137,6 +139,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
             }
             return name;
         });
+        getLogger().info("Setting up ItemNameSet...");
         ItemNameSet.EVENT.register((item, name) -> {
             net.modificationstation.stationloader.api.common.event.ModIDEvent<ItemRegister> event = ItemRegister.EVENT;
             ItemRegister listener = event.getCurrentListener();
@@ -149,6 +152,11 @@ public class StationLoader implements net.modificationstation.stationloader.api.
                 }
             }
             return name;
+        });
+        getLogger().info("Setting up IsEffectiveOn...");
+        IsEffectiveOn.EVENT.register((toolLevel, arg, meta, effective) -> {
+            if (arg instanceof EffectiveForTool)
+                effective.set(((EffectiveForTool) arg).isEffectiveFor(toolLevel, meta));
         });
     }
 
