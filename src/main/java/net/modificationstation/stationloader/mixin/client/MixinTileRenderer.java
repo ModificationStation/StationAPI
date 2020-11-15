@@ -12,6 +12,7 @@ import net.minecraft.level.Level;
 import net.minecraft.level.TileView;
 import net.minecraft.sortme.GameRenderer;
 import net.modificationstation.stationloader.api.client.model.BlockModelProvider;
+import net.modificationstation.stationloader.api.client.model.BlockWithRenderer;
 import net.modificationstation.stationloader.api.client.model.CustomCuboidRenderer;
 import net.modificationstation.stationloader.api.client.model.CustomModel;
 import net.modificationstation.stationloader.api.client.model.CustomTexturedQuad;
@@ -502,6 +503,10 @@ public abstract class MixinTileRenderer {
                 cir.cancel();
             }
         }
+        else if (block instanceof BlockWithRenderer) {
+            ((BlockWithRenderer) block).renderWorld((TileRenderer) (Object) this, field_82, x, y, z, block, field_82.getTileMeta(x, y, z));
+            cir.cancel();
+        }
     }
 
     @ModifyVariable(method = {
@@ -593,12 +598,12 @@ public abstract class MixinTileRenderer {
     }
 
     @Inject(method = "method_48(Lnet/minecraft/block/BlockBase;IF)V", at = @At("HEAD"), cancellable = true)
-    private void onRenderBlockInInventory(BlockBase block, int i, float f, CallbackInfo ci) {
+    private void onRenderBlockInInventory(BlockBase block, int meta, float f, CallbackInfo ci) {
         inventory = true;
 
         if (block instanceof BlockModelProvider) {
             Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
-            CustomModel model = ((BlockModelProvider) block).getCustomInventoryModel(i);
+            CustomModel model = ((BlockModelProvider) block).getCustomInventoryModel(meta);
             if (model != null) {
                 GL11.glPushMatrix();
 
@@ -639,6 +644,11 @@ public abstract class MixinTileRenderer {
                 inventory = false;
                 ci.cancel();
             }
+        }
+        else if (block instanceof BlockWithRenderer) {
+            ((BlockWithRenderer) block).renderInventory((TileRenderer) (Object) this, block, meta);
+            inventory = false;
+            ci.cancel();
         }
     }
 
