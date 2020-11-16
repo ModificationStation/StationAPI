@@ -3,9 +3,7 @@
 StationLoader is a new mod loader for Legacy Minecraft that aims to make mods compatible on both client and server without needing
 seperate verisons for each, along with tools so mod developers no longer need to edit Minecraft's base classes.
 
-## Setup
-
-For general project setup instructions please see the [Fabric Wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+## Plugin Setup
 
 Extra steps for better Mixin making and Fabric configuring in IntelliJ IDEA:
 
@@ -28,14 +26,14 @@ Add this to your build.gradle in the SECOND repositories entry (~line 33):
 `maven { url "https://maven.glass-launcher.net/repo"}`
 
 Then add this to the end of your dependencies (~line 68):  
-`modImplementation "net.modificationstation:StationLoader:1.2:dev"`
+`modImplementation "net.modificationstation:StationLoader:1.3:dev"`
 
 You will likely also want to install HMI-Fabric (unofficial port to SL by calmilamsy) for debugging your items and recipes.  
 If so, download the latest **-dev** jar for HMI from [here](https://maven.glass-launcher.net/repo/net/glasslauncher/HMI-Fabric/) and put it in your `run/mods` folder.
 
 Then reimport your Gradle project.
 
-Proper documentation coming soon.
+Proper code documentation coming soon. There are some JavaDoc comments for some commonly used classes such as ItemRegister and BlockRegister.
 
 ## Common Issues
 
