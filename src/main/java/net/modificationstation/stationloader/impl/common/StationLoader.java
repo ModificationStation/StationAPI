@@ -13,6 +13,7 @@ import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationloader.api.common.block.EffectiveForTool;
 import net.modificationstation.stationloader.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
+import net.modificationstation.stationloader.api.common.event.block.TileEntityRegister;
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import net.modificationstation.stationloader.api.common.event.item.tool.IsEffectiveOn;
@@ -111,7 +112,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         getLogger().info("Setting up UnsafeProvider...");
         net.modificationstation.stationloader.api.common.util.UnsafeProvider.INSTANCE.setHandler(new UnsafeProvider());
         getLogger().info("Setting up SmeltingRegistry...");
-        net.modificationstation.stationloader.api.common.recipe.SmeltingRegistry.INSTANCE.setHandler(new SmeltingRegistry());
+        SmeltingRegistry smeltingRegistry = new SmeltingRegistry();
+        net.modificationstation.stationloader.api.common.recipe.SmeltingRegistry.INSTANCE.setHandler(smeltingRegistry);
         getLogger().info("Setting up CustomReach...");
         net.modificationstation.stationloader.api.common.item.CustomReach.CONSUMERS.put("setDefaultBlockReach", CustomReach::setDefaultBlockReach);
         net.modificationstation.stationloader.api.common.item.CustomReach.CONSUMERS.put("setHandBlockReach", CustomReach::setHandBlockReach);
@@ -161,6 +163,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
             if (arg instanceof EffectiveForTool)
                 effective.set(((EffectiveForTool) arg).isEffectiveFor(toolLevel, meta));
         });
+        getLogger().info("Setting up TileEntityRegister...");
+        TileEntityRegister.EVENT.register(smeltingRegistry);
     }
 
     public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
