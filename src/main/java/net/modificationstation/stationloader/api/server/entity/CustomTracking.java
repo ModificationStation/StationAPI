@@ -3,7 +3,7 @@ package net.modificationstation.stationloader.api.server.entity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@Environment(EnvType.SERVER)
+// No envtype cause it makes things harder than it needs to be.
 public interface CustomTracking {
 
     int getTrackingDistance();

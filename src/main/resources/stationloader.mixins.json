@@ -4,6 +4,7 @@
   "package": "net.modificationstation.stationloader.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "client.Mixinclass_174",
     "common.MixinAbstractPacket",
     "common.MixinAchievements",
     "common.MixinBiome",
