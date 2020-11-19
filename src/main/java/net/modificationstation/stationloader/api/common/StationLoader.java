@@ -39,11 +39,11 @@ public interface StationLoader extends ModCore {
         }
     }).get();
 
-    void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException;
+    void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException, NoSuchFieldException;
 
     void addModAssets(ModMetadata data) throws IOException, URISyntaxException;
 
-    void addMod(ModMetadata data, EnvType envType, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException;
+    void addMod(ModMetadata data, EnvType envType, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException, NoSuchFieldException;
 
     Collection<ModMetadata> getAllStationMods();
 

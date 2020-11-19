@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 public class MixinMinecraftServer {
 
     @Inject(method = "main([Ljava/lang/String;)V", at = @At("HEAD"), remap = false)
-    private static void beforeMain(String[] strings, CallbackInfo ci) throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
+    private static void beforeMain(String[] strings, CallbackInfo ci) throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException, NoSuchFieldException {
         StationLoader.INSTANCE.setup();
     }
 }

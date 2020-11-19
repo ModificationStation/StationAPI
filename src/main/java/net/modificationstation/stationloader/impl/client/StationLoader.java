@@ -24,7 +24,7 @@ import java.util.HashMap;
 public class StationLoader extends net.modificationstation.stationloader.impl.common.StationLoader {
 
     @Override
-    public void setup() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
+    public void setup() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException, NoSuchFieldException {
         if (new Exception().getStackTrace()[1].getClassName().equals(MinecraftApplet.class.getName()))
             super.setup();
         else

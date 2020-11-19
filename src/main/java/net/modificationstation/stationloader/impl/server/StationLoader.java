@@ -17,7 +17,7 @@ import java.util.Map;
 public class StationLoader extends net.modificationstation.stationloader.impl.common.StationLoader {
 
     @Override
-    public void setup() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
+    public void setup() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException, NoSuchFieldException {
         if (new Exception().getStackTrace()[1].getClassName().equals(MinecraftServer.class.getName()))
             super.setup();
         else
@@ -75,7 +75,7 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
     }
 
     @Override
-    public void addMod(ModMetadata data, EnvType envType, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException {
+    public void addMod(ModMetadata data, EnvType envType, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException, NoSuchFieldException {
         if (!onlyModdedClients && envType == null)
             onlyModdedClients = true;
         super.addMod(data, envType, className);

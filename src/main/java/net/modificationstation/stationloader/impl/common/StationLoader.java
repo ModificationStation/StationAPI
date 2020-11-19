@@ -22,6 +22,7 @@ import net.modificationstation.stationloader.api.common.event.mod.PostInit;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
+import net.modificationstation.stationloader.api.common.mod.Instance;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPage;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPageManager;
@@ -43,6 +44,7 @@ import net.modificationstation.stationloader.impl.common.recipe.CraftingRegistry
 import net.modificationstation.stationloader.impl.common.recipe.RecipeManager;
 import net.modificationstation.stationloader.impl.common.recipe.SmeltingRegistry;
 import net.modificationstation.stationloader.impl.common.util.RecursiveReader;
+import net.modificationstation.stationloader.impl.common.util.ReflectionHelper;
 import net.modificationstation.stationloader.impl.common.util.UnsafeProvider;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -50,6 +52,7 @@ import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
@@ -58,7 +61,7 @@ import java.util.*;
 public class StationLoader implements net.modificationstation.stationloader.api.common.StationLoader {
 
     @Override
-    public void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException {
+    public void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException, NoSuchFieldException {
         String name = getData().getName();
         setLogger(LogManager.getFormatterLogger(name + "|API"));
         Configurator.setLevel("mixin", Level.TRACE);
@@ -167,7 +170,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         TileEntityRegister.EVENT.register(smeltingRegistry);
     }
 
-    public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException {
+    public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException, NoSuchFieldException {
         for (ModContainer mod : FabricLoader.getInstance().getAllMods())
             if (mod.getMetadata() instanceof LoaderModMetadata) {
                 LoaderModMetadata loaderData = ((LoaderModMetadata) mod.getMetadata());
@@ -239,7 +242,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
     }
 
     @Override
-    public void addMod(ModMetadata data, EnvType envType, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException {
+    public void addMod(ModMetadata data, EnvType envType, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException, NoSuchFieldException {
         String modid = data.getId();
         getLogger().info("Adding \"" + className + "\" mod");
         Class<?> clazz = Class.forName(className);
@@ -253,6 +256,10 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         } else
             throw new RuntimeException("Corrupted mod " + modid + " at " + className);
         getLogger().info("Created an instance");
+        for (Field field : ReflectionHelper.getFieldsWithAnnotation(modClass, Instance.class)) {
+            ReflectionHelper.setFinalField(field, mod, mod);
+            getLogger().info("Set \"" + field.getName() + "\" field to mod's instance");
+        }
         mod.setSide(envType);
         getLogger().info("Set mod's side");
         mod.setData(data);

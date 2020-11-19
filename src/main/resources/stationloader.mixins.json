@@ -45,11 +45,9 @@
     "server.accessor.ServerPlayerPacketHandlerAccessor"
   ],
   "client": [
-    "client.Mixinclass_174",
-    "client.MixinSoundHelper",
-    "client.MixinSoundMap",
     "client.MixinAbstractClientPlayer",
     "client.MixinAchievements",
+    "client.Mixinclass_174",
     "client.Mixinclass_556",
     "client.Mixinclass_608",
     "client.Mixinclass_66",
@@ -63,6 +61,8 @@
     "client.MixinParticleManager",
     "client.MixinPlayerRenderer",
     "client.MixinRemoteClientInteractionManager",
+    "client.MixinSoundHelper",
+    "client.MixinSoundMap",
     "client.MixinTextureManager",
     "client.MixinTileRenderer",
     "client.accessor.ParticleBaseAccessor",

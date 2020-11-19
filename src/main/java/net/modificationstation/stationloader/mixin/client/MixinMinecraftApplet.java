@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 public class MixinMinecraftApplet {
 
     @Inject(method = "init", at = @At("HEAD"), remap = false)
-    private void beforeInit(CallbackInfo ci) throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException {
+    private void beforeInit(CallbackInfo ci) throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException, NoSuchFieldException {
         StationLoader.INSTANCE.setup();
     }
 }
