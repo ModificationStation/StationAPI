@@ -4,7 +4,6 @@
   "package": "net.modificationstation.stationloader.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "client.Mixinclass_174",
     "common.MixinAbstractPacket",
     "common.MixinAchievements",
     "common.MixinBiome",
@@ -46,6 +45,9 @@
     "server.accessor.ServerPlayerPacketHandlerAccessor"
   ],
   "client": [
+    "client.Mixinclass_174",
+    "client.MixinSoundHelper",
+    "client.MixinSoundMap",
     "client.MixinAbstractClientPlayer",
     "client.MixinAchievements",
     "client.Mixinclass_556",
