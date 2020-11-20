@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
+import net.minecraft.item.armour.Armour;
 import net.minecraft.level.Level;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -19,7 +20,7 @@ import net.modificationstation.stationloader.api.common.entity.player.*;
 import net.modificationstation.stationloader.api.common.event.entity.player.PlayerHandlerRegister;
 import net.modificationstation.stationloader.api.common.item.CustomArmourValue;
 import net.modificationstation.stationloader.impl.common.entity.player.PlayerAPI;
-import net.modificationstation.stationloader.impl.common.util.ArmourDamageAdjust;
+import net.modificationstation.stationloader.impl.common.util.ArmourUtils;
 import net.modificationstation.stationloader.mixin.common.accessor.PlayerBaseAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -307,27 +308,32 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
     }
 
     @Inject(method = "applyDamage(I)V", at = @At("HEAD"), cancellable = true)
-    private void applyDamage(int damageAmount, CallbackInfo ci) {
-        if (PlayerAPI.damageEntity((PlayerBase) (Object) this, damageAmount))
+    private void applyDamage(int initialDamage, CallbackInfo ci) {
+        if (PlayerAPI.damageEntity((PlayerBase) (Object) this, initialDamage))
             ci.cancel();
 
-        boolean doVanillaDamage = true;
-        int initialDamage = damageAmount;
+        double damageAmount = initialDamage;
         ItemInstance[] armour = this.inventory.armour;
 
         for (ItemInstance armourInstance : armour) {
-            if (armourInstance != null && armourInstance.getType() instanceof CustomArmourValue) {
-                CustomArmourValue armor = (CustomArmourValue) armourInstance.getType();
-                ArmourDamageAdjust props = armor.modifyDamageDealt((PlayerBase) (Object) this, initialDamage, damageAmount);
-                damageAmount -= props.damageNegated;
-                doVanillaDamage = doVanillaDamage && props.doVanillaDamage;
+            // This solution is not exact with vanilla, but is WAY better than previous solutions which weren't even close to vanilla.
+            if (armourInstance != null) {
+                if (armourInstance.getType() instanceof CustomArmourValue) {
+                    CustomArmourValue armor = (CustomArmourValue) armourInstance.getType();
+                    int damageNegated = armor.modifyDamageDealt((PlayerBase) (Object) this, initialDamage, damageAmount);
+                    damageAmount -= damageNegated;
+                }
+                else {
+                    damageAmount -= ArmourUtils.getVanillaArmourReduction(armourInstance);
+                    armourInstance.applyDamage(initialDamage, null);
+                }
+                if (damageAmount < 0) {
+                    damageAmount = 0;
+                }
             }
         }
-
-        if (!doVanillaDamage) {
-            super.applyDamage(damageAmount);
-            ci.cancel();
-        }
+        super.applyDamage((int) damageAmount);
+        ci.cancel();
     }
 
     @Override
