@@ -17,7 +17,9 @@ import net.minecraft.util.SleepStatus;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationloader.api.common.entity.player.*;
 import net.modificationstation.stationloader.api.common.event.entity.player.PlayerHandlerRegister;
+import net.modificationstation.stationloader.api.common.item.CustomArmourValue;
 import net.modificationstation.stationloader.impl.common.entity.player.PlayerAPI;
+import net.modificationstation.stationloader.impl.common.util.ArmourDamageAdjust;
 import net.modificationstation.stationloader.mixin.common.accessor.PlayerBaseAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,6 +42,7 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
 
     @Shadow public abstract ItemInstance getHeldItem();
 
+    @Shadow public PlayerInventory inventory;
     private List<PlayerHandler> playerBases;
 
     public MixinPlayerBase(Level world) {
@@ -307,6 +310,24 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
     private void applyDamage(int damageAmount, CallbackInfo ci) {
         if (PlayerAPI.damageEntity((PlayerBase) (Object) this, damageAmount))
             ci.cancel();
+
+        boolean doVanillaDamage = true;
+        int initialDamage = damageAmount;
+        ItemInstance[] armour = this.inventory.armour;
+
+        for (ItemInstance armourInstance : armour) {
+            if (armourInstance != null && armourInstance.getType() instanceof CustomArmourValue) {
+                CustomArmourValue armor = (CustomArmourValue) armourInstance.getType();
+                ArmourDamageAdjust props = armor.modifyDamageDealt((PlayerBase) (Object) this, initialDamage, damageAmount);
+                damageAmount -= props.damageNegated;
+                doVanillaDamage = doVanillaDamage && props.doVanillaDamage;
+            }
+        }
+
+        if (!doVanillaDamage) {
+            super.applyDamage(damageAmount);
+            ci.cancel();
+        }
     }
 
     @Override
