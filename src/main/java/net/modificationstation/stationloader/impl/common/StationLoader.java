@@ -74,7 +74,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         setDefaultConfig(new Configuration(new File(getConfigPath() + File.separator + modid + ".cfg")));
         getLogger().info("Setting up API...");
         setupAPI();
-        getDefaultConfig().save();
         getLogger().info("Setting up lang folder...");
         net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/" + modid + "/lang", modid);
         getLogger().info("Loading mods...");
@@ -96,6 +95,9 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.factory.EnumFactory enumFactory = net.modificationstation.stationloader.api.common.factory.EnumFactory.INSTANCE;
         generalFactory.addFactory(ToolMaterial.class, args -> enumFactory.addEnum(ToolMaterial.class, (String) args[0], new Class[] {int.class, int.class, float.class, int.class}, new Object[] {args[1], args[2], args[3], args[4]}));
         generalFactory.addFactory(EntityType.class, args -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[] {Class.class, int.class, Material.class, boolean.class}, new Object[] {args[1], args[2], args[3], args[4]}));
+        getLogger().info("Loading config...");
+        net.modificationstation.stationloader.api.common.config.Configuration config = getDefaultConfig();
+        config.load();
         getLogger().info("Setting up EnumFactory...");
         enumFactory.setHandler(new EnumFactory());
         getLogger().info("Setting up EventFactory...");
@@ -129,10 +131,11 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         getLogger().info("Setting up AchievementPageManager...");
         net.modificationstation.stationloader.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(new AchievementPageManager());
         getLogger().info("Setting up CustomData packet...");
-        net.modificationstation.stationloader.api.common.config.Configuration config = getDefaultConfig();
-        config.load();
         net.modificationstation.stationloader.api.common.config.Category networkConfig = config.getCategory("Network");
-        PacketRegister.EVENT.register((register, customDataPackets) -> register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class), getData());
+        PacketRegister.EVENT.register((register, customDataPackets) -> {
+            register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class);
+            config.save();
+            }, getData());
         getLogger().info("Setting up BlockNameSet...");
         BlockNameSet.EVENT.register((block, name) -> {
             net.modificationstation.stationloader.api.common.event.ModIDEvent<BlockRegister> event = BlockRegister.EVENT;

@@ -10,7 +10,6 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
-import net.minecraft.item.armour.Armour;
 import net.minecraft.level.Level;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityFurnace;
