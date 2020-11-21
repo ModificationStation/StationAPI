@@ -22,7 +22,6 @@ import net.modificationstation.stationloader.api.common.event.mod.PostInit;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
-import net.modificationstation.stationloader.api.common.mod.Instance;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPage;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPageManager;
@@ -259,7 +258,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         } else
             throw new RuntimeException("Corrupted mod " + modid + " at " + className);
         getLogger().info("Created an instance");
-        for (Field field : ReflectionHelper.getFieldsWithAnnotation(modClass, Instance.class)) {
+        for (Field field : ReflectionHelper.getFieldsWithAnnotation(modClass, StationMod.Instance.class)) {
             ReflectionHelper.setFinalField(field, mod, mod);
             getLogger().info("Set \"" + field.getName() + "\" field to mod's instance");
         }
