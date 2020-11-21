@@ -135,7 +135,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         PacketRegister.EVENT.register((register, customDataPackets) -> {
             register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class);
             config.save();
-            }, getData());
+        }, getData());
         getLogger().info("Setting up BlockNameSet...");
         BlockNameSet.EVENT.register((block, name) -> {
             net.modificationstation.stationloader.api.common.event.ModIDEvent<BlockRegister> event = BlockRegister.EVENT;
