@@ -313,13 +313,14 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
 
         double damageAmount = initialDamage;
         ItemInstance[] armour = this.inventory.armour;
+        int armourSlot = 0;
 
         for (ItemInstance armourInstance : armour) {
             // This solution is not exact with vanilla, but is WAY better than previous solutions which weren't even close to vanilla.
             if (armourInstance != null) {
                 if (armourInstance.getType() instanceof CustomArmourValue) {
                     CustomArmourValue armor = (CustomArmourValue) armourInstance.getType();
-                    int damageNegated = armor.modifyDamageDealt((PlayerBase) (Object) this, initialDamage, damageAmount);
+                    int damageNegated = armor.modifyDamageDealt((PlayerBase) (Object) this, armourSlot, initialDamage, damageAmount);
                     damageAmount -= damageNegated;
                 }
                 else {
@@ -330,6 +331,7 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
                     damageAmount = 0;
                 }
             }
+            armourSlot++;
         }
         super.applyDamage((int) damageAmount);
         ci.cancel();
