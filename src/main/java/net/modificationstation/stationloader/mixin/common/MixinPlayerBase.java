@@ -320,7 +320,7 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
             if (armourInstance != null) {
                 if (armourInstance.getType() instanceof CustomArmourValue) {
                     CustomArmourValue armor = (CustomArmourValue) armourInstance.getType();
-                    int damageNegated = armor.modifyDamageDealt((PlayerBase) (Object) this, armourSlot, initialDamage, damageAmount);
+                    double damageNegated = armor.modifyDamageDealt((PlayerBase) (Object) this, armourSlot, initialDamage, damageAmount);
                     damageAmount -= damageNegated;
                 }
                 else {
