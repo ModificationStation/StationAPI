@@ -3,7 +3,6 @@ package net.modificationstation.stationloader.mixin.common;
 import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.packet.AbstractPacket;
 import net.minecraft.packet.handshake.HandshakeC2S;
@@ -35,38 +34,34 @@ public abstract class MixinHandshakeC2S extends AbstractPacket implements Statio
     @Environment(EnvType.CLIENT)
     @Inject(method = "<init>(Ljava/lang/String;I)V", at = @At("RETURN"))
     private void newClient(String string, int i, CallbackInfo ci) {
-        ModMetadata slData = StationLoader.INSTANCE.getData();
+        ModMetadata slData = StationLoader.INSTANCE.getContainer().getMetadata();
         stationLoader = slData.getId();
         version = slData.getVersion().getFriendlyString();
         mods = new HashMap<>();
-        StationLoader.INSTANCE.getAllStationMods().forEach(mod -> {
-            if (StationLoader.INSTANCE.getModSide(mod) == null)
-                mods.put(mod.getId(), mod.getVersion().getFriendlyString());
+        StationLoader.INSTANCE.getModsToVerifyOnClient().forEach(modContainer -> {
+            ModMetadata modMetadata = modContainer.getMetadata();
+            mods.put(modMetadata.getId(), modMetadata.getVersion().getFriendlyString());
         });
     }
 
+    @Environment(EnvType.SERVER)
     @Inject(method = "read(Ljava/io/DataInputStream;)V", at = @At("RETURN"))
-    private void read(DataInputStream in, CallbackInfo ci) {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            try {
-                String sl;
-                if (in.available() >= 2) {
-                    sl = method_802(in, MAX_STRING_LENGTH);
-                    if (in.available() >= 2) {
-                        stationLoader = sl;
-                        version = method_802(in, MAX_STRING_LENGTH);
-                        mods = new HashMap<>();
-                        int size = in.readInt();
-                        for (int i = 0; i < size; i++)
-                            mods.put(method_802(in, MAX_STRING_LENGTH), method_802(in, MAX_STRING_LENGTH));
-                    }
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+    private void read(DataInputStream in, CallbackInfo ci) throws IOException {
+        String sl;
+        if (in.available() >= 2) {
+            sl = method_802(in, MAX_STRING_LENGTH);
+            if (in.available() >= 2) {
+                stationLoader = sl;
+                version = method_802(in, MAX_STRING_LENGTH);
+                mods = new HashMap<>();
+                int size = in.readInt();
+                for (int i = 0; i < size; i++)
+                    mods.put(method_802(in, MAX_STRING_LENGTH), method_802(in, MAX_STRING_LENGTH));
             }
         }
     }
 
+    @Environment(EnvType.CLIENT)
     @Inject(method = "write(Ljava/io/DataOutputStream;)V", at = @At("RETURN"))
     private void write(DataOutputStream out, CallbackInfo ci) {
         if (stationLoader != null && version != null && mods != null) {
@@ -84,6 +79,7 @@ public abstract class MixinHandshakeC2S extends AbstractPacket implements Statio
         }
     }
 
+    @Environment(EnvType.CLIENT)
     @Inject(method = "length()I", at = @At("RETURN"), cancellable = true)
     private void length(CallbackInfoReturnable<Integer> cir) {
         AtomicInteger extra = new AtomicInteger();

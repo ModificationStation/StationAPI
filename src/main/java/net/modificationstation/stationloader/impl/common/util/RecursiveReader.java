@@ -1,8 +1,10 @@
 package net.modificationstation.stationloader.impl.common.util;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.*;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;

@@ -7,14 +7,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 @Mixin(MinecraftServer.class)
 public class MixinMinecraftServer {
 
     @Inject(method = "main([Ljava/lang/String;)V", at = @At("HEAD"), remap = false)
-    private static void beforeMain(String[] strings, CallbackInfo ci) throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException, NoSuchFieldException {
+    private static void beforeMain(String[] strings, CallbackInfo ci) {
         StationLoader.INSTANCE.setup();
     }
 }

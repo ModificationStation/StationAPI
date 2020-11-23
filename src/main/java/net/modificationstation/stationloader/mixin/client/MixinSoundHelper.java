@@ -2,6 +2,7 @@ package net.modificationstation.stationloader.mixin.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.sound.SoundHelper;
@@ -33,7 +34,8 @@ public class MixinSoundHelper {
     @Environment(EnvType.CLIENT)
     private static void loadModAudio(SoundMap array, String channel) {
         try {
-            for (ModMetadata stationMod : StationLoader.INSTANCE.getAllStationMods()) {
+            for (ModContainer modContainer : StationLoader.INSTANCE.getAllMods()) {
+                ModMetadata stationMod = modContainer.getMetadata();
                 System.out.println(stationMod.getId());
                 Path basePath = Paths.get("/assets/" + stationMod.getId() + "/stationloader/sounds/" + channel);
                 if (MixinSoundHelper.class.getResource(basePath.toString().replace("\\", "/")) != null) {

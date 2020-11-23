@@ -14,7 +14,7 @@ public abstract class GuiHelper implements net.modificationstation.stationloader
 
     @Override
     public void openGUI(PlayerBase player, String modid, short guiID, InventoryBase inventory, ContainerBase container, Consumer<CustomData> customData) {
-        CustomData packet = GeneralFactory.INSTANCE.newInst(CustomData.class, StationLoader.INSTANCE.getData().getId() + ":open_gui");
+        CustomData packet = GeneralFactory.INSTANCE.newInst(CustomData.class, StationLoader.INSTANCE.getContainer().getMetadata().getId() + ":open_gui");
         packet.set(new String[] {
                 modid
         });

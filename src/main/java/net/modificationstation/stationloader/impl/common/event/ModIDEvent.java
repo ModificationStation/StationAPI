@@ -3,8 +3,6 @@ package net.modificationstation.stationloader.impl.common.event;
 import lombok.Getter;
 import lombok.Setter;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.modificationstation.stationloader.api.common.StationLoader;
-import net.modificationstation.stationloader.api.common.mod.StationMod;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,24 +16,7 @@ public class ModIDEvent<T> extends Event<T> implements net.modificationstation.s
 
     @Override
     public void register(T listener) {
-        StackTraceElement[] elements = new Exception().getStackTrace();
-        Class<?> clazz;
-        for (int i = 1; i < elements.length; i++) {
-            try {
-                clazz = Class.forName(elements[i].getClassName());
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            if (StationMod.class.isAssignableFrom(clazz)) {
-                Class<? extends StationMod> modClass = clazz.asSubclass(StationMod.class);
-                StationMod mod = StationLoader.INSTANCE.getModInstance(modClass);
-                if (mod != null) {
-                    listenerToModID.put(listener, mod.getData().getId());
-                    break;
-                }
-            }
-        }
-        super.register(listener);
+        throw new UnsupportedOperationException("You can not register a ModID event listener without providing mod data!");
     }
 
     @Override

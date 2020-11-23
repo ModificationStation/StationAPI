@@ -1,7 +1,6 @@
 package net.modificationstation.stationloader.api.common.util;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.fabricmc.loader.api.ModContainer;
 import net.modificationstation.stationloader.api.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 
@@ -41,7 +40,17 @@ public interface ModCore {
 
     Map<ModCore, Configuration> defaultConfigs = new HashMap<>();
 
-    default ModMetadata getData() {
+    default ModContainer getContainer() {
+        return containers.get(this);
+    }
+
+    default void setContainer(ModContainer container) {
+        containers.put(this, container);
+    }
+
+    Map<ModCore, ModContainer> containers = new HashMap<>();
+
+    /*default ModMetadata getData() {
         return metadatas.get(this);
     }
 
@@ -59,5 +68,5 @@ public interface ModCore {
         sides.put(this, envType);
     }
 
-    Map<ModCore, EnvType> sides = new HashMap<>();
+    Map<ModCore, EnvType> sides = new HashMap<>();*/
 }

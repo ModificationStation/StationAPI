@@ -2,7 +2,6 @@ package net.modificationstation.stationloader.impl.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftApplet;
 import net.minecraft.inventory.InventoryBase;
 import net.modificationstation.stationloader.api.client.event.gui.GuiRegister;
 import net.modificationstation.stationloader.api.common.event.ModIDEvent;
@@ -16,20 +15,10 @@ import net.modificationstation.stationloader.impl.client.packet.PacketHelper;
 import net.modificationstation.stationloader.impl.client.texture.TextureFactory;
 import net.modificationstation.stationloader.impl.client.texture.TextureRegistry;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 
 @Environment(EnvType.CLIENT)
 public class StationLoader extends net.modificationstation.stationloader.impl.common.StationLoader {
-
-    @Override
-    public void setup() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException, NoSuchFieldException {
-        if (new Exception().getStackTrace()[1].getClassName().equals(MinecraftApplet.class.getName()))
-            super.setup();
-        else
-            throw new IllegalAccessException("Tried running StationLoader.setup() from an unknown source!");
-    }
 
     @Override
     public void setupAPI() {
@@ -62,6 +51,6 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
             if (modid != null)
                 ModIDRegistry.gui.put(modid, new HashMap<>());
             invoker.registerGUIs(ModIDRegistry.gui.get(modid));
-        }, getData());
+        }, getContainer().getMetadata());
     }
 }

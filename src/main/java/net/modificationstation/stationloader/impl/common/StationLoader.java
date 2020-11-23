@@ -1,12 +1,11 @@
 package net.modificationstation.stationloader.impl.common;
 
-import net.fabricmc.api.EnvType;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.fabricmc.loader.metadata.EntrypointMetadata;
-import net.fabricmc.loader.metadata.LoaderModMetadata;
-import net.fabricmc.loader.metadata.NestedJarEntry;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.tool.ToolMaterial;
@@ -17,8 +16,6 @@ import net.modificationstation.stationloader.api.common.event.block.TileEntityRe
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import net.modificationstation.stationloader.api.common.event.item.tool.IsEffectiveOn;
-import net.modificationstation.stationloader.api.common.event.mod.Init;
-import net.modificationstation.stationloader.api.common.event.mod.PostInit;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
@@ -60,15 +57,19 @@ import java.util.*;
 public class StationLoader implements net.modificationstation.stationloader.api.common.StationLoader {
 
     @Override
-    public void setup() throws IllegalAccessException, ClassNotFoundException, InstantiationException, IOException, URISyntaxException, NoSuchFieldException {
-        String name = getData().getName();
+    public void setup() {
+        entrypoints.add("stationmod");
+        entrypoints.add(getContainer().getMetadata().getId() + ":mod");
+        String sideName = FabricLoader.getInstance().getEnvironmentType().name().toLowerCase();
+        entrypoints.add("stationmod_" + sideName);
+        entrypoints.add(getContainer().getMetadata().getId() + ":mod_" + sideName);
+        String name = getContainer().getMetadata().getName();
         setLogger(LogManager.getFormatterLogger(name + "|API"));
         Configurator.setLevel("mixin", Level.TRACE);
         Configurator.setLevel("Fabric|Loader", Level.INFO);
         Configurator.setLevel(name + "|API", Level.INFO);
         getLogger().info("Initializing StationLoader...");
-        setSide(null);
-        String modid = getData().getId();
+        String modid = getContainer().getMetadata().getId();
         setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + modid));
         setDefaultConfig(new Configuration(new File(getConfigPath() + File.separator + modid + ".cfg")));
         getLogger().info("Setting up API...");
@@ -134,7 +135,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         PacketRegister.EVENT.register((register, customDataPackets) -> {
             register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class);
             config.save();
-        }, getData());
+        }, getContainer().getMetadata());
         getLogger().info("Setting up BlockNameSet...");
         BlockNameSet.EVENT.register((block, name) -> {
             net.modificationstation.stationloader.api.common.event.ModIDEvent<BlockRegister> event = BlockRegister.EVENT;
@@ -172,150 +173,108 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         TileEntityRegister.EVENT.register(smeltingRegistry);
     }
 
-    public void loadMods() throws IllegalAccessException, InstantiationException, ClassNotFoundException, IOException, URISyntaxException, NoSuchFieldException {
-        for (ModContainer mod : FabricLoader.getInstance().getAllMods())
-            if (mod.getMetadata() instanceof LoaderModMetadata) {
-                LoaderModMetadata loaderData = ((LoaderModMetadata) mod.getMetadata());
-                EnvType envType = FabricLoader.getInstance().getEnvironmentType();
-                List<EntrypointMetadata> entries = loaderData.getEntrypoints("stationmod_" + envType.name().toLowerCase());
-                if (entries.isEmpty()) {
-                    envType = null;
-                    entries = loaderData.getEntrypoints("stationmod");
-                }
-                if (!entries.isEmpty()) {
-                    Collection<NestedJarEntry> jars = loaderData.getJars();
-                    String[] files = new String[jars.size()];
-                    int i = 0;
-                    for (NestedJarEntry jar : jars) {
-                        files[i] = jar.getFile();
-                        i++;
-                    }
-                    StringBuilder out = new StringBuilder("classpath");
-                    if (files.length > 1) {
-                        out = new StringBuilder("{ ");
-                    }
-                    for (int j = 0; j < files.length; j++) {
-                        out.append(files[j]);
-                        if (j < files.length + 1)
-                            out.append(", ");
-                    }
-                    if (files.length > 1)
-                        out.append(" }");
-                    getLogger().info("Detected a StationMod in " + out);
-                    stationMods.put(loaderData, new HashSet<>());
-                    modSides.put(loaderData, envType);
-                    for (EntrypointMetadata entry : entries)
-                        addMod(mod.getMetadata(), envType, entry.getValue());
-                }
-                getLogger().info("Searching for StationLoader assets in " + loaderData.getName() + " (" + loaderData.getId() + ") mod");
-                addModAssets(loaderData);
-            }
-        getLogger().info("Invoking preInit event");
+    @Override
+    public void loadMods() {
+        getLogger().info("Loading entrypoints...");
+        entrypoints.forEach(entrypoint -> FabricLoader.getInstance().getEntrypointContainers(entrypoint, StationMod.class).forEach(this::addMod));
+        getLogger().info("Loading assets...");
+        FabricLoader.getInstance().getAllMods().forEach(this::addModAssets);
+        getLogger().info("Gathering mods that require client verification...");
+        String value = getContainer().getMetadata().getId() + ":verify_client";
+        getAllMods().forEach(modContainer -> {
+            ModMetadata modMetadata = modContainer.getMetadata();
+            if (!modMetadata.containsCustomValue(value) || modMetadata.getCustomValue(value).getAsBoolean())
+                modsToVerifyOnClient.add(modContainer);
+        });
+        getLogger().info("Invoking preInit event...");
         PreInit.EVENT.getInvoker().preInit();
-        getLogger().info("Invoking init event");
-        Init.EVENT.getInvoker().init();
-        getLogger().info("Invoking postInit event");
-        PostInit.EVENT.getInvoker().postInit();
     }
 
     @Override
-    public void addModAssets(ModMetadata data) throws IOException, URISyntaxException {
-        boolean hasAssets = false;
-        String modid = data.getId();
-        String pathName = "/assets/" + modid + "/" + getData().getId() + "/lang";
-        URL path = getClass().getResource(pathName);
+    public void addMod(EntrypointContainer<StationMod> stationModEntrypointContainer) {
+        ModContainer modContainer = stationModEntrypointContainer.getProvider();
+        StationMod stationMod = stationModEntrypointContainer.getEntrypoint();
+        ModMetadata modMetadata = modContainer.getMetadata();
+        for (Field field : ReflectionHelper.getFieldsWithAnnotation(stationMod.getClass(), StationMod.Instance.class)) {
+            try {
+                ReflectionHelper.setFinalField(field, stationMod, stationMod);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(String.format("Failed to set \"%s\" field of %s (%s)'s \"%s\" class!", field.getName(), modMetadata.getName(), modMetadata.getId(), stationMod.getClass().getName()), e);
+            }
+            getLogger().info("Set \"" + field.getName() + "\" field to mod's instance");
+        }
+        stationMod.setContainer(modContainer);
+        getLogger().info("Set mod's container");
+        String name = modMetadata.getName() + "|StationMod";
+        stationMod.setLogger(LogManager.getFormatterLogger(name));
+        Configurator.setLevel(name, Level.INFO);
+        getLogger().info("Registered logger \"" + name + "\"");
+        stationMod.setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + modMetadata.getId()));
+        stationMod.setDefaultConfig(net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.newInst(net.modificationstation.stationloader.api.common.config.Configuration.class, new File(stationMod.getConfigPath() + File.separator + modMetadata.getId() + ".cfg")));
+        getLogger().info("Initialized default config");
+        PreInit.EVENT.register(stationMod);
+        getLogger().info("Registered events");
+        mods.compute(modContainer, (modContainer1, stationMods) -> {
+            stationMods = stationMods == null ? new HashSet<>() : stationMods;
+            stationMods.add(stationMod);
+            return stationMods;
+        });
+        getLogger().info(String.format("Done loading %s (%s)'s \"%s\" StationMod", modMetadata.getName(), modMetadata.getId(), stationMod.getClass().getName()));
+    }
+
+    @Override
+    public void addModAssets(ModContainer modContainer) {
+        ModMetadata modMetadata = modContainer.getMetadata();
+        String modid = modMetadata.getId();
+        String slSubFolder = "/assets/" + modid + "/" + getContainer().getMetadata().getId();
+        URL path = getClass().getResource(slSubFolder);
+        if (path != null)
+            mods.putIfAbsent(modContainer, new HashSet<>());
+        String pathName = slSubFolder + "/lang";
+        path = getClass().getResource(pathName);
         if (path != null) {
-            hasAssets = true;
             net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder(pathName, modid);
             getLogger().info("Registered lang path");
         }
-        pathName = "/assets/" + modid + "/" + getData().getId() + "/recipes";
+        pathName = slSubFolder + "/recipes";
         path = getClass().getResource(pathName);
         if (path != null) {
-            hasAssets = true;
             try {
-                for (URL url : new RecursiveReader(pathName, (file) -> file.endsWith(".json")).read()) {
+                for (URL url : new RecursiveReader(pathName, (file) -> file.endsWith(".json")).read())
                     net.modificationstation.stationloader.api.common.recipe.RecipeManager.INSTANCE.addJsonRecipe(url);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (IOException | URISyntaxException e) {
+                throw new RuntimeException(e);
             }
             getLogger().info("Listed recipes");
         }
-        if (!stationMods.containsKey(data) && !modSides.containsKey(data) && hasAssets) {
-            getLogger().info("Registering the mod as assets-only common mod.");
-            stationMods.put(data, new HashSet<>());
-            modSides.put(data, null);
-        }
     }
 
     @Override
-    public void addMod(ModMetadata data, EnvType envType, String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, URISyntaxException, NoSuchFieldException {
-        String modid = data.getId();
-        getLogger().info("Adding \"" + className + "\" mod");
-        Class<?> clazz = Class.forName(className);
-        getLogger().info("Found the class");
-        Class<? extends StationMod> modClass;
-        StationMod mod;
-        if (StationMod.class.isAssignableFrom(clazz)) {
-            modClass = clazz.asSubclass(StationMod.class);
-            stationMods.get(data).add(modClass);
-            mod = modClass.newInstance();
-        } else
-            throw new RuntimeException("Corrupted mod " + modid + " at " + className);
-        getLogger().info("Created an instance");
-        for (Field field : ReflectionHelper.getFieldsWithAnnotation(modClass, StationMod.Instance.class)) {
-            ReflectionHelper.setFinalField(field, mod, mod);
-            getLogger().info("Set \"" + field.getName() + "\" field to mod's instance");
-        }
-        mod.setSide(envType);
-        getLogger().info("Set mod's side");
-        mod.setData(data);
-        getLogger().info("Set mod's metadata");
-        String name = data.getName() + "|StationMod";
-        mod.setLogger(LogManager.getFormatterLogger(name));
-        Configurator.setLevel(name, Level.INFO);
-        getLogger().info("Registered logger \"" + name + "\"");
-        mod.setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + modid));
-        mod.setDefaultConfig(net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.newInst(net.modificationstation.stationloader.api.common.config.Configuration.class, new File(mod.getConfigPath() + File.separator + modid + ".cfg")));
-        getLogger().info("Initialized default config");
-        PreInit.EVENT.register(mod);
-        getLogger().info("Registered events");
-        stationModInstances.put(modClass, mod);
-        getLogger().info("Success");
+    public Collection<ModContainer> getAllMods() {
+        return Collections.unmodifiableSet(mods.keySet());
     }
 
     @Override
-    public Collection<ModMetadata> getAllStationMods() {
-        return Collections.unmodifiableCollection(stationMods.keySet());
+    public Set<StationMod> getAllModInstances() {
+        return Collections.unmodifiableSet(Sets.newHashSet(Iterables.concat(mods.values())));
     }
 
     @Override
-    public Collection<Class<? extends StationMod>> getAllStationModsClasses() {
-        return Collections.unmodifiableCollection(stationModInstances.keySet());
+    public Set<StationMod> getModInstances(ModContainer modContainer) {
+        return Collections.unmodifiableSet(mods.get(modContainer));
     }
 
     @Override
-    public Collection<StationMod> getAllStationModInstances() {
-        return Collections.unmodifiableCollection(stationModInstances.values());
+    public Set<ModContainer> getModsToVerifyOnClient() {
+        return Collections.unmodifiableSet(modsToVerifyOnClient);
     }
 
-    @Override
-    public Collection<Class<? extends StationMod>> getStationModClasses(ModMetadata data) {
-        return Collections.unmodifiableSet(stationMods.get(data));
-    }
+    protected final Set<String> entrypoints = new HashSet<>();
 
-    @Override
-    public StationMod getModInstance(Class<? extends StationMod> modClass) {
-        return stationModInstances.get(modClass);
-    }
+    private final Map<ModContainer, Set<StationMod>> mods = new HashMap<>();
+    private final Set<ModContainer> modsToVerifyOnClient = new HashSet<>();
 
-    @Override
-    public EnvType getModSide(ModMetadata data) {
-        return modSides.get(data);
-    }
-
-    private final Map<ModMetadata, Set<Class<? extends StationMod>>> stationMods = new HashMap<>();
-    private final Map<Class<? extends StationMod>, StationMod> stationModInstances = new HashMap<>();
-    private final Map<ModMetadata, EnvType> modSides = new HashMap<>();
+    //private final Map<ModMetadata, Set<Class<? extends StationMod>>> stationMods = new HashMap<>();
+    //private final Map<Class<? extends StationMod>, StationMod> stationModInstances = new HashMap<>();
+    //private final Map<ModMetadata, EnvType> modSides = new HashMap<>();
 }

@@ -2,4 +2,4 @@
 disconnect.missing_sl=StationLoader is required to join this server.
 disconnect.sl_version_mismatch=This server runs on StationLoader %s (you have %s).
 disconnect.missing_mod=Mod %s (%s) %s is required to join.
-disconnect.mod_version_mismatch=%s (%s) %s is required (you have @s).
+disconnect.mod_version_mismatch=%s (%s) %s is required (you have %s).
