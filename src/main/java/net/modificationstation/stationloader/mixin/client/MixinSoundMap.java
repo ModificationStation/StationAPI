@@ -21,11 +21,12 @@ public class MixinSoundMap implements CustomSoundMap {
 
     @Override
     public class_267 putSound(String id, URL url) {
+        id = id.toLowerCase();
         if (id.length() - id.replace(".", "").length() != 1) {
-            throw new RuntimeException("You MUST name your audio files with an extension, and with no extra dots or any spaces!\ne.g: \"wolf_bark.ogg\" is fine, but \"wolf_bark\", \"wolf.bark.ogg\" and \"wolf bark.ogg\" are not.");
+            throw new RuntimeException("You MUST name your audio files with an extension, and with no extra dots or any spaces!\ne.g: \"wolf_bark.ogg\" is fine, but \"wolf_bark\", \"wolf.bark.ogg\" and \"wolf bark.ogg\" are not.\nFile name: \"" + id + "\"");
         }
         String filename = id;
-        id = id.split("\\.")[0].toLowerCase();
+        id = id.split("\\.")[0];
         id = id.replaceAll("/", ".");
         if (!this.field_1089.containsKey(id)) {
             this.field_1089.put(id, new ArrayList());

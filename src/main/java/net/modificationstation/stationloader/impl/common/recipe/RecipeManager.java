@@ -9,7 +9,9 @@ import net.modificationstation.stationloader.api.common.recipe.SmeltingRegistry;
 import net.modificationstation.stationloader.impl.common.item.JsonItemKey;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -17,7 +19,12 @@ public class RecipeManager implements net.modificationstation.stationloader.api.
 
     public RecipeManager() {
         addOrGetRecipeType("minecraft:crafting_shaped", (recipe) -> {
-            JsonElement rawJson = JsonParser.parseReader(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(recipe))));
+            JsonElement rawJson = null;
+            try {
+                rawJson = JsonParser.parseReader(new BufferedReader(new InputStreamReader(recipe.openStream())));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             JsonCraftingShaped json = new Gson().fromJson(rawJson, JsonCraftingShaped.class);
             Set<Map.Entry<String, JsonElement>> rawKeys = rawJson.getAsJsonObject().getAsJsonObject("key").entrySet();
             String[] pattern = json.getPattern();
@@ -33,7 +40,12 @@ public class RecipeManager implements net.modificationstation.stationloader.api.
             CraftingRegistry.INSTANCE.addShapedRecipe(json.getResult().getItemInstance(), keys);
         });
         addOrGetRecipeType("minecraft:crafting_shapeless", (recipe) -> {
-            JsonCraftingShapeless json = new Gson().fromJson(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(recipe))), JsonCraftingShapeless.class);
+            JsonCraftingShapeless json = null;
+            try {
+                json = new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonCraftingShapeless.class);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             JsonItemKey[] ingredients = json.getIngredients();
             Object[] itemstacks = new Object[json.getIngredients().length];
             for (int i = 0; i < ingredients.length; i++)
@@ -41,26 +53,31 @@ public class RecipeManager implements net.modificationstation.stationloader.api.
             CraftingRegistry.INSTANCE.addShapelessRecipe(json.getResult().getItemInstance(), itemstacks);
         });
         addOrGetRecipeType("minecraft:smelting", (recipe) -> {
-            JsonSmelting json = new Gson().fromJson(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(recipe))), JsonSmelting.class);
+            JsonSmelting json = null;
+            try {
+                json = new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonSmelting.class);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             SmeltingRegistry.INSTANCE.addSmeltingRecipe(json.getIngredient().getItemInstance(), json.getResult().getItemInstance());
         });
     }
 
     @Override
-    public void addJsonRecipe(String recipe) {
-        addOrGetRecipeType(new Gson().fromJson(new BufferedReader(new InputStreamReader(RecipeManager.class.getResourceAsStream(recipe))), JsonRecipeType.class).getType(), null).add(recipe);
+    public void addJsonRecipe(URL recipe) throws IOException {
+        addOrGetRecipeType(new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonRecipeType.class).getType(), null).add(recipe);
     }
 
     @Override
-    public Set<String> addOrGetRecipeType(String type, Consumer<String> register) {
+    public Set<URL> addOrGetRecipeType(String type, Consumer<URL> register) {
         String modid = type.split(":")[0];
         type = type.substring(modid.length() + 1);
         if (!recipes.containsKey(modid))
             recipes.put(modid, new HashMap<>());
-        Map<String, Map.Entry<Consumer<String>, Set<String>>> map = recipes.get(modid);
+        Map<String, Map.Entry<Consumer<URL>, Set<URL>>> map = recipes.get(modid);
         if (!map.containsKey(type))
             map.put(type, new AbstractMap.SimpleEntry<>(register, new HashSet<>()));
-        Map.Entry<Consumer<String>, Set<String>> entry = map.get(type);
+        Map.Entry<Consumer<URL>, Set<URL>> entry = map.get(type);
         if (entry.getKey() == null)
             entry = new AbstractMap.SimpleEntry<>(register, entry.getValue());
         return entry.getValue();
@@ -69,7 +86,7 @@ public class RecipeManager implements net.modificationstation.stationloader.api.
     @Override
     public void registerRecipes(String recipeType) {
         String modid = recipeType.split(":")[0];
-        Map.Entry<Consumer<String>, Set<String>> recipe = recipes.get(modid).get(recipeType.substring(modid.length() + 1));
+        Map.Entry<Consumer<URL>, Set<URL>> recipe = recipes.get(modid).get(recipeType.substring(modid.length() + 1));
         recipe.getValue().forEach(recipe.getKey());
     }
 }

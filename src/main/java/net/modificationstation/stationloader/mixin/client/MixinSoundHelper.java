@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -33,12 +34,14 @@ public class MixinSoundHelper {
     private static void loadModAudio(SoundMap array, String channel) {
         try {
             for (ModMetadata stationMod : StationLoader.INSTANCE.getAllStationMods()) {
+                System.out.println(stationMod.getId());
                 Path basePath = Paths.get("/assets/" + stationMod.getId() + "/stationloader/sounds/" + channel);
                 if (MixinSoundHelper.class.getResource(basePath.toString().replace("\\", "/")) != null) {
                     RecursiveReader recursiveReader = new RecursiveReader("/assets/" + stationMod.getId() + "/stationloader/sounds/" + channel, (filepath) -> filepath.endsWith(".ogg") || filepath.endsWith(".mp3"));
-                    for (String audioPath : recursiveReader.read()) {
-                        Path audioPathPath = Paths.get(audioPath);
-                        ((CustomSoundMap) array).putSound(stationMod.getId() + ":" + basePath.relativize(audioPathPath).toString().replace("\\", "/"), MixinSoundHelper.class.getResource(audioPathPath.toString().replace("\\", "/")));
+                    for (URL audioUrl : recursiveReader.read()) {
+                        String audioID = audioUrl.toString().replace("\\", "/").split("/stationloader/sounds/" + channel)[1].replaceFirst("/", "");
+                        System.out.println(audioID);
+                        ((CustomSoundMap) array).putSound(stationMod.getId() + ":" + audioID, audioUrl);
                     }
                 }
             }

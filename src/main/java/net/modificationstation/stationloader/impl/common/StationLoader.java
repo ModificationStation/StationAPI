@@ -233,7 +233,13 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         path = getClass().getResource(pathName);
         if (path != null) {
             hasAssets = true;
-            new RecursiveReader(pathName, (file) -> file.endsWith(".json")).read().forEach(net.modificationstation.stationloader.api.common.recipe.RecipeManager.INSTANCE::addJsonRecipe);
+            try {
+                for (URL url : new RecursiveReader(pathName, (file) -> file.endsWith(".json")).read()) {
+                    net.modificationstation.stationloader.api.common.recipe.RecipeManager.INSTANCE.addJsonRecipe(url);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             getLogger().info("Listed recipes");
         }
         if (!stationMods.containsKey(data) && !modSides.containsKey(data) && hasAssets) {

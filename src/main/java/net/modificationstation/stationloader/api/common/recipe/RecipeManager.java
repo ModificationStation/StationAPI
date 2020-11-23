@@ -2,6 +2,8 @@ package net.modificationstation.stationloader.api.common.recipe;
 
 import net.modificationstation.stationloader.api.common.util.HasHandler;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -19,21 +21,21 @@ public interface RecipeManager extends HasHandler<RecipeManager> {
         }
 
         @Override
-        public void addJsonRecipe(String recipe) {
+        public void addJsonRecipe(URL recipe) throws IOException {
             checkAccess(handler);
             handler.addJsonRecipe(recipe);
         }
 
         @Override
-        public Set<String> addOrGetRecipeType(String type, Consumer<String> register) {
+        public Set<URL> addOrGetRecipeType(String type, Consumer<URL> register) {
             checkAccess(handler);
             return handler.addOrGetRecipeType(type, register);
         }
     };
 
-    void addJsonRecipe(String recipe);
+    void addJsonRecipe(URL recipe) throws IOException;
 
-    Set<String> addOrGetRecipeType(String type, Consumer<String> register);
+    Set<URL> addOrGetRecipeType(String type, Consumer<URL> register);
 
-    Map<String, Map<String, Map.Entry<Consumer<String>, Set<String>>>> recipes = new HashMap<>();
+    Map<String, Map<String, Map.Entry<Consumer<URL>, Set<URL>>>> recipes = new HashMap<>();
 }
