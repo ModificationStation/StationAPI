@@ -38,7 +38,6 @@
   "server": [
     "server.Mixinclass_488",
     "server.Mixinclass_70",
-    "server.MixinMinecraftServer",
     "server.MixinPendingConnection",
     "server.MixinServerPlayerPacketHandler",
     "server.accessor.ServerPlayerAccessor",
@@ -57,7 +56,6 @@
     "client.MixinGameRenderer",
     "client.MixinItemRenderer",
     "client.MixinMinecraft",
-    "client.MixinMinecraftApplet",
     "client.MixinParticleManager",
     "client.MixinPlayerRenderer",
     "client.MixinRemoteClientInteractionManager",

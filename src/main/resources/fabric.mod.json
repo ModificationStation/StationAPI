@@ -19,10 +19,13 @@
 
   "environment": "*",
   "entrypoints": {
-    "stationloader_client": [
+    "preLaunch": [
+      "net.modificationstation.stationloader.impl.common.launch.StationLoaderLauncher"
+    ],
+    "stationloader:client": [
       "net.modificationstation.stationloader.impl.client.StationLoader"
     ],
-    "stationloader_server": [
+    "stationloader:server": [
       "net.modificationstation.stationloader.impl.server.StationLoader"
     ]
   },

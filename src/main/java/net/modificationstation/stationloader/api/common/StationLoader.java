@@ -1,43 +1,124 @@
 package net.modificationstation.stationloader.api.common;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
-import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.fabricmc.loader.metadata.LoaderModMetadata;
+import net.modificationstation.stationloader.api.common.config.Configuration;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
+import net.modificationstation.stationloader.api.common.util.HasHandler;
 import net.modificationstation.stationloader.api.common.util.ModCore;
+import org.apache.logging.log4j.Logger;
 
+import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 
-public interface StationLoader extends ModCore {
+public interface StationLoader extends ModCore, HasHandler<StationLoader> {
 
-    StationLoader INSTANCE = ((Supplier<StationLoader>) () -> {
-        try {
-            Optional<ModContainer> modContainerOptional =  FabricLoader.getInstance().getModContainer("stationloader");
-            if (modContainerOptional.isPresent()) {
-                ModContainer modContainer = modContainerOptional.get();
-                ModMetadata data = modContainer.getMetadata();
-                if (data instanceof LoaderModMetadata) {
-                    Class<?> clazz = Class.forName(((LoaderModMetadata) data).getEntrypoints("stationloader_" + FabricLoader.getInstance().getEnvironmentType().name().toLowerCase()).get(0).getValue());
-                    if (StationLoader.class.isAssignableFrom(clazz)) {
-                        Class<? extends StationLoader> slClass = clazz.asSubclass(StationLoader.class);
-                        StationLoader stationLoader = slClass.newInstance();
-                        stationLoader.setContainer(modContainer);
-                        return stationLoader;
-                    } else
-                        throw new RuntimeException("Corrupted StationLoader class!");
-                } else
-                    throw new RuntimeException("Corrupted fabric.mod.json!");
-            } else
-                throw new RuntimeException("Absent fabric.mod.json! (Impossible?)");
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+    StationLoader INSTANCE = new StationLoader() {
+
+        private StationLoader handler;
+
+        @Override
+        public void setHandler(StationLoader handler) {
+            this.handler = handler;
         }
-    }).get();
+
+        @Override
+        public Logger getLogger() {
+            checkAccess(handler);
+            return handler.getLogger();
+        }
+
+        @Override
+        public void setLogger(Logger log) {
+            checkAccess(handler);
+            handler.setLogger(log);
+        }
+
+        @Override
+        public Path getConfigPath() {
+            checkAccess(handler);
+            return handler.getConfigPath();
+        }
+
+        @Override
+        public void setConfigPath(Path configPath) {
+            checkAccess(handler);
+            handler.setConfigPath(configPath);
+        }
+
+        @Override
+        public Configuration getDefaultConfig() {
+            checkAccess(handler);
+            return handler.getDefaultConfig();
+        }
+
+        @Override
+        public void setDefaultConfig(Configuration config) {
+            checkAccess(handler);
+            handler.setDefaultConfig(config);
+        }
+
+        @Override
+        public ModContainer getContainer() {
+            checkAccess(handler);
+            return handler.getContainer();
+        }
+
+        @Override
+        public void setContainer(ModContainer container) {
+            checkAccess(handler);
+            handler.setContainer(container);
+        }
+
+        @Override
+        public void setup() {
+            checkAccess(handler);
+            handler.setup();
+        }
+
+        @Override
+        public void loadMods() {
+            checkAccess(handler);
+            handler.loadMods();
+        }
+
+        @Override
+        public void addMod(EntrypointContainer<StationMod> stationModEntrypointContainer) {
+            checkAccess(handler);
+            handler.addMod(stationModEntrypointContainer);
+        }
+
+        @Override
+        public void addModAssets(ModContainer modContainer) {
+            checkAccess(handler);
+            handler.addModAssets(modContainer);
+        }
+
+        @Override
+        public Collection<ModContainer> getAllMods() {
+            checkAccess(handler);
+            return handler.getAllMods();
+        }
+
+        @Override
+        public Set<StationMod> getAllModInstances() {
+            checkAccess(handler);
+            return handler.getAllModInstances();
+        }
+
+        @Override
+        public Set<StationMod> getModInstances(ModContainer modContainer) {
+            checkAccess(handler);
+            return handler.getModInstances(modContainer);
+        }
+
+        @Override
+        public Set<ModContainer> getModsToVerifyOnClient() {
+            checkAccess(handler);
+            return handler.getModsToVerifyOnClient();
+        }
+    };
 
     void setup();
 
