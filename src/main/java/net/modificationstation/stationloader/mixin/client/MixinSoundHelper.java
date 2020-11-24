@@ -36,13 +36,11 @@ public class MixinSoundHelper {
         try {
             for (ModContainer modContainer : StationLoader.INSTANCE.getAllMods()) {
                 ModMetadata stationMod = modContainer.getMetadata();
-                System.out.println(stationMod.getId());
                 Path basePath = Paths.get("/assets/" + stationMod.getId() + "/stationloader/sounds/" + channel);
                 if (MixinSoundHelper.class.getResource(basePath.toString().replace("\\", "/")) != null) {
                     RecursiveReader recursiveReader = new RecursiveReader("/assets/" + stationMod.getId() + "/stationloader/sounds/" + channel, (filepath) -> filepath.endsWith(".ogg") || filepath.endsWith(".mp3"));
                     for (URL audioUrl : recursiveReader.read()) {
                         String audioID = audioUrl.toString().replace("\\", "/").split("/stationloader/sounds/" + channel)[1].replaceFirst("/", "");
-                        System.out.println(audioID);
                         ((CustomSoundMap) array).putSound(stationMod.getId() + ":" + audioID, audioUrl);
                     }
                 }
