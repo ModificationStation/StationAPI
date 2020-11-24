@@ -236,7 +236,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         path = getClass().getResource(pathName);
         if (path != null) {
             try {
-                for (URL url : new RecursiveReader(pathName, (file) -> file.endsWith(".json")/*file.matches("/stationloader/recipes/.*\\.json$")*/).read())
+                for (URL url : new RecursiveReader(pathName, (file) -> file.endsWith(".json")).read())
                     net.modificationstation.stationloader.api.common.recipe.RecipeManager.INSTANCE.addJsonRecipe(url);
             } catch (IOException | URISyntaxException e) {
                 throw new RuntimeException(e);
