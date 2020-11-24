@@ -214,11 +214,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         getLogger().info("Initialized default config");
         PreInit.EVENT.register(stationMod);
         getLogger().info("Registered events");
-        mods.compute(modContainer, (modContainer1, stationMods) -> {
-            stationMods = stationMods == null ? new HashSet<>() : stationMods;
-            stationMods.add(stationMod);
-            return stationMods;
-        });
+        mods.computeIfAbsent(modContainer, modContainer1 -> new HashSet<>()).add(stationMod);
         getLogger().info(String.format("Done loading %s (%s)'s \"%s\" StationMod", modMetadata.getName(), modMetadata.getId(), stationMod.getClass().getName()));
     }
 
