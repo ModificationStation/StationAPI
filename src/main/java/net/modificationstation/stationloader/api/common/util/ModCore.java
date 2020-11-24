@@ -49,24 +49,4 @@ public interface ModCore {
     }
 
     Map<ModCore, ModContainer> containers = new HashMap<>();
-
-    /*default ModMetadata getData() {
-        return metadatas.get(this);
-    }
-
-    default void setData(ModMetadata data) {
-        metadatas.put(this, data);
-    }
-
-    Map<ModCore, ModMetadata> metadatas = new HashMap<>();
-
-    default EnvType getSide() {
-        return sides.get(this);
-    }
-
-    default void setSide(EnvType envType) {
-        sides.put(this, envType);
-    }
-
-    Map<ModCore, EnvType> sides = new HashMap<>();*/
 }
