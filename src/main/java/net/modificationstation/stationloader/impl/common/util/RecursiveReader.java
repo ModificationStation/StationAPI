@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.*;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -46,23 +50,15 @@ public class RecursiveReader {
                         }
                     }
                 } else if (basePath.isDirectory()) {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(rPath.openStream()));
-                    String filePath = reader.readLine();
-                    URL file;
-                    String actualFilePath;
-                    while (filePath != null) {
-                        actualFilePath = path + "/" + filePath;
-                        file = classLoader.getResource(actualFilePath);
-                        if (file != null) {
-                            if (new File(file.toURI()).isFile()) {
-                                if (formatter == null || formatter.apply(actualFilePath))
-                                    files.add(file);
-                            } else
-                                files.addAll(new RecursiveReader(actualFilePath, formatter).read());
+                    Files.walk(Paths.get(String.valueOf(basePath)))
+                            .filter((pathpath) -> formatter == null || formatter.apply(pathpath.toString()))
+                            .forEach((pathUrl) -> {
+                        try {
+                            files.add(pathUrl.toUri().toURL());
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
                         }
-                        filePath = reader.readLine();
-                    }
-                    reader.close();
+                    });
                 }
             } catch (Exception e) {
                 StationLoader.INSTANCE.getLogger().error("RecursiveReader was given an invalid URL or a corrupt JAR/ZIP!");
