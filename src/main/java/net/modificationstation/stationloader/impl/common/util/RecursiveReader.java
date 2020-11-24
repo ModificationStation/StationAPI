@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class RecursiveReader {
 
@@ -26,28 +28,38 @@ public class RecursiveReader {
         Set<URL> files = new HashSet<>();
         ClassLoader classLoader = getClass().getClassLoader().getParent();
         Enumeration<URL> urls = classLoader.getResources(path);
-        URL rPath;
         while (urls.hasMoreElements()) {
-            rPath = urls.nextElement();
-            BufferedReader reader;
-            String filePath;
-            reader = new BufferedReader(new InputStreamReader(rPath.openStream()));
-            filePath = reader.readLine();
-            URL file;
-            String actualFilePath;
-            while (filePath != null) {
-                actualFilePath = path + "/" + filePath;
-                file = classLoader.getResource(actualFilePath);
-                if (file != null) {
-                    if (new File(file.toURI()).isFile()) {
-                        if (formatter == null || formatter.apply(actualFilePath))
-                            files.add(file);
-                    } else
-                        files.addAll(new RecursiveReader(actualFilePath, formatter).read());
+            URL rPath = urls.nextElement();
+            URLConnection connection = rPath.openConnection();
+            System.out.println(connection.toString());
+            if (connection instanceof JarURLConnection) {
+                Enumeration<JarEntry> entries = ((JarURLConnection) connection).getJarFile().entries();
+                for (JarEntry jarEntry = entries.nextElement(); entries.hasMoreElements(); jarEntry = entries.nextElement()) {
+                    String name = jarEntry.getName();
+                    if (!jarEntry.isDirectory() && (formatter == null || formatter.apply(name))) {
+
+                    }
                 }
-                filePath = reader.readLine();
+            } else if (/*something else*/) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(rPath.openStream()));
+                String filePath = reader.readLine();
+                System.out.println(rPath.openConnection());
+                URL file;
+                String actualFilePath;
+                while (filePath != null) {
+                    actualFilePath = path + "/" + filePath;
+                    file = classLoader.getResource(actualFilePath);
+                    if (file != null) {
+                        if (new File(file.toURI()).isFile()) {
+                            if (formatter == null || formatter.apply(actualFilePath))
+                                files.add(file);
+                        } else
+                            files.addAll(new RecursiveReader(actualFilePath, formatter).read());
+                    }
+                    filePath = reader.readLine();
+                }
+                reader.close();
             }
-            reader.close();
         }
         return files;
     }
