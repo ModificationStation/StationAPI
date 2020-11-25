@@ -45,7 +45,7 @@ public class RecursiveReader {
                     String path = rPath.toURI().getPath();
                     if (path != null) {
                         File basePath = new File(path.split("!/")[0].replace("\\", "/").replace("file:/", ""));
-                        if (basePath.isDirectory()) {
+                        if (basePath.isDirectory())
                             Files.walk(Paths.get(String.valueOf(basePath)))
                                     .filter((pathpath) -> formatter == null || formatter.apply(pathpath.toString()))
                                     .forEach((pathUrl) -> {
@@ -55,7 +55,6 @@ public class RecursiveReader {
                                             e.printStackTrace();
                                         }
                                     });
-                        }
                     }
                 }
             } catch (Exception e) {
