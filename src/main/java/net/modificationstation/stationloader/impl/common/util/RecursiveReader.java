@@ -30,28 +30,33 @@ public class RecursiveReader {
         Enumeration<URL> urls = classLoader.getResources(path);
         while (urls.hasMoreElements()) {
             URL rPath = urls.nextElement();
-            File basePath = new File(rPath.getPath().split("!/")[0].replace("\\", "/").replace("file:/", ""));
-            System.out.println(basePath);
+            System.out.println(rPath.getPath());
+            System.out.println(rPath.toURI().getPath());
             URLConnection connection = rPath.openConnection();
             try {
                 if (connection instanceof JarURLConnection) {
                     Enumeration<JarEntry> entries = ((JarURLConnection) connection).getJarFile().entries();
                     for (JarEntry jarEntry = entries.nextElement(); entries.hasMoreElements(); jarEntry = entries.nextElement()) {
                         String name = jarEntry.getName();
-                        if (!jarEntry.isDirectory() && name.startsWith(path) && (formatter == null || formatter.apply(name))) {
-                            files.add(new URL("jar:file:/" + basePath.getAbsolutePath() + "!/" + name));
+                        if (!jarEntry.isDirectory() && name.startsWith(path) && (formatter == null || formatter.apply(name)))
+                            files.add(new URL("jar:file:/" + new File(rPath.getPath().split("!/")[0].replace("\\", "/").replace("file:/", "")).getAbsolutePath() + "!/" + name));
+                    }
+                } else {
+                    String path = rPath.toURI().getPath();
+                    if (path != null) {
+                        File basePath = new File(path.split("!/")[0].replace("\\", "/").replace("file:/", ""));
+                        if (basePath.isDirectory()) {
+                            Files.walk(Paths.get(String.valueOf(basePath)))
+                                    .filter((pathpath) -> formatter == null || formatter.apply(pathpath.toString()))
+                                    .forEach((pathUrl) -> {
+                                        try {
+                                            files.add(pathUrl.toUri().toURL());
+                                        } catch (MalformedURLException e) {
+                                            e.printStackTrace();
+                                        }
+                                    });
                         }
                     }
-                } else if (basePath.isDirectory()) {
-                    Files.walk(Paths.get(String.valueOf(basePath)))
-                            .filter((pathpath) -> formatter == null || formatter.apply(pathpath.toString()))
-                            .forEach((pathUrl) -> {
-                        try {
-                            files.add(pathUrl.toUri().toURL());
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        }
-                    });
                 }
             } catch (Exception e) {
                 StationLoader.INSTANCE.getLogger().error("RecursiveReader was given an invalid URL or a corrupt JAR/ZIP!");
