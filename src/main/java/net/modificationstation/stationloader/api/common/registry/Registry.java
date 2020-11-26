@@ -86,7 +86,7 @@ public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> 
         @Override
         public int getNextSerializedID() {
             BlockBase[] BY_ID = BlockBase.BY_ID;
-            for (int i = 0; i < BY_ID.length; i++)
+            for (int i = 1; i < BY_ID.length; i++)
                 if (BY_ID[i] == null)
                     return i;
             throw new RuntimeException("No free space left!");
