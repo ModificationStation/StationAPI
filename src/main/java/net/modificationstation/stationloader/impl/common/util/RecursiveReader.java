@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 
 public class RecursiveReader {
@@ -19,9 +19,9 @@ public class RecursiveReader {
         this(path, null);
     }
 
-    public RecursiveReader(String path, Function<String, Boolean> formatter) {
+    public RecursiveReader(String path, Predicate<String> filter) {
         this.path = path.startsWith("/") ? path.substring(1) : path;
-        this.formatter = formatter;
+        this.filter = filter;
     }
 
     public Set<URL> read() throws IOException, URISyntaxException {
@@ -38,7 +38,7 @@ public class RecursiveReader {
                     Enumeration<JarEntry> entries = ((JarURLConnection) connection).getJarFile().entries();
                     for (JarEntry jarEntry = entries.nextElement(); entries.hasMoreElements(); jarEntry = entries.nextElement()) {
                         String name = jarEntry.getName();
-                        if (!jarEntry.isDirectory() && name.startsWith(path) && (formatter == null || formatter.apply(name)))
+                        if (!jarEntry.isDirectory() && name.startsWith(path) && (filter == null || filter.test(name)))
                             files.add(new URL("jar:file:/" + new File(rPath.getPath().split("!/")[0].replace("\\", "/").replace("file:/", "")).getAbsolutePath() + "!/" + name));
                     }
                 } else {
@@ -47,7 +47,7 @@ public class RecursiveReader {
                         File basePath = new File(path.split("!/")[0].replace("\\", "/").replace("file:/", ""));
                         if (basePath.isDirectory())
                             Files.walk(Paths.get(String.valueOf(basePath)))
-                                    .filter((pathpath) -> formatter == null || formatter.apply(pathpath.toString()))
+                                    .filter((pathpath) -> filter == null || filter.test(pathpath.toString()))
                                     .forEach((pathUrl) -> {
                                         try {
                                             files.add(pathUrl.toUri().toURL());
@@ -66,5 +66,5 @@ public class RecursiveReader {
     }
 
     private final String path;
-    private final Function<String, Boolean> formatter;
+    private final Predicate<String> filter;
 }

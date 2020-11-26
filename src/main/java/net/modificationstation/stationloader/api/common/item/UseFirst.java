@@ -1,4 +1,4 @@
-package net.modificationstation.stationloader.api.common.event.item;
+package net.modificationstation.stationloader.api.common.item;
 
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
