@@ -35,53 +35,53 @@ public class CustomCuboidRenderer implements net.modificationstation.stationload
     }
 
     @Environment(EnvType.CLIENT)
-    public void setupCuboid(float f, float f1, float f2, int i, int j, int k, float f3, HashMap<String, String> textures) {
+    public void setupCuboid(float x, float y, float z, int width, int height, int length, float extend, HashMap<String, String> textures) {
         this.quadPoints = new QuadPoint[8];
         this.cubeQuads = new CustomTexturedQuad[6];
-        float var8 = f + (float)i;
-        float var9 = f1 + (float)j;
-        float var10 = f2 + (float)k;
-        f -= f3;
-        f1 -= f3;
-        f2 -= f3;
-        var8 += f3;
-        var9 += f3;
-        var10 += f3;
+        float x2 = x + (float)width;
+        float y2 = y + (float)height;
+        float z2 = z + (float)length;
+        x -= extend;
+        y -= extend;
+        z -= extend;
+        x2 += extend;
+        y2 += extend;
+        z2 += extend;
         if (this.mirror) {
-            float var11 = var8;
-            var8 = f;
-            f = var11;
+            float var11 = x2;
+            x2 = x;
+            x = var11;
         }
 
-        QuadPoint var20 = new QuadPoint(f, f1, f2, 0.0F, 0.0F);
-        QuadPoint var12 = new QuadPoint(var8, f1, f2, 0.0F, 8.0F);
-        QuadPoint var13 = new QuadPoint(var8, var9, f2, 8.0F, 8.0F);
-        QuadPoint var14 = new QuadPoint(f, var9, f2, 8.0F, 0.0F);
-        QuadPoint var15 = new QuadPoint(f, f1, var10, 0.0F, 0.0F);
-        QuadPoint var16 = new QuadPoint(var8, f1, var10, 0.0F, 8.0F);
-        QuadPoint var17 = new QuadPoint(var8, var9, var10, 8.0F, 8.0F);
-        QuadPoint var18 = new QuadPoint(f, var9, var10, 8.0F, 0.0F);
-        this.quadPoints[0] = var20;
-        this.quadPoints[1] = var12;
-        this.quadPoints[2] = var13;
-        this.quadPoints[3] = var14;
-        this.quadPoints[4] = var15;
-        this.quadPoints[5] = var16;
-        this.quadPoints[6] = var17;
-        this.quadPoints[7] = var18;
+        QuadPoint point0 = new QuadPoint(x, y, z, 0.0F, 0.0F);
+        QuadPoint point1 = new QuadPoint(x2, y, z, 0.0F, 8.0F);
+        QuadPoint point2 = new QuadPoint(x2, y2, z, 8.0F, 8.0F);
+        QuadPoint point3 = new QuadPoint(x, y2, z, 8.0F, 0.0F);
+        QuadPoint point4 = new QuadPoint(x, y, z2, 0.0F, 0.0F);
+        QuadPoint point5 = new QuadPoint(x2, y, z2, 0.0F, 8.0F);
+        QuadPoint point6 = new QuadPoint(x2, y2, z2, 8.0F, 8.0F);
+        QuadPoint point7 = new QuadPoint(x, y2, z2, 8.0F, 0.0F);
+        this.quadPoints[0] = point0;
+        this.quadPoints[1] = point1;
+        this.quadPoints[2] = point2;
+        this.quadPoints[3] = point3;
+        this.quadPoints[4] = point4;
+        this.quadPoints[5] = point5;
+        this.quadPoints[6] = point6;
+        this.quadPoints[7] = point7;
 
         // East
-        this.cubeQuads[0] = new CustomTexturedQuad(new QuadPoint[]{var16, var12, var13, var17}, (int) (uvs.getEast().getUv()[2]), (int) (uvs.getEast().getUv()[3]), (int) (uvs.getEast().getUv()[0]), (int) (uvs.getEast().getUv()[1]) , 16, 16, BlockFaces.EAST, getTexture(textures, uvs.getEast().getTexture()));
+        this.cubeQuads[0] = new CustomTexturedQuad(new QuadPoint[]{point5, point1, point2, point6}, (int) (uvs.getEast().getUv()[2]), (int) (uvs.getEast().getUv()[3]), (int) (uvs.getEast().getUv()[0]), (int) (uvs.getEast().getUv()[1]) , 16, 16, BlockFaces.EAST, getTexture(textures, uvs.getEast().getTexture()));
         // West
-        this.cubeQuads[1] = new CustomTexturedQuad(new QuadPoint[]{var20, var15, var18, var14}, (int) (uvs.getWest().getUv()[2]), (int) (uvs.getWest().getUv()[3]), (int) (uvs.getWest().getUv()[0]), (int) (uvs.getWest().getUv()[1]), 16, 16, BlockFaces.WEST, getTexture(textures, uvs.getWest().getTexture()));
+        this.cubeQuads[1] = new CustomTexturedQuad(new QuadPoint[]{point0, point4, point7, point3}, (int) (uvs.getWest().getUv()[2]), (int) (uvs.getWest().getUv()[3]), (int) (uvs.getWest().getUv()[0]), (int) (uvs.getWest().getUv()[1]), 16, 16, BlockFaces.WEST, getTexture(textures, uvs.getWest().getTexture()));
         // Up
-        this.cubeQuads[2] = new CustomTexturedQuad(new QuadPoint[]{var16, var15, var20, var12}, (int) (uvs.getDown().getUv()[0]), (int) (uvs.getDown().getUv()[1]), (int) (uvs.getDown().getUv()[2]), (int) (uvs.getDown().getUv()[3]), 16, 16, BlockFaces.DOWN, getTexture(textures, uvs.getDown().getTexture()));
+        this.cubeQuads[2] = new CustomTexturedQuad(new QuadPoint[]{point5, point4, point0, point1}, (int) (uvs.getDown().getUv()[0]), (int) (uvs.getDown().getUv()[1]), (int) (uvs.getDown().getUv()[2]), (int) (uvs.getDown().getUv()[3]), 16, 16, BlockFaces.DOWN, getTexture(textures, uvs.getDown().getTexture()));
         // Down
-        this.cubeQuads[3] = new CustomTexturedQuad(new QuadPoint[]{var13, var14, var18, var17}, (int) (uvs.getUp().getUv()[0]), (int) (uvs.getUp().getUv()[1]), (int) (uvs.getUp().getUv()[2]), (int) (uvs.getUp().getUv()[3]), 16, 16, BlockFaces.UP, getTexture(textures, uvs.getUp().getTexture()));
+        this.cubeQuads[3] = new CustomTexturedQuad(new QuadPoint[]{point2, point3, point7, point6}, (int) (uvs.getUp().getUv()[0]), (int) (uvs.getUp().getUv()[1]), (int) (uvs.getUp().getUv()[2]), (int) (uvs.getUp().getUv()[3]), 16, 16, BlockFaces.UP, getTexture(textures, uvs.getUp().getTexture()));
         // North
-        this.cubeQuads[4] = new CustomTexturedQuad(new QuadPoint[]{var12, var20, var14, var13}, (int) (uvs.getNorth().getUv()[2]), (int) (uvs.getNorth().getUv()[3]), (int) (uvs.getNorth().getUv()[0]), (int) (uvs.getNorth().getUv()[1]), 16, 16, BlockFaces.NORTH, getTexture(textures, uvs.getNorth().getTexture()));
+        this.cubeQuads[4] = new CustomTexturedQuad(new QuadPoint[]{point1, point0, point3, point2}, (int) (uvs.getNorth().getUv()[2]), (int) (uvs.getNorth().getUv()[3]), (int) (uvs.getNorth().getUv()[0]), (int) (uvs.getNorth().getUv()[1]), 16, 16, BlockFaces.NORTH, getTexture(textures, uvs.getNorth().getTexture()));
         // South
-        this.cubeQuads[5] = new CustomTexturedQuad(new QuadPoint[]{var15, var16, var17, var18}, (int) (uvs.getSouth().getUv()[2]), (int) (uvs.getSouth().getUv()[3]), (int) (uvs.getSouth().getUv()[0]), (int) (uvs.getSouth().getUv()[1]), 16, 16, BlockFaces.SOUTH, getTexture(textures, uvs.getSouth().getTexture()));
+        this.cubeQuads[5] = new CustomTexturedQuad(new QuadPoint[]{point4, point5, point6, point7}, (int) (uvs.getSouth().getUv()[2]), (int) (uvs.getSouth().getUv()[3]), (int) (uvs.getSouth().getUv()[0]), (int) (uvs.getSouth().getUv()[1]), 16, 16, BlockFaces.SOUTH, getTexture(textures, uvs.getSouth().getTexture()));
 
         if (this.mirror) {
             for (CustomTexturedQuad texturedQuad : this.cubeQuads) {
@@ -107,10 +107,10 @@ public class CustomCuboidRenderer implements net.modificationstation.stationload
         }
     }
 
-    public void setRotationPoint(float f, float f1, float f2) {
-        this.rotationPointX = f;
-        this.rotationPointY = f1;
-        this.rotationPointZ = f2;
+    public void setRotationPoint(float x, float y, float z) {
+        this.rotationPointX = x;
+        this.rotationPointY = y;
+        this.rotationPointZ = z;
     }
 
     @Environment(EnvType.CLIENT)
