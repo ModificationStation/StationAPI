@@ -1,4 +1,4 @@
-package net.modificationstation.stationloader.impl.common.util;
+package net.modificationstation.stationloader.api.common.resource;
 
 import net.modificationstation.stationloader.api.common.StationLoader;
 

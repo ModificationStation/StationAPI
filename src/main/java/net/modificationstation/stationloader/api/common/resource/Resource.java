@@ -1,4 +1,6 @@
-package net.modificationstation.stationloader.api.common.registry;
+package net.modificationstation.stationloader.api.common.resource;
+
+import net.modificationstation.stationloader.api.common.registry.Identifier;
 
 import java.net.URL;
 

@@ -10,59 +10,40 @@ import java.util.Map;
 
 public final class Identifier implements Comparable<Identifier> {
 
-    @NotNull
-    public static Identifier of(@NotNull ModID modid, @NotNull String id) {
-        return of(modid.toString(), id);
-    }
-
-    @NotNull
-    public static Identifier of(@NotNull String namespace, @NotNull String id) {
-        return of(Tuple.tuple(namespace, id));
-    }
-
-    @NotNull
-    public static Identifier of(@NotNull BiTuple<String, String> identifier) {
-        return of(identifier.one() + ":" + identifier.two());
-    }
 
     @NotNull
     public static Identifier of(@NotNull String identifier) {
-        return VALUES.computeIfAbsent(identifier, Identifier::new);
-    }
-
-    private Identifier(String namespace, String id) {
-        this.namespace = namespace;
-        this.id = id;
-    }
-
-    private Identifier(BiTuple<String, String> identifier) {
-        this(identifier.one(), identifier.two());
-    }
-
-    private Identifier(String identifier) {
-        this(separate(identifier));
+        return VALUES.computeIfAbsent(identifier, s -> {
+            String[] strings = s.split(":");
+            ModID modID;
+            String id;
+            if (strings.length == 1) {
+                modID = ModID.of("minecraft");
+                id = strings[0];
+            } else {
+                try {
+                    String modid = strings[0];
+                    modID = ModID.of(modid.trim());
+                    id = s.substring(modid.length() + 1);
+                } catch (NullPointerException e) {
+                    modID = ModID.of("minecraft");
+                    id = s;
+                }
+            }
+            id = id.replace(":", "_").trim();
+            BiTuple<ModID, String> tuple = Tuple.tuple(modID, id);
+            return new Identifier(tuple.one(), tuple.two());
+        });
     }
 
     @NotNull
-    public static BiTuple<String, String> separate(String identifier) {
-        String[] strings = identifier.split(":");
-        String namespace, id;
-        switch(strings.length) {
-            case 1: {
-                namespace = "minecraft";
-                id = strings[0].trim();
-                break;
-            }
-            case 2: {
-                namespace = strings[0].trim();
-                id = strings[1].trim();
-                break;
-            }
-            default: {
-                throw new IllegalArgumentException("Wrong string identifier!");
-            }
-        }
-        return Tuple.tuple(namespace, id);
+    public static Identifier of(@NotNull ModID modID, @NotNull String id) {
+        return VALUES.computeIfAbsent(modID + ":" + id, s -> new Identifier(modID, id));
+    }
+
+    private Identifier(ModID modID, String id) {
+        this.modID = modID;
+        this.id = id;
     }
 
     @Override
@@ -73,7 +54,7 @@ public final class Identifier implements Comparable<Identifier> {
     @NotNull
     @Override
     public String toString() {
-        return namespace + ":" + id;
+        return modID + ":" + id;
     }
 
     @Override
@@ -82,7 +63,7 @@ public final class Identifier implements Comparable<Identifier> {
             return other.equals(this.toString());
         } else if (other instanceof Identifier) {
             Identifier otherId = (Identifier) other;
-            return otherId.id.equals(id) && otherId.namespace.equals(namespace);
+            return otherId.id.equals(id) && otherId.modID.equals(modID);
         } else {
             return false;
         }
@@ -91,15 +72,15 @@ public final class Identifier implements Comparable<Identifier> {
     @Override
     public int hashCode() {
         int result = 5;
-        result = 29 * result + namespace.hashCode();
+        result = 29 * result + modID.hashCode();
         result = 29 * result + id.hashCode();
         return result;
     }
 
     @Getter
-    private final String
-            namespace,
-            id;
+    private final ModID modID;
+    @Getter
+    private final String id;
 
     private static final Map<String, Identifier> VALUES = new HashMap<>();
 }

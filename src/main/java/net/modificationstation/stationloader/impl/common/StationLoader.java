@@ -20,6 +20,7 @@ import net.modificationstation.stationloader.api.common.event.mod.PreInit;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
+import net.modificationstation.stationloader.api.common.resource.RecursiveReader;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPage;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPageManager;
 import net.modificationstation.stationloader.impl.common.block.BlockManager;
@@ -39,7 +40,6 @@ import net.modificationstation.stationloader.impl.common.preset.item.PlaceableTi
 import net.modificationstation.stationloader.impl.common.recipe.CraftingRegistry;
 import net.modificationstation.stationloader.impl.common.recipe.RecipeManager;
 import net.modificationstation.stationloader.impl.common.recipe.SmeltingRegistry;
-import net.modificationstation.stationloader.impl.common.util.RecursiveReader;
 import net.modificationstation.stationloader.impl.common.util.ReflectionHelper;
 import net.modificationstation.stationloader.impl.common.util.UnsafeProvider;
 import org.apache.logging.log4j.Level;

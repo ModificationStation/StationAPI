@@ -1,10 +1,8 @@
-package net.modificationstation.stationloader.api.common.registry;
+package net.modificationstation.stationloader.api.common.resource;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.modificationstation.stationloader.impl.common.util.RecursiveReader;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
