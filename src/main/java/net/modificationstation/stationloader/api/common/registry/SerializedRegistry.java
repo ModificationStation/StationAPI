@@ -14,7 +14,11 @@ public abstract class SerializedRegistry<T> extends Registry<T> {
 
     @Override
     public @NotNull Iterator<Map.Entry<Identifier, T>> iterator() {
-        update();
+        if (!updating) {
+            updating = true;
+            update();
+            updating = false;
+        }
         return super.iterator();
     }
 
