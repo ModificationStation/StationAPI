@@ -17,6 +17,7 @@ public final class ItemRegistry extends SerializedRegistry<ItemBase> {
     @Override
     public void registerSerializedValue(Identifier identifier, ItemBase value, int serializedId) {
         registerValue(identifier, value);
+        serializedId += BlockRegistry.INSTANCE.getRegistrySize();
         ItemBase[] byId = ItemBase.byId;
         if (byId[serializedId] == null)
             byId[serializedId] = value;
