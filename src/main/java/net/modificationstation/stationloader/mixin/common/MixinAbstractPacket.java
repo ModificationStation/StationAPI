@@ -1,5 +1,6 @@
 package net.modificationstation.stationloader.mixin.common;
 
+import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationloader.api.common.event.ModIDEvent;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
@@ -22,7 +23,8 @@ public class MixinAbstractPacket {
     private static void afterVanillaPackets(CallbackInfo ci) {
         ModIDEvent<PacketRegister> event = PacketRegister.EVENT;
         PacketRegister invoker = event.getInvoker();
-        String modid = event.getListenerContainer(invoker).getMetadata().getId();
+        ModContainer modContainer = event.getListenerContainer(invoker);
+        String modid = modContainer == null ? null : modContainer.getMetadata().getId();
         if (modid != null)
             ModIDRegistry.packet.put(modid, new HashMap<>());
         invoker.registerPackets(MixinAbstractPacket::register, ModIDRegistry.packet.get(modid));
