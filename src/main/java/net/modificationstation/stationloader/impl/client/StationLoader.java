@@ -47,10 +47,10 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
             }));
             ModIDEvent<GuiRegister> event = GuiRegister.EVENT;
             GuiRegister invoker = event.getInvoker();
-            String modid = event.getListenerModID(invoker);
+            String modid = event.getListenerContainer(invoker).getMetadata().getId();
             if (modid != null)
                 ModIDRegistry.gui.put(modid, new HashMap<>());
             invoker.registerGUIs(ModIDRegistry.gui.get(modid));
-        }, getContainer().getMetadata());
+        }, getContainer());
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.PlaceableTileEntity;
 import net.modificationstation.stationloader.api.client.event.model.ModelRegister;
 import net.modificationstation.stationloader.api.common.block.BlockManager;
+import net.modificationstation.stationloader.api.common.block.BlockRegistry;
 import net.modificationstation.stationloader.api.common.block.BlockStrengthPerMeta;
 import net.modificationstation.stationloader.api.common.entity.player.StrengthOnMeta;
 import net.modificationstation.stationloader.api.common.event.ModIDEvent;
@@ -16,6 +17,7 @@ import net.modificationstation.stationloader.api.common.event.block.BlockNameSet
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.api.common.item.EffectiveOnMeta;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -78,7 +80,7 @@ public class MixinBlockBase implements BlockStrengthPerMeta {
         ModIDEvent<BlockRegister> event = BlockRegister.EVENT;
         BlockRegister invoker = event.getInvoker();
         event.setCurrentListener(invoker);
-        invoker.registerBlocks();
+        invoker.registerBlocks(BlockRegistry.INSTANCE, ModID.of(event.getListenerContainer(invoker)));
         event.setCurrentListener(null);
     }
 

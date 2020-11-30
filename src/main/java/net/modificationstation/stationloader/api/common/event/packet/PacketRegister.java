@@ -19,7 +19,7 @@ public interface PacketRegister {
                 Map<String, Map<String, BiConsumer<PlayerBase, CustomData>>> packets = ModIDRegistry.packet;
                 String modid;
                 for (PacketRegister event : listeners) {
-                    modid = PacketRegister.EVENT.getListenerModID(event);
+                    modid = PacketRegister.EVENT.getListenerContainer(event).getMetadata().getId();
                     if (!packets.containsKey(modid))
                         packets.put(modid, new HashMap<>());
                     customDataPackets = packets.get(modid);

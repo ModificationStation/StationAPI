@@ -2,6 +2,7 @@ package net.modificationstation.stationloader.impl.common.event;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 
 import java.util.HashMap;
@@ -20,17 +21,17 @@ public class ModIDEvent<T> extends Event<T> implements net.modificationstation.s
     }
 
     @Override
-    public void register(T listener, ModMetadata data) {
-        listenerToModID.put(listener, data.getId());
+    public void register(T listener, ModContainer container) {
+        listenerToContainer.put(listener, container);
         super.register(listener);
     }
 
     @Override
-    public String getListenerModID(T listener) {
-        return listenerToModID.get(listener);
+    public ModContainer getListenerContainer(T listener) {
+        return listenerToContainer.get(listener);
     }
 
     @Getter @Setter
     private T currentListener;
-    private final Map<T, String> listenerToModID = new HashMap<>();
+    private final Map<T, ModContainer> listenerToContainer = new HashMap<>();
 }

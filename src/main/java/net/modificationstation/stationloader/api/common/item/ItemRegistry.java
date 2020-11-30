@@ -15,24 +15,6 @@ public final class ItemRegistry extends SerializedRegistry<ItemBase> {
     }
 
     @Override
-    public Identifier getIdentifier(ItemBase value) {
-        BlockRegistry blocks = BlockRegistry.INSTANCE;
-        int id = value.id;
-        return id < blocks.getRegistrySize() ? blocks.getIdentifier(BlockBase.BY_ID[id]) : super.getIdentifier(value);
-    }
-
-    @Override
-    public ItemBase getByIdentifier(Identifier identifier) {
-        ItemBase value = super.getByIdentifier(identifier);
-        BlockRegistry blocks = BlockRegistry.INSTANCE;
-        if (value == null || value.id < blocks.getRegistrySize()) {
-            BlockBase blockValue = blocks.getByIdentifier(identifier);
-            return blockValue == null ? null : ItemBase.byId[blockValue.id];
-        } else
-            return value;
-    }
-
-    @Override
     public void registerSerializedValue(Identifier identifier, ItemBase value, int serializedId) {
         registerValue(identifier, value);
         ItemBase[] byId = ItemBase.byId;
@@ -52,12 +34,13 @@ public final class ItemRegistry extends SerializedRegistry<ItemBase> {
 
     @Override
     protected void update() {
-        ItemBase itemBase;
-        for (int i = BlockRegistry.INSTANCE.getRegistrySize(); i < ItemBase.byId.length; i++) {
-            itemBase = ItemBase.byId[i];
-            if (itemBase != null && getIdentifier(itemBase) == null)
-                registerValue(Identifier.of(itemBase.getTranslationKey() + "_" + itemBase.id), itemBase);
-        }
+        BlockRegistry blocks = BlockRegistry.INSTANCE;
+        int id;
+        for (ItemBase itemBase : ItemBase.byId)
+            if (itemBase != null && getIdentifier(itemBase) == null) {
+                id = itemBase.id;
+                registerValue(id < blocks.getRegistrySize() ? blocks.getIdentifier(BlockBase.BY_ID[id]) : Identifier.of(itemBase.getTranslationKey() + "_" + id), itemBase);
+            }
     }
 
     @Override
