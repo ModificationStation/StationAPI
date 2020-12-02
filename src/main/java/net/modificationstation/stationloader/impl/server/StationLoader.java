@@ -4,6 +4,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationloader.api.common.packet.StationHandshake;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.server.event.network.HandleLogin;
 import net.modificationstation.stationloader.impl.server.entity.player.PlayerHelper;
 import net.modificationstation.stationloader.impl.server.gui.GuiHelper;
@@ -26,9 +27,9 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
                 StationHandshake handshake = (StationHandshake) arg;
                 String stationLoader = handshake.getStationLoader();
                 String version = handshake.getVersion();
-                ModMetadata slData = getContainer().getMetadata();
-                String serverStationLoader = slData.getId();
-                String serverSLVersion = slData.getVersion().getFriendlyString();
+                ModID modID = getModID();
+                String serverStationLoader = modID.toString();
+                String serverSLVersion = modID.getContainer().getMetadata().getVersion().getFriendlyString();
                 TranslationStorage translationStorage = TranslationStorage.getInstance();
                 if (stationLoader == null || version == null || !stationLoader.equals(serverStationLoader)) {
                     pendingConnection.drop(translationStorage.translate("disconnect.stationloader:missing_sl"));

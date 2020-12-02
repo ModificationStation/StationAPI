@@ -1,5 +1,6 @@
 package net.modificationstation.stationloader.api.common.lang;
 
+import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.util.HasHandler;
 
 public interface I18n  extends HasHandler<I18n> {
@@ -20,9 +21,9 @@ public interface I18n  extends HasHandler<I18n> {
         }
 
         @Override
-        public void addLangFolder(String langFolder, String modid) {
+        public void addLangFolder(String langFolder, ModID modID) {
             checkAccess(handler);
-            handler.addLangFolder(langFolder, modid);
+            handler.addLangFolder(langFolder, modID);
         }
 
         @Override
@@ -36,7 +37,7 @@ public interface I18n  extends HasHandler<I18n> {
         addLangFolder(langFolder, null);
     }
 
-    void addLangFolder(String langFolder, String modid);
+    void addLangFolder(String langFolder, ModID modID);
 
     void changeLang(String region);
 }

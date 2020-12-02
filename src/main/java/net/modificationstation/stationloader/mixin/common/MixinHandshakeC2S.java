@@ -8,6 +8,7 @@ import net.minecraft.packet.AbstractPacket;
 import net.minecraft.packet.handshake.HandshakeC2S;
 import net.modificationstation.stationloader.api.common.StationLoader;
 import net.modificationstation.stationloader.api.common.packet.StationHandshake;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,9 +35,9 @@ public abstract class MixinHandshakeC2S extends AbstractPacket implements Statio
     @Environment(EnvType.CLIENT)
     @Inject(method = "<init>(Ljava/lang/String;I)V", at = @At("RETURN"))
     private void newClient(String string, int i, CallbackInfo ci) {
-        ModMetadata slData = StationLoader.INSTANCE.getContainer().getMetadata();
-        stationLoader = slData.getId();
-        version = slData.getVersion().getFriendlyString();
+        ModID modID = StationLoader.INSTANCE.getModID();
+        stationLoader = modID.toString();
+        version = modID.getContainer().getMetadata().getVersion().getFriendlyString();
         mods = new HashMap<>();
         StationLoader.INSTANCE.getModsToVerifyOnClient().forEach(modContainer -> {
             ModMetadata modMetadata = modContainer.getMetadata();

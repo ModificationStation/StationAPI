@@ -1,6 +1,8 @@
 package net.modificationstation.stationloader.api.common.event.mod;
 
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.ModEvent;
+import net.modificationstation.stationloader.api.common.registry.EventRegistry;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 
 /**
  * Event called before Minecraft launch
@@ -14,11 +16,11 @@ import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 
 public interface PreInit {
 
-    SimpleEvent<PreInit> EVENT = new SimpleEvent<>(PreInit.class, listeners ->
-            () -> {
-        for (PreInit event : listeners)
-            event.preInit();
+    ModEvent<PreInit> EVENT = new ModEvent<>(PreInit.class, listeners ->
+            (eventRegistry, modID) -> {
+        for (PreInit listener : listeners)
+            listener.preInit(eventRegistry, PreInit.EVENT.getListenerModID(listener));
     });
 
-    void preInit();
+    void preInit(EventRegistry eventRegistry, ModID modID);
 }

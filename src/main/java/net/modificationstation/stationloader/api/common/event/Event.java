@@ -1,5 +1,9 @@
 package net.modificationstation.stationloader.api.common.event;
 
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
+import net.modificationstation.stationloader.api.common.registry.Identifier;
+
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.function.Function;
@@ -12,7 +16,7 @@ import java.util.function.Function;
  * @param <T>
  **/
 
-public class Event<T> {
+public abstract class Event<T> {
 
     protected T invoker;
     private T[] handlers;
@@ -51,6 +55,12 @@ public class Event<T> {
             handlers[handlers.length - 1] = listener;
         }
         update();
+    }
+
+    public abstract void register(EntrypointContainer<T> container);
+
+    public void register(Identifier identifier) {
+        FabricLoader.getInstance().getEntrypointContainers(identifier.toString(), type).forEach(this::register);
     }
 
     public final T getInvoker() {

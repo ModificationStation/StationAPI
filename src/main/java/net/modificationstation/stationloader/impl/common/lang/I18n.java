@@ -1,6 +1,7 @@
 package net.modificationstation.stationloader.impl.common.lang;
 
 import net.minecraft.client.resource.language.TranslationStorage;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.mixin.common.accessor.TranslationStorageAccessor;
 
 import java.io.IOException;
@@ -16,8 +17,8 @@ public class I18n implements net.modificationstation.stationloader.api.common.la
     }
 
     @Override
-    public void addLangFolder(String langFolder, String modid) {
-        langFolders.put(langFolder, modid);
+    public void addLangFolder(String langFolder, ModID modID) {
+        langFolders.put(langFolder, modID == null ? null : modID.toString());
     }
 
     @Override

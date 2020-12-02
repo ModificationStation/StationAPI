@@ -20,7 +20,7 @@ public interface SLSpawnData extends VanillaSpawnData {
             owner = owner == null ? entityBase : owner;
             ownerId = owner.entityId;
         }
-        CustomData packet = GeneralFactory.INSTANCE.newInst(CustomData.class, StationLoader.INSTANCE.getContainer().getMetadata().getId() + ":spawn_entity");
+        CustomData packet = GeneralFactory.INSTANCE.newInst(CustomData.class, StationLoader.INSTANCE.getModID() + ":spawn_entity");
         packet.set(new String[] {
                 getSpawnModID()
         });

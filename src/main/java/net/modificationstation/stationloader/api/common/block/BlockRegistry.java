@@ -4,7 +4,6 @@ package net.modificationstation.stationloader.api.common.block;
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationloader.api.common.StationLoader;
 import net.modificationstation.stationloader.api.common.registry.Identifier;
-import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.registry.SerializedRegistry;
 
 public final class BlockRegistry extends SerializedRegistry<BlockBase> {
@@ -42,5 +41,5 @@ public final class BlockRegistry extends SerializedRegistry<BlockBase> {
         return BlockBase.BY_ID.length;
     }
 
-    public static final BlockRegistry INSTANCE = new BlockRegistry(Identifier.of(ModID.of(StationLoader.INSTANCE), "blocks"));
+    public static final BlockRegistry INSTANCE = new BlockRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "blocks"));
 }

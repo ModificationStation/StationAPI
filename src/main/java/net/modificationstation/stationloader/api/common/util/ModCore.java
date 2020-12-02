@@ -1,7 +1,7 @@
 package net.modificationstation.stationloader.api.common.util;
 
-import net.fabricmc.loader.api.ModContainer;
 import net.modificationstation.stationloader.api.common.config.Configuration;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;
@@ -40,13 +40,13 @@ public interface ModCore {
 
     Map<ModCore, Configuration> defaultConfigs = new HashMap<>();
 
-    default ModContainer getContainer() {
-        return containers.get(this);
+    default ModID getModID() {
+        return modIDs.get(this);
     }
 
-    default void setContainer(ModContainer container) {
-        containers.put(this, container);
+    default void setModID(ModID modID) {
+        modIDs.put(this, modID);
     }
 
-    Map<ModCore, ModContainer> containers = new HashMap<>();
+    Map<ModCore, ModID> modIDs = new HashMap<>();
 }

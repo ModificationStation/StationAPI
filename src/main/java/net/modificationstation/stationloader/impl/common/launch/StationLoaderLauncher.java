@@ -4,6 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.modificationstation.stationloader.api.common.StationLoader;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +26,7 @@ public class StationLoaderLauncher implements PreLaunchEntrypoint {
             fabricLoader.getEntrypoints(slData.getId() + ":" + fabricLoader.getEnvironmentType().name().toLowerCase(), StationLoader.class).stream().findFirst().ifPresent(stationLoader1 -> {
                 LOGGER.info("Found the first entrypoint! Initializing...");
                 stationLoader.setHandler(stationLoader1);
-                stationLoader.setContainer(modContainer);
+                stationLoader.setModID(ModID.of(modContainer));
                 LOGGER.info("Running setup...");
                 stationLoader.setup();
                 LOGGER.info("Done!");

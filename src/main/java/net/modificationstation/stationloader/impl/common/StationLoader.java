@@ -11,16 +11,30 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationloader.api.common.block.EffectiveForTool;
 import net.modificationstation.stationloader.api.common.event.ModEvent;
+import net.modificationstation.stationloader.api.common.event.achievement.AchievementRegister;
 import net.modificationstation.stationloader.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
 import net.modificationstation.stationloader.api.common.event.block.TileEntityRegister;
+import net.modificationstation.stationloader.api.common.event.container.slot.ItemUsedInCrafting;
+import net.modificationstation.stationloader.api.common.event.entity.EntityRegister;
+import net.modificationstation.stationloader.api.common.event.entity.player.PlayerHandlerRegister;
+import net.modificationstation.stationloader.api.common.event.item.ItemCreation;
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
+import net.modificationstation.stationloader.api.common.event.item.tool.EffectiveBlocksProvider;
 import net.modificationstation.stationloader.api.common.event.item.tool.IsEffectiveOn;
+import net.modificationstation.stationloader.api.common.event.level.biome.BiomeByClimateProvider;
+import net.modificationstation.stationloader.api.common.event.level.biome.BiomeRegister;
+import net.modificationstation.stationloader.api.common.event.level.gen.ChunkPopulator;
+import net.modificationstation.stationloader.api.common.event.mod.Init;
+import net.modificationstation.stationloader.api.common.event.mod.PostInit;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
+import net.modificationstation.stationloader.api.common.registry.EventRegistry;
+import net.modificationstation.stationloader.api.common.registry.Identifier;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.resource.RecursiveReader;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPage;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPageManager;
@@ -52,28 +66,30 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class StationLoader implements net.modificationstation.stationloader.api.common.StationLoader {
+public class StationLoader implements net.modificationstation.stationloader.api.common.StationLoader, PreInit, Init {
 
     @Override
     public void setup() {
+        ModID modID = getModID();
         entrypoints.add("stationmod");
-        entrypoints.add(getContainer().getMetadata().getId() + ":mod");
+        entrypoints.add(modID + ":mod");
         String sideName = FabricLoader.getInstance().getEnvironmentType().name().toLowerCase();
         entrypoints.add("stationmod_" + sideName);
-        entrypoints.add(getContainer().getMetadata().getId() + ":mod_" + sideName);
-        String name = getContainer().getMetadata().getName();
+        entrypoints.add(modID + ":mod_" + sideName);
+        String name = modID.getContainer().getMetadata().getName();
         setLogger(LogManager.getFormatterLogger(name + "|API"));
         Configurator.setLevel("mixin", Level.TRACE);
         Configurator.setLevel("Fabric|Loader", Level.INFO);
         Configurator.setLevel(name + "|API", Level.INFO);
         getLogger().info("Initializing StationLoader...");
-        String modid = getContainer().getMetadata().getId();
-        setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + modid));
-        setDefaultConfig(new Configuration(new File(getConfigPath() + File.separator + modid + ".cfg")));
+        PreInit.EVENT.register(this, getModID());
+        Init.EVENT.register(this);
+        setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + modID));
+        setDefaultConfig(new Configuration(new File(getConfigPath() + File.separator + modID + ".cfg")));
         getLogger().info("Setting up API...");
         setupAPI();
         getLogger().info("Setting up lang folder...");
-        net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/" + modid + "/lang", modid);
+        net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/" + modID + "/lang", modID);
         getLogger().info("Loading mods...");
         loadMods();
         getLogger().info("Finished StationLoader setup");
@@ -129,15 +145,15 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         PacketRegister.EVENT.register((register, customDataPackets) -> {
             register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class);
             config.save();
-        }, getContainer());
+        }, getModID());
         getLogger().info("Setting up BlockNameSet...");
         BlockNameSet.EVENT.register((block, name) -> {
             ModEvent<BlockRegister> event = BlockRegister.EVENT;
             BlockRegister listener = event.getCurrentListener();
             if (listener != null) {
-                String modid = event.getListenerContainer(listener).getMetadata().getId();
-                if (modid != null) {
-                    modid += ":";
+                ModID modID = event.getListenerModID(listener);
+                if (modID != null) {
+                    String modid = modID + ":";
                     if (!name.startsWith(modid) && !name.contains(":"))
                         return modid + name;
                 }
@@ -149,9 +165,9 @@ public class StationLoader implements net.modificationstation.stationloader.api.
             ModEvent<ItemRegister> event = ItemRegister.EVENT;
             ItemRegister listener = event.getCurrentListener();
             if (listener != null) {
-                String modid = event.getListenerContainer(listener).getMetadata().getId();
-                if (modid != null) {
-                    modid += ":";
+                ModID modID = event.getListenerModID(listener);
+                if (modID != null) {
+                    String modid = modID + ":";
                     if (!name.startsWith(modid) && !name.contains(":"))
                         return modid + name;
                 }
@@ -174,14 +190,44 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         getLogger().info("Loading assets...");
         FabricLoader.getInstance().getAllMods().forEach(this::addModAssets);
         getLogger().info("Gathering mods that require client verification...");
-        String value = getContainer().getMetadata().getId() + ":verify_client";
+        String value = getModID() + ":verify_client";
         getAllMods().forEach(modContainer -> {
             ModMetadata modMetadata = modContainer.getMetadata();
             if (!modMetadata.containsCustomValue(value) || modMetadata.getCustomValue(value).getAsBoolean())
                 modsToVerifyOnClient.add(modContainer);
         });
         getLogger().info("Invoking preInit event...");
-        PreInit.EVENT.getInvoker().preInit();
+        PreInit.EVENT.getInvoker().preInit(EventRegistry.INSTANCE, PreInit.EVENT.getListenerModID(PreInit.EVENT.getInvoker()));
+        getLogger().info("Invoking init event...");
+        Init.EVENT.getInvoker().init();
+        getLogger().info("Invoking postInit event...");
+        PostInit.EVENT.getInvoker().postInit();
+    }
+
+    @Override
+    public void preInit(EventRegistry eventRegistry, ModID modID) {
+        eventRegistry.registerValue(Identifier.of(modID, "achievement_register"), AchievementRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "block_name_set"), BlockNameSet.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "block_register"), BlockRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "tile_entity_register"), TileEntityRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "item_used_in_crafting"), ItemUsedInCrafting.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "player_handler_register"), PlayerHandlerRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "entity_register"), EntityRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "effective_blocks_provider"), EffectiveBlocksProvider.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "is_effective_on"), IsEffectiveOn.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "item_creation"), ItemCreation.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "item_name_set"), ItemNameSet.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "item_register"), ItemRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "biome_by_climate_provider"), BiomeByClimateProvider.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "biome_register"), BiomeRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "chunk_populator"), ChunkPopulator.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "packet_register"), PacketRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "recipe_register"), RecipeRegister.EVENT);
+    }
+
+    @Override
+    public void init() {
+        EventRegistry.INSTANCE.forEach((identifier, event) -> event.register(identifier));
     }
 
     @Override
@@ -197,7 +243,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
             }
             getLogger().info("Set \"" + field.getName() + "\" field to mod's instance");
         }
-        stationMod.setContainer(modContainer);
+        stationMod.setModID(ModID.of(modContainer));
         getLogger().info("Set mod's container");
         String name = modMetadata.getName() + "|StationMod";
         stationMod.setLogger(LogManager.getFormatterLogger(name));
@@ -206,7 +252,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         stationMod.setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + modMetadata.getId()));
         stationMod.setDefaultConfig(net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.newInst(net.modificationstation.stationloader.api.common.config.Configuration.class, new File(stationMod.getConfigPath() + File.separator + modMetadata.getId() + ".cfg")));
         getLogger().info("Initialized default config");
-        PreInit.EVENT.register(stationMod);
+        Init.EVENT.register(stationMod);
         getLogger().info("Registered events");
         mods.computeIfAbsent(modContainer, modContainer1 -> new HashSet<>()).add(stationMod);
         getLogger().info(String.format("Done loading %s (%s)'s \"%s\" StationMod", modMetadata.getName(), modMetadata.getId(), stationMod.getClass().getName()));
@@ -214,16 +260,15 @@ public class StationLoader implements net.modificationstation.stationloader.api.
 
     @Override
     public void addModAssets(ModContainer modContainer) {
-        ModMetadata modMetadata = modContainer.getMetadata();
-        String modid = modMetadata.getId();
-        String slSubFolder = "/assets/" + modid + "/" + getContainer().getMetadata().getId();
+        ModID modID = ModID.of(modContainer);
+        String slSubFolder = "/assets/" + modID + "/" + getModID();
         URL path = getClass().getResource(slSubFolder);
         if (path != null)
             mods.putIfAbsent(modContainer, new HashSet<>());
         String pathName = slSubFolder + "/lang";
         path = getClass().getResource(pathName);
         if (path != null) {
-            net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder(pathName, modid);
+            net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder(pathName, modID);
             getLogger().info("Registered lang path");
         }
         pathName = slSubFolder + "/recipes";

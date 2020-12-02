@@ -3,10 +3,8 @@ package net.modificationstation.stationloader.api.common.registry;
 import net.modificationstation.stationloader.api.common.StationLoader;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.function.BiConsumer;
 
 public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
 
@@ -40,6 +38,22 @@ public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> 
         return ID_TO_TYPE.entrySet().iterator();
     }
 
+    public void forEach(BiConsumer<Identifier, T> action) {
+        Objects.requireNonNull(action);
+        for (Map.Entry<Identifier, T> identifierTEntry : this) {
+            Identifier k;
+            T v;
+            try {
+                k = identifierTEntry.getKey();
+                v = identifierTEntry.getValue();
+            } catch(IllegalStateException ise) {
+                // this usually means the entry is no longer in the map.
+                throw new ConcurrentModificationException(ise);
+            }
+            action.accept(k, v);
+        }
+    }
+
     @NotNull
     public final Identifier getRegistryId() {
         return registryId;
@@ -50,7 +64,7 @@ public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> 
     private final Map<Identifier, T> ID_TO_TYPE = new TreeMap<>();
     private final Map<T, Identifier> TYPE_TO_ID = new HashMap<>();
 
-    public static final Registry<Registry<?>> REGISTRIES = new RegistryRegistry(Identifier.of(ModID.of(StationLoader.INSTANCE), "registries"));
+    public static final Registry<Registry<?>> REGISTRIES = new RegistryRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "registries"));
 
     private static final class RegistryRegistry extends Registry<Registry<?>> {
 

@@ -5,12 +5,11 @@ import net.minecraft.item.ItemBase;
 import net.modificationstation.stationloader.api.common.StationLoader;
 import net.modificationstation.stationloader.api.common.block.BlockRegistry;
 import net.modificationstation.stationloader.api.common.registry.Identifier;
-import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.registry.SerializedRegistry;
 
 public final class ItemRegistry extends SerializedRegistry<ItemBase> {
 
-    public ItemRegistry(Identifier registryId) {
+    private ItemRegistry(Identifier registryId) {
         super(registryId);
     }
 
@@ -49,5 +48,5 @@ public final class ItemRegistry extends SerializedRegistry<ItemBase> {
         return ItemBase.byId.length;
     }
 
-    public static final ItemRegistry INSTANCE = new ItemRegistry(Identifier.of(ModID.of(StationLoader.INSTANCE), "items"));
+    public static final ItemRegistry INSTANCE = new ItemRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "items"));
 }

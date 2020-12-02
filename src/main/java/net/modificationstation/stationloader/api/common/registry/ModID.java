@@ -4,7 +4,6 @@ import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.modificationstation.stationloader.api.common.util.ModCore;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -12,10 +11,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public final class ModID implements Comparable<ModID> {
-
-    public static @NotNull ModID of(ModCore modCore) {
-        return of(modCore.getContainer());
-    }
 
     public static @NotNull ModID of(ModContainer modContainer) {
         return VALUES.computeIfAbsent(modContainer.getMetadata().getId(), s -> new ModID(s, modContainer));
@@ -31,7 +26,7 @@ public final class ModID implements Comparable<ModID> {
 
     private ModID(String modid, ModContainer modContainer) {
         this.modid = modid;
-        this.modContainer = modContainer;
+        this.container = modContainer;
     }
 
     @Override
@@ -57,7 +52,7 @@ public final class ModID implements Comparable<ModID> {
 
     private final String modid;
     @Getter
-    private final ModContainer modContainer;
+    private final ModContainer container;
 
     private static final Map<String, ModID> VALUES = new HashMap<>();
 }

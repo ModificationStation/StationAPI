@@ -23,7 +23,7 @@ public class MixinAbstractPacket {
     private static void afterVanillaPackets(CallbackInfo ci) {
         ModEvent<PacketRegister> event = PacketRegister.EVENT;
         PacketRegister invoker = event.getInvoker();
-        ModContainer modContainer = event.getListenerContainer(invoker);
+        ModContainer modContainer = event.getListenerModID(invoker).getContainer();
         String modid = modContainer == null ? null : modContainer.getMetadata().getId();
         if (modid != null)
             ModIDRegistry.packet.put(modid, new HashMap<>());

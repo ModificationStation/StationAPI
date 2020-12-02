@@ -17,7 +17,7 @@ public interface GuiRegister {
                 Map<String, Map<Short, TriConsumer<PlayerBase, InventoryBase, CustomData>>> guis = ModIDRegistry.gui;
                 String modid;
                 for (GuiRegister listener : listeners) {
-                    modid = GuiRegister.EVENT.getListenerContainer(listener).getMetadata().getId();
+                    modid = GuiRegister.EVENT.getListenerModID(listener).toString();
                     if (!guis.containsKey(modid))
                         guis.put(modid, new HashMap<>());
                     listener.registerGUIs(guis.get(modid));

@@ -17,7 +17,6 @@ import net.modificationstation.stationloader.api.common.event.block.BlockNameSet
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.api.common.item.EffectiveOnMeta;
-import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -80,7 +79,7 @@ public class MixinBlockBase implements BlockStrengthPerMeta {
         ModEvent<BlockRegister> event = BlockRegister.EVENT;
         BlockRegister invoker = event.getInvoker();
         event.setCurrentListener(invoker);
-        invoker.registerBlocks(BlockRegistry.INSTANCE, ModID.of(event.getListenerContainer(invoker)));
+        invoker.registerBlocks(BlockRegistry.INSTANCE, event.getListenerModID(invoker));
         event.setCurrentListener(null);
     }
 

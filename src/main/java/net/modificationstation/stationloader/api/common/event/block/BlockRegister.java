@@ -10,7 +10,7 @@ public interface BlockRegister {
             (registry, modID) -> {
                 for (BlockRegister listener : listeners) {
                     BlockRegister.EVENT.setCurrentListener(listener);
-                    listener.registerBlocks(registry, ModID.of(BlockRegister.EVENT.getListenerContainer(listener)));
+                    listener.registerBlocks(registry, BlockRegister.EVENT.getListenerModID(listener));
                 }
             });
 

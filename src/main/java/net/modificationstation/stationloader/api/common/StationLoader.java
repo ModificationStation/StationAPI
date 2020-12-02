@@ -4,6 +4,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.modificationstation.stationloader.api.common.config.Configuration;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.util.HasHandler;
 import net.modificationstation.stationloader.api.common.util.ModCore;
 import org.apache.logging.log4j.Logger;
@@ -60,15 +61,15 @@ public interface StationLoader extends ModCore, HasHandler<StationLoader> {
         }
 
         @Override
-        public ModContainer getContainer() {
+        public ModID getModID() {
             checkAccess(handler);
-            return handler.getContainer();
+            return handler.getModID();
         }
 
         @Override
-        public void setContainer(ModContainer container) {
+        public void setModID(ModID modID) {
             checkAccess(handler);
-            handler.setContainer(container);
+            handler.setModID(modID);
         }
 
         @Override

@@ -2,7 +2,8 @@ package net.modificationstation.stationloader.api.common.event;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,16 +15,21 @@ public class ModEvent<T> extends Event<T> {
         super(type, eventFunc);
     }
 
-    public void register(T listener, ModContainer container) {
-        listenerToContainer.put(listener, container);
+    @Override
+    public void register(EntrypointContainer<T> container) {
+        register(container.getEntrypoint(), ModID.of(container.getProvider()));
+    }
+
+    public void register(T listener, ModID modID) {
+        listenerToModID.put(listener, modID);
         super.register(listener);
     }
 
-    public ModContainer getListenerContainer(T listener) {
-        return listenerToContainer.get(listener);
+    public ModID getListenerModID(T listener) {
+        return listenerToModID.get(listener);
     }
 
     @Getter @Setter
     private T currentListener;
-    private final Map<T, ModContainer> listenerToContainer = new HashMap<>();
+    private final Map<T, ModID> listenerToModID = new HashMap<>();
 }

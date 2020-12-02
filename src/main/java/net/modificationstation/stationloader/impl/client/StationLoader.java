@@ -7,6 +7,7 @@ import net.modificationstation.stationloader.api.client.event.gui.GuiRegister;
 import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import net.modificationstation.stationloader.impl.client.entity.player.PlayerHelper;
 import net.modificationstation.stationloader.impl.client.gui.GuiHelper;
@@ -47,10 +48,10 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
             }));
             ModEvent<GuiRegister> event = GuiRegister.EVENT;
             GuiRegister invoker = event.getInvoker();
-            String modid = event.getListenerContainer(invoker).getMetadata().getId();
+            ModID modid = event.getListenerModID(invoker);
             if (modid != null)
-                ModIDRegistry.gui.put(modid, new HashMap<>());
-            invoker.registerGUIs(ModIDRegistry.gui.get(modid));
-        }, getContainer());
+                ModIDRegistry.gui.put(modid.toString(), new HashMap<>());
+            invoker.registerGUIs(modid == null ? null : ModIDRegistry.gui.get(modid.toString()));
+        }, getModID());
     }
 }

@@ -101,7 +101,7 @@ public abstract class MixinTileRenderer {
                 for (CustomCuboidRenderer cuboid : model.getCuboids()) {
                     for (CustomTexturedQuad texturedQuad : cuboid.getCubeQuads()) {
                         if (texturedQuad.getTexture() != null) {
-                            GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.textureManager.getTextureId("/assets/" + cuboid.getModID() + "/" + StationLoader.INSTANCE.getContainer().getMetadata().getId() + "/models/textures/" + texturedQuad.getTexture() + ".png"));
+                            GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.textureManager.getTextureId("/assets/" + cuboid.getModID() + "/" + StationLoader.INSTANCE.getModID() + "/models/textures/" + texturedQuad.getTexture() + ".png"));
                         }
                         tessellator.start();
                         tessellator.colour(1.0F, 1.0F, 1.0F);
@@ -608,7 +608,7 @@ public abstract class MixinTileRenderer {
                 Tessellator.INSTANCE.colour(1.0F, 1.0F, 1.0F);
                 for (CustomCuboidRenderer cuboid : model.getCuboids()) {
                     for (CustomTexturedQuad texturedQuad : cuboid.getCubeQuads()) {
-                        GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.textureManager.getTextureId("/assets/" + cuboid.getModID() + "/" + StationLoader.INSTANCE.getContainer().getMetadata().getId() + "/models/textures/" + texturedQuad.getTexture() + ".png"));
+                        GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.textureManager.getTextureId("/assets/" + cuboid.getModID() + "/" + StationLoader.INSTANCE.getModID() + "/models/textures/" + texturedQuad.getTexture() + ".png"));
                         Tessellator.INSTANCE.start();
                         for (QuadPoint var7 : texturedQuad.getQuadPoints()) {
                             if (texturedQuad.getSide() == BlockFaces.DOWN) {
