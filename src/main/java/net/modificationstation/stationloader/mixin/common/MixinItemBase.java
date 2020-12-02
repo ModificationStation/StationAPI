@@ -7,7 +7,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationloader.api.client.event.model.ModelRegister;
-import net.modificationstation.stationloader.api.common.event.ModIDEvent;
+import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import net.modificationstation.stationloader.api.common.event.item.tool.IsEffectiveOn;
@@ -56,7 +56,7 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
     @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/Stats;onItemsRegistered()V", shift = At.Shift.BEFORE))
     private static void afterItemRegister(CallbackInfo ci) {
         GeneralFactory.INSTANCE.addFactory(ItemBase.class, (args) -> ItemBase.class.cast(new MixinItemBase((int) args[0])));
-        ModIDEvent<ItemRegister> event = ItemRegister.EVENT;
+        ModEvent<ItemRegister> event = ItemRegister.EVENT;
         ItemRegister invoker = event.getInvoker();
         event.setCurrentListener(invoker);
         invoker.registerItems();

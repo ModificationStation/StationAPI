@@ -1,11 +1,10 @@
 package net.modificationstation.stationloader.api.common.event.mod;
 
-import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 
 public interface Init {
 
-    Event<Init> EVENT = EventFactory.INSTANCE.newEvent(Init.class, listeners ->
+    SimpleEvent<Init> EVENT = new SimpleEvent<>(Init.class, listeners ->
             () -> {
                 for (Init event : listeners)
                     event.init();

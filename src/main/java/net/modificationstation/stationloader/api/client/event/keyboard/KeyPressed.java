@@ -2,8 +2,7 @@ package net.modificationstation.stationloader.api.client.event.keyboard;
 
 import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationloader.api.client.event.option.KeyBindingRegister;
-import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -19,7 +18,7 @@ import org.lwjgl.input.Keyboard;
  */
 public interface KeyPressed {
 
-    Event<KeyPressed> EVENT = EventFactory.INSTANCE.newEvent(KeyPressed.class, (listeners) ->
+    SimpleEvent<KeyPressed> EVENT = new SimpleEvent<>(KeyPressed.class, (listeners) ->
             () -> {
                 for (KeyPressed event : listeners)
                     event.keyPressed();

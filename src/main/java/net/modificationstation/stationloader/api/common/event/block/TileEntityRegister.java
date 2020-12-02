@@ -1,13 +1,12 @@
 package net.modificationstation.stationloader.api.common.event.block;
 
-import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 
 import java.util.Map;
 
 public interface TileEntityRegister {
 
-    Event<TileEntityRegister> EVENT = EventFactory.INSTANCE.newEvent(TileEntityRegister.class, listeners ->
+    SimpleEvent<TileEntityRegister> EVENT = new SimpleEvent<>(TileEntityRegister.class, listeners ->
             tileEntityList -> {
                 for (TileEntityRegister event : listeners)
                     event.registerTileEntities(tileEntityList);

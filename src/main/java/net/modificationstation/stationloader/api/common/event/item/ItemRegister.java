@@ -1,11 +1,10 @@
 package net.modificationstation.stationloader.api.common.event.item;
 
-import net.modificationstation.stationloader.api.common.event.ModIDEvent;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.ModEvent;
 
 public interface ItemRegister {
 
-    ModIDEvent<ItemRegister> EVENT = EventFactory.INSTANCE.newModIDEvent(ItemRegister.class, listeners ->
+    ModEvent<ItemRegister> EVENT = new ModEvent<>(ItemRegister.class, listeners ->
             () -> {
                 for (ItemRegister listener : listeners) {
                     ItemRegister.EVENT.setCurrentListener(listener);

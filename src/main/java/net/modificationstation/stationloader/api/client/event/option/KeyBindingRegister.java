@@ -1,8 +1,7 @@
 package net.modificationstation.stationloader.api.client.event.option;
 
 import net.minecraft.client.options.KeyBinding;
-import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ import java.util.List;
  */
 public interface KeyBindingRegister {
 
-    Event<KeyBindingRegister> EVENT = EventFactory.INSTANCE.newEvent(KeyBindingRegister.class, (listeners) ->
+    SimpleEvent<KeyBindingRegister> EVENT = new SimpleEvent<>(KeyBindingRegister.class, (listeners) ->
             (keyBindings) -> {
                 for (KeyBindingRegister event : listeners)
                     event.registerKeyBindings(keyBindings);

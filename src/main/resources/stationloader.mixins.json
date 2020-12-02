@@ -44,7 +44,6 @@
     "server.accessor.ServerPlayerPacketHandlerAccessor"
   ],
   "client": [
-    "client.MixinContainerBaseGUI",
     "client.MixinAbstractClientPlayer",
     "client.MixinAchievements",
     "client.Mixinclass_174",
@@ -52,6 +51,7 @@
     "client.Mixinclass_608",
     "client.Mixinclass_66",
     "client.MixinClientInteractionManager",
+    "client.MixinContainerBaseGUI",
     "client.MixinEntityRenderDispatcher",
     "client.MixinGameOptions",
     "client.MixinGameRenderer",

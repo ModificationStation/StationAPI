@@ -1,7 +1,6 @@
 package net.modificationstation.stationloader.api.common.event.recipe;
 
-import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 
 /**
  * Event called after one of vanilla recipes system got initialized (CRAFTING_TABLE, FURNACE, etc)
@@ -35,7 +34,7 @@ public interface RecipeRegister {
         private static final String modid = "minecraft";
     }
 
-    Event<RecipeRegister> EVENT = EventFactory.INSTANCE.newEvent(RecipeRegister.class, listeners ->
+    SimpleEvent<RecipeRegister> EVENT = new SimpleEvent<>(RecipeRegister.class, listeners ->
             type -> {
         for (RecipeRegister event : listeners)
             event.registerRecipes(type);

@@ -10,6 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationloader.api.common.block.EffectiveForTool;
+import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
 import net.modificationstation.stationloader.api.common.event.block.TileEntityRegister;
@@ -27,10 +28,7 @@ import net.modificationstation.stationloader.impl.common.block.BlockManager;
 import net.modificationstation.stationloader.impl.common.config.Category;
 import net.modificationstation.stationloader.impl.common.config.Configuration;
 import net.modificationstation.stationloader.impl.common.config.Property;
-import net.modificationstation.stationloader.impl.common.event.Event;
-import net.modificationstation.stationloader.impl.common.event.ModIDEvent;
 import net.modificationstation.stationloader.impl.common.factory.EnumFactory;
-import net.modificationstation.stationloader.impl.common.factory.EventFactory;
 import net.modificationstation.stationloader.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.impl.common.item.CustomReach;
 import net.modificationstation.stationloader.impl.common.lang.I18n;
@@ -100,10 +98,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         config.load();
         getLogger().info("Setting up EnumFactory...");
         enumFactory.setHandler(new EnumFactory());
-        getLogger().info("Setting up EventFactory...");
-        net.modificationstation.stationloader.api.common.factory.EventFactory.INSTANCE.setHandler(new EventFactory());
-        net.modificationstation.stationloader.api.common.factory.EventFactory.INSTANCE.addEvent(net.modificationstation.stationloader.api.common.event.Event.class, Event::new);
-        net.modificationstation.stationloader.api.common.factory.EventFactory.INSTANCE.addEvent(net.modificationstation.stationloader.api.common.event.ModIDEvent.class, ModIDEvent::new);
         getLogger().info("Setting up I18n...");
         net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.setHandler(new I18n());
         getLogger().info("Setting up BlockManager...");
@@ -138,7 +132,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         }, getContainer());
         getLogger().info("Setting up BlockNameSet...");
         BlockNameSet.EVENT.register((block, name) -> {
-            net.modificationstation.stationloader.api.common.event.ModIDEvent<BlockRegister> event = BlockRegister.EVENT;
+            ModEvent<BlockRegister> event = BlockRegister.EVENT;
             BlockRegister listener = event.getCurrentListener();
             if (listener != null) {
                 String modid = event.getListenerContainer(listener).getMetadata().getId();
@@ -152,7 +146,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         });
         getLogger().info("Setting up ItemNameSet...");
         ItemNameSet.EVENT.register((item, name) -> {
-            net.modificationstation.stationloader.api.common.event.ModIDEvent<ItemRegister> event = ItemRegister.EVENT;
+            ModEvent<ItemRegister> event = ItemRegister.EVENT;
             ItemRegister listener = event.getCurrentListener();
             if (listener != null) {
                 String modid = event.getListenerContainer(listener).getMetadata().getId();

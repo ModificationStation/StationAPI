@@ -12,7 +12,7 @@ import net.modificationstation.stationloader.api.common.block.BlockManager;
 import net.modificationstation.stationloader.api.common.block.BlockRegistry;
 import net.modificationstation.stationloader.api.common.block.BlockStrengthPerMeta;
 import net.modificationstation.stationloader.api.common.entity.player.StrengthOnMeta;
-import net.modificationstation.stationloader.api.common.event.ModIDEvent;
+import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
@@ -77,7 +77,7 @@ public class MixinBlockBase implements BlockStrengthPerMeta {
                                         null :
                         null
         );
-        ModIDEvent<BlockRegister> event = BlockRegister.EVENT;
+        ModEvent<BlockRegister> event = BlockRegister.EVENT;
         BlockRegister invoker = event.getInvoker();
         event.setCurrentListener(invoker);
         invoker.registerBlocks(BlockRegistry.INSTANCE, ModID.of(event.getListenerContainer(invoker)));

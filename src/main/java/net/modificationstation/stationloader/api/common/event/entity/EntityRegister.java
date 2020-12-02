@@ -1,13 +1,12 @@
 package net.modificationstation.stationloader.api.common.event.entity;
 
 import net.minecraft.entity.EntityBase;
-import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 import uk.co.benjiweber.expressions.functions.TriConsumer;
 
 public interface EntityRegister {
 
-    Event<EntityRegister> EVENT = EventFactory.INSTANCE.newEvent(EntityRegister.class, listeners ->
+    SimpleEvent<EntityRegister> EVENT = new SimpleEvent<>(EntityRegister.class, listeners ->
             register -> {
                 for (EntityRegister event : listeners)
                     event.registerEntities(register);

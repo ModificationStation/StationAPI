@@ -2,14 +2,13 @@ package net.modificationstation.stationloader.api.client.event.render.entity;
 
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.EntityBase;
-import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 
 import java.util.Map;
 
 public interface EntityRendererRegister {
 
-    Event<EntityRendererRegister> EVENT = EventFactory.INSTANCE.newEvent(EntityRendererRegister.class, (listeners) ->
+    SimpleEvent<EntityRendererRegister> EVENT = new SimpleEvent<>(EntityRendererRegister.class, (listeners) ->
             (renderers) -> {
                 for (EntityRendererRegister event : listeners)
                     event.registerEntityRenderers(renderers);

@@ -1,7 +1,6 @@
 package net.modificationstation.stationloader.api.client.event.texture;
 
-import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 import net.modificationstation.stationloader.impl.client.texture.TextureRegistry;
 
 /**
@@ -16,7 +15,7 @@ import net.modificationstation.stationloader.impl.client.texture.TextureRegistry
 
 public interface TexturesPerFileListener {
 
-    Event<TexturesPerFileListener> EVENT = EventFactory.INSTANCE.newEvent(TexturesPerFileListener.class, (listeners) ->
+    SimpleEvent<TexturesPerFileListener> EVENT = new SimpleEvent<>(TexturesPerFileListener.class, (listeners) ->
             (type) -> {
                 for (TexturesPerFileListener event : listeners)
                     event.texturesPerFileChanged(type);

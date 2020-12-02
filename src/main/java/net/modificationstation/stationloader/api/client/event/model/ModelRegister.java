@@ -1,8 +1,7 @@
 package net.modificationstation.stationloader.api.client.event.model;
 
 import net.modificationstation.stationloader.api.client.model.BlockModelProvider;
-import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 
 // TODO: Item and Entity model documentation.
 /**
@@ -22,7 +21,7 @@ public interface ModelRegister {
         ENTITIES
     }
 
-    Event<ModelRegister> EVENT = EventFactory.INSTANCE.newEvent(ModelRegister.class, (listeners) ->
+    SimpleEvent<ModelRegister> EVENT = new SimpleEvent<>(ModelRegister.class, (listeners) ->
             (type) -> {
                 for (ModelRegister event : listeners)
                     event.registerModels(type);

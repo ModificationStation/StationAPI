@@ -1,8 +1,7 @@
 package net.modificationstation.stationloader.api.client.event.texture;
 
 import net.modificationstation.stationloader.api.client.texture.TextureFactory;
-import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 
 /**
  * Used to register your mod textures.
@@ -15,7 +14,7 @@ import net.modificationstation.stationloader.api.common.factory.EventFactory;
  */
 public interface TextureRegister {
 
-    Event<TextureRegister> EVENT = EventFactory.INSTANCE.newEvent(TextureRegister.class, (listeners) ->
+    SimpleEvent<TextureRegister> EVENT = new SimpleEvent<>(TextureRegister.class, (listeners) ->
             () -> {
                 for (TextureRegister event : listeners)
                     event.registerTextures();

@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.inventory.InventoryBase;
 import net.modificationstation.stationloader.api.client.event.gui.GuiRegister;
-import net.modificationstation.stationloader.api.common.event.ModIDEvent;
+import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
@@ -45,7 +45,7 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
                 if (isClient)
                     playerBase.container.currentContainerId = customData.ints()[0];
             }));
-            ModIDEvent<GuiRegister> event = GuiRegister.EVENT;
+            ModEvent<GuiRegister> event = GuiRegister.EVENT;
             GuiRegister invoker = event.getInvoker();
             String modid = event.getListenerContainer(invoker).getMetadata().getId();
             if (modid != null)

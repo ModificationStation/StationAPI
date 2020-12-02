@@ -2,8 +2,7 @@ package net.modificationstation.stationloader.api.common.event.packet;
 
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.packet.AbstractPacket;
-import net.modificationstation.stationloader.api.common.event.ModIDEvent;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.packet.CustomData;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import uk.co.benjiweber.expressions.functions.QuadConsumer;
@@ -14,7 +13,7 @@ import java.util.function.BiConsumer;
 
 public interface PacketRegister {
 
-    ModIDEvent<PacketRegister> EVENT = EventFactory.INSTANCE.newModIDEvent(PacketRegister.class, listeners ->
+    ModEvent<PacketRegister> EVENT = new ModEvent<>(PacketRegister.class, listeners ->
             (register, customDataPackets) -> {
                 Map<String, Map<String, BiConsumer<PlayerBase, CustomData>>> packets = ModIDRegistry.packet;
                 String modid;

@@ -1,14 +1,13 @@
 package net.modificationstation.stationloader.api.common.event.achievement;
 
 import net.minecraft.achievement.Achievement;
-import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 
 import java.util.List;
 
 public interface AchievementRegister {
 
-    Event<AchievementRegister> EVENT = EventFactory.INSTANCE.newEvent(AchievementRegister.class, listeners ->
+    SimpleEvent<AchievementRegister> EVENT = new SimpleEvent<>(AchievementRegister.class, listeners ->
             achievements -> {
                 for (AchievementRegister event : listeners)
                     event.registerAchievements(achievements);

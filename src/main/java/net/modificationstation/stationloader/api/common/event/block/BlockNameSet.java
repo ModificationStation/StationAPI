@@ -1,12 +1,11 @@
 package net.modificationstation.stationloader.api.common.event.block;
 
 import net.minecraft.block.BlockBase;
-import net.modificationstation.stationloader.api.common.event.Event;
-import net.modificationstation.stationloader.api.common.factory.EventFactory;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 
 public interface BlockNameSet {
 
-    Event<BlockNameSet> EVENT = EventFactory.INSTANCE.newEvent(BlockNameSet.class, listeners ->
+    SimpleEvent<BlockNameSet> EVENT = new SimpleEvent<>(BlockNameSet.class, listeners ->
             (blockBase, name) -> {
                 for (BlockNameSet event : listeners)
                     name = event.getName(blockBase, name);
