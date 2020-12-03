@@ -4,6 +4,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
+import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,8 +24,8 @@ public class MixinAbstractPacket {
     private static void afterVanillaPackets(CallbackInfo ci) {
         ModEvent<PacketRegister> event = PacketRegister.EVENT;
         PacketRegister invoker = event.getInvoker();
-        ModContainer modContainer = event.getListenerModID(invoker).getContainer();
-        String modid = modContainer == null ? null : modContainer.getMetadata().getId();
+        ModID modID = event.getListenerModID(invoker);
+        String modid = modID == null ? null : modID.getContainer().getMetadata().getId();
         if (modid != null)
             ModIDRegistry.packet.put(modid, new HashMap<>());
         invoker.registerPackets(MixinAbstractPacket::register, ModIDRegistry.packet.get(modid));
