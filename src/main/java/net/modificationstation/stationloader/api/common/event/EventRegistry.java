@@ -1,7 +1,8 @@
-package net.modificationstation.stationloader.api.common.registry;
+package net.modificationstation.stationloader.api.common.event;
 
 import net.modificationstation.stationloader.api.common.StationLoader;
-import net.modificationstation.stationloader.api.common.event.Event;
+import net.modificationstation.stationloader.api.common.registry.Identifier;
+import net.modificationstation.stationloader.api.common.registry.Registry;
 
 public final class EventRegistry extends Registry<Event<?>> {
 

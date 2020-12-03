@@ -32,7 +32,7 @@ import net.modificationstation.stationloader.api.common.event.mod.PreInit;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
-import net.modificationstation.stationloader.api.common.registry.EventRegistry;
+import net.modificationstation.stationloader.api.common.event.EventRegistry;
 import net.modificationstation.stationloader.api.common.registry.Identifier;
 import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.resource.RecursiveReader;
@@ -243,7 +243,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
             }
             getLogger().info("Set \"" + field.getName() + "\" field to mod's instance");
         }
-        stationMod.setModID(ModID.of(modContainer));
+        ModID modID = ModID.of(modContainer);
+        stationMod.setModID(modID);
         getLogger().info("Set mod's container");
         String name = modMetadata.getName() + "|StationMod";
         stationMod.setLogger(LogManager.getFormatterLogger(name));
@@ -252,7 +253,11 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         stationMod.setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + modMetadata.getId()));
         stationMod.setDefaultConfig(net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.newInst(net.modificationstation.stationloader.api.common.config.Configuration.class, new File(stationMod.getConfigPath() + File.separator + modMetadata.getId() + ".cfg")));
         getLogger().info("Initialized default config");
+        if (stationMod instanceof PreInit)
+            PreInit.EVENT.register((PreInit) stationMod, modID);
         Init.EVENT.register(stationMod);
+        if (stationMod instanceof PostInit)
+            PostInit.EVENT.register((PostInit) stationMod);
         getLogger().info("Registered events");
         mods.computeIfAbsent(modContainer, modContainer1 -> new HashSet<>()).add(stationMod);
         getLogger().info(String.format("Done loading %s (%s)'s \"%s\" StationMod", modMetadata.getName(), modMetadata.getId(), stationMod.getClass().getName()));
