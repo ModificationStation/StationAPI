@@ -171,6 +171,7 @@ public class CustomCuboidRenderer implements net.modificationstation.stationload
         return cubeQuads;
     }
 
+    @Override
     public String getModID() {
         return modid;
     }

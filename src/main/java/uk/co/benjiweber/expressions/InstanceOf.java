@@ -6,10 +6,13 @@ public class InstanceOf {
 
     public static InstanceOfBuilder when(final Object obj) {
         return new InstanceOfBuilder() {
+            @Override
             public <T> ThenBuilder<T> instanceOf(final Class<T> cls) {
                 return new ThenBuilder<T>() {
+                    @Override
                     public <U> ElseBuilder then(ActionWithOneParam<U, T> ifAction) {
                         return new ElseBuilder<U>(){
+                            @Override
                             public U otherwise(U value) {
                                 try {
                                     return cls.isInstance(obj) ? ifAction.apply((T)obj) : value;
@@ -20,6 +23,7 @@ public class InstanceOf {
                                 }
                             }
 
+                            @Override
                             public Optional<U> optional() {
                                 try {
                                     return cls.isInstance(obj) ? Optional.of(ifAction.apply((T) obj)) : Optional.<U>empty();

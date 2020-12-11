@@ -55,6 +55,7 @@ public class InstanceOfMethodReference {
 
     public static When when(final Object input) {
         return new When() {
+            @Override
             public <T> Is<T> is(Class<T> cls) {
                 return new Is<T>((T)input);
             }

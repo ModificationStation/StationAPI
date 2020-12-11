@@ -45,6 +45,7 @@ public class GuessesName<T> extends Property<T> implements Named<T> {
         return field.get().getName();
     }
 
+    @Override
     public String name() {
         return guessName();
     }

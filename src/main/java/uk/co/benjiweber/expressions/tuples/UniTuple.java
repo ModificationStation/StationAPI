@@ -11,6 +11,7 @@ public interface UniTuple<A> {
     static <A> UniTuple<A> of(A a) {
         abstract class UniTupleValue extends Value<UniTuple<A>> implements UniTuple<A> {}
         return new UniTupleValue() {
+            @Override
             public A one() { return a; }
         }.using(UniTuple::one);
     }

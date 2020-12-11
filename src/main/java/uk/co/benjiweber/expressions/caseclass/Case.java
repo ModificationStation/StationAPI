@@ -21,16 +21,20 @@ import static java.util.Arrays.asList;
 public interface Case<T> extends EqualsHashcode<T> {
     default MatchBuilder<T> match() {
         return new MatchBuilder<T>() {
+            @Override
             public <R> MatchBuilderR<T, R> when(T value, Function<T, R> f) {
                 return new MatchBuilderR<T, R>(asList(MatchDefinition.create(value, f)), Case.this);
             }
+            @Override
             public <R, A, B> MatchBuilderR<T, R> when(TwoMissing<T, A, B> value, BiFunction<A, B, R> f) {
                 Function<T,R> valueExtractor = t -> f.apply(value.prop1((T)Case.this), value.prop2((T)Case.this));
                 return new MatchBuilderR<T, R>(asList(MatchDefinition.create(value.original(), valueExtractor)), Case.this);
             }
 
+            @Override
             public ZeroMatchConstructorBuilder<T> when(Supplier<T> constructor) {
                 return new ZeroMatchConstructorBuilder<T>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(Function<T, R> f) {
                         T original = constructor.get();
                         return new MatchBuilderR<T, R>(asList(MatchDefinition.create(original, f)), Case.this);
@@ -38,8 +42,10 @@ public interface Case<T> extends EqualsHashcode<T> {
                 };
             }
 
+            @Override
             public <A> ZeroMatchConstructorBuilder<T> when(Function<A,T> constructor, A a) {
                 return new ZeroMatchConstructorBuilder<T>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(Function<T, R> f) {
                         T original = constructor.apply(a);
                         return new MatchBuilderR<T, R>(asList(MatchDefinition.create(original, f)), Case.this);
@@ -47,8 +53,10 @@ public interface Case<T> extends EqualsHashcode<T> {
                 };
             }
 
+            @Override
             public <A> UniMatchConstructorBuilder<T, A> when(Function<A, T> constructor, MatchesAny a) {
                 return new UniMatchConstructorBuilder<T, A>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(Function<A, R> f) {
                         T original = constructor.apply(null);
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -62,6 +70,7 @@ public interface Case<T> extends EqualsHashcode<T> {
             @Override
             public <A> UniMatchConstructorBuilder<T, A> when(UniMatch<T, A> ref) {
                 return new UniMatchConstructorBuilder<T, A>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(Function<A, R> f) {
                         T original = ref.comparee();
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -74,6 +83,7 @@ public interface Case<T> extends EqualsHashcode<T> {
             @Override
             public <A,B> BiMatchConstructorBuilder<T, A, B> when(BiMatch<T, A, B> ref) {
                 return new BiMatchConstructorBuilder<T, A, B>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(BiFunction<A, B, R> f) {
                         T original = ref.comparee();
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -86,6 +96,7 @@ public interface Case<T> extends EqualsHashcode<T> {
             @Override
             public <A, B, C> TriMatchConstructorBuilder<T, A, B, C> when(TriMatch<T, A, B, C> ref) {
                 return new TriMatchConstructorBuilder<T, A, B, C>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(TriFunction<A, B, C, R> f) {
                         T original = ref.comparee();
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -97,8 +108,10 @@ public interface Case<T> extends EqualsHashcode<T> {
             }
 
 
+            @Override
             public <A,B> ZeroMatchConstructorBuilder<T> when(BiFunction<A,B,T> constructor, A a, B b) {
                 return new ZeroMatchConstructorBuilder<T>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(Function<T, R> f) {
                         T original = constructor.apply(a,b);
                         return new MatchBuilderR<T, R>(asList(MatchDefinition.create(original, f)), Case.this);
@@ -106,8 +119,10 @@ public interface Case<T> extends EqualsHashcode<T> {
                 };
             }
 
+            @Override
             public <A, B> BiMatchConstructorBuilder<T, A, B> when(BiFunction<A, B, T> constructor, MatchesAny a, MatchesAny b) {
                 return new BiMatchConstructorBuilder<T, A, B>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(BiFunction<A, B, R> f) {
                         T original = constructor.apply(null,null);
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -117,8 +132,10 @@ public interface Case<T> extends EqualsHashcode<T> {
                 };
             }
 
+            @Override
             public <A, B> UniMatchConstructorBuilder<T, A> when(BiFunction<A, B, T> constructor, MatchesAny a, B b) {
                 return new UniMatchConstructorBuilder<T, A>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(Function<A, R> f) {
                         T original = constructor.apply(null,b);
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -128,8 +145,10 @@ public interface Case<T> extends EqualsHashcode<T> {
                 };
             }
 
+            @Override
             public <A, B> UniMatchConstructorBuilder<T, B> when(BiFunction<A, B, T> constructor, A a, MatchesAny b) {
                 return new UniMatchConstructorBuilder<T, B>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(Function<B, R> f) {
                         T original = constructor.apply(a,null);
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -142,8 +161,10 @@ public interface Case<T> extends EqualsHashcode<T> {
 
 
 
+            @Override
             public <A,B,C> ZeroMatchConstructorBuilder<T> when(TriFunction<A,B,C,T> constructor, A a, B b, C c) {
                 return new ZeroMatchConstructorBuilder<T>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(Function<T, R> f) {
                         T original = constructor.apply(a,b,c);
                         return new MatchBuilderR<T, R>(asList(MatchDefinition.create(original, f)), Case.this);
@@ -151,8 +172,10 @@ public interface Case<T> extends EqualsHashcode<T> {
                 };
             }
 
+            @Override
             public <A, B, C> TriMatchConstructorBuilder<T, A, B, C> when(TriFunction<A, B, C, T> constructor, MatchesAny a, MatchesAny b, MatchesAny c) {
                 return new TriMatchConstructorBuilder<T, A, B, C>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(TriFunction<A, B, C, R> f) {
                         T original = constructor.apply(null,null,null);
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -162,8 +185,10 @@ public interface Case<T> extends EqualsHashcode<T> {
                 };
             }
 
+            @Override
             public <A, B, C> BiMatchConstructorBuilder<T, A, B> when(TriFunction<A, B, C, T> constructor, MatchesAny a, MatchesAny b, C c) {
                 return new BiMatchConstructorBuilder<T, A, B>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(BiFunction<A, B, R> f) {
                         T original = constructor.apply(null,null,c);
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -174,8 +199,10 @@ public interface Case<T> extends EqualsHashcode<T> {
             }
 
 
+            @Override
             public <A, B, C> BiMatchConstructorBuilder<T, B, C> when(TriFunction<A, B, C, T> constructor, A a, MatchesAny b, MatchesAny c) {
                 return new BiMatchConstructorBuilder<T, B, C>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(BiFunction<B, C, R> f) {
                         T original = constructor.apply(a,null,null);
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -185,8 +212,10 @@ public interface Case<T> extends EqualsHashcode<T> {
                 };
             }
 
+            @Override
             public <A, B, C> BiMatchConstructorBuilder<T, A, C> when(TriFunction<A, B, C, T> constructor, MatchesAny a, B b, MatchesAny c) {
                 return new BiMatchConstructorBuilder<T, A, C>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(BiFunction<A, C, R> f) {
                         T original = constructor.apply(null,b,null);
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -199,6 +228,7 @@ public interface Case<T> extends EqualsHashcode<T> {
             @Override
             public <A, B, C> UniMatchConstructorBuilder<T, A> when(TriFunction<A, B, C, T> constructor, MatchesAny a, B b, C c) {
                 return new UniMatchConstructorBuilder<T, A>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(Function<A, R> f) {
                         T original = constructor.apply(null,b,c);
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -211,6 +241,7 @@ public interface Case<T> extends EqualsHashcode<T> {
             @Override
             public <A, B, C> UniMatchConstructorBuilder<T, B> when(TriFunction<A, B, C, T> constructor, A a, MatchesAny b, C c) {
                 return new UniMatchConstructorBuilder<T, B>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(Function<B, R> f) {
                         T original = constructor.apply(a,null,c);
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -224,6 +255,7 @@ public interface Case<T> extends EqualsHashcode<T> {
             @Override
             public <A, B, C> UniMatchConstructorBuilder<T, C> when(TriFunction<A, B, C, T> constructor, A a, B b, MatchesAny c) {
                 return new UniMatchConstructorBuilder<T, C>() {
+                    @Override
                     public <R> MatchBuilderR<T, R> then(Function<C, R> f) {
                         T original = constructor.apply(a,b,null);
                         List<Object> missingProps = missingProps((Case<T>)Case.this, (Case<T>)original);
@@ -256,15 +288,20 @@ public interface Case<T> extends EqualsHashcode<T> {
 
     default <A> OneMissing<T,A> missing(Function<T,A> prop1) {
         return new OneMissing<T, A>() {
+            @Override
             public A prop1(T extractFrom) { return prop1.apply(extractFrom); }
+            @Override
             public T original() { return (T)Case.this; }
         };
     }
 
     default <A,B> TwoMissing<T,A,B> missing(Function<T,A> prop1, Function<T,B> prop2) {
         return new TwoMissing<T, A, B>() {
+            @Override
             public A prop1(T extractFrom) { return prop1.apply(extractFrom); }
+            @Override
             public B prop2(T extractFrom) { return prop2.apply(extractFrom); }
+            @Override
             public T original() { return (T)Case.this; }
         } ;
     }
@@ -350,7 +387,9 @@ public interface Case<T> extends EqualsHashcode<T> {
         Function<T,R> f();
         static <T,R> MatchDefinition<T,R> create(T value, Function<T,R> f) {
             return new MatchDefinition<T, R>() {
+                @Override
                 public T value() { return value; }
+                @Override
                 public Function<T, R> f() { return f; }
             };
         }
@@ -404,6 +443,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public ZeroMatchConstructorBuilderR<T,R> when(Supplier<T> constructor) {
             return new ZeroMatchConstructorBuilderR<T,R>() {
+                @Override
                 public MatchBuilderR<T, R> then(Function<T, R> f) {
                     T original = constructor.get();
                     cases.add(MatchDefinition.create(original, f));
@@ -418,6 +458,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A> ZeroMatchConstructorBuilderR<T,R> when(Function<A,T> constructor, A a) {
             return new ZeroMatchConstructorBuilderR<T,R>() {
+                @Override
                 public MatchBuilderR<T, R> then(Function<T, R> f) {
                     T original = constructor.apply(a);
                     cases.add(MatchDefinition.create(original, f));
@@ -428,6 +469,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A> UniMatchConstructorBuilderR<T, A, R> when(Function<A, T> constructor, MatchesAny a) {
             return new UniMatchConstructorBuilderR<T, A, R>() {
+                @Override
                 public MatchBuilderR<T, R> then(Function<A, R> f) {
                     T original = constructor.apply(null);
                     List<Object> missingProps = missingProps(MatchBuilderR.this.value, (Case<T>)original);
@@ -444,6 +486,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A,B> ZeroMatchConstructorBuilderR<T,R> when(BiFunction<A,B,T> constructor, A a, B b) {
             return new ZeroMatchConstructorBuilderR<T,R>() {
+                @Override
                 public MatchBuilderR<T, R> then(Function<T, R> f) {
                     T original = constructor.apply(a,b);
                     cases.add(MatchDefinition.create(original, f));
@@ -454,6 +497,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A, B> BiMatchConstructorBuilderR<T, A, B, R> when(BiFunction<A, B, T> constructor, MatchesAny a, MatchesAny b) {
             return new BiMatchConstructorBuilderR<T, A, B, R>() {
+                @Override
                 public MatchBuilderR<T, R> then(BiFunction<A, B, R> f) {
                     T original = constructor.apply(null,null);
                     List<Object> missingProps = missingProps(MatchBuilderR.this.value, (Case<T>)original);
@@ -466,6 +510,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A, B> UniMatchConstructorBuilderR<T, A, R> when(BiFunction<A, B, T> constructor, MatchesAny a, B b) {
             return new UniMatchConstructorBuilderR<T, A, R>() {
+                @Override
                 public MatchBuilderR<T, R> then(Function<A, R> f) {
                     T original = constructor.apply(null,b);
                     List<Object> missingProps = missingProps(MatchBuilderR.this.value, (Case<T>)original);
@@ -478,6 +523,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A, B> UniMatchConstructorBuilderR<T, B, R> when(BiFunction<A, B, T> constructor, A a, MatchesAny b) {
             return new UniMatchConstructorBuilderR<T, B, R>() {
+                @Override
                 public MatchBuilderR<T, R> then(Function<B, R> f) {
                     T original = constructor.apply(a,null);
                     List<Object> missingProps = missingProps(MatchBuilderR.this.value, (Case<T>)original);
@@ -494,6 +540,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A,B,C> ZeroMatchConstructorBuilderR<T,R> when(TriFunction<A,B,C,T> constructor, A a, B b, C c) {
             return new ZeroMatchConstructorBuilderR<T,R>() {
+                @Override
                 public MatchBuilderR<T, R> then(Function<T, R> f) {
                     T original = constructor.apply(a,b,c);
                     cases.add(MatchDefinition.create(original, f));
@@ -504,6 +551,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A,B,C> TriMatchConstructorBuilderR<T, A, B, C, R> when(TriFunction<A,B,C,T> constructor, MatchesAny a, MatchesAny b, MatchesAny c) {
             return new TriMatchConstructorBuilderR<T, A, B, C, R>() {
+                @Override
                 public MatchBuilderR<T, R> then(TriFunction<A, B, C, R> f) {
                     T original = constructor.apply(null,null,null);
                     List<Object> missingProps = missingProps(MatchBuilderR.this.value, (Case<T>)original);
@@ -516,6 +564,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A,B,C> BiMatchConstructorBuilderR<T, A, B, R> when(TriFunction<A,B,C,T> constructor, MatchesAny a, MatchesAny b, C c) {
             return new BiMatchConstructorBuilderR<T, A, B, R>() {
+                @Override
                 public MatchBuilderR<T, R> then(BiFunction<A, B, R> f) {
                     T original = constructor.apply(null,null,c);
                     List<Object> missingProps = missingProps(MatchBuilderR.this.value, (Case<T>)original);
@@ -528,6 +577,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A,B,C> BiMatchConstructorBuilderR<T, A, C, R> when(TriFunction<A,B,C,T> constructor, MatchesAny a, B b, MatchesAny c) {
             return new BiMatchConstructorBuilderR<T, A, C, R>() {
+                @Override
                 public MatchBuilderR<T, R> then(BiFunction<A, C, R> f) {
                     T original = constructor.apply(null,b,null);
                     List<Object> missingProps = missingProps(MatchBuilderR.this.value, (Case<T>)original);
@@ -540,6 +590,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A,B,C> BiMatchConstructorBuilderR<T, B, C, R> when(TriFunction<A,B,C,T> constructor, A a, MatchesAny b, MatchesAny c) {
             return new BiMatchConstructorBuilderR<T, B, C, R>() {
+                @Override
                 public MatchBuilderR<T, R> then(BiFunction<B, C, R> f) {
                     T original = constructor.apply(a,null,null);
                     List<Object> missingProps = missingProps(MatchBuilderR.this.value, (Case<T>)original);
@@ -552,6 +603,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A,B,C> UniMatchConstructorBuilderR<T, A, R> when(TriFunction<A,B,C,T> constructor, MatchesAny a, B b, C c) {
             return new UniMatchConstructorBuilderR<T, A, R>() {
+                @Override
                 public MatchBuilderR<T, R> then(Function<A, R> f) {
                     T original = constructor.apply(null,b,c);
                     List<Object> missingProps = missingProps(MatchBuilderR.this.value, (Case<T>)original);
@@ -564,6 +616,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A,B,C> UniMatchConstructorBuilderR<T, B, R> when(TriFunction<A,B,C,T> constructor, A a, MatchesAny b, C c) {
             return new UniMatchConstructorBuilderR<T, B, R>() {
+                @Override
                 public MatchBuilderR<T, R> then(Function<B, R> f) {
                     T original = constructor.apply(a,null,c);
                     List<Object> missingProps = missingProps(MatchBuilderR.this.value, (Case<T>)original);
@@ -576,6 +629,7 @@ public interface Case<T> extends EqualsHashcode<T> {
 
         public <A,B,C> UniMatchConstructorBuilderR<T, C, R> when(TriFunction<A,B,C,T> constructor, A a, B b, MatchesAny c) {
             return new UniMatchConstructorBuilderR<T, C, R>() {
+                @Override
                 public MatchBuilderR<T, R> then(Function<C, R> f) {
                     T original = constructor.apply(a,b,null);
                     List<Object> missingProps = missingProps(MatchBuilderR.this.value, (Case<T>)original);

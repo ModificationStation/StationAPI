@@ -5,6 +5,7 @@ import java.util.function.Function;
 public interface Case3<T,U,V> {
     default MatchBuilderNone<T,U,V> match() {
         return new MatchBuilderNone<T, U, V>() {
+            @Override
             public <R> MatchBuilderOne<T, U, V, R> when(Class<T> clsT, Function<T, R> fT) {
                 return (clsU, fU) -> (clsV, fV) -> {
                     if (clsT.isAssignableFrom(Case3.this.getClass())) return fT.apply((T)Case3.this);

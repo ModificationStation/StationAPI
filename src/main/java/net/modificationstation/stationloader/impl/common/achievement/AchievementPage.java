@@ -80,6 +80,7 @@ public class AchievementPage implements net.modificationstation.stationloader.ap
         return pageName;
     }
 
+    @Override
     public ArrayList<Integer> getAchievementIds() {
         return achievementIds;
     }

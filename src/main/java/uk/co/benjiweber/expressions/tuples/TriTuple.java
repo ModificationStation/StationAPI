@@ -11,8 +11,11 @@ public interface TriTuple<A,B,C> {
     static <A,B,C> TriTuple<A,B,C> of(A a, B b, C c) {
         abstract class TriTupleValue extends Value<TriTuple<A,B,C>> implements TriTuple<A,B,C> {}
         return new TriTupleValue() {
+            @Override
             public A one() { return a; }
+            @Override
             public B two() { return b; }
+            @Override
             public C three() { return c; }
         }.using(TriTuple::one, TriTuple::two, TriTuple::three);
     }

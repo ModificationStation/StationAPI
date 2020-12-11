@@ -24,10 +24,12 @@ public class Property<T> {
 
     public static <T> PropertyBuilder<T> get(Supplier<T> getter) {
         return new PropertyBuilder<T>() {
+            @Override
             public Property<T> set(Function<T, T> setter) {
                 return new Property<T>(getter, setter);
             }
 
+            @Override
             public Readonly<T> readonly() {
                 Property<T> prop = new Property<T>(getter, Function.<T>identity());
                 return prop::get;

@@ -44,6 +44,7 @@ public class Exceptions {
 
     public static <T, E extends Exception> Wrapper<T> wrappingChecked(ExceptionalSupplier<T, E> supplier) {
         return new Wrapper<T>() {
+            @Override
             public <U extends Exception> T in(Function<Exception, U> exceptionMapper) throws U {
                 try {
                     return supplier.supply();
@@ -65,6 +66,7 @@ public class Exceptions {
                 }
             }
 
+            @Override
             public <U extends Exception> T in(Class<U> exceptionClass) throws U {
                 try {
                     return supplier.supply();
@@ -79,6 +81,7 @@ public class Exceptions {
 
     public static <T,E extends Exception> Wrapper<T> wrappingAll(ExceptionalSupplier<T,E> supplier) {
         return new Wrapper<T>() {
+            @Override
             public <U extends Exception> T in(Function<Exception, U> exceptionMapper) throws U {
                 try {
                     return supplier.supply();
@@ -96,6 +99,7 @@ public class Exceptions {
                 }
             }
 
+            @Override
             public <U extends Exception> T in(Class<U> exceptionClass) throws U {
                 try {
                     return supplier.supply();

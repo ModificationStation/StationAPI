@@ -10,7 +10,9 @@ public interface BiTuple<A,B> {
     static <A,B> BiTuple<A,B> of(A a, B b) {
         abstract class BiTupleValue extends Value<BiTuple<A,B>> implements BiTuple<A,B> {}
         return new BiTupleValue() {
+            @Override
             public A one() { return a; }
+            @Override
             public B two() { return b; }
         }.using(BiTuple::one, BiTuple::two);
     }

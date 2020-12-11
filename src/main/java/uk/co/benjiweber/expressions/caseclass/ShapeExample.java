@@ -25,7 +25,9 @@ public class ShapeExample {
         int height();
         static Rectangle rectangle(int width, int height) {
             return new Rectangle() {
+                @Override
                 public int width() { return width; }
+                @Override
                 public int height() { return height; }
             };
         }

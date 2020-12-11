@@ -23,18 +23,22 @@ public interface Result<T> {
             this.value = value;
         }
 
+        @Override
         public T unwrap() {
             return value;
         }
 
+        @Override
         public boolean success() {
             return true;
         }
 
+        @Override
         public <R> Result<R> map(Function<T, R> f) {
             return new Success<R>(f.apply(value));
         }
 
+        @Override
         public <R, E extends Exception> Result<R> mapExceptional(ExceptionalFunction<T, R, E> f) {
             try {
                 return new Success<R>(f.apply(value));
@@ -45,6 +49,7 @@ public interface Result<T> {
             }
         }
 
+        @Override
         public <R, E extends Exception> Result<R> map(Class<E> cls, Function<E, R> f) {
             return new Failure<>(new IllegalStateException());
         }
@@ -62,22 +67,27 @@ public interface Result<T> {
             this.e = t instanceof Failure ? ((Failure)t).e : new IllegalStateException();
         }
 
+        @Override
         public T unwrap() {
             throw e instanceof RuntimeException ? (RuntimeException) e : new RuntimeException(e);
         }
 
+        @Override
         public boolean success() {
             return false;
         }
 
+        @Override
         public <R> Result<R> map(Function<T, R> f) {
             return new Failure<R>(e);
         }
 
+        @Override
         public <R, E extends Exception> Result<R> mapExceptional(ExceptionalFunction<T, R, E> f) {
             return new Failure<R>(e);
         }
 
+        @Override
         public <R, E extends Exception> Result<R> map(Class<E> cls, Function<E, R> f) {
             if (e.getClass().isAssignableFrom(cls)) return new Success<R>(f.apply((E)e));
             return new Failure<R>(e);

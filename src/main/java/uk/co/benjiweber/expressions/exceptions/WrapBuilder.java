@@ -6,10 +6,12 @@ import java.util.function.Supplier;
 
 public interface WrapBuilder<T,R,E extends Exception> extends OrElse<T,R,E> {
 
+    @Override
     default Function<T,R> orElse(R value) {
         return wrapException(e -> value);
     }
 
+    @Override
     default Function<T,R> orElse(Supplier<R> supplier) {
         return wrapException(supplier);
     }

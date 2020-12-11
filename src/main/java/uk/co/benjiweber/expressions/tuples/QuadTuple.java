@@ -12,9 +12,13 @@ public interface QuadTuple<A,B,C,D> {
     static <A,B,C,D> QuadTuple<A,B,C,D> of(A a, B b, C c, D d) {
         abstract class QuadTupleValue extends Value<QuadTuple<A,B,C,D>> implements QuadTuple<A,B,C,D> {}
         return new QuadTupleValue() {
+            @Override
             public A one() { return a; }
+            @Override
             public B two() { return b; }
+            @Override
             public C three() { return c; }
+            @Override
             public D four() { return d; }
         }.using(QuadTuple::one, QuadTuple::two, QuadTuple::three, QuadTuple::four);
     }

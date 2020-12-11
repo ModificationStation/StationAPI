@@ -22,6 +22,7 @@ public class Value<T> implements EqualsHashcode<T>, ToString<T> {
         return autoToString();
     }
 
+    @Override
     public List<Function<T, ?>> props() {
         return props;
     }

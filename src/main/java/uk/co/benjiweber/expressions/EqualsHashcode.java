@@ -24,6 +24,7 @@ public interface EqualsHashcode<T> {
 
     static class ResultCalculator implements Consumer {
         private int result = 0;
+        @Override
         public void accept(Object value) {
             result = 31 * result + (value != null ? value.hashCode() : 0);
         }

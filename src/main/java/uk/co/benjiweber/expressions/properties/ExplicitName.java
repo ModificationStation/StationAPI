@@ -12,6 +12,7 @@ public class ExplicitName<T> extends Property<T> implements Named<T> {
         this.name = name;
     }
 
+    @Override
     public String name() {
         return name;
     }
