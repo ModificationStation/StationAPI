@@ -75,7 +75,6 @@ public class MixinAchievements extends ScreenBase {
 
     /**
      * @author calmilamsy
-     * @reason Too many weird edits. Might get rewritten later.
      */
     @Overwrite
     public void method_1998(int i1, int j1, float f) {
