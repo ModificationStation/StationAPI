@@ -3,9 +3,12 @@ package net.modificationstation.stationloader.impl.server;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.resource.language.TranslationStorage;
+import net.modificationstation.stationloader.api.common.event.EventRegistry;
 import net.modificationstation.stationloader.api.common.packet.StationHandshake;
+import net.modificationstation.stationloader.api.common.registry.Identifier;
 import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.server.event.network.HandleLogin;
+import net.modificationstation.stationloader.api.server.event.network.PlayerLogin;
 import net.modificationstation.stationloader.impl.server.entity.player.PlayerHelper;
 import net.modificationstation.stationloader.impl.server.gui.GuiHelper;
 import net.modificationstation.stationloader.impl.server.packet.PacketHelper;
@@ -61,5 +64,12 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
         });
         getLogger().info("Setting up GuiHelper...");
         net.modificationstation.stationloader.api.common.gui.GuiHelper.INSTANCE.setHandler(new GuiHelper());
+    }
+
+    @Override
+    public void preInit(EventRegistry eventRegistry, ModID modID) {
+        super.preInit(eventRegistry, modID);
+        eventRegistry.registerValue(Identifier.of(modID, "handle_login"), HandleLogin.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "player_login"), PlayerLogin.EVENT);
     }
 }
