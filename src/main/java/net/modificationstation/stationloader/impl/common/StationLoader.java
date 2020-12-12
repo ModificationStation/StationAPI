@@ -24,6 +24,7 @@ import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import net.modificationstation.stationloader.api.common.event.item.tool.EffectiveBlocksProvider;
 import net.modificationstation.stationloader.api.common.event.item.tool.IsEffectiveOn;
+import net.modificationstation.stationloader.api.common.event.level.LevelInit;
 import net.modificationstation.stationloader.api.common.event.level.biome.BiomeByClimateProvider;
 import net.modificationstation.stationloader.api.common.event.level.biome.BiomeRegister;
 import net.modificationstation.stationloader.api.common.event.level.gen.ChunkPopulator;
@@ -223,6 +224,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         eventRegistry.registerValue(Identifier.of(modID, "chunk_populator"), ChunkPopulator.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "packet_register"), PacketRegister.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "recipe_register"), RecipeRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "level_init"), LevelInit.EVENT);
     }
 
     @Override

@@ -16,6 +16,7 @@
     "common.MixinHoe",
     "common.MixinItemBase",
     "common.MixinItemInstance",
+    "common.MixinLevel",
     "common.MixinPickaxe",
     "common.MixinPlayerBase",
     "common.MixinPlayerInventory",
