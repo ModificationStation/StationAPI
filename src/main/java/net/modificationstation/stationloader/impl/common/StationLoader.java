@@ -10,6 +10,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationloader.api.common.block.EffectiveForTool;
+import net.modificationstation.stationloader.api.common.event.EventRegistry;
 import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.event.achievement.AchievementRegister;
 import net.modificationstation.stationloader.api.common.event.block.BlockNameSet;
@@ -23,6 +24,7 @@ import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import net.modificationstation.stationloader.api.common.event.item.tool.EffectiveBlocksProvider;
 import net.modificationstation.stationloader.api.common.event.item.tool.IsEffectiveOn;
+import net.modificationstation.stationloader.api.common.event.level.LevelInit;
 import net.modificationstation.stationloader.api.common.event.level.biome.BiomeByClimateProvider;
 import net.modificationstation.stationloader.api.common.event.level.biome.BiomeRegister;
 import net.modificationstation.stationloader.api.common.event.level.gen.ChunkPopulator;
@@ -32,7 +34,6 @@ import net.modificationstation.stationloader.api.common.event.mod.PreInit;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
-import net.modificationstation.stationloader.api.common.event.EventRegistry;
 import net.modificationstation.stationloader.api.common.registry.Identifier;
 import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.resource.RecursiveReader;
@@ -223,6 +224,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         eventRegistry.registerValue(Identifier.of(modID, "chunk_populator"), ChunkPopulator.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "packet_register"), PacketRegister.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "recipe_register"), RecipeRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "level_init"), LevelInit.EVENT);
     }
 
     @Override

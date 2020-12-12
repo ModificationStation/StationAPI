@@ -4,9 +4,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.inventory.InventoryBase;
 import net.modificationstation.stationloader.api.client.event.gui.GuiRegister;
+import net.modificationstation.stationloader.api.client.event.keyboard.KeyPressed;
+import net.modificationstation.stationloader.api.client.event.model.ModelRegister;
+import net.modificationstation.stationloader.api.client.event.option.KeyBindingRegister;
+import net.modificationstation.stationloader.api.client.event.render.entity.EntityRendererRegister;
+import net.modificationstation.stationloader.api.client.event.texture.TextureRegister;
+import net.modificationstation.stationloader.api.client.event.texture.TexturesPerFileListener;
+import net.modificationstation.stationloader.api.common.event.EventRegistry;
 import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
+import net.modificationstation.stationloader.api.common.registry.Identifier;
 import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import net.modificationstation.stationloader.impl.client.entity.player.PlayerHelper;
@@ -53,5 +61,17 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
                 ModIDRegistry.gui.put(modid.toString(), new HashMap<>());
             invoker.registerGUIs(modid == null ? null : ModIDRegistry.gui.get(modid.toString()));
         }, getModID());
+    }
+
+    @Override
+    public void preInit(EventRegistry eventRegistry, ModID modID) {
+        super.preInit(eventRegistry, modID);
+        eventRegistry.registerValue(Identifier.of(modID, "gui_register"), GuiRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "key_pressed"), KeyPressed.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "model_register"), ModelRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "key_binding_register"), KeyBindingRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "entity_renderer_register"), EntityRendererRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "texture_register"), TextureRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "textures_per_file_listener"), TexturesPerFileListener.EVENT);
     }
 }

@@ -1,6 +1,5 @@
 package net.modificationstation.stationloader.mixin.common;
 
-import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;

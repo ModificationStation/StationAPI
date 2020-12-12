@@ -1,7 +1,7 @@
 package net.modificationstation.stationloader.api.common.event.mod;
 
-import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.event.EventRegistry;
+import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.registry.ModID;
 
 /**
