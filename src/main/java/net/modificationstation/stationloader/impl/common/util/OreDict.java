@@ -35,13 +35,19 @@ public class OreDict {
      * @param identifier The Identifier to add.
      */
     public void addID(@NotNull String oreDictString, @NotNull Identifier identifier) {
-        addIDWithPredeicate(oreDictString, identifier, null);
+        addIDWithPredicate(oreDictString, identifier, null);
     }
 
-    // May be removed
-    public void addIDWithPredeicate(@NotNull String oreDictString, @NotNull Identifier identifier, @Nullable Predicate<ItemInstance> identifierPredicate) {
+
+    /**
+     * Adds given Identifier to the given OreDict entry with a Predicate.
+     * @param oreDictString The OreDict key.
+     * @param identifier The Identifier to add.
+     * @param itemInstancePredicate The Predicate used to determine more advanced parameters of your item.
+     */
+    public void addIDWithPredicate(@NotNull String oreDictString, @NotNull Identifier identifier, @Nullable Predicate<ItemInstance> itemInstancePredicate) {
         List<OreDictEntryObject> list = oreDict.computeIfAbsent(oreDictString, oDS -> new ArrayList<>());
-        list.add(new OreDictEntryObject(identifier, identifierPredicate));
+        list.add(new OreDictEntryObject(identifier, itemInstancePredicate));
     }
 
     /**
