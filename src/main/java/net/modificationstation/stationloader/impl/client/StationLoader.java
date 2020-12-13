@@ -2,8 +2,10 @@ package net.modificationstation.stationloader.impl.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.InventoryBase;
-import net.modificationstation.stationloader.api.client.event.gui.GuiRegister;
+import net.modificationstation.stationloader.api.client.event.gui.GuiHandlerRegister;
 import net.modificationstation.stationloader.api.client.event.keyboard.KeyPressed;
 import net.modificationstation.stationloader.api.client.event.model.ModelRegister;
 import net.modificationstation.stationloader.api.client.event.option.KeyBindingRegister;
@@ -11,20 +13,17 @@ import net.modificationstation.stationloader.api.client.event.render.entity.Enti
 import net.modificationstation.stationloader.api.client.event.texture.TextureRegister;
 import net.modificationstation.stationloader.api.client.event.texture.TexturesPerFileListener;
 import net.modificationstation.stationloader.api.common.event.EventRegistry;
-import net.modificationstation.stationloader.api.common.event.ModEvent;
-import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
+import net.modificationstation.stationloader.api.common.event.packet.MessageListenerRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
+import net.modificationstation.stationloader.api.common.gui.GuiHandlerRegistry;
 import net.modificationstation.stationloader.api.common.registry.Identifier;
 import net.modificationstation.stationloader.api.common.registry.ModID;
-import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import net.modificationstation.stationloader.impl.client.entity.player.PlayerHelper;
 import net.modificationstation.stationloader.impl.client.gui.GuiHelper;
 import net.modificationstation.stationloader.impl.client.model.CustomModelRenderer;
 import net.modificationstation.stationloader.impl.client.packet.PacketHelper;
 import net.modificationstation.stationloader.impl.client.texture.TextureFactory;
 import net.modificationstation.stationloader.impl.client.texture.TextureRegistry;
-
-import java.util.HashMap;
 
 @Environment(EnvType.CLIENT)
 public class StationLoader extends net.modificationstation.stationloader.impl.common.StationLoader {
@@ -47,26 +46,21 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
         net.modificationstation.stationloader.api.common.packet.PacketHelper.INSTANCE.setHandler(new PacketHelper());
         getLogger().info("Setting up GuiHelper...");
         net.modificationstation.stationloader.api.common.gui.GuiHelper.INSTANCE.setHandler(new GuiHelper());
-        PacketRegister.EVENT.register((register, customDataPackets) -> {
-            customDataPackets.put("open_gui", ((playerBase, customData) -> {
+        MessageListenerRegister.EVENT.register((messageListeners, modID) -> {
+            messageListeners.registerValue(Identifier.of(modID, "open_gui"), ((playerBase, message) -> {
                 boolean isClient = playerBase.level.isClient;
-                ModIDRegistry.gui.get(customData.strings()[0]).get((short) Byte.toUnsignedInt(customData.bytes()[0])).accept(playerBase, isClient ? null : (InventoryBase) customData.objects()[0], customData);
+                GuiHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(guiHandler -> ((Minecraft) FabricLoader.getInstance().getGameInstance()).openScreen(guiHandler.one().apply(playerBase, isClient ? guiHandler.two().get() : (InventoryBase) message.objects()[0], message)));
                 if (isClient)
-                    playerBase.container.currentContainerId = customData.ints()[0];
+                    playerBase.container.currentContainerId = message.ints()[0];
             }));
-            ModEvent<GuiRegister> event = GuiRegister.EVENT;
-            GuiRegister invoker = event.getInvoker();
-            ModID modid = event.getListenerModID(invoker);
-            if (modid != null)
-                ModIDRegistry.gui.put(modid.toString(), new HashMap<>());
-            invoker.registerGUIs(modid == null ? null : ModIDRegistry.gui.get(modid.toString()));
+            GuiHandlerRegister.EVENT.getInvoker().registerGUIs(GuiHandlerRegistry.INSTANCE, GuiHandlerRegister.EVENT.getListenerModID(GuiHandlerRegister.EVENT.getInvoker()));
         }, getModID());
     }
 
     @Override
     public void preInit(EventRegistry eventRegistry, ModID modID) {
         super.preInit(eventRegistry, modID);
-        eventRegistry.registerValue(Identifier.of(modID, "gui_register"), GuiRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "gui_register"), GuiHandlerRegister.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "key_pressed"), KeyPressed.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "model_register"), ModelRegister.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "key_binding_register"), KeyBindingRegister.EVENT);

@@ -1,29 +1,29 @@
-package net.modificationstation.stationloader.impl.common.packet;
+package net.modificationstation.stationloader.api.common.packet;
 
+import com.google.common.collect.ObjectArrays;
+import com.google.common.primitives.*;
 import com.google.gson.Gson;
 import net.minecraft.network.PacketHandler;
 import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationloader.api.common.entity.player.PlayerHelper;
-import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
+import net.modificationstation.stationloader.api.common.registry.Identifier;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class CustomData extends AbstractPacket implements net.modificationstation.stationloader.api.common.packet.CustomData {
+public class Message extends AbstractPacket {
 
-    public CustomData() {}
+    public Message() {}
 
-    public CustomData(String id) {
-        this.modid = id.split(":")[0];
-        this.packetid = id.substring(modid.length() + 1);
+    public Message(Identifier identifier) {
+        this.identifier = identifier;
     }
 
     @Override
     public void read(DataInputStream in) {
         try {
-            modid = method_802(in, 32767);
-            packetid = method_802(in, 32767);
+            identifier = Identifier.of(method_802(in, 32767));
             short s = in.readShort();
             boolean[] present = new boolean[] {
                     (s & 512) != 0,
@@ -116,8 +116,7 @@ public class CustomData extends AbstractPacket implements net.modificationstatio
     @Override
     public void write(DataOutputStream out) {
         try {
-            writeString(modid, out);
-            writeString(packetid, out);
+            writeString(identifier.toString(), out);
             boolean[] absent = new boolean[] {
                     booleans == null,
                     bytes == null,
@@ -218,13 +217,12 @@ public class CustomData extends AbstractPacket implements net.modificationstatio
 
     @Override
     public void handle(PacketHandler handler) {
-        ModIDRegistry.packet.get(modid).get(packetid).accept(PlayerHelper.INSTANCE.getPlayerFromPacketHandler(handler), this);
+        MessageListenerRegistry.INSTANCE.getByIdentifier(identifier).ifPresent(playerBaseMessageBiConsumer -> playerBaseMessageBiConsumer.accept(PlayerHelper.INSTANCE.getPlayerFromPacketHandler(handler), this));
     }
 
     @Override
     public int length() {
-        return size(modid.toCharArray()) +
-                size(packetid.toCharArray()) +
+        return size(identifier.toString().toCharArray()) +
                 Short.BYTES +
                 (booleans == null ? 0 : size(booleans)) +
                 (bytes == null ? 0 : size(bytes)) +
@@ -285,113 +283,87 @@ public class CustomData extends AbstractPacket implements net.modificationstatio
         return size;
     }
 
-    @Override
-    public void set(boolean[] booleans) {
-        this.booleans = booleans;
+    public void put(boolean... booleans) {
+        this.booleans = Booleans.concat(this.booleans == null ? new boolean[0] : this.booleans, booleans);
     }
 
-    @Override
-    public void set(byte[] bytes) {
-        this.bytes = bytes;
+    public void put(byte... bytes) {
+        this.bytes = Bytes.concat(this.bytes == null ? new byte[0] : this.bytes, bytes);
     }
 
-    @Override
-    public void set(short[] shorts) {
-        this.shorts = shorts;
+    public void put(short... shorts) {
+        this.shorts = Shorts.concat(this.shorts == null ? new short[0] : this.shorts, shorts);
     }
 
-    @Override
-    public void set(char[] chars) {
-        this.chars = chars;
+    public void put(char... chars) {
+        this.chars = Chars.concat(this.chars == null ? new char[0] : this.chars, chars);
     }
 
-    @Override
-    public void set(int[] ints) {
-        this.ints = ints;
+    public void put(int... ints) {
+        this.ints = Ints.concat(this.ints == null ? new int[0] : this.ints, ints);
     }
 
-    @Override
-    public void set(long[] longs) {
-        this.longs = longs;
+    public void put(long... longs) {
+        this.longs = Longs.concat(this.longs == null ? new long[0] : this.longs, longs);
     }
 
-    @Override
-    public void set(float[] floats) {
-        this.floats = floats;
+    public void put(float... floats) {
+        this.floats = Floats.concat(this.floats == null ? new float[0] : this.floats, floats);
     }
 
-    @Override
-    public void set(double[] doubles) {
-        this.doubles = doubles;
+    public void put(double... doubles) {
+        this.doubles = Doubles.concat(this.doubles == null ? new double[0] : this.doubles, doubles);
     }
 
-    @Override
-    public void set(String[] strings) {
-        this.strings = strings;
+    public void put(String... strings) {
+        this.strings = ObjectArrays.concat(this.strings == null ? new String[0] : this.strings, strings, String.class);
     }
 
-    @Override
-    public void set(Object[] objects) {
-        this.objects = objects;
+    public void put(Object... objects) {
+        this.objects = ObjectArrays.concat(this.objects == null ? new Object[0] : this.objects, objects, Object.class);
     }
 
-    @Override
     public boolean[] booleans() {
         return booleans;
     }
 
-    @Override
     public byte[] bytes() {
         return bytes;
     }
 
-    @Override
     public short[] shorts() {
         return shorts;
     }
 
-    @Override
     public char[] chars() {
         return chars;
     }
 
-    @Override
     public int[] ints() {
         return ints;
     }
 
-    @Override
     public long[] longs() {
         return longs;
     }
 
-    @Override
     public float[] floats() {
         return floats;
     }
 
-    @Override
     public double[] doubles() {
         return doubles;
     }
 
-    @Override
     public String[] strings() {
         return strings;
     }
 
-    @Override
     public Object[] objects() {
         return objects;
     }
 
-    @Override
-    public AbstractPacket getPacketInstance() {
-        return this;
-    }
-
-    private String modid;
-    private String packetid;
+    private Identifier identifier;
 
     private boolean[] booleans;
     private byte[] bytes;

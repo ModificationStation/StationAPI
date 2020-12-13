@@ -3,6 +3,8 @@ package net.modificationstation.stationloader.api.common.resource;
 import net.modificationstation.stationloader.api.common.registry.Identifier;
 import net.modificationstation.stationloader.api.common.registry.Registry;
 
+import java.util.Optional;
+
 public class ResourceRegistry extends Registry<Resource> {
 
     public ResourceRegistry(Identifier registryId) {
@@ -10,11 +12,11 @@ public class ResourceRegistry extends Registry<Resource> {
     }
 
     @Override
-    public Resource getByIdentifier(Identifier identifier) {
-        Resource resource = super.getByIdentifier(identifier);
-        if (resource == null) {
-            resource = new Resource(identifier, getClass().getResource(String.format("assets/%s/%s", identifier.getModID(), identifier.getId())));
-            registerValue(identifier, resource);
+    public Optional<Resource> getByIdentifier(Identifier identifier) {
+        Optional<Resource> resource = super.getByIdentifier(identifier);
+        if (!resource.isPresent()) {
+            registerValue(identifier, new Resource(identifier, getClass().getResource(String.format("assets/%s/%s", identifier.getModID(), identifier.getId()))));
+            resource = super.getByIdentifier(identifier);
         }
         return resource;
     }

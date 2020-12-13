@@ -52,6 +52,7 @@
     "client.Mixinclass_608",
     "client.Mixinclass_66",
     "client.MixinClientInteractionManager",
+    "client.MixinClientPlayNetworkHandler",
     "client.MixinContainerBaseGUI",
     "client.MixinEntityRenderDispatcher",
     "client.MixinGameOptions",
