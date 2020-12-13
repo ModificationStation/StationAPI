@@ -19,65 +19,19 @@ public class OreDict {
     public static final OreDict ORE_DICT = new OreDict();
 
     private final HashMap<String, List<OreDictEntryObject>> oreDict = new HashMap<>();
+    private final HashMap<Identifier, List<String>> identifierToOreDictString = new HashMap<>();
 
     /**
      * Gets a list of item Identifiers that are assigned to the ore dict entry.
      * @param oreDictString The OreDict key.
      * @return A list of item Identifiers that can be used for functionality in recipe viewers.
      */
-    public @Nullable List<OreDictEntryObject> getOreDictEntryObjects(@NotNull String oreDictString) {
+    public @Nullable List<@NotNull OreDictEntryObject> getOreDictEntryObjects(@NotNull String oreDictString) {
         return oreDict.get(oreDictString);
     }
 
-    /**
-     * Adds given Identifier to the given OreDict entry.
-     * @param oreDictString The OreDict key.
-     * @param identifier The Identifier to add.
-     */
-    public void addID(@NotNull String oreDictString, @NotNull Identifier identifier) {
-        addIDWithPredicate(oreDictString, identifier, null);
-    }
-
-
-    /**
-     * Adds given Identifier to the given OreDict entry with a Predicate.
-     * @param oreDictString The OreDict key.
-     * @param identifier The Identifier to add.
-     * @param itemInstancePredicate The Predicate used to determine more advanced parameters of your item.
-     */
-    public void addIDWithPredicate(@NotNull String oreDictString, @NotNull Identifier identifier, @Nullable Predicate<ItemInstance> itemInstancePredicate) {
-        List<OreDictEntryObject> list = oreDict.computeIfAbsent(oreDictString, oDS -> new ArrayList<>());
-        list.add(new OreDictEntryObject(identifier, itemInstancePredicate));
-    }
-
-    /**
-     * Add contents of given list to the specified oreDict entry.
-     * @param oreDictString The OreDict key.
-     * @param identifiers A List of Identifiers.
-     */
-    public void addIDsWithoutPredicate(@NotNull String oreDictString, @NotNull List<@NotNull Identifier> identifiers) {
-        addIDsWithPredicate(oreDictString, identifiers, null);
-    }
-
-    /**
-     * Add contents of given list to the specified oreDict entry, all using the same predicate.
-     * @param oreDictString The OreDict key.
-     * @param identifiers A List of Identifiers.
-     * @param itemInstancePredicate The Predicate used to determine more advanced parameters of your item.
-     */
-    public void addIDsWithPredicate(@NotNull String oreDictString, @NotNull List<Identifier> identifiers, @Nullable Predicate<ItemInstance> itemInstancePredicate) {
-        List<OreDictEntryObject> list = oreDict.computeIfAbsent(oreDictString, oDS -> new ArrayList<>());
-        identifiers.forEach((identifier -> list.add(new OreDictEntryObject(identifier, itemInstancePredicate))));
-    }
-
-    /**
-     * Add contents of given list to the specified oreDict entry.
-     * @param oreDictString The OreDict key.
-     * @param oreDictEntryObjects The List of OreDictEntryObjects to add.
-     */
-    public void addOreDictEntryObjects(@NotNull String oreDictString, @NotNull List<@NotNull OreDictEntryObject> oreDictEntryObjects) {
-        List<OreDictEntryObject> list = oreDict.computeIfAbsent(oreDictString, oDS -> new ArrayList<>());
-        list.addAll(oreDictEntryObjects);
+    public @Nullable List<@NotNull String> getOreDictStringsFromIdentifier(@NotNull Identifier identifier) {
+        return identifierToOreDictString.get(identifier);
     }
 
     /**
@@ -85,9 +39,30 @@ public class OreDict {
      * @param oreDictString The OreDict key.
      * @param itemInstance The itemInstance to add to the specified oreDict entry.
      */
-    public void addItemInstance(String oreDictString, ItemInstance itemInstance) {
+    public void addItemInstanceWithPredicate(@NotNull String oreDictString, @NotNull ItemInstance itemInstance, @Nullable Predicate<ItemInstance> itemInstancePredicate) {
+        Identifier identifier = ItemRegistry.INSTANCE.getIdentifier(itemInstance.getType());
+        List<String> identifierList = identifierToOreDictString.computeIfAbsent(identifier, identifier1 -> new ArrayList<>());
+        identifierList.add(oreDictString);
         List<OreDictEntryObject> list = oreDict.computeIfAbsent(oreDictString, oDS -> new ArrayList<>());
-        list.add(new OreDictEntryObject(ItemRegistry.INSTANCE.getIdentifier(itemInstance.getType()), itemInstance::isEqualIgnoreFlags));
+        list.add(new OreDictEntryObject(ItemRegistry.INSTANCE.getIdentifier(itemInstance.getType()), itemInstancePredicate));
+    }
+
+    /**
+     * Add provided itemInstance to the specified oreDict entry.
+     * @param oreDictString The OreDict key.
+     * @param itemInstance The itemInstance to add to the specified oreDict entry.
+     */
+    public void addItemInstance(@NotNull String oreDictString, @NotNull ItemInstance itemInstance) {
+        addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance::isItemEqualIgnoreDamage);
+    }
+
+    /**
+     * Add provided itemInstance to the specified oreDict entry.
+     * @param oreDictString The OreDict key.
+     * @param itemInstance The itemInstance to add to the specified oreDict entry.
+     */
+    public void addItemInstanceIgnoreDamage(@NotNull String oreDictString, @NotNull ItemInstance itemInstance) {
+        addItemInstanceWithPredicate(oreDictString, itemInstance, null);
     }
 
     /**
@@ -95,9 +70,9 @@ public class OreDict {
      * @param oreDictString The OreDict key.
      * @param block The block to be added to the oreDict entry.
      */
-    public void addItemInstanceIgnoreDamage(String oreDictString, BlockBase block) {
-        List<OreDictEntryObject> list = oreDict.computeIfAbsent(oreDictString, oDS -> new ArrayList<>());
-        list.add(new OreDictEntryObject(BlockRegistry.INSTANCE.getIdentifier(block), null));
+    public void addBlockIgnoreDamage(@NotNull String oreDictString, @NotNull BlockBase block) {
+        ItemInstance itemInstance = new ItemInstance(block);
+        addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance::isEqualIgnoreFlags);
     }
 
     /**
@@ -105,9 +80,9 @@ public class OreDict {
      * @param oreDictString The OreDict key.
      * @param item The item to be added to the oreDict entry.
      */
-    public void addItemInstanceIgnoreDamage(String oreDictString, ItemBase item) {
-        List<OreDictEntryObject> list = oreDict.computeIfAbsent(oreDictString, oDS -> new ArrayList<>());
-        list.add(new OreDictEntryObject(ItemRegistry.INSTANCE.getIdentifier(item), null));
+    public void addItemIgnoreDamage(@NotNull String oreDictString, @NotNull ItemBase item) {
+        ItemInstance itemInstance = new ItemInstance(item);
+        addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance::isEqualIgnoreFlags);
     }
 
     /**
