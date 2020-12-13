@@ -3,7 +3,6 @@ package net.modificationstation.stationloader.impl.common.util;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationloader.api.common.block.BlockRegistry;
 import net.modificationstation.stationloader.api.common.item.ItemRegistry;
 import net.modificationstation.stationloader.api.common.registry.Identifier;
 import org.jetbrains.annotations.NotNull;

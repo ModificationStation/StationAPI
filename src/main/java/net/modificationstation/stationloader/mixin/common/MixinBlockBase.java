@@ -2,7 +2,6 @@ package net.modificationstation.stationloader.mixin.common;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerBase;
@@ -17,7 +16,6 @@ import net.modificationstation.stationloader.api.common.event.block.BlockNameSet
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.api.common.item.EffectiveOnMeta;
-import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,9 +25,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Mixin(BlockBase.class)
 public class MixinBlockBase implements BlockStrengthPerMeta {
@@ -47,15 +42,6 @@ public class MixinBlockBase implements BlockStrengthPerMeta {
     @Shadow @Final public Material material;
 
     @Shadow public float getHardness() { return 0; }
-
-    @SuppressWarnings("UnresolvedMixinReference")
-    @Inject(method = "<clinit>", at = @At("HEAD"))
-    private static void onStatic(CallbackInfo ci) {
-        specialCases = new HashMap<>();
-        Map<String, String> minecraft = new HashMap<>();
-        minecraft.put("brick", "brick_block");
-        specialCases.put("minecraft", minecraft);
-    }
 
     @Environment(EnvType.CLIENT)
     @SuppressWarnings("UnresolvedMixinReference")
@@ -91,24 +77,7 @@ public class MixinBlockBase implements BlockStrengthPerMeta {
 
     @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;", at = @At("HEAD"))
     private String getName(String name) {
-        name = BlockNameSet.EVENT.getInvoker().getName((BlockBase) (Object) this, name);
-        Map<String, Map<String, Integer>> map = ModIDRegistry.item;
-        String modid = "minecraft";
-        String blockName = name;
-        String[] strings = name == null ? new String[0] : name.split(":");
-        if (strings.length > 1 && FabricLoader.getInstance().getModContainer(strings[0]).isPresent()) {
-            modid = strings[0];
-            blockName = blockName.substring(modid.length() + 1);
-        }
-        blockName = specialCases.containsKey(modid) ? specialCases.get(modid).getOrDefault(blockName, blockName) : blockName;
-        if (!map.containsKey(modid))
-            map.put(modid, new HashMap<>());
-        Map<String, Integer> blockEntries = map.get(modid);
-        if (actualName != null)
-            blockEntries.remove(actualName);
-        actualName = blockName;
-        blockEntries.put(blockName, ((BlockBase) (Object) this).id);
-        return name;
+        return BlockNameSet.EVENT.getInvoker().getName((BlockBase) (Object) this, name);
     }
 
     @Override
@@ -123,8 +92,4 @@ public class MixinBlockBase implements BlockStrengthPerMeta {
     public float getHardness(int meta) {
         return getHardness();
     }
-
-    private String actualName;
-
-    private static Map<String, Map<String, String>> specialCases;
 }

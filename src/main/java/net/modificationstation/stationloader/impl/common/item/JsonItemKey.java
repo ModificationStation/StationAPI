@@ -2,7 +2,8 @@ package net.modificationstation.stationloader.impl.common.item;
 
 import lombok.Data;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationloader.api.common.registry.ModIDRegistry;
+import net.modificationstation.stationloader.api.common.item.ItemRegistry;
+import net.modificationstation.stationloader.api.common.registry.Identifier;
 
 @Data
 public class JsonItemKey {
@@ -12,7 +13,6 @@ public class JsonItemKey {
     private int damage = 0;
 
     public ItemInstance getItemInstance() {
-        String modid = item.split(":")[0];
-        return new ItemInstance(ModIDRegistry.item.get(modid).get(item.substring(modid.length() + 1)), count, damage);
+        return ItemRegistry.INSTANCE.getByIdentifier(Identifier.of(item)).map(itemBase -> new ItemInstance(itemBase, count, damage)).orElse(null);
     }
 }
