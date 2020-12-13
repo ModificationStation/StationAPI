@@ -25,8 +25,8 @@ public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> 
 
     public abstract int getRegistrySize();
 
-    public T getByIdentifier(Identifier identifier) {
-        return ID_TO_TYPE.get(identifier);
+    public Optional<T> getByIdentifier(Identifier identifier) {
+        return Optional.ofNullable(ID_TO_TYPE.get(identifier));
     }
 
     public Identifier getIdentifier(T value) {

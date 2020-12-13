@@ -31,9 +31,12 @@ import net.modificationstation.stationloader.api.common.event.level.gen.ChunkPop
 import net.modificationstation.stationloader.api.common.event.mod.Init;
 import net.modificationstation.stationloader.api.common.event.mod.PostInit;
 import net.modificationstation.stationloader.api.common.event.mod.PreInit;
+import net.modificationstation.stationloader.api.common.event.packet.MessageListenerRegister;
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
+import net.modificationstation.stationloader.api.common.packet.Message;
+import net.modificationstation.stationloader.api.common.packet.MessageListenerRegistry;
 import net.modificationstation.stationloader.api.common.registry.Identifier;
 import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.resource.RecursiveReader;
@@ -47,7 +50,6 @@ import net.modificationstation.stationloader.impl.common.factory.EnumFactory;
 import net.modificationstation.stationloader.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.impl.common.item.CustomReach;
 import net.modificationstation.stationloader.impl.common.lang.I18n;
-import net.modificationstation.stationloader.impl.common.packet.CustomData;
 import net.modificationstation.stationloader.impl.common.preset.item.PlaceableTileEntityWithMeta;
 import net.modificationstation.stationloader.impl.common.preset.item.PlaceableTileEntityWithMetaAndName;
 import net.modificationstation.stationloader.impl.common.recipe.CraftingRegistry;
@@ -104,7 +106,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.config.Category.class, args -> new Category((String) args[0]));
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.config.Property.class, args -> new Property((String) args[0]));
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.achievement.AchievementPage.class, args -> new AchievementPage((String) args[0]));
-        generalFactory.addFactory(net.modificationstation.stationloader.api.common.packet.CustomData.class, args -> new CustomData((String) args[0]));
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.preset.item.PlaceableTileEntityWithMeta.class, args -> new PlaceableTileEntityWithMeta((int) args[0]));
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.preset.item.PlaceableTileEntityWithMetaAndName.class, args -> new PlaceableTileEntityWithMetaAndName((int) args[0]));
         net.modificationstation.stationloader.api.common.factory.EnumFactory enumFactory = net.modificationstation.stationloader.api.common.factory.EnumFactory.INSTANCE;
@@ -143,10 +144,11 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         net.modificationstation.stationloader.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(new AchievementPageManager());
         getLogger().info("Setting up CustomData packet...");
         net.modificationstation.stationloader.api.common.config.Category networkConfig = config.getCategory("Network");
-        PacketRegister.EVENT.register((register, customDataPackets) -> {
-            register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, CustomData.class);
+        PacketRegister.EVENT.register(register -> {
+            register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, Message.class);
             config.save();
-        }, getModID());
+            MessageListenerRegister.EVENT.getInvoker().registerMessageListeners(MessageListenerRegistry.INSTANCE, MessageListenerRegister.EVENT.getListenerModID(MessageListenerRegister.EVENT.getInvoker()));
+        });
         getLogger().info("Setting up BlockNameSet...");
         BlockNameSet.EVENT.register((block, name) -> {
             ModEvent<BlockRegister> event = BlockRegister.EVENT;
@@ -225,6 +227,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         eventRegistry.registerValue(Identifier.of(modID, "packet_register"), PacketRegister.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "recipe_register"), RecipeRegister.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "level_init"), LevelInit.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "message_listener_register"), MessageListenerRegister.EVENT);
     }
 
     @Override

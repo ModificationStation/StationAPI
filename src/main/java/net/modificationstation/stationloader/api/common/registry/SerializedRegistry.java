@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.IntFunction;
 
 public abstract class SerializedRegistry<T> extends Registry<T> {
@@ -23,9 +24,9 @@ public abstract class SerializedRegistry<T> extends Registry<T> {
     }
 
     @Override
-    public T getByIdentifier(Identifier identifier) {
-        T value = super.getByIdentifier(identifier);
-        if (!updating && value == null) {
+    public Optional<T> getByIdentifier(Identifier identifier) {
+        Optional<T> value = super.getByIdentifier(identifier);
+        if (!updating && !value.isPresent()) {
             updating = true;
             update();
             updating = false;

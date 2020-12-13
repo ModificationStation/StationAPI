@@ -3,7 +3,8 @@ package net.modificationstation.stationloader.api.common.gui;
 import net.minecraft.container.ContainerBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
-import net.modificationstation.stationloader.api.common.packet.CustomData;
+import net.modificationstation.stationloader.api.common.packet.Message;
+import net.modificationstation.stationloader.api.common.registry.Identifier;
 import net.modificationstation.stationloader.api.common.util.HasHandler;
 
 import java.util.function.Consumer;
@@ -20,21 +21,21 @@ public interface GuiHelper extends HasHandler<GuiHelper> {
         }
 
         @Override
-        public void openGUI(PlayerBase player, String modid, short guiID, InventoryBase inventory, ContainerBase container) {
+        public void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container) {
             checkAccess(handler);
-            handler.openGUI(player, modid, guiID, inventory, container);
+            handler.openGUI(player, identifier, inventory, container);
         }
 
         @Override
-        public void openGUI(PlayerBase player, String modid, short guiID, InventoryBase inventory, ContainerBase container, Consumer<CustomData> customData) {
+        public void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container, Consumer<Message> customData) {
             checkAccess(handler);
-            handler.openGUI(player, modid, guiID, inventory, container, customData);
+            handler.openGUI(player, identifier, inventory, container, customData);
         }
     };
 
-    default void openGUI(PlayerBase player, String modid, short guiID, InventoryBase inventory, ContainerBase container) {
-        openGUI(player, modid, guiID, inventory, container, customData -> {});
+    default void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container) {
+        openGUI(player, identifier, inventory, container, customData -> {});
     }
 
-    void openGUI(PlayerBase player, String modid, short guiID, InventoryBase inventory, ContainerBase container, Consumer<CustomData> customData);
+    void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container, Consumer<Message> customData);
 }
