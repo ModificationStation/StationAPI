@@ -156,9 +156,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         getLogger().info("Setting up BlockNameSet...");
         BlockNameSet.EVENT.register((block, name) -> {
             ModEvent<BlockRegister> event = BlockRegister.EVENT;
-            BlockRegister listener = event.getCurrentListener();
-            if (listener != null) {
-                ModID modID = event.getListenerModID(listener);
+            if (event.getCurrentListener() != null) {
+                ModID modID = event.getCurrentListenerModID();
                 if (modID != null) {
                     String modid = modID + ":";
                     if (!name.startsWith(modid) && !name.contains(":"))
@@ -170,9 +169,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         getLogger().info("Setting up ItemNameSet...");
         ItemNameSet.EVENT.register((item, name) -> {
             ModEvent<ItemRegister> event = ItemRegister.EVENT;
-            ItemRegister listener = event.getCurrentListener();
-            if (listener != null) {
-                ModID modID = event.getListenerModID(listener);
+            if (event.getCurrentListener() != null) {
+                ModID modID = event.getCurrentListenerModID();
                 if (modID != null) {
                     String modid = modID + ":";
                     if (!name.startsWith(modid) && !name.contains(":"))

@@ -11,12 +11,12 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public class TextureRegistry implements net.modificationstation.stationloader.api.client.texture.TextureRegistry {
 
+    private static final Set<TextureRegistry> registries = new TreeSet<>();
     public static final TextureRegistry
             TERRAIN = new TextureRegistry("TERRAIN", "/terrain.png", 16, 16),
             PARTICLES = new TextureRegistry("PARTICLES", "/particles.png", 32, 32),
             GUI_ITEMS = new TextureRegistry("GUI_ITEMS", "/gui/items.png", 16, 16),
             GUI_PARTICLES = new TextureRegistry("GUI_PARTICLES", "/gui/particles.png", 32, 32);
-    private static final Set<TextureRegistry> registries = new TreeSet<>();
     private static TextureRegistry currentRegistry;
     private static int nextRegistryID = 0;
     private final String name;

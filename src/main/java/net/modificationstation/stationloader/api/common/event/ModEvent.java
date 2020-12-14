@@ -2,7 +2,6 @@ package net.modificationstation.stationloader.api.common.event;
 
 import com.google.common.eventbus.AsyncEventBus;
 import lombok.Getter;
-import lombok.Setter;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.modificationstation.stationloader.api.common.StationLoader;
 import net.modificationstation.stationloader.api.common.registry.ModID;
@@ -44,7 +43,6 @@ public class ModEvent<T> extends Event<T> {
     });
     private final Map<T, ModID> listenerToModID = new HashMap<>();
     @Getter
-    @Setter
     private T currentListener;
 
     public ModEvent(Class<T> type, Function<T[], T> eventFunc, Function<T, T> listenerWrapper) {
@@ -63,6 +61,12 @@ public class ModEvent<T> extends Event<T> {
 
     public void register(T listener, ModID modID) {
         listenerToModID.put(super.register0(listener), modID);
+    }
+
+    public void setCurrentListener(T currentListener) {
+        if (!isWrapped(currentListener))
+            currentListener = wrap(currentListener);
+        this.currentListener = currentListener;
     }
 
     public ModID getInvokerModID() {
