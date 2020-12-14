@@ -21,6 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(RemoteClientInteractionManager.class)
 public class MixinRemoteClientInteractionManager extends ClientInteractionManager {
 
+    private int capturedMeta;
+
     public MixinRemoteClientInteractionManager(Minecraft minecraft) {
         super(minecraft);
     }
@@ -33,13 +35,13 @@ public class MixinRemoteClientInteractionManager extends ClientInteractionManage
             cir.setReturnValue(defaultBlockReach);
         ItemInstance itemInstance = minecraft.player.getHeldItem();
         if (itemInstance == null) {
-            if(handBlockReach != null)
+            if (handBlockReach != null)
                 cir.setReturnValue(handBlockReach);
         } else {
             ItemBase itemBase = itemInstance.getType();
             if (itemBase instanceof CustomReach)
                 cir.setReturnValue(((CustomReach) itemBase).getCustomBlockReach(itemInstance, cir.getReturnValue()));
-            }
+        }
     }
 
     @Redirect(method = {"method_1707(IIII)V", "method_1721(IIII)V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;getHardness(Lnet/minecraft/entity/player/PlayerBase;)F"))
@@ -59,6 +61,4 @@ public class MixinRemoteClientInteractionManager extends ClientInteractionManage
         ItemInstance itemInstance = abstractClientPlayer.getHeldItem();
         return itemInstance != null && ((EffectiveOnMeta) itemInstance.getType()).isEffectiveOn(arg, capturedMeta);
     }
-
-    private int capturedMeta;
 }

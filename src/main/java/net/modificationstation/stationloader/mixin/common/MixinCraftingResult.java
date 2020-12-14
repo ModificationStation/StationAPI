@@ -16,9 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(CraftingResult.class)
 public class MixinCraftingResult {
 
-    @Shadow private PlayerBase player;
+    @Shadow
+    private PlayerBase player;
 
-    @Shadow @Final private InventoryBase resultInventory;
+    @Shadow
+    @Final
+    private InventoryBase resultInventory;
 
     @Inject(method = "onCrafted(Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/InventoryBase;setInventoryItem(ILnet/minecraft/item/ItemInstance;)V", shift = At.Shift.BY, by = 2), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onCrafted(ItemInstance arg, CallbackInfo ci, int var2, ItemInstance var3) {

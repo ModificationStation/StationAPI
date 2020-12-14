@@ -9,15 +9,26 @@ import java.util.function.Consumer;
 
 /**
  * Event called after one of vanilla recipes system got initialized (CRAFTING_TABLE, FURNACE, etc)
- *
+ * <p>
  * args: RecipeRegister.Type
  * return: void
  *
  * @author mine_diver
- *
  */
 
 public interface RecipeRegister {
+
+    @SuppressWarnings("UnstableApiUsage")
+    SimpleEvent<RecipeRegister> EVENT = new SimpleEvent<>(RecipeRegister.class,
+            listeners ->
+                    recipeId -> {
+                        for (RecipeRegister listener : listeners)
+                            listener.registerRecipes(recipeId);
+                    }, (Consumer<SimpleEvent<RecipeRegister>>) recipeRegister ->
+            recipeRegister.register(recipeId -> SimpleEvent.EVENT_BUS.post(new Data(recipeId)))
+    );
+
+    void registerRecipes(Identifier recipeId);
 
     enum Vanilla {
 
@@ -25,9 +36,7 @@ public interface RecipeRegister {
         CRAFTING_SHAPELESS,
         SMELTING;
 
-        public Identifier type() {
-            return Identifier.of(modID, name().toLowerCase());
-        }
+        private static final ModID modID = ModID.of("minecraft");
 
         public static Vanilla fromType(Identifier type) {
             for (Vanilla recipe : values())
@@ -36,29 +45,19 @@ public interface RecipeRegister {
             return null;
         }
 
-        private static final ModID modID = ModID.of("minecraft");
+        public Identifier type() {
+            return Identifier.of(modID, name().toLowerCase());
+        }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<RecipeRegister> EVENT = new SimpleEvent<>(RecipeRegister.class,
-            listeners ->
-                    recipeId -> {
-        for (RecipeRegister listener : listeners)
-            listener.registerRecipes(recipeId);
-    }, (Consumer<SimpleEvent<RecipeRegister>>) recipeRegister ->
-            recipeRegister.register(recipeId -> SimpleEvent.EVENT_BUS.post(new Data(recipeId)))
-    );
-
-    void registerRecipes(Identifier recipeId);
-
     final class Data extends SimpleEvent.Data<RecipeRegister> {
+
+        @Getter
+        private final Identifier recipeId;
 
         private Data(Identifier recipeId) {
             super(EVENT);
             this.recipeId = recipeId;
         }
-
-        @Getter
-        private final Identifier recipeId;
     }
 }

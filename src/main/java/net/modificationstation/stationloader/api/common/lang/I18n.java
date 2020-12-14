@@ -3,7 +3,7 @@ package net.modificationstation.stationloader.api.common.lang;
 import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.util.HasHandler;
 
-public interface I18n  extends HasHandler<I18n> {
+public interface I18n extends HasHandler<I18n> {
 
     I18n INSTANCE = new I18n() {
 

@@ -12,10 +12,10 @@ public interface ItemNameSet {
     SimpleEvent<ItemNameSet> EVENT = new SimpleEvent<>(ItemNameSet.class,
             listeners ->
                     (item, newName) -> {
-        for (ItemNameSet listener : listeners)
-            newName = listener.getName(item, newName);
-        return newName;
-    }, (Consumer<SimpleEvent<ItemNameSet>>) itemNameSet ->
+                        for (ItemNameSet listener : listeners)
+                            newName = listener.getName(item, newName);
+                        return newName;
+                    }, (Consumer<SimpleEvent<ItemNameSet>>) itemNameSet ->
             itemNameSet.register((item, newName) -> {
                 Data data = new Data(item, newName);
                 //noinspection UnstableApiUsage
@@ -28,15 +28,15 @@ public interface ItemNameSet {
 
     final class Data extends SimpleEvent.Data<ItemNameSet> {
 
+        @Getter
+        private final ItemBase item;
+        @Getter
+        @Setter
+        private String newName;
         private Data(ItemBase item, String newName) {
             super(EVENT);
             this.item = item;
             this.newName = newName;
         }
-
-        @Getter
-        private final ItemBase item;
-        @Getter @Setter
-        private String newName;
     }
 }

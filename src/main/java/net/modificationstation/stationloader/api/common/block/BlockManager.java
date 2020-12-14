@@ -24,21 +24,21 @@ public interface BlockManager extends HasHandler<BlockManager> {
         }
 
         @Override
-        public void setDefaultBlockItemFactory(Function<Integer, PlaceableTileEntity> blockItemFactory) {
-            checkAccess(handler);
-            handler.setDefaultBlockItemFactory(blockItemFactory);
-        }
-
-        @Override
         public Function<Integer, PlaceableTileEntity> getDefaultBlockItemFactory() {
             checkAccess(handler);
             return handler.getDefaultBlockItemFactory();
+        }
+
+        @Override
+        public void setDefaultBlockItemFactory(Function<Integer, PlaceableTileEntity> blockItemFactory) {
+            checkAccess(handler);
+            handler.setDefaultBlockItemFactory(blockItemFactory);
         }
     };
 
     PlaceableTileEntity getBlockItem(BlockBase block);
 
-    void setDefaultBlockItemFactory(Function<Integer, PlaceableTileEntity> blockItemFactory);
-
     Function<Integer, PlaceableTileEntity> getDefaultBlockItemFactory();
+
+    void setDefaultBlockItemFactory(Function<Integer, PlaceableTileEntity> blockItemFactory);
 }

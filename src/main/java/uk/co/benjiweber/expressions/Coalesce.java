@@ -9,14 +9,12 @@ public class Coalesce {
 
     public static <T> T coalesce(Supplier<T>... ts) {
         return asList(ts)
-            .stream()
-            .map(t -> t.get())
-            .filter(t -> t != null)
-            .findFirst()
-            .orElse(null);
+                .stream()
+                .map(t -> t.get())
+                .filter(t -> t != null)
+                .findFirst()
+                .orElse(null);
     }
-
-    public interface AnotherSupplier<T> extends Supplier<T> {}
 
     public static <T> Optional<T> coalesce(AnotherSupplier<Optional<T>>... ts) {
         return asList(ts)
@@ -24,23 +22,26 @@ public class Coalesce {
                 .map(t -> t.get())
                 .filter(t -> t.isPresent())
                 .findFirst()
-                .orElse(Optional.<T>empty());
+                .orElse(Optional.empty());
     }
 
     public static <T> Optional<T> coalesce(Optional<T>... ts) {
         return asList(ts)
-            .stream()
-            .filter(t -> t.isPresent())
-            .findFirst()
-            .orElse(Optional.<T>empty());
+                .stream()
+                .filter(t -> t.isPresent())
+                .findFirst()
+                .orElse(Optional.empty());
     }
 
     public static <T> T coalesce(T... ts) {
         return asList(ts)
-            .stream()
-            .filter(t -> t != null)
-            .findFirst()
-            .orElse(null);
+                .stream()
+                .filter(t -> t != null)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public interface AnotherSupplier<T> extends Supplier<T> {
     }
 
 }

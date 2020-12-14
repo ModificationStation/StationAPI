@@ -14,9 +14,9 @@ public interface ItemCreation {
     SimpleEvent<ItemCreation> EVENT = new SimpleEvent<>(ItemCreation.class,
             listeners ->
                     (level, player, createdItem) -> {
-        for (ItemCreation listener : listeners)
-            listener.onItemCreated(level, player, createdItem);
-    }, (Consumer<SimpleEvent<ItemCreation>>) itemCreation ->
+                        for (ItemCreation listener : listeners)
+                            listener.onItemCreated(level, player, createdItem);
+                    }, (Consumer<SimpleEvent<ItemCreation>>) itemCreation ->
             itemCreation.register((level, player, createdItem) -> SimpleEvent.EVENT_BUS.post(new Data(level, player, createdItem)))
     );
 
@@ -24,18 +24,17 @@ public interface ItemCreation {
 
     final class Data extends SimpleEvent.Data<ItemCreation> {
 
-        private Data(Level level, PlayerBase player, ItemInstance createdItem) {
-            super(EVENT);
-            this.level = level;
-            this.player = player;
-            this.createdItem = createdItem;
-        }
-
         @Getter
         private final Level level;
         @Getter
         private final PlayerBase player;
         @Getter
         private final ItemInstance createdItem;
+        private Data(Level level, PlayerBase player, ItemInstance createdItem) {
+            super(EVENT);
+            this.level = level;
+            this.player = player;
+            this.createdItem = createdItem;
+        }
     }
 }

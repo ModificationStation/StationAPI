@@ -10,9 +10,9 @@ public interface BiomeRegister {
     SimpleEvent<BiomeRegister> EVENT = new SimpleEvent<>(BiomeRegister.class,
             listeners ->
                     () -> {
-        for (BiomeRegister listener : listeners)
-            listener.registerBiomes();
-    }, (Consumer<SimpleEvent<BiomeRegister>>) biomeRegister ->
+                        for (BiomeRegister listener : listeners)
+                            listener.registerBiomes();
+                    }, (Consumer<SimpleEvent<BiomeRegister>>) biomeRegister ->
             biomeRegister.register(() -> SimpleEvent.EVENT_BUS.post(new Data()))
     );
 

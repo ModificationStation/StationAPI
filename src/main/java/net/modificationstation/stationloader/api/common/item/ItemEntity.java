@@ -8,7 +8,7 @@ public interface ItemEntity {
 
     default ItemEntity split(int countToTake) {
         return copy();
-    };
+    }
 
     void writeToNBT(CompoundTag tag);
 }

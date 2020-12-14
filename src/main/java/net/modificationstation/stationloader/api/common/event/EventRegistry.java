@@ -6,6 +6,8 @@ import net.modificationstation.stationloader.api.common.registry.Registry;
 
 public final class EventRegistry extends Registry<Event<?>> {
 
+    public static final EventRegistry INSTANCE = new EventRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "events"));
+
     private EventRegistry(Identifier identifier) {
         super(identifier);
     }
@@ -14,6 +16,4 @@ public final class EventRegistry extends Registry<Event<?>> {
     public int getRegistrySize() {
         return Integer.MAX_VALUE;
     }
-
-    public static final EventRegistry INSTANCE = new EventRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "events"));
 }

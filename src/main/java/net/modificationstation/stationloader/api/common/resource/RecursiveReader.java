@@ -15,6 +15,9 @@ import java.util.jar.JarEntry;
 
 public class RecursiveReader {
 
+    private final String path;
+    private final Predicate<String> filter;
+
     public RecursiveReader(String path) {
         this(path, null);
     }
@@ -64,7 +67,4 @@ public class RecursiveReader {
         }
         return files;
     }
-
-    private final String path;
-    private final Predicate<String> filter;
 }

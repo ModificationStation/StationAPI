@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinEntityRegistry {
 
     @Shadow
-    private static void register(Class<? extends EntityBase> arg, String string, int i) {}
+    private static void register(Class<? extends EntityBase> arg, String string, int i) {
+    }
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At("RETURN"))

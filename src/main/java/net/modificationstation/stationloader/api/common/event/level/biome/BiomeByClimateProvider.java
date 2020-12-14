@@ -12,10 +12,10 @@ public interface BiomeByClimateProvider {
     SimpleEvent<BiomeByClimateProvider> EVENT = new SimpleEvent<>(BiomeByClimateProvider.class,
             listeners ->
                     (currentBiome, temperature, rainfall) -> {
-        for (BiomeByClimateProvider listener : listeners)
-            currentBiome = listener.getBiome(currentBiome, temperature, rainfall);
-        return currentBiome;
-    }, (Consumer<SimpleEvent<BiomeByClimateProvider>>) biomeByClimateProvider ->
+                        for (BiomeByClimateProvider listener : listeners)
+                            currentBiome = listener.getBiome(currentBiome, temperature, rainfall);
+                        return currentBiome;
+                    }, (Consumer<SimpleEvent<BiomeByClimateProvider>>) biomeByClimateProvider ->
             biomeByClimateProvider.register((currentBiome, temperature, rainfall) -> {
                 Data data = new Data(currentBiome, temperature, rainfall);
                 //noinspection UnstableApiUsage
@@ -28,18 +28,18 @@ public interface BiomeByClimateProvider {
 
     final class Data extends SimpleEvent.Data<BiomeByClimateProvider> {
 
+        @Getter
+        private final float temperature;
+        @Getter
+        private final float rainfall;
+        @Getter
+        @Setter
+        private Biome currentBiome;
         private Data(Biome currentBiome, float temperature, float rainfall) {
             super(EVENT);
             this.currentBiome = currentBiome;
             this.temperature = temperature;
             this.rainfall = rainfall;
         }
-
-        @Getter @Setter
-        private Biome currentBiome;
-        @Getter
-        private final float temperature;
-        @Getter
-        private final float rainfall;
     }
 }

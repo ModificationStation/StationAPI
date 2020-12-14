@@ -27,7 +27,7 @@ public class Value<T> implements EqualsHashcode<T>, ToString<T> {
         return props;
     }
 
-    public T using(Function<T,?>... props) {
+    public T using(Function<T, ?>... props) {
         this.props = Arrays.asList(props);
         return (T) this;
     }

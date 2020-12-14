@@ -27,17 +27,32 @@ import static net.minecraft.achievement.Achievements.ACHIEVEMENTS;
 
 @Mixin(Achievements.class)
 public class MixinAchievements extends ScreenBase {
-    @Shadow protected double field_2622;
-    @Shadow protected double field_2624;
-    @Shadow protected double field_2625;
-    @Shadow protected double field_2623;
-    @Shadow @Final private static int field_2628;
-    @Shadow @Final private static int field_2630;
-    @Shadow @Final private static int field_2631;
-    @Shadow @Final private static int field_2629;
-    @Shadow protected int field_2618;
-    @Shadow protected int field_2619;
-    @Shadow private StatsFileWriter field_2633;
+    @Shadow
+    @Final
+    private static int field_2628;
+    @Shadow
+    @Final
+    private static int field_2630;
+    @Shadow
+    @Final
+    private static int field_2631;
+    @Shadow
+    @Final
+    private static int field_2629;
+    @Shadow
+    protected double field_2622;
+    @Shadow
+    protected double field_2624;
+    @Shadow
+    protected double field_2625;
+    @Shadow
+    protected double field_2623;
+    @Shadow
+    protected int field_2618;
+    @Shadow
+    protected int field_2619;
+    @Shadow
+    private StatsFileWriter field_2633;
 
     @SuppressWarnings("unchecked")
     @Inject(method = "init", at = @At(value = "TAIL"))
@@ -51,12 +66,11 @@ public class MixinAchievements extends ScreenBase {
 
     @Redirect(method = "buttonClicked", at = @At(target = "Lnet/minecraft/client/gui/screen/ScreenBase;buttonClicked(Lnet/minecraft/client/gui/widgets/Button;)V", value = "INVOKE"))
     public void buttonClickedNextPrev(ScreenBase screenBase, Button button) {
-        if(button.id == 11) {
+        if (button.id == 11) {
             AchievementPageManager.INSTANCE.prevPage();
-        } else if(button.id == 12) {
+        } else if (button.id == 12) {
             AchievementPageManager.INSTANCE.nextPage();
-        }
-        else {
+        } else {
             super.buttonClicked(button);
         }
     }
@@ -66,8 +80,7 @@ public class MixinAchievements extends ScreenBase {
         if (AchievementPageManager.INSTANCE.getPageCount() > 1) {
             if (AchievementPageManager.INSTANCE.getCurrentPageName().equals("Minecraft")) {
                 this.textManager.drawText("Minecraft", this.width / 2 - 69, this.height / 2 + 80, 0);
-            }
-            else {
+            } else {
                 this.textManager.drawText(TranslationStorage.getInstance().translate("stationloader:achievementPage." + AchievementPageManager.INSTANCE.getCurrentPageName()), this.width / 2 - 69, this.height / 2 + 80, 0);
             }
         }
@@ -80,21 +93,21 @@ public class MixinAchievements extends ScreenBase {
     public void method_1998(int i1, int j1, float f) {
 
         // DRAW ACHIEVEMENT PAGE BORDER
-        int k1 = MathHelper.floor(this.field_2622 + (this.field_2624 - this.field_2622) * (double)f);
-        int l1 = MathHelper.floor(this.field_2623 + (this.field_2625 - this.field_2623) * (double)f);
-        if(k1 < field_2628) {
+        int k1 = MathHelper.floor(this.field_2622 + (this.field_2624 - this.field_2622) * (double) f);
+        int l1 = MathHelper.floor(this.field_2623 + (this.field_2625 - this.field_2623) * (double) f);
+        if (k1 < field_2628) {
             k1 = field_2628;
         }
 
-        if(l1 < field_2629) {
+        if (l1 < field_2629) {
             l1 = field_2629;
         }
 
-        if(k1 >= field_2630) {
+        if (k1 >= field_2630) {
             k1 = field_2630 - 1;
         }
 
-        if(l1 >= field_2631) {
+        if (l1 >= field_2631) {
             l1 = field_2631 - 1;
         }
 
@@ -123,15 +136,15 @@ public class MixinAchievements extends ScreenBase {
         int ny1;
         int adjustedCol;
         int adjustedRow;
-        for(ny1 = 0; ny1 * 16 - i5 < 155; ++ny1) {
-            float bb1 = 0.6F - (float)(i4 + ny1) / 25.0F * 0.3F;
+        for (ny1 = 0; ny1 * 16 - i5 < 155; ++ny1) {
+            float bb1 = 0.6F - (float) (i4 + ny1) / 25.0F * 0.3F;
             GL11.glColor4f(bb1, bb1, bb1, 1.0F);
 
-            for(adjustedCol = 0; adjustedCol * 16 - j4 < 224; ++adjustedCol) {
+            for (adjustedCol = 0; adjustedCol * 16 - j4 < 224; ++adjustedCol) {
                 random.setSeed(1234 + k3 + adjustedCol);
                 random.nextInt();
-                adjustedRow = AchievementPageManager.INSTANCE.getCurrentPage().getBackgroundTexture(random, k3+adjustedCol, i4+ny1);
-                if(adjustedRow != -1) {
+                adjustedRow = AchievementPageManager.INSTANCE.getCurrentPage().getBackgroundTexture(random, k3 + adjustedCol, i4 + ny1);
+                if (adjustedRow != -1) {
                     this.blit(i3 + adjustedCol * 16 - j4, j3 + ny1 * 16 - i5, adjustedRow % 16 << 4, adjustedRow >> 4 << 4, 16, 16);
                 }
             }
@@ -155,10 +168,10 @@ public class MixinAchievements extends ScreenBase {
                 adjustedParentRow = achievement.parent.tableRow * 24 - l1 + 11 + j3;
                 boolean isUnlocked = this.field_2633.achievementUnlocked(achievement);
                 boolean isUnlockable = this.field_2633.isAchievementUnlockable(achievement);
-                flickerTime = Math.sin((double)(System.currentTimeMillis() % 600L) / 600.0D * 3.141592653589793D * 2.0D) <= 0.6D?130:255;
-                if(isUnlocked) {
+                flickerTime = Math.sin((double) (System.currentTimeMillis() % 600L) / 600.0D * 3.141592653589793D * 2.0D) <= 0.6D ? 130 : 255;
+                if (isUnlocked) {
                     lineColour = -9408400;
-                } else if(isUnlockable) {
+                } else if (isUnlockable) {
                     lineColour = '\uff00' + (flickerTime << 24);
                 } else {
                     lineColour = -16777216;
@@ -183,18 +196,18 @@ public class MixinAchievements extends ScreenBase {
 
         // DRAW ACHIEVEMENT ICONS
         int var37;
-        for(adjustedCol = 0; adjustedCol < ACHIEVEMENTS.size(); ++adjustedCol) {
-            Achievement var32 = (Achievement)ACHIEVEMENTS.get(adjustedCol);
-            if(this.isVisibleAchievement(var32)) {
+        for (adjustedCol = 0; adjustedCol < ACHIEVEMENTS.size(); ++adjustedCol) {
+            Achievement var32 = (Achievement) ACHIEVEMENTS.get(adjustedCol);
+            if (this.isVisibleAchievement(var32)) {
                 adjustedParentCol = var32.tableColumn * 24 - k1;
                 adjustedParentRow = var32.tableRow * 24 - l1;
-                if(adjustedParentCol >= -24 && adjustedParentRow >= -24 && adjustedParentCol <= 224 && adjustedParentRow <= 155) {
+                if (adjustedParentCol >= -24 && adjustedParentRow >= -24 && adjustedParentCol <= 224 && adjustedParentRow <= 155) {
                     float var38;
-                    if(this.field_2633.achievementUnlocked(var32)) {
+                    if (this.field_2633.achievementUnlocked(var32)) {
                         var38 = 1.0F;
                         GL11.glColor4f(var38, var38, var38, 1.0F);
-                    } else if(this.field_2633.isAchievementUnlockable(var32)) {
-                        var38 = Math.sin((double)(System.currentTimeMillis() % 600L) / 600.0D * 3.141592653589793D * 2.0D) >= 0.6D?0.8F:0.6F;
+                    } else if (this.field_2633.isAchievementUnlockable(var32)) {
+                        var38 = Math.sin((double) (System.currentTimeMillis() % 600L) / 600.0D * 3.141592653589793D * 2.0D) >= 0.6D ? 0.8F : 0.6F;
                         GL11.glColor4f(var38, var38, var38, 1.0F);
                     } else {
                         var38 = 0.3F;
@@ -204,7 +217,7 @@ public class MixinAchievements extends ScreenBase {
                     lineColour = i3 + adjustedParentCol;
                     var37 = j3 + adjustedParentRow;
 
-                    if(var32.isUnusual()) {
+                    if (var32.isUnusual()) {
                         this.minecraft.textureManager.bindTexture(j2);
                         this.blit(lineColour - 2, var37 - 2, 26, 202, 26, 26);
                     } else {
@@ -212,7 +225,7 @@ public class MixinAchievements extends ScreenBase {
                         this.blit(lineColour - 2, var37 - 2, 0, 202, 26, 26);
                     }
 
-                    if(!this.field_2633.isAchievementUnlockable(var32)) {
+                    if (!this.field_2633.isAchievementUnlockable(var32)) {
                         float var39 = 0.1F;
                         GL11.glColor4f(var39, var39, var39, 1.0F);
                         var31.field_1707 = false;
@@ -222,12 +235,12 @@ public class MixinAchievements extends ScreenBase {
                     GL11.glEnable(2884 /*GL_CULL_FACE*/);
                     var31.method_1487(this.minecraft.textRenderer, this.minecraft.textureManager, var32.displayItem, lineColour + 3, var37 + 3);
                     GL11.glDisable(2896 /*GL_LIGHTING*/);
-                    if(!this.field_2633.isAchievementUnlockable(var32)) {
+                    if (!this.field_2633.isAchievementUnlockable(var32)) {
                         var31.field_1707 = true;
                     }
 
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                    if(i1 >= i3 && j1 >= j3 && i1 < i3 + 224 && j1 < j3 + 155 && i1 >= lineColour && i1 <= lineColour + 22 && j1 >= var37 && j1 <= var37 + 22) {
+                    if (i1 >= i3 && j1 >= j3 && i1 < i3 + 224 && j1 < j3 + 155 && i1 >= lineColour && i1 <= lineColour + 22 && j1 >= var37 && j1 <= var37 + 22) {
                         var29 = var32;
                     }
                 }
@@ -247,21 +260,21 @@ public class MixinAchievements extends ScreenBase {
         super.render(i1, j1, f);
 
         // RENDER MOUSEOVER
-        if(var29 != null) {
+        if (var29 != null) {
             String var34 = var29.name;
             String var35 = var29.getDescription();
             adjustedParentRow = i1 + 12;
             lineColour = j1 - 4;
-            if(this.field_2633.isAchievementUnlockable(var29)) {
+            if (this.field_2633.isAchievementUnlockable(var29)) {
                 var37 = Math.max(this.textManager.getTextWidth(var34), 120);
                 int var40 = this.textManager.method_1902(var35, var37);
-                if(this.field_2633.achievementUnlocked(var29)) {
+                if (this.field_2633.achievementUnlocked(var29)) {
                     var40 += 12;
                 }
 
                 this.fillGradient(adjustedParentRow - 3, lineColour - 3, adjustedParentRow + var37 + 3, lineColour + var40 + 3 + 12, -1073741824, -1073741824);
                 this.textManager.method_1904(var35, adjustedParentRow, lineColour + 12, var37, -6250336);
-                if(this.field_2633.achievementUnlocked(var29)) {
+                if (this.field_2633.achievementUnlocked(var29)) {
                     try {
                         this.textManager.drawTextWithShadow(TranslationStorage.getInstance().translate("achievement.taken"), adjustedParentRow, lineColour + var40 + 4, -7302913);
                     } catch (Exception var28) {
@@ -280,7 +293,7 @@ public class MixinAchievements extends ScreenBase {
                 }
             }
 
-            this.textManager.drawTextWithShadow(var34, adjustedParentRow, lineColour, this.field_2633.isAchievementUnlockable(var29)?(var29.isUnusual()?-128:-1):(var29.isUnusual()?-8355776:-8355712));
+            this.textManager.drawTextWithShadow(var34, adjustedParentRow, lineColour, this.field_2633.isAchievementUnlockable(var29) ? (var29.isUnusual() ? -128 : -1) : (var29.isUnusual() ? -8355776 : -8355712));
         }
 
         GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
@@ -289,37 +302,29 @@ public class MixinAchievements extends ScreenBase {
     }
 
     public boolean isVisibleAchievement(Achievement achievement) {
-        if(this.checkHidden(achievement)) {
+        if (this.checkHidden(achievement)) {
             return false;
-        }
-        else if(!AchievementPageManager.INSTANCE.getCurrentPage().getAchievementIds().contains(achievement.ID)) {
+        } else if (!AchievementPageManager.INSTANCE.getCurrentPage().getAchievementIds().contains(achievement.ID)) {
             return false;
-        }
-        else if (achievement.parent != null && !checkHidden(achievement.parent)) {
+        } else if (achievement.parent != null && !checkHidden(achievement.parent)) {
             return true;
-        }
-        else {
+        } else {
             return true;
         }
     }
 
 
-    public boolean isVisibleLine(Achievement achievement)
-    {
+    public boolean isVisibleLine(Achievement achievement) {
         return achievement.parent != null && isVisibleAchievement(achievement) && isVisibleAchievement(achievement.parent);
     }
 
-    public boolean checkHidden(Achievement achievement)
-    {
-        if(minecraft.statFileWriter.achievementUnlocked(achievement))
-        {
+    public boolean checkHidden(Achievement achievement) {
+        if (minecraft.statFileWriter.achievementUnlocked(achievement)) {
             return false;
         }
-        if(achievement.parent == null)
-        {
+        if (achievement.parent == null) {
             return false;
-        } else
-        {
+        } else {
             return checkHidden(achievement.parent);
         }
     }

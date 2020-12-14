@@ -14,24 +14,15 @@ public interface ItemUsedInCrafting {
     SimpleEvent<ItemUsedInCrafting> EVENT = new SimpleEvent<>(ItemUsedInCrafting.class,
             listeners ->
                     (player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted) -> {
-        for (ItemUsedInCrafting listener : listeners)
-            listener.onItemUsedInCrafting(player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted);
-        }, (Consumer<SimpleEvent<ItemUsedInCrafting>>) itemUsedInCrafting ->
+                        for (ItemUsedInCrafting listener : listeners)
+                            listener.onItemUsedInCrafting(player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted);
+                    }, (Consumer<SimpleEvent<ItemUsedInCrafting>>) itemUsedInCrafting ->
             itemUsedInCrafting.register((player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted) -> SimpleEvent.EVENT_BUS.post(new Data(player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted)))
     );
 
     void onItemUsedInCrafting(PlayerBase player, InventoryBase craftingMatrix, int itemOrdinal, ItemInstance itemUsed, ItemInstance itemCrafted);
 
     final class Data extends SimpleEvent.Data<ItemUsedInCrafting> {
-
-        private Data(PlayerBase player, InventoryBase craftingMatrix, int itemOrdinal, ItemInstance itemUsed, ItemInstance itemCrafted) {
-            super(EVENT);
-            this.player = player;
-            this.craftingMatrix = craftingMatrix;
-            this.itemOrdinal = itemOrdinal;
-            this.itemUsed = itemUsed;
-            this.itemCrafted = itemCrafted;
-        }
 
         @Getter
         private final PlayerBase player;
@@ -43,5 +34,13 @@ public interface ItemUsedInCrafting {
         private final ItemInstance itemUsed;
         @Getter
         private final ItemInstance itemCrafted;
+        private Data(PlayerBase player, InventoryBase craftingMatrix, int itemOrdinal, ItemInstance itemUsed, ItemInstance itemCrafted) {
+            super(EVENT);
+            this.player = player;
+            this.craftingMatrix = craftingMatrix;
+            this.itemOrdinal = itemOrdinal;
+            this.itemUsed = itemUsed;
+            this.itemCrafted = itemCrafted;
+        }
     }
 }

@@ -19,9 +19,11 @@ import java.util.List;
 @Mixin(GameOptions.class)
 public class MixinGameOptions {
 
-    @Shadow public KeyBinding[] keyBindings;
+    @Shadow
+    public KeyBinding[] keyBindings;
 
-    @Shadow public int difficulty;
+    @Shadow
+    public int difficulty;
 
     @Redirect(method = "<init>*", at = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;difficulty:I", opcode = Opcodes.PUTFIELD))
     private void redirectKeyBindings1(GameOptions gameOptions, int value) {

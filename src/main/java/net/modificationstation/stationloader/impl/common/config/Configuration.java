@@ -9,6 +9,9 @@ import java.util.*;
 
 public class Configuration implements net.modificationstation.stationloader.api.common.config.Configuration {
 
+    private final File configFile;
+    private final Set<net.modificationstation.stationloader.api.common.config.Category> categories = new TreeSet<>();
+
     public Configuration(File configFile) {
         this.configFile = configFile;
     }
@@ -151,7 +154,4 @@ public class Configuration implements net.modificationstation.stationloader.api.
             category.save(buffer);
         }
     }
-
-    private final File configFile;
-    private final Set<net.modificationstation.stationloader.api.common.config.Category> categories = new TreeSet<>();
 }

@@ -34,7 +34,8 @@ public interface GuiHelper extends HasHandler<GuiHelper> {
     };
 
     default void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container) {
-        openGUI(player, identifier, inventory, container, customData -> {});
+        openGUI(player, identifier, inventory, container, customData -> {
+        });
     }
 
     void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container, Consumer<Message> customData);

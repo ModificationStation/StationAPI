@@ -5,5 +5,5 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 
 public interface UseFirst {
-    public boolean onItemUseFirst(ItemInstance itemInstance, PlayerBase playerBase, Level level, int x, int y, int z, int sideClicked);
+    boolean onItemUseFirst(ItemInstance itemInstance, PlayerBase playerBase, Level level, int x, int y, int z, int sideClicked);
 }

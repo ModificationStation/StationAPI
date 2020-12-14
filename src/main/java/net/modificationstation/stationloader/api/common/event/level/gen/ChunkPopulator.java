@@ -15,25 +15,15 @@ public interface ChunkPopulator {
     SimpleEvent<ChunkPopulator> EVENT = new SimpleEvent<>(ChunkPopulator.class,
             listeners ->
                     (level, levelSource, biome, x, z, random) -> {
-        for (ChunkPopulator listener : listeners)
-            listener.populate(level, levelSource, biome, x, z, random);
-    }, (Consumer<SimpleEvent<ChunkPopulator>>) chunkPopulator ->
+                        for (ChunkPopulator listener : listeners)
+                            listener.populate(level, levelSource, biome, x, z, random);
+                    }, (Consumer<SimpleEvent<ChunkPopulator>>) chunkPopulator ->
             chunkPopulator.register((level, levelSource, biome, x, z, random) -> SimpleEvent.EVENT_BUS.post(new Data(level, levelSource, biome, x, z, random)))
     );
 
     void populate(Level level, LevelSource levelSource, Biome biome, int x, int z, Random random);
 
     final class Data extends SimpleEvent.Data<ChunkPopulator> {
-
-        private Data(Level level, LevelSource levelSource, Biome biome, int x, int z, Random random) {
-            super(EVENT);
-            this.level = level;
-            this.levelSource = levelSource;
-            this.biome = biome;
-            this.x = x;
-            this.z = z;
-            this.random = random;
-        }
 
         @Getter
         private final Level level;
@@ -47,5 +37,14 @@ public interface ChunkPopulator {
         private final int z;
         @Getter
         private final Random random;
+        private Data(Level level, LevelSource levelSource, Biome biome, int x, int z, Random random) {
+            super(EVENT);
+            this.level = level;
+            this.levelSource = levelSource;
+            this.biome = biome;
+            this.x = x;
+            this.z = z;
+            this.random = random;
+        }
     }
 }

@@ -14,9 +14,9 @@ public interface PlayerHandlerRegister {
     SimpleEvent<PlayerHandlerRegister> EVENT = new SimpleEvent<>(PlayerHandlerRegister.class,
             listeners ->
                     (playerHandlers, player) -> {
-        for (PlayerHandlerRegister listener : listeners)
-            listener.registerPlayerHandlers(playerHandlers, player);
-    }, (Consumer<SimpleEvent<PlayerHandlerRegister>>) playerHandlerRegister ->
+                        for (PlayerHandlerRegister listener : listeners)
+                            listener.registerPlayerHandlers(playerHandlers, player);
+                    }, (Consumer<SimpleEvent<PlayerHandlerRegister>>) playerHandlerRegister ->
             playerHandlerRegister.register((playerHandlers, player) -> SimpleEvent.EVENT_BUS.post(new Data(playerHandlers, player)))
     );
 
@@ -24,15 +24,14 @@ public interface PlayerHandlerRegister {
 
     final class Data extends SimpleEvent.Data<PlayerHandlerRegister> {
 
+        @Getter
+        private final List<PlayerHandler> playerHandlers;
+        @Getter
+        private final PlayerBase player;
         private Data(List<PlayerHandler> playerHandlers, PlayerBase player) {
             super(EVENT);
             this.playerHandlers = playerHandlers;
             this.player = player;
         }
-
-        @Getter
-        private final List<PlayerHandler> playerHandlers;
-        @Getter
-        private final PlayerBase player;
     }
 }

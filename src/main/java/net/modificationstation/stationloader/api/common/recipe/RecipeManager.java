@@ -33,10 +33,9 @@ public interface RecipeManager extends HasHandler<RecipeManager> {
             return handler.addOrGetRecipeType(identifier, register);
         }
     };
+    Map<String, Map<String, Map.Entry<Consumer<URL>, Set<URL>>>> recipes = new HashMap<>();
 
     void addJsonRecipe(URL recipe) throws IOException;
 
     Set<URL> addOrGetRecipeType(Identifier identifier, Consumer<URL> register);
-
-    Map<String, Map<String, Map.Entry<Consumer<URL>, Set<URL>>>> recipes = new HashMap<>();
 }

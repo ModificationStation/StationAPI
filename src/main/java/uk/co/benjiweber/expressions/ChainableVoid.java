@@ -18,30 +18,30 @@ public class ChainableVoid<T> {
         return this;
     }
 
-    public <U> ChainableVoid<T> invoke(VoidMethodOneArgOn<T,U> method, U value) {
+    public <U> ChainableVoid<T> invoke(VoidMethodOneArgOn<T, U> method, U value) {
         unchecked(() -> method.invoke(obj, value));
         return this;
     }
 
-    public <U,V> ChainableVoid<T> invoke(VoidMethodTwoArgOn<T,U,V> method, U value1, V value2) {
+    public <U, V> ChainableVoid<T> invoke(VoidMethodTwoArgOn<T, U, V> method, U value1, V value2) {
         unchecked(() -> method.invoke(obj, value1, value2));
         return this;
+    }
+
+    public T unwrap() {
+        return obj;
     }
 
     public interface VoidMethodOn<T> {
         void invoke(T instance) throws Exception;
     }
 
-    public interface VoidMethodOneArgOn<T,U> {
+    public interface VoidMethodOneArgOn<T, U> {
         void invoke(T instance, U value) throws Exception;
     }
 
-    public interface VoidMethodTwoArgOn<T,U,V> {
+    public interface VoidMethodTwoArgOn<T, U, V> {
         void invoke(T instance, U value1, V value2) throws Exception;
-    }
-
-    public T unwrap() {
-        return obj;
     }
 
 }

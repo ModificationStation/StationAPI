@@ -9,29 +9,30 @@ public interface EqualsHashcode<T> {
     default boolean autoEquals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final T value = (T)o;
+        final T value = (T) o;
         return props().stream()
-            .allMatch(prop -> Objects.equals(prop.apply((T) this), prop.apply(value)));
+                .allMatch(prop -> Objects.equals(prop.apply((T) this), prop.apply(value)));
     }
 
     default int autoHashCode() {
         return props().stream()
-            .map(prop -> (Object)prop.apply((T)this))
-            .collect(ResultCalculator::new, ResultCalculator::accept, ResultCalculator::combine)
-            .result;
+                .map(prop -> (Object) prop.apply((T) this))
+                .collect(ResultCalculator::new, ResultCalculator::accept, ResultCalculator::combine)
+                .result;
     }
 
+    List<Function<T, ?>> props();
 
-    static class ResultCalculator implements Consumer {
+    class ResultCalculator implements Consumer {
         private int result = 0;
+
         @Override
         public void accept(Object value) {
             result = 31 * result + (value != null ? value.hashCode() : 0);
         }
+
         public void combine(ResultCalculator other) {
             result += other.result;
         }
     }
-
-    List<Function<T,?>> props();
 }

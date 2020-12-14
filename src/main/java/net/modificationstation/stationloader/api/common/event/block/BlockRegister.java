@@ -26,12 +26,12 @@ public interface BlockRegister {
 
     final class Data extends ModEvent.Data<BlockRegister> {
 
+        @Getter
+        private final BlockRegistry registry;
+
         private Data(BlockRegistry blocks) {
             super(EVENT);
             registry = blocks;
         }
-
-        @Getter
-        private final BlockRegistry registry;
     }
 }

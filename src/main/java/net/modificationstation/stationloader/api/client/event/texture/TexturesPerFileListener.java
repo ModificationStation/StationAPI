@@ -8,12 +8,11 @@ import java.util.function.Consumer;
 
 /**
  * Event called when TexturesPerFile of a texture registry got changed, so mods can perform actions on change
- *
+ * <p>
  * args: TextureRegistry
  * return: void
  *
  * @author mine_diver
- *
  */
 
 public interface TexturesPerFileListener {
@@ -22,9 +21,9 @@ public interface TexturesPerFileListener {
     SimpleEvent<TexturesPerFileListener> EVENT = new SimpleEvent<>(TexturesPerFileListener.class,
             listeners ->
                     registry -> {
-        for (TexturesPerFileListener listener : listeners)
-            listener.texturesPerFileChanged(registry);
-    }, (Consumer<SimpleEvent<TexturesPerFileListener>>) texturesPerFileListener ->
+                        for (TexturesPerFileListener listener : listeners)
+                            listener.texturesPerFileChanged(registry);
+                    }, (Consumer<SimpleEvent<TexturesPerFileListener>>) texturesPerFileListener ->
             texturesPerFileListener.register(registry -> SimpleEvent.EVENT_BUS.post(new Data(registry)))
     );
 
@@ -32,13 +31,13 @@ public interface TexturesPerFileListener {
 
     final class Data extends SimpleEvent.Data<TexturesPerFileListener> {
 
+        @Getter
+        private final TextureRegistry registry;
+
         private Data(TextureRegistry registry) {
             super(EVENT);
             this.registry = registry;
         }
-
-        @Getter
-        private final TextureRegistry registry;
     }
 }
 

@@ -12,19 +12,20 @@ import java.util.function.Function;
 
 /**
  * Event class
- * 
- * @author mine_diver
  *
  * @param <T>
+ * @author mine_diver
  **/
 
 public abstract class Event<T> {
 
-    protected T invoker;
-    private T[] handlers;
+    public static Event<?>[] EVENTS = new Event[0];
     private final Class<T> type;
     private final Function<T[], T> eventFunc;
     private final Function<T, T> listenerWrapper;
+    protected T invoker;
+    private T[] handlers;
+
     public Event(Class<T> type, Function<T[], T> eventFunc, Function<T, T> listenerWrapper) {
         this.type = type;
         this.eventFunc = eventFunc;
@@ -68,8 +69,7 @@ public abstract class Event<T> {
         if (handlers == null) {
             handlers = (T[]) Array.newInstance(type, 1);
             handlers[0] = listener;
-        }
-        else {
+        } else {
             handlers = Arrays.copyOf(handlers, handlers.length + 1);
             handlers[handlers.length - 1] = listener;
         }
@@ -87,11 +87,11 @@ public abstract class Event<T> {
         return invoker;
     }
 
-    public static Event<?>[] EVENTS = new Event[0];
-
     @SuperBuilder
     @lombok.Data
     protected static class Data<T, U extends Event<T>> {
+
+        private final U event;
 
         protected Data(U event) {
             this.event = event;
@@ -100,7 +100,5 @@ public abstract class Event<T> {
         public final U getEvent() {
             return event;
         }
-
-        private final U event;
     }
 }

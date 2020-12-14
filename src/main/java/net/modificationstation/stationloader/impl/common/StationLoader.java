@@ -71,6 +71,10 @@ import java.util.*;
 
 public class StationLoader implements net.modificationstation.stationloader.api.common.StationLoader, PreInit, Init {
 
+    protected final Set<String> entrypoints = new HashSet<>();
+    private final Map<ModContainer, Set<StationMod>> mods = new HashMap<>();
+    private final Set<ModContainer> modsToVerifyOnClient = new HashSet<>();
+
     @Override
     public void setup() {
         ModID modID = getModID();
@@ -109,8 +113,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.preset.item.PlaceableTileEntityWithMeta.class, args -> new PlaceableTileEntityWithMeta((int) args[0]));
         generalFactory.addFactory(net.modificationstation.stationloader.api.common.preset.item.PlaceableTileEntityWithMetaAndName.class, args -> new PlaceableTileEntityWithMetaAndName((int) args[0]));
         net.modificationstation.stationloader.api.common.factory.EnumFactory enumFactory = net.modificationstation.stationloader.api.common.factory.EnumFactory.INSTANCE;
-        generalFactory.addFactory(ToolMaterial.class, args -> enumFactory.addEnum(ToolMaterial.class, (String) args[0], new Class[] {int.class, int.class, float.class, int.class}, new Object[] {args[1], args[2], args[3], args[4]}));
-        generalFactory.addFactory(EntityType.class, args -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[] {Class.class, int.class, Material.class, boolean.class}, new Object[] {args[1], args[2], args[3], args[4]}));
+        generalFactory.addFactory(ToolMaterial.class, args -> enumFactory.addEnum(ToolMaterial.class, (String) args[0], new Class[]{int.class, int.class, float.class, int.class}, new Object[]{args[1], args[2], args[3], args[4]}));
+        generalFactory.addFactory(EntityType.class, args -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[]{Class.class, int.class, Material.class, boolean.class}, new Object[]{args[1], args[2], args[3], args[4]}));
         getLogger().info("Loading config...");
         net.modificationstation.stationloader.api.common.config.Configuration config = getDefaultConfig();
         config.load();
@@ -314,11 +318,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
     public Set<ModContainer> getModsToVerifyOnClient() {
         return Collections.unmodifiableSet(modsToVerifyOnClient);
     }
-
-    protected final Set<String> entrypoints = new HashSet<>();
-
-    private final Map<ModContainer, Set<StationMod>> mods = new HashMap<>();
-    private final Set<ModContainer> modsToVerifyOnClient = new HashSet<>();
 
     //private final Map<ModMetadata, Set<Class<? extends StationMod>>> stationMods = new HashMap<>();
     //private final Map<Class<? extends StationMod>, StationMod> stationModInstances = new HashMap<>();

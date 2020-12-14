@@ -14,10 +14,10 @@ public interface IsEffectiveOn {
     SimpleEvent<IsEffectiveOn> EVENT = new SimpleEvent<>(IsEffectiveOn.class,
             listeners ->
                     (toolBase, block, meta, effective) -> {
-        for (IsEffectiveOn listener : listeners)
-            effective = listener.isEffectiveOn(toolBase, block, meta, effective);
-        return effective;
-    }, (Consumer<SimpleEvent<IsEffectiveOn>>) isEffectiveOn ->
+                        for (IsEffectiveOn listener : listeners)
+                            effective = listener.isEffectiveOn(toolBase, block, meta, effective);
+                        return effective;
+                    }, (Consumer<SimpleEvent<IsEffectiveOn>>) isEffectiveOn ->
             isEffectiveOn.register((toolLevel, block, meta, effective) -> {
                 Data data = new Data(toolLevel, block, meta, effective);
                 SimpleEvent.EVENT_BUS.post(data);
@@ -29,6 +29,15 @@ public interface IsEffectiveOn {
 
     final class Data extends SimpleEvent.Data<IsEffectiveOn> {
 
+        @Getter
+        private final ToolLevel toolLevel;
+        @Getter
+        private final BlockBase block;
+        @Getter
+        private final int meta;
+        @Getter
+        @Setter
+        private boolean effective;
         private Data(ToolLevel toolLevel, BlockBase block, int meta, boolean effective) {
             super(EVENT);
             this.toolLevel = toolLevel;
@@ -36,14 +45,5 @@ public interface IsEffectiveOn {
             this.meta = meta;
             this.effective = effective;
         }
-
-        @Getter
-        private final ToolLevel toolLevel;
-        @Getter
-        private final BlockBase block;
-        @Getter
-        private final int meta;
-        @Getter @Setter
-        private boolean effective;
     }
 }

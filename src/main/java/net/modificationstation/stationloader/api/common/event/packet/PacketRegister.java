@@ -12,15 +12,17 @@ public interface PacketRegister {
     SimpleEvent<PacketRegister> EVENT = new SimpleEvent<>(PacketRegister.class,
             listeners ->
                     register -> {
-        for (PacketRegister listener : listeners)
-            listener.registerPackets(register);
-    }, (Consumer<SimpleEvent<PacketRegister>>) packetRegister ->
+                        for (PacketRegister listener : listeners)
+                            listener.registerPackets(register);
+                    }, (Consumer<SimpleEvent<PacketRegister>>) packetRegister ->
             packetRegister.register(register -> SimpleEvent.EVENT_BUS.post(new Data(register)))
     );
 
     void registerPackets(QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> register);
 
     final class Data extends SimpleEvent.Data<PacketRegister> {
+
+        private final QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> register;
 
         private Data(QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> register) {
             super(EVENT);
@@ -30,7 +32,5 @@ public interface PacketRegister {
         public void register(int packetId, boolean receivableOnClient, boolean receivableOnServer, Class<? extends AbstractPacket> packetClass) {
             register.accept(packetId, receivableOnClient, receivableOnServer, packetClass);
         }
-
-        private final QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> register;
     }
 }

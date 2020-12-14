@@ -11,14 +11,14 @@ public interface MessageListenerRegister {
     ModEvent<MessageListenerRegister> EVENT = new ModEvent<>(MessageListenerRegister.class,
             listeners ->
                     (registry, modID) -> {
-        for (MessageListenerRegister listener : listeners)
-            listener.registerMessageListeners(registry, MessageListenerRegister.EVENT.getListenerModID(listener));
-    }, listener ->
+                        for (MessageListenerRegister listener : listeners)
+                            listener.registerMessageListeners(registry, MessageListenerRegister.EVENT.getListenerModID(listener));
+                    }, listener ->
             (registry, modID) -> {
-        MessageListenerRegister.EVENT.setCurrentListener(listener);
-        listener.registerMessageListeners(registry, modID);
-        MessageListenerRegister.EVENT.setCurrentListener(null);
-    }, messageListenerRegister ->
+                MessageListenerRegister.EVENT.setCurrentListener(listener);
+                listener.registerMessageListeners(registry, modID);
+                MessageListenerRegister.EVENT.setCurrentListener(null);
+            }, messageListenerRegister ->
             messageListenerRegister.register((registry, modID) -> ModEvent.EVENT_BUS.post(new Data(registry)), null)
     );
 
@@ -26,12 +26,12 @@ public interface MessageListenerRegister {
 
     final class Data extends ModEvent.Data<MessageListenerRegister> {
 
+        @Getter
+        private final MessageListenerRegistry registry;
+
         private Data(MessageListenerRegistry registry) {
             super(EVENT);
             this.registry = registry;
         }
-
-        @Getter
-        private final MessageListenerRegistry registry;
     }
 }

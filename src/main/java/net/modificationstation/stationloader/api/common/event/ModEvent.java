@@ -17,6 +17,36 @@ import java.util.function.Function;
 
 public class ModEvent<T> extends Event<T> {
 
+    public static final ModEventBus EVENT_BUS = new ModEventBus(StationLoader.INSTANCE.getModID().getContainer().getMetadata().getName() + "_ModEvent", command -> {
+        Object target;
+        Object event;
+        try {
+            Class<?> anonRunnable = command.getClass();
+            Field field = anonRunnable.getDeclaredField("this$0");
+            field.setAccessible(true);
+            Object subscriber = field.get(command);
+            field = subscriber.getClass().getSuperclass().getDeclaredField("target");
+            field.setAccessible(true);
+            target = field.get(subscriber);
+            field = anonRunnable.getDeclaredField("val$event");
+            field.setAccessible(true);
+            event = field.get(command);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        if (event instanceof Data) {
+            Data<?> data = (Data<?>) event;
+            ModID modID = ModEvent.EVENT_BUS.TARGET_TO_MODID.get(target);
+            data.getEvent().setCurrentListenerModID(modID);
+            data.modID = modID;
+        }
+        command.run();
+    });
+    private final Map<T, ModID> listenerToModID = new HashMap<>();
+    @Getter
+    @Setter
+    private T currentListener;
+
     public ModEvent(Class<T> type, Function<T[], T> eventFunc, Function<T, T> listenerWrapper) {
         super(type, eventFunc, listenerWrapper);
     }
@@ -43,19 +73,17 @@ public class ModEvent<T> extends Event<T> {
         return getListenerModID(currentListener);
     }
 
-    public ModID getListenerModID(T listener) {
-        return listenerToModID.get(listener);
-    }
-
     private void setCurrentListenerModID(ModID modID) {
         listenerToModID.put(currentListener, modID);
     }
 
-    @Getter @Setter
-    private T currentListener;
-    private final Map<T, ModID> listenerToModID = new HashMap<>();
+    public ModID getListenerModID(T listener) {
+        return listenerToModID.get(listener);
+    }
 
     public static class Data<T> extends Event.Data<T, ModEvent<T>> {
+
+        private ModID modID;
 
         protected Data(ModEvent<T> event) {
             super(event);
@@ -64,38 +92,12 @@ public class ModEvent<T> extends Event<T> {
         public final ModID getModID() {
             return modID;
         }
-
-        private ModID modID;
     }
-
-    public static final ModEventBus EVENT_BUS = new ModEventBus(StationLoader.INSTANCE.getModID().getContainer().getMetadata().getName() + "_ModEvent", command -> {
-        Object target;
-        Object event;
-        try {
-            Class<?> anonRunnable = command.getClass();
-            Field field = anonRunnable.getDeclaredField("this$0");
-            field.setAccessible(true);
-            Object subscriber = field.get(command);
-            field = subscriber.getClass().getSuperclass().getDeclaredField("target");
-            field.setAccessible(true);
-            target = field.get(subscriber);
-            field = anonRunnable.getDeclaredField("val$event");
-            field.setAccessible(true);
-            event = field.get(command);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        if (event instanceof Data) {
-            Data<?> data = (Data<?>) event;
-            ModID modID = ModEvent.EVENT_BUS.TARGET_TO_MODID.get(target);
-            data.getEvent().setCurrentListenerModID(modID);
-            data.modID = modID;
-        }
-        command.run();
-    });
 
     @SuppressWarnings("UnstableApiUsage")
     public static final class ModEventBus extends AsyncEventBus {
+
+        private final Map<Object, ModID> TARGET_TO_MODID = new HashMap<>();
 
         private ModEventBus(String identifier, Executor executor) {
             super(identifier, executor);
@@ -117,7 +119,5 @@ public class ModEvent<T> extends Event<T> {
             TARGET_TO_MODID.remove(object);
             super.unregister(object);
         }
-
-        private final Map<Object, ModID> TARGET_TO_MODID = new HashMap<>();
     }
 }

@@ -8,6 +8,8 @@ import java.util.function.Function;
 
 public class BlockManager implements net.modificationstation.stationloader.api.common.block.BlockManager {
 
+    private Function<Integer, PlaceableTileEntity> defaultBlockItemFactory = PlaceableTileEntity::new;
+
     @Override
     public PlaceableTileEntity getBlockItem(BlockBase block) {
         int shiftedID = block.id - BlockBase.BY_ID.length;
@@ -18,14 +20,12 @@ public class BlockManager implements net.modificationstation.stationloader.api.c
     }
 
     @Override
-    public void setDefaultBlockItemFactory(Function<Integer, PlaceableTileEntity> blockItemFactory) {
-        defaultBlockItemFactory = blockItemFactory;
-    }
-
-    @Override
     public Function<Integer, PlaceableTileEntity> getDefaultBlockItemFactory() {
         return defaultBlockItemFactory;
     }
 
-    private Function<Integer, PlaceableTileEntity> defaultBlockItemFactory = PlaceableTileEntity::new;
+    @Override
+    public void setDefaultBlockItemFactory(Function<Integer, PlaceableTileEntity> blockItemFactory) {
+        defaultBlockItemFactory = blockItemFactory;
+    }
 }

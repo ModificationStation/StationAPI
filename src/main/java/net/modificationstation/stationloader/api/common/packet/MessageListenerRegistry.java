@@ -9,6 +9,8 @@ import java.util.function.BiConsumer;
 
 public final class MessageListenerRegistry extends Registry<BiConsumer<PlayerBase, Message>> {
 
+    public static final MessageListenerRegistry INSTANCE = new MessageListenerRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "message_listeners"));
+
     private MessageListenerRegistry(Identifier identifier) {
         super(identifier);
     }
@@ -17,6 +19,4 @@ public final class MessageListenerRegistry extends Registry<BiConsumer<PlayerBas
     public int getRegistrySize() {
         return Integer.MAX_VALUE;
     }
-
-    public static final MessageListenerRegistry INSTANCE = new MessageListenerRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "message_listeners"));
 }

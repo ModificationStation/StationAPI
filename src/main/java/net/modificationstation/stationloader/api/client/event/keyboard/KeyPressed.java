@@ -11,12 +11,11 @@ import java.util.function.Consumer;
  * Used to handle keypresses.
  * Implement this in the class you plan to use to handle your keypresses.
  * All events need to be registered in your mod's preInit method using KeyPressed.EVENT.register(yourInstantiatedClass).
- *
+ * <p>
  * You want to check for your key with {@link Keyboard#getEventKey()} against {@link KeyBinding#key myKeybind.key} before executing any related code.
  *
- * @see KeyBindingRegister
- *
  * @author mine_diver
+ * @see KeyBindingRegister
  */
 public interface KeyPressed {
 
@@ -24,9 +23,9 @@ public interface KeyPressed {
     SimpleEvent<KeyPressed> EVENT = new SimpleEvent<>(KeyPressed.class,
             (listeners) ->
                     () -> {
-        for (KeyPressed listener : listeners)
-            listener.keyPressed();
-    }, (Consumer<SimpleEvent<KeyPressed>>) keyPressed ->
+                        for (KeyPressed listener : listeners)
+                            listener.keyPressed();
+                    }, (Consumer<SimpleEvent<KeyPressed>>) keyPressed ->
             keyPressed.register(() -> SimpleEvent.EVENT_BUS.post(new Data()))
     );
 

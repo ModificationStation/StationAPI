@@ -10,6 +10,7 @@ public interface RecipeRegistryAccessor {
 
     @Invoker
     void invokeAddShapedRecipe(ItemInstance itemInstance, Object... o);
+
     @Invoker
     void invokeAddShapelessRecipe(ItemInstance itemInstance, Object... o);
 }

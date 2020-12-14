@@ -11,11 +11,13 @@ import java.util.stream.Stream;
 
 public class Exceptions {
 
-    public static <T,R,E extends Exception> Function<T,R> unchecked(ExceptionalFunction<T,R,E> f) {
-        return to(f, t->t ,e -> { throw new RuntimeException(e); });
+    public static <T, R, E extends Exception> Function<T, R> unchecked(ExceptionalFunction<T, R, E> f) {
+        return to(f, t -> t, e -> {
+            throw new RuntimeException(e);
+        });
     }
 
-    public static <T,E extends Exception> T unchecked(ExceptionalSupplier<T,E> supplier) {
+    public static <T, E extends Exception> T unchecked(ExceptionalSupplier<T, E> supplier) {
         try {
             return supplier.supply();
         } catch (Error | RuntimeException rex) {
@@ -33,13 +35,6 @@ public class Exceptions {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    public interface Wrapper<T> {
-        <U extends Exception> T in(Function<Exception, U> exceptionMapper) throws U;
-        <U extends Exception> T in(Supplier<U> exceptionSupplier) throws U;
-        <U extends Exception> T in(Class<U> exceptionClass) throws U;
     }
 
     public static <T, E extends Exception> Wrapper<T> wrappingChecked(ExceptionalSupplier<T, E> supplier) {
@@ -79,7 +74,7 @@ public class Exceptions {
         };
     }
 
-    public static <T,E extends Exception> Wrapper<T> wrappingAll(ExceptionalSupplier<T,E> supplier) {
+    public static <T, E extends Exception> Wrapper<T> wrappingAll(ExceptionalSupplier<T, E> supplier) {
         return new Wrapper<T>() {
             @Override
             public <U extends Exception> T in(Function<Exception, U> exceptionMapper) throws U {
@@ -110,12 +105,6 @@ public class Exceptions {
         };
     }
 
-    static class UnableToInstantiateSuppliedException extends RuntimeException {
-        public UnableToInstantiateSuppliedException(Exception e) {
-            super(e);
-        }
-    }
-
     private static <U extends Exception> U constructAndWrapIfPossible(Class<U> exceptionClass, Exception e) {
         try {
             return exceptionClass.getConstructor(Exception.class).newInstance(e);
@@ -128,7 +117,7 @@ public class Exceptions {
         }
     }
 
-    public static <T,R,E extends Exception> Function<T,Optional<R>> toOptional(ExceptionalFunction<T,R,E> f) {
+    public static <T, R, E extends Exception> Function<T, Optional<R>> toOptional(ExceptionalFunction<T, R, E> f) {
         return t -> {
             try {
                 return Optional.ofNullable(f.apply(t));
@@ -138,7 +127,7 @@ public class Exceptions {
         };
     }
 
-    public static <R,E extends Exception> Supplier<Optional<R>> toOptional(ExceptionalSupplier<R,E> f) {
+    public static <R, E extends Exception> Supplier<Optional<R>> toOptional(ExceptionalSupplier<R, E> f) {
         return () -> {
             try {
                 return Optional.ofNullable(f.supply());
@@ -148,7 +137,7 @@ public class Exceptions {
         };
     }
 
-    public static <T,R,R2, E extends Exception> Function<T,R2> to(ExceptionalFunction<T,R,E> f, Function<R,R2> successHandler, Function<E,R2> exceptionHandler) {
+    public static <T, R, R2, E extends Exception> Function<T, R2> to(ExceptionalFunction<T, R, E> f, Function<R, R2> successHandler, Function<E, R2> exceptionHandler) {
         return t -> {
             try {
                 return successHandler.apply(f.apply(t));
@@ -160,7 +149,21 @@ public class Exceptions {
         };
     }
 
-    public static <T,R,E extends Exception> Function<T,Stream<R>> stream(ExceptionalFunction<T,R,E> f) {
-        return to(f,Stream::of, e -> Stream.empty());
+    public static <T, R, E extends Exception> Function<T, Stream<R>> stream(ExceptionalFunction<T, R, E> f) {
+        return to(f, Stream::of, e -> Stream.empty());
+    }
+
+    public interface Wrapper<T> {
+        <U extends Exception> T in(Function<Exception, U> exceptionMapper) throws U;
+
+        <U extends Exception> T in(Supplier<U> exceptionSupplier) throws U;
+
+        <U extends Exception> T in(Class<U> exceptionClass) throws U;
+    }
+
+    static class UnableToInstantiateSuppliedException extends RuntimeException {
+        public UnableToInstantiateSuppliedException(Exception e) {
+            super(e);
+        }
     }
 }

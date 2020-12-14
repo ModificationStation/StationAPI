@@ -4,33 +4,56 @@ import uk.co.benjiweber.expressions.Value;
 import uk.co.benjiweber.expressions.functions.ExceptionalSexConsumer;
 import uk.co.benjiweber.expressions.functions.ExceptionalSexFunction;
 
-public interface SexTuple<A,B,C,D,E,F> {
-    A one();
-    B two();
-    C three();
-    D four();
-    E five();
-    F six();
-    static <A,B,C,D,E,F> SexTuple<A,B,C,D,E,F> of(A a, B b, C c, D d, E e, F f) {
-        abstract class SexTupleValue extends Value<SexTuple<A,B,C,D,E,F>> implements SexTuple<A,B,C,D,E,F> {}
+public interface SexTuple<A, B, C, D, E, F> {
+    static <A, B, C, D, E, F> SexTuple<A, B, C, D, E, F> of(A a, B b, C c, D d, E e, F f) {
+        abstract class SexTupleValue extends Value<SexTuple<A, B, C, D, E, F>> implements SexTuple<A, B, C, D, E, F> {
+        }
         return new SexTupleValue() {
             @Override
-            public A one() { return a; }
+            public A one() {
+                return a;
+            }
+
             @Override
-            public B two() { return b; }
+            public B two() {
+                return b;
+            }
+
             @Override
-            public C three() { return c; }
+            public C three() {
+                return c;
+            }
+
             @Override
-            public D four() { return d; }
+            public D four() {
+                return d;
+            }
+
             @Override
-            public E five() { return e; }
+            public E five() {
+                return e;
+            }
+
             @Override
-            public F six() { return f; }
+            public F six() {
+                return f;
+            }
         }.using(SexTuple::one, SexTuple::two, SexTuple::three, SexTuple::four, SexTuple::five, SexTuple::six);
     }
 
+    A one();
 
-    default <R,EX extends Exception> R map(ExceptionalSexFunction<A, B, C, D, E, F, R, EX> f) throws EX {
+    B two();
+
+    C three();
+
+    D four();
+
+    E five();
+
+    F six();
+
+    default <R, EX extends Exception> R map(ExceptionalSexFunction<A, B, C, D, E, F, R, EX> f) throws EX {
         return f.apply(one(), two(), three(), four(), five(), six());
     }
 

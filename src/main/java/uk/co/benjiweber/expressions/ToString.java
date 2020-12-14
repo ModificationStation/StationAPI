@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 public interface ToString<T> {
     default String autoToString() {
         return "{" +
-        props().stream()
-            .map(prop -> (Object)prop.apply((T)this))
-            .map(prop -> prop == null ? "_" : prop.toString())
-            .collect(Collectors.joining(", ")) +
-        "}";
+                props().stream()
+                        .map(prop -> (Object) prop.apply((T) this))
+                        .map(prop -> prop == null ? "_" : prop.toString())
+                        .collect(Collectors.joining(", ")) +
+                "}";
     }
 
-    List<Function<T,?>> props();
+    List<Function<T, ?>> props();
 
 }

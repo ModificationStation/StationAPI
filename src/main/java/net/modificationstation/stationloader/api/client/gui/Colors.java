@@ -22,7 +22,7 @@ public class Colors {
     public static final String WHITE = "§f";
 
     public static String[] toArray() {
-        return new String[] {
+        return new String[]{
                 "§0",
                 "§1",
                 "§2",

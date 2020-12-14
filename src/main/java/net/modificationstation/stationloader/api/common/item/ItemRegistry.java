@@ -9,6 +9,8 @@ import net.modificationstation.stationloader.api.common.registry.SerializedRegis
 
 public final class ItemRegistry extends SerializedRegistry<ItemBase> {
 
+    public static final ItemRegistry INSTANCE = new ItemRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "items"));
+
     private ItemRegistry(Identifier registryId) {
         super(registryId);
     }
@@ -47,6 +49,4 @@ public final class ItemRegistry extends SerializedRegistry<ItemBase> {
     public int getRegistrySize() {
         return ItemBase.byId.length;
     }
-
-    public static final ItemRegistry INSTANCE = new ItemRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "items"));
 }

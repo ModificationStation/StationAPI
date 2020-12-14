@@ -10,6 +10,11 @@ import java.util.Map;
 
 public interface ModCore {
 
+    Map<ModCore, Logger> loggers = new HashMap<>();
+    Map<ModCore, Path> configPaths = new HashMap<>();
+    Map<ModCore, Configuration> defaultConfigs = new HashMap<>();
+    Map<ModCore, ModID> modIDs = new HashMap<>();
+
     default Logger getLogger() {
         return loggers.get(this);
     }
@@ -17,8 +22,6 @@ public interface ModCore {
     default void setLogger(Logger log) {
         loggers.put(this, log);
     }
-
-    Map<ModCore, Logger> loggers = new HashMap<>();
 
     default Path getConfigPath() {
         return configPaths.get(this);
@@ -28,8 +31,6 @@ public interface ModCore {
         configPaths.put(this, configPath);
     }
 
-    Map<ModCore, Path> configPaths = new HashMap<>();
-
     default Configuration getDefaultConfig() {
         return defaultConfigs.get(this);
     }
@@ -38,8 +39,6 @@ public interface ModCore {
         defaultConfigs.put(this, config);
     }
 
-    Map<ModCore, Configuration> defaultConfigs = new HashMap<>();
-
     default ModID getModID() {
         return modIDs.get(this);
     }
@@ -47,6 +46,4 @@ public interface ModCore {
     default void setModID(ModID modID) {
         modIDs.put(this, modID);
     }
-
-    Map<ModCore, ModID> modIDs = new HashMap<>();
 }

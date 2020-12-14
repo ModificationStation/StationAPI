@@ -9,6 +9,8 @@ import uk.co.benjiweber.expressions.functions.QuadFunction;
 
 public final class EntityHandlerRegistry extends Registry<QuadFunction<Level, Double, Double, Double, EntityBase>> {
 
+    public static final EntityHandlerRegistry INSTANCE = new EntityHandlerRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "entity_handlers"));
+
     private EntityHandlerRegistry(Identifier identifier) {
         super(identifier);
     }
@@ -17,6 +19,4 @@ public final class EntityHandlerRegistry extends Registry<QuadFunction<Level, Do
     public int getRegistrySize() {
         return Integer.MAX_VALUE;
     }
-
-    public static final EntityHandlerRegistry INSTANCE = new EntityHandlerRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "entity_handlers"));
 }

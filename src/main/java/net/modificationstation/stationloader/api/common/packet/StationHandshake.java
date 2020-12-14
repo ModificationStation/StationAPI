@@ -5,6 +5,8 @@ import java.util.Map;
 public interface StationHandshake {
 
     String getStationLoader();
+
     String getVersion();
+
     Map<String, String> getMods();
 }

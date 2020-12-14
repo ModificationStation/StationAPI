@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(GameRenderer.class)
 public class MixinGameRenderer {
 
-    @Shadow private Minecraft minecraft;
+    @Shadow
+    private Minecraft minecraft;
 
     @ModifyConstant(method = "method_1838(F)V", constant = @Constant(doubleValue = 3))
     private double getEntityReach(double originalReach) {
@@ -23,7 +24,7 @@ public class MixinGameRenderer {
             originalReach = defaultEntityReach;
         ItemInstance itemInstance = minecraft.player.getHeldItem();
         if (itemInstance == null) {
-            if(handEntityReach != null)
+            if (handEntityReach != null)
                 originalReach = handEntityReach;
         } else {
             ItemBase itemBase = itemInstance.getType();

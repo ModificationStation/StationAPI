@@ -29,60 +29,115 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Environment(EnvType.CLIENT)
 @Mixin(TileRenderer.class)
 public abstract class MixinTileRenderer {
-    @Shadow private int field_55;
-    @Shadow private boolean field_92;
-    @Shadow private float field_93;
-    @Shadow private TileView field_82;
-    @Shadow private float field_94;
-    @Shadow private float field_95;
-    @Shadow private float field_96;
-    @Shadow private float field_97;
-    @Shadow private float field_98;
-    @Shadow private float field_99;
-    @Shadow private float field_100;
-    @Shadow private float field_101;
-    @Shadow private float field_102;
-    @Shadow private float field_103;
-    @Shadow private float field_104;
-    @Shadow private float field_105;
-    @Shadow private float field_41;
-    @Shadow private float field_42;
-    @Shadow private float field_56;
-    @Shadow private float field_57;
-    @Shadow private float field_58;
-    @Shadow private float field_59;
-    @Shadow private float field_60;
-    @Shadow private float field_61;
-    @Shadow private float field_62;
-    @Shadow private float field_63;
-    @Shadow private float field_64;
-    @Shadow private float field_65;
-    @Shadow private float field_66;
-    @Shadow private float field_68;
-    @Shadow private boolean field_69;
-    @Shadow private boolean field_70;
-    @Shadow private boolean field_71;
-    @Shadow private boolean field_72;
-    @Shadow private boolean field_73;
-    @Shadow private boolean field_74;
-    @Shadow private boolean field_75;
-    @Shadow private boolean field_76;
-    @Shadow private boolean field_77;
-    @Shadow private boolean field_78;
-    @Shadow private boolean field_79;
-    @Shadow private boolean field_80;
-    @Shadow private float field_43;
-    @Shadow private float field_44;
-    @Shadow private float field_45;
-    @Shadow private float field_46;
-    @Shadow private float field_47;
-    @Shadow private float field_48;
-    @Shadow private float field_49;
-    @Shadow private float field_50;
-    @Shadow private float field_51;
-    @Shadow private float field_52;
-    @Shadow private float field_53;
-    @Shadow private float field_54;
+    @Shadow
+    private int field_55;
+    @Shadow
+    private boolean field_92;
+    @Shadow
+    private float field_93;
+    @Shadow
+    private TileView field_82;
+    @Shadow
+    private float field_94;
+    @Shadow
+    private float field_95;
+    @Shadow
+    private float field_96;
+    @Shadow
+    private float field_97;
+    @Shadow
+    private float field_98;
+    @Shadow
+    private float field_99;
+    @Shadow
+    private float field_100;
+    @Shadow
+    private float field_101;
+    @Shadow
+    private float field_102;
+    @Shadow
+    private float field_103;
+    @Shadow
+    private float field_104;
+    @Shadow
+    private float field_105;
+    @Shadow
+    private float field_41;
+    @Shadow
+    private float field_42;
+    @Shadow
+    private float field_56;
+    @Shadow
+    private float field_57;
+    @Shadow
+    private float field_58;
+    @Shadow
+    private float field_59;
+    @Shadow
+    private float field_60;
+    @Shadow
+    private float field_61;
+    @Shadow
+    private float field_62;
+    @Shadow
+    private float field_63;
+    @Shadow
+    private float field_64;
+    @Shadow
+    private float field_65;
+    @Shadow
+    private float field_66;
+    @Shadow
+    private float field_68;
+    @Shadow
+    private boolean field_69;
+    @Shadow
+    private boolean field_70;
+    @Shadow
+    private boolean field_71;
+    @Shadow
+    private boolean field_72;
+    @Shadow
+    private boolean field_73;
+    @Shadow
+    private boolean field_74;
+    @Shadow
+    private boolean field_75;
+    @Shadow
+    private boolean field_76;
+    @Shadow
+    private boolean field_77;
+    @Shadow
+    private boolean field_78;
+    @Shadow
+    private boolean field_79;
+    @Shadow
+    private boolean field_80;
+    @Shadow
+    private float field_43;
+    @Shadow
+    private float field_44;
+    @Shadow
+    private float field_45;
+    @Shadow
+    private float field_46;
+    @Shadow
+    private float field_47;
+    @Shadow
+    private float field_48;
+    @Shadow
+    private float field_49;
+    @Shadow
+    private float field_50;
+    @Shadow
+    private float field_51;
+    @Shadow
+    private float field_52;
+    @Shadow
+    private float field_53;
+    @Shadow
+    private float field_54;
+    private boolean inventory;
 
     @Inject(method = "method_57(Lnet/minecraft/block/BlockBase;III)Z", at = @At(value = "HEAD"), cancellable = true)
     public void hijackModels(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
@@ -498,8 +553,7 @@ public abstract class MixinTileRenderer {
                 cir.setReturnValue(true);
                 cir.cancel();
             }
-        }
-        else if (block instanceof BlockWithWorldRenderer) {
+        } else if (block instanceof BlockWithWorldRenderer) {
             ((BlockWithWorldRenderer) block).renderWorld((TileRenderer) (Object) this, field_82, x, y, z, field_82.getTileMeta(x, y, z));
             cir.cancel();
         }
@@ -640,8 +694,7 @@ public abstract class MixinTileRenderer {
                 inventory = false;
                 ci.cancel();
             }
-        }
-        else if (block instanceof BlockWithInventoryRenderer) {
+        } else if (block instanceof BlockWithInventoryRenderer) {
             ((BlockWithInventoryRenderer) block).renderInventory((TileRenderer) (Object) this, meta);
             inventory = false;
             ci.cancel();
@@ -652,6 +705,4 @@ public abstract class MixinTileRenderer {
     private void afterRenderBlockInInventory(CallbackInfo ci) {
         inventory = false;
     }
-
-    private boolean inventory;
 }

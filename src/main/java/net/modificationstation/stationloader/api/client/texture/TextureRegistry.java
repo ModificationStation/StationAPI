@@ -10,12 +10,29 @@ import java.util.function.Supplier;
 
 public interface TextureRegistry extends Comparable<TextureRegistry> {
 
-    enum Vanilla {
+    Map<String, Runnable> RUNNABLES = new HashMap<>();
+    Map<String, Supplier<Object>> SUPPLIERS = new HashMap<>();
+    Map<String, Function<Object, Object>> FUNCTIONS = new HashMap<>();
 
-        TERRAIN,
-        PARTICLES,
-        GUI_ITEMS,
-        GUI_PARTICLES
+    static void unbind() {
+        RUNNABLES.get("unbind").run();
+    }
+
+    static TextureRegistry getRegistry(String name) {
+        return (TextureRegistry) FUNCTIONS.get("getRegistry").apply(name);
+    }
+
+    static TextureRegistry getRegistry(Vanilla registry) {
+        return getRegistry(registry.name());
+    }
+
+    static TextureRegistry currentRegistry() {
+        return (TextureRegistry) SUPPLIERS.get("currentRegistry").get();
+    }
+
+    @SuppressWarnings("unchecked")
+    static Collection<TextureRegistry> registries() {
+        return (Collection<TextureRegistry>) SUPPLIERS.get("registries").get();
     }
 
     String name();
@@ -44,30 +61,11 @@ public interface TextureRegistry extends Comparable<TextureRegistry> {
 
     int currentTexture();
 
-    static void unbind() {
-        RUNNABLES.get("unbind").run();
+    enum Vanilla {
+
+        TERRAIN,
+        PARTICLES,
+        GUI_ITEMS,
+        GUI_PARTICLES
     }
-
-    static TextureRegistry getRegistry(String name) {
-        return (TextureRegistry) FUNCTIONS.get("getRegistry").apply(name);
-    }
-
-    static TextureRegistry getRegistry(Vanilla registry) {
-        return getRegistry(registry.name());
-    }
-
-    static TextureRegistry currentRegistry() {
-        return (TextureRegistry) SUPPLIERS.get("currentRegistry").get();
-    }
-
-    @SuppressWarnings("unchecked")
-    static Collection<TextureRegistry> registries() {
-        return (Collection<TextureRegistry>) SUPPLIERS.get("registries").get();
-    }
-
-    Map<String, Runnable> RUNNABLES = new HashMap<>();
-
-    Map<String, Supplier<Object>> SUPPLIERS = new HashMap<>();
-
-    Map<String, Function<Object, Object>> FUNCTIONS = new HashMap<>();
 }

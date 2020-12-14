@@ -13,9 +13,9 @@ public interface HandleLogin {
     SimpleEvent<HandleLogin> EVENT = new SimpleEvent<>(HandleLogin.class,
             listeners ->
                     (pendingConnection, handshakePacket) -> {
-        for (HandleLogin listener : listeners)
-            listener.handleLogin(pendingConnection, handshakePacket);
-    }, (Consumer<SimpleEvent<HandleLogin>>) handleLogin ->
+                        for (HandleLogin listener : listeners)
+                            listener.handleLogin(pendingConnection, handshakePacket);
+                    }, (Consumer<SimpleEvent<HandleLogin>>) handleLogin ->
             handleLogin.register((pendingConnection, handshakePacket) -> SimpleEvent.EVENT_BUS.post(new Data(pendingConnection, handshakePacket)))
     );
 
@@ -23,15 +23,14 @@ public interface HandleLogin {
 
     final class Data extends SimpleEvent.Data<HandleLogin> {
 
+        @Getter
+        private final PendingConnection pendingConnection;
+        @Getter
+        private final HandshakeC2S handshakePacket;
         private Data(PendingConnection pendingConnection, HandshakeC2S handshakePacket) {
             super(EVENT);
             this.pendingConnection = pendingConnection;
             this.handshakePacket = handshakePacket;
         }
-
-        @Getter
-        private final PendingConnection pendingConnection;
-        @Getter
-        private final HandshakeC2S handshakePacket;
     }
 }

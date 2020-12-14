@@ -4,21 +4,18 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Property<T> {
-    private Supplier<T> getter;
-    private final Function<T,T> setter;
+    private final Function<T, T> setter;
+    private final Supplier<T> getter;
 
-    public Property(Supplier<T> getter, Function<T,T> setter) {
+    public Property(Supplier<T> getter, Function<T, T> setter) {
         this.getter = getter;
         this.setter = setter;
     }
 
-    public interface PropertyBuilder<T> {
-        public Property<T> set(Function<T,T> setter);
-        public Readonly<T> readonly();
-    }
-
-    public static <T> Writeonly<T> set(Function<T,T> setter) {
-        Property<T> prop = new Property<T>(() -> {throw new UnsupportedOperationException(); }, setter);
+    public static <T> Writeonly<T> set(Function<T, T> setter) {
+        Property<T> prop = new Property<T>(() -> {
+            throw new UnsupportedOperationException();
+        }, setter);
         return prop::set;
     }
 
@@ -31,7 +28,7 @@ public class Property<T> {
 
             @Override
             public Readonly<T> readonly() {
-                Property<T> prop = new Property<T>(getter, Function.<T>identity());
+                Property<T> prop = new Property<T>(getter, Function.identity());
                 return prop::get;
             }
         };
@@ -49,9 +46,15 @@ public class Property<T> {
         return new GuessesName<T>(this.getter, this.setter);
     }
 
-
     public Named<T> named(String name) {
         return new ExplicitName<T>(this.getter, this.setter, name);
+    }
+
+
+    public interface PropertyBuilder<T> {
+        Property<T> set(Function<T, T> setter);
+
+        Readonly<T> readonly();
     }
 
 

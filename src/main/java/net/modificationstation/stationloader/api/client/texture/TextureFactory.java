@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Used to add textures.
  * You want to reference this inside your registerTextures method.
- *
+ * <p>
  * Use TextureFactory.INSTANCE.add[Animated]Texture("GUI_ITEMS|TERRAIN", yourTexturePath) to add your texture.
  * Then use the returned int value for your return values inside your item/block.
  *

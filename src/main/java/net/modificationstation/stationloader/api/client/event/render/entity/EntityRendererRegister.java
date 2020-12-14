@@ -14,9 +14,9 @@ public interface EntityRendererRegister {
     SimpleEvent<EntityRendererRegister> EVENT = new SimpleEvent<>(EntityRendererRegister.class,
             listeners ->
                     renderers -> {
-        for (EntityRendererRegister listener : listeners)
-            listener.registerEntityRenderers(renderers);
-    }, (Consumer<SimpleEvent<EntityRendererRegister>>) entityRendererRegister ->
+                        for (EntityRendererRegister listener : listeners)
+                            listener.registerEntityRenderers(renderers);
+                    }, (Consumer<SimpleEvent<EntityRendererRegister>>) entityRendererRegister ->
             entityRendererRegister.register(renderers -> SimpleEvent.EVENT_BUS.post(new Data(renderers)))
     );
 
@@ -24,12 +24,12 @@ public interface EntityRendererRegister {
 
     final class Data extends SimpleEvent.Data<EntityRendererRegister> {
 
+        @Getter
+        private final Map<Class<? extends EntityBase>, EntityRenderer> renderers;
+
         private Data(Map<Class<? extends EntityBase>, EntityRenderer> renderers) {
             super(EVENT);
             this.renderers = renderers;
         }
-
-        @Getter
-        private final Map<Class<? extends EntityBase>, EntityRenderer> renderers;
     }
 }

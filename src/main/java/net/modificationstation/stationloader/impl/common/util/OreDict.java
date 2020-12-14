@@ -22,6 +22,7 @@ public class OreDict {
 
     /**
      * Gets a list of item Identifiers that are assigned to the ore dict entry.
+     *
      * @param oreDictString The OreDict key.
      * @return A list of item Identifiers that can be used for functionality in recipe viewers.
      */
@@ -35,8 +36,9 @@ public class OreDict {
 
     /**
      * Add provided itemInstance to the specified oreDict entry.
+     *
      * @param oreDictString The OreDict key.
-     * @param itemInstance The itemInstance to add to the specified oreDict entry.
+     * @param itemInstance  The itemInstance to add to the specified oreDict entry.
      */
     public void addItemInstanceWithPredicate(@NotNull String oreDictString, @NotNull ItemInstance itemInstance, @Nullable Predicate<ItemInstance> itemInstancePredicate) {
         Identifier identifier = ItemRegistry.INSTANCE.getIdentifier(itemInstance.getType());
@@ -48,8 +50,9 @@ public class OreDict {
 
     /**
      * Add provided itemInstance to the specified oreDict entry.
+     *
      * @param oreDictString The OreDict key.
-     * @param itemInstance The itemInstance to add to the specified oreDict entry.
+     * @param itemInstance  The itemInstance to add to the specified oreDict entry.
      */
     public void addItemInstance(@NotNull String oreDictString, @NotNull ItemInstance itemInstance) {
         addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance::isItemEqualIgnoreDamage);
@@ -57,8 +60,9 @@ public class OreDict {
 
     /**
      * Add provided itemInstance to the specified oreDict entry.
+     *
      * @param oreDictString The OreDict key.
-     * @param itemInstance The itemInstance to add to the specified oreDict entry.
+     * @param itemInstance  The itemInstance to add to the specified oreDict entry.
      */
     public void addItemInstanceIgnoreDamage(@NotNull String oreDictString, @NotNull ItemInstance itemInstance) {
         addItemInstanceWithPredicate(oreDictString, itemInstance, null);
@@ -66,8 +70,9 @@ public class OreDict {
 
     /**
      * Add the provided Block to the specified oreDict entry
+     *
      * @param oreDictString The OreDict key.
-     * @param block The block to be added to the oreDict entry.
+     * @param block         The block to be added to the oreDict entry.
      */
     public void addBlockIgnoreDamage(@NotNull String oreDictString, @NotNull BlockBase block) {
         ItemInstance itemInstance = new ItemInstance(block);
@@ -76,8 +81,9 @@ public class OreDict {
 
     /**
      * Add the provided Block to the specified oreDict entry
+     *
      * @param oreDictString The OreDict key.
-     * @param item The item to be added to the oreDict entry.
+     * @param item          The item to be added to the oreDict entry.
      */
     public void addItemIgnoreDamage(@NotNull String oreDictString, @NotNull ItemBase item) {
         ItemInstance itemInstance = new ItemInstance(item);
@@ -86,6 +92,7 @@ public class OreDict {
 
     /**
      * Get if oreDict exists. Useful for certain circumstances.
+     *
      * @param oreDictString The OreDict key.
      * @return True if entry exists, false otherwise.
      */
@@ -95,8 +102,9 @@ public class OreDict {
 
     /**
      * Get if Identifier is in given oreDict entry.
+     *
      * @param oreDictString The OreDict key to check for.
-     * @param identifier The Identifier to check for.
+     * @param identifier    The Identifier to check for.
      * @return True if entry AND Identifier exists inside said entry, false otherwise.
      */
     public boolean containsEntryAndIdentifier(@NotNull String oreDictString, @NotNull Identifier identifier) {

@@ -11,15 +11,15 @@ public class InstanceOf {
                 return new ThenBuilder<T>() {
                     @Override
                     public <U> ElseBuilder then(ActionWithOneParam<U, T> ifAction) {
-                        return new ElseBuilder<U>(){
+                        return new ElseBuilder<U>() {
                             @Override
                             public U otherwise(U value) {
                                 try {
-                                    return cls.isInstance(obj) ? ifAction.apply((T)obj) : value;
+                                    return cls.isInstance(obj) ? ifAction.apply((T) obj) : value;
                                 } catch (RuntimeException | Error e) {
                                     throw e;
                                 } catch (Exception e) {
-                                    throw new RuntimeException( e);
+                                    throw new RuntimeException(e);
                                 }
                             }
 
@@ -50,6 +50,7 @@ public class InstanceOf {
 
     public interface ElseBuilder<U> {
         U otherwise(U value);
+
         Optional<U> optional();
     }
 }

@@ -13,7 +13,7 @@ public class GuiHelper extends net.modificationstation.stationloader.impl.common
     protected void sideDependentPacket(PlayerBase player, InventoryBase inventory, Message message) {
         message.put((Object) null);
         ((ServerPlayerAccessor) player).invokeMethod_314();
-        int[] ints = new int[] {((ServerPlayerAccessor) player).getField_260()};
+        int[] ints = new int[]{((ServerPlayerAccessor) player).getField_260()};
         message.put(ints);
     }
 

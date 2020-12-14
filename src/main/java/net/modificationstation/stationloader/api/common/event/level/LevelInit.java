@@ -12,9 +12,9 @@ public interface LevelInit {
     SimpleEvent<LevelInit> EVENT = new SimpleEvent<>(LevelInit.class,
             listeners ->
                     level -> {
-        for (LevelInit listener : listeners)
-            listener.onLevelInit(level);
-    }, (Consumer<SimpleEvent<LevelInit>>) levelInit ->
+                        for (LevelInit listener : listeners)
+                            listener.onLevelInit(level);
+                    }, (Consumer<SimpleEvent<LevelInit>>) levelInit ->
             levelInit.register(level -> SimpleEvent.EVENT_BUS.post(new Data(level)))
     );
 
@@ -22,12 +22,12 @@ public interface LevelInit {
 
     final class Data extends SimpleEvent.Data<LevelInit> {
 
+        @Getter
+        private final Level level;
+
         private Data(Level level) {
             super(EVENT);
             this.level = level;
         }
-
-        @Getter
-        private final Level level;
     }
 }

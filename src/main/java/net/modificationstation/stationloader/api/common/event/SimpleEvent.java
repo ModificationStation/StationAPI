@@ -9,6 +9,9 @@ import java.util.function.Function;
 
 public class SimpleEvent<T> extends Event<T> {
 
+    @SuppressWarnings("UnstableApiUsage")
+    public static final EventBus EVENT_BUS = new EventBus(StationLoader.INSTANCE.getModID().getContainer().getMetadata().getName() + "_SimpleEvent");
+
     public SimpleEvent(Class<T> type, Function<T[], T> eventFunc, Function<T, T> listenerWrapper) {
         super(type, eventFunc, listenerWrapper);
     }
@@ -42,7 +45,4 @@ public class SimpleEvent<T> extends Event<T> {
             super(event);
         }
     }
-
-    @SuppressWarnings("UnstableApiUsage")
-    public static final EventBus EVENT_BUS = new EventBus(StationLoader.INSTANCE.getModID().getContainer().getMetadata().getName() + "_SimpleEvent");
 }

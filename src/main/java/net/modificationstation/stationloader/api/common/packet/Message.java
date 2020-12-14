@@ -14,10 +14,70 @@ import java.io.IOException;
 
 public class Message extends AbstractPacket {
 
-    public Message() {}
+    private Identifier identifier;
+    private boolean[] booleans;
+    private byte[] bytes;
+    private short[] shorts;
+    private char[] chars;
+    private int[] ints;
+    private long[] longs;
+    private float[] floats;
+    private double[] doubles;
+    private String[] strings;
+    private Object[] objects;
+
+    public Message() {
+    }
 
     public Message(Identifier identifier) {
         this.identifier = identifier;
+    }
+
+    public static int size(boolean[] booleans) {
+        return Short.BYTES + ((int) Math.ceil((double) booleans.length / 8));
+    }
+
+    public static int size(byte[] bytes) {
+        return Short.BYTES + bytes.length;
+    }
+
+    public static int size(short[] shorts) {
+        return Short.BYTES + shorts.length * Short.BYTES;
+    }
+
+    public static int size(char[] chars) {
+        return Short.BYTES + chars.length * Character.BYTES;
+    }
+
+    public static int size(int[] ints) {
+        return Short.BYTES + ints.length * Integer.BYTES;
+    }
+
+    public static int size(long[] longs) {
+        return Short.BYTES + longs.length * Long.BYTES;
+    }
+
+    public static int size(float[] floats) {
+        return Short.BYTES + floats.length * Float.BYTES;
+    }
+
+    public static int size(double[] doubles) {
+        return Short.BYTES + doubles.length * Double.BYTES;
+    }
+
+    public static int size(String[] strings) {
+        int size = Short.BYTES;
+        for (String string : strings)
+            size += size(string.toCharArray());
+        return size;
+    }
+
+    public static int size(Object[] objects) {
+        int size = Short.BYTES;
+        Gson gson = new Gson();
+        for (Object o : objects)
+            size += size(gson.toJson(o).toCharArray()) + size(o == null ? "null".toCharArray() : o.getClass().getName().toCharArray());
+        return size;
     }
 
     @Override
@@ -25,7 +85,7 @@ public class Message extends AbstractPacket {
         try {
             identifier = Identifier.of(method_802(in, 32767));
             short s = in.readShort();
-            boolean[] present = new boolean[] {
+            boolean[] present = new boolean[]{
                     (s & 512) != 0,
                     (s & 256) != 0,
                     (s & 128) != 0,
@@ -117,7 +177,7 @@ public class Message extends AbstractPacket {
     public void write(DataOutputStream out) {
         try {
             writeString(identifier.toString(), out);
-            boolean[] absent = new boolean[] {
+            boolean[] absent = new boolean[]{
                     booleans == null,
                     bytes == null,
                     shorts == null,
@@ -236,53 +296,6 @@ public class Message extends AbstractPacket {
                 (objects == null ? 0 : size(objects));
     }
 
-    public static int size(boolean[] booleans) {
-        return Short.BYTES + ((int) Math.ceil((double) booleans.length / 8));
-    }
-
-    public static int size(byte[] bytes) {
-        return Short.BYTES + bytes.length;
-    }
-
-    public static int size(short[] shorts) {
-        return Short.BYTES + shorts.length * Short.BYTES;
-    }
-
-    public static int size(char[] chars) {
-        return Short.BYTES + chars.length * Character.BYTES;
-    }
-
-    public static int size(int[] ints) {
-        return Short.BYTES + ints.length * Integer.BYTES;
-    }
-
-    public static int size(long[] longs) {
-        return Short.BYTES + longs.length * Long.BYTES;
-    }
-
-    public static int size(float[] floats) {
-        return Short.BYTES + floats.length * Float.BYTES;
-    }
-
-    public static int size(double[] doubles) {
-        return Short.BYTES + doubles.length * Double.BYTES;
-    }
-
-    public static int size(String[] strings) {
-        int size = Short.BYTES;
-        for (String string : strings)
-            size += size(string.toCharArray());
-        return size;
-    }
-
-    public static int size(Object[] objects) {
-        int size = Short.BYTES;
-        Gson gson = new Gson();
-        for (Object o : objects)
-            size += size(gson.toJson(o).toCharArray()) + size(o == null ? "null".toCharArray() : o.getClass().getName().toCharArray());
-        return size;
-    }
-
     public void put(boolean... booleans) {
         this.booleans = Booleans.concat(this.booleans == null ? new boolean[0] : this.booleans, booleans);
     }
@@ -362,17 +375,4 @@ public class Message extends AbstractPacket {
     public Object[] objects() {
         return objects;
     }
-
-    private Identifier identifier;
-
-    private boolean[] booleans;
-    private byte[] bytes;
-    private short[] shorts;
-    private char[] chars;
-    private int[] ints;
-    private long[] longs;
-    private float[] floats;
-    private double[] doubles;
-    private String[] strings;
-    private Object[] objects;
 }

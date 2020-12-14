@@ -9,38 +9,38 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 public interface ExceptionalFunction<T, R, E extends Exception> {
-    R apply(T a) throws E;
-
-    public static <T, R, E extends Exception> ExceptionalFunction<T,R,E> exceptional(ExceptionalFunction<T, R, E> f) {
+    static <T, R, E extends Exception> ExceptionalFunction<T, R, E> exceptional(ExceptionalFunction<T, R, E> f) {
         return f;
     }
 
-    default Function<T,Optional<R>> optional() {
+    R apply(T a) throws E;
+
+    default Function<T, Optional<R>> optional() {
         return Exceptions.toOptional(this);
     }
 
-    default Function<T,Stream<R>> stream() {
+    default Function<T, Stream<R>> stream() {
         return wrapReturn(Stream::of).wrapException(Stream::empty);
     }
 
-    default Function<T,R> unchecked() {
+    default Function<T, R> unchecked() {
         return Exceptions.unchecked(this);
     }
 
-    default Function<T,Result<R>> resultOut() {
+    default Function<T, Result<R>> resultOut() {
         return Result.wrapReturn(this);
     }
 
-    default Function<Result<T>,Result<R>> resultInOut() {
+    default Function<Result<T>, Result<R>> resultInOut() {
         return Result.wrapExceptional(this);
     }
 
-    default <V> WrapBuilder<T,V,E> wrapReturn(Function<R,V> resultWrapper) {
+    default <V> WrapBuilder<T, V, E> wrapReturn(Function<R, V> resultWrapper) {
         return errorWrapper -> t -> {
             try {
                 return resultWrapper.apply(this.apply(t));
             } catch (Exception e) {
-                return errorWrapper.apply((E)e);
+                return errorWrapper.apply((E) e);
             }
         };
     }

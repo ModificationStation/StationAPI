@@ -12,10 +12,10 @@ public interface BlockNameSet {
     SimpleEvent<BlockNameSet> EVENT = new SimpleEvent<>(BlockNameSet.class,
             listeners ->
                     (block, newName) -> {
-        for (BlockNameSet listener : listeners)
-            newName = listener.getName(block, newName);
-        return newName;
-        }, (Consumer<SimpleEvent<BlockNameSet>>) blockNameSet ->
+                        for (BlockNameSet listener : listeners)
+                            newName = listener.getName(block, newName);
+                        return newName;
+                    }, (Consumer<SimpleEvent<BlockNameSet>>) blockNameSet ->
             blockNameSet.register((block, newName) -> {
                 Data data = new Data(block, newName);
                 //noinspection UnstableApiUsage
@@ -28,15 +28,15 @@ public interface BlockNameSet {
 
     final class Data extends SimpleEvent.Data<BlockNameSet> {
 
+        @Getter
+        private final BlockBase block;
+        @Getter
+        @Setter
+        private String newName;
         private Data(BlockBase block, String newName) {
             super(EVENT);
             this.block = block;
             this.newName = newName;
         }
-
-        @Getter
-        private final BlockBase block;
-        @Getter @Setter
-        private String newName;
     }
 }

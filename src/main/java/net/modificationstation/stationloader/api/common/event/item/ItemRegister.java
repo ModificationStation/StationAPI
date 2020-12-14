@@ -26,12 +26,12 @@ public interface ItemRegister {
 
     final class Data extends ModEvent.Data<ItemRegister> {
 
+        @Getter
+        private final ItemRegistry registry;
+
         private Data(ItemRegistry registry) {
             super(EVENT);
             this.registry = registry;
         }
-
-        @Getter
-        private final ItemRegistry registry;
     }
 }

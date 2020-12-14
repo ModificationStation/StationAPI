@@ -16,7 +16,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Environment(EnvType.CLIENT)
 public class Mixinclass_556 {
 
-    @Shadow private Minecraft field_2401;
+    @Shadow
+    private Minecraft field_2401;
 
     @Redirect(method = "method_1862(Lnet/minecraft/entity/Living;Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glBindTexture(II)V", ordinal = 0, remap = false))
     private void bindBlockTexture1(int target, int texture) {

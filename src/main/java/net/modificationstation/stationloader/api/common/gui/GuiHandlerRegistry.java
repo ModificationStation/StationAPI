@@ -16,6 +16,8 @@ import java.util.function.Supplier;
 
 public final class GuiHandlerRegistry extends Registry<BiTuple<TriFunction<PlayerBase, InventoryBase, Message, ScreenBase>, Supplier<InventoryBase>>> {
 
+    public static final GuiHandlerRegistry INSTANCE = new GuiHandlerRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "gui_handlers"));
+
     private GuiHandlerRegistry(Identifier identifier) {
         super(identifier);
     }
@@ -28,6 +30,4 @@ public final class GuiHandlerRegistry extends Registry<BiTuple<TriFunction<Playe
     public void registerValueNoMessage(Identifier identifier, BiTuple<BiFunction<PlayerBase, InventoryBase, ScreenBase>, Supplier<InventoryBase>> value) {
         super.registerValue(identifier, Tuple.tuple((playerBase, inventoryBase, message) -> value.one().apply(playerBase, inventoryBase), value.two()));
     }
-
-    public static final GuiHandlerRegistry INSTANCE = new GuiHandlerRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "gui_handlers"));
 }

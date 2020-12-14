@@ -9,7 +9,7 @@ public interface BlockModelProvider {
 
     /**
      * Override this and return the custom model made from {@link ModelTranslator#translate(JsonModel, String)}.
-     *
+     * <p>
      * The model to render in the world.
      *
      * @see ModelTranslator
@@ -19,7 +19,7 @@ public interface BlockModelProvider {
 
     /**
      * Override this and return the custom model made from {@link ModelTranslator#translate(JsonModel, String)}.
-     *
+     * <p>
      * Model to render inside the inventory.
      *
      * @see ModelTranslator

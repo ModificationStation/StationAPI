@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AchievementPageManager implements net.modificationstation.stationloader.api.common.achievement.AchievementPageManager {
-    private ArrayList<net.modificationstation.stationloader.api.common.achievement.AchievementPage> ACHIEVEMENT_PAGES = new ArrayList<>();
+    private final ArrayList<net.modificationstation.stationloader.api.common.achievement.AchievementPage> ACHIEVEMENT_PAGES = new ArrayList<>();
     private int currentPage = 0;
 
     @Override

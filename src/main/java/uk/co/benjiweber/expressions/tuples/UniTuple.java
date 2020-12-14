@@ -7,16 +7,20 @@ import uk.co.benjiweber.expressions.functions.ExceptionalFunction;
 import java.util.function.Function;
 
 public interface UniTuple<A> {
-    A one();
     static <A> UniTuple<A> of(A a) {
-        abstract class UniTupleValue extends Value<UniTuple<A>> implements UniTuple<A> {}
+        abstract class UniTupleValue extends Value<UniTuple<A>> implements UniTuple<A> {
+        }
         return new UniTupleValue() {
             @Override
-            public A one() { return a; }
+            public A one() {
+                return a;
+            }
         }.using(UniTuple::one);
     }
 
-    default <R,E extends Exception> R map(ExceptionalFunction<A, R, E> f) throws E {
+    A one();
+
+    default <R, E extends Exception> R map(ExceptionalFunction<A, R, E> f) throws E {
         return f.apply(one());
     }
 
@@ -24,7 +28,7 @@ public interface UniTuple<A> {
         return of(f.apply(one()));
     }
 
-    default <E extends Exception> void consume(ExceptionalConsumer<A,E> consumer) throws E{
+    default <E extends Exception> void consume(ExceptionalConsumer<A, E> consumer) throws E {
         consumer.accept(one());
     }
 }

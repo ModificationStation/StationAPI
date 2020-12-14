@@ -4,44 +4,54 @@ import static uk.co.benjiweber.expressions.caseclass.ShapeExample.Rectangle.rect
 
 public class ShapeExample {
 
-    interface Shape extends Case3<Circle, Square, Rectangle> {}
-
-    interface Circle extends Shape {
-        int radius();
-        static Circle circle(int radius) {
-            return () -> radius;
-        }
-    }
-
-    interface Square extends Shape {
-        int width();
-        static Square square(int width) {
-            return () -> width;
-        }
-    }
-
-    interface Rectangle extends Shape {
-        int width();
-        int height();
-        static Rectangle rectangle(int width, int height) {
-            return new Rectangle() {
-                @Override
-                public int width() { return width; }
-                @Override
-                public int height() { return height; }
-            };
-        }
-    }
-
     public static void main(String... args) {
         System.out.println(description(rectangle(5, 4)));
     }
 
     private static String description(Shape shape) {
         return shape.match()
-            .when(Circle.class, circle -> "circle" + circle.radius())
-            .when(Square.class, square -> "square" + square.width())
-            .when(Rectangle.class, rectangle -> "rectangle" + rectangle.width() + rectangle.height());
+                .when(Circle.class, circle -> "circle" + circle.radius())
+                .when(Square.class, square -> "square" + square.width())
+                .when(Rectangle.class, rectangle -> "rectangle" + rectangle.width() + rectangle.height());
+    }
+
+    interface Shape extends Case3<Circle, Square, Rectangle> {
+    }
+
+    interface Circle extends Shape {
+        static Circle circle(int radius) {
+            return () -> radius;
+        }
+
+        int radius();
+    }
+
+    interface Square extends Shape {
+        static Square square(int width) {
+            return () -> width;
+        }
+
+        int width();
+    }
+
+    interface Rectangle extends Shape {
+        static Rectangle rectangle(int width, int height) {
+            return new Rectangle() {
+                @Override
+                public int width() {
+                    return width;
+                }
+
+                @Override
+                public int height() {
+                    return height;
+                }
+            };
+        }
+
+        int width();
+
+        int height();
     }
 
 }

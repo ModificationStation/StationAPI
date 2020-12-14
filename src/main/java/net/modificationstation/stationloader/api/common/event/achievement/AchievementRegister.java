@@ -13,9 +13,9 @@ public interface AchievementRegister {
     SimpleEvent<AchievementRegister> EVENT = new SimpleEvent<>(AchievementRegister.class,
             listeners ->
                     achievements -> {
-        for (AchievementRegister listener : listeners)
-            listener.registerAchievements(achievements);
-        }, (Consumer<SimpleEvent<AchievementRegister>>) achievementRegister ->
+                        for (AchievementRegister listener : listeners)
+                            listener.registerAchievements(achievements);
+                    }, (Consumer<SimpleEvent<AchievementRegister>>) achievementRegister ->
             achievementRegister.register(achievements -> SimpleEvent.EVENT_BUS.post(new Data(achievements)))
     );
 
@@ -23,12 +23,12 @@ public interface AchievementRegister {
 
     final class Data extends SimpleEvent.Data<AchievementRegister> {
 
+        @Getter
+        private final List<Achievement> achievementList;
+
         private Data(List<Achievement> achievementList) {
             super(EVENT);
             this.achievementList = achievementList;
         }
-
-        @Getter
-        private final List<Achievement> achievementList;
     }
 }

@@ -11,6 +11,17 @@ import java.util.Map;
 public final class Identifier implements Comparable<Identifier> {
 
 
+    private static final Map<String, Identifier> VALUES = new HashMap<>();
+    @Getter
+    private final ModID modID;
+    @Getter
+    private final String id;
+
+    private Identifier(ModID modID, String id) {
+        this.modID = modID;
+        this.id = id;
+    }
+
     @NotNull
     public static Identifier of(@NotNull String identifier) {
         return VALUES.computeIfAbsent(identifier, s -> {
@@ -39,11 +50,6 @@ public final class Identifier implements Comparable<Identifier> {
     @NotNull
     public static Identifier of(@NotNull ModID modID, @NotNull String id) {
         return VALUES.computeIfAbsent(modID + ":" + id, s -> new Identifier(modID, id));
-    }
-
-    private Identifier(ModID modID, String id) {
-        this.modID = modID;
-        this.id = id;
     }
 
     @Override
@@ -76,11 +82,4 @@ public final class Identifier implements Comparable<Identifier> {
         result = 29 * result + id.hashCode();
         return result;
     }
-
-    @Getter
-    private final ModID modID;
-    @Getter
-    private final String id;
-
-    private static final Map<String, Identifier> VALUES = new HashMap<>();
 }

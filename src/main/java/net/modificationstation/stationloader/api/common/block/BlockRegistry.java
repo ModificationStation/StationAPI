@@ -8,6 +8,8 @@ import net.modificationstation.stationloader.api.common.registry.SerializedRegis
 
 public final class BlockRegistry extends SerializedRegistry<BlockBase> {
 
+    public static final BlockRegistry INSTANCE = new BlockRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "blocks"));
+
     private BlockRegistry(Identifier registryId) {
         super(registryId);
     }
@@ -40,6 +42,4 @@ public final class BlockRegistry extends SerializedRegistry<BlockBase> {
     public int getRegistrySize() {
         return BlockBase.BY_ID.length;
     }
-
-    public static final BlockRegistry INSTANCE = new BlockRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "blocks"));
 }

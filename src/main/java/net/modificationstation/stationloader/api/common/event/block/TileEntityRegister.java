@@ -12,15 +12,17 @@ public interface TileEntityRegister {
     SimpleEvent<TileEntityRegister> EVENT = new SimpleEvent<>(TileEntityRegister.class,
             listeners ->
                     register -> {
-        for (TileEntityRegister listener : listeners)
-            listener.registerTileEntities(register);
-    }, (Consumer<SimpleEvent<TileEntityRegister>>) tileEntityRegister ->
+                        for (TileEntityRegister listener : listeners)
+                            listener.registerTileEntities(register);
+                    }, (Consumer<SimpleEvent<TileEntityRegister>>) tileEntityRegister ->
             tileEntityRegister.register(register -> SimpleEvent.EVENT_BUS.post(new Data(register)))
     );
 
     void registerTileEntities(BiConsumer<Class<? extends TileEntityBase>, String> register);
 
     final class Data extends SimpleEvent.Data<TileEntityRegister> {
+
+        private final BiConsumer<Class<? extends TileEntityBase>, String> register;
 
         private Data(BiConsumer<Class<? extends TileEntityBase>, String> register) {
             super(EVENT);
@@ -30,7 +32,5 @@ public interface TileEntityRegister {
         public void register(Class<? extends TileEntityBase> teClass, String teIdentifier) {
             register.accept(teClass, teIdentifier);
         }
-
-        private final BiConsumer<Class<? extends TileEntityBase>, String> register;
     }
 }

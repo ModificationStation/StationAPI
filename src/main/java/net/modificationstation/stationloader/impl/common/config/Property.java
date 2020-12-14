@@ -5,6 +5,10 @@ import java.io.IOException;
 
 public class Property implements net.modificationstation.stationloader.api.common.config.Property {
 
+    private final String name;
+    private String value;
+    private String comment;
+
     public Property(String name) {
         this.name = name;
     }
@@ -63,8 +67,4 @@ public class Property implements net.modificationstation.stationloader.api.commo
     public boolean equals(Object o) {
         return o instanceof net.modificationstation.stationloader.api.common.config.Property && getName().equals(((net.modificationstation.stationloader.api.common.config.Property) o).getName());
     }
-
-    private final String name;
-    private String value;
-    private String comment;
 }

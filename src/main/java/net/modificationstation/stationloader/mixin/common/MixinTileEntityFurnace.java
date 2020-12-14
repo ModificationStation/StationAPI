@@ -15,7 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(TileEntityFurnace.class)
 public class MixinTileEntityFurnace {
 
-    @Shadow private ItemInstance[] contents;
+    @Shadow
+    private ItemInstance[] contents;
 
     @Redirect(method = {"canAcceptRecipeOutput()Z", "craftRecipe()V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/SmeltingRecipeRegistry;getResult(I)Lnet/minecraft/item/ItemInstance;"))
     private ItemInstance getResult(SmeltingRecipeRegistry smeltingRecipeRegistry, int i) {

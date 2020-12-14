@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(class_174.class)
 public class Mixinclass_174 {
 
-    @Shadow public EntityBase field_597;
+    @Shadow
+    public EntityBase field_597;
 
     @Inject(method = "method_600", at = @At(value = "HEAD"), cancellable = true)
     private void getSpawnData(CallbackInfoReturnable<AbstractPacket> cir) {
