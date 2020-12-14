@@ -12,6 +12,7 @@ import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationloader.api.common.block.EffectiveForTool;
 import net.modificationstation.stationloader.api.common.event.EventRegistry;
 import net.modificationstation.stationloader.api.common.event.ModEvent;
+import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 import net.modificationstation.stationloader.api.common.event.achievement.AchievementRegister;
 import net.modificationstation.stationloader.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
@@ -235,6 +236,10 @@ public class StationLoader implements net.modificationstation.stationloader.api.
 
     @Override
     public void init() {
+        FabricLoader fabricLoader = FabricLoader.getInstance();
+        //noinspection UnstableApiUsage
+        fabricLoader.getEntrypoints(Identifier.of(getModID(), "simple_event_bus").toString(), Object.class).forEach(SimpleEvent.EVENT_BUS::register);
+        fabricLoader.getEntrypointContainers(Identifier.of(getModID(), "mod_event_bus").toString(), Object.class).forEach(entrypointContainer -> ModEvent.EVENT_BUS.register(entrypointContainer.getEntrypoint(), ModID.of(entrypointContainer.getProvider())));
         EventRegistry.INSTANCE.forEach((identifier, event) -> event.register(identifier));
     }
 
