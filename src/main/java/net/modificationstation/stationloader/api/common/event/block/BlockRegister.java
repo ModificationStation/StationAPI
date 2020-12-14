@@ -11,14 +11,14 @@ public interface BlockRegister {
     ModEvent<BlockRegister> EVENT = new ModEvent<>(BlockRegister.class,
             listeners ->
                     (registry, modID) -> {
-        for (BlockRegister listener : listeners)
-            listener.registerBlocks(registry, BlockRegister.EVENT.getListenerModID(listener));
-        }, listener ->
+                        for (BlockRegister listener : listeners)
+                            listener.registerBlocks(registry, BlockRegister.EVENT.getListenerModID(listener));
+                    }, listener ->
             (blocks, modID) -> {
-        BlockRegister.EVENT.setCurrentListener(listener);
-        listener.registerBlocks(blocks, modID);
-        BlockRegister.EVENT.setCurrentListener(null);
-        }, blockRegister ->
+                BlockRegister.EVENT.setCurrentListener(listener);
+                listener.registerBlocks(blocks, modID);
+                BlockRegister.EVENT.setCurrentListener(null);
+            }, blockRegister ->
             blockRegister.register((blocks, modID) -> ModEvent.EVENT_BUS.post(new Data(blocks)), null)
     );
 
