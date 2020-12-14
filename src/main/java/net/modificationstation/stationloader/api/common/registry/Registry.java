@@ -8,6 +8,11 @@ import java.util.function.BiConsumer;
 
 public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
 
+    public static final Registry<Registry<?>> REGISTRIES = new RegistryRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "registries"));
+    private final Identifier registryId;
+    private final Map<Identifier, T> ID_TO_TYPE = new TreeMap<>();
+    private final Map<T, Identifier> TYPE_TO_ID = new HashMap<>();
+
     public Registry(Identifier identifier) {
         this(identifier, true);
     }
@@ -46,7 +51,7 @@ public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> 
             try {
                 k = identifierTEntry.getKey();
                 v = identifierTEntry.getValue();
-            } catch(IllegalStateException ise) {
+            } catch (IllegalStateException ise) {
                 // this usually means the entry is no longer in the map.
                 throw new ConcurrentModificationException(ise);
             }
@@ -58,13 +63,6 @@ public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> 
     public final Identifier getRegistryId() {
         return registryId;
     }
-
-    private final Identifier registryId;
-
-    private final Map<Identifier, T> ID_TO_TYPE = new TreeMap<>();
-    private final Map<T, Identifier> TYPE_TO_ID = new HashMap<>();
-
-    public static final Registry<Registry<?>> REGISTRIES = new RegistryRegistry(Identifier.of(StationLoader.INSTANCE.getModID(), "registries"));
 
     private static final class RegistryRegistry extends Registry<Registry<?>> {
 

@@ -35,7 +35,7 @@ public class CustomModelRenderer extends EntityRenderer implements net.modificat
         GL11.glPushMatrix();
 
         GL11.glScalef(1f, 1f, 1f);
-        GL11.glTranslatef((float)x-0.5F, (float)y, (float)z-0.5F);
+        GL11.glTranslatef((float) x - 0.5F, (float) y, (float) z - 0.5F);
         //GL11.glOrtho(0, 0, 0, 1, 1, -1);
         entityModelBase.render(0, 0, 0, 0, 0, 0.0625F);
         GL11.glPopMatrix();

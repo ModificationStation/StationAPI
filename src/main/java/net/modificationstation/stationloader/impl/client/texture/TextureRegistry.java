@@ -11,16 +11,22 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public class TextureRegistry implements net.modificationstation.stationloader.api.client.texture.TextureRegistry {
 
-    private static final Set<TextureRegistry> registries = new TreeSet<>();
-
     public static final TextureRegistry
             TERRAIN = new TextureRegistry("TERRAIN", "/terrain.png", 16, 16),
             PARTICLES = new TextureRegistry("PARTICLES", "/particles.png", 32, 32),
             GUI_ITEMS = new TextureRegistry("GUI_ITEMS", "/gui/items.png", 16, 16),
             GUI_PARTICLES = new TextureRegistry("GUI_PARTICLES", "/gui/particles.png", 32, 32);
-
+    private static final Set<TextureRegistry> registries = new TreeSet<>();
     private static TextureRegistry currentRegistry;
     private static int nextRegistryID = 0;
+    private final String name;
+    private final int ordinal;
+    private final Map<Integer, String> atlasIDToPath = new HashMap<>();
+    private final Map<String, Integer> atlasPathToID = new HashMap<>();
+    private int nextAtlasID;
+    private short texturesInLine;
+    private short texturesInColumn;
+    private int currentTexture;
 
     public TextureRegistry(String name, String path, int texturesInLine, int texturesInColumn) {
         this.name = name;
@@ -30,6 +36,25 @@ public class TextureRegistry implements net.modificationstation.stationloader.ap
         this.texturesInColumn = (short) texturesInColumn;
         addAtlas(path);
         nextRegistryID++;
+    }
+
+    public static void unbind() {
+        currentRegistry = null;
+    }
+
+    public static Object getRegistry(Object name) {
+        for (net.modificationstation.stationloader.api.client.texture.TextureRegistry registry : registries())
+            if (name.equals(registry.name()))
+                return registry;
+        return null;
+    }
+
+    public static net.modificationstation.stationloader.api.client.texture.TextureRegistry currentRegistry() {
+        return currentRegistry;
+    }
+
+    public static Collection<net.modificationstation.stationloader.api.client.texture.TextureRegistry> registries() {
+        return Collections.unmodifiableCollection(registries);
     }
 
     @Override
@@ -106,28 +131,9 @@ public class TextureRegistry implements net.modificationstation.stationloader.ap
             currentRegistry = this;
     }
 
-    public static void unbind() {
-        currentRegistry = null;
-    }
-
     @Override
     public int currentTexture() {
         return currentTexture;
-    }
-
-    public static Object getRegistry(Object name) {
-        for (net.modificationstation.stationloader.api.client.texture.TextureRegistry registry : registries())
-            if (name.equals(registry.name()))
-                return registry;
-        return null;
-    }
-
-    public static net.modificationstation.stationloader.api.client.texture.TextureRegistry currentRegistry() {
-        return currentRegistry;
-    }
-
-    public static Collection<net.modificationstation.stationloader.api.client.texture.TextureRegistry> registries() {
-        return Collections.unmodifiableCollection(registries);
     }
 
     @Override
@@ -139,13 +145,4 @@ public class TextureRegistry implements net.modificationstation.stationloader.ap
     public String toString() {
         return name() + ", ordinal: " + ordinal() + ", atlases: " + Arrays.toString(atlasPathToID.values().toArray()) + ", textures in line: " + texturesInLine() + ", textures in column: " + texturesInColumn();
     }
-
-    private final String name;
-    private final int ordinal;
-    private final Map<Integer, String> atlasIDToPath = new HashMap<>();
-    private final Map<String, Integer> atlasPathToID = new HashMap<>();
-    private int nextAtlasID;
-    private short texturesInLine;
-    private short texturesInColumn;
-    private int currentTexture;
 }

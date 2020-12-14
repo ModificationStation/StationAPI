@@ -12,9 +12,9 @@ public interface PlayerLogin {
     SimpleEvent<PlayerLogin> EVENT = new SimpleEvent<>(PlayerLogin.class,
             listeners ->
                     player -> {
-        for (PlayerLogin listener : listeners)
-            listener.afterLogin(player);
-    }, (Consumer<SimpleEvent<PlayerLogin>>) playerLogin ->
+                        for (PlayerLogin listener : listeners)
+                            listener.afterLogin(player);
+                    }, (Consumer<SimpleEvent<PlayerLogin>>) playerLogin ->
             playerLogin.register(player -> SimpleEvent.EVENT_BUS.post(new Data(player)))
     );
 
@@ -22,12 +22,12 @@ public interface PlayerLogin {
 
     final class Data extends SimpleEvent.Data<PlayerLogin> {
 
+        @Getter
+        private final ServerPlayer player;
+
         private Data(ServerPlayer player) {
             super(EVENT);
             this.player = player;
         }
-
-        @Getter
-        private final ServerPlayer player;
     }
 }

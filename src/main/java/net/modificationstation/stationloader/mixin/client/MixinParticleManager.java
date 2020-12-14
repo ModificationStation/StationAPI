@@ -18,7 +18,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ParticleManager.class)
 public class MixinParticleManager {
 
-    @Shadow private TextureManager textureManager;
+    @Shadow
+    private TextureManager textureManager;
 
     /*@Inject(method = "renderParticles(Lnet/minecraft/src/Entity;F)V", at = @At("HEAD"))
     private void onRenderParticles(CallbackInfo ci) {
@@ -29,6 +30,8 @@ public class MixinParticleManager {
     private void onTerrainTexture(CallbackInfo ci) {
         currentTexture = 0;
     }*/
+    private TextureRegistry registryToBind;
+    private int textureToBind;
 
     @Redirect(method = "method_324(Lnet/minecraft/entity/EntityBase;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;getTextureId(Ljava/lang/String;)I"))
     private int onGetTexture(TextureManager textureManager, String texture) {
@@ -76,8 +79,5 @@ public class MixinParticleManager {
         }*/
         particleBase.method_2002(var1, var2, var3, var4, var5, var6, var7);
     }
-
-    private TextureRegistry registryToBind;
-    private int textureToBind;
     //private int currentTexture;
 }

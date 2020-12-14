@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Mixin(HandshakeC2S.class)
 public abstract class MixinHandshakeC2S extends AbstractPacket implements StationHandshake {
 
+    private static final int MAX_STRING_LENGTH = 32767;
     @Getter
     public String
             stationLoader,
@@ -90,6 +91,4 @@ public abstract class MixinHandshakeC2S extends AbstractPacket implements Statio
         }
         cir.setReturnValue(cir.getReturnValueI() + extra.get());
     }
-
-    private static final int MAX_STRING_LENGTH = 32767;
 }

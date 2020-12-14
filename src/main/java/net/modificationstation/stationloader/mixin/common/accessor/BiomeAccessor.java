@@ -12,8 +12,10 @@ public interface BiomeAccessor {
 
     @Accessor
     List<EntityEntry> getMonsters();
+
     @Accessor
     List<EntityEntry> getCreatures();
+
     @Accessor
     List<EntityEntry> getWaterCreatures();
 }

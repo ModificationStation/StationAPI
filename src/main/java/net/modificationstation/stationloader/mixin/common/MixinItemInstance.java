@@ -19,7 +19,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ItemInstance.class)
 public class MixinItemInstance implements HasItemEntity {
 
-    @Shadow public int itemId;
+    @Shadow
+    public int itemId;
+    private ItemEntity itemEntity;
 
     @Inject(method = "<init>(III)V", at = @At("RETURN"))
     private void onFreshInstance(int id, int count, int damage, CallbackInfo ci) {
@@ -63,8 +65,6 @@ public class MixinItemInstance implements HasItemEntity {
     public void setItemEntity(ItemEntity itemEntity) {
         this.itemEntity = itemEntity;
     }
-
-    private ItemEntity itemEntity;
 
     @Inject(method = "onCrafted(Lnet/minecraft/level/Level;Lnet/minecraft/entity/player/PlayerBase;)V", at = @At("RETURN"))
     private void onCreation(Level arg, PlayerBase arg1, CallbackInfo ci) {

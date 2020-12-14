@@ -9,6 +9,8 @@ import java.util.function.IntFunction;
 
 public abstract class SerializedRegistry<T> extends Registry<T> {
 
+    private boolean updating = false;
+
     public SerializedRegistry(Identifier registryId) {
         super(registryId);
     }
@@ -59,6 +61,4 @@ public abstract class SerializedRegistry<T> extends Registry<T> {
     public abstract int getNextSerializedID();
 
     protected abstract void update();
-
-    private boolean updating = false;
 }

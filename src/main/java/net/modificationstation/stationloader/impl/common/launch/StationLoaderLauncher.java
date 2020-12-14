@@ -12,6 +12,8 @@ import org.apache.logging.log4j.core.config.Configurator;
 
 public class StationLoaderLauncher implements PreLaunchEntrypoint {
 
+    private static final Logger LOGGER = LogManager.getFormatterLogger("StationLoader|Launcher");
+
     @Override
     public void onPreLaunch() {
         Configurator.setLevel("StationLoader|Launcher", Level.INFO);
@@ -33,6 +35,4 @@ public class StationLoaderLauncher implements PreLaunchEntrypoint {
             });
         });
     }
-
-    private static final Logger LOGGER = LogManager.getFormatterLogger("StationLoader|Launcher");
 }

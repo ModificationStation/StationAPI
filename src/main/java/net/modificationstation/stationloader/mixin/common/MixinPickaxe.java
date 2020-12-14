@@ -5,5 +5,5 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(Pickaxe.class)
 public abstract class MixinPickaxe implements net.modificationstation.stationloader.api.common.item.tool.Pickaxe {
-    
+
 }

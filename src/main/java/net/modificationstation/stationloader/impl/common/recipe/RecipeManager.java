@@ -31,12 +31,12 @@ public class RecipeManager implements net.modificationstation.stationloader.api.
             String[] pattern = json.getPattern();
             Object[] keys = new Object[rawKeys.size() * 2 + pattern.length];
             int i = 0;
-            for (;i < pattern.length; i++)
+            for (; i < pattern.length; i++)
                 keys[i] = pattern[i];
             for (Map.Entry<String, JsonElement> key : rawKeys) {
                 keys[i] = key.getKey().charAt(0);
                 keys[i + 1] = new Gson().fromJson(key.getValue(), JsonItemKey.class).getItemInstance();
-                i+=2;
+                i += 2;
             }
             CraftingRegistry.INSTANCE.addShapedRecipe(json.getResult().getItemInstance(), keys);
         });

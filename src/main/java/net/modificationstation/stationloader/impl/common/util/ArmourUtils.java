@@ -21,6 +21,6 @@ public class ArmourUtils {
             var1 += var8;
         }
 
-        return ((var1 - 1D) * var2 / var3 + 1D) /5;
+        return ((var1 - 1D) * var2 / var3 + 1D) / 5;
     }
 }

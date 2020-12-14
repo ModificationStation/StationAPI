@@ -12,6 +12,9 @@ import java.util.TreeSet;
 
 public class Category implements net.modificationstation.stationloader.api.common.config.Category {
 
+    private final String name;
+    private final Set<net.modificationstation.stationloader.api.common.config.Property> properties = new TreeSet<>();
+
     public Category(String name) {
         this.name = name;
     }
@@ -88,7 +91,4 @@ public class Category implements net.modificationstation.stationloader.api.commo
     public boolean equals(Object o) {
         return o instanceof net.modificationstation.stationloader.api.common.config.Category && getName().equals(((net.modificationstation.stationloader.api.common.config.Category) o).getName());
     }
-
-    private final String name;
-    private final Set<net.modificationstation.stationloader.api.common.config.Property> properties = new TreeSet<>();
 }

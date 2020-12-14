@@ -20,13 +20,18 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(class_70.class)
 public class Mixinclass_70 {
 
-    @Shadow private ServerLevel field_2310;
+    @Shadow
+    private ServerLevel field_2310;
 
-    @Shadow private int field_2318;
+    @Shadow
+    private int field_2318;
 
-    @Shadow private int field_2319;
+    @Shadow
+    private int field_2319;
 
-    @Shadow private int field_2320;
+    @Shadow
+    private int field_2320;
+    private int capturedMeta;
 
     @Redirect(method = "method_1828()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;getHardness(Lnet/minecraft/entity/player/PlayerBase;)F"))
     private float getHardnessPerMeta(BlockBase blockBase, PlayerBase arg) {
@@ -64,6 +69,4 @@ public class Mixinclass_70 {
             }
         }
     }
-
-    private int capturedMeta;
 }

@@ -14,6 +14,10 @@ import java.io.IOException;
 
 public abstract class Texture extends TextureBinder {
 
+    protected final int atlasID;
+    protected final TextureRegistry textureRegistry;
+    protected final String pathToImage;
+
     public Texture(TextureRegistry textureRegistry, String pathToImage) {
         this(textureRegistry, pathToImage, 1);
     }
@@ -45,8 +49,4 @@ public abstract class Texture extends TextureBinder {
     public final void bindTexture(TextureManager textureManager) {
         textureRegistry.bindAtlas(textureManager, atlasID);
     }
-
-    protected final int atlasID;
-    protected final TextureRegistry textureRegistry;
-    protected final String pathToImage;
 }

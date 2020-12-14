@@ -16,7 +16,9 @@ import static net.modificationstation.stationloader.api.common.event.recipe.Reci
 public class MixinSmeltingRecipeRegistry {
 
     @Mutable
-    @Shadow @Final private static SmeltingRecipeRegistry INSTANCE;
+    @Shadow
+    @Final
+    private static SmeltingRecipeRegistry INSTANCE;
 
     @Inject(method = "<init>()V", at = @At("RETURN"))
     private void afterRecipeRegister(CallbackInfo ci) {

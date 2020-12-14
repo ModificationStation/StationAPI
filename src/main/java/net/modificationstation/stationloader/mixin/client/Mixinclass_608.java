@@ -30,7 +30,7 @@ public class Mixinclass_608 extends ClientInteractionManager {
             cir.setReturnValue(defaultBlockReach);
         ItemInstance itemInstance = minecraft.player.getHeldItem();
         if (itemInstance == null) {
-            if(handBlockReach != null)
+            if (handBlockReach != null)
                 cir.setReturnValue(handBlockReach);
         } else {
             ItemBase itemBase = itemInstance.getType();

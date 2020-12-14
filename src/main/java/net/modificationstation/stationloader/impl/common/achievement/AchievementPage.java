@@ -11,7 +11,7 @@ import java.util.Random;
  */
 public class AchievementPage implements net.modificationstation.stationloader.api.common.achievement.AchievementPage {
     private final String pageName;
-    private ArrayList<Integer> achievementIds = new ArrayList<>();
+    private final ArrayList<Integer> achievementIds = new ArrayList<>();
 
     /**
      * @param pageName The name of the page that is shown on the achievements screen.
@@ -23,6 +23,7 @@ public class AchievementPage implements net.modificationstation.stationloader.ap
 
     /**
      * Adds all provided achievement objects to the achievement page.
+     *
      * @param achievements The achievements to be added. Must be properly configured before adding.
      * @see Achievement
      */
@@ -44,32 +45,20 @@ public class AchievementPage implements net.modificationstation.stationloader.ap
 
 
     @Override
-    public int getBackgroundTexture(Random random, int i, int j)
-    {
+    public int getBackgroundTexture(Random random, int i, int j) {
         int k = BlockBase.SAND.texture;
         int l = random.nextInt(1 + j) + j / 2;
-        if(l > 37 || j == 35)
-        {
+        if (l > 37 || j == 35) {
             k = BlockBase.BEDROCK.texture;
-        } else
-        if(l == 22)
-        {
+        } else if (l == 22) {
             k = random.nextInt(2) != 0 ? BlockBase.REDSTONE_ORE.texture : BlockBase.DIAMOND_ORE.texture;
-        } else
-        if(l == 10)
-        {
+        } else if (l == 10) {
             k = BlockBase.IRON_ORE.texture;
-        } else
-        if(l == 8)
-        {
+        } else if (l == 8) {
             k = BlockBase.COAL_ORE.texture;
-        } else
-        if(l > 4)
-        {
+        } else if (l > 4) {
             k = BlockBase.STONE.texture;
-        } else
-        if(l > 0)
-        {
+        } else if (l > 0) {
             k = BlockBase.DIRT.texture;
         }
         return k;

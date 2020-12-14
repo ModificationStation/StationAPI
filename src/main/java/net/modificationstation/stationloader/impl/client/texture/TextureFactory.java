@@ -20,6 +20,14 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public class TextureFactory implements net.modificationstation.stationloader.api.client.texture.TextureFactory {
 
+    @Getter
+    private final String
+            originalStationAtlasFormat = "/assets/stationloader/atlases/station.%s.png",
+            copiedStationAtlasFormat = "/assets/stationloader/atlases/station.%s.%s.png";
+    private final Map<String, String> fakedAtlases = new HashMap<>();
+    private final Map<TextureRegistry, TreeMap<Integer, Integer>> spriteIDs = new HashMap<>();
+    private Texture[] textures = new Texture[0];
+
     @Override
     public int addTexture(TextureRegistry type, String pathToImage) {
         Texture texture = new StaticTexture(type, pathToImage);
@@ -102,12 +110,4 @@ public class TextureFactory implements net.modificationstation.stationloader.api
     public Map<String, String> getFakedAtlases() {
         return Collections.unmodifiableMap(fakedAtlases);
     }
-
-    @Getter
-    private final String
-            originalStationAtlasFormat = "/assets/stationloader/atlases/station.%s.png",
-            copiedStationAtlasFormat = "/assets/stationloader/atlases/station.%s.%s.png";
-    private final Map<String, String> fakedAtlases = new HashMap<>();
-    private Texture[] textures = new Texture[0];
-    private final Map<TextureRegistry, TreeMap<Integer, Integer>> spriteIDs = new HashMap<>();
 }

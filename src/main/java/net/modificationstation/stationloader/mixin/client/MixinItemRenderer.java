@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Environment(EnvType.CLIENT)
 public abstract class MixinItemRenderer extends EntityRenderer {
 
+    private int atlasToBind;
+
     @Redirect(method = {
             "render(Lnet/minecraft/entity/Item;DDDFF)V",
             "method_1487(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;Lnet/minecraft/item/ItemInstance;II)V"
@@ -50,6 +52,4 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     private void rebindItemTexture(TextureManager textureManager, int i) {
         TextureRegistry.getRegistry(TextureRegistry.Vanilla.GUI_ITEMS).bindAtlas(textureManager, atlasToBind);
     }
-
-    private int atlasToBind;
 }

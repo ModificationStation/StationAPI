@@ -13,11 +13,12 @@ import java.util.Map;
 
 @Mixin(SoundMap.class)
 public class MixinSoundMap implements CustomSoundMap {
-    @Shadow private Map field_1089;
-
-    @Shadow private List field_1090;
-
-    @Shadow public int field_1086;
+    @Shadow
+    public int field_1086;
+    @Shadow
+    private Map field_1089;
+    @Shadow
+    private List field_1090;
 
     @Override
     public class_267 putSound(String id, URL url) {
@@ -33,7 +34,7 @@ public class MixinSoundMap implements CustomSoundMap {
         }
         class_267 var4 = new class_267(filename, url);
 
-        ((List)this.field_1089.get(id)).add(var4);
+        ((List) this.field_1089.get(id)).add(var4);
         this.field_1090.add(var4);
         ++this.field_1086;
         return var4;

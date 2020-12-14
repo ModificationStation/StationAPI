@@ -6,12 +6,8 @@ import java.lang.reflect.Field;
 
 public class UnsafeProvider implements net.modificationstation.stationloader.api.common.util.UnsafeProvider {
 
-    @Override
-    public Unsafe getUnsafe() {
-        return theUnsafe;
-    }
-
     private static final Unsafe theUnsafe;
+
     static {
         try {
             Field field = Unsafe.class.getDeclaredField("theUnsafe");
@@ -20,5 +16,10 @@ public class UnsafeProvider implements net.modificationstation.stationloader.api
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Unsafe getUnsafe() {
+        return theUnsafe;
     }
 }

@@ -24,11 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemBase.class)
 public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
 
-    @Shadow public boolean isEffectiveOn(BlockBase tile) { return false; }
-
-    @Shadow public float getStrengthOnBlock(ItemInstance item, BlockBase tile) { return 0; }
-
-    public MixinItemBase(int i) {}
+    public MixinItemBase(int i) {
+    }
 
     @Environment(EnvType.CLIENT)
     @SuppressWarnings("UnresolvedMixinReference")
@@ -42,6 +39,16 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
     private static void afterItemRegister(CallbackInfo ci) {
         GeneralFactory.INSTANCE.addFactory(ItemBase.class, (args) -> ItemBase.class.cast(new MixinItemBase((int) args[0])));
         ItemRegister.EVENT.getInvoker().registerItems(ItemRegistry.INSTANCE, ItemRegister.EVENT.getInvokerModID());
+    }
+
+    @Shadow
+    public boolean isEffectiveOn(BlockBase tile) {
+        return false;
+    }
+
+    @Shadow
+    public float getStrengthOnBlock(ItemInstance item, BlockBase tile) {
+        return 0;
     }
 
     @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/item/ItemBase;", at = @At("HEAD"))

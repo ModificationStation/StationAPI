@@ -13,34 +13,49 @@ import java.util.HashMap;
 
 public class CustomCuboidRenderer implements net.modificationstation.stationloader.api.client.model.CustomCuboidRenderer {
 
-    private QuadPoint[] quadPoints;
-    private CustomTexturedQuad[] cubeQuads;
-    private JsonFaces uvs;
     public float rotationPointX;
     public float rotationPointY;
     public float rotationPointZ;
     public float pitch;
     public float yaw;
     public float roll;
-    private boolean compiled = false;
-    private int list = 0;
     public boolean mirror = false;
     public boolean visible = true;
     public boolean skipRendering = false;
     public String modid;
+    private QuadPoint[] quadPoints;
+    private CustomTexturedQuad[] cubeQuads;
+    private final JsonFaces uvs;
+    private boolean compiled = false;
+    private int list = 0;
 
     public CustomCuboidRenderer(JsonFaces uvs, String modid) {
         this.uvs = uvs;
         this.modid = modid;
     }
 
+    public static String getTexture(HashMap<String, String> textures, String textureName) {
+        try {
+            if (textureName.startsWith("#missing")) {
+                return null;
+            } else {
+                String[] tex = textures.get(textureName.substring(1)).split("/");
+                return tex[tex.length - 1];
+            }
+        } catch (Exception e) {
+            StationLoader.INSTANCE.getLogger().error("Unable to get valid texture for side!");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @Environment(EnvType.CLIENT)
     public void setupCuboid(float f, float f1, float f2, int i, int j, int k, float f3, HashMap<String, String> textures) {
         this.quadPoints = new QuadPoint[8];
         this.cubeQuads = new CustomTexturedQuad[6];
-        float var8 = f + (float)i;
-        float var9 = f1 + (float)j;
-        float var10 = f2 + (float)k;
+        float var8 = f + (float) i;
+        float var9 = f1 + (float) j;
+        float var10 = f2 + (float) k;
         f -= f3;
         f1 -= f3;
         f2 -= f3;
@@ -71,7 +86,7 @@ public class CustomCuboidRenderer implements net.modificationstation.stationload
         this.quadPoints[7] = var18;
 
         // East
-        this.cubeQuads[0] = new CustomTexturedQuad(new QuadPoint[]{var16, var12, var13, var17}, (int) (uvs.getEast().getUv()[2]), (int) (uvs.getEast().getUv()[3]), (int) (uvs.getEast().getUv()[0]), (int) (uvs.getEast().getUv()[1]) , 16, 16, BlockFaces.EAST, getTexture(textures, uvs.getEast().getTexture()));
+        this.cubeQuads[0] = new CustomTexturedQuad(new QuadPoint[]{var16, var12, var13, var17}, (int) (uvs.getEast().getUv()[2]), (int) (uvs.getEast().getUv()[3]), (int) (uvs.getEast().getUv()[0]), (int) (uvs.getEast().getUv()[1]), 16, 16, BlockFaces.EAST, getTexture(textures, uvs.getEast().getTexture()));
         // West
         this.cubeQuads[1] = new CustomTexturedQuad(new QuadPoint[]{var20, var15, var18, var14}, (int) (uvs.getWest().getUv()[2]), (int) (uvs.getWest().getUv()[3]), (int) (uvs.getWest().getUv()[0]), (int) (uvs.getWest().getUv()[1]), 16, 16, BlockFaces.WEST, getTexture(textures, uvs.getWest().getTexture()));
         // Up
@@ -89,22 +104,6 @@ public class CustomCuboidRenderer implements net.modificationstation.stationload
             }
         }
 
-    }
-
-    public static String getTexture(HashMap<String, String> textures, String textureName) {
-        try {
-            if (textureName.startsWith("#missing")) {
-                return null;
-            }
-            else {
-                String[] tex = textures.get(textureName.substring(1)).split("/");
-                return tex[tex.length-1];
-            }
-        } catch (Exception e) {
-            StationLoader.INSTANCE.getLogger().error("Unable to get valid texture for side!");
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public void setRotationPoint(float f, float f1, float f2) {

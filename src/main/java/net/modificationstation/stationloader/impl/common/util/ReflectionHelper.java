@@ -7,6 +7,16 @@ import java.util.Arrays;
 
 public class ReflectionHelper {
 
+    private static final Field modifiers;
+
+    static {
+        try {
+            modifiers = Field.class.getDeclaredField("modifiers");
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static Field[] getFieldsWithAnnotation(Class<?> targetClass, Class<? extends Annotation> annotationClass) {
         Field[] fields = new Field[0];
         for (Field field : targetClass.getFields())
@@ -31,14 +41,5 @@ public class ReflectionHelper {
         modifiers.setInt(field, fieldModifiers);
         if (modifiersInaccessible)
             modifiers.setAccessible(false);
-    }
-
-    private static final Field modifiers;
-    static {
-        try {
-            modifiers = Field.class.getDeclaredField("modifiers");
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

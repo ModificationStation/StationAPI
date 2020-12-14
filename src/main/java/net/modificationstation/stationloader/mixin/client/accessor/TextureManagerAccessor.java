@@ -15,10 +15,13 @@ public interface TextureManagerAccessor {
 
     @Accessor
     HashMap<String, Integer> getField_1246();
+
     @Accessor
     IntBuffer getField_1249();
+
     @Accessor
     BufferedImage getField_1257();
+
     @Invoker
     BufferedImage invokeMethod_1091(InputStream var1);
 }

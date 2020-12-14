@@ -22,12 +22,12 @@ public interface StationSpawnData extends CustomSpawnData {
         }
         Message message = new Message(Identifier.of(StationLoader.INSTANCE.getModID(), "spawn_entity"));
         message.put(getHandlerIdentifier().toString());
-        int[] ints = new int[] {entityBase.entityId, MathHelper.floor(entityBase.x * 32), MathHelper.floor(entityBase.y * 32), MathHelper.floor(entityBase.z * 32), ownerId};
+        int[] ints = new int[]{entityBase.entityId, MathHelper.floor(entityBase.x * 32), MathHelper.floor(entityBase.y * 32), MathHelper.floor(entityBase.z * 32), ownerId};
         message.put(ints);
         if (ownerId > 0) {
             double var10 = 3.9D;
             //noinspection UnstableApiUsage
-            short[] shorts = new short[] {(short) (Doubles.constrainToRange(entityBase.velocityX, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entityBase.velocityY, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entityBase.velocityZ, -var10, var10) * 8000)};
+            short[] shorts = new short[]{(short) (Doubles.constrainToRange(entityBase.velocityX, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entityBase.velocityY, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entityBase.velocityZ, -var10, var10) * 8000)};
             message.put(shorts);
         }
         writeToMessage(message);
@@ -36,7 +36,9 @@ public interface StationSpawnData extends CustomSpawnData {
 
     Identifier getHandlerIdentifier();
 
-    default void writeToMessage(Message message) { }
+    default void writeToMessage(Message message) {
+    }
 
-    default void readFromMessage(Message message) { }
+    default void readFromMessage(Message message) {
+    }
 }

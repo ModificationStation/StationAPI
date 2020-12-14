@@ -11,7 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(TranslationStorage.class)
 public class MixinTranslationStorage {
 
-    @Shadow private static TranslationStorage instance;
+    @Shadow
+    private static TranslationStorage instance;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void afterLangLoaded(CallbackInfo ci) {

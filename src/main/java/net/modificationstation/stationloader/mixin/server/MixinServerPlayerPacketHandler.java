@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(ServerPlayerPacketHandler.class)
 public class MixinServerPlayerPacketHandler {
 
-    @Shadow private ServerPlayer serverPlayer;
+    @Shadow
+    private ServerPlayer serverPlayer;
 
     @ModifyConstant(method = "method_1426(Lnet/minecraft/packet/Id14Packet;)V", constant = @Constant(doubleValue = 36))
     private double getBlockReach(double originalReach) {
@@ -24,7 +25,7 @@ public class MixinServerPlayerPacketHandler {
             originalReach = defaultBlockReach;
         ItemInstance itemInstance = serverPlayer.getHeldItem();
         if (itemInstance == null) {
-            if(handBlockReach != null)
+            if (handBlockReach != null)
                 originalReach = handBlockReach;
         } else {
             ItemBase itemBase = itemInstance.getType();
@@ -44,7 +45,7 @@ public class MixinServerPlayerPacketHandler {
             originalReach = defaultEntityReach;
         ItemInstance itemInstance = serverPlayer.getHeldItem();
         if (itemInstance == null) {
-            if(handEntityReach != null)
+            if (handEntityReach != null)
                 originalReach = handEntityReach;
         } else {
             ItemBase itemBase = itemInstance.getType();

@@ -12,6 +12,8 @@ import java.util.Properties;
 
 public class I18n implements net.modificationstation.stationloader.api.common.lang.I18n {
 
+    private final Map<String, String> langFolders = new HashMap<>();
+
     public I18n() {
         addLangFolder("/lang");
     }
@@ -57,6 +59,4 @@ public class I18n implements net.modificationstation.stationloader.api.common.la
             translations.putAll(properties);
         }
     }
-
-    private final Map<String, String> langFolders = new HashMap<>();
 }

@@ -15,9 +15,12 @@ import java.util.Random;
 @Mixin(ServerChunkCache.class)
 public class MixinServerChunkCache {
 
-    @Shadow private Level field_1231;
+    @Shadow
+    private Level field_1231;
 
-    @Shadow private LevelSource field_1227;
+    @Shadow
+    private LevelSource field_1227;
+    private Random modRandom;
 
     @Inject(method = "decorate(Lnet/minecraft/level/source/LevelSource;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/level/source/LevelSource;decorate(Lnet/minecraft/level/source/LevelSource;II)V", shift = At.Shift.AFTER))
     private void onPopulate(LevelSource levelSource, int chunkX, int chunkZ, CallbackInfo ci) {
@@ -28,9 +31,7 @@ public class MixinServerChunkCache {
         modRandom.setSeed(field_1231.getSeed());
         long xRandomMultiplier = (modRandom.nextLong() / 2L) * 2L + 1L;
         long zRandomMultiplier = (modRandom.nextLong() / 2L) * 2L + 1L;
-        modRandom.setSeed((long)chunkX * xRandomMultiplier + (long)chunkZ * zRandomMultiplier ^ field_1231.getSeed());
+        modRandom.setSeed((long) chunkX * xRandomMultiplier + (long) chunkZ * zRandomMultiplier ^ field_1231.getSeed());
         ChunkPopulator.EVENT.getInvoker().populate(field_1231, field_1227, field_1231.getBiomeSource().getBiome(blockX + 16, blockZ + 16), blockX, blockZ, modRandom);
     }
-
-    private Random modRandom;
 }

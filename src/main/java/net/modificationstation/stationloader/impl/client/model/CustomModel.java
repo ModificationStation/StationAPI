@@ -3,7 +3,7 @@ package net.modificationstation.stationloader.impl.client.model;
 import net.minecraft.client.render.entity.model.EntityModelBase;
 
 public class CustomModel extends EntityModelBase implements net.modificationstation.stationloader.api.client.model.CustomModel {
-    private CustomCuboidRenderer[] cuboids;
+    private final CustomCuboidRenderer[] cuboids;
 
     public CustomModel(CustomCuboidRenderer[] cuboids) {
         this.cuboids = cuboids;

@@ -13,6 +13,8 @@ import java.util.function.BiConsumer;
 
 public class SmeltingRegistry implements net.modificationstation.stationloader.api.common.recipe.SmeltingRegistry, TileEntityRegister {
 
+    private TileEntityFurnaceAccessor DUMMY_TILE_ENTITY_FURNACE;
+
     @Override
     public void addSmeltingRecipe(int input, ItemInstance output) {
         ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().put(input, output);
@@ -48,6 +50,4 @@ public class SmeltingRegistry implements net.modificationstation.stationloader.a
             throw new RuntimeException(e);
         }
     }
-
-    private TileEntityFurnaceAccessor DUMMY_TILE_ENTITY_FURNACE;
 }

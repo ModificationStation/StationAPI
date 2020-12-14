@@ -24,7 +24,9 @@ import static net.modificationstation.stationloader.api.common.event.recipe.Reci
 public class MixinRecipeRegistry {
 
     @Mutable
-    @Shadow @Final private static RecipeRegistry INSTANCE;
+    @Shadow
+    @Final
+    private static RecipeRegistry INSTANCE;
 
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/util/Collections;sort(Ljava/util/List;Ljava/util/Comparator;)V"))
     private <T> void afterRecipeRegister(List<T> list, Comparator<? super T> c) {

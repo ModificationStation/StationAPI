@@ -18,9 +18,10 @@ import java.util.List;
 @Mixin(ToolBase.class)
 public class MixinToolBase implements ToolLevel {
 
-    @Shadow private BlockBase[] effectiveBlocksBase;
-
-    @Shadow protected ToolMaterial toolMaterial;
+    @Shadow
+    protected ToolMaterial toolMaterial;
+    @Shadow
+    private BlockBase[] effectiveBlocksBase;
 
     @Inject(method = "<init>(IILnet/minecraft/item/tool/ToolMaterial;[Lnet/minecraft/block/BlockBase;)V", at = @At("RETURN"))
     private void getEffectiveBlocks(int id, int j, ToolMaterial arg, BlockBase[] effectiveBlocks, CallbackInfo ci) {

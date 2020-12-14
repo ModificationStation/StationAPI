@@ -12,6 +12,16 @@ import java.util.Objects;
 
 public final class ModID implements Comparable<ModID> {
 
+    private static final Map<String, ModID> VALUES = new HashMap<>();
+    private final String modid;
+    @Getter
+    private final ModContainer container;
+
+    private ModID(String modid, ModContainer modContainer) {
+        this.modid = modid;
+        this.container = modContainer;
+    }
+
     public static @NotNull ModID of(ModContainer modContainer) {
         return VALUES.computeIfAbsent(modContainer.getMetadata().getId(), s -> new ModID(s, modContainer));
     }
@@ -22,11 +32,6 @@ public final class ModID implements Comparable<ModID> {
 
     public static @NotNull ModID of(String modid) {
         return VALUES.computeIfAbsent(modid, s -> of(Objects.requireNonNull(FabricLoader.getInstance().getModContainer(s).orElse(null))));
-    }
-
-    private ModID(String modid, ModContainer modContainer) {
-        this.modid = modid;
-        this.container = modContainer;
     }
 
     @Override
@@ -49,10 +54,4 @@ public final class ModID implements Comparable<ModID> {
     public int compareTo(@NotNull ModID o) {
         return modid.compareTo(o.modid);
     }
-
-    private final String modid;
-    @Getter
-    private final ModContainer container;
-
-    private static final Map<String, ModID> VALUES = new HashMap<>();
 }

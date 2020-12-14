@@ -34,10 +34,10 @@ public class MixinContainerBaseGUI extends ScreenBase {
                     tooltipWidth = len;
                 }
             }
-            this.fillGradient(tooltipX - 3, tooltipY - 3, tooltipX + tooltipWidth + 3, tooltipY+(8*tooltipCount)+(3*tooltipCount), -1073741824, -1073741824);
+            this.fillGradient(tooltipX - 3, tooltipY - 3, tooltipX + tooltipWidth + 3, tooltipY + (8 * tooltipCount) + (3 * tooltipCount), -1073741824, -1073741824);
             tooltipCount = 0;
             for (String line : newTooltip) {
-                this.textManager.drawTextWithShadow(line, tooltipX, tooltipY+(8*tooltipCount)+(3*(tooltipCount)), -1);
+                this.textManager.drawTextWithShadow(line, tooltipX, tooltipY + (8 * tooltipCount) + (3 * (tooltipCount)), -1);
                 tooltipCount++;
             }
 

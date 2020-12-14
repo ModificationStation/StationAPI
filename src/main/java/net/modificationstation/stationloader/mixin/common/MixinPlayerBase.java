@@ -36,18 +36,21 @@ import java.util.Random;
 @Mixin(PlayerBase.class)
 public abstract class MixinPlayerBase extends Living implements PlayerBaseAccessor, PlayerBaseSettersGettersInvokers, HasPlayerHandlers, PlayerBaseSuper, StrengthOnMeta {
 
-    @Shadow protected boolean sleeping;
-
-    @Shadow public abstract float getStrengh(BlockBase arg);
-
-    @Shadow public abstract ItemInstance getHeldItem();
-
-    @Shadow public PlayerInventory inventory;
+    @Shadow
+    public PlayerInventory inventory;
+    @Shadow
+    protected boolean sleeping;
     private List<PlayerHandler> playerBases;
-
+    private Integer meta;
     public MixinPlayerBase(Level world) {
         super(world);
     }
+
+    @Shadow
+    public abstract float getStrengh(BlockBase arg);
+
+    @Shadow
+    public abstract ItemInstance getHeldItem();
 
     @Override
     public List<PlayerHandler> getPlayerBases() {
@@ -322,8 +325,7 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
                     CustomArmourValue armor = (CustomArmourValue) armourInstance.getType();
                     double damageNegated = armor.modifyDamageDealt((PlayerBase) (Object) this, armourSlot, initialDamage, damageAmount);
                     damageAmount -= damageNegated;
-                }
-                else {
+                } else {
                     damageAmount -= ArmourUtils.getVanillaArmourReduction(armourInstance);
                     armourInstance.applyDamage(initialDamage, null);
                 }
@@ -355,16 +357,16 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
         return super.method_1352(entity);
     }
 
+    // ???
+    /*public void superAttackTargetEntityWithCurrentItem(EntityBase entity) {
+        super.attack(entity);
+    }*/
+
     @Inject(method = "attack(Lnet/minecraft/entity/EntityBase;)V", at = @At("HEAD"), cancellable = true)
     private void attackTargetEntityWithCurrentItem(EntityBase arg, CallbackInfo ci) {
         if (PlayerAPI.attackTargetEntityWithCurrentItem((PlayerBase) (Object) this, arg))
             ci.cancel();
     }
-
-    // ???
-    /*public void superAttackTargetEntityWithCurrentItem(EntityBase entity) {
-        super.attack(entity);
-    }*/
 
     @Override
     public boolean method_1393() {
@@ -392,16 +394,16 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
         return super.method_1335();
     }
 
+    // ???
+    /*public void superDropPlayerItemWithRandomChoice(ItemInstance itemstack, boolean flag) {
+        super.dropItem(itemstack, flag);
+    }*/
+
     @Inject(method = "dropItem(Lnet/minecraft/item/ItemInstance;Z)V", at = @At("HEAD"), cancellable = true)
     public void dropPlayerItemWithRandomChoice(ItemInstance arg, boolean flag, CallbackInfo ci) {
         if (PlayerAPI.dropPlayerItemWithRandomChoice((PlayerBase) (Object) this, arg, flag))
             ci.cancel();
     }
-
-    // ???
-    /*public void superDropPlayerItemWithRandomChoice(ItemInstance itemstack, boolean flag) {
-        super.dropItem(itemstack, flag);
-    }*/
 
     @Override
     public void superUpdatePlayerActionState() {
@@ -440,6 +442,4 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
             return ret;
         }
     }
-
-    private Integer meta;
 }

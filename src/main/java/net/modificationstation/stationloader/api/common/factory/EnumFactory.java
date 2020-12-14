@@ -20,5 +20,5 @@ public interface EnumFactory extends HasHandler<EnumFactory> {
         }
     };
 
-    <T extends Enum<? >> T addEnum(Class<T> enumType, String enumName, Class<?>[] paramTypes, Object[] paramValues);
+    <T extends Enum<?>> T addEnum(Class<T> enumType, String enumName, Class<?>[] paramTypes, Object[] paramValues);
 }

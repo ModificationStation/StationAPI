@@ -23,7 +23,11 @@ import java.util.Optional;
 @Mixin(ClientPlayNetworkHandler.class)
 public class MixinClientPlayNetworkHandler {
 
-    @Shadow private ClientLevel level;
+    @Shadow
+    private ClientLevel level;
+    private double capturedX;
+    private double capturedY;
+    private double capturedZ;
 
     @Inject(method = "handleEntitySpawn(Lnet/minecraft/packet/play/EntitySpawnS2C;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/packet/play/EntitySpawnS2C;z:I", opcode = Opcodes.GETFIELD, shift = At.Shift.BY, by = 5), locals = LocalCapture.CAPTURE_FAILHARD)
     private void captureCoords(EntitySpawnS2C packet, CallbackInfo ci, double var2, double var4, double var6) {
@@ -39,8 +43,4 @@ public class MixinClientPlayNetworkHandler {
             entity = entityHandler.get().apply(level, capturedX, capturedY, capturedZ);
         return entity;
     }
-
-    private double capturedX;
-    private double capturedY;
-    private double capturedZ;
 }

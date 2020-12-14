@@ -28,19 +28,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BlockBase.class)
 public class MixinBlockBase implements BlockStrengthPerMeta {
 
-    public MixinBlockBase(int i, Material material) { }
+    @Shadow
+    @Final
+    public static BlockBase[] BY_ID;
+    @Shadow
+    @Final
+    public Material material;
+    @Shadow
+    protected float hardness;
 
-    public MixinBlockBase(int i, int j, Material material) { }
+    public MixinBlockBase(int i, Material material) {
+    }
 
-    @Shadow @Final public static BlockBase[] BY_ID;
-
-    @Shadow public String getName() {return null;}
-
-    @Shadow protected float hardness;
-
-    @Shadow @Final public Material material;
-
-    @Shadow public float getHardness() { return 0; }
+    public MixinBlockBase(int i, int j, Material material) {
+    }
 
     @Environment(EnvType.CLIENT)
     @SuppressWarnings("UnresolvedMixinReference")
@@ -68,6 +69,16 @@ public class MixinBlockBase implements BlockStrengthPerMeta {
     @Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(I)Lnet/minecraft/item/PlaceableTileEntity;"))
     private static PlaceableTileEntity getBlockItem(int blockID) {
         return BlockManager.INSTANCE.getBlockItem(BY_ID[blockID + BY_ID.length]);
+    }
+
+    @Shadow
+    public String getName() {
+        return null;
+    }
+
+    @Shadow
+    public float getHardness() {
+        return 0;
     }
 
     @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;", at = @At("HEAD"))
