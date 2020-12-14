@@ -20,6 +20,11 @@ public interface PreInit {
             (eventRegistry, modID) -> {
         for (PreInit listener : listeners)
             listener.preInit(eventRegistry, PreInit.EVENT.getListenerModID(listener));
+    }, listener ->
+            (eventRegistry, modID) -> {
+        PreInit.EVENT.setCurrentListener(listener);
+        listener.preInit(eventRegistry, modID);
+        PreInit.EVENT.setCurrentListener(null);
     });
 
     void preInit(EventRegistry eventRegistry, ModID modID);

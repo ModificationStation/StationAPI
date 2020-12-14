@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationloader.api.common.recipe.CraftingRegistry;
 import net.modificationstation.stationloader.api.common.recipe.SmeltingRegistry;
+import net.modificationstation.stationloader.api.common.registry.Identifier;
 import net.modificationstation.stationloader.impl.common.item.JsonItemKey;
 
 import java.io.BufferedReader;
@@ -18,8 +19,8 @@ import java.util.function.Consumer;
 public class RecipeManager implements net.modificationstation.stationloader.api.common.recipe.RecipeManager, RecipeRegister {
 
     public RecipeManager() {
-        addOrGetRecipeType("minecraft:crafting_shaped", (recipe) -> {
-            JsonElement rawJson = null;
+        addOrGetRecipeType(Identifier.of("minecraft:crafting_shaped"), (recipe) -> {
+            JsonElement rawJson;
             try {
                 rawJson = JsonParser.parseReader(new BufferedReader(new InputStreamReader(recipe.openStream())));
             } catch (IOException e) {
@@ -39,8 +40,8 @@ public class RecipeManager implements net.modificationstation.stationloader.api.
             }
             CraftingRegistry.INSTANCE.addShapedRecipe(json.getResult().getItemInstance(), keys);
         });
-        addOrGetRecipeType("minecraft:crafting_shapeless", (recipe) -> {
-            JsonCraftingShapeless json = null;
+        addOrGetRecipeType(Identifier.of("minecraft:crafting_shapeless"), (recipe) -> {
+            JsonCraftingShapeless json;
             try {
                 json = new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonCraftingShapeless.class);
             } catch (IOException e) {
@@ -52,8 +53,8 @@ public class RecipeManager implements net.modificationstation.stationloader.api.
                 itemstacks[i] = ingredients[i].getItemInstance();
             CraftingRegistry.INSTANCE.addShapelessRecipe(json.getResult().getItemInstance(), itemstacks);
         });
-        addOrGetRecipeType("minecraft:smelting", (recipe) -> {
-            JsonSmelting json = null;
+        addOrGetRecipeType(Identifier.of("minecraft:smelting"), (recipe) -> {
+            JsonSmelting json;
             try {
                 json = new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonSmelting.class);
             } catch (IOException e) {
@@ -65,13 +66,13 @@ public class RecipeManager implements net.modificationstation.stationloader.api.
 
     @Override
     public void addJsonRecipe(URL recipe) throws IOException {
-        addOrGetRecipeType(new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonRecipeType.class).getType(), null).add(recipe);
+        addOrGetRecipeType(Identifier.of(new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonRecipeType.class).getType()), null).add(recipe);
     }
 
     @Override
-    public Set<URL> addOrGetRecipeType(String type, Consumer<URL> register) {
-        String modid = type.split(":")[0];
-        type = type.substring(modid.length() + 1);
+    public Set<URL> addOrGetRecipeType(Identifier identifier, Consumer<URL> register) {
+        String modid = identifier.getModID().toString();
+        String type = identifier.getId();
         if (!recipes.containsKey(modid))
             recipes.put(modid, new HashMap<>());
         Map<String, Map.Entry<Consumer<URL>, Set<URL>>> map = recipes.get(modid);
@@ -84,9 +85,8 @@ public class RecipeManager implements net.modificationstation.stationloader.api.
     }
 
     @Override
-    public void registerRecipes(String recipeType) {
-        String modid = recipeType.split(":")[0];
-        Map.Entry<Consumer<URL>, Set<URL>> recipe = recipes.get(modid).get(recipeType.substring(modid.length() + 1));
+    public void registerRecipes(Identifier recipeId) {
+        Map.Entry<Consumer<URL>, Set<URL>> recipe = recipes.get(recipeId.getModID().toString()).get(recipeId.getId());
         recipe.getValue().forEach(recipe.getKey());
     }
 }

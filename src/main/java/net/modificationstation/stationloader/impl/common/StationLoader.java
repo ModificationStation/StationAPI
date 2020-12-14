@@ -180,7 +180,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         getLogger().info("Setting up IsEffectiveOn...");
         IsEffectiveOn.EVENT.register((toolLevel, arg, meta, effective) -> {
             if (arg instanceof EffectiveForTool)
-                effective.set(((EffectiveForTool) arg).isEffectiveFor(toolLevel, meta));
+                effective = ((EffectiveForTool) arg).isEffectiveFor(toolLevel, meta);
+            return effective;
         });
         getLogger().info("Setting up TileEntityRegister...");
         TileEntityRegister.EVENT.register(smeltingRegistry);

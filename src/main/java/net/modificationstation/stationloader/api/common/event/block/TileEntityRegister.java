@@ -1,16 +1,36 @@
 package net.modificationstation.stationloader.api.common.event.block;
 
+import net.minecraft.tileentity.TileEntityBase;
 import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 
-import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public interface TileEntityRegister {
 
-    SimpleEvent<TileEntityRegister> EVENT = new SimpleEvent<>(TileEntityRegister.class, listeners ->
-            tileEntityList -> {
-                for (TileEntityRegister event : listeners)
-                    event.registerTileEntities(tileEntityList);
-            });
+    @SuppressWarnings("UnstableApiUsage")
+    SimpleEvent<TileEntityRegister> EVENT = new SimpleEvent<>(TileEntityRegister.class,
+            listeners ->
+                    register -> {
+        for (TileEntityRegister listener : listeners)
+            listener.registerTileEntities(register);
+    }, (Consumer<SimpleEvent<TileEntityRegister>>) tileEntityRegister ->
+            tileEntityRegister.register(register -> SimpleEvent.EVENT_BUS.post(new Data(register)))
+    );
 
-    void registerTileEntities(Map<Class<?>, String> tileEntityList);
+    void registerTileEntities(BiConsumer<Class<? extends TileEntityBase>, String> register);
+
+    final class Data extends SimpleEvent.Data<TileEntityRegister> {
+
+        private Data(BiConsumer<Class<? extends TileEntityBase>, String> register) {
+            super(EVENT);
+            this.register = register;
+        }
+
+        public void register(Class<? extends TileEntityBase> teClass, String teIdentifier) {
+            register.accept(teClass, teIdentifier);
+        }
+
+        private final BiConsumer<Class<? extends TileEntityBase>, String> register;
+    }
 }

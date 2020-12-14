@@ -9,8 +9,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 @Mixin(Biome.class)
 public class MixinBiome {
 
@@ -22,8 +20,6 @@ public class MixinBiome {
 
     @Inject(method = "getClimateBiome(FF)Lnet/minecraft/level/biome/Biome;", at = @At("RETURN"), cancellable = true)
     private static void getBiome(float temperature, float rainfall, CallbackInfoReturnable<Biome> cir) {
-        AtomicReference<Biome> biome = new AtomicReference<>(cir.getReturnValue());
-        BiomeByClimateProvider.EVENT.getInvoker().getBiome(biome, temperature, rainfall);
-        cir.setReturnValue(biome.get());
+        cir.setReturnValue(BiomeByClimateProvider.EVENT.getInvoker().getBiome(cir.getReturnValue(), temperature, rainfall));
     }
 }

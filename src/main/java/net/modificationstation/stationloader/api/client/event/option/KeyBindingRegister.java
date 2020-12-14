@@ -1,9 +1,11 @@
 package net.modificationstation.stationloader.api.client.event.option;
 
+import lombok.Getter;
 import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Used to add keybindings to the keybinding screen.
@@ -20,11 +22,26 @@ import java.util.List;
  */
 public interface KeyBindingRegister {
 
-    SimpleEvent<KeyBindingRegister> EVENT = new SimpleEvent<>(KeyBindingRegister.class, (listeners) ->
-            (keyBindings) -> {
-                for (KeyBindingRegister event : listeners)
-                    event.registerKeyBindings(keyBindings);
-            });
+    @SuppressWarnings("UnstableApiUsage")
+    SimpleEvent<KeyBindingRegister> EVENT = new SimpleEvent<>(KeyBindingRegister.class,
+            listeners ->
+                    keyBindings -> {
+        for (KeyBindingRegister listener : listeners)
+            listener.registerKeyBindings(keyBindings);
+    }, (Consumer<SimpleEvent<KeyBindingRegister>>) keyBindingRegister ->
+            keyBindingRegister.register(keyBindings -> SimpleEvent.EVENT_BUS.post(new Data(keyBindings)))
+    );
 
     void registerKeyBindings(List<KeyBinding> keyBindings);
+
+    final class Data extends SimpleEvent.Data<KeyBindingRegister> {
+
+        private Data(List<KeyBinding> keyBindings) {
+            super(EVENT);
+            this.keyBindings = keyBindings;
+        }
+
+        @Getter
+        private final List<KeyBinding> keyBindings;
+    }
 }

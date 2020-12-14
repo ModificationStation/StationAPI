@@ -2,13 +2,14 @@ package net.modificationstation.stationloader.impl.common.recipe;
 
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
+import net.minecraft.tileentity.TileEntityBase;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.modificationstation.stationloader.api.common.event.block.TileEntityRegister;
 import net.modificationstation.stationloader.api.common.util.UnsafeProvider;
 import net.modificationstation.stationloader.mixin.common.accessor.SmeltingRecipeRegistryAccessor;
 import net.modificationstation.stationloader.mixin.common.accessor.TileEntityFurnaceAccessor;
 
-import java.util.Map;
+import java.util.function.BiConsumer;
 
 public class SmeltingRegistry implements net.modificationstation.stationloader.api.common.recipe.SmeltingRegistry, TileEntityRegister {
 
@@ -40,7 +41,7 @@ public class SmeltingRegistry implements net.modificationstation.stationloader.a
     }
 
     @Override
-    public void registerTileEntities(Map<Class<?>, String> tileEntityList) {
+    public void registerTileEntities(BiConsumer<Class<? extends TileEntityBase>, String> register) {
         try {
             DUMMY_TILE_ENTITY_FURNACE = (TileEntityFurnaceAccessor) UnsafeProvider.INSTANCE.getUnsafe().allocateInstance(TileEntityFurnace.class);
         } catch (InstantiationException e) {

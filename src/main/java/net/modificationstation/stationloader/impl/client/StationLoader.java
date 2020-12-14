@@ -53,7 +53,7 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
                 if (isClient)
                     playerBase.container.currentContainerId = message.ints()[0];
             }));
-            GuiHandlerRegister.EVENT.getInvoker().registerGUIs(GuiHandlerRegistry.INSTANCE, GuiHandlerRegister.EVENT.getListenerModID(GuiHandlerRegister.EVENT.getInvoker()));
+            GuiHandlerRegister.EVENT.getInvoker().registerGuiHandlers(GuiHandlerRegistry.INSTANCE, GuiHandlerRegister.EVENT.getListenerModID(GuiHandlerRegister.EVENT.getInvoker()));
         }, getModID());
     }
 

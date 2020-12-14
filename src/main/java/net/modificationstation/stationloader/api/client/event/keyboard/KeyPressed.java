@@ -5,6 +5,8 @@ import net.modificationstation.stationloader.api.client.event.option.KeyBindingR
 import net.modificationstation.stationloader.api.common.event.SimpleEvent;
 import org.lwjgl.input.Keyboard;
 
+import java.util.function.Consumer;
+
 /**
  * Used to handle keypresses.
  * Implement this in the class you plan to use to handle your keypresses.
@@ -18,11 +20,22 @@ import org.lwjgl.input.Keyboard;
  */
 public interface KeyPressed {
 
-    SimpleEvent<KeyPressed> EVENT = new SimpleEvent<>(KeyPressed.class, (listeners) ->
-            () -> {
-                for (KeyPressed event : listeners)
-                    event.keyPressed();
-            });
+    @SuppressWarnings("UnstableApiUsage")
+    SimpleEvent<KeyPressed> EVENT = new SimpleEvent<>(KeyPressed.class,
+            (listeners) ->
+                    () -> {
+        for (KeyPressed listener : listeners)
+            listener.keyPressed();
+    }, (Consumer<SimpleEvent<KeyPressed>>) keyPressed ->
+            keyPressed.register(() -> SimpleEvent.EVENT_BUS.post(new Data()))
+    );
 
     void keyPressed();
+
+    final class Data extends SimpleEvent.Data<KeyPressed> {
+
+        private Data() {
+            super(EVENT);
+        }
+    }
 }
