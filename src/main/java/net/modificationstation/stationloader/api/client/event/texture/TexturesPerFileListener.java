@@ -23,8 +23,9 @@ public interface TexturesPerFileListener {
                     registry -> {
                         for (TexturesPerFileListener listener : listeners)
                             listener.texturesPerFileChanged(registry);
-                    }, (Consumer<SimpleEvent<TexturesPerFileListener>>) texturesPerFileListener ->
-            texturesPerFileListener.register(registry -> SimpleEvent.EVENT_BUS.post(new Data(registry)))
+                    },
+            (Consumer<SimpleEvent<TexturesPerFileListener>>) texturesPerFileListener ->
+                    texturesPerFileListener.register(registry -> SimpleEvent.EVENT_BUS.post(new Data(registry)))
     );
 
     void texturesPerFileChanged(TextureRegistry registry);

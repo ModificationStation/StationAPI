@@ -15,13 +15,14 @@ public interface BlockNameSet {
                         for (BlockNameSet listener : listeners)
                             newName = listener.getName(block, newName);
                         return newName;
-                    }, (Consumer<SimpleEvent<BlockNameSet>>) blockNameSet ->
-            blockNameSet.register((block, newName) -> {
-                Data data = new Data(block, newName);
-                //noinspection UnstableApiUsage
-                SimpleEvent.EVENT_BUS.post(data);
-                return data.getNewName();
-            })
+                    },
+            (Consumer<SimpleEvent<BlockNameSet>>) blockNameSet ->
+                    blockNameSet.register((block, newName) -> {
+                        Data data = new Data(block, newName);
+                        //noinspection UnstableApiUsage
+                        SimpleEvent.EVENT_BUS.post(data);
+                        return data.getNewName();
+                    })
     );
 
     String getName(BlockBase block, String newName);
@@ -33,6 +34,7 @@ public interface BlockNameSet {
         @Getter
         @Setter
         private String newName;
+
         private Data(BlockBase block, String newName) {
             super(EVENT);
             this.block = block;

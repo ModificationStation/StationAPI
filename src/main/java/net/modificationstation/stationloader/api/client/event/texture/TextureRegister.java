@@ -21,8 +21,9 @@ public interface TextureRegister {
                     () -> {
                         for (TextureRegister listener : listeners)
                             listener.registerTextures();
-                    }, (Consumer<SimpleEvent<TextureRegister>>) textureRegister ->
-            textureRegister.register(() -> SimpleEvent.EVENT_BUS.post(new Data()))
+                    },
+            (Consumer<SimpleEvent<TextureRegister>>) textureRegister ->
+                    textureRegister.register(() -> SimpleEvent.EVENT_BUS.post(new Data()))
     );
 
     /**

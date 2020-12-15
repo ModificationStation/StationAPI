@@ -16,8 +16,9 @@ public interface EntityRendererRegister {
                     renderers -> {
                         for (EntityRendererRegister listener : listeners)
                             listener.registerEntityRenderers(renderers);
-                    }, (Consumer<SimpleEvent<EntityRendererRegister>>) entityRendererRegister ->
-            entityRendererRegister.register(renderers -> SimpleEvent.EVENT_BUS.post(new Data(renderers)))
+                    },
+            (Consumer<SimpleEvent<EntityRendererRegister>>) entityRendererRegister ->
+                    entityRendererRegister.register(renderers -> SimpleEvent.EVENT_BUS.post(new Data(renderers)))
     );
 
     void registerEntityRenderers(Map<Class<? extends EntityBase>, EntityRenderer> renderers);

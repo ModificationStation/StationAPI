@@ -16,8 +16,9 @@ public interface PlayerHandlerRegister {
                     (playerHandlers, player) -> {
                         for (PlayerHandlerRegister listener : listeners)
                             listener.registerPlayerHandlers(playerHandlers, player);
-                    }, (Consumer<SimpleEvent<PlayerHandlerRegister>>) playerHandlerRegister ->
-            playerHandlerRegister.register((playerHandlers, player) -> SimpleEvent.EVENT_BUS.post(new Data(playerHandlers, player)))
+                    },
+            (Consumer<SimpleEvent<PlayerHandlerRegister>>) playerHandlerRegister ->
+                    playerHandlerRegister.register((playerHandlers, player) -> SimpleEvent.EVENT_BUS.post(new Data(playerHandlers, player)))
     );
 
     void registerPlayerHandlers(List<PlayerHandler> playerHandlers, PlayerBase player);
@@ -28,6 +29,7 @@ public interface PlayerHandlerRegister {
         private final List<PlayerHandler> playerHandlers;
         @Getter
         private final PlayerBase player;
+
         private Data(List<PlayerHandler> playerHandlers, PlayerBase player) {
             super(EVENT);
             this.playerHandlers = playerHandlers;

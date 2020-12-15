@@ -12,8 +12,9 @@ public interface BiomeRegister {
                     () -> {
                         for (BiomeRegister listener : listeners)
                             listener.registerBiomes();
-                    }, (Consumer<SimpleEvent<BiomeRegister>>) biomeRegister ->
-            biomeRegister.register(() -> SimpleEvent.EVENT_BUS.post(new Data()))
+                    },
+            (Consumer<SimpleEvent<BiomeRegister>>) biomeRegister ->
+                    biomeRegister.register(() -> SimpleEvent.EVENT_BUS.post(new Data()))
     );
 
     void registerBiomes();

@@ -14,8 +14,9 @@ public interface TileEntityRegister {
                     register -> {
                         for (TileEntityRegister listener : listeners)
                             listener.registerTileEntities(register);
-                    }, (Consumer<SimpleEvent<TileEntityRegister>>) tileEntityRegister ->
-            tileEntityRegister.register(register -> SimpleEvent.EVENT_BUS.post(new Data(register)))
+                    },
+            (Consumer<SimpleEvent<TileEntityRegister>>) tileEntityRegister ->
+                    tileEntityRegister.register(register -> SimpleEvent.EVENT_BUS.post(new Data(register)))
     );
 
     void registerTileEntities(BiConsumer<Class<? extends TileEntityBase>, String> register);

@@ -13,13 +13,15 @@ public interface MessageListenerRegister {
                     (registry, modID) -> {
                         for (MessageListenerRegister listener : listeners)
                             listener.registerMessageListeners(registry, MessageListenerRegister.EVENT.getListenerModID(listener));
-                    }, listener ->
-            (registry, modID) -> {
-                MessageListenerRegister.EVENT.setCurrentListener(listener);
-                listener.registerMessageListeners(registry, modID);
-                MessageListenerRegister.EVENT.setCurrentListener(null);
-            }, messageListenerRegister ->
-            messageListenerRegister.register((registry, modID) -> ModEvent.EVENT_BUS.post(new Data(registry)), null)
+                    },
+            listener ->
+                    (registry, modID) -> {
+                        MessageListenerRegister.EVENT.setCurrentListener(listener);
+                        listener.registerMessageListeners(registry, modID);
+                        MessageListenerRegister.EVENT.setCurrentListener(null);
+                    },
+            messageListenerRegister ->
+                    messageListenerRegister.register((registry, modID) -> ModEvent.EVENT_BUS.post(new Data(registry)), null)
     );
 
     void registerMessageListeners(MessageListenerRegistry registry, ModID modID);

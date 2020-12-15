@@ -24,8 +24,9 @@ public interface RecipeRegister {
                     recipeId -> {
                         for (RecipeRegister listener : listeners)
                             listener.registerRecipes(recipeId);
-                    }, (Consumer<SimpleEvent<RecipeRegister>>) recipeRegister ->
-            recipeRegister.register(recipeId -> SimpleEvent.EVENT_BUS.post(new Data(recipeId)))
+                    },
+            (Consumer<SimpleEvent<RecipeRegister>>) recipeRegister ->
+                    recipeRegister.register(recipeId -> SimpleEvent.EVENT_BUS.post(new Data(recipeId)))
     );
 
     void registerRecipes(Identifier recipeId);

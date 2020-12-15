@@ -15,13 +15,14 @@ public interface BiomeByClimateProvider {
                         for (BiomeByClimateProvider listener : listeners)
                             currentBiome = listener.getBiome(currentBiome, temperature, rainfall);
                         return currentBiome;
-                    }, (Consumer<SimpleEvent<BiomeByClimateProvider>>) biomeByClimateProvider ->
-            biomeByClimateProvider.register((currentBiome, temperature, rainfall) -> {
-                Data data = new Data(currentBiome, temperature, rainfall);
-                //noinspection UnstableApiUsage
-                SimpleEvent.EVENT_BUS.post(data);
-                return data.getCurrentBiome();
-            })
+                    },
+            (Consumer<SimpleEvent<BiomeByClimateProvider>>) biomeByClimateProvider ->
+                    biomeByClimateProvider.register((currentBiome, temperature, rainfall) -> {
+                        Data data = new Data(currentBiome, temperature, rainfall);
+                        //noinspection UnstableApiUsage
+                        SimpleEvent.EVENT_BUS.post(data);
+                        return data.getCurrentBiome();
+                    })
     );
 
     Biome getBiome(Biome currentBiome, float temperature, float rainfall);
@@ -35,6 +36,7 @@ public interface BiomeByClimateProvider {
         @Getter
         @Setter
         private Biome currentBiome;
+
         private Data(Biome currentBiome, float temperature, float rainfall) {
             super(EVENT);
             this.currentBiome = currentBiome;

@@ -17,8 +17,9 @@ public interface EffectiveBlocksProvider {
                     (tool, toolMaterial, effectiveBlocks) -> {
                         for (EffectiveBlocksProvider listener : listeners)
                             listener.getEffectiveBlocks(tool, toolMaterial, effectiveBlocks);
-                    }, (Consumer<SimpleEvent<EffectiveBlocksProvider>>) effectiveBlocksProvider ->
-            effectiveBlocksProvider.register((tool, toolMaterial, effectiveBlocks) -> SimpleEvent.EVENT_BUS.post(new Data(tool, toolMaterial, effectiveBlocks)))
+                    },
+            (Consumer<SimpleEvent<EffectiveBlocksProvider>>) effectiveBlocksProvider ->
+                    effectiveBlocksProvider.register((tool, toolMaterial, effectiveBlocks) -> SimpleEvent.EVENT_BUS.post(new Data(tool, toolMaterial, effectiveBlocks)))
     );
 
     void getEffectiveBlocks(ToolBase tool, ToolMaterial toolMaterial, List<BlockBase> effectiveBlocks);
@@ -31,6 +32,7 @@ public interface EffectiveBlocksProvider {
         private final ToolMaterial toolMaterial;
         @Getter
         private final List<BlockBase> effectiveBlocks;
+
         private Data(ToolBase tool, ToolMaterial toolMaterial, List<BlockBase> effectiveBlocks) {
             super(EVENT);
             this.tool = tool;

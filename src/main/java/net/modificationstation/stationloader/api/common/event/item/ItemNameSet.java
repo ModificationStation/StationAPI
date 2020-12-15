@@ -15,13 +15,14 @@ public interface ItemNameSet {
                         for (ItemNameSet listener : listeners)
                             newName = listener.getName(item, newName);
                         return newName;
-                    }, (Consumer<SimpleEvent<ItemNameSet>>) itemNameSet ->
-            itemNameSet.register((item, newName) -> {
-                Data data = new Data(item, newName);
-                //noinspection UnstableApiUsage
-                SimpleEvent.EVENT_BUS.post(data);
-                return data.getNewName();
-            })
+                    },
+            (Consumer<SimpleEvent<ItemNameSet>>) itemNameSet ->
+                    itemNameSet.register((item, newName) -> {
+                        Data data = new Data(item, newName);
+                        //noinspection UnstableApiUsage
+                        SimpleEvent.EVENT_BUS.post(data);
+                        return data.getNewName();
+                    })
     );
 
     String getName(ItemBase item, String newName);
@@ -33,6 +34,7 @@ public interface ItemNameSet {
         @Getter
         @Setter
         private String newName;
+
         private Data(ItemBase item, String newName) {
             super(EVENT);
             this.item = item;

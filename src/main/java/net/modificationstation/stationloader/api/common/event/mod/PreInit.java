@@ -15,16 +15,19 @@ import net.modificationstation.stationloader.api.common.registry.ModID;
 
 public interface PreInit {
 
-    ModEvent<PreInit> EVENT = new ModEvent<>(PreInit.class, listeners ->
-            (eventRegistry, modID) -> {
-                for (PreInit listener : listeners)
-                    listener.preInit(eventRegistry, PreInit.EVENT.getListenerModID(listener));
-            }, listener ->
-            (eventRegistry, modID) -> {
-                PreInit.EVENT.setCurrentListener(listener);
-                listener.preInit(eventRegistry, modID);
-                PreInit.EVENT.setCurrentListener(null);
-            });
+    ModEvent<PreInit> EVENT = new ModEvent<>(PreInit.class,
+            listeners ->
+                    (eventRegistry, modID) -> {
+                        for (PreInit listener : listeners)
+                            listener.preInit(eventRegistry, PreInit.EVENT.getListenerModID(listener));
+                    },
+            listener ->
+                    (eventRegistry, modID) -> {
+                        PreInit.EVENT.setCurrentListener(listener);
+                        listener.preInit(eventRegistry, modID);
+                        PreInit.EVENT.setCurrentListener(null);
+                    }
+    );
 
     void preInit(EventRegistry eventRegistry, ModID modID);
 }

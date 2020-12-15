@@ -15,8 +15,9 @@ public interface AchievementRegister {
                     achievements -> {
                         for (AchievementRegister listener : listeners)
                             listener.registerAchievements(achievements);
-                    }, (Consumer<SimpleEvent<AchievementRegister>>) achievementRegister ->
-            achievementRegister.register(achievements -> SimpleEvent.EVENT_BUS.post(new Data(achievements)))
+                    },
+            (Consumer<SimpleEvent<AchievementRegister>>) achievementRegister ->
+                    achievementRegister.register(achievements -> SimpleEvent.EVENT_BUS.post(new Data(achievements)))
     );
 
     void registerAchievements(List<Achievement> achievements);

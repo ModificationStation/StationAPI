@@ -13,13 +13,15 @@ public interface GuiHandlerRegister {
                     (guiHandlers, modID) -> {
                         for (GuiHandlerRegister listener : listeners)
                             listener.registerGuiHandlers(guiHandlers, GuiHandlerRegister.EVENT.getListenerModID(listener));
-                    }, listener ->
-            (guiHandlers, modID) -> {
-                GuiHandlerRegister.EVENT.setCurrentListener(listener);
-                listener.registerGuiHandlers(guiHandlers, modID);
-                GuiHandlerRegister.EVENT.setCurrentListener(null);
-            }, guiHandlerRegister ->
-            guiHandlerRegister.register((guiHandlers, modID) -> ModEvent.EVENT_BUS.post(new Data(guiHandlers)), null)
+                    },
+            listener ->
+                    (guiHandlers, modID) -> {
+                        GuiHandlerRegister.EVENT.setCurrentListener(listener);
+                        listener.registerGuiHandlers(guiHandlers, modID);
+                        GuiHandlerRegister.EVENT.setCurrentListener(null);
+                    },
+            guiHandlerRegister ->
+                    guiHandlerRegister.register((guiHandlers, modID) -> ModEvent.EVENT_BUS.post(new Data(guiHandlers)), null)
     );
 
     void registerGuiHandlers(GuiHandlerRegistry guiHandlers, ModID modID);

@@ -14,8 +14,9 @@ public interface PlayerLogin {
                     player -> {
                         for (PlayerLogin listener : listeners)
                             listener.afterLogin(player);
-                    }, (Consumer<SimpleEvent<PlayerLogin>>) playerLogin ->
-            playerLogin.register(player -> SimpleEvent.EVENT_BUS.post(new Data(player)))
+                    },
+            (Consumer<SimpleEvent<PlayerLogin>>) playerLogin ->
+                    playerLogin.register(player -> SimpleEvent.EVENT_BUS.post(new Data(player)))
     );
 
     void afterLogin(ServerPlayer player);

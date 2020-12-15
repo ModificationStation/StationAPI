@@ -25,8 +25,9 @@ public interface KeyPressed {
                     () -> {
                         for (KeyPressed listener : listeners)
                             listener.keyPressed();
-                    }, (Consumer<SimpleEvent<KeyPressed>>) keyPressed ->
-            keyPressed.register(() -> SimpleEvent.EVENT_BUS.post(new Data()))
+                    },
+            (Consumer<SimpleEvent<KeyPressed>>) keyPressed ->
+                    keyPressed.register(() -> SimpleEvent.EVENT_BUS.post(new Data()))
     );
 
     void keyPressed();

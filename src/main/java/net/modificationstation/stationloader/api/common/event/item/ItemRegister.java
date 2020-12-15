@@ -13,13 +13,15 @@ public interface ItemRegister {
                     (registry, modID) -> {
                         for (ItemRegister listener : listeners)
                             listener.registerItems(registry, ItemRegister.EVENT.getListenerModID(listener));
-                    }, listener ->
-            (registry, modID) -> {
-                ItemRegister.EVENT.setCurrentListener(listener);
-                listener.registerItems(registry, modID);
-                ItemRegister.EVENT.setCurrentListener(null);
-            }, itemRegister ->
-            itemRegister.register((registry, modID) -> ModEvent.EVENT_BUS.post(new Data(registry)), null)
+                    },
+            listener ->
+                    (registry, modID) -> {
+                        ItemRegister.EVENT.setCurrentListener(listener);
+                        listener.registerItems(registry, modID);
+                        ItemRegister.EVENT.setCurrentListener(null);
+                    },
+            itemRegister ->
+                    itemRegister.register((registry, modID) -> ModEvent.EVENT_BUS.post(new Data(registry)), null)
     );
 
     void registerItems(ItemRegistry registry, ModID modID);

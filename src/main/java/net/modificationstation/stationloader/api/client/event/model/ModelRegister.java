@@ -23,8 +23,9 @@ public interface ModelRegister {
                     (type) -> {
                         for (ModelRegister listener : listeners)
                             listener.registerModels(type);
-                    }, (Consumer<SimpleEvent<ModelRegister>>) modelRegister ->
-            modelRegister.register(type -> SimpleEvent.EVENT_BUS.post(new Data(type)))
+                    },
+            (Consumer<SimpleEvent<ModelRegister>>) modelRegister ->
+                    modelRegister.register(type -> SimpleEvent.EVENT_BUS.post(new Data(type)))
     );
 
     void registerModels(Type type);

@@ -17,12 +17,13 @@ public interface IsEffectiveOn {
                         for (IsEffectiveOn listener : listeners)
                             effective = listener.isEffectiveOn(toolBase, block, meta, effective);
                         return effective;
-                    }, (Consumer<SimpleEvent<IsEffectiveOn>>) isEffectiveOn ->
-            isEffectiveOn.register((toolLevel, block, meta, effective) -> {
-                Data data = new Data(toolLevel, block, meta, effective);
-                SimpleEvent.EVENT_BUS.post(data);
-                return data.isEffective();
-            })
+                    },
+            (Consumer<SimpleEvent<IsEffectiveOn>>) isEffectiveOn ->
+                    isEffectiveOn.register((toolLevel, block, meta, effective) -> {
+                        Data data = new Data(toolLevel, block, meta, effective);
+                        SimpleEvent.EVENT_BUS.post(data);
+                        return data.isEffective();
+                    })
     );
 
     boolean isEffectiveOn(ToolLevel toolLevel, BlockBase block, int meta, boolean effective);
@@ -38,6 +39,7 @@ public interface IsEffectiveOn {
         @Getter
         @Setter
         private boolean effective;
+
         private Data(ToolLevel toolLevel, BlockBase block, int meta, boolean effective) {
             super(EVENT);
             this.toolLevel = toolLevel;

@@ -27,8 +27,9 @@ public interface KeyBindingRegister {
                     keyBindings -> {
                         for (KeyBindingRegister listener : listeners)
                             listener.registerKeyBindings(keyBindings);
-                    }, (Consumer<SimpleEvent<KeyBindingRegister>>) keyBindingRegister ->
-            keyBindingRegister.register(keyBindings -> SimpleEvent.EVENT_BUS.post(new Data(keyBindings)))
+                    },
+            (Consumer<SimpleEvent<KeyBindingRegister>>) keyBindingRegister ->
+                    keyBindingRegister.register(keyBindings -> SimpleEvent.EVENT_BUS.post(new Data(keyBindings)))
     );
 
     void registerKeyBindings(List<KeyBinding> keyBindings);

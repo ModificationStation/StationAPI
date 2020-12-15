@@ -14,8 +14,9 @@ public interface PacketRegister {
                     register -> {
                         for (PacketRegister listener : listeners)
                             listener.registerPackets(register);
-                    }, (Consumer<SimpleEvent<PacketRegister>>) packetRegister ->
-            packetRegister.register(register -> SimpleEvent.EVENT_BUS.post(new Data(register)))
+                    },
+            (Consumer<SimpleEvent<PacketRegister>>) packetRegister ->
+                    packetRegister.register(register -> SimpleEvent.EVENT_BUS.post(new Data(register)))
     );
 
     void registerPackets(QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> register);

@@ -14,8 +14,9 @@ public interface EntityRegister {
                     register -> {
                         for (EntityRegister listener : listeners)
                             listener.registerEntities(register);
-                    }, (Consumer<SimpleEvent<EntityRegister>>) entityRegister ->
-            entityRegister.register(register -> SimpleEvent.EVENT_BUS.post(new Data(register)))
+                    },
+            (Consumer<SimpleEvent<EntityRegister>>) entityRegister ->
+                    entityRegister.register(register -> SimpleEvent.EVENT_BUS.post(new Data(register)))
     );
 
     void registerEntities(TriConsumer<Class<? extends EntityBase>, String, Integer> register);

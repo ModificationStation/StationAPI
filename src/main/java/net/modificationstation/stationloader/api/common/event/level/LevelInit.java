@@ -14,8 +14,9 @@ public interface LevelInit {
                     level -> {
                         for (LevelInit listener : listeners)
                             listener.onLevelInit(level);
-                    }, (Consumer<SimpleEvent<LevelInit>>) levelInit ->
-            levelInit.register(level -> SimpleEvent.EVENT_BUS.post(new Data(level)))
+                    },
+            (Consumer<SimpleEvent<LevelInit>>) levelInit ->
+                    levelInit.register(level -> SimpleEvent.EVENT_BUS.post(new Data(level)))
     );
 
     void onLevelInit(Level level);
