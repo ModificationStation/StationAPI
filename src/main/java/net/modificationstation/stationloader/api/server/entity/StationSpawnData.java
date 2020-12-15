@@ -21,7 +21,7 @@ public interface StationSpawnData extends CustomSpawnData {
             ownerId = owner.entityId;
         }
         Message message = new Message(Identifier.of(StationLoader.INSTANCE.getModID(), "spawn_entity"));
-        message.put(getHandlerIdentifier().toString());
+        message.put(new String[]{getHandlerIdentifier().toString()});
         int[] ints = new int[]{entityBase.entityId, MathHelper.floor(entityBase.x * 32), MathHelper.floor(entityBase.y * 32), MathHelper.floor(entityBase.z * 32), ownerId};
         message.put(ints);
         if (ownerId > 0) {

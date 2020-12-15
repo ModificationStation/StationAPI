@@ -9,7 +9,7 @@ public class GuiHelper extends net.modificationstation.stationloader.impl.common
 
     @Override
     protected void sideDependentPacket(PlayerBase player, InventoryBase inventory, Message message) {
-        message.put(inventory);
+        message.put(new InventoryBase[]{inventory});
     }
 
     @Override
