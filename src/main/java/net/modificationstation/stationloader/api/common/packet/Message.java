@@ -296,43 +296,43 @@ public class Message extends AbstractPacket {
                 (objects == null ? 0 : size(objects));
     }
 
-    public void put(boolean... booleans) {
+    public void put(boolean[] booleans) {
         this.booleans = Booleans.concat(this.booleans == null ? new boolean[0] : this.booleans, booleans);
     }
 
-    public void put(byte... bytes) {
+    public void put(byte[] bytes) {
         this.bytes = Bytes.concat(this.bytes == null ? new byte[0] : this.bytes, bytes);
     }
 
-    public void put(short... shorts) {
+    public void put(short[] shorts) {
         this.shorts = Shorts.concat(this.shorts == null ? new short[0] : this.shorts, shorts);
     }
 
-    public void put(char... chars) {
+    public void put(char[] chars) {
         this.chars = Chars.concat(this.chars == null ? new char[0] : this.chars, chars);
     }
 
-    public void put(int... ints) {
+    public void put(int[] ints) {
         this.ints = Ints.concat(this.ints == null ? new int[0] : this.ints, ints);
     }
 
-    public void put(long... longs) {
+    public void put(long[] longs) {
         this.longs = Longs.concat(this.longs == null ? new long[0] : this.longs, longs);
     }
 
-    public void put(float... floats) {
+    public void put(float[] floats) {
         this.floats = Floats.concat(this.floats == null ? new float[0] : this.floats, floats);
     }
 
-    public void put(double... doubles) {
+    public void put(double[] doubles) {
         this.doubles = Doubles.concat(this.doubles == null ? new double[0] : this.doubles, doubles);
     }
 
-    public void put(String... strings) {
+    public void put(String[] strings) {
         this.strings = ObjectArrays.concat(this.strings == null ? new String[0] : this.strings, strings, String.class);
     }
 
-    public void put(Object... objects) {
+    public void put(Object[] objects) {
         this.objects = ObjectArrays.concat(this.objects == null ? new Object[0] : this.objects, objects, Object.class);
     }
 
