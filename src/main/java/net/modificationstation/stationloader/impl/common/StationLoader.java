@@ -92,7 +92,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         getLogger().info("Initializing StationLoader...");
         PreInit.EVENT.register(this, getModID());
         Init.EVENT.register(this);
-        setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + modID));
+        setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDir() + File.separator + modID));
         setDefaultConfig(new Configuration(new File(getConfigPath() + File.separator + modID + ".cfg")));
         getLogger().info("Setting up API...");
         setupAPI();
@@ -263,7 +263,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         stationMod.setLogger(LogManager.getFormatterLogger(name));
         Configurator.setLevel(name, Level.INFO);
         getLogger().info("Registered logger \"" + name + "\"");
-        stationMod.setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDirectory() + File.separator + modMetadata.getId()));
+        stationMod.setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDir() + File.separator + modMetadata.getId()));
         stationMod.setDefaultConfig(net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.newInst(net.modificationstation.stationloader.api.common.config.Configuration.class, new File(stationMod.getConfigPath() + File.separator + modMetadata.getId() + ".cfg")));
         getLogger().info("Initialized default config");
         if (stationMod instanceof PreInit)
