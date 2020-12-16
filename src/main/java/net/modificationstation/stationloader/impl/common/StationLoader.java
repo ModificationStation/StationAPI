@@ -321,8 +321,4 @@ public class StationLoader implements net.modificationstation.stationloader.api.
     public Set<ModContainer> getModsToVerifyOnClient() {
         return Collections.unmodifiableSet(modsToVerifyOnClient);
     }
-
-    //private final Map<ModMetadata, Set<Class<? extends StationMod>>> stationMods = new HashMap<>();
-    //private final Map<Class<? extends StationMod>, StationMod> stationModInstances = new HashMap<>();
-    //private final Map<ModMetadata, EnvType> modSides = new HashMap<>();
 }
