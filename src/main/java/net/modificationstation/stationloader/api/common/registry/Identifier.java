@@ -2,8 +2,6 @@ package net.modificationstation.stationloader.api.common.registry;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import uk.co.benjiweber.expressions.tuples.BiTuple;
-import uk.co.benjiweber.expressions.tuples.Tuple;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,24 +24,23 @@ public final class Identifier implements Comparable<Identifier> {
     public static Identifier of(@NotNull String identifier) {
         return VALUES.computeIfAbsent(identifier, s -> {
             String[] strings = s.split(":");
-            ModID modID;
-            String id;
-            if (strings.length == 1) {
-                modID = ModID.of("minecraft");
-                id = strings[0];
-            } else {
-                try {
-                    String modid = strings[0];
-                    modID = ModID.of(modid.trim());
-                    id = s.substring(modid.length() + 1);
-                } catch (NullPointerException e) {
-                    modID = ModID.of("minecraft");
-                    id = s;
+            String modid;
+            int idIndex;
+            switch(strings.length) {
+                case 1: {
+                    modid = "minecraft";
+                    idIndex = 0;
+                    break;
                 }
+                case 2: {
+                    modid = strings[0];
+                    idIndex = 1;
+                    break;
+                }
+                default:
+                    throw new IllegalArgumentException("Invalid identifier string!");
             }
-            id = id.replace(":", "_").trim();
-            BiTuple<ModID, String> tuple = Tuple.tuple(modID, id);
-            return new Identifier(tuple.one(), tuple.two());
+            return new Identifier(ModID.of(modid.trim()), strings[idIndex].trim());
         });
     }
 

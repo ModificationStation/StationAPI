@@ -3,6 +3,7 @@ package net.modificationstation.stationloader.impl.common.recipe;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import net.modificationstation.stationloader.api.common.StationLoader;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationloader.api.common.recipe.CraftingRegistry;
 import net.modificationstation.stationloader.api.common.recipe.SmeltingRegistry;
@@ -66,7 +67,15 @@ public class RecipeManager implements net.modificationstation.stationloader.api.
 
     @Override
     public void addJsonRecipe(URL recipe) throws IOException {
-        addOrGetRecipeType(Identifier.of(new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonRecipeType.class).getType()), null).add(recipe);
+        String type = new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonRecipeType.class).getType();
+        Identifier identifier;
+        try {
+            identifier = Identifier.of(type);
+        } catch (NullPointerException e) {
+            StationLoader.INSTANCE.getLogger().warn(String.format("Found a JSON recipe with an invalid type \"%s\". Ignoring", type));
+            return;
+        }
+        addOrGetRecipeType(identifier, null).add(recipe);
     }
 
     @Override
