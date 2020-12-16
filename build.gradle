@@ -56,15 +56,17 @@ dependencies {
 	// fabric loader requires log4j, guava, and gson
 	implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.1'
 	implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.1'
+	annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.1'
+	annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.1'
 	implementation 'com.google.guava:guava:28.0-jre'
 	implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
 
-	// mixin and fabric loader need asm 8
-	implementation 'org.ow2.asm:asm:8.0'
-	implementation 'org.ow2.asm:asm-analysis:8.0'
-	implementation 'org.ow2.asm:asm-commons:8.0'
-	implementation 'org.ow2.asm:asm-tree:8.0'
-	implementation 'org.ow2.asm:asm-util:8.0'
+	// mixin and fabric loader need asm 9
+	implementation 'org.ow2.asm:asm:9.0'
+	implementation 'org.ow2.asm:asm-analysis:9.0'
+	implementation 'org.ow2.asm:asm-commons:9.0'
+	implementation 'org.ow2.asm:asm-tree:9.0'
+	implementation 'org.ow2.asm:asm-util:9.0'
 
 	// to change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -73,17 +75,15 @@ dependencies {
 		spec.version = "b1.7.3-${project.yarn_mappings}"
 	}
 
-	// for config api
-	compile "tk.valoeghese:ZoesteriaConfig:1.3.2"
-
 	// convenience stuff
 	// adds some useful annotations for data classes. does not add any dependencies
 	compileOnly 'org.projectlombok:lombok:1.18.16'
 	annotationProcessor 'org.projectlombok:lombok:1.18.16'
-	// adds some useful annotations for miscellaneous uses. does not add and dependencies, though people without the lib will be missing some useful context hints.
+
+	// adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
 	compile 'org.jetbrains:annotations:16.0.2'
 
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "com.github.minecraft-cursed-legacy:cursed-fabric-loader:${project.loader_version}"
 }
 
 processResources {
