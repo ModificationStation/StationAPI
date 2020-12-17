@@ -15,11 +15,12 @@ public abstract class Mixinclass_488 {
     @Shadow
     public abstract void method_1667(EntityBase arg, int i, int j, boolean flag);
 
-    @Inject(method = "method_1665(Lnet/minecraft/entity/EntityBase;)V", at = @At("TAIL"))
-    private void afterVanillaEntries(EntityBase arg, CallbackInfo ci) {
+    @Inject(method = "method_1665(Lnet/minecraft/entity/EntityBase;)V", at = @At("HEAD"), cancellable = true)
+    private void beforeVanillaEntries(EntityBase arg, CallbackInfo ci) {
         if (arg instanceof CustomTracking) {
             CustomTracking track = (CustomTracking) arg;
             method_1667(arg, track.getTrackingDistance(), track.getUpdateFrequency(), track.sendVelocity());
+            ci.cancel();
         }
     }
 }

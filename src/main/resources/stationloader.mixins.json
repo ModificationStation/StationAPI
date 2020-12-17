@@ -38,6 +38,7 @@
     "common.accessor.TranslationStorageAccessor"
   ],
   "server": [
+    "server.Mixinclass_174",
     "server.Mixinclass_488",
     "server.Mixinclass_70",
     "server.MixinPendingConnection",
@@ -48,7 +49,6 @@
   "client": [
     "client.MixinAbstractClientPlayer",
     "client.MixinAchievements",
-    "client.Mixinclass_174",
     "client.Mixinclass_556",
     "client.Mixinclass_608",
     "client.Mixinclass_66",
@@ -67,6 +67,7 @@
     "client.MixinSoundMap",
     "client.MixinTextureManager",
     "client.MixinTileRenderer",
+    "client.accessor.ClientPlayNetworkHandlerAccessor",
     "client.accessor.ParticleBaseAccessor",
     "client.accessor.TessellatorAccessor",
     "client.accessor.TextureManagerAccessor",

@@ -4,6 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.level.ClientLevel;
+import net.minecraft.entity.EntityBase;
 import net.minecraft.inventory.InventoryBase;
 import net.modificationstation.stationloader.api.client.event.gui.GuiHandlerRegister;
 import net.modificationstation.stationloader.api.client.event.keyboard.KeyPressed;
@@ -12,18 +14,22 @@ import net.modificationstation.stationloader.api.client.event.option.KeyBindingR
 import net.modificationstation.stationloader.api.client.event.render.entity.EntityRendererRegister;
 import net.modificationstation.stationloader.api.client.event.texture.TextureRegister;
 import net.modificationstation.stationloader.api.client.event.texture.TexturesPerFileListener;
+import net.modificationstation.stationloader.api.common.entity.EntityHandlerRegistry;
+import net.modificationstation.stationloader.api.common.entity.HasOwner;
 import net.modificationstation.stationloader.api.common.event.EventRegistry;
 import net.modificationstation.stationloader.api.common.event.packet.MessageListenerRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.api.common.gui.GuiHandlerRegistry;
 import net.modificationstation.stationloader.api.common.registry.Identifier;
 import net.modificationstation.stationloader.api.common.registry.ModID;
+import net.modificationstation.stationloader.api.server.entity.StationSpawnData;
 import net.modificationstation.stationloader.impl.client.entity.player.PlayerHelper;
 import net.modificationstation.stationloader.impl.client.gui.GuiHelper;
 import net.modificationstation.stationloader.impl.client.model.CustomModelRenderer;
 import net.modificationstation.stationloader.impl.client.packet.PacketHelper;
 import net.modificationstation.stationloader.impl.client.texture.TextureFactory;
 import net.modificationstation.stationloader.impl.client.texture.TextureRegistry;
+import net.modificationstation.stationloader.mixin.client.accessor.ClientPlayNetworkHandlerAccessor;
 
 @Environment(EnvType.CLIENT)
 public class StationLoader extends net.modificationstation.stationloader.impl.common.StationLoader {
@@ -47,13 +53,37 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
         getLogger().info("Setting up GuiHelper...");
         net.modificationstation.stationloader.api.common.gui.GuiHelper.INSTANCE.setHandler(new GuiHelper());
         MessageListenerRegister.EVENT.register((messageListeners, modID) -> {
-            messageListeners.registerValue(Identifier.of(modID, "open_gui"), ((playerBase, message) -> {
+            messageListeners.registerValue(Identifier.of(modID, "open_gui"), (playerBase, message) -> {
                 boolean isClient = playerBase.level.isClient;
                 GuiHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(guiHandler -> ((Minecraft) FabricLoader.getInstance().getGameInstance()).openScreen(guiHandler.one().apply(playerBase, isClient ? guiHandler.two().get() : (InventoryBase) message.objects()[0], message)));
                 if (isClient)
                     playerBase.container.currentContainerId = message.ints()[0];
-            }));
+            });
             GuiHandlerRegister.EVENT.getInvoker().registerGuiHandlers(GuiHandlerRegistry.INSTANCE, GuiHandlerRegister.EVENT.getListenerModID(GuiHandlerRegister.EVENT.getInvoker()));
+            messageListeners.registerValue(Identifier.of(modID, "spawn_entity"), (playerBase, message) -> {
+                EntityHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(entityProvider -> {
+                    double x = message.ints()[1] / 32D, y = message.ints()[2] / 32D, z = message.ints()[3] / 32D;
+                    ClientPlayNetworkHandlerAccessor networkHandler = (ClientPlayNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
+                    ClientLevel level = networkHandler.getLevel();
+                    EntityBase entity = entityProvider.apply(level, x, y, z);
+                    if (entity != null) {
+                        entity.clientX = message.ints()[1];
+                        entity.clientY = message.ints()[2];
+                        entity.clientZ = message.ints()[3];
+                        entity.yaw = 0.0F;
+                        entity.pitch = 0.0F;
+                        entity.entityId = message.ints()[0];
+                        level.method_1495(message.ints()[0], entity);
+                        if (message.ints()[4] > 0) {
+                            if (entity instanceof HasOwner)
+                                ((HasOwner) entity).setOwner(networkHandler.invokeMethod_1645(message.ints()[4]));
+                            entity.setVelocity((double)message.shorts()[0] / 8000.0D, (double)message.shorts()[1] / 8000.0D, (double)message.shorts()[2] / 8000.0D);
+                        }
+                        if (entity instanceof StationSpawnData)
+                            ((StationSpawnData) entity).readFromMessage(message);
+                    }
+                });
+            });
         }, getModID());
     }
 

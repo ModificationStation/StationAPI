@@ -36,9 +36,7 @@ public interface StationSpawnData extends CustomSpawnData {
 
     Identifier getHandlerIdentifier();
 
-    default void writeToMessage(Message message) {
-    }
+    default void writeToMessage(Message message) { }
 
-    default void readFromMessage(Message message) {
-    }
+    default void readFromMessage(Message message) { }
 }

@@ -1,4 +1,4 @@
-package net.modificationstation.stationloader.mixin.client;
+package net.modificationstation.stationloader.mixin.server;
 
 import net.minecraft.class_174;
 import net.minecraft.entity.EntityBase;
