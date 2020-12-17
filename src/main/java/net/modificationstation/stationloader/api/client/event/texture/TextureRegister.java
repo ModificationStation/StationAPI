@@ -15,7 +15,6 @@ import java.util.function.Consumer;
  */
 public interface TextureRegister {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<TextureRegister> EVENT = new GameEvent<>(TextureRegister.class,
             listeners ->
                     () -> {

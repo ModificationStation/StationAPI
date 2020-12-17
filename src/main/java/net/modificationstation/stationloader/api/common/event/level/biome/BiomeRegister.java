@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 
 public interface BiomeRegister {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<BiomeRegister> EVENT = new GameEvent<>(BiomeRegister.class,
             listeners ->
                     () -> {

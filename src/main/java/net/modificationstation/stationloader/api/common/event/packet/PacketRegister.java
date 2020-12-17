@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 
 public interface PacketRegister {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<PacketRegister> EVENT = new GameEvent<>(PacketRegister.class,
             listeners ->
                     register -> {

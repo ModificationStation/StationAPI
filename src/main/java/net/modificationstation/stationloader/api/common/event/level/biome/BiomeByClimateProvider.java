@@ -19,7 +19,6 @@ public interface BiomeByClimateProvider {
             (Consumer<GameEvent<BiomeByClimateProvider>>) biomeByClimateProvider ->
                     biomeByClimateProvider.register((currentBiome, temperature, rainfall) -> {
                         Data data = new Data(currentBiome, temperature, rainfall);
-                        //noinspection UnstableApiUsage
                         GameEvent.EVENT_BUS.post(data);
                         return data.getCurrentBiome();
                     })

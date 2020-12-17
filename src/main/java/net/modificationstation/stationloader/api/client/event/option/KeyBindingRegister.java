@@ -21,7 +21,6 @@ import java.util.function.Consumer;
  */
 public interface KeyBindingRegister {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<KeyBindingRegister> EVENT = new GameEvent<>(KeyBindingRegister.class,
             listeners ->
                     keyBindings -> {

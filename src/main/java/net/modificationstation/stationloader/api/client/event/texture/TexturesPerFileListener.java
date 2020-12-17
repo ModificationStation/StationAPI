@@ -17,7 +17,6 @@ import java.util.function.Consumer;
 
 public interface TexturesPerFileListener {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<TexturesPerFileListener> EVENT = new GameEvent<>(TexturesPerFileListener.class,
             listeners ->
                     registry -> {

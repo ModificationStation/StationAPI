@@ -19,7 +19,6 @@ import java.util.function.Consumer;
  */
 public interface KeyPressed {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<KeyPressed> EVENT = new GameEvent<>(KeyPressed.class,
             (listeners) ->
                     () -> {

@@ -11,7 +11,6 @@ import java.util.function.Consumer;
 
 public interface EffectiveBlocksProvider {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<EffectiveBlocksProvider> EVENT = new GameEvent<>(EffectiveBlocksProvider.class,
             listeners ->
                     (tool, toolMaterial, effectiveBlocks) -> {

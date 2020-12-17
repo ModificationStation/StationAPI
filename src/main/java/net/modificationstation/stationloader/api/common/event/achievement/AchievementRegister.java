@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 
 public interface AchievementRegister {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<AchievementRegister> EVENT = new GameEvent<>(AchievementRegister.class,
             listeners ->
                     achievements -> {

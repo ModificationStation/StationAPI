@@ -9,7 +9,6 @@ import uk.co.benjiweber.expressions.functions.TriConsumer;
 
 public interface EntityRegister {
 
-    @SuppressWarnings("UnstableApiUsage")
     ModEvent<EntityRegister> EVENT = new ModEvent<>(EntityRegister.class,
             listeners ->
                     (register, registry, modID) -> {

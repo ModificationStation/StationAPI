@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 
 public interface PlayerLogin {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<PlayerLogin> EVENT = new GameEvent<>(PlayerLogin.class,
             listeners ->
                     player -> {

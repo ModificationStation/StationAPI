@@ -19,7 +19,6 @@ public interface BlockNameSet {
             (Consumer<GameEvent<BlockNameSet>>) blockNameSet ->
                     blockNameSet.register((block, newName) -> {
                         Data data = new Data(block, newName);
-                        //noinspection UnstableApiUsage
                         GameEvent.EVENT_BUS.post(data);
                         return data.getNewName();
                     })

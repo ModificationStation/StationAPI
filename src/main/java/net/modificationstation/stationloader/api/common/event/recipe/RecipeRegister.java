@@ -18,7 +18,6 @@ import java.util.function.Consumer;
 
 public interface RecipeRegister {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<RecipeRegister> EVENT = new GameEvent<>(RecipeRegister.class,
             listeners ->
                     recipeId -> {

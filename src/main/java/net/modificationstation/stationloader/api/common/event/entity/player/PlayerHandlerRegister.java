@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 
 public interface PlayerHandlerRegister {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<PlayerHandlerRegister> EVENT = new GameEvent<>(PlayerHandlerRegister.class,
             listeners ->
                     (playerHandlers, player) -> {

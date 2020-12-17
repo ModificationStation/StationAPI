@@ -237,7 +237,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
     @Override
     public void init() {
         FabricLoader fabricLoader = FabricLoader.getInstance();
-        //noinspection UnstableApiUsage
         fabricLoader.getEntrypoints(Identifier.of(getModID(), "game_event_bus").toString(), Object.class).forEach(GameEvent.EVENT_BUS::register);
         fabricLoader.getEntrypointContainers(Identifier.of(getModID(), "mod_event_bus").toString(), Object.class).forEach(entrypointContainer -> ModEvent.getEventBus(ModID.of(entrypointContainer.getProvider())).register(entrypointContainer.getEntrypoint()));
         EventRegistry.INSTANCE.forEach((identifier, event) -> event.register(identifier));

@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 
 public interface LevelInit {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<LevelInit> EVENT = new GameEvent<>(LevelInit.class,
             listeners ->
                     level -> {

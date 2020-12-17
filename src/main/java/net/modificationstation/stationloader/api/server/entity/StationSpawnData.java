@@ -26,7 +26,6 @@ public interface StationSpawnData extends CustomSpawnData {
         message.put(ints);
         if (ownerId > 0) {
             double var10 = 3.9D;
-            //noinspection UnstableApiUsage
             short[] shorts = new short[]{(short) (Doubles.constrainToRange(entityBase.velocityX, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entityBase.velocityY, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entityBase.velocityZ, -var10, var10) * 8000)};
             message.put(shorts);
         }

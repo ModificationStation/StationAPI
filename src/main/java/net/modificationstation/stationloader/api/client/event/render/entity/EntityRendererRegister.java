@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 
 public interface EntityRendererRegister {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<EntityRendererRegister> EVENT = new GameEvent<>(EntityRendererRegister.class,
             listeners ->
                     renderers -> {

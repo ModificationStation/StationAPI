@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 
 public interface TileEntityRegister {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<TileEntityRegister> EVENT = new GameEvent<>(TileEntityRegister.class,
             listeners ->
                     register -> {

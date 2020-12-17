@@ -10,7 +10,6 @@ import java.util.function.Function;
 
 public class GameEvent<T> extends Event<T> {
 
-    @SuppressWarnings("UnstableApiUsage")
     public static final EventBus EVENT_BUS = new EventBus(Identifier.of(StationLoader.INSTANCE.getModID() + "game_event_bus").toString());
 
     public GameEvent(Class<T> type, Function<T[], T> eventFunc, Function<T, T> listenerWrapper) {

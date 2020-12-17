@@ -17,7 +17,6 @@ import java.util.function.Consumer;
  */
 public interface ModelRegister {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<ModelRegister> EVENT = new GameEvent<>(ModelRegister.class,
             listeners ->
                     (type) -> {

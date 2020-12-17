@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 
 public interface HandleLogin {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<HandleLogin> EVENT = new GameEvent<>(HandleLogin.class,
             listeners ->
                     (pendingConnection, handshakePacket) -> {

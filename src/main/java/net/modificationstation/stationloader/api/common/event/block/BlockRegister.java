@@ -7,7 +7,6 @@ import net.modificationstation.stationloader.api.common.registry.ModID;
 
 public interface BlockRegister {
 
-    @SuppressWarnings("UnstableApiUsage")
     ModEvent<BlockRegister> EVENT = new ModEvent<>(BlockRegister.class,
             listeners ->
                     (registry, modID) -> {

@@ -11,7 +11,6 @@ import java.util.function.Consumer;
 
 public interface ChunkPopulator {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<ChunkPopulator> EVENT = new GameEvent<>(ChunkPopulator.class,
             listeners ->
                     (level, levelSource, biome, x, z, random) -> {

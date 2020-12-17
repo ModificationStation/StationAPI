@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 
 public interface IsEffectiveOn {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<IsEffectiveOn> EVENT = new GameEvent<>(IsEffectiveOn.class,
             listeners ->
                     (toolBase, block, meta, effective) -> {

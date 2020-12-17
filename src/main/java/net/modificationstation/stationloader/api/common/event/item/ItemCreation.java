@@ -10,7 +10,6 @@ import java.util.function.Consumer;
 
 public interface ItemCreation {
 
-    @SuppressWarnings("UnstableApiUsage")
     GameEvent<ItemCreation> EVENT = new GameEvent<>(ItemCreation.class,
             listeners ->
                     (level, player, createdItem) -> {

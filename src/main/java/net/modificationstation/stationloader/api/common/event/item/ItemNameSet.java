@@ -19,7 +19,6 @@ public interface ItemNameSet {
             (Consumer<GameEvent<ItemNameSet>>) itemNameSet ->
                     itemNameSet.register((item, newName) -> {
                         Data data = new Data(item, newName);
-                        //noinspection UnstableApiUsage
                         GameEvent.EVENT_BUS.post(data);
                         return data.getNewName();
                     })
