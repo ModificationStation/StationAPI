@@ -21,7 +21,7 @@ public interface GuiHandlerRegister {
                         GuiHandlerRegister.EVENT.setCurrentListener(null);
                     },
             guiHandlerRegister ->
-                    guiHandlerRegister.register((guiHandlers, modID) -> ModEvent.EVENT_BUS.post(new Data(guiHandlers)), null)
+                    guiHandlerRegister.register((guiHandlers, modID) -> ModEvent.post(new Data(guiHandlers)), null)
     );
 
     void registerGuiHandlers(GuiHandlerRegistry guiHandlers, ModID modID);

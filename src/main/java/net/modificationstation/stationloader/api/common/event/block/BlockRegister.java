@@ -21,7 +21,7 @@ public interface BlockRegister {
                         BlockRegister.EVENT.setCurrentListener(null);
                     },
             blockRegister ->
-                    blockRegister.register((blocks, modID) -> ModEvent.EVENT_BUS.post(new Data(blocks)), null)
+                    blockRegister.register((blocks, modID) -> ModEvent.post(new Data(blocks)), null)
     );
 
     void registerBlocks(BlockRegistry registry, ModID modID);

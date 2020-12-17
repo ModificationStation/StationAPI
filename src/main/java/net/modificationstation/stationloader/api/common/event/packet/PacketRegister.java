@@ -1,7 +1,7 @@
 package net.modificationstation.stationloader.api.common.event.packet;
 
 import net.minecraft.packet.AbstractPacket;
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 import uk.co.benjiweber.expressions.functions.QuadConsumer;
 
 import java.util.function.Consumer;
@@ -9,19 +9,19 @@ import java.util.function.Consumer;
 public interface PacketRegister {
 
     @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<PacketRegister> EVENT = new SimpleEvent<>(PacketRegister.class,
+    GameEvent<PacketRegister> EVENT = new GameEvent<>(PacketRegister.class,
             listeners ->
                     register -> {
                         for (PacketRegister listener : listeners)
                             listener.registerPackets(register);
                     },
-            (Consumer<SimpleEvent<PacketRegister>>) packetRegister ->
-                    packetRegister.register(register -> SimpleEvent.EVENT_BUS.post(new Data(register)))
+            (Consumer<GameEvent<PacketRegister>>) packetRegister ->
+                    packetRegister.register(register -> GameEvent.EVENT_BUS.post(new Data(register)))
     );
 
     void registerPackets(QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> register);
 
-    final class Data extends SimpleEvent.Data<PacketRegister> {
+    final class Data extends GameEvent.Data<PacketRegister> {
 
         private final QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> register;
 

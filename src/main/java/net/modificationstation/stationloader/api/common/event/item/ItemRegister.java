@@ -21,7 +21,7 @@ public interface ItemRegister {
                         ItemRegister.EVENT.setCurrentListener(null);
                     },
             itemRegister ->
-                    itemRegister.register((registry, modID) -> ModEvent.EVENT_BUS.post(new Data(registry)), null)
+                    itemRegister.register((registry, modID) -> ModEvent.post(new Data(registry)), null)
     );
 
     void registerItems(ItemRegistry registry, ModID modID);

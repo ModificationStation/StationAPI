@@ -1,10 +1,10 @@
 package net.modificationstation.stationloader.api.common.event.mod;
 
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 
 public interface PostInit {
 
-    SimpleEvent<PostInit> EVENT = new SimpleEvent<>(PostInit.class,
+    GameEvent<PostInit> EVENT = new GameEvent<>(PostInit.class,
             listeners ->
                     () -> {
                         for (PostInit event : listeners)

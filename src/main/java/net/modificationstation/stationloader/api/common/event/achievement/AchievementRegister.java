@@ -2,7 +2,7 @@ package net.modificationstation.stationloader.api.common.event.achievement;
 
 import lombok.Getter;
 import net.minecraft.achievement.Achievement;
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -10,19 +10,19 @@ import java.util.function.Consumer;
 public interface AchievementRegister {
 
     @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<AchievementRegister> EVENT = new SimpleEvent<>(AchievementRegister.class,
+    GameEvent<AchievementRegister> EVENT = new GameEvent<>(AchievementRegister.class,
             listeners ->
                     achievements -> {
                         for (AchievementRegister listener : listeners)
                             listener.registerAchievements(achievements);
                     },
-            (Consumer<SimpleEvent<AchievementRegister>>) achievementRegister ->
-                    achievementRegister.register(achievements -> SimpleEvent.EVENT_BUS.post(new Data(achievements)))
+            (Consumer<GameEvent<AchievementRegister>>) achievementRegister ->
+                    achievementRegister.register(achievements -> GameEvent.EVENT_BUS.post(new Data(achievements)))
     );
 
     void registerAchievements(List<Achievement> achievements);
 
-    final class Data extends SimpleEvent.Data<AchievementRegister> {
+    final class Data extends GameEvent.Data<AchievementRegister> {
 
         @Getter
         private final List<Achievement> achievementList;

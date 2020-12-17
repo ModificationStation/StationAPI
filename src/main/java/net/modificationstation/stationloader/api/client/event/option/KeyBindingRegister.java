@@ -2,7 +2,7 @@ package net.modificationstation.stationloader.api.client.event.option;
 
 import lombok.Getter;
 import net.minecraft.client.options.KeyBinding;
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -22,19 +22,19 @@ import java.util.function.Consumer;
 public interface KeyBindingRegister {
 
     @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<KeyBindingRegister> EVENT = new SimpleEvent<>(KeyBindingRegister.class,
+    GameEvent<KeyBindingRegister> EVENT = new GameEvent<>(KeyBindingRegister.class,
             listeners ->
                     keyBindings -> {
                         for (KeyBindingRegister listener : listeners)
                             listener.registerKeyBindings(keyBindings);
                     },
-            (Consumer<SimpleEvent<KeyBindingRegister>>) keyBindingRegister ->
-                    keyBindingRegister.register(keyBindings -> SimpleEvent.EVENT_BUS.post(new Data(keyBindings)))
+            (Consumer<GameEvent<KeyBindingRegister>>) keyBindingRegister ->
+                    keyBindingRegister.register(keyBindings -> GameEvent.EVENT_BUS.post(new Data(keyBindings)))
     );
 
     void registerKeyBindings(List<KeyBinding> keyBindings);
 
-    final class Data extends SimpleEvent.Data<KeyBindingRegister> {
+    final class Data extends GameEvent.Data<KeyBindingRegister> {
 
         @Getter
         private final List<KeyBinding> keyBindings;

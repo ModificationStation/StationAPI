@@ -1,7 +1,7 @@
 package net.modificationstation.stationloader.api.client.event.texture;
 
 import lombok.Getter;
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 import net.modificationstation.stationloader.impl.client.texture.TextureRegistry;
 
 import java.util.function.Consumer;
@@ -18,19 +18,19 @@ import java.util.function.Consumer;
 public interface TexturesPerFileListener {
 
     @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<TexturesPerFileListener> EVENT = new SimpleEvent<>(TexturesPerFileListener.class,
+    GameEvent<TexturesPerFileListener> EVENT = new GameEvent<>(TexturesPerFileListener.class,
             listeners ->
                     registry -> {
                         for (TexturesPerFileListener listener : listeners)
                             listener.texturesPerFileChanged(registry);
                     },
-            (Consumer<SimpleEvent<TexturesPerFileListener>>) texturesPerFileListener ->
-                    texturesPerFileListener.register(registry -> SimpleEvent.EVENT_BUS.post(new Data(registry)))
+            (Consumer<GameEvent<TexturesPerFileListener>>) texturesPerFileListener ->
+                    texturesPerFileListener.register(registry -> GameEvent.EVENT_BUS.post(new Data(registry)))
     );
 
     void texturesPerFileChanged(TextureRegistry registry);
 
-    final class Data extends SimpleEvent.Data<TexturesPerFileListener> {
+    final class Data extends GameEvent.Data<TexturesPerFileListener> {
 
         @Getter
         private final TextureRegistry registry;

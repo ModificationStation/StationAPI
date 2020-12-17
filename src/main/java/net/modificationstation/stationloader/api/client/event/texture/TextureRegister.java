@@ -1,7 +1,7 @@
 package net.modificationstation.stationloader.api.client.event.texture;
 
 import net.modificationstation.stationloader.api.client.texture.TextureFactory;
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 
 import java.util.function.Consumer;
 
@@ -16,14 +16,14 @@ import java.util.function.Consumer;
 public interface TextureRegister {
 
     @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<TextureRegister> EVENT = new SimpleEvent<>(TextureRegister.class,
+    GameEvent<TextureRegister> EVENT = new GameEvent<>(TextureRegister.class,
             listeners ->
                     () -> {
                         for (TextureRegister listener : listeners)
                             listener.registerTextures();
                     },
-            (Consumer<SimpleEvent<TextureRegister>>) textureRegister ->
-                    textureRegister.register(() -> SimpleEvent.EVENT_BUS.post(new Data()))
+            (Consumer<GameEvent<TextureRegister>>) textureRegister ->
+                    textureRegister.register(() -> GameEvent.EVENT_BUS.post(new Data()))
     );
 
     /**
@@ -31,7 +31,7 @@ public interface TextureRegister {
      */
     void registerTextures();
 
-    final class Data extends SimpleEvent.Data<TextureRegister> {
+    final class Data extends GameEvent.Data<TextureRegister> {
 
         private Data() {
             super(EVENT);

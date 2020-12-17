@@ -2,7 +2,7 @@ package net.modificationstation.stationloader.api.client.event.model;
 
 import lombok.Getter;
 import net.modificationstation.stationloader.api.client.model.BlockModelProvider;
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 
 import java.util.function.Consumer;
 
@@ -18,14 +18,14 @@ import java.util.function.Consumer;
 public interface ModelRegister {
 
     @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<ModelRegister> EVENT = new SimpleEvent<>(ModelRegister.class,
+    GameEvent<ModelRegister> EVENT = new GameEvent<>(ModelRegister.class,
             listeners ->
                     (type) -> {
                         for (ModelRegister listener : listeners)
                             listener.registerModels(type);
                     },
-            (Consumer<SimpleEvent<ModelRegister>>) modelRegister ->
-                    modelRegister.register(type -> SimpleEvent.EVENT_BUS.post(new Data(type)))
+            (Consumer<GameEvent<ModelRegister>>) modelRegister ->
+                    modelRegister.register(type -> GameEvent.EVENT_BUS.post(new Data(type)))
     );
 
     void registerModels(Type type);
@@ -37,7 +37,7 @@ public interface ModelRegister {
         ENTITIES
     }
 
-    final class Data extends SimpleEvent.Data<ModelRegister> {
+    final class Data extends GameEvent.Data<ModelRegister> {
 
         @Getter
         private final Type type;

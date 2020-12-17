@@ -1,46 +1,19 @@
 package net.modificationstation.stationloader.api.common.event;
 
-import com.google.common.eventbus.AsyncEventBus;
+import com.google.common.eventbus.EventBus;
 import lombok.Getter;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
-import net.modificationstation.stationloader.api.common.StationLoader;
+import net.modificationstation.stationloader.api.common.registry.Identifier;
 import net.modificationstation.stationloader.api.common.registry.ModID;
-import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ModEvent<T> extends Event<T> {
 
-    public static final ModEventBus EVENT_BUS = new ModEventBus(StationLoader.INSTANCE.getModID().getContainer().getMetadata().getName() + "_ModEvent", command -> {
-        Object target;
-        Object event;
-        try {
-            Class<?> anonRunnable = command.getClass();
-            Field field = anonRunnable.getDeclaredField("this$0");
-            field.setAccessible(true);
-            Object subscriber = field.get(command);
-            field = subscriber.getClass().getSuperclass().getDeclaredField("target");
-            field.setAccessible(true);
-            target = field.get(subscriber);
-            field = anonRunnable.getDeclaredField("val$event");
-            field.setAccessible(true);
-            event = field.get(command);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-        if (event instanceof Data) {
-            Data<?> data = (Data<?>) event;
-            ModID modID = ModEvent.EVENT_BUS.TARGET_TO_MODID.get(target);
-            data.getEvent().setCurrentListenerModID(modID);
-            data.modID = modID;
-        }
-        command.run();
-    });
+    private static final Map<ModID, EventBus> EVENT_BUSES = new HashMap<>();
     private final Map<T, ModID> listenerToModID = new HashMap<>();
     @Getter
     private T currentListener;
@@ -85,6 +58,18 @@ public class ModEvent<T> extends Event<T> {
         return listenerToModID.get(listener);
     }
 
+    public static EventBus getEventBus(ModID modID) {
+        return EVENT_BUSES.computeIfAbsent(modID, modID1 -> new EventBus(Identifier.of(modID1, "mod_event_bus").toString()));
+    }
+
+    public static void post(Data<?> eventData) {
+        EVENT_BUSES.forEach((modID, eventBus) -> {
+            eventData.getEvent().setCurrentListenerModID(modID);
+            eventData.modID = modID;
+            eventBus.post(eventData);
+        });
+    }
+
     public static class Data<T> extends Event.Data<T, ModEvent<T>> {
 
         private ModID modID;
@@ -95,33 +80,6 @@ public class ModEvent<T> extends Event<T> {
 
         public final ModID getModID() {
             return modID;
-        }
-    }
-
-    @SuppressWarnings("UnstableApiUsage")
-    public static final class ModEventBus extends AsyncEventBus {
-
-        private final Map<Object, ModID> TARGET_TO_MODID = new HashMap<>();
-
-        private ModEventBus(String identifier, Executor executor) {
-            super(identifier, executor);
-        }
-
-        @Deprecated
-        @Override
-        public void register(@NotNull Object object) {
-            throw new UnsupportedOperationException("You need to provide ModID for ModEventBus!");
-        }
-
-        public void register(@NotNull Object object, @NotNull ModID modID) {
-            TARGET_TO_MODID.put(object, modID);
-            super.register(object);
-        }
-
-        @Override
-        public void unregister(@NotNull Object object) {
-            TARGET_TO_MODID.remove(object);
-            super.unregister(object);
         }
     }
 }

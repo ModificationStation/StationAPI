@@ -3,7 +3,7 @@ package net.modificationstation.stationloader.api.common.event.item.tool;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.block.BlockBase;
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 import net.modificationstation.stationloader.api.common.item.tool.ToolLevel;
 
 import java.util.function.Consumer;
@@ -11,24 +11,24 @@ import java.util.function.Consumer;
 public interface IsEffectiveOn {
 
     @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<IsEffectiveOn> EVENT = new SimpleEvent<>(IsEffectiveOn.class,
+    GameEvent<IsEffectiveOn> EVENT = new GameEvent<>(IsEffectiveOn.class,
             listeners ->
                     (toolBase, block, meta, effective) -> {
                         for (IsEffectiveOn listener : listeners)
                             effective = listener.isEffectiveOn(toolBase, block, meta, effective);
                         return effective;
                     },
-            (Consumer<SimpleEvent<IsEffectiveOn>>) isEffectiveOn ->
+            (Consumer<GameEvent<IsEffectiveOn>>) isEffectiveOn ->
                     isEffectiveOn.register((toolLevel, block, meta, effective) -> {
                         Data data = new Data(toolLevel, block, meta, effective);
-                        SimpleEvent.EVENT_BUS.post(data);
+                        GameEvent.EVENT_BUS.post(data);
                         return data.isEffective();
                     })
     );
 
     boolean isEffectiveOn(ToolLevel toolLevel, BlockBase block, int meta, boolean effective);
 
-    final class Data extends SimpleEvent.Data<IsEffectiveOn> {
+    final class Data extends GameEvent.Data<IsEffectiveOn> {
 
         @Getter
         private final ToolLevel toolLevel;

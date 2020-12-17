@@ -4,26 +4,26 @@ import lombok.Getter;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 
 import java.util.function.Consumer;
 
 public interface ItemCreation {
 
     @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<ItemCreation> EVENT = new SimpleEvent<>(ItemCreation.class,
+    GameEvent<ItemCreation> EVENT = new GameEvent<>(ItemCreation.class,
             listeners ->
                     (level, player, createdItem) -> {
                         for (ItemCreation listener : listeners)
                             listener.onItemCreated(level, player, createdItem);
                     },
-            (Consumer<SimpleEvent<ItemCreation>>) itemCreation ->
-                    itemCreation.register((level, player, createdItem) -> SimpleEvent.EVENT_BUS.post(new Data(level, player, createdItem)))
+            (Consumer<GameEvent<ItemCreation>>) itemCreation ->
+                    itemCreation.register((level, player, createdItem) -> GameEvent.EVENT_BUS.post(new Data(level, player, createdItem)))
     );
 
     void onItemCreated(Level level, PlayerBase player, ItemInstance createdItem);
 
-    final class Data extends SimpleEvent.Data<ItemCreation> {
+    final class Data extends GameEvent.Data<ItemCreation> {
 
         @Getter
         private final Level level;

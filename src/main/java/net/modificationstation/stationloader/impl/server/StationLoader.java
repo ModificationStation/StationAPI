@@ -32,7 +32,7 @@ public class StationLoader extends net.modificationstation.stationloader.impl.co
                 String version = handshake.getVersion();
                 ModID modID = getModID();
                 String serverStationLoader = modID.toString();
-                String serverSLVersion = modID.getContainer().getMetadata().getVersion().getFriendlyString();
+                String serverSLVersion = modID.getVersion().getFriendlyString();
                 TranslationStorage translationStorage = TranslationStorage.getInstance();
                 if (stationLoader == null || version == null || !stationLoader.equals(serverStationLoader)) {
                     pendingConnection.drop(translationStorage.translate("disconnect.stationloader:missing_sl"));

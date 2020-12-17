@@ -2,7 +2,7 @@ package net.modificationstation.stationloader.api.client.event.keyboard;
 
 import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationloader.api.client.event.option.KeyBindingRegister;
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 import org.lwjgl.input.Keyboard;
 
 import java.util.function.Consumer;
@@ -20,19 +20,19 @@ import java.util.function.Consumer;
 public interface KeyPressed {
 
     @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<KeyPressed> EVENT = new SimpleEvent<>(KeyPressed.class,
+    GameEvent<KeyPressed> EVENT = new GameEvent<>(KeyPressed.class,
             (listeners) ->
                     () -> {
                         for (KeyPressed listener : listeners)
                             listener.keyPressed();
                     },
-            (Consumer<SimpleEvent<KeyPressed>>) keyPressed ->
-                    keyPressed.register(() -> SimpleEvent.EVENT_BUS.post(new Data()))
+            (Consumer<GameEvent<KeyPressed>>) keyPressed ->
+                    keyPressed.register(() -> GameEvent.EVENT_BUS.post(new Data()))
     );
 
     void keyPressed();
 
-    final class Data extends SimpleEvent.Data<KeyPressed> {
+    final class Data extends GameEvent.Data<KeyPressed> {
 
         private Data() {
             super(EVENT);

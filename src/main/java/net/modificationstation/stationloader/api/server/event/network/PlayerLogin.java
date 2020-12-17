@@ -2,26 +2,26 @@ package net.modificationstation.stationloader.api.server.event.network;
 
 import lombok.Getter;
 import net.minecraft.entity.player.ServerPlayer;
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 
 import java.util.function.Consumer;
 
 public interface PlayerLogin {
 
     @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<PlayerLogin> EVENT = new SimpleEvent<>(PlayerLogin.class,
+    GameEvent<PlayerLogin> EVENT = new GameEvent<>(PlayerLogin.class,
             listeners ->
                     player -> {
                         for (PlayerLogin listener : listeners)
                             listener.afterLogin(player);
                     },
-            (Consumer<SimpleEvent<PlayerLogin>>) playerLogin ->
-                    playerLogin.register(player -> SimpleEvent.EVENT_BUS.post(new Data(player)))
+            (Consumer<GameEvent<PlayerLogin>>) playerLogin ->
+                    playerLogin.register(player -> GameEvent.EVENT_BUS.post(new Data(player)))
     );
 
     void afterLogin(ServerPlayer player);
 
-    final class Data extends SimpleEvent.Data<PlayerLogin> {
+    final class Data extends GameEvent.Data<PlayerLogin> {
 
         @Getter
         private final ServerPlayer player;

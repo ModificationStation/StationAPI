@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.source.LevelSource;
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 
 import java.util.Random;
 import java.util.function.Consumer;
@@ -12,19 +12,19 @@ import java.util.function.Consumer;
 public interface ChunkPopulator {
 
     @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<ChunkPopulator> EVENT = new SimpleEvent<>(ChunkPopulator.class,
+    GameEvent<ChunkPopulator> EVENT = new GameEvent<>(ChunkPopulator.class,
             listeners ->
                     (level, levelSource, biome, x, z, random) -> {
                         for (ChunkPopulator listener : listeners)
                             listener.populate(level, levelSource, biome, x, z, random);
                     },
-            (Consumer<SimpleEvent<ChunkPopulator>>) chunkPopulator ->
-                    chunkPopulator.register((level, levelSource, biome, x, z, random) -> SimpleEvent.EVENT_BUS.post(new Data(level, levelSource, biome, x, z, random)))
+            (Consumer<GameEvent<ChunkPopulator>>) chunkPopulator ->
+                    chunkPopulator.register((level, levelSource, biome, x, z, random) -> GameEvent.EVENT_BUS.post(new Data(level, levelSource, biome, x, z, random)))
     );
 
     void populate(Level level, LevelSource levelSource, Biome biome, int x, int z, Random random);
 
-    final class Data extends SimpleEvent.Data<ChunkPopulator> {
+    final class Data extends GameEvent.Data<ChunkPopulator> {
 
         @Getter
         private final Level level;

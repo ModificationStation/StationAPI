@@ -3,6 +3,7 @@ package net.modificationstation.stationloader.api.common.registry;
 import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +33,18 @@ public final class ModID implements Comparable<ModID> {
 
     public static @NotNull ModID of(String modid) {
         return VALUES.computeIfAbsent(modid, s -> of(Objects.requireNonNull(FabricLoader.getInstance().getModContainer(s).orElse(null))));
+    }
+
+    public ModMetadata getMetadata() {
+        return container.getMetadata();
+    }
+
+    public String getName() {
+        return getMetadata().getName();
+    }
+
+    public Version getVersion() {
+        return getMetadata().getVersion();
     }
 
     @Override

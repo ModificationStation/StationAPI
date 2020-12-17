@@ -21,7 +21,7 @@ public interface MessageListenerRegister {
                         MessageListenerRegister.EVENT.setCurrentListener(null);
                     },
             messageListenerRegister ->
-                    messageListenerRegister.register((registry, modID) -> ModEvent.EVENT_BUS.post(new Data(registry)), null)
+                    messageListenerRegister.register((registry, modID) -> ModEvent.post(new Data(registry)), null)
     );
 
     void registerMessageListeners(MessageListenerRegistry registry, ModID modID);

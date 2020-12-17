@@ -4,26 +4,26 @@ import lombok.Getter;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationloader.api.common.event.SimpleEvent;
+import net.modificationstation.stationloader.api.common.event.GameEvent;
 
 import java.util.function.Consumer;
 
 public interface ItemUsedInCrafting {
 
     @SuppressWarnings("UnstableApiUsage")
-    SimpleEvent<ItemUsedInCrafting> EVENT = new SimpleEvent<>(ItemUsedInCrafting.class,
+    GameEvent<ItemUsedInCrafting> EVENT = new GameEvent<>(ItemUsedInCrafting.class,
             listeners ->
                     (player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted) -> {
                         for (ItemUsedInCrafting listener : listeners)
                             listener.onItemUsedInCrafting(player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted);
                     },
-            (Consumer<SimpleEvent<ItemUsedInCrafting>>) itemUsedInCrafting ->
-                    itemUsedInCrafting.register((player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted) -> SimpleEvent.EVENT_BUS.post(new Data(player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted)))
+            (Consumer<GameEvent<ItemUsedInCrafting>>) itemUsedInCrafting ->
+                    itemUsedInCrafting.register((player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted) -> GameEvent.EVENT_BUS.post(new Data(player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted)))
     );
 
     void onItemUsedInCrafting(PlayerBase player, InventoryBase craftingMatrix, int itemOrdinal, ItemInstance itemUsed, ItemInstance itemCrafted);
 
-    final class Data extends SimpleEvent.Data<ItemUsedInCrafting> {
+    final class Data extends GameEvent.Data<ItemUsedInCrafting> {
 
         @Getter
         private final PlayerBase player;
