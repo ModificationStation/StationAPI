@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 
 public class OreDict {
 
-    public static final OreDict ORE_DICT = new OreDict();
+    public static final OreDict INSTANCE = new OreDict();
 
     private final HashMap<String, List<OreDictEntryObject>> oreDict = new HashMap<>();
     private final HashMap<Identifier, List<String>> identifierToOreDictString = new HashMap<>();
@@ -76,7 +76,7 @@ public class OreDict {
      */
     public void addBlockIgnoreDamage(@NotNull String oreDictString, @NotNull BlockBase block) {
         ItemInstance itemInstance = new ItemInstance(block);
-        addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance::isEqualIgnoreFlags);
+        addItemInstanceWithPredicate(oreDictString, itemInstance, null);
     }
 
     /**
@@ -87,7 +87,7 @@ public class OreDict {
      */
     public void addItemIgnoreDamage(@NotNull String oreDictString, @NotNull ItemBase item) {
         ItemInstance itemInstance = new ItemInstance(item);
-        addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance::isEqualIgnoreFlags);
+        addItemInstanceWithPredicate(oreDictString, itemInstance, null);
     }
 
     /**
