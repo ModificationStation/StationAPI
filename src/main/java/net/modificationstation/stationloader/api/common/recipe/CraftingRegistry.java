@@ -25,9 +25,17 @@ public interface CraftingRegistry extends HasHandler<CraftingRegistry> {
             checkAccess(handler);
             handler.addShapelessRecipe(itemInstance, o);
         }
+
+        @Override
+        public void addShapelessOreDictRecipe(ItemInstance itemInstance, Object... o) {
+            checkAccess(handler);
+            handler.addShapelessOreDictRecipe(itemInstance, o);
+        }
     };
 
     void addShapedRecipe(ItemInstance itemInstance, Object... o);
 
     void addShapelessRecipe(ItemInstance itemInstance, Object... o);
+
+    void addShapelessOreDictRecipe(ItemInstance itemInstance, Object... o);
 }

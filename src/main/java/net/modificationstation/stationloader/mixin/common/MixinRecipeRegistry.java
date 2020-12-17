@@ -31,7 +31,7 @@ public class MixinRecipeRegistry {
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/util/Collections;sort(Ljava/util/List;Ljava/util/Comparator;)V"))
     private <T> void afterRecipeRegister(List<T> list, Comparator<? super T> c) {
         INSTANCE = (RecipeRegistry) (Object) this;
-        OreDictRegister.EVENT.getInvoker().registerOreDict(OreDict.ORE_DICT);
+        OreDictRegister.EVENT.getInvoker().registerOreDict(OreDict.INSTANCE);
         RecipeRegister.EVENT.getInvoker().registerRecipes(CRAFTING_SHAPED.type());
         RecipeRegister.EVENT.getInvoker().registerRecipes(CRAFTING_SHAPELESS.type());
         Collections.sort(list, c);
