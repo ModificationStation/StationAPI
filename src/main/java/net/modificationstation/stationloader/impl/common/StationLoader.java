@@ -9,6 +9,7 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.tool.ToolMaterial;
+import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationloader.api.common.block.EffectiveForTool;
 import net.modificationstation.stationloader.api.common.event.EventRegistry;
 import net.modificationstation.stationloader.api.common.event.GameEvent;
@@ -26,6 +27,9 @@ import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import net.modificationstation.stationloader.api.common.event.item.tool.EffectiveBlocksProvider;
 import net.modificationstation.stationloader.api.common.event.item.tool.IsEffectiveOn;
 import net.modificationstation.stationloader.api.common.event.level.LevelInit;
+import net.modificationstation.stationloader.api.common.event.level.LoadLevelProperties;
+import net.modificationstation.stationloader.api.common.event.level.LoadLevelPropertiesOnLevelInit;
+import net.modificationstation.stationloader.api.common.event.level.SaveLevelProperties;
 import net.modificationstation.stationloader.api.common.event.level.biome.BiomeByClimateProvider;
 import net.modificationstation.stationloader.api.common.event.level.biome.BiomeRegister;
 import net.modificationstation.stationloader.api.common.event.level.gen.ChunkPopulator;
@@ -39,7 +43,9 @@ import net.modificationstation.stationloader.api.common.mod.StationMod;
 import net.modificationstation.stationloader.api.common.packet.Message;
 import net.modificationstation.stationloader.api.common.packet.MessageListenerRegistry;
 import net.modificationstation.stationloader.api.common.registry.Identifier;
+import net.modificationstation.stationloader.api.common.registry.LevelRegistry;
 import net.modificationstation.stationloader.api.common.registry.ModID;
+import net.modificationstation.stationloader.api.common.registry.Registry;
 import net.modificationstation.stationloader.api.common.resource.RecursiveReader;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPage;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPageManager;
@@ -188,6 +194,28 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         });
         getLogger().info("Setting up TileEntityRegister...");
         TileEntityRegister.EVENT.register(smeltingRegistry);
+        getLogger().info("Setting up LoadLevelPropertiesOnLevelInit...");
+        LoadLevelPropertiesOnLevelInit.EVENT.register((levelProperties, tag) -> {
+            Registry<Registry<?>> registriesRegistry = Registry.REGISTRIES;
+            CompoundTag registriesTag = tag.getCompoundTag(registriesRegistry.getRegistryId().toString());
+            registriesRegistry.forEach((identifier, registry) -> {
+                if (registry instanceof LevelRegistry)
+                    ((LevelRegistry<?>) registry).load(registriesTag.getCompoundTag(registry.getRegistryId().toString()));
+            });
+        });
+        getLogger().info("Setting up SaveLevelProperties...");
+        SaveLevelProperties.EVENT.register((levelProperties, tag, spPlayerData) -> {
+            Registry<Registry<?>> registriesRegistry = Registry.REGISTRIES;
+            CompoundTag registriesTag = new CompoundTag();
+            registriesRegistry.forEach((identifier, registry) -> {
+                if (registry instanceof LevelRegistry) {
+                    CompoundTag registryTag = new CompoundTag();
+                    ((LevelRegistry<?>) registry).save(registryTag);
+                    registriesTag.put(identifier.toString(), registryTag);
+                }
+            });
+            tag.put(registriesRegistry.getRegistryId().toString(), registriesTag);
+        });
     }
 
     @Override
@@ -232,6 +260,9 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         eventRegistry.registerValue(Identifier.of(modID, "recipe_register"), RecipeRegister.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "level_init"), LevelInit.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "message_listener_register"), MessageListenerRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "load_level_properties"), LoadLevelProperties.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "save_level_properties"), SaveLevelProperties.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "load_level_properties_on_level_init"), LoadLevelPropertiesOnLevelInit.EVENT);
     }
 
     @Override
