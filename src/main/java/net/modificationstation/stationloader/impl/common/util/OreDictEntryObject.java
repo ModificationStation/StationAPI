@@ -9,8 +9,8 @@ import java.util.function.Predicate;
 
 public class OreDictEntryObject {
 
-    Identifier identifier;
-    Predicate<ItemInstance> itemInstancePredicate;
+    public final Identifier identifier;
+    public Predicate<ItemInstance> itemInstancePredicate;
 
     public OreDictEntryObject(@NotNull Identifier identifier, @Nullable Predicate<ItemInstance> itemInstancePredicate) {
         this.identifier = identifier;

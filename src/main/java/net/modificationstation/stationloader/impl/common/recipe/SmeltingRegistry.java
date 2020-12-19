@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntityBase;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.modificationstation.stationloader.api.common.event.block.TileEntityRegister;
 import net.modificationstation.stationloader.api.common.util.UnsafeProvider;
+import net.modificationstation.stationloader.impl.common.util.OreDict;
 import net.modificationstation.stationloader.mixin.common.accessor.SmeltingRecipeRegistryAccessor;
 import net.modificationstation.stationloader.mixin.common.accessor.TileEntityFurnaceAccessor;
 
@@ -26,9 +27,14 @@ public class SmeltingRegistry implements net.modificationstation.stationloader.a
     }
 
     @Override
+    public void addOreDictSmeltingRecipe(String input, ItemInstance output) {
+        ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().put(input, output);
+    }
+
+    @Override
     public ItemInstance getResultFor(ItemInstance input) {
         for (Object o : ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().keySet()) {
-            if (o instanceof ItemInstance && input.isEqualIgnoreFlags((ItemInstance) o))
+            if (o instanceof ItemInstance && input.isEqualIgnoreFlags((ItemInstance) o) || o instanceof String && OreDict.INSTANCE.matches((String) o, input))
                 return ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().get(o);
         }
         return SmeltingRecipeRegistry.getInstance().getResult(input.getType().id);

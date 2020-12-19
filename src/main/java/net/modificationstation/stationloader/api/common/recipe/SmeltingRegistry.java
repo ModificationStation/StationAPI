@@ -27,6 +27,12 @@ public interface SmeltingRegistry extends HasHandler<SmeltingRegistry> {
         }
 
         @Override
+        public void addOreDictSmeltingRecipe(String input, ItemInstance output) {
+            checkAccess(handler);
+            handler.addOreDictSmeltingRecipe(input, output);
+        }
+
+        @Override
         public ItemInstance getResultFor(ItemInstance itemInstance) {
             checkAccess(handler);
             return handler.getResultFor(itemInstance);
@@ -42,6 +48,8 @@ public interface SmeltingRegistry extends HasHandler<SmeltingRegistry> {
     void addSmeltingRecipe(int input, ItemInstance output);
 
     void addSmeltingRecipe(ItemInstance input, ItemInstance output);
+
+    void addOreDictSmeltingRecipe(String input, ItemInstance output);
 
     ItemInstance getResultFor(ItemInstance itemInstance);
 

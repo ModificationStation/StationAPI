@@ -55,7 +55,7 @@ public class OreDict {
      * @param itemInstance  The itemInstance to add to the specified oreDict entry.
      */
     public void addItemInstance(@NotNull String oreDictString, @NotNull ItemInstance itemInstance) {
-        addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance::isItemEqualIgnoreDamage);
+        addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance::isEqualIgnoreFlags);
     }
 
     /**
@@ -65,7 +65,7 @@ public class OreDict {
      * @param itemInstance  The itemInstance to add to the specified oreDict entry.
      */
     public void addItemInstanceIgnoreDamage(@NotNull String oreDictString, @NotNull ItemInstance itemInstance) {
-        addItemInstanceWithPredicate(oreDictString, itemInstance, null);
+        addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance1 -> itemInstance.itemId == itemInstance1.itemId);
     }
 
     /**
@@ -76,7 +76,7 @@ public class OreDict {
      */
     public void addBlockIgnoreDamage(@NotNull String oreDictString, @NotNull BlockBase block) {
         ItemInstance itemInstance = new ItemInstance(block);
-        addItemInstanceWithPredicate(oreDictString, itemInstance, null);
+        addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance1 -> itemInstance.itemId == itemInstance1.itemId);
     }
 
     /**
@@ -87,7 +87,7 @@ public class OreDict {
      */
     public void addItemIgnoreDamage(@NotNull String oreDictString, @NotNull ItemBase item) {
         ItemInstance itemInstance = new ItemInstance(item);
-        addItemInstanceWithPredicate(oreDictString, itemInstance, null);
+        addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance1 -> itemInstance.itemId == itemInstance1.itemId);
     }
 
     /**
@@ -110,6 +110,11 @@ public class OreDict {
     public boolean containsEntryAndIdentifier(@NotNull String oreDictString, @NotNull Identifier identifier) {
         List<OreDictEntryObject> entryObjects = oreDict.get(oreDictString);
         return entryObjects != null && entryObjects.stream().allMatch(entry -> entry.identifier == identifier);
+    }
+
+    public boolean matches(@NotNull String oreDictString, ItemInstance itemInstance) {
+        List<OreDictEntryObject> entryObjects = oreDict.get(oreDictString);
+        return entryObjects != null && entryObjects.stream().anyMatch(oreDictEntryObject -> oreDictEntryObject.itemInstancePredicate.test(itemInstance));
     }
 
 }
