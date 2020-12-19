@@ -20,18 +20,7 @@ Put the downloaded StationLoader jar into your mods folder, do NOT add as a jar 
 
 ## Using This to Make Mods
 
-If you havent already, grab a copy of the [BIN Fabric Example Mod](https://github.com/calmilamsy/BIN-fabric-example-mod/), extract it somewhere and open it in InteliiJ.  
-
-Add this to your build.gradle in the SECOND repositories entry (~line 33):  
-`maven { url "https://maven.glass-launcher.net/repo"}`
-
-Then add this to the end of your dependencies (~line 68):  
-`modImplementation "net.modificationstation:StationLoader:1.3.1:dev"`
-
-You will likely also want to install HMI-Fabric (unofficial port to SL by calmilamsy) for debugging your items and recipes.  
-If so, download the latest **-dev** jar for HMI from [here](https://maven.glass-launcher.net/repo/net/glasslauncher/HMI-Fabric/) and put it in your `run/mods` folder.
-
-Then reimport your Gradle project.
+[See the wiki.](wiki)
 
 Proper code documentation coming soon. There are some JavaDoc comments for some commonly used classes such as ItemRegister and BlockRegister.
 
