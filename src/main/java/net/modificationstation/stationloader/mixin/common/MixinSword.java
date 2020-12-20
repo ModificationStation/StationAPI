@@ -21,4 +21,9 @@ public class MixinSword implements net.modificationstation.stationloader.api.com
     public int getToolLevel() {
         return toolMaterial.getMiningLevel();
     }
+
+    @Override
+    public ToolMaterial getMaterial() {
+        return toolMaterial;
+    }
 }

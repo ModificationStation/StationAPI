@@ -5,9 +5,11 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerBase;
+import net.minecraft.item.ItemInstance;
 import net.minecraft.item.PlaceableTileEntity;
 import net.modificationstation.stationloader.api.client.event.model.ModelRegister;
 import net.modificationstation.stationloader.api.common.block.BlockManager;
+import net.modificationstation.stationloader.api.common.block.BlockMiningLevel;
 import net.modificationstation.stationloader.api.common.block.BlockRegistry;
 import net.modificationstation.stationloader.api.common.block.BlockStrengthPerMeta;
 import net.modificationstation.stationloader.api.common.entity.player.StrengthOnMeta;
@@ -15,6 +17,7 @@ import net.modificationstation.stationloader.api.common.event.block.BlockNameSet
 import net.modificationstation.stationloader.api.common.event.block.BlockRegister;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.api.common.item.EffectiveOnMeta;
+import net.modificationstation.stationloader.api.common.item.tool.*;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockBase.class)
-public class MixinBlockBase implements BlockStrengthPerMeta {
+public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
 
     @Shadow
     @Final
@@ -81,6 +84,8 @@ public class MixinBlockBase implements BlockStrengthPerMeta {
         return 0;
     }
 
+    @Shadow public double maxX;
+
     @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;", at = @At("HEAD"))
     private String getName(String name) {
         return BlockNameSet.EVENT.getInvoker().getName((BlockBase) (Object) this, name);
@@ -97,5 +102,66 @@ public class MixinBlockBase implements BlockStrengthPerMeta {
     @Override
     public float getHardness(int meta) {
         return getHardness();
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public int getBlockLevel(int meta, ItemInstance itemInstance) {
+        if (itemInstance.getType() instanceof Pickaxe) {
+            if ((Object) this == BlockBase.OBSIDIAN) {
+                return 3;
+            } else if ((Object) this != BlockBase.DIAMOND_BLOCK && (Object) this != BlockBase.DIAMOND_ORE) {
+                if ((Object) this != BlockBase.GOLD_BLOCK && (Object) this != BlockBase.GOLD_ORE) {
+                    if ((Object) this != BlockBase.IRON_BLOCK && (Object) this != BlockBase.IRON_ORE) {
+                        if ((Object) this != BlockBase.LAPIS_LAZULI_BLOCK && (Object) this != BlockBase.LAPIS_LAZULI_ORE) {
+                            if ((Object) this != BlockBase.REDSTONE_ORE && (Object) this != BlockBase.REDSTONE_ORE_LIT) {
+                                if (this.material == Material.STONE) {
+                                    return 0;
+                                } else {
+                                    return this.material == Material.METAL ? 0 : -1;
+                                }
+                            } else {
+                                return 2;
+                            }
+                        } else {
+                            return 1;
+                        }
+                    } else {
+                        return 1;
+                    }
+                } else {
+                    return 2;
+                }
+            } else {
+                return 2;
+            }
+        }
+        else if (itemInstance.getType() instanceof Hatchet) {
+            return this.material == Material.WOOD ? 0 : -1;
+        }
+        else if (itemInstance.getType() instanceof Shear) {
+            return this.material == Material.WOOL ? 0 : -1;
+        }
+        else if (itemInstance.getType() instanceof Shovel) {
+            return this.material == Material.DIRT || this.material == Material.CLAY || this.material == Material.SAND || this.material == Material.SNOW || this.material == Material.SNOW_BLOCK ? 1 : -1;
+        }
+        return -1;
+    }
+
+    @Override
+    public Class<? extends ToolLevel> getToolType(int meta, ItemInstance itemInstance) {
+        if (material == Material.STONE || material == Material.METAL) {
+            return Pickaxe.class;
+        }
+        else if (material == Material.WOOD) {
+            return Hatchet.class;
+        }
+        else if (material == Material.WOOL) {
+            return Shear.class;
+        }
+        else if (material == Material.DIRT || material == Material.CLAY || material == Material.SAND || material == Material.SNOW || material == Material.SNOW_BLOCK) {
+            return Shovel.class;
+        }
+        else return null;
     }
 }

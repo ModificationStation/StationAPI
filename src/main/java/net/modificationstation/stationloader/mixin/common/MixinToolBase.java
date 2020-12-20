@@ -3,6 +3,7 @@ package net.modificationstation.stationloader.mixin.common;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.tool.ToolBase;
 import net.minecraft.item.tool.ToolMaterial;
+import net.modificationstation.stationloader.api.common.block.BlockMiningLevel;
 import net.modificationstation.stationloader.api.common.event.item.tool.EffectiveBlocksProvider;
 import net.modificationstation.stationloader.api.common.item.tool.ToolLevel;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,5 +34,10 @@ public class MixinToolBase implements ToolLevel {
     @Override
     public int getToolLevel() {
         return toolMaterial.getMiningLevel();
+    }
+
+    @Override
+    public ToolMaterial getMaterial() {
+        return toolMaterial;
     }
 }
