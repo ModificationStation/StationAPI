@@ -24,6 +24,7 @@
     "common.MixinPlayerInventory",
     "common.MixinRecipeRegistry",
     "common.MixinServerChunkCache",
+    "common.MixinSheep",
     "common.MixinShovel",
     "common.MixinSmeltingRecipeRegistry",
     "common.MixinSword",
