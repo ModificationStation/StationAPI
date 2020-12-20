@@ -8,7 +8,7 @@ import net.minecraft.level.Level;
 import net.minecraft.server.level.ServerLevel;
 import net.modificationstation.stationloader.api.common.block.BlockStrengthPerMeta;
 import net.modificationstation.stationloader.api.common.item.EffectiveOnMeta;
-import net.modificationstation.stationloader.api.common.item.UseFirst;
+import net.modificationstation.stationloader.api.common.item.UseOnBlockFirst;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -63,8 +63,8 @@ public class Mixinclass_70 {
 
     @Inject(method = "method_1832(Lnet/minecraft/entity/player/PlayerBase;Lnet/minecraft/level/Level;Lnet/minecraft/item/ItemInstance;IIII)Z", at = @At(value = "HEAD"), cancellable = true)
     private void injectOnPlaceBlock(PlayerBase playerBase, Level level, ItemInstance itemInstance, int i, int j, int k, int i1, CallbackInfoReturnable<Boolean> cir) {
-        if (itemInstance != null && itemInstance.getType() instanceof UseFirst) {
-            if (((UseFirst) itemInstance.getType()).onItemUseFirst(itemInstance, playerBase, level, i, j, k, i1)) {
+        if (itemInstance != null && itemInstance.getType() instanceof UseOnBlockFirst) {
+            if (((UseOnBlockFirst) itemInstance.getType()).onUseOnBlockFirst(itemInstance, playerBase, level, i, j, k, i1)) {
                 cir.setReturnValue(true);
             }
         }
