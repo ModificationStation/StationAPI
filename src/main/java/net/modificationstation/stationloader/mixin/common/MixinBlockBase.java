@@ -28,6 +28,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Collections;
+import java.util.List;
+
 @Mixin(BlockBase.class)
 public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
 
@@ -149,18 +152,18 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
     }
 
     @Override
-    public Class<? extends ToolLevel> getToolType(int meta, ItemInstance itemInstance) {
+    public List<Class<? extends ToolLevel>> getToolType(int meta, ItemInstance itemInstance) {
         if (material == Material.STONE || material == Material.METAL) {
-            return Pickaxe.class;
+            return Collections.singletonList(Pickaxe.class);
         }
         else if (material == Material.WOOD) {
-            return Hatchet.class;
+            return Collections.singletonList(Hatchet.class);
         }
         else if (material == Material.WOOL) {
-            return Shear.class;
+            return Collections.singletonList(Shear.class);
         }
         else if (material == Material.DIRT || material == Material.CLAY || material == Material.SAND || material == Material.SNOW || material == Material.SNOW_BLOCK) {
-            return Shovel.class;
+            return Collections.singletonList(Shovel.class);
         }
         else return null;
     }

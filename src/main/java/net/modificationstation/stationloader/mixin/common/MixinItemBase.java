@@ -74,7 +74,7 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
             tile instanceof BlockMiningLevel &&
             (((BlockMiningLevel) tile).getBlockLevel(meta, item) <= ((ToolLevel) item.getType()).getMaterial().getMiningLevel() && ((BlockMiningLevel) tile).getBlockLevel(meta, item) != -1) &&
             ((BlockMiningLevel) tile).getToolType(meta, item) != null &&
-            ((BlockMiningLevel) tile).getToolType(meta, item).isAssignableFrom(((ToolLevel) item.getType()).getClass())
+            ((BlockMiningLevel) tile).getToolType(meta, item).stream().anyMatch((toolLevel) -> toolLevel.isAssignableFrom(((ToolLevel) item.getType()).getClass()))
         ) {
             return ((ToolLevel) item.getType()).getMaterial().getMiningSpeed();
         }
