@@ -1,7 +1,5 @@
 package net.modificationstation.stationloader.impl.common;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
@@ -47,6 +45,7 @@ import net.modificationstation.stationloader.api.common.registry.LevelRegistry;
 import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.registry.Registry;
 import net.modificationstation.stationloader.api.common.resource.RecursiveReader;
+import net.modificationstation.stationloader.api.common.util.Instance;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPage;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPageManager;
 import net.modificationstation.stationloader.impl.common.block.BlockManager;
@@ -70,25 +69,22 @@ import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class StationLoader implements net.modificationstation.stationloader.api.common.StationLoader, PreInit, Init {
 
     protected final Set<String> entrypoints = new HashSet<>();
-    private final Map<ModContainer, Set<StationMod>> mods = new HashMap<>();
     private final Set<ModContainer> modsToVerifyOnClient = new HashSet<>();
 
     @Override
     public void setup() {
         ModID modID = getModID();
-        entrypoints.add("stationmod");
         entrypoints.add(modID + ":mod");
         String sideName = FabricLoader.getInstance().getEnvironmentType().name().toLowerCase();
-        entrypoints.add("stationmod_" + sideName);
         entrypoints.add(modID + ":mod_" + sideName);
         String name = modID.getName();
         setLogger(LogManager.getFormatterLogger(name + "|API"));
@@ -96,10 +92,8 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         Configurator.setLevel("Fabric|Loader", Level.INFO);
         Configurator.setLevel(name + "|API", Level.INFO);
         getLogger().info("Initializing StationLoader...");
-        PreInit.EVENT.register(this, getModID());
-        Init.EVENT.register(this);
-        setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDir() + File.separator + modID));
-        setDefaultConfig(new Configuration(new File(getConfigPath() + File.separator + modID + ".cfg")));
+        PreInit.EVENT.register(this, modID);
+        Init.EVENT.register(this, modID);
         getLogger().info("Setting up API...");
         setupAPI();
         getLogger().info("Setting up lang folder...");
@@ -220,15 +214,33 @@ public class StationLoader implements net.modificationstation.stationloader.api.
 
     @Override
     public void loadMods() {
+        FabricLoader fabricLoader = FabricLoader.getInstance();
         getLogger().info("Loading entrypoints...");
-        entrypoints.forEach(entrypoint -> FabricLoader.getInstance().getEntrypointContainers(entrypoint, StationMod.class).forEach(this::addMod));
+        entrypoints.forEach(entrypoint -> fabricLoader.getEntrypointContainers(entrypoint, StationMod.class).forEach(this::addMod));
+        fabricLoader.getEntrypoints(Identifier.of(getModID(), "game_event_bus").toString(), Object.class).forEach(o -> {
+            GameEvent.EVENT_BUS.register(o);
+            try {
+                ReflectionHelper.setFinalFieldsWithAnnotation(o.getClass(), o, Instance.class, o);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        fabricLoader.getEntrypointContainers(Identifier.of(getModID(), "mod_event_bus").toString(), Object.class).forEach(entrypointContainer -> {
+            Object o = entrypointContainer.getEntrypoint();
+            ModEvent.getEventBus(ModID.of(entrypointContainer.getProvider())).register(o);
+            try {
+                ReflectionHelper.setFinalFieldsWithAnnotation(o.getClass(), o, Instance.class, o);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        });
         getLogger().info("Loading assets...");
         FabricLoader.getInstance().getAllMods().forEach(this::addModAssets);
         getLogger().info("Gathering mods that require client verification...");
         String value = getModID() + ":verify_client";
-        getAllMods().forEach(modContainer -> {
+        fabricLoader.getAllMods().forEach(modContainer -> {
             ModMetadata modMetadata = modContainer.getMetadata();
-            if (!modMetadata.containsCustomValue(value) || modMetadata.getCustomValue(value).getAsBoolean())
+            if (modMetadata.containsCustomValue(value) && modMetadata.getCustomValue(value).getAsBoolean())
                 modsToVerifyOnClient.add(modContainer);
         });
         getLogger().info("Invoking preInit event...");
@@ -267,9 +279,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
 
     @Override
     public void init() {
-        FabricLoader fabricLoader = FabricLoader.getInstance();
-        fabricLoader.getEntrypoints(Identifier.of(getModID(), "game_event_bus").toString(), Object.class).forEach(GameEvent.EVENT_BUS::register);
-        fabricLoader.getEntrypointContainers(Identifier.of(getModID(), "mod_event_bus").toString(), Object.class).forEach(entrypointContainer -> ModEvent.getEventBus(ModID.of(entrypointContainer.getProvider())).register(entrypointContainer.getEntrypoint()));
         EventRegistry.INSTANCE.forEach((identifier, event) -> event.register(identifier));
     }
 
@@ -277,44 +286,29 @@ public class StationLoader implements net.modificationstation.stationloader.api.
     public void addMod(EntrypointContainer<StationMod> stationModEntrypointContainer) {
         ModContainer modContainer = stationModEntrypointContainer.getProvider();
         StationMod stationMod = stationModEntrypointContainer.getEntrypoint();
-        ModMetadata modMetadata = modContainer.getMetadata();
-        for (Field field : ReflectionHelper.getFieldsWithAnnotation(stationMod.getClass(), StationMod.Instance.class)) {
-            try {
-                ReflectionHelper.setFinalField(field, stationMod, stationMod);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(String.format("Failed to set \"%s\" field of %s (%s)'s \"%s\" class!", field.getName(), modMetadata.getName(), modMetadata.getId(), stationMod.getClass().getName()), e);
-            }
-            getLogger().info("Set \"" + field.getName() + "\" field to mod's instance");
-        }
         ModID modID = ModID.of(modContainer);
         stationMod.setModID(modID);
         getLogger().info("Set mod's container");
-        String name = modMetadata.getName() + "|StationMod";
-        stationMod.setLogger(LogManager.getFormatterLogger(name));
-        Configurator.setLevel(name, Level.INFO);
-        getLogger().info("Registered logger \"" + name + "\"");
-        stationMod.setConfigPath(Paths.get(FabricLoader.getInstance().getConfigDir() + File.separator + modMetadata.getId()));
-        stationMod.setDefaultConfig(net.modificationstation.stationloader.api.common.factory.GeneralFactory.INSTANCE.newInst(net.modificationstation.stationloader.api.common.config.Configuration.class, new File(stationMod.getConfigPath() + File.separator + modMetadata.getId() + ".cfg")));
-        getLogger().info("Initialized default config");
         if (stationMod instanceof PreInit)
             PreInit.EVENT.register((PreInit) stationMod, modID);
-        Init.EVENT.register(stationMod);
+        Init.EVENT.register(stationMod, modID);
         if (stationMod instanceof PostInit)
-            PostInit.EVENT.register((PostInit) stationMod);
+            PostInit.EVENT.register((PostInit) stationMod, modID);
         getLogger().info("Registered events");
-        mods.computeIfAbsent(modContainer, modContainer1 -> new HashSet<>()).add(stationMod);
-        getLogger().info(String.format("Done loading %s (%s)'s \"%s\" StationMod", modMetadata.getName(), modMetadata.getId(), stationMod.getClass().getName()));
+        try {
+            ReflectionHelper.setFinalFieldsWithAnnotation(stationMod.getClass(), stationMod, Instance.class, stationMod);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        getLogger().info(String.format("Done loading %s (%s)'s \"%s\" StationMod", modID.getName(), modID, stationMod.getClass().getName()));
     }
 
     @Override
     public void addModAssets(ModContainer modContainer) {
         ModID modID = ModID.of(modContainer);
         String slSubFolder = "/assets/" + modID + "/" + getModID();
-        URL path = getClass().getResource(slSubFolder);
-        if (path != null)
-            mods.putIfAbsent(modContainer, new HashSet<>());
         String pathName = slSubFolder + "/lang";
-        path = getClass().getResource(pathName);
+        URL path = getClass().getResource(pathName);
         if (path != null) {
             net.modificationstation.stationloader.api.common.lang.I18n.INSTANCE.addLangFolder(pathName, modID);
             getLogger().info("Registered lang path");
@@ -330,21 +324,6 @@ public class StationLoader implements net.modificationstation.stationloader.api.
             }
             getLogger().info("Listed recipes");
         }
-    }
-
-    @Override
-    public Collection<ModContainer> getAllMods() {
-        return Collections.unmodifiableSet(mods.keySet());
-    }
-
-    @Override
-    public Set<StationMod> getAllModInstances() {
-        return Collections.unmodifiableSet(Sets.newHashSet(Iterables.concat(mods.values())));
-    }
-
-    @Override
-    public Set<StationMod> getModInstances(ModContainer modContainer) {
-        return Collections.unmodifiableSet(mods.get(modContainer));
     }
 
     @Override

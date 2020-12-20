@@ -17,6 +17,11 @@ public class ReflectionHelper {
         }
     }
 
+    public static void setFinalFieldsWithAnnotation(Class<?> targetClass, Object target, Class<? extends Annotation> annotation, Object value) throws IllegalAccessException {
+        for (Field field : ReflectionHelper.getFieldsWithAnnotation(targetClass, annotation))
+            ReflectionHelper.setFinalField(field, target, value);
+    }
+
     public static Field[] getFieldsWithAnnotation(Class<?> targetClass, Class<? extends Annotation> annotationClass) {
         Field[] fields = new Field[0];
         for (Field field : targetClass.getFields())

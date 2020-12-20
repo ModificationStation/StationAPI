@@ -9,8 +9,7 @@ import net.modificationstation.stationloader.api.common.util.HasHandler;
 import net.modificationstation.stationloader.api.common.util.ModCore;
 import org.apache.logging.log4j.Logger;
 
-import java.nio.file.Path;
-import java.util.Collection;
+import java.io.File;
 import java.util.Set;
 
 public interface StationLoader extends ModCore, HasHandler<StationLoader> {
@@ -37,15 +36,15 @@ public interface StationLoader extends ModCore, HasHandler<StationLoader> {
         }
 
         @Override
-        public Path getConfigPath() {
+        public File getConfigDir() {
             checkAccess(handler);
-            return handler.getConfigPath();
+            return handler.getConfigDir();
         }
 
         @Override
-        public void setConfigPath(Path configPath) {
+        public void setConfigDir(File configPath) {
             checkAccess(handler);
-            handler.setConfigPath(configPath);
+            handler.setConfigDir(configPath);
         }
 
         @Override
@@ -97,24 +96,6 @@ public interface StationLoader extends ModCore, HasHandler<StationLoader> {
         }
 
         @Override
-        public Collection<ModContainer> getAllMods() {
-            checkAccess(handler);
-            return handler.getAllMods();
-        }
-
-        @Override
-        public Set<StationMod> getAllModInstances() {
-            checkAccess(handler);
-            return handler.getAllModInstances();
-        }
-
-        @Override
-        public Set<StationMod> getModInstances(ModContainer modContainer) {
-            checkAccess(handler);
-            return handler.getModInstances(modContainer);
-        }
-
-        @Override
         public Set<ModContainer> getModsToVerifyOnClient() {
             checkAccess(handler);
             return handler.getModsToVerifyOnClient();
@@ -128,12 +109,6 @@ public interface StationLoader extends ModCore, HasHandler<StationLoader> {
     void addMod(EntrypointContainer<StationMod> stationModEntrypointContainer);
 
     void addModAssets(ModContainer modContainer);
-
-    Collection<ModContainer> getAllMods();
-
-    Set<StationMod> getAllModInstances();
-
-    Set<StationMod> getModInstances(ModContainer modContainer);
 
     Set<ModContainer> getModsToVerifyOnClient();
 }

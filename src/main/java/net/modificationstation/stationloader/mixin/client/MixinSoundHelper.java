@@ -2,12 +2,12 @@ package net.modificationstation.stationloader.mixin.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.sound.SoundHelper;
 import net.minecraft.util.SoundMap;
-import net.modificationstation.stationloader.api.common.StationLoader;
 import net.modificationstation.stationloader.api.common.resource.RecursiveReader;
 import net.modificationstation.stationloader.api.common.util.CustomSoundMap;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,7 +34,7 @@ public class MixinSoundHelper {
     @Environment(EnvType.CLIENT)
     private static void loadModAudio(SoundMap array, String channel) {
         try {
-            for (ModContainer modContainer : StationLoader.INSTANCE.getAllMods()) {
+            for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
                 ModMetadata stationMod = modContainer.getMetadata();
                 Path basePath = Paths.get("/assets/" + stationMod.getId() + "/stationloader/sounds/" + channel);
                 if (MixinSoundHelper.class.getResource(basePath.toString().replace("\\", "/")) != null) {

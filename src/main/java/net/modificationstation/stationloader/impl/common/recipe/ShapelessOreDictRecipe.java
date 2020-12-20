@@ -3,13 +3,9 @@ package net.modificationstation.stationloader.impl.common.recipe;
 import net.minecraft.inventory.Crafting;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.Recipe;
-import net.modificationstation.stationloader.api.common.item.ItemRegistry;
 import net.modificationstation.stationloader.impl.common.util.OreDict;
-import net.modificationstation.stationloader.mixin.common.accessor.ShapelessRecipeAccessor;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ShapelessOreDictRecipe implements Recipe {

@@ -1,5 +1,6 @@
 package net.modificationstation.stationloader.api.common.event.mod;
 
+import lombok.Getter;
 import net.modificationstation.stationloader.api.common.event.EventRegistry;
 import net.modificationstation.stationloader.api.common.event.ModEvent;
 import net.modificationstation.stationloader.api.common.registry.ModID;
@@ -17,17 +18,30 @@ public interface PreInit {
 
     ModEvent<PreInit> EVENT = new ModEvent<>(PreInit.class,
             listeners ->
-                    (eventRegistry, modID) -> {
+                    (registry, modID) -> {
                         for (PreInit listener : listeners)
-                            listener.preInit(eventRegistry, PreInit.EVENT.getListenerModID(listener));
+                            listener.preInit(registry, PreInit.EVENT.getListenerModID(listener));
                     },
             listener ->
-                    (eventRegistry, modID) -> {
+                    (registry, modID) -> {
                         PreInit.EVENT.setCurrentListener(listener);
-                        listener.preInit(eventRegistry, modID);
+                        listener.preInit(registry, modID);
                         PreInit.EVENT.setCurrentListener(null);
-                    }
+                    },
+            preInit ->
+                    preInit.register((registry, modID) -> ModEvent.post(new Data(registry)), null)
     );
 
     void preInit(EventRegistry eventRegistry, ModID modID);
+
+    final class Data extends ModInitData<PreInit> {
+
+        @Getter
+        private final EventRegistry registry;
+
+        private Data(EventRegistry registry) {
+            super(EVENT);
+            this.registry = registry;
+        }
+    }
 }

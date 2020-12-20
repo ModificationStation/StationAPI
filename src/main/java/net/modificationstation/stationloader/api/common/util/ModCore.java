@@ -1,42 +1,64 @@
 package net.modificationstation.stationloader.api.common.util;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.modificationstation.stationloader.api.common.config.Configuration;
+import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.api.common.registry.ModID;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 public interface ModCore {
 
-    Map<ModCore, Logger> loggers = new HashMap<>();
-    Map<ModCore, Path> configPaths = new HashMap<>();
-    Map<ModCore, Configuration> defaultConfigs = new HashMap<>();
+    Map<ModID, Logger> loggers = new HashMap<>();
+    Map<ModID, File> configDirs = new HashMap<>();
+    Map<ModID, Configuration> defaultConfigs = new HashMap<>();
     Map<ModCore, ModID> modIDs = new HashMap<>();
 
+    static Logger getLogger(ModID modID) {
+        return loggers.computeIfAbsent(modID, modID1 -> {
+            String name = modID1.getName() + "|ModCore";
+            Logger log = LogManager.getFormatterLogger();
+            Configurator.setLevel(name, Level.INFO);
+            return log;
+        });
+    }
+
     default Logger getLogger() {
-        return loggers.get(this);
+        return getLogger(getModID());
     }
 
     default void setLogger(Logger log) {
-        loggers.put(this, log);
+        loggers.put(getModID(), log);
     }
 
-    default Path getConfigPath() {
-        return configPaths.get(this);
+    static File getConfigDir(ModID modID) {
+        return configDirs.computeIfAbsent(modID, modID1 -> new File(FabricLoader.getInstance().getConfigDir() + File.separator + modID1));
     }
 
-    default void setConfigPath(Path configPath) {
-        configPaths.put(this, configPath);
+    default File getConfigDir() {
+        return getConfigDir(getModID());
+    }
+
+    default void setConfigDir(File configPath) {
+        configDirs.put(getModID(), configPath);
+    }
+
+    static Configuration getDefaultConfig(ModID modID) {
+        return defaultConfigs.computeIfAbsent(modID, modID1 -> GeneralFactory.INSTANCE.newInst(Configuration.class, new File(getConfigDir(modID1) + File.separator + modID1 + ".cfg")));
     }
 
     default Configuration getDefaultConfig() {
-        return defaultConfigs.get(this);
+        return getDefaultConfig(getModID());
     }
 
     default void setDefaultConfig(Configuration config) {
-        defaultConfigs.put(this, config);
+        defaultConfigs.put(getModID(), config);
     }
 
     default ModID getModID() {
