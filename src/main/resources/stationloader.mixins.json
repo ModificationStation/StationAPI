@@ -8,6 +8,7 @@
     "common.MixinAchievements",
     "common.MixinBiome",
     "common.MixinBlockBase",
+    "common.MixinBlockSounds",
     "common.MixinChunkCache",
     "common.MixinCraftingResult",
     "common.MixinDimensionFile",
