@@ -6,7 +6,6 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationloader.api.client.event.model.ModelRegister;
-import net.modificationstation.stationloader.api.common.block.BlockHardnessPerMeta;
 import net.modificationstation.stationloader.api.common.block.BlockMiningLevel;
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
