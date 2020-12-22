@@ -50,7 +50,6 @@ repositories {
 }
 
 minecraft {
-	accessWidener = file("src/main/resources/stationloader.accesswidener")
 }
 
 dependencies {

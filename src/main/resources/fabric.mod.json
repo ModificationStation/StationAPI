@@ -29,7 +29,6 @@
       "net.modificationstation.stationloader.impl.server.StationLoader"
     ]
   },
-  "accessWidener" : "stationloader.accesswidener",
   "mixins": [
     "stationloader.mixins.json"
   ],
