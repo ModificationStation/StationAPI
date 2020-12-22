@@ -38,6 +38,8 @@ import net.modificationstation.stationloader.api.common.event.packet.MessageList
 import net.modificationstation.stationloader.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationloader.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationloader.api.common.mod.StationMod;
+import net.modificationstation.stationloader.api.common.mod.entrypoint.Instance;
+import net.modificationstation.stationloader.api.common.mod.entrypoint.ModIDField;
 import net.modificationstation.stationloader.api.common.packet.Message;
 import net.modificationstation.stationloader.api.common.packet.MessageListenerRegistry;
 import net.modificationstation.stationloader.api.common.registry.Identifier;
@@ -45,7 +47,6 @@ import net.modificationstation.stationloader.api.common.registry.LevelRegistry;
 import net.modificationstation.stationloader.api.common.registry.ModID;
 import net.modificationstation.stationloader.api.common.registry.Registry;
 import net.modificationstation.stationloader.api.common.resource.RecursiveReader;
-import net.modificationstation.stationloader.api.common.util.Instance;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPage;
 import net.modificationstation.stationloader.impl.common.achievement.AchievementPageManager;
 import net.modificationstation.stationloader.impl.common.block.BlockManager;
@@ -217,22 +218,17 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         FabricLoader fabricLoader = FabricLoader.getInstance();
         getLogger().info("Loading entrypoints...");
         entrypoints.forEach(entrypoint -> fabricLoader.getEntrypointContainers(entrypoint, StationMod.class).forEach(this::addMod));
-        fabricLoader.getEntrypoints(Identifier.of(getModID(), "game_event_bus").toString(), Object.class).forEach(o -> {
+        fabricLoader.getEntrypointContainers(Identifier.of(getModID(), "game_event_bus").toString(), Object.class).forEach(entrypointContainer -> {
+            ModContainer modContainer = entrypointContainer.getProvider();
+            Object o = entrypointContainer.getEntrypoint();
             GameEvent.EVENT_BUS.register(o);
-            try {
-                ReflectionHelper.setFinalFieldsWithAnnotation(o.getClass(), o, Instance.class, o);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            setupAnnotations(modContainer, o);
         });
         fabricLoader.getEntrypointContainers(Identifier.of(getModID(), "mod_event_bus").toString(), Object.class).forEach(entrypointContainer -> {
+            ModContainer modContainer = entrypointContainer.getProvider();
             Object o = entrypointContainer.getEntrypoint();
-            ModEvent.getEventBus(ModID.of(entrypointContainer.getProvider())).register(o);
-            try {
-                ReflectionHelper.setFinalFieldsWithAnnotation(o.getClass(), o, Instance.class, o);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            ModEvent.getEventBus(ModID.of(modContainer)).register(o);
+            setupAnnotations(modContainer, o);
         });
         getLogger().info("Loading assets...");
         FabricLoader.getInstance().getAllMods().forEach(this::addModAssets);
@@ -295,11 +291,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         if (stationMod instanceof PostInit)
             PostInit.EVENT.register((PostInit) stationMod, modID);
         getLogger().info("Registered events");
-        try {
-            ReflectionHelper.setFinalFieldsWithAnnotation(stationMod.getClass(), stationMod, Instance.class, stationMod);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        setupAnnotations(modContainer, stationMod);
         getLogger().info(String.format("Done loading %s (%s)'s \"%s\" StationMod", modID.getName(), modID, stationMod.getClass().getName()));
     }
 
@@ -323,6 +315,15 @@ public class StationLoader implements net.modificationstation.stationloader.api.
                 throw new RuntimeException(e);
             }
             getLogger().info("Listed recipes");
+        }
+    }
+
+    public static void setupAnnotations(ModContainer modContainer, Object o) {
+        try {
+            ReflectionHelper.setFinalFieldsWithAnnotation(o, Instance.class, o);
+            ReflectionHelper.setFinalFieldsWithAnnotation(o, ModIDField.class, modIDField -> modIDField.value().isEmpty() ? ModID.of(modContainer) : ModID.of(modIDField.value()));
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 

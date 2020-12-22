@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.function.Function;
 
 public class ReflectionHelper {
 
@@ -17,9 +18,21 @@ public class ReflectionHelper {
         }
     }
 
+    public static void setFinalFieldsWithAnnotation(Object target, Class<? extends Annotation> annotation, Object value) throws IllegalAccessException {
+        setFinalFieldsWithAnnotation(target.getClass(), target, annotation, value);
+    }
+
     public static void setFinalFieldsWithAnnotation(Class<?> targetClass, Object target, Class<? extends Annotation> annotation, Object value) throws IllegalAccessException {
+        setFinalFieldsWithAnnotation(targetClass, target, annotation, annotation1 -> value);
+    }
+
+    public static <T extends Annotation> void setFinalFieldsWithAnnotation(Object target, Class<T> annotation, Function<T, Object> processor) throws IllegalAccessException {
+        setFinalFieldsWithAnnotation(target.getClass(), target, annotation, processor);
+    }
+
+    public static <T extends Annotation> void setFinalFieldsWithAnnotation(Class<?> targetClass, Object target, Class<T> annotation, Function<T, Object> processor) throws IllegalAccessException {
         for (Field field : ReflectionHelper.getFieldsWithAnnotation(targetClass, annotation))
-            ReflectionHelper.setFinalField(field, target, value);
+            ReflectionHelper.setFinalField(field, target, processor.apply(field.getAnnotation(annotation)));
     }
 
     public static Field[] getFieldsWithAnnotation(Class<?> targetClass, Class<? extends Annotation> annotationClass) {

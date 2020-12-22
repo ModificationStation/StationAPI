@@ -2,10 +2,10 @@ package net.modificationstation.stationloader.api.common.event;
 
 import lombok.experimental.SuperBuilder;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.modificationstation.stationloader.api.common.registry.Identifier;
-import net.modificationstation.stationloader.api.common.util.Instance;
-import net.modificationstation.stationloader.impl.common.util.ReflectionHelper;
+import net.modificationstation.stationloader.impl.common.StationLoader;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -91,12 +91,9 @@ public abstract class Event<T> {
     public void register(Identifier identifier) {
         FabricLoader.getInstance().getEntrypointContainers(identifier.toString(), type).forEach(container -> {
             register(container);
+            ModContainer modContainer = container.getProvider();
             T listener = container.getEntrypoint();
-            try {
-                ReflectionHelper.setFinalFieldsWithAnnotation(listener.getClass(), listener, Instance.class, listener);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            StationLoader.setupAnnotations(modContainer, listener);
         });
     }
 
