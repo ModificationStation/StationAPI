@@ -21,4 +21,9 @@ public class MixinHoe implements net.modificationstation.stationloader.api.commo
     public int getToolLevel() {
         return toolMaterial.getMiningLevel();
     }
+
+    @Override
+    public ToolMaterial getMaterial() {
+        return toolMaterial;
+    }
 }

@@ -6,6 +6,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationloader.api.client.event.model.ModelRegister;
+import net.modificationstation.stationloader.api.common.block.BlockMiningLevel;
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import net.modificationstation.stationloader.api.common.event.item.tool.IsEffectiveOn;
@@ -59,13 +60,25 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
     @Override
     public boolean isEffectiveOn(BlockBase tile, int meta) {
         boolean effective = isEffectiveOn(tile);
-        if (this instanceof ToolLevel)
+        if (this instanceof ToolLevel) {
             effective = IsEffectiveOn.EVENT.getInvoker().isEffectiveOn((ToolLevel) this, tile, meta, effective);
+        }
         return effective;
     }
 
     @Override
     public float getStrengthOnBlock(ItemInstance item, BlockBase tile, int meta) {
-        return getStrengthOnBlock(item, tile);
+        if (
+            item.getType() instanceof ToolLevel &&
+            tile instanceof BlockMiningLevel &&
+            (((BlockMiningLevel) tile).getBlockLevel(meta, item) <= ((ToolLevel) item.getType()).getMaterial().getMiningLevel() && ((BlockMiningLevel) tile).getBlockLevel(meta, item) != -1) &&
+            ((BlockMiningLevel) tile).getToolType(meta, item) != null &&
+            ((BlockMiningLevel) tile).getToolType(meta, item).stream().anyMatch((toolLevel) -> toolLevel.isAssignableFrom(((ToolLevel) item.getType()).getClass()))
+        ) {
+            return ((ToolLevel) item.getType()).getMaterial().getMiningSpeed();
+        }
+        else {
+            return getStrengthOnBlock(item, tile);
+        }
     }
 }

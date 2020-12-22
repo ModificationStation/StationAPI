@@ -34,4 +34,9 @@ public class MixinToolBase implements ToolLevel {
     public int getToolLevel() {
         return toolMaterial.getMiningLevel();
     }
+
+    @Override
+    public ToolMaterial getMaterial() {
+        return toolMaterial;
+    }
 }

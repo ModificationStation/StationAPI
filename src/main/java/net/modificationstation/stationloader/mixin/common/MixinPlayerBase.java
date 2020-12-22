@@ -18,6 +18,7 @@ import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationloader.api.common.entity.player.*;
 import net.modificationstation.stationloader.api.common.event.entity.player.PlayerHandlerRegister;
 import net.modificationstation.stationloader.api.common.item.CustomArmourValue;
+import net.modificationstation.stationloader.api.common.item.UseOnEntityFirst;
 import net.modificationstation.stationloader.impl.common.entity.player.PlayerAPI;
 import net.modificationstation.stationloader.impl.common.util.ArmourUtils;
 import net.modificationstation.stationloader.mixin.common.accessor.PlayerBaseAccessor;
@@ -42,6 +43,7 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
     protected boolean sleeping;
     private List<PlayerHandler> playerBases;
     private Integer meta;
+
     public MixinPlayerBase(Level world) {
         super(world);
     }
@@ -440,6 +442,13 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
             float ret = itemInstance == null ? playerInventory.method_674(arg) : ((net.modificationstation.stationloader.api.common.item.StrengthOnMeta) itemInstance.getType()).getStrengthOnBlock(itemInstance, arg, meta);
             meta = null;
             return ret;
+        }
+    }
+
+    @Inject(method = "interactWith(Lnet/minecraft/entity/EntityBase;)V", at = @At(value = "HEAD"), cancellable = true)
+    private void hijackInteractWith(EntityBase arg, CallbackInfo ci) {
+        if (getHeldItem().getType() instanceof UseOnEntityFirst && ((UseOnEntityFirst)getHeldItem().getType()).onUseOnEntityFirst(getHeldItem(), (PlayerBase) (Object) this, this.level, arg)) {
+            ci.cancel();
         }
     }
 }
