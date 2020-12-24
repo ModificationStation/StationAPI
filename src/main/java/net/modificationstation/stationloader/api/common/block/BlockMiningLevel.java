@@ -8,5 +8,5 @@ import java.util.List;
 public interface BlockMiningLevel {
     int getBlockLevel(int meta, ItemInstance itemInstance);
 
-    List<Class<? extends ToolLevel>> getToolType(int meta, ItemInstance itemInstance);
+    List<Class<? extends ToolLevel>> getToolTypes(int meta, ItemInstance itemInstance);
 }

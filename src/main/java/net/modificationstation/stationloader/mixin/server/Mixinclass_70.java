@@ -58,7 +58,7 @@ public class Mixinclass_70 {
         if (arg.material.doesRequireTool())
             return true;
         ItemInstance itemInstance = playerBase.getHeldItem();
-        return itemInstance != null && ((EffectiveOnMeta) itemInstance.getType()).isEffectiveOn(arg, capturedMeta);
+        return itemInstance != null && ((EffectiveOnMeta) itemInstance.getType()).isEffectiveOn(arg, capturedMeta, itemInstance);
     }
 
     @Inject(method = "method_1832(Lnet/minecraft/entity/player/PlayerBase;Lnet/minecraft/level/Level;Lnet/minecraft/item/ItemInstance;IIII)Z", at = @At(value = "HEAD"), cancellable = true)

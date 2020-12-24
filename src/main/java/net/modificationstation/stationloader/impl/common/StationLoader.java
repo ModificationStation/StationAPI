@@ -23,7 +23,7 @@ import net.modificationstation.stationloader.api.common.event.item.ItemCreation;
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
 import net.modificationstation.stationloader.api.common.event.item.tool.EffectiveBlocksProvider;
-import net.modificationstation.stationloader.api.common.event.item.tool.IsEffectiveOn;
+import net.modificationstation.stationloader.api.common.event.item.tool.OverrideIsEffectiveOn;
 import net.modificationstation.stationloader.api.common.event.level.LevelInit;
 import net.modificationstation.stationloader.api.common.event.level.LoadLevelProperties;
 import net.modificationstation.stationloader.api.common.event.level.LoadLevelPropertiesOnLevelInit;
@@ -182,7 +182,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
             return name;
         });
         getLogger().info("Setting up IsEffectiveOn...");
-        IsEffectiveOn.EVENT.register((toolLevel, arg, meta, effective) -> {
+        OverrideIsEffectiveOn.EVENT.register((toolLevel, arg, meta, effective) -> {
             if (arg instanceof EffectiveForTool)
                 effective = ((EffectiveForTool) arg).isEffectiveFor(toolLevel, meta);
             return effective;
@@ -257,7 +257,7 @@ public class StationLoader implements net.modificationstation.stationloader.api.
         eventRegistry.registerValue(Identifier.of(modID, "player_handler_register"), PlayerHandlerRegister.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "entity_register"), EntityRegister.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "effective_blocks_provider"), EffectiveBlocksProvider.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "is_effective_on"), IsEffectiveOn.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "is_effective_on"), OverrideIsEffectiveOn.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "item_creation"), ItemCreation.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "item_name_set"), ItemNameSet.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "item_register"), ItemRegister.EVENT);

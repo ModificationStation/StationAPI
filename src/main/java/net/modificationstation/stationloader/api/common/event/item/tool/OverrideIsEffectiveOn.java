@@ -8,16 +8,16 @@ import net.modificationstation.stationloader.api.common.item.tool.ToolLevel;
 
 import java.util.function.Consumer;
 
-public interface IsEffectiveOn {
+public interface OverrideIsEffectiveOn {
 
-    GameEvent<IsEffectiveOn> EVENT = new GameEvent<>(IsEffectiveOn.class,
+    GameEvent<OverrideIsEffectiveOn> EVENT = new GameEvent<>(OverrideIsEffectiveOn.class,
             listeners ->
                     (toolBase, block, meta, effective) -> {
-                        for (IsEffectiveOn listener : listeners)
-                            effective = listener.isEffectiveOn(toolBase, block, meta, effective);
+                        for (OverrideIsEffectiveOn listener : listeners)
+                            effective = listener.overrideIsEffectiveOn(toolBase, block, meta, effective);
                         return effective;
                     },
-            (Consumer<GameEvent<IsEffectiveOn>>) isEffectiveOn ->
+            (Consumer<GameEvent<OverrideIsEffectiveOn>>) isEffectiveOn ->
                     isEffectiveOn.register((toolLevel, block, meta, effective) -> {
                         Data data = new Data(toolLevel, block, meta, effective);
                         GameEvent.EVENT_BUS.post(data);
@@ -25,9 +25,9 @@ public interface IsEffectiveOn {
                     })
     );
 
-    boolean isEffectiveOn(ToolLevel toolLevel, BlockBase block, int meta, boolean effective);
+    boolean overrideIsEffectiveOn(ToolLevel toolLevel, BlockBase block, int meta, boolean effective);
 
-    final class Data extends GameEvent.Data<IsEffectiveOn> {
+    final class Data extends GameEvent.Data<OverrideIsEffectiveOn> {
 
         @Getter
         private final ToolLevel toolLevel;

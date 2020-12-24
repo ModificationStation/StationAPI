@@ -59,6 +59,6 @@ public class MixinRemoteClientInteractionManager extends ClientInteractionManage
         if (arg.material.doesRequireTool())
             return true;
         ItemInstance itemInstance = abstractClientPlayer.getHeldItem();
-        return itemInstance != null && ((EffectiveOnMeta) itemInstance.getType()).isEffectiveOn(arg, capturedMeta);
+        return itemInstance != null && ((EffectiveOnMeta) itemInstance.getType()).isEffectiveOn(arg, capturedMeta, itemInstance);
     }
 }

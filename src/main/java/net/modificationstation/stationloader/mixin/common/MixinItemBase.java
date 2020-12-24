@@ -9,7 +9,7 @@ import net.modificationstation.stationloader.api.client.event.model.ModelRegiste
 import net.modificationstation.stationloader.api.common.block.BlockMiningLevel;
 import net.modificationstation.stationloader.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationloader.api.common.event.item.ItemRegister;
-import net.modificationstation.stationloader.api.common.event.item.tool.IsEffectiveOn;
+import net.modificationstation.stationloader.api.common.event.item.tool.OverrideIsEffectiveOn;
 import net.modificationstation.stationloader.api.common.factory.GeneralFactory;
 import net.modificationstation.stationloader.api.common.item.EffectiveOnMeta;
 import net.modificationstation.stationloader.api.common.item.ItemRegistry;
@@ -58,10 +58,16 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
     }
 
     @Override
-    public boolean isEffectiveOn(BlockBase tile, int meta) {
+    public boolean isEffectiveOn(BlockBase tile, int meta, ItemInstance itemInstance) {
         boolean effective = isEffectiveOn(tile);
         if (this instanceof ToolLevel) {
-            effective = IsEffectiveOn.EVENT.getInvoker().isEffectiveOn((ToolLevel) this, tile, meta, effective);
+            effective =
+                    ((BlockMiningLevel) tile).getToolTypes(meta, itemInstance) != null &&
+                    ((BlockMiningLevel) tile).getToolTypes(meta, itemInstance).stream().anyMatch(entry -> entry != null && entry.isInstance(itemInstance.getType())) &&
+                            ((ToolLevel) this).getToolLevel() >= ((BlockMiningLevel) tile).getBlockLevel(meta, itemInstance);
+            if (this instanceof OverrideIsEffectiveOn) {
+                effective = OverrideIsEffectiveOn.EVENT.getInvoker().overrideIsEffectiveOn((ToolLevel) this, tile, meta, effective);
+            }
         }
         return effective;
     }
@@ -70,10 +76,10 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
     public float getStrengthOnBlock(ItemInstance item, BlockBase tile, int meta) {
         if (
             item.getType() instanceof ToolLevel &&
-            tile instanceof BlockMiningLevel &&
-            (((BlockMiningLevel) tile).getBlockLevel(meta, item) <= ((ToolLevel) item.getType()).getMaterial().getMiningLevel() && ((BlockMiningLevel) tile).getBlockLevel(meta, item) != -1) &&
-            ((BlockMiningLevel) tile).getToolType(meta, item) != null &&
-            ((BlockMiningLevel) tile).getToolType(meta, item).stream().anyMatch((toolLevel) -> toolLevel.isAssignableFrom(((ToolLevel) item.getType()).getClass()))
+            ((BlockMiningLevel) tile).getBlockLevel(meta, item) <= ((ToolLevel) item.getType()).getToolLevel() &&
+            ((BlockMiningLevel) tile).getBlockLevel(meta, item) != -1 &&
+            ((BlockMiningLevel) tile).getToolTypes(meta, item) != null &&
+            ((BlockMiningLevel) tile).getToolTypes(meta, item).stream().anyMatch((toolLevel) -> toolLevel != null && toolLevel.isInstance(item.getType()))
         ) {
             return ((ToolLevel) item.getType()).getMaterial().getMiningSpeed();
         }
