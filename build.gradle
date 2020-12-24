@@ -120,6 +120,7 @@ task javadocJar(type: Jar) {
 }
 
 tasks.publishToMavenLocal.dependsOn(tasks.remapJar)
+tasks.publishToMavenLocal.dependsOn(tasks.javadocJar)
 
 publishing {
 	repositories {
@@ -137,6 +138,11 @@ publishing {
 			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-dev.jar") {
 				classifier 'dev'
 				builtBy remapJar
+			}
+
+			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-javadoc.jar") {
+				classifier 'javadoc'
+				builtBy javadocJar
 			}
 		}
 	}
