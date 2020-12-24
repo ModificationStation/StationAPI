@@ -49,4 +49,19 @@ public class Cobweb extends net.minecraft.block.Cobweb {
     public Cobweb setUnbreakable() {
         return (Cobweb) super.setUnbreakable();
     }
+
+    @Override
+    public Cobweb setTicksRandomly(boolean ticksRandomly) {
+        return (Cobweb) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Cobweb setName(String string) {
+        return (Cobweb) super.setName(string);
+    }
+
+    @Override
+    public Cobweb disableStat() {
+        return (Cobweb) super.disableStat();
+    }
 }

@@ -59,4 +59,19 @@ public class BlockBase extends net.minecraft.block.BlockBase {
     public BlockBase setUnbreakable() {
         return (BlockBase) super.setUnbreakable();
     }
+
+    @Override
+    public BlockBase setTicksRandomly(boolean ticksRandomly) {
+        return (BlockBase) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public BlockBase setName(String string) {
+        return (BlockBase) super.setName(string);
+    }
+
+    @Override
+    public BlockBase disableStat() {
+        return (BlockBase) super.disableStat();
+    }
 }

@@ -49,4 +49,19 @@ public class Portal extends net.minecraft.block.Portal {
     public Portal setUnbreakable() {
         return (Portal) super.setUnbreakable();
     }
+
+    @Override
+    public Portal setTicksRandomly(boolean ticksRandomly) {
+        return (Portal) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Portal setName(String string) {
+        return (Portal) super.setName(string);
+    }
+
+    @Override
+    public Portal disableStat() {
+        return (Portal) super.disableStat();
+    }
 }

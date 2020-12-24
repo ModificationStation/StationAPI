@@ -50,4 +50,19 @@ public class Stairs extends net.minecraft.block.Stairs {
     public Stairs setUnbreakable() {
         return (Stairs) super.setUnbreakable();
     }
+
+    @Override
+    public Stairs setTicksRandomly(boolean ticksRandomly) {
+        return (Stairs) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Stairs setName(String string) {
+        return (Stairs) super.setName(string);
+    }
+
+    @Override
+    public Stairs disableStat() {
+        return (Stairs) super.disableStat();
+    }
 }

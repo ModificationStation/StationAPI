@@ -50,4 +50,19 @@ public class Glowstone extends net.minecraft.block.Glowstone {
     public Glowstone setUnbreakable() {
         return (Glowstone) super.setUnbreakable();
     }
+
+    @Override
+    public Glowstone setTicksRandomly(boolean ticksRandomly) {
+        return (Glowstone) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Glowstone setName(String string) {
+        return (Glowstone) super.setName(string);
+    }
+
+    @Override
+    public Glowstone disableStat() {
+        return (Glowstone) super.disableStat();
+    }
 }

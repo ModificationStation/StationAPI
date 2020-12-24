@@ -49,4 +49,19 @@ public class Tnt extends net.minecraft.block.Tnt {
     public Tnt setUnbreakable() {
         return (Tnt) super.setUnbreakable();
     }
+
+    @Override
+    public Tnt setTicksRandomly(boolean ticksRandomly) {
+        return (Tnt) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Tnt setName(String string) {
+        return (Tnt) super.setName(string);
+    }
+
+    @Override
+    public Tnt disableStat() {
+        return (Tnt) super.disableStat();
+    }
 }

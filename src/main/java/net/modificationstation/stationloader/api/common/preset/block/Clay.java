@@ -49,4 +49,19 @@ public class Clay extends net.minecraft.block.Clay {
     public Clay setUnbreakable() {
         return (Clay) super.setUnbreakable();
     }
+
+    @Override
+    public Clay setTicksRandomly(boolean ticksRandomly) {
+        return (Clay) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Clay setName(String string) {
+        return (Clay) super.setName(string);
+    }
+
+    @Override
+    public Clay disableStat() {
+        return (Clay) super.disableStat();
+    }
 }

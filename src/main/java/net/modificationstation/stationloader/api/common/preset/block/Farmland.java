@@ -49,4 +49,19 @@ public class Farmland extends net.minecraft.block.Farmland {
     public Farmland setUnbreakable() {
         return (Farmland) super.setUnbreakable();
     }
+
+    @Override
+    public Farmland setTicksRandomly(boolean ticksRandomly) {
+        return (Farmland) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Farmland setName(String string) {
+        return (Farmland) super.setName(string);
+    }
+
+    @Override
+    public Farmland disableStat() {
+        return (Farmland) super.disableStat();
+    }
 }

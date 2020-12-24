@@ -49,4 +49,19 @@ public class Sandstone extends net.minecraft.block.Sandstone {
     public Sandstone setUnbreakable() {
         return (Sandstone) super.setUnbreakable();
     }
+
+    @Override
+    public Sandstone setTicksRandomly(boolean ticksRandomly) {
+        return (Sandstone) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Sandstone setName(String string) {
+        return (Sandstone) super.setName(string);
+    }
+
+    @Override
+    public Sandstone disableStat() {
+        return (Sandstone) super.disableStat();
+    }
 }

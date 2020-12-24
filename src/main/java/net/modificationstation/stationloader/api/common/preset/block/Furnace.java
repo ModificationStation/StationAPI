@@ -49,4 +49,19 @@ public class Furnace extends net.minecraft.block.Furnace {
     public Furnace setUnbreakable() {
         return (Furnace) super.setUnbreakable();
     }
+
+    @Override
+    public Furnace setTicksRandomly(boolean ticksRandomly) {
+        return (Furnace) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Furnace setName(String string) {
+        return (Furnace) super.setName(string);
+    }
+
+    @Override
+    public Furnace disableStat() {
+        return (Furnace) super.disableStat();
+    }
 }

@@ -49,4 +49,19 @@ public class DetectorRail extends net.minecraft.block.DetectorRail {
     public DetectorRail setUnbreakable() {
         return (DetectorRail) super.setUnbreakable();
     }
+
+    @Override
+    public DetectorRail setTicksRandomly(boolean ticksRandomly) {
+        return (DetectorRail) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public DetectorRail setName(String string) {
+        return (DetectorRail) super.setName(string);
+    }
+
+    @Override
+    public DetectorRail disableStat() {
+        return (DetectorRail) super.disableStat();
+    }
 }

@@ -50,4 +50,19 @@ public class Door extends net.minecraft.block.Door {
     public Door setUnbreakable() {
         return (Door) super.setUnbreakable();
     }
+
+    @Override
+    public Door setTicksRandomly(boolean ticksRandomly) {
+        return (Door) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Door setName(String string) {
+        return (Door) super.setName(string);
+    }
+
+    @Override
+    public Door disableStat() {
+        return (Door) super.disableStat();
+    }
 }

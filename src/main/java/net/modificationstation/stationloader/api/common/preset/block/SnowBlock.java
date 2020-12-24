@@ -49,4 +49,19 @@ public class SnowBlock extends net.minecraft.block.SnowBlock {
     public SnowBlock setUnbreakable() {
         return (SnowBlock) super.setUnbreakable();
     }
+
+    @Override
+    public SnowBlock setTicksRandomly(boolean ticksRandomly) {
+        return (SnowBlock) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public SnowBlock setName(String string) {
+        return (SnowBlock) super.setName(string);
+    }
+
+    @Override
+    public SnowBlock disableStat() {
+        return (SnowBlock) super.disableStat();
+    }
 }

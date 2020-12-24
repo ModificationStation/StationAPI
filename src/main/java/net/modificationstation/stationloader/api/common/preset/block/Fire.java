@@ -49,4 +49,19 @@ public class Fire extends net.minecraft.block.Fire {
     public Fire setUnbreakable() {
         return (Fire) super.setUnbreakable();
     }
+
+    @Override
+    public Fire setTicksRandomly(boolean ticksRandomly) {
+        return (Fire) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Fire setName(String string) {
+        return (Fire) super.setName(string);
+    }
+
+    @Override
+    public Fire disableStat() {
+        return (Fire) super.disableStat();
+    }
 }

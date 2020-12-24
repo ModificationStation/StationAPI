@@ -49,4 +49,19 @@ public class LockedChest extends net.minecraft.block.LockedChest {
     public LockedChest setUnbreakable() {
         return (LockedChest) super.setUnbreakable();
     }
+
+    @Override
+    public LockedChest setTicksRandomly(boolean ticksRandomly) {
+        return (LockedChest) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public LockedChest setName(String string) {
+        return (LockedChest) super.setName(string);
+    }
+
+    @Override
+    public LockedChest disableStat() {
+        return (LockedChest) super.disableStat();
+    }
 }

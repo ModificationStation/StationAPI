@@ -49,4 +49,19 @@ public class Torch extends net.minecraft.block.Torch {
     public Torch setUnbreakable() {
         return (Torch) super.setUnbreakable();
     }
+
+    @Override
+    public Torch setTicksRandomly(boolean ticksRandomly) {
+        return (Torch) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Torch setName(String string) {
+        return (Torch) super.setName(string);
+    }
+
+    @Override
+    public Torch disableStat() {
+        return (Torch) super.disableStat();
+    }
 }

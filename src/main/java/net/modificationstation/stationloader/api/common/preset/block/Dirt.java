@@ -49,4 +49,19 @@ public class Dirt extends net.minecraft.block.Dirt {
     public Dirt setUnbreakable() {
         return (Dirt) super.setUnbreakable();
     }
+
+    @Override
+    public Dirt setTicksRandomly(boolean ticksRandomly) {
+        return (Dirt) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Dirt setName(String string) {
+        return (Dirt) super.setName(string);
+    }
+
+    @Override
+    public Dirt disableStat() {
+        return (Dirt) super.disableStat();
+    }
 }

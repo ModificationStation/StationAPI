@@ -49,4 +49,19 @@ public class Netherrack extends net.minecraft.block.Netherrack {
     public Netherrack setUnbreakable() {
         return (Netherrack) super.setUnbreakable();
     }
+
+    @Override
+    public Netherrack setTicksRandomly(boolean ticksRandomly) {
+        return (Netherrack) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Netherrack setName(String string) {
+        return (Netherrack) super.setName(string);
+    }
+
+    @Override
+    public Netherrack disableStat() {
+        return (Netherrack) super.disableStat();
+    }
 }

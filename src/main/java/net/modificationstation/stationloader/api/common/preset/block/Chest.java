@@ -49,4 +49,19 @@ public class Chest extends net.minecraft.block.Chest {
     public Chest setUnbreakable() {
         return (Chest) super.setUnbreakable();
     }
+
+    @Override
+    public Chest setTicksRandomly(boolean ticksRandomly) {
+        return (Chest) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Chest setName(String string) {
+        return (Chest) super.setName(string);
+    }
+
+    @Override
+    public Chest disableStat() {
+        return (Chest) super.disableStat();
+    }
 }

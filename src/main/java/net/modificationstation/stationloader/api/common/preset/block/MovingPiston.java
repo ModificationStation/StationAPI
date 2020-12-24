@@ -49,4 +49,19 @@ public class MovingPiston extends net.minecraft.block.MovingPiston {
     public MovingPiston setUnbreakable() {
         return (MovingPiston) super.setUnbreakable();
     }
+
+    @Override
+    public MovingPiston setTicksRandomly(boolean ticksRandomly) {
+        return (MovingPiston) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public MovingPiston setName(String string) {
+        return (MovingPiston) super.setName(string);
+    }
+
+    @Override
+    public MovingPiston disableStat() {
+        return (MovingPiston) super.disableStat();
+    }
 }

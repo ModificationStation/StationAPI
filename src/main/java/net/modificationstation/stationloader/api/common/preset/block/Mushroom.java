@@ -49,4 +49,19 @@ public class Mushroom extends net.minecraft.block.Mushroom {
     public Mushroom setUnbreakable() {
         return (Mushroom) super.setUnbreakable();
     }
+
+    @Override
+    public Mushroom setTicksRandomly(boolean ticksRandomly) {
+        return (Mushroom) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Mushroom setName(String string) {
+        return (Mushroom) super.setName(string);
+    }
+
+    @Override
+    public Mushroom disableStat() {
+        return (Mushroom) super.disableStat();
+    }
 }

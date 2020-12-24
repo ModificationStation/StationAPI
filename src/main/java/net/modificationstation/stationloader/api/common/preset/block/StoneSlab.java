@@ -49,4 +49,19 @@ public class StoneSlab extends net.minecraft.block.StoneSlab {
     public StoneSlab setUnbreakable() {
         return (StoneSlab) super.setUnbreakable();
     }
+
+    @Override
+    public StoneSlab setTicksRandomly(boolean ticksRandomly) {
+        return (StoneSlab) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public StoneSlab setName(String string) {
+        return (StoneSlab) super.setName(string);
+    }
+
+    @Override
+    public StoneSlab disableStat() {
+        return (StoneSlab) super.disableStat();
+    }
 }

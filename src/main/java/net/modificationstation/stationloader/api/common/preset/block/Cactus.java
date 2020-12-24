@@ -49,4 +49,19 @@ public class Cactus extends net.minecraft.block.Cactus {
     public Cactus setUnbreakable() {
         return (Cactus) super.setUnbreakable();
     }
+
+    @Override
+    public Cactus setTicksRandomly(boolean ticksRandomly) {
+        return (Cactus) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Cactus setName(String string) {
+        return (Cactus) super.setName(string);
+    }
+
+    @Override
+    public Cactus disableStat() {
+        return (Cactus) super.disableStat();
+    }
 }

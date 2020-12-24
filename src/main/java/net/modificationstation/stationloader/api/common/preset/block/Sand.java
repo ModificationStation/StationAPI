@@ -49,4 +49,19 @@ public class Sand extends net.minecraft.block.Sand {
     public Sand setUnbreakable() {
         return (Sand) super.setUnbreakable();
     }
+
+    @Override
+    public Sand setTicksRandomly(boolean ticksRandomly) {
+        return (Sand) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Sand setName(String string) {
+        return (Sand) super.setName(string);
+    }
+
+    @Override
+    public Sand disableStat() {
+        return (Sand) super.disableStat();
+    }
 }

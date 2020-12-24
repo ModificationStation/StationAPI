@@ -49,4 +49,19 @@ public class TallGrass extends net.minecraft.block.TallGrass {
     public TallGrass setUnbreakable() {
         return (TallGrass) super.setUnbreakable();
     }
+
+    @Override
+    public TallGrass setTicksRandomly(boolean ticksRandomly) {
+        return (TallGrass) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public TallGrass setName(String string) {
+        return (TallGrass) super.setName(string);
+    }
+
+    @Override
+    public TallGrass disableStat() {
+        return (TallGrass) super.disableStat();
+    }
 }

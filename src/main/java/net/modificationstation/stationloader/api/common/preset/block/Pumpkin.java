@@ -49,4 +49,19 @@ public class Pumpkin extends net.minecraft.block.Pumpkin {
     public Pumpkin setUnbreakable() {
         return (Pumpkin) super.setUnbreakable();
     }
+
+    @Override
+    public Pumpkin setTicksRandomly(boolean ticksRandomly) {
+        return (Pumpkin) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Pumpkin setName(String string) {
+        return (Pumpkin) super.setName(string);
+    }
+
+    @Override
+    public Pumpkin disableStat() {
+        return (Pumpkin) super.disableStat();
+    }
 }

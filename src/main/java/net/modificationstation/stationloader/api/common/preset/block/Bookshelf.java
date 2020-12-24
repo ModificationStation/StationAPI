@@ -49,4 +49,19 @@ public class Bookshelf extends net.minecraft.block.Bookshelf {
     public Bookshelf setUnbreakable() {
         return (Bookshelf) super.setUnbreakable();
     }
+
+    @Override
+    public Bookshelf setTicksRandomly(boolean ticksRandomly) {
+        return (Bookshelf) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Bookshelf setName(String string) {
+        return (Bookshelf) super.setName(string);
+    }
+
+    @Override
+    public Bookshelf disableStat() {
+        return (Bookshelf) super.disableStat();
+    }
 }

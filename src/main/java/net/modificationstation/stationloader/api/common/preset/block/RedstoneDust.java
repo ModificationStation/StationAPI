@@ -49,4 +49,19 @@ public class RedstoneDust extends net.minecraft.block.RedstoneDust {
     public RedstoneDust setUnbreakable() {
         return (RedstoneDust) super.setUnbreakable();
     }
+
+    @Override
+    public RedstoneDust setTicksRandomly(boolean ticksRandomly) {
+        return (RedstoneDust) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public RedstoneDust setName(String string) {
+        return (RedstoneDust) super.setName(string);
+    }
+
+    @Override
+    public RedstoneDust disableStat() {
+        return (RedstoneDust) super.disableStat();
+    }
 }

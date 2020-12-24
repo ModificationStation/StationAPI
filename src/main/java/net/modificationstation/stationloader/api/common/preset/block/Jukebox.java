@@ -49,4 +49,19 @@ public class Jukebox extends net.minecraft.block.Jukebox {
     public Jukebox setUnbreakable() {
         return (Jukebox) super.setUnbreakable();
     }
+
+    @Override
+    public Jukebox setTicksRandomly(boolean ticksRandomly) {
+        return (Jukebox) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Jukebox setName(String string) {
+        return (Jukebox) super.setName(string);
+    }
+
+    @Override
+    public Jukebox disableStat() {
+        return (Jukebox) super.disableStat();
+    }
 }

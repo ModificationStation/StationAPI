@@ -49,4 +49,19 @@ public class Bed extends net.minecraft.block.Bed {
     public Bed setUnbreakable() {
         return (Bed) super.setUnbreakable();
     }
+
+    @Override
+    public Bed setTicksRandomly(boolean ticksRandomly) {
+        return (Bed) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Bed setName(String string) {
+        return (Bed) super.setName(string);
+    }
+
+    @Override
+    public Bed disableStat() {
+        return (Bed) super.disableStat();
+    }
 }

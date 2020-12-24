@@ -49,4 +49,19 @@ public class Stone extends net.minecraft.block.Stone {
     public Stone setUnbreakable() {
         return (Stone) super.setUnbreakable();
     }
+
+    @Override
+    public Stone setTicksRandomly(boolean ticksRandomly) {
+        return (Stone) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Stone setName(String string) {
+        return (Stone) super.setName(string);
+    }
+
+    @Override
+    public Stone disableStat() {
+        return (Stone) super.disableStat();
+    }
 }

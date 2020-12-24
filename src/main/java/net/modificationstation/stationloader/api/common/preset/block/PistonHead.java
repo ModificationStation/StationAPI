@@ -49,4 +49,19 @@ public class PistonHead extends net.minecraft.block.PistonHead {
     public PistonHead setUnbreakable() {
         return (PistonHead) super.setUnbreakable();
     }
+
+    @Override
+    public PistonHead setTicksRandomly(boolean ticksRandomly) {
+        return (PistonHead) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public PistonHead setName(String string) {
+        return (PistonHead) super.setName(string);
+    }
+
+    @Override
+    public PistonHead disableStat() {
+        return (PistonHead) super.disableStat();
+    }
 }

@@ -49,4 +49,19 @@ public class MobSpawner extends net.minecraft.block.MobSpawner {
     public MobSpawner setUnbreakable() {
         return (MobSpawner) super.setUnbreakable();
     }
+
+    @Override
+    public MobSpawner setTicksRandomly(boolean ticksRandomly) {
+        return (MobSpawner) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public MobSpawner setName(String string) {
+        return (MobSpawner) super.setName(string);
+    }
+
+    @Override
+    public MobSpawner disableStat() {
+        return (MobSpawner) super.disableStat();
+    }
 }

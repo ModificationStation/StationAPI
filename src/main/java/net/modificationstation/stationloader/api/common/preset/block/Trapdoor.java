@@ -50,4 +50,19 @@ public class Trapdoor extends net.minecraft.block.Trapdoor {
     public Trapdoor setUnbreakable() {
         return (Trapdoor) super.setUnbreakable();
     }
+
+    @Override
+    public Trapdoor setTicksRandomly(boolean ticksRandomly) {
+        return (Trapdoor) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Trapdoor setName(String string) {
+        return (Trapdoor) super.setName(string);
+    }
+
+    @Override
+    public Trapdoor disableStat() {
+        return (Trapdoor) super.disableStat();
+    }
 }

@@ -59,4 +59,19 @@ public abstract class BlockWithEntity extends net.minecraft.block.BlockWithEntit
     public BlockWithEntity setUnbreakable() {
         return (BlockWithEntity) super.setUnbreakable();
     }
+
+    @Override
+    public BlockWithEntity setTicksRandomly(boolean ticksRandomly) {
+        return (BlockWithEntity) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public BlockWithEntity setName(String string) {
+        return (BlockWithEntity) super.setName(string);
+    }
+
+    @Override
+    public BlockWithEntity disableStat() {
+        return (BlockWithEntity) super.disableStat();
+    }
 }

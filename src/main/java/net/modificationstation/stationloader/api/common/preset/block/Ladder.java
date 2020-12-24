@@ -49,4 +49,19 @@ public class Ladder extends net.minecraft.block.Ladder {
     public Ladder setUnbreakable() {
         return (Ladder) super.setUnbreakable();
     }
+
+    @Override
+    public Ladder setTicksRandomly(boolean ticksRandomly) {
+        return (Ladder) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Ladder setName(String string) {
+        return (Ladder) super.setName(string);
+    }
+
+    @Override
+    public Ladder disableStat() {
+        return (Ladder) super.disableStat();
+    }
 }

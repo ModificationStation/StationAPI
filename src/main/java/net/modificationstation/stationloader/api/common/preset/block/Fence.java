@@ -49,4 +49,19 @@ public class Fence extends net.minecraft.block.Fence {
     public Fence setUnbreakable() {
         return (Fence) super.setUnbreakable();
     }
+
+    @Override
+    public Fence setTicksRandomly(boolean ticksRandomly) {
+        return (Fence) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Fence setName(String string) {
+        return (Fence) super.setName(string);
+    }
+
+    @Override
+    public Fence disableStat() {
+        return (Fence) super.disableStat();
+    }
 }

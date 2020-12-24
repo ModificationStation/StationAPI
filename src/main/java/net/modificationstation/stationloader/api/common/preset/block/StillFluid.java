@@ -50,4 +50,19 @@ public class StillFluid extends net.minecraft.block.StillFluid {
     public StillFluid setUnbreakable() {
         return (StillFluid) super.setUnbreakable();
     }
+
+    @Override
+    public StillFluid setTicksRandomly(boolean ticksRandomly) {
+        return (StillFluid) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public StillFluid setName(String string) {
+        return (StillFluid) super.setName(string);
+    }
+
+    @Override
+    public StillFluid disableStat() {
+        return (StillFluid) super.disableStat();
+    }
 }

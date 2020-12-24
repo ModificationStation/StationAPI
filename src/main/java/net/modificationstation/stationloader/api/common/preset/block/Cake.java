@@ -49,4 +49,19 @@ public class Cake extends net.minecraft.block.Cake {
     public Cake setUnbreakable() {
         return (Cake) super.setUnbreakable();
     }
+
+    @Override
+    public Cake setTicksRandomly(boolean ticksRandomly) {
+        return (Cake) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Cake setName(String string) {
+        return (Cake) super.setName(string);
+    }
+
+    @Override
+    public Cake disableStat() {
+        return (Cake) super.disableStat();
+    }
 }

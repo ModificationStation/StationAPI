@@ -49,4 +49,19 @@ public class Obsidian extends net.minecraft.block.Obsidian {
     public Obsidian setUnbreakable() {
         return (Obsidian) super.setUnbreakable();
     }
+
+    @Override
+    public Obsidian setTicksRandomly(boolean ticksRandomly) {
+        return (Obsidian) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Obsidian setName(String string) {
+        return (Obsidian) super.setName(string);
+    }
+
+    @Override
+    public Obsidian disableStat() {
+        return (Obsidian) super.disableStat();
+    }
 }

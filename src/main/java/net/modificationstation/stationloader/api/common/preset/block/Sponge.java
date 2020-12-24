@@ -49,4 +49,19 @@ public class Sponge extends net.minecraft.block.Sponge {
     public Sponge setUnbreakable() {
         return (Sponge) super.setUnbreakable();
     }
+
+    @Override
+    public Sponge setTicksRandomly(boolean ticksRandomly) {
+        return (Sponge) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Sponge setName(String string) {
+        return (Sponge) super.setName(string);
+    }
+
+    @Override
+    public Sponge disableStat() {
+        return (Sponge) super.disableStat();
+    }
 }

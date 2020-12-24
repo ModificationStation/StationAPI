@@ -49,4 +49,19 @@ public class Crops extends net.minecraft.block.Crops {
     public Crops setUnbreakable() {
         return (Crops) super.setUnbreakable();
     }
+
+    @Override
+    public Crops setTicksRandomly(boolean ticksRandomly) {
+        return (Crops) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Crops setName(String string) {
+        return (Crops) super.setName(string);
+    }
+
+    @Override
+    public Crops disableStat() {
+        return (Crops) super.disableStat();
+    }
 }

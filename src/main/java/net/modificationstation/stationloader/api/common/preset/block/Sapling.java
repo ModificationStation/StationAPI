@@ -49,4 +49,19 @@ public class Sapling extends net.minecraft.block.Sapling {
     public Sapling setUnbreakable() {
         return (Sapling) super.setUnbreakable();
     }
+
+    @Override
+    public Sapling setTicksRandomly(boolean ticksRandomly) {
+        return (Sapling) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Sapling setName(String string) {
+        return (Sapling) super.setName(string);
+    }
+
+    @Override
+    public Sapling disableStat() {
+        return (Sapling) super.disableStat();
+    }
 }

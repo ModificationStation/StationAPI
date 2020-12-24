@@ -49,4 +49,19 @@ public class Button extends net.minecraft.block.Button {
     public Button setUnbreakable() {
         return (Button) super.setUnbreakable();
     }
+
+    @Override
+    public Button setTicksRandomly(boolean ticksRandomly) {
+        return (Button) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Button setName(String string) {
+        return (Button) super.setName(string);
+    }
+
+    @Override
+    public Button disableStat() {
+        return (Button) super.disableStat();
+    }
 }

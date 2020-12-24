@@ -50,4 +50,19 @@ public class Glass extends net.minecraft.block.Glass {
     public Glass setUnbreakable() {
         return (Glass) super.setUnbreakable();
     }
+
+    @Override
+    public Glass setTicksRandomly(boolean ticksRandomly) {
+        return (Glass) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Glass setName(String string) {
+        return (Glass) super.setName(string);
+    }
+
+    @Override
+    public Glass disableStat() {
+        return (Glass) super.disableStat();
+    }
 }

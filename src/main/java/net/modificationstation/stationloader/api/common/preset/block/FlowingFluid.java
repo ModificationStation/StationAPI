@@ -50,4 +50,19 @@ public class FlowingFluid extends net.minecraft.block.FlowingFluid {
     public FlowingFluid setUnbreakable() {
         return (FlowingFluid) super.setUnbreakable();
     }
+
+    @Override
+    public FlowingFluid setTicksRandomly(boolean ticksRandomly) {
+        return (FlowingFluid) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public FlowingFluid setName(String string) {
+        return (FlowingFluid) super.setName(string);
+    }
+
+    @Override
+    public FlowingFluid disableStat() {
+        return (FlowingFluid) super.disableStat();
+    }
 }

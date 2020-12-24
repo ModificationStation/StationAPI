@@ -49,4 +49,19 @@ public class RedstoneOre extends net.minecraft.block.RedstoneOre {
     public RedstoneOre setUnbreakable() {
         return (RedstoneOre) super.setUnbreakable();
     }
+
+    @Override
+    public RedstoneOre setTicksRandomly(boolean ticksRandomly) {
+        return (RedstoneOre) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public RedstoneOre setName(String string) {
+        return (RedstoneOre) super.setName(string);
+    }
+
+    @Override
+    public RedstoneOre disableStat() {
+        return (RedstoneOre) super.disableStat();
+    }
 }

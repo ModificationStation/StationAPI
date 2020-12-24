@@ -49,4 +49,19 @@ public class Leaves extends net.minecraft.block.Leaves {
     public Leaves setUnbreakable() {
         return (Leaves) super.setUnbreakable();
     }
+
+    @Override
+    public Leaves setTicksRandomly(boolean ticksRandomly) {
+        return (Leaves) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Leaves setName(String string) {
+        return (Leaves) super.setName(string);
+    }
+
+    @Override
+    public Leaves disableStat() {
+        return (Leaves) super.disableStat();
+    }
 }

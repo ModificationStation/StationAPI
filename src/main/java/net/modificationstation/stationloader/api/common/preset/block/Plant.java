@@ -49,4 +49,19 @@ public class Plant extends net.minecraft.block.Plant {
     public Plant setUnbreakable() {
         return (Plant) super.setUnbreakable();
     }
+
+    @Override
+    public Plant setTicksRandomly(boolean ticksRandomly) {
+        return (Plant) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Plant setName(String string) {
+        return (Plant) super.setName(string);
+    }
+
+    @Override
+    public Plant disableStat() {
+        return (Plant) super.disableStat();
+    }
 }

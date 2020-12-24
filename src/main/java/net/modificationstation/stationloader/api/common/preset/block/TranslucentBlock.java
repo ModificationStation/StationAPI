@@ -50,4 +50,19 @@ public class TranslucentBlock extends net.minecraft.block.TranslucentBlock {
     public TranslucentBlock setUnbreakable() {
         return (TranslucentBlock) super.setUnbreakable();
     }
+
+    @Override
+    public TranslucentBlock setTicksRandomly(boolean ticksRandomly) {
+        return (TranslucentBlock) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public TranslucentBlock setName(String string) {
+        return (TranslucentBlock) super.setName(string);
+    }
+
+    @Override
+    public TranslucentBlock disableStat() {
+        return (TranslucentBlock) super.disableStat();
+    }
 }

@@ -50,4 +50,19 @@ public class Fluid extends net.minecraft.block.Fluid {
     public Fluid setUnbreakable() {
         return (Fluid) super.setUnbreakable();
     }
+
+    @Override
+    public Fluid setTicksRandomly(boolean ticksRandomly) {
+        return (Fluid) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Fluid setName(String string) {
+        return (Fluid) super.setName(string);
+    }
+
+    @Override
+    public Fluid disableStat() {
+        return (Fluid) super.disableStat();
+    }
 }

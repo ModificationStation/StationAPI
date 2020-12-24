@@ -49,4 +49,19 @@ public class RedstoneRepeater extends net.minecraft.block.RedstoneRepeater {
     public RedstoneRepeater setUnbreakable() {
         return (RedstoneRepeater) super.setUnbreakable();
     }
+
+    @Override
+    public RedstoneRepeater setTicksRandomly(boolean ticksRandomly) {
+        return (RedstoneRepeater) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public RedstoneRepeater setName(String string) {
+        return (RedstoneRepeater) super.setName(string);
+    }
+
+    @Override
+    public RedstoneRepeater disableStat() {
+        return (RedstoneRepeater) super.disableStat();
+    }
 }

@@ -49,4 +49,19 @@ public class Piston extends net.minecraft.block.Piston {
     public Piston setUnbreakable() {
         return (Piston) super.setUnbreakable();
     }
+
+    @Override
+    public Piston setTicksRandomly(boolean ticksRandomly) {
+        return (Piston) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Piston setName(String string) {
+        return (Piston) super.setName(string);
+    }
+
+    @Override
+    public Piston disableStat() {
+        return (Piston) super.disableStat();
+    }
 }

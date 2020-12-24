@@ -49,4 +49,19 @@ public class DeadBush extends net.minecraft.block.DeadBush {
     public DeadBush setUnbreakable() {
         return (DeadBush) super.setUnbreakable();
     }
+
+    @Override
+    public DeadBush setTicksRandomly(boolean ticksRandomly) {
+        return (DeadBush) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public DeadBush setName(String string) {
+        return (DeadBush) super.setName(string);
+    }
+
+    @Override
+    public DeadBush disableStat() {
+        return (DeadBush) super.disableStat();
+    }
 }

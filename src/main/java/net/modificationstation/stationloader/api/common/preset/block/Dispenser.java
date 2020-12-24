@@ -49,4 +49,19 @@ public class Dispenser extends net.minecraft.block.Dispenser {
     public Dispenser setUnbreakable() {
         return (Dispenser) super.setUnbreakable();
     }
+
+    @Override
+    public Dispenser setTicksRandomly(boolean ticksRandomly) {
+        return (Dispenser) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Dispenser setName(String string) {
+        return (Dispenser) super.setName(string);
+    }
+
+    @Override
+    public Dispenser disableStat() {
+        return (Dispenser) super.disableStat();
+    }
 }

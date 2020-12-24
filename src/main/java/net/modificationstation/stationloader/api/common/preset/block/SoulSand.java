@@ -49,4 +49,19 @@ public class SoulSand extends net.minecraft.block.SoulSand {
     public SoulSand setUnbreakable() {
         return (SoulSand) super.setUnbreakable();
     }
+
+    @Override
+    public SoulSand setTicksRandomly(boolean ticksRandomly) {
+        return (SoulSand) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public SoulSand setName(String string) {
+        return (SoulSand) super.setName(string);
+    }
+
+    @Override
+    public SoulSand disableStat() {
+        return (SoulSand) super.disableStat();
+    }
 }

@@ -49,4 +49,19 @@ public class MaterialBlock extends net.minecraft.block.MaterialBlock {
     public MaterialBlock setUnbreakable() {
         return (MaterialBlock) super.setUnbreakable();
     }
+
+    @Override
+    public MaterialBlock setTicksRandomly(boolean ticksRandomly) {
+        return (MaterialBlock) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public MaterialBlock setName(String string) {
+        return (MaterialBlock) super.setName(string);
+    }
+
+    @Override
+    public MaterialBlock disableStat() {
+        return (MaterialBlock) super.disableStat();
+    }
 }

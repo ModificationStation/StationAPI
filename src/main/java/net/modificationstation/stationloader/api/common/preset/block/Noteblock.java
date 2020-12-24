@@ -49,4 +49,19 @@ public class Noteblock extends net.minecraft.block.Noteblock {
     public Noteblock setUnbreakable() {
         return (Noteblock) super.setUnbreakable();
     }
+
+    @Override
+    public Noteblock setTicksRandomly(boolean ticksRandomly) {
+        return (Noteblock) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Noteblock setName(String string) {
+        return (Noteblock) super.setName(string);
+    }
+
+    @Override
+    public Noteblock disableStat() {
+        return (Noteblock) super.disableStat();
+    }
 }

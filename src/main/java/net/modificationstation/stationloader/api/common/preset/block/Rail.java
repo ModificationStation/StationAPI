@@ -49,4 +49,19 @@ public class Rail extends net.minecraft.block.Rail {
     public Rail setUnbreakable() {
         return (Rail) super.setUnbreakable();
     }
+
+    @Override
+    public Rail setTicksRandomly(boolean ticksRandomly) {
+        return (Rail) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Rail setName(String string) {
+        return (Rail) super.setName(string);
+    }
+
+    @Override
+    public Rail disableStat() {
+        return (Rail) super.disableStat();
+    }
 }

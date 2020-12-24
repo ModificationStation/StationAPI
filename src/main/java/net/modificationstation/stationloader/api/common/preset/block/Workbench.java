@@ -49,4 +49,19 @@ public class Workbench extends net.minecraft.block.Workbench {
     public Workbench setUnbreakable() {
         return (Workbench) super.setUnbreakable();
     }
+
+    @Override
+    public Workbench setTicksRandomly(boolean ticksRandomly) {
+        return (Workbench) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Workbench setName(String string) {
+        return (Workbench) super.setName(string);
+    }
+
+    @Override
+    public Workbench disableStat() {
+        return (Workbench) super.disableStat();
+    }
 }

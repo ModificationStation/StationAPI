@@ -49,4 +49,19 @@ public class Snow extends net.minecraft.block.Snow {
     public Snow setUnbreakable() {
         return (Snow) super.setUnbreakable();
     }
+
+    @Override
+    public Snow setTicksRandomly(boolean ticksRandomly) {
+        return (Snow) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Snow setName(String string) {
+        return (Snow) super.setName(string);
+    }
+
+    @Override
+    public Snow disableStat() {
+        return (Snow) super.disableStat();
+    }
 }

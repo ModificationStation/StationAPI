@@ -50,4 +50,19 @@ public class Sign extends net.minecraft.block.Sign {
     public Sign setUnbreakable() {
         return (Sign) super.setUnbreakable();
     }
+
+    @Override
+    public Sign setTicksRandomly(boolean ticksRandomly) {
+        return (Sign) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Sign setName(String string) {
+        return (Sign) super.setName(string);
+    }
+
+    @Override
+    public Sign disableStat() {
+        return (Sign) super.disableStat();
+    }
 }

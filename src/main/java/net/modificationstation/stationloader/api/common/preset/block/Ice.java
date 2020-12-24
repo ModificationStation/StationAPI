@@ -49,4 +49,19 @@ public class Ice extends net.minecraft.block.Ice {
     public Ice setUnbreakable() {
         return (Ice) super.setUnbreakable();
     }
+
+    @Override
+    public Ice setTicksRandomly(boolean ticksRandomly) {
+        return (Ice) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Ice setName(String string) {
+        return (Ice) super.setName(string);
+    }
+
+    @Override
+    public Ice disableStat() {
+        return (Ice) super.disableStat();
+    }
 }

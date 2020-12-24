@@ -49,4 +49,19 @@ public class Lever extends net.minecraft.block.Lever {
     public Lever setUnbreakable() {
         return (Lever) super.setUnbreakable();
     }
+
+    @Override
+    public Lever setTicksRandomly(boolean ticksRandomly) {
+        return (Lever) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Lever setName(String string) {
+        return (Lever) super.setName(string);
+    }
+
+    @Override
+    public Lever disableStat() {
+        return (Lever) super.disableStat();
+    }
 }

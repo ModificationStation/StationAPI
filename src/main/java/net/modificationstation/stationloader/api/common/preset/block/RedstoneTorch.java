@@ -49,4 +49,19 @@ public class RedstoneTorch extends net.minecraft.block.RedstoneTorch {
     public RedstoneTorch setUnbreakable() {
         return (RedstoneTorch) super.setUnbreakable();
     }
+
+    @Override
+    public RedstoneTorch setTicksRandomly(boolean ticksRandomly) {
+        return (RedstoneTorch) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public RedstoneTorch setName(String string) {
+        return (RedstoneTorch) super.setName(string);
+    }
+
+    @Override
+    public RedstoneTorch disableStat() {
+        return (RedstoneTorch) super.disableStat();
+    }
 }

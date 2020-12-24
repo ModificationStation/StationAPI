@@ -49,4 +49,19 @@ public class Grass extends net.minecraft.block.Grass {
     public Grass setUnbreakable() {
         return (Grass) super.setUnbreakable();
     }
+
+    @Override
+    public Grass setTicksRandomly(boolean ticksRandomly) {
+        return (Grass) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Grass setName(String string) {
+        return (Grass) super.setName(string);
+    }
+
+    @Override
+    public Grass disableStat() {
+        return (Grass) super.disableStat();
+    }
 }

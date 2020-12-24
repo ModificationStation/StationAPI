@@ -49,4 +49,19 @@ public class Ore extends net.minecraft.block.Ore {
     public Ore setUnbreakable() {
         return (Ore) super.setUnbreakable();
     }
+
+    @Override
+    public Ore setTicksRandomly(boolean ticksRandomly) {
+        return (Ore) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Ore setName(String string) {
+        return (Ore) super.setName(string);
+    }
+
+    @Override
+    public Ore disableStat() {
+        return (Ore) super.disableStat();
+    }
 }

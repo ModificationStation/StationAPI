@@ -49,4 +49,19 @@ public class Log extends net.minecraft.block.Log {
     public Log setUnbreakable() {
         return (Log) super.setUnbreakable();
     }
+
+    @Override
+    public Log setTicksRandomly(boolean ticksRandomly) {
+        return (Log) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Log setName(String string) {
+        return (Log) super.setName(string);
+    }
+
+    @Override
+    public Log disableStat() {
+        return (Log) super.disableStat();
+    }
 }

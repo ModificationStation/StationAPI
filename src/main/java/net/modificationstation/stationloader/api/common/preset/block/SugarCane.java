@@ -49,4 +49,19 @@ public class SugarCane extends net.minecraft.block.SugarCane {
     public SugarCane setUnbreakable() {
         return (SugarCane) super.setUnbreakable();
     }
+
+    @Override
+    public SugarCane setTicksRandomly(boolean ticksRandomly) {
+        return (SugarCane) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public SugarCane setName(String string) {
+        return (SugarCane) super.setName(string);
+    }
+
+    @Override
+    public SugarCane disableStat() {
+        return (SugarCane) super.disableStat();
+    }
 }

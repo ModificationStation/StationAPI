@@ -51,4 +51,19 @@ public class PressurePlate extends net.minecraft.block.PressurePlate {
     public PressurePlate setUnbreakable() {
         return (PressurePlate) super.setUnbreakable();
     }
+
+    @Override
+    public PressurePlate setTicksRandomly(boolean ticksRandomly) {
+        return (PressurePlate) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public PressurePlate setName(String string) {
+        return (PressurePlate) super.setName(string);
+    }
+
+    @Override
+    public PressurePlate disableStat() {
+        return (PressurePlate) super.disableStat();
+    }
 }

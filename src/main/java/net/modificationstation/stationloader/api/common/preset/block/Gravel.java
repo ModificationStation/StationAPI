@@ -49,4 +49,19 @@ public class Gravel extends net.minecraft.block.Gravel {
     public Gravel setUnbreakable() {
         return (Gravel) super.setUnbreakable();
     }
+
+    @Override
+    public Gravel setTicksRandomly(boolean ticksRandomly) {
+        return (Gravel) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public Gravel setName(String string) {
+        return (Gravel) super.setName(string);
+    }
+
+    @Override
+    public Gravel disableStat() {
+        return (Gravel) super.disableStat();
+    }
 }
