@@ -1,7 +1,6 @@
-# StationLoader API for Minecraft Beta 1.7.3 BIN Fabric
+# StationAPI for Minecraft Beta 1.7.3 BIN Fabric
 
-StationLoader is a new mod loader for Legacy Minecraft that aims to make mods compatible on both client and server without needing
-seperate verisons for each, along with tools so mod developers no longer need to edit Minecraft's base classes.
+A general use API for Fabric Loader mods on legacy Minecraft versions.
 
 ## Plugin Setup
 
@@ -15,8 +14,8 @@ Extra steps for better Mixin making and Fabric configuring in IntelliJ IDEA:
 
 ## Using This to Run Mods
 
-You will want to install the [Cursed Fabric MultiMC Instance](https://github.com/calmilamsy/Cursed-Fabric-MultiMC) and [download the latest release of StationLoader](https://github.com/modificationstation/StationLoader/releases/latest).  
-Put the downloaded StationLoader jar into your mods folder, do NOT add as a jar mod.
+You will want to install the [Cursed Fabric MultiMC Instance](https://github.com/calmilamsy/Cursed-Fabric-MultiMC) and [download the latest release of StationAPI](https://github.com/modificationstation/StationAPI/releases/latest).  
+Put the downloaded StationAPI jar into your mods folder, do NOT add as a jar mod.
 
 ## Using This to Make Mods
 
@@ -26,8 +25,8 @@ Proper code documentation coming soon. There are some JavaDoc comments for some 
 
 ## Common Issues
 
-If you are having any issues with setting up StationLoader or the example mod, have a look at the [BIN Fabric Example Mod's readme entry for common issues](https://github.com/calmilamsy/BIN-fabric-example-mod/#common-issues).  
+If you are having any issues with setting up StationAPI or the example mod, have a look at the [BIN Fabric Example Mod's readme entry for common issues](https://github.com/calmilamsy/BIN-fabric-example-mod/#common-issues).  
 
 ## License
 
-StationLoader is available under the [CC0 1.0 Universal License](LICENSE). Feel free to learn from it and incorporate it in your own projects.
+StationAPI is available under the [CC0 1.0 Universal License](LICENSE). Feel free to learn from it and incorporate it in your own projects.

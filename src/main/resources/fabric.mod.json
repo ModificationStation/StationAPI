@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "stationloader",
+  "id": "stationapi",
   "version": "${version}",
 
-  "name": "StationLoader",
-  "description": "A general use API for Fabric Loader mods on legacy Minecraft versions",
+  "name": "Station",
+  "description": "A general use API for Fabric Loader mods on legacy Minecraft versions.",
   "authors": [
     "mine_diver",
     "calmilamsy"
@@ -15,22 +15,22 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/stationloader/icon.png",
+  "icon": "assets/stationapi/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "preLaunch": [
-      "net.modificationstation.stationloader.impl.common.launch.StationLoaderLauncher"
+      "net.modificationstation.stationapi.impl.common.launch.StationLauncher"
     ],
-    "stationloader:client": [
-      "net.modificationstation.stationloader.impl.client.StationLoader"
+    "stationapi:client": [
+      "net.modificationstation.stationapi.impl.client.StationAPI"
     ],
-    "stationloader:server": [
-      "net.modificationstation.stationloader.impl.server.StationLoader"
+    "stationapi:server": [
+      "net.modificationstation.stationapi.impl.server.StationAPI"
     ]
   },
   "mixins": [
-    "stationloader.mixins.json"
+    "stationapi.mixins.json"
   ],
 
   "depends": {
