@@ -19,7 +19,7 @@ Put the downloaded StationAPI jar into your mods folder, do NOT add as a jar mod
 
 ## Using This to Make Mods
 
-[See the wiki.](wiki)
+[See the wiki.](https://github.com/ModificationStation/StationAPI/wiki)
 
 Proper code documentation coming soon. There are some JavaDoc comments for some commonly used classes such as ItemRegister and BlockRegister.
 
