@@ -20,6 +20,8 @@ public class MixinSoundMap implements CustomSoundMap {
     @Shadow
     private List field_1090;
 
+    @Shadow public boolean field_1087;
+
     @Override
     public class_267 putSound(String id, URL url) {
         id = id.toLowerCase();
@@ -29,6 +31,11 @@ public class MixinSoundMap implements CustomSoundMap {
         String filename = id;
         id = id.split("\\.")[0];
         id = id.replaceAll("/", ".");
+        if (this.field_1087) {
+            while(Character.isDigit(id.charAt(id.length() - 1))) {
+                id = id.substring(0, id.length() - 1);
+            }
+        }
         if (!this.field_1089.containsKey(id)) {
             this.field_1089.put(id, new ArrayList());
         }
