@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
 
@@ -57,6 +58,14 @@ public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> 
             }
             action.accept(k, v);
         }
+    }
+
+    public T computeIfAbsent(Identifier identifier, Function<Identifier, T> function) {
+        return getByIdentifier(identifier).orElseGet(() -> {
+            T value = function.apply(identifier);
+            registerValue(identifier, value);
+            return value;
+        });
     }
 
     @NotNull
