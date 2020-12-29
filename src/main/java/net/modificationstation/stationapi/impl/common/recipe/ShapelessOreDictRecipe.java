@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.common.recipe;
 import net.minecraft.inventory.Crafting;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.Recipe;
-import net.modificationstation.stationapi.impl.common.util.OreDict;
+import net.modificationstation.stationapi.api.common.util.OreDict;
 
 import java.util.ArrayList;
 import java.util.List;

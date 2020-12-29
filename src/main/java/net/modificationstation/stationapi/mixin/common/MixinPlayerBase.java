@@ -20,7 +20,7 @@ import net.modificationstation.stationapi.api.common.event.entity.player.PlayerH
 import net.modificationstation.stationapi.api.common.item.CustomArmourValue;
 import net.modificationstation.stationapi.api.common.item.UseOnEntityFirst;
 import net.modificationstation.stationapi.impl.common.entity.player.PlayerAPI;
-import net.modificationstation.stationapi.impl.common.util.ArmourUtils;
+import net.modificationstation.stationapi.api.common.util.ArmourUtils;
 import net.modificationstation.stationapi.mixin.common.accessor.PlayerBaseAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

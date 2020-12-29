@@ -1,10 +1,11 @@
-package net.modificationstation.stationapi.impl.common.util;
+package net.modificationstation.stationapi.api.common.util;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.impl.common.util.OreDictEntryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
