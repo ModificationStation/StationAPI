@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public class OreDict {
@@ -113,9 +114,23 @@ public class OreDict {
         return entryObjects != null && entryObjects.stream().allMatch(entry -> entry.identifier == identifier);
     }
 
+    /**
+     * Checks the provided item is valid for the provided OreDict string.
+     * @param oreDictString The OreDict string to check.
+     * @param itemInstance The ItemInstance to be checked.
+     * @return True if item is valid for given OreDict string, False otherwise.
+     */
     public boolean matches(@NotNull String oreDictString, ItemInstance itemInstance) {
         List<OreDictEntryObject> entryObjects = oreDict.get(oreDictString);
         return entryObjects != null && entryObjects.stream().anyMatch(oreDictEntryObject -> oreDictEntryObject.itemInstancePredicate.test(itemInstance));
+    }
+
+    /**
+     * Returns all current OreDict strings as a Set.
+     * @return All current OreDict string.
+     */
+    public Set<String> dumpOreDictStrings() {
+        return oreDict.keySet();
     }
 
 }
