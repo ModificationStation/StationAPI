@@ -1,11 +1,14 @@
-package net.modificationstation.stationapi.impl.common.util;
+package net.modificationstation.stationapi.api.common.util;
 
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.armour.Armour;
 
 public class ArmourUtils {
 
-    // This is not perfect, but it gets very close to exact vanilla. Uses double to allow for extra precision.
+    /**
+     * This is not perfect, but it gets very close to exact vanilla. Uses double to allow for extra precision.
+     * Gets vanilla armour reduction for the given armour piece.
+      */
     public static double getVanillaArmourReduction(ItemInstance armour) {
         double var1 = 0;
         double var2 = 0;

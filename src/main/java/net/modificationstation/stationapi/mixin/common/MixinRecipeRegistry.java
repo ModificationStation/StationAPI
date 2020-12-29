@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.mixin.common;
 import net.minecraft.recipe.RecipeRegistry;
 import net.modificationstation.stationapi.api.common.event.OreDictRegister;
 import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
-import net.modificationstation.stationapi.impl.common.util.OreDict;
+import net.modificationstation.stationapi.api.common.util.OreDict;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;

@@ -5,7 +5,7 @@ import net.minecraft.inventory.Crafting;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.Recipe;
-import net.modificationstation.stationapi.impl.common.util.OreDict;
+import net.modificationstation.stationapi.api.common.util.OreDict;
 
 import java.util.Arrays;
 import java.util.HashMap;
