@@ -55,9 +55,9 @@ public class StationAPI extends net.modificationstation.stationapi.impl.common.S
         getLogger().info("Setting up GuiHelper...");
         net.modificationstation.stationapi.api.common.gui.GuiHelper.INSTANCE.setHandler(new GuiHelper());
         getLogger().info("Setting up RenderItemOverlay...");
-        RenderItemOverlay.EVENT.register((itemX, itemY, itemInstance, textRenderer, textureManager) -> {
+        RenderItemOverlay.EVENT.register((itemRenderer, itemX, itemY, itemInstance, textRenderer, textureManager) -> {
             if (itemInstance.getType() instanceof CustomItemOverlay) {
-                ((CustomItemOverlay) itemInstance.getType()).renderItemOverlay(itemX, itemY, itemInstance, textRenderer, textureManager);
+                ((CustomItemOverlay) itemInstance.getType()).renderItemOverlay(itemRenderer, itemX, itemY, itemInstance, textRenderer, textureManager);
             }
         });
         MessageListenerRegister.EVENT.register((messageListeners, modID) -> {
