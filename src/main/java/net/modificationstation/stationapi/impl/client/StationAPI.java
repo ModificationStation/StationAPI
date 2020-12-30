@@ -8,12 +8,14 @@ import net.minecraft.client.level.ClientLevel;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.inventory.InventoryBase;
 import net.modificationstation.stationapi.api.client.event.gui.GuiHandlerRegister;
+import net.modificationstation.stationapi.api.client.event.gui.RenderItemOverlay;
 import net.modificationstation.stationapi.api.client.event.keyboard.KeyPressed;
 import net.modificationstation.stationapi.api.client.event.model.ModelRegister;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegister;
 import net.modificationstation.stationapi.api.client.event.render.entity.EntityRendererRegister;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegister;
 import net.modificationstation.stationapi.api.client.event.texture.TexturesPerFileListener;
+import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
 import net.modificationstation.stationapi.api.common.entity.EntityHandlerRegistry;
 import net.modificationstation.stationapi.api.common.entity.HasOwner;
 import net.modificationstation.stationapi.api.common.event.EventRegistry;
@@ -52,6 +54,12 @@ public class StationAPI extends net.modificationstation.stationapi.impl.common.S
         net.modificationstation.stationapi.api.common.packet.PacketHelper.INSTANCE.setHandler(new PacketHelper());
         getLogger().info("Setting up GuiHelper...");
         net.modificationstation.stationapi.api.common.gui.GuiHelper.INSTANCE.setHandler(new GuiHelper());
+        getLogger().info("Setting up RenderItemOverlay...");
+        RenderItemOverlay.EVENT.register((itemX, itemY, itemInstance, textRenderer, textureManager) -> {
+            if (itemInstance.getType() instanceof CustomItemOverlay) {
+                ((CustomItemOverlay) itemInstance.getType()).renderItemOverlay(itemX, itemY, itemInstance, textRenderer, textureManager);
+            }
+        });
         MessageListenerRegister.EVENT.register((messageListeners, modID) -> {
             messageListeners.registerValue(Identifier.of(modID, "open_gui"), (playerBase, message) -> {
                 boolean isClient = playerBase.level.isClient;
@@ -91,6 +99,7 @@ public class StationAPI extends net.modificationstation.stationapi.impl.common.S
     public void preInit(EventRegistry eventRegistry, ModID modID) {
         super.preInit(eventRegistry, modID);
         eventRegistry.registerValue(Identifier.of(modID, "gui_register"), GuiHandlerRegister.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "render_item_overlay"), RenderItemOverlay.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "key_pressed"), KeyPressed.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "model_register"), ModelRegister.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "key_binding_register"), KeyBindingRegister.EVENT);
