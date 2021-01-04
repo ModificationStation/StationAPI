@@ -118,8 +118,8 @@ task javadocJar(type: Jar) {
 	classifier = 'javadoc'
 }
 
-tasks.publishToMavenLocal.dependsOn(tasks.remapJar)
-tasks.publishToMavenLocal.dependsOn(tasks.javadocJar)
+tasks.publishToMavenLocal.dependsOn(tasks.build)
+tasks.build.dependsOn(tasks.javadocJar)
 
 publishing {
 	repositories {
