@@ -5,6 +5,7 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.common.event.EventRegistry;
 import net.modificationstation.stationapi.api.common.packet.StationHandshake;
+import net.modificationstation.stationapi.api.common.recipe.JsonRecipeParserRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.server.event.network.HandleLogin;
@@ -67,8 +68,8 @@ public class StationAPI extends net.modificationstation.stationapi.impl.common.S
     }
 
     @Override
-    public void preInit(EventRegistry eventRegistry, ModID modID) {
-        super.preInit(eventRegistry, modID);
+    public void preInit(EventRegistry eventRegistry, JsonRecipeParserRegistry jsonRecipeParserRegistry, ModID modID) {
+        super.preInit(eventRegistry, jsonRecipeParserRegistry, modID);
         eventRegistry.registerValue(Identifier.of(modID, "handle_login"), HandleLogin.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "player_login"), PlayerLogin.EVENT);
     }

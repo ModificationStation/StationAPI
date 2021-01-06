@@ -5,8 +5,8 @@ import net.minecraft.recipe.SmeltingRecipeRegistry;
 import net.minecraft.tileentity.TileEntityBase;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.modificationstation.stationapi.api.common.event.block.TileEntityRegister;
-import net.modificationstation.stationapi.api.common.util.UnsafeProvider;
 import net.modificationstation.stationapi.api.common.util.OreDict;
+import net.modificationstation.stationapi.api.common.util.UnsafeProvider;
 import net.modificationstation.stationapi.mixin.common.accessor.SmeltingRecipeRegistryAccessor;
 import net.modificationstation.stationapi.mixin.common.accessor.TileEntityFurnaceAccessor;
 

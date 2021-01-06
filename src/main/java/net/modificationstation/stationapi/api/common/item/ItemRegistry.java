@@ -2,17 +2,48 @@ package net.modificationstation.stationapi.api.common.item;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
+import net.minecraft.stat.Stats;
+import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
-import net.modificationstation.stationapi.api.common.registry.SerializedRegistry;
+import net.modificationstation.stationapi.api.common.registry.LevelRegistry;
+import net.modificationstation.stationapi.mixin.common.accessor.ItemBaseAccessor;
 
-public final class ItemRegistry extends SerializedRegistry<ItemBase> {
+public final class ItemRegistry extends LevelRegistry<ItemBase> {
 
     public static final ItemRegistry INSTANCE = new ItemRegistry(Identifier.of(StationAPI.INSTANCE.getModID(), "items"));
 
     private ItemRegistry(Identifier registryId) {
         super(registryId);
+    }
+
+    @Override
+    public void load(CompoundTag tag) {
+        forEach((identifier, item) -> {
+            if (tag.containsKey(identifier.toString())) {
+                int newID = tag.getInt(identifier.toString());
+                if (newID != item.id)
+                    remap(item, newID);
+            }
+        });
+        Stats.onItemsRegistered();
+    }
+
+    private void remap(ItemBase item, int newID) {
+        if (ItemBase.byId[newID] != null)
+            setID(ItemBase.byId[newID], item.id);
+        setID(item, newID);
+    }
+
+    private void setID(ItemBase item, int newID) {
+        ItemBase.byId[newID] = item;
+        ((ItemBaseAccessor) item).setId(newID);
+    }
+
+    @Override
+    public void save(CompoundTag tag) {
+        forEach((identifier, item) -> tag.put(identifier.toString(), item.id));
     }
 
     @Override

@@ -12,11 +12,18 @@ import java.util.List;
 @Mixin(RecipeRegistry.class)
 public interface RecipeRegistryAccessor {
 
+    @SuppressWarnings("UnusedReturnValue")
+    @Invoker("<init>")
+    static RecipeRegistry invokeCor() {
+        throw new UnsupportedOperationException("Mixin!");
+    }
+
     @Invoker
     void invokeAddShapedRecipe(ItemInstance itemInstance, Object... o);
 
     @Invoker
     void invokeAddShapelessRecipe(ItemInstance itemInstance, Object... o);
+
     @Accessor
     List<Recipe> getRecipes();
 }

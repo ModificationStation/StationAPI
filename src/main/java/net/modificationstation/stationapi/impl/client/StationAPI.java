@@ -22,6 +22,7 @@ import net.modificationstation.stationapi.api.common.event.EventRegistry;
 import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
 import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.api.common.gui.GuiHandlerRegistry;
+import net.modificationstation.stationapi.api.common.recipe.JsonRecipeParserRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.server.entity.StationSpawnData;
@@ -96,8 +97,8 @@ public class StationAPI extends net.modificationstation.stationapi.impl.common.S
     }
 
     @Override
-    public void preInit(EventRegistry eventRegistry, ModID modID) {
-        super.preInit(eventRegistry, modID);
+    public void preInit(EventRegistry eventRegistry, JsonRecipeParserRegistry jsonRecipeParserRegistry, ModID modID) {
+        super.preInit(eventRegistry, jsonRecipeParserRegistry, modID);
         eventRegistry.registerValue(Identifier.of(modID, "gui_register"), GuiHandlerRegister.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "render_item_overlay"), RenderItemOverlay.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "key_pressed"), KeyPressed.EVENT);

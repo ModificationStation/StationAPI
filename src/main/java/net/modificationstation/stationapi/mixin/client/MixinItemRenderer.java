@@ -10,7 +10,6 @@ import net.minecraft.client.texture.TextureManager;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.client.event.gui.RenderItemOverlay;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
-import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

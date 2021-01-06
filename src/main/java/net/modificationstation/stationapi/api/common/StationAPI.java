@@ -1,9 +1,7 @@
 package net.modificationstation.stationapi.api.common;
 
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.modificationstation.stationapi.api.common.config.Configuration;
-import net.modificationstation.stationapi.api.common.mod.StationMod;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.common.util.HasHandler;
 import net.modificationstation.stationapi.api.common.util.ModCore;
@@ -78,21 +76,9 @@ public interface StationAPI extends ModCore, HasHandler<StationAPI> {
         }
 
         @Override
-        public void loadMods() {
+        public void setupMods() {
             checkAccess(handler);
-            handler.loadMods();
-        }
-
-        @Override
-        public void addMod(EntrypointContainer<StationMod> stationModEntrypointContainer) {
-            checkAccess(handler);
-            handler.addMod(stationModEntrypointContainer);
-        }
-
-        @Override
-        public void addModAssets(ModContainer modContainer) {
-            checkAccess(handler);
-            handler.addModAssets(modContainer);
+            handler.setupMods();
         }
 
         @Override
@@ -104,11 +90,7 @@ public interface StationAPI extends ModCore, HasHandler<StationAPI> {
 
     void setup();
 
-    void loadMods();
-
-    void addMod(EntrypointContainer<StationMod> stationModEntrypointContainer);
-
-    void addModAssets(ModContainer modContainer);
+    void setupMods();
 
     Set<ModContainer> getModsToVerifyOnClient();
 }

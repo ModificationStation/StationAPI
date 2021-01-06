@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.api.common.event.mod;
 import lombok.Getter;
 import net.modificationstation.stationapi.api.common.event.EventRegistry;
 import net.modificationstation.stationapi.api.common.event.ModEvent;
+import net.modificationstation.stationapi.api.common.recipe.JsonRecipeParserRegistry;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 
 /**
@@ -18,30 +19,33 @@ public interface PreInit {
 
     ModEvent<PreInit> EVENT = new ModEvent<>(PreInit.class,
             listeners ->
-                    (registry, modID) -> {
+                    (eventRegistry, jsonRecipeParserRegistry, modID) -> {
                         for (PreInit listener : listeners)
-                            listener.preInit(registry, PreInit.EVENT.getListenerModID(listener));
+                            listener.preInit(eventRegistry, jsonRecipeParserRegistry, PreInit.EVENT.getListenerModID(listener));
                     },
             listener ->
-                    (registry, modID) -> {
+                    (eventRegistry, jsonRecipeParserRegistry, modID) -> {
                         PreInit.EVENT.setCurrentListener(listener);
-                        listener.preInit(registry, modID);
+                        listener.preInit(eventRegistry, jsonRecipeParserRegistry, modID);
                         PreInit.EVENT.setCurrentListener(null);
                     },
             preInit ->
-                    preInit.register((registry, modID) -> ModEvent.post(new Data(registry)), null)
+                    preInit.register((eventRegistry, jsonRecipeParserRegistry, modID) -> ModEvent.post(new Data(eventRegistry, jsonRecipeParserRegistry)), null)
     );
 
-    void preInit(EventRegistry eventRegistry, ModID modID);
+    void preInit(EventRegistry eventRegistry, JsonRecipeParserRegistry jsonRecipeParserRegistry, ModID modID);
 
     final class Data extends ModInitData<PreInit> {
 
         @Getter
-        private final EventRegistry registry;
+        private final EventRegistry eventRegistry;
+        @Getter
+        private final JsonRecipeParserRegistry jsonRecipeParserRegistry;
 
-        private Data(EventRegistry registry) {
+        private Data(EventRegistry eventRegistry, JsonRecipeParserRegistry jsonRecipeParserRegistry) {
             super(EVENT);
-            this.registry = registry;
+            this.eventRegistry = eventRegistry;
+            this.jsonRecipeParserRegistry = jsonRecipeParserRegistry;
         }
     }
 }

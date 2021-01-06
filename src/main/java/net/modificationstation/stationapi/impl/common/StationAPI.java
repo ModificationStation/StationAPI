@@ -1,8 +1,10 @@
 package net.modificationstation.stationapi.impl.common;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
@@ -36,17 +38,20 @@ import net.modificationstation.stationapi.api.common.event.mod.PostInit;
 import net.modificationstation.stationapi.api.common.event.mod.PreInit;
 import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
 import net.modificationstation.stationapi.api.common.event.packet.PacketRegister;
+import net.modificationstation.stationapi.api.common.event.recipe.BeforeRecipeStats;
 import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationapi.api.common.mod.StationMod;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Instance;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.ModIDField;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.packet.MessageListenerRegistry;
+import net.modificationstation.stationapi.api.common.recipe.JsonRecipeParserRegistry;
+import net.modificationstation.stationapi.api.common.recipe.JsonRecipesRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.LevelRegistry;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.common.registry.Registry;
-import net.modificationstation.stationapi.api.common.resource.RecursiveReader;
+import net.modificationstation.stationapi.api.common.resource.ResourceManager;
 import net.modificationstation.stationapi.impl.common.achievement.AchievementPage;
 import net.modificationstation.stationapi.impl.common.achievement.AchievementPageManager;
 import net.modificationstation.stationapi.impl.common.block.BlockManager;
@@ -56,25 +61,26 @@ import net.modificationstation.stationapi.impl.common.config.Property;
 import net.modificationstation.stationapi.impl.common.factory.EnumFactory;
 import net.modificationstation.stationapi.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.impl.common.item.CustomReach;
+import net.modificationstation.stationapi.impl.common.item.JsonItemKey;
 import net.modificationstation.stationapi.impl.common.lang.I18n;
 import net.modificationstation.stationapi.impl.common.preset.item.PlaceableTileEntityWithMeta;
 import net.modificationstation.stationapi.impl.common.preset.item.PlaceableTileEntityWithMetaAndName;
-import net.modificationstation.stationapi.impl.common.recipe.CraftingRegistry;
-import net.modificationstation.stationapi.impl.common.recipe.RecipeManager;
-import net.modificationstation.stationapi.impl.common.recipe.SmeltingRegistry;
+import net.modificationstation.stationapi.impl.common.recipe.*;
 import net.modificationstation.stationapi.impl.common.util.ReflectionHelper;
 import net.modificationstation.stationapi.impl.common.util.UnsafeProvider;
+import net.modificationstation.stationapi.mixin.common.accessor.RecipeRegistryAccessor;
+import net.modificationstation.stationapi.mixin.common.accessor.SmeltingRecipeRegistryAccessor;
+import net.modificationstation.stationapi.mixin.common.accessor.StatsAccessor;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class StationAPI implements net.modificationstation.stationapi.api.common.StationAPI, PreInit, Init {
 
@@ -100,7 +106,7 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
         getLogger().info("Setting up lang folder...");
         net.modificationstation.stationapi.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/" + modID + "/lang", modID);
         getLogger().info("Loading mods...");
-        loadMods();
+        setupMods();
         getLogger().info("Finished " + name + " setup");
     }
 
@@ -126,10 +132,6 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
         net.modificationstation.stationapi.api.common.lang.I18n.INSTANCE.setHandler(new I18n());
         getLogger().info("Setting up BlockManager...");
         net.modificationstation.stationapi.api.common.block.BlockManager.INSTANCE.setHandler(new BlockManager());
-        getLogger().info("Setting up RecipeManager...");
-        RecipeManager recipeManager = new RecipeManager();
-        net.modificationstation.stationapi.api.common.recipe.RecipeManager.INSTANCE.setHandler(recipeManager);
-        RecipeRegister.EVENT.register(recipeManager);
         getLogger().info("Setting up CraftingRegistry...");
         net.modificationstation.stationapi.api.common.recipe.CraftingRegistry.INSTANCE.setHandler(new CraftingRegistry());
         getLogger().info("Setting up UnsafeProvider...");
@@ -191,12 +193,16 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
         TileEntityRegister.EVENT.register(smeltingRegistry);
         getLogger().info("Setting up LoadLevelPropertiesOnLevelInit...");
         LoadLevelPropertiesOnLevelInit.EVENT.register((levelProperties, tag) -> {
+            LevelRegistry.remapping = true;
+            StatsAccessor.setField_812(false);
+            StatsAccessor.setField_813(false);
             Registry<Registry<?>> registriesRegistry = Registry.REGISTRIES;
             CompoundTag registriesTag = tag.getCompoundTag(registriesRegistry.getRegistryId().toString());
             registriesRegistry.forEach((identifier, registry) -> {
                 if (registry instanceof LevelRegistry)
                     ((LevelRegistry<?>) registry).load(registriesTag.getCompoundTag(registry.getRegistryId().toString()));
             });
+            LevelRegistry.remapping = false;
         });
         getLogger().info("Setting up SaveLevelProperties...");
         SaveLevelProperties.EVENT.register((levelProperties, tag, spPlayerData) -> {
@@ -211,13 +217,35 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
             });
             tag.put(registriesRegistry.getRegistryId().toString(), registriesTag);
         });
+        getLogger().info("Setting up RecipeRegister...");
+        RecipeRegister.EVENT.register(recipeId -> JsonRecipeParserRegistry.INSTANCE.getByIdentifier(recipeId).ifPresent(recipeParser -> JsonRecipesRegistry.INSTANCE.getByIdentifier(recipeId).ifPresent(recipes -> recipes.forEach(recipeParser))));
+        getLogger().info("Setting up BeforeRecipesStats...");
+        BeforeRecipeStats.EVENT.register(() -> {
+            RecipeRegistryAccessor.invokeCor();
+            SmeltingRecipeRegistryAccessor.invokeCor();
+        });
     }
 
     @Override
-    public void loadMods() {
+    public void setupMods() {
         FabricLoader fabricLoader = FabricLoader.getInstance();
+        Collection<ModContainer> mods = fabricLoader.getAllMods();
         getLogger().info("Loading entrypoints...");
-        entrypoints.forEach(entrypoint -> fabricLoader.getEntrypointContainers(entrypoint, StationMod.class).forEach(this::addMod));
+        entrypoints.forEach(entrypoint -> fabricLoader.getEntrypointContainers(entrypoint, StationMod.class).forEach(stationModEntrypointContainer -> {
+            ModContainer modContainer = stationModEntrypointContainer.getProvider();
+            StationMod stationMod = stationModEntrypointContainer.getEntrypoint();
+            ModID modID = ModID.of(modContainer);
+            stationMod.setModID(modID);
+            getLogger().info("Set mod's container");
+            if (stationMod instanceof PreInit)
+                PreInit.EVENT.register((PreInit) stationMod, modID);
+            Init.EVENT.register(stationMod, modID);
+            if (stationMod instanceof PostInit)
+                PostInit.EVENT.register((PostInit) stationMod, modID);
+            getLogger().info("Registered events");
+            setupAnnotations(modContainer, stationMod);
+            getLogger().info(String.format("Done loading %s (%s)'s \"%s\" StationMod", modID.getName(), modID, stationMod.getClass().getName()));
+        }));
         fabricLoader.getEntrypointContainers(Identifier.of(getModID(), "game_event_bus").toString(), Object.class).forEach(entrypointContainer -> {
             ModContainer modContainer = entrypointContainer.getProvider();
             Object o = entrypointContainer.getEntrypoint();
@@ -231,16 +259,31 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
             setupAnnotations(modContainer, o);
         });
         getLogger().info("Loading assets...");
-        FabricLoader.getInstance().getAllMods().forEach(this::addModAssets);
+        ResourceManager.findResources(getModID() + "/recipes", file -> file.endsWith(".json")).forEach(recipe -> {
+            try {
+                JsonRecipesRegistry.INSTANCE.computeIfAbsent(Identifier.of(new Gson().fromJson(new InputStreamReader(recipe.openStream()), JsonRecipeType.class).getType()), identifier -> new HashSet<>()).add(recipe);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        mods.forEach(modContainer -> {
+            ModID modID = ModID.of(modContainer);
+            String pathName = "/assets/" + modID + "/" + getModID() + "/lang";
+            URL path = getClass().getResource(pathName);
+            if (path != null) {
+                net.modificationstation.stationapi.api.common.lang.I18n.INSTANCE.addLangFolder(pathName, modID);
+                getLogger().info("Registered lang path");
+            }
+        });
         getLogger().info("Gathering mods that require client verification...");
         String value = getModID() + ":verify_client";
-        fabricLoader.getAllMods().forEach(modContainer -> {
+        mods.forEach(modContainer -> {
             ModMetadata modMetadata = modContainer.getMetadata();
             if (modMetadata.containsCustomValue(value) && modMetadata.getCustomValue(value).getAsBoolean())
                 modsToVerifyOnClient.add(modContainer);
         });
         getLogger().info("Invoking preInit event...");
-        PreInit.EVENT.getInvoker().preInit(EventRegistry.INSTANCE, PreInit.EVENT.getListenerModID(PreInit.EVENT.getInvoker()));
+        PreInit.EVENT.getInvoker().preInit(EventRegistry.INSTANCE, JsonRecipeParserRegistry.INSTANCE, PreInit.EVENT.getInvokerModID());
         getLogger().info("Invoking init event...");
         Init.EVENT.getInvoker().init();
         getLogger().info("Invoking postInit event...");
@@ -248,7 +291,7 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
     }
 
     @Override
-    public void preInit(EventRegistry eventRegistry, ModID modID) {
+    public void preInit(EventRegistry eventRegistry, JsonRecipeParserRegistry jsonRecipeParserRegistry, ModID modID) {
         eventRegistry.registerValue(Identifier.of(modID, "achievement_register"), AchievementRegister.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "block_name_set"), BlockNameSet.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "block_register"), BlockRegister.EVENT);
@@ -271,51 +314,55 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
         eventRegistry.registerValue(Identifier.of(modID, "load_level_properties"), LoadLevelProperties.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "save_level_properties"), SaveLevelProperties.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "load_level_properties_on_level_init"), LoadLevelPropertiesOnLevelInit.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "before_recipes_stats"), BeforeRecipeStats.EVENT);
+        jsonRecipeParserRegistry.registerValue(Identifier.of("crafting_shaped"), recipe -> {
+            JsonElement rawJson;
+            try {
+                rawJson = JsonParser.parseReader(new BufferedReader(new InputStreamReader(recipe.openStream())));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            JsonCraftingShaped json = new Gson().fromJson(rawJson, JsonCraftingShaped.class);
+            Set<Map.Entry<String, JsonElement>> rawKeys = rawJson.getAsJsonObject().getAsJsonObject("key").entrySet();
+            String[] pattern = json.getPattern();
+            Object[] keys = new Object[rawKeys.size() * 2 + pattern.length];
+            int i = 0;
+            for (; i < pattern.length; i++)
+                keys[i] = pattern[i];
+            for (Map.Entry<String, JsonElement> key : rawKeys) {
+                keys[i] = key.getKey().charAt(0);
+                keys[i + 1] = new Gson().fromJson(key.getValue(), JsonItemKey.class).getItemInstance();
+                i += 2;
+            }
+            net.modificationstation.stationapi.api.common.recipe.CraftingRegistry.INSTANCE.addShapedRecipe(json.getResult().getItemInstance(), keys);
+        });
+        jsonRecipeParserRegistry.registerValue(Identifier.of("crafting_shapeless"), recipe -> {
+            JsonCraftingShapeless json;
+            try {
+                json = new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonCraftingShapeless.class);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            JsonItemKey[] ingredients = json.getIngredients();
+            Object[] iteminstances = new Object[json.getIngredients().length];
+            for (int i = 0; i < ingredients.length; i++)
+                iteminstances[i] = ingredients[i].getItemInstance();
+            net.modificationstation.stationapi.api.common.recipe.CraftingRegistry.INSTANCE.addShapelessRecipe(json.getResult().getItemInstance(), iteminstances);
+        });
+        jsonRecipeParserRegistry.registerValue(Identifier.of("smelting"), recipe -> {
+            JsonSmelting json;
+            try {
+                json = new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonSmelting.class);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            net.modificationstation.stationapi.api.common.recipe.SmeltingRegistry.INSTANCE.addSmeltingRecipe(json.getIngredient().getItemInstance(), json.getResult().getItemInstance());
+        });
     }
 
     @Override
     public void init() {
         EventRegistry.INSTANCE.forEach((identifier, event) -> event.register(identifier));
-    }
-
-    @Override
-    public void addMod(EntrypointContainer<StationMod> stationModEntrypointContainer) {
-        ModContainer modContainer = stationModEntrypointContainer.getProvider();
-        StationMod stationMod = stationModEntrypointContainer.getEntrypoint();
-        ModID modID = ModID.of(modContainer);
-        stationMod.setModID(modID);
-        getLogger().info("Set mod's container");
-        if (stationMod instanceof PreInit)
-            PreInit.EVENT.register((PreInit) stationMod, modID);
-        Init.EVENT.register(stationMod, modID);
-        if (stationMod instanceof PostInit)
-            PostInit.EVENT.register((PostInit) stationMod, modID);
-        getLogger().info("Registered events");
-        setupAnnotations(modContainer, stationMod);
-        getLogger().info(String.format("Done loading %s (%s)'s \"%s\" StationMod", modID.getName(), modID, stationMod.getClass().getName()));
-    }
-
-    @Override
-    public void addModAssets(ModContainer modContainer) {
-        ModID modID = ModID.of(modContainer);
-        String stationSubFolder = "/assets/" + modID + "/" + getModID();
-        String pathName = stationSubFolder + "/lang";
-        URL path = getClass().getResource(pathName);
-        if (path != null) {
-            net.modificationstation.stationapi.api.common.lang.I18n.INSTANCE.addLangFolder(pathName, modID);
-            getLogger().info("Registered lang path");
-        }
-        pathName = stationSubFolder + "/recipes";
-        path = getClass().getResource(pathName);
-        if (path != null) {
-            try {
-                for (URL url : new RecursiveReader(pathName, (file) -> file.endsWith(".json")).read())
-                    net.modificationstation.stationapi.api.common.recipe.RecipeManager.INSTANCE.addJsonRecipe(url);
-            } catch (IOException | URISyntaxException e) {
-                throw new RuntimeException(e);
-            }
-            getLogger().info("Listed recipes");
-        }
     }
 
     public static void setupAnnotations(ModContainer modContainer, Object o) {

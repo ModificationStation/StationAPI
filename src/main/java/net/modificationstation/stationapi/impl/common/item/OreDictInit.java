@@ -1,16 +1,7 @@
 package net.modificationstation.stationapi.impl.common.item;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.common.util.OreDict;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
 
 public class OreDictInit {
 

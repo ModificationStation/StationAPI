@@ -24,6 +24,5 @@ public class MixinSmeltingRecipeRegistry {
     private void afterRecipeRegister(CallbackInfo ci) {
         INSTANCE = (SmeltingRecipeRegistry) (Object) this;
         RecipeRegister.EVENT.getInvoker().registerRecipes(SMELTING.type());
-        INSTANCE = null;
     }
 }

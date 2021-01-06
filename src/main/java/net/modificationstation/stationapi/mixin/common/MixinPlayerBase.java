@@ -19,8 +19,8 @@ import net.modificationstation.stationapi.api.common.entity.player.*;
 import net.modificationstation.stationapi.api.common.event.entity.player.PlayerHandlerRegister;
 import net.modificationstation.stationapi.api.common.item.CustomArmourValue;
 import net.modificationstation.stationapi.api.common.item.UseOnEntityFirst;
-import net.modificationstation.stationapi.impl.common.entity.player.PlayerAPI;
 import net.modificationstation.stationapi.api.common.util.ArmourUtils;
+import net.modificationstation.stationapi.impl.common.entity.player.PlayerAPI;
 import net.modificationstation.stationapi.mixin.common.accessor.PlayerBaseAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -168,7 +168,7 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
         PlayerAPI.afterMoveEntity((PlayerBase) (Object) this, v, v1, v2);
     }
 
-    @Inject(method = "trySleep(III)Lnet/minecraft/util/SleepStatus;", at = @At("HEAD"))
+    @Inject(method = "trySleep(III)Lnet/minecraft/util/SleepStatus;", at = @At("HEAD"), cancellable = true)
     public void trySleep(int i, int i1, int i2, CallbackInfoReturnable<SleepStatus> cir) {
         PlayerAPI.beforeSleepInBedAt((PlayerBase) (Object) this, i, i1, i2);
         SleepStatus enumstatus = PlayerAPI.sleepInBedAt((PlayerBase) (Object) this, i, i1, i2);
@@ -275,7 +275,7 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
         return super.getHurtSound();
     }
 
-    @Inject(method = "canRemoveBlock(Lnet/minecraft/block/BlockBase;)Z", at = @At("HEAD"))
+    @Inject(method = "canRemoveBlock(Lnet/minecraft/block/BlockBase;)Z", at = @At("HEAD"), cancellable = true)
     private void canRemoveBlock(BlockBase arg, CallbackInfoReturnable<Boolean> cir) {
         Boolean canHarvestBlock = PlayerAPI.canHarvestBlock((PlayerBase) (Object) this, arg);
         if (canHarvestBlock != null)
