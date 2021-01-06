@@ -433,13 +433,13 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
         return getStrengh(arg);
     }
 
-    @Redirect(method = "getStrengh(Lnet/minecraft/block/BlockBase;)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;method_674(Lnet/minecraft/block/BlockBase;)F"))
+    @Redirect(method = "getStrengh(Lnet/minecraft/block/BlockBase;)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;getStrengthOnBlock(Lnet/minecraft/block/BlockBase;)F"))
     private float getStrengthForMeta(PlayerInventory playerInventory, BlockBase arg) {
         if (meta == null)
-            return playerInventory.method_674(arg);
+            return playerInventory.getStrengthOnBlock(arg);
         else {
             ItemInstance itemInstance = playerInventory.getHeldItem();
-            float ret = itemInstance == null ? playerInventory.method_674(arg) : ((net.modificationstation.stationapi.api.common.item.StrengthOnMeta) itemInstance.getType()).getStrengthOnBlock(itemInstance, arg, meta);
+            float ret = itemInstance == null ? playerInventory.getStrengthOnBlock(arg) : ((net.modificationstation.stationapi.api.common.item.StrengthOnMeta) itemInstance.getType()).getStrengthOnBlock(itemInstance, arg, meta);
             meta = null;
             return ret;
         }

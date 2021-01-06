@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.client;
 
-import net.minecraft.class_267;
-import net.minecraft.util.SoundMap;
+import net.minecraft.client.sound.SoundEntry;
+import net.minecraft.client.sound.SoundMap;
 import net.modificationstation.stationapi.api.common.util.CustomSoundMap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,17 +13,17 @@ import java.util.Map;
 
 @Mixin(SoundMap.class)
 public class MixinSoundMap implements CustomSoundMap {
-    @Shadow
-    public int field_1086;
-    @Shadow
-    private Map field_1089;
-    @Shadow
-    private List field_1090;
 
-    @Shadow public boolean field_1087;
+    @Shadow public boolean isRandomSound;
+
+    @Shadow private Map idToSounds;
+
+    @Shadow private List soundList;
+
+    @Shadow public int count;
 
     @Override
-    public class_267 putSound(String id, URL url) {
+    public SoundEntry putSound(String id, URL url) {
         id = id.toLowerCase();
         if (id.length() - id.replace(".", "").length() != 1) {
             throw new RuntimeException("You MUST name your audio files with an extension, and with no extra dots or any spaces!\ne.g: \"wolf_bark.ogg\" is fine, but \"wolf_bark\", \"wolf.bark.ogg\" and \"wolf bark.ogg\" are not.\nFile name: \"" + id + "\"");
@@ -31,19 +31,19 @@ public class MixinSoundMap implements CustomSoundMap {
         String filename = id;
         id = id.split("\\.")[0];
         id = id.replaceAll("/", ".");
-        if (this.field_1087) {
+        if (this.isRandomSound) {
             while(Character.isDigit(id.charAt(id.length() - 1))) {
                 id = id.substring(0, id.length() - 1);
             }
         }
-        if (!this.field_1089.containsKey(id)) {
-            this.field_1089.put(id, new ArrayList());
+        if (!this.idToSounds.containsKey(id)) {
+            this.idToSounds.put(id, new ArrayList());
         }
-        class_267 var4 = new class_267(filename, url);
+        SoundEntry var4 = new SoundEntry(filename, url);
 
-        ((List) this.field_1089.get(id)).add(var4);
-        this.field_1090.add(var4);
-        ++this.field_1086;
+        ((List) this.idToSounds.get(id)).add(var4);
+        this.soundList.add(var4);
+        ++this.count;
         return var4;
     }
 }

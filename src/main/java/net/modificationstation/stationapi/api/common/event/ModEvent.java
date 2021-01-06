@@ -62,7 +62,7 @@ public class ModEvent<T> extends Event<T> {
         return EVENT_BUSES.computeIfAbsent(modID, modID1 -> new EventBus(Identifier.of(modID1, "mod_event_bus").toString()));
     }
 
-    public static void post(Data<?> eventData) {
+    public static void post(net.modificationstation.stationapi.api.common.event.ModEvent.Data<?> eventData) {
         EVENT_BUSES.forEach((modID, eventBus) -> {
             eventData.getEvent().setCurrentListenerModID(modID);
             eventData.modID = modID;

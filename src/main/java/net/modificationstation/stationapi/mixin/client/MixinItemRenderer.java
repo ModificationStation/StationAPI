@@ -28,10 +28,10 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     @Redirect(method = {
             "render(Lnet/minecraft/entity/Item;DDDFF)V",
             "method_1487(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;Lnet/minecraft/item/ItemInstance;II)V"
-    }, at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemInstance;method_725()I"))
+    }, at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemInstance;getTexturePosition()I"))
     private int itemTexture(ItemInstance itemInstance) {
         TextureRegistry gui_items = TextureRegistry.getRegistry(TextureRegistry.Vanilla.GUI_ITEMS);
-        int texID = itemInstance.method_725();
+        int texID = itemInstance.getTexturePosition();
         atlasToBind = texID / gui_items.texturesPerFile();
         return texID % gui_items.texturesPerFile();
     }

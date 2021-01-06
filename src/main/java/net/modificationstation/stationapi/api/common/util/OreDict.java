@@ -57,7 +57,7 @@ public class OreDict {
      * @param itemInstance  The itemInstance to add to the specified oreDict entry.
      */
     public void addItemInstance(@NotNull String oreDictString, @NotNull ItemInstance itemInstance) {
-        addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance::isEqualIgnoreFlags);
+        addItemInstanceWithPredicate(oreDictString, itemInstance, itemInstance::isDamageAndIDIdentical);
     }
 
     /**

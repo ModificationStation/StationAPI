@@ -34,7 +34,7 @@ public class SmeltingRegistry implements net.modificationstation.stationapi.api.
     @Override
     public ItemInstance getResultFor(ItemInstance input) {
         for (Object o : ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().keySet()) {
-            if (o instanceof ItemInstance && input.isEqualIgnoreFlags((ItemInstance) o) || o instanceof String && OreDict.INSTANCE.matches((String) o, input))
+            if (o instanceof ItemInstance && input.isDamageAndIDIdentical((ItemInstance) o) || o instanceof String && OreDict.INSTANCE.matches((String) o, input))
                 return ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().get(o);
         }
         return SmeltingRecipeRegistry.getInstance().getResult(input.getType().id);

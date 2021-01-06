@@ -166,7 +166,7 @@ public class MixinAchievements extends ScreenBase {
                 adjustedRow = achievement.tableRow * 24 - l1 + 11 + j3;
                 adjustedParentCol = achievement.parent.tableColumn * 24 - k1 + 11 + i3;
                 adjustedParentRow = achievement.parent.tableRow * 24 - l1 + 11 + j3;
-                boolean isUnlocked = this.field_2633.achievementUnlocked(achievement);
+                boolean isUnlocked = this.field_2633.isAchievementUnlocked(achievement);
                 boolean isUnlockable = this.field_2633.isAchievementUnlockable(achievement);
                 flickerTime = Math.sin((double) (System.currentTimeMillis() % 600L) / 600.0D * 3.141592653589793D * 2.0D) <= 0.6D ? 130 : 255;
                 if (isUnlocked) {
@@ -203,7 +203,7 @@ public class MixinAchievements extends ScreenBase {
                 adjustedParentRow = var32.tableRow * 24 - l1;
                 if (adjustedParentCol >= -24 && adjustedParentRow >= -24 && adjustedParentCol <= 224 && adjustedParentRow <= 155) {
                     float var38;
-                    if (this.field_2633.achievementUnlocked(var32)) {
+                    if (this.field_2633.isAchievementUnlocked(var32)) {
                         var38 = 1.0F;
                         GL11.glColor4f(var38, var38, var38, 1.0F);
                     } else if (this.field_2633.isAchievementUnlockable(var32)) {
@@ -261,20 +261,20 @@ public class MixinAchievements extends ScreenBase {
 
         // RENDER MOUSEOVER
         if (var29 != null) {
-            String var34 = var29.name;
+            String var34 = var29.NAME;
             String var35 = var29.getDescription();
             adjustedParentRow = i1 + 12;
             lineColour = j1 - 4;
             if (this.field_2633.isAchievementUnlockable(var29)) {
                 var37 = Math.max(this.textManager.getTextWidth(var34), 120);
                 int var40 = this.textManager.method_1902(var35, var37);
-                if (this.field_2633.achievementUnlocked(var29)) {
+                if (this.field_2633.isAchievementUnlocked(var29)) {
                     var40 += 12;
                 }
 
                 this.fillGradient(adjustedParentRow - 3, lineColour - 3, adjustedParentRow + var37 + 3, lineColour + var40 + 3 + 12, -1073741824, -1073741824);
                 this.textManager.method_1904(var35, adjustedParentRow, lineColour + 12, var37, -6250336);
-                if (this.field_2633.achievementUnlocked(var29)) {
+                if (this.field_2633.isAchievementUnlocked(var29)) {
                     try {
                         this.textManager.drawTextWithShadow(TranslationStorage.getInstance().translate("achievement.taken"), adjustedParentRow, lineColour + var40 + 4, -7302913);
                     } catch (Exception var28) {
@@ -284,7 +284,7 @@ public class MixinAchievements extends ScreenBase {
             } else {
                 try {
                     var37 = Math.max(this.textManager.getTextWidth(var34), 120);
-                    String var41 = TranslationStorage.getInstance().translate("achievement.requires", var29.parent.name);
+                    String var41 = TranslationStorage.getInstance().translate("achievement.requires", var29.parent.NAME);
                     flickerTime = this.textManager.method_1902(var41, var37);
                     this.fillGradient(adjustedParentRow - 3, lineColour - 3, adjustedParentRow + var37 + 3, lineColour + flickerTime + 12 + 3, -1073741824, -1073741824);
                     this.textManager.method_1904(var41, adjustedParentRow, lineColour + 12, var37, -9416624);
@@ -319,7 +319,7 @@ public class MixinAchievements extends ScreenBase {
     }
 
     public boolean checkHidden(Achievement achievement) {
-        if (minecraft.statFileWriter.achievementUnlocked(achievement)) {
+        if (minecraft.statFileWriter.isAchievementUnlocked(achievement)) {
             return false;
         }
         if (achievement.parent == null) {

@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Stats.class)
 public class MixinStats {
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "method_756()V", at = @At(value = "NEW", target = "()Ljava/util/HashSet;"))
     private static void beforeRecipeStats(CallbackInfo ci) {
         BeforeRecipeStats.EVENT.getInvoker().beforeRecipeStats();

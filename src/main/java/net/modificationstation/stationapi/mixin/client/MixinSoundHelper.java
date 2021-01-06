@@ -7,7 +7,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.sound.SoundHelper;
-import net.minecraft.util.SoundMap;
+import net.minecraft.client.sound.SoundMap;
 import net.modificationstation.stationapi.api.common.resource.RecursiveReader;
 import net.modificationstation.stationapi.api.common.util.CustomSoundMap;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,12 +24,12 @@ import java.nio.file.Paths;
 
 @Mixin(SoundHelper.class)
 public class MixinSoundHelper {
-    @Shadow
-    private SoundMap soundMapMusic;
-    @Shadow
-    private SoundMap soundMapSounds;
-    @Shadow
-    private SoundMap soundMapStreaming;
+
+    @Shadow private SoundMap sounds;
+
+    @Shadow private SoundMap streaming;
+
+    @Shadow private SoundMap music;
 
     @Environment(EnvType.CLIENT)
     private static void loadModAudio(SoundMap array, String channel) {
@@ -53,10 +53,9 @@ public class MixinSoundHelper {
     @Environment(EnvType.CLIENT)
     @Inject(method = "acceptOptions", at = @At(value = "TAIL"))
     private void loadModAudio(GameOptions paramkv, CallbackInfo ci) {
-        // Cursed mappings has these completely wrong.
-        loadModAudio(this.soundMapMusic, "sound");
-        loadModAudio(this.soundMapSounds, "streaming");
-        loadModAudio(this.soundMapStreaming, "music");
+        loadModAudio(this.sounds, "sound");
+        loadModAudio(this.streaming, "streaming");
+        loadModAudio(this.music, "music");
     }
 
 

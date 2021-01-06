@@ -616,14 +616,14 @@ public abstract class MixinTileRenderer {
         return overrideTexture(blockBase.getTextureForSide(side, meta));
     }
 
-    @Redirect(method = "method_81(Lnet/minecraft/block/BlockBase;III)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;method_1626(Lnet/minecraft/level/TileView;IIII)I", ordinal = 0))
+    @Redirect(method = "method_81(Lnet/minecraft/block/BlockBase;III)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;getTextureForSide(Lnet/minecraft/level/TileView;IIII)I", ordinal = 0))
     private int getBedTextureID1(BlockBase blockBase, TileView block, int i, int j, int k, int i1) {
-        return overrideTexture(blockBase.method_1626(block, i, j, k, i1));
+        return overrideTexture(blockBase.getTextureForSide(block, i, j, k, i1));
     }
 
-    @Redirect(method = "method_81(Lnet/minecraft/block/BlockBase;III)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;method_1626(Lnet/minecraft/level/TileView;IIII)I", ordinal = 1))
+    @Redirect(method = "method_81(Lnet/minecraft/block/BlockBase;III)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;getTextureForSide(Lnet/minecraft/level/TileView;IIII)I", ordinal = 1))
     private int getBedTextureID2(BlockBase blockBase, TileView block, int i, int j, int k, int i1) {
-        return overrideTexture(blockBase.method_1626(block, i, j, k, i1));
+        return overrideTexture(blockBase.getTextureForSide(block, i, j, k, i1));
     }
 
     private int overrideTexture(int texID) {
