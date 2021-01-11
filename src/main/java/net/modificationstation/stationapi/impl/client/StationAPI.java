@@ -16,6 +16,7 @@ import net.modificationstation.stationapi.api.client.event.render.entity.EntityR
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegister;
 import net.modificationstation.stationapi.api.client.event.texture.TexturesPerFileListener;
 import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
+import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
 import net.modificationstation.stationapi.api.common.entity.EntityHandlerRegistry;
 import net.modificationstation.stationapi.api.common.entity.HasOwner;
 import net.modificationstation.stationapi.api.common.event.EventRegistry;
@@ -31,7 +32,6 @@ import net.modificationstation.stationapi.impl.client.gui.GuiHelper;
 import net.modificationstation.stationapi.impl.client.model.CustomModelRenderer;
 import net.modificationstation.stationapi.impl.client.packet.PacketHelper;
 import net.modificationstation.stationapi.impl.client.texture.TextureFactory;
-import net.modificationstation.stationapi.impl.client.texture.TextureRegistry;
 import net.modificationstation.stationapi.mixin.client.accessor.ClientPlayNetworkHandlerAccessor;
 
 @Environment(EnvType.CLIENT)
@@ -45,10 +45,10 @@ public class StationAPI extends net.modificationstation.stationapi.impl.common.S
         getLogger().info("Setting up TextureFactory...");
         net.modificationstation.stationapi.api.client.texture.TextureFactory.INSTANCE.setHandler(new TextureFactory());
         getLogger().info("Setting up TextureRegistry...");
-        net.modificationstation.stationapi.api.client.texture.TextureRegistry.RUNNABLES.put("unbind", TextureRegistry::unbind);
-        net.modificationstation.stationapi.api.client.texture.TextureRegistry.FUNCTIONS.put("getRegistry", TextureRegistry::getRegistry);
-        net.modificationstation.stationapi.api.client.texture.TextureRegistry.SUPPLIERS.put("currentRegistry", TextureRegistry::currentRegistry);
-        net.modificationstation.stationapi.api.client.texture.TextureRegistry.SUPPLIERS.put("registries", TextureRegistry::registries);
+        TextureRegistry.RUNNABLES.put("unbind", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::unbind);
+        TextureRegistry.FUNCTIONS.put("getRegistry", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::getRegistry);
+        TextureRegistry.SUPPLIERS.put("currentRegistry", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::currentRegistry);
+        TextureRegistry.SUPPLIERS.put("registries", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::registries);
         getLogger().info("Setting up PlayerHelper...");
         net.modificationstation.stationapi.api.common.entity.player.PlayerHelper.INSTANCE.setHandler(new PlayerHelper());
         getLogger().info("Setting up PacketHelper...");

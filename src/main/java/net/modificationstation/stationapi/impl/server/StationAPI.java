@@ -10,6 +10,7 @@ import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.server.event.network.HandleLogin;
 import net.modificationstation.stationapi.api.server.event.network.PlayerLogin;
+import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
 import net.modificationstation.stationapi.impl.server.entity.player.PlayerHelper;
 import net.modificationstation.stationapi.impl.server.gui.GuiHelper;
 import net.modificationstation.stationapi.impl.server.packet.PacketHelper;
@@ -72,5 +73,6 @@ public class StationAPI extends net.modificationstation.stationapi.impl.common.S
         super.preInit(eventRegistry, jsonRecipeParserRegistry, modID);
         eventRegistry.registerValue(Identifier.of(modID, "handle_login"), HandleLogin.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "player_login"), PlayerLogin.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "track_entity"), TrackEntity.EVENT);
     }
 }

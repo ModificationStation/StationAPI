@@ -1,8 +1,9 @@
 package net.modificationstation.stationapi.mixin.server;
 
 import net.minecraft.class_488;
+import net.minecraft.class_80;
 import net.minecraft.entity.EntityBase;
-import net.modificationstation.stationapi.api.server.entity.CustomTracking;
+import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,15 +13,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(class_488.class)
 public abstract class Mixinclass_488 {
 
-    @Shadow
-    public abstract void method_1667(EntityBase arg, int i, int j, boolean flag);
+    @Shadow private class_80 field_2005;
 
-    @Inject(method = "method_1665(Lnet/minecraft/entity/EntityBase;)V", at = @At("HEAD"), cancellable = true)
-    private void beforeVanillaEntries(EntityBase arg, CallbackInfo ci) {
-        if (arg instanceof CustomTracking) {
-            CustomTracking track = (CustomTracking) arg;
-            method_1667(arg, track.getTrackingDistance(), track.getUpdateFrequency(), track.sendVelocity());
-            ci.cancel();
-        }
+    @Inject(method = "method_1665(Lnet/minecraft/entity/EntityBase;)V", at = @At("RETURN"))
+    private void afterVanillaEntries(EntityBase arg, CallbackInfo ci) {
+        TrackEntity.EVENT.getInvoker().trackEntity((class_488) (Object) this, field_2005, arg);
     }
 }
