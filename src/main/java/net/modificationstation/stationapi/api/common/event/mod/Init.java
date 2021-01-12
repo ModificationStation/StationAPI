@@ -1,27 +1,43 @@
 package net.modificationstation.stationapi.api.common.event.mod;
 
 import net.modificationstation.stationapi.api.common.event.ModEvent;
+import net.modificationstation.stationapi.api.common.registry.ModID;
 
+/**
+ * Initialization event called for mods to mostly just register event listeners, since the events are already done in {@link PreInit}, or load the config.
+ * Some additional setup can be done as well, but Minecraft classes can not be referenced during this event.
+ * @author mine_diver
+ */
 public interface Init {
 
+    /**
+     * The event instance.
+     */
     ModEvent<Init> EVENT = new ModEvent<>(Init.class,
             listeners ->
-                    () -> {
-                        for (Init event : listeners)
-                            event.init();
+                    modID -> {
+                        for (Init listener : listeners)
+                            listener.init(Init.EVENT.getListenerModID(listener));
                     },
             listener ->
-                    () -> {
+                    modID -> {
                         Init.EVENT.setCurrentListener(listener);
-                        listener.init();
+                        listener.init(modID);
                         Init.EVENT.setCurrentListener(null);
                     },
             init ->
-                    init.register(() -> ModEvent.post(new Data()), null)
+                    init.register(modID -> ModEvent.post(new Data()), null)
     );
 
-    void init();
+    /**
+     * The event function.
+     * @param modID current listener's ModID.
+     */
+    void init(ModID modID);
 
+    /**
+     * The event data used by EventBus.
+     */
     final class Data extends ModInitData<Init> {
 
         private Data() {

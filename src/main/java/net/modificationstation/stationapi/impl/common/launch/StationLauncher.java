@@ -10,10 +10,20 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
+/**
+ * Main StationAPI entrypoint. Since we don't have side-dependent preLaunch entrypoints, sadly.
+ * @author mine_diver
+ */
 public class StationLauncher implements PreLaunchEntrypoint {
 
+    /**
+     * Logger.
+     */
     private static final Logger LOGGER = LogManager.getFormatterLogger("Station|Launcher");
 
+    /**
+     * Loads side-dependent StationAPI entrypoint.
+     */
     @Override
     public void onPreLaunch() {
         Configurator.setLevel("Station|Launcher", Level.INFO);

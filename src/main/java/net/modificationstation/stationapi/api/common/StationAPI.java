@@ -10,8 +10,15 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.util.Set;
 
+/**
+ * StationAPI interface. Used to access StationAPI implementation side-independently.
+ * @author mine_diver
+ */
 public interface StationAPI extends ModCore, HasHandler<StationAPI> {
 
+    /**
+     * Interface instance that holds the actual handler.
+     */
     StationAPI INSTANCE = new StationAPI() {
 
         private StationAPI handler;
@@ -88,9 +95,19 @@ public interface StationAPI extends ModCore, HasHandler<StationAPI> {
         }
     };
 
+    /**
+     * Initial setup. Configures logger, entrypoints, and calls the rest of initialization sequence.
+     */
     void setup();
 
+    /**
+     * Loads main entrypoints and scans mods assets, also invokes preInit, init and postInit events.
+     */
     void setupMods();
 
+    /**
+     * Returns the set of mods that need client-side verification when the client joins server.
+     * @return the set of mods that need client-side verification when the client joins server.
+     */
     Set<ModContainer> getModsToVerifyOnClient();
 }

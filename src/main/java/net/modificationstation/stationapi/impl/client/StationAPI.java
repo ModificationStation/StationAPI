@@ -21,6 +21,7 @@ import net.modificationstation.stationapi.api.common.entity.EntityHandlerRegistr
 import net.modificationstation.stationapi.api.common.entity.HasOwner;
 import net.modificationstation.stationapi.api.common.event.EventRegistry;
 import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
+import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.api.common.gui.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.common.recipe.JsonRecipeParserRegistry;
@@ -33,9 +34,15 @@ import net.modificationstation.stationapi.impl.client.packet.PacketHelper;
 import net.modificationstation.stationapi.impl.client.texture.TextureFactory;
 import net.modificationstation.stationapi.mixin.client.accessor.ClientPlayNetworkHandlerAccessor;
 
+/**
+ * The client side StationAPI entrypoint. Used for client side initialization.
+ */
 @Environment(EnvType.CLIENT)
 public class StationAPI extends net.modificationstation.stationapi.impl.common.StationAPI {
 
+    /**
+     * Performs client side API initialization.
+     */
     @Override
     public void setupAPI() {
         super.setupAPI();
@@ -93,6 +100,12 @@ public class StationAPI extends net.modificationstation.stationapi.impl.common.S
         }, getModID());
     }
 
+    /**
+     * Registers client side events.
+     * @param eventRegistry the event registry used to initialize event listeners through fabric.mod.json entrypoints.
+     * @param jsonRecipeParserRegistry the JSON recipe parser registry that holds all JSON recipe parsers to automatically run when {@link RecipeRegister} event is called with a proper identifier.
+     * @param modID current mod's ModID.
+     */
     @Override
     public void preInit(EventRegistry eventRegistry, JsonRecipeParserRegistry jsonRecipeParserRegistry, ModID modID) {
         super.preInit(eventRegistry, jsonRecipeParserRegistry, modID);

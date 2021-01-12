@@ -3,20 +3,22 @@ package net.modificationstation.stationapi.api.common.event.mod;
 import lombok.Getter;
 import net.modificationstation.stationapi.api.common.event.EventRegistry;
 import net.modificationstation.stationapi.api.common.event.ModEvent;
+import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationapi.api.common.recipe.JsonRecipeParserRegistry;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 
 /**
- * Event called before Minecraft launch
- * <p>
- * args: none
- * return: void
- *
+ * PreInitialization event called for mods to do some set up involving adding new StAPI events, JSON recipe parsers, etc...
+ * Some additional setup can be done as well, but Minecraft classes can not be referenced during this event.
  * @author mine_diver
+ * @see EventRegistry
+ * @see JsonRecipeParserRegistry
  */
-
 public interface PreInit {
 
+    /**
+     * The event instance.
+     */
     ModEvent<PreInit> EVENT = new ModEvent<>(PreInit.class,
             listeners ->
                     (eventRegistry, jsonRecipeParserRegistry, modID) -> {
@@ -33,13 +35,28 @@ public interface PreInit {
                     preInit.register((eventRegistry, jsonRecipeParserRegistry, modID) -> ModEvent.post(new Data(eventRegistry, jsonRecipeParserRegistry)), null)
     );
 
+    /**
+     * The event function.
+     * @param eventRegistry the event registry used to initialize event listeners through fabric.mod.json entrypoints.
+     * @param jsonRecipeParserRegistry the JSON recipe parser registry that holds all JSON recipe parsers to automatically run when {@link RecipeRegister} event is called with a proper identifier.
+     * @param modID current listener's ModID.
+     */
     void preInit(EventRegistry eventRegistry, JsonRecipeParserRegistry jsonRecipeParserRegistry, ModID modID);
 
+    /**
+     * The event data used by EventBus.
+     */
+    @Getter
     final class Data extends ModInitData<PreInit> {
 
-        @Getter
+        /**
+         * The event registry used to initialize event listeners through fabric.mod.json entrypoints.
+         */
         private final EventRegistry eventRegistry;
-        @Getter
+
+        /**
+         * The JSON recipe parser registry that holds all JSON recipe parsers to automatically run when {@link RecipeRegister} event is called with a proper identifier.
+         */
         private final JsonRecipeParserRegistry jsonRecipeParserRegistry;
 
         private Data(EventRegistry eventRegistry, JsonRecipeParserRegistry jsonRecipeParserRegistry) {

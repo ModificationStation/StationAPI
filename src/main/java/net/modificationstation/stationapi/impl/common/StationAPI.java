@@ -82,11 +82,24 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Common StationAPI main class. Used for some initialization.
+ * @author mine_diver
+ */
 public class StationAPI implements net.modificationstation.stationapi.api.common.StationAPI, PreInit, Init {
 
+    /**
+     * StationMod side-dependent entrypoints.
+     */
     protected final Set<String> entrypoints = new HashSet<>();
+    /**
+     * A set of mods that need client-side verification when the client joins server.
+     */
     private final Set<ModContainer> modsToVerifyOnClient = new HashSet<>();
 
+    /**
+     * Initial setup. Configures logger, entrypoints, and calls the rest of initialization sequence.
+     */
     @Override
     public void setup() {
         ModID modID = getModID();
@@ -110,6 +123,9 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
         getLogger().info("Finished " + name + " setup");
     }
 
+    /**
+     * Performs some API setup. Most likely will be removed due to API becoming less annoying.
+     */
     public void setupAPI() {
         getLogger().info("Setting up GeneralFactory...");
         net.modificationstation.stationapi.api.common.factory.GeneralFactory generalFactory = net.modificationstation.stationapi.api.common.factory.GeneralFactory.INSTANCE;
@@ -226,6 +242,9 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
         });
     }
 
+    /**
+     * Loads main entrypoints and scans mods assets, also invokes preInit, init and postInit events.
+     */
     @Override
     public void setupMods() {
         FabricLoader fabricLoader = FabricLoader.getInstance();
@@ -291,11 +310,19 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
         getLogger().info("Invoking preInit event...");
         PreInit.EVENT.getInvoker().preInit(EventRegistry.INSTANCE, JsonRecipeParserRegistry.INSTANCE, PreInit.EVENT.getInvokerModID());
         getLogger().info("Invoking init event...");
-        Init.EVENT.getInvoker().init();
+        Init.EVENT.getInvoker().init(Init.EVENT.getInvokerModID());
         getLogger().info("Invoking postInit event...");
-        PostInit.EVENT.getInvoker().postInit();
+        PostInit.EVENT.getInvoker().postInit(PostInit.EVENT.getInvokerModID());
     }
 
+    /**
+     * Registers StationAPI's events in the {@link EventRegistry} and vanilla JSON recipe parsers in the {@link JsonRecipeParserRegistry}
+     * @param eventRegistry the event registry used to initialize event listeners through fabric.mod.json entrypoints.
+     * @param jsonRecipeParserRegistry the JSON recipe parser registry that holds all JSON recipe parsers to automatically run when {@link RecipeRegister} event is called with a proper identifier.
+     * @param modID current mod's ModID.
+     * @see EventRegistry
+     * @see JsonRecipeParserRegistry
+     */
     @Override
     public void preInit(EventRegistry eventRegistry, JsonRecipeParserRegistry jsonRecipeParserRegistry, ModID modID) {
         eventRegistry.registerValue(Identifier.of(modID, "achievement_register"), AchievementRegister.EVENT);
@@ -366,11 +393,21 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
         });
     }
 
+    /**
+     * Registers the events entrypoints.
+     * @param modID current listener's ModID.
+     * @see EventRegistry
+     */
     @Override
-    public void init() {
+    public void init(ModID modID) {
         EventRegistry.INSTANCE.forEach((identifier, event) -> event.register(identifier));
     }
 
+    /**
+     * Performs the setup of entrypoint's annotated fields.
+     * @param modContainer entrypoint's mod.
+     * @param o entrypoint's instance.
+     */
     public static void setupAnnotations(ModContainer modContainer, Object o) {
         try {
             ReflectionHelper.setFinalFieldsWithAnnotation(o, Instance.class, o);
@@ -380,6 +417,10 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
         }
     }
 
+    /**
+     * Returns the set of mods that need client-side verification when the client joins server.
+     * @return the set of mods that need client-side verification when the client joins server.
+     */
     @Override
     public Set<ModContainer> getModsToVerifyOnClient() {
         return Collections.unmodifiableSet(modsToVerifyOnClient);

@@ -15,6 +15,9 @@ import java.util.function.Consumer;
 
 public class GuiHelper {
 
+    /**
+     * Implementation instance.
+     */
     private static final GuiHelperImpl INSTANCE = SideUtils.get(GuiHelperClientImpl::new, GuiHelperServerImpl::new);
 
     /**
