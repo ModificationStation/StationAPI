@@ -10,9 +10,12 @@ import net.modificationstation.stationapi.api.common.registry.Identifier;
 
 import java.util.function.Consumer;
 
-public abstract class GuiHelper implements net.modificationstation.stationapi.api.common.gui.GuiHelper {
+public abstract class GuiHelperImpl {
 
-    @Override
+    public void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container) {
+        openGUI(player, identifier, inventory, container, (message) -> {});
+    }
+
     public void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container, Consumer<Message> customData) {
         Message message = new Message(Identifier.of(StationAPI.INSTANCE.getModID(), "open_gui"));
         message.put(new String[]{identifier.toString()});

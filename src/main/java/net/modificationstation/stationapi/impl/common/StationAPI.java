@@ -261,7 +261,13 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
         getLogger().info("Loading assets...");
         ResourceManager.findResources(getModID() + "/recipes", file -> file.endsWith(".json")).forEach(recipe -> {
             try {
-                JsonRecipesRegistry.INSTANCE.computeIfAbsent(Identifier.of(new Gson().fromJson(new InputStreamReader(recipe.openStream()), JsonRecipeType.class).getType()), identifier -> new HashSet<>()).add(recipe);
+                String rawId = new Gson().fromJson(new InputStreamReader(recipe.openStream()), JsonRecipeType.class).getType();
+                try {
+                    Identifier recipeId = Identifier.of(rawId);
+                    JsonRecipesRegistry.INSTANCE.computeIfAbsent(recipeId, identifier -> new HashSet<>()).add(recipe);
+                } catch (NullPointerException e) {
+                    getLogger().warn("Found an unknown recipe type " + rawId + ". Ignoring.");
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

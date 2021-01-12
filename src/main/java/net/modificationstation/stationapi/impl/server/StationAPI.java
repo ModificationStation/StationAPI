@@ -12,7 +12,6 @@ import net.modificationstation.stationapi.api.server.event.network.HandleLogin;
 import net.modificationstation.stationapi.api.server.event.network.PlayerLogin;
 import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
 import net.modificationstation.stationapi.impl.server.entity.player.PlayerHelper;
-import net.modificationstation.stationapi.impl.server.gui.GuiHelper;
 import net.modificationstation.stationapi.impl.server.packet.PacketHelper;
 
 import java.util.Map;
@@ -64,8 +63,6 @@ public class StationAPI extends net.modificationstation.stationapi.impl.common.S
                 }
             }
         });
-        getLogger().info("Setting up GuiHelper...");
-        net.modificationstation.stationapi.api.common.gui.GuiHelper.INSTANCE.setHandler(new GuiHelper());
     }
 
     @Override

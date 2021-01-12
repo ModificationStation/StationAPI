@@ -5,16 +5,16 @@ import net.minecraft.container.ContainerBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.modificationstation.stationapi.api.common.packet.Message;
+import net.modificationstation.stationapi.impl.common.gui.GuiHelperImpl;
 import net.modificationstation.stationapi.mixin.server.accessor.ServerPlayerAccessor;
 
-public class GuiHelper extends net.modificationstation.stationapi.impl.common.gui.GuiHelper {
+public class GuiHelperServerImpl extends GuiHelperImpl {
 
     @Override
     protected void sideDependentPacket(PlayerBase player, InventoryBase inventory, Message message) {
-        message.put(new Object[]{null});
+        message.put(new Object[] {null});
         ((ServerPlayerAccessor) player).invokeMethod_314();
-        int[] ints = new int[]{((ServerPlayerAccessor) player).getField_260()};
-        message.put(ints);
+        message.put(new int[] {((ServerPlayerAccessor) player).getField_260()});
     }
 
     @Override

@@ -5,38 +5,25 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
-import net.modificationstation.stationapi.api.common.util.HasHandler;
+import net.modificationstation.stationapi.api.common.util.API;
+import net.modificationstation.stationapi.api.common.util.SideUtils;
+import net.modificationstation.stationapi.impl.client.gui.GuiHelperClientImpl;
+import net.modificationstation.stationapi.impl.common.gui.GuiHelperImpl;
+import net.modificationstation.stationapi.impl.server.gui.GuiHelperServerImpl;
 
 import java.util.function.Consumer;
 
-public interface GuiHelper extends HasHandler<GuiHelper> {
+public class GuiHelper {
 
-    GuiHelper INSTANCE = new GuiHelper() {
+    private static final GuiHelperImpl INSTANCE = SideUtils.get(GuiHelperClientImpl::new, GuiHelperServerImpl::new);
 
-        private GuiHelper handler;
-
-        @Override
-        public void setHandler(GuiHelper handler) {
-            this.handler = handler;
-        }
-
-        @Override
-        public void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container) {
-            checkAccess(handler);
-            handler.openGUI(player, identifier, inventory, container);
-        }
-
-        @Override
-        public void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container, Consumer<Message> customData) {
-            checkAccess(handler);
-            handler.openGUI(player, identifier, inventory, container, customData);
-        }
-    };
-
-    default void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container) {
-        openGUI(player, identifier, inventory, container, customData -> {
-        });
+    @API
+    public static void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container) {
+        INSTANCE.openGUI(player, identifier, inventory, container);
     }
 
-    void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container, Consumer<Message> customData);
+    @API
+    public static void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container, Consumer<Message> customData) {
+        INSTANCE.openGUI(player, identifier, inventory, container, customData);
+    }
 }

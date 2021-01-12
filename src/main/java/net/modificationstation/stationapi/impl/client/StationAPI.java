@@ -28,7 +28,6 @@ import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.server.entity.StationSpawnData;
 import net.modificationstation.stationapi.impl.client.entity.player.PlayerHelper;
-import net.modificationstation.stationapi.impl.client.gui.GuiHelper;
 import net.modificationstation.stationapi.impl.client.model.CustomModelRenderer;
 import net.modificationstation.stationapi.impl.client.packet.PacketHelper;
 import net.modificationstation.stationapi.impl.client.texture.TextureFactory;
@@ -53,8 +52,6 @@ public class StationAPI extends net.modificationstation.stationapi.impl.common.S
         net.modificationstation.stationapi.api.common.entity.player.PlayerHelper.INSTANCE.setHandler(new PlayerHelper());
         getLogger().info("Setting up PacketHelper...");
         net.modificationstation.stationapi.api.common.packet.PacketHelper.INSTANCE.setHandler(new PacketHelper());
-        getLogger().info("Setting up GuiHelper...");
-        net.modificationstation.stationapi.api.common.gui.GuiHelper.INSTANCE.setHandler(new GuiHelper());
         getLogger().info("Setting up RenderItemOverlay...");
         RenderItemOverlay.EVENT.register((itemRenderer, itemX, itemY, itemInstance, textRenderer, textureManager) -> {
             if (itemInstance != null && itemInstance.getType() instanceof CustomItemOverlay) {
