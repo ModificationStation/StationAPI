@@ -18,6 +18,7 @@ public class SideUtils {
      * @param <T> the supplier return type.
      * @return the supplier result.
      */
+    @API
     public static <T> T get(Supplier<T> clientSupplier, Supplier<T> serverSupplier) {
         EnvType side = FabricLoader.getInstance().getEnvironmentType();
         switch (side) {
@@ -26,6 +27,26 @@ public class SideUtils {
             case SERVER:
                 return serverSupplier.get();
             default:
+                throw new IllegalArgumentException("Unknown side " + side + "!");
+        }
+    }
+
+    /**
+     * Side-dependent runnable execution.
+     * @param clientRunnable the runnable that should be executed on client side.
+     * @param serverRunnable the runnable that should be executed on server side.
+     */
+    @API
+    public static void run(Runnable clientRunnable, Runnable serverRunnable) {
+        EnvType side = FabricLoader.getInstance().getEnvironmentType();
+        switch (side) {
+            case CLIENT: {
+                clientRunnable.run();
+                break;
+            } case SERVER: {
+                serverRunnable.run();
+                break;
+            } default:
                 throw new IllegalArgumentException("Unknown side " + side + "!");
         }
     }

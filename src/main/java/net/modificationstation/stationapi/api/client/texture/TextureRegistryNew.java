@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.texture;
 
-import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.Registry;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 
 public class TextureRegistryNew extends Registry<TextureSet> {
 
@@ -15,5 +15,5 @@ public class TextureRegistryNew extends Registry<TextureSet> {
         return Integer.MAX_VALUE;
     }
 
-    public static final TextureRegistryNew INSTANCE = new TextureRegistryNew(Identifier.of(StationAPI.INSTANCE.getModID(), "texture_sets"));
+    public static final TextureRegistryNew INSTANCE = new TextureRegistryNew(Identifier.of(StationAPI.MODID, "texture_sets"));
 }

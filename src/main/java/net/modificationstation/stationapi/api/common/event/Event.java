@@ -93,7 +93,7 @@ public abstract class Event<T> {
             register(container);
             ModContainer modContainer = container.getProvider();
             T listener = container.getEntrypoint();
-            StationAPI.setupAnnotations(modContainer, listener);
+            StationAPI.INSTANCE.setupAnnotations(modContainer, listener);
         });
     }
 

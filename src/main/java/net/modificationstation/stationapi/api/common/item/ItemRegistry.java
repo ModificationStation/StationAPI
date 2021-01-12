@@ -4,15 +4,15 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.LevelRegistry;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 import net.modificationstation.stationapi.mixin.common.accessor.ItemBaseAccessor;
 
 public final class ItemRegistry extends LevelRegistry<ItemBase> {
 
-    public static final ItemRegistry INSTANCE = new ItemRegistry(Identifier.of(StationAPI.INSTANCE.getModID(), "items"));
+    public static final ItemRegistry INSTANCE = new ItemRegistry(Identifier.of(StationAPI.MODID, "items"));
 
     private ItemRegistry(Identifier registryId) {
         super(registryId);

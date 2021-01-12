@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.common.registry;
 
-import net.modificationstation.stationapi.api.common.StationAPI;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
 
-    public static final Registry<Registry<?>> REGISTRIES = new RegistryRegistry(Identifier.of(StationAPI.INSTANCE.getModID(), "registries"));
+    public static final Registry<Registry<?>> REGISTRIES = new RegistryRegistry(Identifier.of(StationAPI.MODID, "registries"));
     private final Identifier registryId;
     private final Map<Identifier, T> ID_TO_TYPE = new TreeMap<>();
     private final Map<T, Identifier> TYPE_TO_ID = new HashMap<>();

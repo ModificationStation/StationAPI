@@ -4,10 +4,10 @@ import com.google.common.primitives.Doubles;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.packet.AbstractPacket;
 import net.minecraft.util.maths.MathHelper;
-import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.entity.HasOwner;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 
 public interface StationSpawnData extends CustomSpawnData {
 
@@ -20,7 +20,7 @@ public interface StationSpawnData extends CustomSpawnData {
             owner = owner == null ? entityBase : owner;
             ownerId = owner.entityId;
         }
-        Message message = new Message(Identifier.of(StationAPI.INSTANCE.getModID(), "spawn_entity"));
+        Message message = new Message(Identifier.of(StationAPI.MODID, "spawn_entity"));
         message.put(new String[]{getHandlerIdentifier().toString()});
         int[] ints = new int[]{entityBase.entityId, MathHelper.floor(entityBase.x * 32), MathHelper.floor(entityBase.y * 32), MathHelper.floor(entityBase.z * 32), ownerId};
         message.put(ints);

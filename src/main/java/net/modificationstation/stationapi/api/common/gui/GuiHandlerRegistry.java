@@ -3,10 +3,10 @@ package net.modificationstation.stationapi.api.common.gui;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
-import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.Registry;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 import uk.co.benjiweber.expressions.functions.TriFunction;
 import uk.co.benjiweber.expressions.tuples.BiTuple;
 import uk.co.benjiweber.expressions.tuples.Tuple;
@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 
 public final class GuiHandlerRegistry extends Registry<BiTuple<TriFunction<PlayerBase, InventoryBase, Message, ScreenBase>, Supplier<InventoryBase>>> {
 
-    public static final GuiHandlerRegistry INSTANCE = new GuiHandlerRegistry(Identifier.of(StationAPI.INSTANCE.getModID(), "gui_handlers"));
+    public static final GuiHandlerRegistry INSTANCE = new GuiHandlerRegistry(Identifier.of(StationAPI.MODID, "gui_handlers"));
 
     private GuiHandlerRegistry(Identifier identifier) {
         super(identifier);

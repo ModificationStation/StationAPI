@@ -4,14 +4,14 @@ package net.modificationstation.stationapi.api.common.block;
 import net.minecraft.block.BlockBase;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.LevelRegistry;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 import net.modificationstation.stationapi.mixin.common.accessor.BlockBaseAccessor;
 
 public final class BlockRegistry extends LevelRegistry<BlockBase> {
 
-    public static final BlockRegistry INSTANCE = new BlockRegistry(Identifier.of(StationAPI.INSTANCE.getModID(), "blocks"));
+    public static final BlockRegistry INSTANCE = new BlockRegistry(Identifier.of(StationAPI.MODID, "blocks"));
 
     private BlockRegistry(Identifier registryId) {
         super(registryId);

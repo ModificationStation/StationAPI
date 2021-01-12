@@ -5,12 +5,30 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.level.ClientLevel;
+import net.minecraft.client.resource.language.TranslationStorage;
+import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.EntityType;
+import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.tool.ToolMaterial;
 import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.client.event.gui.GuiHandlerRegister;
+import net.modificationstation.stationapi.api.client.event.gui.RenderItemOverlay;
+import net.modificationstation.stationapi.api.client.event.keyboard.KeyPressed;
+import net.modificationstation.stationapi.api.client.event.model.ModelRegister;
+import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegister;
+import net.modificationstation.stationapi.api.client.event.render.entity.EntityRendererRegister;
+import net.modificationstation.stationapi.api.client.event.texture.TextureRegister;
+import net.modificationstation.stationapi.api.client.event.texture.TexturesPerFileListener;
+import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
+import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
 import net.modificationstation.stationapi.api.common.block.EffectiveForTool;
+import net.modificationstation.stationapi.api.common.entity.EntityHandlerRegistry;
+import net.modificationstation.stationapi.api.common.entity.HasOwner;
 import net.modificationstation.stationapi.api.common.event.EventRegistry;
 import net.modificationstation.stationapi.api.common.event.GameEvent;
 import net.modificationstation.stationapi.api.common.event.ModEvent;
@@ -40,11 +58,12 @@ import net.modificationstation.stationapi.api.common.event.packet.MessageListene
 import net.modificationstation.stationapi.api.common.event.packet.PacketRegister;
 import net.modificationstation.stationapi.api.common.event.recipe.BeforeRecipeStats;
 import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
+import net.modificationstation.stationapi.api.common.gui.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.common.mod.StationMod;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Instance;
-import net.modificationstation.stationapi.api.common.mod.entrypoint.ModIDField;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.packet.MessageListenerRegistry;
+import net.modificationstation.stationapi.api.common.packet.StationHandshake;
 import net.modificationstation.stationapi.api.common.recipe.JsonRecipeParserRegistry;
 import net.modificationstation.stationapi.api.common.recipe.JsonRecipesRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
@@ -52,6 +71,16 @@ import net.modificationstation.stationapi.api.common.registry.LevelRegistry;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.common.registry.Registry;
 import net.modificationstation.stationapi.api.common.resource.ResourceManager;
+import net.modificationstation.stationapi.api.common.util.ModCore;
+import net.modificationstation.stationapi.api.common.util.SideUtils;
+import net.modificationstation.stationapi.api.server.entity.StationSpawnData;
+import net.modificationstation.stationapi.api.server.event.network.HandleLogin;
+import net.modificationstation.stationapi.api.server.event.network.PlayerLogin;
+import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
+import net.modificationstation.stationapi.impl.client.entity.player.PlayerHelper;
+import net.modificationstation.stationapi.impl.client.model.CustomModelRenderer;
+import net.modificationstation.stationapi.impl.client.packet.PacketHelper;
+import net.modificationstation.stationapi.impl.client.texture.TextureFactory;
 import net.modificationstation.stationapi.impl.common.achievement.AchievementPage;
 import net.modificationstation.stationapi.impl.common.achievement.AchievementPageManager;
 import net.modificationstation.stationapi.impl.common.block.BlockManager;
@@ -68,6 +97,7 @@ import net.modificationstation.stationapi.impl.common.preset.item.PlaceableTileE
 import net.modificationstation.stationapi.impl.common.recipe.*;
 import net.modificationstation.stationapi.impl.common.util.ReflectionHelper;
 import net.modificationstation.stationapi.impl.common.util.UnsafeProvider;
+import net.modificationstation.stationapi.mixin.client.accessor.ClientPlayNetworkHandlerAccessor;
 import net.modificationstation.stationapi.mixin.common.accessor.RecipeRegistryAccessor;
 import net.modificationstation.stationapi.mixin.common.accessor.SmeltingRecipeRegistryAccessor;
 import net.modificationstation.stationapi.mixin.common.accessor.StatsAccessor;
@@ -83,15 +113,28 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * Common StationAPI main class. Used for some initialization.
+ * StationAPI main class. Used for some initialization.
  * @author mine_diver
  */
-public class StationAPI implements net.modificationstation.stationapi.api.common.StationAPI, PreInit, Init {
+public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
+
+    /**
+     * StationAPI's instance.
+     */
+    @Instance
+    public static StationAPI INSTANCE;
+
+    /**
+     * StationAPI's ModID.
+     */
+    @ModID.At
+    public static ModID MODID;
 
     /**
      * StationMod side-dependent entrypoints.
      */
     protected final Set<String> entrypoints = new HashSet<>();
+
     /**
      * A set of mods that need client-side verification when the client joins server.
      */
@@ -101,8 +144,10 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
      * Initial setup. Configures logger, entrypoints, and calls the rest of initialization sequence.
      */
     @Override
-    public void setup() {
+    public void onPreLaunch() {
+        setModID(ModID.of("stationapi"));
         ModID modID = getModID();
+        setupAnnotations(modID.getContainer(), this);
         entrypoints.add(modID + ":mod");
         String sideName = FabricLoader.getInstance().getEnvironmentType().name().toLowerCase();
         entrypoints.add(modID + ":mod_" + sideName);
@@ -124,7 +169,7 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
     }
 
     /**
-     * Performs some API setup. Most likely will be removed due to API becoming less annoying.
+     * Performs some API setup. Most likely will be removed due to API becoming less abstract.
      */
     public void setupAPI() {
         getLogger().info("Setting up GeneralFactory...");
@@ -240,12 +285,115 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
             RecipeRegistryAccessor.invokeCor();
             SmeltingRecipeRegistryAccessor.invokeCor();
         });
+        SideUtils.run(
+
+                // CLIENT
+
+                () -> {
+                    getLogger().info("Setting up client GeneralFactory...");
+                    net.modificationstation.stationapi.api.common.factory.GeneralFactory.INSTANCE.addFactory(net.modificationstation.stationapi.api.client.model.CustomModelRenderer.class, (args) -> new CustomModelRenderer((String) args[0], (String) args[1]));
+                    getLogger().info("Setting up TextureFactory...");
+                    net.modificationstation.stationapi.api.client.texture.TextureFactory.INSTANCE.setHandler(new TextureFactory());
+                    getLogger().info("Setting up TextureRegistry...");
+                    TextureRegistry.RUNNABLES.put("unbind", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::unbind);
+                    TextureRegistry.FUNCTIONS.put("getRegistry", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::getRegistry);
+                    TextureRegistry.SUPPLIERS.put("currentRegistry", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::currentRegistry);
+                    TextureRegistry.SUPPLIERS.put("registries", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::registries);
+                    getLogger().info("Setting up PlayerHelper...");
+                    net.modificationstation.stationapi.api.common.entity.player.PlayerHelper.INSTANCE.setHandler(new PlayerHelper());
+                    getLogger().info("Setting up PacketHelper...");
+                    net.modificationstation.stationapi.api.common.packet.PacketHelper.INSTANCE.setHandler(new PacketHelper());
+                    getLogger().info("Setting up RenderItemOverlay...");
+                    RenderItemOverlay.EVENT.register((itemRenderer, itemX, itemY, itemInstance, textRenderer, textureManager) -> {
+                        if (itemInstance != null && itemInstance.getType() instanceof CustomItemOverlay) {
+                            ((CustomItemOverlay) itemInstance.getType()).renderItemOverlay(itemRenderer, itemX, itemY, itemInstance, textRenderer, textureManager);
+                        }
+                    });
+                    MessageListenerRegister.EVENT.register((messageListeners, modID) -> {
+                        messageListeners.registerValue(Identifier.of(modID, "open_gui"), (playerBase, message) -> {
+                            boolean isClient = playerBase.level.isClient;
+                            GuiHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(guiHandler -> ((Minecraft) FabricLoader.getInstance().getGameInstance()).openScreen(guiHandler.one().apply(playerBase, isClient ? guiHandler.two().get() : (InventoryBase) message.objects()[0], message)));
+                            if (isClient)
+                                playerBase.container.currentContainerId = message.ints()[0];
+                        });
+                        GuiHandlerRegister.EVENT.getInvoker().registerGuiHandlers(GuiHandlerRegistry.INSTANCE, GuiHandlerRegister.EVENT.getListenerModID(GuiHandlerRegister.EVENT.getInvoker()));
+                        messageListeners.registerValue(Identifier.of(modID, "spawn_entity"), (playerBase, message) -> EntityHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(entityProvider -> {
+                            double x = message.ints()[1] / 32D, y = message.ints()[2] / 32D, z = message.ints()[3] / 32D;
+                            ClientPlayNetworkHandlerAccessor networkHandler = (ClientPlayNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
+                            ClientLevel level = networkHandler.getLevel();
+                            EntityBase entity = entityProvider.apply(level, x, y, z);
+                            if (entity != null) {
+                                entity.clientX = message.ints()[1];
+                                entity.clientY = message.ints()[2];
+                                entity.clientZ = message.ints()[3];
+                                entity.yaw = 0.0F;
+                                entity.pitch = 0.0F;
+                                entity.entityId = message.ints()[0];
+                                level.method_1495(message.ints()[0], entity);
+                                if (message.ints()[4] > 0) {
+                                    if (entity instanceof HasOwner)
+                                        ((HasOwner) entity).setOwner(networkHandler.invokeMethod_1645(message.ints()[4]));
+                                    entity.setVelocity((double)message.shorts()[0] / 8000.0D, (double)message.shorts()[1] / 8000.0D, (double)message.shorts()[2] / 8000.0D);
+                                }
+                                if (entity instanceof StationSpawnData)
+                                    ((StationSpawnData) entity).readFromMessage(message);
+                            }
+                        }));
+                    }, getModID());
+                },
+
+                // SERVER
+
+                () -> {
+                    getLogger().info("Setting up PlayerHelper...");
+                    net.modificationstation.stationapi.api.common.entity.player.PlayerHelper.INSTANCE.setHandler(new net.modificationstation.stationapi.impl.server.entity.player.PlayerHelper());
+                    getLogger().info("Setting up PacketHelper...");
+                    net.modificationstation.stationapi.api.common.packet.PacketHelper.INSTANCE.setHandler(new net.modificationstation.stationapi.impl.server.packet.PacketHelper());
+                    getLogger().info("Setting up HandleLogin...");
+                    HandleLogin.EVENT.register((pendingConnection, arg) -> {
+                        if (!getModsToVerifyOnClient().isEmpty()) {
+                            StationHandshake handshake = (StationHandshake) arg;
+                            String stationAPI = handshake.getStationAPI();
+                            String version = handshake.getVersion();
+                            ModID modID = getModID();
+                            String serverStationAPI = modID.toString();
+                            String serverStationVersion = modID.getVersion().getFriendlyString();
+                            TranslationStorage translationStorage = TranslationStorage.getInstance();
+                            if (stationAPI == null || version == null || !stationAPI.equals(serverStationAPI)) {
+                                pendingConnection.drop(translationStorage.translate("disconnect.stationapi:missing_station"));
+                                return;
+                            } else if (!version.equals(serverStationVersion)) {
+                                pendingConnection.drop(translationStorage.translate("disconnect.stationapi:station_version_mismatch", serverStationVersion, version));
+                                return;
+                            }
+                            Map<String, String> clientMods = handshake.getMods();
+                            String modid;
+                            String clientVersion;
+                            String serverVersion;
+                            for (ModContainer serverMod : getModsToVerifyOnClient()) {
+                                ModMetadata modMetadata = serverMod.getMetadata();
+                                modid = modMetadata.getId();
+                                serverVersion = modMetadata.getVersion().getFriendlyString();
+                                if (clientMods.containsKey(modid)) {
+                                    clientVersion = clientMods.get(modid);
+                                    if (clientVersion == null || !clientVersion.equals(serverVersion)) {
+                                        pendingConnection.drop(translationStorage.translate("disconnect.stationapi:mod_version_mismatch", modMetadata.getName(), modid, serverVersion, clientVersion == null ? "null" : clientVersion));
+                                        return;
+                                    }
+                                } else {
+                                    pendingConnection.drop(translationStorage.translate("disconnect.stationapi:missing_mod", modMetadata.getName(), modid, serverVersion));
+                                    return;
+                                }
+                            }
+                        }
+                    });
+                }
+        );
     }
 
     /**
      * Loads main entrypoints and scans mods assets, also invokes preInit, init and postInit events.
      */
-    @Override
     public void setupMods() {
         FabricLoader fabricLoader = FabricLoader.getInstance();
         Collection<ModContainer> mods = fabricLoader.getAllMods();
@@ -348,6 +496,29 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
         eventRegistry.registerValue(Identifier.of(modID, "save_level_properties"), SaveLevelProperties.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "load_level_properties_on_level_init"), LoadLevelPropertiesOnLevelInit.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "before_recipes_stats"), BeforeRecipeStats.EVENT);
+        SideUtils.run(
+
+                // CLIENT
+
+                () -> {
+                    eventRegistry.registerValue(Identifier.of(modID, "gui_register"), GuiHandlerRegister.EVENT);
+                    eventRegistry.registerValue(Identifier.of(modID, "render_item_overlay"), RenderItemOverlay.EVENT);
+                    eventRegistry.registerValue(Identifier.of(modID, "key_pressed"), KeyPressed.EVENT);
+                    eventRegistry.registerValue(Identifier.of(modID, "model_register"), ModelRegister.EVENT);
+                    eventRegistry.registerValue(Identifier.of(modID, "key_binding_register"), KeyBindingRegister.EVENT);
+                    eventRegistry.registerValue(Identifier.of(modID, "entity_renderer_register"), EntityRendererRegister.EVENT);
+                    eventRegistry.registerValue(Identifier.of(modID, "texture_register"), TextureRegister.EVENT);
+                    eventRegistry.registerValue(Identifier.of(modID, "textures_per_file_listener"), TexturesPerFileListener.EVENT);
+                },
+
+                // SERVER
+
+                () -> {
+                    eventRegistry.registerValue(Identifier.of(modID, "handle_login"), HandleLogin.EVENT);
+                    eventRegistry.registerValue(Identifier.of(modID, "player_login"), PlayerLogin.EVENT);
+                    eventRegistry.registerValue(Identifier.of(modID, "track_entity"), TrackEntity.EVENT);
+                }
+        );
         jsonRecipeParserRegistry.registerValue(Identifier.of("crafting_shaped"), recipe -> {
             JsonElement rawJson;
             try {
@@ -408,10 +579,10 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
      * @param modContainer entrypoint's mod.
      * @param o entrypoint's instance.
      */
-    public static void setupAnnotations(ModContainer modContainer, Object o) {
+    public void setupAnnotations(ModContainer modContainer, Object o) {
         try {
             ReflectionHelper.setFinalFieldsWithAnnotation(o, Instance.class, o);
-            ReflectionHelper.setFinalFieldsWithAnnotation(o, ModIDField.class, modIDField -> modIDField.value().isEmpty() ? ModID.of(modContainer) : ModID.of(modIDField.value()));
+            ReflectionHelper.setFinalFieldsWithAnnotation(o, ModID.At.class, modIDField -> modIDField.value().isEmpty() ? ModID.of(modContainer) : ModID.of(modIDField.value()));
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -421,7 +592,6 @@ public class StationAPI implements net.modificationstation.stationapi.api.common
      * Returns the set of mods that need client-side verification when the client joins server.
      * @return the set of mods that need client-side verification when the client joins server.
      */
-    @Override
     public Set<ModContainer> getModsToVerifyOnClient() {
         return Collections.unmodifiableSet(modsToVerifyOnClient);
     }

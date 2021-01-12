@@ -2,15 +2,15 @@ package net.modificationstation.stationapi.api.common.event;
 
 import com.google.common.eventbus.EventBus;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
-import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class GameEvent<T> extends Event<T> {
 
-    public static final EventBus EVENT_BUS = new EventBus(Identifier.of(StationAPI.INSTANCE.getModID() + "game_event_bus").toString());
+    public static final EventBus EVENT_BUS = new EventBus(Identifier.of(StationAPI.MODID + "game_event_bus").toString());
 
     public GameEvent(Class<T> type, Function<T[], T> eventFunc, Function<T, T> listenerWrapper) {
         super(type, eventFunc, listenerWrapper);

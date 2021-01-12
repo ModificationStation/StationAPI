@@ -5,8 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.class_214;
 import net.minecraft.client.render.QuadPoint;
 import net.minecraft.client.render.Tessellator;
-import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.util.BlockFaces;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;

@@ -20,13 +20,7 @@
   "environment": "*",
   "entrypoints": {
     "preLaunch": [
-      "net.modificationstation.stationapi.impl.common.launch.StationLauncher"
-    ],
-    "stationapi:client": [
-      "net.modificationstation.stationapi.impl.client.StationAPI"
-    ],
-    "stationapi:server": [
-      "net.modificationstation.stationapi.impl.server.StationAPI"
+      "net.modificationstation.stationapi.impl.common.StationAPI"
     ]
   },
   "mixins": [
