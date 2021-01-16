@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.api.server.entity;
 
 import net.minecraft.class_488;
 import net.minecraft.class_80;
-import net.minecraft.entity.EntityBase;
 import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
 
 /**
@@ -22,15 +21,4 @@ public interface CustomTracking {
      * @see Tracking#track(class_488, class_80)
      */
     void track(class_488 entityTracker, class_80 trackedEntities);
-
-    /**
-     * Invokes {@link CustomTracking#track(class_488, class_80)} in entity if it's instance of {@link CustomTracking} via {@link TrackEntity} hook.
-     * @param entityTracker the dimension's tracker instance.
-     * @param trackedEntities the set of tracked entities.
-     * @param entityToTrack the entity to invoke the method on.
-     */
-    static void invoke(class_488 entityTracker, class_80 trackedEntities, EntityBase entityToTrack) {
-        if (entityToTrack instanceof CustomTracking)
-            ((CustomTracking) entityToTrack).track(entityTracker, trackedEntities);
-    }
 }

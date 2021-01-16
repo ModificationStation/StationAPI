@@ -9,6 +9,8 @@ import net.modificationstation.stationapi.api.common.util.API;
 import net.modificationstation.stationapi.api.server.entity.CustomTracking;
 import net.modificationstation.stationapi.api.server.entity.Tracking;
 
+import java.util.function.Consumer;
+
 /**
  * Event that gets called after server tries tracking an entity by checking if it's instance of a vanilla class.
  * @author mine_diver
@@ -27,11 +29,8 @@ public interface TrackEntity {
                         for (TrackEntity listener : listeners)
                             listener.trackEntity(entityTracker, trackedEntities, entityToTrack);
                     },
-            trackEntity -> {
-                trackEntity.register(CustomTracking::invoke);
-                trackEntity.register(Tracking::invoke);
-                trackEntity.register((entityTracker, trackedEntities, entityToTrack) -> GameEvent.EVENT_BUS.post(new Data(entityTracker, trackedEntities, entityToTrack)));
-            }
+            (Consumer<GameEvent<TrackEntity>>) trackEntity ->
+                    trackEntity.register((entityTracker, trackedEntities, entityToTrack) -> GameEvent.EVENT_BUS.post(new Data(entityTracker, trackedEntities, entityToTrack)))
     );
 
     /**

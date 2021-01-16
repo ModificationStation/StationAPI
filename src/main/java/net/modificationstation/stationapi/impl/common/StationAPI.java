@@ -33,6 +33,7 @@ import net.modificationstation.stationapi.api.common.event.EventRegistry;
 import net.modificationstation.stationapi.api.common.event.GameEvent;
 import net.modificationstation.stationapi.api.common.event.ModEvent;
 import net.modificationstation.stationapi.api.common.event.achievement.AchievementRegister;
+import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryProvider;
 import net.modificationstation.stationapi.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
 import net.modificationstation.stationapi.api.common.event.block.TileEntityRegister;
@@ -83,7 +84,6 @@ import net.modificationstation.stationapi.impl.client.packet.PacketHelper;
 import net.modificationstation.stationapi.impl.client.texture.TextureFactory;
 import net.modificationstation.stationapi.impl.common.achievement.AchievementPage;
 import net.modificationstation.stationapi.impl.common.achievement.AchievementPageManager;
-import net.modificationstation.stationapi.impl.common.block.BlockManager;
 import net.modificationstation.stationapi.impl.common.config.Category;
 import net.modificationstation.stationapi.impl.common.config.Configuration;
 import net.modificationstation.stationapi.impl.common.config.Property;
@@ -92,8 +92,6 @@ import net.modificationstation.stationapi.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.impl.common.item.CustomReach;
 import net.modificationstation.stationapi.impl.common.item.JsonItemKey;
 import net.modificationstation.stationapi.impl.common.lang.I18n;
-import net.modificationstation.stationapi.impl.common.preset.item.PlaceableTileEntityWithMeta;
-import net.modificationstation.stationapi.impl.common.preset.item.PlaceableTileEntityWithMetaAndName;
 import net.modificationstation.stationapi.impl.common.recipe.*;
 import net.modificationstation.stationapi.impl.common.util.ReflectionHelper;
 import net.modificationstation.stationapi.impl.common.util.UnsafeProvider;
@@ -101,6 +99,8 @@ import net.modificationstation.stationapi.mixin.client.accessor.ClientPlayNetwor
 import net.modificationstation.stationapi.mixin.common.accessor.RecipeRegistryAccessor;
 import net.modificationstation.stationapi.mixin.common.accessor.SmeltingRecipeRegistryAccessor;
 import net.modificationstation.stationapi.mixin.common.accessor.StatsAccessor;
+import net.modificationstation.stationapi.template.common.item.MetaBlock;
+import net.modificationstation.stationapi.template.common.item.MetaNamedBlock;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -179,8 +179,8 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
         generalFactory.addFactory(net.modificationstation.stationapi.api.common.config.Category.class, args -> new Category((String) args[0]));
         generalFactory.addFactory(net.modificationstation.stationapi.api.common.config.Property.class, args -> new Property((String) args[0]));
         generalFactory.addFactory(net.modificationstation.stationapi.api.common.achievement.AchievementPage.class, args -> new AchievementPage((String) args[0]));
-        generalFactory.addFactory(net.modificationstation.stationapi.api.common.preset.item.PlaceableTileEntityWithMeta.class, args -> new PlaceableTileEntityWithMeta((int) args[0]));
-        generalFactory.addFactory(net.modificationstation.stationapi.api.common.preset.item.PlaceableTileEntityWithMetaAndName.class, args -> new PlaceableTileEntityWithMetaAndName((int) args[0]));
+        generalFactory.addFactory(MetaBlock.class, args -> new MetaBlock((int) args[0]));
+        generalFactory.addFactory(MetaNamedBlock.class, args -> new MetaNamedBlock((int) args[0]));
         net.modificationstation.stationapi.api.common.factory.EnumFactory enumFactory = net.modificationstation.stationapi.api.common.factory.EnumFactory.INSTANCE;
         generalFactory.addFactory(ToolMaterial.class, args -> enumFactory.addEnum(ToolMaterial.class, (String) args[0], new Class[]{int.class, int.class, float.class, int.class}, new Object[]{args[1], args[2], args[3], args[4]}));
         generalFactory.addFactory(EntityType.class, args -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[]{Class.class, int.class, Material.class, boolean.class}, new Object[]{args[1], args[2], args[3], args[4]}));
@@ -191,8 +191,6 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
         enumFactory.setHandler(new EnumFactory());
         getLogger().info("Setting up I18n...");
         net.modificationstation.stationapi.api.common.lang.I18n.INSTANCE.setHandler(new I18n());
-        getLogger().info("Setting up BlockManager...");
-        net.modificationstation.stationapi.api.common.block.BlockManager.INSTANCE.setHandler(new BlockManager());
         getLogger().info("Setting up CraftingRegistry...");
         net.modificationstation.stationapi.api.common.recipe.CraftingRegistry.INSTANCE.setHandler(new CraftingRegistry());
         getLogger().info("Setting up UnsafeProvider...");
@@ -496,6 +494,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
         eventRegistry.registerValue(Identifier.of(modID, "save_level_properties"), SaveLevelProperties.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "load_level_properties_on_level_init"), LoadLevelPropertiesOnLevelInit.EVENT);
         eventRegistry.registerValue(Identifier.of(modID, "before_recipes_stats"), BeforeRecipeStats.EVENT);
+        eventRegistry.registerValue(Identifier.of(modID, "block_item_factory_provider"), BlockItemFactoryProvider.EVENT);
         SideUtils.run(
 
                 // CLIENT

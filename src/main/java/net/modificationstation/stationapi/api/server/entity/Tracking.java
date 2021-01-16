@@ -5,6 +5,7 @@ import net.minecraft.class_80;
 import net.minecraft.entity.EntityBase;
 import net.modificationstation.stationapi.api.common.util.TriState;
 import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
+import net.modificationstation.stationapi.impl.server.entity.TrackingImpl;
 
 import java.lang.annotation.*;
 
@@ -14,7 +15,7 @@ import java.lang.annotation.*;
  * @author mine_diver
  * @see TrackEntity
  * @see CustomTracking
- * @see Tracking.At
+ * @see At
  */
 public interface Tracking extends CustomTracking {
 
@@ -25,14 +26,7 @@ public interface Tracking extends CustomTracking {
      */
     @Override
     default void track(class_488 entityTracker, class_80 trackedEntities) {
-        EntityBase entityToTrack = (EntityBase) this;
-        if (trackedEntities.method_777(entityToTrack.entityId))
-            entityTracker.method_1669(entityToTrack);
-        TriState sendVelocity = sendVelocity();
-        if (sendVelocity == TriState.UNSET)
-            entityTracker.method_1666(entityToTrack, getTrackingDistance(), getUpdatePeriod());
-        else
-            entityTracker.method_1667(entityToTrack, getTrackingDistance(), getUpdatePeriod(), sendVelocity.getBool());
+        TrackingImpl.track(entityTracker, trackedEntities, (EntityBase) this, getTrackingDistance(), getUpdatePeriod(), sendVelocity());
     }
 
     /**
@@ -56,8 +50,12 @@ public interface Tracking extends CustomTracking {
     }
 
     /**
-     * Annotation implementation of {@link Tracking}.
+     * Annotation alternative of {@link Tracking}.
+     * @see TrackEntity
+     * @see CustomTracking
+     * @see Tracking
      */
+    @Documented
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
     @Inherited
@@ -80,25 +78,5 @@ public interface Tracking extends CustomTracking {
          * @return whether or not should server send velocity updates to clients (fireballs don't send velocity, because client can calculate it itself, and paintings don't have velocity at all).
          */
         TriState sendVelocity() default TriState.UNSET;
-    }
-
-    /**
-     * Used to handle entity's {@link At} annotation if it's present via {@link TrackEntity} hook.
-     * @param entityTracker the dimension's tracker instance.
-     * @param trackedEntities the set of tracked entities.
-     * @param entityToTrack the entity to handle the annotation on.
-     */
-    static void invoke(class_488 entityTracker, class_80 trackedEntities, EntityBase entityToTrack) {
-        Class<? extends EntityBase> entityClass = entityToTrack.getClass();
-        if (entityClass.isAnnotationPresent(At.class)) {
-            At at = entityClass.getAnnotation(At.class);
-            TriState sendVelocity = at.sendVelocity();
-            if (trackedEntities.method_777(entityToTrack.entityId))
-                entityTracker.method_1669(entityToTrack);
-            if (sendVelocity == TriState.UNSET)
-                entityTracker.method_1666(entityToTrack, at.trackingDistance(), at.updatePeriod());
-            else
-                entityTracker.method_1667(entityToTrack, at.trackingDistance(), at.updatePeriod(), sendVelocity.getBool());
-        }
     }
 }

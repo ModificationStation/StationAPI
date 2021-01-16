@@ -21,6 +21,15 @@
   "entrypoints": {
     "preLaunch": [
       "net.modificationstation.stationapi.impl.common.StationAPI"
+    ],
+    "stationapi:track_entity": [
+      "net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl",
+      "net.modificationstation.stationapi.impl.server.entity.TrackingImpl"
+    ],
+    "stationapi:block_item_factory_provider": [
+      "net.modificationstation.stationapi.impl.common.block.HasCustomBlockItemFactoryImpl",
+      "net.modificationstation.stationapi.impl.common.block.HasMetaBlockItemImpl",
+      "net.modificationstation.stationapi.impl.common.block.HasMetaNamedBlockItemImpl"
     ]
   },
   "mixins": [

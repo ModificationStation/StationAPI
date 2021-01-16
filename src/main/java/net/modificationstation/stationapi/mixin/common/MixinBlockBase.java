@@ -8,11 +8,11 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.PlaceableTileEntity;
 import net.modificationstation.stationapi.api.client.event.model.ModelRegister;
-import net.modificationstation.stationapi.api.common.block.BlockManager;
 import net.modificationstation.stationapi.api.common.block.BlockMiningLevel;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.block.BlockStrengthPerMeta;
 import net.modificationstation.stationapi.api.common.entity.player.StrengthOnMeta;
+import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryProvider;
 import net.modificationstation.stationapi.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
 import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
@@ -172,7 +172,7 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
     @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(I)Lnet/minecraft/item/PlaceableTileEntity;"))
     private static PlaceableTileEntity getBlockItem(int blockID) {
-        return BlockManager.INSTANCE.getBlockItem(BY_ID[blockID + BY_ID.length]);
+        return BlockItemFactoryProvider.EVENT.getInvoker().getBlockItemFactory(BY_ID[blockID + BY_ID.length], PlaceableTileEntity::new).apply(blockID);
     }
 
     @Shadow
@@ -184,8 +184,6 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
     public float getHardness() {
         return 0;
     }
-
-    @Shadow public double maxX;
 
     @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;", at = @At("HEAD"))
     private String getName(String name) {
