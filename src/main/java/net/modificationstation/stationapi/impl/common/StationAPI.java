@@ -91,6 +91,7 @@ import net.modificationstation.stationapi.impl.common.factory.EnumFactory;
 import net.modificationstation.stationapi.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.impl.common.item.CustomReach;
 import net.modificationstation.stationapi.impl.common.item.JsonItemKey;
+import net.modificationstation.stationapi.impl.common.item.OreDictBlockInit;
 import net.modificationstation.stationapi.impl.common.lang.I18n;
 import net.modificationstation.stationapi.impl.common.recipe.*;
 import net.modificationstation.stationapi.impl.common.util.ReflectionHelper;
@@ -229,6 +230,8 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
             }
             return name;
         });
+        getLogger().info("Setting up vanilla BlockOreDict");
+        OreDictBlockInit.setupVanilla();
         getLogger().info("Setting up ItemNameSet...");
         ItemNameSet.EVENT.register((item, name) -> {
             ModEvent<ItemRegister> event = ItemRegister.EVENT;
