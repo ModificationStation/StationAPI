@@ -91,8 +91,6 @@ import net.modificationstation.stationapi.impl.common.factory.EnumFactory;
 import net.modificationstation.stationapi.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.impl.common.item.CustomReach;
 import net.modificationstation.stationapi.impl.common.item.JsonItemKey;
-import net.modificationstation.stationapi.impl.common.item.OreDictBlockInit;
-import net.modificationstation.stationapi.impl.common.item.OreDictItemInit;
 import net.modificationstation.stationapi.impl.common.lang.I18n;
 import net.modificationstation.stationapi.impl.common.recipe.*;
 import net.modificationstation.stationapi.impl.common.util.ReflectionHelper;
@@ -135,7 +133,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
     /**
      * StationMod side-dependent entrypoints.
      */
-    protected final Set<String> entrypoints = new HashSet<>();
+    private final Set<String> entrypoints = new HashSet<>();
 
     /**
      * A set of mods that need client-side verification when the client joins server.
@@ -143,7 +141,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
     private final Set<ModContainer> modsToVerifyOnClient = new HashSet<>();
 
     /**
-     * Initial setup. Configures logger, entrypoints, and calls the rest of initialization sequence.
+     * Initial setup. Configures logger, entrypoints, and calls the rest of initialization sequence. No Minecraft classes must be referenced here.
      */
     @Override
     public void onPreLaunch() {
@@ -171,7 +169,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
     }
 
     /**
-     * Performs some API setup. Most likely will be removed due to API becoming less abstract.
+     * Performs some API setup. Most likely will be removed due to API becoming less abstract. No Minecraft classes must be referenced here.
      */
     public void setupAPI() {
         getLogger().info("Setting up GeneralFactory...");
@@ -231,8 +229,6 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
             }
             return name;
         });
-        getLogger().info("Setting up vanilla BlockOreDict");
-        OreDictBlockInit.setupVanilla();
         getLogger().info("Setting up ItemNameSet...");
         ItemNameSet.EVENT.register((item, name) -> {
             ModEvent<ItemRegister> event = ItemRegister.EVENT;
@@ -246,8 +242,6 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
             }
             return name;
         });
-        getLogger().info("Setting up vanilla ItemOreDict");
-        OreDictItemInit.setupVanilla();
         getLogger().info("Setting up IsEffectiveOn...");
         OverrideIsEffectiveOn.EVENT.register((toolLevel, arg, meta, effective) -> {
             if (arg instanceof EffectiveForTool)
@@ -396,7 +390,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
     }
 
     /**
-     * Loads main entrypoints and scans mods assets, also invokes preInit, init and postInit events.
+     * Loads main entrypoints and scans mods assets, also invokes preInit, init and postInit events. No Minecraft classes must be referenced here.
      */
     public void setupMods() {
         FabricLoader fabricLoader = FabricLoader.getInstance();
@@ -468,7 +462,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
     }
 
     /**
-     * Registers StationAPI's events in the {@link EventRegistry} and vanilla JSON recipe parsers in the {@link JsonRecipeParserRegistry}
+     * Registers StationAPI's events in the {@link EventRegistry} and vanilla JSON recipe parsers in the {@link JsonRecipeParserRegistry}. No Minecraft classes must be referenced here.
      * @param eventRegistry the event registry used to initialize event listeners through fabric.mod.json entrypoints.
      * @param jsonRecipeParserRegistry the JSON recipe parser registry that holds all JSON recipe parsers to automatically run when {@link RecipeRegister} event is called with a proper identifier.
      * @param modID current mod's ModID.
@@ -570,7 +564,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
     }
 
     /**
-     * Registers the events entrypoints.
+     * Registers the events entrypoints. No Minecraft classes must be referenced here.
      * @param modID current listener's ModID.
      * @see EventRegistry
      */
@@ -580,7 +574,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
     }
 
     /**
-     * Performs the setup of entrypoint's annotated fields.
+     * Performs the setup of entrypoint's annotated fields. No Minecraft classes must be referenced here.
      * @param modContainer entrypoint's mod.
      * @param o entrypoint's instance.
      */

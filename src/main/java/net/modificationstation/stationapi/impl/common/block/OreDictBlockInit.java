@@ -1,12 +1,20 @@
-package net.modificationstation.stationapi.impl.common.item;
+package net.modificationstation.stationapi.impl.common.block;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationapi.api.common.block.BlockRegistry;
+import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
+import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.common.util.OreDict;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 
-public class OreDictBlockInit {
+/**
+ * @author calmilamsy
+ */
+public class OreDictBlockInit implements BlockRegister {
 
-    public static void setupVanilla() {
+    @Override
+    public void registerBlocks(BlockRegistry blocks, ModID modID) {
         // Basic Blocks
         addBlock0Damage("stone", BlockBase.STONE);
         addBlock0Damage("dirt", BlockBase.DIRT);
@@ -143,12 +151,15 @@ public class OreDictBlockInit {
         addBlockIgnoreDamage("repeaterRedstone", BlockBase.REDSTONE_REPEATER_LIT);
         addBlockIgnoreDamage("repeaterRedstoneOff", BlockBase.REDSTONE_REPEATER);
         addBlockIgnoreDamage("repeaterRedstoneOn", BlockBase.REDSTONE_REPEATER_LIT);
+
+        StationAPI.INSTANCE.getLogger().info("Registered vanilla block oredict.");
     }
 
     private static void addBlockIgnoreDamage(String oreDictString, BlockBase blockBase) {
         OreDict.INSTANCE.addBlockIgnoreDamage(oreDictString, blockBase);
     }
 
+    //TODO: Figure out if referencing ItemInstance before ItemRegister is fine or bad.
     private static void addBlock0Damage(String oreDictString, BlockBase blockBase) {
         OreDict.INSTANCE.addItemInstance(oreDictString, new ItemInstance(blockBase, 1, 0));
     }

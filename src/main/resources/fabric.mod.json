@@ -30,6 +30,13 @@
       "net.modificationstation.stationapi.impl.common.block.HasCustomBlockItemFactoryImpl",
       "net.modificationstation.stationapi.impl.common.block.HasMetaBlockItemImpl",
       "net.modificationstation.stationapi.impl.common.block.HasMetaNamedBlockItemImpl"
+    ],
+    "stationapi:block_register": [
+      "net.modificationstation.stationapi.impl.common.block.BlockRegistryInit",
+      "net.modificationstation.stationapi.impl.common.block.OreDictBlockInit"
+    ],
+    "stationapi:item_register": [
+      "net.modificationstation.stationapi.impl.common.item.OreDictItemInit"
     ]
   },
   "mixins": [
