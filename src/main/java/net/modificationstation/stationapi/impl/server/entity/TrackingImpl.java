@@ -4,22 +4,23 @@ import net.minecraft.class_488;
 import net.minecraft.class_80;
 import net.minecraft.entity.EntityBase;
 import net.modificationstation.stationapi.api.common.util.TriState;
-import net.modificationstation.stationapi.api.server.entity.CustomTracking;
+import net.modificationstation.stationapi.api.server.entity.ICustomTracking;
+import net.modificationstation.stationapi.api.server.entity.ITracking;
 import net.modificationstation.stationapi.api.server.entity.Tracking;
 import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
 
 /**
- * {@link Tracking} implementation class.
+ * {@link ITracking} implementation class.
  * @author mine_diver
  * @see TrackEntity
- * @see CustomTracking
+ * @see ICustomTracking
+ * @see ITracking
  * @see Tracking
- * @see Tracking.At
  */
 public class TrackingImpl implements TrackEntity {
 
     /**
-     * Handles entity's {@link Tracking.At} annotation if it's present via {@link TrackEntity} hook.
+     * Handles entity's {@link Tracking} annotation if it's present via {@link TrackEntity} hook.
      * @param entityTracker the dimension's tracker instance. Can be used to (un)track entities.
      * @param trackedEntities the set of tracked entities. Can be used to check if entity is already tracked.
      * @param entityToTrack the entity that server tries to track.
@@ -27,8 +28,8 @@ public class TrackingImpl implements TrackEntity {
     @Override
     public void trackEntity(class_488 entityTracker, class_80 trackedEntities, EntityBase entityToTrack) {
         Class<? extends EntityBase> entityClass = entityToTrack.getClass();
-        if (entityClass.isAnnotationPresent(Tracking.At.class)) {
-            Tracking.At at = entityClass.getAnnotation(Tracking.At.class);
+        if (entityClass.isAnnotationPresent(Tracking.class)) {
+            Tracking at = entityClass.getAnnotation(Tracking.class);
             track(entityTracker, trackedEntities, entityToTrack, at.trackingDistance(), at.updatePeriod(), at.sendVelocity());
         }
     }

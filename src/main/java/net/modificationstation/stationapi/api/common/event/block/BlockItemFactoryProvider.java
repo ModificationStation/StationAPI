@@ -2,9 +2,7 @@ package net.modificationstation.stationapi.api.common.event.block;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.PlaceableTileEntity;
-import net.modificationstation.stationapi.api.common.block.HasCustomBlockItemFactory;
-import net.modificationstation.stationapi.api.common.block.HasMetaBlockItem;
-import net.modificationstation.stationapi.api.common.block.HasMetaNamedBlockItem;
+import net.modificationstation.stationapi.api.common.block.*;
 import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.function.Consumer;
@@ -13,12 +11,12 @@ import java.util.function.IntFunction;
 /**
  * When blocks are being registered, this event is called to make it possible to replace the default block item for the current block.
  * @author mine_diver
+ * @see IHasCustomBlockItemFactory
  * @see HasCustomBlockItemFactory
- * @see HasCustomBlockItemFactory.At
+ * @see IHasMetaBlockItem
  * @see HasMetaBlockItem
- * @see HasMetaBlockItem.At
+ * @see IHasMetaNamedBlockItem
  * @see HasMetaNamedBlockItem
- * @see HasMetaNamedBlockItem.At
  */
 public interface BlockItemFactoryProvider {
 

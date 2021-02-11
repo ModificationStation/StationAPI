@@ -74,7 +74,7 @@ public final class ModID implements Comparable<ModID> {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    public @interface At {
+    public @interface Field {
 
         String value() default "";
     }

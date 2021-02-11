@@ -126,7 +126,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
     /**
      * StationAPI's ModID.
      */
-    @ModID.At
+    @ModID.Field
     public static ModID MODID;
 
     /**
@@ -606,7 +606,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
     public void setupAnnotations(ModContainer modContainer, Object o) {
         try {
             ReflectionHelper.setFinalFieldsWithAnnotation(o, Instance.class, o);
-            ReflectionHelper.setFinalFieldsWithAnnotation(o, ModID.At.class, modIDField -> modIDField.value().isEmpty() ? ModID.of(modContainer) : ModID.of(modIDField.value()));
+            ReflectionHelper.setFinalFieldsWithAnnotation(o, ModID.Field.class, modIDField -> modIDField.value().isEmpty() ? ModID.of(modContainer) : ModID.of(modIDField.value()));
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }

@@ -7,4 +7,8 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 public @interface EventListener {
+
+    ListenerPriority priority() default ListenerPriority.CUSTOM;
+
+    int numPriority() default EventListenerData.DEFAULT_PRIORITY;
 }
