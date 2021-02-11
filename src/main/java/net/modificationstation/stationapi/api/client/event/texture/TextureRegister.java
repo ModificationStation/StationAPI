@@ -1,9 +1,7 @@
 package net.modificationstation.stationapi.api.client.event.texture;
 
 import net.modificationstation.stationapi.api.client.texture.TextureFactory;
-import net.modificationstation.stationapi.api.common.event.GameEventOld;
-
-import java.util.function.Consumer;
+import net.modificationstation.stationapi.api.common.event.Event;
 
 /**
  * Used to register your mod textures.
@@ -13,27 +11,6 @@ import java.util.function.Consumer;
  * @author mine_diver
  * @see TextureFactory
  */
-public interface TextureRegister {
-
-    GameEventOld<TextureRegister> EVENT = new GameEventOld<>(TextureRegister.class,
-            listeners ->
-                    () -> {
-                        for (TextureRegister listener : listeners)
-                            listener.registerTextures();
-                    },
-            (Consumer<GameEventOld<TextureRegister>>) textureRegister ->
-                    textureRegister.register(() -> GameEventOld.EVENT_BUS.post(new Data()))
-    );
-
-    /**
-     * Override this and put your texture registering code here.
-     */
-    void registerTextures();
-
-    final class Data extends GameEventOld.Data<TextureRegister> {
-
-        private Data() {
-            super(EVENT);
-        }
-    }
+public class TextureRegister extends Event {
+    // Oh yes, very empty.
 }

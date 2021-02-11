@@ -1,6 +1,8 @@
 package net.modificationstation.stationapi.api.client.event.model;
 
+import lombok.RequiredArgsConstructor;
 import net.modificationstation.stationapi.api.client.model.BlockModelProvider;
+import net.modificationstation.stationapi.api.common.event.Event;
 import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.function.Consumer;
@@ -14,34 +16,14 @@ import java.util.function.Consumer;
  * @author mine_diver
  * @see BlockModelProvider
  */
-public interface ModelRegister {
+@RequiredArgsConstructor
+public class ModelRegister extends Event {
 
-    GameEventOld<ModelRegister> EVENT = new GameEventOld<>(ModelRegister.class,
-            listeners ->
-                    type -> {
-                        for (ModelRegister listener : listeners)
-                            listener.registerModels(type);
-                    },
-            (Consumer<GameEventOld<ModelRegister>>) modelRegister ->
-                    modelRegister.register(type -> GameEventOld.EVENT_BUS.post(new Data(type)))
-    );
+    public final Type type;
 
-    void registerModels(Type type);
-
-    enum Type {
-
+    public enum Type {
         BLOCKS,
         ITEMS,
         ENTITIES
-    }
-
-    final class Data extends GameEventOld.Data<ModelRegister> {
-
-        public final Type type;
-
-        private Data(Type type) {
-            super(EVENT);
-            this.type = type;
-        }
     }
 }

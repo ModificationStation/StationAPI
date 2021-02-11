@@ -1,7 +1,9 @@
 package net.modificationstation.stationapi.api.client.event.keyboard;
 
+import lombok.RequiredArgsConstructor;
 import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegister;
+import net.modificationstation.stationapi.api.common.event.Event;
 import net.modificationstation.stationapi.api.common.event.GameEventOld;
 import org.lwjgl.input.Keyboard;
 
@@ -16,33 +18,13 @@ import java.util.function.Consumer;
  * @author mine_diver
  * @see KeyBindingRegister
  */
-public interface KeyStateChanged {
+@RequiredArgsConstructor
+public class KeyStateChanged extends Event {
 
-    GameEventOld<KeyStateChanged> EVENT = new GameEventOld<>(KeyStateChanged.class,
-            listeners ->
-                    environment -> {
-                        for (KeyStateChanged listener : listeners)
-                            listener.keyStateChange(environment);
-                    },
-            (Consumer<GameEventOld<KeyStateChanged>>) keyPressed ->
-                    keyPressed.register(environment -> GameEventOld.EVENT_BUS.post(new Data(environment)))
-    );
+    public final Environment environment;
 
-    void keyStateChange(Environment environment);
-
-    enum Environment {
-
+    public enum Environment {
         IN_GUI,
         IN_GAME
-    }
-
-    final class Data extends GameEventOld.Data<KeyStateChanged> {
-
-        public final Environment environment;
-
-        private Data(Environment environment) {
-            super(EVENT);
-            this.environment = environment;
-        }
     }
 }

@@ -17,20 +17,17 @@ import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
  * @see ITracking
  * @see Tracking
  */
-public class TrackingImpl implements TrackEntity {
+public class TrackingImpl {
 
     /**
      * Handles entity's {@link Tracking} annotation if it's present via {@link TrackEntity} hook.
-     * @param entityTracker the dimension's tracker instance. Can be used to (un)track entities.
-     * @param trackedEntities the set of tracked entities. Can be used to check if entity is already tracked.
-     * @param entityToTrack the entity that server tries to track.
+     * @see TrackEntity
      */
-    @Override
-    public void trackEntity(class_488 entityTracker, class_80 trackedEntities, EntityBase entityToTrack) {
-        Class<? extends EntityBase> entityClass = entityToTrack.getClass();
+    public static void trackEntity(TrackEntity event) {
+        Class<? extends EntityBase> entityClass = event.entityToTrack.getClass();
         if (entityClass.isAnnotationPresent(Tracking.class)) {
             Tracking at = entityClass.getAnnotation(Tracking.class);
-            track(entityTracker, trackedEntities, entityToTrack, at.trackingDistance(), at.updatePeriod(), at.sendVelocity());
+            track(event.entityTracker, event.trackedEntities, event.entityToTrack, at.trackingDistance(), at.updatePeriod(), at.sendVelocity());
         }
     }
 

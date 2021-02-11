@@ -15,6 +15,7 @@ import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.item.StrengthOnMeta;
 import net.modificationstation.stationapi.api.common.item.tool.ToolLevel;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,7 +33,7 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(ILnet/minecraft/item/tool/ToolMaterial;)Lnet/minecraft/item/tool/Shovel;", ordinal = 0, shift = At.Shift.BEFORE))
     private static void beforeItemRegister(CallbackInfo ci) {
-        ModelRegister.EVENT.getInvoker().registerModels(ModelRegister.Type.ITEMS);
+        StationAPI.EVENT_BUS.post(new ModelRegister(ModelRegister.Type.ITEMS));
     }
 
     @SuppressWarnings("UnresolvedMixinReference")

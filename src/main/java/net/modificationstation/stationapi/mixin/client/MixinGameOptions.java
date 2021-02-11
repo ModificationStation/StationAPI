@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegister;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,7 +34,7 @@ public class MixinGameOptions {
 
     private KeyBinding[] getKeyBindings(KeyBinding[] keyBindings) {
         List<KeyBinding> keyBindingList = new ArrayList<>(Arrays.asList(keyBindings));
-        KeyBindingRegister.EVENT.getInvoker().registerKeyBindings(keyBindingList);
+        StationAPI.EVENT_BUS.post(new KeyBindingRegister(keyBindingList));
         return keyBindingList.toArray(new KeyBinding[0]);
     }
 }

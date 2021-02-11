@@ -9,7 +9,9 @@ import net.minecraft.client.render.entity.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.client.event.gui.RenderItemOverlay;
+import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -63,6 +65,6 @@ public abstract class MixinItemRenderer extends EntityRenderer {
 
     @Inject(method = "method_1488(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;Lnet/minecraft/item/ItemInstance;II)V", at = @At(value = "RETURN"))
     private void fancyItemOverlays(TextRenderer arg, TextureManager arg1, ItemInstance item, int i, int j, CallbackInfo ci) {
-        RenderItemOverlay.EVENT.getInvoker().renderItemOverlay((ItemRenderer) (Object) this, i, j, item, arg, arg1);
+        StationAPI.EVENT_BUS.post(new RenderItemOverlay(i, j, item, arg, arg1, (ItemRenderer) (Object) this));
     }
 }

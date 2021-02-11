@@ -4,6 +4,7 @@ import net.minecraft.class_488;
 import net.minecraft.class_80;
 import net.minecraft.entity.EntityBase;
 import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,6 +18,6 @@ public abstract class Mixinclass_488 {
 
     @Inject(method = "method_1665(Lnet/minecraft/entity/EntityBase;)V", at = @At("RETURN"))
     private void afterVanillaEntries(EntityBase arg, CallbackInfo ci) {
-        TrackEntity.EVENT.getInvoker().trackEntity((class_488) (Object) this, field_2005, arg);
+        StationAPI.EVENT_BUS.post(new TrackEntity((class_488) (Object) this, field_2005, arg));
     }
 }

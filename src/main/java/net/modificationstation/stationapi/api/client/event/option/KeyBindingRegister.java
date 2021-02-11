@@ -1,6 +1,8 @@
 package net.modificationstation.stationapi.api.client.event.option;
 
+import lombok.RequiredArgsConstructor;
 import net.minecraft.client.options.KeyBinding;
+import net.modificationstation.stationapi.api.common.event.Event;
 import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.List;
@@ -18,27 +20,8 @@ import java.util.function.Consumer;
  * @see KeyBinding
  * @see List#add(Object)
  */
-public interface KeyBindingRegister {
+@RequiredArgsConstructor
+public class KeyBindingRegister extends Event {
 
-    GameEventOld<KeyBindingRegister> EVENT = new GameEventOld<>(KeyBindingRegister.class,
-            listeners ->
-                    keyBindings -> {
-                        for (KeyBindingRegister listener : listeners)
-                            listener.registerKeyBindings(keyBindings);
-                    },
-            (Consumer<GameEventOld<KeyBindingRegister>>) keyBindingRegister ->
-                    keyBindingRegister.register(keyBindings -> GameEventOld.EVENT_BUS.post(new Data(keyBindings)))
-    );
-
-    void registerKeyBindings(List<KeyBinding> keyBindings);
-
-    final class Data extends GameEventOld.Data<KeyBindingRegister> {
-
-        public final List<KeyBinding> keyBindings;
-
-        private Data(List<KeyBinding> keyBindings) {
-            super(EVENT);
-            this.keyBindings = keyBindings;
-        }
-    }
+    public final List<KeyBinding> keyBindings;
 }

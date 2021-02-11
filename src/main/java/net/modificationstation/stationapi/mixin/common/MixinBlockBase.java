@@ -18,6 +18,7 @@ import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
 import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
 import net.modificationstation.stationapi.api.common.item.tool.*;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -53,7 +54,7 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(II)Lnet/minecraft/block/Stone;", ordinal = 0, shift = At.Shift.BEFORE))
     private static void beforeBlockRegister(CallbackInfo ci) {
-        ModelRegister.EVENT.getInvoker().registerModels(ModelRegister.Type.BLOCKS);
+        StationAPI.EVENT_BUS.post(new ModelRegister(ModelRegister.Type.BLOCKS));
     }
 
     @SuppressWarnings("UnresolvedMixinReference")

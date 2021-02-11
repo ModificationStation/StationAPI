@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.event.texture.TexturesPerFileListener;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 import org.lwjgl.opengl.GL11;
 
 import java.util.*;
@@ -106,7 +107,7 @@ public class TextureRegistry implements net.modificationstation.stationapi.api.c
     public void setTexturesInLine(int texturesInLine) {
         if (this.texturesInLine != (short) texturesInLine) {
             this.texturesInLine = (short) texturesInLine;
-            TexturesPerFileListener.EVENT.getInvoker().texturesPerFileChanged(this);
+            StationAPI.EVENT_BUS.post(new TexturesPerFileListener(this));
         }
     }
 
@@ -114,7 +115,7 @@ public class TextureRegistry implements net.modificationstation.stationapi.api.c
     public void setTexturesInColumn(int texturesInColumn) {
         if (this.texturesInColumn != (short) texturesInColumn) {
             this.texturesInColumn = (short) texturesInColumn;
-            TexturesPerFileListener.EVENT.getInvoker().texturesPerFileChanged(this);
+            StationAPI.EVENT_BUS.post(new TexturesPerFileListener(this));
         }
     }
 

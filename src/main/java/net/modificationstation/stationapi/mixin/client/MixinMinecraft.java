@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.modificationstation.stationapi.api.client.event.keyboard.KeyStateChanged;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegister;
+import net.modificationstation.stationapi.impl.common.StationAPI;
 import org.lwjgl.input.Keyboard;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +22,7 @@ public class MixinMinecraft {
 
     @Inject(method = "init()V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;textureManager:Lnet/minecraft/client/texture/TextureManager;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
     private void textureManagerInit(CallbackInfo ci) {
-        TextureRegister.EVENT.getInvoker().registerTextures();
+        StationAPI.EVENT_BUS.post(new TextureRegister());
     }
 
 //    @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ScreenBase;onKeyboardEvent()V", shift = At.Shift.AFTER))
