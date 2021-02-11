@@ -40,5 +40,4 @@ public interface RenderItemOverlay {
             this.textureManager = textureManager;
         }
     }
-
 }

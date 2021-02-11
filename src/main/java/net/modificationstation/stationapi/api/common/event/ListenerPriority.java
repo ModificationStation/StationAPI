@@ -12,14 +12,14 @@ public enum ListenerPriority {
     LOWEST(Integer.MIN_VALUE),
     CUSTOM;
 
-    public final int priority;
+    public final int numPriority;
     public final boolean custom;
 
     ListenerPriority() {
         this(0, true);
     }
 
-    ListenerPriority(int priority) {
-        this(priority, false);
+    ListenerPriority(int numPriority) {
+        this(numPriority, false);
     }
 }

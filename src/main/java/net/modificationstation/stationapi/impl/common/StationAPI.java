@@ -165,32 +165,6 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
         getLogger().info("Loading mods...");
         setupMods();
         getLogger().info("Finished " + name + " setup");
-
-        EventBus<EventTestType> eventBus = new EventBus<>(EventTestType.class);
-        eventBus.register(TestListener.class);
-        eventBus.register(new TestListener());
-        eventBus.post(new TestEvent());
-    }
-
-    public static class EventTestType extends Event {
-
-    }
-
-    public static class TestEvent extends EventTestType {
-
-    }
-
-    public static class TestListener {
-
-        @EventListener
-        public static void testListen(TestEvent event) {
-            System.out.println("Test event passed successfully!");
-        }
-
-        @EventListener
-        public void nonStaticListen(TestEvent event) {
-            System.out.println("Non-static event!!!");
-        }
     }
 
     /**
