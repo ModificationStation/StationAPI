@@ -1,38 +1,34 @@
 package net.modificationstation.stationapi.api.common.event.block;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.block.BlockBase;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
+import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.function.Consumer;
 
 public interface BlockNameSet {
 
-    GameEvent<BlockNameSet> EVENT = new GameEvent<>(BlockNameSet.class,
+    GameEventOld<BlockNameSet> EVENT = new GameEventOld<>(BlockNameSet.class,
             listeners ->
                     (block, newName) -> {
                         for (BlockNameSet listener : listeners)
                             newName = listener.getName(block, newName);
                         return newName;
                     },
-            (Consumer<GameEvent<BlockNameSet>>) blockNameSet ->
+            (Consumer<GameEventOld<BlockNameSet>>) blockNameSet ->
                     blockNameSet.register((block, newName) -> {
                         Data data = new Data(block, newName);
-                        GameEvent.EVENT_BUS.post(data);
-                        return data.getNewName();
+                        GameEventOld.EVENT_BUS.post(data);
+                        return data.newName;
                     })
     );
 
     String getName(BlockBase block, String newName);
 
-    final class Data extends GameEvent.Data<BlockNameSet> {
+    final class Data extends GameEventOld.Data<BlockNameSet> {
 
-        @Getter
-        private final BlockBase block;
-        @Getter
-        @Setter
-        private String newName;
+        public final BlockBase block;
+
+        public String newName;
 
         private Data(BlockBase block, String newName) {
             super(EVENT);

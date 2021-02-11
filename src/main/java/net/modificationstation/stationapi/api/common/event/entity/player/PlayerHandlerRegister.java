@@ -1,33 +1,30 @@
 package net.modificationstation.stationapi.api.common.event.entity.player;
 
-import lombok.Getter;
 import net.minecraft.entity.player.PlayerBase;
 import net.modificationstation.stationapi.api.common.entity.player.PlayerHandler;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
+import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public interface PlayerHandlerRegister {
 
-    GameEvent<PlayerHandlerRegister> EVENT = new GameEvent<>(PlayerHandlerRegister.class,
+    GameEventOld<PlayerHandlerRegister> EVENT = new GameEventOld<>(PlayerHandlerRegister.class,
             listeners ->
                     (playerHandlers, player) -> {
                         for (PlayerHandlerRegister listener : listeners)
                             listener.registerPlayerHandlers(playerHandlers, player);
                     },
-            (Consumer<GameEvent<PlayerHandlerRegister>>) playerHandlerRegister ->
-                    playerHandlerRegister.register((playerHandlers, player) -> GameEvent.EVENT_BUS.post(new Data(playerHandlers, player)))
+            (Consumer<GameEventOld<PlayerHandlerRegister>>) playerHandlerRegister ->
+                    playerHandlerRegister.register((playerHandlers, player) -> GameEventOld.EVENT_BUS.post(new Data(playerHandlers, player)))
     );
 
     void registerPlayerHandlers(List<PlayerHandler> playerHandlers, PlayerBase player);
 
-    final class Data extends GameEvent.Data<PlayerHandlerRegister> {
+    final class Data extends GameEventOld.Data<PlayerHandlerRegister> {
 
-        @Getter
-        private final List<PlayerHandler> playerHandlers;
-        @Getter
-        private final PlayerBase player;
+        public final List<PlayerHandler> playerHandlers;
+        public final PlayerBase player;
 
         private Data(List<PlayerHandler> playerHandlers, PlayerBase player) {
             super(EVENT);

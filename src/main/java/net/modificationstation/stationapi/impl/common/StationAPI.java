@@ -18,7 +18,7 @@ import net.minecraft.item.tool.ToolMaterial;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.client.event.gui.GuiHandlerRegister;
 import net.modificationstation.stationapi.api.client.event.gui.RenderItemOverlay;
-import net.modificationstation.stationapi.api.client.event.keyboard.KeyPressed;
+import net.modificationstation.stationapi.api.client.event.keyboard.KeyStateChanged;
 import net.modificationstation.stationapi.api.client.event.model.ModelRegister;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegister;
 import net.modificationstation.stationapi.api.client.event.render.entity.EntityRendererRegister;
@@ -29,9 +29,8 @@ import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
 import net.modificationstation.stationapi.api.common.block.EffectiveForTool;
 import net.modificationstation.stationapi.api.common.entity.EntityHandlerRegistry;
 import net.modificationstation.stationapi.api.common.entity.HasOwner;
-import net.modificationstation.stationapi.api.common.event.EventRegistry;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
-import net.modificationstation.stationapi.api.common.event.ModEvent;
+import net.modificationstation.stationapi.api.common.event.*;
+import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.achievement.AchievementRegister;
 import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryProvider;
 import net.modificationstation.stationapi.api.common.event.block.BlockNameSet;
@@ -166,6 +165,32 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
         getLogger().info("Loading mods...");
         setupMods();
         getLogger().info("Finished " + name + " setup");
+
+        EventBus<EventTestType> eventBus = new EventBus<>(EventTestType.class);
+        eventBus.register(TestListener.class);
+        eventBus.register(new TestListener());
+        eventBus.post(new TestEvent());
+    }
+
+    public static class EventTestType extends Event {
+
+    }
+
+    public static class TestEvent extends EventTestType {
+
+    }
+
+    public static class TestListener {
+
+        @EventListener
+        public static void testListen(TestEvent event) {
+            System.out.println("Test event passed successfully!");
+        }
+
+        @EventListener
+        public void nonStaticListen(TestEvent event) {
+            System.out.println("Non-static event!!!");
+        }
     }
 
     /**
@@ -218,7 +243,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
         });
         getLogger().info("Setting up BlockNameSet...");
         BlockNameSet.EVENT.register((block, name) -> {
-            ModEvent<BlockRegister> event = BlockRegister.EVENT;
+            ModEventOld<BlockRegister> event = BlockRegister.EVENT;
             if (event.getCurrentListener() != null) {
                 ModID modID = event.getCurrentListenerModID();
                 if (modID != null) {
@@ -231,7 +256,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
         });
         getLogger().info("Setting up ItemNameSet...");
         ItemNameSet.EVENT.register((item, name) -> {
-            ModEvent<ItemRegister> event = ItemRegister.EVENT;
+            ModEventOld<ItemRegister> event = ItemRegister.EVENT;
             if (event.getCurrentListener() != null) {
                 ModID modID = event.getCurrentListenerModID();
                 if (modID != null) {
@@ -414,13 +439,13 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
         fabricLoader.getEntrypointContainers(Identifier.of(getModID(), "game_event_bus").toString(), Object.class).forEach(entrypointContainer -> {
             ModContainer modContainer = entrypointContainer.getProvider();
             Object o = entrypointContainer.getEntrypoint();
-            GameEvent.EVENT_BUS.register(o);
+            GameEventOld.EVENT_BUS.register(o);
             setupAnnotations(modContainer, o);
         });
         fabricLoader.getEntrypointContainers(Identifier.of(getModID(), "mod_event_bus").toString(), Object.class).forEach(entrypointContainer -> {
             ModContainer modContainer = entrypointContainer.getProvider();
             Object o = entrypointContainer.getEntrypoint();
-            ModEvent.getEventBus(ModID.of(modContainer)).register(o);
+            ModEventOld.getEventBus(ModID.of(modContainer)).register(o);
             setupAnnotations(modContainer, o);
         });
         getLogger().info("Loading assets...");
@@ -502,7 +527,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
                 () -> {
                     eventRegistry.registerValue(Identifier.of(modID, "gui_register"), GuiHandlerRegister.EVENT);
                     eventRegistry.registerValue(Identifier.of(modID, "render_item_overlay"), RenderItemOverlay.EVENT);
-                    eventRegistry.registerValue(Identifier.of(modID, "key_pressed"), KeyPressed.EVENT);
+                    eventRegistry.registerValue(Identifier.of(modID, "key_state_changed"), KeyStateChanged.EVENT);
                     eventRegistry.registerValue(Identifier.of(modID, "model_register"), ModelRegister.EVENT);
                     eventRegistry.registerValue(Identifier.of(modID, "key_binding_register"), KeyBindingRegister.EVENT);
                     eventRegistry.registerValue(Identifier.of(modID, "entity_renderer_register"), EntityRendererRegister.EVENT);

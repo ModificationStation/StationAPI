@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.common.event.recipe;
 
-import lombok.Getter;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
+import net.modificationstation.stationapi.api.common.event.GameEventOld;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 
@@ -18,14 +17,14 @@ import java.util.function.Consumer;
 
 public interface RecipeRegister {
 
-    GameEvent<RecipeRegister> EVENT = new GameEvent<>(RecipeRegister.class,
+    GameEventOld<RecipeRegister> EVENT = new GameEventOld<>(RecipeRegister.class,
             listeners ->
                     recipeId -> {
                         for (RecipeRegister listener : listeners)
                             listener.registerRecipes(recipeId);
                     },
-            (Consumer<GameEvent<RecipeRegister>>) recipeRegister ->
-                    recipeRegister.register(recipeId -> GameEvent.EVENT_BUS.post(new Data(recipeId)))
+            (Consumer<GameEventOld<RecipeRegister>>) recipeRegister ->
+                    recipeRegister.register(recipeId -> GameEventOld.EVENT_BUS.post(new Data(recipeId)))
     );
 
     void registerRecipes(Identifier recipeId);
@@ -50,10 +49,9 @@ public interface RecipeRegister {
         }
     }
 
-    final class Data extends GameEvent.Data<RecipeRegister> {
+    final class Data extends GameEventOld.Data<RecipeRegister> {
 
-        @Getter
-        private final Identifier recipeId;
+        public final Identifier recipeId;
 
         private Data(Identifier recipeId) {
             super(EVENT);

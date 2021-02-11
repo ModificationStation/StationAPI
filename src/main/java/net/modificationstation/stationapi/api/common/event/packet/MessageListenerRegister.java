@@ -1,13 +1,12 @@
 package net.modificationstation.stationapi.api.common.event.packet;
 
-import lombok.Getter;
-import net.modificationstation.stationapi.api.common.event.ModEvent;
+import net.modificationstation.stationapi.api.common.event.ModEventOld;
 import net.modificationstation.stationapi.api.common.packet.MessageListenerRegistry;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 
 public interface MessageListenerRegister {
 
-    ModEvent<MessageListenerRegister> EVENT = new ModEvent<>(MessageListenerRegister.class,
+    ModEventOld<MessageListenerRegister> EVENT = new ModEventOld<>(MessageListenerRegister.class,
             listeners ->
                     (registry, modID) -> {
                         for (MessageListenerRegister listener : listeners)
@@ -20,15 +19,14 @@ public interface MessageListenerRegister {
                         MessageListenerRegister.EVENT.setCurrentListener(null);
                     },
             messageListenerRegister ->
-                    messageListenerRegister.register((registry, modID) -> ModEvent.post(new Data(registry)), null)
+                    messageListenerRegister.register((registry, modID) -> ModEventOld.post(new Data(registry)), null)
     );
 
     void registerMessageListeners(MessageListenerRegistry registry, ModID modID);
 
-    final class Data extends ModEvent.Data<MessageListenerRegister> {
+    final class Data extends ModEventOld.Data<MessageListenerRegister> {
 
-        @Getter
-        private final MessageListenerRegistry registry;
+        public final MessageListenerRegistry registry;
 
         private Data(MessageListenerRegistry registry) {
             super(EVENT);

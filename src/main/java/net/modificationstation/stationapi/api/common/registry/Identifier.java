@@ -10,10 +10,8 @@ public final class Identifier implements Comparable<Identifier> {
 
 
     private static final Map<String, Identifier> VALUES = new HashMap<>();
-    @Getter
-    private final ModID modID;
-    @Getter
-    private final String id;
+    public final ModID modID;
+    public final String id;
 
     private Identifier(ModID modID, String id) {
         this.modID = modID;

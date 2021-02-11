@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.event.texture;
 
 import net.modificationstation.stationapi.api.client.texture.TextureFactory;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
+import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.function.Consumer;
 
@@ -15,14 +15,14 @@ import java.util.function.Consumer;
  */
 public interface TextureRegister {
 
-    GameEvent<TextureRegister> EVENT = new GameEvent<>(TextureRegister.class,
+    GameEventOld<TextureRegister> EVENT = new GameEventOld<>(TextureRegister.class,
             listeners ->
                     () -> {
                         for (TextureRegister listener : listeners)
                             listener.registerTextures();
                     },
-            (Consumer<GameEvent<TextureRegister>>) textureRegister ->
-                    textureRegister.register(() -> GameEvent.EVENT_BUS.post(new Data()))
+            (Consumer<GameEventOld<TextureRegister>>) textureRegister ->
+                    textureRegister.register(() -> GameEventOld.EVENT_BUS.post(new Data()))
     );
 
     /**
@@ -30,7 +30,7 @@ public interface TextureRegister {
      */
     void registerTextures();
 
-    final class Data extends GameEvent.Data<TextureRegister> {
+    final class Data extends GameEventOld.Data<TextureRegister> {
 
         private Data() {
             super(EVENT);

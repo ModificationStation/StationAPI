@@ -1,8 +1,7 @@
 package net.modificationstation.stationapi.api.client.event.model;
 
-import lombok.Getter;
 import net.modificationstation.stationapi.api.client.model.BlockModelProvider;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
+import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.function.Consumer;
 
@@ -17,14 +16,14 @@ import java.util.function.Consumer;
  */
 public interface ModelRegister {
 
-    GameEvent<ModelRegister> EVENT = new GameEvent<>(ModelRegister.class,
+    GameEventOld<ModelRegister> EVENT = new GameEventOld<>(ModelRegister.class,
             listeners ->
-                    (type) -> {
+                    type -> {
                         for (ModelRegister listener : listeners)
                             listener.registerModels(type);
                     },
-            (Consumer<GameEvent<ModelRegister>>) modelRegister ->
-                    modelRegister.register(type -> GameEvent.EVENT_BUS.post(new Data(type)))
+            (Consumer<GameEventOld<ModelRegister>>) modelRegister ->
+                    modelRegister.register(type -> GameEventOld.EVENT_BUS.post(new Data(type)))
     );
 
     void registerModels(Type type);
@@ -36,10 +35,9 @@ public interface ModelRegister {
         ENTITIES
     }
 
-    final class Data extends GameEvent.Data<ModelRegister> {
+    final class Data extends GameEventOld.Data<ModelRegister> {
 
-        @Getter
-        private final Type type;
+        public final Type type;
 
         private Data(Type type) {
             super(EVENT);

@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.client.event.texture;
 
-import lombok.Getter;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
+import net.modificationstation.stationapi.api.common.event.GameEventOld;
 import net.modificationstation.stationapi.impl.client.texture.TextureRegistry;
 
 import java.util.function.Consumer;
@@ -17,22 +16,21 @@ import java.util.function.Consumer;
 
 public interface TexturesPerFileListener {
 
-    GameEvent<TexturesPerFileListener> EVENT = new GameEvent<>(TexturesPerFileListener.class,
+    GameEventOld<TexturesPerFileListener> EVENT = new GameEventOld<>(TexturesPerFileListener.class,
             listeners ->
                     registry -> {
                         for (TexturesPerFileListener listener : listeners)
                             listener.texturesPerFileChanged(registry);
                     },
-            (Consumer<GameEvent<TexturesPerFileListener>>) texturesPerFileListener ->
-                    texturesPerFileListener.register(registry -> GameEvent.EVENT_BUS.post(new Data(registry)))
+            (Consumer<GameEventOld<TexturesPerFileListener>>) texturesPerFileListener ->
+                    texturesPerFileListener.register(registry -> GameEventOld.EVENT_BUS.post(new Data(registry)))
     );
 
     void texturesPerFileChanged(TextureRegistry registry);
 
-    final class Data extends GameEvent.Data<TexturesPerFileListener> {
+    final class Data extends GameEventOld.Data<TexturesPerFileListener> {
 
-        @Getter
-        private final TextureRegistry registry;
+        public final TextureRegistry registry;
 
         private Data(TextureRegistry registry) {
             super(EVENT);

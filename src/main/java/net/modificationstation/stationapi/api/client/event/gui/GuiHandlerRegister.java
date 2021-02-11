@@ -1,34 +1,32 @@
 package net.modificationstation.stationapi.api.client.event.gui;
 
-import lombok.Getter;
-import net.modificationstation.stationapi.api.common.event.ModEvent;
+import net.modificationstation.stationapi.api.common.event.ModEventOld;
 import net.modificationstation.stationapi.api.common.gui.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 
 public interface GuiHandlerRegister {
 
-    ModEvent<GuiHandlerRegister> EVENT = new ModEvent<>(GuiHandlerRegister.class,
+    ModEventOld<GuiHandlerRegister> EVENT = new ModEventOld<>(GuiHandlerRegister.class,
             listeners ->
-                    (guiHandlers, modID) -> {
+                    (registry, modID) -> {
                         for (GuiHandlerRegister listener : listeners)
-                            listener.registerGuiHandlers(guiHandlers, GuiHandlerRegister.EVENT.getListenerModID(listener));
+                            listener.registerGuiHandlers(registry, GuiHandlerRegister.EVENT.getListenerModID(listener));
                     },
             listener ->
-                    (guiHandlers, modID) -> {
+                    (registry, modID) -> {
                         GuiHandlerRegister.EVENT.setCurrentListener(listener);
-                        listener.registerGuiHandlers(guiHandlers, modID);
+                        listener.registerGuiHandlers(registry, modID);
                         GuiHandlerRegister.EVENT.setCurrentListener(null);
                     },
             guiHandlerRegister ->
-                    guiHandlerRegister.register((guiHandlers, modID) -> ModEvent.post(new Data(guiHandlers)), null)
+                    guiHandlerRegister.register((registry, modID) -> ModEventOld.post(new Data(registry)), null)
     );
 
-    void registerGuiHandlers(GuiHandlerRegistry guiHandlers, ModID modID);
+    void registerGuiHandlers(GuiHandlerRegistry registry, ModID modID);
 
-    final class Data extends ModEvent.Data<GuiHandlerRegister> {
+    final class Data extends ModEventOld.Data<GuiHandlerRegister> {
 
-        @Getter
-        private final GuiHandlerRegistry registry;
+        public final GuiHandlerRegistry registry;
 
         private Data(GuiHandlerRegistry registry) {
             super(EVENT);

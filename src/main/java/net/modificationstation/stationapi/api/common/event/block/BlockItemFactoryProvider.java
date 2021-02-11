@@ -1,13 +1,11 @@
 package net.modificationstation.stationapi.api.common.event.block;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.PlaceableTileEntity;
 import net.modificationstation.stationapi.api.common.block.HasCustomBlockItemFactory;
 import net.modificationstation.stationapi.api.common.block.HasMetaBlockItem;
 import net.modificationstation.stationapi.api.common.block.HasMetaNamedBlockItem;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
+import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
@@ -27,18 +25,18 @@ public interface BlockItemFactoryProvider {
     /**
      * The event instance.
      */
-    GameEvent<BlockItemFactoryProvider> EVENT = new GameEvent<>(BlockItemFactoryProvider.class,
+    GameEventOld<BlockItemFactoryProvider> EVENT = new GameEventOld<>(BlockItemFactoryProvider.class,
             listeners ->
                     (block, currentFactory) -> {
                         for (BlockItemFactoryProvider listener : listeners)
                             currentFactory = listener.getBlockItemFactory(block, currentFactory);
                         return currentFactory;
                     },
-            (Consumer<GameEvent<BlockItemFactoryProvider>>) blockItemFactoryProvider ->
+            (Consumer<GameEventOld<BlockItemFactoryProvider>>) blockItemFactoryProvider ->
                     blockItemFactoryProvider.register((block, currentFactory) -> {
                         Data data = new Data(block, currentFactory);
-                        GameEvent.EVENT_BUS.post(data);
-                        return data.getCurrentFactory();
+                        GameEventOld.EVENT_BUS.post(data);
+                        return data.currentFactory;
                     })
     );
 
@@ -53,19 +51,17 @@ public interface BlockItemFactoryProvider {
     /**
      * The event data used by EventBus.
      */
-    @Getter
-    final class Data extends GameEvent.Data<BlockItemFactoryProvider> {
+    final class Data extends GameEventOld.Data<BlockItemFactoryProvider> {
 
         /**
          * Current block.
          */
-        private final BlockBase block;
+        public final BlockBase block;
 
         /**
          * Current factory that's going to be executed to get block item instance.
          */
-        @Setter
-        private IntFunction<PlaceableTileEntity> currentFactory;
+        public IntFunction<PlaceableTileEntity> currentFactory;
 
         private Data(BlockBase block, IntFunction<PlaceableTileEntity> currentFactory) {
             super(EVENT);

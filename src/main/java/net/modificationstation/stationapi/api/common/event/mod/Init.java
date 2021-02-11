@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.common.event.mod;
 
-import net.modificationstation.stationapi.api.common.event.ModEvent;
+import net.modificationstation.stationapi.api.common.event.ModEventOld;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 
 /**
@@ -13,7 +13,7 @@ public interface Init {
     /**
      * The event instance.
      */
-    ModEvent<Init> EVENT = new ModEvent<>(Init.class,
+    ModEventOld<Init> EVENT = new ModEventOld<>(Init.class,
             listeners ->
                     modID -> {
                         for (Init listener : listeners)
@@ -26,7 +26,7 @@ public interface Init {
                         Init.EVENT.setCurrentListener(null);
                     },
             init ->
-                    init.register(modID -> ModEvent.post(new Data()), null)
+                    init.register(modID -> ModEventOld.post(new Data()), null)
     );
 
     /**

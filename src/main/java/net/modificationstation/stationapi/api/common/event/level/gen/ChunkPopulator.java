@@ -1,42 +1,35 @@
 package net.modificationstation.stationapi.api.common.event.level.gen;
 
-import lombok.Getter;
 import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.source.LevelSource;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
+import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.Random;
 import java.util.function.Consumer;
 
 public interface ChunkPopulator {
 
-    GameEvent<ChunkPopulator> EVENT = new GameEvent<>(ChunkPopulator.class,
+    GameEventOld<ChunkPopulator> EVENT = new GameEventOld<>(ChunkPopulator.class,
             listeners ->
                     (level, levelSource, biome, x, z, random) -> {
                         for (ChunkPopulator listener : listeners)
                             listener.populate(level, levelSource, biome, x, z, random);
                     },
-            (Consumer<GameEvent<ChunkPopulator>>) chunkPopulator ->
-                    chunkPopulator.register((level, levelSource, biome, x, z, random) -> GameEvent.EVENT_BUS.post(new Data(level, levelSource, biome, x, z, random)))
+            (Consumer<GameEventOld<ChunkPopulator>>) chunkPopulator ->
+                    chunkPopulator.register((level, levelSource, biome, x, z, random) -> GameEventOld.EVENT_BUS.post(new Data(level, levelSource, biome, x, z, random)))
     );
 
     void populate(Level level, LevelSource levelSource, Biome biome, int x, int z, Random random);
 
-    final class Data extends GameEvent.Data<ChunkPopulator> {
+    final class Data extends GameEventOld.Data<ChunkPopulator> {
 
-        @Getter
-        private final Level level;
-        @Getter
-        private final LevelSource levelSource;
-        @Getter
-        private final Biome biome;
-        @Getter
-        private final int x;
-        @Getter
-        private final int z;
-        @Getter
-        private final Random random;
+        public final Level level;
+        public final LevelSource levelSource;
+        public final Biome biome;
+        public final int x;
+        public final int z;
+        public final Random random;
 
         private Data(Level level, LevelSource levelSource, Biome biome, int x, int z, Random random) {
             super(EVENT);

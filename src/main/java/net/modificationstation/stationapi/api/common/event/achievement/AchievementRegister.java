@@ -1,34 +1,32 @@
 package net.modificationstation.stationapi.api.common.event.achievement;
 
-import lombok.Getter;
 import net.minecraft.achievement.Achievement;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
+import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public interface AchievementRegister {
 
-    GameEvent<AchievementRegister> EVENT = new GameEvent<>(AchievementRegister.class,
+    GameEventOld<AchievementRegister> EVENT = new GameEventOld<>(AchievementRegister.class,
             listeners ->
                     achievements -> {
                         for (AchievementRegister listener : listeners)
                             listener.registerAchievements(achievements);
                     },
-            (Consumer<GameEvent<AchievementRegister>>) achievementRegister ->
-                    achievementRegister.register(achievements -> GameEvent.EVENT_BUS.post(new Data(achievements)))
+            (Consumer<GameEventOld<AchievementRegister>>) achievementRegister ->
+                    achievementRegister.register(achievements -> GameEventOld.EVENT_BUS.post(new Data(achievements)))
     );
 
     void registerAchievements(List<Achievement> achievements);
 
-    final class Data extends GameEvent.Data<AchievementRegister> {
+    final class Data extends GameEventOld.Data<AchievementRegister> {
 
-        @Getter
-        private final List<Achievement> achievementList;
+        public final List<Achievement> achievements;
 
-        private Data(List<Achievement> achievementList) {
+        private Data(List<Achievement> achievements) {
             super(EVENT);
-            this.achievementList = achievementList;
+            this.achievements = achievements;
         }
     }
 }

@@ -1,8 +1,7 @@
 package net.modificationstation.stationapi.api.common.event.mod;
 
-import lombok.Getter;
 import net.modificationstation.stationapi.api.common.event.EventRegistry;
-import net.modificationstation.stationapi.api.common.event.ModEvent;
+import net.modificationstation.stationapi.api.common.event.ModEventOld;
 import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationapi.api.common.recipe.JsonRecipeParserRegistry;
 import net.modificationstation.stationapi.api.common.registry.ModID;
@@ -19,7 +18,7 @@ public interface PreInit {
     /**
      * The event instance.
      */
-    ModEvent<PreInit> EVENT = new ModEvent<>(PreInit.class,
+    ModEventOld<PreInit> EVENT = new ModEventOld<>(PreInit.class,
             listeners ->
                     (eventRegistry, jsonRecipeParserRegistry, modID) -> {
                         for (PreInit listener : listeners)
@@ -32,7 +31,7 @@ public interface PreInit {
                         PreInit.EVENT.setCurrentListener(null);
                     },
             preInit ->
-                    preInit.register((eventRegistry, jsonRecipeParserRegistry, modID) -> ModEvent.post(new Data(eventRegistry, jsonRecipeParserRegistry)), null)
+                    preInit.register((eventRegistry, jsonRecipeParserRegistry, modID) -> ModEventOld.post(new Data(eventRegistry, jsonRecipeParserRegistry)), null)
     );
 
     /**
@@ -46,18 +45,17 @@ public interface PreInit {
     /**
      * The event data used by EventBus.
      */
-    @Getter
     final class Data extends ModInitData<PreInit> {
 
         /**
          * The event registry used to initialize event listeners through fabric.mod.json entrypoints.
          */
-        private final EventRegistry eventRegistry;
+        public final EventRegistry eventRegistry;
 
         /**
          * The JSON recipe parser registry that holds all JSON recipe parsers to automatically run when {@link RecipeRegister} event is called with a proper identifier.
          */
-        private final JsonRecipeParserRegistry jsonRecipeParserRegistry;
+        public final JsonRecipeParserRegistry jsonRecipeParserRegistry;
 
         private Data(EventRegistry eventRegistry, JsonRecipeParserRegistry jsonRecipeParserRegistry) {
             super(EVENT);

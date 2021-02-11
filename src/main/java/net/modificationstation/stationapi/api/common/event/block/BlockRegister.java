@@ -1,38 +1,36 @@
 package net.modificationstation.stationapi.api.common.event.block;
 
-import lombok.Getter;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
-import net.modificationstation.stationapi.api.common.event.ModEvent;
+import net.modificationstation.stationapi.api.common.event.ModEventOld;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 
 public interface BlockRegister {
 
-    ModEvent<BlockRegister> EVENT = new ModEvent<>(BlockRegister.class,
+    ModEventOld<BlockRegister> EVENT = new ModEventOld<>(BlockRegister.class,
             listeners ->
                     (registry, modID) -> {
                         for (BlockRegister listener : listeners)
                             listener.registerBlocks(registry, BlockRegister.EVENT.getListenerModID(listener));
                     },
             listener ->
-                    (blocks, modID) -> {
+                    (registry, modID) -> {
                         BlockRegister.EVENT.setCurrentListener(listener);
-                        listener.registerBlocks(blocks, modID);
+                        listener.registerBlocks(registry, modID);
                         BlockRegister.EVENT.setCurrentListener(null);
                     },
             blockRegister ->
-                    blockRegister.register((blocks, modID) -> ModEvent.post(new Data(blocks)), null)
+                    blockRegister.register((registry, modID) -> ModEventOld.post(new Data(registry)), null)
     );
 
     void registerBlocks(BlockRegistry registry, ModID modID);
 
-    final class Data extends ModEvent.Data<BlockRegister> {
+    final class Data extends ModEventOld.Data<BlockRegister> {
 
-        @Getter
-        private final BlockRegistry registry;
+        public final BlockRegistry registry;
 
-        private Data(BlockRegistry blocks) {
+        private Data(BlockRegistry registry) {
             super(EVENT);
-            registry = blocks;
+            this.registry = registry;
         }
     }
 }

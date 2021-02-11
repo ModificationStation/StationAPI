@@ -1,39 +1,33 @@
 package net.modificationstation.stationapi.api.common.event.container.slot;
 
-import lombok.Getter;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
+import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.function.Consumer;
 
 public interface ItemUsedInCrafting {
 
-    GameEvent<ItemUsedInCrafting> EVENT = new GameEvent<>(ItemUsedInCrafting.class,
+    GameEventOld<ItemUsedInCrafting> EVENT = new GameEventOld<>(ItemUsedInCrafting.class,
             listeners ->
                     (player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted) -> {
                         for (ItemUsedInCrafting listener : listeners)
                             listener.onItemUsedInCrafting(player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted);
                     },
-            (Consumer<GameEvent<ItemUsedInCrafting>>) itemUsedInCrafting ->
-                    itemUsedInCrafting.register((player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted) -> GameEvent.EVENT_BUS.post(new Data(player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted)))
+            (Consumer<GameEventOld<ItemUsedInCrafting>>) itemUsedInCrafting ->
+                    itemUsedInCrafting.register((player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted) -> GameEventOld.EVENT_BUS.post(new Data(player, craftingMatrix, itemOrdinal, itemUsed, itemCrafted)))
     );
 
     void onItemUsedInCrafting(PlayerBase player, InventoryBase craftingMatrix, int itemOrdinal, ItemInstance itemUsed, ItemInstance itemCrafted);
 
-    final class Data extends GameEvent.Data<ItemUsedInCrafting> {
+    final class Data extends GameEventOld.Data<ItemUsedInCrafting> {
 
-        @Getter
-        private final PlayerBase player;
-        @Getter
-        private final InventoryBase craftingMatrix;
-        @Getter
-        private final int itemOrdinal;
-        @Getter
-        private final ItemInstance itemUsed;
-        @Getter
-        private final ItemInstance itemCrafted;
+        public final PlayerBase player;
+        public final InventoryBase craftingMatrix;
+        public final int itemOrdinal;
+        public final ItemInstance itemUsed;
+        public final ItemInstance itemCrafted;
 
         private Data(PlayerBase player, InventoryBase craftingMatrix, int itemOrdinal, ItemInstance itemUsed, ItemInstance itemCrafted) {
             super(EVENT);

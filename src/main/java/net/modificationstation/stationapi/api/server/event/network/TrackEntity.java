@@ -1,10 +1,9 @@
 package net.modificationstation.stationapi.api.server.event.network;
 
-import lombok.Getter;
 import net.minecraft.class_488;
 import net.minecraft.class_80;
 import net.minecraft.entity.EntityBase;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
+import net.modificationstation.stationapi.api.common.event.GameEventOld;
 import net.modificationstation.stationapi.api.common.util.API;
 import net.modificationstation.stationapi.api.server.entity.CustomTracking;
 import net.modificationstation.stationapi.api.server.entity.Tracking;
@@ -23,14 +22,14 @@ public interface TrackEntity {
     /**
      * The event instance.
      */
-    GameEvent<TrackEntity> EVENT = new GameEvent<>(TrackEntity.class,
+    GameEventOld<TrackEntity> EVENT = new GameEventOld<>(TrackEntity.class,
             listeners ->
                     (entityTracker, trackedEntities, entityToTrack) -> {
                         for (TrackEntity listener : listeners)
                             listener.trackEntity(entityTracker, trackedEntities, entityToTrack);
                     },
-            (Consumer<GameEvent<TrackEntity>>) trackEntity ->
-                    trackEntity.register((entityTracker, trackedEntities, entityToTrack) -> GameEvent.EVENT_BUS.post(new Data(entityTracker, trackedEntities, entityToTrack)))
+            (Consumer<GameEventOld<TrackEntity>>) trackEntity ->
+                    trackEntity.register((entityTracker, trackedEntities, entityToTrack) -> GameEventOld.EVENT_BUS.post(new Data(entityTracker, trackedEntities, entityToTrack)))
     );
 
     /**
@@ -44,23 +43,22 @@ public interface TrackEntity {
     /**
      * The event data used by EventBus.
      */
-    @Getter
-    final class Data extends GameEvent.Data<TrackEntity> {
+    final class Data extends GameEventOld.Data<TrackEntity> {
 
         /**
          * The dimension's tracker instance. Can be used to (un)track entities.
          */
-        private final class_488 entityTracker;
+        public final class_488 entityTracker;
 
         /**
          * The set of tracked entities. Can be used to check if entity is already tracked.
          */
-        private final class_80 trackedEntities;
+        public final class_80 trackedEntities;
 
         /**
          * The entity that server tries to track.
          */
-        private final EntityBase entityToTrack;
+        public final EntityBase entityToTrack;
 
         private Data(class_488 entityTracker, class_80 trackedEntities, EntityBase entityToTrack) {
             super(EVENT);

@@ -4,7 +4,7 @@ import net.modificationstation.stationapi.api.common.util.OreDict;
 
 public interface OreDictRegister {
 
-    GameEvent<OreDictRegister> EVENT = new GameEvent<>(OreDictRegister.class, listeners ->
+    GameEventOld<OreDictRegister> EVENT = new GameEventOld<>(OreDictRegister.class, listeners ->
             oreDictMap -> {
                 for (OreDictRegister event : listeners)
                     event.registerOreDict(oreDictMap);

@@ -1,35 +1,34 @@
 package net.modificationstation.stationapi.api.client.event.gui;
 
-import lombok.Getter;
 import net.minecraft.client.render.TextRenderer;
 import net.minecraft.client.render.entity.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.common.event.GameEvent;
+import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.function.Consumer;
 
 public interface RenderItemOverlay {
 
-    GameEvent<RenderItemOverlay> EVENT = new GameEvent<>(RenderItemOverlay.class,
-            (listeners) ->
+    GameEventOld<RenderItemOverlay> EVENT = new GameEventOld<>(RenderItemOverlay.class,
+            listeners ->
                     (itemRenderer, itemX, itemY, itemInstance, textRenderer, textureManager) -> {
                         for (RenderItemOverlay listener : listeners)
                             listener.renderItemOverlay(itemRenderer, itemX, itemY, itemInstance, textRenderer, textureManager);
                     },
-            (Consumer<GameEvent<RenderItemOverlay>>) keyPressed ->
-                    keyPressed.register((itemRenderer, itemX, itemY, itemInstance, textRenderer, textureManager) -> GameEvent.EVENT_BUS.post(new Data(itemRenderer, itemX, itemY, itemInstance, textRenderer, textureManager)))
+            (Consumer<GameEventOld<RenderItemOverlay>>) keyPressed ->
+                    keyPressed.register((itemRenderer, itemX, itemY, itemInstance, textRenderer, textureManager) -> GameEventOld.EVENT_BUS.post(new Data(itemRenderer, itemX, itemY, itemInstance, textRenderer, textureManager)))
     );
 
     void renderItemOverlay(ItemRenderer itemRenderer, int itemX, int itemY, ItemInstance itemInstance, TextRenderer textRenderer, TextureManager textureManager);
 
-    @Getter
-    final class Data extends GameEvent.Data<RenderItemOverlay> {
-        private final int itemX, itemY;
-        private final ItemInstance itemInstance;
-        private final TextRenderer textRenderer;
-        private final TextureManager textureManager;
-        private final ItemRenderer itemRenderer;
+    final class Data extends GameEventOld.Data<RenderItemOverlay> {
+
+        public final int itemX, itemY;
+        public final ItemInstance itemInstance;
+        public final TextRenderer textRenderer;
+        public final TextureManager textureManager;
+        public final ItemRenderer itemRenderer;
 
         private Data(ItemRenderer itemRenderer, int itemX, int itemY, ItemInstance itemInstance, TextRenderer textRenderer, TextureManager textureManager) {
             super(EVENT);

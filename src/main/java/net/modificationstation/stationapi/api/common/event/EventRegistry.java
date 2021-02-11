@@ -4,7 +4,7 @@ import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.Registry;
 import net.modificationstation.stationapi.impl.common.StationAPI;
 
-public final class EventRegistry extends Registry<Event<?>> {
+public final class EventRegistry extends Registry<EventOld<?>> {
 
     public static final EventRegistry INSTANCE = new EventRegistry(Identifier.of(StationAPI.MODID, "events"));
 

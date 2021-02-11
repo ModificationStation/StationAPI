@@ -1,15 +1,14 @@
 package net.modificationstation.stationapi.api.common.event.entity;
 
-import lombok.Getter;
 import net.minecraft.entity.EntityBase;
 import net.modificationstation.stationapi.api.common.entity.EntityHandlerRegistry;
-import net.modificationstation.stationapi.api.common.event.ModEvent;
+import net.modificationstation.stationapi.api.common.event.ModEventOld;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import uk.co.benjiweber.expressions.functions.TriConsumer;
 
 public interface EntityRegister {
 
-    ModEvent<EntityRegister> EVENT = new ModEvent<>(EntityRegister.class,
+    ModEventOld<EntityRegister> EVENT = new ModEventOld<>(EntityRegister.class,
             listeners ->
                     (register, registry, modID) -> {
                         for (EntityRegister listener : listeners)
@@ -22,16 +21,15 @@ public interface EntityRegister {
                         EntityRegister.EVENT.setCurrentListener(null);
                     },
             entityRegister ->
-                    entityRegister.register((register, registry, modID) -> ModEvent.post(new Data(register, registry)), null)
+                    entityRegister.register((register, registry, modID) -> ModEventOld.post(new Data(register, registry)), null)
     );
 
     void registerEntities(TriConsumer<Class<? extends EntityBase>, String, Integer> register, EntityHandlerRegistry registry, ModID modID);
 
-    final class Data extends ModEvent.Data<EntityRegister> {
+    final class Data extends ModEventOld.Data<EntityRegister> {
 
-        private final TriConsumer<Class<? extends EntityBase>, String, Integer> register;
-        @Getter
-        private final EntityHandlerRegistry registry;
+        public final TriConsumer<Class<? extends EntityBase>, String, Integer> register;
+        public final EntityHandlerRegistry registry;
 
         private Data(TriConsumer<Class<? extends EntityBase>, String, Integer> register, EntityHandlerRegistry registry) {
             super(EVENT);
