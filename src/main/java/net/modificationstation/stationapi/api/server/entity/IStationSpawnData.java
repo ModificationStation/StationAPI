@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.impl.common.StationAPI;
 
-public interface StationSpawnData extends CustomSpawnData {
+public interface IStationSpawnData extends CustomSpawnData {
 
     @Override
     default AbstractPacket getSpawnData() {

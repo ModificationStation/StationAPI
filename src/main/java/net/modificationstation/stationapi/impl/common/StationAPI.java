@@ -30,7 +30,6 @@ import net.modificationstation.stationapi.api.common.block.EffectiveForTool;
 import net.modificationstation.stationapi.api.common.entity.EntityHandlerRegistry;
 import net.modificationstation.stationapi.api.common.entity.HasOwner;
 import net.modificationstation.stationapi.api.common.event.*;
-import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.achievement.AchievementRegister;
 import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryProvider;
 import net.modificationstation.stationapi.api.common.event.block.BlockNameSet;
@@ -73,7 +72,7 @@ import net.modificationstation.stationapi.api.common.registry.Registry;
 import net.modificationstation.stationapi.api.common.resource.ResourceManager;
 import net.modificationstation.stationapi.api.common.util.ModCore;
 import net.modificationstation.stationapi.api.common.util.SideUtils;
-import net.modificationstation.stationapi.api.server.entity.StationSpawnData;
+import net.modificationstation.stationapi.api.server.entity.IStationSpawnData;
 import net.modificationstation.stationapi.api.server.event.network.HandleLogin;
 import net.modificationstation.stationapi.api.server.event.network.PlayerLogin;
 import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
@@ -138,6 +137,8 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
      * A set of mods that need client-side verification when the client joins server.
      */
     private final Set<ModContainer> modsToVerifyOnClient = new HashSet<>();
+
+    public static final EventBus EVENT_BUS = new EventBus();
 
     /**
      * Initial setup. Configures logger, entrypoints, and calls the rest of initialization sequence. No Minecraft classes must be referenced here.
@@ -332,8 +333,8 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
                                         ((HasOwner) entity).setOwner(networkHandler.invokeMethod_1645(message.ints()[4]));
                                     entity.setVelocity((double)message.shorts()[0] / 8000.0D, (double)message.shorts()[1] / 8000.0D, (double)message.shorts()[2] / 8000.0D);
                                 }
-                                if (entity instanceof StationSpawnData)
-                                    ((StationSpawnData) entity).readFromMessage(message);
+                                if (entity instanceof IStationSpawnData)
+                                    ((IStationSpawnData) entity).readFromMessage(message);
                             }
                         }));
                     }, getModID());

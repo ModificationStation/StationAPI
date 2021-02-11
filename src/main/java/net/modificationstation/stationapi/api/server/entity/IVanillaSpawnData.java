@@ -5,7 +5,7 @@ import net.minecraft.packet.AbstractPacket;
 import net.minecraft.packet.play.EntitySpawnS2C;
 import net.modificationstation.stationapi.api.common.entity.HasOwner;
 
-public interface VanillaSpawnData extends CustomSpawnData {
+public interface IVanillaSpawnData extends CustomSpawnData {
 
     @Override
     default AbstractPacket getSpawnData() {
