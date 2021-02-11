@@ -8,6 +8,7 @@ import net.modificationstation.stationapi.impl.common.StationAPI;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+@Deprecated
 public class GameEventOld<T> extends EventOld<T> {
 
     public static final EventBus EVENT_BUS = new EventBus(Identifier.of(StationAPI.MODID + "game_event_bus").toString());

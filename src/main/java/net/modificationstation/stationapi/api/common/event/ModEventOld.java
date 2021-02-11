@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+@Deprecated
 public class ModEventOld<T> extends EventOld<T> {
 
     private static final Map<ModID, EventBus> EVENT_BUSES = new HashMap<>();
