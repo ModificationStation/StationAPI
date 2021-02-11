@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.common.event;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import lombok.RequiredArgsConstructor;
 
 import java.lang.invoke.LambdaMetafactory;
@@ -41,7 +39,7 @@ public class EventBus<T extends Event> {
         register(method, null, priority);
     }
 
-    public <U extends T> void register(Method method, Object listener) {
+    public void register(Method method, Object listener) {
         register(method, listener, EventListenerData.DEFAULT_PRIORITY);
     }
 
