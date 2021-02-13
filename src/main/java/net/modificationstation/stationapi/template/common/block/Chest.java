@@ -22,7 +22,7 @@ public class Chest extends net.minecraft.block.Chest {
 
     @Override
     public Chest sounds(BlockSounds sounds) {
-        return (Chest) super.sounds(sounds);
+        return (Chest) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Chest extends net.minecraft.block.Chest {
 
     @Override
     public Chest setName(String string) {
-        return (Chest) super.setName(string);
+        return (Chest) super.setTranslationKey(string);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class RedstoneRepeater extends net.minecraft.block.RedstoneRepeater {
 
     @Override
     public RedstoneRepeater sounds(BlockSounds sounds) {
-        return (RedstoneRepeater) super.sounds(sounds);
+        return (RedstoneRepeater) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class RedstoneRepeater extends net.minecraft.block.RedstoneRepeater {
 
     @Override
     public RedstoneRepeater setName(String string) {
-        return (RedstoneRepeater) super.setName(string);
+        return (RedstoneRepeater) super.setTranslationKey(string);
     }
 
     @Override

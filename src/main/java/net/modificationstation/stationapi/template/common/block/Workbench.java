@@ -22,7 +22,7 @@ public class Workbench extends net.minecraft.block.Workbench {
 
     @Override
     public Workbench sounds(BlockSounds sounds) {
-        return (Workbench) super.sounds(sounds);
+        return (Workbench) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Workbench extends net.minecraft.block.Workbench {
 
     @Override
     public Workbench setName(String string) {
-        return (Workbench) super.setName(string);
+        return (Workbench) super.setTranslationKey(string);
     }
 
     @Override

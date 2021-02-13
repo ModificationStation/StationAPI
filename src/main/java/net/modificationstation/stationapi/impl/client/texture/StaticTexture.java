@@ -52,7 +52,7 @@ public class StaticTexture extends Texture {
     }
 
     @Override
-    public void setup() {
+    public void update() {
         if (prevRender3d != render3d)
             update();
     }

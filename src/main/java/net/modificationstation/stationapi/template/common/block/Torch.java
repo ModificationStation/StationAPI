@@ -22,7 +22,7 @@ public class Torch extends net.minecraft.block.Torch {
 
     @Override
     public Torch sounds(BlockSounds sounds) {
-        return (Torch) super.sounds(sounds);
+        return (Torch) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Torch extends net.minecraft.block.Torch {
 
     @Override
     public Torch setName(String string) {
-        return (Torch) super.setName(string);
+        return (Torch) super.setTranslationKey(string);
     }
 
     @Override

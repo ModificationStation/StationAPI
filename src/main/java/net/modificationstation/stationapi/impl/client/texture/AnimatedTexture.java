@@ -52,7 +52,7 @@ public class AnimatedTexture extends Texture {
     }
 
     @Override
-    public void setup() {
+    public void update() {
         if (ticks >= tickRate) {
             index++;
             if (index >= images.length)

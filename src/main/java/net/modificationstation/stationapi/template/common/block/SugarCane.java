@@ -22,7 +22,7 @@ public class SugarCane extends net.minecraft.block.SugarCane {
 
     @Override
     public SugarCane sounds(BlockSounds sounds) {
-        return (SugarCane) super.sounds(sounds);
+        return (SugarCane) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class SugarCane extends net.minecraft.block.SugarCane {
 
     @Override
     public SugarCane setName(String string) {
-        return (SugarCane) super.setName(string);
+        return (SugarCane) super.setTranslationKey(string);
     }
 
     @Override

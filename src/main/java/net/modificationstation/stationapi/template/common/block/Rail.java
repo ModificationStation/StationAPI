@@ -22,7 +22,7 @@ public class Rail extends net.minecraft.block.Rail {
 
     @Override
     public Rail sounds(BlockSounds sounds) {
-        return (Rail) super.sounds(sounds);
+        return (Rail) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Rail extends net.minecraft.block.Rail {
 
     @Override
     public Rail setName(String string) {
-        return (Rail) super.setName(string);
+        return (Rail) super.setTranslationKey(string);
     }
 
     @Override

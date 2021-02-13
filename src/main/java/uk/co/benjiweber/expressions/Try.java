@@ -2,6 +2,9 @@ package uk.co.benjiweber.expressions;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import uk.co.benjiweber.expressions.Try.Catch;
+import uk.co.benjiweber.expressions.Try.Finally;
+import uk.co.benjiweber.expressions.Try.TryBuilder.Thrower;
 
 public class Try {
 

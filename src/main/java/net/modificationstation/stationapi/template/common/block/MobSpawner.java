@@ -22,7 +22,7 @@ public class MobSpawner extends net.minecraft.block.MobSpawner {
 
     @Override
     public MobSpawner sounds(BlockSounds sounds) {
-        return (MobSpawner) super.sounds(sounds);
+        return (MobSpawner) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MobSpawner extends net.minecraft.block.MobSpawner {
 
     @Override
     public MobSpawner setName(String string) {
-        return (MobSpawner) super.setName(string);
+        return (MobSpawner) super.setTranslationKey(string);
     }
 
     @Override

@@ -46,7 +46,7 @@ public class ItemBase extends net.minecraft.item.ItemBase {
 
     @Override
     public ItemBase setName(String newName) {
-        return (ItemBase) super.setName(newName);
+        return (ItemBase) super.setTranslationKey(newName);
     }
 
     @Override

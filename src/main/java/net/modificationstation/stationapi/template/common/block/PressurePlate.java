@@ -24,7 +24,7 @@ public class PressurePlate extends net.minecraft.block.PressurePlate {
 
     @Override
     public PressurePlate sounds(BlockSounds sounds) {
-        return (PressurePlate) super.sounds(sounds);
+        return (PressurePlate) super.setSounds(sounds);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class PressurePlate extends net.minecraft.block.PressurePlate {
 
     @Override
     public PressurePlate setName(String string) {
-        return (PressurePlate) super.setName(string);
+        return (PressurePlate) super.setTranslationKey(string);
     }
 
     @Override

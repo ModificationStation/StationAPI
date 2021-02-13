@@ -47,7 +47,7 @@ public class Hoe extends net.minecraft.item.tool.Hoe {
 
     @Override
     public Hoe setName(String newName) {
-        return (Hoe) super.setName(newName);
+        return (Hoe) super.setTranslationKey(newName);
     }
 
     @Override

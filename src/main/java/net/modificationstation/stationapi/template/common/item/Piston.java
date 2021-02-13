@@ -38,7 +38,7 @@ public class Piston extends net.minecraft.item.Piston {
 
     @Override
     public Piston setName(String newName) {
-        return (Piston) super.setName(newName);
+        return (Piston) super.setTranslationKey(newName);
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.common.event.recipe;
 
 import lombok.RequiredArgsConstructor;
 import net.modificationstation.stationapi.api.common.event.Event;
+import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister.Vanilla;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 

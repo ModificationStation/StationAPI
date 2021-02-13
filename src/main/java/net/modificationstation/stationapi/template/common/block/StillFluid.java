@@ -23,7 +23,7 @@ public class StillFluid extends net.minecraft.block.StillFluid {
 
     @Override
     public StillFluid sounds(BlockSounds sounds) {
-        return (StillFluid) super.sounds(sounds);
+        return (StillFluid) super.setSounds(sounds);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class StillFluid extends net.minecraft.block.StillFluid {
 
     @Override
     public StillFluid setName(String string) {
-        return (StillFluid) super.setName(string);
+        return (StillFluid) super.setTranslationKey(string);
     }
 
     @Override

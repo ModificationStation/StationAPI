@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.server.entity;
 
-import net.minecraft.class_488;
-import net.minecraft.class_80;
 import net.minecraft.entity.EntityBase;
+import net.minecraft.network.EntityHashSet;
+import net.minecraft.server.network.ServerEntityTracker;
 import net.modificationstation.stationapi.api.common.util.TriState;
 import net.modificationstation.stationapi.api.server.entity.ICustomTracking;
 import net.modificationstation.stationapi.api.server.entity.ITracking;
@@ -40,12 +40,12 @@ public class TrackingImpl {
      * @param updatePeriod the period in ticks with which the entity updates should be sent to client (position, velocity, etc).
      * @param sendVelocity whether or not should server send velocity updates to clients (fireballs don't send velocity, because client can calculate it itself, and paintings don't have velocity at all).
      */
-    public static void track(class_488 entityTracker, class_80 trackedEntities, EntityBase entityToTrack, int trackingDistance, int updatePeriod, TriState sendVelocity) {
-        if (trackedEntities.method_777(entityToTrack.entityId))
+    public static void track(ServerEntityTracker entityTracker, EntityHashSet trackedEntities, EntityBase entityToTrack, int trackingDistance, int updatePeriod, TriState sendVelocity) {
+        if (trackedEntities.containsId(entityToTrack.entityId))
             entityTracker.method_1669(entityToTrack);
         if (sendVelocity == TriState.UNSET)
             entityTracker.method_1666(entityToTrack, trackingDistance, updatePeriod);
         else
-            entityTracker.method_1667(entityToTrack, trackingDistance, updatePeriod, sendVelocity.getBool());
+            entityTracker.trackEntity(entityToTrack, trackingDistance, updatePeriod, sendVelocity.getBool());
     }
 }

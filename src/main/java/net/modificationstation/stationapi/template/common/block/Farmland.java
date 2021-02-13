@@ -22,7 +22,7 @@ public class Farmland extends net.minecraft.block.Farmland {
 
     @Override
     public Farmland sounds(BlockSounds sounds) {
-        return (Farmland) super.sounds(sounds);
+        return (Farmland) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Farmland extends net.minecraft.block.Farmland {
 
     @Override
     public Farmland setName(String string) {
-        return (Farmland) super.setName(string);
+        return (Farmland) super.setTranslationKey(string);
     }
 
     @Override

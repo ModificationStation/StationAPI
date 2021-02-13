@@ -46,7 +46,7 @@ public class Saddle extends net.minecraft.item.Saddle {
 
     @Override
     public Saddle setName(String newName) {
-        return (Saddle) super.setName(newName);
+        return (Saddle) super.setTranslationKey(newName);
     }
 
     @Override

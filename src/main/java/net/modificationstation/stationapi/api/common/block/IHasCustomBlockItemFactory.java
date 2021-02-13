@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.common.block;
 
-import net.minecraft.item.PlaceableTileEntity;
+import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
 
 import java.util.function.IntFunction;
@@ -21,5 +21,5 @@ public interface IHasCustomBlockItemFactory {
      * BlockItem factory supplier method.
      * @return the {@link IntFunction} instance that'll be executed to get block item's instance.
      */
-    IntFunction<PlaceableTileEntity> getBlockItemFactory();
+    IntFunction<Block> getBlockItemFactory();
 }

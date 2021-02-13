@@ -161,7 +161,7 @@ public abstract class MixinTileRenderer {
                         tessellator.start();
                         tessellator.colour(1.0F, 1.0F, 1.0F);
                         for (QuadPoint quadPoint : texturedQuad.getQuadPoints()) {
-                            int var5 = block.getColor(this.field_82, x, y, z);
+                            int var5 = block.getColourMultiplier(this.field_82, x, y, z);
                             float var6 = (float) (var5 >> 16 & 255) / 255.0F;
                             float var77 = (float) (var5 >> 8 & 255) / 255.0F;
                             float var88 = (float) (var5 & 255) / 255.0F;
@@ -181,25 +181,25 @@ public abstract class MixinTileRenderer {
                             boolean var16 = true;
                             boolean var17 = true;
                             boolean var18 = true;
-                            this.field_93 = block.method_1604(this.field_82, x, y, z);
-                            this.field_94 = block.method_1604(this.field_82, x - 1, y, z);
-                            this.field_95 = block.method_1604(this.field_82, x, y - 1, z);
-                            this.field_96 = block.method_1604(this.field_82, x, y, z - 1);
-                            this.field_97 = block.method_1604(this.field_82, x + 1, y, z);
-                            this.field_98 = block.method_1604(this.field_82, x, y + 1, z);
-                            this.field_99 = block.method_1604(this.field_82, x, y, z + 1);
-                            this.field_70 = BlockBase.field_1942[this.field_82.getTileId(x + 1, y + 1, z)];
-                            this.field_78 = BlockBase.field_1942[this.field_82.getTileId(x + 1, y - 1, z)];
-                            this.field_74 = BlockBase.field_1942[this.field_82.getTileId(x + 1, y, z + 1)];
-                            this.field_76 = BlockBase.field_1942[this.field_82.getTileId(x + 1, y, z - 1)];
-                            this.field_71 = BlockBase.field_1942[this.field_82.getTileId(x - 1, y + 1, z)];
-                            this.field_79 = BlockBase.field_1942[this.field_82.getTileId(x - 1, y - 1, z)];
-                            this.field_73 = BlockBase.field_1942[this.field_82.getTileId(x - 1, y, z - 1)];
-                            this.field_75 = BlockBase.field_1942[this.field_82.getTileId(x - 1, y, z + 1)];
-                            this.field_72 = BlockBase.field_1942[this.field_82.getTileId(x, y + 1, z + 1)];
-                            this.field_69 = BlockBase.field_1942[this.field_82.getTileId(x, y + 1, z - 1)];
-                            this.field_80 = BlockBase.field_1942[this.field_82.getTileId(x, y - 1, z + 1)];
-                            this.field_77 = BlockBase.field_1942[this.field_82.getTileId(x, y - 1, z - 1)];
+                            this.field_93 = block.getBrightness(this.field_82, x, y, z);
+                            this.field_94 = block.getBrightness(this.field_82, x - 1, y, z);
+                            this.field_95 = block.getBrightness(this.field_82, x, y - 1, z);
+                            this.field_96 = block.getBrightness(this.field_82, x, y, z - 1);
+                            this.field_97 = block.getBrightness(this.field_82, x + 1, y, z);
+                            this.field_98 = block.getBrightness(this.field_82, x, y + 1, z);
+                            this.field_99 = block.getBrightness(this.field_82, x, y, z + 1);
+                            this.field_70 = BlockBase.ALLOWS_GRASS_UNDER[this.field_82.getTileId(x + 1, y + 1, z)];
+                            this.field_78 = BlockBase.ALLOWS_GRASS_UNDER[this.field_82.getTileId(x + 1, y - 1, z)];
+                            this.field_74 = BlockBase.ALLOWS_GRASS_UNDER[this.field_82.getTileId(x + 1, y, z + 1)];
+                            this.field_76 = BlockBase.ALLOWS_GRASS_UNDER[this.field_82.getTileId(x + 1, y, z - 1)];
+                            this.field_71 = BlockBase.ALLOWS_GRASS_UNDER[this.field_82.getTileId(x - 1, y + 1, z)];
+                            this.field_79 = BlockBase.ALLOWS_GRASS_UNDER[this.field_82.getTileId(x - 1, y - 1, z)];
+                            this.field_73 = BlockBase.ALLOWS_GRASS_UNDER[this.field_82.getTileId(x - 1, y, z - 1)];
+                            this.field_75 = BlockBase.ALLOWS_GRASS_UNDER[this.field_82.getTileId(x - 1, y, z + 1)];
+                            this.field_72 = BlockBase.ALLOWS_GRASS_UNDER[this.field_82.getTileId(x, y + 1, z + 1)];
+                            this.field_69 = BlockBase.ALLOWS_GRASS_UNDER[this.field_82.getTileId(x, y + 1, z - 1)];
+                            this.field_80 = BlockBase.ALLOWS_GRASS_UNDER[this.field_82.getTileId(x, y - 1, z + 1)];
+                            this.field_77 = BlockBase.ALLOWS_GRASS_UNDER[this.field_82.getTileId(x, y - 1, z - 1)];
                             //<editor-fold desc="320 lines of rendering code.">
                             if (texturedQuad.getSide() == BlockFaces.DOWN) {
                                 int yTemp = y;
@@ -207,32 +207,32 @@ public abstract class MixinTileRenderer {
                                     var9 = var10 = var11 = var12 = this.field_95;
                                 } else {
                                     --yTemp;
-                                    this.field_101 = block.method_1604(this.field_82, x - 1, yTemp, z);
-                                    this.field_103 = block.method_1604(this.field_82, x, yTemp, z - 1);
-                                    this.field_104 = block.method_1604(this.field_82, x, yTemp, z + 1);
-                                    this.field_41 = block.method_1604(this.field_82, x + 1, yTemp, z);
+                                    this.field_101 = block.getBrightness(this.field_82, x - 1, yTemp, z);
+                                    this.field_103 = block.getBrightness(this.field_82, x, yTemp, z - 1);
+                                    this.field_104 = block.getBrightness(this.field_82, x, yTemp, z + 1);
+                                    this.field_41 = block.getBrightness(this.field_82, x + 1, yTemp, z);
                                     if (!this.field_77 && !this.field_79) {
                                         this.field_100 = this.field_101;
                                     } else {
-                                        this.field_100 = block.method_1604(this.field_82, x - 1, yTemp, z - 1);
+                                        this.field_100 = block.getBrightness(this.field_82, x - 1, yTemp, z - 1);
                                     }
 
                                     if (!this.field_80 && !this.field_79) {
                                         this.field_102 = this.field_101;
                                     } else {
-                                        this.field_102 = block.method_1604(this.field_82, x - 1, yTemp, z + 1);
+                                        this.field_102 = block.getBrightness(this.field_82, x - 1, yTemp, z + 1);
                                     }
 
                                     if (!this.field_77 && !this.field_78) {
                                         this.field_105 = this.field_41;
                                     } else {
-                                        this.field_105 = block.method_1604(this.field_82, x + 1, yTemp, z - 1);
+                                        this.field_105 = block.getBrightness(this.field_82, x + 1, yTemp, z - 1);
                                     }
 
                                     if (!this.field_80 && !this.field_78) {
                                         this.field_42 = this.field_41;
                                     } else {
-                                        this.field_42 = block.method_1604(this.field_82, x + 1, yTemp, z + 1);
+                                        this.field_42 = block.getBrightness(this.field_82, x + 1, yTemp, z + 1);
                                     }
 
                                     ++yTemp;
@@ -263,32 +263,32 @@ public abstract class MixinTileRenderer {
                                     var9 = var10 = var11 = var12 = this.field_98;
                                 } else {
                                     ++yTemp;
-                                    this.field_44 = block.method_1604(this.field_82, x - 1, yTemp, z);
-                                    this.field_48 = block.method_1604(this.field_82, x + 1, yTemp, z);
-                                    this.field_46 = block.method_1604(this.field_82, x, yTemp, z - 1);
-                                    this.field_49 = block.method_1604(this.field_82, x, yTemp, z + 1);
+                                    this.field_44 = block.getBrightness(this.field_82, x - 1, yTemp, z);
+                                    this.field_48 = block.getBrightness(this.field_82, x + 1, yTemp, z);
+                                    this.field_46 = block.getBrightness(this.field_82, x, yTemp, z - 1);
+                                    this.field_49 = block.getBrightness(this.field_82, x, yTemp, z + 1);
                                     if (!this.field_69 && !this.field_71) {
                                         this.field_43 = this.field_44;
                                     } else {
-                                        this.field_43 = block.method_1604(this.field_82, x - 1, yTemp, z - 1);
+                                        this.field_43 = block.getBrightness(this.field_82, x - 1, yTemp, z - 1);
                                     }
 
                                     if (!this.field_69 && !this.field_70) {
                                         this.field_47 = this.field_48;
                                     } else {
-                                        this.field_47 = block.method_1604(this.field_82, x + 1, yTemp, z - 1);
+                                        this.field_47 = block.getBrightness(this.field_82, x + 1, yTemp, z - 1);
                                     }
 
                                     if (!this.field_72 && !this.field_71) {
                                         this.field_45 = this.field_44;
                                     } else {
-                                        this.field_45 = block.method_1604(this.field_82, x - 1, yTemp, z + 1);
+                                        this.field_45 = block.getBrightness(this.field_82, x - 1, yTemp, z + 1);
                                     }
 
                                     if (!this.field_72 && !this.field_70) {
                                         this.field_50 = this.field_48;
                                     } else {
-                                        this.field_50 = block.method_1604(this.field_82, x + 1, yTemp, z + 1);
+                                        this.field_50 = block.getBrightness(this.field_82, x + 1, yTemp, z + 1);
                                     }
 
                                     --yTemp;
@@ -319,32 +319,32 @@ public abstract class MixinTileRenderer {
                                     var9 = var10 = var11 = var12 = this.field_96;
                                 } else {
                                     --zTemp;
-                                    this.field_51 = block.method_1604(this.field_82, x - 1, y, zTemp);
-                                    this.field_103 = block.method_1604(this.field_82, x, y - 1, zTemp);
-                                    this.field_46 = block.method_1604(this.field_82, x, y + 1, zTemp);
-                                    this.field_52 = block.method_1604(this.field_82, x + 1, y, zTemp);
+                                    this.field_51 = block.getBrightness(this.field_82, x - 1, y, zTemp);
+                                    this.field_103 = block.getBrightness(this.field_82, x, y - 1, zTemp);
+                                    this.field_46 = block.getBrightness(this.field_82, x, y + 1, zTemp);
+                                    this.field_52 = block.getBrightness(this.field_82, x + 1, y, zTemp);
                                     if (!this.field_73 && !this.field_77) {
                                         this.field_100 = this.field_51;
                                     } else {
-                                        this.field_100 = block.method_1604(this.field_82, x - 1, y - 1, zTemp);
+                                        this.field_100 = block.getBrightness(this.field_82, x - 1, y - 1, zTemp);
                                     }
 
                                     if (!this.field_73 && !this.field_69) {
                                         this.field_43 = this.field_51;
                                     } else {
-                                        this.field_43 = block.method_1604(this.field_82, x - 1, y + 1, zTemp);
+                                        this.field_43 = block.getBrightness(this.field_82, x - 1, y + 1, zTemp);
                                     }
 
                                     if (!this.field_76 && !this.field_77) {
                                         this.field_105 = this.field_52;
                                     } else {
-                                        this.field_105 = block.method_1604(this.field_82, x + 1, y - 1, zTemp);
+                                        this.field_105 = block.getBrightness(this.field_82, x + 1, y - 1, zTemp);
                                     }
 
                                     if (!this.field_76 && !this.field_69) {
                                         this.field_47 = this.field_52;
                                     } else {
-                                        this.field_47 = block.method_1604(this.field_82, x + 1, y + 1, zTemp);
+                                        this.field_47 = block.getBrightness(this.field_82, x + 1, y + 1, zTemp);
                                     }
 
                                     ++zTemp;
@@ -374,32 +374,32 @@ public abstract class MixinTileRenderer {
                                     var9 = var10 = var11 = var12 = this.field_99;
                                 } else {
                                     ++z;
-                                    this.field_53 = block.method_1604(this.field_82, x - 1, y, z);
-                                    this.field_54 = block.method_1604(this.field_82, x + 1, y, z);
-                                    this.field_104 = block.method_1604(this.field_82, x, y - 1, z);
-                                    this.field_49 = block.method_1604(this.field_82, x, y + 1, z);
+                                    this.field_53 = block.getBrightness(this.field_82, x - 1, y, z);
+                                    this.field_54 = block.getBrightness(this.field_82, x + 1, y, z);
+                                    this.field_104 = block.getBrightness(this.field_82, x, y - 1, z);
+                                    this.field_49 = block.getBrightness(this.field_82, x, y + 1, z);
                                     if (!this.field_75 && !this.field_80) {
                                         this.field_102 = this.field_53;
                                     } else {
-                                        this.field_102 = block.method_1604(this.field_82, x - 1, y - 1, z);
+                                        this.field_102 = block.getBrightness(this.field_82, x - 1, y - 1, z);
                                     }
 
                                     if (!this.field_75 && !this.field_72) {
                                         this.field_45 = this.field_53;
                                     } else {
-                                        this.field_45 = block.method_1604(this.field_82, x - 1, y + 1, z);
+                                        this.field_45 = block.getBrightness(this.field_82, x - 1, y + 1, z);
                                     }
 
                                     if (!this.field_74 && !this.field_80) {
                                         this.field_42 = this.field_54;
                                     } else {
-                                        this.field_42 = block.method_1604(this.field_82, x + 1, y - 1, z);
+                                        this.field_42 = block.getBrightness(this.field_82, x + 1, y - 1, z);
                                     }
 
                                     if (!this.field_74 && !this.field_72) {
                                         this.field_50 = this.field_54;
                                     } else {
-                                        this.field_50 = block.method_1604(this.field_82, x + 1, y + 1, z);
+                                        this.field_50 = block.getBrightness(this.field_82, x + 1, y + 1, z);
                                     }
 
                                     --z;
@@ -430,32 +430,32 @@ public abstract class MixinTileRenderer {
                                     var9 = var10 = var11 = var12 = this.field_94;
                                 } else {
                                     --xTemp;
-                                    this.field_101 = block.method_1604(this.field_82, xTemp, y - 1, z);
-                                    this.field_51 = block.method_1604(this.field_82, xTemp, y, z - 1);
-                                    this.field_53 = block.method_1604(this.field_82, xTemp, y, z + 1);
-                                    this.field_44 = block.method_1604(this.field_82, xTemp, y + 1, z);
+                                    this.field_101 = block.getBrightness(this.field_82, xTemp, y - 1, z);
+                                    this.field_51 = block.getBrightness(this.field_82, xTemp, y, z - 1);
+                                    this.field_53 = block.getBrightness(this.field_82, xTemp, y, z + 1);
+                                    this.field_44 = block.getBrightness(this.field_82, xTemp, y + 1, z);
                                     if (!this.field_73 && !this.field_79) {
                                         this.field_100 = this.field_51;
                                     } else {
-                                        this.field_100 = block.method_1604(this.field_82, xTemp, y - 1, z - 1);
+                                        this.field_100 = block.getBrightness(this.field_82, xTemp, y - 1, z - 1);
                                     }
 
                                     if (!this.field_75 && !this.field_79) {
                                         this.field_102 = this.field_53;
                                     } else {
-                                        this.field_102 = block.method_1604(this.field_82, xTemp, y - 1, z + 1);
+                                        this.field_102 = block.getBrightness(this.field_82, xTemp, y - 1, z + 1);
                                     }
 
                                     if (!this.field_73 && !this.field_71) {
                                         this.field_43 = this.field_51;
                                     } else {
-                                        this.field_43 = block.method_1604(this.field_82, xTemp, y + 1, z - 1);
+                                        this.field_43 = block.getBrightness(this.field_82, xTemp, y + 1, z - 1);
                                     }
 
                                     if (!this.field_75 && !this.field_71) {
                                         this.field_45 = this.field_53;
                                     } else {
-                                        this.field_45 = block.method_1604(this.field_82, xTemp, y + 1, z + 1);
+                                        this.field_45 = block.getBrightness(this.field_82, xTemp, y + 1, z + 1);
                                     }
 
                                     ++xTemp;
@@ -486,32 +486,32 @@ public abstract class MixinTileRenderer {
                                     var9 = var10 = var11 = var12 = this.field_97;
                                 } else {
                                     ++xTemp;
-                                    this.field_41 = block.method_1604(this.field_82, xTemp, y - 1, z);
-                                    this.field_52 = block.method_1604(this.field_82, xTemp, y, z - 1);
-                                    this.field_54 = block.method_1604(this.field_82, xTemp, y, z + 1);
-                                    this.field_48 = block.method_1604(this.field_82, xTemp, y + 1, z);
+                                    this.field_41 = block.getBrightness(this.field_82, xTemp, y - 1, z);
+                                    this.field_52 = block.getBrightness(this.field_82, xTemp, y, z - 1);
+                                    this.field_54 = block.getBrightness(this.field_82, xTemp, y, z + 1);
+                                    this.field_48 = block.getBrightness(this.field_82, xTemp, y + 1, z);
                                     if (!this.field_78 && !this.field_76) {
                                         this.field_105 = this.field_52;
                                     } else {
-                                        this.field_105 = block.method_1604(this.field_82, xTemp, y - 1, z - 1);
+                                        this.field_105 = block.getBrightness(this.field_82, xTemp, y - 1, z - 1);
                                     }
 
                                     if (!this.field_78 && !this.field_74) {
                                         this.field_42 = this.field_54;
                                     } else {
-                                        this.field_42 = block.method_1604(this.field_82, xTemp, y - 1, z + 1);
+                                        this.field_42 = block.getBrightness(this.field_82, xTemp, y - 1, z + 1);
                                     }
 
                                     if (!this.field_70 && !this.field_76) {
                                         this.field_47 = this.field_52;
                                     } else {
-                                        this.field_47 = block.method_1604(this.field_82, xTemp, y + 1, z - 1);
+                                        this.field_47 = block.getBrightness(this.field_82, xTemp, y + 1, z - 1);
                                     }
 
                                     if (!this.field_70 && !this.field_74) {
                                         this.field_50 = this.field_54;
                                     } else {
-                                        this.field_50 = block.method_1604(this.field_82, xTemp, y + 1, z + 1);
+                                        this.field_50 = block.getBrightness(this.field_82, xTemp, y + 1, z + 1);
                                     }
 
                                     --xTemp;
@@ -666,22 +666,22 @@ public abstract class MixinTileRenderer {
                         Tessellator.INSTANCE.start();
                         for (QuadPoint var7 : texturedQuad.getQuadPoints()) {
                             if (texturedQuad.getSide() == BlockFaces.DOWN) {
-                                tessellator.method_1697(0F, -1F, 0F);
+                                tessellator.setNormal(0F, -1F, 0F);
                             }
                             if (texturedQuad.getSide() == BlockFaces.UP) {
-                                tessellator.method_1697(0F, 1F, 0F);
+                                tessellator.setNormal(0F, 1F, 0F);
                             }
                             if (texturedQuad.getSide() == BlockFaces.EAST) {
-                                tessellator.method_1697(0F, 0F, -1F);
+                                tessellator.setNormal(0F, 0F, -1F);
                             }
                             if (texturedQuad.getSide() == BlockFaces.WEST) {
-                                tessellator.method_1697(0F, 0F, 1F);
+                                tessellator.setNormal(0F, 0F, 1F);
                             }
                             if (texturedQuad.getSide() == BlockFaces.NORTH) {
-                                tessellator.method_1697(-1F, 0F, 0F);
+                                tessellator.setNormal(-1F, 0F, 0F);
                             }
                             if (texturedQuad.getSide() == BlockFaces.SOUTH) {
-                                tessellator.method_1697(1F, 0F, 0F);
+                                tessellator.setNormal(1F, 0F, 0F);
                             }
                             tessellator.vertex(((float) var7.pointVector.x * 0.0625F) - .5, ((float) var7.pointVector.y * 0.0625F) - .5, ((float) var7.pointVector.z * 0.0625F) - .5, var7.field_1147, var7.field_1148);
                         }

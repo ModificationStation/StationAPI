@@ -46,7 +46,7 @@ public class FishingRod extends net.minecraft.item.tool.FishingRod {
 
     @Override
     public FishingRod setName(String newName) {
-        return (FishingRod) super.setName(newName);
+        return (FishingRod) super.setTranslationKey(newName);
     }
 
     @Override

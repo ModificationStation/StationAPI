@@ -38,7 +38,7 @@ public class Log extends net.minecraft.item.Log {
 
     @Override
     public Log setName(String newName) {
-        return (Log) super.setName(newName);
+        return (Log) super.setTranslationKey(newName);
     }
 
     @Override

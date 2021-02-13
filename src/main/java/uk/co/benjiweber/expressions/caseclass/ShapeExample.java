@@ -2,6 +2,9 @@ package uk.co.benjiweber.expressions.caseclass;
 
 import static uk.co.benjiweber.expressions.caseclass.ShapeExample.Rectangle.rectangle;
 
+import uk.co.benjiweber.expressions.caseclass.ShapeExample.Circle;
+import uk.co.benjiweber.expressions.caseclass.ShapeExample.Square;
+
 public class ShapeExample {
 
     public static void main(String... args) {

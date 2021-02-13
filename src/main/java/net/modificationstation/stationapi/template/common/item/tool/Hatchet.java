@@ -47,7 +47,7 @@ public class Hatchet extends net.minecraft.item.tool.Hatchet {
 
     @Override
     public Hatchet setName(String newName) {
-        return (Hatchet) super.setName(newName);
+        return (Hatchet) super.setTranslationKey(newName);
     }
 
     @Override

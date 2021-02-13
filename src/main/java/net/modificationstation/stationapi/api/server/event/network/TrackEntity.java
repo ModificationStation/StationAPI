@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.server.event.network;
 
 import lombok.RequiredArgsConstructor;
-import net.minecraft.class_488;
-import net.minecraft.class_80;
 import net.minecraft.entity.EntityBase;
+import net.minecraft.network.EntityHashSet;
+import net.minecraft.server.network.ServerEntityTracker;
 import net.modificationstation.stationapi.api.common.event.Event;
 import net.modificationstation.stationapi.api.common.util.API;
 import net.modificationstation.stationapi.api.server.entity.ICustomTracking;
@@ -23,12 +23,12 @@ public class TrackEntity extends Event {
     /**
      * The dimension's tracker instance. Can be used to (un)track entities.
      */
-    public final class_488 entityTracker;
+    public final ServerEntityTracker entityTracker;
 
     /**
      * The set of tracked entities. Can be used to check if entity is already tracked.
      */
-    public final class_80 trackedEntities;
+    public final EntityHashSet trackedEntities;
 
     /**
      * The entity that server tries to track.
@@ -41,7 +41,7 @@ public class TrackEntity extends Event {
      */
     @API
     public boolean isTracked() {
-        return trackedEntities.method_777(entityToTrack.entityId);
+        return trackedEntities.containsId(entityToTrack.entityId);
     }
 
     /**
@@ -72,6 +72,6 @@ public class TrackEntity extends Event {
      */
     @API
     public void track(int trackingDistance, int updatePeriod, boolean sendVelocity) {
-        entityTracker.method_1667(entityToTrack, trackingDistance, updatePeriod, sendVelocity);
+        entityTracker.trackEntity(entityToTrack, trackingDistance, updatePeriod, sendVelocity);
     }
 }

@@ -22,7 +22,7 @@ public class MaterialBlock extends net.minecraft.block.MaterialBlock {
 
     @Override
     public MaterialBlock sounds(BlockSounds sounds) {
-        return (MaterialBlock) super.sounds(sounds);
+        return (MaterialBlock) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MaterialBlock extends net.minecraft.block.MaterialBlock {
 
     @Override
     public MaterialBlock setName(String string) {
-        return (MaterialBlock) super.setName(string);
+        return (MaterialBlock) super.setTranslationKey(string);
     }
 
     @Override

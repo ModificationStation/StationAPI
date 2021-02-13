@@ -46,7 +46,7 @@ public class Bed extends net.minecraft.item.Bed {
 
     @Override
     public Bed setName(String newName) {
-        return (Bed) super.setName(newName);
+        return (Bed) super.setTranslationKey(newName);
     }
 
     @Override

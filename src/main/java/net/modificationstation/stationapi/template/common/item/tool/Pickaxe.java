@@ -47,7 +47,7 @@ public class Pickaxe extends net.minecraft.item.tool.Pickaxe {
 
     @Override
     public Pickaxe setName(String newName) {
-        return (Pickaxe) super.setName(newName);
+        return (Pickaxe) super.setTranslationKey(newName);
     }
 
     @Override

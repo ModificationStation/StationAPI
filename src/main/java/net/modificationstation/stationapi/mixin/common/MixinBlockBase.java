@@ -5,8 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerBase;
+import net.minecraft.item.Block;
 import net.minecraft.item.ItemInstance;
-import net.minecraft.item.PlaceableTileEntity;
 import net.modificationstation.stationapi.api.client.event.model.ModelRegister;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.block.BlockMiningLevel;
@@ -74,8 +74,8 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(I)Lnet/minecraft/item/PlaceableTileEntity;"))
-    private static PlaceableTileEntity getBlockItem(int blockID) {
-        return BlockItemFactoryCallback.EVENT.getInvoker().getBlockItemFactory(BY_ID[blockID + BY_ID.length], PlaceableTileEntity::new).apply(blockID);
+    private static Block getBlockItem(int blockID) {
+        return BlockItemFactoryCallback.EVENT.getInvoker().getBlockItemFactory(BY_ID[blockID + BY_ID.length], Block::new).apply(blockID);
     }
 
     @Shadow

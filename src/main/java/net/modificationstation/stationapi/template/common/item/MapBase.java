@@ -46,7 +46,7 @@ public class MapBase extends net.minecraft.item.MapBase {
 
     @Override
     public MapBase setName(String newName) {
-        return (MapBase) super.setName(newName);
+        return (MapBase) super.setTranslationKey(newName);
     }
 
     @Override

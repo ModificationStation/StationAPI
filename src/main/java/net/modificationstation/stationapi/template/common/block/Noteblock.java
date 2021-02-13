@@ -22,7 +22,7 @@ public class Noteblock extends net.minecraft.block.Noteblock {
 
     @Override
     public Noteblock sounds(BlockSounds sounds) {
-        return (Noteblock) super.sounds(sounds);
+        return (Noteblock) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Noteblock extends net.minecraft.block.Noteblock {
 
     @Override
     public Noteblock setName(String string) {
-        return (Noteblock) super.setName(string);
+        return (Noteblock) super.setTranslationKey(string);
     }
 
     @Override

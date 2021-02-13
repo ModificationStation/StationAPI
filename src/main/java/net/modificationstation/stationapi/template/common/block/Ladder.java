@@ -22,7 +22,7 @@ public class Ladder extends net.minecraft.block.Ladder {
 
     @Override
     public Ladder sounds(BlockSounds sounds) {
-        return (Ladder) super.sounds(sounds);
+        return (Ladder) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Ladder extends net.minecraft.block.Ladder {
 
     @Override
     public Ladder setName(String string) {
-        return (Ladder) super.setName(string);
+        return (Ladder) super.setTranslationKey(string);
     }
 
     @Override

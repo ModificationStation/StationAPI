@@ -47,7 +47,7 @@ public class Door extends net.minecraft.item.Door {
 
     @Override
     public Door setName(String newName) {
-        return (Door) super.setName(newName);
+        return (Door) super.setTranslationKey(newName);
     }
 
     @Override

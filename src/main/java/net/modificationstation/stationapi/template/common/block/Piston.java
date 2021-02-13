@@ -22,7 +22,7 @@ public class Piston extends net.minecraft.block.Piston {
 
     @Override
     public Piston sounds(BlockSounds sounds) {
-        return (Piston) super.sounds(sounds);
+        return (Piston) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Piston extends net.minecraft.block.Piston {
 
     @Override
     public Piston setName(String string) {
-        return (Piston) super.setName(string);
+        return (Piston) super.setTranslationKey(string);
     }
 
     @Override

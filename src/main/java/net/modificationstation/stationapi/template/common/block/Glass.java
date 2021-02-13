@@ -23,7 +23,7 @@ public class Glass extends net.minecraft.block.Glass {
 
     @Override
     public Glass sounds(BlockSounds sounds) {
-        return (Glass) super.sounds(sounds);
+        return (Glass) super.setSounds(sounds);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class Glass extends net.minecraft.block.Glass {
 
     @Override
     public Glass setName(String string) {
-        return (Glass) super.setName(string);
+        return (Glass) super.setTranslationKey(string);
     }
 
     @Override

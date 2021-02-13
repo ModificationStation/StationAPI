@@ -1,6 +1,7 @@
 package uk.co.benjiweber.expressions.caseclass;
 
 import uk.co.benjiweber.expressions.Value;
+import uk.co.benjiweber.expressions.caseclass.MatchExample.Person;
 
 import static uk.co.benjiweber.expressions.caseclass.MatchesAny._;
 

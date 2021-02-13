@@ -46,7 +46,7 @@ public class Minecart extends net.minecraft.item.Minecart {
 
     @Override
     public Minecart setName(String newName) {
-        return (Minecart) super.setName(newName);
+        return (Minecart) super.setTranslationKey(newName);
     }
 
     @Override

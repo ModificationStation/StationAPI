@@ -32,7 +32,7 @@ public class BlockBase extends net.minecraft.block.BlockBase {
 
     @Override
     public BlockBase sounds(BlockSounds sounds) {
-        return (BlockBase) super.sounds(sounds);
+        return (BlockBase) super.setSounds(sounds);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class BlockBase extends net.minecraft.block.BlockBase {
 
     @Override
     public BlockBase setName(String string) {
-        return (BlockBase) super.setName(string);
+        return (BlockBase) super.setTranslationKey(string);
     }
 
     @Override

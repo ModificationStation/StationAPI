@@ -22,7 +22,7 @@ public class TallGrass extends net.minecraft.block.TallGrass {
 
     @Override
     public TallGrass sounds(BlockSounds sounds) {
-        return (TallGrass) super.sounds(sounds);
+        return (TallGrass) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class TallGrass extends net.minecraft.block.TallGrass {
 
     @Override
     public TallGrass setName(String string) {
-        return (TallGrass) super.setName(string);
+        return (TallGrass) super.setTranslationKey(string);
     }
 
     @Override

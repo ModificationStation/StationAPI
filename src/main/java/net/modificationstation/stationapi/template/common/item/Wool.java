@@ -38,7 +38,7 @@ public class Wool extends net.minecraft.item.Wool {
 
     @Override
     public Wool setName(String newName) {
-        return (Wool) super.setName(newName);
+        return (Wool) super.setTranslationKey(newName);
     }
 
     @Override

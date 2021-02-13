@@ -22,7 +22,7 @@ public class RedstoneTorch extends net.minecraft.block.RedstoneTorch {
 
     @Override
     public RedstoneTorch sounds(BlockSounds sounds) {
-        return (RedstoneTorch) super.sounds(sounds);
+        return (RedstoneTorch) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class RedstoneTorch extends net.minecraft.block.RedstoneTorch {
 
     @Override
     public RedstoneTorch setName(String string) {
-        return (RedstoneTorch) super.setName(string);
+        return (RedstoneTorch) super.setTranslationKey(string);
     }
 
     @Override

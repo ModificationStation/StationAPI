@@ -79,7 +79,7 @@ public class TextureFactory implements net.modificationstation.stationapi.api.cl
         singleIntBuffer.clear();
         class_214.method_742(singleIntBuffer);
         int var6 = singleIntBuffer.get(0);
-        InputStream var7 = texturePack.method_976(originalAtlas);
+        InputStream var7 = texturePack.getResourceAsStream(originalAtlas);
         if (var7 == null)
             textureManager.method_1089(missingTextureImage, var6);
         else

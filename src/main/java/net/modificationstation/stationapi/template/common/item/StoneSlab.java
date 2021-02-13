@@ -38,7 +38,7 @@ public class StoneSlab extends net.minecraft.item.StoneSlab {
 
     @Override
     public StoneSlab setName(String newName) {
-        return (StoneSlab) super.setName(newName);
+        return (StoneSlab) super.setTranslationKey(newName);
     }
 
     @Override

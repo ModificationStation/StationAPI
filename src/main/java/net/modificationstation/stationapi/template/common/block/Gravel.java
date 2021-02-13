@@ -22,7 +22,7 @@ public class Gravel extends net.minecraft.block.Gravel {
 
     @Override
     public Gravel sounds(BlockSounds sounds) {
-        return (Gravel) super.sounds(sounds);
+        return (Gravel) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Gravel extends net.minecraft.block.Gravel {
 
     @Override
     public Gravel setName(String string) {
-        return (Gravel) super.setName(string);
+        return (Gravel) super.setTranslationKey(string);
     }
 
     @Override

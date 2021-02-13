@@ -46,7 +46,7 @@ public class Coal extends net.minecraft.item.Coal {
 
     @Override
     public Coal setName(String newName) {
-        return (Coal) super.setName(newName);
+        return (Coal) super.setTranslationKey(newName);
     }
 
     @Override

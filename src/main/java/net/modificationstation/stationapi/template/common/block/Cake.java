@@ -22,7 +22,7 @@ public class Cake extends net.minecraft.block.Cake {
 
     @Override
     public Cake sounds(BlockSounds sounds) {
-        return (Cake) super.sounds(sounds);
+        return (Cake) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Cake extends net.minecraft.block.Cake {
 
     @Override
     public Cake setName(String string) {
-        return (Cake) super.setName(string);
+        return (Cake) super.setTranslationKey(string);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class RedstoneOre extends net.minecraft.block.RedstoneOre {
 
     @Override
     public RedstoneOre sounds(BlockSounds sounds) {
-        return (RedstoneOre) super.sounds(sounds);
+        return (RedstoneOre) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class RedstoneOre extends net.minecraft.block.RedstoneOre {
 
     @Override
     public RedstoneOre setName(String string) {
-        return (RedstoneOre) super.setName(string);
+        return (RedstoneOre) super.setTranslationKey(string);
     }
 
     @Override

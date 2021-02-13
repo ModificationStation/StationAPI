@@ -23,7 +23,7 @@ public class Sign extends net.minecraft.block.Sign {
 
     @Override
     public Sign sounds(BlockSounds sounds) {
-        return (Sign) super.sounds(sounds);
+        return (Sign) super.setSounds(sounds);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class Sign extends net.minecraft.block.Sign {
 
     @Override
     public Sign setName(String string) {
-        return (Sign) super.setName(string);
+        return (Sign) super.setTranslationKey(string);
     }
 
     @Override

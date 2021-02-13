@@ -1,5 +1,10 @@
 package uk.co.benjiweber.expressions;
 
+import uk.co.benjiweber.expressions.InstanceOfMethodReference.Is;
+import uk.co.benjiweber.expressions.InstanceOfMethodReference.OneArg;
+import uk.co.benjiweber.expressions.InstanceOfMethodReference.OneArgApplicator;
+import uk.co.benjiweber.expressions.InstanceOfMethodReference.When;
+
 public class InstanceOfMethodReference {
 
     public static void main(String... args) throws Exception {

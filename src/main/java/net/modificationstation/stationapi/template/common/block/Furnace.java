@@ -22,7 +22,7 @@ public class Furnace extends net.minecraft.block.Furnace {
 
     @Override
     public Furnace sounds(BlockSounds sounds) {
-        return (Furnace) super.sounds(sounds);
+        return (Furnace) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Furnace extends net.minecraft.block.Furnace {
 
     @Override
     public Furnace setName(String string) {
-        return (Furnace) super.setName(string);
+        return (Furnace) super.setTranslationKey(string);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class SoulSand extends net.minecraft.block.SoulSand {
 
     @Override
     public SoulSand sounds(BlockSounds sounds) {
-        return (SoulSand) super.sounds(sounds);
+        return (SoulSand) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class SoulSand extends net.minecraft.block.SoulSand {
 
     @Override
     public SoulSand setName(String string) {
-        return (SoulSand) super.setName(string);
+        return (SoulSand) super.setTranslationKey(string);
     }
 
     @Override

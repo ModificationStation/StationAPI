@@ -22,7 +22,7 @@ public class Ice extends net.minecraft.block.Ice {
 
     @Override
     public Ice sounds(BlockSounds sounds) {
-        return (Ice) super.sounds(sounds);
+        return (Ice) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Ice extends net.minecraft.block.Ice {
 
     @Override
     public Ice setName(String string) {
-        return (Ice) super.setName(string);
+        return (Ice) super.setTranslationKey(string);
     }
 
     @Override

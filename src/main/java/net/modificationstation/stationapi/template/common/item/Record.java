@@ -46,7 +46,7 @@ public class Record extends net.minecraft.item.Record {
 
     @Override
     public Record setName(String newName) {
-        return (Record) super.setName(newName);
+        return (Record) super.setTranslationKey(newName);
     }
 
     @Override

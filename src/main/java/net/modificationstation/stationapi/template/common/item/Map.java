@@ -46,7 +46,7 @@ public class Map extends net.minecraft.item.Map {
 
     @Override
     public Map setName(String newName) {
-        return (Map) super.setName(newName);
+        return (Map) super.setTranslationKey(newName);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.common.block;
 
-import net.minecraft.item.PlaceableTileEntity;
+import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
 import net.modificationstation.stationapi.impl.common.block.HasMetaNamedBlockItemImpl;
 import net.modificationstation.stationapi.template.common.item.MetaNamedBlock;
@@ -25,7 +25,7 @@ public interface IHasMetaNamedBlockItem extends IHasCustomBlockItemFactory {
      * @return {@link MetaNamedBlock#MetaNamedBlock(int)}.
      */
     @Override
-    default IntFunction<PlaceableTileEntity> getBlockItemFactory() {
+    default IntFunction<Block> getBlockItemFactory() {
         return HasMetaNamedBlockItemImpl.FACTORY;
     }
 

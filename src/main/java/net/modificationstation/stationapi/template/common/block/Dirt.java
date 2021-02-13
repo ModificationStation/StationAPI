@@ -22,7 +22,7 @@ public class Dirt extends net.minecraft.block.Dirt {
 
     @Override
     public Dirt sounds(BlockSounds sounds) {
-        return (Dirt) super.sounds(sounds);
+        return (Dirt) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Dirt extends net.minecraft.block.Dirt {
 
     @Override
     public Dirt setName(String string) {
-        return (Dirt) super.setName(string);
+        return (Dirt) super.setTranslationKey(string);
     }
 
     @Override

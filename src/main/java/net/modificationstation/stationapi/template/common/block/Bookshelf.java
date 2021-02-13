@@ -22,7 +22,7 @@ public class Bookshelf extends net.minecraft.block.Bookshelf {
 
     @Override
     public Bookshelf sounds(BlockSounds sounds) {
-        return (Bookshelf) super.sounds(sounds);
+        return (Bookshelf) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Bookshelf extends net.minecraft.block.Bookshelf {
 
     @Override
     public Bookshelf setName(String string) {
-        return (Bookshelf) super.setName(string);
+        return (Bookshelf) super.setTranslationKey(string);
     }
 
     @Override

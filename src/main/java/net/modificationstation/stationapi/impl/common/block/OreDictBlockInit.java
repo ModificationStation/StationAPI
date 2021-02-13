@@ -28,7 +28,7 @@ public class OreDictBlockInit implements BlockRegister {
         addBlock0Damage("sandstone", BlockBase.SANDSTONE);
         addBlock0Damage("cobweb", BlockBase.COBWEB);
         addBlock0Damage("wool", BlockBase.WOOL);
-        addBlock0Damage("bricks", BlockBase.BRICK);
+        addBlock0Damage("bricks", BlockBase.BRICKS);
         addBlock0Damage("bookshelf", BlockBase.BOOKSHELF);
         addBlock0Damage("cobblestoneMossy", BlockBase.MOSSY_COBBLESTONE);
         addBlock0Damage("obsidian", BlockBase.OBSIDIAN);
@@ -45,13 +45,13 @@ public class OreDictBlockInit implements BlockRegister {
         addBlock0Damage("torch", BlockBase.TORCH);
         addBlock0Damage("fire", BlockBase.FIRE);
         addBlock0Damage("spawnerMob", BlockBase.MOB_SPAWNER);
-        addBlock0Damage("stairsWood", BlockBase.STAIRS_WOOD);
-        addBlock0Damage("stairsCobblestone", BlockBase.STAIRS_STONE);
+        addBlock0Damage("stairsWood", BlockBase.WOOD_STAIRS);
+        addBlock0Damage("stairsCobblestone", BlockBase.COBBLESTONE_STAIRS);
         addBlockIgnoreDamage("farmland", BlockBase.FARMLAND);
-        addBlockIgnoreDamage("door", BlockBase.DOOR_WOOD);
-        addBlockIgnoreDamage("door", BlockBase.DOOR_IRON);
-        addBlockIgnoreDamage("doorWood", BlockBase.DOOR_WOOD);
-        addBlockIgnoreDamage("doorIron", BlockBase.DOOR_IRON);
+        addBlockIgnoreDamage("door", BlockBase.WOOD_DOOR);
+        addBlockIgnoreDamage("door", BlockBase.IRON_DOOR);
+        addBlockIgnoreDamage("doorWood", BlockBase.WOOD_DOOR);
+        addBlockIgnoreDamage("doorIron", BlockBase.IRON_DOOR);
         addBlockIgnoreDamage("ladder", BlockBase.LADDER);
         addBlockIgnoreDamage("ladderWood", BlockBase.LADDER);
         addBlock0Damage("snow", BlockBase.SNOW);

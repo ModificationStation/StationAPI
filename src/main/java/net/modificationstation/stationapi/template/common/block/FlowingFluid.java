@@ -23,7 +23,7 @@ public class FlowingFluid extends net.minecraft.block.FlowingFluid {
 
     @Override
     public FlowingFluid sounds(BlockSounds sounds) {
-        return (FlowingFluid) super.sounds(sounds);
+        return (FlowingFluid) super.setSounds(sounds);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class FlowingFluid extends net.minecraft.block.FlowingFluid {
 
     @Override
     public FlowingFluid setName(String string) {
-        return (FlowingFluid) super.setName(string);
+        return (FlowingFluid) super.setTranslationKey(string);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.server.entity;
 
-import net.minecraft.class_488;
-import net.minecraft.class_80;
 import net.minecraft.entity.EntityBase;
+import net.minecraft.network.EntityHashSet;
+import net.minecraft.server.network.ServerEntityTracker;
 import net.modificationstation.stationapi.api.common.util.TriState;
 import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
 import net.modificationstation.stationapi.impl.server.entity.TrackingImpl;
@@ -23,7 +23,7 @@ public interface ITracking extends ICustomTracking {
      * @param trackedEntities the set of tracked entities. Can be used to check if entity is already tracked.
      */
     @Override
-    default void track(class_488 entityTracker, class_80 trackedEntities) {
+    default void track(ServerEntityTracker entityTracker, EntityHashSet trackedEntities) {
         TrackingImpl.track(entityTracker, trackedEntities, (EntityBase) this, getTrackingDistance(), getUpdatePeriod(), sendVelocity());
     }
 

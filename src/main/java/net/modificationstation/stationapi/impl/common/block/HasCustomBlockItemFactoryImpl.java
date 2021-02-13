@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.common.block;
 
 import net.minecraft.block.BlockBase;
-import net.minecraft.item.PlaceableTileEntity;
+import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.common.block.*;
 import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
 
@@ -30,7 +30,7 @@ public class HasCustomBlockItemFactoryImpl implements BlockItemFactoryCallback {
      * @return new or current factory.
      */
     @Override
-    public IntFunction<PlaceableTileEntity> getBlockItemFactory(BlockBase block, IntFunction<PlaceableTileEntity> currentFactory) {
+    public IntFunction<Block> getBlockItemFactory(BlockBase block, IntFunction<Block> currentFactory) {
         if (block instanceof IHasCustomBlockItemFactory)
             currentFactory = ((IHasCustomBlockItemFactory) block).getBlockItemFactory();
         Class<? extends BlockBase> blockClass = block.getClass();
@@ -38,13 +38,13 @@ public class HasCustomBlockItemFactoryImpl implements BlockItemFactoryCallback {
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             try {
                 //noinspection unchecked
-                currentFactory = (IntFunction<PlaceableTileEntity>) LambdaMetafactory.metafactory(
+                currentFactory = (IntFunction<Block>) LambdaMetafactory.metafactory(
                         lookup,
                         "apply",
                         MethodType.methodType(IntFunction.class),
                         MethodType.methodType(Object.class, int.class),
                         lookup.findConstructor(blockClass.getAnnotation(HasCustomBlockItemFactory.class).value(), MethodType.methodType(void.class, int.class)),
-                        MethodType.methodType(PlaceableTileEntity.class, int.class)
+                        MethodType.methodType(Block.class, int.class)
                 ).getTarget().invokeExact();
             } catch (Throwable e) {
                 throw new RuntimeException(e);

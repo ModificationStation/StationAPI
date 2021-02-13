@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.common.block;
 
 import net.minecraft.block.BlockBase;
-import net.minecraft.item.PlaceableTileEntity;
+import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.common.block.*;
 import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
 import net.modificationstation.stationapi.template.common.item.MetaBlock;
@@ -28,7 +28,7 @@ public class HasMetaBlockItemImpl implements BlockItemFactoryCallback {
      * @return {@link MetaBlock#MetaBlock(int)} if annotation is present, otherwise currentFactory.
      */
     @Override
-    public IntFunction<PlaceableTileEntity> getBlockItemFactory(BlockBase block, IntFunction<PlaceableTileEntity> currentFactory) {
+    public IntFunction<Block> getBlockItemFactory(BlockBase block, IntFunction<Block> currentFactory) {
         if (block.getClass().isAnnotationPresent(HasMetaBlockItem.class))
             currentFactory = FACTORY;
         return currentFactory;
@@ -37,5 +37,5 @@ public class HasMetaBlockItemImpl implements BlockItemFactoryCallback {
     /**
      * {@link MetaBlock#MetaBlock(int)} field.
      */
-    public static final IntFunction<PlaceableTileEntity> FACTORY = MetaBlock::new;
+    public static final IntFunction<Block> FACTORY = MetaBlock::new;
 }

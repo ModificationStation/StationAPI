@@ -22,7 +22,7 @@ public class StoneSlab extends net.minecraft.block.StoneSlab {
 
     @Override
     public StoneSlab sounds(BlockSounds sounds) {
-        return (StoneSlab) super.sounds(sounds);
+        return (StoneSlab) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class StoneSlab extends net.minecraft.block.StoneSlab {
 
     @Override
     public StoneSlab setName(String string) {
-        return (StoneSlab) super.setName(string);
+        return (StoneSlab) super.setTranslationKey(string);
     }
 
     @Override

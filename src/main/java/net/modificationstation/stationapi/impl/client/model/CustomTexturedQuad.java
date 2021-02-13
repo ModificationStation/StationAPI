@@ -59,9 +59,9 @@ public class CustomTexturedQuad implements net.modificationstation.stationapi.ap
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId("/assets/" + modid + "/models/textures/" + texture + ".png"));
         arg.start();
         if (this.mirror) {
-            arg.method_1697(-((float) var5.x), -((float) var5.y), -((float) var5.z));
+            arg.setNormal(-((float) var5.x), -((float) var5.y), -((float) var5.z));
         } else {
-            arg.method_1697((float) var5.x, (float) var5.y, (float) var5.z);
+            arg.setNormal((float) var5.x, (float) var5.y, (float) var5.z);
         }
 
         for (int var6 = 0; var6 < 4; ++var6) {

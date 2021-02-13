@@ -22,7 +22,7 @@ public class Sand extends net.minecraft.block.Sand {
 
     @Override
     public Sand sounds(BlockSounds sounds) {
-        return (Sand) super.sounds(sounds);
+        return (Sand) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Sand extends net.minecraft.block.Sand {
 
     @Override
     public Sand setName(String string) {
-        return (Sand) super.setName(string);
+        return (Sand) super.setTranslationKey(string);
     }
 
     @Override

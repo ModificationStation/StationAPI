@@ -46,7 +46,7 @@ public class FoodBase extends net.minecraft.item.food.FoodBase {
 
     @Override
     public FoodBase setName(String newName) {
-        return (FoodBase) super.setName(newName);
+        return (FoodBase) super.setTranslationKey(newName);
     }
 
     @Override

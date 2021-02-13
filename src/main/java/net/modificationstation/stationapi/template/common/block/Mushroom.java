@@ -22,7 +22,7 @@ public class Mushroom extends net.minecraft.block.Mushroom {
 
     @Override
     public Mushroom sounds(BlockSounds sounds) {
-        return (Mushroom) super.sounds(sounds);
+        return (Mushroom) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Mushroom extends net.minecraft.block.Mushroom {
 
     @Override
     public Mushroom setName(String string) {
-        return (Mushroom) super.setName(string);
+        return (Mushroom) super.setTranslationKey(string);
     }
 
     @Override

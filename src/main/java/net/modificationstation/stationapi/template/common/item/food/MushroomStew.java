@@ -46,7 +46,7 @@ public class MushroomStew extends net.minecraft.item.food.MushroomStew {
 
     @Override
     public MushroomStew setName(String newName) {
-        return (MushroomStew) super.setName(newName);
+        return (MushroomStew) super.setTranslationKey(newName);
     }
 
     @Override

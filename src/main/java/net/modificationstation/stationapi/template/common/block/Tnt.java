@@ -22,7 +22,7 @@ public class Tnt extends net.minecraft.block.Tnt {
 
     @Override
     public Tnt sounds(BlockSounds sounds) {
-        return (Tnt) super.sounds(sounds);
+        return (Tnt) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Tnt extends net.minecraft.block.Tnt {
 
     @Override
     public Tnt setName(String string) {
-        return (Tnt) super.setName(string);
+        return (Tnt) super.setTranslationKey(string);
     }
 
     @Override

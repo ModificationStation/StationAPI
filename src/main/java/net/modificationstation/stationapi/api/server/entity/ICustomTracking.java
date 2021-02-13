@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.server.entity;
 
-import net.minecraft.class_488;
-import net.minecraft.class_80;
+import net.minecraft.network.EntityHashSet;
+import net.minecraft.server.network.ServerEntityTracker;
 import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
 
 /**
@@ -18,7 +18,7 @@ public interface ICustomTracking {
      * Track method that gets called after server tries tracking an entity by checking if it's instance of a vanilla class.
      * @param entityTracker current dimension's tracker instance. Can be used to (un)track entities.
      * @param trackedEntities the set of tracked entities. Can be used to check if entity is already tracked.
-     * @see ITracking#track(class_488, class_80)
+     * @see ITracking#track(ServerEntityTracker, EntityHashSet)
      */
-    void track(class_488 entityTracker, class_80 trackedEntities);
+    void track(ServerEntityTracker entityTracker, EntityHashSet trackedEntities);
 }

@@ -58,7 +58,7 @@ public class BlockRegistryInit implements BlockRegister {
         registry.registerValue(Identifier.of("iron_block"), BlockBase.IRON_BLOCK);
         registry.registerValue(Identifier.of("double_slab"), BlockBase.DOUBLE_STONE_SLAB);
         registry.registerValue(Identifier.of("slab"), BlockBase.STONE_SLAB);
-        registry.registerValue(Identifier.of("bricks"), BlockBase.BRICK);
+        registry.registerValue(Identifier.of("bricks"), BlockBase.BRICKS);
         registry.registerValue(Identifier.of("tnt"), BlockBase.TNT);
         registry.registerValue(Identifier.of("bookshelf"), BlockBase.BOOKSHELF);
         registry.registerValue(Identifier.of("mossy_cobblestone"), BlockBase.MOSSY_COBBLESTONE);
@@ -66,7 +66,7 @@ public class BlockRegistryInit implements BlockRegister {
         registry.registerValue(Identifier.of("torch"), BlockBase.TORCH);
         registry.registerValue(Identifier.of("fire"), BlockBase.FIRE);
         registry.registerValue(Identifier.of("spawner"), BlockBase.MOB_SPAWNER);
-        registry.registerValue(Identifier.of("plank_stairs"), BlockBase.STAIRS_WOOD);
+        registry.registerValue(Identifier.of("plank_stairs"), BlockBase.WOOD_STAIRS);
         registry.registerValue(Identifier.of("chest"), BlockBase.CHEST);
         registry.registerValue(Identifier.of("redstone_wire"), BlockBase.REDSTONE_DUST);
         registry.registerValue(Identifier.of("diamond_ore"), BlockBase.DIAMOND_ORE);
@@ -77,14 +77,14 @@ public class BlockRegistryInit implements BlockRegister {
         registry.registerValue(Identifier.of("furnace"), BlockBase.FURNACE);
         registry.registerValue(Identifier.of("furnace_lit"), BlockBase.FURNACE_LIT);
         registry.registerValue(Identifier.of("sign"), BlockBase.STANDING_SIGN);
-        registry.registerValue(Identifier.of("plank_door"), BlockBase.DOOR_WOOD);
+        registry.registerValue(Identifier.of("plank_door"), BlockBase.WOOD_DOOR);
         registry.registerValue(Identifier.of("ladder"), BlockBase.LADDER);
         registry.registerValue(Identifier.of("rail"), BlockBase.RAIL);
-        registry.registerValue(Identifier.of("cobblestone_stairs"), BlockBase.STAIRS_STONE);
+        registry.registerValue(Identifier.of("cobblestone_stairs"), BlockBase.COBBLESTONE_STAIRS);
         registry.registerValue(Identifier.of("wall_sign"), BlockBase.WALL_SIGN);
         registry.registerValue(Identifier.of("lever"), BlockBase.LEVER);
         registry.registerValue(Identifier.of("plank_pressure_plate"), BlockBase.WOODEN_PRESSURE_PLATE);
-        registry.registerValue(Identifier.of("iron_door"), BlockBase.DOOR_IRON);
+        registry.registerValue(Identifier.of("iron_door"), BlockBase.IRON_DOOR);
         registry.registerValue(Identifier.of("stone_pressure_plate"), BlockBase.STONE_PRESSURE_PLATE);
         registry.registerValue(Identifier.of("redstone_ore"), BlockBase.REDSTONE_ORE);
         registry.registerValue(Identifier.of("redstone_ore_lit"), BlockBase.REDSTONE_ORE_LIT);

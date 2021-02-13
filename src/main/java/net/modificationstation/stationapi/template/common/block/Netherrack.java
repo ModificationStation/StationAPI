@@ -22,7 +22,7 @@ public class Netherrack extends net.minecraft.block.Netherrack {
 
     @Override
     public Netherrack sounds(BlockSounds sounds) {
-        return (Netherrack) super.sounds(sounds);
+        return (Netherrack) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Netherrack extends net.minecraft.block.Netherrack {
 
     @Override
     public Netherrack setName(String string) {
-        return (Netherrack) super.setName(string);
+        return (Netherrack) super.setTranslationKey(string);
     }
 
     @Override

@@ -26,7 +26,7 @@ public final class BlockRegistry extends LevelRegistry<BlockBase> {
                     remap(block, newID);
             }
         });
-        Stats.method_753();
+        Stats.setupBlockStats();
     }
 
     private void remap(BlockBase block, int newID) {
@@ -66,7 +66,7 @@ public final class BlockRegistry extends LevelRegistry<BlockBase> {
     protected void update() {
         for (BlockBase blockBase : BlockBase.BY_ID)
             if (blockBase != null && getIdentifier(blockBase) == null)
-                registerValue(Identifier.of(blockBase.getName() + "_" + blockBase.id), blockBase);
+                registerValue(Identifier.of(blockBase.getTranslationKey() + "_" + blockBase.id), blockBase);
     }
 
     @Override

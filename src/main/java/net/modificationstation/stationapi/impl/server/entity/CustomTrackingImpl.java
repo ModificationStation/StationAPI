@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.server.entity;
 
-import net.minecraft.class_488;
-import net.minecraft.class_80;
+import net.minecraft.network.EntityHashSet;
+import net.minecraft.server.network.ServerEntityTracker;
 import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.server.entity.ICustomTracking;
 import net.modificationstation.stationapi.api.server.entity.ITracking;
@@ -19,7 +19,7 @@ import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
 public class CustomTrackingImpl {
 
     /**
-     * Invokes {@link ICustomTracking#track(class_488, class_80)} in entity if it's instance of {@link ICustomTracking} via {@link TrackEntity} hook.
+     * Invokes {@link ICustomTracking#track(ServerEntityTracker, EntityHashSet)} in entity if it's instance of {@link ICustomTracking} via {@link TrackEntity} hook.
      * @see TrackEntity
      */
     @EventListener

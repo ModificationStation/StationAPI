@@ -22,7 +22,7 @@ public class LockedChest extends net.minecraft.block.LockedChest {
 
     @Override
     public LockedChest sounds(BlockSounds sounds) {
-        return (LockedChest) super.sounds(sounds);
+        return (LockedChest) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class LockedChest extends net.minecraft.block.LockedChest {
 
     @Override
     public LockedChest setName(String string) {
-        return (LockedChest) super.setName(string);
+        return (LockedChest) super.setTranslationKey(string);
     }
 
     @Override

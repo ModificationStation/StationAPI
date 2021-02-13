@@ -22,7 +22,7 @@ public class Fire extends net.minecraft.block.Fire {
 
     @Override
     public Fire sounds(BlockSounds sounds) {
-        return (Fire) super.sounds(sounds);
+        return (Fire) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Fire extends net.minecraft.block.Fire {
 
     @Override
     public Fire setName(String string) {
-        return (Fire) super.setName(string);
+        return (Fire) super.setTranslationKey(string);
     }
 
     @Override

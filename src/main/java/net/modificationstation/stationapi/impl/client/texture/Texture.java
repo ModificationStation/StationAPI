@@ -37,7 +37,7 @@ public abstract class Texture extends TextureBinder {
         bindTexture(mc.textureManager);
         int targetWidth = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, 4096) / textureRegistry.texturesInLine();
         int targetHeight = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, 4097) / textureRegistry.texturesInColumn();
-        BufferedImage image = ImageIO.read(mc.texturePackManager.texturePack.method_976(pathToImage));
+        BufferedImage image = ImageIO.read(mc.texturePackManager.texturePack.getResourceAsStream(pathToImage));
         int width = image.getWidth();
         int height = image.getHeight();
         setImage(image, targetWidth, targetHeight, width, height);

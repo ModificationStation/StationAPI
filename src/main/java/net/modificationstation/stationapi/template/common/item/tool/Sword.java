@@ -47,7 +47,7 @@ public class Sword extends net.minecraft.item.tool.Sword {
 
     @Override
     public Sword setName(String newName) {
-        return (Sword) super.setName(newName);
+        return (Sword) super.setTranslationKey(newName);
     }
 
     @Override

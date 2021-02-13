@@ -22,7 +22,7 @@ public class Leaves extends net.minecraft.block.Leaves {
 
     @Override
     public Leaves sounds(BlockSounds sounds) {
-        return (Leaves) super.sounds(sounds);
+        return (Leaves) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Leaves extends net.minecraft.block.Leaves {
 
     @Override
     public Leaves setName(String string) {
-        return (Leaves) super.setName(string);
+        return (Leaves) super.setTranslationKey(string);
     }
 
     @Override

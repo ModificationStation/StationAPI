@@ -27,7 +27,7 @@ public final class ItemRegistry extends LevelRegistry<ItemBase> {
                     remap(item, newID);
             }
         });
-        Stats.onItemsRegistered();
+        Stats.setupItemStats();
     }
 
     private void remap(ItemBase item, int newID) {

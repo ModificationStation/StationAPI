@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.common.block;
 
-import net.minecraft.item.PlaceableTileEntity;
+import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
 
 import java.lang.annotation.*;
@@ -25,5 +25,5 @@ public @interface HasCustomBlockItemFactory {
      * BlockItem class supplier method.
      * @return the block item class that'll be instantiated and used as current block's item.
      */
-    Class<? extends PlaceableTileEntity> value();
+    Class<? extends Block> value();
 }

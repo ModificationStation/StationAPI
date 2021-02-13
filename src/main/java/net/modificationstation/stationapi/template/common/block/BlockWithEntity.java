@@ -32,7 +32,7 @@ public abstract class BlockWithEntity extends net.minecraft.block.BlockWithEntit
 
     @Override
     public BlockWithEntity sounds(BlockSounds sounds) {
-        return (BlockWithEntity) super.sounds(sounds);
+        return (BlockWithEntity) super.setSounds(sounds);
     }
 
     @Override
@@ -67,7 +67,7 @@ public abstract class BlockWithEntity extends net.minecraft.block.BlockWithEntit
 
     @Override
     public BlockWithEntity setName(String string) {
-        return (BlockWithEntity) super.setName(string);
+        return (BlockWithEntity) super.setTranslationKey(string);
     }
 
     @Override

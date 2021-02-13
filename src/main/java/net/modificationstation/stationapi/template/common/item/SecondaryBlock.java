@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class SecondaryBlock extends net.minecraft.item.PlaceableBlock {
+public class SecondaryBlock extends net.minecraft.item.SecondaryBlock {
 
     public SecondaryBlock(Identifier identifier, BlockBase tile) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), tile);
@@ -47,7 +47,7 @@ public class SecondaryBlock extends net.minecraft.item.PlaceableBlock {
 
     @Override
     public SecondaryBlock setName(String newName) {
-        return (SecondaryBlock) super.setName(newName);
+        return (SecondaryBlock) super.setTranslationKey(newName);
     }
 
     @Override

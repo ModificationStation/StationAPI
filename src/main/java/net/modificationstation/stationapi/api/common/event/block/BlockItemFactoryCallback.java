@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.common.event.block;
 
 import net.minecraft.block.BlockBase;
-import net.minecraft.item.PlaceableTileEntity;
+import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.common.block.*;
 
 import java.util.function.IntFunction;
@@ -21,9 +21,9 @@ public class BlockItemFactoryCallback extends BlockEvent {
     /**
      * Current factory that's going to be executed to get block item instance.
      */
-    public IntFunction<PlaceableTileEntity> currentFactory;
+    public IntFunction<Block> currentFactory;
 
-    public BlockItemFactoryCallback(BlockBase block, IntFunction<PlaceableTileEntity> currentFactory) {
+    public BlockItemFactoryCallback(BlockBase block, IntFunction<Block> currentFactory) {
         super(block);
         this.currentFactory = currentFactory;
     }

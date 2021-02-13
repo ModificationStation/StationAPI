@@ -22,7 +22,7 @@ public class Button extends net.minecraft.block.Button {
 
     @Override
     public Button sounds(BlockSounds sounds) {
-        return (Button) super.sounds(sounds);
+        return (Button) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Button extends net.minecraft.block.Button {
 
     @Override
     public Button setName(String string) {
-        return (Button) super.setName(string);
+        return (Button) super.setTranslationKey(string);
     }
 
     @Override

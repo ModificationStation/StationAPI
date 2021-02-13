@@ -46,7 +46,7 @@ public class Redstone extends net.minecraft.item.Redstone {
 
     @Override
     public Redstone setName(String newName) {
-        return (Redstone) super.setName(newName);
+        return (Redstone) super.setTranslationKey(newName);
     }
 
     @Override

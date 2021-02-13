@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.template.common.item;
 
-public class Block extends net.minecraft.item.PlaceableTileEntity {
+public class Block extends net.minecraft.item.Block {
     
     public Block(int i) {
         super(i);
@@ -38,7 +38,7 @@ public class Block extends net.minecraft.item.PlaceableTileEntity {
 
     @Override
     public Block setName(String newName) {
-        return (Block) super.setName(newName);
+        return (Block) super.setTranslationKey(newName);
     }
 
     @Override

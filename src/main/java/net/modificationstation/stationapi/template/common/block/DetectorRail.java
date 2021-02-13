@@ -22,7 +22,7 @@ public class DetectorRail extends net.minecraft.block.DetectorRail {
 
     @Override
     public DetectorRail sounds(BlockSounds sounds) {
-        return (DetectorRail) super.sounds(sounds);
+        return (DetectorRail) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class DetectorRail extends net.minecraft.block.DetectorRail {
 
     @Override
     public DetectorRail setName(String string) {
-        return (DetectorRail) super.setName(string);
+        return (DetectorRail) super.setTranslationKey(string);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class Obsidian extends net.minecraft.block.Obsidian {
 
     @Override
     public Obsidian sounds(BlockSounds sounds) {
-        return (Obsidian) super.sounds(sounds);
+        return (Obsidian) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Obsidian extends net.minecraft.block.Obsidian {
 
     @Override
     public Obsidian setName(String string) {
-        return (Obsidian) super.setName(string);
+        return (Obsidian) super.setTranslationKey(string);
     }
 
     @Override

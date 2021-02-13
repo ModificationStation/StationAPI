@@ -46,7 +46,7 @@ public class Egg extends net.minecraft.item.Egg {
 
     @Override
     public Egg setName(String newName) {
-        return (Egg) super.setName(newName);
+        return (Egg) super.setTranslationKey(newName);
     }
 
     @Override

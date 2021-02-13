@@ -22,7 +22,7 @@ public class Clay extends net.minecraft.block.Clay {
 
     @Override
     public Clay sounds(BlockSounds sounds) {
-        return (Clay) super.sounds(sounds);
+        return (Clay) super.setSounds(sounds);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Clay extends net.minecraft.block.Clay {
 
     @Override
     public Clay setName(String string) {
-        return (Clay) super.setName(string);
+        return (Clay) super.setTranslationKey(string);
     }
 
     @Override
