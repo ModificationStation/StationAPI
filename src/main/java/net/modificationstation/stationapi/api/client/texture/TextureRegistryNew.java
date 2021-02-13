@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.texture;
 
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.Registry;
-import net.modificationstation.stationapi.impl.common.StationAPI;
 
 public class TextureRegistryNew extends Registry<TextureSet> {
 

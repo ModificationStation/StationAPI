@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.impl.server.entity;
 
 import net.minecraft.class_488;
 import net.minecraft.class_80;
-import net.minecraft.entity.EntityBase;
 import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.server.entity.ICustomTracking;
 import net.modificationstation.stationapi.api.server.entity.ITracking;

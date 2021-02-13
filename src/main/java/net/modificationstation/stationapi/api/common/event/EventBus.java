@@ -7,7 +7,8 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 public class EventBus {
@@ -77,15 +78,14 @@ public class EventBus {
 //    }
 
     public <T extends Event> void register(Class<T> eventType, Consumer<T> listener) {
-        listeners.add(new EventListenerContainer<>(eventType, listener, EventListenerContainer.DEFAULT_PRIORITY));
+        register(new EventListenerContainer<>(eventType, listener, EventListenerContainer.DEFAULT_PRIORITY));
     }
 
     public <T extends Event> void register(Class<T> eventType, Consumer<T> listener, int priority) {
         listeners.add(new EventListenerContainer<>(eventType, listener, priority));
-        Collections.sort(listeners);
     }
 
-    public <T extends Event> void post(T event) {
+    public <T extends Event> boolean post(T event) {
         boolean dead = true;
         for (EventListenerContainer<? extends Event> eventListenerData : listeners)
             if (eventListenerData.eventType.isInstance(event)) {
@@ -95,9 +95,10 @@ public class EventBus {
             }
         if (dead && !(event instanceof DeadEvent))
             post(new DeadEvent(event));
+        return event.isCancelled();
     }
 
-    private final List<EventListenerContainer<? extends Event>> listeners = new ArrayList<>();
+    private final Set<EventListenerContainer<? extends Event>> listeners = new TreeSet<>();
 
     private static final MethodHandles.Lookup IMPL_LOOKUP;
     static {

@@ -4,10 +4,10 @@ import com.google.common.primitives.Doubles;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.packet.AbstractPacket;
 import net.minecraft.util.maths.MathHelper;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.entity.HasOwner;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
-import net.modificationstation.stationapi.impl.common.StationAPI;
 
 public interface IStationSpawnData extends CustomSpawnData {
 

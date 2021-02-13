@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.api.common.block;
 
 import net.minecraft.item.PlaceableTileEntity;
-import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryProvider;
+import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
 
 import java.util.function.IntFunction;
 
 /**
- * Interface that blocks can use to provide a custom block item factory on register via {@link BlockItemFactoryProvider} hook.
+ * Interface that blocks can use to provide a custom block item factory on register via {@link BlockItemFactoryCallback} hook.
  * @author mine_diver
- * @see BlockItemFactoryProvider
+ * @see BlockItemFactoryCallback
  * @see HasCustomBlockItemFactory
  * @see IHasMetaBlockItem
  * @see HasMetaBlockItem

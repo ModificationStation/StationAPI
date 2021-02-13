@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegister;
-import net.modificationstation.stationapi.impl.common.StationAPI;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

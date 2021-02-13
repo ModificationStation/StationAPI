@@ -3,10 +3,8 @@ package net.modificationstation.stationapi.api.client.event.option;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationapi.api.common.event.Event;
-import net.modificationstation.stationapi.api.common.event.GameEventOld;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Used to add keybindings to the keybinding screen.

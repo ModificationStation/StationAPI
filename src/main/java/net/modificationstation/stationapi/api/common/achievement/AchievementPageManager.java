@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.common.util.HasHandler;
 
 import java.util.List;
 
-public interface AchievementPageManager extends HasHandler<AchievementPageManager>, AchievementRegister {
+public interface AchievementPageManager extends HasHandler<AchievementPageManager> {
 
     AchievementPageManager INSTANCE = new AchievementPageManager() {
 
@@ -15,13 +15,6 @@ public interface AchievementPageManager extends HasHandler<AchievementPageManage
         @Override
         public void setHandler(AchievementPageManager handler) {
             this.handler = handler;
-            AchievementRegister.EVENT.register(handler);
-        }
-
-        @Override
-        public void registerAchievements(List<Achievement> achievements) {
-            checkAccess(handler);
-            handler.registerAchievements(achievements);
         }
 
         @Override

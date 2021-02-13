@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegister;
 import net.modificationstation.stationapi.api.common.event.Event;
-import net.modificationstation.stationapi.api.common.event.GameEventOld;
 import org.lwjgl.input.Keyboard;
-
-import java.util.function.Consumer;
 
 /**
  * Used to handle keypresses.

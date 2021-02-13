@@ -2,6 +2,9 @@ package net.modificationstation.stationapi.impl.common.achievement;
 
 import net.minecraft.achievement.Achievement;
 import net.minecraft.achievement.Achievements;
+import net.modificationstation.stationapi.api.common.event.EventListener;
+import net.modificationstation.stationapi.api.common.event.ListenerPriority;
+import net.modificationstation.stationapi.api.common.event.achievement.AchievementRegister;
 import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 
 import java.util.ArrayList;
@@ -54,8 +57,8 @@ public class AchievementPageManager implements net.modificationstation.stationap
         return ACHIEVEMENT_PAGES.size();
     }
 
-    @Override
-    public void registerAchievements(List<Achievement> achievements) {
+    @EventListener(priority = ListenerPriority.HIGH)
+    public void registerAchievements(AchievementRegister event) {
         net.modificationstation.stationapi.api.common.achievement.AchievementPage page = GeneralFactory.INSTANCE.newInst(net.modificationstation.stationapi.api.common.achievement.AchievementPage.class, "Minecraft");
         List<Achievement> list = new ArrayList<>();
         for (Object o : Achievements.ACHIEVEMENTS)

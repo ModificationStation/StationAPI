@@ -18,4 +18,13 @@ public class EventListenerContainer<T extends Event> implements Comparable<Event
     public int compareTo(@NotNull EventListenerContainer<?> o) {
         return Integer.compare(o.priority, priority);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof EventListenerContainer) {
+            EventListenerContainer<?> container = (EventListenerContainer<?>) obj;
+            return eventType.equals(container.eventType) && invoker.equals(container.invoker) && priority == container.priority;
+        } else
+            return false;
+    }
 }

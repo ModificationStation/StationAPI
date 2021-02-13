@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.common.resource;
 
-import net.modificationstation.stationapi.impl.common.StationAPI;
+import net.modificationstation.stationapi.api.common.StationAPI;
 
 import java.io.File;
 import java.io.IOException;

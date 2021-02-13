@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.event.texture.TexturesPerFileListener;
-import net.modificationstation.stationapi.impl.common.StationAPI;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import org.lwjgl.opengl.GL11;
 
 import java.util.*;

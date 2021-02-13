@@ -2,11 +2,11 @@ package net.modificationstation.stationapi.impl.common.block;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.common.util.OreDict;
-import net.modificationstation.stationapi.impl.common.StationAPI;
 
 /**
  * @author calmilamsy

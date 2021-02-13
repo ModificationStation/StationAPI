@@ -3,7 +3,7 @@
   "id": "stationapi",
   "version": "${version}",
 
-  "name": "Station",
+  "name": "Station API",
   "description": "A general use API for Fabric Loader mods on legacy Minecraft versions.",
   "authors": [
     "mine_diver",
@@ -20,23 +20,20 @@
   "environment": "*",
   "entrypoints": {
     "preLaunch": [
-      "net.modificationstation.stationapi.impl.common.StationAPI"
+      "net.modificationstation.stationapi.api.common.StationAPI"
     ],
-    "stationapi:track_entity": [
-      "net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl",
-      "net.modificationstation.stationapi.impl.server.entity.TrackingImpl"
-    ],
-    "stationapi:block_item_factory_provider": [
+    "stationapi:event_bus": [
       "net.modificationstation.stationapi.impl.common.block.HasCustomBlockItemFactoryImpl",
       "net.modificationstation.stationapi.impl.common.block.HasMetaBlockItemImpl",
-      "net.modificationstation.stationapi.impl.common.block.HasMetaNamedBlockItemImpl"
-    ],
-    "stationapi:block_register": [
+      "net.modificationstation.stationapi.impl.common.block.HasMetaNamedBlockItemImpl",
       "net.modificationstation.stationapi.impl.common.block.BlockRegistryInit",
-      "net.modificationstation.stationapi.impl.common.block.OreDictBlockInit"
+      "net.modificationstation.stationapi.impl.common.block.OreDictBlockInit",
+      "net.modificationstation.stationapi.impl.common.item.OreDictItemInit",
+      "net.modificationstation.stationapi.impl.common.mod.InitImpl"
     ],
-    "stationapi:item_register": [
-      "net.modificationstation.stationapi.impl.common.item.OreDictItemInit"
+    "stationapi:event_bus_server": [
+      "net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl",
+      "net.modificationstation.stationapi.impl.server.entity.TrackingImpl"
     ]
   },
   "mixins": [

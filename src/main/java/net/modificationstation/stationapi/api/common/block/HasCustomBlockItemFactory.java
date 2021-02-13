@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.api.common.block;
 
 import net.minecraft.item.PlaceableTileEntity;
-import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryProvider;
+import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
 
 import java.lang.annotation.*;
 
 /**
  * Annotation alternative of {@link IHasCustomBlockItemFactory}.
  * @author mine_diver
- * @see BlockItemFactoryProvider
+ * @see BlockItemFactoryCallback
  * @see IHasCustomBlockItemFactory
  * @see IHasMetaBlockItem
  * @see HasMetaBlockItem

@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.api.common.event;
 
 import com.google.common.eventbus.EventBus;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
-import net.modificationstation.stationapi.impl.common.StationAPI;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

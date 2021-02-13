@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.client;
 
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.modificationstation.stationapi.api.client.event.keyboard.KeyStateChanged;
-import net.modificationstation.stationapi.impl.common.StationAPI;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import org.lwjgl.input.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.common.registry;
 
-import net.modificationstation.stationapi.impl.common.StationAPI;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

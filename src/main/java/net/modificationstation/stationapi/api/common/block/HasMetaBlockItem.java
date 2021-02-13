@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.common.block;
 
-import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryProvider;
+import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
 import net.modificationstation.stationapi.template.common.item.MetaBlock;
 
 import java.lang.annotation.*;
@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 /**
  * Annotation alternative of {@link IHasMetaBlockItem}.
  * @author mine_diver
- * @see BlockItemFactoryProvider
+ * @see BlockItemFactoryCallback
  * @see IHasCustomBlockItemFactory
  * @see HasCustomBlockItemFactory
  * @see IHasMetaBlockItem

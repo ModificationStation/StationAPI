@@ -56,7 +56,6 @@
     "server.accessor.ServerPlayerPacketHandlerAccessor"
   ],
   "client": [
-    "client.MixinScreenBase",
     "client.MixinAbstractClientPlayer",
     "client.MixinAchievements",
     "client.Mixinclass_556",
@@ -73,6 +72,7 @@
     "client.MixinParticleManager",
     "client.MixinPlayerRenderer",
     "client.MixinRemoteClientInteractionManager",
+    "client.MixinScreenBase",
     "client.MixinSoundHelper",
     "client.MixinSoundMap",
     "client.MixinTextureManager",

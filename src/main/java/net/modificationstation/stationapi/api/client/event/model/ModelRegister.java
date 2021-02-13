@@ -3,9 +3,6 @@ package net.modificationstation.stationapi.api.client.event.model;
 import lombok.RequiredArgsConstructor;
 import net.modificationstation.stationapi.api.client.model.BlockModelProvider;
 import net.modificationstation.stationapi.api.common.event.Event;
-import net.modificationstation.stationapi.api.common.event.GameEventOld;
-
-import java.util.function.Consumer;
 
 // TODO: Item and Entity model documentation.
 

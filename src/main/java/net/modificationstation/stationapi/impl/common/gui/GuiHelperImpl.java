@@ -3,10 +3,10 @@ package net.modificationstation.stationapi.impl.common.gui;
 import net.minecraft.container.ContainerBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.packet.PacketHelper;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
-import net.modificationstation.stationapi.impl.common.StationAPI;
 
 import java.util.function.Consumer;
 

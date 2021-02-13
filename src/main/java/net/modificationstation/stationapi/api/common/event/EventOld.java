@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.api.common.event;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
+import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
-import net.modificationstation.stationapi.impl.common.StationAPI;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -92,7 +92,7 @@ public abstract class EventOld<T> {
             register(container);
             ModContainer modContainer = container.getProvider();
             T listener = container.getEntrypoint();
-            StationAPI.INSTANCE.setupAnnotations(modContainer, listener);
+            Entrypoint.setup(listener, modContainer);
         });
     }
 

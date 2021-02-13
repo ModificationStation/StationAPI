@@ -2,17 +2,16 @@ package net.modificationstation.stationapi.impl.common.recipe;
 
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
-import net.minecraft.tileentity.TileEntityBase;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.modificationstation.stationapi.api.common.event.EventListener;
+import net.modificationstation.stationapi.api.common.event.ListenerPriority;
 import net.modificationstation.stationapi.api.common.event.block.TileEntityRegister;
 import net.modificationstation.stationapi.api.common.util.OreDict;
 import net.modificationstation.stationapi.api.common.util.UnsafeProvider;
 import net.modificationstation.stationapi.mixin.common.accessor.SmeltingRecipeRegistryAccessor;
 import net.modificationstation.stationapi.mixin.common.accessor.TileEntityFurnaceAccessor;
 
-import java.util.function.BiConsumer;
-
-public class SmeltingRegistry implements net.modificationstation.stationapi.api.common.recipe.SmeltingRegistry, TileEntityRegister {
+public class SmeltingRegistry implements net.modificationstation.stationapi.api.common.recipe.SmeltingRegistry {
 
     private TileEntityFurnaceAccessor DUMMY_TILE_ENTITY_FURNACE;
 
@@ -48,8 +47,8 @@ public class SmeltingRegistry implements net.modificationstation.stationapi.api.
             return DUMMY_TILE_ENTITY_FURNACE.invokeGetFuelTime(itemInstance);
     }
 
-    @Override
-    public void registerTileEntities(BiConsumer<Class<? extends TileEntityBase>, String> register) {
+    @EventListener(priority = ListenerPriority.HIGH)
+    public void registerTileEntities(TileEntityRegister event) {
         try {
             DUMMY_TILE_ENTITY_FURNACE = (TileEntityFurnaceAccessor) UnsafeProvider.INSTANCE.getUnsafe().allocateInstance(TileEntityFurnace.class);
         } catch (InstantiationException e) {

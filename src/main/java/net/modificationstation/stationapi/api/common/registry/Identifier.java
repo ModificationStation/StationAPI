@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.common.registry;
 
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;

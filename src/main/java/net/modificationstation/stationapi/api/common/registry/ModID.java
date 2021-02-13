@@ -7,7 +7,6 @@ import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -69,12 +68,4 @@ public final class ModID implements Comparable<ModID> {
         return modid.compareTo(o.modid);
     }
 
-    @Documented
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    @Inherited
-    public @interface Field {
-
-        String value() default "";
-    }
 }

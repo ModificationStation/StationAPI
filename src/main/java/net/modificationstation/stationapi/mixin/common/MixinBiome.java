@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.common;
 
 import net.minecraft.level.biome.Biome;
-import net.modificationstation.stationapi.api.common.event.level.biome.BiomeByClimateProvider;
+import net.modificationstation.stationapi.api.common.event.level.biome.BiomeByClimateCallback;
 import net.modificationstation.stationapi.api.common.event.level.biome.BiomeRegister;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,6 +20,6 @@ public class MixinBiome {
 
     @Inject(method = "getClimateBiome(FF)Lnet/minecraft/level/biome/Biome;", at = @At("RETURN"), cancellable = true)
     private static void getBiome(float temperature, float rainfall, CallbackInfoReturnable<Biome> cir) {
-        cir.setReturnValue(BiomeByClimateProvider.EVENT.getInvoker().getBiome(cir.getReturnValue(), temperature, rainfall));
+        cir.setReturnValue(BiomeByClimateCallback.EVENT.getInvoker().getBiome(cir.getReturnValue(), temperature, rainfall));
     }
 }

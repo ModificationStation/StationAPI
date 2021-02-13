@@ -6,16 +6,16 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.client.event.model.ModelRegister;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.block.BlockMiningLevel;
 import net.modificationstation.stationapi.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationapi.api.common.event.item.ItemRegister;
-import net.modificationstation.stationapi.api.common.event.item.tool.OverrideIsEffectiveOn;
 import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.item.StrengthOnMeta;
+import net.modificationstation.stationapi.api.common.item.tool.OverrideIsEffectiveOn;
 import net.modificationstation.stationapi.api.common.item.tool.ToolLevel;
-import net.modificationstation.stationapi.impl.common.StationAPI;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -67,7 +67,7 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
                     ((BlockMiningLevel) tile).getToolTypes(meta, itemInstance).stream().anyMatch(entry -> entry != null && entry.isInstance(itemInstance.getType())) &&
                             ((ToolLevel) this).getToolLevel() >= ((BlockMiningLevel) tile).getBlockLevel(meta, itemInstance);
             if (this instanceof OverrideIsEffectiveOn) {
-                effective = OverrideIsEffectiveOn.EVENT.getInvoker().overrideIsEffectiveOn((ToolLevel) this, tile, meta, effective);
+                effective = ((OverrideIsEffectiveOn) this).overrideIsEffectiveOn((ToolLevel) this, tile, meta, effective);
             }
         }
         return effective;

@@ -18,21 +18,21 @@ public class ReflectionHelper {
         }
     }
 
-    public static void setFinalFieldsWithAnnotation(Object target, Class<? extends Annotation> annotation, Object value) throws IllegalAccessException {
-        setFinalFieldsWithAnnotation(target.getClass(), target, annotation, value);
+    public static void setFieldsWithAnnotation(Object target, Class<? extends Annotation> annotation, Object value) throws IllegalAccessException {
+        setFieldsWithAnnotation(target.getClass(), target, annotation, value);
     }
 
-    public static void setFinalFieldsWithAnnotation(Class<?> targetClass, Object target, Class<? extends Annotation> annotation, Object value) throws IllegalAccessException {
-        setFinalFieldsWithAnnotation(targetClass, target, annotation, annotation1 -> value);
+    public static void setFieldsWithAnnotation(Class<?> targetClass, Object target, Class<? extends Annotation> annotation, Object value) throws IllegalAccessException {
+        setFieldsWithAnnotation(targetClass, target, annotation, annotation1 -> value);
     }
 
-    public static <T extends Annotation> void setFinalFieldsWithAnnotation(Object target, Class<T> annotation, Function<T, Object> processor) throws IllegalAccessException {
-        setFinalFieldsWithAnnotation(target.getClass(), target, annotation, processor);
+    public static <T extends Annotation> void setFieldsWithAnnotation(Object target, Class<T> annotation, Function<T, Object> processor) throws IllegalAccessException {
+        setFieldsWithAnnotation(target.getClass(), target, annotation, processor);
     }
 
-    public static <T extends Annotation> void setFinalFieldsWithAnnotation(Class<?> targetClass, Object target, Class<T> annotation, Function<T, Object> processor) throws IllegalAccessException {
+    public static <T extends Annotation> void setFieldsWithAnnotation(Class<?> targetClass, Object target, Class<T> annotation, Function<T, Object> processor) throws IllegalAccessException {
         for (Field field : ReflectionHelper.getFieldsWithAnnotation(targetClass, annotation))
-            ReflectionHelper.setFinalField(field, target, processor.apply(field.getAnnotation(annotation)));
+            ReflectionHelper.setPrivateFinalField(field, target, processor.apply(field.getAnnotation(annotation)));
     }
 
     public static Field[] getFieldsWithAnnotation(Class<?> targetClass, Class<? extends Annotation> annotationClass) {
@@ -45,19 +45,19 @@ public class ReflectionHelper {
         return fields;
     }
 
-    public static void setFinalField(Field field, Object instance, Object value) throws IllegalAccessException {
+    public static void setPrivateFinalField(Field field, Object instance, Object value) throws IllegalAccessException {
         int mod = field.getModifiers();
-        setFieldModifiers(field, mod & ~Modifier.FINAL);
-        field.set(instance, value);
-        setFieldModifiers(field, mod);
+        setPrivateField(modifiers, field, mod & ~Modifier.FINAL);
+        setPrivateField(field, instance, value);
+        setPrivateField(modifiers, field, mod);
     }
 
-    public static void setFieldModifiers(Field field, int fieldModifiers) throws IllegalAccessException {
-        boolean modifiersInaccessible = !modifiers.isAccessible();
-        if (modifiersInaccessible)
-            modifiers.setAccessible(true);
-        modifiers.setInt(field, fieldModifiers);
-        if (modifiersInaccessible)
-            modifiers.setAccessible(false);
+    public static void setPrivateField(Field field, Object instance, Object value) throws IllegalAccessException {
+        boolean inaccessible = !field.isAccessible();
+        if (inaccessible)
+            field.setAccessible(true);
+        field.set(instance, value);
+        if (inaccessible)
+            field.setAccessible(false);
     }
 }

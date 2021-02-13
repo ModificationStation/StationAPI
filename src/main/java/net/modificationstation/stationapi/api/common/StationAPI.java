@@ -1,10 +1,11 @@
-package net.modificationstation.stationapi.impl.common;
+package net.modificationstation.stationapi.api.common;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.block.material.Material;
@@ -18,38 +19,14 @@ import net.minecraft.item.tool.ToolMaterial;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.client.event.gui.GuiHandlerRegister;
 import net.modificationstation.stationapi.api.client.event.gui.RenderItemOverlay;
-import net.modificationstation.stationapi.api.client.event.keyboard.KeyStateChanged;
-import net.modificationstation.stationapi.api.client.event.model.ModelRegister;
-import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegister;
-import net.modificationstation.stationapi.api.client.event.render.entity.EntityRendererRegister;
-import net.modificationstation.stationapi.api.client.event.texture.TextureRegister;
-import net.modificationstation.stationapi.api.client.event.texture.TexturesPerFileListener;
 import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
-import net.modificationstation.stationapi.api.common.block.EffectiveForTool;
 import net.modificationstation.stationapi.api.common.entity.EntityHandlerRegistry;
 import net.modificationstation.stationapi.api.common.entity.HasOwner;
-import net.modificationstation.stationapi.api.common.event.*;
-import net.modificationstation.stationapi.api.common.event.achievement.AchievementRegister;
-import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryProvider;
-import net.modificationstation.stationapi.api.common.event.block.BlockNameSet;
-import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
-import net.modificationstation.stationapi.api.common.event.block.TileEntityRegister;
-import net.modificationstation.stationapi.api.common.event.container.slot.ItemUsedInCrafting;
-import net.modificationstation.stationapi.api.common.event.entity.EntityRegister;
-import net.modificationstation.stationapi.api.common.event.entity.player.PlayerHandlerRegister;
-import net.modificationstation.stationapi.api.common.event.item.ItemCreation;
-import net.modificationstation.stationapi.api.common.event.item.ItemNameSet;
-import net.modificationstation.stationapi.api.common.event.item.ItemRegister;
-import net.modificationstation.stationapi.api.common.event.item.tool.EffectiveBlocksProvider;
-import net.modificationstation.stationapi.api.common.event.item.tool.OverrideIsEffectiveOn;
-import net.modificationstation.stationapi.api.common.event.level.LevelInit;
-import net.modificationstation.stationapi.api.common.event.level.LoadLevelProperties;
+import net.modificationstation.stationapi.api.common.event.EventBus;
+import net.modificationstation.stationapi.api.common.event.ListenerPriority;
 import net.modificationstation.stationapi.api.common.event.level.LoadLevelPropertiesOnLevelInit;
 import net.modificationstation.stationapi.api.common.event.level.SaveLevelProperties;
-import net.modificationstation.stationapi.api.common.event.level.biome.BiomeByClimateProvider;
-import net.modificationstation.stationapi.api.common.event.level.biome.BiomeRegister;
-import net.modificationstation.stationapi.api.common.event.level.gen.ChunkPopulator;
 import net.modificationstation.stationapi.api.common.event.mod.Init;
 import net.modificationstation.stationapi.api.common.event.mod.PostInit;
 import net.modificationstation.stationapi.api.common.event.mod.PreInit;
@@ -58,8 +35,7 @@ import net.modificationstation.stationapi.api.common.event.packet.PacketRegister
 import net.modificationstation.stationapi.api.common.event.recipe.BeforeRecipeStats;
 import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationapi.api.common.gui.GuiHandlerRegistry;
-import net.modificationstation.stationapi.api.common.mod.StationMod;
-import net.modificationstation.stationapi.api.common.mod.entrypoint.Instance;
+import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.packet.MessageListenerRegistry;
 import net.modificationstation.stationapi.api.common.packet.StationHandshake;
@@ -70,11 +46,9 @@ import net.modificationstation.stationapi.api.common.registry.LevelRegistry;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.common.registry.Registry;
 import net.modificationstation.stationapi.api.common.resource.ResourceManager;
-import net.modificationstation.stationapi.api.common.util.ModCore;
 import net.modificationstation.stationapi.api.common.util.SideUtils;
 import net.modificationstation.stationapi.api.server.entity.IStationSpawnData;
 import net.modificationstation.stationapi.api.server.event.network.HandleLogin;
-import net.modificationstation.stationapi.api.server.event.network.PlayerLogin;
 import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
 import net.modificationstation.stationapi.impl.client.entity.player.PlayerHelper;
 import net.modificationstation.stationapi.impl.client.model.CustomModelRenderer;
@@ -91,7 +65,6 @@ import net.modificationstation.stationapi.impl.common.item.CustomReach;
 import net.modificationstation.stationapi.impl.common.item.JsonItemKey;
 import net.modificationstation.stationapi.impl.common.lang.I18n;
 import net.modificationstation.stationapi.impl.common.recipe.*;
-import net.modificationstation.stationapi.impl.common.util.ReflectionHelper;
 import net.modificationstation.stationapi.impl.common.util.UnsafeProvider;
 import net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl;
 import net.modificationstation.stationapi.impl.server.entity.TrackingImpl;
@@ -102,7 +75,7 @@ import net.modificationstation.stationapi.mixin.common.accessor.StatsAccessor;
 import net.modificationstation.stationapi.template.common.item.MetaBlock;
 import net.modificationstation.stationapi.template.common.item.MetaNamedBlock;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.BufferedReader;
@@ -116,24 +89,25 @@ import java.util.*;
  * StationAPI main class. Used for some initialization.
  * @author mine_diver
  */
-public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
+public class StationAPI implements PreLaunchEntrypoint {
 
     /**
      * StationAPI's instance.
      */
-    @Instance
-    public static StationAPI INSTANCE;
+    @Entrypoint.Instance
+    public static final StationAPI INSTANCE = Entrypoint.getNull();
 
     /**
      * StationAPI's ModID.
      */
-    @ModID.Field
-    public static ModID MODID;
+    @Entrypoint.ModID
+    public static final ModID MODID = Entrypoint.getNull();
 
-    /**
-     * StationMod side-dependent entrypoints.
-     */
-    private final Set<String> entrypoints = new HashSet<>();
+    @Entrypoint.Logger("Station|API")
+    public static final Logger LOGGER = Entrypoint.getNull();
+
+    @Entrypoint.Config
+    public static final net.modificationstation.stationapi.api.common.config.Configuration CONFIG = Entrypoint.getNull();
 
     /**
      * A set of mods that need client-side verification when the client joins server.
@@ -147,34 +121,25 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
      */
     @Override
     public void onPreLaunch() {
-        setModID(ModID.of("stationapi"));
-        ModID modID = getModID();
-        setupAnnotations(modID.getContainer(), this);
-        entrypoints.add(modID + ":mod");
-        String sideName = FabricLoader.getInstance().getEnvironmentType().name().toLowerCase();
-        entrypoints.add(modID + ":mod_" + sideName);
-        String name = modID.getName();
-        setLogger(LogManager.getFormatterLogger(name + "|API"));
+        FabricLoader.getInstance().getModContainer("stationapi").ifPresent(modContainer -> Entrypoint.setup(this, modContainer));
+        String name = MODID.getName();
+        LOGGER.info("Initializing " + name + "...");
         Configurator.setLevel("mixin", Level.TRACE);
         Configurator.setLevel("Fabric|Loader", Level.INFO);
-        Configurator.setLevel(name + "|API", Level.INFO);
-        getLogger().info("Initializing " + name + "...");
-        PreInit.EVENT.register(this, modID);
-        Init.EVENT.register(this, modID);
-        getLogger().info("Setting up API...");
+        LOGGER.info("Setting up API...");
         setupAPI();
-        getLogger().info("Setting up lang folder...");
-        net.modificationstation.stationapi.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/" + modID + "/lang", modID);
-        getLogger().info("Loading mods...");
+        LOGGER.info("Setting up lang folder...");
+        net.modificationstation.stationapi.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/" + MODID + "/lang", MODID);
+        LOGGER.info("Loading mods...");
         setupMods();
-        getLogger().info("Finished " + name + " setup");
+        LOGGER.info("Finished " + name + " setup");
     }
 
     /**
      * Performs some API setup. Most likely will be removed due to API becoming less abstract. No Minecraft classes must be referenced here.
      */
     public void setupAPI() {
-        getLogger().info("Setting up GeneralFactory...");
+        LOGGER.info("Setting up GeneralFactory...");
         net.modificationstation.stationapi.api.common.factory.GeneralFactory generalFactory = net.modificationstation.stationapi.api.common.factory.GeneralFactory.INSTANCE;
         generalFactory.setHandler(new GeneralFactory());
         generalFactory.addFactory(net.modificationstation.stationapi.api.common.config.Configuration.class, args -> new Configuration((File) args[0]));
@@ -186,21 +151,18 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
         net.modificationstation.stationapi.api.common.factory.EnumFactory enumFactory = net.modificationstation.stationapi.api.common.factory.EnumFactory.INSTANCE;
         generalFactory.addFactory(ToolMaterial.class, args -> enumFactory.addEnum(ToolMaterial.class, (String) args[0], new Class[]{int.class, int.class, float.class, int.class}, new Object[]{args[1], args[2], args[3], args[4]}));
         generalFactory.addFactory(EntityType.class, args -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[]{Class.class, int.class, Material.class, boolean.class}, new Object[]{args[1], args[2], args[3], args[4]}));
-        getLogger().info("Loading config...");
-        net.modificationstation.stationapi.api.common.config.Configuration config = getDefaultConfig();
-        config.load();
-        getLogger().info("Setting up EnumFactory...");
+        LOGGER.info("Setting up EnumFactory...");
         enumFactory.setHandler(new EnumFactory());
-        getLogger().info("Setting up I18n...");
+        LOGGER.info("Setting up I18n...");
         net.modificationstation.stationapi.api.common.lang.I18n.INSTANCE.setHandler(new I18n());
-        getLogger().info("Setting up CraftingRegistry...");
+        LOGGER.info("Setting up CraftingRegistry...");
         net.modificationstation.stationapi.api.common.recipe.CraftingRegistry.INSTANCE.setHandler(new CraftingRegistry());
-        getLogger().info("Setting up UnsafeProvider...");
+        LOGGER.info("Setting up UnsafeProvider...");
         net.modificationstation.stationapi.api.common.util.UnsafeProvider.INSTANCE.setHandler(new UnsafeProvider());
-        getLogger().info("Setting up SmeltingRegistry...");
+        LOGGER.info("Setting up SmeltingRegistry...");
         SmeltingRegistry smeltingRegistry = new SmeltingRegistry();
         net.modificationstation.stationapi.api.common.recipe.SmeltingRegistry.INSTANCE.setHandler(smeltingRegistry);
-        getLogger().info("Setting up CustomReach...");
+        LOGGER.info("Setting up CustomReach...");
         net.modificationstation.stationapi.api.common.item.CustomReach.CONSUMERS.put("setDefaultBlockReach", CustomReach::setDefaultBlockReach);
         net.modificationstation.stationapi.api.common.item.CustomReach.CONSUMERS.put("setHandBlockReach", CustomReach::setHandBlockReach);
         net.modificationstation.stationapi.api.common.item.CustomReach.CONSUMERS.put("setDefaultEntityReach", CustomReach::setDefaultEntityReach);
@@ -209,64 +171,34 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
         net.modificationstation.stationapi.api.common.item.CustomReach.SUPPLIERS.put("getHandBlockReach", CustomReach::getHandBlockReach);
         net.modificationstation.stationapi.api.common.item.CustomReach.SUPPLIERS.put("getDefaultEntityReach", CustomReach::getDefaultEntityReach);
         net.modificationstation.stationapi.api.common.item.CustomReach.SUPPLIERS.put("getHandEntityReach", CustomReach::getHandEntityReach);
-        getLogger().info("Setting up AchievementPageManager...");
-        net.modificationstation.stationapi.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(new AchievementPageManager());
-        getLogger().info("Setting up CustomData packet...");
-        net.modificationstation.stationapi.api.common.config.Category networkConfig = config.getCategory("Network");
-        PacketRegister.EVENT.register(register -> {
-            register.accept(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, Message.class);
-            config.save();
-            MessageListenerRegister.EVENT.getInvoker().registerMessageListeners(MessageListenerRegistry.INSTANCE, MessageListenerRegister.EVENT.getListenerModID(MessageListenerRegister.EVENT.getInvoker()));
-        });
-        getLogger().info("Setting up BlockNameSet...");
-        BlockNameSet.EVENT.register((block, name) -> {
-            ModEventOld<BlockRegister> event = BlockRegister.EVENT;
-            if (event.getCurrentListener() != null) {
-                ModID modID = event.getCurrentListenerModID();
-                if (modID != null) {
-                    String modid = modID + ":";
-                    if (!name.startsWith(modid) && !name.contains(":"))
-                        return modid + name;
-                }
-            }
-            return name;
-        });
-        getLogger().info("Setting up ItemNameSet...");
-        ItemNameSet.EVENT.register((item, name) -> {
-            ModEventOld<ItemRegister> event = ItemRegister.EVENT;
-            if (event.getCurrentListener() != null) {
-                ModID modID = event.getCurrentListenerModID();
-                if (modID != null) {
-                    String modid = modID + ":";
-                    if (!name.startsWith(modid) && !name.contains(":"))
-                        return modid + name;
-                }
-            }
-            return name;
-        });
-        getLogger().info("Setting up IsEffectiveOn...");
-        OverrideIsEffectiveOn.EVENT.register((toolLevel, arg, meta, effective) -> {
-            if (arg instanceof EffectiveForTool)
-                effective = ((EffectiveForTool) arg).isEffectiveFor(toolLevel, meta);
-            return effective;
-        });
-        getLogger().info("Setting up TileEntityRegister...");
-        TileEntityRegister.EVENT.register(smeltingRegistry);
-        getLogger().info("Setting up LoadLevelPropertiesOnLevelInit...");
-        LoadLevelPropertiesOnLevelInit.EVENT.register((levelProperties, tag) -> {
+        LOGGER.info("Setting up AchievementPageManager...");
+        net.modificationstation.stationapi.api.common.achievement.AchievementPageManager acpMngr = new AchievementPageManager();
+        net.modificationstation.stationapi.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(acpMngr);
+        EVENT_BUS.register(acpMngr);
+        LOGGER.info("Setting up CustomData packet...");
+        net.modificationstation.stationapi.api.common.config.Category networkConfig = CONFIG.getCategory("Network");
+        EVENT_BUS.register(PacketRegister.class, event -> {
+            event.register(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, Message.class);
+            CONFIG.save();
+            EVENT_BUS.post(new MessageListenerRegister(MessageListenerRegistry.INSTANCE));
+        }, ListenerPriority.HIGH.numPriority);
+        LOGGER.info("Setting up TileEntityRegister...");
+        EVENT_BUS.register(smeltingRegistry);
+        LOGGER.info("Setting up LoadLevelPropertiesOnLevelInit...");
+        EVENT_BUS.register(LoadLevelPropertiesOnLevelInit.class, event -> {
             LevelRegistry.remapping = true;
             StatsAccessor.setField_812(false);
             StatsAccessor.setField_813(false);
             Registry<Registry<?>> registriesRegistry = Registry.REGISTRIES;
-            CompoundTag registriesTag = tag.getCompoundTag(registriesRegistry.getRegistryId().toString());
+            CompoundTag registriesTag = event.tag.getCompoundTag(registriesRegistry.getRegistryId().toString());
             registriesRegistry.forEach((identifier, registry) -> {
                 if (registry instanceof LevelRegistry)
                     ((LevelRegistry<?>) registry).load(registriesTag.getCompoundTag(registry.getRegistryId().toString()));
             });
             LevelRegistry.remapping = false;
-        });
-        getLogger().info("Setting up SaveLevelProperties...");
-        SaveLevelProperties.EVENT.register((levelProperties, tag, spPlayerData) -> {
+        }, ListenerPriority.HIGH.numPriority);
+        LOGGER.info("Setting up SaveLevelProperties...");
+        EVENT_BUS.register(SaveLevelProperties.class, event -> {
             Registry<Registry<?>> registriesRegistry = Registry.REGISTRIES;
             CompoundTag registriesTag = new CompoundTag();
             registriesRegistry.forEach((identifier, registry) -> {
@@ -276,49 +208,51 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
                     registriesTag.put(identifier.toString(), registryTag);
                 }
             });
-            tag.put(registriesRegistry.getRegistryId().toString(), registriesTag);
-        });
-        getLogger().info("Setting up RecipeRegister...");
-        RecipeRegister.EVENT.register(recipeId -> JsonRecipeParserRegistry.INSTANCE.getByIdentifier(recipeId).ifPresent(recipeParser -> JsonRecipesRegistry.INSTANCE.getByIdentifier(recipeId).ifPresent(recipes -> recipes.forEach(recipeParser))));
-        getLogger().info("Setting up BeforeRecipesStats...");
-        BeforeRecipeStats.EVENT.register(() -> {
+            event.tag.put(registriesRegistry.getRegistryId().toString(), registriesTag);
+        }, ListenerPriority.HIGH.numPriority);
+        LOGGER.info("Setting up RecipeRegister...");
+        EVENT_BUS.register(RecipeRegister.class, event -> JsonRecipeParserRegistry.INSTANCE.getByIdentifier(event.recipeId).ifPresent(recipeParser -> JsonRecipesRegistry.INSTANCE.getByIdentifier(event.recipeId).ifPresent(recipes -> recipes.forEach(recipeParser))), ListenerPriority.HIGH.numPriority);
+        LOGGER.info("Setting up BeforeRecipesStats...");
+        EVENT_BUS.register(BeforeRecipeStats.class, event -> {
             RecipeRegistryAccessor.invokeCor();
             SmeltingRecipeRegistryAccessor.invokeCor();
-        });
+        }, ListenerPriority.HIGH.numPriority);
         SideUtils.run(
 
                 // CLIENT
 
                 () -> {
-                    getLogger().info("Setting up client GeneralFactory...");
+                    LOGGER.info("Setting up client GeneralFactory...");
                     net.modificationstation.stationapi.api.common.factory.GeneralFactory.INSTANCE.addFactory(net.modificationstation.stationapi.api.client.model.CustomModelRenderer.class, (args) -> new CustomModelRenderer((String) args[0], (String) args[1]));
-                    getLogger().info("Setting up TextureFactory...");
+                    LOGGER.info("Setting up TextureFactory...");
                     net.modificationstation.stationapi.api.client.texture.TextureFactory.INSTANCE.setHandler(new TextureFactory());
-                    getLogger().info("Setting up TextureRegistry...");
+                    LOGGER.info("Setting up TextureRegistry...");
                     TextureRegistry.RUNNABLES.put("unbind", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::unbind);
                     TextureRegistry.FUNCTIONS.put("getRegistry", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::getRegistry);
                     TextureRegistry.SUPPLIERS.put("currentRegistry", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::currentRegistry);
                     TextureRegistry.SUPPLIERS.put("registries", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::registries);
-                    getLogger().info("Setting up PlayerHelper...");
+                    LOGGER.info("Setting up PlayerHelper...");
                     net.modificationstation.stationapi.api.common.entity.player.PlayerHelper.INSTANCE.setHandler(new PlayerHelper());
-                    getLogger().info("Setting up PacketHelper...");
+                    LOGGER.info("Setting up PacketHelper...");
                     net.modificationstation.stationapi.api.common.packet.PacketHelper.INSTANCE.setHandler(new PacketHelper());
-                    getLogger().info("Setting up RenderItemOverlay...");
+                    LOGGER.info("Setting up RenderItemOverlay...");
                     EVENT_BUS.register(RenderItemOverlay.class, (event) -> {
                         if (event.itemInstance != null && event.itemInstance.getType() instanceof CustomItemOverlay) {
                             ((CustomItemOverlay) event.itemInstance.getType()).renderItemOverlay(event.itemRenderer, event.itemX, event.itemY, event.itemInstance, event.textRenderer, event.textureManager);
                         }
-                    });
-                    MessageListenerRegister.EVENT.register((messageListeners, modID) -> {
-                        messageListeners.registerValue(Identifier.of(modID, "open_gui"), (playerBase, message) -> {
+                    }, ListenerPriority.HIGH.numPriority);
+                    EVENT_BUS.register(MessageListenerRegister.class, event -> {
+                        event.registry.registerValue(Identifier.of(MODID, "open_gui"), (playerBase, message) -> {
                             boolean isClient = playerBase.level.isClient;
+                            //noinspection deprecation
                             GuiHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(guiHandler -> ((Minecraft) FabricLoader.getInstance().getGameInstance()).openScreen(guiHandler.one().apply(playerBase, isClient ? guiHandler.two().get() : (InventoryBase) message.objects()[0], message)));
                             if (isClient)
                                 playerBase.container.currentContainerId = message.ints()[0];
                         });
                         EVENT_BUS.post(new GuiHandlerRegister(GuiHandlerRegistry.INSTANCE));
-                        messageListeners.registerValue(Identifier.of(modID, "spawn_entity"), (playerBase, message) -> EntityHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(entityProvider -> {
+                        event.registry.registerValue(Identifier.of(MODID, "spawn_entity"), (playerBase, message) -> EntityHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(entityProvider -> {
                             double x = message.ints()[1] / 32D, y = message.ints()[2] / 32D, z = message.ints()[3] / 32D;
+                            //noinspection deprecation
                             ClientPlayNetworkHandlerAccessor networkHandler = (ClientPlayNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
                             ClientLevel level = networkHandler.getLevel();
                             EntityBase entity = entityProvider.apply(level, x, y, z);
@@ -339,27 +273,26 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
                                     ((IStationSpawnData) entity).readFromMessage(message);
                             }
                         }));
-                    }, getModID());
+                    }, ListenerPriority.HIGH.numPriority);
                 },
 
                 // SERVER
 
                 () -> {
-                    EVENT_BUS.register(TrackEntity.class, CustomTrackingImpl::trackEntity);
-                    EVENT_BUS.register(TrackEntity.class, TrackingImpl::trackEntity);
-                    getLogger().info("Setting up PlayerHelper...");
+                    EVENT_BUS.register(TrackEntity.class, CustomTrackingImpl::trackEntity, ListenerPriority.HIGH.numPriority);
+                    EVENT_BUS.register(TrackEntity.class, TrackingImpl::trackEntity, ListenerPriority.HIGH.numPriority);
+                    LOGGER.info("Setting up PlayerHelper...");
                     net.modificationstation.stationapi.api.common.entity.player.PlayerHelper.INSTANCE.setHandler(new net.modificationstation.stationapi.impl.server.entity.player.PlayerHelper());
-                    getLogger().info("Setting up PacketHelper...");
+                    LOGGER.info("Setting up PacketHelper...");
                     net.modificationstation.stationapi.api.common.packet.PacketHelper.INSTANCE.setHandler(new net.modificationstation.stationapi.impl.server.packet.PacketHelper());
-                    getLogger().info("Setting up HandleLogin...");
+                    LOGGER.info("Setting up HandleLogin...");
                     EVENT_BUS.register(HandleLogin.class, (event) -> {
                         if (!getModsToVerifyOnClient().isEmpty()) {
                             StationHandshake handshake = (StationHandshake) event.handshakePacket;
                             String stationAPI = handshake.getStationAPI();
                             String version = handshake.getVersion();
-                            ModID modID = getModID();
-                            String serverStationAPI = modID.toString();
-                            String serverStationVersion = modID.getVersion().getFriendlyString();
+                            String serverStationAPI = MODID.toString();
+                            String serverStationVersion = MODID.getVersion().getFriendlyString();
                             TranslationStorage translationStorage = TranslationStorage.getInstance();
                             if (stationAPI == null || version == null || !stationAPI.equals(serverStationAPI)) {
                                 event.pendingConnection.drop(translationStorage.translate("disconnect.stationapi:missing_station"));
@@ -388,7 +321,7 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
                                 }
                             }
                         }
-                    });
+                    }, ListenerPriority.HIGH.numPriority);
                 }
         );
     }
@@ -398,107 +331,49 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
      */
     public void setupMods() {
         FabricLoader fabricLoader = FabricLoader.getInstance();
+        fabricLoader.getEntrypointContainers(Identifier.of(MODID, "event_bus").toString(), Object.class).forEach(Entrypoint::setup);
+        fabricLoader.getEntrypointContainers(Identifier.of(MODID, "event_bus_" + fabricLoader.getEnvironmentType().name().toLowerCase()).toString(), Object.class).forEach(Entrypoint::setup);
         Collection<ModContainer> mods = fabricLoader.getAllMods();
-        getLogger().info("Loading entrypoints...");
-        entrypoints.forEach(entrypoint -> fabricLoader.getEntrypointContainers(entrypoint, StationMod.class).forEach(stationModEntrypointContainer -> {
-            ModContainer modContainer = stationModEntrypointContainer.getProvider();
-            StationMod stationMod = stationModEntrypointContainer.getEntrypoint();
-            ModID modID = ModID.of(modContainer);
-            stationMod.setModID(modID);
-            getLogger().info("Set mod's container");
-            if (stationMod instanceof PreInit)
-                PreInit.EVENT.register((PreInit) stationMod, modID);
-            Init.EVENT.register(stationMod, modID);
-            if (stationMod instanceof PostInit)
-                PostInit.EVENT.register((PostInit) stationMod, modID);
-            getLogger().info("Registered events");
-            setupAnnotations(modContainer, stationMod);
-            getLogger().info(String.format("Done loading %s (%s)'s \"%s\" StationMod", modID.getName(), modID, stationMod.getClass().getName()));
-        }));
-        fabricLoader.getEntrypointContainers(Identifier.of(getModID(), "game_event_bus").toString(), Object.class).forEach(entrypointContainer -> {
-            ModContainer modContainer = entrypointContainer.getProvider();
-            Object o = entrypointContainer.getEntrypoint();
-            GameEventOld.EVENT_BUS.register(o);
-            setupAnnotations(modContainer, o);
-        });
-        fabricLoader.getEntrypointContainers(Identifier.of(getModID(), "mod_event_bus").toString(), Object.class).forEach(entrypointContainer -> {
-            ModContainer modContainer = entrypointContainer.getProvider();
-            Object o = entrypointContainer.getEntrypoint();
-            ModEventOld.getEventBus(ModID.of(modContainer)).register(o);
-            setupAnnotations(modContainer, o);
-        });
-        getLogger().info("Loading assets...");
-        ResourceManager.findResources(getModID() + "/recipes", file -> file.endsWith(".json")).forEach(recipe -> {
+        LOGGER.info("Loading assets...");
+        ResourceManager.findResources(MODID + "/recipes", file -> file.endsWith(".json")).forEach(recipe -> {
             try {
                 String rawId = new Gson().fromJson(new InputStreamReader(recipe.openStream()), JsonRecipeType.class).getType();
                 try {
                     Identifier recipeId = Identifier.of(rawId);
                     JsonRecipesRegistry.INSTANCE.computeIfAbsent(recipeId, identifier -> new HashSet<>()).add(recipe);
                 } catch (NullPointerException e) {
-                    getLogger().warn("Found an unknown recipe type " + rawId + ". Ignoring.");
+                    LOGGER.warn("Found an unknown recipe type " + rawId + ". Ignoring.");
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
         mods.forEach(modContainer -> {
-            ModID modID = ModID.of(modContainer);
-            String pathName = "/assets/" + modID + "/" + getModID() + "/lang";
+            net.modificationstation.stationapi.api.common.registry.ModID modID = net.modificationstation.stationapi.api.common.registry.ModID.of(modContainer);
+            String pathName = "/assets/" + modID + "/" + MODID + "/lang";
             URL path = getClass().getResource(pathName);
             if (path != null) {
                 net.modificationstation.stationapi.api.common.lang.I18n.INSTANCE.addLangFolder(pathName, modID);
-                getLogger().info("Registered lang path");
+                LOGGER.info("Registered lang path");
             }
         });
-        getLogger().info("Gathering mods that require client verification...");
-        String value = getModID() + ":verify_client";
+        LOGGER.info("Gathering mods that require client verification...");
+        String value = MODID + ":verify_client";
         mods.forEach(modContainer -> {
             ModMetadata modMetadata = modContainer.getMetadata();
             if (modMetadata.containsCustomValue(value) && modMetadata.getCustomValue(value).getAsBoolean())
                 modsToVerifyOnClient.add(modContainer);
         });
-        getLogger().info("Invoking preInit event...");
-        PreInit.EVENT.getInvoker().preInit(EventRegistry.INSTANCE, JsonRecipeParserRegistry.INSTANCE, PreInit.EVENT.getInvokerModID());
-        getLogger().info("Invoking init event...");
-        Init.EVENT.getInvoker().init(Init.EVENT.getInvokerModID());
-        getLogger().info("Invoking postInit event...");
-        PostInit.EVENT.getInvoker().postInit(PostInit.EVENT.getInvokerModID());
+        LOGGER.info("Invoking PreInit event...");
+        EVENT_BUS.post(new PreInit());
+        LOGGER.info("Invoking Init event...");
+        EVENT_BUS.post(new Init());
+        LOGGER.info("Invoking PostInit event...");
+        EVENT_BUS.post(new PostInit());
     }
 
-    /**
-     * Registers StationAPI's events in the {@link EventRegistry} and vanilla JSON recipe parsers in the {@link JsonRecipeParserRegistry}. No Minecraft classes must be referenced here.
-     * @param eventRegistry the event registry used to initialize event listeners through fabric.mod.json entrypoints.
-     * @param jsonRecipeParserRegistry the JSON recipe parser registry that holds all JSON recipe parsers to automatically run when {@link RecipeRegister} event is called with a proper identifier.
-     * @param modID current mod's ModID.
-     * @see EventRegistry
-     * @see JsonRecipeParserRegistry
-     */
-    @Override
-    public void preInit(EventRegistry eventRegistry, JsonRecipeParserRegistry jsonRecipeParserRegistry, ModID modID) {
-        eventRegistry.registerValue(Identifier.of(modID, "achievement_register"), AchievementRegister.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "block_name_set"), BlockNameSet.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "block_register"), BlockRegister.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "tile_entity_register"), TileEntityRegister.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "item_used_in_crafting"), ItemUsedInCrafting.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "player_handler_register"), PlayerHandlerRegister.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "entity_register"), EntityRegister.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "effective_blocks_provider"), EffectiveBlocksProvider.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "is_effective_on"), OverrideIsEffectiveOn.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "item_creation"), ItemCreation.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "item_name_set"), ItemNameSet.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "item_register"), ItemRegister.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "biome_by_climate_provider"), BiomeByClimateProvider.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "biome_register"), BiomeRegister.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "chunk_populator"), ChunkPopulator.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "packet_register"), PacketRegister.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "recipe_register"), RecipeRegister.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "level_init"), LevelInit.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "message_listener_register"), MessageListenerRegister.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "load_level_properties"), LoadLevelProperties.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "save_level_properties"), SaveLevelProperties.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "load_level_properties_on_level_init"), LoadLevelPropertiesOnLevelInit.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "before_recipes_stats"), BeforeRecipeStats.EVENT);
-        eventRegistry.registerValue(Identifier.of(modID, "block_item_factory_provider"), BlockItemFactoryProvider.EVENT);
+    //@Override
+    public void preInit(JsonRecipeParserRegistry jsonRecipeParserRegistry, net.modificationstation.stationapi.api.common.registry.ModID modID) {
         jsonRecipeParserRegistry.registerValue(Identifier.of("crafting_shaped"), recipe -> {
             JsonElement rawJson;
             try {
@@ -542,30 +417,6 @@ public class StationAPI implements ModCore, PreInit, Init, PreLaunchEntrypoint {
             }
             net.modificationstation.stationapi.api.common.recipe.SmeltingRegistry.INSTANCE.addSmeltingRecipe(json.getIngredient().getItemInstance(), json.getResult().getItemInstance());
         });
-    }
-
-    /**
-     * Registers the events entrypoints. No Minecraft classes must be referenced here.
-     * @param modID current listener's ModID.
-     * @see EventRegistry
-     */
-    @Override
-    public void init(ModID modID) {
-        EventRegistry.INSTANCE.forEach((identifier, event) -> event.register(identifier));
-    }
-
-    /**
-     * Performs the setup of entrypoint's annotated fields. No Minecraft classes must be referenced here.
-     * @param modContainer entrypoint's mod.
-     * @param o entrypoint's instance.
-     */
-    public void setupAnnotations(ModContainer modContainer, Object o) {
-        try {
-            ReflectionHelper.setFinalFieldsWithAnnotation(o, Instance.class, o);
-            ReflectionHelper.setFinalFieldsWithAnnotation(o, ModID.Field.class, modIDField -> modIDField.value().isEmpty() ? ModID.of(modContainer) : ModID.of(modIDField.value()));
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**

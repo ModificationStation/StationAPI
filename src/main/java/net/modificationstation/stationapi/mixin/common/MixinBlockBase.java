@@ -8,17 +8,17 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.PlaceableTileEntity;
 import net.modificationstation.stationapi.api.client.event.model.ModelRegister;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.block.BlockMiningLevel;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.block.BlockStrengthPerMeta;
 import net.modificationstation.stationapi.api.common.entity.player.StrengthOnMeta;
-import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryProvider;
+import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
 import net.modificationstation.stationapi.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
 import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
 import net.modificationstation.stationapi.api.common.item.tool.*;
-import net.modificationstation.stationapi.impl.common.StationAPI;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -75,7 +75,7 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
     @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(I)Lnet/minecraft/item/PlaceableTileEntity;"))
     private static PlaceableTileEntity getBlockItem(int blockID) {
-        return BlockItemFactoryProvider.EVENT.getInvoker().getBlockItemFactory(BY_ID[blockID + BY_ID.length], PlaceableTileEntity::new).apply(blockID);
+        return BlockItemFactoryCallback.EVENT.getInvoker().getBlockItemFactory(BY_ID[blockID + BY_ID.length], PlaceableTileEntity::new).apply(blockID);
     }
 
     @Shadow

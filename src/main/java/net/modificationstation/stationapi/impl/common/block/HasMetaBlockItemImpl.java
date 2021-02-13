@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.common.block;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.PlaceableTileEntity;
 import net.modificationstation.stationapi.api.common.block.*;
-import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryProvider;
+import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
 import net.modificationstation.stationapi.template.common.item.MetaBlock;
 
 import java.util.function.IntFunction;
@@ -11,7 +11,7 @@ import java.util.function.IntFunction;
 /**
  * {@link IHasMetaBlockItem} implementation class.
  * @author mine_diver
- * @see BlockItemFactoryProvider
+ * @see BlockItemFactoryCallback
  * @see IHasCustomBlockItemFactory
  * @see HasCustomBlockItemFactory
  * @see IHasMetaBlockItem
@@ -19,10 +19,10 @@ import java.util.function.IntFunction;
  * @see IHasMetaNamedBlockItem
  * @see HasMetaNamedBlockItem
  */
-public class HasMetaBlockItemImpl implements BlockItemFactoryProvider {
+public class HasMetaBlockItemImpl implements BlockItemFactoryCallback {
 
     /**
-     * Handles block's {@link HasMetaBlockItem} annotation if it's present via {@link BlockItemFactoryProvider} hook.
+     * Handles block's {@link HasMetaBlockItem} annotation if it's present via {@link BlockItemFactoryCallback} hook.
      * @param block current block.
      * @param currentFactory current factory that's going to be executed to get block item instance.
      * @return {@link MetaBlock#MetaBlock(int)} if annotation is present, otherwise currentFactory.

@@ -1,14 +1,10 @@
 package net.modificationstation.stationapi.api.common.event;
 
+import lombok.RequiredArgsConstructor;
 import net.modificationstation.stationapi.api.common.util.OreDict;
 
-public interface OreDictRegister {
+@RequiredArgsConstructor
+public class OreDictRegister extends Event {
 
-    GameEventOld<OreDictRegister> EVENT = new GameEventOld<>(OreDictRegister.class, listeners ->
-            oreDictMap -> {
-                for (OreDictRegister event : listeners)
-                    event.registerOreDict(oreDictMap);
-            });
-
-    void registerOreDict(OreDict oreDictMap);
+    public final OreDict oreDictMap;
 }

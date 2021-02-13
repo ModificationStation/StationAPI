@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.client.model;
 import com.google.gson.Gson;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.EntityBase;
-import net.modificationstation.stationapi.impl.common.StationAPI;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import org.lwjgl.opengl.GL11;
 
 import java.io.BufferedReader;
