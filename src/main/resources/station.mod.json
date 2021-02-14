@@ -1,0 +1,8 @@
+{
+  "libraries": [
+    {
+      "url": "https://maven.glass-launcher.net/repo",
+      "name": "net.glasslauncher:commons:1.0"
+    }
+  ]
+}
