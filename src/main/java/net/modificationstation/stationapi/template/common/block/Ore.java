@@ -21,7 +21,7 @@ public class Ore extends net.minecraft.block.Ore {
     }
 
     @Override
-    public Ore sounds(BlockSounds sounds) {
+    public Ore setSounds(BlockSounds sounds) {
         return (Ore) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Ore extends net.minecraft.block.Ore {
     }
 
     @Override
-    public Ore setName(String string) {
+    public Ore setTranslationKey(String string) {
         return (Ore) super.setTranslationKey(string);
     }
 

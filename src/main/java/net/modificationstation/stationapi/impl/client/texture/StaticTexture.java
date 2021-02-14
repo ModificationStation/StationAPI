@@ -29,10 +29,10 @@ public class StaticTexture extends Texture {
             graphics2d.dispose();
         } else
             image.getRGB(0, 0, width, height, pixels, 0, width);
-        update();
+        updateTexture();
     }
 
-    public void update() {
+    public void updateTexture() {
         for (int i = 0; i < pixels.length; i++) {
             int j = pixels[i] >> 24 & 0xff;
             int k = pixels[i] >> 16 & 0xff;
@@ -54,6 +54,6 @@ public class StaticTexture extends Texture {
     @Override
     public void update() {
         if (prevRender3d != render3d)
-            update();
+            updateTexture();
     }
 }

@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.mixin.common;
 
 import net.minecraft.recipe.RecipeRegistry;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.OreDictRegister;
 import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationapi.api.common.util.OreDict;
@@ -29,9 +30,10 @@ public class MixinRecipeRegistry {
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/util/Collections;sort(Ljava/util/List;Ljava/util/Comparator;)V"))
     private <T> void afterRecipeRegister(List<T> list, Comparator<? super T> c) {
         INSTANCE = (RecipeRegistry) (Object) this;
-        OreDictRegister.EVENT.getInvoker().registerOreDict(OreDict.INSTANCE);
-        RecipeRegister.EVENT.getInvoker().registerRecipes(CRAFTING_SHAPED.type());
-        RecipeRegister.EVENT.getInvoker().registerRecipes(CRAFTING_SHAPELESS.type());
+        StationAPI.EVENT_BUS.post(new OreDictRegister(OreDict.INSTANCE));
+        StationAPI.EVENT_BUS.post(new RecipeRegister(CRAFTING_SHAPED.type()));
+        StationAPI.EVENT_BUS.post(new RecipeRegister(CRAFTING_SHAPELESS.type()));
+        //noinspection Java8ListSort
         Collections.sort(list, c);
     }
 }

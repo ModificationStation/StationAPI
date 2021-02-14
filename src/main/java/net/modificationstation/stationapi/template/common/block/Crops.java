@@ -21,7 +21,7 @@ public class Crops extends net.minecraft.block.Crops {
     }
 
     @Override
-    public Crops sounds(BlockSounds sounds) {
+    public Crops setSounds(BlockSounds sounds) {
         return (Crops) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Crops extends net.minecraft.block.Crops {
     }
 
     @Override
-    public Crops setName(String string) {
+    public Crops setTranslationKey(String string) {
         return (Crops) super.setTranslationKey(string);
     }
 

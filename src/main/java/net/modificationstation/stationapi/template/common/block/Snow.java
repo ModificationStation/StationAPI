@@ -21,7 +21,7 @@ public class Snow extends net.minecraft.block.Snow {
     }
 
     @Override
-    public Snow sounds(BlockSounds sounds) {
+    public Snow setSounds(BlockSounds sounds) {
         return (Snow) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Snow extends net.minecraft.block.Snow {
     }
 
     @Override
-    public Snow setName(String string) {
+    public Snow setTranslationKey(String string) {
         return (Snow) super.setTranslationKey(string);
     }
 

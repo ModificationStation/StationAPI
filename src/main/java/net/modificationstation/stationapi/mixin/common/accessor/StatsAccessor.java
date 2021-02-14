@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface StatsAccessor {
 
     @Accessor
-    static void setField_812(boolean field_812) {
+    static void setBlocksInit(boolean blocksInit) {
         throw new UnsupportedOperationException("Mixin!");
     }
 
     @Accessor
-    static void setField_813(boolean field_813) {
+    static void setItemsInit(boolean itemsInit) {
         throw new UnsupportedOperationException("Mixin!");
     }
 }

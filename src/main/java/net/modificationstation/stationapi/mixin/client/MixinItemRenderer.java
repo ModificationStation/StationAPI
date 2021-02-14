@@ -52,12 +52,12 @@ public abstract class MixinItemRenderer extends EntityRenderer {
         TextureRegistry.getRegistry(TextureRegistry.Vanilla.GUI_ITEMS).bindAtlas(dispatcher.textureManager, atlasToBind);
     }
 
-    @Redirect(method = "method_1486(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;IIIII)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(I)V", ordinal = 1))
+    @Redirect(method = "renderItemOnGui(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;IIIII)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(I)V", ordinal = 1))
     private void rebindBlockTexture(TextureManager textureManager, int i) {
         TextureRegistry.getRegistry(TextureRegistry.Vanilla.TERRAIN).bindAtlas(textureManager, atlasToBind);
     }
 
-    @Redirect(method = "method_1486(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;IIIII)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(I)V", ordinal = 2))
+    @Redirect(method = "renderItemOnGui(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;IIIII)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(I)V", ordinal = 2))
     private void rebindItemTexture(TextureManager textureManager, int i) {
         TextureRegistry.getRegistry(TextureRegistry.Vanilla.GUI_ITEMS).bindAtlas(textureManager, atlasToBind);
     }

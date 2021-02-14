@@ -1,18 +1,25 @@
 package net.modificationstation.stationapi.impl.common.config;
 
 import net.modificationstation.stationapi.api.common.config.Category;
+import net.modificationstation.stationapi.api.common.config.Configuration;
 import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 
 import java.io.*;
 import java.text.DateFormat;
 import java.util.*;
 
-public class Configuration implements net.modificationstation.stationapi.api.common.config.Configuration {
+public class ConfigurationImpl implements Configuration {
 
     private final File configFile;
     private final Set<net.modificationstation.stationapi.api.common.config.Category> categories = new TreeSet<>();
 
-    public Configuration(File configFile) {
+    private static final Map<File, ConfigurationImpl> CONFIGS = new HashMap<>();
+
+    public static ConfigurationImpl of(File file) {
+        return CONFIGS.computeIfAbsent(file, ConfigurationImpl::new);
+    }
+
+    private ConfigurationImpl(File configFile) {
         this.configFile = configFile;
     }
 

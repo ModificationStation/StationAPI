@@ -21,7 +21,7 @@ public class Cactus extends net.minecraft.block.Cactus {
     }
 
     @Override
-    public Cactus sounds(BlockSounds sounds) {
+    public Cactus setSounds(BlockSounds sounds) {
         return (Cactus) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Cactus extends net.minecraft.block.Cactus {
     }
 
     @Override
-    public Cactus setName(String string) {
+    public Cactus setTranslationKey(String string) {
         return (Cactus) super.setTranslationKey(string);
     }
 

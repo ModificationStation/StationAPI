@@ -43,7 +43,7 @@ public class CustomCuboidRenderer implements net.modificationstation.stationapi.
                 return tex[tex.length - 1];
             }
         } catch (Exception e) {
-            StationAPI.INSTANCE.getLogger().error("Unable to get valid texture for side!");
+            StationAPI.LOGGER.error("Unable to get valid texture for side!");
             e.printStackTrace();
             return null;
         }

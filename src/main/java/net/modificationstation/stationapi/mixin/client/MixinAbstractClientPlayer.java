@@ -19,7 +19,7 @@ public class MixinAbstractClientPlayer {
             ci.cancel();
     }
 
-    @Redirect(method = "method_141", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;getArmourValue()I"))
+    @Redirect(method = "getArmourValue()I", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;getArmourValue()I"))
     private int redirectGetPlayerArmorValue(PlayerInventory inventoryPlayer) {
         return PlayerAPI.getPlayerArmorValue((AbstractClientPlayer) (Object) this, inventoryPlayer.getArmourValue());
     }

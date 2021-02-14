@@ -36,7 +36,7 @@ public abstract class MixinHandshakeC2S extends AbstractPacket implements Statio
     @Environment(EnvType.CLIENT)
     @Inject(method = "<init>(Ljava/lang/String;I)V", at = @At("RETURN"))
     private void newClient(String string, int i, CallbackInfo ci) {
-        ModID modID = StationAPI.INSTANCE.getModID();
+        ModID modID = StationAPI.MODID;
         stationAPI = modID.toString();
         version = modID.getVersion().getFriendlyString();
         mods = new HashMap<>();

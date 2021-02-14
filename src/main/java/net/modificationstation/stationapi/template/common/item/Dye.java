@@ -45,7 +45,7 @@ public class Dye extends net.minecraft.item.Dye {
     }
 
     @Override
-    public Dye setName(String newName) {
+    public Dye setTranslationKey(String newName) {
         return (Dye) super.setTranslationKey(newName);
     }
 

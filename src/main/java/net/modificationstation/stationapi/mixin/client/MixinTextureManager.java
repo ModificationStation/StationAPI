@@ -27,7 +27,8 @@ public class MixinTextureManager {
         OpenGLHelper.bindTexture(target, texture);
     }
 
-    @Redirect(method = "method_1096()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resource/TexturePack;method_976(Ljava/lang/String;)Ljava/io/InputStream;"))
+    @SuppressWarnings("UnresolvedMixinReference")
+    @Redirect(method = "method_1096()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resource/TexturePack;getResourceAsStream(Ljava/lang/String;)Ljava/io/InputStream;"))
     private InputStream fixFakeAtlases(TexturePack texturePack, String string) {
         return texturePack.getResourceAsStream(TextureFactory.INSTANCE.getFakedAtlases().getOrDefault(string, string));
     }

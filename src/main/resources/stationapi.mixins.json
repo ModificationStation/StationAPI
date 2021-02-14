@@ -47,11 +47,11 @@
     "common.accessor.TranslationStorageAccessor"
   ],
   "server": [
-    "server.Mixinclass_174",
-    "server.Mixinclass_488",
     "server.Mixinclass_70",
     "server.MixinPendingConnection",
+    "server.MixinServerEntityTracker",
     "server.MixinServerPlayerPacketHandler",
+    "server.MixinTrackedEntity",
     "server.accessor.ServerPlayerAccessor",
     "server.accessor.ServerPlayerPacketHandlerAccessor"
   ],

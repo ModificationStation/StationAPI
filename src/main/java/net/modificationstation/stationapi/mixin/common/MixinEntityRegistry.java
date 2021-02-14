@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.common;
 
 import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.EntityRegistry;
-import net.modificationstation.stationapi.api.common.entity.EntityHandlerRegistry;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.entity.EntityRegister;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,6 +19,6 @@ public class MixinEntityRegistry {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void onEntityRegister(CallbackInfo ci) {
-        EntityRegister.EVENT.getInvoker().registerEntities(MixinEntityRegistry::register, EntityHandlerRegistry.INSTANCE, EntityRegister.EVENT.getInvokerModID());
+        StationAPI.EVENT_BUS.post(new EntityRegister(MixinEntityRegistry::register));
     }
 }

@@ -21,7 +21,7 @@ public class MaterialBlock extends net.minecraft.block.MaterialBlock {
     }
 
     @Override
-    public MaterialBlock sounds(BlockSounds sounds) {
+    public MaterialBlock setSounds(BlockSounds sounds) {
         return (MaterialBlock) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class MaterialBlock extends net.minecraft.block.MaterialBlock {
     }
 
     @Override
-    public MaterialBlock setName(String string) {
+    public MaterialBlock setTranslationKey(String string) {
         return (MaterialBlock) super.setTranslationKey(string);
     }
 

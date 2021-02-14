@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.mixin.common;
 
 import net.minecraft.level.LevelProperties;
 import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.level.LoadLevelProperties;
 import net.modificationstation.stationapi.api.common.event.level.SaveLevelProperties;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,11 +15,11 @@ public class MixinLevelProperties {
 
     @Inject(method = "<init>(Lnet/minecraft/util/io/CompoundTag;)V", at = @At("RETURN"))
     private void onLoadFromTag(CompoundTag arg, CallbackInfo ci) {
-        LoadLevelProperties.EVENT.getInvoker().loadLevelProperties((LevelProperties) (Object) this, arg);
+        StationAPI.EVENT_BUS.post(new LoadLevelProperties((LevelProperties) (Object) this, arg));
     }
 
     @Inject(method = "updateProperties(Lnet/minecraft/util/io/CompoundTag;Lnet/minecraft/util/io/CompoundTag;)V", at = @At("RETURN"))
     private void onSaveToTag(CompoundTag arg, CompoundTag arg1, CallbackInfo ci) {
-        SaveLevelProperties.EVENT.getInvoker().saveLevelProperties((LevelProperties) (Object) this, arg, arg1);
+        StationAPI.EVENT_BUS.post(new SaveLevelProperties((LevelProperties) (Object) this, arg, arg1));
     }
 }

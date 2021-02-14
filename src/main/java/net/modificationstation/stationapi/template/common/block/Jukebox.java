@@ -21,7 +21,7 @@ public class Jukebox extends net.minecraft.block.Jukebox {
     }
 
     @Override
-    public Jukebox sounds(BlockSounds sounds) {
+    public Jukebox setSounds(BlockSounds sounds) {
         return (Jukebox) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Jukebox extends net.minecraft.block.Jukebox {
     }
 
     @Override
-    public Jukebox setName(String string) {
+    public Jukebox setTranslationKey(String string) {
         return (Jukebox) super.setTranslationKey(string);
     }
 

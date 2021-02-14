@@ -5,7 +5,6 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.config.Configuration;
-import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.impl.common.util.ReflectionHelper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -15,16 +14,12 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.lang.annotation.*;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Entrypoint utility class for easier mod initialization.
  * @author mine_diver
  */
 public class Entrypoint {
-
-    private static final Map<File, Configuration> configs = new HashMap<>();
 
     /**
      * Performs the setup of entrypoint, such as:
@@ -76,7 +71,7 @@ public class Entrypoint {
                 });
                 ReflectionHelper.setFieldsWithAnnotation(o, Config.class, config -> {
                     String modid = modContainer.getMetadata().getId();
-                    return configs.computeIfAbsent(new File(FabricLoader.getInstance().getConfigDir().toFile(),File.separator + (config.dir().isEmpty() ? modid : config.dir()) + File.separator + (config.value().isEmpty() ? modid + ".cfg" : config.value())), file -> GeneralFactory.INSTANCE.newInst(Configuration.class, file));
+                    return Configuration.of(new File(FabricLoader.getInstance().getConfigDir().toFile(),File.separator + (config.dir().isEmpty() ? modid : config.dir()) + File.separator + (config.value().isEmpty() ? modid + ".cfg" : config.value())));
                 });
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);

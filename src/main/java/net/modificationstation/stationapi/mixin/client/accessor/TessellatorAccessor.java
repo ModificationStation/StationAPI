@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface TessellatorAccessor {
 
     @Accessor
-    boolean getField_2065();
+    boolean getHasColour();
 
     @Accessor
-    void setField_2065(boolean field_2065);
+    void setHasColour(boolean hasColour);
 }

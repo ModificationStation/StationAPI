@@ -3,7 +3,8 @@ package net.modificationstation.stationapi.mixin.common;
 import net.minecraft.level.Level;
 import net.minecraft.level.chunk.ServerChunkCache;
 import net.minecraft.level.source.LevelSource;
-import net.modificationstation.stationapi.api.common.event.level.gen.ChunkPopulator;
+import net.modificationstation.stationapi.api.common.StationAPI;
+import net.modificationstation.stationapi.api.common.event.level.gen.ChunkDecoration;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,6 +31,6 @@ public class MixinServerChunkCache {
         long xRandomMultiplier = (modRandom.nextLong() / 2L) * 2L + 1L;
         long zRandomMultiplier = (modRandom.nextLong() / 2L) * 2L + 1L;
         modRandom.setSeed((long) chunkX * xRandomMultiplier + (long) chunkZ * zRandomMultiplier ^ level.getSeed());
-        ChunkPopulator.EVENT.getInvoker().populate(level, this.levelSource, level.getBiomeSource().getBiome(blockX + 16, blockZ + 16), blockX, blockZ, modRandom);
+        StationAPI.EVENT_BUS.post(new ChunkDecoration(level, this.levelSource, level.getBiomeSource().getBiome(blockX + 16, blockZ + 16), blockX, blockZ, modRandom));
     }
 }

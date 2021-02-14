@@ -21,7 +21,7 @@ public class Cobweb extends net.minecraft.block.Cobweb {
     }
 
     @Override
-    public Cobweb sounds(BlockSounds sounds) {
+    public Cobweb setSounds(BlockSounds sounds) {
         return (Cobweb) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Cobweb extends net.minecraft.block.Cobweb {
     }
 
     @Override
-    public Cobweb setName(String string) {
+    public Cobweb setTranslationKey(String string) {
         return (Cobweb) super.setTranslationKey(string);
     }
 

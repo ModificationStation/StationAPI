@@ -22,7 +22,7 @@ public class Door extends net.minecraft.block.Door {
     }
 
     @Override
-    public Door sounds(BlockSounds sounds) {
+    public Door setSounds(BlockSounds sounds) {
         return (Door) super.setSounds(sounds);
     }
 
@@ -57,7 +57,7 @@ public class Door extends net.minecraft.block.Door {
     }
 
     @Override
-    public Door setName(String string) {
+    public Door setTranslationKey(String string) {
         return (Door) super.setTranslationKey(string);
     }
 

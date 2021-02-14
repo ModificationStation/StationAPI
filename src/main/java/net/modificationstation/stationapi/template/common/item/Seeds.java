@@ -45,7 +45,7 @@ public class Seeds extends net.minecraft.item.Seeds {
     }
 
     @Override
-    public Seeds setName(String newName) {
+    public Seeds setTranslationKey(String newName) {
         return (Seeds) super.setTranslationKey(newName);
     }
 

@@ -21,7 +21,7 @@ public class MovingPiston extends net.minecraft.block.MovingPiston {
     }
 
     @Override
-    public MovingPiston sounds(BlockSounds sounds) {
+    public MovingPiston setSounds(BlockSounds sounds) {
         return (MovingPiston) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class MovingPiston extends net.minecraft.block.MovingPiston {
     }
 
     @Override
-    public MovingPiston setName(String string) {
+    public MovingPiston setTranslationKey(String string) {
         return (MovingPiston) super.setTranslationKey(string);
     }
 

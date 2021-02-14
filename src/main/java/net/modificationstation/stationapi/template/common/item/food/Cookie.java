@@ -45,7 +45,7 @@ public class Cookie extends net.minecraft.item.food.Cookie {
     }
 
     @Override
-    public Cookie setName(String newName) {
+    public Cookie setTranslationKey(String newName) {
         return (Cookie) super.setTranslationKey(newName);
     }
 

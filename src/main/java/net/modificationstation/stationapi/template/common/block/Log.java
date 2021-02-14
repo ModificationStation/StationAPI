@@ -21,7 +21,7 @@ public class Log extends net.minecraft.block.Log {
     }
 
     @Override
-    public Log sounds(BlockSounds sounds) {
+    public Log setSounds(BlockSounds sounds) {
         return (Log) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Log extends net.minecraft.block.Log {
     }
 
     @Override
-    public Log setName(String string) {
+    public Log setTranslationKey(String string) {
         return (Log) super.setTranslationKey(string);
     }
 

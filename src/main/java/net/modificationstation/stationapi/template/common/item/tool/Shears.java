@@ -45,7 +45,7 @@ public class Shears extends net.minecraft.item.tool.Shears {
     }
 
     @Override
-    public Shears setName(String newName) {
+    public Shears setTranslationKey(String newName) {
         return (Shears) super.setTranslationKey(newName);
     }
 

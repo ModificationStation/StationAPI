@@ -21,7 +21,7 @@ public class Sponge extends net.minecraft.block.Sponge {
     }
 
     @Override
-    public Sponge sounds(BlockSounds sounds) {
+    public Sponge setSounds(BlockSounds sounds) {
         return (Sponge) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Sponge extends net.minecraft.block.Sponge {
     }
 
     @Override
-    public Sponge setName(String string) {
+    public Sponge setTranslationKey(String string) {
         return (Sponge) super.setTranslationKey(string);
     }
 

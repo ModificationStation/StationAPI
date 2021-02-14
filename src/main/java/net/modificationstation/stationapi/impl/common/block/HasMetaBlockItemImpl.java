@@ -1,9 +1,11 @@
 package net.modificationstation.stationapi.impl.common.block;
 
-import net.minecraft.block.BlockBase;
 import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.common.block.*;
+import net.modificationstation.stationapi.api.common.event.EventListener;
+import net.modificationstation.stationapi.api.common.event.ListenerPriority;
 import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
+import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.template.common.item.MetaBlock;
 
 import java.util.function.IntFunction;
@@ -19,19 +21,17 @@ import java.util.function.IntFunction;
  * @see IHasMetaNamedBlockItem
  * @see HasMetaNamedBlockItem
  */
-public class HasMetaBlockItemImpl implements BlockItemFactoryCallback {
+@Entrypoint.Properties(eventBus = Entrypoint.Properties.EventBusPolicy.CLASS)
+public class HasMetaBlockItemImpl {
 
     /**
      * Handles block's {@link HasMetaBlockItem} annotation if it's present via {@link BlockItemFactoryCallback} hook.
-     * @param block current block.
-     * @param currentFactory current factory that's going to be executed to get block item instance.
-     * @return {@link MetaBlock#MetaBlock(int)} if annotation is present, otherwise currentFactory.
+     * @param event blockitemfactory callback.
      */
-    @Override
-    public IntFunction<Block> getBlockItemFactory(BlockBase block, IntFunction<Block> currentFactory) {
-        if (block.getClass().isAnnotationPresent(HasMetaBlockItem.class))
-            currentFactory = FACTORY;
-        return currentFactory;
+    @EventListener(priority = ListenerPriority.HIGH)
+    private static void getBlockItemFactory(BlockItemFactoryCallback event) {
+        if (event.block.getClass().isAnnotationPresent(HasMetaBlockItem.class))
+            event.currentFactory = FACTORY;
     }
 
     /**

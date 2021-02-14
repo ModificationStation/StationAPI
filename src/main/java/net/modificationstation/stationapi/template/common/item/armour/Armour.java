@@ -45,7 +45,7 @@ public class Armour extends net.minecraft.item.armour.Armour {
     }
 
     @Override
-    public Armour setName(String newName) {
+    public Armour setTranslationKey(String newName) {
         return (Armour) super.setTranslationKey(newName);
     }
 

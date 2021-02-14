@@ -61,7 +61,7 @@ public class RecursiveReader {
                     }
                 }
             } catch (Exception e) {
-                StationAPI.INSTANCE.getLogger().error("RecursiveReader was given an invalid URL or a corrupt JAR/ZIP!");
+                StationAPI.LOGGER.error("RecursiveReader was given an invalid URL or a corrupt JAR/ZIP!");
                 e.printStackTrace();
             }
         }

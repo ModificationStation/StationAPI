@@ -21,7 +21,7 @@ public class Portal extends net.minecraft.block.Portal {
     }
 
     @Override
-    public Portal sounds(BlockSounds sounds) {
+    public Portal setSounds(BlockSounds sounds) {
         return (Portal) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Portal extends net.minecraft.block.Portal {
     }
 
     @Override
-    public Portal setName(String string) {
+    public Portal setTranslationKey(String string) {
         return (Portal) super.setTranslationKey(string);
     }
 

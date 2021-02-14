@@ -45,7 +45,7 @@ public class Boat extends net.minecraft.item.Boat {
     }
 
     @Override
-    public Boat setName(String newName) {
+    public Boat setTranslationKey(String newName) {
         return (Boat) super.setTranslationKey(newName);
     }
 

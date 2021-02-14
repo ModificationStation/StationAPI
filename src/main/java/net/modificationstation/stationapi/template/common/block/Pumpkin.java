@@ -21,7 +21,7 @@ public class Pumpkin extends net.minecraft.block.Pumpkin {
     }
 
     @Override
-    public Pumpkin sounds(BlockSounds sounds) {
+    public Pumpkin setSounds(BlockSounds sounds) {
         return (Pumpkin) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Pumpkin extends net.minecraft.block.Pumpkin {
     }
 
     @Override
-    public Pumpkin setName(String string) {
+    public Pumpkin setTranslationKey(String string) {
         return (Pumpkin) super.setTranslationKey(string);
     }
 

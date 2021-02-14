@@ -3,18 +3,20 @@ package net.modificationstation.stationapi.impl.common.block;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.common.StationAPI;
-import net.modificationstation.stationapi.api.common.block.BlockRegistry;
+import net.modificationstation.stationapi.api.common.event.EventListener;
+import net.modificationstation.stationapi.api.common.event.ListenerPriority;
 import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
-import net.modificationstation.stationapi.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.util.OreDict;
 
 /**
  * @author calmilamsy
  */
-public class OreDictBlockInit implements BlockRegister {
+@Entrypoint.Properties(eventBus = Entrypoint.Properties.EventBusPolicy.CLASS)
+public class OreDictBlockInit {
 
-    @Override
-    public void registerBlocks(BlockRegistry blocks, ModID modID) {
+    @EventListener(priority = ListenerPriority.HIGH)
+    private static void registerBlockOreDict(BlockRegister event) {
         // Basic Blocks
         addBlock0Damage("stone", BlockBase.STONE);
         addBlock0Damage("dirt", BlockBase.DIRT);
@@ -152,7 +154,7 @@ public class OreDictBlockInit implements BlockRegister {
         addBlockIgnoreDamage("repeaterRedstoneOff", BlockBase.REDSTONE_REPEATER);
         addBlockIgnoreDamage("repeaterRedstoneOn", BlockBase.REDSTONE_REPEATER_LIT);
 
-        StationAPI.INSTANCE.getLogger().info("Registered vanilla block oredict.");
+        StationAPI.LOGGER.info("Registered vanilla block oredict.");
     }
 
     private static void addBlockIgnoreDamage(String oreDictString, BlockBase blockBase) {

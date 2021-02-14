@@ -45,7 +45,7 @@ public class FlintAndSteel extends net.minecraft.item.FlintAndSteel {
     }
 
     @Override
-    public FlintAndSteel setName(String newName) {
+    public FlintAndSteel setTranslationKey(String newName) {
         return (FlintAndSteel) super.setTranslationKey(newName);
     }
 

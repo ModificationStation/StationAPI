@@ -1,15 +1,17 @@
 package net.modificationstation.stationapi.impl.common.config;
 
+import net.modificationstation.stationapi.api.common.config.Property;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-public class Property implements net.modificationstation.stationapi.api.common.config.Property {
+public class PropertyImpl implements Property {
 
     private final String name;
     private String value;
     private String comment;
 
-    public Property(String name) {
+    public PropertyImpl(String name) {
         this.name = name;
     }
 
@@ -59,12 +61,12 @@ public class Property implements net.modificationstation.stationapi.api.common.c
     }
 
     @Override
-    public int compareTo(net.modificationstation.stationapi.api.common.config.Property o) {
+    public int compareTo(Property o) {
         return getName().compareTo(o.getName());
     }
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof net.modificationstation.stationapi.api.common.config.Property && getName().equals(((net.modificationstation.stationapi.api.common.config.Property) o).getName());
+        return o instanceof Property && getName().equals(((Property) o).getName());
     }
 }

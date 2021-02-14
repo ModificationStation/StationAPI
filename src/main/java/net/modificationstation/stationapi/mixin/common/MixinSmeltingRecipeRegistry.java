@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.mixin.common;
 
 import net.minecraft.recipe.SmeltingRecipeRegistry;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,6 +24,6 @@ public class MixinSmeltingRecipeRegistry {
     @Inject(method = "<init>()V", at = @At("RETURN"))
     private void afterRecipeRegister(CallbackInfo ci) {
         INSTANCE = (SmeltingRecipeRegistry) (Object) this;
-        RecipeRegister.EVENT.getInvoker().registerRecipes(SMELTING.type());
+        StationAPI.EVENT_BUS.post(new RecipeRegister(SMELTING.type()));
     }
 }

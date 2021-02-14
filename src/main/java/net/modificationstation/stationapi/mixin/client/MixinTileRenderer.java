@@ -586,17 +586,17 @@ public abstract class MixinTileRenderer {
         return overrideTexture(texID);
     }
 
-    @ModifyVariable(method = "method_70(Lnet/minecraft/block/BlockBase;III)Z", index = 6, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;method_1604(Lnet/minecraft/level/TileView;III)F", shift = At.Shift.BEFORE))
+    @ModifyVariable(method = "method_70(Lnet/minecraft/block/BlockBase;III)Z", index = 6, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;getBrightness(Lnet/minecraft/level/TileView;III)F", shift = At.Shift.BEFORE))
     private int getFireTextureID(int texID) {
         return overrideTexture(texID);
     }
 
-    @ModifyVariable(method = "method_71(Lnet/minecraft/block/BlockBase;III)Z", index = 7, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;method_1604(Lnet/minecraft/level/TileView;III)F", shift = At.Shift.BEFORE))
+    @ModifyVariable(method = "method_71(Lnet/minecraft/block/BlockBase;III)Z", index = 7, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;getBrightness(Lnet/minecraft/level/TileView;III)F", shift = At.Shift.BEFORE))
     private int getRedstoneWireTextureID(int texID) {
         return overrideTexture(texID);
     }
 
-    @ModifyVariable(method = "method_72(Lnet/minecraft/block/BlockBase;III)Z", index = 6, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;method_1604(Lnet/minecraft/level/TileView;III)F", shift = At.Shift.BEFORE))
+    @ModifyVariable(method = "method_72(Lnet/minecraft/block/BlockBase;III)Z", index = 6, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;getBrightness(Lnet/minecraft/level/TileView;III)F", shift = At.Shift.BEFORE))
     private int getLadderTextureID(int texID) {
         return overrideTexture(texID);
     }
@@ -633,13 +633,13 @@ public abstract class MixinTileRenderer {
                 Tessellator tessellator = Tessellator.INSTANCE;
                 boolean hasColor = false;
                 if (!inventory) {
-                    hasColor = ((TessellatorAccessor) tessellator).getField_2065();
+                    hasColor = ((TessellatorAccessor) tessellator).getHasColour();
                     tessellator.draw();
                 }
                 TextureRegistry.currentRegistry().bindAtlas(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, atlasID);
                 if (!inventory) {
                     tessellator.start();
-                    ((TessellatorAccessor) tessellator).setField_2065(hasColor);
+                    ((TessellatorAccessor) tessellator).setHasColour(hasColor);
                 }
             }
             return texID % TextureRegistry.currentRegistry().texturesPerFile();

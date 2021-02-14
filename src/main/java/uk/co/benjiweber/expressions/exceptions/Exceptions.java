@@ -1,6 +1,5 @@
 package uk.co.benjiweber.expressions.exceptions;
 
-import uk.co.benjiweber.expressions.exceptions.Exceptions.UnableToInstantiateSuppliedException;
 import uk.co.benjiweber.expressions.functions.ExceptionalFunction;
 import uk.co.benjiweber.expressions.functions.ExceptionalSupplier;
 import uk.co.benjiweber.expressions.functions.ExceptionalVoid;

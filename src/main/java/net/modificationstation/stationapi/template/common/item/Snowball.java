@@ -45,7 +45,7 @@ public class Snowball extends net.minecraft.item.Snowball {
     }
 
     @Override
-    public Snowball setName(String newName) {
+    public Snowball setTranslationKey(String newName) {
         return (Snowball) super.setTranslationKey(newName);
     }
 

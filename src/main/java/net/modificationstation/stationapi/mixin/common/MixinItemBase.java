@@ -12,7 +12,6 @@ import net.modificationstation.stationapi.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationapi.api.common.event.item.ItemRegister;
 import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
-import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.item.StrengthOnMeta;
 import net.modificationstation.stationapi.api.common.item.tool.OverrideIsEffectiveOn;
 import net.modificationstation.stationapi.api.common.item.tool.ToolLevel;
@@ -37,10 +36,10 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
     }
 
     @SuppressWarnings("UnresolvedMixinReference")
-    @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/Stats;onItemsRegistered()V", shift = At.Shift.BEFORE))
+    @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/Stats;setupItemStats()V", shift = At.Shift.BEFORE))
     private static void afterItemRegister(CallbackInfo ci) {
         GeneralFactory.INSTANCE.addFactory(ItemBase.class, (args) -> ItemBase.class.cast(new MixinItemBase((int) args[0])));
-        ItemRegister.EVENT.getInvoker().registerItems(ItemRegistry.INSTANCE, ItemRegister.EVENT.getInvokerModID());
+        StationAPI.EVENT_BUS.post(new ItemRegister());
     }
 
     @Shadow
@@ -53,9 +52,9 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
         return 0;
     }
 
-    @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/item/ItemBase;", at = @At("HEAD"))
+    @ModifyVariable(method = "setTranslationKey(Ljava/lang/String;)Lnet/minecraft/item/ItemBase;", at = @At("HEAD"))
     private String getName(String name) {
-        return ItemNameSet.EVENT.getInvoker().getName((ItemBase) (Object) this, name);
+        return StationAPI.EVENT_BUS.post(new ItemNameSet((ItemBase) (Object) this, name)).newName;
     }
 
     @Override

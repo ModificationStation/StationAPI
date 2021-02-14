@@ -11,14 +11,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TrackedEntity.class)
-public class Mixinclass_174 {
+public class MixinTrackedEntity {
 
     @Shadow
-    public EntityBase field_597;
+    public EntityBase entityToSync;
 
     @Inject(method = "method_600", at = @At(value = "HEAD"), cancellable = true)
     private void getSpawnData(CallbackInfoReturnable<AbstractPacket> cir) {
-        if (this.field_597 instanceof CustomSpawnData)
-            cir.setReturnValue(((CustomSpawnData) field_597).getSpawnData());
+        if (this.entityToSync instanceof CustomSpawnData)
+            cir.setReturnValue(((CustomSpawnData) entityToSync).getSpawnData());
     }
 }

@@ -37,7 +37,7 @@ public class Sapling extends net.minecraft.item.Sapling {
     }
 
     @Override
-    public Sapling setName(String newName) {
+    public Sapling setTranslationKey(String newName) {
         return (Sapling) super.setTranslationKey(newName);
     }
 

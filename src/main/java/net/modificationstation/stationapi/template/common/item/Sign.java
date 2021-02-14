@@ -45,7 +45,7 @@ public class Sign extends net.minecraft.item.Sign {
     }
 
     @Override
-    public Sign setName(String newName) {
+    public Sign setTranslationKey(String newName) {
         return (Sign) super.setTranslationKey(newName);
     }
 

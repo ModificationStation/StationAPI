@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.mixin.common;
 
 import net.minecraft.achievement.Achievement;
 import net.minecraft.achievement.Achievements;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.achievement.AchievementRegister;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,6 +22,6 @@ public class MixinAchievements {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/achievement/Achievements;FLY_PIG:Lnet/minecraft/achievement/Achievement;", opcode = Opcodes.PUTSTATIC, shift = At.Shift.AFTER))
     private static void afterAchievementRegister(CallbackInfo ci) {
-        AchievementRegister.EVENT.getInvoker().registerAchievements(ACHIEVEMENTS);
+        StationAPI.EVENT_BUS.post(new AchievementRegister(ACHIEVEMENTS));
     }
 }

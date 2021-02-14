@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.SleepStatus;
 import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.entity.player.*;
 import net.modificationstation.stationapi.api.common.event.entity.player.PlayerHandlerRegister;
 import net.modificationstation.stationapi.api.common.item.CustomArmourValue;
@@ -58,7 +59,7 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
     public List<PlayerHandler> getPlayerBases() {
         if (playerBases == null) {
             playerBases = new ArrayList<>();
-            PlayerHandlerRegister.EVENT.getInvoker().registerPlayerHandlers(playerBases, (PlayerBase) (Object) this);
+            StationAPI.EVENT_BUS.post(new PlayerHandlerRegister((PlayerBase) (Object) this, playerBases));
         }
         return playerBases;
     }

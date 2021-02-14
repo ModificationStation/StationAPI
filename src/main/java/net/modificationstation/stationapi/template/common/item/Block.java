@@ -37,7 +37,7 @@ public class Block extends net.minecraft.item.Block {
     }
 
     @Override
-    public Block setName(String newName) {
+    public Block setTranslationKey(String newName) {
         return (Block) super.setTranslationKey(newName);
     }
 

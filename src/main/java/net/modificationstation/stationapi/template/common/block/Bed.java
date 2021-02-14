@@ -21,7 +21,7 @@ public class Bed extends net.minecraft.block.Bed {
     }
 
     @Override
-    public Bed sounds(BlockSounds sounds) {
+    public Bed setSounds(BlockSounds sounds) {
         return (Bed) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Bed extends net.minecraft.block.Bed {
     }
 
     @Override
-    public Bed setName(String string) {
+    public Bed setTranslationKey(String string) {
         return (Bed) super.setTranslationKey(string);
     }
 

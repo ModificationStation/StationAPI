@@ -46,7 +46,7 @@ public class SecondaryBlock extends net.minecraft.item.SecondaryBlock {
     }
 
     @Override
-    public SecondaryBlock setName(String newName) {
+    public SecondaryBlock setTranslationKey(String newName) {
         return (SecondaryBlock) super.setTranslationKey(newName);
     }
 

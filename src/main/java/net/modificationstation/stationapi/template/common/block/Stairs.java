@@ -22,7 +22,7 @@ public class Stairs extends net.minecraft.block.Stairs {
     }
 
     @Override
-    public Stairs sounds(BlockSounds sounds) {
+    public Stairs setSounds(BlockSounds sounds) {
         return (Stairs) super.setSounds(sounds);
     }
 
@@ -57,7 +57,7 @@ public class Stairs extends net.minecraft.block.Stairs {
     }
 
     @Override
-    public Stairs setName(String string) {
+    public Stairs setTranslationKey(String string) {
         return (Stairs) super.setTranslationKey(string);
     }
 

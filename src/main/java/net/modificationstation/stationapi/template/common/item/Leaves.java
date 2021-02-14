@@ -37,7 +37,7 @@ public class Leaves extends net.minecraft.item.Leaves {
     }
 
     @Override
-    public Leaves setName(String newName) {
+    public Leaves setTranslationKey(String newName) {
         return (Leaves) super.setTranslationKey(newName);
     }
 

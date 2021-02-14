@@ -3,7 +3,10 @@ package net.modificationstation.stationapi.impl.common.block;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.common.block.*;
+import net.modificationstation.stationapi.api.common.event.EventListener;
+import net.modificationstation.stationapi.api.common.event.ListenerPriority;
 import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
+import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 
 import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandles;
@@ -21,24 +24,23 @@ import java.util.function.IntFunction;
  * @see IHasMetaNamedBlockItem
  * @see HasMetaNamedBlockItem
  */
-public class HasCustomBlockItemFactoryImpl implements BlockItemFactoryCallback {
+@Entrypoint.Properties(eventBus = Entrypoint.Properties.EventBusPolicy.CLASS)
+public class HasCustomBlockItemFactoryImpl {
 
     /**
      * Processes {@link HasCustomBlockItemFactory} annotation if present via {@link BlockItemFactoryCallback} hook.
-     * @param block current block.
-     * @param currentFactory current factory that's going to be executed to get block item instance.
-     * @return new or current factory.
+     * @param event blockitemfactory callback.
      */
-    @Override
-    public IntFunction<Block> getBlockItemFactory(BlockBase block, IntFunction<Block> currentFactory) {
-        if (block instanceof IHasCustomBlockItemFactory)
-            currentFactory = ((IHasCustomBlockItemFactory) block).getBlockItemFactory();
-        Class<? extends BlockBase> blockClass = block.getClass();
+    @EventListener(priority = ListenerPriority.HIGH)
+    private static void getBlockItemFactory(BlockItemFactoryCallback event) {
+        if (event.block instanceof IHasCustomBlockItemFactory)
+            event.currentFactory = ((IHasCustomBlockItemFactory) event.block).getBlockItemFactory();
+        Class<? extends BlockBase> blockClass = event.block.getClass();
         if (blockClass.isAnnotationPresent(HasCustomBlockItemFactory.class)) {
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             try {
                 //noinspection unchecked
-                currentFactory = (IntFunction<Block>) LambdaMetafactory.metafactory(
+                event.currentFactory = (IntFunction<Block>) LambdaMetafactory.metafactory(
                         lookup,
                         "apply",
                         MethodType.methodType(IntFunction.class),
@@ -50,6 +52,5 @@ public class HasCustomBlockItemFactoryImpl implements BlockItemFactoryCallback {
                 throw new RuntimeException(e);
             }
         }
-        return currentFactory;
     }
 }

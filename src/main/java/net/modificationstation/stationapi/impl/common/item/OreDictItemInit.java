@@ -3,18 +3,20 @@ package net.modificationstation.stationapi.impl.common.item;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.common.StationAPI;
+import net.modificationstation.stationapi.api.common.event.EventListener;
+import net.modificationstation.stationapi.api.common.event.ListenerPriority;
 import net.modificationstation.stationapi.api.common.event.item.ItemRegister;
-import net.modificationstation.stationapi.api.common.item.ItemRegistry;
-import net.modificationstation.stationapi.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.util.OreDict;
 
 /**
  * @author calmilamsy
  */
-public class OreDictItemInit implements ItemRegister {
+@Entrypoint.Properties(eventBus = Entrypoint.Properties.EventBusPolicy.CLASS)
+public class OreDictItemInit {
 
-    @Override
-    public void registerItems(ItemRegistry registry, ModID modID) {
+    @EventListener(priority = ListenerPriority.HIGH)
+    private static void registerItems(ItemRegister event) {
 
         // Basic Items
         addItem0Damage("stick", ItemBase.stick);
@@ -147,7 +149,7 @@ public class OreDictItemInit implements ItemRegister {
         addItemIgnoreDamage("leggingsDiamond", ItemBase.diamondLeggings);
         addItemIgnoreDamage("bootsDiamond", ItemBase.diamondBoots);
 
-        StationAPI.INSTANCE.getLogger().info("Registered vanilla item oredict.");
+        StationAPI.LOGGER.info("Registered vanilla item oredict.");
     }
 
     private static void addItemIgnoreDamage(String oreDictString, ItemBase itemBase) {

@@ -45,7 +45,7 @@ public class Painting extends net.minecraft.item.Painting {
     }
 
     @Override
-    public Painting setName(String newName) {
+    public Painting setTranslationKey(String newName) {
         return (Painting) super.setTranslationKey(newName);
     }
 

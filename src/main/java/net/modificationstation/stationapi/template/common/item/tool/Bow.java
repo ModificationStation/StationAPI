@@ -45,7 +45,7 @@ public class Bow extends net.minecraft.item.tool.Bow {
     }
 
     @Override
-    public Bow setName(String newName) {
+    public Bow setTranslationKey(String newName) {
         return (Bow) super.setTranslationKey(newName);
     }
 

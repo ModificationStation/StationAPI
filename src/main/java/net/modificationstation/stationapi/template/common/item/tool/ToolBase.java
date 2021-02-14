@@ -47,7 +47,7 @@ public class ToolBase extends net.minecraft.item.tool.ToolBase {
     }
 
     @Override
-    public ToolBase setName(String newName) {
+    public ToolBase setTranslationKey(String newName) {
         return (ToolBase) super.setTranslationKey(newName);
     }
 

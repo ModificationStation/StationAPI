@@ -5,6 +5,7 @@ import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.item.ItemCreation;
 import net.modificationstation.stationapi.api.common.item.HasItemEntity;
 import net.modificationstation.stationapi.api.common.item.ItemEntity;
@@ -68,6 +69,6 @@ public class MixinItemInstance implements HasItemEntity {
 
     @Inject(method = "onCrafted(Lnet/minecraft/level/Level;Lnet/minecraft/entity/player/PlayerBase;)V", at = @At("RETURN"))
     private void onCreation(Level arg, PlayerBase arg1, CallbackInfo ci) {
-        ItemCreation.EVENT.getInvoker().onItemCreated(arg, arg1, (ItemInstance) (Object) this);
+        StationAPI.EVENT_BUS.post(new ItemCreation((ItemInstance) (Object) this, arg, arg1));
     }
 }

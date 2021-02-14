@@ -21,7 +21,7 @@ public class Stone extends net.minecraft.block.Stone {
     }
 
     @Override
-    public Stone sounds(BlockSounds sounds) {
+    public Stone setSounds(BlockSounds sounds) {
         return (Stone) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Stone extends net.minecraft.block.Stone {
     }
 
     @Override
-    public Stone setName(String string) {
+    public Stone setTranslationKey(String string) {
         return (Stone) super.setTranslationKey(string);
     }
 

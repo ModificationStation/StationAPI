@@ -10,12 +10,12 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Category implements net.modificationstation.stationapi.api.common.config.Category {
+public class CategoryImpl implements net.modificationstation.stationapi.api.common.config.Category {
 
     private final String name;
-    private final Set<net.modificationstation.stationapi.api.common.config.Property> properties = new TreeSet<>();
+    private final Set<Property> properties = new TreeSet<>();
 
-    public Category(String name) {
+    public CategoryImpl(String name) {
         this.name = name;
     }
 
@@ -25,17 +25,17 @@ public class Category implements net.modificationstation.stationapi.api.common.c
     }
 
     @Override
-    public net.modificationstation.stationapi.api.common.config.Property getProperty(String name) {
-        for (net.modificationstation.stationapi.api.common.config.Property property : properties)
+    public Property getProperty(String name) {
+        for (Property property : properties)
             if (name.equals(property.getName()))
                 return property;
-        net.modificationstation.stationapi.api.common.config.Property property = GeneralFactory.INSTANCE.newInst(net.modificationstation.stationapi.api.common.config.Property.class, name);
+        Property property = GeneralFactory.INSTANCE.newInst(Property.class, name);
         properties.add(property);
         return property;
     }
 
     @Override
-    public net.modificationstation.stationapi.api.common.config.Property getProperty(String name, String defaultValue) {
+    public Property getProperty(String name, String defaultValue) {
         Property property = getProperty(name);
         if (property.getStringValue() == null) {
             property.setValue(defaultValue);
@@ -44,7 +44,7 @@ public class Category implements net.modificationstation.stationapi.api.common.c
     }
 
     @Override
-    public net.modificationstation.stationapi.api.common.config.Property getProperty(String name, int defaultValue) {
+    public Property getProperty(String name, int defaultValue) {
         Property property = getProperty(name);
         if (property.getStringValue() == null) {
             property.setValue(defaultValue);
@@ -53,7 +53,7 @@ public class Category implements net.modificationstation.stationapi.api.common.c
     }
 
     @Override
-    public net.modificationstation.stationapi.api.common.config.Property getProperty(String name, boolean defaultValue) {
+    public Property getProperty(String name, boolean defaultValue) {
         Property property = getProperty(name);
         if (property.getStringValue() == null) {
             property.setValue(defaultValue);
@@ -73,7 +73,7 @@ public class Category implements net.modificationstation.stationapi.api.common.c
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        for (net.modificationstation.stationapi.api.common.config.Property property : properties)
+        for (Property property : properties)
             property.save(buffer);
         try {
             buffer.write("}\r\n");

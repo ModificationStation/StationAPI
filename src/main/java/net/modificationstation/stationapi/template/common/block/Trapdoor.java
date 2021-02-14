@@ -22,7 +22,7 @@ public class Trapdoor extends net.minecraft.block.Trapdoor {
     }
 
     @Override
-    public Trapdoor sounds(BlockSounds sounds) {
+    public Trapdoor setSounds(BlockSounds sounds) {
         return (Trapdoor) super.setSounds(sounds);
     }
 
@@ -57,7 +57,7 @@ public class Trapdoor extends net.minecraft.block.Trapdoor {
     }
 
     @Override
-    public Trapdoor setName(String string) {
+    public Trapdoor setTranslationKey(String string) {
         return (Trapdoor) super.setTranslationKey(string);
     }
 

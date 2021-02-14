@@ -21,7 +21,7 @@ public class MobSpawner extends net.minecraft.block.MobSpawner {
     }
 
     @Override
-    public MobSpawner sounds(BlockSounds sounds) {
+    public MobSpawner setSounds(BlockSounds sounds) {
         return (MobSpawner) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class MobSpawner extends net.minecraft.block.MobSpawner {
     }
 
     @Override
-    public MobSpawner setName(String string) {
+    public MobSpawner setTranslationKey(String string) {
         return (MobSpawner) super.setTranslationKey(string);
     }
 

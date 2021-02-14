@@ -46,7 +46,7 @@ public class Shovel extends net.minecraft.item.tool.Shovel {
     }
 
     @Override
-    public Shovel setName(String newName) {
+    public Shovel setTranslationKey(String newName) {
         return (Shovel) super.setTranslationKey(newName);
     }
 

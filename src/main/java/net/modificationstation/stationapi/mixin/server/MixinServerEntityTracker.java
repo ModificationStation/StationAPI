@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerEntityTracker.class)
-public abstract class Mixinclass_488 {
+public abstract class MixinServerEntityTracker {
 
-    @Shadow private EntityHashSet field_2005;
+    @Shadow private EntityHashSet entityHashes;
 
-    @Inject(method = "method_1665(Lnet/minecraft/entity/EntityBase;)V", at = @At("RETURN"))
+    @Inject(method = "syncEntity(Lnet/minecraft/entity/EntityBase;)V", at = @At("RETURN"))
     private void afterVanillaEntries(EntityBase arg, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new TrackEntity((ServerEntityTracker) (Object) this, field_2005, arg));
+        StationAPI.EVENT_BUS.post(new TrackEntity((ServerEntityTracker) (Object) this, entityHashes, arg));
     }
 }

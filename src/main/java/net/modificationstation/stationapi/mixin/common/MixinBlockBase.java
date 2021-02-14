@@ -10,7 +10,6 @@ import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.client.event.model.ModelRegister;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.block.BlockMiningLevel;
-import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.block.BlockStrengthPerMeta;
 import net.modificationstation.stationapi.api.common.entity.player.StrengthOnMeta;
 import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
@@ -69,18 +68,13 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
                                         null :
                         null
         );
-        BlockRegister.EVENT.getInvoker().registerBlocks(BlockRegistry.INSTANCE, BlockRegister.EVENT.getInvokerModID());
+        StationAPI.EVENT_BUS.post(new BlockRegister());
     }
 
     @SuppressWarnings("UnresolvedMixinReference")
-    @Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(I)Lnet/minecraft/item/PlaceableTileEntity;"))
+    @Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(I)Lnet/minecraft/item/Block;"))
     private static Block getBlockItem(int blockID) {
-        return BlockItemFactoryCallback.EVENT.getInvoker().getBlockItemFactory(BY_ID[blockID + BY_ID.length], Block::new).apply(blockID);
-    }
-
-    @Shadow
-    public String getName() {
-        return null;
+        return StationAPI.EVENT_BUS.post(new BlockItemFactoryCallback(BY_ID[blockID + BY_ID.length], Block::new)).currentFactory.apply(blockID);
     }
 
     @Shadow
@@ -88,9 +82,9 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
         return 0;
     }
 
-    @ModifyVariable(method = "setName(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;", at = @At("HEAD"))
-    private String getName(String name) {
-        return BlockNameSet.EVENT.getInvoker().getName((BlockBase) (Object) this, name);
+    @ModifyVariable(method = "setTranslationKey(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;", at = @At("HEAD"))
+    private String getTranslationKey(String name) {
+        return StationAPI.EVENT_BUS.post(new BlockNameSet((BlockBase) (Object) this, name)).newName;
     }
 
     @Override

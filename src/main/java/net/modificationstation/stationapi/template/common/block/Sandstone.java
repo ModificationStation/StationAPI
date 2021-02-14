@@ -21,7 +21,7 @@ public class Sandstone extends net.minecraft.block.Sandstone {
     }
 
     @Override
-    public Sandstone sounds(BlockSounds sounds) {
+    public Sandstone setSounds(BlockSounds sounds) {
         return (Sandstone) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Sandstone extends net.minecraft.block.Sandstone {
     }
 
     @Override
-    public Sandstone setName(String string) {
+    public Sandstone setTranslationKey(String string) {
         return (Sandstone) super.setTranslationKey(string);
     }
 

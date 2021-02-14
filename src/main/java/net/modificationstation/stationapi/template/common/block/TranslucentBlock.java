@@ -22,7 +22,7 @@ public class TranslucentBlock extends net.minecraft.block.TranslucentBlock {
     }
 
     @Override
-    public TranslucentBlock sounds(BlockSounds sounds) {
+    public TranslucentBlock setSounds(BlockSounds sounds) {
         return (TranslucentBlock) super.setSounds(sounds);
     }
 
@@ -57,7 +57,7 @@ public class TranslucentBlock extends net.minecraft.block.TranslucentBlock {
     }
 
     @Override
-    public TranslucentBlock setName(String string) {
+    public TranslucentBlock setTranslationKey(String string) {
         return (TranslucentBlock) super.setTranslationKey(string);
     }
 

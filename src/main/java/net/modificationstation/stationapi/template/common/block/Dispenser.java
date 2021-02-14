@@ -21,7 +21,7 @@ public class Dispenser extends net.minecraft.block.Dispenser {
     }
 
     @Override
-    public Dispenser sounds(BlockSounds sounds) {
+    public Dispenser setSounds(BlockSounds sounds) {
         return (Dispenser) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Dispenser extends net.minecraft.block.Dispenser {
     }
 
     @Override
-    public Dispenser setName(String string) {
+    public Dispenser setTranslationKey(String string) {
         return (Dispenser) super.setTranslationKey(string);
     }
 

@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.mixin.common;
 
 import net.minecraft.packet.AbstractPacket;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.packet.PacketRegister;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,6 +19,6 @@ public class MixinAbstractPacket {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/packet/AbstractPacket;register(IZZLjava/lang/Class;)V", ordinal = 56, shift = At.Shift.AFTER))
     private static void afterVanillaPackets(CallbackInfo ci) {
-        PacketRegister.EVENT.getInvoker().registerPackets(MixinAbstractPacket::register);
+        StationAPI.EVENT_BUS.post(new PacketRegister(MixinAbstractPacket::register));
     }
 }

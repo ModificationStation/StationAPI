@@ -21,7 +21,7 @@ public class DeadBush extends net.minecraft.block.DeadBush {
     }
 
     @Override
-    public DeadBush sounds(BlockSounds sounds) {
+    public DeadBush setSounds(BlockSounds sounds) {
         return (DeadBush) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class DeadBush extends net.minecraft.block.DeadBush {
     }
 
     @Override
-    public DeadBush setName(String string) {
+    public DeadBush setTranslationKey(String string) {
         return (DeadBush) super.setTranslationKey(string);
     }
 

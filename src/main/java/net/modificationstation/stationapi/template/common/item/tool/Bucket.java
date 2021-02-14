@@ -45,7 +45,7 @@ public class Bucket extends net.minecraft.item.tool.Bucket {
     }
 
     @Override
-    public Bucket setName(String newName) {
+    public Bucket setTranslationKey(String newName) {
         return (Bucket) super.setTranslationKey(newName);
     }
 

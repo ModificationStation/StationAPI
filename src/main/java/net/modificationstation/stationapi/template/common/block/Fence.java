@@ -21,7 +21,7 @@ public class Fence extends net.minecraft.block.Fence {
     }
 
     @Override
-    public Fence sounds(BlockSounds sounds) {
+    public Fence setSounds(BlockSounds sounds) {
         return (Fence) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Fence extends net.minecraft.block.Fence {
     }
 
     @Override
-    public Fence setName(String string) {
+    public Fence setTranslationKey(String string) {
         return (Fence) super.setTranslationKey(string);
     }
 

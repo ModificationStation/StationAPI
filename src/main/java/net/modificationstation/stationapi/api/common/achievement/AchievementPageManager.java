@@ -1,10 +1,6 @@
 package net.modificationstation.stationapi.api.common.achievement;
 
-import net.minecraft.achievement.Achievement;
-import net.modificationstation.stationapi.api.common.event.achievement.AchievementRegister;
 import net.modificationstation.stationapi.api.common.util.HasHandler;
-
-import java.util.List;
 
 public interface AchievementPageManager extends HasHandler<AchievementPageManager> {
 

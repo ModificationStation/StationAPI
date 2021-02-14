@@ -21,7 +21,7 @@ public class RedstoneDust extends net.minecraft.block.RedstoneDust {
     }
 
     @Override
-    public RedstoneDust sounds(BlockSounds sounds) {
+    public RedstoneDust setSounds(BlockSounds sounds) {
         return (RedstoneDust) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class RedstoneDust extends net.minecraft.block.RedstoneDust {
     }
 
     @Override
-    public RedstoneDust setName(String string) {
+    public RedstoneDust setTranslationKey(String string) {
         return (RedstoneDust) super.setTranslationKey(string);
     }
 

@@ -21,7 +21,7 @@ public class Sand extends net.minecraft.block.Sand {
     }
 
     @Override
-    public Sand sounds(BlockSounds sounds) {
+    public Sand setSounds(BlockSounds sounds) {
         return (Sand) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Sand extends net.minecraft.block.Sand {
     }
 
     @Override
-    public Sand setName(String string) {
+    public Sand setTranslationKey(String string) {
         return (Sand) super.setTranslationKey(string);
     }
 

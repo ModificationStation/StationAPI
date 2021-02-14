@@ -21,7 +21,7 @@ public class Lever extends net.minecraft.block.Lever {
     }
 
     @Override
-    public Lever sounds(BlockSounds sounds) {
+    public Lever setSounds(BlockSounds sounds) {
         return (Lever) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Lever extends net.minecraft.block.Lever {
     }
 
     @Override
-    public Lever setName(String string) {
+    public Lever setTranslationKey(String string) {
         return (Lever) super.setTranslationKey(string);
     }
 

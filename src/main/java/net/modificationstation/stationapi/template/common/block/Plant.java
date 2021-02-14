@@ -21,7 +21,7 @@ public class Plant extends net.minecraft.block.Plant {
     }
 
     @Override
-    public Plant sounds(BlockSounds sounds) {
+    public Plant setSounds(BlockSounds sounds) {
         return (Plant) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Plant extends net.minecraft.block.Plant {
     }
 
     @Override
-    public Plant setName(String string) {
+    public Plant setTranslationKey(String string) {
         return (Plant) super.setTranslationKey(string);
     }
 

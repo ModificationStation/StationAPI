@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.mixin.common;
 
 import net.minecraft.tileentity.TileEntityBase;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.block.TileEntityRegister;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,6 +19,6 @@ public class MixinTileEntityBase {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "TAIL"))
     private static void registerModdedTileEntities(CallbackInfo ci) {
-        TileEntityRegister.EVENT.getInvoker().registerTileEntities(MixinTileEntityBase::register);
+        StationAPI.EVENT_BUS.post(new TileEntityRegister(MixinTileEntityBase::register));
     }
 }

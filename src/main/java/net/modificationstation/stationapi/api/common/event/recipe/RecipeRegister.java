@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.api.common.event.recipe;
 
 import lombok.RequiredArgsConstructor;
 import net.modificationstation.stationapi.api.common.event.Event;
-import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister.Vanilla;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 
@@ -19,7 +18,7 @@ public class RecipeRegister extends Event {
 
     public final Identifier recipeId;
 
-    enum Vanilla {
+    public enum Vanilla {
 
         CRAFTING_SHAPED,
         CRAFTING_SHAPELESS,

@@ -22,7 +22,7 @@ public class Glowstone extends net.minecraft.block.Glowstone {
     }
 
     @Override
-    public Glowstone sounds(BlockSounds sounds) {
+    public Glowstone setSounds(BlockSounds sounds) {
         return (Glowstone) super.setSounds(sounds);
     }
 
@@ -57,7 +57,7 @@ public class Glowstone extends net.minecraft.block.Glowstone {
     }
 
     @Override
-    public Glowstone setName(String string) {
+    public Glowstone setTranslationKey(String string) {
         return (Glowstone) super.setTranslationKey(string);
     }
 

@@ -21,7 +21,7 @@ public class Sapling extends net.minecraft.block.Sapling {
     }
 
     @Override
-    public Sapling sounds(BlockSounds sounds) {
+    public Sapling setSounds(BlockSounds sounds) {
         return (Sapling) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Sapling extends net.minecraft.block.Sapling {
     }
 
     @Override
-    public Sapling setName(String string) {
+    public Sapling setTranslationKey(String string) {
         return (Sapling) super.setTranslationKey(string);
     }
 

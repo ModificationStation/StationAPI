@@ -21,7 +21,7 @@ public class Grass extends net.minecraft.block.Grass {
     }
 
     @Override
-    public Grass sounds(BlockSounds sounds) {
+    public Grass setSounds(BlockSounds sounds) {
         return (Grass) super.setSounds(sounds);
     }
 
@@ -56,7 +56,7 @@ public class Grass extends net.minecraft.block.Grass {
     }
 
     @Override
-    public Grass setName(String string) {
+    public Grass setTranslationKey(String string) {
         return (Grass) super.setTranslationKey(string);
     }
 

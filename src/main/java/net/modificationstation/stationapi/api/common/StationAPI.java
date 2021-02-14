@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.block.material.Material;
@@ -21,6 +20,9 @@ import net.modificationstation.stationapi.api.client.event.gui.GuiHandlerRegiste
 import net.modificationstation.stationapi.api.client.event.gui.RenderItemOverlay;
 import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
+import net.modificationstation.stationapi.api.common.config.Category;
+import net.modificationstation.stationapi.api.common.config.Configuration;
+import net.modificationstation.stationapi.api.common.config.Property;
 import net.modificationstation.stationapi.api.common.entity.EntityHandlerRegistry;
 import net.modificationstation.stationapi.api.common.entity.HasOwner;
 import net.modificationstation.stationapi.api.common.event.EventBus;
@@ -56,9 +58,8 @@ import net.modificationstation.stationapi.impl.client.packet.PacketHelper;
 import net.modificationstation.stationapi.impl.client.texture.TextureFactory;
 import net.modificationstation.stationapi.impl.common.achievement.AchievementPage;
 import net.modificationstation.stationapi.impl.common.achievement.AchievementPageManager;
-import net.modificationstation.stationapi.impl.common.config.Category;
-import net.modificationstation.stationapi.impl.common.config.Configuration;
-import net.modificationstation.stationapi.impl.common.config.Property;
+import net.modificationstation.stationapi.impl.common.config.CategoryImpl;
+import net.modificationstation.stationapi.impl.common.config.PropertyImpl;
 import net.modificationstation.stationapi.impl.common.factory.EnumFactory;
 import net.modificationstation.stationapi.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.impl.common.item.CustomReach;
@@ -79,7 +80,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -107,7 +107,7 @@ public class StationAPI implements PreLaunchEntrypoint {
     public static final Logger LOGGER = Entrypoint.getNull();
 
     @Entrypoint.Config
-    public static final net.modificationstation.stationapi.api.common.config.Configuration CONFIG = Entrypoint.getNull();
+    public static final Configuration CONFIG = Entrypoint.getNull();
 
     /**
      * A set of mods that need client-side verification when the client joins server.
@@ -142,9 +142,8 @@ public class StationAPI implements PreLaunchEntrypoint {
         LOGGER.info("Setting up GeneralFactory...");
         net.modificationstation.stationapi.api.common.factory.GeneralFactory generalFactory = net.modificationstation.stationapi.api.common.factory.GeneralFactory.INSTANCE;
         generalFactory.setHandler(new GeneralFactory());
-        generalFactory.addFactory(net.modificationstation.stationapi.api.common.config.Configuration.class, args -> new Configuration((File) args[0]));
-        generalFactory.addFactory(net.modificationstation.stationapi.api.common.config.Category.class, args -> new Category((String) args[0]));
-        generalFactory.addFactory(net.modificationstation.stationapi.api.common.config.Property.class, args -> new Property((String) args[0]));
+        generalFactory.addFactory(Category.class, args -> new CategoryImpl((String) args[0]));
+        generalFactory.addFactory(Property.class, args -> new PropertyImpl((String) args[0]));
         generalFactory.addFactory(net.modificationstation.stationapi.api.common.achievement.AchievementPage.class, args -> new AchievementPage((String) args[0]));
         generalFactory.addFactory(MetaBlock.class, args -> new MetaBlock((int) args[0]));
         generalFactory.addFactory(MetaNamedBlock.class, args -> new MetaNamedBlock((int) args[0]));
@@ -176,7 +175,7 @@ public class StationAPI implements PreLaunchEntrypoint {
         net.modificationstation.stationapi.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(acpMngr);
         EVENT_BUS.register(acpMngr);
         LOGGER.info("Setting up CustomData packet...");
-        net.modificationstation.stationapi.api.common.config.Category networkConfig = CONFIG.getCategory("Network");
+        Category networkConfig = CONFIG.getCategory("Network");
         EVENT_BUS.register(PacketRegister.class, event -> {
             event.register(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, Message.class);
             CONFIG.save();
@@ -187,8 +186,8 @@ public class StationAPI implements PreLaunchEntrypoint {
         LOGGER.info("Setting up LoadLevelPropertiesOnLevelInit...");
         EVENT_BUS.register(LoadLevelPropertiesOnLevelInit.class, event -> {
             LevelRegistry.remapping = true;
-            StatsAccessor.setField_812(false);
-            StatsAccessor.setField_813(false);
+            StatsAccessor.setBlocksInit(false);
+            StatsAccessor.setItemsInit(false);
             Registry<Registry<?>> registriesRegistry = Registry.REGISTRIES;
             CompoundTag registriesTag = event.tag.getCompoundTag(registriesRegistry.getRegistryId().toString());
             registriesRegistry.forEach((identifier, registry) -> {

@@ -52,7 +52,7 @@ public class MixinAchievements extends ScreenBase {
     @Shadow
     protected int field_2619;
     @Shadow
-    private StatsFileWriter field_2633;
+    private StatsFileWriter statsFileWriter;
 
     @SuppressWarnings("unchecked")
     @Inject(method = "init", at = @At(value = "TAIL"))
@@ -75,7 +75,7 @@ public class MixinAchievements extends ScreenBase {
         }
     }
 
-    @Inject(method = "method_1999", at = @At(value = "TAIL"))
+    @Inject(method = "drawHeader()V", at = @At(value = "TAIL"))
     public void doDrawTitle(CallbackInfo ci) {
         if (AchievementPageManager.INSTANCE.getPageCount() > 1) {
             if (AchievementPageManager.INSTANCE.getCurrentPageName().equals("Minecraft")) {
@@ -166,8 +166,8 @@ public class MixinAchievements extends ScreenBase {
                 adjustedRow = achievement.tableRow * 24 - l1 + 11 + j3;
                 adjustedParentCol = achievement.parent.tableColumn * 24 - k1 + 11 + i3;
                 adjustedParentRow = achievement.parent.tableRow * 24 - l1 + 11 + j3;
-                boolean isUnlocked = this.field_2633.isAchievementUnlocked(achievement);
-                boolean isUnlockable = this.field_2633.isAchievementUnlockable(achievement);
+                boolean isUnlocked = this.statsFileWriter.isAchievementUnlocked(achievement);
+                boolean isUnlockable = this.statsFileWriter.isAchievementUnlockable(achievement);
                 flickerTime = Math.sin((double) (System.currentTimeMillis() % 600L) / 600.0D * 3.141592653589793D * 2.0D) <= 0.6D ? 130 : 255;
                 if (isUnlocked) {
                     lineColour = -9408400;
@@ -203,10 +203,10 @@ public class MixinAchievements extends ScreenBase {
                 adjustedParentRow = var32.tableRow * 24 - l1;
                 if (adjustedParentCol >= -24 && adjustedParentRow >= -24 && adjustedParentCol <= 224 && adjustedParentRow <= 155) {
                     float var38;
-                    if (this.field_2633.isAchievementUnlocked(var32)) {
+                    if (this.statsFileWriter.isAchievementUnlocked(var32)) {
                         var38 = 1.0F;
                         GL11.glColor4f(var38, var38, var38, 1.0F);
-                    } else if (this.field_2633.isAchievementUnlockable(var32)) {
+                    } else if (this.statsFileWriter.isAchievementUnlockable(var32)) {
                         var38 = Math.sin((double) (System.currentTimeMillis() % 600L) / 600.0D * 3.141592653589793D * 2.0D) >= 0.6D ? 0.8F : 0.6F;
                         GL11.glColor4f(var38, var38, var38, 1.0F);
                     } else {
@@ -225,7 +225,7 @@ public class MixinAchievements extends ScreenBase {
                         this.blit(lineColour - 2, var37 - 2, 0, 202, 26, 26);
                     }
 
-                    if (!this.field_2633.isAchievementUnlockable(var32)) {
+                    if (!this.statsFileWriter.isAchievementUnlockable(var32)) {
                         float var39 = 0.1F;
                         GL11.glColor4f(var39, var39, var39, 1.0F);
                         var31.field_1707 = false;
@@ -235,7 +235,7 @@ public class MixinAchievements extends ScreenBase {
                     GL11.glEnable(2884 /*GL_CULL_FACE*/);
                     var31.method_1487(this.minecraft.textRenderer, this.minecraft.textureManager, var32.displayItem, lineColour + 3, var37 + 3);
                     GL11.glDisable(2896 /*GL_LIGHTING*/);
-                    if (!this.field_2633.isAchievementUnlockable(var32)) {
+                    if (!this.statsFileWriter.isAchievementUnlockable(var32)) {
                         var31.field_1707 = true;
                     }
 
@@ -265,16 +265,16 @@ public class MixinAchievements extends ScreenBase {
             String var35 = var29.getDescription();
             adjustedParentRow = i1 + 12;
             lineColour = j1 - 4;
-            if (this.field_2633.isAchievementUnlockable(var29)) {
+            if (this.statsFileWriter.isAchievementUnlockable(var29)) {
                 var37 = Math.max(this.textManager.getTextWidth(var34), 120);
                 int var40 = this.textManager.method_1902(var35, var37);
-                if (this.field_2633.isAchievementUnlocked(var29)) {
+                if (this.statsFileWriter.isAchievementUnlocked(var29)) {
                     var40 += 12;
                 }
 
                 this.fillGradient(adjustedParentRow - 3, lineColour - 3, adjustedParentRow + var37 + 3, lineColour + var40 + 3 + 12, -1073741824, -1073741824);
                 this.textManager.method_1904(var35, adjustedParentRow, lineColour + 12, var37, -6250336);
-                if (this.field_2633.isAchievementUnlocked(var29)) {
+                if (this.statsFileWriter.isAchievementUnlocked(var29)) {
                     try {
                         this.textManager.drawTextWithShadow(TranslationStorage.getInstance().translate("achievement.taken"), adjustedParentRow, lineColour + var40 + 4, -7302913);
                     } catch (Exception var28) {
@@ -293,7 +293,7 @@ public class MixinAchievements extends ScreenBase {
                 }
             }
 
-            this.textManager.drawTextWithShadow(var34, adjustedParentRow, lineColour, this.field_2633.isAchievementUnlockable(var29) ? (var29.isUnusual() ? -128 : -1) : (var29.isUnusual() ? -8355776 : -8355712));
+            this.textManager.drawTextWithShadow(var34, adjustedParentRow, lineColour, this.statsFileWriter.isAchievementUnlockable(var29) ? (var29.isUnusual() ? -128 : -1) : (var29.isUnusual() ? -8355776 : -8355712));
         }
 
         GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
