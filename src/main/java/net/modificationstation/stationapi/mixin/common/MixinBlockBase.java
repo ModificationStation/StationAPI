@@ -43,20 +43,18 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
     @Shadow
     protected float hardness;
 
-    public MixinBlockBase(int i, Material material) {
+    public MixinBlockBase(@SuppressWarnings("unused") int i, @SuppressWarnings("unused") Material material) {
     }
 
-    public MixinBlockBase(int i, int j, Material material) {
+    public MixinBlockBase(@SuppressWarnings("unused") int i, @SuppressWarnings("unused") int j, @SuppressWarnings("unused") Material material) {
     }
 
     @Environment(EnvType.CLIENT)
-    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(II)Lnet/minecraft/block/Stone;", ordinal = 0, shift = At.Shift.BEFORE))
     private static void beforeBlockRegister(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(new ModelRegister(ModelRegister.Type.BLOCKS));
     }
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/block/BlockBase;TRAPDOOR:Lnet/minecraft/block/BlockBase;", opcode = Opcodes.PUTSTATIC, shift = At.Shift.AFTER))
     private static void afterBlockRegister(CallbackInfo ci) {
         GeneralFactory.INSTANCE.addFactory(BlockBase.class, (args) ->
@@ -71,7 +69,6 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
         StationAPI.EVENT_BUS.post(new BlockRegister());
     }
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(I)Lnet/minecraft/item/Block;"))
     private static Block getBlockItem(int blockID) {
         return StationAPI.EVENT_BUS.post(new BlockItemFactoryCallback(BY_ID[blockID + BY_ID.length], Block::new)).currentFactory.apply(blockID);
