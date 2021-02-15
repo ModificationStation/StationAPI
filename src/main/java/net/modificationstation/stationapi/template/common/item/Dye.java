@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.template.common.item;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Dye extends net.minecraft.item.Dye {
+public class Dye extends net.minecraft.item.Dye implements IItemTemplate<Dye> {
     
     public Dye(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

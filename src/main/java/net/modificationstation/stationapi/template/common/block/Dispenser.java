@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Dispenser extends net.minecraft.block.Dispenser {
+public class Dispenser extends net.minecraft.block.Dispenser implements IBlockTemplate<Dispenser> {
 
     public Dispenser(Identifier identifier) {
         this(BlockRegistry.INSTANCE.getNextSerializedID());

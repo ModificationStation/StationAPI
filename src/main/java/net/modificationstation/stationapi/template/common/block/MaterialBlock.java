@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class MaterialBlock extends net.minecraft.block.MaterialBlock {
+public class MaterialBlock extends net.minecraft.block.MaterialBlock implements IBlockTemplate<MaterialBlock> {
     
     public MaterialBlock(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

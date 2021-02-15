@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class DetectorRail extends net.minecraft.block.DetectorRail {
+public class DetectorRail extends net.minecraft.block.DetectorRail implements IBlockTemplate<DetectorRail> {
     
     public DetectorRail(Identifier identifier, int texture) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), texture);

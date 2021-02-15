@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.template.common.item;
 
-public class Block extends net.minecraft.item.Block {
+public class Block extends net.minecraft.item.Block implements IItemTemplate<Block> {
     
     public Block(int i) {
         super(i);

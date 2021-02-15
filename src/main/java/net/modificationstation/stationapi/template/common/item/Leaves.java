@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.template.common.item;
 
-public class Leaves extends net.minecraft.item.Leaves {
+public class Leaves extends net.minecraft.item.Leaves implements IItemTemplate<Leaves> {
     
     public Leaves(int i) {
         super(i);

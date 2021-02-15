@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class TallGrass extends net.minecraft.block.TallGrass {
+public class TallGrass extends net.minecraft.block.TallGrass implements IBlockTemplate<TallGrass> {
     
     public TallGrass(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

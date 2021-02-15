@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.template.common.item;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Painting extends net.minecraft.item.Painting {
+public class Painting extends net.minecraft.item.Painting implements IItemTemplate<Painting> {
     
     public Painting(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

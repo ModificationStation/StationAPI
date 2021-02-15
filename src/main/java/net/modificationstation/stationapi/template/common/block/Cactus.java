@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Cactus extends net.minecraft.block.Cactus {
+public class Cactus extends net.minecraft.block.Cactus implements IBlockTemplate<Cactus> {
 
     public Cactus(Identifier identifier, int texture) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), texture);

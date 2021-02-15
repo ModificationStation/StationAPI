@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class RedstoneTorch extends net.minecraft.block.RedstoneTorch {
+public class RedstoneTorch extends net.minecraft.block.RedstoneTorch implements IBlockTemplate<RedstoneTorch> {
     
     public RedstoneTorch(Identifier identifier, int j, boolean flag) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j, flag);

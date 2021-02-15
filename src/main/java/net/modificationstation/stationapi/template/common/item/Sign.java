@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.template.common.item;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Sign extends net.minecraft.item.Sign {
+public class Sign extends net.minecraft.item.Sign implements IItemTemplate<Sign> {
     
     public Sign(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

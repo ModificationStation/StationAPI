@@ -3,8 +3,9 @@ package net.modificationstation.stationapi.template.common.item.tool;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.template.common.item.IItemTemplate;
 
-public class Pickaxe extends net.minecraft.item.tool.Pickaxe {
+public class Pickaxe extends net.minecraft.item.tool.Pickaxe implements IItemTemplate<Pickaxe> {
     
     public Pickaxe(Identifier identifier, ToolMaterial material) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), material);

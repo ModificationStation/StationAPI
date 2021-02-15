@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Cobweb extends net.minecraft.block.Cobweb {
+public class Cobweb extends net.minecraft.block.Cobweb implements IBlockTemplate<Cobweb> {
 
     public Cobweb(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

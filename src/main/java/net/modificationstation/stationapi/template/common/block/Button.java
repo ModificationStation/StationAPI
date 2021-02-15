@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Button extends net.minecraft.block.Button {
+public class Button extends net.minecraft.block.Button implements IBlockTemplate<Button> {
 
     public Button(Identifier identifier, int texture) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), texture);

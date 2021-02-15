@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Piston extends net.minecraft.block.Piston {
+public class Piston extends net.minecraft.block.Piston implements IBlockTemplate<Piston> {
 
     public Piston(Identifier identifier, int j, boolean flag) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j, flag);

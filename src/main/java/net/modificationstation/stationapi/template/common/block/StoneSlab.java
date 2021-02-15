@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class StoneSlab extends net.minecraft.block.StoneSlab {
+public class StoneSlab extends net.minecraft.block.StoneSlab implements IBlockTemplate<StoneSlab> {
     
     public StoneSlab(Identifier identifier, boolean flag) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), flag);

@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Sapling extends net.minecraft.block.Sapling {
+public class Sapling extends net.minecraft.block.Sapling implements IBlockTemplate<Sapling> {
 
     public Sapling(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

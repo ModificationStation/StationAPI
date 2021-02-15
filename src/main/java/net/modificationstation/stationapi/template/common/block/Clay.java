@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Clay extends net.minecraft.block.Clay {
+public class Clay extends net.minecraft.block.Clay implements IBlockTemplate<Clay> {
 
     public Clay(Identifier identifier, int texture) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), texture);

@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Leaves extends net.minecraft.block.Leaves {
+public class Leaves extends net.minecraft.block.Leaves implements IBlockTemplate<Leaves> {
 
     public Leaves(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

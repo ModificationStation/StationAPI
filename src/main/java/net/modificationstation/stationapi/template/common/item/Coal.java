@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.template.common.item;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Coal extends net.minecraft.item.Coal {
+public class Coal extends net.minecraft.item.Coal implements IItemTemplate<Coal> {
     
     public Coal(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

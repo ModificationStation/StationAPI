@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Fire extends net.minecraft.block.Fire {
+public class Fire extends net.minecraft.block.Fire implements IBlockTemplate<Fire> {
 
     public Fire(Identifier identifier, int texture) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), texture);

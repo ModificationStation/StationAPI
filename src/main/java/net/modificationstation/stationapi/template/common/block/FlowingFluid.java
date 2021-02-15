@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class FlowingFluid extends net.minecraft.block.FlowingFluid {
+public class FlowingFluid extends net.minecraft.block.FlowingFluid implements IBlockTemplate<FlowingFluid> {
 
     public FlowingFluid(Identifier identifier, Material material) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), material);

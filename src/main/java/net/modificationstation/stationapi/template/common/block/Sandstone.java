@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Sandstone extends net.minecraft.block.Sandstone {
+public class Sandstone extends net.minecraft.block.Sandstone implements IBlockTemplate<Sandstone> {
     
     public Sandstone(Identifier identifier) {
         this(BlockRegistry.INSTANCE.getNextSerializedID());

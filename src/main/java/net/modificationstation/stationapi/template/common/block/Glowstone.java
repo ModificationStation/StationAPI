@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Glowstone extends net.minecraft.block.Glowstone {
+public class Glowstone extends net.minecraft.block.Glowstone implements IBlockTemplate<Glowstone> {
     
     public Glowstone(Identifier identifier, int j, Material arg) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j, arg);

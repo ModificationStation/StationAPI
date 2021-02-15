@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public abstract class BlockWithEntity extends net.minecraft.block.BlockWithEntity {
+public abstract class BlockWithEntity extends net.minecraft.block.BlockWithEntity implements IBlockTemplate<BlockWithEntity> {
 
     public BlockWithEntity(Identifier identifier, Material material) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), material);

@@ -3,8 +3,9 @@ package net.modificationstation.stationapi.template.common.item.tool;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.template.common.item.IItemTemplate;
 
-public class Sword extends net.minecraft.item.tool.Sword {
+public class Sword extends net.minecraft.item.tool.Sword implements IItemTemplate<Sword> {
     
     public Sword(Identifier identifier, ToolMaterial arg) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), arg);

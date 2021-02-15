@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Netherrack extends net.minecraft.block.Netherrack {
+public class Netherrack extends net.minecraft.block.Netherrack implements IBlockTemplate<Netherrack> {
 
     public Netherrack(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

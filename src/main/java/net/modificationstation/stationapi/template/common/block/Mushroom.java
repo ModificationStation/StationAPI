@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Mushroom extends net.minecraft.block.Mushroom {
+public class Mushroom extends net.minecraft.block.Mushroom implements IBlockTemplate<Mushroom> {
 
     public Mushroom(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

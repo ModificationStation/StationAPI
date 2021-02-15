@@ -3,8 +3,9 @@ package net.modificationstation.stationapi.template.common.item.tool;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.template.common.item.IItemTemplate;
 
-public class Shovel extends net.minecraft.item.tool.Shovel {
+public class Shovel extends net.minecraft.item.tool.Shovel implements IItemTemplate<Shovel> {
     
     public Shovel(Identifier identifier, ToolMaterial arg) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), arg);

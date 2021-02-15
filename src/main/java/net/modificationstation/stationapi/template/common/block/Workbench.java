@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Workbench extends net.minecraft.block.Workbench {
+public class Workbench extends net.minecraft.block.Workbench implements IBlockTemplate<Workbench> {
     
     public Workbench(Identifier identifier) {
         this(BlockRegistry.INSTANCE.getNextSerializedID());

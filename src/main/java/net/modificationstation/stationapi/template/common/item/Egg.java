@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.template.common.item;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Egg extends net.minecraft.item.Egg {
+public class Egg extends net.minecraft.item.Egg implements IItemTemplate<Egg> {
 
     public Egg(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

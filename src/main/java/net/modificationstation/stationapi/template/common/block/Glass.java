@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Glass extends net.minecraft.block.Glass {
+public class Glass extends net.minecraft.block.Glass implements IBlockTemplate<Glass> {
 
     public Glass(Identifier identifier, int j, Material arg, boolean flag) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j, arg, flag);

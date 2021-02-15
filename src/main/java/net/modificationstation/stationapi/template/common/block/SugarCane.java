@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class SugarCane extends net.minecraft.block.SugarCane {
+public class SugarCane extends net.minecraft.block.SugarCane implements IBlockTemplate<SugarCane> {
     
     public SugarCane(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

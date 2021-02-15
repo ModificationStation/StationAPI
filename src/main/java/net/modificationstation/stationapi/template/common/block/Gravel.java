@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Gravel extends net.minecraft.block.Gravel {
+public class Gravel extends net.minecraft.block.Gravel implements IBlockTemplate<Gravel> {
     
     public Gravel(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

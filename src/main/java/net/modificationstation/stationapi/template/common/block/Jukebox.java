@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Jukebox extends net.minecraft.block.Jukebox {
+public class Jukebox extends net.minecraft.block.Jukebox implements IBlockTemplate<Jukebox> {
     
     public Jukebox(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

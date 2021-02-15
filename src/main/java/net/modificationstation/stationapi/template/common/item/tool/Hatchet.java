@@ -3,8 +3,9 @@ package net.modificationstation.stationapi.template.common.item.tool;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.template.common.item.IItemTemplate;
 
-public class Hatchet extends net.minecraft.item.tool.Hatchet {
+public class Hatchet extends net.minecraft.item.tool.Hatchet implements IItemTemplate<Hatchet> {
     
     public Hatchet(Identifier identifier, ToolMaterial material) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), material);

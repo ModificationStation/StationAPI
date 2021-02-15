@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.template.common.item;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Snowball extends net.minecraft.item.Snowball {
+public class Snowball extends net.minecraft.item.Snowball implements IItemTemplate<Snowball> {
 
     public Snowball(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Bed extends net.minecraft.block.Bed {
+public class Bed extends net.minecraft.block.Bed implements IBlockTemplate<Bed> {
 
     public Bed(Identifier identifier) {
         this(BlockRegistry.INSTANCE.getNextSerializedID());

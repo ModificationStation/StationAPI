@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.common;
+package net.modificationstation.stationapi.api.common.util.exception;
 
 public class BadGradleIdentifierException extends Exception {
 

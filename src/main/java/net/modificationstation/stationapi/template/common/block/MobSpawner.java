@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class MobSpawner extends net.minecraft.block.MobSpawner {
+public class MobSpawner extends net.minecraft.block.MobSpawner implements IBlockTemplate<MobSpawner> {
 
     public MobSpawner(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

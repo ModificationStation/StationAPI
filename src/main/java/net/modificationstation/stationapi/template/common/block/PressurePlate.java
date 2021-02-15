@@ -6,7 +6,7 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class PressurePlate extends net.minecraft.block.PressurePlate {
+public class PressurePlate extends net.minecraft.block.PressurePlate implements IBlockTemplate<PressurePlate> {
     
     public PressurePlate(Identifier identifier, int j, PressurePlateTrigger arg, Material arg1) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j, arg, arg1);

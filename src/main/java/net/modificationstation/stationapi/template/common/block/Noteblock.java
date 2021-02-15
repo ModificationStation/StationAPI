@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Noteblock extends net.minecraft.block.Noteblock {
+public class Noteblock extends net.minecraft.block.Noteblock implements IBlockTemplate<Noteblock> {
     
     public Noteblock(Identifier identifier) {
         this(BlockRegistry.INSTANCE.getNextSerializedID());

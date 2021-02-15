@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Sponge extends net.minecraft.block.Sponge {
+public class Sponge extends net.minecraft.block.Sponge implements IBlockTemplate<Sponge> {
     
     public Sponge(Identifier identifier) {
         this(BlockRegistry.INSTANCE.getNextSerializedID());

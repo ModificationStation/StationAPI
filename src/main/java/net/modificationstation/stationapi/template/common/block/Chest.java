@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Chest extends net.minecraft.block.Chest {
+public class Chest extends net.minecraft.block.Chest implements IBlockTemplate<Chest> {
 
     public Chest(Identifier identifier) {
         this(BlockRegistry.INSTANCE.getNextSerializedID());

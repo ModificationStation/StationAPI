@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Furnace extends net.minecraft.block.Furnace {
+public class Furnace extends net.minecraft.block.Furnace implements IBlockTemplate<Furnace> {
 
     public Furnace(Identifier identifier, boolean flag) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), flag);

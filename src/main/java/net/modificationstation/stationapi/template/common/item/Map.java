@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.template.common.item;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Map extends net.minecraft.item.Map {
+public class Map extends net.minecraft.item.Map implements IItemTemplate<Map> {
 
     public Map(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

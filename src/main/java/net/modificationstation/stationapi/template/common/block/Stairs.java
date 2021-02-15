@@ -5,7 +5,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Stairs extends net.minecraft.block.Stairs {
+public class Stairs extends net.minecraft.block.Stairs implements IBlockTemplate<Stairs> {
     
     public Stairs(Identifier identifier, BlockBase arg) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), arg);

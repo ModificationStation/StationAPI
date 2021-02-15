@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Obsidian extends net.minecraft.block.Obsidian {
+public class Obsidian extends net.minecraft.block.Obsidian implements IBlockTemplate<Obsidian> {
     
     public Obsidian(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

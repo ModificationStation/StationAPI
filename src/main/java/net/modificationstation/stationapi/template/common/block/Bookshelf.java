@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Bookshelf extends net.minecraft.block.Bookshelf {
+public class Bookshelf extends net.minecraft.block.Bookshelf implements IBlockTemplate<Bookshelf> {
 
     public Bookshelf(Identifier identifier, int texture) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), texture);

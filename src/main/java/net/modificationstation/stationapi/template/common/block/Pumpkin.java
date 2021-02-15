@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Pumpkin extends net.minecraft.block.Pumpkin {
+public class Pumpkin extends net.minecraft.block.Pumpkin implements IBlockTemplate<Pumpkin> {
 
     public Pumpkin(Identifier identifier, int j, boolean flag) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j, flag);

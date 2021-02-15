@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Tnt extends net.minecraft.block.Tnt {
+public class Tnt extends net.minecraft.block.Tnt implements IBlockTemplate<Tnt> {
     
     public Tnt(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

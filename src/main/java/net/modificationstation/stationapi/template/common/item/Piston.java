@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.template.common.item;
 
-public class Piston extends net.minecraft.item.Piston {
+public class Piston extends net.minecraft.item.Piston implements IItemTemplate<Piston> {
     
     public Piston(int i) {
         super(i);

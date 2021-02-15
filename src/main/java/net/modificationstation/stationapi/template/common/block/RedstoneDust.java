@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class RedstoneDust extends net.minecraft.block.RedstoneDust {
+public class RedstoneDust extends net.minecraft.block.RedstoneDust implements IBlockTemplate<RedstoneDust> {
 
     public RedstoneDust(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

@@ -14,7 +14,7 @@ import net.modificationstation.stationapi.api.common.registry.Identifier;
 @Entrypoint.Properties(eventBus = Entrypoint.Properties.EventBusPolicy.CLASS)
 public class BlockRegistryInit {
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener(priority = ListenerPriority.HIGHEST)
     public static void registerBlocks(BlockRegister event) {
         event.registry.registerValue(Identifier.of("stone"), BlockBase.STONE);
         event.registry.registerValue(Identifier.of("grass_block"), BlockBase.GRASS);
@@ -114,10 +114,5 @@ public class BlockRegistryInit {
         event.registry.registerValue(Identifier.of("trapdoor"), BlockBase.TRAPDOOR);
 
         StationAPI.LOGGER.info("Registered vanilla block identifiers.");
-    }
-
-    @EventListener(priority = ListenerPriority.HIGH)
-    public void check2AMCodeSanity(BlockRegister event) {
-        throw new RuntimeException("This shouldn't have happened!");
     }
 }

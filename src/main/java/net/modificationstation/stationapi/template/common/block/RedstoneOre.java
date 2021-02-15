@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class RedstoneOre extends net.minecraft.block.RedstoneOre {
+public class RedstoneOre extends net.minecraft.block.RedstoneOre implements IBlockTemplate<RedstoneOre> {
     
     public RedstoneOre(Identifier identifier, int j, boolean isLit) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j, isLit);

@@ -2,8 +2,9 @@ package net.modificationstation.stationapi.template.common.item.tool;
 
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.template.common.item.IItemTemplate;
 
-public class Bucket extends net.minecraft.item.tool.Bucket {
+public class Bucket extends net.minecraft.item.tool.Bucket implements IItemTemplate<Bucket> {
     
     public Bucket(Identifier identifier, int j) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), j);

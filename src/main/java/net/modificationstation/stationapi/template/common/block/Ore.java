@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Ore extends net.minecraft.block.Ore {
+public class Ore extends net.minecraft.block.Ore implements IBlockTemplate<Ore> {
 
     public Ore(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

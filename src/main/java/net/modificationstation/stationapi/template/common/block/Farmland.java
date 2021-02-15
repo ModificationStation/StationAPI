@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Farmland extends net.minecraft.block.Farmland {
+public class Farmland extends net.minecraft.block.Farmland implements IBlockTemplate<Farmland> {
 
     public Farmland(Identifier identifier) {
         this(BlockRegistry.INSTANCE.getNextSerializedID());

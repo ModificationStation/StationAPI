@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.template.common.item;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Saddle extends net.minecraft.item.Saddle {
+public class Saddle extends net.minecraft.item.Saddle implements IItemTemplate<Saddle> {
     
     public Saddle(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

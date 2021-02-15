@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class DeadBush extends net.minecraft.block.DeadBush {
+public class DeadBush extends net.minecraft.block.DeadBush implements IBlockTemplate<DeadBush> {
 
     public DeadBush(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

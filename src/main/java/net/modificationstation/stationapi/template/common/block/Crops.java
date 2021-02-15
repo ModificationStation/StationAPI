@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Crops extends net.minecraft.block.Crops {
+public class Crops extends net.minecraft.block.Crops implements IBlockTemplate<Crops> {
 
     public Crops(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

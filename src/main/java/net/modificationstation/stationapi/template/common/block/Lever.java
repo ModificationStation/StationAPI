@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Lever extends net.minecraft.block.Lever {
+public class Lever extends net.minecraft.block.Lever implements IBlockTemplate<Lever> {
 
     public Lever(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

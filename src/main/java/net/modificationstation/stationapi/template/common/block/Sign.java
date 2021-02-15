@@ -5,7 +5,7 @@ import net.minecraft.tileentity.TileEntityBase;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Sign extends net.minecraft.block.Sign {
+public class Sign extends net.minecraft.block.Sign implements IBlockTemplate<Sign> {
     
     public Sign(Identifier identifier, Class<? extends TileEntityBase> arg, boolean flag) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), arg, flag);

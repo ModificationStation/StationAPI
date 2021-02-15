@@ -4,7 +4,7 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Door extends net.minecraft.item.Door {
+public class Door extends net.minecraft.item.Door implements IItemTemplate<Door> {
     
     public Door(Identifier identifier, Material arg) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), arg);

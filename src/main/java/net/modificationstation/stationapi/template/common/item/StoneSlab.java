@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.template.common.item;
 
-public class StoneSlab extends net.minecraft.item.StoneSlab {
+public class StoneSlab extends net.minecraft.item.StoneSlab implements IItemTemplate<StoneSlab> {
     
     public StoneSlab(int i) {
         super(i);

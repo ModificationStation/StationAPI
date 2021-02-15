@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class SoulSand extends net.minecraft.block.SoulSand {
+public class SoulSand extends net.minecraft.block.SoulSand implements IBlockTemplate<SoulSand> {
     
     public SoulSand(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

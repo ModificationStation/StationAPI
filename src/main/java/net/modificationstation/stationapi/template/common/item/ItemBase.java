@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.template.common.item;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class ItemBase extends net.minecraft.item.ItemBase {
+public class ItemBase extends net.minecraft.item.ItemBase implements IItemTemplate<ItemBase> {
 
     public ItemBase(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Fence extends net.minecraft.block.Fence {
+public class Fence extends net.minecraft.block.Fence implements IBlockTemplate<Fence> {
 
     public Fence(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

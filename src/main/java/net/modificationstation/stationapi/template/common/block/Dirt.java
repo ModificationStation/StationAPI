@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Dirt extends net.minecraft.block.Dirt {
+public class Dirt extends net.minecraft.block.Dirt implements IBlockTemplate<Dirt> {
 
     public Dirt(Identifier identifier, int texture) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), texture);

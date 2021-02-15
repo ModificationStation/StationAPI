@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class BlockBase extends net.minecraft.block.BlockBase {
+public class BlockBase extends net.minecraft.block.BlockBase implements IBlockTemplate<BlockBase> {
 
     public BlockBase(Identifier identifier, Material material) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), material);

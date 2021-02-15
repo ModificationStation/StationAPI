@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Rail extends net.minecraft.block.Rail {
+public class Rail extends net.minecraft.block.Rail implements IBlockTemplate<Rail> {
 
     public Rail(Identifier identifier, int j, boolean flag) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j, flag);

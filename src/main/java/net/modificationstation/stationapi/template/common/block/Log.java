@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Log extends net.minecraft.block.Log {
+public class Log extends net.minecraft.block.Log implements IBlockTemplate<Log> {
     
     public Log(Identifier identifier) {
         this(BlockRegistry.INSTANCE.getNextSerializedID());

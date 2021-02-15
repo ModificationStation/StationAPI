@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.template.common.item;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Redstone extends net.minecraft.item.Redstone {
+public class Redstone extends net.minecraft.item.Redstone implements IItemTemplate<Redstone> {
     
     public Redstone(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

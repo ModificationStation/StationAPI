@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Ice extends net.minecraft.block.Ice {
+public class Ice extends net.minecraft.block.Ice implements IBlockTemplate<Ice> {
 
     public Ice(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

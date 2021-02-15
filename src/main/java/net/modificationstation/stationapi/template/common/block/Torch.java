@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Torch extends net.minecraft.block.Torch {
+public class Torch extends net.minecraft.block.Torch implements IBlockTemplate<Torch> {
     
     public Torch(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

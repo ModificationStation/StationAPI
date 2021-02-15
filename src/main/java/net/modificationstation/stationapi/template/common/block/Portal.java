@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Portal extends net.minecraft.block.Portal {
+public class Portal extends net.minecraft.block.Portal implements IBlockTemplate<Portal> {
 
     public Portal(Identifier identifier, int j) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j);

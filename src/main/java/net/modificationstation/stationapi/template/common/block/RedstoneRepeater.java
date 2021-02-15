@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class RedstoneRepeater extends net.minecraft.block.RedstoneRepeater {
+public class RedstoneRepeater extends net.minecraft.block.RedstoneRepeater implements IBlockTemplate<RedstoneRepeater> {
     
     public RedstoneRepeater(Identifier identifier, boolean flag) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), flag);

@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class SnowBlock extends net.minecraft.block.SnowBlock {
+public class SnowBlock extends net.minecraft.block.SnowBlock implements IBlockTemplate<SnowBlock> {
     
     public SnowBlock(Identifier identifier, int texUVStart) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), texUVStart);

@@ -5,7 +5,7 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class TranslucentBlock extends net.minecraft.block.TranslucentBlock {
+public class TranslucentBlock extends net.minecraft.block.TranslucentBlock implements IBlockTemplate<TranslucentBlock> {
     
     public TranslucentBlock(Identifier identifier, int j, Material arg, boolean flag) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), j, arg, flag);

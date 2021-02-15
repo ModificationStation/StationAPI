@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Snow extends net.minecraft.block.Snow {
+public class Snow extends net.minecraft.block.Snow implements IBlockTemplate<Snow> {
     
     public Snow(Identifier identifier, int texUVStart) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), texUVStart);

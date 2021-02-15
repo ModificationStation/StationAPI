@@ -4,7 +4,7 @@ import net.minecraft.block.BlockSounds;
 import net.modificationstation.stationapi.api.common.block.BlockRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Ladder extends net.minecraft.block.Ladder {
+public class Ladder extends net.minecraft.block.Ladder implements IBlockTemplate<Ladder> {
 
     public Ladder(Identifier identifier, int texUVStart) {
         this(BlockRegistry.INSTANCE.getNextSerializedID(), texUVStart);

@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.template.common.item;
 import net.modificationstation.stationapi.api.common.item.ItemRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-public class Seeds extends net.minecraft.item.Seeds {
+public class Seeds extends net.minecraft.item.Seeds implements IItemTemplate<Seeds> {
 
     public Seeds(Identifier identifier, int j) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), j);
