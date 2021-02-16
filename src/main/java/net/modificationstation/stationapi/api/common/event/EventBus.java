@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.api.common.event;
 
+import net.jodah.typetools.TypeResolver;
+
 import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -40,7 +42,7 @@ public class EventBus {
     }
 
     public void register(Method method, Object listener) {
-        register(method, listener, ListenerContainer.DEFAULT_PRIORITY);
+        register(method, listener, EventListener.DEFAULT_PRIORITY);
     }
 
     public <T extends Event> void register(Method method, Object listener, int priority) {
@@ -74,12 +76,17 @@ public class EventBus {
             throw new IllegalArgumentException(String.format("Method %s#%s has %s annotation, but has wrong amount of parameters!", method.getDeclaringClass().getName(), method.getName(), EventListener.class.getName()));
     }
 
-//    public <T extends Event> void register(Consumer<T> listener) {
-//
-//    }
+    public <T extends Event> void register(Consumer<T> listener) {
+        register(listener, EventListener.DEFAULT_PRIORITY);
+    }
+
+    public <T extends Event> void register(Consumer<T> listener, int priority) {
+        //noinspection unchecked
+        register((Class<T>) TypeResolver.resolveRawArgument(Consumer.class, listener.getClass()), listener, priority);
+    }
 
     public <T extends Event> void register(Class<T> eventType, Consumer<T> listener) {
-        register(new ListenerContainer<>(eventType, listener, ListenerContainer.DEFAULT_PRIORITY));
+        register(new ListenerContainer<>(eventType, listener, EventListener.DEFAULT_PRIORITY));
     }
 
     public <T extends Event> void register(Class<T> eventType, Consumer<T> listener, int priority) {

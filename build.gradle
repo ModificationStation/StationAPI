@@ -83,6 +83,10 @@ dependencies {
 	compile 'org.jetbrains:annotations:16.0.2'
 
 	modImplementation "com.github.minecraft-cursed-legacy:cursed-fabric-loader:${project.loader_version}"
+
+	implementation "com.github.jhalterman:typetools:87240d6"
+
+	include "com.github.jhalterman:typetools:87240d6"
 }
 
 processResources {

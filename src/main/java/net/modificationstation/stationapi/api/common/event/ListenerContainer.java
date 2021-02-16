@@ -8,8 +8,6 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class ListenerContainer<T extends Event> implements Comparable<ListenerContainer<?>> {
 
-    public static final int DEFAULT_PRIORITY = 0;
-
     public final Class<T> eventType;
     public final Consumer<T> invoker;
     public final int priority;
