@@ -48,8 +48,6 @@ import net.modificationstation.stationapi.api.common.registry.LevelRegistry;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.common.registry.Registry;
 import net.modificationstation.stationapi.api.common.resource.ResourceManager;
-import net.modificationstation.stationapi.api.common.util.ClassPath;
-import net.modificationstation.stationapi.api.common.util.Downloader;
 import net.modificationstation.stationapi.api.common.util.SideUtils;
 import net.modificationstation.stationapi.api.common.util.exception.BadGradleIdentifierException;
 import net.modificationstation.stationapi.api.common.util.exception.DuplicateIDException;
@@ -84,12 +82,8 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
@@ -123,8 +117,6 @@ public class StationAPI implements PreLaunchEntrypoint {
     private final Set<ModContainer> modsToVerifyOnClient = new HashSet<>();
 
     public static final EventBus EVENT_BUS = new EventBus();
-
-    public static final HashMap<ModID, StationModJson> MOD_JSONS = new HashMap<>();
 
     /**
      * Initial setup. Configures logger, entrypoints, and calls the rest of initialization sequence. No Minecraft classes must be referenced here.
@@ -340,55 +332,9 @@ public class StationAPI implements PreLaunchEntrypoint {
      */
     public void setupMods() {
         FabricLoader fabricLoader = FabricLoader.getInstance();
-        Collection<ModContainer> mods = fabricLoader.getAllMods();
-        Gson gson = new Gson();
-
-
-        LOGGER.info("Loading station.mod.jsons");
-        // Load station.mod.jsons here.
-        try {
-            Enumeration<URL> urls = getClass().getClassLoader().getParent().getResources("station.mod.json");
-            while (urls.hasMoreElements()) {
-                URL currentURL = urls.nextElement();
-                StationModJson stationModJson = gson.fromJson(new InputStreamReader(currentURL.openStream()), StationModJson.class);
-
-                URI currentURI = currentURL.toURI();
-                URI parent = currentURI.getPath().endsWith("/") ? currentURI.resolve("..") : currentURI.resolve(".");
-                String id = gson.fromJson(new InputStreamReader(parent.resolve("fabric.mod.json").toURL().openStream()), FabricJson.class).getId();
-                LOGGER.info("Found station.mod.json inside of \"" + id + "\"");
-                if (MOD_JSONS.containsKey(ModID.of(id)))
-                    throw new DuplicateIDException(id);
-                MOD_JSONS.put(ModID.of(id), stationModJson);
-            }
-        } catch (IOException | URISyntaxException | DuplicateIDException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            for (StationModJson stationModJson : MOD_JSONS.values()) {
-                for (Library library : stationModJson.getLibraries()) {
-                    String[] nameParts = library.getName().split(":");
-                    if (nameParts.length < 3 || nameParts.length > 4) {
-                        throw new BadGradleIdentifierException("Library name is not a valid gradle formatted identifier!");
-                    }
-
-                    String urlEnd = nameParts[0].replace(".", "/")
-                            + "/" + nameParts[1]
-                            + "/" + nameParts[2]
-                            + "/" + nameParts[1] + "-" + nameParts[2] + (nameParts.length == 4? "-" + nameParts[3] : "") + ".jar";
-
-                    URL libraryURL = new URI(library.getUrl().endsWith("/")? library.getUrl() : library.getUrl() + "/").resolve(urlEnd).toURL();
-
-                    ClassPath.addFile(Downloader.downloadFile(libraryURL, new File(fabricLoader.getGameDir().toFile(), "stationapi/cache/libs"), nameParts[1] + "-" + nameParts[2] + (nameParts.length == 4? "-" + nameParts[3] : "") + ".jar", false));
-                    LOGGER.info(libraryURL);
-                }
-            }
-        } catch (IOException | BadGradleIdentifierException | URISyntaxException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-
         fabricLoader.getEntrypointContainers(Identifier.of(MODID, "event_bus").toString(), Object.class).forEach(Entrypoint::setup);
         fabricLoader.getEntrypointContainers(Identifier.of(MODID, "event_bus_" + fabricLoader.getEnvironmentType().name().toLowerCase()).toString(), Object.class).forEach(Entrypoint::setup);
+        Collection<ModContainer> mods = fabricLoader.getAllMods();
         LOGGER.info("Loading assets...");
         ResourceManager.findResources(MODID + "/recipes", file -> file.endsWith(".json")).forEach(recipe -> {
             try {
