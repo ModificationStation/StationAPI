@@ -13,6 +13,4 @@ public @interface EventListener {
     ListenerPriority priority() default ListenerPriority.CUSTOM;
 
     int numPriority() default DEFAULT_PRIORITY;
-
-
 }

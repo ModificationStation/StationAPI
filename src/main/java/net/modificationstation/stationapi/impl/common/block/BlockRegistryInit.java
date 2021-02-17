@@ -6,16 +6,17 @@ import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.ListenerPriority;
 import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
 /**
  * @author mine_diver
  */
-@Entrypoint.Properties(eventBus = Entrypoint.Properties.EventBusPolicy.CLASS)
+@Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class BlockRegistryInit {
 
     @EventListener(priority = ListenerPriority.HIGHEST)
-    public static void registerBlocks(BlockRegister event) {
+    private static void registerBlocks(BlockRegister event) {
         event.registry.registerValue(Identifier.of("stone"), BlockBase.STONE);
         event.registry.registerValue(Identifier.of("grass_block"), BlockBase.GRASS);
         event.registry.registerValue(Identifier.of("dirt"), BlockBase.DIRT);

@@ -7,12 +7,13 @@ import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.ListenerPriority;
 import net.modificationstation.stationapi.api.common.event.item.ItemRegister;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.common.util.OreDict;
 
 /**
  * @author calmilamsy
  */
-@Entrypoint.Properties(eventBus = Entrypoint.Properties.EventBusPolicy.CLASS)
+@Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class OreDictItemInit {
 
     @EventListener(priority = ListenerPriority.HIGH)

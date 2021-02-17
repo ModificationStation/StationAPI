@@ -6,6 +6,7 @@ import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.ListenerPriority;
 import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.template.common.item.MetaBlock;
 
 import java.util.function.IntFunction;
@@ -21,7 +22,7 @@ import java.util.function.IntFunction;
  * @see IHasMetaNamedBlockItem
  * @see HasMetaNamedBlockItem
  */
-@Entrypoint.Properties(eventBus = Entrypoint.Properties.EventBusPolicy.CLASS)
+@Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class HasMetaBlockItemImpl {
 
     /**

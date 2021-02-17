@@ -1,9 +1,15 @@
 package net.modificationstation.stationapi.impl.common.util;
 
+import sun.reflect.annotation.AnnotationParser;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 public class ReflectionHelper {
@@ -59,5 +65,18 @@ public class ReflectionHelper {
         field.set(instance, value);
         if (inaccessible)
             field.setAccessible(false);
+    }
+
+    public static <A extends Annotation> A newAnnotation(Class<A> annotationType) {
+        return newAnnotation(annotationType, Collections.emptyMap());
+    }
+
+    public static <A extends Annotation> A newAnnotation(Class<A> annotationType, Map<String, Object> customValues) {
+        Map<String, Object> values = new HashMap<>();
+        for (Method method : annotationType.getDeclaredMethods())
+            values.put(method.getName(), method.getDefaultValue());
+        values.putAll(customValues);
+        //noinspection unchecked
+        return (A) AnnotationParser.annotationForMap(annotationType, values);
     }
 }

@@ -38,6 +38,7 @@ import net.modificationstation.stationapi.api.common.event.recipe.BeforeRecipeSt
 import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationapi.api.common.gui.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.common.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.packet.MessageListenerRegistry;
 import net.modificationstation.stationapi.api.common.packet.StationHandshake;
@@ -48,6 +49,7 @@ import net.modificationstation.stationapi.api.common.registry.LevelRegistry;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.common.registry.Registry;
 import net.modificationstation.stationapi.api.common.resource.ResourceManager;
+import net.modificationstation.stationapi.api.common.util.Null;
 import net.modificationstation.stationapi.api.common.util.SideUtils;
 import net.modificationstation.stationapi.api.server.entity.IStationSpawnData;
 import net.modificationstation.stationapi.api.server.event.network.HandleLogin;
@@ -95,19 +97,19 @@ public class StationAPI implements PreLaunchEntrypoint {
      * StationAPI's instance.
      */
     @Entrypoint.Instance
-    public static final StationAPI INSTANCE = Entrypoint.getNull();
+    public static final StationAPI INSTANCE = Null.get();
 
     /**
      * StationAPI's ModID.
      */
     @Entrypoint.ModID
-    public static final ModID MODID = Entrypoint.getNull();
+    public static final ModID MODID = Null.get();
 
     @Entrypoint.Logger("Station|API")
-    public static final Logger LOGGER = Entrypoint.getNull();
+    public static final Logger LOGGER = Null.get();
 
     @Entrypoint.Config
-    public static final Configuration CONFIG = Entrypoint.getNull();
+    public static final Configuration CONFIG = Null.get();
 
     /**
      * A set of mods that need client-side verification when the client joins server.
@@ -121,7 +123,7 @@ public class StationAPI implements PreLaunchEntrypoint {
      */
     @Override
     public void onPreLaunch() {
-        FabricLoader.getInstance().getModContainer("stationapi").ifPresent(modContainer -> Entrypoint.setup(this, modContainer));
+        FabricLoader.getInstance().getModContainer("stationapi").ifPresent(modContainer -> EntrypointManager.setup(this, modContainer));
         String name = MODID.getName();
         LOGGER.info("Initializing " + name + "...");
         Configurator.setLevel("mixin", Level.TRACE);
@@ -330,8 +332,8 @@ public class StationAPI implements PreLaunchEntrypoint {
      */
     public void setupMods() {
         FabricLoader fabricLoader = FabricLoader.getInstance();
-        fabricLoader.getEntrypointContainers(Identifier.of(MODID, "event_bus").toString(), Object.class).forEach(Entrypoint::setup);
-        fabricLoader.getEntrypointContainers(Identifier.of(MODID, "event_bus_" + fabricLoader.getEnvironmentType().name().toLowerCase()).toString(), Object.class).forEach(Entrypoint::setup);
+        fabricLoader.getEntrypointContainers(Identifier.of(MODID, "event_bus").toString(), Object.class).forEach(EntrypointManager::setup);
+        fabricLoader.getEntrypointContainers(Identifier.of(MODID, "event_bus_" + fabricLoader.getEnvironmentType().name().toLowerCase()).toString(), Object.class).forEach(EntrypointManager::setup);
         Collection<ModContainer> mods = fabricLoader.getAllMods();
         LOGGER.info("Loading assets...");
         ResourceManager.findResources(MODID + "/recipes", file -> file.endsWith(".json")).forEach(recipe -> {
