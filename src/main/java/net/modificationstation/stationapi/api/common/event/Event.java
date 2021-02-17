@@ -2,23 +2,28 @@ package net.modificationstation.stationapi.api.common.event;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Event {
 
-    public final boolean cancellable;
+    @Getter
+    private final boolean cancellable = false;
     @Getter
     private boolean cancelled;
 
-    protected Event() {
-        this(false);
-    }
-
-    public final void setCancelled(boolean cancelled) {
-        if (cancellable)
+    public void setCancelled(boolean cancelled) {
+        if (isCancellable())
             this.cancelled = cancelled;
         else
             throw new UnsupportedOperationException(String.format("Trying to cancel an uncancellable event! (%s)", getClass().getName()));
+    }
+
+    public final void cancel() {
+        setCancelled(true);
+    }
+
+    public final void resume() {
+        setCancelled(false);
     }
 }
