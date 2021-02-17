@@ -248,7 +248,7 @@ public class StationAPI implements PreLaunchEntrypoint {
                             if (isClient)
                                 playerBase.container.currentContainerId = message.ints()[0];
                         });
-                        EVENT_BUS.post(new GuiHandlerRegister(GuiHandlerRegistry.INSTANCE));
+                        EVENT_BUS.post(new GuiHandlerRegister());
                         event.registry.registerValue(Identifier.of(MODID, "spawn_entity"), (playerBase, message) -> EntityHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(entityProvider -> {
                             double x = message.ints()[1] / 32D, y = message.ints()[2] / 32D, z = message.ints()[3] / 32D;
                             //noinspection deprecation

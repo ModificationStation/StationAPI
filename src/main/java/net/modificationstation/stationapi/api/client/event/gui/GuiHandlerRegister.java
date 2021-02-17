@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.api.client.event.gui;
 
-import lombok.RequiredArgsConstructor;
-import net.modificationstation.stationapi.api.common.event.Event;
+import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
 import net.modificationstation.stationapi.api.common.gui.GuiHandlerRegistry;
 
-@RequiredArgsConstructor
-public class GuiHandlerRegister extends Event {
+public class GuiHandlerRegister extends RegistryEvent<GuiHandlerRegistry> {
 
-    public final GuiHandlerRegistry registry;
+    public GuiHandlerRegister() {
+        super(GuiHandlerRegistry.INSTANCE);
+    }
 }
