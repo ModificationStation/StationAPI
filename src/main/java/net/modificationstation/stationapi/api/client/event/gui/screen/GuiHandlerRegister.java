@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.client.event.gui;
+package net.modificationstation.stationapi.api.client.event.gui.screen;
 
 import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
 import net.modificationstation.stationapi.api.common.gui.GuiHandlerRegistry;

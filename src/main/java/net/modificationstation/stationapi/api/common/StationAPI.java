@@ -16,10 +16,11 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.tool.ToolMaterial;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.client.event.gui.GuiHandlerRegister;
+import net.modificationstation.stationapi.api.client.event.gui.screen.GuiHandlerRegister;
 import net.modificationstation.stationapi.api.client.event.gui.RenderItemOverlay;
 import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
+import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
 import net.modificationstation.stationapi.api.common.config.Category;
 import net.modificationstation.stationapi.api.common.config.Configuration;
 import net.modificationstation.stationapi.api.common.config.Property;
@@ -58,8 +59,6 @@ import net.modificationstation.stationapi.impl.client.entity.player.PlayerHelper
 import net.modificationstation.stationapi.impl.client.model.CustomModelRenderer;
 import net.modificationstation.stationapi.impl.client.packet.PacketHelper;
 import net.modificationstation.stationapi.impl.client.texture.TextureFactory;
-import net.modificationstation.stationapi.impl.common.achievement.AchievementPage;
-import net.modificationstation.stationapi.impl.common.achievement.AchievementPageManager;
 import net.modificationstation.stationapi.impl.common.config.CategoryImpl;
 import net.modificationstation.stationapi.impl.common.config.PropertyImpl;
 import net.modificationstation.stationapi.impl.common.factory.EnumFactory;
@@ -146,7 +145,7 @@ public class StationAPI implements PreLaunchEntrypoint {
         generalFactory.setHandler(new GeneralFactory());
         generalFactory.addFactory(Category.class, args -> new CategoryImpl((String) args[0]));
         generalFactory.addFactory(Property.class, args -> new PropertyImpl((String) args[0]));
-        generalFactory.addFactory(net.modificationstation.stationapi.api.common.achievement.AchievementPage.class, args -> new AchievementPage((String) args[0]));
+        generalFactory.addFactory(AchievementPage.class, args -> new AchievementPage((String) args[0]));
         generalFactory.addFactory(MetaBlock.class, args -> new MetaBlock((int) args[0]));
         generalFactory.addFactory(MetaNamedBlock.class, args -> new MetaNamedBlock((int) args[0]));
         net.modificationstation.stationapi.api.common.factory.EnumFactory enumFactory = net.modificationstation.stationapi.api.common.factory.EnumFactory.INSTANCE;
@@ -172,10 +171,6 @@ public class StationAPI implements PreLaunchEntrypoint {
         net.modificationstation.stationapi.api.common.item.CustomReach.SUPPLIERS.put("getHandBlockReach", CustomReach::getHandBlockReach);
         net.modificationstation.stationapi.api.common.item.CustomReach.SUPPLIERS.put("getDefaultEntityReach", CustomReach::getDefaultEntityReach);
         net.modificationstation.stationapi.api.common.item.CustomReach.SUPPLIERS.put("getHandEntityReach", CustomReach::getHandEntityReach);
-        LOGGER.info("Setting up AchievementPageManager...");
-        net.modificationstation.stationapi.api.common.achievement.AchievementPageManager acpMngr = new AchievementPageManager();
-        net.modificationstation.stationapi.api.common.achievement.AchievementPageManager.INSTANCE.setHandler(acpMngr);
-        EVENT_BUS.register(acpMngr);
         LOGGER.info("Setting up CustomData packet...");
         Category networkConfig = CONFIG.getCategory("Network");
         EVENT_BUS.register(PacketRegister.class, event -> {

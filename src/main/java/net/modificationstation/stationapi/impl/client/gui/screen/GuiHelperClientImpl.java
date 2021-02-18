@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.client.gui;
+package net.modificationstation.stationapi.impl.client.gui.screen;
 
 import net.minecraft.container.ContainerBase;
 import net.minecraft.entity.player.PlayerBase;

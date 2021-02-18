@@ -4,26 +4,25 @@ import net.minecraft.achievement.Achievement;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.gui.screen.menu.Achievements;
 import net.minecraft.client.gui.widgets.Button;
-import net.minecraft.client.render.RenderHelper;
-import net.minecraft.client.render.entity.ItemRenderer;
 import net.minecraft.client.resource.language.TranslationStorage;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.io.StatsFileWriter;
-import net.minecraft.util.maths.MathHelper;
+import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsBackgroundTextureCallback;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
-import net.modificationstation.stationapi.api.common.achievement.AchievementPageManager;
-import org.lwjgl.opengl.GL11;
+import net.modificationstation.stationapi.api.common.StationAPI;
+import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Random;
-
-import static net.minecraft.achievement.Achievements.ACHIEVEMENTS;
 
 @Mixin(Achievements.class)
 public class MixinAchievements extends ScreenBase {
@@ -58,7 +57,7 @@ public class MixinAchievements extends ScreenBase {
     @Inject(method = "init", at = @At(value = "TAIL"))
     public void initPrevNext(CallbackInfo ci) {
         // Prev and next buttons.
-        if (AchievementPageManager.INSTANCE.getPageCount() > 1) {
+        if (AchievementPage.getPageCount() > 1) {
             this.buttons.add(new Button(11, this.width / 2 - 113, this.height / 2 + 74, 20, 20, "<"));
             this.buttons.add(new Button(12, this.width / 2 - 93, this.height / 2 + 74, 20, 20, ">"));
         }
@@ -67,9 +66,9 @@ public class MixinAchievements extends ScreenBase {
     @Redirect(method = "buttonClicked", at = @At(target = "Lnet/minecraft/client/gui/screen/ScreenBase;buttonClicked(Lnet/minecraft/client/gui/widgets/Button;)V", value = "INVOKE"))
     public void buttonClickedNextPrev(ScreenBase screenBase, Button button) {
         if (button.id == 11) {
-            AchievementPageManager.INSTANCE.prevPage();
+            AchievementPage.prevPage();
         } else if (button.id == 12) {
-            AchievementPageManager.INSTANCE.nextPage();
+            AchievementPage.nextPage();
         } else {
             super.buttonClicked(button);
         }
@@ -77,20 +76,43 @@ public class MixinAchievements extends ScreenBase {
 
     @Inject(method = "drawHeader()V", at = @At(value = "TAIL"))
     public void doDrawTitle(CallbackInfo ci) {
-        if (AchievementPageManager.INSTANCE.getPageCount() > 1) {
-            if (AchievementPageManager.INSTANCE.getCurrentPageName().equals("Minecraft")) {
+        if (AchievementPage.getPageCount() > 1) {
+            if (AchievementPage.getCurrentPageName().equals("Minecraft")) {
                 this.textManager.drawText("Minecraft", this.width / 2 - 69, this.height / 2 + 80, 0);
             } else {
-                this.textManager.drawText(TranslationStorage.getInstance().translate("stationapi:achievementPage." + AchievementPageManager.INSTANCE.getCurrentPageName()), this.width / 2 - 69, this.height / 2 + 80, 0);
+                this.textManager.drawText(TranslationStorage.getInstance().translate("stationapi:achievementPage." + AchievementPage.getCurrentPageName()), this.width / 2 - 69, this.height / 2 + 80, 0);
             }
         }
+    }
+
+    @Redirect(method = "method_1998(IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(I)V", ordinal = 0))
+    private void bindTerrainTexture(TextureManager textureManager, int i) {
+        TextureRegistry.getRegistry(TextureRegistry.Vanilla.TERRAIN).bindAtlas(textureManager, 0);
+    }
+
+    @Inject(method = "method_1998(IIF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/block/BlockBase;texture:I", opcode = Opcodes.GETFIELD, ordinal = 7, shift = At.Shift.BY, by = 3), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void captureLocals(int mouseX, int mouseY, float delta, CallbackInfo ci, int var4, int var5, int var6, int var7, int var8, int var9, int var10, int var11, int var12, int var13, int var14, int var15, Random var21, int var22, float var23, int var24, int var25) {
+        capturedRandom = var21;
+        capturedColumn = var12 + var24;
+        capturedRow = var13 + var22;
+        capturedRowRandomized = var25;
+    }
+
+    private Random capturedRandom;
+    private int capturedColumn;
+    private int capturedRow;
+    private int capturedRowRandomized;
+
+    @ModifyVariable(method = "method_1998(IIF)V", index = 26, at = @At(value = "FIELD", target = "Lnet/minecraft/block/BlockBase;texture:I", opcode = Opcodes.GETFIELD, ordinal = 7, shift = At.Shift.BY, by = 3))
+    private int renderBackgroundTexture(int var26) {
+        return StationAPI.EVENT_BUS.post(new AchievementsBackgroundTextureCallback((Achievements) (Object) this, capturedRandom, capturedColumn, capturedRow, capturedRowRandomized, var26)).backgroundTexture;
     }
 
     /**
      * @author calmilamsy
      */
-    @Overwrite
-    public void method_1998(int i1, int j1, float f) {
+    @Deprecated
+    public void toBeDeleted(int i1, int j1, float f) {
 
         // DRAW ACHIEVEMENT PAGE BORDER
         int k1 = MathHelper.floor(this.field_2622 + (this.field_2624 - this.field_2622) * (double) f);
@@ -299,33 +321,5 @@ public class MixinAchievements extends ScreenBase {
         GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
         GL11.glEnable(2896 /*GL_LIGHTING*/);
         RenderHelper.disableLighting();
-    }
-
-    public boolean isVisibleAchievement(Achievement achievement) {
-        if (this.checkHidden(achievement)) {
-            return false;
-        } else if (!AchievementPageManager.INSTANCE.getCurrentPage().getAchievementIds().contains(achievement.ID)) {
-            return false;
-        } else if (achievement.parent != null && !checkHidden(achievement.parent)) {
-            return true;
-        } else {
-            return true;
-        }
-    }
-
-
-    public boolean isVisibleLine(Achievement achievement) {
-        return achievement.parent != null && isVisibleAchievement(achievement) && isVisibleAchievement(achievement.parent);
-    }
-
-    public boolean checkHidden(Achievement achievement) {
-        if (minecraft.statFileWriter.isAchievementUnlocked(achievement)) {
-            return false;
-        }
-        if (achievement.parent == null) {
-            return false;
-        } else {
-            return checkHidden(achievement.parent);
-        }
     }
 }

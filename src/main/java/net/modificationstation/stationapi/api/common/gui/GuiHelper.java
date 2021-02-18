@@ -3,11 +3,12 @@ package net.modificationstation.stationapi.api.common.gui;
 import net.minecraft.container.ContainerBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
+import net.modificationstation.stationapi.api.client.event.gui.screen.GuiHandlerRegister;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.util.API;
 import net.modificationstation.stationapi.api.common.util.SideUtils;
-import net.modificationstation.stationapi.impl.client.gui.GuiHelperClientImpl;
+import net.modificationstation.stationapi.impl.client.gui.screen.GuiHelperClientImpl;
 import net.modificationstation.stationapi.impl.common.gui.GuiHelperImpl;
 import net.modificationstation.stationapi.impl.server.gui.GuiHelperServerImpl;
 
@@ -28,7 +29,7 @@ public class GuiHelper {
      * @param identifier GUI handler identifier.
      * @param inventory the inventory to open (usually a tile entity).
      * @param container the container to open.
-     * @see net.modificationstation.stationapi.api.client.event.gui.GuiHandlerRegister
+     * @see GuiHandlerRegister
      * @see GuiHandlerRegistry
      * @see GuiHelper#openGUI(PlayerBase, Identifier, InventoryBase, ContainerBase, Consumer)
      */
@@ -46,7 +47,7 @@ public class GuiHelper {
      * @param inventory the inventory to open (usually a tile entity).
      * @param container the container to open.
      * @param customData the packet consumer that can add additional data to the GUI packet.
-     * @see net.modificationstation.stationapi.api.client.event.gui.GuiHandlerRegister
+     * @see GuiHandlerRegister
      * @see GuiHandlerRegistry
      * @see GuiHelper#openGUI(PlayerBase, Identifier, InventoryBase, ContainerBase)
      */
