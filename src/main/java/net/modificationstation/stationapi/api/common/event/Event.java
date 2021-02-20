@@ -16,7 +16,7 @@ public class Event {
         if (isCancellable())
             this.cancelled = cancelled;
         else
-            throw new UnsupportedOperationException(String.format("Trying to cancel an uncancellable event! (%s)", getClass().getName()));
+            throw new UnsupportedOperationException(String.format("Trying to cancel a not cancellable event! (%s)", getClass().getName()));
     }
 
     public final void cancel() {
