@@ -1,8 +1,6 @@
 package net.modificationstation.stationapi.api.common;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
@@ -64,9 +62,10 @@ import net.modificationstation.stationapi.impl.common.config.PropertyImpl;
 import net.modificationstation.stationapi.impl.common.factory.EnumFactory;
 import net.modificationstation.stationapi.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.impl.common.item.CustomReach;
-import net.modificationstation.stationapi.impl.common.item.JsonItemKey;
 import net.modificationstation.stationapi.impl.common.lang.I18n;
-import net.modificationstation.stationapi.impl.common.recipe.*;
+import net.modificationstation.stationapi.impl.common.recipe.CraftingRegistry;
+import net.modificationstation.stationapi.impl.common.recipe.JsonRecipeType;
+import net.modificationstation.stationapi.impl.common.recipe.SmeltingRegistry;
 import net.modificationstation.stationapi.impl.common.util.UnsafeProvider;
 import net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl;
 import net.modificationstation.stationapi.impl.server.entity.TrackingImpl;
@@ -80,7 +79,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -366,53 +364,6 @@ public class StationAPI implements PreLaunchEntrypoint {
         EVENT_BUS.post(new Init());
         LOGGER.info("Invoking PostInit event...");
         EVENT_BUS.post(new PostInit());
-    }
-
-    //@Override
-    public void preInit(JsonRecipeParserRegistry jsonRecipeParserRegistry, net.modificationstation.stationapi.api.common.registry.ModID modID) {
-        jsonRecipeParserRegistry.registerValue(Identifier.of("crafting_shaped"), recipe -> {
-            JsonElement rawJson;
-            try {
-                rawJson = JsonParser.parseReader(new BufferedReader(new InputStreamReader(recipe.openStream())));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            JsonCraftingShaped json = new Gson().fromJson(rawJson, JsonCraftingShaped.class);
-            Set<Map.Entry<String, JsonElement>> rawKeys = rawJson.getAsJsonObject().getAsJsonObject("key").entrySet();
-            String[] pattern = json.getPattern();
-            Object[] keys = new Object[rawKeys.size() * 2 + pattern.length];
-            int i = 0;
-            for (; i < pattern.length; i++)
-                keys[i] = pattern[i];
-            for (Map.Entry<String, JsonElement> key : rawKeys) {
-                keys[i] = key.getKey().charAt(0);
-                keys[i + 1] = new Gson().fromJson(key.getValue(), JsonItemKey.class).getItemInstance();
-                i += 2;
-            }
-            net.modificationstation.stationapi.api.common.recipe.CraftingRegistry.INSTANCE.addShapedRecipe(json.getResult().getItemInstance(), keys);
-        });
-        jsonRecipeParserRegistry.registerValue(Identifier.of("crafting_shapeless"), recipe -> {
-            JsonCraftingShapeless json;
-            try {
-                json = new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonCraftingShapeless.class);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            JsonItemKey[] ingredients = json.getIngredients();
-            Object[] iteminstances = new Object[json.getIngredients().length];
-            for (int i = 0; i < ingredients.length; i++)
-                iteminstances[i] = ingredients[i].getItemInstance();
-            net.modificationstation.stationapi.api.common.recipe.CraftingRegistry.INSTANCE.addShapelessRecipe(json.getResult().getItemInstance(), iteminstances);
-        });
-        jsonRecipeParserRegistry.registerValue(Identifier.of("smelting"), recipe -> {
-            JsonSmelting json;
-            try {
-                json = new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonSmelting.class);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            net.modificationstation.stationapi.api.common.recipe.SmeltingRegistry.INSTANCE.addSmeltingRecipe(json.getIngredient().getItemInstance(), json.getResult().getItemInstance());
-        });
     }
 
     /**
