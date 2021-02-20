@@ -43,7 +43,7 @@ public class ReflectionHelper {
 
     public static Field[] getFieldsWithAnnotation(Class<?> targetClass, Class<? extends Annotation> annotationClass) {
         Field[] fields = new Field[0];
-        for (Field field : targetClass.getFields())
+        for (Field field : targetClass.getDeclaredFields())
             if (field.getAnnotation(annotationClass) != null) {
                 fields = Arrays.copyOf(fields, fields.length + 1);
                 fields[fields.length - 1] = field;
