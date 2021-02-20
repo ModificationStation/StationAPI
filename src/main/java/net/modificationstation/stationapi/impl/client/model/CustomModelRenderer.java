@@ -1,12 +1,15 @@
 package net.modificationstation.stationapi.impl.client.model;
 
 import com.google.gson.Gson;
+import lombok.SneakyThrows;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.EntityBase;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import org.lwjgl.opengl.GL11;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
@@ -24,10 +27,15 @@ public class CustomModelRenderer extends EntityRenderer implements net.modificat
         entityModelBase = new CustomModel(ModelTranslator.translate(json));
     }*/
 
+    @SneakyThrows
     public CustomModelRenderer(String path, String modid) {
-        String testModel = new BufferedReader(new InputStreamReader(StationAPI.class.getResourceAsStream(path), StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
-        JsonModel json = (new Gson()).fromJson(testModel, (Type) JsonModel.class);
-        entityModelBase = new CustomModel(ModelTranslator.translate(json, modid));
+        try {
+            String testModel = new BufferedReader(new InputStreamReader(StationAPI.class.getResourceAsStream(path), StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
+            JsonModel json = (new Gson()).fromJson(testModel, (Type) JsonModel.class);
+            entityModelBase = new CustomModel(ModelTranslator.translate(json, modid));
+        } catch (Exception e) {
+            throw new FileNotFoundException("Could not find JSON model! Check your path and try again.");
+        }
     }
 
     @Override
