@@ -3,8 +3,9 @@ package net.modificationstation.stationapi.impl.server.packet;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.entity.player.ServerPlayer;
 import net.minecraft.packet.AbstractPacket;
+import net.modificationstation.stationapi.impl.common.packet.PacketHelperImpl;
 
-public class PacketHelper implements net.modificationstation.stationapi.api.common.packet.PacketHelper {
+public class PacketHelperServerImpl extends PacketHelperImpl {
 
     @Override
     public void send(AbstractPacket packet) {

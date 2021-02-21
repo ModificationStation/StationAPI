@@ -21,7 +21,7 @@ public abstract class GuiHelperImpl {
         message.put(new String[]{identifier.toString()});
         sideDependentPacket(player, inventory, message);
         customData.accept(message);
-        PacketHelper.INSTANCE.sendTo(player, message);
+        PacketHelper.sendTo(player, message);
         afterPacketSent(player, container);
     }
 

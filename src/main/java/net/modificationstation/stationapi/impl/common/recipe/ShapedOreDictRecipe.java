@@ -51,7 +51,6 @@ public class ShapedOreDictRecipe implements Recipe {
             } else if (objects.get(arrayIndex + 1) instanceof BlockBase) {
                 ingredientToAdd = new ItemInstance((BlockBase)objects.get(arrayIndex + 1), 1, -1);
             } else if (objects.get(arrayIndex + 1) instanceof ItemInstance || objects.get(arrayIndex + 1) instanceof String) {
-                System.out.println("oredict");
                 ingredientToAdd = objects.get(arrayIndex + 1);
             }
 

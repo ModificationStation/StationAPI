@@ -4,11 +4,13 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.packet.AbstractPacket;
+import net.modificationstation.stationapi.impl.common.packet.PacketHelperImpl;
 
-public class PacketHelper implements net.modificationstation.stationapi.api.common.packet.PacketHelper {
+public class PacketHelperClientImpl extends PacketHelperImpl {
 
     @Override
     public void send(AbstractPacket packet) {
+        //noinspection deprecation
         Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
         if (minecraft.level.isClient)
             minecraft.getNetworkHandler().sendPacket(packet);
@@ -17,8 +19,8 @@ public class PacketHelper implements net.modificationstation.stationapi.api.comm
     }
 
     @Override
-    public void sendTo(PlayerBase playerBase, AbstractPacket packet) {
-        if (!playerBase.level.isClient)
+    public void sendTo(PlayerBase player, AbstractPacket packet) {
+        if (!player.level.isClient)
             packet.handle(null);
     }
 }
