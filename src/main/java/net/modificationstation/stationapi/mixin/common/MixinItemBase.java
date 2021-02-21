@@ -10,7 +10,6 @@ import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.block.BlockMiningLevel;
 import net.modificationstation.stationapi.api.common.event.item.ItemNameSet;
 import net.modificationstation.stationapi.api.common.event.item.ItemRegister;
-import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
 import net.modificationstation.stationapi.api.common.item.StrengthOnMeta;
 import net.modificationstation.stationapi.api.common.item.tool.OverrideIsEffectiveOn;
@@ -25,9 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemBase.class)
 public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
 
-    public MixinItemBase(int i) {
-    }
-
     @Environment(EnvType.CLIENT)
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(ILnet/minecraft/item/tool/ToolMaterial;)Lnet/minecraft/item/tool/Shovel;", ordinal = 0, shift = At.Shift.BEFORE))
@@ -38,7 +34,6 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/Stats;setupItemStats()V", shift = At.Shift.BEFORE))
     private static void afterItemRegister(CallbackInfo ci) {
-        GeneralFactory.INSTANCE.addFactory(ItemBase.class, (args) -> ItemBase.class.cast(new MixinItemBase((int) args[0])));
         StationAPI.EVENT_BUS.post(new ItemRegister());
     }
 

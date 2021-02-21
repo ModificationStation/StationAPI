@@ -16,7 +16,6 @@ import net.minecraft.item.tool.ToolMaterial;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.client.event.gui.RenderItemOverlay;
 import net.modificationstation.stationapi.api.client.event.gui.screen.GuiHandlerRegister;
-import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
 import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
 import net.modificationstation.stationapi.api.common.config.Category;
@@ -73,8 +72,6 @@ import net.modificationstation.stationapi.mixin.client.accessor.ClientPlayNetwor
 import net.modificationstation.stationapi.mixin.common.accessor.RecipeRegistryAccessor;
 import net.modificationstation.stationapi.mixin.common.accessor.SmeltingRecipeRegistryAccessor;
 import net.modificationstation.stationapi.mixin.common.accessor.StatsAccessor;
-import net.modificationstation.stationapi.template.common.item.MetaBlock;
-import net.modificationstation.stationapi.template.common.item.MetaNamedBlock;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -143,9 +140,6 @@ public class StationAPI implements PreLaunchEntrypoint {
         generalFactory.setHandler(new GeneralFactory());
         generalFactory.addFactory(Category.class, args -> new CategoryImpl((String) args[0]));
         generalFactory.addFactory(Property.class, args -> new PropertyImpl((String) args[0]));
-        generalFactory.addFactory(AchievementPage.class, args -> new AchievementPage((String) args[0]));
-        generalFactory.addFactory(MetaBlock.class, args -> new MetaBlock((int) args[0]));
-        generalFactory.addFactory(MetaNamedBlock.class, args -> new MetaNamedBlock((int) args[0]));
         net.modificationstation.stationapi.api.common.factory.EnumFactory enumFactory = net.modificationstation.stationapi.api.common.factory.EnumFactory.INSTANCE;
         generalFactory.addFactory(ToolMaterial.class, args -> enumFactory.addEnum(ToolMaterial.class, (String) args[0], new Class[]{int.class, int.class, float.class, int.class}, new Object[]{args[1], args[2], args[3], args[4]}));
         generalFactory.addFactory(EntityType.class, args -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[]{Class.class, int.class, Material.class, boolean.class}, new Object[]{args[1], args[2], args[3], args[4]}));

@@ -15,7 +15,6 @@ import net.modificationstation.stationapi.api.common.entity.player.StrengthOnMet
 import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
 import net.modificationstation.stationapi.api.common.event.block.BlockNameSet;
 import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
-import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
 import net.modificationstation.stationapi.api.common.item.tool.*;
 import org.objectweb.asm.Opcodes;
@@ -43,32 +42,20 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
     @Shadow
     protected float hardness;
 
-    public MixinBlockBase(@SuppressWarnings("unused") int i, @SuppressWarnings("unused") Material material) {
-    }
-
-    public MixinBlockBase(@SuppressWarnings("unused") int i, @SuppressWarnings("unused") int j, @SuppressWarnings("unused") Material material) {
-    }
-
+    @SuppressWarnings("UnresolvedMixinReference")
     @Environment(EnvType.CLIENT)
     @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(II)Lnet/minecraft/block/Stone;", ordinal = 0, shift = At.Shift.BEFORE))
     private static void beforeBlockRegister(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(new ModelRegister(ModelRegister.Type.BLOCKS));
     }
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/block/BlockBase;TRAPDOOR:Lnet/minecraft/block/BlockBase;", opcode = Opcodes.PUTSTATIC, shift = At.Shift.AFTER))
     private static void afterBlockRegister(CallbackInfo ci) {
-        GeneralFactory.INSTANCE.addFactory(BlockBase.class, (args) ->
-                args[0] instanceof Integer ?
-                        args[1] instanceof Material ?
-                                BlockBase.class.cast(new MixinBlockBase((int) args[0], (Material) args[1])) :
-                                args[1] instanceof Integer && args[2] instanceof Material ?
-                                        BlockBase.class.cast(new MixinBlockBase((int) args[0], (int) args[1], (Material) args[2])) :
-                                        null :
-                        null
-        );
         StationAPI.EVENT_BUS.post(new BlockRegister());
     }
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(I)Lnet/minecraft/item/Block;"))
     private static Block getBlockItem(int blockID) {
         return StationAPI.EVENT_BUS.post(new BlockItemFactoryCallback(BY_ID[blockID + BY_ID.length], Block::new)).currentFactory.apply(blockID);
