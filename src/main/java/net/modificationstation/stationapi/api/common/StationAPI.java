@@ -52,7 +52,6 @@ import net.modificationstation.stationapi.api.common.util.SideUtils;
 import net.modificationstation.stationapi.api.server.entity.IStationSpawnData;
 import net.modificationstation.stationapi.api.server.event.network.HandleLogin;
 import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
-import net.modificationstation.stationapi.impl.client.entity.player.PlayerHelper;
 import net.modificationstation.stationapi.impl.client.model.CustomModelRenderer;
 import net.modificationstation.stationapi.impl.client.packet.PacketHelper;
 import net.modificationstation.stationapi.impl.client.texture.TextureFactory;
@@ -219,8 +218,6 @@ public class StationAPI implements PreLaunchEntrypoint {
                     TextureRegistry.FUNCTIONS.put("getRegistry", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::getRegistry);
                     TextureRegistry.SUPPLIERS.put("currentRegistry", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::currentRegistry);
                     TextureRegistry.SUPPLIERS.put("registries", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::registries);
-                    LOGGER.info("Setting up PlayerHelper...");
-                    net.modificationstation.stationapi.api.common.entity.player.PlayerHelper.INSTANCE.setHandler(new PlayerHelper());
                     LOGGER.info("Setting up PacketHelper...");
                     net.modificationstation.stationapi.api.common.packet.PacketHelper.INSTANCE.setHandler(new PacketHelper());
                     LOGGER.info("Setting up RenderItemOverlay...");
@@ -269,8 +266,6 @@ public class StationAPI implements PreLaunchEntrypoint {
                 () -> {
                     EVENT_BUS.register(TrackEntity.class, CustomTrackingImpl::trackEntity, ListenerPriority.HIGH.numPriority);
                     EVENT_BUS.register(TrackEntity.class, TrackingImpl::trackEntity, ListenerPriority.HIGH.numPriority);
-                    LOGGER.info("Setting up PlayerHelper...");
-                    net.modificationstation.stationapi.api.common.entity.player.PlayerHelper.INSTANCE.setHandler(new net.modificationstation.stationapi.impl.server.entity.player.PlayerHelper());
                     LOGGER.info("Setting up PacketHelper...");
                     net.modificationstation.stationapi.api.common.packet.PacketHelper.INSTANCE.setHandler(new net.modificationstation.stationapi.impl.server.packet.PacketHelper());
                     LOGGER.info("Setting up HandleLogin...");
