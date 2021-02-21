@@ -3,8 +3,10 @@ package net.modificationstation.stationapi.mixin.client;
 import net.fabricmc.api.EnvType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ScreenBase;
+import net.modificationstation.stationapi.api.client.event.keyboard.KeyStateChanged;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegister;
 import net.modificationstation.stationapi.api.common.StationAPI;
+import org.lwjgl.input.Keyboard;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,22 +25,22 @@ public class MixinMinecraft {
         StationAPI.EVENT_BUS.post(new TextureRegister());
     }
 
-//    @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ScreenBase;onKeyboardEvent()V", shift = At.Shift.AFTER))
-//    private void keyPressInGUI(CallbackInfo ci) {
-//        KeyStateChanged.EVENT.getInvoker().keyStateChange(KeyStateChanged.Environment.IN_GUI, KeyStateChanged.State.PRESSED);
-//    }
-//
-//    @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;hasLevel()Z", shift = At.Shift.BEFORE, ordinal = 0))
-//    private void keyPressInGame(CallbackInfo ci) {
-//        KeyStateChanged.EVENT.getInvoker().keyStateChange(KeyStateChanged.Environment.IN_GAME, KeyStateChanged.State.PRESSED);
-//    }
-//
-//    @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Keyboard;getEventKeyState()Z", ordinal = 1, shift = At.Shift.BEFORE))
-//    private void keyReleased(CallbackInfo ci) {
-//        if (!Keyboard.getEventKeyState())
-//            if (currentScreen == null)
-//                KeyStateChanged.EVENT.getInvoker().keyStateChange(KeyStateChanged.Environment.IN_GAME, KeyStateChanged.State.RELEASED);
-//            else
-//                KeyStateChanged.EVENT.getInvoker().keyStateChange(KeyStateChanged.Environment.IN_GUI, KeyStateChanged.State.RELEASED);
-//    }
+    @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ScreenBase;onKeyboardEvent()V", shift = At.Shift.AFTER))
+    private void keyPressInGUI(CallbackInfo ci) {
+        StationAPI.EVENT_BUS.post(new KeyStateChanged(KeyStateChanged.Environment.IN_GUI));
+    }
+
+    @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;hasLevel()Z", shift = At.Shift.BEFORE, ordinal = 0))
+    private void keyPressInGame(CallbackInfo ci) {
+        StationAPI.EVENT_BUS.post(new KeyStateChanged(KeyStateChanged.Environment.IN_GAME));
+    }
+
+    @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Keyboard;getEventKeyState()Z", ordinal = 1, shift = At.Shift.BEFORE))
+    private void keyReleased(CallbackInfo ci) {
+        if (!Keyboard.getEventKeyState())
+            if (currentScreen == null)
+                StationAPI.EVENT_BUS.post(new KeyStateChanged(KeyStateChanged.Environment.IN_GAME));
+            else
+                StationAPI.EVENT_BUS.post(new KeyStateChanged(KeyStateChanged.Environment.IN_GUI));
+    }
 }
