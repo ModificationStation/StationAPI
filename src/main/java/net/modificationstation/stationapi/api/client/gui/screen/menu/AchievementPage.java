@@ -1,6 +1,8 @@
 package net.modificationstation.stationapi.api.client.gui.screen.menu;
 
 import net.minecraft.achievement.Achievement;
+import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.common.util.API;
 import net.modificationstation.stationapi.api.common.util.Named;
 
@@ -22,8 +24,8 @@ public class AchievementPage implements Named {
     /**
      * @param pageName The name of the page that is shown on the achievements screen.
      */
-    public AchievementPage(String pageName) {
-        this.pageName = pageName;
+    public AchievementPage(ModID modID, String pageName) {
+        this.pageName = Identifier.of(modID, pageName).toString();
         addPage(this);
     }
 

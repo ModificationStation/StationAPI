@@ -8,6 +8,7 @@ import net.modificationstation.stationapi.api.client.event.gui.screen.menu.Achie
 import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsIconRender;
 import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsLineRender;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
+import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.ListenerPriority;
 import net.modificationstation.stationapi.api.common.event.achievement.AchievementRegister;
@@ -27,7 +28,7 @@ public class AchievementPageImpl {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerAchievements(AchievementRegister event) {
-        AchievementPage page = new AchievementPage("Minecraft");
+        AchievementPage page = new AchievementPage(StationAPI.MODID, "minecraft");
         List<Achievement> list = new ArrayList<>();
         for (Object o : Achievements.ACHIEVEMENTS)
             list.add((Achievement) o);
