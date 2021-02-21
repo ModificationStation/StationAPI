@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screen.menu.Achievements;
 
 public class AchievementsIconRender extends AchievementsEvent {
 
-    @Getter(onMethod_ = @Override)
+    @Getter // @Override
     private final boolean cancellable = true;
     public final Achievement achievement;
 

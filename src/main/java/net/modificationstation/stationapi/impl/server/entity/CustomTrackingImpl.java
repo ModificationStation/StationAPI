@@ -20,6 +20,7 @@ public class CustomTrackingImpl {
 
     /**
      * Invokes {@link ICustomTracking#track(ServerEntityTracker, EntityHashSet)} in entity if it's instance of {@link ICustomTracking} via {@link TrackEntity} hook.
+     * @param event the {@link TrackEntity} event.
      * @see TrackEntity
      */
     @EventListener

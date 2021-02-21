@@ -22,7 +22,8 @@ public class AchievementPage implements Named {
     private final List<Integer> achievementIds = new ArrayList<>();
 
     /**
-     * @param pageName The name of the page that is shown on the achievements screen.
+     * @param modID the {@link ModID} to add to the translation key.
+     * @param pageName the name of the page that is shown on the achievements screen.
      */
     public AchievementPage(ModID modID, String pageName) {
         this.pageName = Identifier.of(modID, pageName).toString();

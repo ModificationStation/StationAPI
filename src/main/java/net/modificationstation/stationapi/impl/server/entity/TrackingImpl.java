@@ -21,6 +21,7 @@ public class TrackingImpl {
 
     /**
      * Handles entity's {@link Tracking} annotation if it's present via {@link TrackEntity} hook.
+     * @param event the {@link TrackEntity} event.
      * @see TrackEntity
      */
     public static void trackEntity(TrackEntity event) {
