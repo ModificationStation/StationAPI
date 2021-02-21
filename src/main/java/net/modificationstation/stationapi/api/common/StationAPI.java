@@ -35,6 +35,7 @@ import net.modificationstation.stationapi.api.common.event.packet.PacketRegister
 import net.modificationstation.stationapi.api.common.event.recipe.BeforeRecipeStats;
 import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
 import net.modificationstation.stationapi.api.common.gui.GuiHandlerRegistry;
+import net.modificationstation.stationapi.api.common.lang.I18n;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.common.packet.Message;
@@ -60,7 +61,6 @@ import net.modificationstation.stationapi.impl.common.config.PropertyImpl;
 import net.modificationstation.stationapi.impl.common.factory.EnumFactory;
 import net.modificationstation.stationapi.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.impl.common.item.CustomReach;
-import net.modificationstation.stationapi.impl.common.lang.I18n;
 import net.modificationstation.stationapi.impl.common.recipe.CraftingRegistry;
 import net.modificationstation.stationapi.impl.common.recipe.JsonRecipeType;
 import net.modificationstation.stationapi.impl.common.recipe.SmeltingRegistry;
@@ -124,7 +124,7 @@ public class StationAPI implements PreLaunchEntrypoint {
         LOGGER.info("Setting up API...");
         setupAPI();
         LOGGER.info("Setting up lang folder...");
-        net.modificationstation.stationapi.api.common.lang.I18n.INSTANCE.addLangFolder("/assets/" + MODID + "/lang", MODID);
+        I18n.addLangFolder(MODID, "/assets/" + MODID + "/lang");
         LOGGER.info("Loading mods...");
         setupMods();
         LOGGER.info("Finished " + name + " setup");
@@ -144,8 +144,6 @@ public class StationAPI implements PreLaunchEntrypoint {
         generalFactory.addFactory(EntityType.class, args -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[]{Class.class, int.class, Material.class, boolean.class}, new Object[]{args[1], args[2], args[3], args[4]}));
         LOGGER.info("Setting up EnumFactory...");
         enumFactory.setHandler(new EnumFactory());
-        LOGGER.info("Setting up I18n...");
-        net.modificationstation.stationapi.api.common.lang.I18n.INSTANCE.setHandler(new I18n());
         LOGGER.info("Setting up CraftingRegistry...");
         net.modificationstation.stationapi.api.common.recipe.CraftingRegistry.INSTANCE.setHandler(new CraftingRegistry());
         LOGGER.info("Setting up UnsafeProvider...");
@@ -336,7 +334,7 @@ public class StationAPI implements PreLaunchEntrypoint {
             String pathName = "/assets/" + modID + "/" + MODID + "/lang";
             URL path = getClass().getResource(pathName);
             if (path != null) {
-                net.modificationstation.stationapi.api.common.lang.I18n.INSTANCE.addLangFolder(pathName, modID);
+                I18n.addLangFolder(modID, pathName);
                 LOGGER.info("Registered lang path");
             }
         });

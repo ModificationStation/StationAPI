@@ -1,43 +1,64 @@
 package net.modificationstation.stationapi.api.common.lang;
 
+import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.common.registry.ModID;
-import net.modificationstation.stationapi.api.common.util.HasHandler;
+import net.modificationstation.stationapi.mixin.common.accessor.TranslationStorageAccessor;
 
-public interface I18n extends HasHandler<I18n> {
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
-    I18n INSTANCE = new I18n() {
+public class I18n {
 
-        private I18n handler;
+    private static final Map<String, String> langFolders = new HashMap<>();
 
-        @Override
-        public void setHandler(I18n handler) {
-            this.handler = handler;
-        }
-
-        @Override
-        public void addLangFolder(String langFolder) {
-            checkAccess(handler);
-            handler.addLangFolder(langFolder);
-        }
-
-        @Override
-        public void addLangFolder(String langFolder, ModID modID) {
-            checkAccess(handler);
-            handler.addLangFolder(langFolder, modID);
-        }
-
-        @Override
-        public void changeLang(String region) {
-            checkAccess(handler);
-            handler.changeLang(region);
-        }
-    };
-
-    default void addLangFolder(String langFolder) {
-        addLangFolder(langFolder, null);
+    static {
+        addLangFolder("/lang");
     }
 
-    void addLangFolder(String langFolder, ModID modID);
+    public static void addLangFolder(String langFolder) {
+        addLangFolder(null, langFolder);
+    }
 
-    void changeLang(String region);
+    public static void addLangFolder(ModID modID, String langFolder) {
+        langFolders.put(langFolder, modID == null ? null : modID.toString());
+    }
+
+    public static void changeLang(String region) {
+        Properties translations = ((TranslationStorageAccessor) TranslationStorage.getInstance()).getTranslations();
+        translations.clear();
+        langFolders.forEach((key, value) -> {
+            try {
+                loadLang(translations, key + "/" + region + ".lang", value);
+                loadLang(translations, key + "/stats_" + region.split("_")[1] + ".lang", value);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    private static void loadLang(Properties translations, String path, String modid) throws IOException {
+        InputStream inputStream = I18n.class.getResourceAsStream(path);
+        if (inputStream != null) {
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            if (modid != null) {
+                Properties rawProp = properties;
+                properties = new Properties();
+                Properties finalProperties = properties;
+                rawProp.forEach((key, value) -> {
+                    if (key instanceof String) {
+                        String[] strings = ((String) key).split("\\.");
+                        if (strings.length > 1)
+                            strings[1] = modid + ":" + strings[1];
+                        key = String.join(".", strings);
+                    }
+                    finalProperties.put(key, value);
+                });
+            }
+            translations.putAll(properties);
+        }
+    }
 }

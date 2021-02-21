@@ -17,7 +17,7 @@ public class MixinTranslationStorage {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void afterLangLoaded(CallbackInfo ci) {
         instance = (TranslationStorage) (Object) this;
-        I18n.INSTANCE.changeLang("en_US");
+        I18n.changeLang("en_US");
         instance = null;
     }
 }
