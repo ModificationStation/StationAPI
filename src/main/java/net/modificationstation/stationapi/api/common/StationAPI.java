@@ -61,7 +61,6 @@ import net.modificationstation.stationapi.impl.common.factory.EnumFactory;
 import net.modificationstation.stationapi.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.impl.common.item.CustomReach;
 import net.modificationstation.stationapi.impl.common.recipe.JsonRecipeType;
-import net.modificationstation.stationapi.impl.common.util.UnsafeProvider;
 import net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl;
 import net.modificationstation.stationapi.impl.server.entity.TrackingImpl;
 import net.modificationstation.stationapi.mixin.client.accessor.ClientPlayNetworkHandlerAccessor;
@@ -141,8 +140,6 @@ public class StationAPI implements PreLaunchEntrypoint {
         generalFactory.addFactory(EntityType.class, args -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[]{Class.class, int.class, Material.class, boolean.class}, new Object[]{args[1], args[2], args[3], args[4]}));
         LOGGER.info("Setting up EnumFactory...");
         enumFactory.setHandler(new EnumFactory());
-        LOGGER.info("Setting up UnsafeProvider...");
-        net.modificationstation.stationapi.api.common.util.UnsafeProvider.INSTANCE.setHandler(new UnsafeProvider());
         LOGGER.info("Setting up CustomReach...");
         net.modificationstation.stationapi.api.common.item.CustomReach.CONSUMERS.put("setDefaultBlockReach", CustomReach::setDefaultBlockReach);
         net.modificationstation.stationapi.api.common.item.CustomReach.CONSUMERS.put("setHandBlockReach", CustomReach::setHandBlockReach);

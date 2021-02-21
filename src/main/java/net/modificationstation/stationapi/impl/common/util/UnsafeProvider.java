@@ -4,7 +4,7 @@ import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
 
-public class UnsafeProvider implements net.modificationstation.stationapi.api.common.util.UnsafeProvider {
+public class UnsafeProvider {
 
     private static final Unsafe theUnsafe;
 
@@ -18,8 +18,7 @@ public class UnsafeProvider implements net.modificationstation.stationapi.api.co
         }
     }
 
-    @Override
-    public Unsafe getUnsafe() {
+    public static Unsafe getUnsafe() {
         return theUnsafe;
     }
 }
