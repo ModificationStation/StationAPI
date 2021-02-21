@@ -1,49 +1,33 @@
 package net.modificationstation.stationapi.api.common.recipe;
 
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.common.util.HasHandler;
+import net.minecraft.recipe.RecipeRegistry;
+import net.modificationstation.stationapi.api.common.util.API;
+import net.modificationstation.stationapi.impl.common.recipe.ShapedOreDictRecipe;
+import net.modificationstation.stationapi.impl.common.recipe.ShapelessOreDictRecipe;
+import net.modificationstation.stationapi.mixin.common.accessor.RecipeRegistryAccessor;
 
-public interface CraftingRegistry extends HasHandler<CraftingRegistry> {
+import java.util.Arrays;
 
-    CraftingRegistry INSTANCE = new CraftingRegistry() {
+public class CraftingRegistry {
 
-        private CraftingRegistry handler;
+    @API
+    public static void addShapedRecipe(ItemInstance itemInstance, Object... o) {
+        ((RecipeRegistryAccessor) RecipeRegistry.getInstance()).invokeAddShapedRecipe(itemInstance, o);
+    }
 
-        @Override
-        public void setHandler(CraftingRegistry handler) {
-            this.handler = handler;
-        }
+    @API
+    public static void addShapelessRecipe(ItemInstance itemInstance, Object... o) {
+        ((RecipeRegistryAccessor) RecipeRegistry.getInstance()).invokeAddShapelessRecipe(itemInstance, o);
+    }
 
-        @Override
-        public void addShapedRecipe(ItemInstance itemInstance, Object... o) {
-            checkAccess(handler);
-            handler.addShapedRecipe(itemInstance, o);
-        }
+    @API
+    public static void addShapelessOreDictRecipe(ItemInstance itemInstance, Object... o) {
+        ((RecipeRegistryAccessor) RecipeRegistry.getInstance()).getRecipes().add(new ShapelessOreDictRecipe(itemInstance, Arrays.asList(o)));
+    }
 
-        @Override
-        public void addShapelessRecipe(ItemInstance itemInstance, Object... o) {
-            checkAccess(handler);
-            handler.addShapelessRecipe(itemInstance, o);
-        }
-
-        @Override
-        public void addShapelessOreDictRecipe(ItemInstance itemInstance, Object... o) {
-            checkAccess(handler);
-            handler.addShapelessOreDictRecipe(itemInstance, o);
-        }
-
-        @Override
-        public void addShapedOreDictRecipe(ItemInstance itemInstance, Object... o) {
-            checkAccess(handler);
-            handler.addShapedOreDictRecipe(itemInstance, o);
-        }
-    };
-
-    void addShapedRecipe(ItemInstance itemInstance, Object... o);
-
-    void addShapelessRecipe(ItemInstance itemInstance, Object... o);
-
-    void addShapelessOreDictRecipe(ItemInstance itemInstance, Object... o);
-
-    void addShapedOreDictRecipe(ItemInstance itemInstance, Object... o);
+    @API
+    public static void addShapedOreDictRecipe(ItemInstance itemInstance, Object... o) {
+        ((RecipeRegistryAccessor) RecipeRegistry.getInstance()).getRecipes().add(new ShapedOreDictRecipe(itemInstance, Arrays.asList(o)));
+    }
 }

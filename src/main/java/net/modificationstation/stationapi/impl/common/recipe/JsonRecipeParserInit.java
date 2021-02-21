@@ -8,6 +8,8 @@ import net.modificationstation.stationapi.api.common.event.ListenerPriority;
 import net.modificationstation.stationapi.api.common.event.recipe.JsonRecipeParserRegister;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPolicy;
+import net.modificationstation.stationapi.api.common.recipe.CraftingRegistry;
+import net.modificationstation.stationapi.api.common.recipe.SmeltingRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.impl.common.item.JsonItemKey;
 
@@ -41,7 +43,7 @@ public class JsonRecipeParserInit {
                 keys[i + 1] = new Gson().fromJson(key.getValue(), JsonItemKey.class).getItemInstance();
                 i += 2;
             }
-            net.modificationstation.stationapi.api.common.recipe.CraftingRegistry.INSTANCE.addShapedRecipe(json.getResult().getItemInstance(), keys);
+            CraftingRegistry.addShapedRecipe(json.getResult().getItemInstance(), keys);
         });
         event.registry.registerValue(Identifier.of("crafting_shapeless"), recipe -> {
             JsonCraftingShapeless json;
@@ -54,7 +56,7 @@ public class JsonRecipeParserInit {
             Object[] iteminstances = new Object[json.getIngredients().length];
             for (int i = 0; i < ingredients.length; i++)
                 iteminstances[i] = ingredients[i].getItemInstance();
-            net.modificationstation.stationapi.api.common.recipe.CraftingRegistry.INSTANCE.addShapelessRecipe(json.getResult().getItemInstance(), iteminstances);
+            CraftingRegistry.addShapelessRecipe(json.getResult().getItemInstance(), iteminstances);
         });
         event.registry.registerValue(Identifier.of("smelting"), recipe -> {
             JsonSmelting json;
@@ -63,7 +65,7 @@ public class JsonRecipeParserInit {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            net.modificationstation.stationapi.api.common.recipe.SmeltingRegistry.INSTANCE.addSmeltingRecipe(json.getIngredient().getItemInstance(), json.getResult().getItemInstance());
+            SmeltingRegistry.addSmeltingRecipe(json.getIngredient().getItemInstance(), json.getResult().getItemInstance());
         });
     }
 }

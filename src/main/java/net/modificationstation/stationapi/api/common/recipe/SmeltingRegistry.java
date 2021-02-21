@@ -1,57 +1,43 @@
 package net.modificationstation.stationapi.api.common.recipe;
 
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.common.util.HasHandler;
+import net.minecraft.recipe.SmeltingRecipeRegistry;
+import net.modificationstation.stationapi.api.common.util.API;
+import net.modificationstation.stationapi.api.common.util.OreDict;
+import net.modificationstation.stationapi.impl.common.recipe.SmeltingRegistryImpl;
+import net.modificationstation.stationapi.mixin.common.accessor.SmeltingRecipeRegistryAccessor;
 
-public interface SmeltingRegistry extends HasHandler<SmeltingRegistry> {
+public class SmeltingRegistry {
 
-    SmeltingRegistry INSTANCE = new SmeltingRegistry() {
+    @API
+    public static void addSmeltingRecipe(int input, ItemInstance output) {
+        ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().put(input, output);
+    }
 
-        private SmeltingRegistry handler;
+    @API
+    public static void addSmeltingRecipe(ItemInstance input, ItemInstance output) {
+        ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().put(input, output);
+    }
 
-        @Override
-        public void setHandler(SmeltingRegistry handler) {
-            this.handler = handler;
+    @API
+    public static void addOreDictSmeltingRecipe(String input, ItemInstance output) {
+        ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().put(input, output);
+    }
+
+    @API
+    public static ItemInstance getResultFor(ItemInstance input) {
+        for (Object o : ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().keySet()) {
+            if (o instanceof ItemInstance && input.isDamageAndIDIdentical((ItemInstance) o) || o instanceof String && OreDict.INSTANCE.matches((String) o, input))
+                return ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().get(o);
         }
+        return SmeltingRecipeRegistry.getInstance().getResult(input.getType().id);
+    }
 
-        @Override
-        public void addSmeltingRecipe(int input, ItemInstance output) {
-            checkAccess(handler);
-            handler.addSmeltingRecipe(input, output);
-        }
-
-        @Override
-        public void addSmeltingRecipe(ItemInstance input, ItemInstance output) {
-            checkAccess(handler);
-            handler.addSmeltingRecipe(input, output);
-        }
-
-        @Override
-        public void addOreDictSmeltingRecipe(String input, ItemInstance output) {
-            checkAccess(handler);
-            handler.addOreDictSmeltingRecipe(input, output);
-        }
-
-        @Override
-        public ItemInstance getResultFor(ItemInstance itemInstance) {
-            checkAccess(handler);
-            return handler.getResultFor(itemInstance);
-        }
-
-        @Override
-        public int getFuelTime(ItemInstance itemInstance) {
-            checkAccess(handler);
-            return handler.getFuelTime(itemInstance);
-        }
-    };
-
-    void addSmeltingRecipe(int input, ItemInstance output);
-
-    void addSmeltingRecipe(ItemInstance input, ItemInstance output);
-
-    void addOreDictSmeltingRecipe(String input, ItemInstance output);
-
-    ItemInstance getResultFor(ItemInstance itemInstance);
-
-    int getFuelTime(ItemInstance itemInstance);
+    @API
+    public static int getFuelTime(ItemInstance itemInstance) {
+        if (SmeltingRegistryImpl.getWarcrimes() == null)
+            throw new RuntimeException("Accessed Lnet/modificationstation/stationapi/api/common/recipe/SmeltingRegistry;getFuelTime(Lnet/minecraft/item/ItemInstance;)I too early!");
+        else
+            return SmeltingRegistryImpl.getWarcrimes().invokeGetFuelTime(itemInstance);
+    }
 }

@@ -21,7 +21,7 @@ public class MixinTileEntityFurnace {
 
     @Redirect(method = {"canAcceptRecipeOutput()Z", "craftRecipe()V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/SmeltingRecipeRegistry;getResult(I)Lnet/minecraft/item/ItemInstance;"))
     private ItemInstance getResult(SmeltingRecipeRegistry smeltingRecipeRegistry, int i) {
-        return SmeltingRegistry.INSTANCE.getResultFor(contents[0]);
+        return SmeltingRegistry.getResultFor(contents[0]);
     }
 
     @Inject(method = "getFuelTime(Lnet/minecraft/item/ItemInstance;)I", at = @At(value = "HEAD"), cancellable = true)

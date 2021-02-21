@@ -30,7 +30,8 @@
       "net.modificationstation.stationapi.impl.common.block.OreDictBlockInit",
       "net.modificationstation.stationapi.impl.common.item.OreDictItemInit",
       "net.modificationstation.stationapi.impl.common.mod.InitImpl",
-      "net.modificationstation.stationapi.impl.common.recipe.JsonRecipeParserInit"
+      "net.modificationstation.stationapi.impl.common.recipe.JsonRecipeParserInit",
+      "net.modificationstation.stationapi.impl.common.recipe.SmeltingRegistryImpl"
     ],
     "stationapi:event_bus_server": [
       "net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl",
