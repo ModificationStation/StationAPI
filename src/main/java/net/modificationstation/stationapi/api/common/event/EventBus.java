@@ -9,9 +9,9 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class EventBus {
@@ -90,24 +90,27 @@ public class EventBus {
     }
 
     public <T extends Event> void register(Class<T> eventType, Consumer<T> listener, int priority) {
-        listeners.add(new ListenerContainer<>(eventType, listener, priority));
-        Collections.sort(listeners);
+        //noinspection unchecked
+        ListenerContainer<T>[] listenerContainers = (ListenerContainer<T>[]) listeners.getOrDefault(eventType, new ListenerContainer[0]);
+        listenerContainers = Arrays.copyOf(listenerContainers, listenerContainers.length + 1);
+        listenerContainers[listenerContainers.length - 1] = new ListenerContainer<>(eventType, listener, priority);
+        Arrays.sort(listenerContainers);
+        listeners.put(eventType, listenerContainers);
     }
 
     public <T extends Event> T post(T event) {
-        boolean dead = true;
-        for (ListenerContainer<?> eventListenerData : listeners)
-            if (eventListenerData.eventType.isInstance(event)) {
-                dead = false;
-                //noinspection unchecked
-                ((Consumer<T>) eventListenerData.invoker).accept(event);
-            }
-        if (dead && !(event instanceof DeadEvent))
+        //noinspection unchecked
+        Class<T> eventType = (Class<T>) event.getClass();
+        if (listeners.containsKey(eventType))
+            //noinspection unchecked
+            for (ListenerContainer<T> listenerContainer : (ListenerContainer<T>[]) listeners.get(eventType))
+                listenerContainer.invoker.accept(event);
+        else if (!(event instanceof DeadEvent))
             post(new DeadEvent(event));
         return event;
     }
 
-    private final List<ListenerContainer<?>> listeners = new ArrayList<>();
+    private final Map<Class<? extends Event>, ListenerContainer<?>[]> listeners = new IdentityHashMap<>();
 
     private static final MethodHandles.Lookup IMPL_LOOKUP;
     static {
