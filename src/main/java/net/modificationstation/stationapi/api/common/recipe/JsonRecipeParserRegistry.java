@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.api.common.recipe;
 
 import net.modificationstation.stationapi.api.common.StationAPI;
-import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
+import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.Registry;
 
 import java.net.URL;
 import java.util.function.Consumer;
 /**
- * The JSON recipe parser registry that holds all JSON recipe parsers to automatically run when {@link RecipeRegister} event is called with a proper identifier.
+ * The JSON recipe parser registry that holds all JSON recipe parsers to automatically run when {@link RecipeRegisterEvent} event is called with a proper identifier.
  * @author mine_diver
  */
 public final class JsonRecipeParserRegistry extends Registry<Consumer<URL>> {

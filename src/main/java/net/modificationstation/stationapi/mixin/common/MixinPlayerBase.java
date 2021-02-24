@@ -17,7 +17,7 @@ import net.minecraft.util.SleepStatus;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.entity.player.*;
-import net.modificationstation.stationapi.api.common.event.entity.player.PlayerHandlerRegister;
+import net.modificationstation.stationapi.api.common.event.entity.player.PlayerEvent;
 import net.modificationstation.stationapi.api.common.item.CustomArmourValue;
 import net.modificationstation.stationapi.api.common.item.UseOnEntityFirst;
 import net.modificationstation.stationapi.api.common.util.ArmourUtils;
@@ -59,7 +59,7 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
     public List<PlayerHandler> getPlayerBases() {
         if (playerBases == null) {
             playerBases = new ArrayList<>();
-            StationAPI.EVENT_BUS.post(new PlayerHandlerRegister((PlayerBase) (Object) this, playerBases));
+            StationAPI.EVENT_BUS.post(new PlayerEvent.HandlerRegister((PlayerBase) (Object) this, playerBases));
         }
         return playerBases;
     }

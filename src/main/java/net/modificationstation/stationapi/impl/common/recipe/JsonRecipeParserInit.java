@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.ListenerPriority;
-import net.modificationstation.stationapi.api.common.event.recipe.JsonRecipeParserRegister;
+import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.common.recipe.CraftingRegistry;
@@ -23,7 +23,7 @@ import java.util.Set;
 public class JsonRecipeParserInit {
 
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void registerJsonRecipeParsers(JsonRecipeParserRegister event) {
+    private static void registerJsonRecipeParsers(RegistryEvent.JsonRecipeParsers event) {
         event.registry.registerValue(Identifier.of("crafting_shaped"), recipe -> {
             JsonElement rawJson;
             try {

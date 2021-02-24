@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.common;
 
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.common.StationAPI;
-import net.modificationstation.stationapi.api.common.event.level.LevelInit;
+import net.modificationstation.stationapi.api.common.event.level.LevelEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,6 +13,6 @@ public class MixinLevel {
 
     @Inject(method = "<init>*", at = @At("RETURN"))
     private void afterLevelInitialization(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new LevelInit((Level) (Object) this));
+        StationAPI.EVENT_BUS.post(new LevelEvent.Init((Level) (Object) this));
     }
 }

@@ -8,4 +8,14 @@ import net.modificationstation.stationapi.api.common.event.Event;
 public class ItemEvent extends Event {
 
     public final ItemBase item;
+
+    public static class TranslationKeyChanged extends ItemEvent {
+
+        public String currentTranslationKey;
+
+        public TranslationKeyChanged(ItemBase item, String currentTranslationKey) {
+            super(item);
+            this.currentTranslationKey = currentTranslationKey;
+        }
+    }
 }

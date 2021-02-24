@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.api.common.block;
 
 import net.minecraft.item.Block;
-import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
+import net.modificationstation.stationapi.api.common.event.block.BlockEvent;
 
 import java.lang.annotation.*;
 
 /**
  * Annotation alternative of {@link IHasCustomBlockItemFactory}.
  * @author mine_diver
- * @see BlockItemFactoryCallback
+ * @see BlockEvent.ItemFactory
  * @see IHasCustomBlockItemFactory
  * @see IHasMetaBlockItem
  * @see HasMetaBlockItem

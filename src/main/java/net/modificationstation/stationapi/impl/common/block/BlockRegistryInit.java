@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.ListenerPriority;
-import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
+import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
@@ -16,7 +16,7 @@ import net.modificationstation.stationapi.api.common.registry.Identifier;
 public class BlockRegistryInit {
 
     @EventListener(priority = ListenerPriority.HIGHEST)
-    private static void registerBlocks(BlockRegister event) {
+    private static void registerBlocks(RegistryEvent.Blocks event) {
         event.registry.registerValue(Identifier.of("stone"), BlockBase.STONE);
         event.registry.registerValue(Identifier.of("grass_block"), BlockBase.GRASS);
         event.registry.registerValue(Identifier.of("dirt"), BlockBase.DIRT);

@@ -4,14 +4,14 @@ import net.minecraft.entity.EntityBase;
 import net.minecraft.network.EntityHashSet;
 import net.minecraft.server.network.ServerEntityTracker;
 import net.modificationstation.stationapi.api.common.util.TriState;
-import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
+import net.modificationstation.stationapi.api.server.event.network.TrackEntityEvent;
 import net.modificationstation.stationapi.impl.server.entity.TrackingImpl;
 
 /**
  * An implementation of {@link ICustomTracking} that has the logic set up and just requires entity to provide data for tracking.
  * If the data is constant, use {@link Tracking}.
  * @author mine_diver
- * @see TrackEntity
+ * @see TrackEntityEvent
  * @see ICustomTracking
  * @see Tracking
  */

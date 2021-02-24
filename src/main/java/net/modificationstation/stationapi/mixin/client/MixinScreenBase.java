@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.client;
 
 import net.minecraft.client.gui.screen.ScreenBase;
-import net.modificationstation.stationapi.api.client.event.keyboard.KeyStateChanged;
+import net.modificationstation.stationapi.api.client.event.keyboard.KeyStateChangedEvent;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,6 +13,6 @@ public class MixinScreenBase {
 
     @Inject(method = "method_130()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ScreenBase;onKeyboardEvent()V", shift = At.Shift.AFTER))
     private void keyStateChange(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new KeyStateChanged(KeyStateChanged.Environment.IN_GUI));
+        StationAPI.EVENT_BUS.post(new KeyStateChangedEvent(KeyStateChangedEvent.Environment.IN_GUI));
     }
 }

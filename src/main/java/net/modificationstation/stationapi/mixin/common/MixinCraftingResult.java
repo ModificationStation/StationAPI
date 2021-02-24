@@ -5,7 +5,7 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.common.StationAPI;
-import net.modificationstation.stationapi.api.common.event.container.slot.ItemUsedInCrafting;
+import net.modificationstation.stationapi.api.common.event.container.slot.ItemUsedInCraftingEvent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,6 +26,6 @@ public class MixinCraftingResult {
 
     @Inject(method = "onCrafted(Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/InventoryBase;setInventoryItem(ILnet/minecraft/item/ItemInstance;)V", shift = At.Shift.BY, by = 2), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onCrafted(ItemInstance arg, CallbackInfo ci, int var2, ItemInstance var3) {
-        StationAPI.EVENT_BUS.post(new ItemUsedInCrafting(player, resultInventory, var2, var3, arg));
+        StationAPI.EVENT_BUS.post(new ItemUsedInCraftingEvent(player, resultInventory, var2, var3, arg));
     }
 }

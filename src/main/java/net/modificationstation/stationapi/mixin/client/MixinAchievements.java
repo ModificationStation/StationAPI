@@ -6,9 +6,7 @@ import net.minecraft.client.gui.screen.menu.Achievements;
 import net.minecraft.client.gui.widgets.Button;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.client.texture.TextureManager;
-import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsBackgroundTextureOverride;
-import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsIconRender;
-import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsLineRender;
+import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsEvent;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
 import net.modificationstation.stationapi.api.common.StationAPI;
@@ -77,12 +75,12 @@ public class MixinAchievements extends ScreenBase {
 
     @ModifyVariable(method = "method_1998(IIF)V", index = 26, at = @At(value = "FIELD", target = "Lnet/minecraft/block/BlockBase;texture:I", opcode = Opcodes.GETFIELD, ordinal = 7, shift = At.Shift.BY, by = 3))
     private int renderBackgroundTexture(int var26) {
-        return StationAPI.EVENT_BUS.post(new AchievementsBackgroundTextureOverride((Achievements) (Object) this, capturedRandom, capturedColumn, capturedRow, capturedRowRandomized, var26)).backgroundTexture;
+        return StationAPI.EVENT_BUS.post(new AchievementsEvent.BackgroundTextureRender((Achievements) (Object) this, capturedRandom, capturedColumn, capturedRow, capturedRowRandomized, var26)).backgroundTexture;
     }
 
     @Redirect(method = "method_1998(IIF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/achievement/Achievement;parent:Lnet/minecraft/achievement/Achievement;", opcode = Opcodes.GETFIELD, ordinal = 0))
     private Achievement overrideLineRender(Achievement achievement) {
-        return StationAPI.EVENT_BUS.post(new AchievementsLineRender((Achievements) (Object) this, achievement)).isCancelled() ? null : achievement.parent;
+        return StationAPI.EVENT_BUS.post(new AchievementsEvent.LineRender((Achievements) (Object) this, achievement)).isCancelled() ? null : achievement.parent;
     }
 
     @SuppressWarnings("DefaultAnnotationParam")
@@ -97,7 +95,7 @@ public class MixinAchievements extends ScreenBase {
     }
 
     private int onRenderAchievement(int achievementOrdinal) {
-        while (achievementOrdinal < ACHIEVEMENTS.size() && StationAPI.EVENT_BUS.post(new AchievementsIconRender((Achievements) (Object) this, (Achievement) ACHIEVEMENTS.get(achievementOrdinal))).isCancelled())
+        while (achievementOrdinal < ACHIEVEMENTS.size() && StationAPI.EVENT_BUS.post(new AchievementsEvent.AchievementIconRender((Achievements) (Object) this, (Achievement) ACHIEVEMENTS.get(achievementOrdinal))).isCancelled())
             achievementOrdinal++;
         return achievementOrdinal;
     }

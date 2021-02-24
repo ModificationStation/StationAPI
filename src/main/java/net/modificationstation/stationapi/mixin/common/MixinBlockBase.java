@@ -7,14 +7,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.Block;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.client.event.model.ModelRegister;
+import net.modificationstation.stationapi.api.client.event.model.ModelRegisterEvent;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.block.BlockMiningLevel;
 import net.modificationstation.stationapi.api.common.block.BlockStrengthPerMeta;
 import net.modificationstation.stationapi.api.common.entity.player.StrengthOnMeta;
-import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
-import net.modificationstation.stationapi.api.common.event.block.BlockNameSet;
-import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
+import net.modificationstation.stationapi.api.common.event.block.BlockEvent;
+import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
 import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
 import net.modificationstation.stationapi.api.common.item.tool.*;
 import org.objectweb.asm.Opcodes;
@@ -46,19 +45,19 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
     @Environment(EnvType.CLIENT)
     @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(II)Lnet/minecraft/block/Stone;", ordinal = 0, shift = At.Shift.BEFORE))
     private static void beforeBlockRegister(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new ModelRegister(ModelRegister.Type.BLOCKS));
+        StationAPI.EVENT_BUS.post(new ModelRegisterEvent(ModelRegisterEvent.Type.BLOCKS));
     }
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/block/BlockBase;TRAPDOOR:Lnet/minecraft/block/BlockBase;", opcode = Opcodes.PUTSTATIC, shift = At.Shift.AFTER))
     private static void afterBlockRegister(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new BlockRegister());
+        StationAPI.EVENT_BUS.post(new RegistryEvent.Blocks());
     }
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(I)Lnet/minecraft/item/Block;"))
     private static Block getBlockItem(int blockID) {
-        return StationAPI.EVENT_BUS.post(new BlockItemFactoryCallback(BY_ID[blockID + BY_ID.length], Block::new)).currentFactory.apply(blockID);
+        return StationAPI.EVENT_BUS.post(new BlockEvent.ItemFactory(BY_ID[blockID + BY_ID.length], Block::new)).currentFactory.apply(blockID);
     }
 
     @Shadow
@@ -68,7 +67,7 @@ public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
 
     @ModifyVariable(method = "setTranslationKey(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;", at = @At("HEAD"))
     private String getTranslationKey(String name) {
-        return StationAPI.EVENT_BUS.post(new BlockNameSet((BlockBase) (Object) this, name)).newName;
+        return StationAPI.EVENT_BUS.post(new BlockEvent.TranslationKeyChanged((BlockBase) (Object) this, name)).currentTranslationKey;
     }
 
     @Override

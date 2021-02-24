@@ -9,4 +9,11 @@ import net.modificationstation.stationapi.api.common.event.Event;
 public class LevelEvent extends Event {
 
     public final Level level;
+
+    public static class Init extends LevelEvent {
+
+        public Init(Level level) {
+            super(level);
+        }
+    }
 }

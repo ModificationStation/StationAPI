@@ -5,7 +5,7 @@ import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.ListenerPriority;
-import net.modificationstation.stationapi.api.common.event.item.ItemRegister;
+import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.common.util.OreDict;
@@ -17,7 +17,7 @@ import net.modificationstation.stationapi.api.common.util.OreDict;
 public class OreDictItemInit {
 
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void registerItems(ItemRegister event) {
+    private static void registerItems(RegistryEvent.Items event) {
 
         // Basic Items
         addItem0Damage("stick", ItemBase.stick);

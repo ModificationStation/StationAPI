@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.mixin.common;
 import net.minecraft.recipe.RecipeRegistry;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.OreDictRegister;
-import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
+import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.common.util.OreDict;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,8 +16,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister.Vanilla.CRAFTING_SHAPED;
-import static net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister.Vanilla.CRAFTING_SHAPELESS;
+import static net.modificationstation.stationapi.api.common.event.recipe.RecipeRegisterEvent.Vanilla.CRAFTING_SHAPED;
+import static net.modificationstation.stationapi.api.common.event.recipe.RecipeRegisterEvent.Vanilla.CRAFTING_SHAPELESS;
 
 @Mixin(RecipeRegistry.class)
 public class MixinRecipeRegistry {
@@ -31,8 +31,8 @@ public class MixinRecipeRegistry {
     private <T> void afterRecipeRegister(List<T> list, Comparator<? super T> c) {
         INSTANCE = (RecipeRegistry) (Object) this;
         StationAPI.EVENT_BUS.post(new OreDictRegister(OreDict.INSTANCE));
-        StationAPI.EVENT_BUS.post(new RecipeRegister(CRAFTING_SHAPED.type()));
-        StationAPI.EVENT_BUS.post(new RecipeRegister(CRAFTING_SHAPELESS.type()));
+        StationAPI.EVENT_BUS.post(new RecipeRegisterEvent(CRAFTING_SHAPED.type()));
+        StationAPI.EVENT_BUS.post(new RecipeRegisterEvent(CRAFTING_SHAPELESS.type()));
         //noinspection Java8ListSort
         Collections.sort(list, c);
     }

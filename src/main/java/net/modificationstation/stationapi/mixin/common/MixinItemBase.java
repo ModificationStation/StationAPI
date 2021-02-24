@@ -5,11 +5,11 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.client.event.model.ModelRegister;
+import net.modificationstation.stationapi.api.client.event.model.ModelRegisterEvent;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.block.BlockMiningLevel;
-import net.modificationstation.stationapi.api.common.event.item.ItemNameSet;
-import net.modificationstation.stationapi.api.common.event.item.ItemRegister;
+import net.modificationstation.stationapi.api.common.event.item.ItemEvent;
+import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
 import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
 import net.modificationstation.stationapi.api.common.item.StrengthOnMeta;
 import net.modificationstation.stationapi.api.common.item.tool.OverrideIsEffectiveOn;
@@ -28,13 +28,13 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(ILnet/minecraft/item/tool/ToolMaterial;)Lnet/minecraft/item/tool/Shovel;", ordinal = 0, shift = At.Shift.BEFORE))
     private static void beforeItemRegister(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new ModelRegister(ModelRegister.Type.ITEMS));
+        StationAPI.EVENT_BUS.post(new ModelRegisterEvent(ModelRegisterEvent.Type.ITEMS));
     }
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/stat/Stats;setupItemStats()V", shift = At.Shift.BEFORE))
     private static void afterItemRegister(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new ItemRegister());
+        StationAPI.EVENT_BUS.post(new RegistryEvent.Items());
     }
 
     @Shadow
@@ -49,7 +49,7 @@ public class MixinItemBase implements EffectiveOnMeta, StrengthOnMeta {
 
     @ModifyVariable(method = "setTranslationKey(Ljava/lang/String;)Lnet/minecraft/item/ItemBase;", at = @At("HEAD"))
     private String getName(String name) {
-        return StationAPI.EVENT_BUS.post(new ItemNameSet((ItemBase) (Object) this, name)).newName;
+        return StationAPI.EVENT_BUS.post(new ItemEvent.TranslationKeyChanged((ItemBase) (Object) this, name)).currentTranslationKey;
     }
 
     @Override

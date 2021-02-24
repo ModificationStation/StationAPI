@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.common.gui;
 import net.minecraft.container.ContainerBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
-import net.modificationstation.stationapi.api.client.event.gui.screen.GuiHandlerRegister;
+import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.util.API;
@@ -34,7 +34,7 @@ public final class GuiHelper {
      * @param identifier GUI handler identifier.
      * @param inventory the inventory to open (usually a tile entity).
      * @param container the container to open.
-     * @see GuiHandlerRegister
+     * @see RegistryEvent.GuiHandlers
      * @see GuiHandlerRegistry
      * @see GuiHelper#openGUI(PlayerBase, Identifier, InventoryBase, ContainerBase, Consumer)
      */
@@ -52,7 +52,7 @@ public final class GuiHelper {
      * @param inventory the inventory to open (usually a tile entity).
      * @param container the container to open.
      * @param customData the packet consumer that can add additional data to the GUI packet.
-     * @see GuiHandlerRegister
+     * @see RegistryEvent.GuiHandlers
      * @see GuiHandlerRegistry
      * @see GuiHelper#openGUI(PlayerBase, Identifier, InventoryBase, ContainerBase)
      */

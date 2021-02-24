@@ -3,8 +3,7 @@ package net.modificationstation.stationapi.mixin.common;
 import net.minecraft.level.LevelProperties;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.common.StationAPI;
-import net.modificationstation.stationapi.api.common.event.level.LoadLevelProperties;
-import net.modificationstation.stationapi.api.common.event.level.SaveLevelProperties;
+import net.modificationstation.stationapi.api.common.event.level.LevelPropertiesEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,11 +14,11 @@ public class MixinLevelProperties {
 
     @Inject(method = "<init>(Lnet/minecraft/util/io/CompoundTag;)V", at = @At("RETURN"))
     private void onLoadFromTag(CompoundTag arg, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new LoadLevelProperties((LevelProperties) (Object) this, arg));
+        StationAPI.EVENT_BUS.post(new LevelPropertiesEvent.Load((LevelProperties) (Object) this, arg));
     }
 
     @Inject(method = "updateProperties(Lnet/minecraft/util/io/CompoundTag;Lnet/minecraft/util/io/CompoundTag;)V", at = @At("RETURN"))
     private void onSaveToTag(CompoundTag arg, CompoundTag arg1, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new SaveLevelProperties((LevelProperties) (Object) this, arg, arg1));
+        StationAPI.EVENT_BUS.post(new LevelPropertiesEvent.Save((LevelProperties) (Object) this, arg, arg1));
     }
 }

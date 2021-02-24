@@ -5,7 +5,7 @@ import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.ListenerPriority;
-import net.modificationstation.stationapi.api.common.event.block.BlockRegister;
+import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.common.util.OreDict;
@@ -17,7 +17,7 @@ import net.modificationstation.stationapi.api.common.util.OreDict;
 public class OreDictBlockInit {
 
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void registerBlockOreDict(BlockRegister event) {
+    private static void registerBlockOreDict(RegistryEvent.Blocks event) {
         // Basic Blocks
         addBlock0Damage("stone", BlockBase.STONE);
         addBlock0Damage("dirt", BlockBase.DIRT);

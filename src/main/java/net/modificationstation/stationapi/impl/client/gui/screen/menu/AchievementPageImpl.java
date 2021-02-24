@@ -4,14 +4,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.achievement.Achievement;
 import net.minecraft.achievement.Achievements;
 import net.minecraft.client.Minecraft;
-import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsBackgroundTextureOverride;
-import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsIconRender;
-import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsLineRender;
+import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsEvent;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.ListenerPriority;
-import net.modificationstation.stationapi.api.common.event.achievement.AchievementRegister;
+import net.modificationstation.stationapi.api.common.event.achievement.AchievementRegisterEvent;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPolicy;
 
@@ -22,12 +20,12 @@ import java.util.List;
 public class AchievementPageImpl {
 
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void replaceBackgroundTexture(AchievementsBackgroundTextureOverride event) {
+    private static void replaceBackgroundTexture(AchievementsEvent.BackgroundTextureRender event) {
         event.backgroundTexture = AchievementPage.getCurrentPage().getBackgroundTexture(event.random, event.column, event.row, event.randomizedRow, event.backgroundTexture);
     }
 
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void registerAchievements(AchievementRegister event) {
+    private static void registerAchievements(AchievementRegisterEvent event) {
         AchievementPage page = new AchievementPage(StationAPI.MODID, "minecraft");
         List<Achievement> list = new ArrayList<>();
         for (Object o : Achievements.ACHIEVEMENTS)
@@ -36,7 +34,7 @@ public class AchievementPageImpl {
     }
 
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void renderAchievementIcon(AchievementsIconRender event) {
+    private static void renderAchievementIcon(AchievementsEvent.AchievementIconRender event) {
         if (!isVisibleAchievement(event.achievement))
             event.cancel();
     }
@@ -54,7 +52,7 @@ public class AchievementPageImpl {
     }
 
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void renderAchievementsLine(AchievementsLineRender event) {
+    private static void renderAchievementsLine(AchievementsEvent.LineRender event) {
         if (!(event.achievement.parent != null && isVisibleAchievement(event.achievement) && isVisibleAchievement(event.achievement.parent)))
             event.cancel();
     }

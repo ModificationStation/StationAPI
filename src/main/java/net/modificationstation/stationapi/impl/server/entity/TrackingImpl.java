@@ -7,12 +7,12 @@ import net.modificationstation.stationapi.api.common.util.TriState;
 import net.modificationstation.stationapi.api.server.entity.ICustomTracking;
 import net.modificationstation.stationapi.api.server.entity.ITracking;
 import net.modificationstation.stationapi.api.server.entity.Tracking;
-import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
+import net.modificationstation.stationapi.api.server.event.network.TrackEntityEvent;
 
 /**
  * {@link ITracking} implementation class.
  * @author mine_diver
- * @see TrackEntity
+ * @see TrackEntityEvent
  * @see ICustomTracking
  * @see ITracking
  * @see Tracking
@@ -20,11 +20,11 @@ import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
 public class TrackingImpl {
 
     /**
-     * Handles entity's {@link Tracking} annotation if it's present via {@link TrackEntity} hook.
-     * @param event the {@link TrackEntity} event.
-     * @see TrackEntity
+     * Handles entity's {@link Tracking} annotation if it's present via {@link TrackEntityEvent} hook.
+     * @param event the {@link TrackEntityEvent} event.
+     * @see TrackEntityEvent
      */
-    public static void trackEntity(TrackEntity event) {
+    public static void trackEntity(TrackEntityEvent event) {
         Class<? extends EntityBase> entityClass = event.entityToTrack.getClass();
         if (entityClass.isAnnotationPresent(Tracking.class)) {
             Tracking at = entityClass.getAnnotation(Tracking.class);

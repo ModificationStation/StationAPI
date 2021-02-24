@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.api.common.block;
 
 import net.minecraft.item.Block;
-import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
+import net.modificationstation.stationapi.api.common.event.block.BlockEvent;
 
 import java.util.function.IntFunction;
 
 /**
- * Interface that blocks can use to provide a custom block item factory on register via {@link BlockItemFactoryCallback} hook.
+ * Interface that blocks can use to provide a custom block item factory on register via {@link BlockEvent.ItemFactory} hook.
  * @author mine_diver
- * @see BlockItemFactoryCallback
+ * @see BlockEvent.ItemFactory
  * @see HasCustomBlockItemFactory
  * @see IHasMetaBlockItem
  * @see HasMetaBlockItem

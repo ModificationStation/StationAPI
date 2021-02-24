@@ -14,8 +14,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.tool.ToolMaterial;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.client.event.gui.RenderItemOverlay;
-import net.modificationstation.stationapi.api.client.event.gui.screen.GuiHandlerRegister;
+import net.modificationstation.stationapi.api.client.event.gui.ItemOverlayRenderEvent;
 import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
 import net.modificationstation.stationapi.api.common.config.Category;
@@ -25,21 +24,19 @@ import net.modificationstation.stationapi.api.common.entity.EntityHandlerRegistr
 import net.modificationstation.stationapi.api.common.entity.HasOwner;
 import net.modificationstation.stationapi.api.common.event.EventBus;
 import net.modificationstation.stationapi.api.common.event.ListenerPriority;
-import net.modificationstation.stationapi.api.common.event.level.LoadLevelPropertiesOnLevelInit;
-import net.modificationstation.stationapi.api.common.event.level.SaveLevelProperties;
-import net.modificationstation.stationapi.api.common.event.mod.Init;
-import net.modificationstation.stationapi.api.common.event.mod.PostInit;
-import net.modificationstation.stationapi.api.common.event.mod.PreInit;
-import net.modificationstation.stationapi.api.common.event.packet.MessageListenerRegister;
-import net.modificationstation.stationapi.api.common.event.packet.PacketRegister;
-import net.modificationstation.stationapi.api.common.event.recipe.BeforeRecipeStats;
-import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister;
+import net.modificationstation.stationapi.api.common.event.level.LevelPropertiesEvent;
+import net.modificationstation.stationapi.api.common.event.mod.InitEvent;
+import net.modificationstation.stationapi.api.common.event.mod.PostInitEvent;
+import net.modificationstation.stationapi.api.common.event.mod.PreInitEvent;
+import net.modificationstation.stationapi.api.common.event.packet.PacketRegisterEvent;
+import net.modificationstation.stationapi.api.common.event.recipe.BeforeRecipeStatsEvent;
+import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegisterEvent;
+import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
 import net.modificationstation.stationapi.api.common.gui.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.common.lang.I18n;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.common.packet.Message;
-import net.modificationstation.stationapi.api.common.packet.MessageListenerRegistry;
 import net.modificationstation.stationapi.api.common.packet.StationHandshake;
 import net.modificationstation.stationapi.api.common.recipe.JsonRecipeParserRegistry;
 import net.modificationstation.stationapi.api.common.recipe.JsonRecipesRegistry;
@@ -51,15 +48,14 @@ import net.modificationstation.stationapi.api.common.resource.ResourceManager;
 import net.modificationstation.stationapi.api.common.util.Null;
 import net.modificationstation.stationapi.api.common.util.SideUtils;
 import net.modificationstation.stationapi.api.server.entity.IStationSpawnData;
-import net.modificationstation.stationapi.api.server.event.network.HandleLogin;
-import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
+import net.modificationstation.stationapi.api.server.event.network.HandshakeSuccessEvent;
+import net.modificationstation.stationapi.api.server.event.network.TrackEntityEvent;
 import net.modificationstation.stationapi.impl.client.model.CustomModelRenderer;
 import net.modificationstation.stationapi.impl.client.texture.TextureFactory;
 import net.modificationstation.stationapi.impl.common.config.CategoryImpl;
 import net.modificationstation.stationapi.impl.common.config.PropertyImpl;
 import net.modificationstation.stationapi.impl.common.factory.EnumFactory;
 import net.modificationstation.stationapi.impl.common.factory.GeneralFactory;
-import net.modificationstation.stationapi.impl.common.item.CustomReach;
 import net.modificationstation.stationapi.impl.common.recipe.JsonRecipeType;
 import net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl;
 import net.modificationstation.stationapi.impl.server.entity.TrackingImpl;
@@ -140,24 +136,15 @@ public class StationAPI implements PreLaunchEntrypoint {
         generalFactory.addFactory(EntityType.class, args -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[]{Class.class, int.class, Material.class, boolean.class}, new Object[]{args[1], args[2], args[3], args[4]}));
         LOGGER.info("Setting up EnumFactory...");
         enumFactory.setHandler(new EnumFactory());
-        LOGGER.info("Setting up CustomReach...");
-        net.modificationstation.stationapi.api.common.item.CustomReach.CONSUMERS.put("setDefaultBlockReach", CustomReach::setDefaultBlockReach);
-        net.modificationstation.stationapi.api.common.item.CustomReach.CONSUMERS.put("setHandBlockReach", CustomReach::setHandBlockReach);
-        net.modificationstation.stationapi.api.common.item.CustomReach.CONSUMERS.put("setDefaultEntityReach", CustomReach::setDefaultEntityReach);
-        net.modificationstation.stationapi.api.common.item.CustomReach.CONSUMERS.put("setHandEntityReach", CustomReach::setHandEntityReach);
-        net.modificationstation.stationapi.api.common.item.CustomReach.SUPPLIERS.put("getDefaultBlockReach", CustomReach::getDefaultBlockReach);
-        net.modificationstation.stationapi.api.common.item.CustomReach.SUPPLIERS.put("getHandBlockReach", CustomReach::getHandBlockReach);
-        net.modificationstation.stationapi.api.common.item.CustomReach.SUPPLIERS.put("getDefaultEntityReach", CustomReach::getDefaultEntityReach);
-        net.modificationstation.stationapi.api.common.item.CustomReach.SUPPLIERS.put("getHandEntityReach", CustomReach::getHandEntityReach);
         LOGGER.info("Setting up CustomData packet...");
         Category networkConfig = CONFIG.getCategory("Network");
-        EVENT_BUS.register(PacketRegister.class, event -> {
+        EVENT_BUS.register(PacketRegisterEvent.class, event -> {
             event.register(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, Message.class);
             CONFIG.save();
-            EVENT_BUS.post(new MessageListenerRegister(MessageListenerRegistry.INSTANCE));
+            EVENT_BUS.post(new RegistryEvent.MessageListeners());
         }, ListenerPriority.HIGH.numPriority);
         LOGGER.info("Setting up LoadLevelPropertiesOnLevelInit...");
-        EVENT_BUS.register(LoadLevelPropertiesOnLevelInit.class, event -> {
+        EVENT_BUS.register(LevelPropertiesEvent.LoadOnLevelInit.class, event -> {
             LevelRegistry.remapping = true;
             StatsAccessor.setBlocksInit(false);
             StatsAccessor.setItemsInit(false);
@@ -170,7 +157,7 @@ public class StationAPI implements PreLaunchEntrypoint {
             LevelRegistry.remapping = false;
         }, ListenerPriority.HIGH.numPriority);
         LOGGER.info("Setting up SaveLevelProperties...");
-        EVENT_BUS.register(SaveLevelProperties.class, event -> {
+        EVENT_BUS.register(LevelPropertiesEvent.Save.class, event -> {
             Registry<Registry<?>> registriesRegistry = Registry.REGISTRIES;
             CompoundTag registriesTag = new CompoundTag();
             registriesRegistry.forEach((identifier, registry) -> {
@@ -183,9 +170,9 @@ public class StationAPI implements PreLaunchEntrypoint {
             event.tag.put(registriesRegistry.getRegistryId().toString(), registriesTag);
         }, ListenerPriority.HIGH.numPriority);
         LOGGER.info("Setting up RecipeRegister...");
-        EVENT_BUS.register(RecipeRegister.class, event -> JsonRecipeParserRegistry.INSTANCE.getByIdentifier(event.recipeId).ifPresent(recipeParser -> JsonRecipesRegistry.INSTANCE.getByIdentifier(event.recipeId).ifPresent(recipes -> recipes.forEach(recipeParser))), ListenerPriority.HIGH.numPriority);
+        EVENT_BUS.register(RecipeRegisterEvent.class, event -> JsonRecipeParserRegistry.INSTANCE.getByIdentifier(event.recipeId).ifPresent(recipeParser -> JsonRecipesRegistry.INSTANCE.getByIdentifier(event.recipeId).ifPresent(recipes -> recipes.forEach(recipeParser))), ListenerPriority.HIGH.numPriority);
         LOGGER.info("Setting up BeforeRecipesStats...");
-        EVENT_BUS.register(BeforeRecipeStats.class, event -> {
+        EVENT_BUS.register(BeforeRecipeStatsEvent.class, event -> {
             RecipeRegistryAccessor.invokeCor();
             SmeltingRecipeRegistryAccessor.invokeCor();
         }, ListenerPriority.HIGH.numPriority);
@@ -204,12 +191,12 @@ public class StationAPI implements PreLaunchEntrypoint {
                     TextureRegistry.SUPPLIERS.put("currentRegistry", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::currentRegistry);
                     TextureRegistry.SUPPLIERS.put("registries", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::registries);
                     LOGGER.info("Setting up RenderItemOverlay...");
-                    EVENT_BUS.register(RenderItemOverlay.class, (event) -> {
+                    EVENT_BUS.register(ItemOverlayRenderEvent.class, (event) -> {
                         if (event.itemInstance != null && event.itemInstance.getType() instanceof CustomItemOverlay) {
                             ((CustomItemOverlay) event.itemInstance.getType()).renderItemOverlay(event.itemRenderer, event.itemX, event.itemY, event.itemInstance, event.textRenderer, event.textureManager);
                         }
                     }, ListenerPriority.HIGH.numPriority);
-                    EVENT_BUS.register(MessageListenerRegister.class, event -> {
+                    EVENT_BUS.register(RegistryEvent.MessageListeners.class, event -> {
                         event.registry.registerValue(Identifier.of(MODID, "open_gui"), (playerBase, message) -> {
                             boolean isClient = playerBase.level.isClient;
                             //noinspection deprecation
@@ -217,7 +204,7 @@ public class StationAPI implements PreLaunchEntrypoint {
                             if (isClient)
                                 playerBase.container.currentContainerId = message.ints()[0];
                         });
-                        EVENT_BUS.post(new GuiHandlerRegister());
+                        EVENT_BUS.post(new RegistryEvent.GuiHandlers());
                         event.registry.registerValue(Identifier.of(MODID, "spawn_entity"), (playerBase, message) -> EntityHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(entityProvider -> {
                             double x = message.ints()[1] / 32D, y = message.ints()[2] / 32D, z = message.ints()[3] / 32D;
                             //noinspection deprecation
@@ -241,16 +228,17 @@ public class StationAPI implements PreLaunchEntrypoint {
                                     ((IStationSpawnData) entity).readFromMessage(message);
                             }
                         }));
+                        EVENT_BUS.post(new RegistryEvent.EntityHandlers());
                     }, ListenerPriority.HIGH.numPriority);
                 },
 
                 // SERVER
 
                 () -> {
-                    EVENT_BUS.register(TrackEntity.class, CustomTrackingImpl::trackEntity, ListenerPriority.HIGH.numPriority);
-                    EVENT_BUS.register(TrackEntity.class, TrackingImpl::trackEntity, ListenerPriority.HIGH.numPriority);
+                    EVENT_BUS.register(TrackEntityEvent.class, CustomTrackingImpl::trackEntity, ListenerPriority.HIGH.numPriority);
+                    EVENT_BUS.register(TrackEntityEvent.class, TrackingImpl::trackEntity, ListenerPriority.HIGH.numPriority);
                     LOGGER.info("Setting up HandleLogin...");
-                    EVENT_BUS.register(HandleLogin.class, (event) -> {
+                    EVENT_BUS.register(HandshakeSuccessEvent.class, (event) -> {
                         if (!getModsToVerifyOnClient().isEmpty()) {
                             StationHandshake handshake = (StationHandshake) event.handshakePacket;
                             String stationAPI = handshake.getStationAPI();
@@ -329,11 +317,11 @@ public class StationAPI implements PreLaunchEntrypoint {
                 modsToVerifyOnClient.add(modContainer);
         });
         LOGGER.info("Invoking PreInit event...");
-        EVENT_BUS.post(new PreInit());
+        EVENT_BUS.post(new PreInitEvent());
         LOGGER.info("Invoking Init event...");
-        EVENT_BUS.post(new Init());
+        EVENT_BUS.post(new InitEvent());
         LOGGER.info("Invoking PostInit event...");
-        EVENT_BUS.post(new PostInit());
+        EVENT_BUS.post(new PostInitEvent());
     }
 
     /**

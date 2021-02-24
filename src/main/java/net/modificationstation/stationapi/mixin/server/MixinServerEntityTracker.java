@@ -4,7 +4,7 @@ import net.minecraft.entity.EntityBase;
 import net.minecraft.network.EntityHashSet;
 import net.minecraft.server.network.ServerEntityTracker;
 import net.modificationstation.stationapi.api.common.StationAPI;
-import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
+import net.modificationstation.stationapi.api.server.event.network.TrackEntityEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,6 +18,6 @@ public abstract class MixinServerEntityTracker {
 
     @Inject(method = "syncEntity(Lnet/minecraft/entity/EntityBase;)V", at = @At("RETURN"))
     private void afterVanillaEntries(EntityBase arg, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new TrackEntity((ServerEntityTracker) (Object) this, entityHashes, arg));
+        StationAPI.EVENT_BUS.post(new TrackEntityEvent((ServerEntityTracker) (Object) this, entityHashes, arg));
     }
 }

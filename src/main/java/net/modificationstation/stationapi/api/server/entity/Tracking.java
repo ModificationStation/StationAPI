@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.api.server.entity;
 
 import net.modificationstation.stationapi.api.common.util.TriState;
-import net.modificationstation.stationapi.api.server.event.network.TrackEntity;
+import net.modificationstation.stationapi.api.server.event.network.TrackEntityEvent;
 
 import java.lang.annotation.*;
 
 /**
  * Annotation alternative of {@link ITracking}.
  * @author mine_diver
- * @see TrackEntity
+ * @see TrackEntityEvent
  * @see ICustomTracking
  * @see ITracking
  */

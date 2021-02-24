@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.ListenerPriority;
-import net.modificationstation.stationapi.api.common.event.block.TileEntityRegister;
+import net.modificationstation.stationapi.api.common.event.tileentity.TileEntityRegisterEvent;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.impl.common.util.UnsafeProvider;
@@ -17,7 +17,7 @@ public class SmeltingRegistryImpl {
     private static TileEntityFurnaceAccessor warcrimes;
 
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void registerTileEntities(TileEntityRegister event) {
+    private static void registerTileEntities(TileEntityRegisterEvent event) {
         try {
             warcrimes = (TileEntityFurnaceAccessor) UnsafeProvider.getUnsafe().allocateInstance(TileEntityFurnace.class);
         } catch (InstantiationException e) {

@@ -5,7 +5,7 @@ import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.common.block.*;
 import net.modificationstation.stationapi.api.common.event.EventListener;
 import net.modificationstation.stationapi.api.common.event.ListenerPriority;
-import net.modificationstation.stationapi.api.common.event.block.BlockItemFactoryCallback;
+import net.modificationstation.stationapi.api.common.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPolicy;
 
@@ -17,7 +17,7 @@ import java.util.function.IntFunction;
 /**
  * {@link IHasCustomBlockItemFactory} implementation class.
  * @author mine_diver
- * @see BlockItemFactoryCallback
+ * @see BlockEvent.ItemFactory
  * @see IHasCustomBlockItemFactory
  * @see HasCustomBlockItemFactory
  * @see IHasMetaBlockItem
@@ -29,11 +29,11 @@ import java.util.function.IntFunction;
 public class HasCustomBlockItemFactoryImpl {
 
     /**
-     * Processes {@link HasCustomBlockItemFactory} annotation if present via {@link BlockItemFactoryCallback} hook.
+     * Processes {@link HasCustomBlockItemFactory} annotation if present via {@link BlockEvent.ItemFactory} hook.
      * @param event blockitemfactory callback.
      */
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void getBlockItemFactory(BlockItemFactoryCallback event) {
+    private static void getBlockItemFactory(BlockEvent.ItemFactory event) {
         if (event.block instanceof IHasCustomBlockItemFactory)
             event.currentFactory = ((IHasCustomBlockItemFactory) event.block).getBlockItemFactory();
         Class<? extends BlockBase> blockClass = event.block.getClass();
