@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.template.common.item;
 
-public class MetaBlock extends Block {
+public class MetaBlock extends TemplateBlock {
 
     public MetaBlock(int i) {
         super(i);
