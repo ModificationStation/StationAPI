@@ -7,12 +7,10 @@ import net.minecraft.entity.EntityBase;
 import net.modificationstation.stationapi.api.common.StationAPI;
 import org.lwjgl.opengl.GL11;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
+import java.io.*;
+import java.lang.reflect.*;
+import java.nio.charset.*;
+import java.util.stream.*;
 
 public class CustomModelRenderer extends EntityRenderer implements net.modificationstation.stationapi.api.client.model.CustomModelRenderer {
     CustomModel entityModelBase;

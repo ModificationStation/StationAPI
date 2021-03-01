@@ -2,17 +2,10 @@ package net.modificationstation.stationapi.api.common.event;
 
 import net.jodah.typetools.TypeResolver;
 
-import java.lang.invoke.LambdaMetafactory;
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.function.Consumer;
+import java.lang.invoke.*;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.function.*;
 
 public class EventBus {
 

@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.impl.common.recipe.ShapedOreDictRecipe
 import net.modificationstation.stationapi.impl.common.recipe.ShapelessOreDictRecipe;
 import net.modificationstation.stationapi.mixin.common.accessor.RecipeRegistryAccessor;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class CraftingRegistry {
 

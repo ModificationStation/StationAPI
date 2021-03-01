@@ -5,7 +5,7 @@ import net.modificationstation.stationapi.api.common.registry.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Predicate;
+import java.util.function.*;
 
 public class OreDictEntryObject {
 

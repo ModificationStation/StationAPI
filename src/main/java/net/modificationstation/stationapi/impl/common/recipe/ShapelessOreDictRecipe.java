@@ -5,8 +5,7 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.Recipe;
 import net.modificationstation.stationapi.api.common.util.OreDict;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ShapelessOreDictRecipe implements Recipe {
 

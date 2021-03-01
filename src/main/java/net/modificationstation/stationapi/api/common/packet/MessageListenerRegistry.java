@@ -5,7 +5,7 @@ import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.Registry;
 
-import java.util.function.BiConsumer;
+import java.util.function.*;
 
 public final class MessageListenerRegistry extends Registry<BiConsumer<PlayerBase, Message>> {
 

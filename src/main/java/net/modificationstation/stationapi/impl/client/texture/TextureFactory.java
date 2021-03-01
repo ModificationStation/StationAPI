@@ -11,10 +11,9 @@ import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
 import net.modificationstation.stationapi.mixin.client.accessor.TextureManagerAccessor;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.IntBuffer;
+import java.awt.image.*;
+import java.io.*;
+import java.nio.*;
 import java.util.*;
 
 @Environment(EnvType.CLIENT)

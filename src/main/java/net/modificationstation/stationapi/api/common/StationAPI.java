@@ -67,9 +67,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
+import java.io.*;
+import java.net.*;
 import java.util.*;
 
 /**

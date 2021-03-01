@@ -1,16 +1,21 @@
 package net.modificationstation.stationapi.api.common.packet;
 
 import com.google.common.collect.ObjectArrays;
-import com.google.common.primitives.*;
+import com.google.common.primitives.Booleans;
+import com.google.common.primitives.Bytes;
+import com.google.common.primitives.Chars;
+import com.google.common.primitives.Doubles;
+import com.google.common.primitives.Floats;
+import com.google.common.primitives.Ints;
+import com.google.common.primitives.Longs;
+import com.google.common.primitives.Shorts;
 import com.google.gson.Gson;
 import net.minecraft.network.PacketHandler;
 import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationapi.api.common.entity.player.PlayerHelper;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 public class Message extends AbstractPacket {
 

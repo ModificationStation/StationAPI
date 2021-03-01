@@ -2,10 +2,8 @@ package net.modificationstation.stationapi.api.common.registry;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.IntFunction;
+import java.util.*;
+import java.util.function.*;
 
 public abstract class SerializedRegistry<T> extends Registry<T> {
 

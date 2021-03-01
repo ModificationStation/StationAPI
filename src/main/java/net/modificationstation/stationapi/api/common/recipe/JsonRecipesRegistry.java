@@ -4,8 +4,8 @@ import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.Registry;
 
-import java.net.URL;
-import java.util.Set;
+import java.net.*;
+import java.util.*;
 
 public final class JsonRecipesRegistry extends Registry<Set<URL>> {
 

@@ -5,7 +5,7 @@ import net.minecraft.level.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-import java.util.List;
+import java.util.*;
 
 @Mixin(Biome.class)
 public interface BiomeAccessor {

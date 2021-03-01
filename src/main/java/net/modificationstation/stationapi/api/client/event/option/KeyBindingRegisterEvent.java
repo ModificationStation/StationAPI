@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationapi.api.common.event.Event;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Used to add keybindings to the keybinding screen.

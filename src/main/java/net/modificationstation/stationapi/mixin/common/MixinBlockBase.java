@@ -15,7 +15,11 @@ import net.modificationstation.stationapi.api.common.entity.player.StrengthOnMet
 import net.modificationstation.stationapi.api.common.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
 import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
-import net.modificationstation.stationapi.api.common.item.tool.*;
+import net.modificationstation.stationapi.api.common.item.tool.Hatchet;
+import net.modificationstation.stationapi.api.common.item.tool.Pickaxe;
+import net.modificationstation.stationapi.api.common.item.tool.Shear;
+import net.modificationstation.stationapi.api.common.item.tool.Shovel;
+import net.modificationstation.stationapi.api.common.item.tool.ToolLevel;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,8 +30,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Mixin(BlockBase.class)
 public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {

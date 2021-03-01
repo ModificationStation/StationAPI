@@ -5,8 +5,8 @@ import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegister
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.api.common.registry.Registry;
 
-import java.net.URL;
-import java.util.function.Consumer;
+import java.net.*;
+import java.util.function.*;
 /**
  * The JSON recipe parser registry that holds all JSON recipe parsers to automatically run when {@link RecipeRegisterEvent} event is called with a proper identifier.
  * @author mine_diver

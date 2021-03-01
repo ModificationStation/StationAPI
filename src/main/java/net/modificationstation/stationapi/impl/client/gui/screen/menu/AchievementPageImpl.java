@@ -13,8 +13,7 @@ import net.modificationstation.stationapi.api.common.event.achievement.Achieveme
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPolicy;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class AchievementPageImpl {

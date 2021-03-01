@@ -9,11 +9,8 @@ import net.modificationstation.stationapi.impl.common.util.OreDictEntryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
+import java.util.*;
+import java.util.function.*;
 
 public class OreDict {
 

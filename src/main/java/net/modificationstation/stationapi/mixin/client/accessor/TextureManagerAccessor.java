@@ -5,10 +5,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
-import java.nio.IntBuffer;
-import java.util.HashMap;
+import java.awt.image.*;
+import java.io.*;
+import java.nio.*;
+import java.util.*;
 
 @Mixin(TextureManager.class)
 public interface TextureManagerAccessor {

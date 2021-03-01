@@ -2,16 +2,12 @@ package net.modificationstation.stationapi.api.common.resource;
 
 import net.modificationstation.stationapi.api.common.StationAPI;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.jar.JarEntry;
+import java.nio.file.*;
+import java.util.*;
+import java.util.function.*;
+import java.util.jar.*;
 
 public class RecursiveReader {
 

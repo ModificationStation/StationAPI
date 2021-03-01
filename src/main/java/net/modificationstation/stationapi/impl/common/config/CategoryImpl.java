@@ -3,12 +3,8 @@ package net.modificationstation.stationapi.impl.common.config;
 import net.modificationstation.stationapi.api.common.config.Property;
 import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+import java.io.*;
+import java.util.*;
 
 public class CategoryImpl implements net.modificationstation.stationapi.api.common.config.Category {
 

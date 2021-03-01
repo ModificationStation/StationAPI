@@ -2,11 +2,8 @@ package net.modificationstation.stationapi.api.client.texture;
 
 import net.minecraft.client.texture.TextureManager;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.*;
+import java.util.function.*;
 
 public interface TextureRegistry extends Comparable<TextureRegistry> {
 

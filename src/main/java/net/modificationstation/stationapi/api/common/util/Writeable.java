@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.common.util;
 
-import java.io.BufferedWriter;
+import java.io.*;
 
 public interface Writeable {
 

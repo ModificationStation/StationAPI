@@ -4,11 +4,8 @@ import sun.reflect.ConstructorAccessor;
 import sun.reflect.FieldAccessor;
 import sun.reflect.ReflectionFactory;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.*;
+import java.util.*;
 
 public class EnumFactory implements net.modificationstation.stationapi.api.common.factory.EnumFactory {
 

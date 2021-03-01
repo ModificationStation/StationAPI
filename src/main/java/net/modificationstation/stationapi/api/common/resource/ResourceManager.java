@@ -4,12 +4,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.api.common.util.API;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Predicate;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.function.*;
 
 public class ResourceManager {
 

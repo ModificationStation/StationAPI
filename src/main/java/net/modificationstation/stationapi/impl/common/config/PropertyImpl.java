@@ -2,8 +2,7 @@ package net.modificationstation.stationapi.impl.common.config;
 
 import net.modificationstation.stationapi.api.common.config.Property;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class PropertyImpl implements Property {
 

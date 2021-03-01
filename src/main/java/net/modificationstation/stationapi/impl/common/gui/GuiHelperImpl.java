@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.packet.PacketHelper;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 
-import java.util.function.Consumer;
+import java.util.function.*;
 
 public abstract class GuiHelperImpl {
 

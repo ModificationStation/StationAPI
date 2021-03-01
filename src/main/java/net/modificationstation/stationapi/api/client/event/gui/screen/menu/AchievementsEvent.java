@@ -7,7 +7,7 @@ import net.minecraft.achievement.Achievement;
 import net.minecraft.client.gui.screen.menu.Achievements;
 import net.modificationstation.stationapi.api.common.event.Event;
 
-import java.util.Random;
+import java.util.*;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class AchievementsEvent extends Event {

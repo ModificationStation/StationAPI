@@ -7,9 +7,7 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.Recipe;
 import net.modificationstation.stationapi.api.common.util.OreDict;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class ShapedOreDictRecipe implements Recipe {
     public final int outputId;

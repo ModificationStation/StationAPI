@@ -13,11 +13,8 @@ import net.modificationstation.stationapi.api.common.recipe.SmeltingRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.impl.common.item.JsonItemKey;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Map;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class JsonRecipeParserInit {

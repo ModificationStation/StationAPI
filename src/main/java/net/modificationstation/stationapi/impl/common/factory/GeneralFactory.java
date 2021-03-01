@@ -1,8 +1,7 @@
 package net.modificationstation.stationapi.impl.common.factory;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.*;
+import java.util.function.*;
 
 public class GeneralFactory implements net.modificationstation.stationapi.api.common.factory.GeneralFactory {
 

@@ -4,8 +4,7 @@ import net.modificationstation.stationapi.api.common.StationAPI;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.function.*;
 
 public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
 

@@ -15,12 +15,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.atomic.*;
 
 @Mixin(HandshakeC2S.class)
 public abstract class MixinHandshakeC2S extends AbstractPacket implements StationHandshake {

@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.common.entity.player;
 
-import java.util.Random;
+import java.util.*;
 
 public interface PlayerBaseSettersGettersInvokers {
 

@@ -5,7 +5,7 @@ import net.minecraft.level.biome.Biome;
 import net.minecraft.level.source.LevelSource;
 import net.modificationstation.stationapi.api.common.event.level.LevelEvent;
 
-import java.util.Random;
+import java.util.*;
 
 public class LevelGenEvent extends LevelEvent {
 

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.minecraft.achievement.Achievement;
 import net.modificationstation.stationapi.api.common.event.Event;
 
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class AchievementRegisterEvent extends Event {

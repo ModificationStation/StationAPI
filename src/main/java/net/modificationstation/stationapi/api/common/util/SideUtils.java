@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.common.util;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 
-import java.util.function.Supplier;
+import java.util.function.*;
 
 /**
  * Utility class to work with side-dependent objects and processes.

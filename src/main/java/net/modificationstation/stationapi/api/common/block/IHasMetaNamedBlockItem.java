@@ -5,7 +5,7 @@ import net.modificationstation.stationapi.api.common.event.block.BlockEvent;
 import net.modificationstation.stationapi.impl.common.block.HasMetaNamedBlockItemImpl;
 import net.modificationstation.stationapi.template.common.item.MetaNamedBlock;
 
-import java.util.function.IntFunction;
+import java.util.function.*;
 
 /**
  * Interface that pre-defines block item's factory to be {@link MetaNamedBlock#MetaNamedBlock(int)}

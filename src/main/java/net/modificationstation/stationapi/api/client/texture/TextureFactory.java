@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.common.util.HasHandler;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * Used to add textures.

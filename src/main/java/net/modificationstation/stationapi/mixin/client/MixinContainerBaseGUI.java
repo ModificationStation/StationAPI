@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.List;
+import java.util.*;
 
 @Mixin(ContainerBase.class)
 public class MixinContainerBaseGUI extends ScreenBase {

@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.common.StationAPI;
 import net.modificationstation.stationapi.api.common.util.BlockFaces;
 import org.lwjgl.opengl.GL11;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class CustomCuboidRenderer implements net.modificationstation.stationapi.api.client.model.CustomCuboidRenderer {
 

@@ -2,15 +2,10 @@ package net.modificationstation.stationapi.impl.common.util;
 
 import sun.reflect.annotation.AnnotationParser;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.function.*;
 
 public class ReflectionHelper {
 

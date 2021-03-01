@@ -4,11 +4,8 @@ import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.common.registry.ModID;
 import net.modificationstation.stationapi.mixin.common.accessor.TranslationStorageAccessor;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
 public class I18n {
 

@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.common.entity.player;
 
-import java.util.List;
+import java.util.*;
 
 public interface HasPlayerHandlers {
 

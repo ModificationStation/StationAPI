@@ -4,8 +4,8 @@ import net.modificationstation.stationapi.api.common.util.Readable;
 import net.modificationstation.stationapi.api.common.util.Writeable;
 import net.modificationstation.stationapi.impl.common.config.ConfigurationImpl;
 
-import java.io.File;
-import java.util.Collection;
+import java.io.*;
+import java.util.*;
 
 public interface Configuration extends Writeable, Readable {
 

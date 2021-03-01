@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.common.packet;
 
-import java.util.Map;
+import java.util.*;
 
 public interface StationHandshake {
 

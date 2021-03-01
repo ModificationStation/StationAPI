@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.common.factory;
 
 import net.modificationstation.stationapi.api.common.util.HasHandler;
 
-import java.util.function.Function;
+import java.util.function.*;
 
 public interface GeneralFactory extends HasHandler<GeneralFactory> {
 

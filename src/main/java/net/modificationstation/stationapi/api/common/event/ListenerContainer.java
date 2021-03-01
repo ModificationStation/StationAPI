@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.common.event;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
+import java.util.function.*;
 
 @RequiredArgsConstructor
 public class ListenerContainer<T extends Event> implements Comparable<ListenerContainer<?>> {

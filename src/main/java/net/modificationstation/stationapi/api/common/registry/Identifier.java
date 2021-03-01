@@ -2,8 +2,7 @@ package net.modificationstation.stationapi.api.common.registry;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class Identifier implements Comparable<Identifier> {
 

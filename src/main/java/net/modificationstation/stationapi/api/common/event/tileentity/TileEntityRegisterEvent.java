@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.minecraft.tileentity.TileEntityBase;
 import net.modificationstation.stationapi.api.common.event.Event;
 
-import java.util.function.BiConsumer;
+import java.util.function.*;
 
 @RequiredArgsConstructor
 public class TileEntityRegisterEvent extends Event {

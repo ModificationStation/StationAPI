@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.common.util.API;
 import net.modificationstation.stationapi.api.common.util.Named;
 
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 
 /**
  * Instantiates and adds an achievement page to the achievement page list.
