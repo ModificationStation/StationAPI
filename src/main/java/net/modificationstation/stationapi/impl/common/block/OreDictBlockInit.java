@@ -163,6 +163,7 @@ public class OreDictBlockInit {
     }
 
     //TODO: Figure out if referencing ItemInstance before ItemRegister is fine or bad.
+    //TODO: Bad. Decidedly.
     private static void addBlock0Damage(String oreDictString, BlockBase blockBase) {
         OreDict.INSTANCE.addItemInstance(oreDictString, new ItemInstance(blockBase, 1, 0));
     }
