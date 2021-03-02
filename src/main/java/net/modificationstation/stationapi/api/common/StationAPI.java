@@ -6,50 +6,25 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.level.ClientLevel;
-import net.minecraft.client.resource.language.TranslationStorage;
-import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.EntityType;
-import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.tool.ToolMaterial;
-import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.client.event.gui.ItemOverlayRenderEvent;
-import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
 import net.modificationstation.stationapi.api.common.config.Category;
 import net.modificationstation.stationapi.api.common.config.Configuration;
 import net.modificationstation.stationapi.api.common.config.Property;
-import net.modificationstation.stationapi.api.common.entity.EntityHandlerRegistry;
-import net.modificationstation.stationapi.api.common.entity.HasOwner;
 import net.modificationstation.stationapi.api.common.event.EventBus;
-import net.modificationstation.stationapi.api.common.event.ListenerPriority;
-import net.modificationstation.stationapi.api.common.event.level.LevelPropertiesEvent;
 import net.modificationstation.stationapi.api.common.event.mod.InitEvent;
 import net.modificationstation.stationapi.api.common.event.mod.PostInitEvent;
 import net.modificationstation.stationapi.api.common.event.mod.PreInitEvent;
-import net.modificationstation.stationapi.api.common.event.packet.PacketRegisterEvent;
-import net.modificationstation.stationapi.api.common.event.recipe.BeforeRecipeStatsEvent;
-import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegisterEvent;
-import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
-import net.modificationstation.stationapi.api.common.gui.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.common.lang.I18n;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.common.mod.entrypoint.EntrypointManager;
-import net.modificationstation.stationapi.api.common.packet.Message;
-import net.modificationstation.stationapi.api.common.packet.StationHandshake;
-import net.modificationstation.stationapi.api.common.recipe.JsonRecipeParserRegistry;
 import net.modificationstation.stationapi.api.common.recipe.JsonRecipesRegistry;
 import net.modificationstation.stationapi.api.common.registry.Identifier;
-import net.modificationstation.stationapi.api.common.registry.LevelRegistry;
 import net.modificationstation.stationapi.api.common.registry.ModID;
-import net.modificationstation.stationapi.api.common.registry.Registry;
 import net.modificationstation.stationapi.api.common.resource.ResourceManager;
 import net.modificationstation.stationapi.api.common.util.Null;
 import net.modificationstation.stationapi.api.common.util.SideUtils;
-import net.modificationstation.stationapi.api.server.entity.IStationSpawnData;
-import net.modificationstation.stationapi.api.server.event.network.HandshakeSuccessEvent;
-import net.modificationstation.stationapi.api.server.event.network.TrackEntityEvent;
 import net.modificationstation.stationapi.impl.client.model.CustomModelRenderer;
 import net.modificationstation.stationapi.impl.client.texture.TextureFactory;
 import net.modificationstation.stationapi.impl.common.config.CategoryImpl;
@@ -57,12 +32,6 @@ import net.modificationstation.stationapi.impl.common.config.PropertyImpl;
 import net.modificationstation.stationapi.impl.common.factory.EnumFactory;
 import net.modificationstation.stationapi.impl.common.factory.GeneralFactory;
 import net.modificationstation.stationapi.impl.common.recipe.JsonRecipeType;
-import net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl;
-import net.modificationstation.stationapi.impl.server.entity.TrackingImpl;
-import net.modificationstation.stationapi.mixin.client.accessor.ClientPlayNetworkHandlerAccessor;
-import net.modificationstation.stationapi.mixin.common.accessor.RecipeRegistryAccessor;
-import net.modificationstation.stationapi.mixin.common.accessor.SmeltingRecipeRegistryAccessor;
-import net.modificationstation.stationapi.mixin.common.accessor.StatsAccessor;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -135,46 +104,6 @@ public class StationAPI implements PreLaunchEntrypoint {
         generalFactory.addFactory(EntityType.class, args -> enumFactory.addEnum(EntityType.class, (String) args[0], new Class[]{Class.class, int.class, Material.class, boolean.class}, new Object[]{args[1], args[2], args[3], args[4]}));
         LOGGER.info("Setting up EnumFactory...");
         enumFactory.setHandler(new EnumFactory());
-        LOGGER.info("Setting up CustomData packet...");
-        Category networkConfig = CONFIG.getCategory("Network");
-        EVENT_BUS.register(PacketRegisterEvent.class, event -> {
-            event.register(networkConfig.getProperty("PacketCustomDataID", 254).getIntValue(), true, true, Message.class);
-            CONFIG.save();
-            EVENT_BUS.post(new RegistryEvent.MessageListeners());
-        }, ListenerPriority.HIGH.numPriority);
-        LOGGER.info("Setting up LoadLevelPropertiesOnLevelInit...");
-        EVENT_BUS.register(LevelPropertiesEvent.LoadOnLevelInit.class, event -> {
-            LevelRegistry.remapping = true;
-            StatsAccessor.setBlocksInit(false);
-            StatsAccessor.setItemsInit(false);
-            Registry<Registry<?>> registriesRegistry = Registry.REGISTRIES;
-            CompoundTag registriesTag = event.tag.getCompoundTag(registriesRegistry.getRegistryId().toString());
-            registriesRegistry.forEach((identifier, registry) -> {
-                if (registry instanceof LevelRegistry)
-                    ((LevelRegistry<?>) registry).load(registriesTag.getCompoundTag(registry.getRegistryId().toString()));
-            });
-            LevelRegistry.remapping = false;
-        }, ListenerPriority.HIGH.numPriority);
-        LOGGER.info("Setting up SaveLevelProperties...");
-        EVENT_BUS.register(LevelPropertiesEvent.Save.class, event -> {
-            Registry<Registry<?>> registriesRegistry = Registry.REGISTRIES;
-            CompoundTag registriesTag = new CompoundTag();
-            registriesRegistry.forEach((identifier, registry) -> {
-                if (registry instanceof LevelRegistry) {
-                    CompoundTag registryTag = new CompoundTag();
-                    ((LevelRegistry<?>) registry).save(registryTag);
-                    registriesTag.put(identifier.toString(), registryTag);
-                }
-            });
-            event.tag.put(registriesRegistry.getRegistryId().toString(), registriesTag);
-        }, ListenerPriority.HIGH.numPriority);
-        LOGGER.info("Setting up RecipeRegister...");
-        EVENT_BUS.register(RecipeRegisterEvent.class, event -> JsonRecipeParserRegistry.INSTANCE.getByIdentifier(event.recipeId).ifPresent(recipeParser -> JsonRecipesRegistry.INSTANCE.getByIdentifier(event.recipeId).ifPresent(recipes -> recipes.forEach(recipeParser))), ListenerPriority.HIGH.numPriority);
-        LOGGER.info("Setting up BeforeRecipesStats...");
-        EVENT_BUS.register(BeforeRecipeStatsEvent.class, event -> {
-            RecipeRegistryAccessor.invokeCor();
-            SmeltingRecipeRegistryAccessor.invokeCor();
-        }, ListenerPriority.HIGH.numPriority);
         SideUtils.run(
 
                 // CLIENT
@@ -189,91 +118,11 @@ public class StationAPI implements PreLaunchEntrypoint {
                     TextureRegistry.FUNCTIONS.put("getRegistry", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::getRegistry);
                     TextureRegistry.SUPPLIERS.put("currentRegistry", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::currentRegistry);
                     TextureRegistry.SUPPLIERS.put("registries", net.modificationstation.stationapi.impl.client.texture.TextureRegistry::registries);
-                    LOGGER.info("Setting up RenderItemOverlay...");
-                    EVENT_BUS.register(ItemOverlayRenderEvent.class, (event) -> {
-                        if (event.itemInstance != null && event.itemInstance.getType() instanceof CustomItemOverlay) {
-                            ((CustomItemOverlay) event.itemInstance.getType()).renderItemOverlay(event.itemRenderer, event.itemX, event.itemY, event.itemInstance, event.textRenderer, event.textureManager);
-                        }
-                    }, ListenerPriority.HIGH.numPriority);
-                    EVENT_BUS.register(RegistryEvent.MessageListeners.class, event -> {
-                        event.registry.registerValue(Identifier.of(MODID, "open_gui"), (playerBase, message) -> {
-                            boolean isClient = playerBase.level.isClient;
-                            //noinspection deprecation
-                            GuiHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(guiHandler -> ((Minecraft) FabricLoader.getInstance().getGameInstance()).openScreen(guiHandler.one().apply(playerBase, isClient ? guiHandler.two().get() : (InventoryBase) message.objects()[0], message)));
-                            if (isClient)
-                                playerBase.container.currentContainerId = message.ints()[0];
-                        });
-                        EVENT_BUS.post(new RegistryEvent.GuiHandlers());
-                        event.registry.registerValue(Identifier.of(MODID, "spawn_entity"), (playerBase, message) -> EntityHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(entityProvider -> {
-                            double x = message.ints()[1] / 32D, y = message.ints()[2] / 32D, z = message.ints()[3] / 32D;
-                            //noinspection deprecation
-                            ClientPlayNetworkHandlerAccessor networkHandler = (ClientPlayNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-                            ClientLevel level = networkHandler.getLevel();
-                            EntityBase entity = entityProvider.apply(level, x, y, z);
-                            if (entity != null) {
-                                entity.clientX = message.ints()[1];
-                                entity.clientY = message.ints()[2];
-                                entity.clientZ = message.ints()[3];
-                                entity.yaw = 0.0F;
-                                entity.pitch = 0.0F;
-                                entity.entityId = message.ints()[0];
-                                level.method_1495(message.ints()[0], entity);
-                                if (message.ints()[4] > 0) {
-                                    if (entity instanceof HasOwner)
-                                        ((HasOwner) entity).setOwner(networkHandler.invokeMethod_1645(message.ints()[4]));
-                                    entity.setVelocity((double)message.shorts()[0] / 8000.0D, (double)message.shorts()[1] / 8000.0D, (double)message.shorts()[2] / 8000.0D);
-                                }
-                                if (entity instanceof IStationSpawnData)
-                                    ((IStationSpawnData) entity).readFromMessage(message);
-                            }
-                        }));
-                        EVENT_BUS.post(new RegistryEvent.EntityHandlers());
-                    }, ListenerPriority.HIGH.numPriority);
                 },
 
                 // SERVER
 
-                () -> {
-                    EVENT_BUS.register(TrackEntityEvent.class, CustomTrackingImpl::trackEntity, ListenerPriority.HIGH.numPriority);
-                    EVENT_BUS.register(TrackEntityEvent.class, TrackingImpl::trackEntity, ListenerPriority.HIGH.numPriority);
-                    LOGGER.info("Setting up HandleLogin...");
-                    EVENT_BUS.register(HandshakeSuccessEvent.class, (event) -> {
-                        if (!getModsToVerifyOnClient().isEmpty()) {
-                            StationHandshake handshake = (StationHandshake) event.handshakePacket;
-                            String stationAPI = handshake.getStationAPI();
-                            String version = handshake.getVersion();
-                            String serverStationAPI = MODID.toString();
-                            String serverStationVersion = MODID.getVersion().getFriendlyString();
-                            TranslationStorage translationStorage = TranslationStorage.getInstance();
-                            if (stationAPI == null || version == null || !stationAPI.equals(serverStationAPI)) {
-                                event.pendingConnection.drop(translationStorage.translate("disconnect.stationapi:missing_station"));
-                                return;
-                            } else if (!version.equals(serverStationVersion)) {
-                                event.pendingConnection.drop(translationStorage.translate("disconnect.stationapi:station_version_mismatch", serverStationVersion, version));
-                                return;
-                            }
-                            Map<String, String> clientMods = handshake.getMods();
-                            String modid;
-                            String clientVersion;
-                            String serverVersion;
-                            for (ModContainer serverMod : getModsToVerifyOnClient()) {
-                                ModMetadata modMetadata = serverMod.getMetadata();
-                                modid = modMetadata.getId();
-                                serverVersion = modMetadata.getVersion().getFriendlyString();
-                                if (clientMods.containsKey(modid)) {
-                                    clientVersion = clientMods.get(modid);
-                                    if (clientVersion == null || !clientVersion.equals(serverVersion)) {
-                                        event.pendingConnection.drop(translationStorage.translate("disconnect.stationapi:mod_version_mismatch", modMetadata.getName(), modid, serverVersion, clientVersion == null ? "null" : clientVersion));
-                                        return;
-                                    }
-                                } else {
-                                    event.pendingConnection.drop(translationStorage.translate("disconnect.stationapi:missing_mod", modMetadata.getName(), modid, serverVersion));
-                                    return;
-                                }
-                            }
-                        }
-                    }, ListenerPriority.HIGH.numPriority);
-                }
+                () -> { }
         );
     }
 
