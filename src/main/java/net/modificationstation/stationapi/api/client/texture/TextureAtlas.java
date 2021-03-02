@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.texture;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 
 public class TextureAtlas {
 

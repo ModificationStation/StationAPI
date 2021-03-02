@@ -17,7 +17,7 @@ import net.modificationstation.stationapi.api.common.registry.Identifier;
 import net.modificationstation.stationapi.impl.common.item.JsonItemKey;
 
 import java.io.*;
-import java.net.URL;
+import java.net.*;
 import java.util.*;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))

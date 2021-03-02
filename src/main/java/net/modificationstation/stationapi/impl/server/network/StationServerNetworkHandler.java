@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.api.common.mod.entrypoint.EventBusPoli
 import net.modificationstation.stationapi.api.common.packet.StationHandshake;
 import net.modificationstation.stationapi.api.server.event.network.HandshakeSuccessEvent;
 
-import java.util.Map;
+import java.util.*;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class StationServerNetworkHandler {
