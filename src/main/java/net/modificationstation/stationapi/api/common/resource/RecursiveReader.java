@@ -37,8 +37,12 @@ public class RecursiveReader {
                     Enumeration<JarEntry> entries = ((JarURLConnection) connection).getJarFile().entries();
                     for (JarEntry jarEntry = entries.nextElement(); entries.hasMoreElements(); jarEntry = entries.nextElement()) {
                         String name = jarEntry.getName();
-                        if (!jarEntry.isDirectory() && name.startsWith(path) && (filter == null || filter.test(name)))
-                            files.add(new URL("jar:file:/" + new File(rPath.getPath().split("!/")[0].replace("\\", "/").replace("file:/", "")).getAbsolutePath() + "!/" + name));
+                        if (!jarEntry.isDirectory() && name.startsWith(path) && (filter == null || filter.test(name))) {
+//                            System.out.println(classLoader.getResource(jarEntry.getName()));
+//                            System.out.println(new URL("jar:file:/" + new File(rPath.getPath().split("!/")[0].replace("\\", "/").replace("file:/", "")).getAbsolutePath() + "!/" + name));
+//                            files.add(new URL("jar:file:/" + new File(rPath.getPath().split("!/")[0].replace("\\", "/").replace("file:/", "")).getAbsolutePath() + "!/" + name));
+                            files.add(classLoader.getResource(jarEntry.getName()));
+                        }
                     }
                 } else {
                     String path = rPath.toURI().getPath();

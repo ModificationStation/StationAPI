@@ -24,4 +24,7 @@ public interface TextureManagerAccessor {
 
     @Invoker
     BufferedImage invokeMethod_1091(InputStream var1);
+
+    @Invoker
+    void invokeMethod_1089(BufferedImage bufferedImage, int i);
 }
