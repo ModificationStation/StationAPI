@@ -17,8 +17,13 @@ public class ExpandableTextureAtlas extends TextureAtlas {
 
     private BufferedImage spritesheetImage;
 
+    public ExpandableTextureAtlas(Identifier identifier) {
+        super("/assets/stationapi/atlases/" + identifier, 0);
+        PATH_TO_ATLAS.put(spritesheet, this);
+    }
+
     public ExpandableTextureAtlas(Identifier identifier, TextureAtlas parent) {
-        super(parent, "/assets/stationapi/atlases/" + identifier, 0);
+        super("/assets/stationapi/atlases/" + identifier, 0, parent);
         PATH_TO_ATLAS.put(spritesheet, this);
     }
 
