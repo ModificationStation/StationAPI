@@ -89,21 +89,24 @@ public class EventBus {
         listenerContainers[listenerContainers.length - 1] = new ListenerContainer<>(eventType, listener, priority);
         Arrays.sort(listenerContainers);
         listeners.put(eventType, listenerContainers);
+        //noinspection unchecked
+        invokers.put(eventType, Arrays.stream(listenerContainers).map(tListenerContainer -> tListenerContainer.invoker).toArray(Consumer[]::new));
     }
 
     public <T extends Event> T post(T event) {
         //noinspection unchecked
         Class<T> eventType = (Class<T>) event.getClass();
-        if (listeners.containsKey(eventType))
+        if (invokers.containsKey(eventType))
             //noinspection unchecked
-            for (ListenerContainer<T> listenerContainer : (ListenerContainer<T>[]) listeners.get(eventType))
-                listenerContainer.invoker.accept(event);
+            for (Consumer<T> invoker : (Consumer<T>[]) invokers.get(eventType))
+                invoker.accept(event);
         else if (!(event instanceof DeadEvent))
             post(new DeadEvent(event));
         return event;
     }
 
     private final Map<Class<? extends Event>, ListenerContainer<?>[]> listeners = new IdentityHashMap<>();
+    private final Map<Class<? extends Event>, Consumer<? extends Event>[]> invokers = new IdentityHashMap<>();
 
     private static final MethodHandles.Lookup IMPL_LOOKUP;
     static {
