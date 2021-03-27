@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.concurrent.*;
 import java.util.function.*;
 
 public class EventBus {
@@ -70,33 +69,43 @@ public class EventBus {
     }
 
     public <T extends Event> void register(Class<T> eventType, Consumer<T> listener, int priority) {
-        if (eventTypes.contains(eventType)) {
-            List<ListenerContainer> listenerContainers = listeners.get(eventTypes.indexOf(eventType));
+        int eventId = idOf(eventTypes, eventType);
+        if (eventId == -1) {
+            eventTypes = Arrays.copyOf(eventTypes, eventTypes.length + 1);
+            eventId = eventTypes.length - 1;
+            eventTypes[eventId] = eventType;
             //noinspection unchecked
-            listenerContainers.add(new ListenerContainer((Consumer<Event>) listener, priority));
-            Collections.sort(listenerContainers);
+            ListenerContainer[] listenerContainers = new ListenerContainer[] { new ListenerContainer((Consumer<Event>) listener, priority) };
+            listeners = Arrays.copyOf(listeners, listeners.length + 1);
+            listeners[eventId] = listenerContainers;
         } else {
-            eventTypes.add(eventType);
-            int eventId = eventTypes.indexOf(eventType);
-            List<ListenerContainer> listenerContainers = new CopyOnWriteArrayList<>();
-            listeners.add(eventId, listenerContainers);
+            ListenerContainer[] listenerContainers = listeners[eventId];
+            listenerContainers = Arrays.copyOf(listenerContainers, listenerContainers.length + 1);
             //noinspection unchecked
-            listenerContainers.add(new ListenerContainer((Consumer<Event>) listener, priority));
+            listenerContainers[listenerContainers.length - 1] = new ListenerContainer((Consumer<Event>) listener, priority);
+            Arrays.sort(listenerContainers);
+            listeners[eventId] = listenerContainers;
         }
     }
 
     public final @NotNull <T extends Event> T post(@NotNull final T event) {
-        //noinspection unchecked
-        final Class<T> eventType = (Class<T>) event.getClass();
-        final int eventId = eventTypes.indexOf(eventType);
+        final int eventId = idOf(eventTypes, event.getClass());
         if (eventId != -1)
-            for (final ListenerContainer listener : listeners.get(eventId))
+            for (final ListenerContainer listener : listeners[eventId])
                 listener.invoker.accept(event);
         else if (!(event instanceof DeadEvent))
             post(new DeadEvent(event));
         return event;
     }
 
-    private final List<Class<? extends Event>> eventTypes = new CopyOnWriteArrayList<>();
-    private final List<List<ListenerContainer>> listeners = new CopyOnWriteArrayList<>();
+    private static int idOf(Class<? extends Event>[] eventTypes, Class<? extends Event> eventType) {
+        for (int i = 0; i < eventTypes.length; i++)
+            if (eventType == eventTypes[i])
+                return i;
+        return -1;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Class<? extends Event>[] eventTypes = new Class[0];
+    private ListenerContainer[][] listeners = new ListenerContainer[0][0];
 }
