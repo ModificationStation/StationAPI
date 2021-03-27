@@ -6,14 +6,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.*;
 
 @RequiredArgsConstructor
-public class ListenerContainer<T extends Event> implements Comparable<ListenerContainer<?>> {
+final class ListenerContainer implements Comparable<ListenerContainer> {
 
-    public final Class<T> eventType;
-    public final Consumer<T> invoker;
-    public final int priority;
+    final Consumer<Event> invoker;
+    final int priority;
 
     @Override
-    public int compareTo(@NotNull ListenerContainer<?> o) {
+    public int compareTo(final @NotNull ListenerContainer o) {
         return Integer.compare(o.priority, priority);
     }
 }

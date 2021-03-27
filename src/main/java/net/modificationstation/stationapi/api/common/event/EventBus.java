@@ -1,10 +1,11 @@
 package net.modificationstation.stationapi.api.common.event;
 
 import net.jodah.typetools.TypeResolver;
+import org.jetbrains.annotations.NotNull;
 
-import java.lang.invoke.*;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.*;
 
 public class EventBus {
@@ -43,26 +44,12 @@ public class EventBus {
             Class<?> rawEventType = method.getParameterTypes()[0];
             if (Event.class.isAssignableFrom(rawEventType)) {
                 @SuppressWarnings("unchecked") Class<T> eventType = (Class<T>) rawEventType;
-                method.setAccessible(true);
-                MethodHandles.Lookup lookup = IMPL_LOOKUP.in(method.getDeclaringClass());
-                MethodHandle methodHandle;
-                try {
-                    methodHandle = lookup.unreflect(method);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException("Impossible error!", e);
-                }
-                boolean isStatic = Modifier.isStatic(method.getModifiers());
-                if (!isStatic && listener == null)
-                    throw new IllegalArgumentException(String.format("Method %s#%s isn't static, but no listener instance is provided!", method.getDeclaringClass().getName(), method.getName()));
-                try {
-                    MethodHandle factory = LambdaMetafactory.metafactory(lookup, "accept", isStatic ? MethodType.methodType(Consumer.class) : MethodType.methodType(Consumer.class, listener.getClass()), MethodType.methodType(void.class, Object.class), methodHandle, MethodType.methodType(void.class, eventType)).getTarget();
-                    if (!isStatic)
-                        factory = factory.bindTo(listener);
-                    //noinspection unchecked
-                    register(eventType, (Consumer<T>) factory.invoke(), priority);
-                } catch (Throwable throwable) {
-                    throw new RuntimeException(throwable);
-                }
+                register(
+                        eventType,
+                        Modifier.isPublic(method.getModifiers()) && Modifier.isPublic(method.getDeclaringClass().getModifiers()) && Modifier.isPublic(method.getParameterTypes()[0].getModifiers()) ?
+                                ASMFactory.create(listener, method, eventType) :
+                                LambdaFactory.create(listener, method, eventType),
+                        priority);
             } else
                 throw new IllegalArgumentException(String.format("Method %s#%s's parameter type (%s) can't be assigned to the current EventBus's event type (%s)!", method.getDeclaringClass().getName(), method.getName(), rawEventType.getName(), Event.class.getName()));
         } else
@@ -79,43 +66,37 @@ public class EventBus {
     }
 
     public <T extends Event> void register(Class<T> eventType, Consumer<T> listener) {
-        register(new ListenerContainer<>(eventType, listener, EventListener.DEFAULT_PRIORITY));
+        register(eventType, listener, EventListener.DEFAULT_PRIORITY);
     }
 
     public <T extends Event> void register(Class<T> eventType, Consumer<T> listener, int priority) {
-        //noinspection unchecked
-        ListenerContainer<T>[] listenerContainers = (ListenerContainer<T>[]) listeners.getOrDefault(eventType, new ListenerContainer[0]);
-        listenerContainers = Arrays.copyOf(listenerContainers, listenerContainers.length + 1);
-        listenerContainers[listenerContainers.length - 1] = new ListenerContainer<>(eventType, listener, priority);
-        Arrays.sort(listenerContainers);
-        listeners.put(eventType, listenerContainers);
-        //noinspection unchecked
-        invokers.put(eventType, Arrays.stream(listenerContainers).map(tListenerContainer -> tListenerContainer.invoker).toArray(Consumer[]::new));
+        if (eventTypes.contains(eventType)) {
+            List<ListenerContainer> listenerContainers = listeners.get(eventTypes.indexOf(eventType));
+            //noinspection unchecked
+            listenerContainers.add(new ListenerContainer((Consumer<Event>) listener, priority));
+            Collections.sort(listenerContainers);
+        } else {
+            eventTypes.add(eventType);
+            int eventId = eventTypes.indexOf(eventType);
+            List<ListenerContainer> listenerContainers = new CopyOnWriteArrayList<>();
+            listeners.add(eventId, listenerContainers);
+            //noinspection unchecked
+            listenerContainers.add(new ListenerContainer((Consumer<Event>) listener, priority));
+        }
     }
 
-    public <T extends Event> T post(T event) {
+    public final @NotNull <T extends Event> T post(@NotNull final T event) {
         //noinspection unchecked
-        Class<T> eventType = (Class<T>) event.getClass();
-        if (invokers.containsKey(eventType))
-            //noinspection unchecked
-            for (Consumer<T> invoker : (Consumer<T>[]) invokers.get(eventType))
-                invoker.accept(event);
+        final Class<T> eventType = (Class<T>) event.getClass();
+        final int eventId = eventTypes.indexOf(eventType);
+        if (eventId != -1)
+            for (final ListenerContainer listener : listeners.get(eventId))
+                listener.invoker.accept(event);
         else if (!(event instanceof DeadEvent))
             post(new DeadEvent(event));
         return event;
     }
 
-    private final Map<Class<? extends Event>, ListenerContainer<?>[]> listeners = new IdentityHashMap<>();
-    private final Map<Class<? extends Event>, Consumer<? extends Event>[]> invokers = new IdentityHashMap<>();
-
-    private static final MethodHandles.Lookup IMPL_LOOKUP;
-    static {
-        try {
-            Field field = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
-            field.setAccessible(true);
-            IMPL_LOOKUP = (MethodHandles.Lookup) field.get(null);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private final List<Class<? extends Event>> eventTypes = new CopyOnWriteArrayList<>();
+    private final List<List<ListenerContainer>> listeners = new CopyOnWriteArrayList<>();
 }
