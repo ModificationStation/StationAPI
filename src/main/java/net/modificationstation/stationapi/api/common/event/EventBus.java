@@ -43,12 +43,7 @@ public class EventBus {
             Class<?> rawEventType = method.getParameterTypes()[0];
             if (Event.class.isAssignableFrom(rawEventType)) {
                 @SuppressWarnings("unchecked") Class<T> eventType = (Class<T>) rawEventType;
-                register(
-                        eventType,
-                        Modifier.isPublic(method.getModifiers()) && Modifier.isPublic(method.getDeclaringClass().getModifiers()) && Modifier.isPublic(method.getParameterTypes()[0].getModifiers()) ?
-                                ASMFactory.create(listener, method, eventType) :
-                                LambdaFactory.create(listener, method, eventType),
-                        priority);
+                register(eventType, ListenerExecutorFactory.create(listener, method, eventType), priority);
             } else
                 throw new IllegalArgumentException(String.format("Method %s#%s's parameter type (%s) can't be assigned to the current EventBus's event type (%s)!", method.getDeclaringClass().getName(), method.getName(), rawEventType.getName(), Event.class.getName()));
         } else
