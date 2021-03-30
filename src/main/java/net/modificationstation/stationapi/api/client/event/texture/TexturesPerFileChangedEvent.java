@@ -14,6 +14,14 @@ import net.modificationstation.stationapi.impl.client.texture.TextureRegistry;
  */
 @RequiredArgsConstructor
 public class TexturesPerFileChangedEvent extends Event {
+
     public final TextureRegistry registry;
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }
 

@@ -10,4 +10,11 @@ public class HandshakeSuccessEvent extends Event {
 
     public final PendingConnection pendingConnection;
     public final HandshakeC2S handshakePacket;
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

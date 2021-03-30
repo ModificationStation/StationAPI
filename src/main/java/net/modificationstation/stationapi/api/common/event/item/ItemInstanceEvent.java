@@ -7,7 +7,7 @@ import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.common.event.Event;
 
 @RequiredArgsConstructor
-public class ItemInstanceEvent extends Event {
+public abstract class ItemInstanceEvent extends Event {
 
     public final ItemInstance itemInstance;
 
@@ -21,5 +21,12 @@ public class ItemInstanceEvent extends Event {
             this.level = level;
             this.player = player;
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 }

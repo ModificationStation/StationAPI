@@ -7,7 +7,6 @@ import org.objectweb.asm.Type;
 
 import java.lang.reflect.*;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
 import java.util.function.*;
 
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
@@ -31,7 +30,7 @@ final class ListenerExecutorFactory {
                         method.getDeclaringClass(),
                         generateExecutorClass(
                                 method,
-                                method.getDeclaringClass().getName().replace('.', '/') + "$$PericulosusOcto$ListenerExecutor$" + NEXT_ID.incrementAndGet(),
+                                method.getDeclaringClass().getName().replace('.', '/') + "$$PericulosusOcto$ListenerExecutor",
                                 eventType
                         ),
                         null
@@ -76,8 +75,6 @@ final class ListenerExecutorFactory {
         writer.visitEnd();
         return writer.toByteArray();
     }
-
-    private static final AtomicInteger NEXT_ID = new AtomicInteger(1);
 
     private static final ConcurrentMap<Method, Class<? extends Consumer<? extends Event>>> cache = new ConcurrentHashMap<>();
 

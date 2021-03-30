@@ -15,4 +15,11 @@ public class ItemOverlayRenderEvent extends Event {
     public final TextRenderer textRenderer;
     public final TextureManager textureManager;
     public final ItemRenderer itemRenderer;
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

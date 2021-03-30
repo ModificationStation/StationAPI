@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.common.event.level.LevelEvent;
 
 import java.util.*;
 
-public class LevelGenEvent extends LevelEvent {
+public abstract class LevelGenEvent extends LevelEvent {
 
     public final LevelSource levelSource;
 
@@ -29,5 +29,12 @@ public class LevelGenEvent extends LevelEvent {
             this.z = z;
             this.random = random;
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 }

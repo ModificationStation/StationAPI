@@ -9,4 +9,10 @@ import net.modificationstation.stationapi.api.common.event.Event;
  */
 public class InitEvent extends Event {
 
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

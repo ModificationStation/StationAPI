@@ -24,4 +24,11 @@ public class KeyStateChangedEvent extends Event {
         IN_GUI,
         IN_GAME
     }
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

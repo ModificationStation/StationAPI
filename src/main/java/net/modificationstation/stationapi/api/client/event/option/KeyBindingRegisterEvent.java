@@ -22,4 +22,11 @@ import java.util.*;
 public class KeyBindingRegisterEvent extends Event {
 
     public final List<KeyBinding> keyBindings;
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

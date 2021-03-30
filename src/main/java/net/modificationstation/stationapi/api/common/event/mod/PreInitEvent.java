@@ -7,4 +7,12 @@ import net.modificationstation.stationapi.api.common.event.Event;
  * Some additional setup can be done as well, but Minecraft classes can not be referenced during this event.
  * @author mine_diver
  */
-public class PreInitEvent extends Event { }
+public class PreInitEvent extends Event {
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
+}

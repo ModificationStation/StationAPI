@@ -14,4 +14,11 @@ public class ItemUsedInCraftingEvent extends Event {
     public final int itemOrdinal;
     public final ItemInstance itemUsed;
     public final ItemInstance itemCrafted;
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

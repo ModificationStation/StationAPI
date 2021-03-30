@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.common.event.Event;
 import java.util.*;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class AchievementsEvent extends Event {
+public abstract class AchievementsEvent extends Event {
 
     public final Achievements achievementsScreen;
 
@@ -28,6 +28,13 @@ public class AchievementsEvent extends Event {
             this.randomizedRow = randomizedRow;
             this.backgroundTexture = backgroundTexture;
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 
     public static class AchievementIconRender extends AchievementsEvent {
@@ -40,6 +47,13 @@ public class AchievementsEvent extends Event {
             super(achievementsScreen);
             this.achievement = achievement;
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 
     public static class LineRender extends AchievementsEvent {
@@ -52,5 +66,12 @@ public class AchievementsEvent extends Event {
             super(achievementsScreen);
             this.achievement = achievement;
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 }

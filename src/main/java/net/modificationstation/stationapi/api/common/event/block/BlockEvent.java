@@ -14,7 +14,7 @@ import net.modificationstation.stationapi.api.common.event.Event;
 import java.util.function.*;
 
 @RequiredArgsConstructor
-public class BlockEvent extends Event {
+public abstract class BlockEvent extends Event {
 
     public final BlockBase block;
 
@@ -39,6 +39,13 @@ public class BlockEvent extends Event {
             super(block);
             this.currentFactory = currentFactory;
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 
     public static class TranslationKeyChanged extends BlockEvent {
@@ -49,5 +56,12 @@ public class BlockEvent extends Event {
             super(block);
             this.currentTranslationKey = currentTranslationKey;
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 }

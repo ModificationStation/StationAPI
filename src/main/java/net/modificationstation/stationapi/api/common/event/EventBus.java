@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.api.common.event;
 
+import com.google.common.collect.ObjectArrays;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import net.jodah.typetools.TypeResolver;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,6 +10,16 @@ import java.util.*;
 import java.util.function.*;
 
 public class EventBus {
+
+    public EventBus() {
+        this(Short.MAX_VALUE);
+    }
+
+    public EventBus(int eventTypesBufferSize) {
+        listeners = new ListenerContainer[eventTypesBufferSize][0];
+        //noinspection unchecked
+        listenerRegistries = new Consumer[eventTypesBufferSize];
+    }
 
     public <T> void register(Class<T> listenerClass) {
         register(listenerClass, null);
@@ -64,43 +76,48 @@ public class EventBus {
     }
 
     public <T extends Event> void register(Class<T> eventType, Consumer<T> listener, int priority) {
-        int eventId = idOf(eventTypes, eventType);
-        if (eventId == -1) {
-            eventTypes = Arrays.copyOf(eventTypes, eventTypes.length + 1);
-            eventId = eventTypes.length - 1;
-            eventTypes[eventId] = eventType;
-            //noinspection unchecked
-            ListenerContainer[] listenerContainers = new ListenerContainer[] { new ListenerContainer((Consumer<Event>) listener, priority) };
-            listeners = Arrays.copyOf(listeners, listeners.length + 1);
-            listeners[eventId] = listenerContainers;
-        } else {
-            ListenerContainer[] listenerContainers = listeners[eventId];
-            listenerContainers = Arrays.copyOf(listenerContainers, listenerContainers.length + 1);
-            //noinspection unchecked
-            listenerContainers[listenerContainers.length - 1] = new ListenerContainer((Consumer<Event>) listener, priority);
-            Arrays.sort(listenerContainers);
-            listeners[eventId] = listenerContainers;
-        }
+        int globalId = EVENT_ID_LOOKUP.computeIfAbsent(eventType, aClass -> {
+            try {
+                return eventType.getDeclaredField("ID").getInt(null);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        if (listeners[globalId] == null)
+            listeners[globalId] = new ListenerContainer[0];
+        ListenerContainer[] listenerContainers = listeners[globalId];
+        //noinspection unchecked
+        listenerContainers = ObjectArrays.concat(listenerContainers, new ListenerContainer((Consumer<Event>) listener, priority));
+        Arrays.sort(listenerContainers);
+        listeners[globalId] = listenerContainers;
+        ListenerContainer[] finalListenerContainers = listenerContainers;
+        //noinspection unchecked
+        listenerRegistries[globalId] =
+                listenerContainers.length == 1 ?
+                        (Consumer<Event>) listener :
+                        listenerContainers.length == 2 ?
+                                event ->
+                                {
+                                    finalListenerContainers[0].invoker.accept(event);
+                                    finalListenerContainers[1].invoker.accept(event);
+                                } :
+                                listenerRegistryFactory.create(listenerContainers);
     }
 
-    public final @NotNull <T extends Event> T post(@NotNull final T event) {
-        final int eventId = idOf(eventTypes, event.getClass());
-        if (eventId != -1)
-            for (final ListenerContainer listener : listeners[eventId])
-                listener.invoker.accept(event);
-        else if (!(event instanceof DeadEvent))
-            post(new DeadEvent(event));
+    @CanIgnoreReturnValue
+    public @NotNull <T extends Event> T post(@NotNull final T event) {
+        final Consumer<Event> invoker = listenerRegistries[event.getEventID()];
+        if (invoker == null) {
+            if (!(event instanceof DeadEvent))
+                post(new DeadEvent(event));
+        } else
+            invoker.accept(event);
         return event;
     }
 
-    private static int idOf(Class<? extends Event>[] eventTypes, Class<? extends Event> eventType) {
-        for (int i = 0; i < eventTypes.length; i++)
-            if (eventType == eventTypes[i])
-                return i;
-        return -1;
-    }
+    protected final ListenerRegistryFactory listenerRegistryFactory = new ListenerRegistryFactory(this);
+    protected final ListenerContainer[][] listeners;
+    protected final Consumer<Event>[] listenerRegistries;
 
-    @SuppressWarnings("unchecked")
-    private Class<? extends Event>[] eventTypes = new Class[0];
-    private ListenerContainer[][] listeners = new ListenerContainer[0][0];
+    protected static final Map<Class<? extends Event>, Integer> EVENT_ID_LOOKUP = new IdentityHashMap<>();
 }

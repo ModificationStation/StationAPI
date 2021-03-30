@@ -8,4 +8,11 @@ import net.modificationstation.stationapi.api.common.event.Event;
 public class PlayerLoginEvent extends Event {
 
     public final ServerPlayer player;
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

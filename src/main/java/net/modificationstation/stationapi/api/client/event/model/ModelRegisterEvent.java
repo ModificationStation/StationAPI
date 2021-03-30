@@ -23,4 +23,11 @@ public class ModelRegisterEvent extends Event {
         ITEMS,
         ENTITIES
     }
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

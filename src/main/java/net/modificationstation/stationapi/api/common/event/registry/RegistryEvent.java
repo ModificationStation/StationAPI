@@ -12,7 +12,7 @@ import net.modificationstation.stationapi.api.common.recipe.JsonRecipeParserRegi
 import net.modificationstation.stationapi.api.common.registry.Registry;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class RegistryEvent<T extends Registry<?>> extends Event {
+public abstract class RegistryEvent<T extends Registry<?>> extends Event {
 
     public final T registry;
 
@@ -21,6 +21,13 @@ public class RegistryEvent<T extends Registry<?>> extends Event {
         public GuiHandlers() {
             super(GuiHandlerRegistry.INSTANCE);
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 
     public static class Blocks extends RegistryEvent<BlockRegistry> {
@@ -28,6 +35,13 @@ public class RegistryEvent<T extends Registry<?>> extends Event {
         public Blocks() {
             super(BlockRegistry.INSTANCE);
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 
     public static class EntityHandlers extends RegistryEvent<EntityHandlerRegistry> {
@@ -35,6 +49,13 @@ public class RegistryEvent<T extends Registry<?>> extends Event {
         public EntityHandlers() {
             super(EntityHandlerRegistry.INSTANCE);
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 
     public static class Items extends RegistryEvent<ItemRegistry> {
@@ -42,6 +63,13 @@ public class RegistryEvent<T extends Registry<?>> extends Event {
         public Items() {
             super(ItemRegistry.INSTANCE);
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 
     public static class MessageListeners extends RegistryEvent<MessageListenerRegistry> {
@@ -49,6 +77,13 @@ public class RegistryEvent<T extends Registry<?>> extends Event {
         public MessageListeners() {
             super(MessageListenerRegistry.INSTANCE);
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 
     public static class JsonRecipeParsers extends RegistryEvent<JsonRecipeParserRegistry> {
@@ -56,5 +91,12 @@ public class RegistryEvent<T extends Registry<?>> extends Event {
         public JsonRecipeParsers() {
             super(JsonRecipeParserRegistry.INSTANCE);
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 }

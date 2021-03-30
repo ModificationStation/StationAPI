@@ -5,7 +5,7 @@ import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.common.event.Event;
 
 @RequiredArgsConstructor
-public class ItemEvent extends Event {
+public abstract class ItemEvent extends Event {
 
     public final ItemBase item;
 
@@ -17,5 +17,12 @@ public class ItemEvent extends Event {
             super(item);
             this.currentTranslationKey = currentTranslationKey;
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 }

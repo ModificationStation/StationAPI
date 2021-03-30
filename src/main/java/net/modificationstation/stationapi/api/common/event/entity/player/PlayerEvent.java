@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.common.event.Event;
 import java.util.*;
 
 @RequiredArgsConstructor
-public class PlayerEvent extends Event {
+public abstract class PlayerEvent extends Event {
 
     public final PlayerBase player;
 
@@ -23,6 +23,13 @@ public class PlayerEvent extends Event {
             this.type = type;
             this.currentReach = currentReach;
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 
     public static class HandlerRegister extends PlayerEvent {
@@ -33,5 +40,12 @@ public class PlayerEvent extends Event {
             super(player);
             this.playerHandlers = playerHandlers;
         }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
     }
 }

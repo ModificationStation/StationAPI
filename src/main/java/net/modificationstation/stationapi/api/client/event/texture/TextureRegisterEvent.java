@@ -12,5 +12,11 @@ import net.modificationstation.stationapi.api.common.event.Event;
  * @see TextureFactory
  */
 public class TextureRegisterEvent extends Event {
-    // Oh yes, very empty.
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

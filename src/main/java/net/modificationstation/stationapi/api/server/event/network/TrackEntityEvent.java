@@ -74,4 +74,11 @@ public class TrackEntityEvent extends Event {
     public void track(int trackingDistance, int updatePeriod, boolean sendVelocity) {
         entityTracker.trackEntity(entityToTrack, trackingDistance, updatePeriod, sendVelocity);
     }
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

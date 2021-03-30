@@ -13,4 +13,11 @@ public class PacketRegisterEvent extends Event {
     public final void register(int packetId, boolean receivableOnClient, boolean receivableOnServer, Class<? extends AbstractPacket> packetClass) {
         register.accept(packetId, receivableOnClient, receivableOnServer, packetClass);
     }
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

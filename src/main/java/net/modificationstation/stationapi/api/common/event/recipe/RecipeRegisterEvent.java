@@ -37,4 +37,11 @@ public class RecipeRegisterEvent extends Event {
             return Identifier.of(modID, name().toLowerCase());
         }
     }
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

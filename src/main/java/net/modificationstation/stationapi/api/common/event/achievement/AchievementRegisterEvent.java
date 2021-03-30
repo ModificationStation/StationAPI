@@ -10,4 +10,11 @@ import java.util.*;
 public class AchievementRegisterEvent extends Event {
 
     public final List<Achievement> achievements;
+
+    @Override
+    protected int getEventID() {
+        return ID;
+    }
+
+    public static final int ID = NEXT_ID.incrementAndGet();
 }

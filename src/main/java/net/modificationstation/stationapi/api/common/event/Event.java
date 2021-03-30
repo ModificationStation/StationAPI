@@ -4,8 +4,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.concurrent.atomic.*;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Event {
+public abstract class Event {
 
     @Getter
     private final boolean cancellable = false;
@@ -26,4 +28,8 @@ public class Event {
     public final void resume() {
         setCancelled(false);
     }
+
+    protected abstract int getEventID();
+
+    protected static final AtomicInteger NEXT_ID = new AtomicInteger();
 }
