@@ -21,8 +21,8 @@ public class TextureFactory implements net.modificationstation.stationapi.api.cl
 
     @Getter
     private final String
-            originalStationAtlasFormat = "/assets/stationapi/atlases/station.%s.png",
-            copiedStationAtlasFormat = "/assets/stationapi/atlases/station.%s.%s.png";
+            originalStationAtlasFormat = "/assets/station-api-base/atlases/station.%s.png",
+            copiedStationAtlasFormat = "/assets/station-api-base/atlases/station.%s.%s.png";
     private final Map<String, String> fakedAtlases = new HashMap<>();
     private final Map<TextureRegistry, TreeMap<Integer, Integer>> spriteIDs = new HashMap<>();
     private Texture[] textures = new Texture[0];

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "sltest",
+  "version": "1.0",
+
+  "name": "Test Mod",
+  "description": "stationapi test mod",
+  "authors": [
+    "mine_diver"
+  ],
+  "contact": {
+    "discord": "mine_diver#0618"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/sltest/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "stationapi:event_bus": [
+      "net.modificationstation.sltest.block.BlockListener",
+      "net.modificationstation.sltest.item.ItemListener",
+      "net.modificationstation.sltest.packet.MessageListenerListener",
+      "net.modificationstation.sltest.SLTest",
+      "net.modificationstation.sltest.recipe.RecipeListener",
+      "net.modificationstation.sltest.achievement.AchievementListener",
+      "net.modificationstation.sltest.entity.player.PlayerHandlerListener",
+      "net.modificationstation.sltest.level.gen.ChunkListener",
+      "net.modificationstation.sltest.entity.EntityListener",
+      "net.modificationstation.sltest.tileentity.TileEntityListener",
+      "net.modificationstation.sltest.item.tool.ToolListener"
+    ],
+    "stationapi:event_bus_client": [
+      "net.modificationstation.sltest.gui.GuiListener",
+      "net.modificationstation.sltest.option.OptionListener",
+      "net.modificationstation.sltest.keyboard.KeyboardListener",
+      "net.modificationstation.sltest.texture.TextureListener",
+      "net.modificationstation.sltest.model.ModelListener",
+      "net.modificationstation.sltest.render.entity.EntityRendererListener"
+    ],
+    "main": [
+      "net.modificationstation.sltest.MainTest"
+    ]
+  },
+
+  "mixins": [
+    "sltest.mixins.json"
+  ],
+
+  "depends": {
+    "minecraft": "1.0.0-beta.7.3",
+    "stationapi": "*"
+  },
+  "custom": {
+    "stationapi:verify_client": true
+  }
+}

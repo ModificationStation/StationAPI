@@ -19,38 +19,6 @@
   "icon": "assets/stationapi/icon.png",
 
   "environment": "*",
-  "entrypoints": {
-    "preLaunch": [
-      "net.modificationstation.stationapi.api.common.StationAPI"
-    ],
-    "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.common.block.HasCustomBlockItemFactoryImpl",
-      "net.modificationstation.stationapi.impl.common.block.HasMetaBlockItemImpl",
-      "net.modificationstation.stationapi.impl.common.block.HasMetaNamedBlockItemImpl",
-      "net.modificationstation.stationapi.impl.common.block.BlockRegistryInit",
-      "net.modificationstation.stationapi.impl.common.block.OreDictBlockInit",
-      "net.modificationstation.stationapi.impl.common.item.OreDictItemInit",
-      "net.modificationstation.stationapi.impl.common.mod.InitImpl",
-      "net.modificationstation.stationapi.impl.common.recipe.JsonRecipeParserInit",
-      "net.modificationstation.stationapi.impl.common.recipe.SmeltingRegistryImpl",
-      "net.modificationstation.stationapi.impl.common.entity.player.PlayerReachImpl",
-      "net.modificationstation.stationapi.impl.common.packet.MessagePacketInit",
-      "net.modificationstation.stationapi.impl.common.registry.LevelRegistryRemapper"
-    ],
-    "stationapi:event_bus_server": [
-      "net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl",
-      "net.modificationstation.stationapi.impl.server.entity.TrackingImpl",
-      "net.modificationstation.stationapi.impl.server.network.StationServerNetworkHandler"
-    ],
-    "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.client.gui.screen.menu.AchievementPageImpl",
-      "net.modificationstation.stationapi.impl.client.network.StationClientNetworkHandler",
-      "net.modificationstation.stationapi.impl.client.gui.RenderItemOverlayImpl"
-    ]
-  },
-  "mixins": [
-    "stationapi.mixins.json"
-  ],
 
   "depends": {
     "minecraft": "1.0.0-beta.7.3"

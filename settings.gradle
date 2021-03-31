@@ -1,0 +1,6 @@
+rootProject.name = "station-api"
+
+include 'station-api-base'
+
+//include 'station-registry-api-v0'
+

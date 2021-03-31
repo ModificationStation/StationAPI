@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "xxa",
+    "x x",
+    "xxx"
+  ],
+  "key":
+  {
+    "x":
+    {
+      "item": "minecraft:dirt"
+    },
+    "a":
+    {
+      "item": "sltest:test_block"
+    }
+  },
+  "result":
+  {
+    "item": "minecraft:grass",
+    "count": 9
+  }
+}
