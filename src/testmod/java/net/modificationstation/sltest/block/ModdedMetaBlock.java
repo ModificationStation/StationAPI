@@ -4,13 +4,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.material.Material;
 import net.minecraft.level.TileView;
-import net.modificationstation.stationapi.api.common.block.BlockHardnessPerMeta;
-import net.modificationstation.stationapi.api.common.block.EffectiveForTool;
-import net.modificationstation.stationapi.api.common.block.HasMetaNamedBlockItem;
+import net.modificationstation.stationapi.api.block.BlockHardnessPerMeta;
+import net.modificationstation.stationapi.api.block.EffectiveForTool;
+import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
 import net.modificationstation.stationapi.api.common.item.tool.Hoe;
 import net.modificationstation.stationapi.api.common.item.tool.ToolLevel;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.template.common.block.TemplateBlockBase;
+import net.modificationstation.stationapi.template.block.TemplateBlockBase;
 
 @HasMetaNamedBlockItem
 public class ModdedMetaBlock extends TemplateBlockBase implements BlockHardnessPerMeta, EffectiveForTool {

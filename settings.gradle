@@ -13,4 +13,5 @@ include 'station-blocks-v0'
 include 'station-tileentities-v0'
 include 'station-entities-v0'
 include 'station-networking-v0'
+include 'station-templates-v0'
 

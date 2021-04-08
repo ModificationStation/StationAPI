@@ -6,7 +6,7 @@ import net.modificationstation.sltest.model.ModelListener;
 import net.modificationstation.stationapi.api.client.model.BlockModelProvider;
 import net.modificationstation.stationapi.api.client.model.CustomModel;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.template.common.block.TemplateBlockBase;
+import net.modificationstation.stationapi.template.block.TemplateBlockBase;
 
 public class ModdedModelBlock extends TemplateBlockBase implements BlockModelProvider {
     protected ModdedModelBlock(Identifier id, Material material) {

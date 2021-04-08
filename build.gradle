@@ -113,6 +113,12 @@ allprojects {
 		classpath sourceSets.testmod.runtimeClasspath
 	}
 
+	compileJava {
+		options.compilerArgs << '-XDignore.symbol.file'
+		options.fork = true
+		options.forkOptions.executable = 'javac'
+	}
+
 	dependencies {
 		// fabric loader requires log4j, guava, and gson
 		implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.1'

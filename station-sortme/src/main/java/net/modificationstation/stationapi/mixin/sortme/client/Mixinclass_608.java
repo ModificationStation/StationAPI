@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.util.hit.HitType;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.common.block.BlockStrengthPerMeta;
+import net.modificationstation.stationapi.api.block.BlockStrengthPerMeta;
 import net.modificationstation.stationapi.api.common.event.entity.player.PlayerEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

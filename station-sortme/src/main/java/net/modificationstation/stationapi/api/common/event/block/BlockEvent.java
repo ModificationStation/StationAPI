@@ -3,12 +3,12 @@ package net.modificationstation.stationapi.api.common.event.block;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.Block;
-import net.modificationstation.stationapi.api.common.block.HasCustomBlockItemFactory;
-import net.modificationstation.stationapi.api.common.block.HasMetaBlockItem;
-import net.modificationstation.stationapi.api.common.block.HasMetaNamedBlockItem;
-import net.modificationstation.stationapi.api.common.block.IHasCustomBlockItemFactory;
-import net.modificationstation.stationapi.api.common.block.IHasMetaBlockItem;
-import net.modificationstation.stationapi.api.common.block.IHasMetaNamedBlockItem;
+import net.modificationstation.stationapi.api.block.HasCustomBlockItemFactory;
+import net.modificationstation.stationapi.api.block.HasMetaBlockItem;
+import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
+import net.modificationstation.stationapi.api.block.IHasCustomBlockItemFactory;
+import net.modificationstation.stationapi.api.block.IHasMetaBlockItem;
+import net.modificationstation.stationapi.api.block.IHasMetaNamedBlockItem;
 import net.mine_diver.unsafeevents.Event;
 
 import java.util.function.*;

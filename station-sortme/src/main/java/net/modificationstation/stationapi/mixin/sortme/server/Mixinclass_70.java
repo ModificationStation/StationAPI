@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.server.level.ServerLevel;
-import net.modificationstation.stationapi.api.common.block.BlockStrengthPerMeta;
+import net.modificationstation.stationapi.api.block.BlockStrengthPerMeta;
 import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
 import net.modificationstation.stationapi.api.common.item.UseOnBlockFirst;
 import org.spongepowered.asm.mixin.Mixin;

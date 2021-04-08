@@ -7,7 +7,7 @@ import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.client.event.model.ModelRegisterEvent;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.common.block.BlockMiningLevel;
+import net.modificationstation.stationapi.api.block.BlockMiningLevel;
 import net.modificationstation.stationapi.api.common.event.item.ItemEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
