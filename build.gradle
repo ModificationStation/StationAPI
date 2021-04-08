@@ -49,7 +49,7 @@ def getSubprojectVersion(project, version) {
 		return version + "+uncommited"
 	}
 
-	return version + "+" + latestCommits.get(0).id.substring(0, 8) + DigestUtils.sha256Hex({project.minecraft_version}).substring(0, 2)
+	return version + "+" + latestCommits.get(0).id.substring(0, 8) /*+ DigestUtils.sha256Hex({project.minecraft_version}).substring(0, 2)*/
 }
 
 def getBranch() {
@@ -132,6 +132,8 @@ allprojects {
 		implementation "com.github.jhalterman:typetools:87240d6"
 
 		implementation "com.github.benjiman:expressions:7ed6748"
+
+		implementation "com.github.mineLdiver:UnsafeEvents:7efec57"
 
 		// to change the versions see the gradle.properties file
 		minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -226,8 +228,8 @@ eclipse {
 	}
 }
 
-minecraft {
-}
+//minecraft {
+//}
 
 processResources {
 	inputs.property "version", project.version
@@ -407,4 +409,5 @@ dependencies {
 
 	include "com.github.jhalterman:typetools:87240d6"
 	include "com.github.benjiman:expressions:7ed6748"
+	include "com.github.mineLdiver:UnsafeEvents:7efec57"
 }

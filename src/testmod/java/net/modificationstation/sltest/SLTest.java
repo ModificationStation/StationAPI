@@ -1,13 +1,13 @@
 package net.modificationstation.sltest;
 
-import net.modificationstation.stationapi.api.common.event.Event;
-import net.modificationstation.stationapi.api.common.event.EventBus;
-import net.modificationstation.stationapi.api.common.event.EventListener;
-import net.modificationstation.stationapi.api.common.event.ListenerPriority;
-import net.modificationstation.stationapi.api.common.event.mod.InitEvent;
-import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
-import net.modificationstation.stationapi.api.common.registry.ModID;
-import net.modificationstation.stationapi.api.common.util.Null;
+import net.mine_diver.unsafeevents.Event;
+import net.mine_diver.unsafeevents.EventBus;
+import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.ListenerPriority;
+import net.modificationstation.stationapi.api.event.mod.InitEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Null;
 
 public class SLTest {
 

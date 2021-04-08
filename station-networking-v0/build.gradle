@@ -1,0 +1,7 @@
+archivesBaseName = "station-networking-v0"
+version = getSubprojectVersion(project, "1.0")
+
+moduleDependencies(project, [
+        'station-api-base',
+        'station-registry-api-v0'
+])

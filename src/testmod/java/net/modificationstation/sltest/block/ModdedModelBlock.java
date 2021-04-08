@@ -5,7 +5,7 @@ import net.minecraft.level.Level;
 import net.modificationstation.sltest.model.ModelListener;
 import net.modificationstation.stationapi.api.client.model.BlockModelProvider;
 import net.modificationstation.stationapi.api.client.model.CustomModel;
-import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.template.common.block.TemplateBlockBase;
 
 public class ModdedModelBlock extends TemplateBlockBase implements BlockModelProvider {

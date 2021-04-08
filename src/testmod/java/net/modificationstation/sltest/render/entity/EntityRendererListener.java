@@ -4,7 +4,7 @@ import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.model.Biped;
 import net.modificationstation.sltest.entity.PoorGuy;
 import net.modificationstation.stationapi.api.client.event.render.entity.EntityRendererRegisterEvent;
-import net.modificationstation.stationapi.api.common.event.EventListener;
+import net.mine_diver.unsafeevents.listener.EventListener;
 
 public class EntityRendererListener {
 

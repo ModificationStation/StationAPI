@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.common.block.EffectiveForTool;
 import net.modificationstation.stationapi.api.common.block.HasMetaNamedBlockItem;
 import net.modificationstation.stationapi.api.common.item.tool.Hoe;
 import net.modificationstation.stationapi.api.common.item.tool.ToolLevel;
-import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.template.common.block.TemplateBlockBase;
 
 @HasMetaNamedBlockItem

@@ -7,10 +7,10 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.tileentity.TileEntityFreezer;
-import net.modificationstation.stationapi.api.common.event.EventListener;
-import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
+import net.mine_diver.unsafeevents.listener.EventListener;
+import net.modificationstation.stationapi.api.event.registry.RegistryEvent;
 import net.modificationstation.stationapi.api.common.gui.GuiHandlerRegistry;
-import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import uk.co.benjiweber.expressions.tuples.BiTuple;
 
 public class GuiListener {

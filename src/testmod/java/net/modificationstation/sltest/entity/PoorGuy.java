@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.minecraft.entity.animal.AnimalBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.level.Level;
-import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.server.entity.IStationSpawnData;
 import net.modificationstation.stationapi.api.server.entity.Tracking;
 

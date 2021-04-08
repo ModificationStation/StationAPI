@@ -2,13 +2,13 @@ package net.modificationstation.sltest.block;
 
 import com.google.gson.Gson;
 import net.minecraft.block.material.Material;
-import net.modificationstation.stationapi.api.common.block.BlockRegistry;
-import net.modificationstation.stationapi.api.common.event.EventListener;
-import net.modificationstation.stationapi.api.common.event.registry.RegistryEvent;
-import net.modificationstation.stationapi.api.common.mod.entrypoint.Entrypoint;
-import net.modificationstation.stationapi.api.common.registry.Identifier;
-import net.modificationstation.stationapi.api.common.registry.ModID;
-import net.modificationstation.stationapi.api.common.util.Null;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.mine_diver.unsafeevents.listener.EventListener;
+import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.template.common.block.TemplateBlockBase;
 
 public class BlockListener {
@@ -17,7 +17,7 @@ public class BlockListener {
     private static final ModID MODID = Null.get();
 
     @EventListener
-    public void registerBlocks(RegistryEvent.Blocks event) {
+    public void registerBlocks(BlockRegistryEvent event) {
         BlockRegistry registry = event.registry;
         testAnimatedBlock = new ModdedMetaBlock(Identifier.of(MODID, "test_animated_block"), Material.PORTAL).setTranslationKey(MODID, "testAnimatedBlock"); //151
         testBlock = new TemplateBlockBase(Identifier.of(MODID, "test_block"), Material.CLAY).setTranslationKey(MODID, "testBlock"); //150

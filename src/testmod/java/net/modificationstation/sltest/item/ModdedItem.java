@@ -8,7 +8,7 @@ import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.common.item.ICustomReach;
 import net.modificationstation.stationapi.api.common.packet.Message;
 import net.modificationstation.stationapi.api.common.packet.PacketHelper;
-import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.template.common.item.TemplateItemBase;
 
 import java.util.*;

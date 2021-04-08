@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.tool.ToolMaterial;
 import net.minecraft.level.Level;
-import net.modificationstation.stationapi.api.common.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.common.util.BlockFaces;
 import net.modificationstation.stationapi.template.common.item.tool.TemplatePickaxe;
 

@@ -3,8 +3,8 @@ package net.modificationstation.sltest.model;
 import net.modificationstation.stationapi.api.client.event.model.ModelRegisterEvent;
 import net.modificationstation.stationapi.api.client.model.CustomModel;
 import net.modificationstation.stationapi.api.client.model.CustomModelRenderer;
-import net.modificationstation.stationapi.api.common.event.EventListener;
-import net.modificationstation.stationapi.api.common.factory.GeneralFactory;
+import net.mine_diver.unsafeevents.listener.EventListener;
+import net.modificationstation.stationapi.api.factory.GeneralFactory;
 
 public class ModelListener {
 

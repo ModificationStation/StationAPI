@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.registry",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinStat"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

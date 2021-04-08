@@ -2,7 +2,7 @@ package net.modificationstation.sltest.achievement;
 
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
-import net.modificationstation.stationapi.api.common.registry.ModID;
+import net.modificationstation.stationapi.api.registry.ModID;
 
 import java.util.*;
 

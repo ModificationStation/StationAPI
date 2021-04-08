@@ -5,11 +5,11 @@ import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.sltest.block.BlockListener;
 import net.modificationstation.sltest.item.ItemListener;
-import net.modificationstation.stationapi.api.common.event.EventListener;
-import net.modificationstation.stationapi.api.common.event.recipe.RecipeRegisterEvent;
+import net.mine_diver.unsafeevents.listener.EventListener;
+import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.common.item.HasItemEntity;
-import net.modificationstation.stationapi.api.common.recipe.CraftingRegistry;
-import net.modificationstation.stationapi.api.common.recipe.SmeltingRegistry;
+import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
+import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
 
 public class RecipeListener {
 

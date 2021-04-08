@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.recipe",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinRecipeRegistry",
+    "MixinSmeltingRecipeRegistry",
+    "RecipeRegistryAccessor",
+    "SmeltingRecipeRegistryAccessor",
+    "TileEntityFurnaceAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

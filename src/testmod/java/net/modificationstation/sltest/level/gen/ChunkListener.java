@@ -1,6 +1,6 @@
 package net.modificationstation.sltest.level.gen;
 
-import net.modificationstation.stationapi.api.common.event.EventListener;
+import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.common.event.level.gen.LevelGenEvent;
 
 public class ChunkListener {
