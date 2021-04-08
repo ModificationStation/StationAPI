@@ -6,8 +6,8 @@ import net.minecraft.level.Level;
 import net.minecraft.util.hit.HitType;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.common.item.ICustomReach;
-import net.modificationstation.stationapi.api.common.packet.Message;
-import net.modificationstation.stationapi.api.common.packet.PacketHelper;
+import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.packet.PacketHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.template.item.TemplateItemBase;
 

@@ -8,7 +8,7 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.common.packet.StationHandshake;
+import net.modificationstation.stationapi.api.packet.StationHandshake;
 import net.modificationstation.stationapi.api.server.event.network.HandshakeSuccessEvent;
 
 import java.util.*;

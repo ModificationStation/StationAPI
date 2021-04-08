@@ -19,6 +19,15 @@
   "icon": "assets/station-entities-v0/icon.png",
 
   "environment": "*",
+  "entrypoints": {
+    "stationapi:event_bus_server": [
+      "net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl",
+      "net.modificationstation.stationapi.impl.server.entity.TrackingImpl"
+    ],
+    "stationapi:event_bus_client": [
+      "net.modificationstation.stationapi.impl.client.network.EntityClientNetworkHandler"
+    ]
+  },
   "mixins": [
     "station-entities-v0.mixins.json"
   ],

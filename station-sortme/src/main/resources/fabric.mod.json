@@ -28,12 +28,9 @@
       "net.modificationstation.stationapi.impl.common.block.OreDictBlockInit",
       "net.modificationstation.stationapi.impl.common.item.OreDictItemInit",
       "net.modificationstation.stationapi.impl.common.entity.player.PlayerReachImpl",
-      "net.modificationstation.stationapi.impl.common.packet.MessagePacketInit",
       "net.modificationstation.stationapi.impl.common.SortMe"
     ],
     "stationapi:event_bus_server": [
-      "net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl",
-      "net.modificationstation.stationapi.impl.server.entity.TrackingImpl",
       "net.modificationstation.stationapi.impl.server.network.StationServerNetworkHandler"
     ],
     "stationapi:event_bus_client": [

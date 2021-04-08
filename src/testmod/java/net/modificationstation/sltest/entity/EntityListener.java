@@ -2,7 +2,7 @@ package net.modificationstation.sltest.entity;
 
 import net.modificationstation.sltest.SLTest;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.modificationstation.stationapi.api.common.event.entity.EntityRegister;
+import net.modificationstation.stationapi.api.event.entity.EntityRegister;
 import net.modificationstation.stationapi.api.event.registry.EntityHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
 

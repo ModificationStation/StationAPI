@@ -6,6 +6,9 @@
   "mixins": [
     "BlockBaseAccessor"
   ],
+  "server": [
+    "server.Mixinclass_70"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
