@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.metablock",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinBlockBase",
+    "MixinItemBase",
+    "MixinPlayerBase"
+  ],
+  "server": [
+    "server.Mixinclass_70"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

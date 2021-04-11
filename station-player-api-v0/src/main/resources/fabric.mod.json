@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "station-player-api-v0",
+  "version": "${version}",
+
+  "name": "Station Player API (v0)",
+  "description": "Utility module for working with players.",
+  "authors": [
+    "mine_diver",
+    "calmilamsy"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/repo/mod/stationapi",
+    "sources": "https://github.com/ModificationStation/StationAPI",
+    "issues": "https://github.com/ModificationStation/StationAPI/issues"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/station-player-api-v0/icon.png",
+
+  "environment": "*",
+  "mixins": [
+    "station-player-api-v0.mixins.json"
+  ],
+
+  "depends": {
+    "minecraft": "1.0.0-beta.7.3"
+  },
+
+  "custom": {
+    "modmenu:api": true
+  }
+}

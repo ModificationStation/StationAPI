@@ -4,86 +4,36 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.Block;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.client.event.model.ModelRegisterEvent;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.block.BlockMiningLevel;
-import net.modificationstation.stationapi.api.block.BlockStrengthPerMeta;
-import net.modificationstation.stationapi.api.common.entity.player.StrengthOnMeta;
-import net.modificationstation.stationapi.api.common.event.block.BlockEvent;
-import net.modificationstation.stationapi.api.event.registry.RegistryEvent;
-import net.modificationstation.stationapi.api.common.item.EffectiveOnMeta;
+import net.modificationstation.stationapi.api.client.event.model.ModelRegisterEvent;
+import net.modificationstation.stationapi.api.common.block.BlockMiningLevel;
 import net.modificationstation.stationapi.api.common.item.tool.Hatchet;
 import net.modificationstation.stationapi.api.common.item.tool.Pickaxe;
 import net.modificationstation.stationapi.api.common.item.tool.Shear;
 import net.modificationstation.stationapi.api.common.item.tool.Shovel;
 import net.modificationstation.stationapi.api.common.item.tool.ToolLevel;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
 @Mixin(BlockBase.class)
-public class MixinBlockBase implements BlockStrengthPerMeta, BlockMiningLevel {
+public class MixinBlockBase implements BlockMiningLevel {
 
     @Shadow
     @Final
-    public static BlockBase[] BY_ID;
-    @Shadow
-    @Final
     public Material material;
-    @Shadow
-    protected float hardness;
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Environment(EnvType.CLIENT)
     @Inject(method = "<clinit>", at = @At(value = "NEW", target = "(II)Lnet/minecraft/block/Stone;", ordinal = 0, shift = At.Shift.BEFORE))
     private static void beforeBlockRegister(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(new ModelRegisterEvent(ModelRegisterEvent.Type.BLOCKS));
-    }
-
-    @SuppressWarnings("UnresolvedMixinReference")
-    @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/block/BlockBase;TRAPDOOR:Lnet/minecraft/block/BlockBase;", opcode = Opcodes.PUTSTATIC, shift = At.Shift.AFTER))
-    private static void afterBlockRegister(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new RegistryEvent.Blocks());
-    }
-
-    @SuppressWarnings("UnresolvedMixinReference")
-    @Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(I)Lnet/minecraft/item/Block;"))
-    private static Block getBlockItem(int blockID) {
-        return StationAPI.EVENT_BUS.post(new BlockEvent.ItemFactory(BY_ID[blockID + BY_ID.length], Block::new)).currentFactory.apply(blockID);
-    }
-
-    @Shadow
-    public float getHardness() {
-        return 0;
-    }
-
-    @ModifyVariable(method = "setTranslationKey(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;", at = @At("HEAD"))
-    private String getTranslationKey(String name) {
-        return StationAPI.EVENT_BUS.post(new BlockEvent.TranslationKeyChanged((BlockBase) (Object) this, name)).currentTranslationKey;
-    }
-
-    @Override
-    public float getBlockStrength(PlayerBase player, int meta) {
-        float ret = getHardness(meta);
-        if (ret < 0.0F)
-            return 0.0F;
-        return material.doesRequireTool() || player.getHeldItem() != null && ((EffectiveOnMeta) player.getHeldItem().getType()).isEffectiveOn((BlockBase) (Object) this, meta, player.getHeldItem()) ? ((StrengthOnMeta) player).getStrengh((BlockBase) (Object) this, meta) / ret / 30F : 1F / ret / 100F;
-    }
-
-    @Override
-    public float getHardness(int meta) {
-        return getHardness();
     }
 
     @SuppressWarnings("ConstantConditions")

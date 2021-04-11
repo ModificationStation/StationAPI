@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.player",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "server": [
+    "server.ServerPlayerPacketHandlerAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

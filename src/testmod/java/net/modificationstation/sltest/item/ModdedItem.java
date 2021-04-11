@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.common.item.ICustomReach;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.template.item.TemplateItemBase;
+import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
 
 import java.util.*;
 

@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.server.entity;
 
 import net.minecraft.network.EntityHashSet;
 import net.minecraft.server.network.ServerEntityTracker;
-import net.modificationstation.stationapi.api.server.event.network.TrackEntityEvent;
+import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEvent;
 
 /**
  * Entity interface that's used to do custom entity tracking logic inside the entity class via {@link TrackEntityEvent} hook.

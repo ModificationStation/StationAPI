@@ -5,12 +5,13 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.registry.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.API;
 import net.modificationstation.stationapi.api.util.SideUtils;
 import net.modificationstation.stationapi.impl.client.gui.screen.container.GuiHelperClientImpl;
 import net.modificationstation.stationapi.impl.gui.screen.container.GuiHelperImpl;
-import net.modificationstation.stationapi.impl.server.gui.GuiHelperServerImpl;
+import net.modificationstation.stationapi.impl.server.gui.screen.container.GuiHelperServerImpl;
 
 import java.util.function.*;
 

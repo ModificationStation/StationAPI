@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityBase;
 import net.minecraft.packet.AbstractPacket;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.common.entity.HasOwner;
+import net.modificationstation.stationapi.api.entity.HasOwner;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.registry.Identifier;
 

@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Null;
-import net.modificationstation.stationapi.template.block.TemplateBlockBase;
+import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 
 public class BlockListener {
 

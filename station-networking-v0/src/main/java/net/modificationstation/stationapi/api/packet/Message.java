@@ -12,7 +12,7 @@ import com.google.common.primitives.Shorts;
 import com.google.gson.Gson;
 import net.minecraft.network.PacketHandler;
 import net.minecraft.packet.AbstractPacket;
-import net.modificationstation.stationapi.api.common.entity.player.PlayerHelper;
+import net.modificationstation.stationapi.api.entity.player.PlayerHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
 
@@ -32,8 +32,7 @@ public class Message extends AbstractPacket {
     private String[] strings;
     private Object[] objects;
 
-    public Message() {
-    }
+    public Message() { }
 
     public Message(Identifier identifier) {
         this.identifier = identifier;

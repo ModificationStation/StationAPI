@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.server.entity;
 
+import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEvent;
 import net.modificationstation.stationapi.api.util.TriState;
-import net.modificationstation.stationapi.api.server.event.network.TrackEntityEvent;
 
 import java.lang.annotation.*;
 

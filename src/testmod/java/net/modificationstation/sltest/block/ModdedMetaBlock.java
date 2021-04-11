@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
 import net.modificationstation.stationapi.api.common.item.tool.Hoe;
 import net.modificationstation.stationapi.api.common.item.tool.ToolLevel;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.template.block.TemplateBlockBase;
+import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 
 @HasMetaNamedBlockItem
 public class ModdedMetaBlock extends TemplateBlockBase implements BlockHardnessPerMeta, EffectiveForTool {

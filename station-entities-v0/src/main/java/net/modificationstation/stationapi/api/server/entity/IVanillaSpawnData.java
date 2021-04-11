@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.server.entity;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.packet.AbstractPacket;
 import net.minecraft.packet.play.EntitySpawnS2C;
-import net.modificationstation.stationapi.api.common.entity.HasOwner;
+import net.modificationstation.stationapi.api.entity.HasOwner;
 
 public interface IVanillaSpawnData extends CustomSpawnData {
 

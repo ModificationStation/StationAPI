@@ -7,7 +7,7 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.event.registry.JsonRecipeParserRegistryEvent;
-import net.modificationstation.stationapi.api.item.JsonItemKey;
+import net.modificationstation.stationapi.api.template.item.JsonItemKey;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;

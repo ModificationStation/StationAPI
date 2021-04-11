@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.blockitem",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinBlockBase"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

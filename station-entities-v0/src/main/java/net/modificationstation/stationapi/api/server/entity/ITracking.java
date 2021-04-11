@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.api.server.entity;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.network.EntityHashSet;
 import net.minecraft.server.network.ServerEntityTracker;
+import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEvent;
 import net.modificationstation.stationapi.api.util.TriState;
-import net.modificationstation.stationapi.api.server.event.network.TrackEntityEvent;
 import net.modificationstation.stationapi.impl.server.entity.TrackingImpl;
 
 /**

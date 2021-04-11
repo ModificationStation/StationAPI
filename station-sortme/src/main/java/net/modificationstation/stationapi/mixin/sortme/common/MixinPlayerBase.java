@@ -20,7 +20,6 @@ import net.modificationstation.stationapi.api.common.entity.player.HasPlayerHand
 import net.modificationstation.stationapi.api.common.entity.player.PlayerBaseSettersGettersInvokers;
 import net.modificationstation.stationapi.api.common.entity.player.PlayerBaseSuper;
 import net.modificationstation.stationapi.api.common.entity.player.PlayerHandler;
-import net.modificationstation.stationapi.api.common.entity.player.StrengthOnMeta;
 import net.modificationstation.stationapi.api.common.event.entity.player.PlayerEvent;
 import net.modificationstation.stationapi.api.common.item.CustomArmourValue;
 import net.modificationstation.stationapi.api.common.item.UseOnEntityFirst;
@@ -31,28 +30,23 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.*;
 
 @Mixin(PlayerBase.class)
-public abstract class MixinPlayerBase extends Living implements PlayerBaseAccessor, PlayerBaseSettersGettersInvokers, HasPlayerHandlers, PlayerBaseSuper, StrengthOnMeta {
+public abstract class MixinPlayerBase extends Living implements PlayerBaseAccessor, PlayerBaseSettersGettersInvokers, HasPlayerHandlers, PlayerBaseSuper {
 
     @Shadow
     public PlayerInventory inventory;
     @Shadow
     protected boolean sleeping;
     private List<PlayerHandler> playerBases;
-    private Integer meta;
 
     public MixinPlayerBase(Level world) {
         super(world);
     }
-
-    @Shadow
-    public abstract float getStrengh(BlockBase arg);
 
     @Shadow
     public abstract ItemInstance getHeldItem();
@@ -428,24 +422,6 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
     @Override
     public void setIsJumping(boolean value) {
         this.jumping = value;
-    }
-
-    @Override
-    public float getStrengh(BlockBase arg, int meta) {
-        this.meta = meta;
-        return getStrengh(arg);
-    }
-
-    @Redirect(method = "getStrengh(Lnet/minecraft/block/BlockBase;)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;getStrengthOnBlock(Lnet/minecraft/block/BlockBase;)F"))
-    private float getStrengthForMeta(PlayerInventory playerInventory, BlockBase arg) {
-        if (meta == null)
-            return playerInventory.getStrengthOnBlock(arg);
-        else {
-            ItemInstance itemInstance = playerInventory.getHeldItem();
-            float ret = itemInstance == null ? playerInventory.getStrengthOnBlock(arg) : ((net.modificationstation.stationapi.api.common.item.StrengthOnMeta) itemInstance.getType()).getStrengthOnBlock(itemInstance, arg, meta);
-            meta = null;
-            return ret;
-        }
     }
 
     @Inject(method = "interactWith(Lnet/minecraft/entity/EntityBase;)V", at = @At(value = "HEAD"), cancellable = true)

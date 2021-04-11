@@ -8,7 +8,7 @@ import net.minecraft.item.tool.ToolMaterial;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.common.util.BlockFaces;
-import net.modificationstation.stationapi.template.item.tool.TemplatePickaxe;
+import net.modificationstation.stationapi.api.template.item.tool.TemplatePickaxe;
 
 public class ModdedPickaxe extends TemplatePickaxe {
 

@@ -7,11 +7,11 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
+import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEvent;
 import net.modificationstation.stationapi.api.util.TriState;
 import net.modificationstation.stationapi.api.server.entity.ICustomTracking;
 import net.modificationstation.stationapi.api.server.entity.ITracking;
 import net.modificationstation.stationapi.api.server.entity.Tracking;
-import net.modificationstation.stationapi.api.server.event.network.TrackEntityEvent;
 
 /**
  * {@link ITracking} implementation class.

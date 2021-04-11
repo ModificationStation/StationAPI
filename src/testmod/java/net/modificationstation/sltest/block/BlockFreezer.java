@@ -19,7 +19,7 @@ import net.modificationstation.sltest.inventory.ContainerFreezer;
 import net.modificationstation.sltest.tileentity.TileEntityFreezer;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.template.block.TemplateBlockWithEntity;
+import net.modificationstation.stationapi.api.template.block.TemplateBlockWithEntity;
 
 import java.util.*;
 

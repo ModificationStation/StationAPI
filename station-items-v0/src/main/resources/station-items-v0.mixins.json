@@ -4,7 +4,8 @@
   "package": "net.modificationstation.stationapi.mixin.item",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "ItemBaseAccessor"
+    "ItemBaseAccessor",
+    "MixinItemBase"
   ],
   "injectors": {
     "defaultRequire": 1
