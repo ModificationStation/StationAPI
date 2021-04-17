@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "station-api-base",
+  "id": "station-tools-api",
   "version": "${version}",
 
-  "name": "Station API Base",
-  "description": "Contains the essentials for Fabric API modules, such as an event bus.",
+  "name": "Station Tools API",
+  "description": "Makes tools actually work properly. Also, custom shears!",
   "authors": [
     "mine_diver",
     "calmilamsy"
@@ -16,16 +16,19 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/station-api-base/icon.png",
+  "icon": "assets/station-tools-api/icon.png",
 
   "environment": "*",
   "entrypoints": {
-    "preLaunch": [
-      "net.modificationstation.stationapi.api.StationAPI"
+    "stationapi:event_bus": [
+    ],
+    "stationapi:event_bus_server": [
+    ],
+    "stationapi:event_bus_client": [
     ]
   },
   "mixins": [
-    "station-api-base.mixins.json"
+    "station-tools-api.mixins.json"
   ],
 
   "depends": {

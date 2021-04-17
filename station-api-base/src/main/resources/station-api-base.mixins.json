@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.debugfixes",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "DestroyStupidResource404Errors",
+    "MixinFixDepthBuffer",
+    "MixinFixThreadCheckHasPaid"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

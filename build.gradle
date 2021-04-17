@@ -159,6 +159,7 @@ allprojects {
 		compile 'org.jetbrains:annotations:16.0.2'
 
 		modImplementation "com.github.minecraft-cursed-legacy:cursed-fabric-loader:${project.loader_version}"
+		modImplementation "com.github.amb0s:ModMenu:c52f3df"
 	}
 
 	configurations {

@@ -17,4 +17,5 @@ include 'station-blockitems-v0'
 include 'station-container-api-v0'
 include 'station-metablocks-v0'
 include 'station-player-api-v0'
+include 'station-tools-api-v0'
 

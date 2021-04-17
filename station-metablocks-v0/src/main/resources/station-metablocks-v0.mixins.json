@@ -6,10 +6,14 @@
   "mixins": [
     "MixinBlockBase",
     "MixinItemBase",
-    "MixinPlayerBase"
+    "MixinPlayerBase",
+    "client.MixinRemoteClientInteractionManager"
   ],
   "server": [
     "server.Mixinclass_70"
+  ],
+  "client": [
+    "client.Mixinclass_608"
   ],
   "injectors": {
     "defaultRequire": 1
