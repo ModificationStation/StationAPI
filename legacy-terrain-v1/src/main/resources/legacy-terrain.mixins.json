@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "io.github.minecraftcursedlegacy.mixin.terrain",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinBiome",
+    "MixinNetherLevelSource",
+    "MixinOverworldLevelSource"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

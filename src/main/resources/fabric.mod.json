@@ -1,30 +1,39 @@
 {
   "schemaVersion": 1,
-  "id": "stationapi",
+  "id": "api",
   "version": "${version}",
 
-  "name": "Station API",
-  "description": "A general use API for Fabric Loader mods on legacy Minecraft versions.",
+  "name": "Minecraft Cursed Legacy API",
+  "description": "A set of useful hooks and features to be used by modders.",
   "authors": [
-    "mine_diver",
-    "calmilamsy"
+    "The Cursed Legacy Team"
   ],
   "contact": {
-    "homepage": "https://glass-launcher.net/repo/mod/stationapi",
-    "sources": "https://github.com/ModificationStation/StationAPI",
-    "issues": "https://github.com/ModificationStation/StationAPI/issues"
+    "issues": "https://github.com/minecraft-cursed-legacy/Cursed-Legacy-API/issues",
+    "sources": "https://github.com/minecraft-cursed-legacy/Cursed-Legacy-API"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/stationapi/icon.png",
+  "license": "MIT",
+  "icon": "assets/api/icon.png",
 
   "environment": "*",
 
-  "depends": {
-    "minecraft": "1.0.0-beta.7.3"
-  },
+  "mixins": [
+    "api.mixins.json"
+  ],
 
-  "custom": {
-    "modmenu:api": true
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "1.0.0-beta.7.3",
+    "legacy-api-base": "*",
+    "legacy-attached-data": "*",
+    "legacy-config": "*",
+    "legacy-interaction-events": "*",
+    "legacy-lifecycle-events": "*",
+    "legacy-networking": "*",
+    "legacy-recipes": "*",
+    "legacy-registries": "*",
+    "legacy-terrain": "*",
+    "legacy-translations": "*"
   }
 }

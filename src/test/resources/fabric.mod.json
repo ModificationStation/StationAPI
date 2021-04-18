@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "modid",
+  "version": "${version}",
+
+  "name": "Test Mod",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": [
+    "The Cursed Legacy Team"
+  ],
+  "contact": {
+    "issues": "https://github.com/minecraft-cursed-legacy/Cursed-Legacy-API/issues",
+    "sources": "https://github.com/minecraft-cursed-legacy/Cursed-Legacy-API"
+  },
+
+  "license": "MIT",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "init": [
+      "io.github.minecraftcursedlegacy.test.MultiTest"
+    ],
+    "postInit": [
+      "io.github.minecraftcursedlegacy.test.MultiTest"
+    ]
+  },
+
+  "depends": {
+    "fabricloader": "*",
+    "api": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  },
+  
+  "mixins": [
+    "test.mixins.json"
+  ]
+}

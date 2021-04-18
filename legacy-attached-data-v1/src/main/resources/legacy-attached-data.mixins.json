@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "io.github.minecraftcursedlegacy.mixin.attacheddata",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinItemInstance",
+    "MixinLevelProperties",
+    "MixinPlayerInventory"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

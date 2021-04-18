@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "legacy-tile-entities-test",
+  "version": "${version}",
+
+  "name": "Tile Entities Test Mod",
+  "description": "Tests for the tile entities module of Cursed Legacy API.",
+  "authors": [
+    "The Cursed Legacy Team"
+  ],
+  "contact": {
+    "issues": "https://github.com/minecraft-cursed-legacy/Cursed-Legacy-API/issues",
+    "sources": "https://github.com/minecraft-cursed-legacy/Cursed-Legacy-API"
+  },
+
+  "license": "MIT",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "init": [
+      "io.github.minecraftcursedlegacy.test.TileEntityTest"
+    ]
+  },
+
+  "depends": {
+    "fabricloader": "*",
+    "legacy-api-base": "*",
+    "legacy-registries": "*",
+    "legacy-tile-entities": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  }
+}

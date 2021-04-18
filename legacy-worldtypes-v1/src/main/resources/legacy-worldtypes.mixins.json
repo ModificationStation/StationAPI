@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "io.github.minecraftcursedlegacy.mixin.worldtype",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinDimension"
+  ],
+  "client": [
+    "MixinCreateLevelScreen"
+  ],
+  "server": [
+    "MixinMinecraftServer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

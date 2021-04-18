@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "package": "io.github.minecraftcursedlegacy.mixin.registry",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinItemType",
+    "MixinMcRegionLevelStorage",
+    "MixinOldLevelStorage",
+    "MixinPlaceableTileItem",
+    "MixinShapedRecipe",
+    "MixinSmeltingRecipeRegistry",
+    "MixinTile",
+    "MixinTileItem"
+  ],
+  "client": [
+    "MixinHandItemRenderer",
+    "MixinItemRenderer"
+  ],
+  "server": [
+    "MixinMinecraftServer",
+    "MixinPendingConnection"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

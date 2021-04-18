@@ -1,102 +1,58 @@
 buildscript {
-	repositories {
-		mavenCentral()
+    repositories {
+    	mavenCentral()
 		jcenter()
-		gradlePluginPortal()
-		maven {
-			name = "Fabric"
-			url = "https://maven.fabricmc.net/"
-		}
-		maven {
+        maven {
+            name = "Fabric"
+            url = "https://maven.fabricmc.net/"
+        }
+		maven { 
 			name = "Jitpack"
 			url 'https://jitpack.io/'
 		}
 	}
 	dependencies {
-		classpath 'com.github.Chocohead:Fabric-Loom:e3d1762'
+        classpath 'com.github.Chocohead:Fabric-Loom:7425f5a'
 	}
 }
 
 plugins {
-	id "java"
-	id "eclipse"
-	id "idea"
-	id "maven-publish"
-//	id "fabric-loom" version "0.5.43" apply false
-//	id "net.minecrell.licenser" version "0.4.1"
-	id "org.ajoberstar.grgit" version "3.1.1"
-	id "com.matthewprenger.cursegradle" version "1.4.0"
-	id "com.modrinth.minotaur" version "1.1.0"
+	id 'java'
+    id 'checkstyle'
 }
 
-apply plugin: "fabric-loom"
+def getSubprojectVersion(project, ver) {
+	return "${project.mod_version}" + "-" + ver
+}
 
-def ENV = System.getenv()
-
+sourceSets {
+	testmod
+}
 
 import net.fabricmc.loom.task.RunClientTask
 import net.fabricmc.loom.task.RunServerTask
-import org.apache.commons.codec.digest.DigestUtils
 
-def getSubprojectVersion(project, version) {
-	if (grgit == null) {
-		return version + "+nogit"
-	}
+apply plugin: "fabric-loom"
 
-	def latestCommits = grgit.log(paths: [project.name], maxCommits: 1)
-
-	if (latestCommits.isEmpty()) {
-		return version + "+uncommited"
-	}
-
-	return version + "+" + latestCommits.get(0).id.substring(0, 8) /*+ DigestUtils.sha256Hex({project.minecraft_version}).substring(0, 2)*/
-}
-
-def getBranch() {
-	def ENV = System.getenv()
-	if (ENV.GITHUB_REF) {
-		def branch = ENV.GITHUB_REF
-		return branch.substring(branch.lastIndexOf("/") + 1)
-	}
-
-	if (grgit == null) {
-		return "unknown"
-	}
-
-	def branch = grgit.branch.current().name
-	return branch.substring(branch.lastIndexOf("/") + 1)
-}
-
-def moduleDependencies(project, List<String> depNames) {
-	def deps = depNames.iterator().collect { project.dependencies.project(path: ":$it", configuration: 'dev') }
-	project.dependencies {
-		deps.each {
-			compile it
-		}
-	}
-	project.publishing {
-		publications {
-			mavenJava(MavenPublication) {
-				pom.withXml {
-					asNode().dependencies.dependency.each { dep ->
-						if(dep.artifactId.last().value().last().toLowerCase() in ["cursed-fabric-loader"]) {
-							assert dep.parent().remove(dep)
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-allprojects {
-	apply plugin: 'maven-publish'
-	apply plugin: 'fabric-loom'
+allprojects {	
+	apply plugin: "fabric-loom"
 
 	sourceCompatibility = JavaVersion.VERSION_1_8
 	targetCompatibility = JavaVersion.VERSION_1_8
 
-	group = 'net.modificationstation.stationapi'
+	archivesBaseName = project.archives_base_name
+	version = project.mod_version
+	group = project.maven_group
+
+	repositories {
+		maven { 
+			name = "Jitpack"
+			url "https://jitpack.io/"
+		}
+	}
+
+	minecraft {
+	}
 
 	sourceSets {
 		testmod {
@@ -113,80 +69,52 @@ allprojects {
 		classpath sourceSets.testmod.runtimeClasspath
 	}
 
+	// CHOCO DEBUG
+	/*task splat {
+		doFirst {
+			compileJava.classpath.each {
+				println it.name
+			}
+		}
+	}*/
 	compileJava {
-		options.compilerArgs << '-XDignore.symbol.file'
-		options.fork = true
-		options.forkOptions.executable = 'javac'
+		/*doFirst {
+			println options.compilerArgs
+			configurations.annotationProcessor.files.each {
+				println it.name
+			}
+			
+		}*/
+		//finalizedBy splat
 	}
-
 	dependencies {
 		// fabric loader requires log4j, guava, and gson
 		implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.1'
 		implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.1'
-		annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.1'
-		annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.1'
 		implementation 'com.google.guava:guava:28.0-jre'
 		implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
 
-		// mixin and fabric loader need asm 9
-		implementation 'org.ow2.asm:asm:9.0'
-		implementation 'org.ow2.asm:asm-analysis:9.0'
-		implementation 'org.ow2.asm:asm-commons:9.0'
-		implementation 'org.ow2.asm:asm-tree:9.0'
-		implementation 'org.ow2.asm:asm-util:9.0'
+		// mixin and fabric loader need asm 8
+		implementation 'org.ow2.asm:asm:8.0'
+		implementation 'org.ow2.asm:asm-analysis:8.0'
+		implementation 'org.ow2.asm:asm-commons:8.0'
+		implementation 'org.ow2.asm:asm-tree:8.0'
+		implementation 'org.ow2.asm:asm-util:8.0'
 
-		implementation "com.github.jhalterman:typetools:87240d6"
-
-		implementation "com.github.benjiman:expressions:7ed6748"
-
-		implementation "com.github.mineLdiver:UnsafeEvents:7efec57"
-
-		// to change the versions see the gradle.properties file
+		//to change the versions see the gradle.properties file
 		minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
-		mappings loom.fromCommit("calmilamsy/BIN-Mappings", "${project.yarn_mappings}") {spec ->
-			spec.version = "b1.7.3-${project.yarn_mappings}"
+		mappings loom.fromCommit("minecraft-cursed-legacy/Plasma", "59b928b") {spec ->
+			spec.version = "b1.7.3-15"
 		}
 
-		// convenience stuff
-		// adds some useful annotations for data classes. does not add any dependencies
-		compileOnly 'org.projectlombok:lombok:1.18.16'
-		annotationProcessor 'org.projectlombok:lombok:1.18.16'
-		testmodCompileOnly 'org.projectlombok:lombok:1.18.16'
-		testmodAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
-
-		// adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
-		compile 'org.jetbrains:annotations:16.0.2'
+		// for config api
+		implementation "tk.valoeghese:ZoesteriaConfig:1.3.6"
 
 		modImplementation "com.github.minecraft-cursed-legacy:cursed-fabric-loader:${project.loader_version}"
-		modImplementation "com.github.amb0s:ModMenu:c52f3df"
-	}
-
-	configurations {
-		dev
-	}
-
-//	loom {
-//		shareCaches = true
-//	}
-
-	repositories {
-		mavenLocal()
-		mavenCentral()
-		jcenter()
-		gradlePluginPortal()
-		maven {
-			name = "Fabric"
-			url = "https://maven.fabricmc.net/"
-		}
-		maven {
-			name = "Jitpack"
-			url 'https://jitpack.io/'
-		}
-	}
-
-	jar {
-		classifier = "dev"
+		
+		// CoreLib for Models
+		modImplementation 'com.github.paulevsGitch:B.1.7.3-CoreLib:v.1.3.0'
 	}
 
 	afterEvaluate {
@@ -194,11 +122,7 @@ allprojects {
 			input = file("${project.buildDir}/libs/$archivesBaseName-${version}-dev.jar")
 			archiveName = "${archivesBaseName}-${version}.jar"
 		}
-
-		artifacts {
-			dev file: file("${project.buildDir}/libs/$archivesBaseName-${version}-dev.jar"), type: "jar", builtBy: jar
-		}
-
+		
 		processResources {
 			inputs.property "version", project.version
 
@@ -213,30 +137,31 @@ allprojects {
 		}
 	}
 
+	// ensure that the encoding is set to UTF-8, no matter what the system default is
+	// this fixes some edge cases with special characters not displaying correctly
+	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+	tasks.withType(JavaCompile) {
+		options.encoding = "UTF-8"
+	}
+
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this task, sources will not be generated.
 	task sourcesJar(type: Jar, dependsOn: classes) {
-		archiveClassifier = "sources"
+		classifier = "sources"
 		from sourceSets.main.allSource
+	}
+}
+
+subprojects {
+	dependencies {
+		testmodCompile sourceSets.main.output
 	}
 }
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
-
-idea {
-	module {
-		downloadJavadoc = true
-	}
-}
-
-eclipse {
-	classpath {
-		downloadJavadoc = true
-	}
-}
-
-//minecraft {
-//}
 
 processResources {
 	inputs.property "version", project.version
@@ -251,170 +176,31 @@ processResources {
 	}
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
-	options.encoding = "UTF-8"
-}
-
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-//task sourcesJar(type: Jar, dependsOn: classes) {
-//	classifier = "sources"
-//	from sourceSets.main.allSource
-//}
-
-javadoc {
-	options {
-		source = "8"
-		encoding = "UTF-8"
-		charSet = "UTF-8"
-		memberLevel = JavadocMemberLevel.PACKAGE
-		links(
-				"https://guava.dev/releases/21.0/api/docs/",
-				"https://asm.ow2.io/javadoc/",
-				"https://docs.oracle.com/javase/8/docs/api/",
-				"http://jenkins.liteloader.com/job/Mixin/javadoc/",
-				"https://logging.apache.org/log4j/2.x/log4j-api/apidocs/"
-				// Need to add minecraft jd publication etc once there is one available
-		)
-		// Disable the crazy super-strict doclint tool in Java 8
-		addStringOption("Xdoclint:none", "-quiet")
-	}
-
-	allprojects.each {
-		source(it.sourceSets.main.allJava.srcDirs)
-	}
-
-	classpath = sourceSets.main.compileClasspath
-	include("**/api/**")
-	include("**/template/**")
-	failOnError false
-}
-
-task javadocJar(type: Jar) {
-	dependsOn javadoc
-	from javadoc.destinationDir
-	//Set as `fatjavadoc` to prevent an ide form trying to use this javadoc, over using the modules javadoc
-	archiveClassifier = "fatjavadoc"
-}
-
-subprojects {
-	dependencies {
-		testmodCompile sourceSets.main.output
-	}
-
-	task remapMavenJar(type: Copy, dependsOn: remapJar) {
-		afterEvaluate {
-			from("${project.buildDir}/libs/$archivesBaseName-${version}.jar")
-			into("${project.buildDir}/libs/")
-			rename { String fn -> "$archivesBaseName-${version}-maven.jar" }
-		}
-	}
-
-	publishing {
-		publications {
-			mavenJava(MavenPublication) {
-				afterEvaluate {
-					artifact(file("${project.buildDir}/libs/$archivesBaseName-${version}-maven.jar")) {
-						builtBy remapMavenJar
-					}
-
-					artifact(sourcesJar) {
-						builtBy remapSourcesJar
-					}
-				}
-			}
-		}
-
-		setupRepositories(repositories)
-	}
-
-	javadoc.enabled = false
-}
-
-task remapMavenJar(type: net.fabricmc.loom.task.RemapJarTask, dependsOn: jar) {
-	afterEvaluate {
-		input = file("${project.buildDir}/libs/${archivesBaseName}-${version}-dev.jar")
-		archiveName = "${archivesBaseName}-${version}-maven.jar"
-		addNestedDependencies = false
-	}
-}
-
-void setupRepositories(RepositoryHandler repositories) {
-	//repositories.mavenLocal() // uncomment for testing
-	def ENV = System.getenv()
-	if (ENV.MAVEN_URL) {
-		repositories.maven {
-			url ENV.MAVEN_URL
-			credentials {
-				username ENV.MAVEN_USERNAME
-				password ENV.MAVEN_PASSWORD
-			}
-		}
-	}
-}
-
-tasks.publishToMavenLocal.dependsOn(tasks.build)
-tasks.build.dependsOn(tasks.javadocJar)
-
-publishing {
-	repositories {
-		mavenLocal()
-	}
-
-	publications {
-		mavenJava(MavenPublication) {
-			artifactId project.archives_base_name
-			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}.jar") {
-				classifier null
-				builtBy remapJar
-			}
-
-			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-dev.jar") {
-				classifier 'dev'
-				builtBy remapJar
-			}
-
-			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-javadoc.jar") {
-				classifier 'javadoc'
-				builtBy javadocJar
-			}
-
-			artifact(file("${project.buildDir}/libs/$archivesBaseName-${version}-maven.jar")) {
-				builtBy remapMavenJar
-			}
-
-			pom.withXml {
-				asNode().dependencies.dependency.each { dep ->
-					if(dep.artifactId.last().value().last().toLowerCase() in ["cursed-fabric-loader"]) {
-						assert dep.parent().remove(dep)
-					}
-				}
-			}
-		}
-	}
-}
-
 subprojects.each { remapJar.dependsOn("${it.path}:remapJar") }
 
-sourceSets {
-	testmod
-}
-
 dependencies {
-	afterEvaluate {
-		subprojects.each {
-			compile project(path: ":${it.name}", configuration: "dev")
-			include project("${it.name}:")
-
-			testmodCompile project("${it.name}:").sourceSets.testmod.output
-		}
+	ext.useDep = {dep ->
+		implementation dep
+		include dep
 	}
 
-	include "com.github.jhalterman:typetools:87240d6"
-	include "com.github.benjiman:expressions:7ed6748"
-	include "com.github.mineLdiver:UnsafeEvents:7efec57"
+	afterEvaluate {
+		// Root project setup nonsense
+		useDep project(":legacy-api-base")
+		useDep project(":legacy-attached-data-v1")
+		useDep project(":legacy-config-v0")
+		useDep project(":legacy-interaction-events-v0")
+		useDep project(":legacy-lifecycle-events-v0")
+		useDep project(":legacy-networking-v0")
+		useDep project(":legacy-networking-v0")
+		useDep project(":legacy-recipes-v0")
+		useDep project(":legacy-registries-v1")
+		useDep project(":legacy-terrain-v1")
+		useDep project(":legacy-tile-entities-v1")
+		useDep project(":legacy-translations-v0")
+		useDep project(":legacy-worldtypes-v1")
+	}
+	
+	include 'com.github.paulevsGitch:B.1.7.3-CoreLib:v.1.3.0'
+	include "tk.valoeghese:ZoesteriaConfig:1.3.6"
 }

@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "io.github.minecraftcursedlegacy.accessor.tileentities",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "AccessorTileEntity"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

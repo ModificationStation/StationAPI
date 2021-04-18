@@ -1,32 +1,40 @@
-# StationAPI for Minecraft Beta 1.7.3 BIN Fabric
+# Minecraft Cursed Legacy API
 
-A general use API for Fabric Loader mods on legacy Minecraft versions.
+The (unofficial) [Fabric](https://fabricmc.net/) home for 1.2.5 and Beta 1.7.3 - if you want the newer versions see [here](https://github.com/FabricMC/fabric).
 
-## Plugin Setup
+## Setup
+Run the following command (if you are not using eclipse, replace “eclipse” with your relevant ide)
 
-Extra steps for better Mixin making and Fabric configuring in IntelliJ IDEA:
+```
+./gradlew eclipse
+```
 
-1. Go to `File > Settings...`
-2. Go to `Plugins` and install the `Minecraft Development` plugin.
-3. Restart IntelliJ IDEA.
-4. Follow the instructions in [Using This to Make Mods](#using-this-to-make-mods).
-5. Profit!
+NOTE: if you want sources (recommended), instead run this. You only need to run this the first time you need to generate sources.
 
-## Using This to Run Mods
+```
+./gradlew :rebuildLVT :genSources eclipse
+```
 
-You will want to install the [Cursed Fabric MultiMC Instance](https://github.com/calmilamsy/Cursed-Fabric-MultiMC) and [download the latest release of StationAPI](https://github.com/modificationstation/StationAPI/releases/latest).  
-Put the downloaded StationAPI jar into your mods folder, do NOT add as a jar mod.
+To be able to run the API as a whole in an API dev environment, ensure the root project has been set up in your ide. This should be automatic, but it pays to make sure.
 
-## Using This to Make Mods
+If you wish to build a copy of API, you can run:
 
-[See the wiki.](https://github.com/ModificationStation/StationAPI/wiki)
+```
+./gradlew build -x compileTestJava -x checkstyleTest
+```
 
-Proper code documentation coming soon. There are some JavaDoc comments for some commonly used classes such as ItemRegister and BlockRegister.
+## Contributing
 
-## Common Issues
+Make sure to follow the code style guidelines, which can be seen in use in existing files.
 
-If you are having any issues with setting up StationAPI or the example mod, have a look at the [BIN Fabric Example Mod's readme entry for common issues](https://github.com/calmilamsy/BIN-fabric-example-mod/#common-issues).  
+A General Summary of the code style:
+- Use tabs for indentation
+- Use same-line braces
+- Put a new line between “regular code lines” and if/for/while etc. statements.
 
 ## License
+This API is available under the MIT license. Feel free to learn from it and incorporate it in your own projects.
 
-StationAPI is available under the [CC0 1.0 Universal License](LICENSE). Feel free to learn from it and incorporate it in your own projects.
+## Running Tests
+If your ide runs using gradle change settings to make your ide compile it itself so you can run the test modules.
+If your ide doesn't have this feature get a better ide not a glorified text editor please kthx

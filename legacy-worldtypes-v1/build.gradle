@@ -1,0 +1,9 @@
+archivesBaseName = "legacy-worldtypes-v1"
+version = getSubprojectVersion(project, "1.0.0")
+
+dependencies {
+	compile project(path: ':legacy-api-base')
+	compile project(path: ':legacy-attached-data-v1')
+	compile project(path: ':legacy-terrain-v1')
+	compile project(path: ':legacy-translations-v0')
+}

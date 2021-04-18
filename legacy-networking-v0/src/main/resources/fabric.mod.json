@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "legacy-networking",
+  "version": "${version}",
+
+  "name": "Minecraft Cursed Legacy Networking",
+  "description": "A set of useful hooks and features to be used by modders.",
+  "authors": [
+    "The Cursed Legacy Team"
+  ],
+  "contact": {
+    "issues": "https://github.com/minecraft-cursed-legacy/Cursed-Legacy-API/issues",
+    "sources": "https://github.com/minecraft-cursed-legacy/Cursed-Legacy-API"
+  },
+
+  "license": "MIT",
+  "icon": "assets/api/icon.png",
+  
+  "entrypoints": {
+    "init": [
+      "io.github.minecraftcursedlegacy.impl.networking.NetworkingImpl"
+    ]
+  },
+  
+  "mixins": [
+    "legacy-networking.accessors.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "legacy-api-base": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  }
+}

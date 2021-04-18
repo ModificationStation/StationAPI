@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "io.github.minecraftcursedlegacy.mixin.event.lifecycle",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "MixinMinecraft"
+  ],
+  "server": [
+    "MixinMinecraftServer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

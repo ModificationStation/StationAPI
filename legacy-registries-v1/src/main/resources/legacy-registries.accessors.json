@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "io.github.minecraftcursedlegacy.accessor.registry",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "AccessorDimensionFile",
+    "AccessorEntityRegistry",
+    "AccessorPlaceableTileItem",
+    "AccessorRecipeRegistry",
+    "AccessorShapedRecipe",
+    "AccessorShapelessRecipe",
+    "AccessorTileItem"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
