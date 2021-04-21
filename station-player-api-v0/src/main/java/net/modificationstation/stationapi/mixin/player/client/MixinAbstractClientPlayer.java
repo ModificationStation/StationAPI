@@ -1,8 +1,8 @@
-package net.modificationstation.stationapi.mixin.sortme.client;
+package net.modificationstation.stationapi.mixin.player.client;
 
 import net.minecraft.entity.player.AbstractClientPlayer;
 import net.minecraft.entity.player.PlayerInventory;
-import net.modificationstation.stationapi.impl.common.entity.player.PlayerAPI;
+import net.modificationstation.stationapi.impl.entity.player.PlayerAPI;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

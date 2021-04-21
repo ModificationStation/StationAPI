@@ -1,9 +1,9 @@
-package net.modificationstation.stationapi.mixin.sortme.common;
+package net.modificationstation.stationapi.mixin.recipe;
 
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.modificationstation.stationapi.api.common.item.Fuel;
+import net.modificationstation.stationapi.api.item.Fuel;
 import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;

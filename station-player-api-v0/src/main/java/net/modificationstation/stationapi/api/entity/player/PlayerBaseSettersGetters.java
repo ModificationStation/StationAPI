@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.entity.player;
 
 import java.util.*;
 
-public interface PlayerBaseSettersGettersInvokers {
+public interface PlayerBaseSettersGetters {
 
     void doFall(float fallDist);
 

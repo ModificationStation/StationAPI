@@ -5,13 +5,15 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ItemBaseAccessor",
-    "MixinItemBase"
+    "MixinItemBase",
+    "MixinPlayerBase"
   ],
   "server": [
     "server.MixinServerPlayerPacketHandler"
   ],
   "client": [
     "client.Mixinclass_608",
+    "client.MixinClientInteractionManager",
     "client.MixinGameRenderer",
     "client.MixinRemoteClientInteractionManager"
   ],

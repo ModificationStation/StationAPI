@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.sortme.client;
+package net.modificationstation.stationapi.mixin.armour.client;
 
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.PlayerRenderer;

@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.entity.player;
 
 import java.util.*;
 
-public interface HasPlayerHandlers {
+public interface PlayerHandlerContainer {
 
     List<PlayerHandler> getPlayerBases();
 }

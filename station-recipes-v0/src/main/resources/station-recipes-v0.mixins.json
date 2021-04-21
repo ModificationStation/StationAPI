@@ -6,6 +6,7 @@
   "mixins": [
     "MixinRecipeRegistry",
     "MixinSmeltingRecipeRegistry",
+    "MixinTileEntityFurnace",
     "RecipeRegistryAccessor",
     "SmeltingRecipeRegistryAccessor",
     "TileEntityFurnaceAccessor"

@@ -4,9 +4,13 @@
   "package": "net.modificationstation.stationapi.mixin.player",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinPlayerBase"
   ],
   "server": [
     "server.ServerPlayerPacketHandlerAccessor"
+  ],
+  "client": [
+    "client.MixinAbstractClientPlayer"
   ],
   "injectors": {
     "defaultRequire": 1

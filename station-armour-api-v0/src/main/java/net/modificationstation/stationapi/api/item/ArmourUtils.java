@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.common.util;
+package net.modificationstation.stationapi.api.item;
 
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.armour.Armour;

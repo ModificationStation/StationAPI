@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.sortme.common;
+package net.modificationstation.stationapi.mixin.player;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,16 +16,12 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.SleepStatus;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.common.entity.player.HasPlayerHandlers;
-import net.modificationstation.stationapi.api.common.entity.player.PlayerBaseSettersGettersInvokers;
-import net.modificationstation.stationapi.api.common.entity.player.PlayerBaseSuper;
-import net.modificationstation.stationapi.api.common.entity.player.PlayerHandler;
-import net.modificationstation.stationapi.api.common.event.entity.player.PlayerEvent;
-import net.modificationstation.stationapi.api.common.item.CustomArmourValue;
-import net.modificationstation.stationapi.api.common.item.UseOnEntityFirst;
-import net.modificationstation.stationapi.api.common.util.ArmourUtils;
-import net.modificationstation.stationapi.impl.common.entity.player.PlayerAPI;
-import net.modificationstation.stationapi.mixin.sortme.common.accessor.PlayerBaseAccessor;
+import net.modificationstation.stationapi.api.entity.player.PlayerBaseSettersGetters;
+import net.modificationstation.stationapi.api.entity.player.PlayerBaseSuper;
+import net.modificationstation.stationapi.api.entity.player.PlayerHandler;
+import net.modificationstation.stationapi.api.entity.player.PlayerHandlerContainer;
+import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
+import net.modificationstation.stationapi.impl.entity.player.PlayerAPI;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,8 +29,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.*;
+
 @Mixin(PlayerBase.class)
-public abstract class MixinPlayerBase extends Living implements PlayerBaseAccessor, PlayerBaseSettersGettersInvokers, HasPlayerHandlers, PlayerBaseSuper {
+public abstract class MixinPlayerBase extends Living implements PlayerBaseSettersGetters, PlayerHandlerContainer, PlayerBaseSuper {
 
     @Shadow
     public PlayerInventory inventory;
@@ -45,9 +43,6 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
     public MixinPlayerBase(Level world) {
         super(world);
     }
-
-    @Shadow
-    public abstract ItemInstance getHeldItem();
 
     @Override
     public List<PlayerHandler> getPlayerBases() {
@@ -306,36 +301,6 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
         super.jump();
     }
 
-    @Inject(method = "applyDamage(I)V", at = @At("HEAD"), cancellable = true)
-    private void applyDamage(int initialDamage, CallbackInfo ci) {
-        if (PlayerAPI.damageEntity((PlayerBase) (Object) this, initialDamage))
-            ci.cancel();
-
-        double damageAmount = initialDamage;
-        ItemInstance[] armour = this.inventory.armour;
-        int armourSlot = 0;
-
-        for (ItemInstance armourInstance : armour) {
-            // This solution is not exact with vanilla, but is WAY better than previous solutions which weren't even close to vanilla.
-            if (armourInstance != null) {
-                if (armourInstance.getType() instanceof CustomArmourValue) {
-                    CustomArmourValue armor = (CustomArmourValue) armourInstance.getType();
-                    double damageNegated = armor.modifyDamageDealt((PlayerBase) (Object) this, armourSlot, initialDamage, damageAmount);
-                    damageAmount -= damageNegated;
-                } else {
-                    damageAmount -= ArmourUtils.getVanillaArmourReduction(armourInstance);
-                    armourInstance.applyDamage(initialDamage, null);
-                }
-                if (damageAmount < 0) {
-                    damageAmount = 0;
-                }
-            }
-            armourSlot++;
-        }
-        super.applyDamage((int) damageAmount);
-        ci.cancel();
-    }
-
     @Override
     public void superDamageEntity(int i) {
         super.applyDamage(i);
@@ -402,6 +367,12 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
             ci.cancel();
     }
 
+    @Inject(method = "applyDamage(I)V", at = @At("HEAD"), cancellable = true)
+    private void applyDamage(int initialDamage, CallbackInfo ci) {
+        if (PlayerAPI.damageEntity((PlayerBase) (Object) this, initialDamage))
+            ci.cancel();
+    }
+
     @Override
     public void superUpdatePlayerActionState() {
         super.tickHandSwing();
@@ -420,12 +391,5 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseAccess
     @Override
     public void setIsJumping(boolean value) {
         this.jumping = value;
-    }
-
-    @Inject(method = "interactWith(Lnet/minecraft/entity/EntityBase;)V", at = @At(value = "HEAD"), cancellable = true)
-    private void hijackInteractWith(EntityBase arg, CallbackInfo ci) {
-        if (getHeldItem() != null && getHeldItem().getType() instanceof UseOnEntityFirst && ((UseOnEntityFirst)getHeldItem().getType()).onUseOnEntityFirst(getHeldItem(), (PlayerBase) (Object) this, this.level, arg)) {
-            ci.cancel();
-        }
     }
 }
