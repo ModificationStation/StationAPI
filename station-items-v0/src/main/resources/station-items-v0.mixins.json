@@ -7,6 +7,14 @@
     "ItemBaseAccessor",
     "MixinItemBase"
   ],
+  "server": [
+    "server.MixinServerPlayerPacketHandler"
+  ],
+  "client": [
+    "client.Mixinclass_608",
+    "client.MixinGameRenderer",
+    "client.MixinRemoteClientInteractionManager"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

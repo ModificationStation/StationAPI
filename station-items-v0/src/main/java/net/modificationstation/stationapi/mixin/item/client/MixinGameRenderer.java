@@ -1,10 +1,10 @@
-package net.modificationstation.stationapi.mixin.sortme.client;
+package net.modificationstation.stationapi.mixin.item.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.sortme.GameRenderer;
 import net.minecraft.util.hit.HitType;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.common.event.entity.player.PlayerEvent;
+import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Constant;

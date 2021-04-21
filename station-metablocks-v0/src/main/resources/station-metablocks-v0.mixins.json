@@ -8,14 +8,14 @@
     "MixinItemBase",
     "MixinItemInstance",
     "MixinPlayerBase",
-    "MixinPlayerInventory",
-    "client.MixinRemoteClientInteractionManager"
+    "MixinPlayerInventory"
   ],
   "server": [
     "server.Mixinclass_70"
   ],
   "client": [
-    "client.Mixinclass_608"
+    "client.Mixinclass_608",
+    "client.MixinRemoteClientInteractionManager"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,8 +1,6 @@
 package net.modificationstation.stationapi.mixin.metablock.client;
 
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.ClientInteractionManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.RemoteClientInteractionManager;
 import net.minecraft.entity.player.AbstractClientPlayer;
 import net.minecraft.entity.player.PlayerBase;
@@ -16,18 +14,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(RemoteClientInteractionManager.class)
-public class MixinRemoteClientInteractionManager extends ClientInteractionManager {
+public class MixinRemoteClientInteractionManager {
 
     private int capturedMeta;
-
-    public MixinRemoteClientInteractionManager(Minecraft minecraft) {
-        super(minecraft);
-    }
-
-//    @Inject(method = "getBlockReachDistance()F", at = @At("RETURN"), cancellable = true)
-//    private void getBlockReach(CallbackInfoReturnable<Float> cir) {
-//        cir.setReturnValue((float) StationAPI.EVENT_BUS.post(new PlayerEvent.Reach(minecraft.player, HitType.TILE, cir.getReturnValueF())).currentReach);
-//    }
 
     @Redirect(method = {"method_1707(IIII)V", "method_1721(IIII)V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;getHardness(Lnet/minecraft/entity/player/PlayerBase;)F"))
     private float getHardnessPerMeta(BlockBase blockBase, PlayerBase arg, int i, int j, int k, int i1) {
