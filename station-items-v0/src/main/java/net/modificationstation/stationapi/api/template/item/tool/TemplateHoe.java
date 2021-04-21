@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.template.item.tool;
 
 import net.minecraft.item.tool.ToolMaterial;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.IItemTemplate;
 
 public class TemplateHoe extends net.minecraft.item.tool.Hoe implements IItemTemplate<TemplateHoe> {

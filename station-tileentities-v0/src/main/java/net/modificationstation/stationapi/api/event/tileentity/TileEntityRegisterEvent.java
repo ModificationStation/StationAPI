@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.event.tileentity;
 
 import lombok.RequiredArgsConstructor;
-import net.minecraft.tileentity.TileEntityBase;
 import net.mine_diver.unsafeevents.Event;
+import net.minecraft.tileentity.TileEntityBase;
 
 import java.util.function.*;
 

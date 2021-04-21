@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.registry;
 
-import net.modificationstation.stationapi.api.StationAPI;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

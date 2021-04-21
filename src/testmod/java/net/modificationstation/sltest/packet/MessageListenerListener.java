@@ -1,15 +1,15 @@
 package net.modificationstation.sltest.packet;
 
+import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.item.ModdedItem;
-import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.packet.Message;
-import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
 
 public class MessageListenerListener {
 

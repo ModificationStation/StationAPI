@@ -11,11 +11,6 @@ import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
 import net.modificationstation.stationapi.mixin.sortme.client.accessor.TextureManagerAccessor;
 
-import java.awt.image.*;
-import java.io.*;
-import java.nio.*;
-import java.util.*;
-
 @Environment(EnvType.CLIENT)
 public class TextureFactory implements net.modificationstation.stationapi.api.client.texture.TextureFactory {
 

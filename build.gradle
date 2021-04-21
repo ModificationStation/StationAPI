@@ -36,7 +36,6 @@ def ENV = System.getenv()
 
 import net.fabricmc.loom.task.RunClientTask
 import net.fabricmc.loom.task.RunServerTask
-import org.apache.commons.codec.digest.DigestUtils
 
 def getSubprojectVersion(project, version) {
 	if (grgit == null) {
@@ -159,7 +158,6 @@ allprojects {
 		compile 'org.jetbrains:annotations:16.0.2'
 
 		modImplementation "com.github.minecraft-cursed-legacy:cursed-fabric-loader:${project.loader_version}"
-		modImplementation "com.github.amb0s:ModMenu:c52f3df"
 	}
 
 	configurations {
@@ -417,4 +415,6 @@ dependencies {
 	include "com.github.jhalterman:typetools:87240d6"
 	include "com.github.benjiman:expressions:7ed6748"
 	include "com.github.mineLdiver:UnsafeEvents:7efec57"
+
+	modImplementation "com.github.amb0s:ModMenu:c52f3df"
 }

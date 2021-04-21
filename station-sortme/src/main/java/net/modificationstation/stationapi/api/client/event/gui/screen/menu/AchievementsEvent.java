@@ -3,11 +3,9 @@ package net.modificationstation.stationapi.api.client.event.gui.screen.menu;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.mine_diver.unsafeevents.Event;
 import net.minecraft.achievement.Achievement;
 import net.minecraft.client.gui.screen.menu.Achievements;
-import net.mine_diver.unsafeevents.Event;
-
-import java.util.*;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AchievementsEvent extends Event {

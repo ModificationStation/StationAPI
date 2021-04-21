@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.event.item;
 
 import lombok.RequiredArgsConstructor;
-import net.minecraft.item.ItemBase;
 import net.mine_diver.unsafeevents.Event;
+import net.minecraft.item.ItemBase;
 
 @RequiredArgsConstructor
 public abstract class ItemEvent extends Event {

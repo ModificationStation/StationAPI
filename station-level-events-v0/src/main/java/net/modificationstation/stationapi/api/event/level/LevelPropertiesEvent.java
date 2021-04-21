@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.event.level;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import net.mine_diver.unsafeevents.Event;
 import net.minecraft.level.LevelProperties;
 import net.minecraft.util.io.CompoundTag;
-import net.mine_diver.unsafeevents.Event;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class LevelPropertiesEvent extends Event {

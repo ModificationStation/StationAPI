@@ -4,8 +4,6 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.util.HasHandler;
 
-import java.util.*;
-
 /**
  * Used to add textures.
  * You want to reference this inside your registerTextures method.

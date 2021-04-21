@@ -35,7 +35,6 @@ public class ShapedOreDictRecipe implements Recipe {
                 ++recipeStringHeight;
                 recipeStringLength = recipeString.length();
                 joinedRecipeString.append(recipeString);
-                System.out.println(recipeString);
             }
         }
 
@@ -53,7 +52,6 @@ public class ShapedOreDictRecipe implements Recipe {
             }
 
             characterToIngredient.put(recipeCharacter, ingredientToAdd);
-            System.out.println(characterToIngredient);
         }
 
         Object[] ingredients = new Object[recipeStringLength * recipeStringHeight];
@@ -76,7 +74,6 @@ public class ShapedOreDictRecipe implements Recipe {
         this.width = recipeStringLength;
         this.height = recipeStringHeight;
         this.ingredients = ingredients;
-        System.out.println(Arrays.toString(this.ingredients));
         this.output = output;
     }
 
@@ -132,7 +129,6 @@ public class ShapedOreDictRecipe implements Recipe {
                 }
                 else {
                     String var11 = (String) var9;
-                    System.out.println(var11);
                     if (!OreDict.INSTANCE.matches(var11, var10)) {
                         return false;
                     }

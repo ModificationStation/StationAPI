@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.template.item.food;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
+
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.IItemTemplate;
 
 public class TemplateFoodBase extends net.minecraft.item.food.FoodBase implements IItemTemplate<TemplateFoodBase> {

@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.client.event.keyboard;
 
 import lombok.RequiredArgsConstructor;
+import net.mine_diver.unsafeevents.Event;
 import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegisterEvent;
-import net.mine_diver.unsafeevents.Event;
 import org.lwjgl.input.Keyboard;
 
 /**

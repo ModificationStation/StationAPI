@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.api.server.event.entity;
 
 import lombok.RequiredArgsConstructor;
+import net.mine_diver.unsafeevents.Event;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.network.EntityHashSet;
 import net.minecraft.server.network.ServerEntityTracker;
-import net.mine_diver.unsafeevents.Event;
-import net.modificationstation.stationapi.api.util.API;
 import net.modificationstation.stationapi.api.server.entity.ICustomTracking;
 import net.modificationstation.stationapi.api.server.entity.ITracking;
 import net.modificationstation.stationapi.api.server.entity.Tracking;
+import net.modificationstation.stationapi.api.util.API;
 
 /**
  * Event that gets called after server tries tracking an entity by checking if it's instance of a vanilla class.

@@ -3,11 +3,9 @@ package net.modificationstation.stationapi.impl.client.texture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureManager;
-import net.modificationstation.stationapi.api.client.event.texture.TexturesPerFileChangedEvent;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.client.event.texture.TexturesPerFileChangedEvent;
 import org.lwjgl.opengl.GL11;
-
-import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class TextureRegistry implements net.modificationstation.stationapi.api.client.texture.TextureRegistry {

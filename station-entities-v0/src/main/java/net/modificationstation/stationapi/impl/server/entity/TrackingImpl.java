@@ -1,17 +1,17 @@
 package net.modificationstation.stationapi.impl.server.entity;
 
+import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.network.EntityHashSet;
 import net.minecraft.server.network.ServerEntityTracker;
-import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEvent;
-import net.modificationstation.stationapi.api.util.TriState;
 import net.modificationstation.stationapi.api.server.entity.ICustomTracking;
 import net.modificationstation.stationapi.api.server.entity.ITracking;
 import net.modificationstation.stationapi.api.server.entity.Tracking;
+import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEvent;
+import net.modificationstation.stationapi.api.util.TriState;
 
 /**
  * {@link ITracking} implementation class.

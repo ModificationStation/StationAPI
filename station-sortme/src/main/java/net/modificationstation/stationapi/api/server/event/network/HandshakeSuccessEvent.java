@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.server.event.network;
 
 import lombok.RequiredArgsConstructor;
+import net.mine_diver.unsafeevents.Event;
 import net.minecraft.packet.handshake.HandshakeC2S;
 import net.minecraft.server.network.PendingConnection;
-import net.mine_diver.unsafeevents.Event;
 
 @RequiredArgsConstructor
 public class HandshakeSuccessEvent extends Event {

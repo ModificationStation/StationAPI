@@ -20,7 +20,6 @@ public class MixinPlayerInventory {
     @Inject(method = "mergeStacks(Lnet/minecraft/item/ItemInstance;)I", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemInstance;<init>(III)V", shift = At.Shift.BY, by = 2), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onCopyItemInstance(ItemInstance arg, CallbackInfoReturnable<Integer> cir, int var2, int var3, int var4) {
         ItemEntity itemEntity = HasItemEntity.cast(arg).getItemEntity();
-        System.out.println(main[var4]);
         HasItemEntity.cast(main[var4]).setItemEntity(itemEntity == null ? null : itemEntity.copy());
     }
 }

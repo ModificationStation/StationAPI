@@ -1,11 +1,11 @@
 package net.modificationstation.sltest.achievement;
 
+import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.achievement.Achievement;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.item.ItemListener;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
-import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.common.event.achievement.AchievementRegisterEvent;
 
 public class AchievementListener {

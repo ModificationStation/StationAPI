@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.sortme.client;
 
 import net.minecraft.client.gui.screen.ScreenBase;
-import net.modificationstation.stationapi.api.client.event.keyboard.KeyStateChangedEvent;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.client.event.keyboard.KeyStateChangedEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

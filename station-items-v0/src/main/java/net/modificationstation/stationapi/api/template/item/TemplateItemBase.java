@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.template.item;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
+
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
 public class TemplateItemBase extends net.minecraft.item.ItemBase implements IItemTemplate<TemplateItemBase> {
 

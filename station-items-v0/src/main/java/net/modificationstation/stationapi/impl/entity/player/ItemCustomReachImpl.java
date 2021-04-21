@@ -1,16 +1,16 @@
-package net.modificationstation.stationapi.impl.common.entity.player;
+package net.modificationstation.stationapi.impl.entity.player;
 
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
-import net.modificationstation.stationapi.api.common.event.entity.player.PlayerEvent;
-import net.modificationstation.stationapi.api.common.item.ICustomReach;
+import net.minecraft.item.ItemBase;
+import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
+import net.modificationstation.stationapi.api.item.ICustomReach;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
-public class PlayerReachImpl {
+public class ItemCustomReachImpl {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void getReach(PlayerEvent.Reach event) {

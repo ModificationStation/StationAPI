@@ -1,10 +1,10 @@
-package net.modificationstation.stationapi.api.common.event.entity.player;
+package net.modificationstation.stationapi.api.event.entity.player;
 
 import lombok.RequiredArgsConstructor;
+import net.mine_diver.unsafeevents.Event;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.util.hit.HitType;
-import net.modificationstation.stationapi.api.common.entity.player.PlayerHandler;
-import net.mine_diver.unsafeevents.Event;
+import net.modificationstation.stationapi.api.entity.player.PlayerHandler;
 
 import java.util.*;
 

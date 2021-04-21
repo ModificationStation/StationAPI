@@ -5,7 +5,7 @@ import net.minecraft.class_608;
 import net.minecraft.client.ClientInteractionManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerBase;
-import net.modificationstation.stationapi.api.block.BlockStrengthPerMeta;
+import net.modificationstation.stationapi.api.block.PlayerBlockHardnessPerMeta;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -24,7 +24,6 @@ public class Mixinclass_608 extends ClientInteractionManager {
 
     @Redirect(method = {"method_1707(IIII)V", "method_1721(IIII)V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;getHardness(Lnet/minecraft/entity/player/PlayerBase;)F"))
     private float getHardnessPerMeta(BlockBase blockBase, PlayerBase arg, int i, int j, int k, int i1) {
-        System.out.println("cunt");
-        return ((BlockStrengthPerMeta) blockBase).getBlockStrength(arg, arg.level.getTileMeta(i, j, k));
+        return ((PlayerBlockHardnessPerMeta) blockBase).getHardness(arg, arg.level.getTileMeta(i, j, k));
     }
 }

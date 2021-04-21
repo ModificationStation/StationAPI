@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.common.event.container.slot;
 
 import lombok.RequiredArgsConstructor;
+import net.mine_diver.unsafeevents.Event;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
-import net.mine_diver.unsafeevents.Event;
 
 @RequiredArgsConstructor
 public class ItemUsedInCraftingEvent extends Event {

@@ -4,9 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
 
-import java.awt.*;
-import java.awt.image.*;
-
 @Environment(EnvType.CLIENT)
 public class StaticTexture extends Texture {
 

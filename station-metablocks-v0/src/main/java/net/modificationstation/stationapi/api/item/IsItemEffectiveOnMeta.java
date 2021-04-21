@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.item;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemInstance;
 
-public interface StrengthOnMeta {
+public interface IsItemEffectiveOnMeta {
 
-    float getStrengthOnBlock(ItemInstance item, BlockBase tile, int meta);
+    boolean isEffectiveOn(ItemInstance itemInstance, BlockBase tile, int meta);
 }

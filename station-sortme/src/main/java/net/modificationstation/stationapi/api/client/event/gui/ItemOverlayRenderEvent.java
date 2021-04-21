@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.api.client.event.gui;
 
 import lombok.RequiredArgsConstructor;
+import net.mine_diver.unsafeevents.Event;
 import net.minecraft.client.render.TextRenderer;
 import net.minecraft.client.render.entity.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.item.ItemInstance;
-import net.mine_diver.unsafeevents.Event;
 
 @RequiredArgsConstructor
 public class ItemOverlayRenderEvent extends Event {

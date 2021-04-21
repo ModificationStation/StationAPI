@@ -6,9 +6,6 @@ import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.API;
 import net.modificationstation.stationapi.api.util.Named;
 
-import java.util.*;
-import java.util.stream.*;
-
 /**
  * Instantiates and adds an achievement page to the achievement page list.
  * @author calmilamsy

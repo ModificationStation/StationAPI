@@ -5,12 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.mixin.sortme.client.accessor.TextureManagerAccessor;
 
-import javax.imageio.*;
-import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
-import java.util.*;
-
 public class ExpandableTextureAtlas extends TextureAtlas {
 
     private static final Map<String, ExpandableTextureAtlas> PATH_TO_ATLAS = new HashMap<>();

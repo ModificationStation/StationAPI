@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.common.entity.player;
+package net.modificationstation.stationapi.impl.entity.player;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.Sign;
@@ -11,8 +11,8 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.SleepStatus;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.common.entity.player.HasPlayerHandlers;
-import net.modificationstation.stationapi.api.common.entity.player.PlayerHandler;
+import net.modificationstation.stationapi.api.entity.player.HasPlayerHandlers;
+import net.modificationstation.stationapi.api.entity.player.PlayerHandler;
 
 public class PlayerAPI {
 

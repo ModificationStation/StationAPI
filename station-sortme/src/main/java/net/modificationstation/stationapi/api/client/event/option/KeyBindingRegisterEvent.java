@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.event.option;
 
 import lombok.RequiredArgsConstructor;
-import net.minecraft.client.options.KeyBinding;
 import net.mine_diver.unsafeevents.Event;
+import net.minecraft.client.options.KeyBinding;
 
 import java.util.*;
 

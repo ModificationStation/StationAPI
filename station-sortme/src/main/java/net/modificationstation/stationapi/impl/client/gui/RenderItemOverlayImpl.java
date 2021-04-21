@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.impl.client.gui;
 
-import net.modificationstation.stationapi.api.client.event.gui.ItemOverlayRenderEvent;
-import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
+import net.modificationstation.stationapi.api.client.event.gui.ItemOverlayRenderEvent;
+import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 

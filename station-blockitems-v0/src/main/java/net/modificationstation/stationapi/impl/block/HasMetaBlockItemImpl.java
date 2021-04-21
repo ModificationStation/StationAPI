@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.impl.block;
 
+import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.item.Block;
+import net.modificationstation.stationapi.api.block.CustomBlockItemFactoryProvider;
 import net.modificationstation.stationapi.api.block.HasCustomBlockItemFactory;
 import net.modificationstation.stationapi.api.block.HasMetaBlockItem;
 import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
-import net.modificationstation.stationapi.api.block.CustomBlockItemFactoryProvider;
 import net.modificationstation.stationapi.api.block.MetaBlockItemProvider;
 import net.modificationstation.stationapi.api.block.MetaNamedBlockItemProvider;
-import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;

@@ -6,9 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.RemoteClientInteractionManager;
 import net.minecraft.entity.player.AbstractClientPlayer;
 import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.block.BlockStrengthPerMeta;
-import net.modificationstation.stationapi.api.item.EffectiveOnMeta;
+import net.modificationstation.stationapi.api.block.PlayerBlockHardnessPerMeta;
+import net.modificationstation.stationapi.api.entity.player.CanPlayerRemoveMetaBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,7 +31,7 @@ public class MixinRemoteClientInteractionManager extends ClientInteractionManage
 
     @Redirect(method = {"method_1707(IIII)V", "method_1721(IIII)V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;getHardness(Lnet/minecraft/entity/player/PlayerBase;)F"))
     private float getHardnessPerMeta(BlockBase blockBase, PlayerBase arg, int i, int j, int k, int i1) {
-        return ((BlockStrengthPerMeta) blockBase).getBlockStrength(arg, arg.level.getTileMeta(i, j, k));
+        return ((PlayerBlockHardnessPerMeta) blockBase).getHardness(arg, arg.level.getTileMeta(i, j, k));
     }
 
     @Inject(method = "method_1716(IIII)Z", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/level/Level;getTileMeta(III)I", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
@@ -42,9 +41,6 @@ public class MixinRemoteClientInteractionManager extends ClientInteractionManage
 
     @Redirect(method = "method_1716(IIII)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/AbstractClientPlayer;canRemoveBlock(Lnet/minecraft/block/BlockBase;)Z"))
     private boolean canRemoveBlock(AbstractClientPlayer abstractClientPlayer, BlockBase arg) {
-        if (arg.material.doesRequireTool())
-            return true;
-        ItemInstance itemInstance = abstractClientPlayer.getHeldItem();
-        return itemInstance != null && ((EffectiveOnMeta) itemInstance.getType()).isEffectiveOn(arg, capturedMeta, itemInstance);
+        return ((CanPlayerRemoveMetaBlock) abstractClientPlayer).canRemoveBlock(arg, capturedMeta);
     }
 }

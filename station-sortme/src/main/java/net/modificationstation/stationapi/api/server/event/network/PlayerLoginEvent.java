@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.server.event.network;
 
 import lombok.RequiredArgsConstructor;
-import net.minecraft.entity.player.ServerPlayer;
 import net.mine_diver.unsafeevents.Event;
+import net.minecraft.entity.player.ServerPlayer;
 
 @RequiredArgsConstructor
 public class PlayerLoginEvent extends Event {

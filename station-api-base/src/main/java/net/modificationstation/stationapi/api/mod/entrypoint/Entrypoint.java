@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.mod.entrypoint;
 
-import net.modificationstation.stationapi.api.config.Configuration;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.modificationstation.stationapi.api.config.Configuration;
 
 import java.lang.annotation.*;
 

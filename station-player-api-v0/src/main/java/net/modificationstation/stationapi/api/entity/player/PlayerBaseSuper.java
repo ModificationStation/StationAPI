@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.common.entity.player;
+package net.modificationstation.stationapi.api.entity.player;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityBase;

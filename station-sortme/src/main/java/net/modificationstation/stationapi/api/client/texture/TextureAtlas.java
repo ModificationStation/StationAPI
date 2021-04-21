@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.client.texture;
 
-import java.util.function.*;
-
 public class TextureAtlas {
 
     public static final TextureAtlas GUI_ITEMS = new TextureAtlas("/gui/items.png", 256);

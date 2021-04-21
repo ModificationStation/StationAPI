@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.api.block;
 
 import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
-import net.modificationstation.stationapi.impl.block.HasMetaNamedBlockItemImpl;
 import net.modificationstation.stationapi.api.template.item.MetaNamedBlock;
+import net.modificationstation.stationapi.impl.block.HasMetaNamedBlockItemImpl;
 
 import java.util.function.*;
 

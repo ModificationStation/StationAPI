@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.template.item.food;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
+
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.IItemTemplate;
 
 public class TemplateCookie extends net.minecraft.item.food.Cookie implements IItemTemplate<TemplateCookie> {

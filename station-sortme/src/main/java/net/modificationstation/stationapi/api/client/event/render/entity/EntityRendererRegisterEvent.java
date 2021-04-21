@@ -1,11 +1,9 @@
 package net.modificationstation.stationapi.api.client.event.render.entity;
 
 import lombok.RequiredArgsConstructor;
+import net.mine_diver.unsafeevents.Event;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.EntityBase;
-import net.mine_diver.unsafeevents.Event;
-
-import java.util.*;
 
 @RequiredArgsConstructor
 public class EntityRendererRegisterEvent extends Event {

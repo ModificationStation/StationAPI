@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.template.item.tool;
 
 import net.minecraft.item.tool.ToolMaterial;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.IItemTemplate;
 
 public class TemplateSword extends net.minecraft.item.tool.Sword implements IItemTemplate<TemplateSword> {

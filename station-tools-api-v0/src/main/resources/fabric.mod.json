@@ -21,10 +21,7 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-    ],
-    "stationapi:event_bus_server": [
-    ],
-    "stationapi:event_bus_client": [
+      "net.modificationstation.stationapi.impl.item.ToolEffectivenessImpl"
     ]
   },
   "mixins": [

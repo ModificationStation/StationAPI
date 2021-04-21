@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.event.texture;
 
-import net.modificationstation.stationapi.api.client.texture.TextureFactory;
 import net.mine_diver.unsafeevents.Event;
+import net.modificationstation.stationapi.api.client.texture.TextureFactory;
 
 /**
  * Used to register your mod textures.

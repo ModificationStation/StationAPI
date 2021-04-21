@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.template.item;
 
 import net.minecraft.block.material.Material;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
 public class TemplateDoor extends net.minecraft.item.Door implements IItemTemplate<TemplateDoor> {
     

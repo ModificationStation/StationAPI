@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.event.model;
 
 import lombok.RequiredArgsConstructor;
-import net.modificationstation.stationapi.api.client.model.BlockModelProvider;
 import net.mine_diver.unsafeevents.Event;
+import net.modificationstation.stationapi.api.client.model.BlockModelProvider;
 
 // TODO: Item and Entity model documentation.
 

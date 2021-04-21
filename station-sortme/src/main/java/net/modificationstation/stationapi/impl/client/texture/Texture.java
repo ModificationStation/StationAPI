@@ -8,10 +8,6 @@ import net.modificationstation.stationapi.api.client.texture.TextureFactory;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
 import org.lwjgl.opengl.GL11;
 
-import javax.imageio.*;
-import java.awt.image.*;
-import java.io.*;
-
 public abstract class Texture extends TextureBinder {
 
     protected final int atlasID;

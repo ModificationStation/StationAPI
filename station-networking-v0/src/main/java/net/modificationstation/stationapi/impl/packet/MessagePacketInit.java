@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.impl.packet;
 
-import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.config.Category;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
+import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.config.Category;
 import net.modificationstation.stationapi.api.event.packet.PacketRegisterEvent;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;

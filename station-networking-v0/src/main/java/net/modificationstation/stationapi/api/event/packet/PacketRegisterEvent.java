@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.event.packet;
 
 import lombok.RequiredArgsConstructor;
-import net.minecraft.packet.AbstractPacket;
 import net.mine_diver.unsafeevents.Event;
+import net.minecraft.packet.AbstractPacket;
 import uk.co.benjiweber.expressions.functions.QuadConsumer;
 
 @RequiredArgsConstructor

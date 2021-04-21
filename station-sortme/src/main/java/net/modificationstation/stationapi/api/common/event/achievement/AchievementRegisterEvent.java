@@ -1,10 +1,8 @@
 package net.modificationstation.stationapi.api.common.event.achievement;
 
 import lombok.RequiredArgsConstructor;
-import net.minecraft.achievement.Achievement;
 import net.mine_diver.unsafeevents.Event;
-
-import java.util.*;
+import net.minecraft.achievement.Achievement;
 
 @RequiredArgsConstructor
 public class AchievementRegisterEvent extends Event {

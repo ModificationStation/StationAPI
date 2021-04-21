@@ -4,9 +4,6 @@ import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.mixin.sortme.common.accessor.TranslationStorageAccessor;
 
-import java.io.*;
-import java.util.*;
-
 public class I18n {
 
     private static final Map<String, String> langFolders = new HashMap<>();

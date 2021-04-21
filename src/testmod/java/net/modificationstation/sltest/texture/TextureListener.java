@@ -1,5 +1,6 @@
 package net.modificationstation.sltest.texture;
 
+import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.block.BlockListener;
@@ -8,7 +9,6 @@ import net.modificationstation.stationapi.api.client.event.texture.TextureRegist
 import net.modificationstation.stationapi.api.client.texture.ExpandableTextureAtlas;
 import net.modificationstation.stationapi.api.client.texture.TextureFactory;
 import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
-import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
 public class TextureListener {

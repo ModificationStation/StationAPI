@@ -16,10 +16,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.*;
-import java.net.*;
-import java.nio.file.*;
-
 @Mixin(SoundHelper.class)
 public class MixinSoundHelper {
 

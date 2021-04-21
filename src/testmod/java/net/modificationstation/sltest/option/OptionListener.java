@@ -2,9 +2,9 @@ package net.modificationstation.sltest.option;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegisterEvent;
-import net.mine_diver.unsafeevents.listener.EventListener;
 
 public class OptionListener {
 

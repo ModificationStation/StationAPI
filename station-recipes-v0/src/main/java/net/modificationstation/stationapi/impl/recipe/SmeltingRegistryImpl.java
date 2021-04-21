@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.impl.recipe;
 
 import lombok.Getter;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.modificationstation.stationapi.api.event.tileentity.TileEntityRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;

@@ -6,7 +6,9 @@
   "mixins": [
     "MixinBlockBase",
     "MixinItemBase",
+    "MixinItemInstance",
     "MixinPlayerBase",
+    "MixinPlayerInventory",
     "client.MixinRemoteClientInteractionManager"
   ],
   "server": [

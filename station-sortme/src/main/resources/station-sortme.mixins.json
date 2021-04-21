@@ -9,7 +9,6 @@
     "common.MixinBlockSounds",
     "common.MixinChunkCache",
     "common.MixinCraftingResult",
-    "net.modificationstation.stationapi.mixin.entity.MixinEntityRegistry",
     "common.MixinHatchet",
     "common.MixinHoe",
     "common.MixinItemBase",
@@ -31,13 +30,14 @@
     "common.accessor.ShapelessRecipeAccessor",
     "common.accessor.SmeltingRecipeRegistryAccessor",
     "common.accessor.StatsAccessor",
-    "common.accessor.TranslationStorageAccessor"
+    "common.accessor.TranslationStorageAccessor",
+    "net.modificationstation.stationapi.mixin.entity.MixinEntityRegistry"
   ],
   "server": [
+    "net.modificationstation.stationapi.mixin.container.ServerPlayerAccessor",
     "server.Mixinclass_70",
     "server.MixinPendingConnection",
     "server.MixinServerPlayerPacketHandler",
-    "net.modificationstation.stationapi.mixin.container.ServerPlayerAccessor",
     "server.accessor.ServerPlayerPacketHandlerAccessor"
   ],
   "client": [
@@ -65,13 +65,13 @@
     "client.MixinTexturePack",
     "client.MixinTileRenderer",
     "client.MixinZippedTexturePack",
-    "net.modificationstation.stationapi.impl.client.network.ClientPlayNetworkHandlerAccessor",
     "client.accessor.ParticleBaseAccessor",
     "client.accessor.TessellatorAccessor",
     "client.accessor.TextureManagerAccessor",
     "client.debugfixes.DestroyStupidResource404Errors",
     "client.debugfixes.MixinFixDepthBuffer",
-    "client.debugfixes.MixinFixThreadCheckHasPaid"
+    "client.debugfixes.MixinFixThreadCheckHasPaid",
+    "net.modificationstation.stationapi.impl.client.network.ClientPlayNetworkHandlerAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

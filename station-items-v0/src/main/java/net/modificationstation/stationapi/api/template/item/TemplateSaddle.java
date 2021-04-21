@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.template.item;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
+
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
 public class TemplateSaddle extends net.minecraft.item.Saddle implements IItemTemplate<TemplateSaddle> {
     

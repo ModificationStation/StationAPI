@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.impl.common.block;
 
+import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.block.HasCustomBlockItemFactory;
@@ -8,14 +10,9 @@ import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
 import net.modificationstation.stationapi.api.block.IHasCustomBlockItemFactory;
 import net.modificationstation.stationapi.api.block.IHasMetaBlockItem;
 import net.modificationstation.stationapi.api.block.IHasMetaNamedBlockItem;
-import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.common.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-
-import java.lang.invoke.*;
-import java.util.function.*;
 
 /**
  * {@link IHasCustomBlockItemFactory} implementation class.

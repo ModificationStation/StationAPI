@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.api.event.level;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import net.minecraft.level.Level;
 import net.mine_diver.unsafeevents.Event;
+import net.minecraft.level.Level;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class LevelEvent extends Event {

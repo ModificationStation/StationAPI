@@ -1,9 +1,9 @@
 package net.modificationstation.sltest.item;
 
+import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.sltest.SLTest;
-import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.factory.GeneralFactory;
 import net.modificationstation.stationapi.api.registry.Identifier;
