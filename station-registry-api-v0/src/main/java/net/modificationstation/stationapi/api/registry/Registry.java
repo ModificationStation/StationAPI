@@ -7,6 +7,7 @@ import java.util.function.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
+// TODO: Replace 2 maps with a bimap.
 public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
 
     public static final Registry<Registry<?>> REGISTRIES = new RegistryRegistry(Identifier.of(MODID, "registries"));

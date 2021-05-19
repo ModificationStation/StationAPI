@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.lang",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinTranslationStorage",
+    "TranslationStorageAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

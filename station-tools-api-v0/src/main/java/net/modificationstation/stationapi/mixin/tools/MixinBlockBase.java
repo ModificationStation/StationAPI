@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.*;
 
+// TODO: move this elsewhere, or *at very least* make it configurable.
 @Mixin(BlockBase.class)
 public class MixinBlockBase implements BlockMiningLevel {
 

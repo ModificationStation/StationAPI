@@ -1,8 +1,11 @@
-package net.modificationstation.stationapi.api.common.lang;
+package net.modificationstation.stationapi.api.lang;
 
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.registry.ModID;
-import net.modificationstation.stationapi.mixin.sortme.common.accessor.TranslationStorageAccessor;
+import net.modificationstation.stationapi.mixin.lang.TranslationStorageAccessor;
+
+import java.io.*;
+import java.util.*;
 
 public class I18n {
 

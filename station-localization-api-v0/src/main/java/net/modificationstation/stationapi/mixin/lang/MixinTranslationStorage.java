@@ -1,7 +1,7 @@
-package net.modificationstation.stationapi.mixin.sortme.common;
+package net.modificationstation.stationapi.mixin.lang;
 
 import net.minecraft.client.resource.language.TranslationStorage;
-import net.modificationstation.stationapi.api.common.lang.I18n;
+import net.modificationstation.stationapi.api.lang.I18n;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

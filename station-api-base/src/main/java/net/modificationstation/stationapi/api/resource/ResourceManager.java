@@ -1,8 +1,13 @@
-package net.modificationstation.stationapi.api.common.resource;
+package net.modificationstation.stationapi.api.resource;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.API;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.function.*;
 
 public class ResourceManager {
 

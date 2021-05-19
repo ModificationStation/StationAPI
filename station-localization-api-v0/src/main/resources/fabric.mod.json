@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "station-recipes-v0",
+  "id": "station-localization-api-v0",
   "version": "${version}",
 
-  "name": "Station Recipes (v0)",
-  "description": "Recipes API for mods to add new crafting/smelting/etc recipes.",
+  "name": "Station Localization API (v0)",
+  "description": "Provides a system for ingame localization of block names/item names/etc.",
   "authors": [
     "mine_diver",
     "calmilamsy"
@@ -16,19 +16,16 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/station-recipes-v0/icon.png",
+  "icon": "assets/station-localization-api-v0/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.recipe.json.JsonRecipeParserRegisterImpl",
-      "net.modificationstation.stationapi.impl.recipe.JsonRecipeParserInit",
-      "net.modificationstation.stationapi.impl.recipe.SmeltingRegistryImpl",
-      "net.modificationstation.stationapi.impl.recipe.JsonRecipesLoader"
+      "net.modificationstation.stationapi.impl.lang.LangLoader"
     ]
   },
   "mixins": [
-    "station-recipes-v0.mixins.json"
+    "station-localization-api-v0.mixins.json"
   ],
 
   "depends": {

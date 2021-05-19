@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.impl.registry;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
+// TODO: redo this completely to use a weaklist with all iteminstances to remap manually.
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class LevelRegistryRemapper {
 //
