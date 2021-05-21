@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.template.item;
 
-public class TemplateBlock extends net.minecraft.item.Block implements IItemTemplate<TemplateBlock> {
+public class TemplateBlock extends net.minecraft.item.Block implements ItemTemplate<TemplateBlock> {
     
     public TemplateBlock(int i) {
         super(i);

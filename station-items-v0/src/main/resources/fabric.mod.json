@@ -19,6 +19,14 @@
   "icon": "assets/station-items-v0/icon.png",
 
   "environment": "*",
+  "entrypoints": {
+    "stationapi:event_bus": [
+      "net.modificationstation.stationapi.impl.entity.player.ItemCustomReachImpl"
+    ],
+    "stationapi:event_bus_client": [
+      "net.modificationstation.stationapi.impl.client.gui.CustomItemOverlayImpl"
+    ]
+  },
   "mixins": [
     "station-items-v0.mixins.json"
   ],

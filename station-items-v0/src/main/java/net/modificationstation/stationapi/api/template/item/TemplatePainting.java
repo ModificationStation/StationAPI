@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.template.item;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
-public class TemplatePainting extends net.minecraft.item.Painting implements IItemTemplate<TemplatePainting> {
+public class TemplatePainting extends net.minecraft.item.Painting implements ItemTemplate<TemplatePainting> {
     
     public TemplatePainting(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

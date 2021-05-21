@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.template.item;
 
-public class TemplateWool extends net.minecraft.item.Wool implements IItemTemplate<TemplateWool> {
+public class TemplateWool extends net.minecraft.item.Wool implements ItemTemplate<TemplateWool> {
 
     public TemplateWool(int i) {
         super(i);

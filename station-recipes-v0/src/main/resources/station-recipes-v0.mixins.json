@@ -4,8 +4,10 @@
   "package": "net.modificationstation.stationapi.mixin.recipe",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinCraftingResult",
     "MixinRecipeRegistry",
     "MixinSmeltingRecipeRegistry",
+    "MixinStats",
     "MixinTileEntityFurnace",
     "RecipeRegistryAccessor",
     "SmeltingRecipeRegistryAccessor",

@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.template.item.food;
 
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.template.item.IItemTemplate;
+import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateFoodBase extends net.minecraft.item.food.FoodBase implements IItemTemplate<TemplateFoodBase> {
+public class TemplateFoodBase extends net.minecraft.item.food.FoodBase implements ItemTemplate<TemplateFoodBase> {
     
     public TemplateFoodBase(Identifier identifier, int healAmount, boolean isWolfFood) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), healAmount, isWolfFood);

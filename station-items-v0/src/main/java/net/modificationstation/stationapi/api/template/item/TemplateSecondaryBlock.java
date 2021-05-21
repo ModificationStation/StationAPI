@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
-public class TemplateSecondaryBlock extends net.minecraft.item.SecondaryBlock implements IItemTemplate<TemplateSecondaryBlock> {
+public class TemplateSecondaryBlock extends net.minecraft.item.SecondaryBlock implements ItemTemplate<TemplateSecondaryBlock> {
 
     public TemplateSecondaryBlock(Identifier identifier, BlockBase tile) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), tile);

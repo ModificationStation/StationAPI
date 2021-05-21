@@ -6,7 +6,11 @@
   "mixins": [
     "MixinDimensionFile",
     "MixinLevel",
-    "MixinLevelProperties"
+    "MixinLevelProperties",
+    "MixinServerChunkCache"
+  ],
+  "client": [
+    "client.MixinChunkCache"
   ],
   "injectors": {
     "defaultRequire": 1

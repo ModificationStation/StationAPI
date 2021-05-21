@@ -5,7 +5,7 @@ import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
-import net.modificationstation.stationapi.api.item.ICustomReach;
+import net.modificationstation.stationapi.api.item.CustomReachProvider;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
@@ -17,8 +17,8 @@ public class ItemCustomReachImpl {
         ItemInstance itemInstance = event.player.getHeldItem();
         if (itemInstance != null) {
             ItemBase item = itemInstance.getType();
-            if (item instanceof ICustomReach)
-                event.currentReach = ((ICustomReach) item).getReach(itemInstance, event.player, event.type, event.currentReach);
+            if (item instanceof CustomReachProvider)
+                event.currentReach = ((CustomReachProvider) item).getReach(itemInstance, event.player, event.type, event.currentReach);
         }
     }
 }

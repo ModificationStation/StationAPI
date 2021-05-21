@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.template.item;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
-public class TemplateDye extends net.minecraft.item.Dye implements IItemTemplate<TemplateDye> {
+public class TemplateDye extends net.minecraft.item.Dye implements ItemTemplate<TemplateDye> {
     
     public TemplateDye(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

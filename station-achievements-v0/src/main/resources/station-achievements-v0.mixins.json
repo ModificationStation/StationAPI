@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.achievement",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinAchievements"
+  ],
+  "client": [
+    "client.MixinAchievements"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

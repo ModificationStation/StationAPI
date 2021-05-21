@@ -6,15 +6,20 @@
   "mixins": [
     "ItemBaseAccessor",
     "MixinItemBase",
-    "MixinPlayerBase"
+    "MixinItemInstance",
+    "MixinPlayerBase",
+    "MixinPlayerInventory"
   ],
   "server": [
+    "server.Mixinclass_70",
     "server.MixinServerPlayerPacketHandler"
   ],
   "client": [
     "client.Mixinclass_608",
     "client.MixinClientInteractionManager",
+    "client.MixinContainerBase",
     "client.MixinGameRenderer",
+    "client.MixinItemRenderer",
     "client.MixinRemoteClientInteractionManager"
   ],
   "injectors": {

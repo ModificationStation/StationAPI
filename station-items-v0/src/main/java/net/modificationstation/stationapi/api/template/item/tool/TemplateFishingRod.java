@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.template.item.tool;
 
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.template.item.IItemTemplate;
+import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateFishingRod extends net.minecraft.item.tool.FishingRod implements IItemTemplate<TemplateFishingRod> {
+public class TemplateFishingRod extends net.minecraft.item.tool.FishingRod implements ItemTemplate<TemplateFishingRod> {
     
     public TemplateFishingRod(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

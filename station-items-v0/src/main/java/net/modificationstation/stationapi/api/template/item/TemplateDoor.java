@@ -4,7 +4,7 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
-public class TemplateDoor extends net.minecraft.item.Door implements IItemTemplate<TemplateDoor> {
+public class TemplateDoor extends net.minecraft.item.Door implements ItemTemplate<TemplateDoor> {
     
     public TemplateDoor(Identifier identifier, Material arg) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), arg);

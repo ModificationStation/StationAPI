@@ -3,9 +3,9 @@ package net.modificationstation.stationapi.api.template.item.tool;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.template.item.IItemTemplate;
+import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateSword extends net.minecraft.item.tool.Sword implements IItemTemplate<TemplateSword> {
+public class TemplateSword extends net.minecraft.item.tool.Sword implements ItemTemplate<TemplateSword> {
     
     public TemplateSword(Identifier identifier, ToolMaterial arg) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), arg);

@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.template.item;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
-public class TemplateMinecart extends net.minecraft.item.Minecart implements IItemTemplate<TemplateMinecart> {
+public class TemplateMinecart extends net.minecraft.item.Minecart implements ItemTemplate<TemplateMinecart> {
     
     public TemplateMinecart(Identifier identifier, int j) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), j);

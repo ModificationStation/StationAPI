@@ -4,9 +4,9 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.template.item.IItemTemplate;
+import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateToolBase extends net.minecraft.item.tool.ToolBase implements IItemTemplate<TemplateToolBase> {
+public class TemplateToolBase extends net.minecraft.item.tool.ToolBase implements ItemTemplate<TemplateToolBase> {
     
     public TemplateToolBase(Identifier identifier, int j, ToolMaterial arg, BlockBase[] effectiveBlocks) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), j, arg, effectiveBlocks);

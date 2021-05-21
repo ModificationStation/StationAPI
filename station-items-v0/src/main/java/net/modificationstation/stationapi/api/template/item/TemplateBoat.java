@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.template.item;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
-public class TemplateBoat extends net.minecraft.item.Boat implements IItemTemplate<TemplateBoat> {
+public class TemplateBoat extends net.minecraft.item.Boat implements ItemTemplate<TemplateBoat> {
     
     public TemplateBoat(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

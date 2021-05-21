@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.template.item.food;
 
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.template.item.IItemTemplate;
+import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateCookie extends net.minecraft.item.food.Cookie implements IItemTemplate<TemplateCookie> {
+public class TemplateCookie extends net.minecraft.item.food.Cookie implements ItemTemplate<TemplateCookie> {
     
     public TemplateCookie(Identifier identifier, int healAmount, boolean isWolfFood, int maxStackSize) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), healAmount, isWolfFood, maxStackSize);

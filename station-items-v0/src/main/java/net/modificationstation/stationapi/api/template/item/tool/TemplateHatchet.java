@@ -3,9 +3,9 @@ package net.modificationstation.stationapi.api.template.item.tool;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.template.item.IItemTemplate;
+import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateHatchet extends net.minecraft.item.tool.Hatchet implements IItemTemplate<TemplateHatchet> {
+public class TemplateHatchet extends net.minecraft.item.tool.Hatchet implements ItemTemplate<TemplateHatchet> {
     
     public TemplateHatchet(Identifier identifier, ToolMaterial material) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), material);

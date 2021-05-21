@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.template.item.tool;
 
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.template.item.IItemTemplate;
+import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateBow extends net.minecraft.item.tool.Bow implements IItemTemplate<TemplateBow> {
+public class TemplateBow extends net.minecraft.item.tool.Bow implements ItemTemplate<TemplateBow> {
     
     public TemplateBow(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

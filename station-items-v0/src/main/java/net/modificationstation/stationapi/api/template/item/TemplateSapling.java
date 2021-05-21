@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.template.item;
 
-public class TemplateSapling extends net.minecraft.item.Sapling implements IItemTemplate<TemplateSapling> {
+public class TemplateSapling extends net.minecraft.item.Sapling implements ItemTemplate<TemplateSapling> {
     
     public TemplateSapling(int i) {
         super(i);

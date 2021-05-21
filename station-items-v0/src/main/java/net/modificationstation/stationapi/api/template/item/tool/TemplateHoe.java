@@ -3,9 +3,9 @@ package net.modificationstation.stationapi.api.template.item.tool;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.template.item.IItemTemplate;
+import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateHoe extends net.minecraft.item.tool.Hoe implements IItemTemplate<TemplateHoe> {
+public class TemplateHoe extends net.minecraft.item.tool.Hoe implements ItemTemplate<TemplateHoe> {
 
     public TemplateHoe(Identifier identifier, ToolMaterial arg) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), arg);

@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.template.item.food;
 
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.template.item.IItemTemplate;
+import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateMushroomStew extends net.minecraft.item.food.MushroomStew implements IItemTemplate<TemplateMushroomStew> {
+public class TemplateMushroomStew extends net.minecraft.item.food.MushroomStew implements ItemTemplate<TemplateMushroomStew> {
     
     public TemplateMushroomStew(Identifier identifier, int healAmount) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), healAmount);

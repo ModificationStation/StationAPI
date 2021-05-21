@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.template.item.tool;
 
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.template.item.IItemTemplate;
+import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateShears extends net.minecraft.item.tool.Shears implements IItemTemplate<TemplateShears> {
+public class TemplateShears extends net.minecraft.item.tool.Shears implements ItemTemplate<TemplateShears> {
     
     public TemplateShears(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

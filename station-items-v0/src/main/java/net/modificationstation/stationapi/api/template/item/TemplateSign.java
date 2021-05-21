@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.template.item;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
-public class TemplateSign extends net.minecraft.item.Sign implements IItemTemplate<TemplateSign> {
+public class TemplateSign extends net.minecraft.item.Sign implements ItemTemplate<TemplateSign> {
     
     public TemplateSign(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

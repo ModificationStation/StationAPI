@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.template.item.armour;
 
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.template.item.IItemTemplate;
+import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateArmour extends net.minecraft.item.armour.Armour implements IItemTemplate<TemplateArmour> {
+public class TemplateArmour extends net.minecraft.item.armour.Armour implements ItemTemplate<TemplateArmour> {
 
     public TemplateArmour(Identifier identifier, int j, int k, int slot) {
         this(ItemRegistry.INSTANCE.getNextSerializedID(), j, k, slot);

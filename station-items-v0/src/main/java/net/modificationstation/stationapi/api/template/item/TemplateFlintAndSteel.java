@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.template.item;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
-public class TemplateFlintAndSteel extends net.minecraft.item.FlintAndSteel implements IItemTemplate<TemplateFlintAndSteel> {
+public class TemplateFlintAndSteel extends net.minecraft.item.FlintAndSteel implements ItemTemplate<TemplateFlintAndSteel> {
 
     public TemplateFlintAndSteel(Identifier identifier) {
         this(ItemRegistry.INSTANCE.getNextSerializedID());

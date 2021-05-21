@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.template.item;
 
-public class TemplateLog extends net.minecraft.item.Log implements IItemTemplate<TemplateLog> {
+public class TemplateLog extends net.minecraft.item.Log implements ItemTemplate<TemplateLog> {
     
     public TemplateLog(int i) {
         super(i);
