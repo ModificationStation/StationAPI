@@ -45,34 +45,34 @@ public class SLTest {
 //        }
 
         {
-            int tests = 1000;
-            int listeners = 1;
-            int dispatches = 1000000;
-            long total = 0;
-            long min = Long.MAX_VALUE;
-            long max = Long.MIN_VALUE;
-            for (int i = 0; i < tests; i++) {
-                EventBus bmBus = new EventBus();
-                for (int j = 0; j < listeners; j++)
-                    bmBus.register(Listener.class);
-                long startTS = System.nanoTime();
-                for (int j = 0; j < dispatches; j++)
-                    bmBus.post(new TestEvent());
-                long stopTS = System.nanoTime();
-                long result = stopTS - startTS;
-                System.out.println("Took: " + result + "ns");
-                total += result;
-                if (result < min)
-                    min = result;
-                if (result > max)
-                    max = result;
-            }
-            System.out.println("Tests: " + tests);
-            System.out.println("Listeners: " + listeners);
-            System.out.println("Dispatches: " + dispatches);
-            System.out.println("Average: " + total / tests + "ns");
-            System.out.println("Min: " + min + "ns");
-            System.out.println("Max: " + max + "ns");
+//            int tests = 1000;
+//            int listeners = 1;
+//            int dispatches = 1000000;
+//            long total = 0;
+//            long min = Long.MAX_VALUE;
+//            long max = Long.MIN_VALUE;
+//            for (int i = 0; i < tests; i++) {
+//                EventBus bmBus = new EventBus();
+//                for (int j = 0; j < listeners; j++)
+//                    bmBus.register(Listener.class);
+//                long startTS = System.nanoTime();
+//                for (int j = 0; j < dispatches; j++)
+//                    bmBus.post(new TestEvent());
+//                long stopTS = System.nanoTime();
+//                long result = stopTS - startTS;
+//                System.out.println("Took: " + result + "ns");
+//                total += result;
+//                if (result < min)
+//                    min = result;
+//                if (result > max)
+//                    max = result;
+//            }
+//            System.out.println("Tests: " + tests);
+//            System.out.println("Listeners: " + listeners);
+//            System.out.println("Dispatches: " + dispatches);
+//            System.out.println("Average: " + total / tests + "ns");
+//            System.out.println("Min: " + min + "ns");
+//            System.out.println("Max: " + max + "ns");
         }
     }
 

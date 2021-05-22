@@ -1,7 +1,7 @@
 package net.modificationstation.sltest.item.entity;
 
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.common.item.ItemEntity;
+import net.modificationstation.stationapi.api.item.nbt.ItemEntity;
 
 import java.util.*;
 

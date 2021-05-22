@@ -7,8 +7,6 @@ import net.minecraft.level.TileView;
 import net.modificationstation.stationapi.api.block.BlockHardnessPerMeta;
 import net.modificationstation.stationapi.api.block.EffectiveForTool;
 import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
-import net.modificationstation.stationapi.api.common.item.tool.Hoe;
-import net.modificationstation.stationapi.api.common.item.tool.ToolLevel;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 
@@ -46,8 +44,8 @@ public class ModdedMetaBlock extends TemplateBlockBase implements BlockHardnessP
         return i == 1 ? 0.5F : getHardness();
     }
 
-    @Override
-    public boolean isEffectiveFor(ToolLevel toolLevel, int i) {
-        return i == 1 && toolLevel instanceof Hoe && toolLevel.getToolLevel() < 1;
-    }
+//    @Override
+//    public boolean isEffectiveFor(ToolLevel toolLevel, int i) {
+//        return i == 1 && toolLevel instanceof Hoe && toolLevel.getToolLevel() < 1;
+//    }
 }

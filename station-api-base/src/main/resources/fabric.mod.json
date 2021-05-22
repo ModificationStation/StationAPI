@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Station API Base",
-  "description": "Contains the essentials for Fabric API modules, such as an event bus.",
+  "description": "Contains the essentials for Station API modules, such as an event bus.",
   "authors": [
     "mine_diver",
     "calmilamsy"

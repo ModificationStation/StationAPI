@@ -6,17 +6,21 @@ import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.achievement.Achievement;
 import net.minecraft.achievement.Achievements;
 import net.minecraft.client.Minecraft;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsEvent;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
 import net.modificationstation.stationapi.api.event.achievement.AchievementRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
+import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Null;
 
 import java.util.*;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class AchievementPageImpl {
+
+    @Entrypoint.ModID
+    private static final ModID MODID = Null.get();
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void replaceBackgroundTexture(AchievementsEvent.BackgroundTextureRender event) {
@@ -25,7 +29,7 @@ public class AchievementPageImpl {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerAchievements(AchievementRegisterEvent event) {
-        AchievementPage page = new AchievementPage(StationAPI.MODID, "minecraft");
+        AchievementPage page = new AchievementPage(MODID, "minecraft");
         List<Achievement> list = new ArrayList<>();
         for (Object o : Achievements.ACHIEVEMENTS)
             list.add((Achievement) o);

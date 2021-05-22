@@ -5,7 +5,7 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.util.hit.HitType;
 import net.modificationstation.sltest.SLTest;
-import net.modificationstation.stationapi.api.common.item.ICustomReach;
+import net.modificationstation.stationapi.api.item.CustomReachProvider;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -13,7 +13,7 @@ import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
 
 import java.util.*;
 
-public class ModdedItem extends TemplateItemBase implements ICustomReach {
+public class ModdedItem extends TemplateItemBase implements CustomReachProvider {
     public ModdedItem(Identifier id) {
         super(id);
     }
@@ -32,11 +32,13 @@ public class ModdedItem extends TemplateItemBase implements ICustomReach {
 
     @Override
     public double getReach(ItemInstance itemInstance, PlayerBase player, HitType type, double currentReach) {
-        if (type == HitType.TILE) {
-            return 50;
-        } else if (type == HitType.ENTITY) {
-            return 10;
+        switch (type) {
+            case TILE:
+                return 50;
+            case ENTITY:
+                return 10;
+            default:
+                return currentReach;
         }
-        return currentReach;
     }
 }

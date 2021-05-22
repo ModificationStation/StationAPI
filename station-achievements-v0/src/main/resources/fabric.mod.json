@@ -19,6 +19,11 @@
   "icon": "assets/station-achievements-v0/icon.png",
 
   "environment": "*",
+  "entrypoints": {
+    "stationapi:event_bus_client": [
+      "net.modificationstation.stationapi.impl.client.gui.screen.menu.AchievementPageImpl"
+    ]
+  },
   "mixins": [
     "station-achievements-v0.mixins.json"
   ],

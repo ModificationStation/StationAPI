@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.keybinding",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "client.MixinGameOptions",
+    "client.MixinMinecraft",
+    "client.MixinScreenBase"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

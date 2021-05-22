@@ -6,7 +6,7 @@ import net.minecraft.item.ItemBase;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.item.ItemListener;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
-import net.modificationstation.stationapi.api.common.event.achievement.AchievementRegisterEvent;
+import net.modificationstation.stationapi.api.event.achievement.AchievementRegisterEvent;
 
 public class AchievementListener {
 

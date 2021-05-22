@@ -4,7 +4,8 @@
   "package": "net.modificationstation.stationapi.mixin.registry",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinStat"
+    "MixinStat",
+    "StatsAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

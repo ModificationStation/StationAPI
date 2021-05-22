@@ -2,7 +2,7 @@ package net.modificationstation.sltest.entity.player;
 
 import net.minecraft.entity.player.PlayerBase;
 
-public class PlayerHandler implements net.modificationstation.stationapi.api.common.entity.player.PlayerHandler {
+public class PlayerHandler implements net.modificationstation.stationapi.api.entity.player.PlayerHandler {
 
     private final PlayerBase player;
 

@@ -21,4 +21,6 @@ include 'station-tools-api-v0'
 include 'station-armour-api-v0'
 include 'station-localization-api-v0'
 include 'station-achievements-v0'
+include 'station-keybindings-v0'
+include 'station-render-api-v0'
 

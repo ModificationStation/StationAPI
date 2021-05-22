@@ -6,8 +6,8 @@ import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.sltest.block.BlockListener;
 import net.modificationstation.sltest.item.ItemListener;
-import net.modificationstation.stationapi.api.common.item.HasItemEntity;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
+import net.modificationstation.stationapi.api.item.nbt.HasItemEntity;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
 

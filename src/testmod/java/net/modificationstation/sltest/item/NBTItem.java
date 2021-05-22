@@ -5,9 +5,9 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.sltest.item.entity.NBTItemEntity;
-import net.modificationstation.stationapi.api.common.item.HasItemEntity;
-import net.modificationstation.stationapi.api.common.item.ItemEntity;
-import net.modificationstation.stationapi.api.common.item.ItemWithEntity;
+import net.modificationstation.stationapi.api.item.nbt.HasItemEntity;
+import net.modificationstation.stationapi.api.item.nbt.ItemEntity;
+import net.modificationstation.stationapi.api.item.nbt.ItemWithEntity;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
 

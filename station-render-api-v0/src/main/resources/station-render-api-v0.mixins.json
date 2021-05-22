@@ -1,0 +1,29 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.render",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinBlockBase",
+    "MixinItemBase"
+  ],
+  "client": [
+    "client.MixinAchievements",
+    "client.Mixinclass_556",
+    "client.Mixinclass_66",
+    "client.MixinItemRenderer",
+    "client.MixinMinecraft",
+    "client.MixinParticleManager",
+    "client.MixinTessellator",
+    "client.MixinTextureManager",
+    "client.MixinTexturePack",
+    "client.MixinTileRenderer",
+    "client.MixinZippedTexturePack",
+    "client.ParticleBaseAccessor",
+    "client.TessellatorAccessor",
+    "client.TextureManagerAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

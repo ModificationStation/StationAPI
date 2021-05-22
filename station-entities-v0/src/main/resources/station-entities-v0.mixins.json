@@ -11,7 +11,9 @@
     "server.MixinTrackedEntity"
   ],
   "client": [
-    "client.ClientPlayNetworkHandlerAccessor"
+    "client.ClientPlayNetworkHandlerAccessor",
+    "client.MixinClientPlayNetworkHandler",
+    "client.MixinEntityRenderDispatcher"
   ],
   "injectors": {
     "defaultRequire": 1
