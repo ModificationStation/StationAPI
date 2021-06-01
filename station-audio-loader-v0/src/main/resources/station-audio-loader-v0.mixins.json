@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.audio",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinBlockSounds"
+  ],
+  "client": [
+    "client.MixinSoundHelper",
+    "client.MixinSoundMap"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

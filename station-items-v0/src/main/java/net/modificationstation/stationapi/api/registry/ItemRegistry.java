@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.api.registry;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
-import net.minecraft.stat.Stats;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.mixin.item.ItemBaseAccessor;
@@ -24,7 +23,8 @@ public final class ItemRegistry extends LevelRegistry<ItemBase> {
                     remap(item, newID);
             }
         });
-        Stats.setupItemStats();
+        // TODO: manually remap item stats.
+//        Stats.setupItemStats();
     }
 
     private void remap(ItemBase item, int newID) {

@@ -19,6 +19,9 @@
   "icon": "assets/station-oredict-v0/icon.png",
 
   "environment": "*",
+  "mixins": [
+    "station-oredict-v0.mixins.json"
+  ],
 
   "depends": {
     "minecraft": "1.0.0-beta.7.3"

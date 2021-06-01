@@ -8,23 +8,22 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.LevelRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
-import net.modificationstation.stationapi.mixin.registry.StatsAccessor;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class LevelRegistryRemapper {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void loadProperties(LevelPropertiesEvent.LoadOnLevelInit event) {
-        LevelRegistry.remapping = true;
-        StatsAccessor.setBlocksInit(false);
-        StatsAccessor.setItemsInit(false);
+//        LevelRegistry.remapping = true;
+//        StatsAccessor.setBlocksInit(false);
+//        StatsAccessor.setItemsInit(false);
         Registry<Registry<?>> registriesRegistry = Registry.REGISTRIES;
         CompoundTag registriesTag = event.tag.getCompoundTag(registriesRegistry.getRegistryId().toString());
         registriesRegistry.forEach((identifier, registry) -> {
             if (registry instanceof LevelRegistry)
                 ((LevelRegistry<?>) registry).load(registriesTag.getCompoundTag(registry.getRegistryId().toString()));
         });
-        LevelRegistry.remapping = false;
+//        LevelRegistry.remapping = false;
     }
 
     @EventListener(priority = ListenerPriority.HIGH)

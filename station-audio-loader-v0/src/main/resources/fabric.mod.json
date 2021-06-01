@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "station-tools-api-v0",
+  "id": "station-audio-loader-v0",
   "version": "${version}",
 
-  "name": "Station Tools API (v0)",
-  "description": "Makes tools actually work properly. Also, custom shears!",
+  "name": "Station Audio Loader (v0)",
+  "description": "Loads audio right from the mods jars.",
   "authors": [
     "mine_diver",
     "calmilamsy"
@@ -16,16 +16,11 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/station-tools-api-v0/icon.png",
+  "icon": "assets/station-audio-loader-v0/icon.png",
 
-  "environment": "*",
-  "entrypoints": {
-    "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.item.ToolEffectivenessImpl"
-    ]
-  },
+  "environment": "client",
   "mixins": [
-    "station-tools-api-v0.mixins.json"
+    "station-audio-loader-v0.mixins.json"
   ],
 
   "depends": {
@@ -33,6 +28,7 @@
   },
 
   "custom": {
-    "modmenu:api": true
+    "modmenu:api": true,
+    "modmenu:clientsideOnly": true
   }
 }

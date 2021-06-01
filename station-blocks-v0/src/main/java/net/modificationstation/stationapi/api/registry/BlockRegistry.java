@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.registry;
 
 import net.minecraft.block.BlockBase;
-import net.minecraft.stat.Stats;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.mixin.block.BlockBaseAccessor;
@@ -23,7 +22,8 @@ public final class BlockRegistry extends LevelRegistry<BlockBase> {
                     remap(block, newID);
             }
         });
-        Stats.setupBlockStats();
+        // TODO: manually remap block stats.
+//        Stats.setupBlockStats();
     }
 
     private void remap(BlockBase block, int newID) {

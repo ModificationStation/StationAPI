@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "station-tools-api-v0",
+  "id": "station-vanilla-checker-v0",
   "version": "${version}",
 
-  "name": "Station Tools API (v0)",
-  "description": "Makes tools actually work properly. Also, custom shears!",
+  "name": "Station Vanilla Checker (v0)",
+  "description": "Verifies client mods when it connects to a server, or checks if server is vanilla-friendly.",
   "authors": [
     "mine_diver",
     "calmilamsy"
@@ -16,17 +16,14 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/station-tools-api-v0/icon.png",
+  "icon": "assets/station-vanilla-checker-v0/icon.png",
 
   "environment": "*",
   "entrypoints": {
-    "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.item.ToolEffectivenessImpl"
+    "stationapi:event_bus_server": [
+      "net.modificationstation.stationapi.impl.server.network.StationServerNetworkHandler"
     ]
   },
-  "mixins": [
-    "station-tools-api-v0.mixins.json"
-  ],
 
   "depends": {
     "minecraft": "1.0.0-beta.7.3"

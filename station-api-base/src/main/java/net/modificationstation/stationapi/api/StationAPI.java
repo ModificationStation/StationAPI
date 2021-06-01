@@ -1,9 +1,7 @@
 package net.modificationstation.stationapi.api;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
-import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.mine_diver.unsafeevents.EventBus;
 import net.modificationstation.stationapi.api.config.Category;
 import net.modificationstation.stationapi.api.config.Configuration;
@@ -24,8 +22,6 @@ import net.modificationstation.stationapi.impl.factory.GeneralFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
-
-import java.util.*;
 
 /**
  * StationAPI main class. Used for some initialization.
@@ -51,11 +47,6 @@ public class StationAPI implements PreLaunchEntrypoint {
 
     @Entrypoint.Config
     public static final Configuration CONFIG = Null.get();
-
-    /**
-     * A set of mods that need client-side verification when the client joins server.
-     */
-    private final Set<ModContainer> modsToVerifyOnClient = new HashSet<>();
 
     public static final EventBus EVENT_BUS = new EventBus();
 
@@ -96,26 +87,11 @@ public class StationAPI implements PreLaunchEntrypoint {
         FabricLoader fabricLoader = FabricLoader.getInstance();
         fabricLoader.getEntrypointContainers(Identifier.of(MODID, "event_bus").toString(), Object.class).forEach(EntrypointManager::setup);
         fabricLoader.getEntrypointContainers(Identifier.of(MODID, "event_bus_" + fabricLoader.getEnvironmentType().name().toLowerCase()).toString(), Object.class).forEach(EntrypointManager::setup);
-        LOGGER.info("Gathering mods that require client verification...");
-        String value = MODID + ":verify_client";
-        fabricLoader.getAllMods().forEach(modContainer -> {
-            ModMetadata modMetadata = modContainer.getMetadata();
-            if (modMetadata.containsCustomValue(value) && modMetadata.getCustomValue(value).getAsBoolean())
-                modsToVerifyOnClient.add(modContainer);
-        });
         LOGGER.info("Invoking PreInit event...");
         EVENT_BUS.post(new PreInitEvent());
         LOGGER.info("Invoking Init event...");
         EVENT_BUS.post(new InitEvent());
         LOGGER.info("Invoking PostInit event...");
         EVENT_BUS.post(new PostInitEvent());
-    }
-
-    /**
-     * Returns the set of mods that need client-side verification when the client joins server.
-     * @return the set of mods that need client-side verification when the client joins server.
-     */
-    public Set<ModContainer> getModsToVerifyOnClient() {
-        return Collections.unmodifiableSet(modsToVerifyOnClient);
     }
 }

@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.lifecycle",
+  "compatibilityLevel": "JAVA_8",
+  "server": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "server.MixinPendingConnection"
+  ]
+}

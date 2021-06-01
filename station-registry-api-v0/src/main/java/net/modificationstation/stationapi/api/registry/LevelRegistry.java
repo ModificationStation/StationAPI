@@ -12,5 +12,5 @@ public abstract class LevelRegistry<T> extends SerializedRegistry<T> {
 
     public abstract void save(CompoundTag tag);
 
-    public static boolean remapping;
+//    public static boolean remapping;
 }

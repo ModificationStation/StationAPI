@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "station-tools-api-v0",
+  "id": "station-lifecycle-events-v0",
   "version": "${version}",
 
-  "name": "Station Tools API (v0)",
-  "description": "Makes tools actually work properly. Also, custom shears!",
+  "name": "Station Lifecycle Events (v0)",
+  "description": "Provides some events that fire during the lifecycle of the game (player login, game tick, etc).",
   "authors": [
     "mine_diver",
     "calmilamsy"
@@ -16,16 +16,11 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/station-tools-api-v0/icon.png",
+  "icon": "assets/station-lifecycle-events-v0/icon.png",
 
   "environment": "*",
-  "entrypoints": {
-    "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.item.ToolEffectivenessImpl"
-    ]
-  },
   "mixins": [
-    "station-tools-api-v0.mixins.json"
+    "station-lifecycle-events-v0.mixins.json"
   ],
 
   "depends": {

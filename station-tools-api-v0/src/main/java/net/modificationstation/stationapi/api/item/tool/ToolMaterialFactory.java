@@ -10,6 +10,7 @@ public class ToolMaterialFactory {
                 ToolMaterial.class,
                 materialName,
                 new Class[] { int.class, int.class, float.class, int.class },
-                new Object[] { miningLevel, durability, miningSpeed, attackDamage });
+                new Object[] { miningLevel, durability, miningSpeed, attackDamage }
+        );
     }
 }
