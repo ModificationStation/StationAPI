@@ -13,6 +13,6 @@ public class JsonItemKey {
     private int damage = 0;
 
     public ItemInstance getItemInstance() {
-        return ItemRegistry.INSTANCE.getByIdentifier(Identifier.of(item)).map(itemBase -> new ItemInstance(itemBase, count, damage)).orElse(null);
+        return ItemRegistry.INSTANCE.get(Identifier.of(item)).map(itemBase -> new ItemInstance(itemBase, count, damage)).orElse(null);
     }
 }

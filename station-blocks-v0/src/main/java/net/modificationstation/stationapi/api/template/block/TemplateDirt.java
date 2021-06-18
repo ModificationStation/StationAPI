@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateDirt extends net.minecraft.block.Dirt implements IBlockTemplate<TemplateDirt> {
 
     public TemplateDirt(Identifier identifier, int texture) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), texture);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), texture);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateDirt(int id, int texture) {

@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplatePumpkin extends net.minecraft.block.Pumpkin implements IBlockTemplate<TemplatePumpkin> {
 
     public TemplatePumpkin(Identifier identifier, int j, boolean flag) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), j, flag);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), j, flag);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplatePumpkin(int i, int j, boolean flag) {

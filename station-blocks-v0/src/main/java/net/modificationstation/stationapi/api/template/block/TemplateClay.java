@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateClay extends net.minecraft.block.Clay implements IBlockTemplate<TemplateClay> {
 
     public TemplateClay(Identifier identifier, int texture) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), texture);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), texture);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateClay(int id, int texture) {

@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplateShovel extends net.minecraft.item.tool.Shovel implements ItemTemplate<TemplateShovel> {
     
     public TemplateShovel(Identifier identifier, ToolMaterial arg) {
-        this(ItemRegistry.INSTANCE.getNextSerializedID(), arg);
-        ItemRegistry.INSTANCE.registerValue(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextSerialID(), arg);
+        ItemRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateShovel(int id, ToolMaterial arg) {

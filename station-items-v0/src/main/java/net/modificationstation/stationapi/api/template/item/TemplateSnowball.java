@@ -6,8 +6,8 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateSnowball extends net.minecraft.item.Snowball implements ItemTemplate<TemplateSnowball> {
 
     public TemplateSnowball(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerializedID());
-        ItemRegistry.INSTANCE.registerValue(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextSerialID());
+        ItemRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateSnowball(int i) {

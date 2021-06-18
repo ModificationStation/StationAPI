@@ -24,12 +24,12 @@ public final class EntityClientNetworkHandler {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerMessageListeners(MessageListenerRegistryEvent event) {
-        event.registry.registerValue(Identifier.of(StationAPI.MODID, "spawn_entity"), EntityClientNetworkHandler::handleEntitySpawn);
+        event.registry.register(Identifier.of(StationAPI.MODID, "spawn_entity"), EntityClientNetworkHandler::handleEntitySpawn);
         StationAPI.EVENT_BUS.post(new EntityHandlerRegistryEvent());
     }
 
     private static void handleEntitySpawn(PlayerBase player, Message message) {
-        EntityHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(entityProvider -> {
+        EntityHandlerRegistry.INSTANCE.get(Identifier.of(message.strings()[0])).ifPresent(entityProvider -> {
             double x = message.ints()[1] / 32D, y = message.ints()[2] / 32D, z = message.ints()[3] / 32D;
             //noinspection deprecation
             ClientPlayNetworkHandlerAccessor networkHandler = (ClientPlayNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();

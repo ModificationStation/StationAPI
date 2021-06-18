@@ -16,8 +16,8 @@ public class MessageListenerListener {
     @EventListener
     public void registerMessageListeners(MessageListenerRegistryEvent event) {
         MessageListenerRegistry registry = event.registry;
-        registry.registerValue(Identifier.of(SLTest.MODID, "give_me_diamonds"), this::handleGiveMeDiamonds);
-        registry.registerValue(Identifier.of(SLTest.MODID, "send_an_object"), this::handleSendCoords);
+        registry.register(Identifier.of(SLTest.MODID, "give_me_diamonds"), this::handleGiveMeDiamonds);
+        registry.register(Identifier.of(SLTest.MODID, "send_an_object"), this::handleSendCoords);
     }
 
     public void handleGiveMeDiamonds(PlayerBase playerBase, Message message) {

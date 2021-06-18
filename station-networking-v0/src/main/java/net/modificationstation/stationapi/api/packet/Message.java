@@ -282,7 +282,7 @@ public class Message extends AbstractPacket {
 
     @Override
     public void handle(PacketHandler handler) {
-        MessageListenerRegistry.INSTANCE.getByIdentifier(identifier).ifPresent(playerBaseMessageBiConsumer -> playerBaseMessageBiConsumer.accept(PlayerHelper.getPlayerFromPacketHandler(handler), this));
+        MessageListenerRegistry.INSTANCE.get(identifier).ifPresent(playerBaseMessageBiConsumer -> playerBaseMessageBiConsumer.accept(PlayerHelper.getPlayerFromPacketHandler(handler), this));
     }
 
     @Override

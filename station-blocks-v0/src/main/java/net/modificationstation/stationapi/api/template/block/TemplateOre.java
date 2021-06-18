@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateOre extends net.minecraft.block.Ore implements IBlockTemplate<TemplateOre> {
 
     public TemplateOre(Identifier identifier, int j) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), j);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), j);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateOre(int i, int j) {

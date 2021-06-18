@@ -13,9 +13,4 @@ public final class MessageListenerRegistry extends Registry<BiConsumer<PlayerBas
     private MessageListenerRegistry(Identifier identifier) {
         super(identifier);
     }
-
-    @Override
-    public int getRegistrySize() {
-        return Integer.MAX_VALUE;
-    }
 }

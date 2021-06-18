@@ -27,7 +27,7 @@ public class JsonRecipesLoader {
                 String rawId = new Gson().fromJson(new InputStreamReader(recipe.openStream()), JsonRecipeType.class).getType();
                 try {
                     Identifier recipeId = Identifier.of(rawId);
-                    JsonRecipesRegistry.INSTANCE.computeIfAbsent(recipeId, identifier -> new HashSet<>()).add(recipe);
+                    JsonRecipesRegistry.INSTANCE.registerIfAbsent(recipeId, identifier -> new HashSet<>()).add(recipe);
                 } catch (NullPointerException e) {
                     LOGGER.warn("Found an unknown recipe type " + rawId + ". Ignoring.");
                 }

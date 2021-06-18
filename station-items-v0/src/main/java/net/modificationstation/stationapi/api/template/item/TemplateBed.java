@@ -6,8 +6,8 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateBed extends net.minecraft.item.Bed implements ItemTemplate<TemplateBed> {
 
     public TemplateBed(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerializedID());
-        ItemRegistry.INSTANCE.registerValue(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextSerialID());
+        ItemRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateBed(int i) {

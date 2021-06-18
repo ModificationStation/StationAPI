@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateSponge extends net.minecraft.block.Sponge implements IBlockTemplate<TemplateSponge> {
     
     public TemplateSponge(Identifier identifier) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID());
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID());
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateSponge(int i) {

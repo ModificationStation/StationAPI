@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateRail extends net.minecraft.block.Rail implements IBlockTemplate<TemplateRail> {
 
     public TemplateRail(Identifier identifier, int j, boolean flag) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), j, flag);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), j, flag);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateRail(int i, int j, boolean flag) {

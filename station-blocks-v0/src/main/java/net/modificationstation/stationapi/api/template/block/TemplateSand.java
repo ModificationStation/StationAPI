@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateSand extends net.minecraft.block.Sand implements IBlockTemplate<TemplateSand> {
     
     public TemplateSand(Identifier identifier, int j) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), j);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), j);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateSand(int i, int j) {

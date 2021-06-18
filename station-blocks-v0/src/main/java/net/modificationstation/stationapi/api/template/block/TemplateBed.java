@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateBed extends net.minecraft.block.Bed implements IBlockTemplate<TemplateBed> {
 
     public TemplateBed(Identifier identifier) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID());
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID());
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateBed(int id) {

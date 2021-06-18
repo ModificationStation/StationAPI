@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplatePickaxe extends net.minecraft.item.tool.Pickaxe implements ItemTemplate<TemplatePickaxe> {
     
     public TemplatePickaxe(Identifier identifier, ToolMaterial material) {
-        this(ItemRegistry.INSTANCE.getNextSerializedID(), material);
-        ItemRegistry.INSTANCE.registerValue(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextSerialID(), material);
+        ItemRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplatePickaxe(int id, ToolMaterial material) {

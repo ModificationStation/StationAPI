@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateTorch extends net.minecraft.block.Torch implements IBlockTemplate<TemplateTorch> {
     
     public TemplateTorch(Identifier identifier, int j) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), j);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), j);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateTorch(int i, int j) {

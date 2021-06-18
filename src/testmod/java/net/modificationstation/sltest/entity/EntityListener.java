@@ -15,6 +15,6 @@ public class EntityListener {
 
     @EventListener
     public void registerEntityHandlers(EntityHandlerRegistryEvent event) {
-        event.registry.registerValue(Identifier.of(SLTest.MODID, "gpoor"), PoorGuy::new);
+        event.registry.register(Identifier.of(SLTest.MODID, "gpoor"), PoorGuy::new);
     }
 }

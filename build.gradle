@@ -416,5 +416,5 @@ dependencies {
 	include "com.github.benjiman:expressions:7ed6748"
 	include "com.github.mineLdiver:UnsafeEvents:7efec57"
 
-	modImplementation "com.github.amb0s:ModMenu:c52f3df"
+//	modImplementation "com.github.amb0s:ModMenu:c52f3df"
 }

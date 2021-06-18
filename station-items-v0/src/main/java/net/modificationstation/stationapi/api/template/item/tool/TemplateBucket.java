@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplateBucket extends net.minecraft.item.tool.Bucket implements ItemTemplate<TemplateBucket> {
     
     public TemplateBucket(Identifier identifier, int j) {
-        this(ItemRegistry.INSTANCE.getNextSerializedID(), j);
-        ItemRegistry.INSTANCE.registerValue(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextSerialID(), j);
+        ItemRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateBucket(int i, int j) {

@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateSign extends net.minecraft.block.Sign implements IBlockTemplate<TemplateSign> {
     
     public TemplateSign(Identifier identifier, Class<? extends TileEntityBase> arg, boolean flag) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), arg, flag);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), arg, flag);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateSign(int i, Class<? extends TileEntityBase> arg, boolean flag) {

@@ -6,8 +6,8 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateCoal extends net.minecraft.item.Coal implements ItemTemplate<TemplateCoal> {
     
     public TemplateCoal(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerializedID());
-        ItemRegistry.INSTANCE.registerValue(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextSerialID());
+        ItemRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateCoal(int i) {

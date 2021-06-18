@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateFire extends net.minecraft.block.Fire implements IBlockTemplate<TemplateFire> {
 
     public TemplateFire(Identifier identifier, int texture) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), texture);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), texture);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateFire(int id, int texture) {

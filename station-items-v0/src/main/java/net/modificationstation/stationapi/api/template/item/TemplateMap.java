@@ -6,8 +6,8 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateMap extends net.minecraft.item.Map implements ItemTemplate<TemplateMap> {
 
     public TemplateMap(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerializedID());
-        ItemRegistry.INSTANCE.registerValue(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextSerialID());
+        ItemRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateMap(int i) {

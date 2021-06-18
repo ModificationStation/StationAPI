@@ -7,10 +7,10 @@ import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
 public class TemplatePressurePlate extends net.minecraft.block.PressurePlate implements IBlockTemplate<TemplatePressurePlate> {
-    
+
     public TemplatePressurePlate(Identifier identifier, int j, PressurePlateTrigger arg, Material arg1) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), j, arg, arg1);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), j, arg, arg1);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplatePressurePlate(int i, int j, PressurePlateTrigger arg, Material arg1) {

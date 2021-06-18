@@ -1,80 +1,57 @@
 package net.modificationstation.stationapi.api.registry;
 
-import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
-import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.mixin.item.ItemBaseAccessor;
+import org.jetbrains.annotations.NotNull;
 
-public final class ItemRegistry extends LevelRegistry<ItemBase> {
+import java.util.Optional;
 
-    public static final ItemRegistry INSTANCE = new ItemRegistry(Identifier.of(StationAPI.MODID, "items"));
+import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-    private ItemRegistry(Identifier registryId) {
-        super(registryId);
+public final class ItemRegistry extends LevelSerialRegistry<ItemBase> {
+
+    public static final ItemRegistry INSTANCE = new ItemRegistry(Identifier.of(MODID, "items"));
+
+    private ItemRegistry(@NotNull Identifier identifier) {
+        super(identifier);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        forEach((identifier, item) -> {
-            if (tag.containsKey(identifier.toString())) {
-                int newID = tag.getInt(identifier.toString());
-                if (newID != item.id)
-                    remap(item, newID);
-            }
-        });
-        // TODO: manually remap item stats.
-//        Stats.setupItemStats();
-    }
-
-    private void remap(ItemBase item, int newID) {
-        if (ItemBase.byId[newID] != null)
-            setID(ItemBase.byId[newID], item.id);
-        setID(item, newID);
-    }
-
-    private void setID(ItemBase item, int newID) {
-        ItemBase.byId[newID] = item;
-        ((ItemBaseAccessor) item).setId(newID);
+    protected void remap(int newSerialID, ItemBase value) {
+        ItemBase.byId[value.id] = null;
+        if (ItemBase.byId[newSerialID] != null)
+            remap(getNextSerialID(), ItemBase.byId[newSerialID]);
+        ((ItemBaseAccessor) value).setId(newSerialID);
+        ItemBase.byId[newSerialID] = value;
     }
 
     @Override
-    public void save(CompoundTag tag) {
-        forEach((identifier, item) -> tag.put(identifier.toString(), item.id));
-    }
-
-    @Override
-    public void registerSerializedValue(Identifier identifier, ItemBase value, int serializedId) {
-        registerValue(identifier, value);
-        serializedId += BlockRegistry.INSTANCE.getRegistrySize();
-        ItemBase[] byId = ItemBase.byId;
-        if (byId[serializedId] == null)
-            byId[serializedId] = value;
-    }
-
-    @Override
-    public int getNextSerializedID() {
-        BlockRegistry blocks = BlockRegistry.INSTANCE;
-        ItemBase[] byId = ItemBase.byId;
-        for (int i = blocks.getRegistrySize(); i < byId.length; i++)
-            if (byId[i] == null)
-                return i - blocks.getRegistrySize();
-        throw new RuntimeException("No free space left!");
-    }
-
-    @Override
-    protected void update() {
-        BlockRegistry blocks = BlockRegistry.INSTANCE;
-        int id;
-        for (ItemBase itemBase : ItemBase.byId)
-            if (itemBase != null && getIdentifier(itemBase) == null) {
-                id = itemBase.id;
-                registerValue(id < blocks.getRegistrySize() ? blocks.getIdentifier(BlockBase.BY_ID[id]) : Identifier.of(itemBase.getTranslationKey() + "_" + id), itemBase);
-            }
-    }
-
-    @Override
-    public int getRegistrySize() {
+    public int getSize() {
         return ItemBase.byId.length;
+    }
+
+    @Override
+    public int getSerialID(ItemBase value) {
+        return value.id;
+    }
+
+    @Override
+    public Optional<ItemBase> get(int serialID) {
+        try {
+            return Optional.ofNullable(ItemBase.byId[serialID]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public int getFirstSerialID() {
+        return BlockRegistry.INSTANCE.getSize();
+    }
+
+    @Override
+    public Optional<ItemBase> get(@NotNull Identifier identifier) {
+        Optional<ItemBase> item = super.get(identifier);
+        return item.isPresent() ? item : get(BlockRegistry.INSTANCE.getSerialID(identifier));
     }
 }

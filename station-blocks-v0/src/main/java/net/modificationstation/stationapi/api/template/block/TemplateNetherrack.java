@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateNetherrack extends net.minecraft.block.Netherrack implements IBlockTemplate<TemplateNetherrack> {
 
     public TemplateNetherrack(Identifier identifier, int j) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), j);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), j);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateNetherrack(int i, int j) {

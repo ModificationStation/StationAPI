@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.api.registry;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -7,45 +9,48 @@ import java.util.function.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-// TODO: Replace 2 maps with a bimap.
-public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
+public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
 
+    @NotNull
     public static final Registry<Registry<?>> REGISTRIES = new RegistryRegistry(Identifier.of(MODID, "registries"));
+    @NotNull
     private final Identifier registryId;
-    private final Map<Identifier, T> ID_TO_TYPE = new TreeMap<>();
-    private final Map<T, Identifier> TYPE_TO_ID = new HashMap<>();
+    @NotNull
+    private final BiMap<Identifier, T> VALUES = HashBiMap.create();
 
-    public Registry(Identifier identifier) {
+    public Registry(@NotNull Identifier identifier) {
         this(identifier, true);
     }
 
-    private Registry(Identifier identifier, boolean register) {
+    private Registry(@NotNull Identifier identifier, boolean register) {
+        Objects.requireNonNull(identifier);
         this.registryId = identifier;
         if (register)
-            REGISTRIES.registerValue(registryId, this);
+            REGISTRIES.register(registryId, this);
     }
 
-    public void registerValue(Identifier identifier, T value) {
-        ID_TO_TYPE.put(identifier, value);
-        TYPE_TO_ID.put(value, identifier);
+    public void register(@NotNull Identifier identifier, @NotNull T value) {
+        Objects.requireNonNull(identifier);
+        Objects.requireNonNull(value);
+        VALUES.put(identifier, value);
     }
 
-    public abstract int getRegistrySize();
-
-    public Optional<T> getByIdentifier(Identifier identifier) {
-        return Optional.ofNullable(ID_TO_TYPE.get(identifier));
+    public Optional<T> get(@NotNull Identifier identifier) {
+        Objects.requireNonNull(identifier);
+        return Optional.ofNullable(VALUES.get(identifier));
     }
 
-    public Identifier getIdentifier(T value) {
-        return TYPE_TO_ID.get(value);
+    public @NotNull Identifier getIdentifier(@NotNull T value) {
+        Objects.requireNonNull(value);
+        return VALUES.inverse().get(value);
     }
 
     @Override
     public @NotNull Iterator<Map.Entry<Identifier, T>> iterator() {
-        return ID_TO_TYPE.entrySet().iterator();
+        return VALUES.entrySet().iterator();
     }
 
-    public void forEach(BiConsumer<Identifier, T> action) {
+    public void forEach(@NotNull BiConsumer<Identifier, T> action) {
         Objects.requireNonNull(action);
         for (Map.Entry<Identifier, T> identifierTEntry : this) {
             Identifier k;
@@ -61,16 +66,17 @@ public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> 
         }
     }
 
-    public T computeIfAbsent(Identifier identifier, Function<Identifier, T> function) {
-        return getByIdentifier(identifier).orElseGet(() -> {
+    public @NotNull T registerIfAbsent(@NotNull Identifier identifier, @NotNull Function<@NotNull Identifier, @NotNull T> function) {
+        Objects.requireNonNull(identifier);
+        Objects.requireNonNull(function);
+        return get(identifier).orElseGet(() -> {
             T value = function.apply(identifier);
-            registerValue(identifier, value);
+            register(identifier, value);
             return value;
         });
     }
 
-    @NotNull
-    public final Identifier getRegistryId() {
+    public final @NotNull Identifier getRegistryId() {
         return registryId;
     }
 
@@ -78,12 +84,7 @@ public abstract class Registry<T> implements Iterable<Map.Entry<Identifier, T>> 
 
         private RegistryRegistry(Identifier registryId) {
             super(registryId, false);
-            registerValue(registryId, this);
-        }
-
-        @Override
-        public int getRegistrySize() {
-            return Integer.MAX_VALUE;
+            register(registryId, this);
         }
     }
 }

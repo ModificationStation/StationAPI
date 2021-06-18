@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateDoor extends net.minecraft.item.Door implements ItemTemplate<TemplateDoor> {
     
     public TemplateDoor(Identifier identifier, Material arg) {
-        this(ItemRegistry.INSTANCE.getNextSerializedID(), arg);
-        ItemRegistry.INSTANCE.registerValue(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextSerialID(), arg);
+        ItemRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateDoor(int id, Material arg) {

@@ -8,13 +8,13 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public abstract class TemplateBlockWithEntity extends net.minecraft.block.BlockWithEntity implements IBlockTemplate<TemplateBlockWithEntity> {
 
     public TemplateBlockWithEntity(Identifier identifier, Material material) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), material);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), material);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateBlockWithEntity(Identifier identifier, int tex, Material material) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), tex, material);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), tex, material);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateBlockWithEntity(int i, Material arg) {

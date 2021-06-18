@@ -6,10 +6,10 @@ import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
 public class TemplateStillFluid extends net.minecraft.block.StillFluid implements IBlockTemplate<TemplateStillFluid> {
-    
+
     public TemplateStillFluid(Identifier identifier, Material arg) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), arg);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), arg);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateStillFluid(int i, Material arg) {

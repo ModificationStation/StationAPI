@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateDoor extends net.minecraft.block.Door implements IBlockTemplate<TemplateDoor> {
 
     public TemplateDoor(Identifier identifier, Material material) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), material);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), material);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateDoor(int i, Material arg) {

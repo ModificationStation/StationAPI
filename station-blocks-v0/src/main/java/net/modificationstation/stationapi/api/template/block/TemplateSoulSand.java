@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateSoulSand extends net.minecraft.block.SoulSand implements IBlockTemplate<TemplateSoulSand> {
     
     public TemplateSoulSand(Identifier identifier, int j) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), j);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), j);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateSoulSand(int i, int j) {

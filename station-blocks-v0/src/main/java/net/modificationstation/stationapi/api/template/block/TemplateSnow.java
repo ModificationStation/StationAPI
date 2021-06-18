@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateSnow extends net.minecraft.block.Snow implements IBlockTemplate<TemplateSnow> {
     
     public TemplateSnow(Identifier identifier, int texUVStart) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), texUVStart);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), texUVStart);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateSnow(int id, int texUVStart) {

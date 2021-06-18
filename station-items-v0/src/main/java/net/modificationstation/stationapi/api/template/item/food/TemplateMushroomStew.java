@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplateMushroomStew extends net.minecraft.item.food.MushroomStew implements ItemTemplate<TemplateMushroomStew> {
     
     public TemplateMushroomStew(Identifier identifier, int healAmount) {
-        this(ItemRegistry.INSTANCE.getNextSerializedID(), healAmount);
-        ItemRegistry.INSTANCE.registerValue(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextSerialID(), healAmount);
+        ItemRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateMushroomStew(int id, int healAmount) {

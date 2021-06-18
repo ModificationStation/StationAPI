@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplateSword extends net.minecraft.item.tool.Sword implements ItemTemplate<TemplateSword> {
     
     public TemplateSword(Identifier identifier, ToolMaterial arg) {
-        this(ItemRegistry.INSTANCE.getNextSerializedID(), arg);
-        ItemRegistry.INSTANCE.registerValue(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextSerialID(), arg);
+        ItemRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateSword(int i, ToolMaterial arg) {

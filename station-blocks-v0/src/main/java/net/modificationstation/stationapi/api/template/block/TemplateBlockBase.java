@@ -8,13 +8,13 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateBlockBase extends net.minecraft.block.BlockBase implements IBlockTemplate<TemplateBlockBase> {
 
     public TemplateBlockBase(Identifier identifier, Material material) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), material);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), material);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateBlockBase(Identifier identifier, int tex, Material material) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), tex, material);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), tex, material);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateBlockBase(int id, Material material) {

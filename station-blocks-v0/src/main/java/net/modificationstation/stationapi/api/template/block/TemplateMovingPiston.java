@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateMovingPiston extends net.minecraft.block.MovingPiston implements IBlockTemplate<TemplateMovingPiston> {
     
     public TemplateMovingPiston(Identifier identifier) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID());
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID());
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateMovingPiston(int id) {

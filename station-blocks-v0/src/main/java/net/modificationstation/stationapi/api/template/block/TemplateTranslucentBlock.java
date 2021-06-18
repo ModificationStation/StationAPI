@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateTranslucentBlock extends net.minecraft.block.TranslucentBlock implements IBlockTemplate<TemplateTranslucentBlock> {
     
     public TemplateTranslucentBlock(Identifier identifier, int j, Material arg, boolean flag) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), j, arg, flag);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), j, arg, flag);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateTranslucentBlock(int i, int j, Material arg, boolean flag) {

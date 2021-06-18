@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateNoteblock extends net.minecraft.block.Noteblock implements IBlockTemplate<TemplateNoteblock> {
     
     public TemplateNoteblock(Identifier identifier) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID());
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID());
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateNoteblock(int i) {

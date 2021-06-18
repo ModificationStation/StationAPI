@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateStairs extends net.minecraft.block.Stairs implements IBlockTemplate<TemplateStairs> {
     
     public TemplateStairs(Identifier identifier, BlockBase arg) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), arg);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), arg);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateStairs(int i, BlockBase arg) {

@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateLadder extends net.minecraft.block.Ladder implements IBlockTemplate<TemplateLadder> {
 
     public TemplateLadder(Identifier identifier, int texUVStart) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), texUVStart);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), texUVStart);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
 
     public TemplateLadder(int id, int texUVStart) {

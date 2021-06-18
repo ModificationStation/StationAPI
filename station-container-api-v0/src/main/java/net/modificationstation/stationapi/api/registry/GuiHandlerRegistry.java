@@ -19,12 +19,7 @@ public final class GuiHandlerRegistry extends Registry<BiTuple<TriFunction<Playe
         super(identifier);
     }
 
-    @Override
-    public int getRegistrySize() {
-        return Integer.MAX_VALUE;
-    }
-
     public void registerValueNoMessage(Identifier identifier, BiTuple<BiFunction<PlayerBase, InventoryBase, ScreenBase>, Supplier<InventoryBase>> value) {
-        super.registerValue(identifier, Tuple.tuple((playerBase, inventoryBase, message) -> value.one().apply(playerBase, inventoryBase), value.two()));
+        super.register(identifier, Tuple.tuple((playerBase, inventoryBase, message) -> value.one().apply(playerBase, inventoryBase), value.two()));
     }
 }

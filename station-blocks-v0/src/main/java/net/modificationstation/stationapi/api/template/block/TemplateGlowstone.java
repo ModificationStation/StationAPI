@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateGlowstone extends net.minecraft.block.Glowstone implements IBlockTemplate<TemplateGlowstone> {
     
     public TemplateGlowstone(Identifier identifier, int j, Material arg) {
-        this(BlockRegistry.INSTANCE.getNextSerializedID(), j, arg);
-        BlockRegistry.INSTANCE.registerValue(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextSerialID(), j, arg);
+        BlockRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateGlowstone(int i, int j, Material arg) {

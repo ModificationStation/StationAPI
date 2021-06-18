@@ -38,7 +38,7 @@ public class MixinClientPlayNetworkHandler {
 
     @ModifyVariable(method = "handleEntitySpawn(Lnet/minecraft/packet/play/EntitySpawnS2C;)V", index = 8, at = @At("LOAD"))
     private EntityBase onEntitySpawn(EntityBase entity, EntitySpawnS2C packet) {
-        Optional<QuadFunction<Level, Double, Double, Double, EntityBase>> entityHandler = EntityHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(ModID.of("minecraft"), String.valueOf(packet.id)));
+        Optional<QuadFunction<Level, Double, Double, Double, EntityBase>> entityHandler = EntityHandlerRegistry.INSTANCE.get(Identifier.of(ModID.of("minecraft"), String.valueOf(packet.id)));
         if (entityHandler.isPresent())
             entity = entityHandler.get().apply(level, capturedX, capturedY, capturedZ);
         return entity;

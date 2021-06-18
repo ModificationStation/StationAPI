@@ -4,8 +4,11 @@
   "package": "net.modificationstation.stationapi.mixin.block",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "BlockAccessor",
     "BlockBaseAccessor",
-    "MixinBlockBase"
+    "ItemBaseAccessor",
+    "MixinBlockBase",
+    "SecondaryBlockAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

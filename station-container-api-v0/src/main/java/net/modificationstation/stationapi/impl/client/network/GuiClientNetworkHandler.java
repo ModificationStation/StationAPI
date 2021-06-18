@@ -20,14 +20,14 @@ public final class GuiClientNetworkHandler {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerMessageListeners(MessageListenerRegistryEvent event) {
-        event.registry.registerValue(Identifier.of(StationAPI.MODID, "open_gui"), GuiClientNetworkHandler::handleGui);
+        event.registry.register(Identifier.of(StationAPI.MODID, "open_gui"), GuiClientNetworkHandler::handleGui);
         StationAPI.EVENT_BUS.post(new GuiHandlerRegistryEvent());
     }
 
     private static void handleGui(PlayerBase player, Message message) {
         boolean isClient = player.level.isClient;
         //noinspection deprecation
-        GuiHandlerRegistry.INSTANCE.getByIdentifier(Identifier.of(message.strings()[0])).ifPresent(guiHandler -> ((Minecraft) FabricLoader.getInstance().getGameInstance()).openScreen(guiHandler.one().apply(player, isClient ? guiHandler.two().get() : (InventoryBase) message.objects()[0], message)));
+        GuiHandlerRegistry.INSTANCE.get(Identifier.of(message.strings()[0])).ifPresent(guiHandler -> ((Minecraft) FabricLoader.getInstance().getGameInstance()).openScreen(guiHandler.one().apply(player, isClient ? guiHandler.two().get() : (InventoryBase) message.objects()[0], message)));
         if (isClient)
             player.container.currentContainerId = message.ints()[0];
     }

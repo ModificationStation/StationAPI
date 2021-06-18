@@ -6,24 +6,27 @@ import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.event.level.LevelPropertiesEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.LevelRegistry;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.LevelSerialRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
+
+import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class LevelRegistryRemapper {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void loadProperties(LevelPropertiesEvent.LoadOnLevelInit event) {
-//        LevelRegistry.remapping = true;
-//        StatsAccessor.setBlocksInit(false);
-//        StatsAccessor.setItemsInit(false);
         Registry<Registry<?>> registriesRegistry = Registry.REGISTRIES;
-        CompoundTag registriesTag = event.tag.getCompoundTag(registriesRegistry.getRegistryId().toString());
-        registriesRegistry.forEach((identifier, registry) -> {
-            if (registry instanceof LevelRegistry)
-                ((LevelRegistry<?>) registry).load(registriesTag.getCompoundTag(registry.getRegistryId().toString()));
-        });
-//        LevelRegistry.remapping = false;
+        String lsr = Identifier.of(MODID, "level_serial_registries").toString();
+        if (event.tag.containsKey(lsr)) {
+            CompoundTag registriesTag = event.tag.getCompoundTag(lsr);
+            registriesRegistry.forEach((identifier, registry) -> {
+                String id = registry.getRegistryId().toString();
+                if (registry instanceof LevelSerialRegistry<?> && registriesTag.containsKey(id))
+                    ((LevelSerialRegistry<?>) registry).load(registriesTag.getCompoundTag(id));
+            });
+        }
     }
 
     @EventListener(priority = ListenerPriority.HIGH)
@@ -31,20 +34,12 @@ public class LevelRegistryRemapper {
         Registry<Registry<?>> registriesRegistry = Registry.REGISTRIES;
         CompoundTag registriesTag = new CompoundTag();
         registriesRegistry.forEach((identifier, registry) -> {
-            if (registry instanceof LevelRegistry) {
+            if (registry instanceof LevelSerialRegistry) {
                 CompoundTag registryTag = new CompoundTag();
-                ((LevelRegistry<?>) registry).save(registryTag);
+                ((LevelSerialRegistry<?>) registry).save(registryTag);
                 registriesTag.put(identifier.toString(), registryTag);
             }
         });
-        event.tag.put(registriesRegistry.getRegistryId().toString(), registriesTag);
+        event.tag.put(Identifier.of(MODID, "level_serial_registries").toString(), registriesTag);
     }
-
-// TODO: redo this completely to use a weaklist with all iteminstances to remap manually.
-
-//    @EventListener(priority = ListenerPriority.HIGH)
-//    private static void resetRecipes(BeforeRecipeStatsEvent event) {
-//        RecipeRegistryAccessor.invokeCor();
-//        SmeltingRecipeRegistryAccessor.invokeCor();
-//    }
 }

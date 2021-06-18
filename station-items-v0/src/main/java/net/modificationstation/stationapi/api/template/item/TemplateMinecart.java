@@ -6,8 +6,8 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateMinecart extends net.minecraft.item.Minecart implements ItemTemplate<TemplateMinecart> {
     
     public TemplateMinecart(Identifier identifier, int j) {
-        this(ItemRegistry.INSTANCE.getNextSerializedID(), j);
-        ItemRegistry.INSTANCE.registerValue(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextSerialID(), j);
+        ItemRegistry.INSTANCE.register(identifier, this);
     }
     
     public TemplateMinecart(int i, int j) {

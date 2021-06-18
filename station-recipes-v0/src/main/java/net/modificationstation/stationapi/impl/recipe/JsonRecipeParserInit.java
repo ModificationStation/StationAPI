@@ -25,14 +25,14 @@ public class JsonRecipeParserInit {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerJsonRecipeParsers(JsonRecipeParserRegistryEvent event) {
-        event.registry.registerValue(Identifier.of("crafting_shaped"), JsonRecipeParserInit::parseCraftingShaped);
-        event.registry.registerValue(Identifier.of("crafting_shapeless"), JsonRecipeParserInit::parseCraftingShapeless);
-        event.registry.registerValue(Identifier.of("smelting"), JsonRecipeParserInit::parseSmelting);
+        event.registry.register(Identifier.of("crafting_shaped"), JsonRecipeParserInit::parseCraftingShaped);
+        event.registry.register(Identifier.of("crafting_shapeless"), JsonRecipeParserInit::parseCraftingShapeless);
+        event.registry.register(Identifier.of("smelting"), JsonRecipeParserInit::parseSmelting);
     }
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void parseAndRegisterRecipe(RecipeRegisterEvent event) {
-        JsonRecipeParserRegistry.INSTANCE.getByIdentifier(event.recipeId).ifPresent(recipeParser -> JsonRecipesRegistry.INSTANCE.getByIdentifier(event.recipeId).ifPresent(recipes -> recipes.forEach(recipeParser)));
+        JsonRecipeParserRegistry.INSTANCE.get(event.recipeId).ifPresent(recipeParser -> JsonRecipesRegistry.INSTANCE.get(event.recipeId).ifPresent(recipes -> recipes.forEach(recipeParser)));
     }
 
     private static void parseCraftingShaped(URL recipe) {

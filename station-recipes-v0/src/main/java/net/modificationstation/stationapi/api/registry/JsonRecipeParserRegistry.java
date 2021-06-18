@@ -15,10 +15,5 @@ public final class JsonRecipeParserRegistry extends Registry<Consumer<URL>> {
         super(identifier);
     }
 
-    @Override
-    public int getRegistrySize() {
-        return Integer.MAX_VALUE;
-    }
-
     public static final JsonRecipeParserRegistry INSTANCE = new JsonRecipeParserRegistry(Identifier.of(StationAPI.MODID, "json_recipe_parsers"));
 }
