@@ -8,8 +8,9 @@ import net.modificationstation.stationapi.mixin.block.BlockAccessor;
 import net.modificationstation.stationapi.mixin.block.BlockBaseAccessor;
 import net.modificationstation.stationapi.mixin.block.ItemBaseAccessor;
 import net.modificationstation.stationapi.mixin.block.SecondaryBlockAccessor;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
+import java.util.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
@@ -22,7 +23,7 @@ public final class BlockRegistry extends LevelSerialRegistry<BlockBase> {
     }
 
     @Override
-    public void load(CompoundTag tag) {
+    public void load(@NotNull CompoundTag tag) {
         BlockBase[] oldBlocks = BlockBase.BY_ID.clone();
         super.load(tag);
         for (int i = getSize(); i < ItemBase.byId.length; i++) {
@@ -33,7 +34,7 @@ public final class BlockRegistry extends LevelSerialRegistry<BlockBase> {
     }
 
     @Override
-    protected void remap(int newSerialID, BlockBase value) {
+    protected void remap(int newSerialID, @NotNull BlockBase value) {
         ItemBase blockItem = ItemBase.byId[value.id];
         boolean ticksRandomly = BlockBase.TICKS_RANDOMLY[value.id];
         boolean fullOpaque = BlockBase.FULL_OPAQUE[value.id];
@@ -73,12 +74,12 @@ public final class BlockRegistry extends LevelSerialRegistry<BlockBase> {
     }
 
     @Override
-    public int getSerialID(BlockBase value) {
+    public int getSerialID(@NotNull BlockBase value) {
         return value.id;
     }
 
     @Override
-    public Optional<BlockBase> get(int serialID) {
+    public @NotNull Optional<BlockBase> get(int serialID) {
         try {
             return Optional.ofNullable(BlockBase.BY_ID[serialID]);
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -87,7 +88,7 @@ public final class BlockRegistry extends LevelSerialRegistry<BlockBase> {
     }
 
     @Override
-    public int getFirstSerialID() {
+    public int getSerialIDShift() {
         return 1;
     }
 }

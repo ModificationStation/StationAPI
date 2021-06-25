@@ -22,7 +22,7 @@ public class LevelRegistryRemapper {
         if (event.tag.containsKey(lsr)) {
             CompoundTag registriesTag = event.tag.getCompoundTag(lsr);
             registriesRegistry.forEach((identifier, registry) -> {
-                String id = registry.getRegistryId().toString();
+                String id = registry.id.toString();
                 if (registry instanceof LevelSerialRegistry<?> && registriesTag.containsKey(id))
                     ((LevelSerialRegistry<?>) registry).load(registriesTag.getCompoundTag(id));
             });

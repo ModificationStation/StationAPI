@@ -4,7 +4,7 @@ import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.mixin.item.ItemBaseAccessor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
+import java.util.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
@@ -17,7 +17,7 @@ public final class ItemRegistry extends LevelSerialRegistry<ItemBase> {
     }
 
     @Override
-    protected void remap(int newSerialID, ItemBase value) {
+    protected void remap(int newSerialID, @NotNull ItemBase value) {
         ItemBase.byId[value.id] = null;
         if (ItemBase.byId[newSerialID] != null)
             remap(getNextSerialID(), ItemBase.byId[newSerialID]);
@@ -31,12 +31,12 @@ public final class ItemRegistry extends LevelSerialRegistry<ItemBase> {
     }
 
     @Override
-    public int getSerialID(ItemBase value) {
+    public int getSerialID(@NotNull ItemBase value) {
         return value.id;
     }
 
     @Override
-    public Optional<ItemBase> get(int serialID) {
+    public @NotNull Optional<ItemBase> get(int serialID) {
         try {
             return Optional.ofNullable(ItemBase.byId[serialID]);
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -45,13 +45,18 @@ public final class ItemRegistry extends LevelSerialRegistry<ItemBase> {
     }
 
     @Override
-    public int getFirstSerialID() {
+    public int getSerialIDShift() {
         return BlockRegistry.INSTANCE.getSize();
     }
 
     @Override
-    public Optional<ItemBase> get(@NotNull Identifier identifier) {
+    public @NotNull Optional<ItemBase> get(@NotNull Identifier identifier) {
         Optional<ItemBase> item = super.get(identifier);
-        return item.isPresent() ? item : get(BlockRegistry.INSTANCE.getSerialID(identifier));
+        if (item.isPresent())
+            return item;
+        else {
+            OptionalInt serialID = BlockRegistry.INSTANCE.getSerialID(identifier);
+            return serialID.isPresent() ? get(serialID.getAsInt()) : Optional.empty();
+        }
     }
 }

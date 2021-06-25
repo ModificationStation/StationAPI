@@ -2,34 +2,140 @@ package net.modificationstation.stationapi.api.registry;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-import java.util.function.IntFunction;
+import java.util.*;
+import java.util.function.*;
 
+/**
+ * Abstract extension of {@link Registry} which allows interaction with objects that also have serial IDs assigned to them.
+ *
+ * <p>For example, "minecraft:dirt" -> {@link net.minecraft.block.BlockBase#DIRT}; "minecraft:dirt" -> 3 (serial ID)
+ *
+ * <p>Serial IDs act like identifiers. Every object must have a serial ID, but not all serial IDs must have an object.
+ * Serial IDs are integers.
+ *
+ * <p>Unlike identifiers though, serial IDs are limited and can be iterated through, as they're just integer numbers.
+ *
+ * <p>This registry has a lot of abstract methods to allow direct interaction with already existing methods of
+ * serial ID lookup, for example {@link net.minecraft.block.BlockBase#id} and {@link net.minecraft.block.BlockBase#BY_ID}.
+ *
+ * @param <T> the object's type that's stored in the registry.
+ * @author mine_diver
+ * @see Registry
+ * @see LevelSerialRegistry
+ */
 public abstract class AbstractSerialRegistry<T> extends Registry<T> {
 
+    /**
+     * Default registry constructor.
+     * @param identifier registry's identifier.
+     */
     public AbstractSerialRegistry(@NotNull Identifier identifier) {
         super(identifier);
     }
 
+    /**
+     * Defines registry's serial IDs limit.
+     *
+     * <p>For example, the length of {@link net.minecraft.block.BlockBase#BY_ID} array.
+     *
+     * @return the maximum serial ID value (exclusive).
+     */
     public abstract int getSize();
 
-    public abstract int getSerialID(T value);
+    /**
+     * Returns object's serial ID.
+     *
+     * <p>Since every object is supposed to have a serial ID, {@link OptionalInt} isn't required here.
+     *
+     * @param value the object associated to the requested serial ID.
+     * @return the serial ID of the given object.
+     */
+    public abstract int getSerialID(@NotNull T value);
 
-    public int getSerialID(Identifier identifier) {
-        return get(identifier).map(this::getSerialID).orElse(-1);
+    /**
+     * Returns the serial ID of object associated to the given identifier.
+     *
+     * <p>Note, since not every identifier is supposed to have an object associated to it,
+     * not every identifier is supposed to have a corresponding serial ID, so {@link OptionalInt} is required here.
+     *
+     * @param identifier the identifier of object associated to the requested serial ID.
+     * @return the serial ID of object associated to the given identifier.
+     */
+    public @NotNull OptionalInt getSerialID(@NotNull Identifier identifier) {
+        return get(Objects.requireNonNull(identifier)).map(t -> OptionalInt.of(getSerialID(t))).orElse(OptionalInt.empty());
     }
 
-    public abstract Optional<T> get(int serialID);
+    /**
+     * Returns the identifier of object associated to the given serial ID.
+     *
+     * <p>Note, since not every serial ID is supposed to have an object associated to it,
+     * not every serial ID is supposed to have a corresponding identifier, so {@link Optional} is required here.
+     *
+     * @param serialID the serial ID of object associated to the requested identifier.
+     * @return the identifier of object associated to the given serial ID.
+     */
+    public @NotNull Optional<Identifier> getIdentifier(int serialID) {
+        return get(serialID).map(this::getIdentifier);
+    }
 
-    public abstract int getFirstSerialID();
+    /**
+     * Returns the object associated to the given serial ID.
+     *
+     * <p>Note, since not every serial ID is supposed to have an object associated to it,
+     * an {@link Optional} is returned instead of the object itself.
+     *
+     * @param serialID the serial ID of the requested object.
+     * @return an {@link Optional} containing the object associated to the given serial ID,
+     * or an empty optional if there's no object associated to it.
+     */
+    public abstract @NotNull Optional<T> get(int serialID);
 
+    /**
+     * Defines the first serial ID (inclusive).
+     *
+     * <p>This is useful if the registry in question has preserved serial IDs for some internal behavior,
+     * or if the serial IDs can be negative.
+     *
+     * <p>For example, a block with serial ID 0 is null because that's how Minecraft handles air blocks,
+     * but if we try searching for a free serial ID, it'll be considered free, which will cause
+     * a lot of unpredictable behavior and crashes. Thus, shifting the first serial ID to 1 allows us to
+     * avoid such scenarios.
+     *
+     * @return the serial ID shift (inclusive).
+     */
+    public abstract int getSerialIDShift();
+
+    /**
+     * Searches for a free serial ID starting from {@link AbstractSerialRegistry#getSerialIDShift()} (inclusive)
+     * to {@link AbstractSerialRegistry#getSize()} (exclusive).
+     *
+     * <p>If a serial ID doesn't have a value associated to it (the returned {@link Optional} is empty),
+     * then the serial ID is considered free.
+     *
+     * @return the found free serial ID.
+     * @throws IndexOutOfBoundsException if there are no free serial IDs left in the range.
+     */
     public int getNextSerialID() {
-        for (int i = getFirstSerialID(); i < getSize(); i++) if (!get(i).isPresent())
+        for (int i = getSerialIDShift(); i < getSize(); i++) if (!get(i).isPresent())
             return i;
-        throw new IndexOutOfBoundsException("No more free serial IDs left for " + getRegistryId() + " registry!");
+        throw new IndexOutOfBoundsException("No more free serial IDs left for " + id + " registry!");
     }
 
-    public <E extends T> E register(Identifier identifier, IntFunction<E> initializer) {
+    /**
+     * This register method acts like a shortcut for initializing an object by giving it a free serial ID
+     * and adding it to the registry with the given {@code identifier}.
+     *
+     * <p>A practical use case would be:
+     * <p><code>myCoolBlock = registry.register(Identifier.of(MODID, "my_cool_block"), MyCoolBlock::new).setTranslationKey(MODID, "myCoolBlock");</code>
+     *
+     * @param identifier the identifier that should be associated to the object.
+     * @param initializer the function that initializes the object with the serial ID (for example, {@code MyCoolBlock::new}).
+     * @param <E> a subtype of object's type. Useful so that you get for example {@code MyCoolBlock} on the return
+     *           instead of {@code BlockBase}.
+     * @return the initialized object.
+     * @throws IndexOutOfBoundsException if there are no free serial IDs left.
+     */
+    public <E extends T> @NotNull E register(@NotNull Identifier identifier, IntFunction<@NotNull E> initializer) {
         int serialID = getNextSerialID();
         E value = initializer.apply(serialID);
         register(identifier, value);
