@@ -1,12 +1,12 @@
 buildscript {
 	repositories {
-		mavenCentral()
-		jcenter()
-		gradlePluginPortal()
 		maven {
 			name = "Fabric"
 			url = "https://maven.fabricmc.net/"
 		}
+		gradlePluginPortal()
+		mavenCentral()
+		jcenter()
 		maven {
 			name = "Jitpack"
 			url 'https://jitpack.io/'
@@ -169,14 +169,14 @@ allprojects {
 //	}
 
 	repositories {
-		mavenLocal()
-		mavenCentral()
-		jcenter()
-		gradlePluginPortal()
 		maven {
 			name = "Fabric"
 			url = "https://maven.fabricmc.net/"
 		}
+		mavenLocal()
+		gradlePluginPortal()
+		mavenCentral()
+		jcenter()
 		maven {
 			name = "Jitpack"
 			url 'https://jitpack.io/'
