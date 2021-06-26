@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplateHoe extends net.minecraft.item.tool.Hoe implements ItemTemplate<TemplateHoe> {
 
     public TemplateHoe(Identifier identifier, ToolMaterial arg) {
-        this(ItemRegistry.INSTANCE.getNextSerialID(), arg);
+        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), arg);
         ItemRegistry.INSTANCE.register(identifier, this);
     }
 

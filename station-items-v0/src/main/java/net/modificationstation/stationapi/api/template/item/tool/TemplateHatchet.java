@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplateHatchet extends net.minecraft.item.tool.Hatchet implements ItemTemplate<TemplateHatchet> {
     
     public TemplateHatchet(Identifier identifier, ToolMaterial material) {
-        this(ItemRegistry.INSTANCE.getNextSerialID(), material);
+        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), material);
         ItemRegistry.INSTANCE.register(identifier, this);
     }
     

@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateDye extends net.minecraft.item.Dye implements ItemTemplate<TemplateDye> {
     
     public TemplateDye(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerialID());
+        this(ItemRegistry.INSTANCE.getNextSerialIDShifted());
         ItemRegistry.INSTANCE.register(identifier, this);
     }
     

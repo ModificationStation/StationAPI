@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplatePainting extends net.minecraft.item.Painting implements ItemTemplate<TemplatePainting> {
     
     public TemplatePainting(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerialID());
+        this(ItemRegistry.INSTANCE.getNextSerialIDShifted());
         ItemRegistry.INSTANCE.register(identifier, this);
     }
     

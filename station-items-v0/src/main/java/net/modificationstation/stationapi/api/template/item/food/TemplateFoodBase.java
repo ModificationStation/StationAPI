@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplateFoodBase extends net.minecraft.item.food.FoodBase implements ItemTemplate<TemplateFoodBase> {
     
     public TemplateFoodBase(Identifier identifier, int healAmount, boolean isWolfFood) {
-        this(ItemRegistry.INSTANCE.getNextSerialID(), healAmount, isWolfFood);
+        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), healAmount, isWolfFood);
         ItemRegistry.INSTANCE.register(identifier, this);
     }
     

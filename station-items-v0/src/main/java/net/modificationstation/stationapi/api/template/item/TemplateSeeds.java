@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateSeeds extends net.minecraft.item.Seeds implements ItemTemplate<TemplateSeeds> {
 
     public TemplateSeeds(Identifier identifier, int j) {
-        this(ItemRegistry.INSTANCE.getNextSerialID(), j);
+        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), j);
         ItemRegistry.INSTANCE.register(identifier, this);
     }
 

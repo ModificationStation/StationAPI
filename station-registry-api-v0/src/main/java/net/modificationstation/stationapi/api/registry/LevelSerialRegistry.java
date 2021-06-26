@@ -23,6 +23,10 @@ public abstract class LevelSerialRegistry<T> extends AbstractSerialRegistry<T> {
         super(identifier);
     }
 
+    public LevelSerialRegistry(@NotNull Identifier identifier, boolean shiftSerialIDOnRegister) {
+        super(identifier, shiftSerialIDOnRegister);
+    }
+
     /**
      * This method writes the {@code Identifier -> Serial ID} mappings of this registry
      * into the level properties located in level.dat file.

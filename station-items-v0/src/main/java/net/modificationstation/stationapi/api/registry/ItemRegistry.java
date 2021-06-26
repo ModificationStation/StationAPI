@@ -13,7 +13,7 @@ public final class ItemRegistry extends LevelSerialRegistry<ItemBase> {
     public static final ItemRegistry INSTANCE = new ItemRegistry(Identifier.of(MODID, "items"));
 
     private ItemRegistry(@NotNull Identifier identifier) {
-        super(identifier);
+        super(identifier, true);
     }
 
     @Override
@@ -58,5 +58,12 @@ public final class ItemRegistry extends LevelSerialRegistry<ItemBase> {
             OptionalInt serialID = BlockRegistry.INSTANCE.getSerialID(identifier);
             return serialID.isPresent() ? get(serialID.getAsInt()) : Optional.empty();
         }
+    }
+
+    @Override
+    public @NotNull Identifier getIdentifier(@NotNull ItemBase value) {
+        Identifier identifier = super.getIdentifier(value);
+        //noinspection ConstantConditions
+        return identifier == null ? BlockRegistry.INSTANCE.get(getSerialID(value)).map(BlockRegistry.INSTANCE::getIdentifier).orElse(null) : identifier;
     }
 }

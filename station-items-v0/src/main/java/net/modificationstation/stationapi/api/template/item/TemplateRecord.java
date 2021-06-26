@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateRecord extends net.minecraft.item.Record implements ItemTemplate<TemplateRecord> {
 
     public TemplateRecord(Identifier identifier, String title) {
-        this(ItemRegistry.INSTANCE.getNextSerialID(), title);
+        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), title);
         ItemRegistry.INSTANCE.register(identifier, this);
     }
 

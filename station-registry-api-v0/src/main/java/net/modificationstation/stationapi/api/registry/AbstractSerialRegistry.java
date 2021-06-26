@@ -26,11 +26,33 @@ import java.util.function.*;
 public abstract class AbstractSerialRegistry<T> extends Registry<T> {
 
     /**
+     * This flag defines whether or not should the next free serial ID be shifted to 0->size-shift range
+     * during object initialization in {@link AbstractSerialRegistry#register(Identifier, IntFunction)} method.
+     *
+     * <p>This is set to true in ItemRegistry due to quirkiness of item constructor and reserved serial IDs for block items.
+     */
+    private final boolean shiftSerialIDOnRegister;
+
+    /**
      * Default registry constructor.
      * @param identifier registry's identifier.
      */
     public AbstractSerialRegistry(@NotNull Identifier identifier) {
+        this(identifier, false);
+    }
+
+    /**
+     * Constructor that allows to change the {@link AbstractSerialRegistry#shiftSerialIDOnRegister} flag.
+     *
+     * <p>Used by ItemRegistry.
+     *
+     * @param identifier registry's identifier.
+     * @param shiftSerialIDOnRegister whether or not the next free serial ID should be shifted
+     *                                to 0->size-shift range during object initialization.
+     */
+    public AbstractSerialRegistry(@NotNull Identifier identifier, boolean shiftSerialIDOnRegister) {
         super(identifier);
+        this.shiftSerialIDOnRegister = shiftSerialIDOnRegister;
     }
 
     /**
@@ -122,6 +144,19 @@ public abstract class AbstractSerialRegistry<T> extends Registry<T> {
     }
 
     /**
+     * Returns the next serial ID but shifted to 0->size-shift range by subtracting the {@link AbstractSerialRegistry#getSerialIDShift()}.
+     *
+     * <p>This is useful for the ItemRegistry, in which usual items take IDs from 0->size-shift range
+     * (shift being 256, the default size of BlockRegistry),
+     * but {@link net.minecraft.item.ItemBase#id} has the true ID that's shifted back to shift->size range.
+     *
+     * @return the next serial ID but shifted to 0.
+     */
+    public int getNextSerialIDShifted() {
+        return getNextSerialID() - getSerialIDShift();
+    }
+
+    /**
      * This register method acts like a shortcut for initializing an object by giving it a free serial ID
      * and adding it to the registry with the given {@code identifier}.
      *
@@ -136,8 +171,7 @@ public abstract class AbstractSerialRegistry<T> extends Registry<T> {
      * @throws IndexOutOfBoundsException if there are no free serial IDs left.
      */
     public <E extends T> @NotNull E register(@NotNull Identifier identifier, IntFunction<@NotNull E> initializer) {
-        int serialID = getNextSerialID();
-        E value = initializer.apply(serialID);
+        E value = initializer.apply(shiftSerialIDOnRegister ? getNextSerialIDShifted() : getNextSerialID());
         register(identifier, value);
         return value;
     }

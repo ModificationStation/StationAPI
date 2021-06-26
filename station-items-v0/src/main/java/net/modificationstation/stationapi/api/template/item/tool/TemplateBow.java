@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplateBow extends net.minecraft.item.tool.Bow implements ItemTemplate<TemplateBow> {
     
     public TemplateBow(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerialID());
+        this(ItemRegistry.INSTANCE.getNextSerialIDShifted());
         ItemRegistry.INSTANCE.register(identifier, this);
     }
     

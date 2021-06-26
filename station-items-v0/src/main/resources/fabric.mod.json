@@ -21,7 +21,8 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.entity.player.ItemCustomReachImpl"
+      "net.modificationstation.stationapi.impl.entity.player.ItemCustomReachImpl",
+      "net.modificationstation.stationapi.impl.registry.ItemInstanceRemapper"
     ],
     "stationapi:event_bus_client": [
       "net.modificationstation.stationapi.impl.client.gui.CustomItemOverlayImpl"

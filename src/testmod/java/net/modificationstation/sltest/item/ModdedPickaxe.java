@@ -25,6 +25,7 @@ public class ModdedPickaxe extends TemplatePickaxe {
                 level.spawnEntity(entity);
                 entity.onSpawnedFromSpawner();
             }
+            item.cooldown = 20;
             return true;
         } else
             return false;

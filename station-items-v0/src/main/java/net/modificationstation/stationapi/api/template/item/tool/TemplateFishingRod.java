@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplateFishingRod extends net.minecraft.item.tool.FishingRod implements ItemTemplate<TemplateFishingRod> {
     
     public TemplateFishingRod(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerialID());
+        this(ItemRegistry.INSTANCE.getNextSerialIDShifted());
         ItemRegistry.INSTANCE.register(identifier, this);
     }
     

@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplateShears extends net.minecraft.item.tool.Shears implements ItemTemplate<TemplateShears> {
     
     public TemplateShears(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerialID());
+        this(ItemRegistry.INSTANCE.getNextSerialIDShifted());
         ItemRegistry.INSTANCE.register(identifier, this);
     }
     

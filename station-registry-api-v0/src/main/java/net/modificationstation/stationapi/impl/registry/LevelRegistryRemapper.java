@@ -3,7 +3,9 @@ package net.modificationstation.stationapi.impl.registry;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.LevelPropertiesEvent;
+import net.modificationstation.stationapi.api.event.registry.PostRegistryRemapEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -27,6 +29,7 @@ public class LevelRegistryRemapper {
                     ((LevelSerialRegistry<?>) registry).load(registriesTag.getCompoundTag(id));
             });
         }
+        StationAPI.EVENT_BUS.post(new PostRegistryRemapEvent());
     }
 
     @EventListener(priority = ListenerPriority.HIGH)
