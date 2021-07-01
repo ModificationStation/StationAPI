@@ -19,12 +19,6 @@ public class ItemInstanceRemapper {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void afterRegistryRemap(PostRegistryRemapEvent event) {
-        System.out.println("Remap!");
-        ITEM_INSTANCE_TO_IDENTIFIER.forEach((itemInstance, identifier) -> {
-            System.out.println(itemInstance.itemId + " " + identifier);
-            ItemRegistry.INSTANCE.getSerialID(identifier).ifPresent(value -> itemInstance.itemId = value);
-            System.out.println(itemInstance.itemId + " " + identifier);
-        });
-        System.out.println("Remap done!");
+        ITEM_INSTANCE_TO_IDENTIFIER.forEach((itemInstance, identifier) -> ItemRegistry.INSTANCE.getSerialID(identifier).ifPresent(value -> itemInstance.itemId = value));
     }
 }
