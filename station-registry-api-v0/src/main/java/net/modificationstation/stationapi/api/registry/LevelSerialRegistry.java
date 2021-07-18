@@ -1,6 +1,8 @@
 package net.modificationstation.stationapi.api.registry;
 
 import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.event.registry.PostRegistryRemapEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -60,4 +62,33 @@ public abstract class LevelSerialRegistry<T> extends AbstractSerialRegistry<T> {
      * @param value the object that should be remapped.
      */
     protected abstract void remap(int newSerialID, @NotNull T value);
+
+    /**
+     * Writes all LevelSerialRegistries into an NBT tag.
+     *
+     * @param tag the tag to save all registries to.
+     */
+    public static void saveAll(CompoundTag tag) {
+        Registry.REGISTRIES.forEach((identifier, registry) -> {
+            if (registry instanceof LevelSerialRegistry) {
+                CompoundTag registryTag = new CompoundTag();
+                ((LevelSerialRegistry<?>) registry).save(registryTag);
+                tag.put(identifier.toString(), registryTag);
+            }
+        });
+    }
+
+    /**
+     * Reads all LevelSerialRegistries from an NBT tag.
+     *
+     * @param tag the tag to load all registries from.
+     */
+    public static void loadAll(CompoundTag tag) {
+        Registry.REGISTRIES.forEach((identifier, registry) -> {
+            String id = registry.id.toString();
+            if (registry instanceof LevelSerialRegistry<?> && tag.containsKey(id))
+                ((LevelSerialRegistry<?>) registry).load(tag.getCompoundTag(id));
+        });
+        StationAPI.EVENT_BUS.post(new PostRegistryRemapEvent());
+    }
 }
