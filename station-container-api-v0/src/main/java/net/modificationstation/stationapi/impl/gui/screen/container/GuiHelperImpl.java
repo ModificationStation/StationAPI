@@ -18,7 +18,7 @@ public abstract class GuiHelperImpl {
 
     public void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container, Consumer<Message> customData) {
         Message message = new Message(Identifier.of(StationAPI.MODID, "open_gui"));
-        message.put(new String[]{identifier.toString()});
+        message.strings = new String[] { identifier.toString() };
         sideDependentPacket(player, inventory, message);
         customData.accept(message);
         PacketHelper.sendTo(player, message);

@@ -23,7 +23,7 @@ public class ModdedItem extends TemplateItemBase implements CustomReachProvider 
         Message message = new Message(Identifier.of(SLTest.MODID, "send_an_object"));
         hmmSho = new Random().nextInt();
         System.out.println(hmmSho);
-        message.put(new Object[] {this});
+        message.objects = new Object[] { this };
         PacketHelper.sendTo(player, message);
         return super.use(item, level, player);
     }

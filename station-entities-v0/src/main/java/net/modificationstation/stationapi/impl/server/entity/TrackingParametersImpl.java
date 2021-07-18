@@ -7,33 +7,33 @@ import net.minecraft.network.EntityHashSet;
 import net.minecraft.server.network.ServerEntityTracker;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.server.entity.ICustomTracking;
-import net.modificationstation.stationapi.api.server.entity.ITracking;
-import net.modificationstation.stationapi.api.server.entity.Tracking;
+import net.modificationstation.stationapi.api.server.entity.CustomTracking;
+import net.modificationstation.stationapi.api.server.entity.HasTrackingParameters;
+import net.modificationstation.stationapi.api.server.entity.TrackingParametersProvider;
 import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEvent;
 import net.modificationstation.stationapi.api.util.TriState;
 
 /**
- * {@link ITracking} implementation class.
+ * {@link TrackingParametersProvider} implementation class.
  * @author mine_diver
  * @see TrackEntityEvent
- * @see ICustomTracking
- * @see ITracking
- * @see Tracking
+ * @see CustomTracking
+ * @see TrackingParametersProvider
+ * @see HasTrackingParameters
  */
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
-public class TrackingImpl {
+public class TrackingParametersImpl {
 
     /**
-     * Handles entity's {@link Tracking} annotation if it's present via {@link TrackEntityEvent} hook.
+     * Handles entity's {@link HasTrackingParameters} annotation if it's present via {@link TrackEntityEvent} hook.
      * @param event the {@link TrackEntityEvent} event.
      * @see TrackEntityEvent
      */
     @EventListener(priority = ListenerPriority.HIGH)
     private static void trackEntity(TrackEntityEvent event) {
         Class<? extends EntityBase> entityClass = event.entityToTrack.getClass();
-        if (entityClass.isAnnotationPresent(Tracking.class)) {
-            Tracking at = entityClass.getAnnotation(Tracking.class);
+        if (entityClass.isAnnotationPresent(HasTrackingParameters.class)) {
+            HasTrackingParameters at = entityClass.getAnnotation(HasTrackingParameters.class);
             track(event.entityTracker, event.trackedEntities, event.entityToTrack, at.trackingDistance(), at.updatePeriod(), at.sendVelocity());
         }
     }

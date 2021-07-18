@@ -6,17 +6,17 @@ import net.modificationstation.stationapi.api.util.TriState;
 import java.lang.annotation.*;
 
 /**
- * Annotation alternative of {@link ITracking}.
+ * Annotation alternative of {@link TrackingParametersProvider}.
  * @author mine_diver
  * @see TrackEntityEvent
- * @see ICustomTracking
- * @see ITracking
+ * @see CustomTracking
+ * @see TrackingParametersProvider
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
-public @interface Tracking {
+public @interface HasTrackingParameters {
 
     /**
      * TrackingDistance supplier method.

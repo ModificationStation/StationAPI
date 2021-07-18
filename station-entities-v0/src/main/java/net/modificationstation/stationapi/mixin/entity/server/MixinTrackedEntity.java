@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.mixin.entity.server;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.packet.AbstractPacket;
 import net.minecraft.server.network.TrackedEntity;
-import net.modificationstation.stationapi.api.server.entity.CustomSpawnData;
+import net.modificationstation.stationapi.api.server.entity.CustomSpawnDataProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,7 +18,7 @@ public class MixinTrackedEntity {
 
     @Inject(method = "method_600", at = @At(value = "HEAD"), cancellable = true)
     private void getSpawnData(CallbackInfoReturnable<AbstractPacket> cir) {
-        if (this.entityToSync instanceof CustomSpawnData)
-            cir.setReturnValue(((CustomSpawnData) entityToSync).getSpawnData());
+        if (this.entityToSync instanceof CustomSpawnDataProvider)
+            cir.setReturnValue(((CustomSpawnDataProvider) entityToSync).getSpawnData());
     }
 }

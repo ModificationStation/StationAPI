@@ -10,7 +10,7 @@ public class GuiHelperClientImpl extends GuiHelperImpl {
 
     @Override
     protected void sideDependentPacket(PlayerBase player, InventoryBase inventory, Message message) {
-        message.put(new Object[] {inventory});
+        message.objects = new Object[] { inventory };
     }
 
     @Override

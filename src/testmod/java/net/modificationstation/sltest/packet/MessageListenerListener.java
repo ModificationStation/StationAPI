@@ -26,6 +26,6 @@ public class MessageListenerListener {
     }
 
     public void handleSendCoords(PlayerBase playerBase, Message message) {
-        System.out.println(((ModdedItem) message.objects()[0]).hmmSho);
+        System.out.println(((ModdedItem) message.objects[0]).hmmSho);
     }
 }

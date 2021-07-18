@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.server.entity;
 
 import net.minecraft.packet.AbstractPacket;
 
-public interface CustomSpawnData {
+public interface CustomSpawnDataProvider {
 
     AbstractPacket getSpawnData();
 }

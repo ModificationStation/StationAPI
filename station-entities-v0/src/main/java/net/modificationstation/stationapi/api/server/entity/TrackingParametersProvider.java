@@ -5,17 +5,17 @@ import net.minecraft.network.EntityHashSet;
 import net.minecraft.server.network.ServerEntityTracker;
 import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEvent;
 import net.modificationstation.stationapi.api.util.TriState;
-import net.modificationstation.stationapi.impl.server.entity.TrackingImpl;
+import net.modificationstation.stationapi.impl.server.entity.TrackingParametersImpl;
 
 /**
- * An implementation of {@link ICustomTracking} that has the logic set up and just requires entity to provide data for tracking.
- * If the data is constant, use {@link Tracking}.
+ * An implementation of {@link CustomTracking} that has the logic set up and just requires entity to provide data for tracking.
+ * If the data is constant, use {@link HasTrackingParameters}.
  * @author mine_diver
  * @see TrackEntityEvent
- * @see ICustomTracking
- * @see Tracking
+ * @see CustomTracking
+ * @see HasTrackingParameters
  */
-public interface ITracking extends ICustomTracking {
+public interface TrackingParametersProvider extends CustomTracking {
 
     /**
      * The logic implementation.
@@ -24,7 +24,7 @@ public interface ITracking extends ICustomTracking {
      */
     @Override
     default void track(ServerEntityTracker entityTracker, EntityHashSet trackedEntities) {
-        TrackingImpl.track(entityTracker, trackedEntities, (EntityBase) this, getTrackingDistance(), getUpdatePeriod(), sendVelocity());
+        TrackingParametersImpl.track(entityTracker, trackedEntities, (EntityBase) this, getTrackingDistance(), getUpdatePeriod(), sendVelocity());
     }
 
     /**

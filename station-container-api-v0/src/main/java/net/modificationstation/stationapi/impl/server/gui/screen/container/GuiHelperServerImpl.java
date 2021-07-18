@@ -12,9 +12,9 @@ public class GuiHelperServerImpl extends GuiHelperImpl {
 
     @Override
     protected void sideDependentPacket(PlayerBase player, InventoryBase inventory, Message message) {
-        message.put(new Object[] {null});
+        message.objects = new Object[] { null };
         ((ServerPlayerAccessor) player).invokeMethod_314();
-        message.put(new int[] {((ServerPlayerAccessor) player).getField_260()});
+        message.ints = new int[] { ((ServerPlayerAccessor) player).getField_260() };
     }
 
     @Override

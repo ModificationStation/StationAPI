@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.entity.HasOwner;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public interface IStationSpawnData extends CustomSpawnData {
+public interface StationSpawnDataProvider extends CustomSpawnDataProvider {
 
     @Override
     default AbstractPacket getSpawnData() {
@@ -21,13 +21,11 @@ public interface IStationSpawnData extends CustomSpawnData {
             ownerId = owner.entityId;
         }
         Message message = new Message(Identifier.of(StationAPI.MODID, "spawn_entity"));
-        message.put(new String[]{getHandlerIdentifier().toString()});
-        int[] ints = new int[]{entityBase.entityId, MathHelper.floor(entityBase.x * 32), MathHelper.floor(entityBase.y * 32), MathHelper.floor(entityBase.z * 32), ownerId};
-        message.put(ints);
+        message.strings = new String[] { getHandlerIdentifier().toString() };
+        message.ints = new int[] { entityBase.entityId, MathHelper.floor(entityBase.x * 32), MathHelper.floor(entityBase.y * 32), MathHelper.floor(entityBase.z * 32), ownerId };
         if (ownerId > 0) {
             double var10 = 3.9D;
-            short[] shorts = new short[]{(short) (Doubles.constrainToRange(entityBase.velocityX, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entityBase.velocityY, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entityBase.velocityZ, -var10, var10) * 8000)};
-            message.put(shorts);
+            message.shorts = new short[] { (short) (Doubles.constrainToRange(entityBase.velocityX, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entityBase.velocityY, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entityBase.velocityZ, -var10, var10) * 8000) };
         }
         writeToMessage(message);
         return message;

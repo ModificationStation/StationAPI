@@ -5,17 +5,17 @@ import net.mine_diver.unsafeevents.Event;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.network.EntityHashSet;
 import net.minecraft.server.network.ServerEntityTracker;
-import net.modificationstation.stationapi.api.server.entity.ICustomTracking;
-import net.modificationstation.stationapi.api.server.entity.ITracking;
-import net.modificationstation.stationapi.api.server.entity.Tracking;
+import net.modificationstation.stationapi.api.server.entity.CustomTracking;
+import net.modificationstation.stationapi.api.server.entity.HasTrackingParameters;
+import net.modificationstation.stationapi.api.server.entity.TrackingParametersProvider;
 import net.modificationstation.stationapi.api.util.API;
 
 /**
  * Event that gets called after server tries tracking an entity by checking if it's instance of a vanilla class.
  * @author mine_diver
- * @see ICustomTracking
- * @see ITracking
- * @see Tracking
+ * @see CustomTracking
+ * @see TrackingParametersProvider
+ * @see HasTrackingParameters
  */
 @RequiredArgsConstructor
 public class TrackEntityEvent extends Event {

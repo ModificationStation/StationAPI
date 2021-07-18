@@ -5,11 +5,11 @@ import net.minecraft.entity.animal.AnimalBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.server.entity.IStationSpawnData;
-import net.modificationstation.stationapi.api.server.entity.Tracking;
+import net.modificationstation.stationapi.api.server.entity.HasTrackingParameters;
+import net.modificationstation.stationapi.api.server.entity.StationSpawnDataProvider;
 
-@Tracking(trackingDistance = 5, updatePeriod = 2)
-public class PoorGuy extends AnimalBase implements IStationSpawnData {
+@HasTrackingParameters(trackingDistance = 5, updatePeriod = 2)
+public class PoorGuy extends AnimalBase implements StationSpawnDataProvider {
 
     public PoorGuy(Level arg) {
         super(arg);

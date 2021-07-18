@@ -1,37 +1,30 @@
 package net.modificationstation.stationapi.api.packet;
 
-import com.google.common.collect.ObjectArrays;
-import com.google.common.primitives.Booleans;
-import com.google.common.primitives.Bytes;
-import com.google.common.primitives.Chars;
-import com.google.common.primitives.Doubles;
-import com.google.common.primitives.Floats;
-import com.google.common.primitives.Ints;
-import com.google.common.primitives.Longs;
-import com.google.common.primitives.Shorts;
 import com.google.gson.Gson;
 import net.minecraft.network.PacketHandler;
 import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationapi.api.entity.player.PlayerHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.io.*;
 
 public class Message extends AbstractPacket {
 
     private Identifier identifier;
-    private boolean[] booleans;
-    private byte[] bytes;
-    private short[] shorts;
-    private char[] chars;
-    private int[] ints;
-    private long[] longs;
-    private float[] floats;
-    private double[] doubles;
-    private String[] strings;
-    private Object[] objects;
+    public boolean[] booleans;
+    public byte[] bytes;
+    public short[] shorts;
+    public char[] chars;
+    public int[] ints;
+    public long[] longs;
+    public float[] floats;
+    public double[] doubles;
+    public String[] strings;
+    public Object[] objects;
 
+    @ApiStatus.Internal
     public Message() { }
 
     public Message(Identifier identifier) {
@@ -104,7 +97,7 @@ public class Message extends AbstractPacket {
             };
             int length;
             if (present[0]) {
-                length = in.readUnsignedShort();
+                length = in.readInt();
                 booleans = new boolean[length];
                 int lengthBytes = (int) Math.ceil((double) length / 8);
                 for (int i = 0; i < lengthBytes; i++) {
@@ -114,54 +107,55 @@ public class Message extends AbstractPacket {
                 }
             }
             if (present[1]) {
-                length = in.readUnsignedShort();
+                length = in.readInt();
                 bytes = new byte[length];
-                in.readFully(bytes);
+                for (int i = 0; i < length; i++)
+                    bytes[i] = in.readByte();
             }
             if (present[2]) {
-                length = in.readUnsignedShort();
+                length = in.readInt();
                 shorts = new short[length];
                 for (int i = 0; i < length; i++)
                     shorts[i] = in.readShort();
             }
             if (present[3]) {
-                length = in.readUnsignedShort();
+                length = in.readInt();
                 chars = new char[length];
                 for (int i = 0; i < length; i++)
                     chars[i] = in.readChar();
             }
             if (present[4]) {
-                length = in.readUnsignedShort();
+                length = in.readInt();
                 ints = new int[length];
                 for (int i = 0; i < length; i++)
                     ints[i] = in.readInt();
             }
             if (present[5]) {
-                length = in.readUnsignedShort();
+                length = in.readInt();
                 longs = new long[length];
                 for (int i = 0; i < length; i++)
                     longs[i] = in.readLong();
             }
             if (present[6]) {
-                length = in.readUnsignedShort();
+                length = in.readInt();
                 floats = new float[length];
                 for (int i = 0; i < length; i++)
                     floats[i] = in.readFloat();
             }
             if (present[7]) {
-                length = in.readUnsignedShort();
+                length = in.readInt();
                 doubles = new double[length];
                 for (int i = 0; i < length; i++)
                     doubles[i] = in.readDouble();
             }
             if (present[8]) {
-                length = in.readUnsignedShort();
+                length = in.readInt();
                 strings = new String[length];
                 for (int i = 0; i < length; i++)
                     strings[i] = method_802(in, 32767);
             }
             if (present[9]) {
-                length = in.readUnsignedShort();
+                length = in.readInt();
                 objects = new Object[length];
                 Gson gson = new Gson();
                 for (int i = 0; i < length; i++)
@@ -206,7 +200,7 @@ public class Message extends AbstractPacket {
                     (absent[9] ? 0 : 1)));
             if (!absent[0]) {
                 int length = booleans.length;
-                out.writeShort(length);
+                out.writeInt(length);
                 int i0, i1, i2, i3, i4, i5, i6, i7;
                 for (int i = 0; i < (int) Math.ceil((double) length / 8); i++) {
                     i0 = i * 8;
@@ -228,47 +222,47 @@ public class Message extends AbstractPacket {
                 }
             }
             if (!absent[1]) {
-                out.writeShort(bytes.length);
+                out.writeInt(bytes.length);
                 for (byte b : bytes)
                     out.writeByte(b);
             }
             if (!absent[2]) {
-                out.writeShort(shorts.length);
+                out.writeInt(shorts.length);
                 for (short s : shorts)
                     out.writeShort(s);
             }
             if (!absent[3]) {
-                out.writeShort(chars.length);
+                out.writeInt(chars.length);
                 for (char c : chars)
                     out.writeChar(c);
             }
             if (!absent[4]) {
-                out.writeShort(ints.length);
+                out.writeInt(ints.length);
                 for (int i : ints)
                     out.writeInt(i);
             }
             if (!absent[5]) {
-                out.writeShort(ints.length);
+                out.writeInt(ints.length);
                 for (long l : longs)
                     out.writeLong(l);
             }
             if (!absent[6]) {
-                out.writeShort(floats.length);
+                out.writeInt(floats.length);
                 for (float f : floats)
                     out.writeFloat(f);
             }
             if (!absent[7]) {
-                out.writeShort(doubles.length);
+                out.writeInt(doubles.length);
                 for (double d : doubles)
                     out.writeDouble(d);
             }
             if (!absent[8]) {
-                out.writeShort(strings.length);
+                out.writeInt(strings.length);
                 for (String s : strings)
                     writeString(s, out);
             }
             if (!absent[9]) {
-                out.writeShort(objects.length);
+                out.writeInt(objects.length);
                 Gson gson = new Gson();
                 for (Object o : objects) {
                     writeString(gson.toJson(o), out);
@@ -299,85 +293,5 @@ public class Message extends AbstractPacket {
                 (doubles == null ? 0 : size(doubles)) +
                 (strings == null ? 0 : size(strings)) +
                 (objects == null ? 0 : size(objects));
-    }
-
-    public void put(boolean[] booleans) {
-        this.booleans = Booleans.concat(this.booleans == null ? new boolean[0] : this.booleans, booleans);
-    }
-
-    public void put(byte[] bytes) {
-        this.bytes = Bytes.concat(this.bytes == null ? new byte[0] : this.bytes, bytes);
-    }
-
-    public void put(short[] shorts) {
-        this.shorts = Shorts.concat(this.shorts == null ? new short[0] : this.shorts, shorts);
-    }
-
-    public void put(char[] chars) {
-        this.chars = Chars.concat(this.chars == null ? new char[0] : this.chars, chars);
-    }
-
-    public void put(int[] ints) {
-        this.ints = Ints.concat(this.ints == null ? new int[0] : this.ints, ints);
-    }
-
-    public void put(long[] longs) {
-        this.longs = Longs.concat(this.longs == null ? new long[0] : this.longs, longs);
-    }
-
-    public void put(float[] floats) {
-        this.floats = Floats.concat(this.floats == null ? new float[0] : this.floats, floats);
-    }
-
-    public void put(double[] doubles) {
-        this.doubles = Doubles.concat(this.doubles == null ? new double[0] : this.doubles, doubles);
-    }
-
-    public void put(String[] strings) {
-        this.strings = ObjectArrays.concat(this.strings == null ? new String[0] : this.strings, strings, String.class);
-    }
-
-    public void put(Object[] objects) {
-        this.objects = ObjectArrays.concat(this.objects == null ? new Object[0] : this.objects, objects, Object.class);
-    }
-
-    public boolean[] booleans() {
-        return booleans;
-    }
-
-    public byte[] bytes() {
-        return bytes;
-    }
-
-    public short[] shorts() {
-        return shorts;
-    }
-
-    public char[] chars() {
-        return chars;
-    }
-
-    public int[] ints() {
-        return ints;
-    }
-
-    public long[] longs() {
-        return longs;
-    }
-
-    public float[] floats() {
-        return floats;
-    }
-
-    public double[] doubles() {
-        return doubles;
-    }
-
-    public String[] strings() {
-        return strings;
-    }
-
-    public Object[] objects() {
-        return objects;
     }
 }

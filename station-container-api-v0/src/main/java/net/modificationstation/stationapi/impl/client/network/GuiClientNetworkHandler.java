@@ -27,8 +27,8 @@ public final class GuiClientNetworkHandler {
     private static void handleGui(PlayerBase player, Message message) {
         boolean isClient = player.level.isClient;
         //noinspection deprecation
-        GuiHandlerRegistry.INSTANCE.get(Identifier.of(message.strings()[0])).ifPresent(guiHandler -> ((Minecraft) FabricLoader.getInstance().getGameInstance()).openScreen(guiHandler.one().apply(player, isClient ? guiHandler.two().get() : (InventoryBase) message.objects()[0], message)));
+        GuiHandlerRegistry.INSTANCE.get(Identifier.of(message.strings[0])).ifPresent(guiHandler -> ((Minecraft) FabricLoader.getInstance().getGameInstance()).openScreen(guiHandler.one().apply(player, isClient ? guiHandler.two().get() : (InventoryBase) message.objects[0], message)));
         if (isClient)
-            player.container.currentContainerId = message.ints()[0];
+            player.container.currentContainerId = message.ints[0];
     }
 }
