@@ -10,6 +10,7 @@ import net.modificationstation.stationapi.impl.server.packet.PacketHelperServerI
 
 /**
  * Sided packet helper class.
+ *
  * @author mine_diver
  */
 public final class PacketHelper {

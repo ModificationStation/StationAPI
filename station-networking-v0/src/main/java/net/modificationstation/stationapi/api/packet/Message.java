@@ -10,74 +10,228 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.io.*;
 
+/**
+ * Universal packet class that can hold any kind of data,
+ * be received on both server and client, and be used locally on either server or client.
+ *
+ * <p>Instead of a byte ID, uses an {@link Identifier} for practically infinite variety of packets with no collisions.
+ * Can hold any primitive type array, as well as {@link String} and any kind of object.
+ *
+ * <p>For objects, uses GSON to write them as JSON strings and send to the other side.
+ * Only works if the object's class is also present on the receiver side.
+ * Be careful with this feature. It doesn't guarantee that every object will work.
+ * It most certainly won't be able to send a new block/item to the client or server.
+ * You can, however, use it perfectly fine with data classes that just hold some primitive data or some collection of data.
+ *
+ * <p>When received, Message finds a listener in {@link MessageListenerRegistry} with its identifier,
+ * and passes itself into it.
+ *
+ * <p>This packet, in combination with {@link PacketHelper}, can also be used to communicate data locally on a client or server.
+ * For example, this is very useful for handling some gameplay keybinds, because when playing on singleplayer you want
+ * keybinds to be processed locally, and in multiplayer you want them to trigger logic on server, and the Message and {@link PacketHelper}
+ * combo allows it to be handled in 1 universal way for both situations.
+ *
+ * @author mine_diver
+ */
 public class Message extends AbstractPacket {
 
+    /**
+     * Message's identifier.
+     */
     private Identifier identifier;
+
+    /**
+     * Array of booleans to send.
+     *
+     * <p>Since booleans are written as bytes, taking up 7 extra bits,
+     * Message stores multiple booleans into 1 byte, saving packet size.
+     */
     public boolean[] booleans;
+
+    /**
+     * Array of bytes to send.
+     *
+     * <p>Useful for sending over NBT tags.
+     */
     public byte[] bytes;
+
+    /**
+     * Array of shorts to send.
+     */
     public short[] shorts;
+
+    /**
+     * Array of chars to send.
+     */
     public char[] chars;
+
+    /**
+     * Array of ints to send.
+     */
     public int[] ints;
+
+    /**
+     * Array of longs to send.
+     */
     public long[] longs;
+
+    /**
+     * Array of floats to send.
+     */
     public float[] floats;
+
+    /**
+     * Array of doubles to send.
+     */
     public double[] doubles;
+
+    /**
+     * Array of strings to send.
+     *
+     * <p>Due to a hard limit in {@link AbstractPacket#writeString(String, DataOutputStream)},
+     * the maximum allowed length of a single string is 32767.
+     *
+     * <p>String's single character is 2 bytes, allowing all unicode characters.
+     */
     public String[] strings;
+
+    /**
+     * Array of objects to send.
+     *
+     * <p>All objects are converted to JSON strings using GSON to be sent over to the other side.
+     * Object's classes must also be present on the receiver side.
+     *
+     * <p>Objects won't go through GSON if the packet is processed locally.
+     */
     public Object[] objects;
 
+    /**
+     * Internal Message constructor for initialization when received.
+     */
     @ApiStatus.Internal
     public Message() { }
 
+    /**
+     * Default Message constructor.
+     *
+     * @param identifier the Message's identifier.
+     */
     public Message(Identifier identifier) {
         this.identifier = identifier;
     }
 
+    /**
+     * Calculates the size of a boolean array, including an integer length variable.
+     *
+     * @param booleans the boolean array to calculate the size of.
+     * @return the size of the given boolean array.
+     */
     public static int size(boolean[] booleans) {
-        return Short.BYTES + ((int) Math.ceil((double) booleans.length / 8));
+        return Integer.BYTES + ((int) Math.ceil((double) booleans.length / 8));
     }
 
+    /**
+     * Calculates the size of a byte array, including an integer length variable.
+     *
+     * @param bytes the byte array to calculate the size of.
+     * @return the size of the given byte array.
+     */
     public static int size(byte[] bytes) {
-        return Short.BYTES + bytes.length;
+        return Integer.BYTES + bytes.length;
     }
 
+    /**
+     * Calculates the size of a short array, including an integer length variable.
+     *
+     * @param shorts the short array to calculate the size of.
+     * @return the size of the given short array.
+     */
     public static int size(short[] shorts) {
-        return Short.BYTES + shorts.length * Short.BYTES;
+        return Integer.BYTES + shorts.length * Short.BYTES;
     }
 
+    /**
+     * Calculates the size of a char array, including an integer length variable.
+     *
+     * @param chars the char array to calculate the size of.
+     * @return the size of the given char array.
+     */
     public static int size(char[] chars) {
-        return Short.BYTES + chars.length * Character.BYTES;
+        return Integer.BYTES + chars.length * Character.BYTES;
     }
 
+    /**
+     * Calculates the size of a int array, including an integer length variable.
+     *
+     * @param ints the int array to calculate the size of.
+     * @return the size of the given int array.
+     */
     public static int size(int[] ints) {
-        return Short.BYTES + ints.length * Integer.BYTES;
+        return Integer.BYTES + ints.length * Integer.BYTES;
     }
 
+    /**
+     * Calculates the size of a long array, including an integer length variable.
+     *
+     * @param longs the long array to calculate the size of.
+     * @return the size of the given long array.
+     */
     public static int size(long[] longs) {
-        return Short.BYTES + longs.length * Long.BYTES;
+        return Integer.BYTES + longs.length * Long.BYTES;
     }
 
+    /**
+     * Calculates the size of a float array, including an integer length variable.
+     *
+     * @param floats the float array to calculate the size of.
+     * @return the size of the given float array.
+     */
     public static int size(float[] floats) {
-        return Short.BYTES + floats.length * Float.BYTES;
+        return Integer.BYTES + floats.length * Float.BYTES;
     }
 
+    /**
+     * Calculates the size of a double array, including an integer length variable.
+     *
+     * @param doubles the double array to calculate the size of.
+     * @return the size of the given double array.
+     */
     public static int size(double[] doubles) {
-        return Short.BYTES + doubles.length * Double.BYTES;
+        return Integer.BYTES + doubles.length * Double.BYTES;
     }
 
+    /**
+     * Calculates the size of a string array, including an integer length variable.
+     *
+     * @param strings the string array to calculate the size of.
+     * @return the size of the given string array.
+     */
     public static int size(String[] strings) {
-        int size = Short.BYTES;
+        int size = Integer.BYTES;
         for (String string : strings)
             size += size(string.toCharArray());
         return size;
     }
 
+    /**
+     * Calculates the size of a object array, including an integer length variable.
+     *
+     * @param objects the object array to calculate the size of.
+     * @return the size of the given object array.
+     */
     public static int size(Object[] objects) {
-        int size = Short.BYTES;
+        int size = Integer.BYTES;
         Gson gson = new Gson();
         for (Object o : objects)
             size += size(gson.toJson(o).toCharArray()) + size(o == null ? "null".toCharArray() : o.getClass().getName().toCharArray());
         return size;
     }
 
+    /**
+     * Reads the packet from an input stream.
+     *
+     * @param in the packet input stream.
+     */
     @Override
     public void read(DataInputStream in) {
         try {
@@ -172,6 +326,11 @@ public class Message extends AbstractPacket {
         }
     }
 
+    /**
+     * Writes the data to the output stream.
+     *
+     * @param out the packet output stream.
+     */
     @Override
     public void write(DataOutputStream out) {
         try {
@@ -274,11 +433,22 @@ public class Message extends AbstractPacket {
         }
     }
 
+    /**
+     * Handles the packet by searching up a message listener with the given identifier.
+     *
+     * @param handler the player's packet handler. Not useful for Message because there are separate modded message listeners,
+     *                but can be used to get the player's instance that received the packet.
+     */
     @Override
     public void handle(PacketHandler handler) {
         MessageListenerRegistry.INSTANCE.get(identifier).ifPresent(playerBaseMessageBiConsumer -> playerBaseMessageBiConsumer.accept(PlayerHelper.getPlayerFromPacketHandler(handler), this));
     }
 
+    /**
+     * Calculates the packet's size.
+     *
+     * @return the packet's size.
+     */
     @Override
     public int length() {
         return size(identifier.toString().toCharArray()) +
