@@ -45,7 +45,6 @@ public class AnimatedTextureBinder extends StationTextureBinder implements Textu
             }
         }
         grid = frames[0];
-        System.out.println("Refreshed!");
     }
 
     @Override
