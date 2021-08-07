@@ -1,12 +1,13 @@
 package net.modificationstation.sltest.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.item.ItemBase;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.item.tool.ToolMaterialFactory;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
+import net.modificationstation.stationapi.api.template.item.tool.TemplatePickaxe;
 
 public class ItemListener {
 
@@ -18,8 +19,8 @@ public class ItemListener {
         testNBTItem = new NBTItem(Identifier.of(SLTest.MODID, "nbt_item")).setMaxStackSize(1).setTranslationKey(SLTest.MODID, "nbt_item"); //8477
     }
 
-    public static ItemBase testItem;
+    public static TemplateItemBase testItem;
     public static ToolMaterial testMaterial;
-    public static ItemBase testPickaxe;
-    public static ItemBase testNBTItem;
+    public static TemplatePickaxe testPickaxe;
+    public static TemplateItemBase testNBTItem;
 }

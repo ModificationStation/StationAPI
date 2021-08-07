@@ -22,9 +22,9 @@ public class TextureListener {
 //        ItemListener.testPickaxe.setTexturePosition(TextureFactoryOld.INSTANCE.addAnimatedTexture(TextureRegistryOld.getRegistry("GUI_ITEMS"), "/assets/sltest/textures/items/testPickaxe.png", 4));
 //        ItemListener.testNBTItem.setTexturePosition(TextureFactory.INSTANCE.addTexture(TextureRegistry.getRegistry("GUI_ITEMS"), "/assets/sltest/textures/items/nbtItem.png"));
 
-        ItemListener.testNBTItem.setTexturePosition(ExpandableAtlas.STATION_GUI_ITEMS.addTexture("/assets/sltest/textures/items/nbtItem.png").index);
-        ItemListener.testItem.setTexturePosition(ExpandableAtlas.STATION_GUI_ITEMS.addTexture("/assets/sltest/textures/items/highres.png").index);
-        ItemListener.testPickaxe.setTexturePosition(ExpandableAtlas.STATION_GUI_ITEMS.addAnimationBinder( "/assets/sltest/textures/items/testPickaxe.png", 4, "/assets/sltest/textures/items/testItem.png").index);
+        ItemListener.testNBTItem.setTexture("/assets/sltest/textures/items/nbtItem.png");
+        ItemListener.testItem.setTexture("/assets/sltest/textures/items/highres.png");
+        ItemListener.testPickaxe.setAnimationBinder( "/assets/sltest/textures/items/testPickaxe.png", 1, "/assets/sltest/textures/items/testItem.png");
 
 //        SquareAtlas.GUI_ITEMS.addAnimationBinder("/assets/sltest/textures/items/testPickaxe.png", 1, 0);
 
