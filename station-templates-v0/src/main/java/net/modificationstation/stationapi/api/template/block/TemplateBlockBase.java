@@ -1,0 +1,83 @@
+package net.modificationstation.stationapi.api.template.block;
+
+import net.minecraft.block.BlockSounds;
+import net.minecraft.block.material.Material;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.registry.Identifier;
+
+public class TemplateBlockBase extends net.minecraft.block.BlockBase implements BlockTemplate<TemplateBlockBase> {
+
+    public TemplateBlockBase(Identifier identifier, Material material) {
+        this(BlockRegistry.INSTANCE.getNextSerialID(), material);
+        BlockRegistry.INSTANCE.register(identifier, this);
+    }
+
+    public TemplateBlockBase(Identifier identifier, int tex, Material material) {
+        this(BlockRegistry.INSTANCE.getNextSerialID(), tex, material);
+        BlockRegistry.INSTANCE.register(identifier, this);
+    }
+
+    public TemplateBlockBase(int id, Material material) {
+        super(id, material);
+    }
+
+    public TemplateBlockBase(int id, int tex, Material material) {
+        super(id, tex, material);
+    }
+
+    @Override
+    public TemplateBlockBase disableNotifyOnMetaDataChange() {
+        return (TemplateBlockBase) super.disableNotifyOnMetaDataChange();
+    }
+
+    @Override
+    public TemplateBlockBase setSounds(BlockSounds sounds) {
+        return (TemplateBlockBase) super.setSounds(sounds);
+    }
+
+    @Override
+    public TemplateBlockBase setLightOpacity(int i) {
+        return (TemplateBlockBase) super.setLightOpacity(i);
+    }
+
+    @Override
+    public TemplateBlockBase setLightEmittance(float f) {
+        return (TemplateBlockBase) super.setLightEmittance(f);
+    }
+
+    @Override
+    public TemplateBlockBase setBlastResistance(float resistance) {
+        return (TemplateBlockBase) super.setBlastResistance(resistance);
+    }
+
+    @Override
+    public TemplateBlockBase setHardness(float hardness) {
+        return (TemplateBlockBase) super.setHardness(hardness);
+    }
+
+    @Override
+    public TemplateBlockBase setUnbreakable() {
+        return (TemplateBlockBase) super.setUnbreakable();
+    }
+
+    @Override
+    public TemplateBlockBase setTicksRandomly(boolean ticksRandomly) {
+        return (TemplateBlockBase) super.setTicksRandomly(ticksRandomly);
+    }
+
+    @Override
+    public TemplateBlockBase setTranslationKey(String string) {
+        return (TemplateBlockBase) super.setTranslationKey(string);
+    }
+
+    @Override
+    public TemplateBlockBase disableStat() {
+        return (TemplateBlockBase) super.disableStat();
+    }
+
+    @Override
+    public Atlas getAtlas() {
+        return BlockTemplate.super.getAtlas();
+    }
+}

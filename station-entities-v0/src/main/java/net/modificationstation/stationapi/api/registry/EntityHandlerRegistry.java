@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.registry;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.StationAPI;
-import uk.co.benjiweber.expressions.functions.QuadFunction;
+import uk.co.benjiweber.expressions.function.QuadFunction;
 
 public final class EntityHandlerRegistry extends Registry<QuadFunction<Level, Double, Double, Double, EntityBase>> {
 

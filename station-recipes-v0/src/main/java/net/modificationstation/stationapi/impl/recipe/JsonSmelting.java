@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.impl.recipe;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.modificationstation.stationapi.api.template.item.JsonItemKey;
+import net.modificationstation.stationapi.api.item.json.JsonItemKey;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

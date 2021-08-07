@@ -19,7 +19,7 @@ import net.modificationstation.stationapi.api.client.model.BlockWithWorldRendere
 import net.modificationstation.stationapi.api.client.model.CustomCuboidRenderer;
 import net.modificationstation.stationapi.api.client.model.CustomModel;
 import net.modificationstation.stationapi.api.client.model.CustomTexturedQuad;
-import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
+import net.modificationstation.stationapi.api.client.texture.TextureRegistryOld;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -153,9 +153,9 @@ public abstract class MixinTileRenderer {
                 Tessellator tessellator = Tessellator.INSTANCE;
 
                 tessellator.draw();
-                TextureRegistry lastRegistry = TextureRegistry.currentRegistry();
+                TextureRegistryOld lastRegistry = TextureRegistryOld.currentRegistry();
                 int lastTex = lastRegistry.currentTexture();
-                TextureRegistry.unbind();
+                TextureRegistryOld.unbind();
 
                 for (CustomCuboidRenderer cuboid : model.getCuboids()) {
                     for (CustomTexturedQuad texturedQuad : cuboid.getCubeQuads()) {
@@ -631,22 +631,22 @@ public abstract class MixinTileRenderer {
     }
 
     private int overrideTexture(int texID) {
-        if (TextureRegistry.currentRegistry() != null) {
-            int atlasID = texID / TextureRegistry.currentRegistry().texturesPerFile();
-            if (TextureRegistry.currentRegistry().currentTexture() != atlasID) {
+        if (TextureRegistryOld.currentRegistry() != null) {
+            int atlasID = texID / TextureRegistryOld.currentRegistry().texturesPerFile();
+            if (TextureRegistryOld.currentRegistry().currentTexture() != atlasID) {
                 Tessellator tessellator = Tessellator.INSTANCE;
                 boolean hasColor = false;
                 if (!inventory) {
                     hasColor = ((TessellatorAccessor) tessellator).getHasColour();
                     tessellator.draw();
                 }
-                TextureRegistry.currentRegistry().bindAtlas(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, atlasID);
+                TextureRegistryOld.currentRegistry().bindAtlas(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, atlasID);
                 if (!inventory) {
                     tessellator.start();
                     ((TessellatorAccessor) tessellator).setHasColour(hasColor);
                 }
             }
-            return texID % TextureRegistry.currentRegistry().texturesPerFile();
+            return texID % TextureRegistryOld.currentRegistry().texturesPerFile();
         } else
             return texID;
     }

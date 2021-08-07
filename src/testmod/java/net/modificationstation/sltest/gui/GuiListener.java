@@ -11,7 +11,7 @@ import net.modificationstation.sltest.tileentity.TileEntityFreezer;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.registry.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import uk.co.benjiweber.expressions.tuples.BiTuple;
+import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 public class GuiListener {
 

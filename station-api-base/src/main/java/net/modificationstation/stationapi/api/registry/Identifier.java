@@ -1,48 +1,60 @@
 package net.modificationstation.stationapi.api.registry;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.concurrent.*;
 
 public final class Identifier implements Comparable<Identifier> {
 
+    @NotNull
+    private static final Cache<String, Identifier> CACHE = CacheBuilder.newBuilder().softValues().build();
 
-    private static final Map<String, Identifier> VALUES = new HashMap<>();
+    @NotNull
     public final ModID modID;
+
+    @NotNull
     public final String id;
 
-    private Identifier(ModID modID, String id) {
+    private Identifier(@NotNull ModID modID, @NotNull String id) {
         this.modID = modID;
         this.id = id;
     }
 
-    @NotNull
-    public static Identifier of(@NotNull String identifier) {
-        return VALUES.computeIfAbsent(identifier, s -> {
-            String[] strings = s.split(":");
-            String modid;
-            int idIndex;
-            switch(strings.length) {
-                case 1: {
-                    modid = "minecraft";
-                    idIndex = 0;
-                    break;
+    public static @NotNull Identifier of(@NotNull String identifier) {
+        try {
+            return CACHE.get(identifier, () -> {
+                String[] strings = identifier.split(":");
+                String modid;
+                int idIndex;
+                switch(strings.length) {
+                    case 1: {
+                        modid = "minecraft";
+                        idIndex = 0;
+                        break;
+                    }
+                    case 2: {
+                        modid = strings[0];
+                        idIndex = 1;
+                        break;
+                    }
+                    default:
+                        throw new IllegalArgumentException("Invalid identifier string! " + identifier);
                 }
-                case 2: {
-                    modid = strings[0];
-                    idIndex = 1;
-                    break;
-                }
-                default:
-                    throw new IllegalArgumentException("Invalid identifier string!");
-            }
-            return new Identifier(ModID.of(modid.trim()), strings[idIndex].trim());
-        });
+                return new Identifier(ModID.of(modid.trim()), strings[idIndex].trim());
+            });
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    @NotNull
-    public static Identifier of(@NotNull ModID modID, @NotNull String id) {
-        return VALUES.computeIfAbsent(modID + ":" + id, s -> new Identifier(modID, id));
+    public static @NotNull Identifier of(@NotNull ModID modID, @NotNull String id) {
+        try {
+            return CACHE.get(modID + ":" + id, () -> new Identifier(modID, id));
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -50,29 +62,18 @@ public final class Identifier implements Comparable<Identifier> {
         return toString().compareTo(o.toString());
     }
 
-    @NotNull
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return modID + ":" + id;
     }
 
     @Override
-    public boolean equals(Object other) {
-        if (other instanceof String) {
-            return other.equals(this.toString());
-        } else if (other instanceof Identifier) {
-            Identifier otherId = (Identifier) other;
-            return otherId.id.equals(id) && otherId.modID.equals(modID);
-        } else {
-            return false;
-        }
+    public boolean equals(@NotNull Object other) {
+        return (other instanceof String && toString().equals(other)) || (other instanceof Identifier && toString().equals(other.toString()));
     }
 
     @Override
     public int hashCode() {
-        int result = 5;
-        result = 29 * result + modID.hashCode();
-        result = 29 * result + id.hashCode();
-        return result;
+        return toString().hashCode();
     }
 }

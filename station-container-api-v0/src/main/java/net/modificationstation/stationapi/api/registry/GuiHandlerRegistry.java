@@ -5,9 +5,9 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.packet.Message;
-import uk.co.benjiweber.expressions.functions.TriFunction;
-import uk.co.benjiweber.expressions.tuples.BiTuple;
-import uk.co.benjiweber.expressions.tuples.Tuple;
+import uk.co.benjiweber.expressions.function.TriFunction;
+import uk.co.benjiweber.expressions.tuple.BiTuple;
+import uk.co.benjiweber.expressions.tuple.Tuple;
 
 import java.util.function.*;
 

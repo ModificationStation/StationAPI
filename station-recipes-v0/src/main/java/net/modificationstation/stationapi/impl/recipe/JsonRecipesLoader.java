@@ -28,7 +28,7 @@ public class JsonRecipesLoader {
                 try {
                     Identifier recipeId = Identifier.of(rawId);
                     JsonRecipesRegistry.INSTANCE.computeIfAbsent(recipeId, identifier -> new HashSet<>()).add(recipe);
-                } catch (NullPointerException e) {
+                } catch (IllegalArgumentException e) {
                     LOGGER.warn("Found an unknown recipe type " + rawId + ". Ignoring.");
                 }
             } catch (IOException e) {

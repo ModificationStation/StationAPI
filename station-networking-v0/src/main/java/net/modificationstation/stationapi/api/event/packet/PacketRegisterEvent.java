@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationapi.api.packet.Message;
-import uk.co.benjiweber.expressions.functions.QuadConsumer;
+import uk.co.benjiweber.expressions.function.QuadConsumer;
 
 /**
  * Event that fires after vanilla packets are registered.

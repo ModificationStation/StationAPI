@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import uk.co.benjiweber.expressions.functions.QuadFunction;
+import uk.co.benjiweber.expressions.function.QuadFunction;
 
 import java.util.*;
 

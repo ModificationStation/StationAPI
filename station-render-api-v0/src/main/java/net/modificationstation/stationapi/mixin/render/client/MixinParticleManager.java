@@ -6,7 +6,7 @@ import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.entity.ParticleBase;
-import net.modificationstation.stationapi.api.client.texture.TextureRegistry;
+import net.modificationstation.stationapi.api.client.texture.TextureRegistryOld;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,14 +29,14 @@ public class MixinParticleManager {
     private void onTerrainTexture(CallbackInfo ci) {
         currentTexture = 0;
     }*/
-    private TextureRegistry registryToBind;
+    private TextureRegistryOld registryToBind;
     private int textureToBind;
 
     @Redirect(method = "method_324(Lnet/minecraft/entity/EntityBase;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;getTextureId(Ljava/lang/String;)I"))
     private int onGetTexture(TextureManager textureManager, String texture) {
         registryToBind = null;
-        if (TextureRegistry.currentRegistry() == null || !TextureRegistry.currentRegistry().getAtlas(TextureRegistry.currentRegistry().currentTexture()).equals(texture))
-            for (TextureRegistry registry : TextureRegistry.registries()) {
+        if (TextureRegistryOld.currentRegistry() == null || !TextureRegistryOld.currentRegistry().getAtlas(TextureRegistryOld.currentRegistry().currentTexture()).equals(texture))
+            for (TextureRegistryOld registry : TextureRegistryOld.registries()) {
                 Integer atlasID = registry.getAtlasID(texture);
                 if (atlasID != null) {
                     registryToBind = registry;
@@ -57,12 +57,12 @@ public class MixinParticleManager {
 
     @Redirect(method = "method_324(Lnet/minecraft/entity/EntityBase;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ParticleBase;method_2002(Lnet/minecraft/client/render/Tessellator;FFFFFF)V"))
     private void onRenderParticles(ParticleBase particleBase, Tessellator var1, float var2, float var3, float var4, float var5, float var6, float var7) {
-        if (TextureRegistry.currentRegistry() != null) {
-            int atlasID = ((ParticleBaseAccessor) particleBase).getField_2635() / TextureRegistry.currentRegistry().texturesPerFile();
-            if (atlasID != TextureRegistry.currentRegistry().currentTexture()) {
+        if (TextureRegistryOld.currentRegistry() != null) {
+            int atlasID = ((ParticleBaseAccessor) particleBase).getField_2635() / TextureRegistryOld.currentRegistry().texturesPerFile();
+            if (atlasID != TextureRegistryOld.currentRegistry().currentTexture()) {
                 Tessellator tessellator = Tessellator.INSTANCE;
                 tessellator.draw();
-                TextureRegistry.currentRegistry().bindAtlas(textureManager, atlasID);
+                TextureRegistryOld.currentRegistry().bindAtlas(textureManager, atlasID);
                 tessellator.start();
             }
         }

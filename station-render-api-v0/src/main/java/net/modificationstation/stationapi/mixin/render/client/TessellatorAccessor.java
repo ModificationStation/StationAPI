@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.mixin.render.client;
 import net.minecraft.client.render.Tessellator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Tessellator.class)
 public interface TessellatorAccessor {
@@ -12,4 +13,9 @@ public interface TessellatorAccessor {
 
     @Accessor
     void setHasColour(boolean hasColour);
+
+    @Invoker("<init>")
+    static Tessellator newInst(int bufferSize) {
+        throw new AssertionError("Mixin!");
+    }
 }

@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.event.entity;
 import lombok.RequiredArgsConstructor;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.entity.EntityBase;
-import uk.co.benjiweber.expressions.functions.TriConsumer;
+import uk.co.benjiweber.expressions.function.TriConsumer;
 
 @RequiredArgsConstructor
 public class EntityRegister extends Event {

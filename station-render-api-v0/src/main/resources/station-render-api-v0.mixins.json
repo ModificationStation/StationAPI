@@ -8,6 +8,7 @@
     "MixinItemBase"
   ],
   "client": [
+    "client.EntityRendererAccessor",
     "client.MixinAchievements",
     "client.Mixinclass_556",
     "client.Mixinclass_66",

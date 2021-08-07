@@ -136,7 +136,7 @@ allprojects {
 
 		implementation "com.github.jhalterman:typetools:87240d6"
 
-		implementation "com.github.benjiman:expressions:7ed6748"
+		implementation "com.github.mineLdiver:expressions:2fa66db"
 
 		implementation "com.github.mineLdiver:UnsafeEvents:7efec57"
 
@@ -413,7 +413,7 @@ dependencies {
 	}
 
 	include "com.github.jhalterman:typetools:87240d6"
-	include "com.github.benjiman:expressions:7ed6748"
+	include "com.github.mineLdiver:expressions:2fa66db"
 	include "com.github.mineLdiver:UnsafeEvents:7efec57"
 
 //	modImplementation "com.github.amb0s:ModMenu:c52f3df"

@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.render.client;
 
+import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.texture.TextureManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -27,4 +28,7 @@ public interface TextureManagerAccessor {
 
     @Invoker
     void invokeMethod_1089(BufferedImage bufferedImage, int i);
+
+    @Accessor
+    List<TextureBinder> getTextureBinders();
 }

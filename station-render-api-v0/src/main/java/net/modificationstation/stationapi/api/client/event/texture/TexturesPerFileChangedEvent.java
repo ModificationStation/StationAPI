@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.client.event.texture;
 
 import lombok.RequiredArgsConstructor;
 import net.mine_diver.unsafeevents.Event;
-import net.modificationstation.stationapi.impl.client.texture.TextureRegistry;
+import net.modificationstation.stationapi.impl.client.texture.TextureRegistryOld;
 
 /**
  * Event called when TexturesPerFile of a texture registry got changed, so mods can perform actions on change
@@ -15,7 +15,7 @@ import net.modificationstation.stationapi.impl.client.texture.TextureRegistry;
 @RequiredArgsConstructor
 public class TexturesPerFileChangedEvent extends Event {
 
-    public final TextureRegistry registry;
+    public final TextureRegistryOld registry;
 
     @Override
     protected int getEventID() {
