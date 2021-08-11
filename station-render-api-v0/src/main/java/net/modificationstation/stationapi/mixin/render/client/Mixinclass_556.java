@@ -62,7 +62,7 @@ public class Mixinclass_556 {
     private void method_1862_initCustomLocals(Living arg, ItemInstance arg1, CallbackInfo ci) {
         int itemId = arg1.itemId;
         Object item = itemId < BlockBase.BY_ID.length ? BlockBase.BY_ID[itemId] : ItemBase.byId[itemId];
-        method_1862_customLocals_atlas.push(item instanceof CustomAtlasProvider ? ((CustomAtlasProvider) item).getAtlas() : null);
+        method_1862_customLocals_atlas.push(item instanceof CustomAtlasProvider ? ((CustomAtlasProvider) item).getAtlas().of(arg.method_917(arg1)) : null);
     }
 
     @Redirect(
@@ -75,7 +75,7 @@ public class Mixinclass_556 {
     )
     private int redirectItemAtlasID(TextureManager textureManager, String string, Living arg, ItemInstance arg1) {
         Atlas atlas = method_1862_customLocals_atlas.peek();
-        return atlas == null ? textureManager.getTextureId(string) : atlas.getAtlasTextureID(arg.method_917(arg1));
+        return atlas == null ? textureManager.getTextureId(string) : atlas.getAtlasTextureID();
     }
 
     private final IntStack method_1862_capturedLocals_texturePosition = new IntStack();

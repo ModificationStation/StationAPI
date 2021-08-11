@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.mixin.render.client;
 
-import com.sun.org.apache.xml.internal.utils.IntStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
@@ -82,7 +81,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     }
 
     @Unique
-    private final IntStack render_capturedLocals_texturePosition = new IntStack();
+    private final Stack<Atlas.Texture> render_customLocals_texture = new Stack<>();
 
     @ModifyVariable(
             method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
@@ -95,8 +94,26 @@ public abstract class MixinItemRenderer extends EntityRenderer {
             )
     )
     private int captureTexturePosition(int texturePosition) {
-        render_capturedLocals_texturePosition.push(texturePosition);
+        Atlas atlas = render_customLocals_atlas.pop();
+        render_customLocals_atlas.push(atlas = (atlas == null ? null : atlas.of(texturePosition)));
+        render_customLocals_texture.push(atlas == null ? null : atlas.getTexture(texturePosition));
         return texturePosition;
+    }
+
+    @Redirect(
+            method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/entity/ItemRenderer;bindTexture(Ljava/lang/String;)V",
+                    ordinal = 1
+            )
+    )
+    private void bindTerrainAtlas(ItemRenderer itemRenderer, String texture, Item itemEntity, double d, double d1, double d2, float f, float f1) {
+        Atlas atlas = render_customLocals_atlas.peek();
+        if (atlas == null)
+            ((EntityRendererAccessor) itemRenderer).invokeBindTexture(texture);
+        else
+            atlas.bindAtlas();
     }
 
     @Redirect(
@@ -112,11 +129,8 @@ public abstract class MixinItemRenderer extends EntityRenderer {
         if (atlas == null)
             ((EntityRendererAccessor) itemRenderer).invokeBindTexture(texture);
         else
-            atlas.bindAtlas(render_capturedLocals_texturePosition.peek());
+            atlas.bindAtlas();
     }
-
-    @Unique
-    private final Stack<Atlas.Texture> render_customLocals_texture = new Stack<>();
 
     @ModifyVariable(
             method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
@@ -124,9 +138,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
             at = @At("STORE")
     )
     private float modifyStartU(float originalStartU) {
-        Atlas atlas = render_customLocals_atlas.peek();
-        Atlas.Texture texture = atlas == null ? null : atlas.getTexture(render_capturedLocals_texturePosition.pop());
-        render_customLocals_texture.push(texture);
+        Atlas.Texture texture = render_customLocals_texture.peek();
         return texture == null ? originalStartU : texture.getStartU();
     }
 
@@ -177,7 +189,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     )
     private void renderItemOnGui_initCustomLocals(TextRenderer textRenderer, TextureManager textureManagerArg, int itemId, int damage, int textureIndex, int textureX, int textureY, CallbackInfo ci) {
         Object item = itemId < BlockBase.BY_ID.length ? BlockBase.BY_ID[itemId] : ItemBase.byId[itemId];
-        renderItemOnGui_customLocals_atlas.push(item instanceof CustomAtlasProvider ? ((CustomAtlasProvider) item).getAtlas() : null);
+        renderItemOnGui_customLocals_atlas.push(item instanceof CustomAtlasProvider ? ((CustomAtlasProvider) item).getAtlas().of(textureIndex) : null);
     }
 
     @Redirect(
@@ -190,7 +202,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     )
     private int modifyItemTextureID(TextureManager textureManager, String string, TextRenderer textRenderer, TextureManager textureManagerArg, int itemId, int damage, int textureIndex, int textureX, int textureY) {
         Atlas atlas = renderItemOnGui_customLocals_atlas.peek();
-        return atlas == null ? textureManager.getTextureId(string) : atlas.getAtlasTextureID(textureIndex);
+        return atlas == null ? textureManager.getTextureId(string) : atlas.getAtlasTextureID();
     }
 
     @Redirect(

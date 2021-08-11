@@ -18,4 +18,16 @@ public interface TessellatorAccessor {
     static Tessellator newInst(int bufferSize) {
         throw new AssertionError("Mixin!");
     }
+
+    @Accessor
+    boolean getDrawing();
+
+    @Accessor
+    double getXOffset();
+
+    @Accessor
+    double getYOffset();
+
+    @Accessor
+    double getZOffset();
 }

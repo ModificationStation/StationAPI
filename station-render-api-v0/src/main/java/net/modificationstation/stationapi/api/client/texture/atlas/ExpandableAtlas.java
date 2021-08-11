@@ -17,15 +17,14 @@ import java.util.*;
 import java.util.function.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public class ExpandableAtlas extends Atlas {
 
     private static final Map<String, ExpandableAtlas> PATH_TO_ATLAS = new HashMap<>();
 
     public static final ExpandableAtlas
-            STATION_TERRAIN = new ExpandableAtlas(of(MODID, "terrain"), SquareAtlas.TERRAIN),
-            STATION_GUI_ITEMS = new ExpandableAtlas(of(MODID, "gui_items"), SquareAtlas.GUI_ITEMS);
+            STATION_TERRAIN = new ExpandableAtlas(Identifier.of(MODID, "terrain"), SquareAtlas.TERRAIN).initTessellator(),
+            STATION_GUI_ITEMS = new ExpandableAtlas(Identifier.of(MODID, "gui_items"), SquareAtlas.GUI_ITEMS);
 
     public ExpandableAtlas(final Identifier identifier) {
         super("/assets/stationapi/atlases/" + identifier, 0);
@@ -69,7 +68,7 @@ public class ExpandableAtlas extends Atlas {
         ));
     }
 
-    public <T extends StationTextureBinder> T addTextureBinder(String staticReference, BiFunction<Atlas, Texture, T> initializer) {
+    public <T extends StationTextureBinder> T addTextureBinder(String staticReference, Function<Texture, T> initializer) {
         return addTextureBinder(addTexture(staticReference), initializer);
     }
 

@@ -53,7 +53,7 @@ public class MixinWorldRenderer {
             if (var22 == 3) {
 //                this.textureManager.bindTexture(this.textureManager.getTextureId("/assets/sltest/textures/skybox/sky2.png"));
 //                this.textureManager.bindTexture(this.textureManager.getTextureId(ExpandableTextureAtlas.STATION_GUI_ITEMS.spritesheet));
-                this.textureManager.bindTexture(((CustomAtlasProvider) ItemListener.testItem).getAtlas().getAtlasTextureID(ItemListener.testItem.getTexturePosition(0)));
+                ((CustomAtlasProvider) ItemListener.testItem).getAtlas().of(ItemListener.testItem.getTexturePosition(0)).bindAtlas();
                 GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);
             }
 

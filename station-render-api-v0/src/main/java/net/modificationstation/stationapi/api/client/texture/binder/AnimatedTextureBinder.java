@@ -13,8 +13,8 @@ public class AnimatedTextureBinder extends StationTextureBinder implements Textu
     private int currentFrame = 0;
     private int tick = 0;
 
-    public AnimatedTextureBinder(Atlas atlas, Atlas.Texture staticReference, String animatedTexture, int animationRate) {
-        super(atlas, staticReference);
+    public AnimatedTextureBinder(Atlas.Texture staticReference, String animatedTexture, int animationRate) {
+        super(staticReference);
         this.animatedTexture = animatedTexture;
         this.animationRate = animationRate;
         refreshTextures();

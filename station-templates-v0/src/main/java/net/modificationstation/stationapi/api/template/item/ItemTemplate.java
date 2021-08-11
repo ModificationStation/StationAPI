@@ -29,7 +29,7 @@ public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider {
         return texture;
     }
 
-    default <E extends StationTextureBinder> E setTextureBinder(String staticReference, BiFunction<Atlas, Atlas.Texture, E> initializer) {
+    default <E extends StationTextureBinder> E setTextureBinder(String staticReference, Function<Atlas.Texture, E> initializer) {
         E textureBinder = ((ExpandableAtlas) getAtlas()).addTextureBinder(staticReference, initializer);
         ((ItemBase) this).setTexturePosition(textureBinder.index);
         return textureBinder;

@@ -76,7 +76,7 @@ public abstract class Atlas {
         return setTessellator(TessellatorAccessor.newInst(2097152));
     }
 
-    protected final  <T> T applyInherited(int textureIndex, IntFunction<T> atlasBounds, ObjIntFunction<Atlas, T> parentBounds) {
+    protected final <T> T applyInherited(int textureIndex, IntFunction<T> atlasBounds, ObjIntFunction<Atlas, T> parentBounds) {
         if (parent == null) {
             if (0 <= textureIndex && textureIndex < size)
                 return atlasBounds.apply(textureIndex);
@@ -89,18 +89,23 @@ public abstract class Atlas {
         throw new IllegalArgumentException("Texture index " + textureIndex + " out of bounds of " + spritesheet + " atlas!");
     }
 
-    public final Tessellator getTessellator(int textureIndex) {
-        return applyInherited(textureIndex, value -> tessellator, Atlas::getTessellator);
+    public final <T extends Atlas> T of(int textureIndex) {
+        //noinspection unchecked
+        return (T) applyInherited(textureIndex, value -> this, Atlas::of);
     }
 
-    public final int getAtlasTextureID(int textureIndex) {
-        //noinspection deprecation
-        return applyInherited(textureIndex, value -> ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId(spritesheet), Atlas::getAtlasTextureID);
+    public final Tessellator getTessellator() {
+        return tessellator;
     }
 
-    public final void bindAtlas(int textureIndex) {
+    public final int getAtlasTextureID() {
         //noinspection deprecation
-        ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.bindTexture(getAtlasTextureID(textureIndex));
+        return ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId(spritesheet);
+    }
+
+    public final void bindAtlas() {
+        //noinspection deprecation
+        ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.bindTexture(getAtlasTextureID());
     }
 
     public final Texture getTexture(int textureIndex) {
@@ -111,23 +116,23 @@ public abstract class Atlas {
         return parent == null ? size : size - parent.size;
     }
 
-    public <T extends StationTextureBinder> T addTextureBinder(int staticReferenceTextureIndex, BiFunction<Atlas, Texture, T> initializer) {
+    public <T extends StationTextureBinder> T addTextureBinder(int staticReferenceTextureIndex, Function<Texture, T> initializer) {
         return addTextureBinder(getTexture(staticReferenceTextureIndex), initializer);
     }
 
-    public <T extends StationTextureBinder> T addTextureBinder(Texture staticReference, BiFunction<Atlas, Texture, T> initializer) {
-        T textureBinder = initializer.apply(this, staticReference);
+    public <T extends StationTextureBinder> T addTextureBinder(Texture staticReference, Function<Texture, T> initializer) {
+        T textureBinder = initializer.apply(staticReference);
         //noinspection deprecation
         ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.add(textureBinder);
         return textureBinder;
     }
 
     public AnimatedTextureBinder addAnimationBinder(String animationPath, int animationRate, int staticReferenceTextureIndex) {
-        return addTextureBinder(staticReferenceTextureIndex, (atlas, texture) -> new AnimatedTextureBinder(atlas, texture, animationPath, animationRate));
+        return addTextureBinder(staticReferenceTextureIndex, texture -> new AnimatedTextureBinder(texture, animationPath, animationRate));
     }
 
     public AnimatedTextureBinder addAnimationBinder(String animationPath, int animationRate, Texture staticReference) {
-        return addTextureBinder(staticReference, (atlas, texture) -> new AnimatedTextureBinder(atlas, texture, animationPath, animationRate));
+        return addTextureBinder(staticReference, texture -> new AnimatedTextureBinder(texture, animationPath, animationRate));
     }
 
     public class Texture {
