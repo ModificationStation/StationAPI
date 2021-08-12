@@ -9,4 +9,22 @@ public interface ParticleBaseAccessor {
 
     @Accessor
     int getField_2635();
+
+    @Accessor
+    float getField_2636();
+
+    @Accessor
+    float getField_2637();
+
+    @Accessor
+    float getField_2640();
+
+    @Accessor
+    float getField_2642();
+
+    @Accessor
+    float getField_2643();
+
+    @Accessor
+    float getField_2644();
 }

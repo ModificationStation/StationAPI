@@ -8,10 +8,12 @@
     "MixinItemBase"
   ],
   "client": [
+    "client.DiggingAccessor",
     "client.EntityRendererAccessor",
     "client.MixinAchievements",
     "client.Mixinclass_556",
     "client.Mixinclass_66",
+    "client.MixinDigging",
     "client.MixinItemRenderer",
     "client.MixinMinecraft",
     "client.MixinParticleManager",
