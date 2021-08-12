@@ -21,7 +21,6 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.client.texture.TexturesInitOld",
       "net.modificationstation.stationapi.impl.client.texture.TextureRefresherImpl"
     ]
   },

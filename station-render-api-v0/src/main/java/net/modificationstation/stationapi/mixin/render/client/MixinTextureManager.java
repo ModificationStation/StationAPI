@@ -29,22 +29,6 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public class MixinTextureManager {
 
-//    @Redirect(method = "bindTexture(I)V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glBindTexture(II)V", remap = false))
-//    private void onBindTexture1(int target, int texture) {
-//        for (TextureRegistryOld registry : TextureRegistryOld.registries())
-//            if (registry.getAtlasTexture((TextureManager) (Object) this, 0) == texture) {
-//                registry.bindAtlas((TextureManager) (Object) this, 0);
-//                return;
-//            }
-//        OpenGLHelperOld.bindTexture(target, texture);
-//    }
-//
-//    @SuppressWarnings("UnresolvedMixinReference")
-//    @Redirect(method = "method_1096()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resource/TexturePack;getResourceAsStream(Ljava/lang/String;)Ljava/io/InputStream;"))
-//    private InputStream fixFakeAtlases(TexturePack texturePack, String string) {
-//        return texturePack.getResourceAsStream(TextureFactoryOld.INSTANCE.getFakedAtlases().getOrDefault(string, string));
-//    }
-
     @Shadow private ByteBuffer field_1250;
 
     @Inject(

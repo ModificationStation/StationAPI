@@ -27,46 +27,6 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public abstract class MixinItemRenderer extends EntityRenderer {
 
-//    @Shadow protected abstract void method_1485(Tessellator arg, int i, int j, int k, int i1, int j1);
-//
-//    private int atlasToBind;
-//
-//    @Redirect(method = {
-//            "render(Lnet/minecraft/entity/Item;DDDFF)V",
-//            "method_1487(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;Lnet/minecraft/item/ItemInstance;II)V"
-//    }, at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemInstance;getTexturePosition()I"))
-//    private int itemTexture(ItemInstance itemInstance) {
-//        TextureRegistry gui_items = TextureRegistry.getRegistry(TextureRegistry.Vanilla.GUI_ITEMS);
-//        int texID = itemInstance.getTexturePosition();
-//        atlasToBind = texID / gui_items.texturesPerFile();
-//        return texID % gui_items.texturesPerFile();
-//    }
-//
-//    @Redirect(method = "render(Lnet/minecraft/entity/Item;DDDFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/ItemRenderer;bindTexture(Ljava/lang/String;)V", ordinal = 0))
-//    private void rebindBlockTexture1(ItemRenderer itemRenderer, String string) {
-//        TextureRegistry.getRegistry(TextureRegistry.Vanilla.TERRAIN).bindAtlas(dispatcher.textureManager, atlasToBind);
-//    }
-//
-//    @Redirect(method = "render(Lnet/minecraft/entity/Item;DDDFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/ItemRenderer;bindTexture(Ljava/lang/String;)V", ordinal = 1))
-//    private void rebindBlockTexture2(ItemRenderer itemRenderer, String string) {
-//        TextureRegistry.getRegistry(TextureRegistry.Vanilla.TERRAIN).bindAtlas(dispatcher.textureManager, atlasToBind);
-//    }
-//
-//    @Redirect(method = "render(Lnet/minecraft/entity/Item;DDDFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/ItemRenderer;bindTexture(Ljava/lang/String;)V", ordinal = 2))
-//    private void rebindItemTexture(ItemRenderer itemRenderer, String string) {
-//        TextureRegistry.getRegistry(TextureRegistry.Vanilla.GUI_ITEMS).bindAtlas(dispatcher.textureManager, atlasToBind);
-//    }
-//
-//    @Redirect(method = "renderItemOnGui(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;IIIII)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(I)V", ordinal = 1))
-//    private void rebindBlockTexture(TextureManager textureManager, int i) {
-//        TextureRegistry.getRegistry(TextureRegistry.Vanilla.TERRAIN).bindAtlas(textureManager, atlasToBind);
-//    }
-//
-//    @Redirect(method = "renderItemOnGui(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;IIIII)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureManager;bindTexture(I)V", ordinal = 2))
-//    private void rebindItemTexture(TextureManager textureManager, int i) {
-//        TextureRegistry.getRegistry(TextureRegistry.Vanilla.GUI_ITEMS).bindAtlas(textureManager, atlasToBind);
-//    }
-
     @Unique
     private final Stack<Atlas> render_customLocals_atlas = new Stack<>();
 

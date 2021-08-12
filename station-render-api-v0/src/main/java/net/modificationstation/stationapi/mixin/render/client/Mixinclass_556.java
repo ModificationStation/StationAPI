@@ -27,31 +27,6 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public class Mixinclass_556 {
 
-//    @Shadow
-//    private Minecraft field_2401;
-//
-//    @Redirect(method = "method_1862(Lnet/minecraft/entity/Living;Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glBindTexture(II)V", ordinal = 0, remap = false))
-//    private void bindBlockTexture1(int target, int texture) {
-//        TextureRegistryOld.getRegistry(TextureRegistryOld.Vanilla.TERRAIN).bindAtlas(field_2401.textureManager, 0);
-//    }
-//
-//    @Redirect(method = "method_1862(Lnet/minecraft/entity/Living;Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glBindTexture(II)V", ordinal = 1, remap = false))
-//    private void bindBlockTexture2(int target, int texture) {
-//        TextureRegistryOld.getRegistry(TextureRegistryOld.Vanilla.TERRAIN).bindAtlas(field_2401.textureManager, 0);
-//    }
-//
-//    @Redirect(method = "method_1862(Lnet/minecraft/entity/Living;Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glBindTexture(II)V", ordinal = 2, remap = false))
-//    private void bindItemTexture(int target, int texture) {
-//        TextureRegistryOld.getRegistry(TextureRegistryOld.Vanilla.GUI_ITEMS).bindAtlas(field_2401.textureManager, 0);
-//    }
-//
-//    @Redirect(method = "method_1862(Lnet/minecraft/entity/Living;Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Living;method_917(Lnet/minecraft/item/ItemInstance;)I"))
-//    private int rebindItemTexture(Living living, ItemInstance arg) {
-//        int texID = living.method_917(arg);
-//        TextureRegistryOld.currentRegistry().bindAtlas(field_2401.textureManager, texID / TextureRegistryOld.currentRegistry().texturesPerFile());
-//        return texID % TextureRegistryOld.currentRegistry().texturesPerFile();
-//    }
-
     @Unique
     private final Stack<Atlas> method_1862_customLocals_atlas = new Stack<>();
 
