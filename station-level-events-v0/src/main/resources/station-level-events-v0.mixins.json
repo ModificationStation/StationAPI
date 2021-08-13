@@ -4,10 +4,13 @@
   "package": "net.modificationstation.stationapi.mixin.level",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinChunk",
     "MixinDimensionFile",
     "MixinLevel",
     "MixinLevelProperties",
-    "MixinServerChunkCache"
+    "MixinServerChunkCache",
+    "client.MixinClientInteractionManager",
+    "server.Mixinclass_70"
   ],
   "client": [
     "client.MixinChunkCache"

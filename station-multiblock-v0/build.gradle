@@ -1,0 +1,8 @@
+archivesBaseName = "station-multiblock-v0"
+version = getSubprojectVersion(project, "1.0.0")
+
+moduleDependencies(project, [
+        'station-api-base',
+        'station-blocks-v0',
+        'station-level-events-v0'
+])
