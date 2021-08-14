@@ -22,7 +22,8 @@
     "client.MixinZippedTexturePack",
     "client.ParticleBaseAccessor",
     "client.TessellatorAccessor",
-    "client.TextureManagerAccessor"
+    "client.TextureManagerAccessor",
+    "client.TileRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
