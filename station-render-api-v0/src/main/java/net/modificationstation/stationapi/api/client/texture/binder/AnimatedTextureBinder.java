@@ -10,7 +10,7 @@ public class AnimatedTextureBinder extends StationTextureBinder implements Textu
     private final String animatedTexture;
     private final int animationRate;
     private byte[][] frames;
-    private int currentFrame = 0;
+    private int currentFrame;
     private int tick = 0;
 
     public AnimatedTextureBinder(Atlas.Texture staticReference, String animatedTexture, int animationRate) {
@@ -44,7 +44,7 @@ public class AnimatedTextureBinder extends StationTextureBinder implements Textu
                 frames[i][j * 4 + 3] = (byte) a;
             }
         }
-        grid = frames[0];
+        grid = frames[currentFrame = 0];
     }
 
     @Override
