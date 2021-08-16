@@ -47,6 +47,24 @@ public interface TileRendererAccessor {
     int getField_83();
 
     @Accessor
+    boolean getField_84();
+
+    @Accessor
+    int getField_86();
+
+    @Accessor
+    int getField_87();
+
+    @Accessor
+    int getField_88();
+
+    @Accessor
+    int getField_89();
+
+    @Accessor
+    int getField_90();
+
+    @Accessor
     int getField_91();
 
     @Accessor

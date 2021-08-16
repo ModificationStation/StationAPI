@@ -95,7 +95,10 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     @ModifyVariable(
             method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
             index = 16,
-            at = @At("STORE")
+            at = @At(
+                    value = "STORE",
+                    ordinal = 1
+            )
     )
     private float modifyStartU(float originalStartU) {
         Atlas.Texture texture = render_customLocals_texture.peek();
@@ -105,7 +108,10 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     @ModifyVariable(
             method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
             index = 17,
-            at = @At("STORE")
+            at = @At(
+                    value = "STORE",
+                    ordinal = 1
+            )
     )
     private float modifyEndU(float originalEndU) {
         Atlas.Texture texture = render_customLocals_texture.peek();
@@ -115,7 +121,10 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     @ModifyVariable(
             method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
             index = 18,
-            at = @At("STORE")
+            at = @At(
+                    value = "STORE",
+                    ordinal = 1
+            )
     )
     private float modifyStartV(float originalStartV) {
         Atlas.Texture texture = render_customLocals_texture.peek();
