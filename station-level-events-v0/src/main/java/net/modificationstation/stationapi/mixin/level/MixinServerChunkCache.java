@@ -1,53 +1,42 @@
 package net.modificationstation.stationapi.mixin.level;
 
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.AbstractClientPlayer;
 import net.minecraft.level.Level;
+import net.minecraft.level.chunk.Chunk;
+import net.minecraft.level.chunk.ChunkIO;
 import net.minecraft.level.chunk.ServerChunkCache;
 import net.minecraft.level.source.LevelSource;
+import net.minecraft.util.maths.Vec2i;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.gen.LevelGenEvent;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Mixin(ServerChunkCache.class)
-public class MixinServerChunkCache {
+public abstract class MixinServerChunkCache {
 
     @Shadow private Level level;
 
     @Shadow private LevelSource levelSource;
-//    @Shadow private Map serverChunkCache;
-//    @Shadow private Set dropSet;
-//
-//    private final AtomicReference<Thread> chunkThread = new AtomicReference<>(null);
-    private Random modRandom;
+    @Shadow private Map serverChunkCache;
 
-//    @Inject(method = "loadChunk", at = @At(value = "HEAD"))
-//    private void threadStuff(int a, int b, CallbackInfoReturnable<Chunk> cir) {
-//        int renderDistance = (64 << 3 - ((Minecraft) FabricLoader.getInstance().getGameInstance()).options.viewDistance)/16;
-//        if (serverChunkCache.keySet().size() > Math.pow(renderDistance, 2)) {
-//            if (chunkThread.get() == null) {
-//                chunkThread.set(new Thread(() -> {
-//                    for (Object vec : serverChunkCache.keySet()) {
-//                        AbstractClientPlayer player = ((Minecraft) FabricLoader.getInstance().getGameInstance()).player;
-//                        Chunk chunk = (Chunk) serverChunkCache.get(vec);
-//                        int chunkX = chunk.x;
-//                        int chunkZ = chunk.z;
-//                        double chunkDistX = Math.abs(chunkX * 16) - player.x;
-//                        double chunkDistZ = Math.abs(chunkZ * 16) - player.z;
-//                        if (chunkDistX > (64 << 3 - ((Minecraft) FabricLoader.getInstance().getGameInstance()).options.viewDistance) || chunkDistZ > (64 << 3 - ((Minecraft) FabricLoader.getInstance().getGameInstance()).options.viewDistance)) {
-//                            dropSet.add(vec);
-//                        }
-//                    }
-//                    chunkThread.set(null);
-//                }));
-//            }
-//            chunkThread.get().start();
-//        }
-//    }
+    @Shadow protected abstract void method_1050(Chunk arg);
+
+    @Shadow protected abstract void method_1049(Chunk arg);
+
+    @Shadow private List field_1230;
+    private Random modRandom;
 
     @Inject(method = "decorate(Lnet/minecraft/level/source/LevelSource;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/level/source/LevelSource;decorate(Lnet/minecraft/level/source/LevelSource;II)V", shift = At.Shift.AFTER))
     private void onPopulate(LevelSource levelSource, int chunkX, int chunkZ, CallbackInfo ci) {
@@ -62,8 +51,25 @@ public class MixinServerChunkCache {
         StationAPI.EVENT_BUS.post(new LevelGenEvent.ChunkDecoration(level, this.levelSource, level.getBiomeSource().getBiome(blockX + 16, blockZ + 16), blockX, blockZ, modRandom));
     }
 
-//    @Override
-//    public String toString() {
-//        return "ServerChunkCache: " + this.serverChunkCache.size() + " Drop: " + this.dropSet.size() + " Max: " + (int)Math.pow((64 << 3 - ((Minecraft) FabricLoader.getInstance().getGameInstance()).options.viewDistance)/16, 2);
-//    }
+    @Inject(method = "method_1050", at = @At(value = "HEAD"))
+    private void fixChunkUnloading(Chunk chunk, CallbackInfo ci) {
+        int renderDistance = (64 << 3 - ((Minecraft) FabricLoader.getInstance().getGameInstance()).options.viewDistance) / 16;
+        Vec2i playerPos = new Vec2i(((Minecraft) FabricLoader.getInstance().getGameInstance()).player.chunkX, ((Minecraft) FabricLoader.getInstance().getGameInstance()).player.chunkZ);
+        if (Math.abs(chunk.x - playerPos.x) > renderDistance || Math.abs(chunk.z - playerPos.z) > renderDistance) {
+            chunk.method_883();
+        }
+    }
+
+
+    @Inject(method = "method_1050", at = @At(value = "TAIL"))
+    private void fixChunkUnloading2(Chunk chunk, CallbackInfo ci) {
+        int renderDistance = (64 << 3 - ((Minecraft) FabricLoader.getInstance().getGameInstance()).options.viewDistance)/16;
+        Vec2i playerPos = new Vec2i(((Minecraft) FabricLoader.getInstance().getGameInstance()).player.chunkX, ((Minecraft) FabricLoader.getInstance().getGameInstance()).player.chunkZ);
+        if (Math.abs(chunk.x - playerPos.x) > renderDistance || Math.abs(chunk.z - playerPos.z) > renderDistance) {
+            method_1049(chunk);
+            serverChunkCache.remove(Vec2i.hash(chunk.x, chunk.z));
+            field_1230.remove(chunk);
+        }
+    }
+
 }
