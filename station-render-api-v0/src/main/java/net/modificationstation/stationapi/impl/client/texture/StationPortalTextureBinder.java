@@ -19,21 +19,24 @@ public class StationPortalTextureBinder extends StationTextureBinder implements 
 
     @Override
     public void refreshTextures() {
+        int
+                textureWidth = getStaticReference().getWidth(),
+                textureHeight = getStaticReference().getHeight();
         Random var1 = new Random(100L);
 
-        grid = new byte[getStaticReference().getWidth() * getStaticReference().getHeight() * 4];
+        grid = new byte[textureWidth * textureHeight * 4];
 
         for(int var2 = 0; var2 < 32; ++var2) {
-            texture[var2] = new byte[getStaticReference().getWidth() * getStaticReference().getHeight() * 4];
-            for(int var3 = 0; var3 < getStaticReference().getWidth(); ++var3) {
-                for(int var4 = 0; var4 < getStaticReference().getHeight(); ++var4) {
+            texture[var2] = new byte[textureWidth * textureHeight * 4];
+            for(int var3 = 0; var3 < textureWidth; ++var3) {
+                for(int var4 = 0; var4 < textureHeight; ++var4) {
                     float var5 = 0.0F;
 
                     for(int var6 = 0; var6 < 2; ++var6) {
-                        float var7 = (float)(var6 * getStaticReference().getWidth() / 2);
-                        float var8 = (float)(var6 * getStaticReference().getHeight() / 2);
-                        float var9 = ((float)var3 - var7) / getStaticReference().getWidth() * 2.0F;
-                        float var10 = ((float)var4 - var8) / getStaticReference().getHeight() * 2.0F;
+                        float var7 = (float)(var6 * textureWidth / 2);
+                        float var8 = (float)(var6 * textureHeight / 2);
+                        float var9 = ((float)var3 - var7) / textureWidth * 2.0F;
+                        float var10 = ((float)var4 - var8) / textureHeight * 2.0F;
                         if (var9 < -1.0F) {
                             var9 += 2.0F;
                         }
@@ -62,7 +65,7 @@ public class StationPortalTextureBinder extends StationTextureBinder implements 
                     int var15 = (int)(var5 * var5 * 200.0F + 55.0F);
                     int var16 = (int)(var5 * var5 * var5 * var5 * 255.0F);
                     int var17 = (int)(var5 * 100.0F + 155.0F);
-                    int var18 = var4 * getStaticReference().getWidth() + var3;
+                    int var18 = var4 * textureWidth + var3;
                     this.texture[var2][var18 * 4] = (byte)var15;
                     this.texture[var2][var18 * 4 + 1] = (byte)var16;
                     this.texture[var2][var18 * 4 + 2] = (byte)var14;

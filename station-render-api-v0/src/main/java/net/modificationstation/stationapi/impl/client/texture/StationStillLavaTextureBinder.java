@@ -30,33 +30,36 @@ public class StationStillLavaTextureBinder extends StationTextureBinder implemen
 
     @Override
     public void update() {
-        for(int var1 = 0; var1 < getStaticReference().getWidth(); ++var1) {
-            for(int var2 = 0; var2 < getStaticReference().getHeight(); ++var2) {
+        int
+                textureWidth = getStaticReference().getWidth(),
+                textureHeight = getStaticReference().getHeight();
+        for(int var1 = 0; var1 < textureWidth; ++var1) {
+            for(int var2 = 0; var2 < textureHeight; ++var2) {
                 float var3 = 0.0F;
-                int var4 = (int)(MathHelper.sin((float)var2 * (float)Math.PI * 2.0F / getStaticReference().getHeight()) * 1.2F);
-                int var5 = (int)(MathHelper.sin((float)var1 * (float)Math.PI * 2.0F / getStaticReference().getWidth()) * 1.2F);
+                int var4 = (int)(MathHelper.sin((float)var2 * (float)Math.PI * 2.0F / textureHeight) * 1.2F);
+                int var5 = (int)(MathHelper.sin((float)var1 * (float)Math.PI * 2.0F / textureWidth) * 1.2F);
 
                 for(int var6 = var1 - 1; var6 <= var1 + 1; ++var6) {
                     for(int var7 = var2 - 1; var7 <= var2 + 1; ++var7) {
-                        int var8 = var6 + var4 & (getStaticReference().getHeight() - 1);
-                        int var9 = var7 + var5 & (getStaticReference().getWidth() - 1);
-                        var3 += this.field_2701[var8 + var9 * getStaticReference().getWidth()];
+                        int var8 = var6 + var4 & (textureHeight - 1);
+                        int var9 = var7 + var5 & (textureWidth - 1);
+                        var3 += this.field_2701[var8 + var9 * textureWidth];
                     }
                 }
 
-                this.field_2702[var1 + var2 * getStaticReference().getWidth()] = var3 / 10.0F + (
-                        this.field_2703[(var1 & (getStaticReference().getWidth() - 1)) + (var2 & (getStaticReference().getHeight() - 1)) * getStaticReference().getWidth()] +
-                                this.field_2703[(var1 + 1 & (getStaticReference().getWidth() - 1)) + (var2 & (getStaticReference().getHeight() - 1)) * getStaticReference().getWidth()] +
-                                this.field_2703[(var1 + 1 & (getStaticReference().getWidth() - 1)) + (var2 + 1 & (getStaticReference().getHeight() - 1)) * getStaticReference().getWidth()] +
-                                this.field_2703[(var1 & (getStaticReference().getWidth() - 1)) + (var2 + 1 & (getStaticReference().getHeight() - 1)) * getStaticReference().getWidth()]) / 4.0F * 0.8F;
-                this.field_2703[var1 + var2 * getStaticReference().getWidth()] += this.field_2704[var1 + var2 * getStaticReference().getWidth()] * 0.01F;
-                if (this.field_2703[var1 + var2 * getStaticReference().getWidth()] < 0.0F) {
-                    this.field_2703[var1 + var2 * getStaticReference().getWidth()] = 0.0F;
+                this.field_2702[var1 + var2 * textureWidth] = var3 / 10.0F + (
+                        this.field_2703[(var1 & (textureWidth - 1)) + (var2 & (textureHeight - 1)) * textureWidth] +
+                                this.field_2703[(var1 + 1 & (textureWidth - 1)) + (var2 & (textureHeight - 1)) * textureWidth] +
+                                this.field_2703[(var1 + 1 & (textureWidth - 1)) + (var2 + 1 & (textureHeight - 1)) * textureWidth] +
+                                this.field_2703[(var1 & (textureWidth - 1)) + (var2 + 1 & (textureHeight - 1)) * textureWidth]) / 4.0F * 0.8F;
+                this.field_2703[var1 + var2 * textureWidth] += this.field_2704[var1 + var2 * textureWidth] * 0.01F;
+                if (this.field_2703[var1 + var2 * textureWidth] < 0.0F) {
+                    this.field_2703[var1 + var2 * textureWidth] = 0.0F;
                 }
 
-                this.field_2704[var1 + var2 * getStaticReference().getWidth()] -= 0.06F;
+                this.field_2704[var1 + var2 * textureWidth] -= 0.06F;
                 if (Math.random() < 0.005D) {
-                    this.field_2704[var1 + var2 * getStaticReference().getWidth()] = 1.5F;
+                    this.field_2704[var1 + var2 * textureWidth] = 1.5F;
                 }
             }
         }
@@ -65,7 +68,7 @@ public class StationStillLavaTextureBinder extends StationTextureBinder implemen
         this.field_2702 = this.field_2701;
         this.field_2701 = var11;
 
-        for(int var12 = 0; var12 < getStaticReference().getWidth() * getStaticReference().getHeight(); ++var12) {
+        for(int var12 = 0; var12 < textureWidth * textureHeight; ++var12) {
             float var13 = this.field_2701[var12] * 2.0F;
             if (var13 > 1.0F) {
                 var13 = 1.0F;

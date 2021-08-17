@@ -29,30 +29,33 @@ public class StationStillWaterTextureBinder extends StationTextureBinder impleme
 
     @Override
     public void update() {
-        for(int var1 = 0; var1 < getStaticReference().getWidth(); ++var1) {
-            for(int var2 = 0; var2 < getStaticReference().getHeight(); ++var2) {
+        int
+                textureWidth = getStaticReference().getWidth(),
+                textureHeight = getStaticReference().getHeight();
+        for(int var1 = 0; var1 < textureWidth; ++var1) {
+            for(int var2 = 0; var2 < textureHeight; ++var2) {
                 float var3 = 0.0F;
 
                 for(int var4 = var1 - 1; var4 <= var1 + 1; ++var4) {
-                    int var5 = var4 & (getStaticReference().getWidth() - 1);
-                    int var6 = var2 & (getStaticReference().getHeight() - 1);
-                    var3 += this.field_2566[var5 + var6 * getStaticReference().getWidth()];
+                    int var5 = var4 & (textureWidth - 1);
+                    int var6 = var2 & (textureHeight - 1);
+                    var3 += this.field_2566[var5 + var6 * textureWidth];
                 }
 
-                this.field_2567[var1 + var2 * getStaticReference().getWidth()] = var3 / 3.3F + this.field_2568[var1 + var2 * getStaticReference().getWidth()] * 0.8F;
+                this.field_2567[var1 + var2 * textureWidth] = var3 / 3.3F + this.field_2568[var1 + var2 * textureWidth] * 0.8F;
             }
         }
 
-        for(int var12 = 0; var12 < getStaticReference().getWidth(); ++var12) {
-            for(int var14 = 0; var14 < getStaticReference().getHeight(); ++var14) {
-                this.field_2568[var12 + var14 * getStaticReference().getWidth()] += this.field_2569[var12 + var14 * getStaticReference().getWidth()] * 0.05F;
-                if (this.field_2568[var12 + var14 * getStaticReference().getWidth()] < 0.0F) {
-                    this.field_2568[var12 + var14 * getStaticReference().getWidth()] = 0.0F;
+        for(int var12 = 0; var12 < textureWidth; ++var12) {
+            for(int var14 = 0; var14 < textureHeight; ++var14) {
+                this.field_2568[var12 + var14 * textureWidth] += this.field_2569[var12 + var14 * textureWidth] * 0.05F;
+                if (this.field_2568[var12 + var14 * textureWidth] < 0.0F) {
+                    this.field_2568[var12 + var14 * textureWidth] = 0.0F;
                 }
 
-                this.field_2569[var12 + var14 * getStaticReference().getWidth()] -= 0.1F;
+                this.field_2569[var12 + var14 * textureWidth] -= 0.1F;
                 if (Math.random() < 0.05D) {
-                    this.field_2569[var12 + var14 * getStaticReference().getWidth()] = 0.5F;
+                    this.field_2569[var12 + var14 * textureWidth] = 0.5F;
                 }
             }
         }
@@ -61,7 +64,7 @@ public class StationStillWaterTextureBinder extends StationTextureBinder impleme
         this.field_2567 = this.field_2566;
         this.field_2566 = var13;
 
-        for(int var15 = 0; var15 < getStaticReference().getWidth() * getStaticReference().getHeight(); ++var15) {
+        for(int var15 = 0; var15 < textureWidth * textureHeight; ++var15) {
             float var16 = this.field_2566[var15];
             if (var16 > 1.0F) {
                 var16 = 1.0F;
