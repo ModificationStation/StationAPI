@@ -5,7 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.TileRenderer;
-import net.modificationstation.stationapi.impl.client.texture.StationBlockRendererImpl;
+import net.modificationstation.stationapi.impl.client.texture.StationBlockRenderer;
 import net.modificationstation.stationapi.impl.client.texture.StationBlockRendererProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -694,7 +694,7 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
 //    }
 
     @Unique @Getter
-    private final StationBlockRendererImpl stationBlockRenderer = new StationBlockRendererImpl((TileRenderer) (Object) this);
+    private final StationBlockRenderer stationBlockRenderer = new StationBlockRenderer((TileRenderer) (Object) this);
 
     @Unique
     private boolean method_46_customArguments_renderingInInventory;

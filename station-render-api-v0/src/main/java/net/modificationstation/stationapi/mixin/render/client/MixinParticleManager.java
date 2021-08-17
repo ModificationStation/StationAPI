@@ -6,7 +6,7 @@ import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.ParticleBase;
-import net.modificationstation.stationapi.impl.client.texture.StationParticleManagerImpl;
+import net.modificationstation.stationapi.impl.client.texture.StationParticleManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(ParticleManager.class)
 public class MixinParticleManager {
 
-    private final StationParticleManagerImpl stationParticleManager = new StationParticleManagerImpl();
+    private final StationParticleManager stationParticleManager = new StationParticleManager();
 
     @Inject(
             method = "method_324(Lnet/minecraft/entity/EntityBase;F)V",

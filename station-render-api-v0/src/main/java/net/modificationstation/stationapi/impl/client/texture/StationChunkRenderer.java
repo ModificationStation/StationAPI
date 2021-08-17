@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
 
 import java.util.*;
 
-public class StationChunkRendererImpl {
+public class StationChunkRenderer {
 
     public void renderAtlases(TileRenderer tileRenderer) {
         Set<Atlas> activeAtlases = ((StationBlockRendererProvider) tileRenderer).getStationBlockRenderer().activeAtlases;

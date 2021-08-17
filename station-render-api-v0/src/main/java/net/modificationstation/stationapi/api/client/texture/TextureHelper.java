@@ -10,8 +10,12 @@ import java.io.*;
 public class TextureHelper {
 
     public static BufferedImage getTexture(String path) {
+        return readTextureStream(getTextureStream(path));
+    }
+
+    public static BufferedImage readTextureStream(InputStream stream) {
         //noinspection deprecation
-        return ((TextureManagerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager).invokeMethod_1091(getTextureStream(path));
+        return ((TextureManagerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager).invokeMethod_1091(stream);
     }
 
     public static InputStream getTextureStream(String path) {

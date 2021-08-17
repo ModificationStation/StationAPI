@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.mixin.render.client.TessellatorAccesso
 
 import java.util.*;
 
-public class StationParticleManagerImpl {
+public class StationParticleManager {
 
     public final Set<Atlas> activeAtlases = new HashSet<>();
 

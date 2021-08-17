@@ -5,7 +5,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.particle.Digging;
 import net.minecraft.level.Level;
-import net.modificationstation.stationapi.impl.client.texture.StationDiggingParticleImpl;
+import net.modificationstation.stationapi.impl.client.texture.StationDiggingParticle;
 import net.modificationstation.stationapi.impl.client.texture.StationDiggingParticleProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,14 +16,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinDigging implements StationDiggingParticleProvider {
 
     @Getter
-    private StationDiggingParticleImpl stationDiggingParticle;
+    private StationDiggingParticle stationDiggingParticle;
 
     @Inject(
             method = "<init>(Lnet/minecraft/level/Level;DDDDDDLnet/minecraft/block/BlockBase;II)V",
             at = @At("RETURN")
     )
     private void onCor(Level arg, double d, double d1, double d2, double d3, double d4, double d5, BlockBase arg1, int i, int j, CallbackInfo ci) {
-        stationDiggingParticle = new StationDiggingParticleImpl((Digging) (Object) this);
+        stationDiggingParticle = new StationDiggingParticle((Digging) (Object) this);
     }
 
     @Inject(

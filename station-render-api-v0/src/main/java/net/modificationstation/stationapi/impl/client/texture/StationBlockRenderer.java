@@ -11,12 +11,12 @@ import net.modificationstation.stationapi.mixin.render.client.TileRendererAccess
 import java.awt.image.*;
 import java.util.*;
 
-public class StationBlockRendererImpl {
+public class StationBlockRenderer {
 
     public final Set<Atlas> activeAtlases = new HashSet<>();
     public final TileRendererAccessor tileRendererAccessor;
 
-    public StationBlockRendererImpl(TileRenderer tileRenderer) {
+    public StationBlockRenderer(TileRenderer tileRenderer) {
         tileRendererAccessor = (TileRendererAccessor) tileRenderer;
     }
 

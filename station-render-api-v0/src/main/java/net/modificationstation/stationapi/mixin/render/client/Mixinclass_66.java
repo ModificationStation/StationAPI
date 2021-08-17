@@ -6,7 +6,7 @@ import net.minecraft.class_66;
 import net.minecraft.client.render.TileRenderer;
 import net.minecraft.level.WorldPopulationRegion;
 import net.minecraft.tileentity.TileEntityBase;
-import net.modificationstation.stationapi.impl.client.texture.StationChunkRendererImpl;
+import net.modificationstation.stationapi.impl.client.texture.StationChunkRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,7 +19,7 @@ import java.util.*;
 @Mixin(class_66.class)
 public class Mixinclass_66 {
 
-    private final StationChunkRendererImpl stationChunkRenderer = new StationChunkRendererImpl();
+    private final StationChunkRenderer stationChunkRenderer = new StationChunkRenderer();
 
     @Inject(
             method = "method_296()V",

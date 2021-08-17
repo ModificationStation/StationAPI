@@ -8,13 +8,13 @@ import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasPr
 import net.modificationstation.stationapi.mixin.render.client.DiggingAccessor;
 import net.modificationstation.stationapi.mixin.render.client.ParticleBaseAccessor;
 
-public class StationDiggingParticleImpl {
+public class StationDiggingParticle {
 
     private final Digging digging;
     private final ParticleBaseAccessor particleBaseAccessor;
     public final Atlas.Texture texture;
 
-    public StationDiggingParticleImpl(Digging digging) {
+    public StationDiggingParticle(Digging digging) {
         this.digging = digging;
         particleBaseAccessor = (ParticleBaseAccessor) digging;
         texture = ((CustomAtlasProvider) ((DiggingAccessor) digging).getField_2383()).getAtlas().of(particleBaseAccessor.getField_2635()).getTexture(particleBaseAccessor.getField_2635());

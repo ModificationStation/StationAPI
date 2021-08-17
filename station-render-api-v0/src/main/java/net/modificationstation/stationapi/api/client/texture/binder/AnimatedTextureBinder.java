@@ -4,6 +4,7 @@ import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 
 import java.awt.image.*;
+import java.io.*;
 
 public class AnimatedTextureBinder extends StationTextureBinder implements TexturePackDependent {
 
@@ -22,29 +23,32 @@ public class AnimatedTextureBinder extends StationTextureBinder implements Textu
 
     @Override
     public void refreshTextures() {
-        BufferedImage image = TextureHelper.getTexture(animatedTexture);
-        int
-                targetWidth = getStaticReference().getWidth(),
-                targetHeight = getStaticReference().getHeight(),
-                images = image.getHeight() / targetHeight;
-        frames = new byte[images][];
-        for (int i = 0; i < images; i++) {
-            int[] temp = new int[targetWidth * targetHeight];
-            image.getRGB(0, targetHeight * i, targetWidth, targetHeight, temp, 0, targetWidth);
-            frames[i] = new byte[targetWidth * targetHeight * 4];
-            for (int j = 0; j < temp.length; j++) {
-                int
-                        a = temp[j] >> 24 & 0xff,
-                        r = temp[j] >> 16 & 0xff,
-                        g = temp[j] >> 8 & 0xff,
-                        b = temp[j] & 0xff;
-                frames[i][j * 4] = (byte) r;
-                frames[i][j * 4 + 1] = (byte) g;
-                frames[i][j * 4 + 2] = (byte) b;
-                frames[i][j * 4 + 3] = (byte) a;
+        InputStream stream = TextureHelper.getTextureStream(animatedTexture);
+        if (stream != null) {
+            BufferedImage image = TextureHelper.readTextureStream(stream);
+            int
+                    targetWidth = getStaticReference().getWidth(),
+                    targetHeight = getStaticReference().getHeight(),
+                    images = image.getHeight() / targetHeight;
+            frames = new byte[images][];
+            for (int i = 0; i < images; i++) {
+                int[] temp = new int[targetWidth * targetHeight];
+                image.getRGB(0, targetHeight * i, targetWidth, targetHeight, temp, 0, targetWidth);
+                frames[i] = new byte[targetWidth * targetHeight * 4];
+                for (int j = 0; j < temp.length; j++) {
+                    int
+                            a = temp[j] >> 24 & 0xff,
+                            r = temp[j] >> 16 & 0xff,
+                            g = temp[j] >> 8 & 0xff,
+                            b = temp[j] & 0xff;
+                    frames[i][j * 4] = (byte) r;
+                    frames[i][j * 4 + 1] = (byte) g;
+                    frames[i][j * 4 + 2] = (byte) b;
+                    frames[i][j * 4 + 3] = (byte) a;
+                }
             }
+            grid = frames[currentFrame = 0];
         }
-        grid = frames[currentFrame = 0];
     }
 
     @Override
