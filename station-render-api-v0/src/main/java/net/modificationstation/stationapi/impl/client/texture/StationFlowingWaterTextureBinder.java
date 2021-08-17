@@ -3,9 +3,8 @@ package net.modificationstation.stationapi.impl.client.texture;
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
-import net.modificationstation.stationapi.api.client.texture.binder.TexturePackDependent;
 
-public class StationFlowingWaterTextureBinder extends StationTextureBinder implements TexturePackDependent {
+public class StationFlowingWaterTextureBinder extends StationTextureBinder {
 
     protected float[] field_2118;
     protected float[] field_2119;

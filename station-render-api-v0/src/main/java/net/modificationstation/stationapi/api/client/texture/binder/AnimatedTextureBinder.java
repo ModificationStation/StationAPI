@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import java.awt.image.*;
 import java.io.*;
 
-public class AnimatedTextureBinder extends StationTextureBinder implements TexturePackDependent {
+public class AnimatedTextureBinder extends StationTextureBinder {
 
     private final String animatedTexture;
     private final int animationRate;

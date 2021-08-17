@@ -4,9 +4,8 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
-import net.modificationstation.stationapi.api.client.texture.binder.TexturePackDependent;
 
-public class StationFlowingLavaTextureBinder extends StationTextureBinder implements TexturePackDependent {
+public class StationFlowingLavaTextureBinder extends StationTextureBinder {
 
     protected float[] field_1166;
     protected float[] field_1167;

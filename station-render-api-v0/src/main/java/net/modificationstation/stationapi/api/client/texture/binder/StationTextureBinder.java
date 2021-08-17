@@ -5,7 +5,7 @@ import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 
-public abstract class StationTextureBinder extends TextureBinder implements StaticReferenceProvider {
+public abstract class StationTextureBinder extends TextureBinder implements StaticReferenceProvider, TexturePackDependent {
 
     @Getter
     private final Atlas.Texture staticReference;

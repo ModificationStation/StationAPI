@@ -4,11 +4,10 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
-import net.modificationstation.stationapi.api.client.texture.binder.TexturePackDependent;
 
 import java.util.*;
 
-public class StationPortalTextureBinder extends StationTextureBinder implements TexturePackDependent {
+public class StationPortalTextureBinder extends StationTextureBinder {
     private int updatesRan = 0;
     private final byte[][] texture = new byte[32][1024];
 
