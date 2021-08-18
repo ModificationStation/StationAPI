@@ -5,6 +5,7 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.TileRenderer;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
+import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
 import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
 import net.modificationstation.stationapi.mixin.render.client.TileRendererAccessor;
 
@@ -20,6 +21,19 @@ public class StationBlockRenderer {
         tileRendererAccessor = (TileRendererAccessor) tileRenderer;
     }
 
+    public void renderActiveAtlases() {
+        if (!activeAtlases.isEmpty()) {
+            activeAtlases.forEach(atlas -> {
+                atlas.bindAtlas();
+                Tessellator tessellator = atlas.getTessellator();
+                tessellator.draw();
+                tessellator.setOffset(0, 0, 0);
+            });
+            activeAtlases.clear();
+            SquareAtlas.TERRAIN.bindAtlas();
+        }
+    }
+
     public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
         if (tileRendererAccessor.getField_83() >= 0)
             textureIndex = tileRendererAccessor.getField_83();
@@ -32,12 +46,14 @@ public class StationBlockRenderer {
             atlas.bindAtlas();
         } else {
             tessellator = atlas.getTessellator();
+            TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
             if (!((TessellatorAccessor) tessellator).getDrawing()) {
                 activeAtlases.add(atlas);
                 tessellator.start();
-                TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
                 tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
             }
+            if (originalAccessor.getHasColour())
+                tessellator.colour(originalAccessor.getColour());
         }
         int
                 texX = texture.getX(),
@@ -143,12 +159,14 @@ public class StationBlockRenderer {
             atlas.bindAtlas();
         } else {
             tessellator = atlas.getTessellator();
+            TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
             if (!((TessellatorAccessor) tessellator).getDrawing()) {
                 activeAtlases.add(atlas);
                 tessellator.start();
-                TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
                 tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
             }
+            if (originalAccessor.getHasColour())
+                tessellator.colour(originalAccessor.getColour());
         }
         int
                 texX = texture.getX(),
@@ -254,12 +272,14 @@ public class StationBlockRenderer {
             atlas.bindAtlas();
         } else {
             tessellator = atlas.getTessellator();
+            TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
             if (!((TessellatorAccessor) tessellator).getDrawing()) {
                 activeAtlases.add(atlas);
                 tessellator.start();
-                TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
                 tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
             }
+            if (originalAccessor.getHasColour())
+                tessellator.colour(originalAccessor.getColour());
         }
         int
                 texX = texture.getX(),
@@ -370,12 +390,14 @@ public class StationBlockRenderer {
             atlas.bindAtlas();
         } else {
             tessellator = atlas.getTessellator();
+            TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
             if (!((TessellatorAccessor) tessellator).getDrawing()) {
                 activeAtlases.add(atlas);
                 tessellator.start();
-                TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
                 tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
             }
+            if (originalAccessor.getHasColour())
+                tessellator.colour(originalAccessor.getColour());
         }
         int
                 texX = texture.getX(),
@@ -486,12 +508,14 @@ public class StationBlockRenderer {
             atlas.bindAtlas();
         } else {
             tessellator = atlas.getTessellator();
+            TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
             if (!((TessellatorAccessor) tessellator).getDrawing()) {
                 activeAtlases.add(atlas);
                 tessellator.start();
-                TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
                 tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
             }
+            if (originalAccessor.getHasColour())
+                tessellator.colour(originalAccessor.getColour());
         }
         int
                 texX = texture.getX(),
@@ -602,12 +626,14 @@ public class StationBlockRenderer {
             atlas.bindAtlas();
         } else {
             tessellator = atlas.getTessellator();
+            TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
             if (!((TessellatorAccessor) tessellator).getDrawing()) {
                 activeAtlases.add(atlas);
                 tessellator.start();
-                TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
                 tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
             }
+            if (originalAccessor.getHasColour())
+                tessellator.colour(originalAccessor.getColour());
         }
         int
                 texX = texture.getX(),

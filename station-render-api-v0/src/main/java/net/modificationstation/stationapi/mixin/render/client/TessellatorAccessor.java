@@ -30,4 +30,7 @@ public interface TessellatorAccessor {
 
     @Accessor
     double getZOffset();
+
+    @Accessor
+    int getColour();
 }

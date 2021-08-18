@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.TileRenderer;
+import net.minecraft.level.Level;
 import net.modificationstation.stationapi.impl.client.texture.StationBlockRenderer;
 import net.modificationstation.stationapi.impl.client.texture.StationBlockRendererProvider;
 import org.spongepowered.asm.mixin.Mixin;
@@ -697,7 +698,7 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
     private final StationBlockRenderer stationBlockRenderer = new StationBlockRenderer((TileRenderer) (Object) this);
 
     @Unique
-    private boolean method_46_customArguments_renderingInInventory;
+    private boolean renderingInInventory;
 
     @Inject(
             method = "method_46(Lnet/minecraft/block/BlockBase;DDDI)V",
@@ -705,13 +706,10 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
             cancellable = true
     )
     private void method_46_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
-        stationBlockRenderer.renderBottomFace(arg, d, d1, d2, i, method_46_customArguments_renderingInInventory);
-        method_46_customArguments_renderingInInventory = false;
+        stationBlockRenderer.renderBottomFace(arg, d, d1, d2, i, renderingInInventory);
+        renderingInInventory = false;
         ci.cancel();
     }
-
-    @Unique
-    private boolean method_55_customArguments_renderingInInventory;
 
     @Inject(
             method = "method_55(Lnet/minecraft/block/BlockBase;DDDI)V",
@@ -719,13 +717,10 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
             cancellable = true
     )
     private void method_55_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
-        stationBlockRenderer.renderTopFace(arg, d, d1, d2, i, method_55_customArguments_renderingInInventory);
-        method_55_customArguments_renderingInInventory = false;
+        stationBlockRenderer.renderTopFace(arg, d, d1, d2, i, renderingInInventory);
+        renderingInInventory = false;
         ci.cancel();
     }
-
-    @Unique
-    private boolean method_61_customArguments_renderingInInventory;
 
     @Inject(
             method = "method_61(Lnet/minecraft/block/BlockBase;DDDI)V",
@@ -733,13 +728,10 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
             cancellable = true
     )
     private void method_61_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
-        stationBlockRenderer.renderEastFace(arg, d, d1, d2, i, method_61_customArguments_renderingInInventory);
-        method_61_customArguments_renderingInInventory = false;
+        stationBlockRenderer.renderEastFace(arg, d, d1, d2, i, renderingInInventory);
+        renderingInInventory = false;
         ci.cancel();
     }
-
-    @Unique
-    private boolean method_65_customArguments_renderingInInventory;
 
     @Inject(
             method = "method_65(Lnet/minecraft/block/BlockBase;DDDI)V",
@@ -747,13 +739,10 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
             cancellable = true
     )
     private void method_65_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
-        stationBlockRenderer.renderWestFace(arg, d, d1, d2, i, method_65_customArguments_renderingInInventory);
-        method_65_customArguments_renderingInInventory = false;
+        stationBlockRenderer.renderWestFace(arg, d, d1, d2, i, renderingInInventory);
+        renderingInInventory = false;
         ci.cancel();
     }
-
-    @Unique
-    private boolean method_67_customArguments_renderingInInventory;
 
     @Inject(
             method = "method_67(Lnet/minecraft/block/BlockBase;DDDI)V",
@@ -761,13 +750,10 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
             cancellable = true
     )
     private void method_67_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
-        stationBlockRenderer.renderNorthFace(arg, d, d1, d2, i, method_67_customArguments_renderingInInventory);
-        method_67_customArguments_renderingInInventory = false;
+        stationBlockRenderer.renderNorthFace(arg, d, d1, d2, i, renderingInInventory);
+        renderingInInventory = false;
         ci.cancel();
     }
-
-    @Unique
-    private boolean method_69_customArguments_renderingInInventory;
 
     @Inject(
             method = "method_69(Lnet/minecraft/block/BlockBase;DDDI)V",
@@ -775,74 +761,49 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
             cancellable = true
     )
     private void method_69_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
-        stationBlockRenderer.renderSouthFace(arg, d, d1, d2, i, method_69_customArguments_renderingInInventory);
-        method_69_customArguments_renderingInInventory = false;
+        stationBlockRenderer.renderSouthFace(arg, d, d1, d2, i, renderingInInventory);
+        renderingInInventory = false;
         ci.cancel();
     }
 
     @Inject(
             method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/TileRenderer;method_46(Lnet/minecraft/block/BlockBase;DDDI)V"
-            )
+            at = {
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/client/render/TileRenderer;method_46(Lnet/minecraft/block/BlockBase;DDDI)V"
+                    ),
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/client/render/TileRenderer;method_55(Lnet/minecraft/block/BlockBase;DDDI)V"
+                    ),
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/client/render/TileRenderer;method_61(Lnet/minecraft/block/BlockBase;DDDI)V"
+                    ),
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/client/render/TileRenderer;method_65(Lnet/minecraft/block/BlockBase;DDDI)V"
+                    ),
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/client/render/TileRenderer;method_67(Lnet/minecraft/block/BlockBase;DDDI)V"
+                    ),
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/client/render/TileRenderer;method_69(Lnet/minecraft/block/BlockBase;DDDI)V"
+                    )
+            }
     )
-    private void method_46_setCustomArguments(BlockBase arg, int i, float f, CallbackInfo ci) {
-        method_46_customArguments_renderingInInventory = true;
+    private void setRenderingInInventory(BlockBase arg, int i, float f, CallbackInfo ci) {
+        renderingInInventory = true;
     }
 
     @Inject(
-            method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/TileRenderer;method_55(Lnet/minecraft/block/BlockBase;DDDI)V"
-            )
+            method = "method_53(Lnet/minecraft/block/BlockBase;Lnet/minecraft/level/Level;III)V",
+            at = @At("RETURN")
     )
-    private void method_55_setCustomArguments(BlockBase arg, int i, float f, CallbackInfo ci) {
-        method_55_customArguments_renderingInInventory = true;
-    }
-
-    @Inject(
-            method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/TileRenderer;method_61(Lnet/minecraft/block/BlockBase;DDDI)V"
-            )
-    )
-    private void method_61_setCustomArguments(BlockBase arg, int i, float f, CallbackInfo ci) {
-        method_61_customArguments_renderingInInventory = true;
-    }
-
-    @Inject(
-            method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/TileRenderer;method_65(Lnet/minecraft/block/BlockBase;DDDI)V"
-            )
-    )
-    private void method_65_setCustomArguments(BlockBase arg, int i, float f, CallbackInfo ci) {
-        method_65_customArguments_renderingInInventory = true;
-    }
-
-    @Inject(
-            method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/TileRenderer;method_67(Lnet/minecraft/block/BlockBase;DDDI)V"
-            )
-    )
-    private void method_67_setCustomArguments(BlockBase arg, int i, float f, CallbackInfo ci) {
-        method_67_customArguments_renderingInInventory = true;
-    }
-
-    @Inject(
-            method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/TileRenderer;method_69(Lnet/minecraft/block/BlockBase;DDDI)V"
-            )
-    )
-    private void method_69_setCustomArguments(BlockBase arg, int i, float f, CallbackInfo ci) {
-        method_69_customArguments_renderingInInventory = true;
+    private void renderFallingBlockAtlases(BlockBase arg, Level arg1, int i, int j, int k, CallbackInfo ci) {
+        stationBlockRenderer.renderActiveAtlases();
     }
 }
