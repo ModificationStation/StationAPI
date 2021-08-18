@@ -1,5 +1,8 @@
 package net.modificationstation.stationapi.impl.client.texture;
 
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
@@ -23,14 +26,15 @@ public class StationVanillaTextureBinder extends StationTextureBinder {
         this.animationPath = animationPath;
         this.originalBinder = originalBinder;
         animatedTextureBinder = new AnimatedTextureBinder(getStaticReference(), animationPath, 0);
-        refreshTextures();
+        //noinspection deprecation
+        refreshTextures(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
     @Override
-    public void refreshTextures() {
+    public void refreshTextures(TexturePack newTexturePack) {
         animationImageAbsent = TextureHelper.getTextureStream(animationPath) == null;
         StationTextureBinder textureBinder = animationImageAbsent ? originalBinder : animatedTextureBinder;
-        textureBinder.refreshTextures();
+        textureBinder.refreshTextures(newTexturePack);
         grid = textureBinder.grid;
     }
 

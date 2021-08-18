@@ -4,9 +4,10 @@ import jdk.internal.org.objectweb.asm.Opcodes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.class_214;
+import net.minecraft.client.TexturePackManager;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.client.event.texture.AfterTexturePackLoadedEvent;
+import net.modificationstation.stationapi.api.client.event.texture.TexturePackLoadedEvent;
 import net.modificationstation.stationapi.impl.client.texture.StationTextureManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,6 +28,8 @@ public class MixinTextureManager {
     private final StationTextureManager stationTextureManager = new StationTextureManager((TextureManager) (Object) this);
 
     @Shadow private ByteBuffer field_1250;
+
+    @Shadow private TexturePackManager field_1256;
 
     @Inject(
             method = "method_1089(Ljava/awt/image/BufferedImage;I)V",
@@ -72,9 +75,17 @@ public class MixinTextureManager {
 
     @Inject(
             method = "method_1096()V",
+            at = @At("HEAD")
+    )
+    private void beforeTextureRefresh(CallbackInfo ci) {
+        StationAPI.EVENT_BUS.post(new TexturePackLoadedEvent.Before((TextureManager) (Object) this, field_1256.texturePack));
+    }
+
+    @Inject(
+            method = "method_1096()V",
             at = @At("RETURN")
     )
     private void texturesRefresh(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new AfterTexturePackLoadedEvent());
+        StationAPI.EVENT_BUS.post(new TexturePackLoadedEvent.After((TextureManager) (Object) this, field_1256.texturePack));
     }
 }

@@ -22,6 +22,9 @@ public interface TextureManagerAccessor {
     List<TextureBinder> getTextureBinders();
 
     @Accessor
+    HashMap<String, Integer> getField_1246();
+
+    @Accessor
     ByteBuffer getField_1250();
 
     @Accessor

@@ -1,6 +1,9 @@
 package net.modificationstation.stationapi.impl.client.texture;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resource.TexturePack;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
@@ -16,11 +19,12 @@ public class StationFlowingLavaTextureBinder extends StationTextureBinder {
     public StationFlowingLavaTextureBinder() {
         super(SquareAtlas.TERRAIN.getTexture(BlockBase.FLOWING_LAVA.texture + 1));
         textureSize = 2;
-        refreshTextures();
+        //noinspection deprecation
+        refreshTextures(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
     @Override
-    public void refreshTextures() {
+    public void refreshTextures(TexturePack newTexturePack) {
         int square = getStaticReference().getWidth() * getStaticReference().getHeight();
         field_1166 = new float[square];
         field_1167 = new float[square];
