@@ -32,5 +32,6 @@ public class TextureInit {
         textureManager.add(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.FIRE.texture + 16), new StationFireTextureBinder(1), "/custom_fire_n_s.png"));
         textureManager.add(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.PORTAL.texture), new StationPortalTextureBinder(), "/custom_portal.png"));
         textureManager.add(new StationCompassTextureBinder());
+        textureManager.add(new StationClockTextureBinder());
     }
 }
