@@ -118,6 +118,16 @@ allprojects {
 		options.forkOptions.executable = 'javac'
 	}
 
+	task moveRemappedSrc {
+		if (project.name.equals("station-api"))
+			return
+		doLast {
+			delete './src/main/java/'
+			ant.move file: './remappedSrc/net',
+					todir: './src/main/java/'
+		}
+	}
+
 	dependencies {
 		// fabric loader requires log4j, guava, and gson
 		implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.1'
