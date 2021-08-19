@@ -22,17 +22,17 @@ public interface TextureManagerAccessor {
     List<TextureBinder> getTextureBinders();
 
     @Accessor
-    HashMap<String, Integer> getField_1246();
+    HashMap<String, Integer> getTextures();
 
     @Accessor
-    ByteBuffer getField_1250();
+    ByteBuffer getCurrentImageBuffer();
 
     @Accessor
-    void setField_1250(ByteBuffer byteBuffer);
+    void setCurrentImageBuffer(ByteBuffer byteBuffer);
 
     @Invoker
-    void invokeMethod_1089(BufferedImage bufferedImage, int i);
+    void invokeBindImageToId(BufferedImage bufferedImage, int i);
 
     @Invoker
-    BufferedImage invokeMethod_1091(InputStream var1);
+    BufferedImage invokeReadImage(InputStream var1);
 }

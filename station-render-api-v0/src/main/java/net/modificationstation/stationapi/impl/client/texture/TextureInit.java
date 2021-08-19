@@ -20,18 +20,18 @@ public class TextureInit {
         //noinspection deprecation
         TextureManager textureManager = ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager;
         TextureBinder textureBinder;
-        textureManager.add(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture), new StationStillWaterTextureBinder(), "/custom_water_still.png"));
+        textureManager.addTextureBinder(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture), new StationStillWaterTextureBinder(), "/custom_water_still.png"));
         textureBinder = new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture + 1), new StationFlowingWaterTextureBinder(), "/custom_water_flowing.png");
         textureBinder.textureSize = 2;
-        textureManager.add(textureBinder);
-        textureManager.add(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.FLOWING_LAVA.texture), new StationStillLavaTextureBinder(), "/custom_lava_still.png"));
+        textureManager.addTextureBinder(textureBinder);
+        textureManager.addTextureBinder(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.FLOWING_LAVA.texture), new StationStillLavaTextureBinder(), "/custom_lava_still.png"));
         textureBinder = new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.FLOWING_LAVA.texture + 1), new StationFlowingLavaTextureBinder(), "/custom_lava_flowing.png");
         textureBinder.textureSize = 2;
-        textureManager.add(textureBinder);
-        textureManager.add(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.FIRE.texture), new StationFireTextureBinder(0), "/custom_fire_e_w.png"));
-        textureManager.add(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.FIRE.texture + 16), new StationFireTextureBinder(1), "/custom_fire_n_s.png"));
-        textureManager.add(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.PORTAL.texture), new StationPortalTextureBinder(), "/custom_portal.png"));
-        textureManager.add(new StationCompassTextureBinder());
-        textureManager.add(new StationClockTextureBinder());
+        textureManager.addTextureBinder(textureBinder);
+        textureManager.addTextureBinder(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.FIRE.texture), new StationFireTextureBinder(0), "/custom_fire_e_w.png"));
+        textureManager.addTextureBinder(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.FIRE.texture + 16), new StationFireTextureBinder(1), "/custom_fire_n_s.png"));
+        textureManager.addTextureBinder(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.PORTAL.texture), new StationPortalTextureBinder(), "/custom_portal.png"));
+        textureManager.addTextureBinder(new StationCompassTextureBinder());
+        textureManager.addTextureBinder(new StationClockTextureBinder());
     }
 }

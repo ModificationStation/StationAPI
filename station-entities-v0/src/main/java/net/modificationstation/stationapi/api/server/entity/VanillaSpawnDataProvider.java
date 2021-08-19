@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.server.entity;
 
 import net.minecraft.entity.EntityBase;
 import net.minecraft.packet.AbstractPacket;
-import net.minecraft.packet.play.EntitySpawnS2C;
+import net.minecraft.packet.play.EntitySpawn0x17S2CPacket;
 import net.modificationstation.stationapi.api.entity.HasOwner;
 
 public interface VanillaSpawnDataProvider extends CustomSpawnDataProvider {
@@ -16,7 +16,7 @@ public interface VanillaSpawnDataProvider extends CustomSpawnDataProvider {
             owner = owner == null ? entityBase : owner;
             ownerId = owner.entityId;
         }
-        return new EntitySpawnS2C(entityBase, getSpawnID(), ownerId);
+        return new EntitySpawn0x17S2CPacket(entityBase, getSpawnID(), ownerId);
     }
 
     short getSpawnID();

@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.metablock.client;
 
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.RemoteClientInteractionManager;
+import net.minecraft.client.SinglePlayerClientInteractionManager;
 import net.minecraft.entity.player.AbstractClientPlayer;
 import net.minecraft.entity.player.PlayerBase;
 import net.modificationstation.stationapi.api.block.PlayerBlockHardnessPerMeta;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(RemoteClientInteractionManager.class)
+@Mixin(SinglePlayerClientInteractionManager.class)
 public class MixinRemoteClientInteractionManager {
 
     private int capturedMeta;

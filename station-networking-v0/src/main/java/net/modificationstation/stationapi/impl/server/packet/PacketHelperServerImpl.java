@@ -9,7 +9,7 @@ public class PacketHelperServerImpl extends PacketHelperImpl {
 
     @Override
     public void send(AbstractPacket packet) {
-        packet.handle(null);
+        packet.apply(null);
     }
 
     @Override

@@ -21,11 +21,11 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class MixinTileEntityFurnace {
 
     @Shadow
-    private ItemInstance[] contents;
+    private ItemInstance[] inventory;
 
     @Redirect(method = {"canAcceptRecipeOutput()Z", "craftRecipe()V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/SmeltingRecipeRegistry;getResult(I)Lnet/minecraft/item/ItemInstance;"))
     private ItemInstance getResult(SmeltingRecipeRegistry smeltingRecipeRegistry, int i) {
-        return SmeltingRegistry.getResultFor(contents[0]);
+        return SmeltingRegistry.getResultFor(inventory[0]);
     }
 
     @Inject(method = "getFuelTime(Lnet/minecraft/item/ItemInstance;)I", at = @At(value = "HEAD"), cancellable = true)

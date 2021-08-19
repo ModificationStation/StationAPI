@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.TileRenderer;
+import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.impl.client.texture.StationBlockRenderer;
 import net.modificationstation.stationapi.impl.client.texture.StationBlockRendererProvider;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
-@Mixin(TileRenderer.class)
+@Mixin(BlockRenderer.class)
 public class MixinTileRenderer implements StationBlockRendererProvider {
 //    @Shadow
 //    private int field_55;
@@ -548,12 +548,12 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
 //    }
 //
 //    @ModifyVariable(method = {
-//            "method_46(Lnet/minecraft/block/BlockBase;DDDI)V",
-//            "method_55(Lnet/minecraft/block/BlockBase;DDDI)V",
-//            "method_61(Lnet/minecraft/block/BlockBase;DDDI)V",
-//            "method_65(Lnet/minecraft/block/BlockBase;DDDI)V",
-//            "method_67(Lnet/minecraft/block/BlockBase;DDDI)V",
-//            "method_69(Lnet/minecraft/block/BlockBase;DDDI)V"
+//            "renderBottomFace(Lnet/minecraft/block/BlockBase;DDDI)V",
+//            "renderTopFace(Lnet/minecraft/block/BlockBase;DDDI)V",
+//            "renderEastFace(Lnet/minecraft/block/BlockBase;DDDI)V",
+//            "renderWestFace(Lnet/minecraft/block/BlockBase;DDDI)V",
+//            "renderNorthFace(Lnet/minecraft/block/BlockBase;DDDI)V",
+//            "renderSouthFace(Lnet/minecraft/block/BlockBase;DDDI)V"
 //    }, index = 8, at = @At(value = "CONSTANT", args = "intValue=15", ordinal = 0, shift = At.Shift.BEFORE, by = 2))
 //    private int getTextureID(int texID) {
 //        return overrideTexture(texID);
@@ -695,72 +695,72 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
 //    }
 
     @Unique @Getter
-    private final StationBlockRenderer stationBlockRenderer = new StationBlockRenderer((TileRenderer) (Object) this);
+    private final StationBlockRenderer stationBlockRenderer = new StationBlockRenderer((BlockRenderer) (Object) this);
 
     @Unique
     private boolean renderingInInventory;
 
     @Inject(
-            method = "method_46(Lnet/minecraft/block/BlockBase;DDDI)V",
+            method = "renderBottomFace(Lnet/minecraft/block/BlockBase;DDDI)V",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void method_46_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
+    private void renderBottomFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
         stationBlockRenderer.renderBottomFace(arg, d, d1, d2, i, renderingInInventory);
         renderingInInventory = false;
         ci.cancel();
     }
 
     @Inject(
-            method = "method_55(Lnet/minecraft/block/BlockBase;DDDI)V",
+            method = "renderTopFace(Lnet/minecraft/block/BlockBase;DDDI)V",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void method_55_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
+    private void renderTopFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
         stationBlockRenderer.renderTopFace(arg, d, d1, d2, i, renderingInInventory);
         renderingInInventory = false;
         ci.cancel();
     }
 
     @Inject(
-            method = "method_61(Lnet/minecraft/block/BlockBase;DDDI)V",
+            method = "renderEastFace(Lnet/minecraft/block/BlockBase;DDDI)V",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void method_61_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
+    private void renderEastFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
         stationBlockRenderer.renderEastFace(arg, d, d1, d2, i, renderingInInventory);
         renderingInInventory = false;
         ci.cancel();
     }
 
     @Inject(
-            method = "method_65(Lnet/minecraft/block/BlockBase;DDDI)V",
+            method = "renderWestFace(Lnet/minecraft/block/BlockBase;DDDI)V",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void method_65_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
+    private void renderWestFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
         stationBlockRenderer.renderWestFace(arg, d, d1, d2, i, renderingInInventory);
         renderingInInventory = false;
         ci.cancel();
     }
 
     @Inject(
-            method = "method_67(Lnet/minecraft/block/BlockBase;DDDI)V",
+            method = "renderNorthFace(Lnet/minecraft/block/BlockBase;DDDI)V",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void method_67_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
+    private void renderNorthFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
         stationBlockRenderer.renderNorthFace(arg, d, d1, d2, i, renderingInInventory);
         renderingInInventory = false;
         ci.cancel();
     }
 
     @Inject(
-            method = "method_69(Lnet/minecraft/block/BlockBase;DDDI)V",
+            method = "renderSouthFace(Lnet/minecraft/block/BlockBase;DDDI)V",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void method_69_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
+    private void renderSouthFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
         stationBlockRenderer.renderSouthFace(arg, d, d1, d2, i, renderingInInventory);
         renderingInInventory = false;
         ci.cancel();
@@ -771,27 +771,27 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
             at = {
                     @At(
                             value = "INVOKE",
-                            target = "Lnet/minecraft/client/render/TileRenderer;method_46(Lnet/minecraft/block/BlockBase;DDDI)V"
+                            target = "Lnet/minecraft/client/render/block/BlockRenderer;renderBottomFace(Lnet/minecraft/block/BlockBase;DDDI)V"
                     ),
                     @At(
                             value = "INVOKE",
-                            target = "Lnet/minecraft/client/render/TileRenderer;method_55(Lnet/minecraft/block/BlockBase;DDDI)V"
+                            target = "Lnet/minecraft/client/render/block/BlockRenderer;renderTopFace(Lnet/minecraft/block/BlockBase;DDDI)V"
                     ),
                     @At(
                             value = "INVOKE",
-                            target = "Lnet/minecraft/client/render/TileRenderer;method_61(Lnet/minecraft/block/BlockBase;DDDI)V"
+                            target = "Lnet/minecraft/client/render/block/BlockRenderer;renderEastFace(Lnet/minecraft/block/BlockBase;DDDI)V"
                     ),
                     @At(
                             value = "INVOKE",
-                            target = "Lnet/minecraft/client/render/TileRenderer;method_65(Lnet/minecraft/block/BlockBase;DDDI)V"
+                            target = "Lnet/minecraft/client/render/block/BlockRenderer;renderWestFace(Lnet/minecraft/block/BlockBase;DDDI)V"
                     ),
                     @At(
                             value = "INVOKE",
-                            target = "Lnet/minecraft/client/render/TileRenderer;method_67(Lnet/minecraft/block/BlockBase;DDDI)V"
+                            target = "Lnet/minecraft/client/render/block/BlockRenderer;renderNorthFace(Lnet/minecraft/block/BlockBase;DDDI)V"
                     ),
                     @At(
                             value = "INVOKE",
-                            target = "Lnet/minecraft/client/render/TileRenderer;method_69(Lnet/minecraft/block/BlockBase;DDDI)V"
+                            target = "Lnet/minecraft/client/render/block/BlockRenderer;renderSouthFace(Lnet/minecraft/block/BlockBase;DDDI)V"
                     )
             }
     )

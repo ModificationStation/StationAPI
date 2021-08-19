@@ -5,8 +5,8 @@
 
 package net.modificationstation.sltest.inventory;
 
-import net.minecraft.class_633;
 import net.minecraft.container.ContainerBase;
+import net.minecraft.container.ContainerListener;
 import net.minecraft.container.slot.FurnaceOutput;
 import net.minecraft.container.slot.Slot;
 import net.minecraft.entity.player.PlayerBase;
@@ -52,19 +52,19 @@ public class ContainerFreezer extends ContainerBase
     }
 
     @Override
-    public void method_2075()
+    public void tick()
     {
-        super.method_2075();
-        for (Object o : field_2736) {
-            class_633 icrafting = (class_633) o;
+        super.tick();
+        for (Object o : listeners) {
+            ContainerListener icrafting = (ContainerListener) o;
             if (cookTime != freezer.frozenTimeForItem) {
-                icrafting.method_2099(this, 0, freezer.frozenTimeForItem);
+                icrafting.updateProperty(this, 0, freezer.frozenTimeForItem);
             }
             if (burnTime != freezer.frozenProgress) {
-                icrafting.method_2099(this, 1, freezer.frozenProgress);
+                icrafting.updateProperty(this, 1, freezer.frozenProgress);
             }
             if (itemBurnTime != freezer.frozenPowerRemaining) {
-                icrafting.method_2099(this, 2, freezer.frozenPowerRemaining);
+                icrafting.updateProperty(this, 2, freezer.frozenPowerRemaining);
             }
         }
 
@@ -139,11 +139,11 @@ public class ContainerFreezer extends ContainerBase
     }
 
     @Override
-    public void method_2076(class_633 crafting) {
-        super.method_2076(crafting);
-        crafting.method_2099(this, 0, freezer.frozenTimeForItem);
-        crafting.method_2099(this, 1, freezer.frozenProgress);
-        crafting.method_2099(this, 2, freezer.frozenPowerRemaining);
+    public void addListener(ContainerListener crafting) {
+        super.addListener(crafting);
+        crafting.updateProperty(this, 0, freezer.frozenTimeForItem);
+        crafting.updateProperty(this, 1, freezer.frozenProgress);
+        crafting.updateProperty(this, 2, freezer.frozenPowerRemaining);
     }
 
     private TileEntityFreezer freezer;

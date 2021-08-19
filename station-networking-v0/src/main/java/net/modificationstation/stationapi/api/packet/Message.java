@@ -235,7 +235,7 @@ public class Message extends AbstractPacket {
     @Override
     public void read(DataInputStream in) {
         try {
-            identifier = Identifier.of(method_802(in, 32767));
+            identifier = Identifier.of(readString(in, 32767));
             short s = in.readShort();
             boolean[] present = new boolean[]{
                     (s & 512) != 0,
@@ -306,7 +306,7 @@ public class Message extends AbstractPacket {
                 length = in.readInt();
                 strings = new String[length];
                 for (int i = 0; i < length; i++)
-                    strings[i] = method_802(in, 32767);
+                    strings[i] = readString(in, 32767);
             }
             if (present[9]) {
                 length = in.readInt();
@@ -314,8 +314,8 @@ public class Message extends AbstractPacket {
                 Gson gson = new Gson();
                 for (int i = 0; i < length; i++)
                     try {
-                        String objectJson = method_802(in, 32767);
-                        String className = method_802(in, 32767);
+                        String objectJson = readString(in, 32767);
+                        String className = readString(in, 32767);
                         objects[i] = className.equals("null") ? null : gson.fromJson(objectJson, Class.forName(className));
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
@@ -440,7 +440,7 @@ public class Message extends AbstractPacket {
      *                but can be used to get the player's instance that received the packet.
      */
     @Override
-    public void handle(PacketHandler handler) {
+    public void apply(PacketHandler handler) {
         MessageListenerRegistry.INSTANCE.get(identifier).ifPresent(playerBaseMessageBiConsumer -> playerBaseMessageBiConsumer.accept(PlayerHelper.getPlayerFromPacketHandler(handler), this));
     }
 

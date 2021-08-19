@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.item.client;
 
-import net.minecraft.client.ClientInteractionManager;
+import net.minecraft.client.BaseClientInteractionManager;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ClientInteractionManager.class)
+@Mixin(BaseClientInteractionManager.class)
 public class MixinClientInteractionManager {
 
     @Inject(method = "method_1713(Lnet/minecraft/entity/player/PlayerBase;Lnet/minecraft/level/Level;Lnet/minecraft/item/ItemInstance;IIII)Z", at = @At("HEAD"), cancellable = true)

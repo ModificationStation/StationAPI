@@ -104,7 +104,7 @@ public class ExpandableAtlas extends Atlas {
             //noinspection deprecation
             Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
             TextureManagerAccessor textureManager = (TextureManagerAccessor) minecraft.textureManager;
-            textureManager.invokeMethod_1089(imageCache, minecraft.textureManager.getTextureId(spritesheet));
+            textureManager.invokeBindImageToId(imageCache, minecraft.textureManager.getTextureId(spritesheet));
         }
     }
 

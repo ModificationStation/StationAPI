@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.model;
 
-import net.minecraft.client.render.TileRenderer;
+import net.minecraft.client.render.block.BlockRenderer;
 
 public interface BlockWithInventoryRenderer {
 
-    void renderInventory(TileRenderer tileRenderer, int meta);
+    void renderInventory(BlockRenderer tileRenderer, int meta);
 }

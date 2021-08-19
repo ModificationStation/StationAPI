@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.item.client;
 
-import net.minecraft.class_608;
-import net.minecraft.client.ClientInteractionManager;
+import net.minecraft.client.BaseClientInteractionManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.MultiPlayerClientInteractionManager;
 import net.minecraft.util.hit.HitType;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(class_608.class)
-public class Mixinclass_608 extends ClientInteractionManager {
+@Mixin(MultiPlayerClientInteractionManager.class)
+public class Mixinclass_608 extends BaseClientInteractionManager {
 
     public Mixinclass_608(Minecraft minecraft) {
         super(minecraft);

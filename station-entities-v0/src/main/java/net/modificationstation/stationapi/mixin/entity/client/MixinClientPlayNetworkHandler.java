@@ -4,7 +4,7 @@ import net.minecraft.client.level.ClientLevel;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.level.Level;
 import net.minecraft.network.ClientPlayNetworkHandler;
-import net.minecraft.packet.play.EntitySpawnS2C;
+import net.minecraft.packet.play.EntitySpawn0x17S2CPacket;
 import net.modificationstation.stationapi.api.registry.EntityHandlerRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
@@ -29,16 +29,16 @@ public class MixinClientPlayNetworkHandler {
     private double capturedY;
     private double capturedZ;
 
-    @Inject(method = "handleEntitySpawn(Lnet/minecraft/packet/play/EntitySpawnS2C;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/packet/play/EntitySpawnS2C;z:I", opcode = Opcodes.GETFIELD, shift = At.Shift.BY, by = 5), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void captureCoords(EntitySpawnS2C packet, CallbackInfo ci, double var2, double var4, double var6) {
+    @Inject(method = "onEntitySpawn(Lnet/minecraft/packet/play/EntitySpawn0x17S2CPacket;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/packet/play/EntitySpawnS2C;z:I", opcode = Opcodes.GETFIELD, shift = At.Shift.BY, by = 5), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void captureCoords(EntitySpawn0x17S2CPacket packet, CallbackInfo ci, double var2, double var4, double var6) {
         capturedX = var2;
         capturedY = var4;
         capturedZ = var6;
     }
 
-    @ModifyVariable(method = "handleEntitySpawn(Lnet/minecraft/packet/play/EntitySpawnS2C;)V", index = 8, at = @At("LOAD"))
-    private EntityBase onEntitySpawn(EntityBase entity, EntitySpawnS2C packet) {
-        Optional<QuadFunction<Level, Double, Double, Double, EntityBase>> entityHandler = EntityHandlerRegistry.INSTANCE.get(Identifier.of(ModID.of("minecraft"), String.valueOf(packet.id)));
+    @ModifyVariable(method = "onEntitySpawn(Lnet/minecraft/packet/play/EntitySpawn0x17S2CPacket;)V", index = 8, at = @At("LOAD"))
+    private EntityBase onEntitySpawn(EntityBase entity, EntitySpawn0x17S2CPacket packet) {
+        Optional<QuadFunction<Level, Double, Double, Double, EntityBase>> entityHandler = EntityHandlerRegistry.INSTANCE.get(Identifier.of(ModID.of("minecraft"), String.valueOf(packet.type)));
         if (entityHandler.isPresent())
             entity = entityHandler.get().apply(level, capturedX, capturedY, capturedZ);
         return entity;

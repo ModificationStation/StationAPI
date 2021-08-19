@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.impl.client.texture;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.TileRenderer;
+import net.minecraft.client.render.block.BlockRenderer;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
@@ -17,7 +17,7 @@ public class StationBlockRenderer {
     public final Set<Atlas> activeAtlases = new HashSet<>();
     public final TileRendererAccessor tileRendererAccessor;
 
-    public StationBlockRenderer(TileRenderer tileRenderer) {
+    public StationBlockRenderer(BlockRenderer tileRenderer) {
         tileRendererAccessor = (TileRendererAccessor) tileRenderer;
     }
 
@@ -35,8 +35,8 @@ public class StationBlockRenderer {
     }
 
     public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        if (tileRendererAccessor.getField_83() >= 0)
-            textureIndex = tileRendererAccessor.getField_83();
+        if (tileRendererAccessor.getTextureOverride() >= 0)
+            textureIndex = tileRendererAccessor.getTextureOverride();
         Atlas atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Texture texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
@@ -81,7 +81,7 @@ public class StationBlockRenderer {
                 startU2 = startU1,
                 startV2 = startV1,
                 endV2 = endV1;
-        switch (tileRendererAccessor.getField_91()) {
+        switch (tileRendererAccessor.getBottomFaceRotation()) {
             case 1:
                 startU1 = (texX + textureWidth - block.maxZ * textureWidth) / atlasWidth;
                 startV1 = (texY + block.minX * textureHeight) / atlasHeight;
@@ -148,8 +148,8 @@ public class StationBlockRenderer {
     }
 
     public void renderTopFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        if (tileRendererAccessor.getField_83() >= 0)
-            textureIndex = tileRendererAccessor.getField_83();
+        if (tileRendererAccessor.getTextureOverride() >= 0)
+            textureIndex = tileRendererAccessor.getTextureOverride();
         Atlas atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Texture texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
@@ -194,7 +194,7 @@ public class StationBlockRenderer {
                 startU2 = startU1,
                 startV2 = startV1,
                 endV2 = endV1;
-        switch (tileRendererAccessor.getField_90()) {
+        switch (tileRendererAccessor.getTopFaceRotation()) {
             case 1:
                 startU1 = (texX + block.minZ * textureWidth) / atlasWidth;
                 startV1 = (texY + textureHeight - block.maxX * textureHeight) / atlasHeight;
@@ -261,8 +261,8 @@ public class StationBlockRenderer {
     }
 
     public void renderEastFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        if (tileRendererAccessor.getField_83() >= 0)
-            textureIndex = tileRendererAccessor.getField_83();
+        if (tileRendererAccessor.getTextureOverride() >= 0)
+            textureIndex = tileRendererAccessor.getTextureOverride();
         Atlas atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Texture texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
@@ -293,7 +293,7 @@ public class StationBlockRenderer {
                 endU1 = (texX + block.maxX * textureWidth) / atlasWidth,
                 startV1 = (texY + textureHeight - block.maxY * textureHeight) / atlasHeight,
                 endV1 = (texY + textureHeight - block.minY * textureHeight) / atlasHeight;
-        if (tileRendererAccessor.getField_84()) {
+        if (tileRendererAccessor.getMirrorTexture()) {
             double temp = startU1;
             startU1 = endU1;
             endU1 = temp;
@@ -312,7 +312,7 @@ public class StationBlockRenderer {
                 startU2 = startU1,
                 startV2 = startV1,
                 endV2 = endV1;
-        switch (tileRendererAccessor.getField_86()) {
+        switch (tileRendererAccessor.getEastFaceRotation()) {
             case 1:
                 startU1 = (texX + textureWidth - block.maxY * textureWidth) / atlasWidth;
                 startV1 = (texY + block.maxX * textureHeight) / atlasHeight;
@@ -379,8 +379,8 @@ public class StationBlockRenderer {
     }
 
     public void renderWestFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        if (tileRendererAccessor.getField_83() >= 0)
-            textureIndex = tileRendererAccessor.getField_83();
+        if (tileRendererAccessor.getTextureOverride() >= 0)
+            textureIndex = tileRendererAccessor.getTextureOverride();
         Atlas atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Texture texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
@@ -411,7 +411,7 @@ public class StationBlockRenderer {
                 endU1 = (texX + block.maxX * textureWidth) / atlasWidth,
                 startV1 = (texY + textureHeight - block.maxY * textureHeight) / atlasHeight,
                 endV1 = (texY + textureHeight - block.minY * textureHeight) / atlasHeight;
-        if (tileRendererAccessor.getField_84()) {
+        if (tileRendererAccessor.getMirrorTexture()) {
             double temp = startU1;
             startU1 = endU1;
             endU1 = temp;
@@ -430,7 +430,7 @@ public class StationBlockRenderer {
                 startU2 = startU1,
                 startV2 = startV1,
                 endV2 = endV1;
-        switch (tileRendererAccessor.getField_87()) {
+        switch (tileRendererAccessor.getWestFaceRotation()) {
             case 1:
                 startU1 = (texX + block.minY * textureWidth) / atlasWidth;
                 endV1 = (texY + textureHeight - block.minX * textureHeight) / atlasHeight;
@@ -497,8 +497,8 @@ public class StationBlockRenderer {
     }
 
     public void renderNorthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        if (tileRendererAccessor.getField_83() >= 0)
-            textureIndex = tileRendererAccessor.getField_83();
+        if (tileRendererAccessor.getTextureOverride() >= 0)
+            textureIndex = tileRendererAccessor.getTextureOverride();
         Atlas atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Texture texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
@@ -529,7 +529,7 @@ public class StationBlockRenderer {
                 endU1 = (texX + block.maxZ * textureWidth) / atlasWidth,
                 startV1 = (texY + textureHeight - block.maxY * textureHeight) / atlasHeight,
                 endV1 = (texY + textureHeight - block.minY * textureHeight) / atlasHeight;
-        if (tileRendererAccessor.getField_84()) {
+        if (tileRendererAccessor.getMirrorTexture()) {
             double temp = startU1;
             startU1 = endU1;
             endU1 = temp;
@@ -548,7 +548,7 @@ public class StationBlockRenderer {
                 startU2 = startU1,
                 startV2 = startV1,
                 endV2 = endV1;
-        switch (tileRendererAccessor.getField_89()) {
+        switch (tileRendererAccessor.getNorthFaceRotation()) {
             case 1:
                 startU1 = (texX + block.minY * textureWidth) / atlasWidth;
                 startV1 = (texY + textureHeight - block.maxZ * textureHeight) / atlasHeight;
@@ -615,8 +615,8 @@ public class StationBlockRenderer {
     }
 
     public void renderSouthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        if (tileRendererAccessor.getField_83() >= 0)
-            textureIndex = tileRendererAccessor.getField_83();
+        if (tileRendererAccessor.getTextureOverride() >= 0)
+            textureIndex = tileRendererAccessor.getTextureOverride();
         Atlas atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Texture texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
@@ -647,7 +647,7 @@ public class StationBlockRenderer {
                 endU1 = (texX + block.maxZ * textureWidth) / atlasWidth,
                 startV1 = (texY + textureHeight - block.maxY * textureHeight) / atlasHeight,
                 endV1 = (texY + textureHeight - block.minY * textureHeight) / atlasHeight;
-        if (tileRendererAccessor.getField_84()) {
+        if (tileRendererAccessor.getMirrorTexture()) {
             double temp = startU1;
             startU1 = endU1;
             endU1 = temp;
@@ -666,7 +666,7 @@ public class StationBlockRenderer {
                 startU2 = startU1,
                 startV2 = startV1,
                 endV2 = endV1;
-        switch (tileRendererAccessor.getField_88()) {
+        switch (tileRendererAccessor.getSouthFaceRotation()) {
             case 1:
                 startU1 = (texX + textureWidth - block.maxY * textureWidth) / atlasWidth;
                 startV1 = (texY + block.maxZ * textureHeight) / atlasHeight;

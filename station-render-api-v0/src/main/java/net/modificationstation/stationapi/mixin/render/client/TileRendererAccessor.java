@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.render.client;
 
-import net.minecraft.client.render.TileRenderer;
+import net.minecraft.client.render.block.BlockRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(TileRenderer.class)
+@Mixin(BlockRenderer.class)
 public interface TileRendererAccessor {
 
     @Accessor
@@ -44,28 +44,28 @@ public interface TileRendererAccessor {
     float getField_68();
 
     @Accessor
-    int getField_83();
+    int getTextureOverride();
 
     @Accessor
-    boolean getField_84();
+    boolean getMirrorTexture();
 
     @Accessor
-    int getField_86();
+    int getEastFaceRotation();
 
     @Accessor
-    int getField_87();
+    int getWestFaceRotation();
 
     @Accessor
-    int getField_88();
+    int getSouthFaceRotation();
 
     @Accessor
-    int getField_89();
+    int getNorthFaceRotation();
 
     @Accessor
-    int getField_90();
+    int getTopFaceRotation();
 
     @Accessor
-    int getField_91();
+    int getBottomFaceRotation();
 
     @Accessor
     boolean getField_92();

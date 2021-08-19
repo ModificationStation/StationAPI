@@ -27,15 +27,15 @@ public class MixinTextureManager {
     @Unique
     private final StationTextureManager stationTextureManager = new StationTextureManager((TextureManager) (Object) this);
 
-    @Shadow private ByteBuffer field_1250;
+    @Shadow private ByteBuffer currentImageBuffer;
 
-    @Shadow private TexturePackManager field_1256;
+    @Shadow private TexturePackManager texturePackManager;
 
     @Inject(
-            method = "method_1089(Ljava/awt/image/BufferedImage;I)V",
+            method = "bindImageToId(Ljava/awt/image/BufferedImage;I)V",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/texture/TextureManager;field_1250:Ljava/nio/ByteBuffer;",
+                    target = "Lnet/minecraft/client/texture/TextureManager;currentImageBuffer:Ljava/nio/ByteBuffer;",
                     opcode = Opcodes.GETFIELD,
                     ordinal = 1,
                     shift = At.Shift.BEFORE
@@ -43,15 +43,15 @@ public class MixinTextureManager {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void method_1089_ensureBufferCapacity(BufferedImage bufferedImage, int i, CallbackInfo ci, int var3, int var4, int[] var5, byte[] var6) {
-        if (var6.length != field_1250.capacity())
-            field_1250 = class_214.method_744(var6.length);
+        if (var6.length != currentImageBuffer.capacity())
+            currentImageBuffer = class_214.method_744(var6.length);
     }
 
     @Inject(
-            method = "method_1095([IIII)V",
+            method = "bindImageToId([IIII)V",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/texture/TextureManager;field_1250:Ljava/nio/ByteBuffer;",
+                    target = "Lnet/minecraft/client/texture/TextureManager;currentImageBuffer:Ljava/nio/ByteBuffer;",
                     opcode = Opcodes.GETFIELD,
                     ordinal = 1,
                     shift = At.Shift.BEFORE
@@ -59,8 +59,8 @@ public class MixinTextureManager {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void method_1095_ensureBufferCapacity(int[] is, int i, int j, int k, CallbackInfo ci, byte[] var5) {
-        if (var5.length != field_1250.capacity())
-            field_1250 = class_214.method_744(var5.length);
+        if (var5.length != currentImageBuffer.capacity())
+            currentImageBuffer = class_214.method_744(var5.length);
     }
 
     @Inject(
@@ -74,18 +74,18 @@ public class MixinTextureManager {
     }
 
     @Inject(
-            method = "method_1096()V",
+            method = "reloadTexturesFromTexturePack()V",
             at = @At("HEAD")
     )
     private void beforeTextureRefresh(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new TexturePackLoadedEvent.Before((TextureManager) (Object) this, field_1256.texturePack));
+        StationAPI.EVENT_BUS.post(new TexturePackLoadedEvent.Before((TextureManager) (Object) this, texturePackManager.texturePack));
     }
 
     @Inject(
-            method = "method_1096()V",
+            method = "reloadTexturesFromTexturePack()V",
             at = @At("RETURN")
     )
     private void texturesRefresh(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new TexturePackLoadedEvent.After((TextureManager) (Object) this, field_1256.texturePack));
+        StationAPI.EVENT_BUS.post(new TexturePackLoadedEvent.After((TextureManager) (Object) this, texturePackManager.texturePack));
     }
 }

@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.server.gui.screen.container;
 
-import net.minecraft.class_633;
 import net.minecraft.container.ContainerBase;
+import net.minecraft.container.ContainerListener;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.modificationstation.stationapi.api.packet.Message;
@@ -21,6 +21,6 @@ public class GuiHelperServerImpl extends GuiHelperImpl {
     protected void afterPacketSent(PlayerBase player, ContainerBase container) {
         player.container = container;
         container.currentContainerId = ((ServerPlayerAccessor) player).getField_260();
-        container.method_2076((class_633) player);
+        container.addListener((ContainerListener) player);
     }
 }

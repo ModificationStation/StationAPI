@@ -15,12 +15,12 @@ public class PacketHelperClientImpl extends PacketHelperImpl {
         if (minecraft.level.isClient)
             minecraft.getNetworkHandler().sendPacket(packet);
         else
-            packet.handle(null);
+            packet.apply(null);
     }
 
     @Override
     public void sendTo(PlayerBase player, AbstractPacket packet) {
         if (!player.level.isClient)
-            packet.handle(null);
+            packet.apply(null);
     }
 }

@@ -18,7 +18,7 @@ public class TextureRefresherImpl {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void beforeTexturePackApplied(TexturePackLoadedEvent.Before event) {
-        Map<String, Integer> textureMap = ((TextureManagerAccessor) event.textureManager).getField_1246();
+        Map<String, Integer> textureMap = ((TextureManagerAccessor) event.textureManager).getTextures();
         textureMap.keySet().stream().filter(s -> event.newTexturePack.getResourceAsStream(s) == null).collect(Collectors.toList()).forEach(s -> GL11.glDeleteTextures(textureMap.remove(s)));
     }
 

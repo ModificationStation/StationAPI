@@ -22,11 +22,12 @@ public class MixinMinecraft {
         StationAPI.EVENT_BUS.post(new TextureRegisterEvent());
     }
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(
             method = "init()V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/texture/TextureManager;add(Lnet/minecraft/client/render/TextureBinder;)V"
+                    target = "Lnet/minecraft/client/texture/TextureManager;addTextureBinder(Lnet/minecraft/client/render/TextureBinder;)V"
             )
     )
     private void stopVanillaTextureBinders(TextureManager textureManager, TextureBinder arg) { }

@@ -3,7 +3,7 @@ package net.modificationstation.sltest.block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.material.Material;
-import net.minecraft.level.TileView;
+import net.minecraft.level.BlockView;
 import net.modificationstation.stationapi.api.block.BlockHardnessPerMeta;
 import net.modificationstation.stationapi.api.block.EffectiveForTool;
 import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
@@ -24,7 +24,7 @@ public class ModdedMetaBlock extends TemplateBlockBase implements BlockHardnessP
 
     @Override
     @Environment(EnvType.CLIENT)
-    public float getBrightness(TileView arg, int i, int j, int k) {
+    public float getBrightness(BlockView arg, int i, int j, int k) {
         if (arg.getTileMeta(i, j, k) == 1) {
             lightchecks = 6;
             return 1.0F;

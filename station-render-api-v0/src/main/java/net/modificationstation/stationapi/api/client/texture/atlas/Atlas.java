@@ -123,7 +123,7 @@ public abstract class Atlas {
     public <T extends StationTextureBinder> T addTextureBinder(Texture staticReference, Function<Texture, T> initializer) {
         T textureBinder = initializer.apply(staticReference);
         //noinspection deprecation
-        ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.add(textureBinder);
+        ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.addTextureBinder(textureBinder);
         return textureBinder;
     }
 
