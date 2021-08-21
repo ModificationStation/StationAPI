@@ -5,18 +5,23 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.block.BlockRenderer;
+import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
+import net.modificationstation.stationapi.api.client.model.BlockWithInventoryRenderer;
+import net.modificationstation.stationapi.api.client.model.BlockWithWorldRenderer;
 import net.modificationstation.stationapi.impl.client.texture.StationBlockRenderer;
 import net.modificationstation.stationapi.impl.client.texture.StationBlockRendererProvider;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(BlockRenderer.class)
-public class MixinTileRenderer implements StationBlockRendererProvider {
+public class MixinBlockRenderer implements StationBlockRendererProvider {
 //    @Shadow
 //    private int field_55;
 //    @Shadow
@@ -694,6 +699,7 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
 //        inventory = false;
 //    }
 
+    @Shadow private BlockView blockView;
     @Unique @Getter
     private final StationBlockRenderer stationBlockRenderer = new StationBlockRenderer((BlockRenderer) (Object) this);
 
@@ -805,5 +811,33 @@ public class MixinTileRenderer implements StationBlockRendererProvider {
     )
     private void renderFallingBlockAtlases(BlockBase arg, Level arg1, int i, int j, int k, CallbackInfo ci) {
         stationBlockRenderer.renderActiveAtlases();
+    }
+
+    @Inject(
+            method = "render(Lnet/minecraft/block/BlockBase;III)Z",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/block/BlockBase;updateBoundingBox(Lnet/minecraft/level/BlockView;III)V",
+                    shift = At.Shift.AFTER
+            ),
+            cancellable = true
+    )
+    private void onRenderInWorld(BlockBase block, int blockX, int blockY, int blockZ, CallbackInfoReturnable<Boolean> cir) {
+        if (block instanceof BlockWithWorldRenderer) {
+            ((BlockWithWorldRenderer) block).renderWorld((BlockRenderer) (Object) this, blockView, blockX, blockY, blockZ);
+            cir.cancel();
+        }
+    }
+
+    @Inject(
+            method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void onRenderInInventory(BlockBase arg, int i, float f, CallbackInfo ci) {
+        if (arg instanceof BlockWithInventoryRenderer) {
+            ((BlockWithInventoryRenderer) arg).renderInventory((BlockRenderer) (Object) this, i);
+            ci.cancel();
+        }
     }
 }

@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.resource;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.API;
 
@@ -10,6 +11,10 @@ import java.util.*;
 import java.util.function.*;
 
 public class ResourceManager {
+
+    public static String parsePath(Identifier identifier, String path, String extension) {
+        return "/assets/" + identifier.modID + path + (identifier.id.startsWith("/") ? identifier.id : ("/" + identifier.id)) + "." + extension;
+    }
 
     @API
     public static Set<URL> findResources(String path) {

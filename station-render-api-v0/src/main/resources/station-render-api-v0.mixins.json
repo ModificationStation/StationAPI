@@ -10,6 +10,7 @@
   "client": [
     "client.DiggingAccessor",
     "client.EntityRendererAccessor",
+    "client.MixinBlockRenderer",
     "client.Mixinclass_556",
     "client.Mixinclass_66",
     "client.MixinDigging",
@@ -18,7 +19,6 @@
     "client.MixinParticleManager",
     "client.MixinTextureManager",
     "client.MixinTexturePack",
-    "client.MixinTileRenderer",
     "client.MixinZippedTexturePack",
     "client.ParticleBaseAccessor",
     "client.TessellatorAccessor",

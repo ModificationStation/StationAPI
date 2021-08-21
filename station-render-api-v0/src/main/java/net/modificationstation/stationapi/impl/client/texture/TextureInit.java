@@ -8,12 +8,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.JsonModelAtlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
+import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.util.Null;
+
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class TextureInit {
+
+    @Entrypoint.ModID
+    private static final ModID MODID = Null.get();
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void init(TextureRegisterEvent event) {
@@ -33,5 +43,8 @@ public class TextureInit {
         textureManager.addTextureBinder(new StationVanillaTextureBinder(SquareAtlas.TERRAIN.getTexture(BlockBase.PORTAL.texture), new StationPortalTextureBinder(), "/custom_portal.png"));
         textureManager.addTextureBinder(new StationCompassTextureBinder());
         textureManager.addTextureBinder(new StationClockTextureBinder());
+        JSON_MISSING = JsonModelAtlas.STATION_JSON_MODELS.addTexture(ResourceManager.parsePath(of(MODID, "missing"), "/textures", "png"));
     }
+
+    public static Atlas.Texture JSON_MISSING;
 }

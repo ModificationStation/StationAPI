@@ -2,16 +2,16 @@ package net.modificationstation.stationapi.api.client.event.model;
 
 import lombok.RequiredArgsConstructor;
 import net.mine_diver.unsafeevents.Event;
-import net.modificationstation.stationapi.api.client.model.BlockModelProvider;
+import net.modificationstation.stationapi.api.client.model.BlockInventoryModelProvider;
 
 // TODO: Item and Entity model documentation.
 
 /**
  * Used to set a custom model for your block.
- * Implement {@link BlockModelProvider} in your block class to use a custom model.
+ * Implement {@link BlockInventoryModelProvider} in your block class to use a custom model.
  *
  * @author mine_diver
- * @see BlockModelProvider
+ * @see BlockInventoryModelProvider
  */
 @RequiredArgsConstructor
 public class ModelRegisterEvent extends Event {

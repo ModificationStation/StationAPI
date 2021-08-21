@@ -7,11 +7,12 @@ import net.minecraft.client.render.QuadPoint;
 import net.minecraft.client.render.Tessellator;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockFaces;
+import net.modificationstation.stationapi.api.registry.ModID;
 import org.lwjgl.opengl.GL11;
 
 import java.util.*;
 
-public class CustomCuboidRenderer implements net.modificationstation.stationapi.api.client.model.CustomCuboidRenderer {
+public class CustomCuboidRenderer {
 
     public float rotationPointX;
     public float rotationPointY;
@@ -22,14 +23,14 @@ public class CustomCuboidRenderer implements net.modificationstation.stationapi.
     public boolean mirror = false;
     public boolean visible = true;
     public boolean skipRendering = false;
-    public String modid;
+    public ModID modid;
     private QuadPoint[] quadPoints;
     private CustomTexturedQuad[] cubeQuads;
     private final JsonFaces uvs;
     private boolean compiled = false;
     private int list = 0;
 
-    public CustomCuboidRenderer(JsonFaces uvs, String modid) {
+    public CustomCuboidRenderer(JsonFaces uvs, ModID modid) {
         this.uvs = uvs;
         this.modid = modid;
     }
@@ -165,13 +166,11 @@ public class CustomCuboidRenderer implements net.modificationstation.stationapi.
         this.compiled = true;
     }
 
-    @Override
     public CustomTexturedQuad[] getCubeQuads() {
         return cubeQuads;
     }
 
-    @Override
-    public String getModID() {
+    public ModID getModID() {
         return modid;
     }
 }

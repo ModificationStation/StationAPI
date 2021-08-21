@@ -1,12 +1,10 @@
 package net.modificationstation.stationapi.impl.client.model;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.modificationstation.stationapi.api.registry.ModID;
 
 public class ModelTranslator {
 
-    @Environment(EnvType.CLIENT)
-    public static CustomCuboidRenderer[] translate(JsonModel modelJson, String modid) {
+    public static CustomCuboidRenderer[] translate(JsonModel modelJson, ModID modid) {
         CustomCuboidRenderer[] cuboids = new CustomCuboidRenderer[modelJson.getElements().length];
         JsonCuboid[] elements = modelJson.getElements();
         for (int i = 0; i < (elements.length); i++) {
@@ -16,7 +14,7 @@ public class ModelTranslator {
             double[] from = jsonCuboid.getFrom();
             double[] to = jsonCuboid.getTo();
 
-            double rads = 90 * (Math.PI / 180);
+//            double rads = 90 * (Math.PI / 180);
             //double[] newRotation = rotateVector(new double[]{from[0], from[2]}, rads);
             double[] newRotation = new double[]{from[0], from[2]};
 
@@ -27,10 +25,10 @@ public class ModelTranslator {
         return cuboids;
     }
 
-    public static double[] rotateVector(double[] vector, double rads) {
-        return new double[]{
-                vector[0] * Math.cos(rads) - vector[1] * Math.sin(rads),
-                vector[0] * Math.sin(rads) + vector[1] * Math.cos(rads)
-        };
-    }
+//    public static double[] rotateVector(double[] vector, double rads) {
+//        return new double[]{
+//                vector[0] * Math.cos(rads) - vector[1] * Math.sin(rads),
+//                vector[0] * Math.sin(rads) + vector[1] * Math.cos(rads)
+//        };
+//    }
 }

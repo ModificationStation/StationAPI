@@ -35,7 +35,6 @@
       "net.modificationstation.sltest.option.OptionListener",
       "net.modificationstation.sltest.keyboard.KeyboardListener",
       "net.modificationstation.sltest.texture.TextureListener",
-      "net.modificationstation.sltest.model.ModelListener",
       "net.modificationstation.sltest.render.entity.EntityRendererListener"
     ],
     "main": [

@@ -26,11 +26,13 @@ public class ExpandableAtlas extends Atlas {
             STATION_TERRAIN = new ExpandableAtlas(Identifier.of(MODID, "terrain"), SquareAtlas.TERRAIN).initTessellator(),
             STATION_GUI_ITEMS = new ExpandableAtlas(Identifier.of(MODID, "gui_items"), SquareAtlas.GUI_ITEMS);
 
+    private final Map<String, Texture> textureCache = new HashMap<>();
+
     public ExpandableAtlas(final Identifier identifier) {
         super("/assets/stationapi/atlases/" + identifier, 0);
     }
 
-    public ExpandableAtlas(final Identifier identifier, final SquareAtlas parent) {
+    public ExpandableAtlas(final Identifier identifier, final Atlas parent) {
         super("/assets/stationapi/atlases/" + identifier, 0, parent);
     }
 
@@ -56,16 +58,20 @@ public class ExpandableAtlas extends Atlas {
     }
 
     public Texture addTexture(String texture) {
-        BufferedImage image = TextureHelper.getTexture(texture);
-        int previousAtlasWidth = imageCache == null ? 0 : imageCache.getWidth();
-        drawTextureOnSpritesheet(image);
-        textures.forEach(Texture::updateUVs);
-        refreshTextureID();
-        return EnhancedList.enhance(textures).addAndReturn(new FileTexture(
-                texture, size++,
-                previousAtlasWidth, 0,
-                image.getWidth(), image.getHeight()
-        ));
+        if (textureCache.containsKey(texture))
+            return textureCache.get(texture);
+        else {
+            BufferedImage image = TextureHelper.getTexture(texture);
+            int previousAtlasWidth = imageCache == null ? 0 : imageCache.getWidth();
+            drawTextureOnSpritesheet(image);
+            textures.forEach(Texture::updateUVs);
+            refreshTextureID();
+            return textureCache.compute(texture, (s, texture1) -> EnhancedList.enhance(textures).addAndReturn(new FileTexture(
+                    texture, size++,
+                    previousAtlasWidth, 0,
+                    image.getWidth(), image.getHeight()
+            )));
+        }
     }
 
     public <T extends StationTextureBinder> T addTextureBinder(String staticReference, Function<Texture, T> initializer) {
@@ -99,7 +105,7 @@ public class ExpandableAtlas extends Atlas {
         graphics.dispose();
     }
 
-    private void refreshTextureID() {
+    protected void refreshTextureID() {
         if (imageCache != null) {
             //noinspection deprecation
             Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();

@@ -9,9 +9,10 @@ import net.minecraft.client.render.QuadPoint;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.util.maths.Vec3f;
 import net.modificationstation.stationapi.api.block.BlockFaces;
+import net.modificationstation.stationapi.api.registry.ModID;
 import org.lwjgl.opengl.GL11;
 
-public class CustomTexturedQuad implements net.modificationstation.stationapi.api.client.model.CustomTexturedQuad {
+public class CustomTexturedQuad {
     @Getter
     private QuadPoint[] quadPoints;
     private final boolean mirror;
@@ -51,7 +52,7 @@ public class CustomTexturedQuad implements net.modificationstation.stationapi.ap
     }
 
     @Environment(EnvType.CLIENT)
-    public void renderQuads(Tessellator arg, float f, String modid) {
+    public void renderQuads(Tessellator arg, float f, ModID modid) {
         Vec3f var3 = this.quadPoints[1].pointVector.method_1307(this.quadPoints[0].pointVector);
         Vec3f var4 = this.quadPoints[1].pointVector.method_1307(this.quadPoints[2].pointVector);
         Vec3f var5 = var4.method_1309(var3).method_1296();

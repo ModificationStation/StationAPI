@@ -6,8 +6,12 @@ import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.block.BlockListener;
 import net.modificationstation.sltest.item.ItemListener;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
+import net.modificationstation.stationapi.api.client.model.JsonModel;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
+
+import static net.modificationstation.sltest.SLTest.MODID;
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public class TextureListener {
 
@@ -42,7 +46,11 @@ public class TextureListener {
         TEST_ATLAS.addTexture("/assets/sltest/textures/items/nbtItem.png");
         TEST_ATLAS.addTexture("/assets/sltest/textures/blocks/FreezerTop.png");
         TEST_ATLAS.addTexture("/assets/sltest/textures/blocks/FreezerSide.png");
+
+        farlandsBlockModel = new JsonModel(of(MODID, "farlandsBlock"));
     }
 
     public static ExpandableAtlas TEST_ATLAS;
+
+    public static JsonModel farlandsBlockModel;
 }
