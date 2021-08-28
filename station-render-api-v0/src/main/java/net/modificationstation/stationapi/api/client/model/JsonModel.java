@@ -1,6 +1,11 @@
 package net.modificationstation.stationapi.api.client.model;
 
+import com.google.common.primitives.Doubles;
+import com.google.common.primitives.Floats;
 import com.google.gson.Gson;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.QuadPoint;
 import net.modificationstation.stationapi.api.client.registry.JsonModelRegistry;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.JsonModelAtlas;
@@ -26,6 +31,7 @@ public class JsonModel {
     public final String modelPath;
     private final Map<String, Atlas.Texture> textures = new HashMap<>();
     private final List<JsonCuboidData> cuboids = new ArrayList<>();
+    public final List<QuadPoint> quads = new ArrayList<>();
 
     public JsonModel(final Identifier id) {
         JsonModelRegistry.INSTANCE.register(id, this);
@@ -35,33 +41,93 @@ public class JsonModel {
     }
 
     public void reload() {
-        final JsonModelData data = new Gson().fromJson(new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(modelPath), StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")), JsonModelData.class);
+        //noinspection deprecation
+        final JsonModelData data = new Gson().fromJson(new BufferedReader(new InputStreamReader(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack.getResourceAsStream(modelPath), StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")), JsonModelData.class);
         final Map<String, Atlas.Texture> textures = new HashMap<>();
         textures.put("#missing", TextureInit.JSON_MISSING);
-        data.getTextures().forEach((textureId, texturePath) -> textures.put("#" + textureId, JsonModelAtlas.STATION_JSON_MODELS.addTexture(ResourceManager.parsePath(of(texturePath), "/" + MODID + "/textures", "png"))));
+        data.textures.forEach((textureId, texturePath) -> textures.put("#" + textureId, JsonModelAtlas.STATION_JSON_MODELS.addTexture(ResourceManager.parsePath(of(texturePath), "/" + MODID + "/textures", "png"))));
         this.textures.clear();
         this.textures.putAll(textures);
         cuboids.clear();
-        cuboids.addAll(data.getElements());
+        cuboids.addAll(data.elements);
+        cuboids.forEach(JsonCuboidData::postprocess);
         updateUVs();
     }
 
     public void updateUVs() {
-        cuboids.forEach(jsonCuboidData -> {
-            JsonFacesData jsonFacesData = jsonCuboidData.getFaces();
+        quads.clear();
+//        cuboids.forEach(jsonCuboidData -> {
+//            JsonFacesData jsonFacesData = jsonCuboidData.faces;
+//            JsonFaceData jsonFaceData;
+//            jsonFaceData = jsonFacesData.down;
+//            jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
+//            jsonFaceData = jsonFacesData.up;
+//            jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
+//            jsonFaceData = jsonFacesData.east;
+//            jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
+//            jsonFaceData = jsonFacesData.west;
+//            jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
+//            jsonFaceData = jsonFacesData.north;
+//            jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
+//            jsonFaceData = jsonFacesData.south;
+//            jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
+//        });
+        cuboids.forEach(cuboid -> {
+            double[]
+                    from = cuboid.from,
+                    to = cuboid.to;
+            float
+                    xFrom = (float) from[0],
+                    yFrom = (float) from[1],
+                    zFrom = (float) from[2],
+                    xTo = (float) to[0],
+                    yTo = (float) to[1],
+                    zTo = (float) to[2];
+            JsonFacesData jsonFacesData = cuboid.faces;
             JsonFaceData jsonFaceData;
-            jsonFaceData = jsonFacesData.getDown();
+            float[] uv;
+            jsonFaceData = jsonFacesData.down;
             jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
-            jsonFaceData = jsonFacesData.getUp();
+            uv = Floats.toArray(Doubles.asList(jsonFaceData.getUv()));
+            quads.add(new QuadPoint(xFrom, yFrom, zTo, uv[0], uv[3]));
+            quads.add(new QuadPoint(xFrom, yFrom, zFrom, uv[0], uv[1]));
+            quads.add(new QuadPoint(xTo, yFrom, zFrom, uv[2], uv[1]));
+            quads.add(new QuadPoint(xTo, yFrom, zTo, uv[2], uv[3]));
+            jsonFaceData = jsonFacesData.up;
             jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
-            jsonFaceData = jsonFacesData.getEast();
+            uv = Floats.toArray(Doubles.asList(jsonFaceData.getUv()));
+            quads.add(new QuadPoint(xTo, yTo, zTo, uv[2], uv[3]));
+            quads.add(new QuadPoint(xTo, yTo, zFrom, uv[2], uv[1]));
+            quads.add(new QuadPoint(xFrom, yTo, zFrom, uv[0], uv[1]));
+            quads.add(new QuadPoint(xFrom, yTo, zTo, uv[0], uv[3]));
+            jsonFaceData = jsonFacesData.east;
             jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
-            jsonFaceData = jsonFacesData.getWest();
+            uv = Floats.toArray(Doubles.asList(jsonFaceData.getUv()));
+            quads.add(new QuadPoint(xFrom, yTo, zFrom, uv[2], uv[1]));
+            quads.add(new QuadPoint(xTo, yTo, zFrom, uv[0], uv[1]));
+            quads.add(new QuadPoint(xTo, yFrom, zFrom, uv[0], uv[3]));
+            quads.add(new QuadPoint(xFrom, yFrom, zFrom, uv[2], uv[3]));
+            jsonFaceData = jsonFacesData.west;
             jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
-            jsonFaceData = jsonFacesData.getNorth();
+            uv = Floats.toArray(Doubles.asList(jsonFaceData.getUv()));
+            quads.add(new QuadPoint(xFrom, yTo, zTo, uv[0], uv[1]));
+            quads.add(new QuadPoint(xFrom, yFrom, zTo, uv[0], uv[3]));
+            quads.add(new QuadPoint(xTo, yFrom, zTo, uv[2], uv[3]));
+            quads.add(new QuadPoint(xTo, yTo, zTo, uv[2], uv[1]));
+            jsonFaceData = jsonFacesData.north;
             jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
-            jsonFaceData = jsonFacesData.getSouth();
+            uv = Floats.toArray(Doubles.asList(jsonFaceData.getUv()));
+            quads.add(new QuadPoint(xFrom, yTo, zTo, uv[2], uv[1]));
+            quads.add(new QuadPoint(xFrom, yTo, zFrom, uv[0], uv[1]));
+            quads.add(new QuadPoint(xFrom, yFrom, zFrom, uv[0], uv[3]));
+            quads.add(new QuadPoint(xFrom, yFrom, zTo, uv[2], uv[3]));
+            jsonFaceData = jsonFacesData.south;
             jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
+            uv = Floats.toArray(Doubles.asList(jsonFaceData.getUv()));
+            quads.add(new QuadPoint(xTo, yFrom, zTo, uv[0], uv[3]));
+            quads.add(new QuadPoint(xTo, yFrom, zFrom, uv[2], uv[3]));
+            quads.add(new QuadPoint(xTo, yTo, zFrom, uv[2], uv[1]));
+            quads.add(new QuadPoint(xTo, yTo, zTo, uv[0], uv[1]));
         });
     }
 

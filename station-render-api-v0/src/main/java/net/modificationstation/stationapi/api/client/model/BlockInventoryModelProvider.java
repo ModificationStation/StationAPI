@@ -23,57 +23,53 @@ public interface BlockInventoryModelProvider extends BlockWithInventoryRenderer 
             JsonModelAtlas.STATION_JSON_MODELS.bindAtlas();
             for (JsonCuboidData cuboid : model.getCuboids()) {
                 double[]
-                        from = cuboid.getFrom(),
-                        to = cuboid.getTo();
-                JsonFacesData jsonFacesData = cuboid.getFaces();
+                        from = cuboid.from,
+                        to = cuboid.to;
+                JsonFacesData jsonFacesData = cuboid.faces;
                 JsonFaceData jsonFaceData;
                 double[] uv;
-                jsonFaceData = jsonFacesData.getDown();
+                jsonFaceData = jsonFacesData.down;
                 tessellator.setNormal(0F, -1F, 0F);
                 uv = jsonFaceData.getUv();
-                tessellator.vertex(from[0] / 16 - .5, from[1] / 16 - .5, to[2] / 16 -.5, uv[0], uv[3]);
-                tessellator.vertex(from[0] / 16 - .5, from[1] / 16 - .5, from[2] / 16 -.5, uv[0], uv[1]);
-                tessellator.vertex(to[0] / 16 - .5, from[1] / 16 - .5, from[2] / 16 -.5, uv[2], uv[1]);
-                tessellator.vertex(to[0] / 16 - .5, from[1] / 16 - .5, to[2] / 16 -.5, uv[2], uv[3]);
-                jsonFaceData = jsonFacesData.getUp();
+                tessellator.vertex(from[0] - .5, from[1] - .5, to[2] -.5, uv[0], uv[3]);
+                tessellator.vertex(from[0] - .5, from[1] - .5, from[2] -.5, uv[0], uv[1]);
+                tessellator.vertex(to[0] - .5, from[1] - .5, from[2] -.5, uv[2], uv[1]);
+                tessellator.vertex(to[0] - .5, from[1] - .5, to[2] -.5, uv[2], uv[3]);
+                jsonFaceData = jsonFacesData.up;
                 tessellator.setNormal(0F, 1F, 0F);
                 uv = jsonFaceData.getUv();
-                tessellator.vertex(to[0] / 16 - .5, to[1] / 16 - .5, to[2] / 16 -.5, uv[2], uv[3]);
-                tessellator.vertex(to[0] / 16 - .5, to[1] / 16 - .5, from[2] / 16 -.5, uv[2], uv[1]);
-                tessellator.vertex(from[0] / 16 - .5, to[1] / 16 - .5, from[2] / 16 -.5, uv[0], uv[1]);
-                tessellator.vertex(from[0] / 16 - .5, to[1] / 16 - .5, to[2] / 16 -.5, uv[0], uv[3]);
-                jsonFaceData = jsonFacesData.getEast();
+                tessellator.vertex(to[0] - .5, to[1] - .5, to[2] -.5, uv[2], uv[3]);
+                tessellator.vertex(to[0] - .5, to[1] - .5, from[2] -.5, uv[2], uv[1]);
+                tessellator.vertex(from[0] - .5, to[1] - .5, from[2] -.5, uv[0], uv[1]);
+                tessellator.vertex(from[0] - .5, to[1] - .5, to[2] -.5, uv[0], uv[3]);
+                jsonFaceData = jsonFacesData.east;
                 tessellator.setNormal(0F, 0F, -1F);
                 uv = jsonFaceData.getUv();
-                // actually south
-                tessellator.vertex(to[0] / 16 - .5, from[1] / 16 - .5, to[2] / 16 -.5, uv[0], uv[3]);
-                tessellator.vertex(to[0] / 16 - .5, from[1] / 16 - .5, from[2] / 16 -.5, uv[2], uv[3]);
-                tessellator.vertex(to[0] / 16 - .5, to[1] / 16 - .5, from[2] / 16 -.5, uv[2], uv[1]);
-                tessellator.vertex(to[0] / 16 - .5, to[1] / 16 - .5, to[2] / 16 -.5, uv[0], uv[1]);
-                jsonFaceData = jsonFacesData.getWest();
+                tessellator.vertex(from[0] - .5, to[1] - .5, from[2] -.5, uv[2], uv[1]);
+                tessellator.vertex(to[0] - .5, to[1] - .5, from[2] -.5, uv[0], uv[1]);
+                tessellator.vertex(to[0] - .5, from[1] - .5, from[2] -.5, uv[0], uv[3]);
+                tessellator.vertex(from[0] - .5, from[1] - .5, from[2] -.5, uv[2], uv[3]);
+                jsonFaceData = jsonFacesData.west;
                 tessellator.setNormal(0F, 0F, 1F);
                 uv = jsonFaceData.getUv();
-                // actually north
-                tessellator.vertex(from[0] / 16 - .5, to[1] / 16 - .5, to[2] / 16 -.5, uv[2], uv[1]);
-                tessellator.vertex(from[0] / 16 - .5, to[1] / 16 - .5, from[2] / 16 -.5, uv[0], uv[1]);
-                tessellator.vertex(from[0] / 16 - .5, from[1] / 16 - .5, from[2] / 16 -.5, uv[0], uv[3]);
-                tessellator.vertex(from[0] / 16 - .5, from[1] / 16 - .5, to[2] / 16 -.5, uv[2], uv[3]);
-                jsonFaceData = jsonFacesData.getNorth();
+                tessellator.vertex(from[0] - .5, to[1] - .5, to[2] -.5, uv[0], uv[1]);
+                tessellator.vertex(from[0] - .5, from[1] - .5, to[2] -.5, uv[0], uv[3]);
+                tessellator.vertex(to[0] - .5, from[1] - .5, to[2] -.5, uv[2], uv[3]);
+                tessellator.vertex(to[0] - .5, to[1] - .5, to[2] -.5, uv[2], uv[1]);
+                jsonFaceData = jsonFacesData.north;
                 tessellator.setNormal(-1F, 0F, 0F);
                 uv = jsonFaceData.getUv();
-                // actually west
-                tessellator.vertex(from[0] / 16 - .5, to[1] / 16 - .5, to[2] / 16 -.5, uv[0], uv[1]);
-                tessellator.vertex(from[0] / 16 - .5, from[1] / 16 - .5, to[2] / 16 -.5, uv[0], uv[3]);
-                tessellator.vertex(to[0] / 16 - .5, from[1] / 16 - .5, to[2] / 16 -.5, uv[2], uv[3]);
-                tessellator.vertex(to[0] / 16 - .5, to[1] / 16 - .5, to[2] / 16 -.5, uv[2], uv[1]);
-                jsonFaceData = jsonFacesData.getSouth();
+                tessellator.vertex(from[0] - .5, to[1] - .5, to[2] -.5, uv[2], uv[1]);
+                tessellator.vertex(from[0] - .5, to[1] - .5, from[2] -.5, uv[0], uv[1]);
+                tessellator.vertex(from[0] - .5, from[1] - .5, from[2] -.5, uv[0], uv[3]);
+                tessellator.vertex(from[0] - .5, from[1] - .5, to[2] -.5, uv[2], uv[3]);
+                jsonFaceData = jsonFacesData.south;
                 tessellator.setNormal(1F, 0F, 0F);
                 uv = jsonFaceData.getUv();
-                // actually east
-                tessellator.vertex(from[0] / 16 - .5, to[1] / 16 - .5, from[2] / 16 -.5, uv[2], uv[1]);
-                tessellator.vertex(to[0] / 16 - .5, to[1] / 16 - .5, from[2] / 16 -.5, uv[0], uv[1]);
-                tessellator.vertex(to[0] / 16 - .5, from[1] / 16 - .5, from[2] / 16 -.5, uv[0], uv[3]);
-                tessellator.vertex(from[0] / 16 - .5, from[1] / 16 - .5, from[2] / 16 -.5, uv[2], uv[3]);
+                tessellator.vertex(to[0] - .5, from[1] - .5, to[2] -.5, uv[0], uv[3]);
+                tessellator.vertex(to[0] - .5, from[1] - .5, from[2] -.5, uv[2], uv[3]);
+                tessellator.vertex(to[0] - .5, to[1] - .5, from[2] -.5, uv[2], uv[1]);
+                tessellator.vertex(to[0] - .5, to[1] - .5, to[2] -.5, uv[0], uv[1]);
             }
             tessellator.draw();
         }

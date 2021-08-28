@@ -1,17 +1,17 @@
 package net.modificationstation.stationapi.impl.client.model;
 
-import lombok.Getter;
+import com.google.gson.annotations.SerializedName;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Getter
 public class JsonFacesData {
 
-    private final JsonFaceData
-            north,
-            east,
-            south,
-            west,
-            up,
-            down;
+    public final JsonFaceData north;
+    @SerializedName("west")
+    public final JsonFaceData east;
+    public final JsonFaceData south;
+    @SerializedName("east")
+    public final JsonFaceData west;
+    public final JsonFaceData up;
+    public final JsonFaceData down;
 }

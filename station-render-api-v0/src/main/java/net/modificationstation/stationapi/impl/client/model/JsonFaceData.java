@@ -9,7 +9,7 @@ import java.awt.image.*;
 public class JsonFaceData {
 
     public final String texture;
-    private final double[] uv;
+    double[] uv;
     private transient double[] adjustedUVs;
 
     public void updateUVs(Atlas.Texture texture) {
@@ -17,13 +17,15 @@ public class JsonFaceData {
         int
                 textureX = texture.getX(),
                 textureY = texture.getY(),
+                textureWidth = texture.getWidth(),
+                textureHeight = texture.getHeight(),
                 atlasWidth = atlasImage.getWidth(),
                 atlasHeight = atlasImage.getHeight();
         double[] adjustedUVs = new double[4];
-        adjustedUVs[0] = (textureX + uv[0]) / atlasWidth;
-        adjustedUVs[1] = (textureY + uv[1]) / atlasHeight;
-        adjustedUVs[2] = (textureX + uv[2]) / atlasWidth;
-        adjustedUVs[3] = (textureY + uv[3]) / atlasHeight;
+        adjustedUVs[0] = (textureX + (uv[0] / 16) * textureWidth) / atlasWidth;
+        adjustedUVs[1] = (textureY + (uv[1] / 16) * textureHeight) / atlasHeight;
+        adjustedUVs[2] = (textureX + (uv[2] / 16) * textureWidth) / atlasWidth;
+        adjustedUVs[3] = (textureY + (uv[3] / 16) * textureHeight) / atlasHeight;
         this.adjustedUVs = adjustedUVs;
     }
 
