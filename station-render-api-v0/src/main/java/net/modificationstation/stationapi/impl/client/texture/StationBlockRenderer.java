@@ -4,8 +4,8 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
-import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
 import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
 import net.modificationstation.stationapi.mixin.render.client.TileRendererAccessor;
 
@@ -30,7 +30,7 @@ public class StationBlockRenderer {
                 tessellator.setOffset(0, 0, 0);
             });
             activeAtlases.clear();
-            SquareAtlas.TERRAIN.bindAtlas();
+            Atlases.getTerrain().bindAtlas();
         }
     }
 
@@ -258,6 +258,14 @@ public class StationBlockRenderer {
             tessellator.vertex(startRenderX, adjustedRenderY, startRenderZ, startU1, startV1);
         }
         tessellator.vertex(startRenderX, adjustedRenderY, endRenderZ, startU2, endV2);
+    }
+
+    public void renderTopFace(
+            Tessellator tessellator,
+            double fromX, double toX, double y, double fromZ, double toZ,
+            Atlas.Texture texture, double localStartU, double localStartV, double localEndU, double localEndV
+    ) {
+
     }
 
     public void renderEastFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {

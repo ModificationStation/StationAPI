@@ -4,7 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
-import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 public class StationFireTextureBinder extends StationTextureBinder {
@@ -12,7 +12,7 @@ public class StationFireTextureBinder extends StationTextureBinder {
     protected float[] lastFireFrame;
 
     public StationFireTextureBinder(int line) {
-        super(SquareAtlas.TERRAIN.getTexture(BlockBase.FIRE.texture + 16 * line));
+        super(Atlases.getTerrain().getTexture(BlockBase.FIRE.texture + 16 * line));
         //noinspection deprecation
         refreshTextures(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }

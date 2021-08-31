@@ -7,6 +7,7 @@ import net.modificationstation.sltest.block.BlockListener;
 import net.modificationstation.sltest.item.ItemListener;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.model.JsonModel;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
@@ -27,7 +28,7 @@ public class TextureListener {
 //        ItemListener.testPickaxe.setTexturePosition(TextureFactoryOld.INSTANCE.addAnimatedTexture(TextureRegistryOld.getRegistry("GUI_ITEMS"), "/assets/sltest/textures/items/testPickaxe.png", 4));
 //        ItemListener.testNBTItem.setTexturePosition(TextureFactory.INSTANCE.addTexture(TextureRegistry.getRegistry("GUI_ITEMS"), "/assets/sltest/textures/items/nbtItem.png"));
 
-        BlockListener.testBlock.texture = ExpandableAtlas.STATION_TERRAIN.addTexture("/assets/sltest/textures/blocks/testBlock.png").index;
+        BlockListener.testBlock.texture = Atlases.getStationTerrain().addTexture("/assets/sltest/textures/blocks/testBlock.png").index;
 
         ItemListener.testNBTItem.setTexture("/assets/sltest/textures/items/nbtItem.png");
         ItemListener.testItem.setTexture("/assets/sltest/textures/items/highres.png");

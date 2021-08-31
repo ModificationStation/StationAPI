@@ -5,7 +5,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.util.maths.MathHelper;
-import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 public class StationStillLavaTextureBinder extends StationTextureBinder {
@@ -16,7 +16,7 @@ public class StationStillLavaTextureBinder extends StationTextureBinder {
     protected float[] field_2704;
 
     public StationStillLavaTextureBinder() {
-        super(SquareAtlas.TERRAIN.getTexture(BlockBase.FLOWING_LAVA.texture));
+        super(Atlases.getTerrain().getTexture(BlockBase.FLOWING_LAVA.texture));
         //noinspection deprecation
         refreshTextures(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }

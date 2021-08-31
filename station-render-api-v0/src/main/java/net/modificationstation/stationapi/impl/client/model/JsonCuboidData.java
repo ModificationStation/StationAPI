@@ -24,28 +24,28 @@ public class JsonCuboidData {
         to[2] /= 16;
         double tmp;
 
-        // Rotating down UVs
-        tmp = faces.down.uv[0];
-        faces.down.uv[0] = faces.down.uv[1];
-        faces.down.uv[1] = tmp;
-        tmp = faces.down.uv[2];
-        faces.down.uv[2] = faces.down.uv[3];
-        faces.down.uv[3] = tmp;
-        faces.down.uv[0] = 16 - faces.down.uv[0];
-        faces.down.uv[1] = 16 - faces.down.uv[1];
-        faces.down.uv[2] = 16 - faces.down.uv[2];
-        faces.down.uv[3] = 16 - faces.down.uv[3];
-
-        // Rotating up UVs
-        tmp = faces.up.uv[0];
-        faces.up.uv[0] = faces.up.uv[1];
-        faces.up.uv[1] = tmp;
-        tmp = faces.up.uv[2];
-        faces.up.uv[2] = faces.up.uv[3];
-        faces.up.uv[3] = tmp;
-        faces.up.uv[0] = 16 - faces.up.uv[0];
-        faces.up.uv[1] = 16 - faces.up.uv[1];
-        faces.up.uv[2] = 16 - faces.up.uv[2];
-        faces.up.uv[3] = 16 - faces.up.uv[3];
+//        // Rotating down UVs
+//        tmp = faces.down.uv[0];
+//        faces.down.uv[0] = faces.down.uv[1];
+//        faces.down.uv[1] = tmp;
+//        tmp = faces.down.uv[2];
+//        faces.down.uv[2] = faces.down.uv[3];
+//        faces.down.uv[3] = tmp;
+//        faces.down.uv[0] = 16 - faces.down.uv[0];
+//        faces.down.uv[1] = 16 - faces.down.uv[1];
+//        faces.down.uv[2] = 16 - faces.down.uv[2];
+//        faces.down.uv[3] = 16 - faces.down.uv[3];
+//
+//        // Rotating up UVs
+//        tmp = faces.up.uv[0];
+//        faces.up.uv[0] = faces.up.uv[1];
+//        faces.up.uv[1] = tmp;
+//        tmp = faces.up.uv[2];
+//        faces.up.uv[2] = faces.up.uv[3];
+//        faces.up.uv[3] = tmp;
+//        faces.up.uv[0] = 16 - faces.up.uv[0];
+//        faces.up.uv[1] = 16 - faces.up.uv[1];
+//        faces.up.uv[2] = 16 - faces.up.uv[2];
+//        faces.up.uv[3] = 16 - faces.up.uv[3];
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.QuadPoint;
 import net.modificationstation.stationapi.api.client.registry.JsonModelRegistry;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-import net.modificationstation.stationapi.api.client.texture.atlas.JsonModelAtlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.impl.client.model.JsonCuboidData;
@@ -45,7 +45,7 @@ public class JsonModel {
         final JsonModelData data = new Gson().fromJson(new BufferedReader(new InputStreamReader(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack.getResourceAsStream(modelPath), StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")), JsonModelData.class);
         final Map<String, Atlas.Texture> textures = new HashMap<>();
         textures.put("#missing", TextureInit.JSON_MISSING);
-        data.textures.forEach((textureId, texturePath) -> textures.put("#" + textureId, JsonModelAtlas.STATION_JSON_MODELS.addTexture(ResourceManager.parsePath(of(texturePath), "/" + MODID + "/textures", "png"))));
+        data.textures.forEach((textureId, texturePath) -> textures.put("#" + textureId, Atlases.getStationJsonModels().addTexture(ResourceManager.parsePath(of(texturePath), "/" + MODID + "/textures", "png"))));
         this.textures.clear();
         this.textures.putAll(textures);
         cuboids.clear();

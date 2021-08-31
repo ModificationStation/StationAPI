@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.template.item;
 
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.client.texture.binder.AnimatedTextureBinder;
@@ -20,7 +21,7 @@ public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider {
 
     @Override
     default Atlas getAtlas() {
-        return ExpandableAtlas.STATION_GUI_ITEMS;
+        return Atlases.getStationGuiItems();
     }
 
     default Atlas.Texture setTexture(String path) {

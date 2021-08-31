@@ -16,24 +16,18 @@ import java.io.*;
 import java.util.*;
 import java.util.function.*;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
-
 public class ExpandableAtlas extends Atlas {
 
     private static final Map<String, ExpandableAtlas> PATH_TO_ATLAS = new HashMap<>();
 
-    public static final ExpandableAtlas
-            STATION_TERRAIN = new ExpandableAtlas(Identifier.of(MODID, "terrain"), SquareAtlas.TERRAIN).initTessellator(),
-            STATION_GUI_ITEMS = new ExpandableAtlas(Identifier.of(MODID, "gui_items"), SquareAtlas.GUI_ITEMS);
-
-    private final Map<String, Texture> textureCache = new HashMap<>();
+    protected final Map<String, Texture> textureCache = new HashMap<>();
 
     public ExpandableAtlas(final Identifier identifier) {
-        super("/assets/stationapi/atlases/" + identifier, 0);
+        super("/assets/stationapi/atlases/" + identifier, 0, false);
     }
 
     public ExpandableAtlas(final Identifier identifier, final Atlas parent) {
-        super("/assets/stationapi/atlases/" + identifier, 0, parent);
+        super("/assets/stationapi/atlases/" + identifier, 0, false, parent);
     }
 
     @Override
@@ -130,7 +124,7 @@ public class ExpandableAtlas extends Atlas {
     }
 
     public static ExpandableAtlas getByPath(String spritesheet) {
-        return PATH_TO_ATLAS == null ? null : PATH_TO_ATLAS.get(spritesheet);
+        return PATH_TO_ATLAS.get(spritesheet);
     }
 
     public class FileTexture extends Texture {

@@ -27,24 +27,27 @@ public abstract class Atlas {
     public final String spritesheet;
     protected final Atlas parent;
     protected int size;
+    public final boolean fixedSize;
     protected final List<Texture> textures = new CopyOnWriteArrayList<>();
     private Tessellator tessellator;
     protected BufferedImage imageCache;
 
-    public Atlas(final String spritesheet, final int size) {
-        this(spritesheet, size, null);
+    public Atlas(final String spritesheet, final int size, final boolean fixedSize) {
+        this(spritesheet, size, fixedSize, null);
     }
 
-    public Atlas(final String spritesheet, final int size, final Atlas parent) {
+    public Atlas(final String spritesheet, final int size, final boolean fixedSize, final Atlas parent) {
         this.spritesheet = spritesheet;
-        this.parent = parent;
-        if (parent != null) {
-            if (parent instanceof ExpandableAtlas)
-                throw new UnsupportedOperationException("Parent atlas can't be expandable!");
-            else
-                this.size = parent.size + size;
-        } else
+        if (parent == null)
             this.size = size;
+        else {
+            if (parent.fixedSize)
+                this.size = parent.size + size;
+            else
+                throw new UnsupportedOperationException("Parent atlas can't have dynamic size!");
+        }
+        this.fixedSize = fixedSize;
+        this.parent = parent;
         atlases.add(this);
         init();
     }
@@ -63,7 +66,7 @@ public abstract class Atlas {
         imageCache = null;
     }
 
-    final <E extends Atlas> E setTessellator(Tessellator tessellator) {
+    public final <E extends Atlas> E setTessellator(Tessellator tessellator) {
         if (this.tessellator == null) {
             this.tessellator = tessellator;
             //noinspection unchecked

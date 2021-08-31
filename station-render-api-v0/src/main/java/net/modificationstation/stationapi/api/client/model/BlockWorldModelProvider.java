@@ -6,7 +6,7 @@ import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.Vec3f;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-import net.modificationstation.stationapi.api.client.texture.atlas.JsonModelAtlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.impl.client.texture.StationBlockRendererProvider;
 import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
 
@@ -23,9 +23,9 @@ public interface BlockWorldModelProvider extends BlockWithWorldRenderer {
     default void renderWorld(BlockRenderer blockRenderer, BlockView blockView, int x, int y, int z) {
         JsonModel model = getCustomWorldModel(blockView, x, y, z);
         if (model != null) {
-            Atlas atlas = JsonModelAtlas.STATION_JSON_MODELS;
+            Atlas atlas = Atlases.getStationJsonModels();
             TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
-            Tessellator tessellator = JsonModelAtlas.STATION_JSON_MODELS.getTessellator();
+            Tessellator tessellator = Atlases.getStationJsonModels().getTessellator();
             if (!((TessellatorAccessor) tessellator).getDrawing()) {
                 ((StationBlockRendererProvider) blockRenderer).getStationBlockRenderer().activeAtlases.add(atlas);
                 tessellator.start();

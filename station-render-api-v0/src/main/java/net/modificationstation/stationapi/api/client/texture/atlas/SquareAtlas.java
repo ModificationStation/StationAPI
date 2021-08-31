@@ -1,21 +1,15 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
-import net.minecraft.client.render.Tessellator;
-
 import java.awt.image.*;
 
 public class SquareAtlas extends Atlas {
 
-    public static final SquareAtlas
-            TERRAIN = new SquareAtlas("/terrain.png", 16).setTessellator(Tessellator.INSTANCE),
-            GUI_ITEMS = new SquareAtlas("/gui/items.png", 16);
-
     public SquareAtlas(final String spritesheet, final int sizeSquareRoot) {
-        super(spritesheet, sizeSquareRoot * sizeSquareRoot);
+        super(spritesheet, sizeSquareRoot * sizeSquareRoot, true);
     }
 
     public SquareAtlas(final String spritesheet, final int sizeSquareRoot, final Atlas parent) {
-        super(spritesheet, sizeSquareRoot * sizeSquareRoot, parent);
+        super(spritesheet, sizeSquareRoot * sizeSquareRoot, true, parent);
     }
 
     @Override

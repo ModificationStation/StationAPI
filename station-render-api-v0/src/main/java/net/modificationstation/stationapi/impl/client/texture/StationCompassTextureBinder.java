@@ -6,7 +6,7 @@ import net.minecraft.client.resource.TexturePack;
 import net.minecraft.item.ItemBase;
 import net.minecraft.util.Vec3i;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 public class StationCompassTextureBinder extends StationTextureBinder {
@@ -18,7 +18,7 @@ public class StationCompassTextureBinder extends StationTextureBinder {
     private double rotationDelay;
 
     public StationCompassTextureBinder() {
-        super(SquareAtlas.GUI_ITEMS.getTexture(ItemBase.compass.getTexturePosition(0)));
+        super(Atlases.getGuiItems().getTexture(ItemBase.compass.getTexturePosition(0)));
         refreshTextures(minecraft.texturePackManager.texturePack);
     }
 

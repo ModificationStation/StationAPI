@@ -6,8 +6,8 @@ import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.model.ModelRegisterEvent;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
-import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,6 +25,6 @@ public class MixinBlockBase implements CustomAtlasProvider {
 
     @Override
     public Atlas getAtlas() {
-        return SquareAtlas.TERRAIN;
+        return Atlases.getTerrain();
     }
 }

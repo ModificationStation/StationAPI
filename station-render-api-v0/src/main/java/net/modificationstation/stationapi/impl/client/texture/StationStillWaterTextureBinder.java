@@ -4,7 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
-import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 public class StationStillWaterTextureBinder extends StationTextureBinder {
@@ -15,7 +15,7 @@ public class StationStillWaterTextureBinder extends StationTextureBinder {
     protected float[] field_2569;
 
     public StationStillWaterTextureBinder() {
-        super(SquareAtlas.TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture));
+        super(Atlases.getTerrain().getTexture(BlockBase.FLOWING_WATER.texture));
         //noinspection deprecation
         refreshTextures(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }

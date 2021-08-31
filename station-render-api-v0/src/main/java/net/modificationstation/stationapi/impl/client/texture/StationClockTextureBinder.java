@@ -6,7 +6,7 @@ import net.minecraft.client.resource.TexturePack;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-import net.modificationstation.stationapi.api.client.texture.atlas.SquareAtlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 import java.awt.image.*;
@@ -21,7 +21,7 @@ public class StationClockTextureBinder extends StationTextureBinder {
     private double rotationDelay;
 
     public StationClockTextureBinder() {
-        super(SquareAtlas.GUI_ITEMS.getTexture(ItemBase.clock.getTexturePosition(0)));
+        super(Atlases.getGuiItems().getTexture(ItemBase.clock.getTexturePosition(0)));
         refreshTextures(minecraft.texturePackManager.texturePack);
     }
 
