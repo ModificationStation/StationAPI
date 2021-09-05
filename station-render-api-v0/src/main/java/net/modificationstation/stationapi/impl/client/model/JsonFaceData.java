@@ -1,18 +1,33 @@
 package net.modificationstation.stationapi.impl.client.model;
 
+import com.google.gson.annotations.SerializedName;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 
 import java.awt.image.*;
+import java.util.stream.*;
 
 @RequiredArgsConstructor
 public class JsonFaceData {
 
-    public final String texture;
-    double[] uv;
-    private transient double[] adjustedUVs;
+    @SerializedName("uv")
+    double[] localUVs;
+    @Getter
+    private transient double[] uv;
+    @Getter
+    int rotation = 0;
+    @SerializedName("texture")
+    public final String textureId;
+    @Getter
+    private transient Atlas.Texture texture;
 
-    public void updateUVs(Atlas.Texture texture) {
+    public void postprocess(Atlas.Texture texture) {
+        this.texture = texture;
+        IntStream.range(0, localUVs.length).forEach(i -> localUVs[i] /= 16);
+    }
+
+    public void updateUVs() {
         BufferedImage atlasImage = texture.getAtlas().getImage();
         int
                 textureX = texture.getX(),
@@ -21,15 +36,11 @@ public class JsonFaceData {
                 textureHeight = texture.getHeight(),
                 atlasWidth = atlasImage.getWidth(),
                 atlasHeight = atlasImage.getHeight();
-        double[] adjustedUVs = new double[4];
-        adjustedUVs[0] = (textureX + (uv[0] / 16) * textureWidth) / atlasWidth;
-        adjustedUVs[1] = (textureY + (uv[1] / 16) * textureHeight) / atlasHeight;
-        adjustedUVs[2] = (textureX + (uv[2] / 16) * textureWidth) / atlasWidth;
-        adjustedUVs[3] = (textureY + (uv[3] / 16) * textureHeight) / atlasHeight;
-        this.adjustedUVs = adjustedUVs;
-    }
-
-    public double[] getUv() {
-        return adjustedUVs;
+        double[] uv = new double[localUVs.length];
+        for (int i = 0; i < localUVs.length; i+=2) {
+            uv[i] = (textureX + localUVs[i] * textureWidth) / atlasWidth;
+            uv[i + 1] = (textureY + localUVs[i + 1] * textureHeight) / atlasHeight;
+        }
+        this.uv = uv;
     }
 }

@@ -371,6 +371,15 @@ tasks.build.dependsOn(tasks.javadocJar)
 publishing {
 	repositories {
 		mavenLocal()
+		if (project.hasProperty("glass_maven_username")) {
+			maven {
+				url = "https://maven.glass-launcher.net/repo/"
+				credentials {
+					username "${glass_maven_username}"
+					password "${glass_maven_password}"
+				}
+			}
+		}
 	}
 
 	publications {

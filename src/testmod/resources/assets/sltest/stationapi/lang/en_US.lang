@@ -7,3 +7,4 @@ item.testPickaxe.name=Test Pickaxe
 tile.farlands_block.name=FarLands Block
 item.nbt_item.name=NBT Item
 tile.freezer.name=Freezer
+tile.altar.name=Altar

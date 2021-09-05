@@ -77,7 +77,7 @@ public class Mixinclass_556 {
         Atlas atlas = method_1862_customLocals_atlas.peek();
         Atlas.Texture texture = atlas == null ? null : atlas.getTexture(method_1862_capturedLocals_texturePosition.peek());
         method_1862_customLocals_texture.push(texture);
-        return texture == null ? originalStartU : texture.getStartU();
+        return texture == null ? originalStartU : (float) texture.getStartU();
     }
 
     @ModifyVariable(
@@ -87,7 +87,7 @@ public class Mixinclass_556 {
     )
     private float modifyEndU(float originalEndU) {
         Atlas.Texture texture = method_1862_customLocals_texture.peek();
-        return texture == null ? originalEndU : texture.getEndU();
+        return texture == null ? originalEndU : (float) texture.getEndU();
     }
 
     @ModifyVariable(
@@ -97,7 +97,7 @@ public class Mixinclass_556 {
     )
     private float modifyStartV(float originalStartV) {
         Atlas.Texture texture = method_1862_customLocals_texture.peek();
-        return texture == null ? originalStartV : texture.getStartV();
+        return texture == null ? originalStartV : (float) texture.getStartV();
     }
 
     @ModifyVariable(
@@ -107,7 +107,7 @@ public class Mixinclass_556 {
     )
     private float modifyEndV(float originalEndV) {
         Atlas.Texture texture = method_1862_customLocals_texture.peek();
-        return texture == null ? originalEndV : texture.getEndV();
+        return texture == null ? originalEndV : (float) texture.getEndV();
     }
 
     @ModifyConstant(

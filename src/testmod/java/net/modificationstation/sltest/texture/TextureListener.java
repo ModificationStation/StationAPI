@@ -5,6 +5,7 @@ import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.block.BlockListener;
 import net.modificationstation.sltest.item.ItemListener;
+import net.modificationstation.stationapi.api.block.BlockFaces;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.model.JsonModel;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
@@ -28,7 +29,16 @@ public class TextureListener {
 //        ItemListener.testPickaxe.setTexturePosition(TextureFactoryOld.INSTANCE.addAnimatedTexture(TextureRegistryOld.getRegistry("GUI_ITEMS"), "/assets/sltest/textures/items/testPickaxe.png", 4));
 //        ItemListener.testNBTItem.setTexturePosition(TextureFactory.INSTANCE.addTexture(TextureRegistry.getRegistry("GUI_ITEMS"), "/assets/sltest/textures/items/nbtItem.png"));
 
-        BlockListener.testBlock.texture = Atlases.getStationTerrain().addTexture("/assets/sltest/textures/blocks/testBlock.png").index;
+        ExpandableAtlas terrain = Atlases.getStationTerrain();
+
+        BlockListener.testBlock.texture = terrain.addTexture("/assets/sltest/textures/blocks/testBlock.png").index;
+
+        altarTextures[BlockFaces.DOWN.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_bottom.png").index;
+        altarTextures[BlockFaces.UP.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_top.png").index;
+        altarTextures[BlockFaces.EAST.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_east.png").index;
+        altarTextures[BlockFaces.WEST.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_west.png").index;
+        altarTextures[BlockFaces.NORTH.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_north.png").index;
+        altarTextures[BlockFaces.SOUTH.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_south.png").index;
 
         ItemListener.testNBTItem.setTexture("/assets/sltest/textures/items/nbtItem.png");
         ItemListener.testItem.setTexture("/assets/sltest/textures/items/highres.png");
@@ -50,6 +60,8 @@ public class TextureListener {
 
         farlandsBlockModel = new JsonModel(of(MODID, "farlandsBlock"));
     }
+
+    public static final int[] altarTextures = new int[6];
 
     public static ExpandableAtlas TEST_ATLAS;
 

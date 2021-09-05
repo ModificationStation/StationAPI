@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.client.texture.atlas;
 
 import net.modificationstation.stationapi.impl.client.texture.TextureInit;
 
-public class Atlases {
+public final class Atlases {
 
     public static SquareAtlas getTerrain() {
         return TextureInit.TERRAIN;

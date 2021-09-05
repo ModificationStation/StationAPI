@@ -8,6 +8,7 @@
     "MixinItemBase"
   ],
   "client": [
+    "client.BlockRendererAccessor",
     "client.DiggingAccessor",
     "client.EntityRendererAccessor",
     "client.MixinBlockRenderer",
@@ -22,8 +23,7 @@
     "client.MixinZippedTexturePack",
     "client.ParticleBaseAccessor",
     "client.TessellatorAccessor",
-    "client.TextureManagerAccessor",
-    "client.TileRendererAccessor"
+    "client.TextureManagerAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

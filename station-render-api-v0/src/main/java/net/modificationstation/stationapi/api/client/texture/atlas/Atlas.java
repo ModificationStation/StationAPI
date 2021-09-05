@@ -146,7 +146,7 @@ public abstract class Atlas {
                 x, y,
                 width, height;
         @Getter
-        protected float
+        protected double
                 startU, endU,
                 startV, endV;
 
@@ -168,10 +168,10 @@ public abstract class Atlas {
             int
                     atlasWidth = image.getWidth(),
                     atlasHeight = image.getHeight();
-            this.startU = (float) x / atlasWidth;
-            this.endU = (float) (x + width) / atlasWidth;
-            this.startV = (float) y / atlasHeight;
-            this.endV = (float) (y + height) / atlasHeight;
+            this.startU = (double) x / atlasWidth;
+            this.endU = (double) (x + width) / atlasWidth;
+            this.startV = (double) y / atlasHeight;
+            this.endV = (double) (y + height) / atlasHeight;
         }
     }
 }

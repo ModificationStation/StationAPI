@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(BlockRenderer.class)
-public interface TileRendererAccessor {
+public interface BlockRendererAccessor {
 
     @Accessor
     float getField_56();
@@ -53,19 +53,37 @@ public interface TileRendererAccessor {
     int getEastFaceRotation();
 
     @Accessor
+    void setEastFaceRotation(int eastFaceRotation);
+
+    @Accessor
     int getWestFaceRotation();
+
+    @Accessor
+    void setWestFaceRotation(int westFaceRotation);
 
     @Accessor
     int getSouthFaceRotation();
 
     @Accessor
+    void setSouthFaceRotation(int southFaceRotation);
+
+    @Accessor
     int getNorthFaceRotation();
+
+    @Accessor
+    void setNorthFaceRotation(int northFaceRotation);
 
     @Accessor
     int getTopFaceRotation();
 
     @Accessor
+    void setTopFaceRotation(int topFaceRotation);
+
+    @Accessor
     int getBottomFaceRotation();
+
+    @Accessor
+    void setBottomFaceRotation(int bottomFaceRotation);
 
     @Accessor
     boolean getField_92();

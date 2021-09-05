@@ -1,16 +1,15 @@
 package net.modificationstation.stationapi.api.client.model;
 
-import com.google.common.primitives.Doubles;
-import com.google.common.primitives.Floats;
 import com.google.gson.Gson;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.QuadPoint;
+import net.modificationstation.stationapi.api.block.BlockFaces;
 import net.modificationstation.stationapi.api.client.registry.JsonModelRegistry;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.impl.client.model.FaceQuadPoint;
 import net.modificationstation.stationapi.impl.client.model.JsonCuboidData;
 import net.modificationstation.stationapi.impl.client.model.JsonFaceData;
 import net.modificationstation.stationapi.impl.client.model.JsonFacesData;
@@ -31,7 +30,7 @@ public class JsonModel {
     public final String modelPath;
     private final Map<String, Atlas.Texture> textures = new HashMap<>();
     private final List<JsonCuboidData> cuboids = new ArrayList<>();
-    public final List<QuadPoint> quads = new ArrayList<>();
+    public final List<FaceQuadPoint> quadPoints = new ArrayList<>();
 
     public JsonModel(final Identifier id) {
         JsonModelRegistry.INSTANCE.register(id, this);
@@ -50,12 +49,20 @@ public class JsonModel {
         this.textures.putAll(textures);
         cuboids.clear();
         cuboids.addAll(data.elements);
-        cuboids.forEach(JsonCuboidData::postprocess);
+        cuboids.forEach(jsonCuboidData -> {
+            jsonCuboidData.postprocess();
+            jsonCuboidData.faces.down.postprocess(this.textures.get(jsonCuboidData.faces.down.textureId));
+            jsonCuboidData.faces.up.postprocess(this.textures.get(jsonCuboidData.faces.up.textureId));
+            jsonCuboidData.faces.east.postprocess(this.textures.get(jsonCuboidData.faces.east.textureId));
+            jsonCuboidData.faces.west.postprocess(this.textures.get(jsonCuboidData.faces.west.textureId));
+            jsonCuboidData.faces.north.postprocess(this.textures.get(jsonCuboidData.faces.north.textureId));
+            jsonCuboidData.faces.south.postprocess(this.textures.get(jsonCuboidData.faces.south.textureId));
+        });
         updateUVs();
     }
 
     public void updateUVs() {
-        quads.clear();
+        quadPoints.clear();
 //        cuboids.forEach(jsonCuboidData -> {
 //            JsonFacesData jsonFacesData = jsonCuboidData.faces;
 //            JsonFaceData jsonFaceData;
@@ -85,49 +92,49 @@ public class JsonModel {
                     zTo = (float) to[2];
             JsonFacesData jsonFacesData = cuboid.faces;
             JsonFaceData jsonFaceData;
-            float[] uv;
+            double[] uv;
             jsonFaceData = jsonFacesData.down;
-            jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
-            uv = Floats.toArray(Doubles.asList(jsonFaceData.getUv()));
-            quads.add(new QuadPoint(xFrom, yFrom, zTo, uv[0], uv[3]));
-            quads.add(new QuadPoint(xFrom, yFrom, zFrom, uv[0], uv[1]));
-            quads.add(new QuadPoint(xTo, yFrom, zFrom, uv[2], uv[1]));
-            quads.add(new QuadPoint(xTo, yFrom, zTo, uv[2], uv[3]));
+            jsonFaceData.updateUVs();
+            uv = jsonFaceData.getUv();
+            quadPoints.add(FaceQuadPoint.get(xFrom, yFrom, zTo, uv[4], uv[7], BlockFaces.DOWN));
+            quadPoints.add(FaceQuadPoint.get(xFrom, yFrom, zFrom, uv[0], uv[1], BlockFaces.DOWN));
+            quadPoints.add(FaceQuadPoint.get(xTo, yFrom, zFrom, uv[6], uv[5], BlockFaces.DOWN));
+            quadPoints.add(FaceQuadPoint.get(xTo, yFrom, zTo, uv[2], uv[3], BlockFaces.DOWN));
             jsonFaceData = jsonFacesData.up;
-            jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
-            uv = Floats.toArray(Doubles.asList(jsonFaceData.getUv()));
-            quads.add(new QuadPoint(xTo, yTo, zTo, uv[2], uv[3]));
-            quads.add(new QuadPoint(xTo, yTo, zFrom, uv[2], uv[1]));
-            quads.add(new QuadPoint(xFrom, yTo, zFrom, uv[0], uv[1]));
-            quads.add(new QuadPoint(xFrom, yTo, zTo, uv[0], uv[3]));
+            jsonFaceData.updateUVs();
+            uv = jsonFaceData.getUv();
+            quadPoints.add(FaceQuadPoint.get(xTo, yTo, zTo, uv[2], uv[3], BlockFaces.UP));
+            quadPoints.add(FaceQuadPoint.get(xTo, yTo, zFrom, uv[6], uv[5], BlockFaces.UP));
+            quadPoints.add(FaceQuadPoint.get(xFrom, yTo, zFrom, uv[0], uv[1], BlockFaces.UP));
+            quadPoints.add(FaceQuadPoint.get(xFrom, yTo, zTo, uv[4], uv[7], BlockFaces.UP));
             jsonFaceData = jsonFacesData.east;
-            jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
-            uv = Floats.toArray(Doubles.asList(jsonFaceData.getUv()));
-            quads.add(new QuadPoint(xFrom, yTo, zFrom, uv[2], uv[1]));
-            quads.add(new QuadPoint(xTo, yTo, zFrom, uv[0], uv[1]));
-            quads.add(new QuadPoint(xTo, yFrom, zFrom, uv[0], uv[3]));
-            quads.add(new QuadPoint(xFrom, yFrom, zFrom, uv[2], uv[3]));
+            jsonFaceData.updateUVs();
+            uv = jsonFaceData.getUv();
+            quadPoints.add(FaceQuadPoint.get(xFrom, yTo, zFrom, uv[2], uv[1], BlockFaces.EAST));
+            quadPoints.add(FaceQuadPoint.get(xTo, yTo, zFrom, uv[0], uv[1], BlockFaces.EAST));
+            quadPoints.add(FaceQuadPoint.get(xTo, yFrom, zFrom, uv[0], uv[3], BlockFaces.EAST));
+            quadPoints.add(FaceQuadPoint.get(xFrom, yFrom, zFrom, uv[2], uv[3], BlockFaces.EAST));
             jsonFaceData = jsonFacesData.west;
-            jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
-            uv = Floats.toArray(Doubles.asList(jsonFaceData.getUv()));
-            quads.add(new QuadPoint(xFrom, yTo, zTo, uv[0], uv[1]));
-            quads.add(new QuadPoint(xFrom, yFrom, zTo, uv[0], uv[3]));
-            quads.add(new QuadPoint(xTo, yFrom, zTo, uv[2], uv[3]));
-            quads.add(new QuadPoint(xTo, yTo, zTo, uv[2], uv[1]));
+            jsonFaceData.updateUVs();
+            uv = jsonFaceData.getUv();
+            quadPoints.add(FaceQuadPoint.get(xFrom, yTo, zTo, uv[0], uv[1], BlockFaces.WEST));
+            quadPoints.add(FaceQuadPoint.get(xFrom, yFrom, zTo, uv[0], uv[3], BlockFaces.WEST));
+            quadPoints.add(FaceQuadPoint.get(xTo, yFrom, zTo, uv[2], uv[3], BlockFaces.WEST));
+            quadPoints.add(FaceQuadPoint.get(xTo, yTo, zTo, uv[2], uv[1], BlockFaces.WEST));
             jsonFaceData = jsonFacesData.north;
-            jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
-            uv = Floats.toArray(Doubles.asList(jsonFaceData.getUv()));
-            quads.add(new QuadPoint(xFrom, yTo, zTo, uv[2], uv[1]));
-            quads.add(new QuadPoint(xFrom, yTo, zFrom, uv[0], uv[1]));
-            quads.add(new QuadPoint(xFrom, yFrom, zFrom, uv[0], uv[3]));
-            quads.add(new QuadPoint(xFrom, yFrom, zTo, uv[2], uv[3]));
+            jsonFaceData.updateUVs();
+            uv = jsonFaceData.getUv();
+            quadPoints.add(FaceQuadPoint.get(xFrom, yTo, zTo, uv[2], uv[1], BlockFaces.NORTH));
+            quadPoints.add(FaceQuadPoint.get(xFrom, yTo, zFrom, uv[0], uv[1], BlockFaces.NORTH));
+            quadPoints.add(FaceQuadPoint.get(xFrom, yFrom, zFrom, uv[0], uv[3], BlockFaces.NORTH));
+            quadPoints.add(FaceQuadPoint.get(xFrom, yFrom, zTo, uv[2], uv[3], BlockFaces.NORTH));
             jsonFaceData = jsonFacesData.south;
-            jsonFaceData.updateUVs(textures.get(jsonFaceData.texture));
-            uv = Floats.toArray(Doubles.asList(jsonFaceData.getUv()));
-            quads.add(new QuadPoint(xTo, yFrom, zTo, uv[0], uv[3]));
-            quads.add(new QuadPoint(xTo, yFrom, zFrom, uv[2], uv[3]));
-            quads.add(new QuadPoint(xTo, yTo, zFrom, uv[2], uv[1]));
-            quads.add(new QuadPoint(xTo, yTo, zTo, uv[0], uv[1]));
+            jsonFaceData.updateUVs();
+            uv = jsonFaceData.getUv();
+            quadPoints.add(FaceQuadPoint.get(xTo, yFrom, zTo, uv[0], uv[3], BlockFaces.SOUTH));
+            quadPoints.add(FaceQuadPoint.get(xTo, yFrom, zFrom, uv[2], uv[3], BlockFaces.SOUTH));
+            quadPoints.add(FaceQuadPoint.get(xTo, yTo, zFrom, uv[2], uv[1], BlockFaces.SOUTH));
+            quadPoints.add(FaceQuadPoint.get(xTo, yTo, zTo, uv[0], uv[1], BlockFaces.SOUTH));
         });
     }
 

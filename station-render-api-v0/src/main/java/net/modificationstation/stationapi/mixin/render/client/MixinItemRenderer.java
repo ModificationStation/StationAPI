@@ -102,7 +102,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     )
     private float modifyStartU(float originalStartU) {
         Atlas.Texture texture = render_customLocals_texture.peek();
-        return texture == null ? originalStartU : texture.getStartU();
+        return texture == null ? originalStartU : (float) texture.getStartU();
     }
 
     @ModifyVariable(
@@ -115,7 +115,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     )
     private float modifyEndU(float originalEndU) {
         Atlas.Texture texture = render_customLocals_texture.peek();
-        return texture == null ? originalEndU : texture.getEndU();
+        return texture == null ? originalEndU : (float) texture.getEndU();
     }
 
     @ModifyVariable(
@@ -128,7 +128,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     )
     private float modifyStartV(float originalStartV) {
         Atlas.Texture texture = render_customLocals_texture.peek();
-        return texture == null ? originalStartV : texture.getStartV();
+        return texture == null ? originalStartV : (float) texture.getStartV();
     }
 
     @ModifyVariable(
@@ -138,7 +138,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     )
     private float modifyEndV(float originalEndV) {
         Atlas.Texture texture = render_customLocals_texture.pop();
-        return texture == null ? originalEndV : texture.getEndV();
+        return texture == null ? originalEndV : (float) texture.getEndV();
     }
 
     @Inject(

@@ -6,5 +6,9 @@ public enum BlockFaces {
     EAST,
     WEST,
     NORTH,
-    SOUTH
+    SOUTH;
+
+    public BlockFaces getOpposite() {
+        return values()[ordinal() + ordinal() % 2 == 0 ? 1 : -1];
+    }
 }
