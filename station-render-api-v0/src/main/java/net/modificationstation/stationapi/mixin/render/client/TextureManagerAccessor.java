@@ -35,4 +35,7 @@ public interface TextureManagerAccessor {
 
     @Invoker
     BufferedImage invokeReadImage(InputStream var1);
+
+    @Accessor
+    BufferedImage getMissingTexImage();
 }

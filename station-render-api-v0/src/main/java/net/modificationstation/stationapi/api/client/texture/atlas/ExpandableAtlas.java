@@ -44,7 +44,8 @@ public class ExpandableAtlas extends Atlas {
     public InputStream getStream() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
-            ImageIO.write(imageCache, "png", outputStream);
+            //noinspection deprecation
+            ImageIO.write(imageCache == null ? ((TextureManagerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager).getMissingTexImage() : imageCache, "png", outputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
