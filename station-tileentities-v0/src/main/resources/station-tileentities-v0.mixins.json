@@ -7,7 +7,7 @@
     "MixinTileEntityBase"
   ],
   "client": [
-    "MixinTileEntityRenderDispatcher"
+    "client.MixinTileEntityRenderDispatcher"
   ],
   "injectors": {
     "defaultRequire": 1
