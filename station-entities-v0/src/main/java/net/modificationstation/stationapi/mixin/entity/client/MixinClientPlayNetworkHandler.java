@@ -29,7 +29,7 @@ public class MixinClientPlayNetworkHandler {
     private double capturedY;
     private double capturedZ;
 
-    @Inject(method = "onEntitySpawn(Lnet/minecraft/packet/play/EntitySpawn0x17S2CPacket;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/packet/play/EntitySpawnS2C;z:I", opcode = Opcodes.GETFIELD, shift = At.Shift.BY, by = 5), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "onEntitySpawn(Lnet/minecraft/packet/play/EntitySpawn0x17S2CPacket;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/packet/play/EntitySpawn0x17S2CPacket;z:I", opcode = Opcodes.GETFIELD, shift = At.Shift.BY, by = 5), locals = LocalCapture.CAPTURE_FAILHARD)
     private void captureCoords(EntitySpawn0x17S2CPacket packet, CallbackInfo ci, double var2, double var4, double var6) {
         capturedX = var2;
         capturedY = var4;
