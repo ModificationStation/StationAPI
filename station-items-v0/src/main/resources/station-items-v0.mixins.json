@@ -20,7 +20,8 @@
     "client.MixinContainerBase",
     "client.MixinGameRenderer",
     "client.MixinItemRenderer",
-    "client.MixinRemoteClientInteractionManager"
+    "client.MixinRemoteClientInteractionManager",
+    "client.DrawableHelperInvoker"
   ],
   "injectors": {
     "defaultRequire": 1
