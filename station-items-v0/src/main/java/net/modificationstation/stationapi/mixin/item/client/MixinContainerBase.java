@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-// TODO: make this fire an event and make an implementation for CustomTooltipProvider instead.
 // TODO: make this use translation keys instead and automatically add lines depending on the translated text's width.
 @Mixin(ContainerBase.class)
 public class MixinContainerBase extends ScreenBase {
