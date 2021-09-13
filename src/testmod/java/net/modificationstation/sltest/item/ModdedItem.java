@@ -5,6 +5,7 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.util.hit.HitType;
 import net.modificationstation.sltest.SLTest;
+import net.modificationstation.stationapi.api.client.gui.CustomTooltipProvider;
 import net.modificationstation.stationapi.api.item.CustomReachProvider;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
@@ -13,7 +14,7 @@ import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
 
 import java.util.*;
 
-public class ModdedItem extends TemplateItemBase implements CustomReachProvider {
+public class ModdedItem extends TemplateItemBase implements CustomReachProvider, CustomTooltipProvider {
     public ModdedItem(Identifier id) {
         super(id);
     }
@@ -40,5 +41,10 @@ public class ModdedItem extends TemplateItemBase implements CustomReachProvider 
             default:
                 return currentReach;
         }
+    }
+
+    @Override
+    public String[] getTooltip(ItemInstance itemInstance, String originalTooltip) {
+        return new String[]{originalTooltip, "This has 50 block reach for tiles!"};
     }
 }
