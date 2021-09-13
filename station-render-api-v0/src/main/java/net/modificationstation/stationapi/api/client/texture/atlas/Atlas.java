@@ -4,7 +4,9 @@ import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
+import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.binder.AnimatedTextureBinder;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
@@ -16,7 +18,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
 
-public abstract class Atlas {
+public abstract class Atlas implements TexturePackDependent {
 
     private static final Set<Atlas> atlases = new HashSet<>();
 
@@ -62,7 +64,8 @@ public abstract class Atlas {
         return imageCache == null ? imageCache = TextureHelper.getTexture(spritesheet) : imageCache;
     }
 
-    public void refreshTextures() {
+    @Override
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
         imageCache = null;
     }
 

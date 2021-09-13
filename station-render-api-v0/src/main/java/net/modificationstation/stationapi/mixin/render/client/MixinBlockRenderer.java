@@ -7,8 +7,8 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
-import net.modificationstation.stationapi.api.client.model.BlockWithInventoryRenderer;
-import net.modificationstation.stationapi.api.client.model.BlockWithWorldRenderer;
+import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
+import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldRenderer;
 import net.modificationstation.stationapi.impl.client.texture.StationBlockRenderer;
 import net.modificationstation.stationapi.impl.client.texture.StationBlockRendererProvider;
 import org.spongepowered.asm.mixin.Mixin;
@@ -831,7 +831,10 @@ public class MixinBlockRenderer implements StationBlockRendererProvider {
 
     @Inject(
             method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
-            at = @At("HEAD"),
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/block/BlockBase;getRenderType()I"
+            ),
             cancellable = true
     )
     private void onRenderInInventory(BlockBase arg, int i, float f, CallbackInfo ci) {

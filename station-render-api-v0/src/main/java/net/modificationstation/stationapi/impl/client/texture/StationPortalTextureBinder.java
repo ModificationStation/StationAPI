@@ -17,11 +17,11 @@ public class StationPortalTextureBinder extends StationTextureBinder {
     public StationPortalTextureBinder() {
         super(Atlases.getTerrain().getTexture(BlockBase.PORTAL.texture));
         //noinspection deprecation
-        refreshTextures(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
+        reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
     @Override
-    public void refreshTextures(TexturePack newTexturePack) {
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
         int
                 textureWidth = getStaticReference().getWidth(),
                 textureHeight = getStaticReference().getHeight();

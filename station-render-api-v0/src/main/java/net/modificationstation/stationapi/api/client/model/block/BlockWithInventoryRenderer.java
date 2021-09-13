@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.client.model;
+package net.modificationstation.stationapi.api.client.model.block;
 
 import net.minecraft.client.render.block.BlockRenderer;
 

@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.client.texture.atlas;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.binder.AnimatedTextureBinder;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
@@ -110,12 +111,12 @@ public class ExpandableAtlas extends Atlas {
     }
 
     @Override
-    public void refreshTextures() {
-        super.refreshTextures();
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
+        super.reloadFromTexturePack(newTexturePack);
         textures.forEach(texture -> {
             texture.x = imageCache == null ? 0 : imageCache.getWidth();
             texture.y = 0;
-            BufferedImage image = TextureHelper.getTexture(((FileTexture) texture).path);
+            BufferedImage image = TextureHelper.readTextureStream(newTexturePack.getResourceAsStream(((FileTexture) texture).path));
             texture.width = image.getWidth();
             texture.height = image.getHeight();
             drawTextureOnSpritesheet(image);

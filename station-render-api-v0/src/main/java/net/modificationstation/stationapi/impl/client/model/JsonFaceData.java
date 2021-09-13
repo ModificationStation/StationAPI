@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.impl.client.model;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import net.modificationstation.stationapi.api.block.Direction;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 
 import java.awt.image.*;
@@ -12,7 +13,7 @@ import java.util.stream.*;
 public class JsonFaceData {
 
     @SerializedName("uv")
-    double[] localUVs;
+    double[] localUVs = new double[] {0, 0, 16, 16};
     @Getter
     private transient double[] uv;
     @Getter
@@ -21,6 +22,8 @@ public class JsonFaceData {
     public final String textureId;
     @Getter
     private transient Atlas.Texture texture;
+    @Getter
+    private Direction cullface = null;
 
     public void postprocess(Atlas.Texture texture) {
         this.texture = texture;

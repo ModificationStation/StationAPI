@@ -22,11 +22,11 @@ public class StationClockTextureBinder extends StationTextureBinder {
 
     public StationClockTextureBinder() {
         super(Atlases.getGuiItems().getTexture(ItemBase.clock.getTexturePosition(0)));
-        refreshTextures(minecraft.texturePackManager.texturePack);
+        reloadFromTexturePack(minecraft.texturePackManager.texturePack);
     }
 
     @Override
-    public void refreshTextures(TexturePack newTexturePack) {
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
         Atlas.Texture staticReference = getStaticReference();
         int
                 textureWidth = staticReference.getWidth(),

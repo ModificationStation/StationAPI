@@ -27,14 +27,14 @@ public class StationVanillaTextureBinder extends StationTextureBinder {
         this.originalBinder = originalBinder;
         animatedTextureBinder = new AnimatedTextureBinder(getStaticReference(), animationPath, 0);
         //noinspection deprecation
-        refreshTextures(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
+        reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
     @Override
-    public void refreshTextures(TexturePack newTexturePack) {
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
         animationImageAbsent = TextureHelper.getTextureStream(animationPath) == null;
         StationTextureBinder textureBinder = animationImageAbsent ? originalBinder : animatedTextureBinder;
-        textureBinder.refreshTextures(newTexturePack);
+        textureBinder.reloadFromTexturePack(newTexturePack);
         grid = textureBinder.grid;
     }
 

@@ -9,7 +9,7 @@ import java.util.*;
 
 public class StationParticleManager {
 
-    public final Set<Atlas> activeAtlases = new HashSet<>();
+    private final Set<Atlas> activeAtlases = new HashSet<>();
 
     public void checkParticle(ParticleBase particle) {
         if (particle instanceof StationDiggingParticleProvider) {

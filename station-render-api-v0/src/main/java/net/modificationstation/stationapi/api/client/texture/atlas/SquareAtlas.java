@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
+import net.minecraft.client.resource.TexturePack;
+
 import java.awt.image.*;
 
 public class SquareAtlas extends Atlas {
@@ -28,8 +30,8 @@ public class SquareAtlas extends Atlas {
     }
 
     @Override
-    public void refreshTextures() {
-        super.refreshTextures();
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
+        super.reloadFromTexturePack(newTexturePack);
         BufferedImage image = getImage();
         final int
                 sizeSquareRoot = (int) Math.sqrt(getUnitSize()),

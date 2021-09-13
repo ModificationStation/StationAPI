@@ -14,11 +14,11 @@ public class StationFireTextureBinder extends StationTextureBinder {
     public StationFireTextureBinder(int line) {
         super(Atlases.getTerrain().getTexture(BlockBase.FIRE.texture + 16 * line));
         //noinspection deprecation
-        refreshTextures(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
+        reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
     @Override
-    public void refreshTextures(TexturePack newTexturePack) {
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
         int
                 textureWidth = getStaticReference().getWidth(),
                 textureHeight = getStaticReference().getHeight();

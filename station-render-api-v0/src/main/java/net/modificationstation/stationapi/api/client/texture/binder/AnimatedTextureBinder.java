@@ -22,11 +22,11 @@ public class AnimatedTextureBinder extends StationTextureBinder {
         this.animatedTexture = animatedTexture;
         this.animationRate = animationRate;
         //noinspection deprecation
-        refreshTextures(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
+        reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
     @Override
-    public void refreshTextures(TexturePack newTexturePack) {
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
         InputStream stream = newTexturePack.getResourceAsStream(animatedTexture);
         if (stream != null) {
             BufferedImage image = TextureHelper.readTextureStream(stream);

@@ -3,8 +3,9 @@ package net.modificationstation.stationapi.impl.client.texture;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.client.event.texture.TexturePackLoadedEvent;
+import net.modificationstation.stationapi.api.client.registry.ModelRegistry;
+import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-import net.modificationstation.stationapi.api.client.texture.binder.TexturePackDependent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
@@ -24,7 +25,8 @@ public class TextureRefresherImpl {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void texturePackApplied(TexturePackLoadedEvent.After event) {
-        Atlas.getAtlases().forEach(Atlas::refreshTextures);
-        ((TextureManagerAccessor) event.textureManager).getTextureBinders().stream().filter(textureBinder -> textureBinder instanceof TexturePackDependent).forEach(textureBinder -> ((TexturePackDependent) textureBinder).refreshTextures(event.newTexturePack));
+        Atlas.getAtlases().forEach(atlas -> atlas.reloadFromTexturePack(event.newTexturePack));
+        ModelRegistry.INSTANCE.forEach((identifier, model) -> model.reloadFromTexturePack(event.newTexturePack));
+        ((TextureManagerAccessor) event.textureManager).getTextureBinders().stream().filter(textureBinder -> textureBinder instanceof TexturePackDependent).forEach(textureBinder -> ((TexturePackDependent) textureBinder).reloadFromTexturePack(event.newTexturePack));
     }
 }

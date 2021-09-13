@@ -5,9 +5,9 @@ import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.block.BlockListener;
 import net.modificationstation.sltest.item.ItemListener;
-import net.modificationstation.stationapi.api.block.BlockFaces;
+import net.modificationstation.stationapi.api.block.Direction;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
-import net.modificationstation.stationapi.api.client.model.JsonModel;
+import net.modificationstation.stationapi.api.client.model.json.JsonModel;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -33,12 +33,12 @@ public class TextureListener {
 
         BlockListener.testBlock.texture = terrain.addTexture("/assets/sltest/textures/blocks/testBlock.png").index;
 
-        altarTextures[BlockFaces.DOWN.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_bottom.png").index;
-        altarTextures[BlockFaces.UP.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_top.png").index;
-        altarTextures[BlockFaces.EAST.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_east.png").index;
-        altarTextures[BlockFaces.WEST.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_west.png").index;
-        altarTextures[BlockFaces.NORTH.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_north.png").index;
-        altarTextures[BlockFaces.SOUTH.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_south.png").index;
+        altarTextures[Direction.DOWN.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_bottom.png").index;
+        altarTextures[Direction.UP.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_top.png").index;
+        altarTextures[Direction.EAST.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_east.png").index;
+        altarTextures[Direction.WEST.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_west.png").index;
+        altarTextures[Direction.NORTH.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_north.png").index;
+        altarTextures[Direction.SOUTH.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_south.png").index;
 
         ItemListener.testNBTItem.setTexture("/assets/sltest/textures/items/nbtItem.png");
         ItemListener.testItem.setTexture("/assets/sltest/textures/items/highres.png");

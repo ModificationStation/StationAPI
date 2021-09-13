@@ -2,13 +2,24 @@ package net.modificationstation.stationapi.impl.client.model;
 
 import com.google.common.primitives.Doubles;
 import lombok.RequiredArgsConstructor;
+import net.modificationstation.stationapi.api.block.Direction;
+
+import java.util.*;
+
+import static net.modificationstation.stationapi.api.block.Direction.DOWN;
+import static net.modificationstation.stationapi.api.block.Direction.EAST;
+import static net.modificationstation.stationapi.api.block.Direction.NORTH;
+import static net.modificationstation.stationapi.api.block.Direction.SOUTH;
+import static net.modificationstation.stationapi.api.block.Direction.UP;
+import static net.modificationstation.stationapi.api.block.Direction.WEST;
 
 @RequiredArgsConstructor
 public class JsonCuboidData {
 
     public final double[] from;
     public final double[] to;
-    public final JsonFacesData faces;
+//    public final JsonFacesData faces;
+    public final EnumMap<Direction, JsonFaceData> faces;
 
     public void postprocess() {
         Doubles.reverse(from);
@@ -23,23 +34,23 @@ public class JsonCuboidData {
         to[1] /= 16;
         to[2] /= 16;
 
-        faces.down.rotation += 90;
-        faces.up.rotation += 90;
+        faces.get(DOWN).rotation += 90;
+        faces.get(UP).rotation += 90;
 
-        faces.down.rotation = (faces.down.rotation / 90) % 4;
-        faces.up.rotation = (faces.up.rotation / 90) % 4;
-        faces.east.rotation = (faces.east.rotation / 90) % 4;
-        faces.west.rotation = (faces.west.rotation / 90) % 4;
-        faces.north.rotation = (faces.north.rotation / 90) % 4;
-        faces.south.rotation = (faces.south.rotation / 90) % 4;
+        faces.get(DOWN).rotation = (faces.get(DOWN).rotation / 90) % 4;
+        faces.get(UP).rotation = (faces.get(UP).rotation / 90) % 4;
+        faces.get(EAST).rotation = (faces.get(EAST).rotation / 90) % 4;
+        faces.get(WEST).rotation = (faces.get(WEST).rotation / 90) % 4;
+        faces.get(NORTH).rotation = (faces.get(NORTH).rotation / 90) % 4;
+        faces.get(SOUTH).rotation = (faces.get(SOUTH).rotation / 90) % 4;
 
         double
                 tmp,
-                startU1 = faces.down.localUVs[0],
-                startV1 = faces.down.localUVs[1],
-                endU1 = faces.down.localUVs[2],
-                endV1 = faces.down.localUVs[3];
-        if (faces.down.rotation % 2 == 0) {
+                startU1 = faces.get(DOWN).localUVs[0],
+                startV1 = faces.get(DOWN).localUVs[1],
+                endU1 = faces.get(DOWN).localUVs[2],
+                endV1 = faces.get(DOWN).localUVs[3];
+        if (faces.get(DOWN).rotation % 2 == 0) {
             tmp = startV1;
             startV1 = endV1;
             endV1 = tmp;
@@ -53,7 +64,7 @@ public class JsonCuboidData {
                 startU2 = startU1,
                 startV2 = startV1,
                 endV2 = endV1;
-        switch (faces.down.rotation) {
+        switch (faces.get(DOWN).rotation) {
             case 1:
                 startV2 = startV1;
                 endV2 = endV1;
@@ -77,17 +88,17 @@ public class JsonCuboidData {
                 endV2 = startV1;
                 break;
         }
-        faces.down.localUVs = new double[] {startU1, startV1, endU1, endV1, startU2, startV2, endU2, endV2};
+        faces.get(DOWN).localUVs = new double[] {startU1, startV1, endU1, endV1, startU2, startV2, endU2, endV2};
 
-        startU1 = faces.up.localUVs[0];
-        startV1 = faces.up.localUVs[1];
-        endU1 = faces.up.localUVs[2];
-        endV1 = faces.up.localUVs[3];
+        startU1 = faces.get(UP).localUVs[0];
+        startV1 = faces.get(UP).localUVs[1];
+        endU1 = faces.get(UP).localUVs[2];
+        endV1 = faces.get(UP).localUVs[3];
         endU2 = endU1;
         startU2 = startU1;
         startV2 = startV1;
         endV2 = endV1;
-        switch (faces.up.rotation) {
+        switch (faces.get(UP).rotation) {
             case 1:
                 endU2 = endU1;
                 startU2 = startU1;
@@ -111,6 +122,6 @@ public class JsonCuboidData {
                 endV1 = startV2;
                 break;
         }
-        faces.up.localUVs = new double[] {startU1, startV1, endU1, endV1, startU2, startV2, endU2, endV2};
+        faces.get(UP).localUVs = new double[] {startU1, startV1, endU1, endV1, startU2, startV2, endU2, endV2};
     }
 }

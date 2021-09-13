@@ -20,11 +20,11 @@ public class StationFlowingLavaTextureBinder extends StationTextureBinder {
         super(Atlases.getTerrain().getTexture(BlockBase.FLOWING_LAVA.texture + 1));
         textureSize = 2;
         //noinspection deprecation
-        refreshTextures(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
+        reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
     @Override
-    public void refreshTextures(TexturePack newTexturePack) {
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
         int square = getStaticReference().getWidth() * getStaticReference().getHeight();
         field_1166 = new float[square];
         field_1167 = new float[square];
