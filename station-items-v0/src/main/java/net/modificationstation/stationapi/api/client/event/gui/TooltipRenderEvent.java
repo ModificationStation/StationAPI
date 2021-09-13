@@ -7,7 +7,7 @@ import net.minecraft.client.render.TextRenderer;
 import net.minecraft.item.ItemInstance;
 
 @RequiredArgsConstructor
-public class CustomTooltipProviderEvent extends Event {
+public class TooltipRenderEvent extends Event {
 
     public final ItemInstance itemInstance;
     public final ContainerBase container;
@@ -16,6 +16,8 @@ public class CustomTooltipProviderEvent extends Event {
     public final int containerY;
     public final int mouseX;
     public final int mouseY;
+    public final float delta;
+    public final boolean cancelVanillaRender;
 
     @Override
     protected int getEventID() {
