@@ -45,6 +45,9 @@ public class ModdedItem extends TemplateItemBase implements CustomReachProvider,
 
     @Override
     public String[] getTooltip(ItemInstance itemInstance, String originalTooltip) {
-        return new String[]{originalTooltip, "This has 50 block reach for tiles!"};
+        return new String[] {
+                "This has 50 block reach for tiles!",
+                originalTooltip
+        };
     }
 }

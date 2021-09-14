@@ -15,13 +15,13 @@
     "server.MixinServerPlayerPacketHandler"
   ],
   "client": [
+    "client.DrawableHelperInvoker",
     "client.Mixinclass_608",
     "client.MixinClientInteractionManager",
     "client.MixinContainerBase",
     "client.MixinGameRenderer",
     "client.MixinItemRenderer",
-    "client.MixinRemoteClientInteractionManager",
-    "client.DrawableHelperInvoker"
+    "client.MixinRemoteClientInteractionManager"
   ],
   "injectors": {
     "defaultRequire": 1
