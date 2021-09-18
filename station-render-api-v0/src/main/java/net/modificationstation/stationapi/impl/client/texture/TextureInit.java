@@ -19,6 +19,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.util.Null;
+import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
@@ -44,7 +45,7 @@ public class TextureInit {
         GUI_ITEMS = new SquareAtlas("/gui/items.png", 16);
         STATION_TERRAIN = new ExpandableAtlas(of(StationAPI.MODID, "terrain"), TERRAIN).initTessellator();
         STATION_GUI_ITEMS = new ExpandableAtlas(of(StationAPI.MODID, "gui_items"), GUI_ITEMS);
-        STATION_JSON_MODELS = new JsonModelAtlas(of(StationAPI.MODID, "json_textures")).initTessellator();
+        STATION_JSON_MODELS = new JsonModelAtlas(of(StationAPI.MODID, "json_textures")).setTessellator(TessellatorAccessor.newInst(8388608));
         JSON_MISSING = STATION_JSON_MODELS.addTexture(ResourceManager.parsePath(of(MODID, "missing"), "/textures", "png"));
         //noinspection deprecation
         TextureManager textureManager = ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager;

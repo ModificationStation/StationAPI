@@ -1,23 +1,29 @@
-package net.modificationstation.stationapi.api.block;
+package net.modificationstation.stationapi.api.util.math;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.minecraft.util.maths.Vec3i;
 
+import static net.modificationstation.stationapi.api.util.math.Axis.X;
+import static net.modificationstation.stationapi.api.util.math.Axis.Y;
+import static net.modificationstation.stationapi.api.util.math.Axis.Z;
+
+@RequiredArgsConstructor
 public enum Direction {
 
     @SerializedName("down")
-    DOWN(new Vec3i(0, -1, 0)),
+    DOWN(new Vec3i(0, -1, 0), Y),
     @SerializedName("up")
-    UP(new Vec3i(0, 1, 0)),
+    UP(new Vec3i(0, 1, 0), Y),
     @SerializedName("east")
-    EAST(new Vec3i(0, 0, -1)),
+    EAST(new Vec3i(0, 0, -1), Z),
     @SerializedName("west")
-    WEST(new Vec3i(0, 0, 1)),
+    WEST(new Vec3i(0, 0, 1), Z),
     @SerializedName("north")
-    NORTH(new Vec3i(-1, 0, 0)),
+    NORTH(new Vec3i(-1, 0, 0), X),
     @SerializedName("south")
-    SOUTH(new Vec3i(1, 0, 0));
+    SOUTH(new Vec3i(1, 0, 0), X);
 
     static {
         DOWN.opposite = UP;
@@ -31,8 +37,5 @@ public enum Direction {
     public final Vec3i vector;
     @Getter
     private Direction opposite;
-
-    Direction(Vec3i vector) {
-        this.vector = vector;
-    }
+    public final Axis axis;
 }

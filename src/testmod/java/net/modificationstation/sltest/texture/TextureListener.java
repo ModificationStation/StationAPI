@@ -5,12 +5,12 @@ import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.block.BlockListener;
 import net.modificationstation.sltest.item.ItemListener;
-import net.modificationstation.stationapi.api.block.Direction;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.model.json.JsonModel;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.math.Direction;
 
 import static net.modificationstation.sltest.SLTest.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;

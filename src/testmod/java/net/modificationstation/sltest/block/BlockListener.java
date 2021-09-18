@@ -22,7 +22,7 @@ public class BlockListener {
         BlockRegistry registry = event.registry;
         testAnimatedBlock = new ModdedMetaBlock(of(MODID, "test_animated_block"), Material.PORTAL).setTranslationKey(MODID, "testAnimatedBlock"); //151
         testBlock = new TemplateBlockBase(of(MODID, "test_block"), Material.CLAY).setHardness(1).setTranslationKey(MODID, "testBlock"); //150
-        customModelBlock = new ModdedModelBlock(of(MODID, "farlands_block"), Material.DIRT).setTranslationKey(MODID, "farlands_block"); //152
+        customModelBlock = new ModdedModelBlock(of(MODID, "farlands_block"), Material.DIRT).setHardness(1).setTranslationKey(MODID, "farlands_block"); //152
         Freezer = (BlockFreezer) new BlockFreezer(of(MODID, "freezer")).setHardness(2.5F).setSounds(TemplateBlockBase.STONE_SOUNDS).setTranslationKey(MODID, "freezer"); //153
         altar = new BlockAltar(of(MODID, "altar"), Material.STONE).setHardness(3).setTranslationKey(MODID, "altar");
         System.out.println(new Gson().toJson(customModelBlock));

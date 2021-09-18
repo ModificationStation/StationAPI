@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import net.modificationstation.stationapi.api.block.Direction;
+import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.*;
 import java.util.concurrent.*;

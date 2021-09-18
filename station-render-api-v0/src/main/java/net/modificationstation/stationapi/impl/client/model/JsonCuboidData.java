@@ -2,16 +2,16 @@ package net.modificationstation.stationapi.impl.client.model;
 
 import com.google.common.primitives.Doubles;
 import lombok.RequiredArgsConstructor;
-import net.modificationstation.stationapi.api.block.Direction;
+import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.*;
 
-import static net.modificationstation.stationapi.api.block.Direction.DOWN;
-import static net.modificationstation.stationapi.api.block.Direction.EAST;
-import static net.modificationstation.stationapi.api.block.Direction.NORTH;
-import static net.modificationstation.stationapi.api.block.Direction.SOUTH;
-import static net.modificationstation.stationapi.api.block.Direction.UP;
-import static net.modificationstation.stationapi.api.block.Direction.WEST;
+import static net.modificationstation.stationapi.api.util.math.Direction.DOWN;
+import static net.modificationstation.stationapi.api.util.math.Direction.EAST;
+import static net.modificationstation.stationapi.api.util.math.Direction.NORTH;
+import static net.modificationstation.stationapi.api.util.math.Direction.SOUTH;
+import static net.modificationstation.stationapi.api.util.math.Direction.UP;
+import static net.modificationstation.stationapi.api.util.math.Direction.WEST;
 
 @RequiredArgsConstructor
 public class JsonCuboidData {

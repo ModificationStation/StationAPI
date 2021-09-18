@@ -3,8 +3,9 @@ package net.modificationstation.stationapi.impl.client.model;
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.modificationstation.stationapi.api.block.Direction;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.util.Null;
+import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.awt.image.*;
 import java.util.stream.*;
@@ -22,8 +23,7 @@ public class JsonFaceData {
     public final String textureId;
     @Getter
     private transient Atlas.Texture texture;
-    @Getter
-    private Direction cullface = null;
+    public final Direction cullface = Null.get();
 
     public void postprocess(Atlas.Texture texture) {
         this.texture = texture;
@@ -31,19 +31,21 @@ public class JsonFaceData {
     }
 
     public void updateUVs() {
-        BufferedImage atlasImage = texture.getAtlas().getImage();
-        int
-                textureX = texture.getX(),
-                textureY = texture.getY(),
-                textureWidth = texture.getWidth(),
-                textureHeight = texture.getHeight(),
-                atlasWidth = atlasImage.getWidth(),
-                atlasHeight = atlasImage.getHeight();
-        double[] uv = new double[localUVs.length];
-        for (int i = 0; i < localUVs.length; i+=2) {
-            uv[i] = (textureX + localUVs[i] * textureWidth) / atlasWidth;
-            uv[i + 1] = (textureY + localUVs[i + 1] * textureHeight) / atlasHeight;
+        if (texture != null) {
+            BufferedImage atlasImage = texture.getAtlas().getImage();
+            int
+                    textureX = texture.getX(),
+                    textureY = texture.getY(),
+                    textureWidth = texture.getWidth(),
+                    textureHeight = texture.getHeight(),
+                    atlasWidth = atlasImage.getWidth(),
+                    atlasHeight = atlasImage.getHeight();
+            double[] uv = new double[localUVs.length];
+            for (int i = 0; i < localUVs.length; i += 2) {
+                uv[i] = (textureX + localUVs[i] * textureWidth) / atlasWidth;
+                uv[i + 1] = (textureY + localUVs[i + 1] * textureHeight) / atlasHeight;
+            }
+            this.uv = uv;
         }
-        this.uv = uv;
     }
 }

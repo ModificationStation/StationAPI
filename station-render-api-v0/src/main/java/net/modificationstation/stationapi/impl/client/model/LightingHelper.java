@@ -3,13 +3,88 @@ package net.modificationstation.stationapi.impl.client.model;
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.BlockView;
 import net.minecraft.sortme.GameRenderer;
-import net.modificationstation.stationapi.api.block.Direction;
 import net.modificationstation.stationapi.api.client.model.Vertex;
+import net.modificationstation.stationapi.api.util.math.Direction;
 
 public class LightingHelper {
 
-    // broken
-    public static float[] getSmoothForQuadPoint(BlockBase block, BlockView blockView, int x, int y, int z, Vertex faceQuadPoint) {
+    public static int getFastForVertex(
+            Vertex vertex,
+            float colourMultiplierRed, float colourMultiplierGreen, float colourMultiplierBlue,
+            float brightnessMiddle, float brightnessBottom, float brightnessTop, float brightnessEast, float brightnessWest, float brightnessNorth, float brightnessSouth
+    ) {
+        Direction face = vertex.lightingFace;
+        switch (face) {
+            case DOWN:
+                colourMultiplierRed *= 0.5;
+                colourMultiplierGreen *= 0.5;
+                colourMultiplierBlue *= 0.5;
+                break;
+            case UP:
+                break;
+            case EAST:
+            case WEST:
+                colourMultiplierRed *= 0.8;
+                colourMultiplierGreen *= 0.8;
+                colourMultiplierBlue *= 0.8;
+                break;
+            case NORTH:
+            case SOUTH:
+                colourMultiplierRed *= 0.6;
+                colourMultiplierGreen *= 0.6;
+                colourMultiplierBlue *= 0.6;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + face);
+        }
+        float brightnessMultiplier;
+        switch (face) {
+            case DOWN:
+                if (vertex.y > -1)
+                    brightnessMultiplier = brightnessMiddle;
+                else
+                    brightnessMultiplier = brightnessBottom;
+                break;
+            case UP:
+                if (vertex.y < 1)
+                    brightnessMultiplier = brightnessMiddle;
+                else
+                    brightnessMultiplier = brightnessTop;
+                break;
+            case EAST:
+                if (vertex.z > -1)
+                    brightnessMultiplier = brightnessMiddle;
+                else
+                    brightnessMultiplier = brightnessEast;
+                break;
+            case WEST:
+                if (vertex.z < 1)
+                    brightnessMultiplier = brightnessMiddle;
+                else
+                    brightnessMultiplier = brightnessWest;
+                break;
+            case NORTH:
+                if (vertex.x > -1)
+                    brightnessMultiplier = brightnessMiddle;
+                else
+                    brightnessMultiplier = brightnessNorth;
+                break;
+            case SOUTH:
+                if (vertex.x < 1)
+                    brightnessMultiplier = brightnessMiddle;
+                else
+                    brightnessMultiplier = brightnessSouth;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected face: " + face);
+        }
+        return (((int) (colourMultiplierRed * brightnessMultiplier * 255) & 255) << 16) +
+                (((int) (colourMultiplierGreen * brightnessMultiplier * 255) & 255) << 8) +
+                ((int) (colourMultiplierBlue * brightnessMultiplier * 255) & 255);
+    }
+
+    // TODO: use this for inner model faces
+    public static float[] getSmoothForVertex(BlockBase block, BlockView blockView, int x, int y, int z, Vertex faceQuadPoint) {
         Direction face = faceQuadPoint.lightingFace;
         int colourMultiplier = block.getColourMultiplier(blockView, x, y, z);
         float colourMultiplierRed = (float)(colourMultiplier >> 16 & 255) / 255.0F;
@@ -148,20 +223,9 @@ public class LightingHelper {
         };
     }
 
-    public static int getSmoothForQuadPoint(BlockBase block, BlockView blockView, int x, int y, int z, Vertex faceQuadPoint, int quadPointOrder) {
+    // TODO: use this for outer model faces and interpolate the light
+    public static int getSmoothForVertex(BlockBase block, BlockView blockView, int x, int y, int z, Vertex faceQuadPoint, int quadPointOrder, float colourMultiplierRed, float colourMultiplierGreen, float colourMultiplierBlue) {
         Direction face = faceQuadPoint.lightingFace;
-        int colourMultiplier = block.getColourMultiplier(blockView, x, y, z);
-        float colourMultiplierRed = (float)(colourMultiplier >> 16 & 255) / 255.0F;
-        float colourMultiplierGreen = (float)(colourMultiplier >> 8 & 255) / 255.0F;
-        float colourMultiplierBlue = (float)(colourMultiplier & 255) / 255.0F;
-        if (GameRenderer.field_2340) {
-            float colourMultiplierRedTmp = (colourMultiplierRed * 30.0F + colourMultiplierGreen * 59.0F + colourMultiplierBlue * 11.0F) / 100.0F;
-            float colourMultiplierGreenTmp = (colourMultiplierRed * 30.0F + colourMultiplierGreen * 70.0F) / 100.0F;
-            float colourMultiplierBlueTmp = (colourMultiplierRed * 30.0F + colourMultiplierBlue * 70.0F) / 100.0F;
-            colourMultiplierRed = colourMultiplierRedTmp;
-            colourMultiplierGreen = colourMultiplierGreenTmp;
-            colourMultiplierBlue = colourMultiplierBlueTmp;
-        }
         switch (face) {
             case DOWN:
                 colourMultiplierRed *= 0.5;
