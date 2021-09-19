@@ -25,7 +25,6 @@ import java.util.*;
 import java.util.stream.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.client.model.Vertex.get;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 import static net.modificationstation.stationapi.api.util.math.Direction.DOWN;
 import static net.modificationstation.stationapi.api.util.math.Direction.EAST;
@@ -35,11 +34,15 @@ import static net.modificationstation.stationapi.api.util.math.Direction.UP;
 import static net.modificationstation.stationapi.api.util.math.Direction.WEST;
 import static net.modificationstation.stationapi.api.util.math.Direction.values;
 
-public class JsonModel extends Model {
+public final class JsonModel extends Model {
 
     private JsonModelData data;
 
-    public JsonModel(final Identifier identifier) {
+    public static JsonModel get(final Identifier identifier) {
+        return get(identifier, JsonModel::new);
+    }
+
+    private JsonModel(final Identifier identifier) {
         super(identifier, "json");
     }
 
@@ -93,60 +96,60 @@ public class JsonModel extends Model {
                 v = absentCullface ? vertexes : faceVertexesBuilder.get(face.cullface);
                 face.updateUVs();
                 uv = face.getUv();
-                v.add(get(xFrom, yFrom, zTo, uv[4], uv[7], lightingFace));
-                v.add(get(xFrom, yFrom, zFrom, uv[0], uv[1], lightingFace));
-                v.add(get(xTo, yFrom, zFrom, uv[6], uv[5], lightingFace));
-                v.add(get(xTo, yFrom, zTo, uv[2], uv[3], lightingFace));
+                v.add(Vertex.get(xFrom, yFrom, zTo, uv[4], uv[7], lightingFace));
+                v.add(Vertex.get(xFrom, yFrom, zFrom, uv[0], uv[1], lightingFace));
+                v.add(Vertex.get(xTo, yFrom, zFrom, uv[6], uv[5], lightingFace));
+                v.add(Vertex.get(xTo, yFrom, zTo, uv[2], uv[3], lightingFace));
                 face = faces.get(UP);
                 absentCullface = face.cullface == null;
                 lightingFace = absentCullface ? UP : face.cullface;
                 v = absentCullface ? vertexes : faceVertexesBuilder.get(face.cullface);
                 face.updateUVs();
                 uv = face.getUv();
-                v.add(get(xTo, yTo, zTo, uv[2], uv[3], lightingFace));
-                v.add(get(xTo, yTo, zFrom, uv[6], uv[5], lightingFace));
-                v.add(get(xFrom, yTo, zFrom, uv[0], uv[1], lightingFace));
-                v.add(get(xFrom, yTo, zTo, uv[4], uv[7], lightingFace));
+                v.add(Vertex.get(xTo, yTo, zTo, uv[2], uv[3], lightingFace));
+                v.add(Vertex.get(xTo, yTo, zFrom, uv[6], uv[5], lightingFace));
+                v.add(Vertex.get(xFrom, yTo, zFrom, uv[0], uv[1], lightingFace));
+                v.add(Vertex.get(xFrom, yTo, zTo, uv[4], uv[7], lightingFace));
                 face = faces.get(EAST);
                 absentCullface = face.cullface == null;
                 lightingFace = absentCullface ? EAST : face.cullface;
                 v = absentCullface ? vertexes : faceVertexesBuilder.get(face.cullface);
                 face.updateUVs();
                 uv = face.getUv();
-                v.add(get(xFrom, yTo, zFrom, uv[2], uv[1], lightingFace));
-                v.add(get(xTo, yTo, zFrom, uv[0], uv[1], lightingFace));
-                v.add(get(xTo, yFrom, zFrom, uv[0], uv[3], lightingFace));
-                v.add(get(xFrom, yFrom, zFrom, uv[2], uv[3], lightingFace));
+                v.add(Vertex.get(xFrom, yTo, zFrom, uv[2], uv[1], lightingFace));
+                v.add(Vertex.get(xTo, yTo, zFrom, uv[0], uv[1], lightingFace));
+                v.add(Vertex.get(xTo, yFrom, zFrom, uv[0], uv[3], lightingFace));
+                v.add(Vertex.get(xFrom, yFrom, zFrom, uv[2], uv[3], lightingFace));
                 face = faces.get(WEST);
                 absentCullface = face.cullface == null;
                 lightingFace = absentCullface ? WEST : face.cullface;
                 v = absentCullface ? vertexes : faceVertexesBuilder.get(face.cullface);
                 face.updateUVs();
                 uv = face.getUv();
-                v.add(get(xFrom, yTo, zTo, uv[0], uv[1], lightingFace));
-                v.add(get(xFrom, yFrom, zTo, uv[0], uv[3], lightingFace));
-                v.add(get(xTo, yFrom, zTo, uv[2], uv[3], lightingFace));
-                v.add(get(xTo, yTo, zTo, uv[2], uv[1], lightingFace));
+                v.add(Vertex.get(xFrom, yTo, zTo, uv[0], uv[1], lightingFace));
+                v.add(Vertex.get(xFrom, yFrom, zTo, uv[0], uv[3], lightingFace));
+                v.add(Vertex.get(xTo, yFrom, zTo, uv[2], uv[3], lightingFace));
+                v.add(Vertex.get(xTo, yTo, zTo, uv[2], uv[1], lightingFace));
                 face = faces.get(NORTH);
                 absentCullface = face.cullface == null;
                 lightingFace = absentCullface ? NORTH : face.cullface;
                 v = absentCullface ? vertexes : faceVertexesBuilder.get(face.cullface);
                 face.updateUVs();
                 uv = face.getUv();
-                v.add(get(xFrom, yTo, zTo, uv[2], uv[1], lightingFace));
-                v.add(get(xFrom, yTo, zFrom, uv[0], uv[1], lightingFace));
-                v.add(get(xFrom, yFrom, zFrom, uv[0], uv[3], lightingFace));
-                v.add(get(xFrom, yFrom, zTo, uv[2], uv[3], lightingFace));
+                v.add(Vertex.get(xFrom, yTo, zTo, uv[2], uv[1], lightingFace));
+                v.add(Vertex.get(xFrom, yTo, zFrom, uv[0], uv[1], lightingFace));
+                v.add(Vertex.get(xFrom, yFrom, zFrom, uv[0], uv[3], lightingFace));
+                v.add(Vertex.get(xFrom, yFrom, zTo, uv[2], uv[3], lightingFace));
                 face = faces.get(SOUTH);
                 absentCullface = face.cullface == null;
                 lightingFace = absentCullface ? SOUTH : face.cullface;
                 v = absentCullface ? vertexes : faceVertexesBuilder.get(face.cullface);
                 face.updateUVs();
                 uv = face.getUv();
-                v.add(get(xTo, yFrom, zTo, uv[0], uv[3], lightingFace));
-                v.add(get(xTo, yFrom, zFrom, uv[2], uv[3], lightingFace));
-                v.add(get(xTo, yTo, zFrom, uv[2], uv[1], lightingFace));
-                v.add(get(xTo, yTo, zTo, uv[0], uv[1], lightingFace));
+                v.add(Vertex.get(xTo, yFrom, zTo, uv[0], uv[3], lightingFace));
+                v.add(Vertex.get(xTo, yFrom, zFrom, uv[2], uv[3], lightingFace));
+                v.add(Vertex.get(xTo, yTo, zFrom, uv[2], uv[1], lightingFace));
+                v.add(Vertex.get(xTo, yTo, zTo, uv[0], uv[1], lightingFace));
             });
         ImmutableMap.Builder<Direction, ImmutableList<Vertex>> faceVertexes = ImmutableMap.builder();
         faceVertexesBuilder.forEach((direction, faceQuadPointBuilder) -> faceVertexes.put(direction, faceQuadPointBuilder.build()));

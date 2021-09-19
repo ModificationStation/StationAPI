@@ -58,7 +58,7 @@ public class TextureListener {
         TEST_ATLAS.addTexture("/assets/sltest/textures/blocks/FreezerTop.png");
         TEST_ATLAS.addTexture("/assets/sltest/textures/blocks/FreezerSide.png");
 
-        farlandsBlockModel = new JsonModel(of(MODID, "farlandsBlock"));
+        farlandsBlockModel = JsonModel.get(of(MODID, "farlandsBlock"));
     }
 
     public static final int[] altarTextures = new int[6];

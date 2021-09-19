@@ -7,6 +7,8 @@ import net.modificationstation.stationapi.api.client.texture.TexturePackDependen
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 
+import java.util.function.*;
+
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 public abstract class Model implements TexturePackDependent {
@@ -16,10 +18,14 @@ public abstract class Model implements TexturePackDependent {
     private BakedModel baked;
     protected boolean invalidated;
 
-    public Model(Identifier identifier, String extension) {
+    public static <T extends Model> T get(final Identifier identifier, final Function<Identifier, T> initializer) {
+        //noinspection unchecked
+        return (T) ModelRegistry.INSTANCE.computeIfAbsent(identifier, (Function<Identifier, Model>) initializer);
+    }
+
+    protected Model(final Identifier identifier, final String extension) {
         this.id = identifier;
         modelPath = ResourceManager.parsePath(identifier, "/" + MODID + "/models", extension);
-        ModelRegistry.INSTANCE.register(identifier, this);
         //noinspection deprecation
         reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }

@@ -64,7 +64,7 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
      * Default registry constructor.
      * @param identifier registry's identifier.
      */
-    public Registry(@NotNull Identifier identifier) {
+    public Registry(final @NotNull Identifier identifier) {
         this(identifier, false);
     }
 
@@ -75,7 +75,7 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
      * @param isRegistryRegistry whether or not the current registry is the registry of registries.
      *                           If it is, it registers itself in itself, otherwise registries itself in {@link Registry#REGISTRIES}.
      */
-    private Registry(@NotNull Identifier identifier, boolean isRegistryRegistry) {
+    private Registry(final @NotNull Identifier identifier, final boolean isRegistryRegistry) {
         this.id = Objects.requireNonNull(identifier);
         if (isRegistryRegistry)
             //noinspection unchecked
@@ -89,7 +89,7 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
      * @param identifier the identifier to assign to the object.
      * @param value the object to assign to the identifier.
      */
-    public void register(@NotNull Identifier identifier, @NotNull T value) {
+    public void register(final @NotNull Identifier identifier, final @NotNull T value) {
         values.put(Objects.requireNonNull(identifier), Objects.requireNonNull(value));
     }
 
@@ -102,7 +102,7 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
      * @return an {@link Optional} containing the object associated to the given identifier,
      * or an empty optional if there's no object associated to this identifier.
      */
-    public @NotNull Optional<T> get(@NotNull Identifier identifier) {
+    public @NotNull Optional<T> get(final @NotNull Identifier identifier) {
         return Optional.ofNullable(values.get(Objects.requireNonNull(identifier)));
     }
 
@@ -112,7 +112,7 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
      * @param value the object associated to the requested identifier.
      * @return the identifier of the given object.
      */
-    public @NotNull Identifier getIdentifier(@NotNull T value) {
+    public @NotNull Identifier getIdentifier(final @NotNull T value) {
         return values.inverse().get(Objects.requireNonNull(value));
     }
 
@@ -130,11 +130,11 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
      * {@link Identifier} and registry's object instead of a {@link Consumer} of {@link Map.Entry} of those.
      * @param action the action to be performed for each element.
      */
-    public void forEach(@NotNull BiConsumer<Identifier, T> action) {
+    public void forEach(final @NotNull BiConsumer<Identifier, T> action) {
         Objects.requireNonNull(action);
         for (Map.Entry<Identifier, T> identifierTEntry : this) {
-            Identifier k;
-            T v;
+            final Identifier k;
+            final T v;
             try {
                 k = identifierTEntry.getKey();
                 v = identifierTEntry.getValue();
@@ -153,11 +153,11 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
      * @param function the function to compute an object.
      * @return the current (existing or computed) object associated with the specified identifier.
      */
-    public @NotNull T computeIfAbsent(@NotNull Identifier identifier, @NotNull Function<@NotNull Identifier, @NotNull T> function) {
+    public @NotNull T computeIfAbsent(final @NotNull Identifier identifier, final @NotNull Function<@NotNull Identifier, @NotNull T> function) {
         Objects.requireNonNull(identifier);
         Objects.requireNonNull(function);
         return get(identifier).orElseGet(() -> {
-            T value = function.apply(identifier);
+            final T value = function.apply(identifier);
             register(identifier, value);
             return value;
         });

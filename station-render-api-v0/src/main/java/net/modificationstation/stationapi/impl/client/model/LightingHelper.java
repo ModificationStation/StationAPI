@@ -223,7 +223,7 @@ public class LightingHelper {
         };
     }
 
-    // TODO: use this for outer model faces and interpolate the light
+    // TODO: use this for outer model faces, interpolate the light and optimize by using pre-calculated light levels
     public static int getSmoothForVertex(BlockBase block, BlockView blockView, int x, int y, int z, Vertex faceQuadPoint, int quadPointOrder, float colourMultiplierRed, float colourMultiplierGreen, float colourMultiplierBlue) {
         Direction face = faceQuadPoint.lightingFace;
         switch (face) {
