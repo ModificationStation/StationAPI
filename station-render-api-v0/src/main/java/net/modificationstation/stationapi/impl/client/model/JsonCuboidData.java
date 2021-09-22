@@ -1,7 +1,8 @@
 package net.modificationstation.stationapi.impl.client.model;
 
 import com.google.common.primitives.Doubles;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.*;
@@ -13,13 +14,14 @@ import static net.modificationstation.stationapi.api.util.math.Direction.SOUTH;
 import static net.modificationstation.stationapi.api.util.math.Direction.UP;
 import static net.modificationstation.stationapi.api.util.math.Direction.WEST;
 
-@RequiredArgsConstructor
 public class JsonCuboidData {
 
-    public final double[] from;
-    public final double[] to;
-//    public final JsonFacesData faces;
-    public final EnumMap<Direction, JsonFaceData> faces;
+    public final double[] from = Null.get();
+    public final double[] to = Null.get();
+    public final EnumMap<Direction, JsonFaceData> faces = Null.get();
+    @SuppressWarnings("FieldMayBeFinal")
+    @Getter
+    private boolean shade = true;
 
     public void postprocess() {
         Doubles.reverse(from);

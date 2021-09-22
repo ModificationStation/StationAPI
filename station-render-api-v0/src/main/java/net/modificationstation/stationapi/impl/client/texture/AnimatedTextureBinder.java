@@ -1,10 +1,11 @@
-package net.modificationstation.stationapi.api.client.texture.binder;
+package net.modificationstation.stationapi.impl.client.texture;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 import java.awt.image.*;
 import java.io.*;
@@ -57,7 +58,7 @@ public class AnimatedTextureBinder extends StationTextureBinder {
 
     @Override
     public void update() {
-        if (tick++ >= animationRate) {
+        if (++tick >= animationRate) {
             grid = frames[++currentFrame >= frames.length ? currentFrame = 0 : currentFrame];
             tick = 0;
         }

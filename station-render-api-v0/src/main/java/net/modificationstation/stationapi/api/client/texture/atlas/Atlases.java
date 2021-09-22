@@ -1,26 +1,26 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
-import net.modificationstation.stationapi.impl.client.texture.TextureInit;
+import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 
 public final class Atlases {
 
     public static SquareAtlas getTerrain() {
-        return TextureInit.TERRAIN;
+        return StationRenderAPI.TERRAIN;
     }
 
     public static SquareAtlas getGuiItems() {
-        return TextureInit.GUI_ITEMS;
+        return StationRenderAPI.GUI_ITEMS;
     }
 
     public static ExpandableAtlas getStationTerrain() {
-        return TextureInit.STATION_TERRAIN;
+        return StationRenderAPI.STATION_TERRAIN;
     }
 
     public static ExpandableAtlas getStationGuiItems() {
-        return TextureInit.STATION_GUI_ITEMS;
+        return StationRenderAPI.STATION_GUI_ITEMS;
     }
 
     public static JsonModelAtlas getStationJsonModels() {
-        return TextureInit.STATION_JSON_MODELS;
+        return StationRenderAPI.STATION_JSON_MODELS;
     }
 }

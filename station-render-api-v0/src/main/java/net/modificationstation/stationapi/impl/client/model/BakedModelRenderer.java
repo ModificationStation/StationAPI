@@ -70,19 +70,22 @@ public class BakedModelRenderer {
                 Vertex vertex;
                 for (int i = 0, vertexesSize = vertexes.size(); i < vertexesSize; i++) {
                     vertex = vertexes.get(i);
-                    tessellator.colour(
-                            model.ambientocclusion ?
-                                    LightingHelper.getSmoothForVertex(
-                                            block, blockView, x, y, z,
-                                            vertex, i % 4,
-                                            colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue
-                                    ) :
-                                    LightingHelper.getFastForVertex(
-                                            vertex,
-                                            colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue,
-                                            brightnessMiddle, brightnessBottom, brightnessTop, brightnessEast, brightnessWest, brightnessNorth, brightnessSouth
-                                    )
-                    );
+                    if (vertex.shade)
+                        tessellator.colour(
+                                model.ambientocclusion ?
+                                        LightingHelper.getSmoothForVertex(
+                                                block, blockView, x, y, z,
+                                                vertex, i % 4,
+                                                colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue
+                                        ) :
+                                        LightingHelper.getFastForVertex(
+                                                vertex,
+                                                colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue,
+                                                brightnessMiddle, brightnessBottom, brightnessTop, brightnessEast, brightnessWest, brightnessNorth, brightnessSouth
+                                        )
+                        );
+                    else
+                        tessellator.colour(colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue);
                     tessellator.vertex(x + vertex.x, y + vertex.y, z + vertex.z,
                             noTextureOverride ? vertex.u : (textureOverride.getX() + vertex.lightingFace.axis.get2DX(vertex.x, vertex.y, vertex.z) * textureOverride.getWidth()) / textureOverride.getAtlas().getImage().getWidth(),
                             noTextureOverride ? vertex.v : (textureOverride.getY() + vertex.lightingFace.axis.get2DY(vertex.x, vertex.y, vertex.z) * textureOverride.getHeight()) / textureOverride.getAtlas().getImage().getHeight()

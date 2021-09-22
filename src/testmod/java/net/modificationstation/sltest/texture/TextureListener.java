@@ -1,18 +1,18 @@
 package net.modificationstation.sltest.texture;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.sltest.SLTest;
-import net.modificationstation.sltest.block.BlockListener;
 import net.modificationstation.sltest.item.ItemListener;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.model.json.JsonModel;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
-import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import static net.modificationstation.sltest.SLTest.MODID;
+import static net.modificationstation.sltest.block.BlockListener.Freezer;
+import static net.modificationstation.sltest.block.BlockListener.testAnimatedBlock;
+import static net.modificationstation.sltest.block.BlockListener.testBlock;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public class TextureListener {
@@ -31,32 +31,34 @@ public class TextureListener {
 
         ExpandableAtlas terrain = Atlases.getStationTerrain();
 
-        BlockListener.testBlock.texture = terrain.addTexture("/assets/sltest/textures/blocks/testBlock.png").index;
+        testBlock.texture = terrain.addTexture(of(MODID, "blocks/testBlock")).index;
+        testAnimatedBlock.texture = terrain.addTexture(of(MODID, "blocks/testAnimatedBlock")).index;
+        Freezer.texture = terrain.addTexture(of(MODID, "blocks/FreezerTop")).index;
+        Freezer.sideTexture = terrain.addTexture(of(MODID, "blocks/FreezerSide")).index;
 
-        altarTextures[Direction.DOWN.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_bottom.png").index;
-        altarTextures[Direction.UP.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_top.png").index;
-        altarTextures[Direction.EAST.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_east.png").index;
-        altarTextures[Direction.WEST.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_west.png").index;
-        altarTextures[Direction.NORTH.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_north.png").index;
-        altarTextures[Direction.SOUTH.ordinal()] = terrain.addTexture("/assets/sltest/stationapi/textures/blocks/altar_south.png").index;
+        altarTextures[Direction.DOWN.ordinal()] = terrain.addTexture(of(MODID, "blocks/altar_bottom")).index;
+        altarTextures[Direction.UP.ordinal()] = terrain.addTexture(of(MODID, "blocks/altar_top")).index;
+        altarTextures[Direction.EAST.ordinal()] = terrain.addTexture(of(MODID, "blocks/altar_east")).index;
+        altarTextures[Direction.WEST.ordinal()] = terrain.addTexture(of(MODID, "blocks/altar_west")).index;
+        altarTextures[Direction.NORTH.ordinal()] = terrain.addTexture(of(MODID, "blocks/altar_north")).index;
+        altarTextures[Direction.SOUTH.ordinal()] = terrain.addTexture(of(MODID, "blocks/altar_south")).index;
 
-        ItemListener.testNBTItem.setTexture("/assets/sltest/textures/items/nbtItem.png");
-        ItemListener.testItem.setTexture("/assets/sltest/textures/items/highres.png");
-        ItemListener.testPickaxe.setAnimationBinder( "/assets/sltest/textures/items/testPickaxe.png", 1, "/assets/sltest/textures/items/testItem.png");
+        ItemListener.testNBTItem.setTexture(of(MODID, "items/nbtItem"));
+        ItemListener.testItem.setTexture(of(MODID, "items/highres"));
+//        ItemListener.testPickaxe.setAnimationBinder("/assets/sltest/stationapi/textures/items/testPickaxe.png", 1, of(MODID, "items/testItem"));
+        ItemListener.testPickaxe.setTexture(of(MODID, "items/testPickaxe"));
 
 //        SquareAtlas.GUI_ITEMS.addAnimationBinder("/assets/sltest/textures/items/testPickaxe.png", 1, 0);
 
-        System.out.println(TexturePack.class.getResourceAsStream("/assets/sltest/textures/items/testItem.png"));
+        TEST_ATLAS = new ExpandableAtlas(of(SLTest.MODID, "test_atlas"));
 
-        TEST_ATLAS = new ExpandableAtlas(Identifier.of(SLTest.MODID, "test_atlas"));
-
-        TEST_ATLAS.addTexture("/assets/sltest/textures/items/testItem.png");
-        TEST_ATLAS.addTexture("/assets/sltest/textures/blocks/testBlock.png");
-        TEST_ATLAS.addTexture("/assets/sltest/textures/blocks/testAnimatedBlock.png");
-        TEST_ATLAS.addTexture("/assets/sltest/textures/items/testPickaxe.png");
-        TEST_ATLAS.addTexture("/assets/sltest/textures/items/nbtItem.png");
-        TEST_ATLAS.addTexture("/assets/sltest/textures/blocks/FreezerTop.png");
-        TEST_ATLAS.addTexture("/assets/sltest/textures/blocks/FreezerSide.png");
+        TEST_ATLAS.addTexture(of(MODID, "items/testItem"));
+        TEST_ATLAS.addTexture(of(MODID, "blocks/testBlock"));
+        TEST_ATLAS.addTexture(of(MODID, "blocks/testAnimatedBlock"));
+        TEST_ATLAS.addTexture(of(MODID, "items/testPickaxe"));
+        TEST_ATLAS.addTexture(of(MODID, "items/nbtItem"));
+        TEST_ATLAS.addTexture(of(MODID, "blocks/FreezerTop"));
+        TEST_ATLAS.addTexture(of(MODID, "blocks/FreezerSide"));
 
         farlandsBlockModel = JsonModel.get(of(MODID, "farlandsBlock"));
     }

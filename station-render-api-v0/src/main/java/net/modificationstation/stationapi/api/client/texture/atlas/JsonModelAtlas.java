@@ -4,20 +4,25 @@ import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.client.model.json.JsonModel;
 import net.modificationstation.stationapi.api.client.registry.ModelRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 
 public final class JsonModelAtlas extends ExpandableAtlas {
+
+    public static final Identifier MISSING = Identifier.of(StationRenderAPI.MODID, "missing");
 
     public JsonModelAtlas(Identifier identifier) {
         super(identifier);
     }
 
     @Override
-    public Texture addTexture(String texture) {
+    public Texture addTexture(Identifier texture) {
+        boolean newTexture = !textureCache.containsKey(texture);
         Texture textureInst = super.addTexture(texture);
-        ModelRegistry.INSTANCE.forEach((identifier, model) -> {
-            if (model instanceof JsonModel)
-                ((JsonModel) model).updateUVs();
-        });
+        if (newTexture)
+            ModelRegistry.INSTANCE.forEach((identifier, model) -> {
+                if (model instanceof JsonModel)
+                    ((JsonModel) model).updateUVs();
+            });
         return textureInst;
     }
 

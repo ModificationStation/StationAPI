@@ -23,18 +23,19 @@ public class Vertex {
             u, v;
     Direction lightingFace;
     float normalX, normalY, normalZ;
+    boolean shade;
 
-    public static Vertex get(double x, double y, double z, double u, double v, Direction face) {
-        return get(x, y, z, u, v, face, face);
+    public static Vertex get(double x, double y, double z, double u, double v, Direction face, boolean shade) {
+        return get(x, y, z, u, v, face, face, shade);
     }
 
-    public static Vertex get(double x, double y, double z, double u, double v, Direction lightingFace, Direction normal) {
-        return get(x, y, z, u, v, lightingFace, normal.vector.x, normal.vector.y, normal.vector.z);
+    public static Vertex get(double x, double y, double z, double u, double v, Direction lightingFace, Direction normal, boolean shade) {
+        return get(x, y, z, u, v, lightingFace, normal.vector.x, normal.vector.y, normal.vector.z, shade);
     }
 
-    public static Vertex get(double x, double y, double z, double u, double v, Direction face, float normalX, float normalY, float normalZ) {
+    public static Vertex get(double x, double y, double z, double u, double v, Direction face, float normalX, float normalY, float normalZ, boolean shade) {
         try {
-            return CACHE.get(Arrays.deepToString(new Object[] {x, y, z, u, v, face, normalX, normalY, normalZ}), () -> new Vertex(x, y, z, u, v, face, normalX, normalY, normalZ));
+            return CACHE.get(Arrays.deepToString(new Object[] {x, y, z, u, v, face, normalX, normalY, normalZ, shade}), () -> new Vertex(x, y, z, u, v, face, normalX, normalY, normalZ, shade));
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }

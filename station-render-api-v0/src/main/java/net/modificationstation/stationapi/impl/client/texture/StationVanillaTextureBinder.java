@@ -6,7 +6,6 @@ import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-import net.modificationstation.stationapi.api.client.texture.binder.AnimatedTextureBinder;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +24,7 @@ public class StationVanillaTextureBinder extends StationTextureBinder {
         super(staticReference);
         this.animationPath = animationPath;
         this.originalBinder = originalBinder;
-        animatedTextureBinder = new AnimatedTextureBinder(getStaticReference(), animationPath, 0);
+        animatedTextureBinder = new AnimatedTextureBinder(getStaticReference(), animationPath, 1);
         //noinspection deprecation
         reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }

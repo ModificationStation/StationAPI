@@ -1,14 +1,21 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
+import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
+import net.minecraft.client.texture.TextureManager;
+import net.modificationstation.stationapi.api.client.resource.Resource;
+import net.modificationstation.stationapi.api.client.texture.TextureAnimationData;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
-import net.modificationstation.stationapi.api.client.texture.binder.AnimatedTextureBinder;
+import net.modificationstation.stationapi.api.client.texture.binder.AnimationTextureBinder;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
-import uk.co.benjiweber.expressions.collection.EnhancedList;
 
 import javax.imageio.*;
 import java.awt.*;
@@ -17,11 +24,13 @@ import java.io.*;
 import java.util.*;
 import java.util.function.*;
 
+import static net.modificationstation.stationapi.api.StationAPI.MODID;
+
 public class ExpandableAtlas extends Atlas {
 
     private static final Map<String, ExpandableAtlas> PATH_TO_ATLAS = new HashMap<>();
 
-    protected final Map<String, Texture> textureCache = new HashMap<>();
+    protected final Map<Identifier, Texture> textureCache = new HashMap<>();
 
     public ExpandableAtlas(final Identifier identifier) {
         super("/assets/stationapi/atlases/" + identifier, 0, false);
@@ -53,29 +62,74 @@ public class ExpandableAtlas extends Atlas {
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
 
-    public Texture addTexture(String texture) {
+    public Texture addTexture(Identifier texture) {
         if (textureCache.containsKey(texture))
             return textureCache.get(texture);
         else {
-            BufferedImage image = TextureHelper.getTexture(texture);
+            String texturePath = ResourceManager.parsePath(texture, "/" + MODID + "/textures", "png");
+            Resource textureResource = Resource.of(TextureHelper.getTextureStream(texturePath));
+            BufferedImage image = TextureHelper.readTextureStream(textureResource.getResource());
+            int width = image.getWidth();
+            int height = image.getHeight();
             int previousAtlasWidth = imageCache == null ? 0 : imageCache.getWidth();
+            Optional<TextureAnimationData> animationDataOptional = parseTextureMeta(textureResource);
+            boolean animationPresent = animationDataOptional.isPresent();
+            BufferedImage frames = null;
+            if (animationPresent) {
+                //noinspection SuspiciousNameCombination
+                height = width;
+                frames = image;
+                image = image.getSubimage(0, 0, width, height);
+            }
             drawTextureOnSpritesheet(image);
-            textures.forEach(Texture::updateUVs);
             refreshTextureID();
-            return textureCache.compute(texture, (s, texture1) -> EnhancedList.enhance(textures).addAndReturn(new FileTexture(
-                    texture, size++,
+            textures.forEach(Texture::updateUVs);
+            FileTexture textureInst = new FileTexture(
+                    texturePath, size++,
                     previousAtlasWidth, 0,
-                    image.getWidth(), image.getHeight()
-            )));
+                    width, height
+            );
+            textureCache.put(texture, textureInst);
+            textures.add(textureInst);
+            if (animationPresent) {
+                BufferedImage finalFrames = frames;
+                addTextureBinder(textureInst, texture1 -> new AnimationTextureBinder(finalFrames, texture1, animationDataOptional.get()));
+            }
+            return textureInst;
         }
     }
 
-    public <T extends StationTextureBinder> T addTextureBinder(String staticReference, Function<Texture, T> initializer) {
-        return addTextureBinder(addTexture(staticReference), initializer);
+    protected Optional<TextureAnimationData> parseTextureMeta(Resource resource) {
+        if (resource.getMeta().isPresent()) {
+            InputStream inputStream = resource.getMeta().get();
+            JsonElement tmp = JsonParser.parseReader(new InputStreamReader(inputStream));
+            if (tmp.isJsonObject()) {
+                JsonObject meta = tmp.getAsJsonObject();
+                if (meta.has("animation")) {
+                    JsonObject animation = meta.getAsJsonObject("animation");
+                    int frametime = animation.has("frametime") ? animation.getAsJsonPrimitive("frametime").getAsInt() : 1;
+                    ImmutableList.Builder<TextureAnimationData.Frame> frames = ImmutableList.builder();
+                    if (animation.has("frames")) {
+                        for (JsonElement element : animation.getAsJsonArray("frames")) {
+                            if (element.isJsonPrimitive())
+                                frames.add(new TextureAnimationData.Frame(element.getAsInt(), frametime));
+                            else if (element.isJsonObject()) {
+                                JsonObject frame = element.getAsJsonObject();
+                                frames.add(new TextureAnimationData.Frame(frame.getAsJsonPrimitive("index").getAsInt(), frame.has("time") ? frame.getAsJsonPrimitive("time").getAsInt() : frametime));
+                            } else
+                                throw new RuntimeException("Unknown frame entry: " + element);
+                        }
+                    }
+                    boolean interpolate = animation.has("interpolate") && animation.getAsJsonPrimitive("interpolate").getAsBoolean();
+                    return Optional.of(new TextureAnimationData(frametime, frames.build(), interpolate));
+                }
+            }
+        }
+        return Optional.empty();
     }
 
-    public AnimatedTextureBinder addAnimationBinder(String animationPath, int animationRate, String staticReference) {
-        return addAnimationBinder(animationPath, animationRate, addTexture(staticReference));
+    public <T extends StationTextureBinder> T addTextureBinder(Identifier staticReference, Function<Texture, T> initializer) {
+        return addTextureBinder(addTexture(staticReference), initializer);
     }
 
     private void drawTextureOnSpritesheet(BufferedImage image) {
@@ -116,10 +170,29 @@ public class ExpandableAtlas extends Atlas {
         textures.forEach(texture -> {
             texture.x = imageCache == null ? 0 : imageCache.getWidth();
             texture.y = 0;
-            BufferedImage image = TextureHelper.readTextureStream(newTexturePack.getResourceAsStream(((FileTexture) texture).path));
-            texture.width = image.getWidth();
-            texture.height = image.getHeight();
+            Resource textureResource = Resource.of(newTexturePack.getResourceAsStream(((FileTexture) texture).path));
+            BufferedImage image = TextureHelper.readTextureStream(textureResource.getResource());
+            int
+                    width = image.getWidth(),
+                    height = image.getHeight();
+            Optional<TextureAnimationData> animationDataOptional = parseTextureMeta(textureResource);
+            BufferedImage frames = null;
+            boolean animationPresent = animationDataOptional.isPresent();
+            if (animationPresent) {
+                //noinspection SuspiciousNameCombination
+                height = width;
+                frames = image;
+                image = image.getSubimage(0, 0, width, height);
+            }
+            texture.width = width;
+            texture.height = height;
             drawTextureOnSpritesheet(image);
+            if (animationPresent) {
+                TextureAnimationData animationData = animationDataOptional.get();
+                //noinspection deprecation
+                TextureManager textureManager = ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager;
+                textureManager.addTextureBinder(new AnimationTextureBinder(frames, texture, animationData));
+            }
         });
         textures.forEach(Texture::updateUVs);
         refreshTextureID();

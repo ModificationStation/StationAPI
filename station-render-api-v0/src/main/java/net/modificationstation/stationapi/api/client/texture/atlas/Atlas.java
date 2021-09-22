@@ -7,7 +7,6 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
-import net.modificationstation.stationapi.api.client.texture.binder.AnimatedTextureBinder;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
 import uk.co.benjiweber.expressions.function.ObjIntFunction;
@@ -131,14 +130,6 @@ public abstract class Atlas implements TexturePackDependent {
         //noinspection deprecation
         ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.addTextureBinder(textureBinder);
         return textureBinder;
-    }
-
-    public AnimatedTextureBinder addAnimationBinder(String animationPath, int animationRate, int staticReferenceTextureIndex) {
-        return addTextureBinder(staticReferenceTextureIndex, texture -> new AnimatedTextureBinder(texture, animationPath, animationRate));
-    }
-
-    public AnimatedTextureBinder addAnimationBinder(String animationPath, int animationRate, Texture staticReference) {
-        return addTextureBinder(staticReference, texture -> new AnimatedTextureBinder(texture, animationPath, animationRate));
     }
 
     public class Texture {
