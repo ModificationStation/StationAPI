@@ -1,9 +1,5 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
-import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
@@ -30,7 +26,7 @@ public class ExpandableAtlas extends Atlas {
 
     private static final Map<String, ExpandableAtlas> PATH_TO_ATLAS = new HashMap<>();
 
-    protected final Map<Identifier, Texture> textureCache = new HashMap<>();
+    protected final Map<String, Texture> textureCache = new HashMap<>();
 
     public ExpandableAtlas(final Identifier identifier) {
         super("/assets/stationapi/atlases/" + identifier, 0, false);
@@ -63,16 +59,19 @@ public class ExpandableAtlas extends Atlas {
     }
 
     public Texture addTexture(Identifier texture) {
-        if (textureCache.containsKey(texture))
-            return textureCache.get(texture);
+        return addTexture(ResourceManager.parsePath(texture, "/" + MODID + "/textures", "png"));
+    }
+
+    public Texture addTexture(String texturePath) {
+        if (textureCache.containsKey(texturePath))
+            return textureCache.get(texturePath);
         else {
-            String texturePath = ResourceManager.parsePath(texture, "/" + MODID + "/textures", "png");
             Resource textureResource = Resource.of(TextureHelper.getTextureStream(texturePath));
             BufferedImage image = TextureHelper.readTextureStream(textureResource.getResource());
             int width = image.getWidth();
             int height = image.getHeight();
             int previousAtlasWidth = imageCache == null ? 0 : imageCache.getWidth();
-            Optional<TextureAnimationData> animationDataOptional = parseTextureMeta(textureResource);
+            Optional<TextureAnimationData> animationDataOptional = TextureAnimationData.parse(textureResource);
             boolean animationPresent = animationDataOptional.isPresent();
             BufferedImage frames = null;
             if (animationPresent) {
@@ -84,48 +83,19 @@ public class ExpandableAtlas extends Atlas {
             drawTextureOnSpritesheet(image);
             refreshTextureID();
             textures.forEach(Texture::updateUVs);
-            FileTexture textureInst = new FileTexture(
+            FileTexture texture = new FileTexture(
                     texturePath, size++,
                     previousAtlasWidth, 0,
                     width, height
             );
-            textureCache.put(texture, textureInst);
-            textures.add(textureInst);
+            textureCache.put(texturePath, texture);
+            textures.add(texture);
             if (animationPresent) {
                 BufferedImage finalFrames = frames;
-                addTextureBinder(textureInst, texture1 -> new AnimationTextureBinder(finalFrames, texture1, animationDataOptional.get()));
+                addTextureBinder(texture, texture1 -> new AnimationTextureBinder(finalFrames, texture1, animationDataOptional.get()));
             }
-            return textureInst;
+            return texture;
         }
-    }
-
-    protected Optional<TextureAnimationData> parseTextureMeta(Resource resource) {
-        if (resource.getMeta().isPresent()) {
-            InputStream inputStream = resource.getMeta().get();
-            JsonElement tmp = JsonParser.parseReader(new InputStreamReader(inputStream));
-            if (tmp.isJsonObject()) {
-                JsonObject meta = tmp.getAsJsonObject();
-                if (meta.has("animation")) {
-                    JsonObject animation = meta.getAsJsonObject("animation");
-                    int frametime = animation.has("frametime") ? animation.getAsJsonPrimitive("frametime").getAsInt() : 1;
-                    ImmutableList.Builder<TextureAnimationData.Frame> frames = ImmutableList.builder();
-                    if (animation.has("frames")) {
-                        for (JsonElement element : animation.getAsJsonArray("frames")) {
-                            if (element.isJsonPrimitive())
-                                frames.add(new TextureAnimationData.Frame(element.getAsInt(), frametime));
-                            else if (element.isJsonObject()) {
-                                JsonObject frame = element.getAsJsonObject();
-                                frames.add(new TextureAnimationData.Frame(frame.getAsJsonPrimitive("index").getAsInt(), frame.has("time") ? frame.getAsJsonPrimitive("time").getAsInt() : frametime));
-                            } else
-                                throw new RuntimeException("Unknown frame entry: " + element);
-                        }
-                    }
-                    boolean interpolate = animation.has("interpolate") && animation.getAsJsonPrimitive("interpolate").getAsBoolean();
-                    return Optional.of(new TextureAnimationData(frametime, frames.build(), interpolate));
-                }
-            }
-        }
-        return Optional.empty();
     }
 
     public <T extends StationTextureBinder> T addTextureBinder(Identifier staticReference, Function<Texture, T> initializer) {
@@ -175,7 +145,7 @@ public class ExpandableAtlas extends Atlas {
             int
                     width = image.getWidth(),
                     height = image.getHeight();
-            Optional<TextureAnimationData> animationDataOptional = parseTextureMeta(textureResource);
+            Optional<TextureAnimationData> animationDataOptional = TextureAnimationData.parse(textureResource);
             BufferedImage frames = null;
             boolean animationPresent = animationDataOptional.isPresent();
             if (animationPresent) {

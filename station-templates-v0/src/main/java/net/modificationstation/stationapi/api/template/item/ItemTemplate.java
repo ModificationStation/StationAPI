@@ -23,8 +23,14 @@ public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider {
         return Atlases.getStationGuiItems();
     }
 
-    default Atlas.Texture setTexture(Identifier identifier) {
-        Atlas.Texture texture = ((ExpandableAtlas) getAtlas()).addTexture(identifier);
+    default Atlas.Texture setTexture(Identifier textureIdentifier) {
+        Atlas.Texture texture = ((ExpandableAtlas) getAtlas()).addTexture(textureIdentifier);
+        ((ItemBase) this).setTexturePosition(texture.index);
+        return texture;
+    }
+
+    default Atlas.Texture setTexture(String texturePath) {
+        Atlas.Texture texture = ((ExpandableAtlas) getAtlas()).addTexture(texturePath);
         ((ItemBase) this).setTexturePosition(texture.index);
         return texture;
     }
