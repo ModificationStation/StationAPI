@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.InstanceCreator;
 import net.minecraft.client.resource.TexturePack;
-import net.modificationstation.stationapi.api.client.model.BakedModel;
+import net.modificationstation.stationapi.api.client.model.BasicBakedModel;
 import net.modificationstation.stationapi.api.client.model.Model;
 import net.modificationstation.stationapi.api.client.model.Vertex;
 import net.modificationstation.stationapi.api.client.registry.ModelRegistry;
@@ -16,6 +16,7 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.impl.client.model.GuiLightType;
 import net.modificationstation.stationapi.impl.client.model.JsonCuboidData;
 import net.modificationstation.stationapi.impl.client.model.JsonFaceData;
 import net.modificationstation.stationapi.impl.client.model.JsonModelData;
@@ -107,7 +108,7 @@ public final class JsonModel extends Model {
     }
 
     @Override
-    protected BakedModel bake() {
+    protected BasicBakedModel bake() {
         Map<Direction, ImmutableList.Builder<Vertex>> faceVertexesBuilder = new EnumMap<>(Direction.class);
         Arrays.stream(values()).forEach(direction -> faceVertexesBuilder.put(direction, ImmutableList.builder()));
         ImmutableList.Builder<Vertex> vertexes = ImmutableList.builder();
@@ -172,6 +173,12 @@ public final class JsonModel extends Model {
         });
         ImmutableMap.Builder<Direction, ImmutableList<Vertex>> faceVertexes = ImmutableMap.builder();
         faceVertexesBuilder.forEach((direction, faceQuadPointBuilder) -> faceVertexes.put(direction, faceQuadPointBuilder.build()));
-        return new BakedModel(Atlases.getStationJsonModels(), Maps.immutableEnumMap(faceVertexes.build()), vertexes.build(), data.isAmbientocclusion(), textures.get("#particle"));
+        return new BasicBakedModel.Builder()
+                .faceVertexes(Maps.immutableEnumMap(faceVertexes.build()))
+                .vertexes(vertexes.build())
+                .useAO(data.isAmbientocclusion())
+                .isSideLit(data.gui_light == GuiLightType.SIDE)
+                .sprite(textures.get("#particle"))
+                .build();
     }
 }

@@ -27,7 +27,7 @@ public class StationDiggingParticle {
     public void checkBlockCoords(int x, int y, int z) {
         BlockBase block = ((DiggingAccessor) digging).getField_2383();
         if (block instanceof BlockWorldModelProvider)
-            texture = ((BlockWorldModelProvider) block).getCustomWorldModel(digging.level, x, y, z).getBaked().sprite;
+            texture = ((BlockWorldModelProvider) block).getCustomWorldModel(digging.level, x, y, z).getBaked().getSprite();
     }
 
     public void render(float delta, float yawX, float pitchX, float yawY, float pitchY1, float pitchY2) {

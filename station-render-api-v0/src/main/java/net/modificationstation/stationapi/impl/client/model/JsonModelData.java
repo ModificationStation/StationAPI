@@ -15,4 +15,5 @@ public class JsonModelData {
     private boolean ambientocclusion = true;
     public Map<String, String> textures = Null.get();
     public List<JsonCuboidData> elements = Null.get();
+    public GuiLightType gui_light = GuiLightType.SIDE;
 }

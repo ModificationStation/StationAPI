@@ -6,19 +6,27 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
 import net.minecraft.sortme.GameRenderer;
+import net.minecraft.util.Vec3i;
 import net.modificationstation.stationapi.api.client.model.BakedModel;
 import net.modificationstation.stationapi.api.client.model.Vertex;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.client.texture.StationBlockRendererProvider;
 import net.modificationstation.stationapi.mixin.render.client.BlockRendererAccessor;
 import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
 
+import java.util.*;
+
 public class BakedModelRenderer {
+
+    private static final Random random = new Random();
 
     public static void renderWorld(BlockRenderer blockRenderer, BlockBase block, BakedModel model, BlockView blockView, int x, int y, int z) {
         if (model != null) {
+            Vec3i pos = new Vec3i(x, y, z);
+            long seed = MathHelper.hashCode(x, y, z);
             int textureOverridePosition = ((BlockRendererAccessor) blockRenderer).getTextureOverride();
             Atlas.Sprite textureOverride = null;
             Atlas atlas;
@@ -26,7 +34,7 @@ public class BakedModelRenderer {
                 atlas = Atlases.getTerrain();
                 textureOverride = atlas.getTexture(textureOverridePosition);
             } else
-                atlas = model.getAtlas();
+                atlas = model.getSprite().getAtlas();
             boolean noTextureOverride = textureOverride == null;
             TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
             Tessellator tessellator = atlas.getTessellator();
@@ -56,23 +64,19 @@ public class BakedModelRenderer {
                     brightnessWest = blockView.getBrightness(x, y, z + 1),
                     brightnessNorth = blockView.getBrightness(x - 1, y, z),
                     brightnessSouth = blockView.getBrightness(x + 1, y, z);
-            Direction[] directions = Direction.values();
-            for (int vertexSet = 0, vertexSetCount = directions.length + 1; vertexSet < vertexSetCount; vertexSet++) {
-                ImmutableList<Vertex> vertexes;
-                if (vertexSet == directions.length)
-                    vertexes = model.vertexes;
-                else {
-                    Direction face = directions[vertexSet];
-                    vertexes = model.faceVertexes.get(face);
-                    if (!block.isSideRendered(blockView, x + face.vector.x, y + face.vector.y, z + face.vector.z, vertexSet))
-                        continue;
-                }
+            Direction[] directions = Arrays.copyOf(Direction.values(), Direction.values().length + 1);
+            for (int vertexSet = 0, vertexSetCount = directions.length; vertexSet < vertexSetCount; vertexSet++) {
+                Direction face = directions[vertexSet];
+                random.setSeed(seed);
+                ImmutableList<Vertex> vertexes = model.getVertexes(blockView, pos, face, random);
+                if (vertexes.isEmpty() || (face != null && !block.isSideRendered(blockView, x + face.vector.x, y + face.vector.y, z + face.vector.z, vertexSet)))
+                    continue;
                 Vertex vertex;
                 for (int i = 0, vertexesSize = vertexes.size(); i < vertexesSize; i++) {
                     vertex = vertexes.get(i);
                     if (vertex.shade)
                         tessellator.colour(
-                                model.ambientocclusion ?
+                                model.useAmbientOcclusion() ?
                                         LightingHelper.getSmoothForVertex(
                                                 block, blockView, x, y, z,
                                                 vertex, i % 4,
@@ -97,11 +101,15 @@ public class BakedModelRenderer {
 
     public static void renderInventory(BakedModel model) {
         if (model != null) {
-            Atlas atlas = model.getAtlas();
+            Atlas atlas = model.getSprite().getAtlas();
             Tessellator tessellator = atlas.getTessellator();
             tessellator.start();
-            for (int vertexSet = 0; vertexSet < 7; vertexSet++) {
-                ImmutableList<Vertex> vertexes = vertexSet == 6 ? model.vertexes : model.faceVertexes.get(Direction.values()[vertexSet]);
+            Direction[] directions = Arrays.copyOf(Direction.values(), Direction.values().length + 1);
+            //noinspection ForLoopReplaceableByForEach
+            for (int vertexSet = 0; vertexSet < directions.length; vertexSet++) {
+                Direction face = directions[vertexSet];
+                random.setSeed(42);
+                ImmutableList<Vertex> vertexes = model.getVertexes(null, null, face, random);
                 Vertex vertex;
                 for (int i = 0, vertexesSize = vertexes.size(); i < vertexesSize; i++) {
                     vertex = vertexes.get(i);
