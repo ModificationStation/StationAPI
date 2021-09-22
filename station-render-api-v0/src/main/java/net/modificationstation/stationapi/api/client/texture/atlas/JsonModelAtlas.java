@@ -15,9 +15,9 @@ public final class JsonModelAtlas extends ExpandableAtlas {
     }
 
     @Override
-    public Texture addTexture(String texturePath) {
+    public Sprite addTexture(String texturePath) {
         boolean newTexture = !textureCache.containsKey(texturePath);
-        Texture textureInst = super.addTexture(texturePath);
+        Sprite textureInst = super.addTexture(texturePath);
         if (newTexture)
             ModelRegistry.INSTANCE.forEach((identifier, model) -> {
                 if (model instanceof JsonModel)

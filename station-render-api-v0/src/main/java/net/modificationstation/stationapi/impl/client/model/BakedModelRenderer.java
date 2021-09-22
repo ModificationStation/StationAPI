@@ -20,7 +20,7 @@ public class BakedModelRenderer {
     public static void renderWorld(BlockRenderer blockRenderer, BlockBase block, BakedModel model, BlockView blockView, int x, int y, int z) {
         if (model != null) {
             int textureOverridePosition = ((BlockRendererAccessor) blockRenderer).getTextureOverride();
-            Atlas.Texture textureOverride = null;
+            Atlas.Sprite textureOverride = null;
             Atlas atlas;
             if (textureOverridePosition >= 0) {
                 atlas = Atlases.getTerrain();

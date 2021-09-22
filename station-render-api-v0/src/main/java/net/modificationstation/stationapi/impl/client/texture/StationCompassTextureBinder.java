@@ -24,7 +24,7 @@ public class StationCompassTextureBinder extends StationTextureBinder {
 
     @Override
     public void reloadFromTexturePack(TexturePack newTexturePack) {
-        Atlas.Texture staticReference = getStaticReference();
+        Atlas.Sprite staticReference = getStaticReference();
         int
                 textureWidth = staticReference.getWidth(),
                 textureHeight = staticReference.getHeight(),
@@ -36,7 +36,7 @@ public class StationCompassTextureBinder extends StationTextureBinder {
 
     @Override
     public void update() {
-        Atlas.Texture staticReference = getStaticReference();
+        Atlas.Sprite staticReference = getStaticReference();
         int
                 textureWidth = staticReference.getWidth(),
                 textureHeight = staticReference.getHeight();

@@ -22,7 +22,7 @@ public class AnimationTextureBinder extends StationTextureBinder {
     private int currentFrameIndex;
     private int timer;
 
-    public AnimationTextureBinder(BufferedImage image, Atlas.Texture staticReference, TextureAnimationData animationData) {
+    public AnimationTextureBinder(BufferedImage image, Atlas.Sprite staticReference, TextureAnimationData animationData) {
         super(staticReference);
         this.animationData = animationData;
         int

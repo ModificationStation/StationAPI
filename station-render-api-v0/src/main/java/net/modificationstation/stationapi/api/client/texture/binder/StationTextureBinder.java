@@ -9,9 +9,9 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 public abstract class StationTextureBinder extends TextureBinder implements StaticReferenceProvider, TexturePackDependent {
 
     @Getter
-    private final Atlas.Texture staticReference;
+    private final Atlas.Sprite staticReference;
 
-    public StationTextureBinder(Atlas.Texture staticReference) {
+    public StationTextureBinder(Atlas.Sprite staticReference) {
         super(staticReference.index);
         this.staticReference = staticReference;
     }

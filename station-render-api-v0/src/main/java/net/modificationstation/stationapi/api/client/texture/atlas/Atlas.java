@@ -29,7 +29,7 @@ public abstract class Atlas implements TexturePackDependent {
     protected final Atlas parent;
     protected int size;
     public final boolean fixedSize;
-    protected final List<Texture> textures = new CopyOnWriteArrayList<>();
+    protected final List<Sprite> textures = new CopyOnWriteArrayList<>();
     private Tessellator tessellator;
     protected BufferedImage imageCache;
 
@@ -113,7 +113,7 @@ public abstract class Atlas implements TexturePackDependent {
         ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.bindTexture(getAtlasTextureID());
     }
 
-    public final Texture getTexture(int textureIndex) {
+    public final Sprite getTexture(int textureIndex) {
         return applyInherited(textureIndex, textures::get, Atlas::getTexture);
     }
 
@@ -121,18 +121,18 @@ public abstract class Atlas implements TexturePackDependent {
         return parent == null ? size : size - parent.size;
     }
 
-    public <T extends StationTextureBinder> T addTextureBinder(int staticReferenceTextureIndex, Function<Texture, T> initializer) {
+    public <T extends StationTextureBinder> T addTextureBinder(int staticReferenceTextureIndex, Function<Sprite, T> initializer) {
         return addTextureBinder(getTexture(staticReferenceTextureIndex), initializer);
     }
 
-    public <T extends StationTextureBinder> T addTextureBinder(Texture staticReference, Function<Texture, T> initializer) {
+    public <T extends StationTextureBinder> T addTextureBinder(Sprite staticReference, Function<Sprite, T> initializer) {
         T textureBinder = initializer.apply(staticReference);
         //noinspection deprecation
         ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.addTextureBinder(textureBinder);
         return textureBinder;
     }
 
-    public class Texture {
+    public class Sprite {
 
         public final int index;
         @Getter
@@ -144,7 +144,7 @@ public abstract class Atlas implements TexturePackDependent {
                 startU, endU,
                 startV, endV;
 
-        protected Texture(int index, int x, int y, int width, int height) {
+        protected Sprite(int index, int x, int y, int width, int height) {
             this.index = index;
             this.x = x;
             this.y = y;

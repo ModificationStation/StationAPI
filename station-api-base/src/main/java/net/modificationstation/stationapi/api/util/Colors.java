@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.gui;
+package net.modificationstation.stationapi.api.util;
 
 import lombok.RequiredArgsConstructor;
 

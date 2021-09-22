@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Digging.class)
 public class MixinDigging implements StationDiggingParticleProvider {
@@ -24,6 +25,14 @@ public class MixinDigging implements StationDiggingParticleProvider {
     )
     private void onCor(Level arg, double d, double d1, double d2, double d3, double d4, double d5, BlockBase arg1, int i, int j, CallbackInfo ci) {
         stationDiggingParticle = new StationDiggingParticle((Digging) (Object) this);
+    }
+
+    @Inject(
+            method = "method_1856(III)Lnet/minecraft/client/render/particle/Digging;",
+            at = @At("HEAD")
+    )
+    private void checkBlockCoords(int i, int j, int k, CallbackInfoReturnable<Digging> cir) {
+        stationDiggingParticle.checkBlockCoords(i, j, k);
     }
 
     @Inject(

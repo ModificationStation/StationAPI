@@ -35,10 +35,13 @@ public class StationBlockRenderer {
     }
 
     public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        if (blockRendererAccessor.getTextureOverride() >= 0)
+        Atlas atlas;
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
             textureIndex = blockRendererAccessor.getTextureOverride();
-        Atlas atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
-        Atlas.Texture texture = atlas.getTexture(textureIndex);
+            atlas = Atlases.getTerrain();
+        } else
+            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
+        Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
         Tessellator tessellator;
         if (renderingInInventory) {
@@ -148,10 +151,13 @@ public class StationBlockRenderer {
     }
 
     public void renderTopFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        if (blockRendererAccessor.getTextureOverride() >= 0)
+        Atlas atlas;
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
             textureIndex = blockRendererAccessor.getTextureOverride();
-        Atlas atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
-        Atlas.Texture texture = atlas.getTexture(textureIndex);
+            atlas = Atlases.getTerrain();
+        } else
+            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
+        Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
         Tessellator tessellator;
         if (renderingInInventory) {
@@ -261,10 +267,13 @@ public class StationBlockRenderer {
     }
 
     public void renderEastFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        if (blockRendererAccessor.getTextureOverride() >= 0)
+        Atlas atlas;
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
             textureIndex = blockRendererAccessor.getTextureOverride();
-        Atlas atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
-        Atlas.Texture texture = atlas.getTexture(textureIndex);
+            atlas = Atlases.getTerrain();
+        } else
+            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
+        Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
         Tessellator tessellator;
         if (renderingInInventory) {
@@ -379,10 +388,13 @@ public class StationBlockRenderer {
     }
 
     public void renderWestFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        if (blockRendererAccessor.getTextureOverride() >= 0)
+        Atlas atlas;
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
             textureIndex = blockRendererAccessor.getTextureOverride();
-        Atlas atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
-        Atlas.Texture texture = atlas.getTexture(textureIndex);
+            atlas = Atlases.getTerrain();
+        } else
+            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
+        Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
         Tessellator tessellator;
         if (renderingInInventory) {
@@ -497,10 +509,13 @@ public class StationBlockRenderer {
     }
 
     public void renderNorthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        if (blockRendererAccessor.getTextureOverride() >= 0)
+        Atlas atlas;
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
             textureIndex = blockRendererAccessor.getTextureOverride();
-        Atlas atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
-        Atlas.Texture texture = atlas.getTexture(textureIndex);
+            atlas = Atlases.getTerrain();
+        } else
+            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
+        Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
         Tessellator tessellator;
         if (renderingInInventory) {
@@ -615,10 +630,13 @@ public class StationBlockRenderer {
     }
 
     public void renderSouthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        if (blockRendererAccessor.getTextureOverride() >= 0)
+        Atlas atlas;
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
             textureIndex = blockRendererAccessor.getTextureOverride();
-        Atlas atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
-        Atlas.Texture texture = atlas.getTexture(textureIndex);
+            atlas = Atlases.getTerrain();
+        } else
+            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
+        Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
         Tessellator tessellator;
         if (renderingInInventory) {

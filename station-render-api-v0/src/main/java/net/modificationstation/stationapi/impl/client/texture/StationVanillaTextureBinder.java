@@ -20,7 +20,7 @@ public class StationVanillaTextureBinder extends StationTextureBinder {
 
     private boolean animationImageAbsent;
 
-    public StationVanillaTextureBinder(@NotNull Atlas.Texture staticReference, @NotNull StationTextureBinder originalBinder, @NotNull String animationPath) {
+    public StationVanillaTextureBinder(@NotNull Atlas.Sprite staticReference, @NotNull StationTextureBinder originalBinder, @NotNull String animationPath) {
         super(staticReference);
         this.animationPath = animationPath;
         this.originalBinder = originalBinder;

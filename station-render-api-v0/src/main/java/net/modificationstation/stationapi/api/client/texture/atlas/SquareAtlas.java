@@ -22,7 +22,7 @@ public class SquareAtlas extends Atlas {
                 textureWidth = image.getWidth() / sizeSquareRoot,
                 textureHeight = image.getHeight() / sizeSquareRoot;
         for (int y = 0; y < sizeSquareRoot; y++) for (int x = 0; x < sizeSquareRoot; x++)
-            textures.add(new Texture(
+            textures.add(new Sprite(
                     (parent == null ? 0 : parent.size) + y * sizeSquareRoot + x,
                     x * textureWidth, y * textureHeight,
                     textureWidth, textureHeight
@@ -43,6 +43,6 @@ public class SquareAtlas extends Atlas {
             texture.width = textureWidth;
             texture.height = textureHeight;
         });
-        textures.forEach(Texture::updateUVs);
+        textures.forEach(Sprite::updateUVs);
     }
 }

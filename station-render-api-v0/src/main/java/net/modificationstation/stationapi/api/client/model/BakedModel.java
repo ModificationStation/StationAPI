@@ -18,16 +18,19 @@ public class BakedModel implements CustomAtlasProvider {
     @NotNull
     public final ImmutableList<@NotNull Vertex> vertexes;
     public final boolean ambientocclusion;
+    public final Atlas.Sprite sprite;
 
     public BakedModel(
-            @NotNull Atlas atlas,
-            @NotNull ImmutableMap<Direction, @NotNull ImmutableList<@NotNull Vertex>> faceVertexes,
-            @NotNull ImmutableList<@NotNull Vertex> vertexes,
-            boolean ambientocclusion
+            final @NotNull Atlas atlas,
+            final @NotNull ImmutableMap<@NotNull Direction, @NotNull ImmutableList<@NotNull Vertex>> faceVertexes,
+            final @NotNull ImmutableList<@NotNull Vertex> vertexes,
+            final boolean ambientocclusion,
+            final @NotNull Atlas.Sprite sprite
     ) {
         this.atlas = atlas;
         this.faceVertexes = faceVertexes;
         this.vertexes = vertexes;
         this.ambientocclusion = ambientocclusion;
+        this.sprite = sprite;
     }
 }

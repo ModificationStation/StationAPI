@@ -41,7 +41,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     }
 
     @Unique
-    private final Stack<Atlas.Texture> render_customLocals_texture = new Stack<>();
+    private final Stack<Atlas.Sprite> render_customLocals_texture = new Stack<>();
 
     @ModifyVariable(
             method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
@@ -101,7 +101,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
             )
     )
     private float modifyStartU(float originalStartU) {
-        Atlas.Texture texture = render_customLocals_texture.peek();
+        Atlas.Sprite texture = render_customLocals_texture.peek();
         return texture == null ? originalStartU : (float) texture.getStartU();
     }
 
@@ -114,7 +114,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
             )
     )
     private float modifyEndU(float originalEndU) {
-        Atlas.Texture texture = render_customLocals_texture.peek();
+        Atlas.Sprite texture = render_customLocals_texture.peek();
         return texture == null ? originalEndU : (float) texture.getEndU();
     }
 
@@ -127,7 +127,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
             )
     )
     private float modifyStartV(float originalStartV) {
-        Atlas.Texture texture = render_customLocals_texture.peek();
+        Atlas.Sprite texture = render_customLocals_texture.peek();
         return texture == null ? originalStartV : (float) texture.getStartV();
     }
 
@@ -137,7 +137,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
             at = @At("STORE")
     )
     private float modifyEndV(float originalEndV) {
-        Atlas.Texture texture = render_customLocals_texture.pop();
+        Atlas.Sprite texture = render_customLocals_texture.pop();
         return texture == null ? originalEndV : (float) texture.getEndV();
     }
 
@@ -184,7 +184,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     private void redirectItemDraw(ItemRenderer itemRenderer, int renderX, int renderY, int textureX, int textureY, int width, int height, TextRenderer textRenderer, TextureManager textureManagerArg, int itemId, int damage, int textureIndex, int renderYArg, int renderXArg) {
         Atlas atlas = renderItemOnGui_customLocals_atlas.peek();
         if (atlas != null) {
-            Atlas.Texture texture = atlas.getTexture(textureIndex);
+            Atlas.Sprite texture = atlas.getTexture(textureIndex);
             textureX = texture.getX();
             textureY = texture.getY();
             width = texture.getWidth();

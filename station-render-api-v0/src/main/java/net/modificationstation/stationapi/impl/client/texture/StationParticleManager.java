@@ -13,7 +13,7 @@ public class StationParticleManager {
 
     public void checkParticle(ParticleBase particle) {
         if (particle instanceof StationDiggingParticleProvider) {
-            Atlas atlas = ((StationDiggingParticleProvider) particle).getStationDiggingParticle().texture.getAtlas();
+            Atlas atlas = ((StationDiggingParticleProvider) particle).getStationDiggingParticle().getTexture().getAtlas();
             Tessellator tessellator = atlas.getTessellator();
             if (!((TessellatorAccessor) tessellator).getDrawing()) {
                 activeAtlases.add(atlas);

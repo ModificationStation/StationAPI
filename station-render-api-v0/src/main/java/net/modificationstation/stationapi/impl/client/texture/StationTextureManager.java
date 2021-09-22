@@ -31,7 +31,7 @@ public class StationTextureManager {
             var2.bindTexture(textureManager);
 
             if (var2 instanceof StaticReferenceProvider) {
-                Atlas.Texture staticReference = ((StaticReferenceProvider) var2).getStaticReference();
+                Atlas.Sprite staticReference = ((StaticReferenceProvider) var2).getStaticReference();
                 for (int var3 = 0; var3 < var2.textureSize; ++var3)
                     for (int var4 = 0; var4 < var2.textureSize; ++var4)
                         GL11.glTexSubImage2D(3553, 0, staticReference.getX() + var3 * staticReference.getWidth(), staticReference.getY() + var4 * staticReference.getHeight(), staticReference.getWidth(), staticReference.getHeight(), 6408, 5121, textureManagerAccessor.getCurrentImageBuffer());

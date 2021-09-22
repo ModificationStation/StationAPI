@@ -18,7 +18,7 @@ public class AnimatedTextureBinder extends StationTextureBinder {
     private int currentFrame;
     private int tick = 0;
 
-    public AnimatedTextureBinder(Atlas.Texture staticReference, String animatedTexture, int animationRate) {
+    public AnimatedTextureBinder(Atlas.Sprite staticReference, String animatedTexture, int animationRate) {
         super(staticReference);
         this.animatedTexture = animatedTexture;
         this.animationRate = animationRate;

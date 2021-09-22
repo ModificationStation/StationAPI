@@ -94,6 +94,14 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
     }
 
     /**
+     * Unregisters the value with the given identifier.
+     * @param identifier the identifier of the value that should get unregistered.
+     */
+    public void unregister(final @NotNull Identifier identifier) {
+        values.remove(identifier);
+    }
+
+    /**
      * Returns the object associated to this identifier.
      * <p>Note, since not all identifiers are supposed to have an object assigned to them,
      * an {@link Optional} containing the object is returned instead.

@@ -22,10 +22,10 @@ public class JsonFaceData {
     @SerializedName("texture")
     public final String textureId;
     @Getter
-    private transient Atlas.Texture texture;
+    private transient Atlas.Sprite texture;
     public final Direction cullface = Null.get();
 
-    public void postprocess(Atlas.Texture texture) {
+    public void postprocess(Atlas.Sprite texture) {
         this.texture = texture;
         IntStream.range(0, localUVs.length).forEach(i -> localUVs[i] /= 16);
     }

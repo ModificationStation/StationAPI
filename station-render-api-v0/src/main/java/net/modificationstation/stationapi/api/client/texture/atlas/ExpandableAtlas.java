@@ -26,7 +26,7 @@ public class ExpandableAtlas extends Atlas {
 
     private static final Map<String, ExpandableAtlas> PATH_TO_ATLAS = new HashMap<>();
 
-    protected final Map<String, Texture> textureCache = new HashMap<>();
+    protected final Map<String, Sprite> textureCache = new HashMap<>();
 
     public ExpandableAtlas(final Identifier identifier) {
         super("/assets/stationapi/atlases/" + identifier, 0, false);
@@ -58,11 +58,11 @@ public class ExpandableAtlas extends Atlas {
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
 
-    public Texture addTexture(Identifier texture) {
+    public Sprite addTexture(Identifier texture) {
         return addTexture(ResourceManager.parsePath(texture, "/" + MODID + "/textures", "png"));
     }
 
-    public Texture addTexture(String texturePath) {
+    public Sprite addTexture(String texturePath) {
         if (textureCache.containsKey(texturePath))
             return textureCache.get(texturePath);
         else {
@@ -82,8 +82,8 @@ public class ExpandableAtlas extends Atlas {
             }
             drawTextureOnSpritesheet(image);
             refreshTextureID();
-            textures.forEach(Texture::updateUVs);
-            FileTexture texture = new FileTexture(
+            textures.forEach(Sprite::updateUVs);
+            FileSprite texture = new FileSprite(
                     texturePath, size++,
                     previousAtlasWidth, 0,
                     width, height
@@ -98,7 +98,7 @@ public class ExpandableAtlas extends Atlas {
         }
     }
 
-    public <T extends StationTextureBinder> T addTextureBinder(Identifier staticReference, Function<Texture, T> initializer) {
+    public <T extends StationTextureBinder> T addTextureBinder(Identifier staticReference, Function<Sprite, T> initializer) {
         return addTextureBinder(addTexture(staticReference), initializer);
     }
 
@@ -140,7 +140,7 @@ public class ExpandableAtlas extends Atlas {
         textures.forEach(texture -> {
             texture.x = imageCache == null ? 0 : imageCache.getWidth();
             texture.y = 0;
-            Resource textureResource = Resource.of(newTexturePack.getResourceAsStream(((FileTexture) texture).path));
+            Resource textureResource = Resource.of(newTexturePack.getResourceAsStream(((FileSprite) texture).path));
             BufferedImage image = TextureHelper.readTextureStream(textureResource.getResource());
             int
                     width = image.getWidth(),
@@ -164,7 +164,7 @@ public class ExpandableAtlas extends Atlas {
                 textureManager.addTextureBinder(new AnimationTextureBinder(frames, texture, animationData));
             }
         });
-        textures.forEach(Texture::updateUVs);
+        textures.forEach(Sprite::updateUVs);
         refreshTextureID();
     }
 
@@ -172,11 +172,11 @@ public class ExpandableAtlas extends Atlas {
         return PATH_TO_ATLAS.get(spritesheet);
     }
 
-    public class FileTexture extends Texture {
+    public class FileSprite extends Sprite {
 
         public final String path;
 
-        protected FileTexture(String path, int index, int x, int y, int width, int height) {
+        protected FileSprite(String path, int index, int x, int y, int width, int height) {
             super(index, x, y, width, height);
             this.path = path;
         }

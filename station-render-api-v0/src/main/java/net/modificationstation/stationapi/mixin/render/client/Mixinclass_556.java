@@ -66,7 +66,7 @@ public class Mixinclass_556 {
     }
 
     @Unique
-    private final Stack<Atlas.Texture> method_1862_customLocals_texture = new Stack<>();
+    private final Stack<Atlas.Sprite> method_1862_customLocals_texture = new Stack<>();
 
     @ModifyVariable(
             method = "method_1862(Lnet/minecraft/entity/Living;Lnet/minecraft/item/ItemInstance;)V",
@@ -75,7 +75,7 @@ public class Mixinclass_556 {
     )
     private float modifyStartU(float originalStartU) {
         Atlas atlas = method_1862_customLocals_atlas.peek();
-        Atlas.Texture texture = atlas == null ? null : atlas.getTexture(method_1862_capturedLocals_texturePosition.peek());
+        Atlas.Sprite texture = atlas == null ? null : atlas.getTexture(method_1862_capturedLocals_texturePosition.peek());
         method_1862_customLocals_texture.push(texture);
         return texture == null ? originalStartU : (float) texture.getStartU();
     }
@@ -86,7 +86,7 @@ public class Mixinclass_556 {
             at = @At("STORE")
     )
     private float modifyEndU(float originalEndU) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? originalEndU : (float) texture.getEndU();
     }
 
@@ -96,7 +96,7 @@ public class Mixinclass_556 {
             at = @At("STORE")
     )
     private float modifyStartV(float originalStartV) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? originalStartV : (float) texture.getStartV();
     }
 
@@ -106,7 +106,7 @@ public class Mixinclass_556 {
             at = @At("STORE")
     )
     private float modifyEndV(float originalEndV) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? originalEndV : (float) texture.getEndV();
     }
 
@@ -118,7 +118,7 @@ public class Mixinclass_556 {
             )
     )
     private int modifyAmountOfNorthVertexes(int constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : texture.getHeight();
     }
 
@@ -130,7 +130,7 @@ public class Mixinclass_556 {
             )
     )
     private float modifyNorthVertexesDenominator(float constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : texture.getHeight();
     }
 
@@ -142,7 +142,7 @@ public class Mixinclass_556 {
             )
     )
     private float modifyNorthVertexesNudge(float constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : 1F / (texture.getHeight() * texture.getHeight() * 2);
     }
 
@@ -154,7 +154,7 @@ public class Mixinclass_556 {
             )
     )
     private int modifyAmountOfSouthVertexes(int constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : texture.getHeight();
     }
 
@@ -166,7 +166,7 @@ public class Mixinclass_556 {
             )
     )
     private float modifySouthVertexesDenominator(float constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : texture.getHeight();
     }
 
@@ -178,7 +178,7 @@ public class Mixinclass_556 {
             )
     )
     private float modifySouthVertexesNudge(float constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : 1F / (texture.getHeight() * texture.getHeight() * 2);
     }
 
@@ -190,7 +190,7 @@ public class Mixinclass_556 {
             )
     )
     private float modifySouthVertexesReciprocal(float constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : 1F / texture.getHeight();
     }
 
@@ -202,7 +202,7 @@ public class Mixinclass_556 {
             )
     )
     private int modifyAmountOfTopVertexes(int constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : texture.getWidth();
     }
 
@@ -214,7 +214,7 @@ public class Mixinclass_556 {
             )
     )
     private float modifyTopVertexesDenominator(float constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : texture.getWidth();
     }
 
@@ -226,7 +226,7 @@ public class Mixinclass_556 {
             )
     )
     private float modifyTopVertexesNudge(float constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : 1F / (texture.getWidth() * texture.getWidth() * 2);
     }
 
@@ -238,7 +238,7 @@ public class Mixinclass_556 {
             )
     )
     private float modifyTopVertexesReciprocal(float constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : 1F / texture.getWidth();
     }
 
@@ -250,7 +250,7 @@ public class Mixinclass_556 {
             )
     )
     private int modifyAmountOfBottomVertexes(int constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : texture.getWidth();
     }
 
@@ -262,7 +262,7 @@ public class Mixinclass_556 {
             )
     )
     private float modifyBottomVertexesDenominator(float constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : texture.getWidth();
     }
 
@@ -274,7 +274,7 @@ public class Mixinclass_556 {
             )
     )
     private float modifyBottomVertexesNudge(float constant) {
-        Atlas.Texture texture = method_1862_customLocals_texture.peek();
+        Atlas.Sprite texture = method_1862_customLocals_texture.peek();
         return texture == null ? constant : 1F / (texture.getWidth() * texture.getWidth() * 2);
     }
 
