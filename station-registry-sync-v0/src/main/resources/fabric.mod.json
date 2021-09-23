@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "station-vanilla-checker-v0",
+  "id": "station-registry-sync-v0",
   "version": "${version}",
 
-  "name": "Station Vanilla Checker (v0)",
-  "description": "Verifies client mods when it connects to a server, or checks if server is vanilla-friendly.",
+  "name": "Station Registry Sync (v0)",
+  "description": "Registry synchronization between server and client.",
   "authors": [
     "mine_diver",
     "calmilamsy"
@@ -16,23 +16,17 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/station-vanilla-checker-v0/icon.png",
+  "icon": "assets/station-registry-sync-v0/icon.png",
 
   "environment": "*",
   "entrypoints": {
-    "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.network.VanillaChecker"
-    ],
     "stationapi:event_bus_server": [
-      "net.modificationstation.stationapi.impl.server.network.ServerVanillaChecker"
+      "net.modificationstation.stationapi.impl.server.registry.ServerRegistrySender"
     ],
     "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.client.network.ClientVanillaChecker"
+      "net.modificationstation.stationapi.impl.client.registry.ClientServerRegistryRemapper"
     ]
   },
-  "mixins": [
-    "station-vanilla-checker-v0.mixins.json"
-  ],
 
   "depends": {
     "minecraft": "1.0.0-beta.7.3"

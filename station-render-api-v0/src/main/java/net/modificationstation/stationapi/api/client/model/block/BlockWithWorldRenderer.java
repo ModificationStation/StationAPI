@@ -5,5 +5,5 @@ import net.minecraft.level.BlockView;
 
 public interface BlockWithWorldRenderer {
 
-    void renderWorld(BlockRenderer tileRenderer, BlockView tileView, int x, int y, int z);
+    boolean renderWorld(BlockRenderer tileRenderer, BlockView tileView, int x, int y, int z);
 }

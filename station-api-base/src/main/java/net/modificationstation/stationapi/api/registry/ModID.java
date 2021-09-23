@@ -61,7 +61,7 @@ public final class ModID implements Comparable<ModID> {
 
     @Override
     public boolean equals(@NotNull Object obj) {
-        return (obj instanceof String && modid.equals(obj)) || (obj instanceof ModID && modid.equals(((ModID) obj).modid));
+        return (modid.equals(obj)) || (obj instanceof ModID && modid.equals(((ModID) obj).modid));
     }
 
     @Override

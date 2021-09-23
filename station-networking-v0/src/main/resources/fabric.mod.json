@@ -22,12 +22,6 @@
   "entrypoints": {
     "stationapi:event_bus": [
       "net.modificationstation.stationapi.impl.packet.MessagePacketInit"
-    ],
-    "stationapi:event_bus_server": [
-      "net.modificationstation.stationapi.impl.server.registry.ServerRegistrySender"
-    ],
-    "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.client.registry.ClientServerRegistryRemapper"
     ]
   },
   "mixins": [

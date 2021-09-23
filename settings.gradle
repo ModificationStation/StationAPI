@@ -26,4 +26,5 @@ include 'station-audio-loader-v0'
 include 'station-lifecycle-events-v0'
 include 'station-vanilla-checker-v0'
 include 'station-templates-v0'
+include 'station-registry-sync-v0'
 

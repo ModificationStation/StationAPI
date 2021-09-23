@@ -23,7 +23,8 @@ public class BakedModelRenderer {
 
     private static final Random random = new Random();
 
-    public static void renderWorld(BlockRenderer blockRenderer, BlockBase block, BakedModel model, BlockView blockView, int x, int y, int z) {
+    public static boolean renderWorld(BlockRenderer blockRenderer, BlockBase block, BakedModel model, BlockView blockView, int x, int y, int z) {
+        boolean rendered = false;
         if (model != null) {
             Vec3i pos = new Vec3i(x, y, z);
             long seed = MathHelper.hashCode(x, y, z);
@@ -71,6 +72,7 @@ public class BakedModelRenderer {
                 ImmutableList<Vertex> vertexes = model.getVertexes(blockView, pos, face, random);
                 if (vertexes.isEmpty() || (face != null && !block.isSideRendered(blockView, x + face.vector.x, y + face.vector.y, z + face.vector.z, vertexSet)))
                     continue;
+                rendered = true;
                 Vertex vertex;
                 for (int i = 0, vertexesSize = vertexes.size(); i < vertexesSize; i++) {
                     vertex = vertexes.get(i);
@@ -97,6 +99,7 @@ public class BakedModelRenderer {
                 }
             }
         }
+        return rendered;
     }
 
     public static void renderInventory(BakedModel model) {

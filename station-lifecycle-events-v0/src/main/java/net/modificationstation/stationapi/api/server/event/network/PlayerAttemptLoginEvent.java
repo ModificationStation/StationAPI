@@ -6,10 +6,10 @@ import net.minecraft.packet.login.LoginRequest0x1Packet;
 import net.minecraft.server.network.ServerPacketHandler;
 
 @RequiredArgsConstructor
-public class HandshakeSuccessEvent extends Event {
+public class PlayerAttemptLoginEvent extends Event {
 
-    public final ServerPacketHandler pendingConnection;
-    public final LoginRequest0x1Packet handshakePacket;
+    public final ServerPacketHandler serverPacketHandler;
+    public final LoginRequest0x1Packet loginRequestPacket;
 
     @Override
     protected int getEventID() {

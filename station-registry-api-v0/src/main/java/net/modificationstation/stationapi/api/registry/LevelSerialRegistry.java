@@ -5,6 +5,8 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.PostRegistryRemapEvent;
 import org.jetbrains.annotations.NotNull;
 
+import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
+
 /**
  * An abstract extension of {@link AbstractSerialRegistry} that has different serial ID mappings for each Minecraft world.
  *
@@ -86,8 +88,10 @@ public abstract class LevelSerialRegistry<T> extends AbstractSerialRegistry<T> {
     public static void loadAll(CompoundTag tag) {
         Registry.REGISTRIES.forEach((identifier, registry) -> {
             String id = registry.id.toString();
-            if (registry instanceof LevelSerialRegistry<?> && tag.containsKey(id))
+            if (registry instanceof LevelSerialRegistry<?> && tag.containsKey(id)) {
+                LOGGER.info("Remapping \"" + id + "\" registry...");
                 ((LevelSerialRegistry<?>) registry).load(tag.getCompoundTag(id));
+            }
         });
         StationAPI.EVENT_BUS.post(new PostRegistryRemapEvent());
     }

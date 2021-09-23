@@ -14,7 +14,7 @@ public interface BlockWorldModelProvider extends BlockWithWorldRenderer {
     Model getCustomWorldModel(BlockView blockView, int x, int y, int z);
 
     @Override
-    default void renderWorld(BlockRenderer blockRenderer, BlockView blockView, int x, int y, int z) {
-        BakedModelRenderer.renderWorld(blockRenderer, (BlockBase) this, getCustomWorldModel(blockView, x, y, z).getBaked(), blockView, x, y, z);
+    default boolean renderWorld(BlockRenderer blockRenderer, BlockView blockView, int x, int y, int z) {
+        return BakedModelRenderer.renderWorld(blockRenderer, (BlockBase) this, getCustomWorldModel(blockView, x, y, z).getBaked(), blockView, x, y, z);
     }
 }
