@@ -9,7 +9,7 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.client.event.texture.TexturePackLoadedEvent;
+import net.modificationstation.stationapi.api.client.event.resource.TexturePackLoadedEvent;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.registry.ModelRegistry;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;

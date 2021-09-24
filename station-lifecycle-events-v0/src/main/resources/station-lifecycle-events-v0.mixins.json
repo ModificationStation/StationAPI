@@ -9,7 +9,8 @@
     "server.MixinPendingConnection"
   ],
   "client": [
-    "client.MixinClientPlayNetworkHandler"
+    "client.MixinClientPlayNetworkHandler",
+    "client.MixinTextureManager"
   ],
   "injectors": {
     "defaultRequire": 1

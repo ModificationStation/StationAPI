@@ -6,8 +6,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.class_214;
 import net.minecraft.client.TexturePackManager;
 import net.minecraft.client.texture.TextureManager;
-import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.client.event.texture.TexturePackLoadedEvent;
 import net.modificationstation.stationapi.impl.client.texture.StationTextureManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -71,21 +69,5 @@ public class MixinTextureManager {
     private void tick_redirect(CallbackInfo ci) {
         stationTextureManager.tick();
         ci.cancel();
-    }
-
-    @Inject(
-            method = "reloadTexturesFromTexturePack()V",
-            at = @At("HEAD")
-    )
-    private void beforeTextureRefresh(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new TexturePackLoadedEvent.Before((TextureManager) (Object) this, texturePackManager.texturePack));
-    }
-
-    @Inject(
-            method = "reloadTexturesFromTexturePack()V",
-            at = @At("RETURN")
-    )
-    private void texturesRefresh(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new TexturePackLoadedEvent.After((TextureManager) (Object) this, texturePackManager.texturePack));
     }
 }

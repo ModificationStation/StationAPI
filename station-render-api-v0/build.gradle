@@ -4,5 +4,6 @@ version = getSubprojectVersion(project, "1.0.0")
 moduleDependencies(project, [
         'station-api-base',
         'station-blocks-v0',
-        'station-registry-api-v0'
+        'station-registry-api-v0',
+        'station-lifecycle-events-v0'
 ])

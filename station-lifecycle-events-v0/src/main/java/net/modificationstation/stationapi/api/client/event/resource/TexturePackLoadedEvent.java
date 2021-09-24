@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.client.event.texture;
+package net.modificationstation.stationapi.api.client.event.resource;
 
 import lombok.RequiredArgsConstructor;
 import net.mine_diver.unsafeevents.Event;
