@@ -18,7 +18,7 @@
   "license": "CC0-1.0",
   "icon": "assets/station-render-api-v0/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "stationapi:event_bus_client": [
       "net.modificationstation.stationapi.impl.client.texture.StationRenderAPI"
