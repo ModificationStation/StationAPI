@@ -5,13 +5,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.material.Material;
 import net.minecraft.level.BlockView;
 import net.modificationstation.stationapi.api.block.BlockHardnessPerMeta;
-import net.modificationstation.stationapi.api.block.EffectiveForTool;
 import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 
 @HasMetaNamedBlockItem
-public class ModdedMetaBlock extends TemplateBlockBase implements BlockHardnessPerMeta, EffectiveForTool {
+public class ModdedMetaBlock extends TemplateBlockBase implements BlockHardnessPerMeta {
 
     public ModdedMetaBlock(Identifier id, Material material) {
         super(id, material);
