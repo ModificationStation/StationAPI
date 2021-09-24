@@ -13,9 +13,6 @@ import net.minecraft.util.io.CompoundTag;
 
 public interface PlayerHandler {
 
-    default void playerInit() {
-    }
-
     default boolean onLivingUpdate() {
         return false;
     }
