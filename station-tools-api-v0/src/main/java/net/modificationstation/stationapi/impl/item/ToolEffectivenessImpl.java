@@ -36,6 +36,6 @@ public class ToolEffectivenessImpl {
                         ((BlockMiningLevel) event.block).getToolTypes(event.meta, event.itemInstance) != null &&
                         ((BlockMiningLevel) event.block).getToolTypes(event.meta, event.itemInstance).stream().anyMatch((toolLevel) -> toolLevel != null && toolLevel.isInstance(event.itemInstance.getType()))
         )
-            event.strength = ((ToolLevel) event.itemInstance.getType()).getMaterial().getMiningSpeed();
+            event.strength = ((BlockMiningLevel) event.block).getEffectiveMiningSpeed(event.itemInstance, event.meta, ((ToolLevel) event.itemInstance.getType()).getMaterial().getMiningSpeed());
     }
 }
