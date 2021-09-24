@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.factory.EnumFactory;
 public class ToolMaterialFactory {
 
     public static ToolMaterial create(String materialName, int miningLevel, int durability, float miningSpeed, int attackDamage) {
-        return EnumFactory.INSTANCE.addEnum(
+        return EnumFactory.addEnum(
                 ToolMaterial.class,
                 materialName,
                 new Class[] { int.class, int.class, float.class, int.class },

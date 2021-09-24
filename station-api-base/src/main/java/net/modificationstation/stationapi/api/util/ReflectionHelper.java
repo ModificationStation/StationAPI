@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.util;
+package net.modificationstation.stationapi.api.util;
 
 import sun.reflect.annotation.AnnotationParser;
 

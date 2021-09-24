@@ -4,7 +4,7 @@ import net.minecraft.achievement.Achievement;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.API;
-import net.modificationstation.stationapi.api.util.Named;
+import uk.co.benjiweber.expressions.property.Named;
 
 import java.util.*;
 import java.util.stream.*;
@@ -13,7 +13,7 @@ import java.util.stream.*;
  * Instantiates and adds an achievement page to the achievement page list.
  * @author calmilamsy
  */
-public class AchievementPage implements Named {
+public class AchievementPage implements Named<AchievementPage> {
 
     private static final List<AchievementPage> PAGES = new ArrayList<>();
     private static int currentPage = 0;
@@ -57,7 +57,7 @@ public class AchievementPage implements Named {
     }
 
     public static String getCurrentPageName() {
-        return getCurrentPage().getName();
+        return getCurrentPage().name();
     }
 
     @API
@@ -84,7 +84,7 @@ public class AchievementPage implements Named {
     }
 
     @Override
-    public String getName() {
+    public String name() {
         return pageName;
     }
 

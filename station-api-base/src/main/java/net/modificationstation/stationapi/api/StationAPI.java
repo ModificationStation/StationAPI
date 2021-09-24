@@ -3,9 +3,6 @@ package net.modificationstation.stationapi.api;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.mine_diver.unsafeevents.EventBus;
-import net.modificationstation.stationapi.api.config.Category;
-import net.modificationstation.stationapi.api.config.Configuration;
-import net.modificationstation.stationapi.api.config.Property;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
 import net.modificationstation.stationapi.api.event.mod.PostInitEvent;
 import net.modificationstation.stationapi.api.event.mod.PreInitEvent;
@@ -15,10 +12,6 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Null;
-import net.modificationstation.stationapi.impl.config.CategoryImpl;
-import net.modificationstation.stationapi.impl.config.PropertyImpl;
-import net.modificationstation.stationapi.impl.factory.EnumFactory;
-import net.modificationstation.stationapi.impl.factory.GeneralFactory;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -45,9 +38,6 @@ public class StationAPI implements PreLaunchEntrypoint {
     @Entrypoint.Logger("Station|API")
     public static final Logger LOGGER = Null.get();
 
-    @Entrypoint.Config
-    public static final Configuration CONFIG = Null.get();
-
     public static final EventBus EVENT_BUS = new EventBus();
 
     /**
@@ -60,24 +50,9 @@ public class StationAPI implements PreLaunchEntrypoint {
         LOGGER.info("Initializing " + name + "...");
         Configurator.setLevel("mixin", Level.TRACE);
         Configurator.setLevel("Fabric|Loader", Level.INFO);
-        LOGGER.info("Setting up API...");
-        setupAPI();
-        LOGGER.info("Loading mods...");
+        LOGGER.info("Loading entrypoints...");
         setupMods();
-        LOGGER.info("Finished " + name + " setup");
-    }
-
-    /**
-     * Performs some API setup. Most likely will be removed due to API becoming less abstract. No Minecraft classes must be referenced here.
-     */
-    public void setupAPI() {
-        LOGGER.info("Setting up GeneralFactory...");
-        net.modificationstation.stationapi.api.factory.GeneralFactory generalFactory = net.modificationstation.stationapi.api.factory.GeneralFactory.INSTANCE;
-        generalFactory.setHandler(new GeneralFactory());
-        generalFactory.addFactory(Category.class, args -> new CategoryImpl((String) args[0]));
-        generalFactory.addFactory(Property.class, args -> new PropertyImpl((String) args[0]));
-        LOGGER.info("Setting up EnumFactory...");
-        net.modificationstation.stationapi.api.factory.EnumFactory.INSTANCE.setHandler(new EnumFactory());
+        LOGGER.info("Finished " + name + " setup.");
     }
 
     /**

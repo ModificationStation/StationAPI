@@ -1,18 +1,15 @@
 package net.modificationstation.stationapi.api.mod.entrypoint;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.mine_diver.unsafeevents.Event;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.config.Configuration;
 import net.modificationstation.stationapi.api.registry.ModID;
-import net.modificationstation.stationapi.impl.util.ReflectionHelper;
+import net.modificationstation.stationapi.api.util.ReflectionHelper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 
-import java.io.*;
 import java.lang.reflect.*;
 import java.util.function.*;
 
@@ -28,7 +25,6 @@ public class EntrypointManager {
      * - Setting entrypoint's {@link Entrypoint.Instance} field.
      * - Setting entrypoint's {@link Entrypoint.ModID} field.
      * - Setting entrypoint's {@link Entrypoint.Logger} field.
-     * - Setting entrypoint's {@link Entrypoint.Config} field.
      * @param entrypointContainer the entrypoint.
      * @see EntrypointManager#setup(Object, ModContainer)
      */
@@ -42,7 +38,6 @@ public class EntrypointManager {
      * - Setting entrypoint's {@link Entrypoint.Instance} field.
      * - Setting entrypoint's {@link Entrypoint.ModID} field.
      * - Setting entrypoint's {@link Entrypoint.Logger} field.
-     * - Setting entrypoint's {@link Entrypoint.Config} field.
      * @param o entrypoint's instance.
      * @param modContainer entrypoint's mod container.
      * @see EntrypointManager#setup(EntrypointContainer)
@@ -71,10 +66,6 @@ public class EntrypointManager {
                     org.apache.logging.log4j.Logger log = LogManager.getFormatterLogger(name);
                     Configurator.setLevel(name, Level.INFO);
                     return log;
-                });
-                ReflectionHelper.setFieldsWithAnnotation(o, Entrypoint.Config.class, config -> {
-                    String modid = modContainer.getMetadata().getId();
-                    return Configuration.of(new File(FabricLoader.getInstance().getConfigDir().toFile(),File.separator + (config.dir().isEmpty() ? modid : config.dir()) + File.separator + (config.value().isEmpty() ? modid + ".cfg" : config.value())));
                 });
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);

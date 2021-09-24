@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.mod.entrypoint;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.modificationstation.stationapi.api.config.Configuration;
 
 import java.lang.annotation.*;
 
@@ -58,26 +57,5 @@ public @interface Entrypoint {
          * @return logger's name. Empty defaults to "modid|Mod"
          */
         String value() default "";
-    }
-
-    /**
-     * Marks the field to be set to the specified config instance.
-     * If both dir and value are empty, /.minecraft/config/modid/modid.cfg is used instead.
-     * @see Configuration
-     */
-    @Documented
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.FIELD)
-    @interface Config {
-
-        /**
-         * @return config's file name with extension included. Empty defaults to "modid.cfg"
-         */
-        String value() default "";
-
-        /**
-         * @return config's directory inside /.minecraft/config/. Empty defaults to "modid", the full path being /.minecraft/config/modid/
-         */
-        String dir() default "";
     }
 }

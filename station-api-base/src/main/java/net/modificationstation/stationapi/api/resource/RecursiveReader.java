@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.resource;
 
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.util.API;
 
 import java.io.*;
 import java.net.*;
@@ -14,6 +15,7 @@ public class RecursiveReader {
     private final String path;
     private final Predicate<String> filter;
 
+    @API
     public RecursiveReader(String path) {
         this(path, null);
     }
