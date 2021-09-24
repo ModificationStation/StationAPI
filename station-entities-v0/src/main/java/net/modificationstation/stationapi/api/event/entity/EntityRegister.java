@@ -5,13 +5,20 @@ import net.mine_diver.unsafeevents.Event;
 import net.minecraft.entity.EntityBase;
 import uk.co.benjiweber.expressions.function.TriConsumer;
 
+import java.util.function.*;
+
 @RequiredArgsConstructor
 public class EntityRegister extends Event {
 
     public final TriConsumer<Class<? extends EntityBase>, String, Integer> register;
+    public final BiConsumer<Class<? extends EntityBase>, String> registerNoID;
 
     public final void register(Class<? extends EntityBase> entityClass, String entityIdentifier, int entityId) {
         register.accept(entityClass, entityIdentifier, entityId);
+    }
+
+    public final void register(Class<? extends EntityBase> entityClass, String entityIdentifier) {
+        registerNoID.accept(entityClass, entityIdentifier);
     }
 
     @Override

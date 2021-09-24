@@ -1,20 +1,26 @@
 package net.modificationstation.sltest.entity;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.event.entity.EntityRegister;
-import net.modificationstation.stationapi.api.event.registry.EntityHandlerRegistryEvent;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.event.registry.MobHandlerRegistryEvent;
+
+import static net.modificationstation.sltest.SLTest.MODID;
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public class EntityListener {
 
     @EventListener
     public void registerEntities(EntityRegister event) {
-        event.register(PoorGuy.class, "GPoor", 127);
+        event.register(PoorGuy.class, "GPoor");
     }
 
+//    @EventListener
+//    public void registerEntityHandlers(EntityHandlerRegistryEvent event) {
+//        event.registry.register(Identifier.of(SLTest.MODID, "gpoor"), PoorGuy::new);
+//    }
+
     @EventListener
-    public void registerEntityHandlers(EntityHandlerRegistryEvent event) {
-        event.registry.register(Identifier.of(SLTest.MODID, "gpoor"), PoorGuy::new);
+    public void registerMobHandlers(MobHandlerRegistryEvent event) {
+        event.registry.register(of(MODID, "gpoor"), PoorGuy::new);
     }
 }
