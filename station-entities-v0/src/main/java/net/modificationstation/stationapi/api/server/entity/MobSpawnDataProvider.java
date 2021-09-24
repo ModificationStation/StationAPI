@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.server.entity;
 
 import com.google.common.primitives.Bytes;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 import net.minecraft.entity.Living;
 import net.minecraft.packet.AbstractPacket;
 import net.minecraft.util.maths.MathHelper;
@@ -29,9 +28,9 @@ public interface MobSpawnDataProvider extends StationSpawnDataProvider {
                 (byte)((int)(mob.yaw * 256.0F / 360.0F)),
                 (byte)((int)(mob.pitch * 256.0F / 360.0F))
         };
-        ByteOutputStream outputStream = new ByteOutputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         mob.getDataTracker().write(new DataOutputStream(outputStream));
-        byte[] data = outputStream.getBytes();
+        byte[] data = outputStream.toByteArray();
         message.bytes = Bytes.concat(rotations, data);
         writeToMessage(message);
         return message;

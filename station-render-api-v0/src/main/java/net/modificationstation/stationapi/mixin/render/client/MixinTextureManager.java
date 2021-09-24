@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.mixin.render.client;
 
-import jdk.internal.org.objectweb.asm.Opcodes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.class_214;
 import net.minecraft.client.TexturePackManager;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.impl.client.texture.StationTextureManager;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
