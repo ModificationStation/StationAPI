@@ -20,8 +20,8 @@ public class JsonCuboidData {
     private boolean shade = true;
 
     public void postprocess() {
-        Doubles.reverse(from);
-        Doubles.reverse(to);
+        Collections.reverse(Doubles.asList(from));
+        Collections.reverse(Doubles.asList(to));
         double fromTmp = from[2];
         from[2] = 16 - to[2];
         to[2] = 16 - fromTmp;

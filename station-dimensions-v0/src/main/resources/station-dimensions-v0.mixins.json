@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.dimension",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinDimension"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

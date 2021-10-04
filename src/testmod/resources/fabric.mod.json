@@ -18,7 +18,7 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.sltest.block.BlockListener",
+      "net.modificationstation.sltest.block.Blocks$Init",
       "net.modificationstation.sltest.item.ItemListener",
       "net.modificationstation.sltest.packet.MessageListenerListener",
       "net.modificationstation.sltest.SLTest",
