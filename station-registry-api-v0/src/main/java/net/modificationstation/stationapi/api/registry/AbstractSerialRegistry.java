@@ -47,7 +47,7 @@ public abstract class AbstractSerialRegistry<T> extends Registry<T> {
      * <p>Used by ItemRegistry.
      *
      * @param identifier registry's identifier.
-     * @param shiftSerialIDOnRegister whether or not the next free serial ID should be shifted
+     * @param shiftSerialIDOnRegister whether the next free serial ID should be shifted
      *                                to 0->size-shift range during object initialization.
      */
     public AbstractSerialRegistry(@NotNull Identifier identifier, boolean shiftSerialIDOnRegister) {

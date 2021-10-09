@@ -19,6 +19,11 @@
   "icon": "assets/station-dimensions-v0/icon.png",
 
   "environment": "*",
+  "entrypoints": {
+    "stationapi:event_bus": [
+      "net.modificationstation.stationapi.impl.level.dimension.DimensionRegistryInit"
+    ]
+  },
   "mixins": [
     "station-dimensions-v0.mixins.json"
   ],

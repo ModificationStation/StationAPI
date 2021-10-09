@@ -130,7 +130,7 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
      */
     @Override
     public @NotNull Iterator<Map.Entry<Identifier, T>> iterator() {
-        return values.entrySet().iterator();
+        return new HashSet<>(values.entrySet()).iterator();
     }
 
     /**

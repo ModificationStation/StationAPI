@@ -1,20 +1,21 @@
 package net.modificationstation.stationapi.api.registry;
 
-import net.minecraft.level.dimension.Dimension;
+import net.modificationstation.stationapi.api.level.dimension.DimensionContainer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.function.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
-public final class DimensionRegistry extends LevelSerialRegistry<Supplier<Dimension>> {
+public final class DimensionRegistry extends LevelSerialRegistry<DimensionContainer<?>> {
 
     public static final DimensionRegistry INSTANCE = new DimensionRegistry();
 
-    private final TreeMap<Integer, Supplier<Dimension>> values = new TreeMap<>();
-    public final SortedMap<Integer, Supplier<Dimension>> serialView = Collections.unmodifiableSortedMap(values);
+    private final TreeMap<Integer, DimensionContainer<?>> values = new TreeMap<>();
+    public final NavigableMap<Integer, DimensionContainer<?>> serialView = Collections.unmodifiableNavigableMap(values);
+
+    private boolean badcode;
 
     private DimensionRegistry() {
         super(of(MODID, "dimensions"));
@@ -26,13 +27,13 @@ public final class DimensionRegistry extends LevelSerialRegistry<Supplier<Dimens
     }
 
     @Override
-    public int getSerialID(@NotNull Supplier<Dimension> value) {
-        return values.entrySet().stream().filter(integerSupplierEntry -> value.equals(integerSupplierEntry.getValue())).findFirst().map(Map.Entry::getKey).orElseThrow(() -> new RuntimeException("Couldn't find serial ID for dimension " + value.get().getClass().getName() + "!"));
+    public int getSerialID(@NotNull DimensionContainer<?> value) {
+        return value.serialID;
     }
 
     @Override
-    public @NotNull Optional<Supplier<Dimension>> get(int serialID) {
-        return Optional.ofNullable(values.get(serialID));
+    public @NotNull Optional<DimensionContainer<?>> get(int serialID) {
+        return Optional.ofNullable(serialView.get(serialID));
     }
 
     @Override
@@ -41,20 +42,35 @@ public final class DimensionRegistry extends LevelSerialRegistry<Supplier<Dimens
     }
 
     @Override
-    protected void remap(int newSerialID, @NotNull Supplier<Dimension> value) {
+    protected void remap(int newSerialID, @NotNull DimensionContainer<?> value) {
+        Identifier id = getIdentifier(value);
+        unregister(id);
         values.remove(getSerialID(value));
-        if (values.containsKey(newSerialID))
-            remap(getNextSerialID(), values.get(newSerialID));
+        if (serialView.containsKey(newSerialID))
+            remap(getNextSerialID(), serialView.get(newSerialID));
+        value.serialID = newSerialID;
+        super.register(id, value);
         values.put(newSerialID, value);
     }
 
     @Override
-    public void register(@NotNull Identifier identifier, @NotNull Supplier<Dimension> value) {
-        register(identifier, getNextSerialID(), value);
+    public void register(@NotNull Identifier identifier, @NotNull DimensionContainer<?> value) {
+        if (badcode)
+            super.register(identifier, value);
+        else {
+            badcode = true;
+            register(identifier, id -> {
+                value.serialID = id;
+                values.put(id, value);
+                return value;
+            });
+            badcode = false;
+        }
     }
 
-    public void register(@NotNull Identifier identifier, int serialID, @NotNull Supplier<Dimension> value) {
-        super.register(identifier, value);
+    public void register(@NotNull Identifier identifier, int serialID, @NotNull DimensionContainer<?> value) {
+        value.serialID = serialID;
         values.put(serialID, value);
+        super.register(identifier, value);
     }
 }

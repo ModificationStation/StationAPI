@@ -9,6 +9,9 @@ import java.util.concurrent.*;
 public final class Identifier implements Comparable<Identifier> {
 
     @NotNull
+    public static final String SEPARATOR = ":";
+
+    @NotNull
     private static final Cache<String, Identifier> CACHE = CacheBuilder.newBuilder().softValues().build();
 
     @NotNull
@@ -17,15 +20,19 @@ public final class Identifier implements Comparable<Identifier> {
     @NotNull
     public final String id;
 
+    @NotNull
+    private final String stringCache;
+
     private Identifier(@NotNull ModID modID, @NotNull String id) {
         this.modID = modID;
         this.id = id;
+        stringCache = modID + SEPARATOR + id;
     }
 
     public static @NotNull Identifier of(@NotNull String identifier) {
         try {
             return CACHE.get(identifier, () -> {
-                String[] strings = identifier.split(":");
+                String[] strings = identifier.split(SEPARATOR);
                 String modid;
                 int idIndex;
                 switch(strings.length) {
@@ -51,7 +58,7 @@ public final class Identifier implements Comparable<Identifier> {
 
     public static @NotNull Identifier of(@NotNull ModID modID, @NotNull String id) {
         try {
-            return CACHE.get(modID + ":" + id, () -> new Identifier(modID, id));
+            return CACHE.get(modID + SEPARATOR + id, () -> new Identifier(modID, id));
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -64,7 +71,7 @@ public final class Identifier implements Comparable<Identifier> {
 
     @Override
     public @NotNull String toString() {
-        return modID + ":" + id;
+        return stringCache;
     }
 
     @Override

@@ -4,7 +4,14 @@
   "package": "net.modificationstation.stationapi.mixin.dimension",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinDimension"
+    "MixinDimension",
+    "MixinDimensionFile",
+    "MixinLevel",
+    "MixinMcRegionDimensionFile"
+  ],
+  "client": [
+    "client.MixinAbstractClientPlayer",
+    "client.MixinMinecraft"
   ],
   "injectors": {
     "defaultRequire": 1

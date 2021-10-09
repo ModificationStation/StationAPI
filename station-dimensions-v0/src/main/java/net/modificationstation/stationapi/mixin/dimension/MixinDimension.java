@@ -8,8 +8,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.function.*;
-
 @Mixin(Dimension.class)
 public class MixinDimension {
 
@@ -21,6 +19,6 @@ public class MixinDimension {
             cancellable = true
     )
     private static void getDimension(int id, CallbackInfoReturnable<Dimension> cir) {
-        cir.setReturnValue(DimensionRegistry.INSTANCE.get(id).map(Supplier::get).orElse(null));
+        cir.setReturnValue(DimensionRegistry.INSTANCE.get(id).map(dimensionFactory -> dimensionFactory.factory.get()).orElse(null));
     }
 }

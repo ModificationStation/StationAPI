@@ -7,7 +7,6 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.level.Level;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -50,10 +49,10 @@ public class MixinWorldRenderer {
             }
 
             if (var22 == 3) {
-//                this.textureManager.bindTexture(this.textureManager.getTextureId("/assets/sltest/textures/skybox/sky2.png"));
+                this.textureManager.bindTexture(this.textureManager.getTextureId("/assets/sltest/textures/skybox/sky2.png"));
 //                this.textureManager.bindTexture(this.textureManager.getTextureId(ExpandableTextureAtlas.STATION_GUI_ITEMS.spritesheet));
 //                ((CustomAtlasProvider) ItemListener.testItem).getAtlas().of(ItemListener.testItem.getTexturePosition(0)).bindAtlas();
-                Atlases.getStationJsonModels().bindAtlas();
+//                Atlases.getStationJsonModels().bindAtlas();
                 GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);
             }
 
