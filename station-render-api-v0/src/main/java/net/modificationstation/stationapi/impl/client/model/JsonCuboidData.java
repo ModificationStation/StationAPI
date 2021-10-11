@@ -33,6 +33,8 @@ public class JsonCuboidData {
         to[2] /= 16;
 
         faces.forEach((direction, face) -> {
+            if (face.localUVs == null)
+                face.localUVs = getRotatedMatrix(direction);
             if (direction == DOWN || direction == UP)
                 face.rotation += 90;
             face.rotation = (face.rotation / 90) % 4;
@@ -121,5 +123,23 @@ public class JsonCuboidData {
                     break;
             }
         });
+    }
+
+    private double[] getRotatedMatrix(Direction direction) {
+        switch(direction) {
+            case DOWN:
+                return new double[]{this.from[0], 16 - this.to[2], this.to[0], 16 - this.from[2]};
+            case UP:
+                return new double[]{this.from[0], this.from[2], this.to[0], this.to[2]};
+            case NORTH:
+            default:
+                return new double[]{16 - this.to[0], 16 - this.to[1], 16 - this.from[0], 16 - this.from[1]};
+            case SOUTH:
+                return new double[]{this.from[0], 16 - this.to[1], this.to[0], 16 - this.from[1]};
+            case WEST:
+                return new double[]{this.from[2], 16 - this.to[1], this.to[2], 16 - this.from[1]};
+            case EAST:
+                return new double[]{16 - this.to[2], 16 - this.to[1], 16 - this.from[2], 16 - this.from[1]};
+        }
     }
 }

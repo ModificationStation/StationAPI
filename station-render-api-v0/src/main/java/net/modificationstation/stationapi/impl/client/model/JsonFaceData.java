@@ -14,7 +14,7 @@ import java.util.stream.*;
 public class JsonFaceData {
 
     @SerializedName("uv")
-    double[] localUVs = new double[] {0, 0, 16, 16};
+    double[] localUVs;
     @Getter
     private transient double[] uv;
     @Getter
