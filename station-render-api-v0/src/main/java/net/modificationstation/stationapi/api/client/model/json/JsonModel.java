@@ -92,7 +92,7 @@ public final class JsonModel extends Model {
             data.elements = elements;
             ImmutableMap.Builder<String, Atlas.Sprite> texturesBuilder = ImmutableMap.builder();
             data.textures.forEach((textureId, texturePath) -> {
-                while (texturePath.startsWith("#")) texturePath = data.textures.get(texturePath);
+                while (texturePath.startsWith("#")) texturePath = data.textures.get(texturePath.substring(1));
                 texturesBuilder.put("#" + textureId, Atlases.getStationJsonModels().addTexture(of(texturePath)));
             });
             this.textures = texturesBuilder.build();
