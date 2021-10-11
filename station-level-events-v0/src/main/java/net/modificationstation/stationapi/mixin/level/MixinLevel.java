@@ -11,8 +11,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Level.class)
 public class MixinLevel {
 
-    @Inject(method = "<init>*", at = @At("RETURN"))
-    private void afterLevelInitialization(CallbackInfo ci) {
+    @Inject(
+            method = {
+                    "<init>(Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;Lnet/minecraft/level/dimension/Dimension;J)V",
+                    "<init>(Lnet/minecraft/level/Level;Lnet/minecraft/level/dimension/Dimension;)V",
+                    "<init>(Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/level/dimension/Dimension;)V"
+            },
+            at = @At("RETURN")
+    )
+    private void onCor1(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(new LevelEvent.Init((Level) (Object) this));
     }
 }
