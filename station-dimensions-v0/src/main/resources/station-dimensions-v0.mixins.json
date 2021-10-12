@@ -7,7 +7,9 @@
     "MixinDimension",
     "MixinDimensionFile",
     "MixinLevel",
-    "MixinMcRegionDimensionFile"
+    "MixinMcRegionDimensionFile",
+    "MixinPlayerBase",
+    "MixinPortal"
   ],
   "client": [
     "client.MixinAbstractClientPlayer",
