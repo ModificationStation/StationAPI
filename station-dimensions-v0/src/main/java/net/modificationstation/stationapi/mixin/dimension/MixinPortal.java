@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.dimension;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Portal;
 import net.minecraft.client.Minecraft;
@@ -23,10 +25,22 @@ public class MixinPortal implements TeleportationManager {
     @Unique
     @Override
     public void switchDimension(PlayerBase player) {
-        //noinspection deprecation
-        Object game = FabricLoader.getInstance().getGameInstance();
         //noinspection Convert2MethodRef
-        SideUtils.run(() -> ((Minecraft) game).switchDimension(), () -> ((MinecraftServer) game).serverPlayerConnectionManager.sendToOppositeDimension((ServerPlayer) player));
+        SideUtils.run(() -> switchDimensionClient(), () -> switchDimensionServer(player));
+    }
+
+    @Unique
+    @Environment(EnvType.CLIENT)
+    private void switchDimensionClient() {
+        //noinspection deprecation
+        ((Minecraft) FabricLoader.getInstance().getGameInstance()).switchDimension();
+    }
+
+    @Unique
+    @Environment(EnvType.SERVER)
+    private void switchDimensionServer(PlayerBase player) {
+        //noinspection deprecation
+        ((MinecraftServer) FabricLoader.getInstance().getGameInstance()).serverPlayerConnectionManager.sendToOppositeDimension((ServerPlayer) player);
     }
 
     @Inject(
