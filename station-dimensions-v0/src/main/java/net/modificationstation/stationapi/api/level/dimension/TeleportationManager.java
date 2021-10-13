@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.block;
+package net.modificationstation.stationapi.api.level.dimension;
 
 import net.minecraft.entity.player.PlayerBase;
 

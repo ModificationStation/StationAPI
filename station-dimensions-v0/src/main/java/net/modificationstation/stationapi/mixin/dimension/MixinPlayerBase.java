@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.dimension;
 
 import net.minecraft.entity.player.PlayerBase;
-import net.modificationstation.stationapi.api.block.TeleportationManager;
 import net.modificationstation.stationapi.api.entity.HasTeleportationManager;
+import net.modificationstation.stationapi.api.level.dimension.TeleportationManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
