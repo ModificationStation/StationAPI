@@ -1,8 +1,11 @@
 package net.modificationstation.stationapi.api.level.dimension;
 
 import net.minecraft.entity.player.PlayerBase;
+import net.modificationstation.stationapi.impl.block.NetherPortalImpl;
 
 public interface TeleportationManager {
 
-    void switchDimension(PlayerBase player);
+    default void switchDimension(PlayerBase player) {
+        NetherPortalImpl.switchDimension(player);
+    }
 }

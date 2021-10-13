@@ -3,15 +3,15 @@ package net.modificationstation.stationapi.mixin.dimension;
 import net.minecraft.block.Portal;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.level.Level;
-import net.modificationstation.stationapi.api.block.NetherPortal;
 import net.modificationstation.stationapi.api.entity.HasTeleportationManager;
+import net.modificationstation.stationapi.api.level.dimension.TeleportationManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Portal.class)
-public class MixinPortal implements NetherPortal {
+public class MixinPortal implements TeleportationManager {
 
     @Inject(
             method = "onEntityCollision(Lnet/minecraft/level/Level;IIILnet/minecraft/entity/EntityBase;)V",
