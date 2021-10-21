@@ -31,13 +31,21 @@ public class MixinBlockRenderer implements StationBlockRendererProvider {
     private boolean renderingInInventory;
 
     @Inject(
+            method = "renderBed(Lnet/minecraft/block/BlockBase;III)Z",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void renderBed_redirect(BlockBase block, int blockX, int blockY, int blockZ, CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(stationBlockRenderer.renderBed(block, blockX, blockY, blockZ, renderingInInventory));
+    }
+
+    @Inject(
             method = "renderBottomFace(Lnet/minecraft/block/BlockBase;DDDI)V",
             at = @At("HEAD"),
             cancellable = true
     )
     private void renderBottomFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
         stationBlockRenderer.renderBottomFace(arg, d, d1, d2, i, renderingInInventory);
-        renderingInInventory = false;
         ci.cancel();
     }
 
@@ -48,7 +56,6 @@ public class MixinBlockRenderer implements StationBlockRendererProvider {
     )
     private void renderTopFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
         stationBlockRenderer.renderTopFace(arg, d, d1, d2, i, renderingInInventory);
-        renderingInInventory = false;
         ci.cancel();
     }
 
@@ -59,7 +66,6 @@ public class MixinBlockRenderer implements StationBlockRendererProvider {
     )
     private void renderEastFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
         stationBlockRenderer.renderEastFace(arg, d, d1, d2, i, renderingInInventory);
-        renderingInInventory = false;
         ci.cancel();
     }
 
@@ -70,7 +76,6 @@ public class MixinBlockRenderer implements StationBlockRendererProvider {
     )
     private void renderWestFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
         stationBlockRenderer.renderWestFace(arg, d, d1, d2, i, renderingInInventory);
-        renderingInInventory = false;
         ci.cancel();
     }
 
@@ -81,7 +86,6 @@ public class MixinBlockRenderer implements StationBlockRendererProvider {
     )
     private void renderNorthFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
         stationBlockRenderer.renderNorthFace(arg, d, d1, d2, i, renderingInInventory);
-        renderingInInventory = false;
         ci.cancel();
     }
 
@@ -92,41 +96,23 @@ public class MixinBlockRenderer implements StationBlockRendererProvider {
     )
     private void renderSouthFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
         stationBlockRenderer.renderSouthFace(arg, d, d1, d2, i, renderingInInventory);
-        renderingInInventory = false;
         ci.cancel();
     }
 
     @Inject(
             method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
-            at = {
-                    @At(
-                            value = "INVOKE",
-                            target = "Lnet/minecraft/client/render/block/BlockRenderer;renderBottomFace(Lnet/minecraft/block/BlockBase;DDDI)V"
-                    ),
-                    @At(
-                            value = "INVOKE",
-                            target = "Lnet/minecraft/client/render/block/BlockRenderer;renderTopFace(Lnet/minecraft/block/BlockBase;DDDI)V"
-                    ),
-                    @At(
-                            value = "INVOKE",
-                            target = "Lnet/minecraft/client/render/block/BlockRenderer;renderEastFace(Lnet/minecraft/block/BlockBase;DDDI)V"
-                    ),
-                    @At(
-                            value = "INVOKE",
-                            target = "Lnet/minecraft/client/render/block/BlockRenderer;renderWestFace(Lnet/minecraft/block/BlockBase;DDDI)V"
-                    ),
-                    @At(
-                            value = "INVOKE",
-                            target = "Lnet/minecraft/client/render/block/BlockRenderer;renderNorthFace(Lnet/minecraft/block/BlockBase;DDDI)V"
-                    ),
-                    @At(
-                            value = "INVOKE",
-                            target = "Lnet/minecraft/client/render/block/BlockRenderer;renderSouthFace(Lnet/minecraft/block/BlockBase;DDDI)V"
-                    )
-            }
+            at = @At("HEAD")
     )
-    private void setRenderingInInventory(BlockBase arg, int i, float f, CallbackInfo ci) {
+    private void setRenderingInInventory1(BlockBase arg, int i, float f, CallbackInfo ci) {
         renderingInInventory = true;
+    }
+
+    @Inject(
+            method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
+            at = @At("RETURN")
+    )
+    private void setRenderingInInventory2(BlockBase arg, int i, float f, CallbackInfo ci) {
+        renderingInInventory = false;
     }
 
     @Inject(
@@ -162,6 +148,7 @@ public class MixinBlockRenderer implements StationBlockRendererProvider {
     private void onRenderInInventory(BlockBase arg, int i, float f, CallbackInfo ci) {
         if (arg instanceof BlockWithInventoryRenderer) {
             ((BlockWithInventoryRenderer) arg).renderInventory((BlockRenderer) (Object) this, i);
+            renderingInInventory = false;
             ci.cancel();
         }
     }

@@ -1,8 +1,10 @@
 package net.modificationstation.stationapi.impl.client.texture;
 
+import net.minecraft.block.Bed;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
+import net.minecraft.sortme.MagicBedNumbers;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
@@ -34,15 +36,7 @@ public class StationBlockRenderer {
         }
     }
 
-    public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
-        Atlas atlas;
-        if (blockRendererAccessor.getTextureOverride() >= 0) {
-            textureIndex = blockRendererAccessor.getTextureOverride();
-            atlas = Atlases.getTerrain();
-        } else
-            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
-        Atlas.Sprite texture = atlas.getTexture(textureIndex);
-        BufferedImage atlasImage = atlas.getImage();
+    public Tessellator prepareTessellator(Atlas atlas, boolean renderingInInventory) {
         Tessellator tessellator;
         if (renderingInInventory) {
             tessellator = Tessellator.INSTANCE;
@@ -58,6 +52,159 @@ public class StationBlockRenderer {
             if (originalAccessor.getHasColour())
                 tessellator.colour(originalAccessor.getColour());
         }
+        return tessellator;
+    }
+
+    public boolean renderBed(BlockBase block, int blockX, int blockY, int blockZ, boolean renderingInInventory) {
+        Atlas atlas = ((CustomAtlasProvider) block).getAtlas();
+        Tessellator var5 = prepareTessellator(atlas, renderingInInventory);
+        Atlas.Sprite texture;
+        int
+                var6 = blockRendererAccessor.getBlockView().getTileMeta(blockX, blockY, blockZ),
+                var7 = Bed.orientationOnly(var6);
+        boolean var8 = Bed.isFoot(var6);
+        float
+                var9 = 0.5F,
+                var10 = 1.0F,
+                var11 = 0.8F,
+                var12 = 0.6F,
+                var25 = block.getBrightness(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ);
+        var5.colour(var9 * var25, var9 * var25, var9 * var25);
+        int var26 = block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 0);
+        texture = atlas.getTexture(var26);
+        double
+                var37 = (double)blockX + block.minX,
+                var39 = (double)blockX + block.maxX,
+                var41 = (double)blockY + block.minY + 0.1875D,
+                var43 = (double)blockZ + block.minZ,
+                var45 = (double)blockZ + block.maxZ;
+        var5.vertex(var37, var41, var45, texture.getStartU(), texture.getEndV());
+        var5.vertex(var37, var41, var43, texture.getStartU(), texture.getStartV());
+        var5.vertex(var39, var41, var43, texture.getEndU(), texture.getStartV());
+        var5.vertex(var39, var41, var45, texture.getEndU(), texture.getEndV());
+        float var64 = block.getBrightness(blockRendererAccessor.getBlockView(), blockX, blockY + 1, blockZ);
+        var5.colour(var10 * var64, var10 * var64, var10 * var64);
+        var26 = block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 1);
+        texture = atlas.getTexture(var26);
+        double
+                var30 = texture.getStartU(),
+                var32 = texture.getEndU(),
+                var34 = texture.getStartV(),
+                var36 = texture.getEndV(),
+                var38 = var30,
+                var40 = var32,
+                var42 = var34,
+                var44 = var34,
+                var46 = var30,
+                var48 = var32,
+                var50 = var36,
+                var52 = var36;
+        if (var7 == 0) {
+            var40 = var30;
+            var42 = var36;
+            var46 = var32;
+            var52 = var34;
+        } else if (var7 == 2) {
+            var38 = var32;
+            var44 = var36;
+            var48 = var30;
+            var50 = var34;
+        } else if (var7 == 3) {
+            var38 = var32;
+            var44 = var36;
+            var48 = var30;
+            var50 = var34;
+            var40 = var30;
+            var42 = var36;
+            var46 = var32;
+            var52 = var34;
+        }
+
+        double
+                var54 = (double)blockX + block.minX,
+                var56 = (double)blockX + block.maxX,
+                var58 = (double)blockY + block.maxY,
+                var60 = (double)blockZ + block.minZ,
+                var62 = (double)blockZ + block.maxZ;
+        var5.vertex(var56, var58, var62, var46, var50);
+        var5.vertex(var56, var58, var60, var38, var42);
+        var5.vertex(var54, var58, var60, var40, var44);
+        var5.vertex(var54, var58, var62, var48, var52);
+        int var65 = MagicBedNumbers.field_792[var7];
+        if (var8)
+            var65 = MagicBedNumbers.field_792[MagicBedNumbers.field_793[var7]];
+
+        int rotation;
+        switch(var7) {
+            case 0:
+                rotation = 5;
+                break;
+            case 1:
+                rotation = 3;
+                break;
+            case 2:
+            default:
+                rotation = 4;
+                break;
+            case 3:
+                rotation = 2;
+                break;
+        }
+
+        if (var65 != 2 && (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ - 1, 2))) {
+            float var69 = block.getBrightness(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ - 1);
+            if (block.minZ > 0.0D)
+                var69 = var25;
+
+            var5.colour(var11 * var69, var11 * var69, var11 * var69);
+            blockRendererAccessor.setMirrorTexture(rotation == 2);
+            this.renderEastFace(block, blockX, blockY, blockZ, block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 2), renderingInInventory);
+        }
+
+        if (var65 != 3 && (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ + 1, 3))) {
+            float var70 = block.getBrightness(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ + 1);
+            if (block.maxZ < 1.0D)
+                var70 = var25;
+
+            var5.colour(var11 * var70, var11 * var70, var11 * var70);
+            blockRendererAccessor.setMirrorTexture(rotation == 3);
+            this.renderWestFace(block, blockX, blockY, blockZ, block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 3), renderingInInventory);
+        }
+
+        if (var65 != 4 && (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), blockX - 1, blockY, blockZ, 4))) {
+            float var71 = block.getBrightness(blockRendererAccessor.getBlockView(), blockX - 1, blockY, blockZ);
+            if (block.minX > 0.0D)
+                var71 = var25;
+
+            var5.colour(var12 * var71, var12 * var71, var12 * var71);
+            blockRendererAccessor.setMirrorTexture(rotation == 4);
+            this.renderNorthFace(block, blockX, blockY, blockZ, block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 4), renderingInInventory);
+        }
+
+        if (var65 != 5 && (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), blockX + 1, blockY, blockZ, 5))) {
+            float var72 = block.getBrightness(blockRendererAccessor.getBlockView(), blockX + 1, blockY, blockZ);
+            if (block.maxX < 1.0D)
+                var72 = var25;
+
+            var5.colour(var12 * var72, var12 * var72, var12 * var72);
+            blockRendererAccessor.setMirrorTexture(rotation == 5);
+            this.renderSouthFace(block, blockX, blockY, blockZ, block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 5), renderingInInventory);
+        }
+
+        blockRendererAccessor.setMirrorTexture(false);
+        return true;
+    }
+
+    public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
+        Atlas atlas;
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
+            textureIndex = blockRendererAccessor.getTextureOverride();
+            atlas = Atlases.getTerrain();
+        } else
+            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
+        Atlas.Sprite texture = atlas.getTexture(textureIndex);
+        BufferedImage atlasImage = atlas.getImage();
+        Tessellator tessellator = prepareTessellator(atlas, renderingInInventory);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
@@ -159,21 +306,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
-        Tessellator tessellator;
-        if (renderingInInventory) {
-            tessellator = Tessellator.INSTANCE;
-            atlas.bindAtlas();
-        } else {
-            tessellator = atlas.getTessellator();
-            TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
-            if (!((TessellatorAccessor) tessellator).getDrawing()) {
-                activeAtlases.add(atlas);
-                tessellator.start();
-                tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
-            }
-            if (originalAccessor.getHasColour())
-                tessellator.colour(originalAccessor.getColour());
-        }
+        Tessellator tessellator = prepareTessellator(atlas, renderingInInventory);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
@@ -275,21 +408,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
-        Tessellator tessellator;
-        if (renderingInInventory) {
-            tessellator = Tessellator.INSTANCE;
-            atlas.bindAtlas();
-        } else {
-            tessellator = atlas.getTessellator();
-            TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
-            if (!((TessellatorAccessor) tessellator).getDrawing()) {
-                activeAtlases.add(atlas);
-                tessellator.start();
-                tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
-            }
-            if (originalAccessor.getHasColour())
-                tessellator.colour(originalAccessor.getColour());
-        }
+        Tessellator tessellator = prepareTessellator(atlas, renderingInInventory);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
@@ -396,21 +515,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
-        Tessellator tessellator;
-        if (renderingInInventory) {
-            tessellator = Tessellator.INSTANCE;
-            atlas.bindAtlas();
-        } else {
-            tessellator = atlas.getTessellator();
-            TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
-            if (!((TessellatorAccessor) tessellator).getDrawing()) {
-                activeAtlases.add(atlas);
-                tessellator.start();
-                tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
-            }
-            if (originalAccessor.getHasColour())
-                tessellator.colour(originalAccessor.getColour());
-        }
+        Tessellator tessellator = prepareTessellator(atlas, renderingInInventory);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
@@ -517,21 +622,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
-        Tessellator tessellator;
-        if (renderingInInventory) {
-            tessellator = Tessellator.INSTANCE;
-            atlas.bindAtlas();
-        } else {
-            tessellator = atlas.getTessellator();
-            TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
-            if (!((TessellatorAccessor) tessellator).getDrawing()) {
-                activeAtlases.add(atlas);
-                tessellator.start();
-                tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
-            }
-            if (originalAccessor.getHasColour())
-                tessellator.colour(originalAccessor.getColour());
-        }
+        Tessellator tessellator = prepareTessellator(atlas, renderingInInventory);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
@@ -638,21 +729,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
-        Tessellator tessellator;
-        if (renderingInInventory) {
-            tessellator = Tessellator.INSTANCE;
-            atlas.bindAtlas();
-        } else {
-            tessellator = atlas.getTessellator();
-            TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
-            if (!((TessellatorAccessor) tessellator).getDrawing()) {
-                activeAtlases.add(atlas);
-                tessellator.start();
-                tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
-            }
-            if (originalAccessor.getHasColour())
-                tessellator.colour(originalAccessor.getColour());
-        }
+        Tessellator tessellator = prepareTessellator(atlas, renderingInInventory);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),

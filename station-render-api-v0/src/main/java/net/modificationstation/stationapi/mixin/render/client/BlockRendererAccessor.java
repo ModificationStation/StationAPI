@@ -1,11 +1,15 @@
 package net.modificationstation.stationapi.mixin.render.client;
 
 import net.minecraft.client.render.block.BlockRenderer;
+import net.minecraft.level.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(BlockRenderer.class)
 public interface BlockRendererAccessor {
+
+    @Accessor
+    BlockView getBlockView();
 
     @Accessor
     float getField_56();
@@ -48,6 +52,12 @@ public interface BlockRendererAccessor {
 
     @Accessor
     boolean getMirrorTexture();
+
+    @Accessor
+    void setMirrorTexture(boolean mirrorTexture);
+
+    @Accessor
+    boolean getRenderAllSides();
 
     @Accessor
     int getEastFaceRotation();
