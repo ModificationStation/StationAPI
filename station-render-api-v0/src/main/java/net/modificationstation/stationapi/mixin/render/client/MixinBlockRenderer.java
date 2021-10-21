@@ -40,6 +40,25 @@ public class MixinBlockRenderer implements StationBlockRendererProvider {
     }
 
     @Inject(
+            method = "renderCrossed(Lnet/minecraft/block/BlockBase;III)Z",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void renderPlant_redirect(BlockBase arg, int i, int j, int k, CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(stationBlockRenderer.renderPlant(arg, i, j, k, renderingInInventory));
+    }
+
+    @Inject(
+            method = "method_47(Lnet/minecraft/block/BlockBase;IDDD)V",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void renderCrossed_redirect(BlockBase arg, int i, double d, double d1, double d2, CallbackInfo ci) {
+        stationBlockRenderer.renderCrossed(arg, i, d, d1, d2, renderingInInventory);
+        ci.cancel();
+    }
+
+    @Inject(
             method = "renderBottomFace(Lnet/minecraft/block/BlockBase;DDDI)V",
             at = @At("HEAD"),
             cancellable = true
