@@ -197,10 +197,10 @@ public class StationBlockRenderer {
     }
 
     public boolean renderPlant(BlockBase block, int x, int y, int z, boolean renderingInInventory) {
-        int meta = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
-        Tessellator var5 = prepareTessellator(((CustomAtlasProvider) block).getAtlas().of(block.getTextureForSide(0, blockRendererAccessor.getBlockView().getTileMeta(x, y, z))), renderingInInventory);
         float var6 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
         int var7 = block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
+        int meta = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
+        Tessellator var5 = prepareTessellator(((CustomAtlasProvider) block).getAtlas().of(block.getTextureForSide(0, blockRendererAccessor.getBlockView().getTileMeta(x, y, z))), renderingInInventory);
         float var8 = (float)(var7 >> 16 & 255) / 255.0F;
         float var9 = (float)(var7 >> 8 & 255) / 255.0F;
         float var10 = (float)(var7 & 255) / 255.0F;
@@ -226,6 +226,15 @@ public class StationBlockRenderer {
         }
 
         this.renderCrossed(block, meta, var19, var20, var15, renderingInInventory);
+        return true;
+    }
+
+    public boolean renderCrops(BlockBase block, int x, int y, int z, boolean renderingInInventory) {
+        float var6 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
+        int meta = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
+        Tessellator var5 = prepareTessellator(((CustomAtlasProvider) block).getAtlas().of(block.getTextureForSide(0, blockRendererAccessor.getBlockView().getTileMeta(x, y, z))), renderingInInventory);
+        var5.colour(var6, var6, var6);
+        this.renderShiftedColumn(block, meta, x, (float)y - 0.0625F, z, renderingInInventory);
         return true;
     }
 
@@ -266,6 +275,64 @@ public class StationBlockRenderer {
         t.vertex(var23, y + 0.0D, var25, var13, var19);
         t.vertex(var21, y + 0.0D, var27, var15, var19);
         t.vertex(var21, y + 1.0D, var27, var15, var17);
+    }
+
+    public void renderShiftedColumn(BlockBase block, int meta, double x, double y, double z, boolean renderingInInventory) {
+        Atlas atlas;
+        Atlas.Sprite texture;
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
+            atlas = Atlases.getTerrain();
+            texture = atlas.getTexture(blockRendererAccessor.getTextureOverride());
+        } else {
+            int textureIndex = block.getTextureForSide(0, meta);
+            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
+            texture = atlas.getTexture(textureIndex);
+        }
+        Tessellator t = prepareTessellator(atlas, renderingInInventory);
+        double var13 = texture.getStartU();
+        double var15 = texture.getEndU();
+        double var17 = texture.getStartV();
+        double var19 = texture.getEndV();
+        double var21 = x + 0.5D - 0.25D;
+        double var23 = x + 0.5D + 0.25D;
+        double var25 = z + 0.5D - 0.5D;
+        double var27 = z + 0.5D + 0.5D;
+        t.vertex(var21, y + 1.0D, var25, var13, var17);
+        t.vertex(var21, y + 0.0D, var25, var13, var19);
+        t.vertex(var21, y + 0.0D, var27, var15, var19);
+        t.vertex(var21, y + 1.0D, var27, var15, var17);
+        t.vertex(var21, y + 1.0D, var27, var13, var17);
+        t.vertex(var21, y + 0.0D, var27, var13, var19);
+        t.vertex(var21, y + 0.0D, var25, var15, var19);
+        t.vertex(var21, y + 1.0D, var25, var15, var17);
+        t.vertex(var23, y + 1.0D, var27, var13, var17);
+        t.vertex(var23, y + 0.0D, var27, var13, var19);
+        t.vertex(var23, y + 0.0D, var25, var15, var19);
+        t.vertex(var23, y + 1.0D, var25, var15, var17);
+        t.vertex(var23, y + 1.0D, var25, var13, var17);
+        t.vertex(var23, y + 0.0D, var25, var13, var19);
+        t.vertex(var23, y + 0.0D, var27, var15, var19);
+        t.vertex(var23, y + 1.0D, var27, var15, var17);
+        var21 = x + 0.5D - 0.5D;
+        var23 = x + 0.5D + 0.5D;
+        var25 = z + 0.5D - 0.25D;
+        var27 = z + 0.5D + 0.25D;
+        t.vertex(var21, y + 1.0D, var25, var13, var17);
+        t.vertex(var21, y + 0.0D, var25, var13, var19);
+        t.vertex(var23, y + 0.0D, var25, var15, var19);
+        t.vertex(var23, y + 1.0D, var25, var15, var17);
+        t.vertex(var23, y + 1.0D, var25, var13, var17);
+        t.vertex(var23, y + 0.0D, var25, var13, var19);
+        t.vertex(var21, y + 0.0D, var25, var15, var19);
+        t.vertex(var21, y + 1.0D, var25, var15, var17);
+        t.vertex(var23, y + 1.0D, var27, var13, var17);
+        t.vertex(var23, y + 0.0D, var27, var13, var19);
+        t.vertex(var21, y + 0.0D, var27, var15, var19);
+        t.vertex(var21, y + 1.0D, var27, var15, var17);
+        t.vertex(var21, y + 1.0D, var27, var13, var17);
+        t.vertex(var21, y + 0.0D, var27, var13, var19);
+        t.vertex(var23, y + 0.0D, var27, var15, var19);
+        t.vertex(var23, y + 1.0D, var27, var15, var17);
     }
 
     public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {

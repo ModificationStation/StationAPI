@@ -49,12 +49,31 @@ public class MixinBlockRenderer implements StationBlockRendererProvider {
     }
 
     @Inject(
+            method = "renderCrops(Lnet/minecraft/block/BlockBase;III)Z",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void renderCrops_redirect(BlockBase arg, int i, int j, int k, CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(stationBlockRenderer.renderCrops(arg, i, j, k, renderingInInventory));
+    }
+
+    @Inject(
             method = "method_47(Lnet/minecraft/block/BlockBase;IDDD)V",
             at = @At("HEAD"),
             cancellable = true
     )
     private void renderCrossed_redirect(BlockBase arg, int i, double d, double d1, double d2, CallbackInfo ci) {
         stationBlockRenderer.renderCrossed(arg, i, d, d1, d2, renderingInInventory);
+        ci.cancel();
+    }
+
+    @Inject(
+            method = "method_56(Lnet/minecraft/block/BlockBase;IDDD)V",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void renderShhiftedColumn_redirect(BlockBase arg, int i, double d, double d1, double d2, CallbackInfo ci) {
+        stationBlockRenderer.renderShiftedColumn(arg, i, d, d1, d2, renderingInInventory);
         ci.cancel();
     }
 
