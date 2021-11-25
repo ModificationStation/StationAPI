@@ -87,7 +87,7 @@ public class MixinAchievements extends ScreenBase {
         return onRenderAchievement(i);
     }
 
-    @ModifyVariable(method = "method_1998(IIF)V", index = 14, at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glDisable(I)V", ordinal = 4, shift = At.Shift.BY, by = -4))
+    @ModifyVariable(method = "method_1998(IIF)V", index = 14, at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glDisable(I)V", ordinal = 4, shift = At.Shift.BY, by = -4, remap = false))
     private int onNextForIteration(int i) {
         return onRenderAchievement(i);
     }

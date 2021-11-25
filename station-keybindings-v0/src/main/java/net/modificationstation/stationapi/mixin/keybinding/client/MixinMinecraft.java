@@ -27,7 +27,7 @@ public class MixinMinecraft {
         StationAPI.EVENT_BUS.post(new KeyStateChangedEvent(KeyStateChangedEvent.Environment.IN_GAME));
     }
 
-    @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Keyboard;getEventKeyState()Z", ordinal = 1, shift = At.Shift.BEFORE))
+    @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Keyboard;getEventKeyState()Z", ordinal = 1, shift = At.Shift.BEFORE, remap = false))
     private void keyReleased(CallbackInfo ci) {
         if (!Keyboard.getEventKeyState())
             if (currentScreen == null)
