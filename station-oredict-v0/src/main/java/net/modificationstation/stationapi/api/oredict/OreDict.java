@@ -5,6 +5,7 @@ import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.impl.oredict.FilterableOreDictMap;
 import net.modificationstation.stationapi.impl.oredict.OreDictEntryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,19 +17,24 @@ public class OreDict {
 
     public static final OreDict INSTANCE = new OreDict();
 
-    private final HashMap<String, List<OreDictEntryObject>> oreDict = new HashMap<>();
+    private final FilterableOreDictMap oreDict = new FilterableOreDictMap();
     private final HashMap<Identifier, List<String>> identifierToOreDictString = new HashMap<>();
 
     /**
-     * Gets a list of item Identifiers that are assigned to the ore dict entry.
+     * Gets a list of item Identifiers that are assigned to the OreDict entry.
      *
      * @param oreDictString The OreDict key.
      * @return A list of item Identifiers that can be used for functionality in recipe viewers.
      */
-    public @Nullable List<@NotNull OreDictEntryObject> getOreDictEntryObjects(@NotNull String oreDictString) {
-        return oreDict.get(oreDictString);
+    public @NotNull List<@NotNull OreDictEntryObject> getOreDictEntryObjects(@NotNull String oreDictString) {
+        return oreDictString.endsWith("*")? oreDict.filterMap(oreDictString.substring(0, oreDictString.length()-2)) : oreDict.get(oreDictString);
     }
 
+    /**
+     * Gets a list of OreDict entries that are valid for the Identifier.
+     * @param identifier The Identifier to check.
+     * @return A list of OreDict keys that can be used top check if an item has a specific OreDict entry.
+     */
     public @Nullable List<@NotNull String> getOreDictStringsFromIdentifier(@NotNull Identifier identifier) {
         return identifierToOreDictString.get(identifier);
     }

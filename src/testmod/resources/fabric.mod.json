@@ -21,6 +21,7 @@
       "net.modificationstation.sltest.block.Blocks$Init",
       "net.modificationstation.sltest.item.ItemListener",
       "net.modificationstation.sltest.packet.MessageListenerListener",
+      "net.modificationstation.sltest.MainTest",
       "net.modificationstation.sltest.SLTest",
       "net.modificationstation.sltest.recipe.RecipeListener",
       "net.modificationstation.sltest.achievement.AchievementListener",
@@ -38,7 +39,6 @@
       "net.modificationstation.sltest.render.entity.EntityRendererListener"
     ],
     "main": [
-      "net.modificationstation.sltest.MainTest"
     ]
   },
 

@@ -19,6 +19,12 @@
   "icon": "assets/station-oredict-v0/icon.png",
 
   "environment": "*",
+  "entrypoints": {
+    "stationapi:event_bus": [
+      "net.modificationstation.stationapi.impl.oredict.OreDictItemInit",
+      "net.modificationstation.stationapi.impl.oredict.OreDictBlockInit"
+    ]
+  },
   "mixins": [
     "station-oredict-v0.mixins.json"
   ],
