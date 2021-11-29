@@ -86,7 +86,7 @@ public class OreDictItemInit {
         addItemIgnoreDamage("hoeGold", ItemBase.goldHoe);
         addItemIgnoreDamage("hoeDiamond", ItemBase.diamondHoe);
 
-        addItemIgnoreDamage("fireStarter", ItemBase.flintAndSteel);
+        addItemIgnoreDamage("firestarter", ItemBase.flintAndSteel);
         addItem0Damage("bucket", ItemBase.bucket);
         addItem0Damage("bucketIron", ItemBase.bucket);
         addItem0Damage("bucketWater", ItemBase.waterBucket);
