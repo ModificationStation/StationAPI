@@ -6,6 +6,7 @@ import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.item.ModdedItem;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -26,6 +27,6 @@ public class MessageListenerListener {
     }
 
     public void handleSendCoords(PlayerBase playerBase, Message message) {
-        System.out.println(((ModdedItem) message.objects[0]).hmmSho);
+        SLTest.LOGGER.info(String.valueOf(((ModdedItem) message.objects[0]).hmmSho));
     }
 }

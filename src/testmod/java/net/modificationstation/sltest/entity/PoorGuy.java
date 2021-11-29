@@ -4,6 +4,8 @@ import lombok.Getter;
 import net.minecraft.entity.animal.AnimalBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.level.Level;
+import net.modificationstation.sltest.SLTest;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.server.entity.HasTrackingParameters;
 import net.modificationstation.stationapi.api.server.entity.MobSpawnDataProvider;
@@ -16,7 +18,7 @@ public class PoorGuy extends AnimalBase implements MobSpawnDataProvider {
 
     public PoorGuy(Level arg) {
         super(arg);
-        System.out.println("well guess im dead");
+        SLTest.LOGGER.info("well guess im dead");
         texture = "/assets/sltest/textures/entities/geisterspoor.png";
     }
 
