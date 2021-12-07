@@ -1,17 +1,19 @@
 package net.modificationstation.sltest.tileentity;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.modificationstation.sltest.SLTest;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.tileentity.TileEntityRegisterEvent;
 
 public class TileEntityListener {
 
     public TileEntityListener() {
-        System.out.println("tile entities?");
+        SLTest.LOGGER.info("tile entities?");
     }
 
     @EventListener
     public void registerTileEntities(TileEntityRegisterEvent event) {
-        System.out.println("reeee tile entiites");
+        SLTest.LOGGER.info("reeee tile entiites");
         new Exception().printStackTrace();
         event.register(TileEntityFreezer.class, "sltest:freezer");
     }

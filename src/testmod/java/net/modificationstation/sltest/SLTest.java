@@ -4,12 +4,18 @@ import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.EventBus;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Null;
 
+import java.util.logging.Logger;
+
 public class SLTest {
+
+    @Entrypoint.Logger
+    public static final Logger LOGGER = Null.get();
 
     @Entrypoint.Instance
     public static final SLTest INSTANCE = Null.get();
@@ -18,12 +24,12 @@ public class SLTest {
     public static final ModID MODID = Null.get();
 
     public SLTest() {
-        System.out.println("WHAT");
+        SLTest.LOGGER.info("WHAT");
     }
 
     @EventListener
     public void init(InitEvent event) {
-        System.out.println(MODID);
+        SLTest.LOGGER.info(MODID.toString());
         EventBus eventBus = new EventBus();
         eventBus.register(this::onTestEvent, ListenerPriority.LOWEST.numPriority);
         eventBus.register(this::onTestEventbutCOOLER, ListenerPriority.HIGH.numPriority);
@@ -89,15 +95,15 @@ public class SLTest {
     }
 
     public void onTestEvent(TestEvent event) {
-        System.out.println("oh wow, a test event");
+        SLTest.LOGGER.info("oh wow, a test event");
     }
 
     public void onTestEventbutCOOLER(TestEvent event) {
-        System.out.println("am cooler that the thing that's gonna execute after me");
+        SLTest.LOGGER.info("am cooler that the thing that's gonna execute after me");
     }
 
     public void onTestEventButNo(TestEvent event) {
-        System.out.println("no, not me");
+        SLTest.LOGGER.info("no, not me");
     }
 
 //    public void lol(Event event) {

@@ -31,8 +31,8 @@ public class RecursiveReader {
         Enumeration<URL> urls = classLoader.getResources(path);
         while (urls.hasMoreElements()) {
             URL rPath = urls.nextElement();
-            System.out.println(rPath.getPath());
-            System.out.println(rPath.toURI().getPath());
+            StationAPI.LOGGER.info(rPath.getPath());
+            StationAPI.LOGGER.info(rPath.toURI().getPath());
             URLConnection connection = rPath.openConnection();
             try {
                 if (connection instanceof JarURLConnection) {
