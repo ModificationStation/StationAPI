@@ -9,6 +9,7 @@ import com.google.gson.InstanceCreator;
 import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.client.model.BasicBakedModel;
 import net.modificationstation.stationapi.api.client.model.Model;
+import net.modificationstation.stationapi.api.client.model.Quad;
 import net.modificationstation.stationapi.api.client.model.Vertex;
 import net.modificationstation.stationapi.api.client.registry.ModelRegistry;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
@@ -112,9 +113,9 @@ public final class JsonModel extends Model {
 
     @Override
     protected BasicBakedModel bake() {
-        Map<Direction, ImmutableList.Builder<Vertex>> faceVertexesBuilder = new EnumMap<>(Direction.class);
-        Arrays.stream(values()).forEach(direction -> faceVertexesBuilder.put(direction, ImmutableList.builder()));
-        ImmutableList.Builder<Vertex> vertexes = ImmutableList.builder();
+        Map<Direction, ImmutableList.Builder<Quad>> faceQuadsBuilders = new EnumMap<>(Direction.class);
+        Arrays.stream(values()).forEach(direction -> faceQuadsBuilders.put(direction, ImmutableList.builder()));
+        ImmutableList.Builder<Quad> quads = ImmutableList.builder();
         data.elements.forEach(cuboid -> {
             double[]
                     from = cuboid.from,
@@ -129,56 +130,66 @@ public final class JsonModel extends Model {
             Map<Direction, JsonFaceData> faces = cuboid.faces;
             boolean shade = cuboid.isShade();
             faces.forEach((direction, face) -> {
-                boolean absentCullface = face.cullface == null;
-                Direction lightingFace = absentCullface ? direction : face.cullface;
-                ImmutableList.Builder<Vertex> v = absentCullface ? vertexes : faceVertexesBuilder.get(face.cullface);
+                ImmutableList.Builder<Quad> q = face.cullface == null ? quads : faceQuadsBuilders.get(face.cullface);
                 face.updateUVs();
                 double[] uv = face.getUv();
                 switch (direction) {
                     case DOWN:
-                        v.add(Vertex.get(xFrom, yFrom, zTo, uv[4], uv[7], lightingFace, shade));
-                        v.add(Vertex.get(xFrom, yFrom, zFrom, uv[0], uv[1], lightingFace, shade));
-                        v.add(Vertex.get(xTo, yFrom, zFrom, uv[6], uv[5], lightingFace, shade));
-                        v.add(Vertex.get(xTo, yFrom, zTo, uv[2], uv[3], lightingFace, shade));
+                        q.add(Quad.get(
+                                Vertex.get(xFrom, yFrom, zTo, uv[4], uv[7], direction, shade),
+                                Vertex.get(xFrom, yFrom, zFrom, uv[0], uv[1], direction, shade),
+                                Vertex.get(xTo, yFrom, zFrom, uv[6], uv[5], direction, shade),
+                                Vertex.get(xTo, yFrom, zTo, uv[2], uv[3], direction, shade)
+                        ));
                         break;
                     case UP:
-                        v.add(Vertex.get(xTo, yTo, zTo, uv[2], uv[3], lightingFace, shade));
-                        v.add(Vertex.get(xTo, yTo, zFrom, uv[6], uv[5], lightingFace, shade));
-                        v.add(Vertex.get(xFrom, yTo, zFrom, uv[0], uv[1], lightingFace, shade));
-                        v.add(Vertex.get(xFrom, yTo, zTo, uv[4], uv[7], lightingFace, shade));
+                        q.add(Quad.get(
+                                Vertex.get(xTo, yTo, zTo, uv[2], uv[3], direction, shade),
+                                Vertex.get(xTo, yTo, zFrom, uv[6], uv[5], direction, shade),
+                                Vertex.get(xFrom, yTo, zFrom, uv[0], uv[1], direction, shade),
+                                Vertex.get(xFrom, yTo, zTo, uv[4], uv[7], direction, shade)
+                        ));
                         break;
                     case EAST:
-                        v.add(Vertex.get(xFrom, yTo, zFrom, uv[2], uv[1], lightingFace, shade));
-                        v.add(Vertex.get(xTo, yTo, zFrom, uv[0], uv[1], lightingFace, shade));
-                        v.add(Vertex.get(xTo, yFrom, zFrom, uv[0], uv[3], lightingFace, shade));
-                        v.add(Vertex.get(xFrom, yFrom, zFrom, uv[2], uv[3], lightingFace, shade));
+                        q.add(Quad.get(
+                                Vertex.get(xFrom, yTo, zFrom, uv[2], uv[1], direction, shade),
+                                Vertex.get(xTo, yTo, zFrom, uv[0], uv[1], direction, shade),
+                                Vertex.get(xTo, yFrom, zFrom, uv[0], uv[3], direction, shade),
+                                Vertex.get(xFrom, yFrom, zFrom, uv[2], uv[3], direction, shade)
+                        ));
                         break;
                     case WEST:
-                        v.add(Vertex.get(xFrom, yTo, zTo, uv[0], uv[1], lightingFace, shade));
-                        v.add(Vertex.get(xFrom, yFrom, zTo, uv[0], uv[3], lightingFace, shade));
-                        v.add(Vertex.get(xTo, yFrom, zTo, uv[2], uv[3], lightingFace, shade));
-                        v.add(Vertex.get(xTo, yTo, zTo, uv[2], uv[1], lightingFace, shade));
+                        q.add(Quad.get(
+                                Vertex.get(xFrom, yTo, zTo, uv[0], uv[1], direction, shade),
+                                Vertex.get(xFrom, yFrom, zTo, uv[0], uv[3], direction, shade),
+                                Vertex.get(xTo, yFrom, zTo, uv[2], uv[3], direction, shade),
+                                Vertex.get(xTo, yTo, zTo, uv[2], uv[1], direction, shade)
+                        ));
                         break;
                     case NORTH:
-                        v.add(Vertex.get(xFrom, yTo, zTo, uv[2], uv[1], lightingFace, shade));
-                        v.add(Vertex.get(xFrom, yTo, zFrom, uv[0], uv[1], lightingFace, shade));
-                        v.add(Vertex.get(xFrom, yFrom, zFrom, uv[0], uv[3], lightingFace, shade));
-                        v.add(Vertex.get(xFrom, yFrom, zTo, uv[2], uv[3], lightingFace, shade));
+                        q.add(Quad.get(
+                                Vertex.get(xFrom, yTo, zTo, uv[2], uv[1], direction, shade),
+                                Vertex.get(xFrom, yTo, zFrom, uv[0], uv[1], direction, shade),
+                                Vertex.get(xFrom, yFrom, zFrom, uv[0], uv[3], direction, shade),
+                                Vertex.get(xFrom, yFrom, zTo, uv[2], uv[3], direction, shade)
+                        ));
                         break;
                     case SOUTH:
-                        v.add(Vertex.get(xTo, yFrom, zTo, uv[0], uv[3], lightingFace, shade));
-                        v.add(Vertex.get(xTo, yFrom, zFrom, uv[2], uv[3], lightingFace, shade));
-                        v.add(Vertex.get(xTo, yTo, zFrom, uv[2], uv[1], lightingFace, shade));
-                        v.add(Vertex.get(xTo, yTo, zTo, uv[0], uv[1], lightingFace, shade));
+                        q.add(Quad.get(
+                                Vertex.get(xTo, yFrom, zTo, uv[0], uv[3], direction, shade),
+                                Vertex.get(xTo, yFrom, zFrom, uv[2], uv[3], direction, shade),
+                                Vertex.get(xTo, yTo, zFrom, uv[2], uv[1], direction, shade),
+                                Vertex.get(xTo, yTo, zTo, uv[0], uv[1], direction, shade)
+                        ));
                         break;
                 }
             });
         });
-        ImmutableMap.Builder<Direction, ImmutableList<Vertex>> faceVertexes = ImmutableMap.builder();
-        faceVertexesBuilder.forEach((direction, faceQuadPointBuilder) -> faceVertexes.put(direction, faceQuadPointBuilder.build()));
+        ImmutableMap.Builder<Direction, ImmutableList<Quad>> faceQuads = ImmutableMap.builder();
+        faceQuadsBuilders.forEach((direction, faceQuadPointBuilder) -> faceQuads.put(direction, faceQuadPointBuilder.build()));
         return new BasicBakedModel.Builder()
-                .faceVertexes(Maps.immutableEnumMap(faceVertexes.build()))
-                .vertexes(vertexes.build())
+                .faceQuads(Maps.immutableEnumMap(faceQuads.build()))
+                .quads(quads.build())
                 .useAO(data.isAmbientocclusion())
                 .isSideLit(data.gui_light == GuiLightType.SIDE)
                 .sprite(textures.get("#particle"))

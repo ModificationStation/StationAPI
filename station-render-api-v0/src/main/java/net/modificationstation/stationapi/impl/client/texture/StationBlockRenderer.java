@@ -204,7 +204,7 @@ public class StationBlockRenderer {
         float var8 = (float)(var7 >> 16 & 255) / 255.0F;
         float var9 = (float)(var7 >> 8 & 255) / 255.0F;
         float var10 = (float)(var7 & 255) / 255.0F;
-        if (GameRenderer.field_2340) {
+        if (GameRenderer.anaglyph3d) {
             float var11 = (var8 * 30.0F + var9 * 59.0F + var10 * 11.0F) / 100.0F;
             float var12 = (var8 * 30.0F + var9 * 70.0F) / 100.0F;
             float var13 = (var8 * 30.0F + var10 * 70.0F) / 100.0F;
@@ -413,21 +413,21 @@ public class StationBlockRenderer {
                 adjustedRenderY = renderY + block.minY,
                 startRenderZ = renderZ + block.minZ,
                 endRenderZ = renderZ + block.maxZ;
-        if (blockRendererAccessor.getField_92()) {
+        if (blockRendererAccessor.getShadeTopFace()) {
             t.colour(
-                    blockRendererAccessor.getField_56(), blockRendererAccessor.getField_60(), blockRendererAccessor.getField_64()
+                    blockRendererAccessor.getColourRed00(), blockRendererAccessor.getColourGreen00(), blockRendererAccessor.getColourBlue00()
             );
             t.vertex(startRenderX, adjustedRenderY, endRenderZ, startU2, endV2);
             t.colour(
-                    blockRendererAccessor.getField_57(), blockRendererAccessor.getField_61(), blockRendererAccessor.getField_65()
+                    blockRendererAccessor.getColourRed01(), blockRendererAccessor.getColourGreen01(), blockRendererAccessor.getColourBlue01()
             );
             t.vertex(startRenderX, adjustedRenderY, startRenderZ, startU1, startV1);
             t.colour(
-                    blockRendererAccessor.getField_58(), blockRendererAccessor.getField_62(), blockRendererAccessor.getField_66()
+                    blockRendererAccessor.getColurRed11(), blockRendererAccessor.getColourGreen11(), blockRendererAccessor.getColourBlue11()
             );
             t.vertex(endRenderX, adjustedRenderY, startRenderZ, endU2, startV2);
             t.colour(
-                    blockRendererAccessor.getField_59(), blockRendererAccessor.getField_63(), blockRendererAccessor.getField_68()
+                    blockRendererAccessor.getColourRed10(), blockRendererAccessor.getColourGreen10(), blockRendererAccessor.getColourBlue10()
             );
         } else {
             t.vertex(startRenderX, adjustedRenderY, endRenderZ, startU2, endV2);
@@ -515,21 +515,21 @@ public class StationBlockRenderer {
                 adjustedRenderY = renderY + block.maxY,
                 startRenderZ = renderZ + block.minZ,
                 endRenderZ = renderZ + block.maxZ;
-        if (blockRendererAccessor.getField_92()) {
+        if (blockRendererAccessor.getShadeTopFace()) {
             t.colour(
-                    blockRendererAccessor.getField_56(), blockRendererAccessor.getField_60(), blockRendererAccessor.getField_64()
+                    blockRendererAccessor.getColourRed00(), blockRendererAccessor.getColourGreen00(), blockRendererAccessor.getColourBlue00()
             );
             t.vertex(endRenderX, adjustedRenderY, endRenderZ, endU1, endV1);
             t.colour(
-                    blockRendererAccessor.getField_57(), blockRendererAccessor.getField_61(), blockRendererAccessor.getField_65()
+                    blockRendererAccessor.getColourRed01(), blockRendererAccessor.getColourGreen01(), blockRendererAccessor.getColourBlue01()
             );
             t.vertex(endRenderX, adjustedRenderY, startRenderZ, endU2, startV2);
             t.colour(
-                    blockRendererAccessor.getField_58(), blockRendererAccessor.getField_62(), blockRendererAccessor.getField_66()
+                    blockRendererAccessor.getColurRed11(), blockRendererAccessor.getColourGreen11(), blockRendererAccessor.getColourBlue11()
             );
             t.vertex(startRenderX, adjustedRenderY, startRenderZ, startU1, startV1);
             t.colour(
-                    blockRendererAccessor.getField_59(), blockRendererAccessor.getField_63(), blockRendererAccessor.getField_68()
+                    blockRendererAccessor.getColourRed10(), blockRendererAccessor.getColourGreen10(), blockRendererAccessor.getColourBlue10()
             );
         } else {
             t.vertex(endRenderX, adjustedRenderY, endRenderZ, endU1, endV1);
@@ -622,21 +622,21 @@ public class StationBlockRenderer {
                 startRenderY = renderY + block.minY,
                 endRenderY = renderY + block.maxY,
                 adjustedRenderZ = renderZ + block.minZ;
-        if (blockRendererAccessor.getField_92()) {
+        if (blockRendererAccessor.getShadeTopFace()) {
             t.colour(
-                    blockRendererAccessor.getField_56(), blockRendererAccessor.getField_60(), blockRendererAccessor.getField_64()
+                    blockRendererAccessor.getColourRed00(), blockRendererAccessor.getColourGreen00(), blockRendererAccessor.getColourBlue00()
             );
             t.vertex(startRenderX, endRenderY, adjustedRenderZ, endU2, startV2);
             t.colour(
-                    blockRendererAccessor.getField_57(), blockRendererAccessor.getField_61(), blockRendererAccessor.getField_65()
+                    blockRendererAccessor.getColourRed01(), blockRendererAccessor.getColourGreen01(), blockRendererAccessor.getColourBlue01()
             );
             t.vertex(endRenderX, endRenderY, adjustedRenderZ, startU1, startV1);
             t.colour(
-                    blockRendererAccessor.getField_58(), blockRendererAccessor.getField_62(), blockRendererAccessor.getField_66()
+                    blockRendererAccessor.getColurRed11(), blockRendererAccessor.getColourGreen11(), blockRendererAccessor.getColourBlue11()
             );
             t.vertex(endRenderX, startRenderY, adjustedRenderZ, startU2, endV2);
             t.colour(
-                    blockRendererAccessor.getField_59(), blockRendererAccessor.getField_63(), blockRendererAccessor.getField_68()
+                    blockRendererAccessor.getColourRed10(), blockRendererAccessor.getColourGreen10(), blockRendererAccessor.getColourBlue10()
             );
         } else {
             t.vertex(startRenderX, endRenderY, adjustedRenderZ, endU2, startV2);
@@ -729,21 +729,21 @@ public class StationBlockRenderer {
                 startRenderY = renderY + block.minY,
                 endRenderY = renderY + block.maxY,
                 adjustedRenderZ = renderZ + block.maxZ;
-        if (blockRendererAccessor.getField_92()) {
+        if (blockRendererAccessor.getShadeTopFace()) {
             t.colour(
-                    blockRendererAccessor.getField_56(), blockRendererAccessor.getField_60(), blockRendererAccessor.getField_64()
+                    blockRendererAccessor.getColourRed00(), blockRendererAccessor.getColourGreen00(), blockRendererAccessor.getColourBlue00()
             );
             t.vertex(startRenderX, endRenderY, adjustedRenderZ, startU1, startV1);
             t.colour(
-                    blockRendererAccessor.getField_57(), blockRendererAccessor.getField_61(), blockRendererAccessor.getField_65()
+                    blockRendererAccessor.getColourRed01(), blockRendererAccessor.getColourGreen01(), blockRendererAccessor.getColourBlue01()
             );
             t.vertex(startRenderX, startRenderY, adjustedRenderZ, startU2, endV2);
             t.colour(
-                    blockRendererAccessor.getField_58(), blockRendererAccessor.getField_62(), blockRendererAccessor.getField_66()
+                    blockRendererAccessor.getColurRed11(), blockRendererAccessor.getColourGreen11(), blockRendererAccessor.getColourBlue11()
             );
             t.vertex(endRenderX, startRenderY, adjustedRenderZ, endU1, endV1);
             t.colour(
-                    blockRendererAccessor.getField_59(), blockRendererAccessor.getField_63(), blockRendererAccessor.getField_68()
+                    blockRendererAccessor.getColourRed10(), blockRendererAccessor.getColourGreen10(), blockRendererAccessor.getColourBlue10()
             );
         } else {
             t.vertex(startRenderX, endRenderY, adjustedRenderZ, startU1, startV1);
@@ -836,21 +836,21 @@ public class StationBlockRenderer {
                 endRenderY = renderY + block.maxY,
                 startRenderZ = renderZ + block.minZ,
                 endRenderZ = renderZ + block.maxZ;
-        if (blockRendererAccessor.getField_92()) {
+        if (blockRendererAccessor.getShadeTopFace()) {
             t.colour(
-                    blockRendererAccessor.getField_56(), blockRendererAccessor.getField_60(), blockRendererAccessor.getField_64()
+                    blockRendererAccessor.getColourRed00(), blockRendererAccessor.getColourGreen00(), blockRendererAccessor.getColourBlue00()
             );
             t.vertex(adjustedRenderX, endRenderY, endRenderZ, endU2, startV2);
             t.colour(
-                    blockRendererAccessor.getField_57(), blockRendererAccessor.getField_61(), blockRendererAccessor.getField_65()
+                    blockRendererAccessor.getColourRed01(), blockRendererAccessor.getColourGreen01(), blockRendererAccessor.getColourBlue01()
             );
             t.vertex(adjustedRenderX, endRenderY, startRenderZ, startU1, startV1);
             t.colour(
-                    blockRendererAccessor.getField_58(), blockRendererAccessor.getField_62(), blockRendererAccessor.getField_66()
+                    blockRendererAccessor.getColurRed11(), blockRendererAccessor.getColourGreen11(), blockRendererAccessor.getColourBlue11()
             );
             t.vertex(adjustedRenderX, startRenderY, startRenderZ, startU2, endV2);
             t.colour(
-                    blockRendererAccessor.getField_59(), blockRendererAccessor.getField_63(), blockRendererAccessor.getField_68()
+                    blockRendererAccessor.getColourRed10(), blockRendererAccessor.getColourGreen10(), blockRendererAccessor.getColourBlue10()
             );
         } else {
             t.vertex(adjustedRenderX, endRenderY, endRenderZ, endU2, startV2);
@@ -943,21 +943,21 @@ public class StationBlockRenderer {
                 endRenderY = renderY + block.maxY,
                 startRenderZ = renderZ + block.minZ,
                 endRenderZ = renderZ + block.maxZ;
-        if (blockRendererAccessor.getField_92()) {
+        if (blockRendererAccessor.getShadeTopFace()) {
             t.colour(
-                    blockRendererAccessor.getField_56(), blockRendererAccessor.getField_60(), blockRendererAccessor.getField_64()
+                    blockRendererAccessor.getColourRed00(), blockRendererAccessor.getColourGreen00(), blockRendererAccessor.getColourBlue00()
             );
             t.vertex(adjustedRenderX, startRenderY, endRenderZ, startU2, endV2);
             t.colour(
-                    blockRendererAccessor.getField_57(), blockRendererAccessor.getField_61(), blockRendererAccessor.getField_65()
+                    blockRendererAccessor.getColourRed01(), blockRendererAccessor.getColourGreen01(), blockRendererAccessor.getColourBlue01()
             );
             t.vertex(adjustedRenderX, startRenderY, startRenderZ, endU1, endV1);
             t.colour(
-                    blockRendererAccessor.getField_58(), blockRendererAccessor.getField_62(), blockRendererAccessor.getField_66()
+                    blockRendererAccessor.getColurRed11(), blockRendererAccessor.getColourGreen11(), blockRendererAccessor.getColourBlue11()
             );
             t.vertex(adjustedRenderX, endRenderY, startRenderZ, endU2, startV2);
             t.colour(
-                    blockRendererAccessor.getField_59(), blockRendererAccessor.getField_63(), blockRendererAccessor.getField_68()
+                    blockRendererAccessor.getColourRed10(), blockRendererAccessor.getColourGreen10(), blockRendererAccessor.getColourBlue10()
             );
         } else {
             t.vertex(adjustedRenderX, startRenderY, endRenderZ, startU2, endV2);

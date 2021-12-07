@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
 import net.modificationstation.stationapi.api.client.model.Model;
-import net.modificationstation.stationapi.impl.client.model.BakedModelRenderer;
+import net.modificationstation.stationapi.api.client.render.block.BlockRendererUtil;
 
 public interface BlockWorldModelProvider extends BlockWithWorldRenderer {
 
@@ -15,6 +15,6 @@ public interface BlockWorldModelProvider extends BlockWithWorldRenderer {
 
     @Override
     default boolean renderWorld(BlockRenderer blockRenderer, BlockView blockView, int x, int y, int z) {
-        return BakedModelRenderer.renderWorld(blockRenderer, (BlockBase) this, getCustomWorldModel(blockView, x, y, z).getBaked(), blockView, x, y, z);
+        return BlockRendererUtil.getBakedModelRenderer(blockRenderer).renderWorld((BlockBase) this, getCustomWorldModel(blockView, x, y, z).getBaked(), blockView, x, y, z);
     }
 }

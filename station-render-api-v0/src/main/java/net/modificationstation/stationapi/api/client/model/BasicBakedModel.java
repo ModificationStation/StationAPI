@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import lombok.Getter;
 import net.minecraft.level.BlockView;
 import net.minecraft.util.Vec3i;
@@ -11,13 +12,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.*;
 
 public class BasicBakedModel implements BakedModel {
 
     @NotNull
-    private final ImmutableMap<@NotNull Direction, @NotNull ImmutableList<@NotNull Vertex>> faceVertexes;
+    private final ImmutableMap<@NotNull Direction, @NotNull ImmutableList<@NotNull Quad>> faceQuads;
     @NotNull
-    private final ImmutableList<@NotNull Vertex> vertexes;
+    private final ImmutableList<@NotNull Quad> quads;
     private final boolean ambientocclusion;
     @Getter
     private final boolean isSideLit;
@@ -29,16 +31,16 @@ public class BasicBakedModel implements BakedModel {
     private final ModelOverrideList overrides;
 
     private BasicBakedModel(
-            final @NotNull ImmutableMap<@NotNull Direction, @NotNull ImmutableList<@NotNull Vertex>> faceVertexes,
-            final @NotNull ImmutableList<@NotNull Vertex> vertexes,
+            final @NotNull ImmutableMap<@NotNull Direction, @NotNull ImmutableList<@NotNull Quad>> faceQuads,
+            final @NotNull ImmutableList<@NotNull Quad> quads,
             final boolean ambientocclusion,
             final boolean isSideLit,
             final @NotNull Atlas.Sprite sprite,
             ModelTransformation transformation,
             ModelOverrideList overrides
     ) {
-        this.faceVertexes = faceVertexes;
-        this.vertexes = vertexes;
+        this.faceQuads = faceQuads;
+        this.quads = quads;
         this.ambientocclusion = ambientocclusion;
         this.sprite = sprite;
         this.isSideLit = isSideLit;
@@ -47,8 +49,8 @@ public class BasicBakedModel implements BakedModel {
     }
 
     @Override
-    public ImmutableList<Vertex> getVertexes(@Nullable BlockView blockView, @Nullable Vec3i blockPos, @Nullable Direction face, Random random) {
-        return face == null ? vertexes : faceVertexes.get(face);
+    public ImmutableList<Quad> getQuads(@Nullable BlockView blockView, @Nullable Vec3i blockPos, @Nullable Direction face, Random random) {
+        return face == null ? quads : faceQuads.get(face);
     }
 
     @Override
@@ -68,21 +70,35 @@ public class BasicBakedModel implements BakedModel {
 
     public final static class Builder {
 
-        private ImmutableMap<Direction, ImmutableList<Vertex>> faceVertexes = ImmutableMap.of();
-        private ImmutableList<Vertex> vertexes = ImmutableList.of();
+        private ImmutableMap<Direction, ImmutableList<Quad>> faceQuads = ImmutableMap.of();
+        private ImmutableList<Quad> quads = ImmutableList.of();
         private boolean useAO = true;
         private boolean isSideLit = true;
         private Atlas.Sprite sprite;
         private ModelTransformation transformation = null;
         private ModelOverrideList overrides = null;
 
+        /** @deprecated use {@link Builder#faceQuads(ImmutableMap)} instead */
+        @Deprecated
         public Builder faceVertexes(ImmutableMap<Direction, ImmutableList<Vertex>> faceVertexes) {
-            this.faceVertexes = faceVertexes;
+            this.faceQuads = Maps.immutableEnumMap(faceVertexes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> Quad.fromVertexes(e.getValue()), (l, r) -> { throw new IllegalArgumentException("Duplicate keys " + l + "and " + r + "."); }, () -> new EnumMap<>(Direction.class))));
             return this;
         }
 
+        public Builder faceQuads(ImmutableMap<Direction, ImmutableList<Quad>> faceQuads) {
+            this.faceQuads = faceQuads;
+            return this;
+        }
+
+        /** @deprecated use {@link Builder#quads(ImmutableList)} instead */
+        @Deprecated
         public Builder vertexes(ImmutableList<Vertex> vertexes) {
-            this.vertexes = vertexes;
+            this.quads = Quad.fromVertexes(vertexes);
+            return this;
+        }
+
+        public Builder quads(ImmutableList<Quad> quads) {
+            this.quads = quads;
             return this;
         }
 
@@ -115,8 +131,8 @@ public class BasicBakedModel implements BakedModel {
             if (sprite == null)
                 throw new IllegalStateException("Sprite wasn't defined in the BasicBakedModel builder!");
             return new BasicBakedModel(
-                    faceVertexes,
-                    vertexes,
+                    faceQuads,
+                    quads,
                     useAO,
                     isSideLit,
                     sprite,

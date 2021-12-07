@@ -12,40 +12,40 @@ public interface BlockRendererAccessor {
     BlockView getBlockView();
 
     @Accessor
-    float getField_56();
+    float getColourRed00();
 
     @Accessor
-    float getField_57();
+    float getColourGreen00();
 
     @Accessor
-    float getField_58();
+    float getColourBlue00();
 
     @Accessor
-    float getField_59();
+    float getColourRed01();
 
     @Accessor
-    float getField_60();
+    float getColourGreen01();
 
     @Accessor
-    float getField_61();
+    float getColourBlue01();
 
     @Accessor
-    float getField_62();
+    float getColurRed11();
 
     @Accessor
-    float getField_63();
+    float getColourGreen11();
 
     @Accessor
-    float getField_64();
+    float getColourBlue11();
 
     @Accessor
-    float getField_65();
+    float getColourRed10();
 
     @Accessor
-    float getField_66();
+    float getColourGreen10();
 
     @Accessor
-    float getField_68();
+    float getColourBlue10();
 
     @Accessor
     int getTextureOverride();
@@ -96,5 +96,5 @@ public interface BlockRendererAccessor {
     void setBottomFaceRotation(int bottomFaceRotation);
 
     @Accessor
-    boolean getField_92();
+    boolean getShadeTopFace();
 }

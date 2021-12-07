@@ -1,5 +1,8 @@
 package net.modificationstation.stationapi.api.registry;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectAVLTreeMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectSortedMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectSortedMaps;
 import net.modificationstation.stationapi.api.level.dimension.DimensionContainer;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,8 +15,8 @@ public final class DimensionRegistry extends LevelSerialRegistry<DimensionContai
 
     public static final DimensionRegistry INSTANCE = new DimensionRegistry();
 
-    private final TreeMap<Integer, DimensionContainer<?>> values = new TreeMap<>();
-    public final NavigableMap<Integer, DimensionContainer<?>> serialView = Collections.unmodifiableNavigableMap(values);
+    private final Int2ObjectSortedMap<DimensionContainer<?>> values = new Int2ObjectAVLTreeMap<>();
+    public final Int2ObjectSortedMap<DimensionContainer<?>> serialView = Int2ObjectSortedMaps.unmodifiable(values);
 
     private boolean badcode;
 

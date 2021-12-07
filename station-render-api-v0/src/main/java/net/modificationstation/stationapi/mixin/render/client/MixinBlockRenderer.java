@@ -7,10 +7,12 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
+import net.modificationstation.stationapi.api.client.model.BakedModelRenderer;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldRenderer;
+import net.modificationstation.stationapi.impl.client.model.BakedModelRendererImpl;
+import net.modificationstation.stationapi.impl.client.texture.BlockRendererCustomAccessor;
 import net.modificationstation.stationapi.impl.client.texture.StationBlockRenderer;
-import net.modificationstation.stationapi.impl.client.texture.StationBlockRendererProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,11 +23,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(BlockRenderer.class)
-public class MixinBlockRenderer implements StationBlockRendererProvider {
+public class MixinBlockRenderer implements BlockRendererCustomAccessor {
 
     @Shadow private BlockView blockView;
     @Unique @Getter
     private final StationBlockRenderer stationBlockRenderer = new StationBlockRenderer((BlockRenderer) (Object) this);
+    @Unique @Getter
+    private final BakedModelRenderer bakedModelRenderer = new BakedModelRendererImpl((BlockRenderer) (Object) this);
 
     @Unique
     private boolean renderingInInventory;

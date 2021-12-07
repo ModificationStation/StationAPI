@@ -13,5 +13,5 @@ public class ChunkListener {
             for (int z = 0; z < 16; z++)
                 if ((event.biome == Biome.FOREST || event.biome == Biome.SEASONAL_FOREST) && event.random.nextBoolean())
                     event.level.setTile(event.x + x, 90, event.z + z, BlockBase.DIAMOND_BLOCK.id);
-    } //that's how easy it is
+    }
 }

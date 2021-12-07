@@ -1,6 +1,8 @@
 package net.modificationstation.stationapi.api.client.render.block;
 
 import net.minecraft.client.render.block.BlockRenderer;
+import net.modificationstation.stationapi.api.client.model.BakedModelRenderer;
+import net.modificationstation.stationapi.impl.client.texture.BlockRendererCustomAccessor;
 import net.modificationstation.stationapi.mixin.render.client.BlockRendererAccessor;
 
 public final class BlockRendererUtil {
@@ -27,5 +29,9 @@ public final class BlockRendererUtil {
 
     public static void setSouthFaceRotation(BlockRenderer blockRenderer, int rotation) {
         ((BlockRendererAccessor) blockRenderer).setSouthFaceRotation(rotation);
+    }
+
+    public static BakedModelRenderer getBakedModelRenderer(BlockRenderer blockRenderer) {
+        return ((BlockRendererCustomAccessor) blockRenderer).getBakedModelRenderer();
     }
 }
