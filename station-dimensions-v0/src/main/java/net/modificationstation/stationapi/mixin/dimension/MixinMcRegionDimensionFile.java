@@ -5,6 +5,7 @@ import net.minecraft.level.dimension.McRegionDimensionFile;
 import net.modificationstation.stationapi.api.level.dimension.VanillaDimensions;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
@@ -21,8 +22,8 @@ public class MixinMcRegionDimensionFile {
             ),
             require = 0
     )
-    private boolean isNotOverworld(Object dimension, Class<?> netherClass) {
-        return !DimensionRegistry.INSTANCE.getIdentifier(((Dimension) dimension).id).map(VanillaDimensions.OVERWORLD::equals).orElse(true);
+    private boolean isNotOverworldNamed(Object dimension, Class<?> netherClass) {
+        return isNotOverworld(dimension);
     }
 
     @Redirect(
@@ -34,6 +35,11 @@ public class MixinMcRegionDimensionFile {
             require = 0
     )
     private boolean isNotOverworldIntermediary(Object dimension, Class<?> netherClass) {
+        return isNotOverworld(dimension);
+    }
+
+    @Unique
+    private boolean isNotOverworld(Object dimension) {
         return !DimensionRegistry.INSTANCE.getIdentifier(((Dimension) dimension).id).map(VanillaDimensions.OVERWORLD::equals).orElse(true);
     }
 
