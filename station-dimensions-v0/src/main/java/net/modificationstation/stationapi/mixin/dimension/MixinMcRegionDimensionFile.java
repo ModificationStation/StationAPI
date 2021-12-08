@@ -18,9 +18,22 @@ public class MixinMcRegionDimensionFile {
             at = @At(
                     value = "CONSTANT",
                     args = "classValue=net/minecraft/level/dimension/Nether"
-            )
+            ),
+            require = 0
     )
     private boolean isNotOverworld(Object dimension, Class<?> netherClass) {
+        return !DimensionRegistry.INSTANCE.getIdentifier(((Dimension) dimension).id).map(VanillaDimensions.OVERWORLD::equals).orElse(true);
+    }
+
+    @Redirect(
+            method = "getChunkIO(Lnet/minecraft/level/dimension/Dimension;)Lnet/minecraft/level/chunk/ChunkIO;",
+            at = @At(
+                    value = "CONSTANT",
+                    args = "classValue=net/minecraft/class_502"
+            ),
+            require = 0
+    )
+    private boolean isNotOverworldIntermediary(Object dimension, Class<?> netherClass) {
         return !DimensionRegistry.INSTANCE.getIdentifier(((Dimension) dimension).id).map(VanillaDimensions.OVERWORLD::equals).orElse(true);
     }
 
