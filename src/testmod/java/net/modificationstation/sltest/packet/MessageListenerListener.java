@@ -6,7 +6,6 @@ import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.item.ModdedItem;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.registry.Identifier;

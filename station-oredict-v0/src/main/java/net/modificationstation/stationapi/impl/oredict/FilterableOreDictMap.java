@@ -1,9 +1,6 @@
 package net.modificationstation.stationapi.impl.oredict;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public class FilterableOreDictMap extends TreeMap<String, List<OreDictEntryObject>> {
 

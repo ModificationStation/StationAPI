@@ -2,7 +2,6 @@ package net.modificationstation.sltest.tileentity;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.sltest.SLTest;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.tileentity.TileEntityRegisterEvent;
 
 public class TileEntityListener {
