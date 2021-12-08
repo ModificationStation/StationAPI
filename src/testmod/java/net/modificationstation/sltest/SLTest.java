@@ -23,10 +23,6 @@ public class SLTest {
     @Entrypoint.ModID
     public static final ModID MODID = Null.get();
 
-    public SLTest() {
-        SLTest.LOGGER.info("WHAT");
-    }
-
     @EventListener
     public void init(InitEvent event) {
         SLTest.LOGGER.info(MODID.toString());

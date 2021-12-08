@@ -7,10 +7,6 @@ import net.modificationstation.stationapi.api.event.tileentity.TileEntityRegiste
 
 public class TileEntityListener {
 
-    public TileEntityListener() {
-        SLTest.LOGGER.info("tile entities?");
-    }
-
     @EventListener
     public void registerTileEntities(TileEntityRegisterEvent event) {
         SLTest.LOGGER.info("reeee tile entiites");
