@@ -9,8 +9,7 @@ import net.modificationstation.stationapi.api.event.mod.InitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Null;
-
-import java.util.logging.Logger;
+import org.apache.logging.log4j.Logger;
 
 public class SLTest {
 
