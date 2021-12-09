@@ -3,7 +3,8 @@ package net.modificationstation.stationapi.impl.recipe.oredict;
 import net.minecraft.inventory.Crafting;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.Recipe;
-import net.modificationstation.stationapi.api.oredict.OreDict;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.tags.TagRegistry;
 
 import java.util.*;
 
@@ -14,10 +15,10 @@ public class ShapelessOreDictRecipe implements Recipe {
 
     public ShapelessOreDictRecipe(ItemInstance output, List<?> inputs) {
         for (Object o : inputs) {
-            if (!(o instanceof ItemInstance) && !(o instanceof String)) {
+            if (!(o instanceof ItemInstance) && !(o instanceof Identifier)) {
                 throw new RuntimeException("Invalid shapeless OreDict recipe! Expected " + String.class.getName() + ", " + ItemInstance.class.getName() + ". Got: \"" + o.getClass().getName() + "\"");
             }
-            if (o instanceof String && !OreDict.INSTANCE.containsEntry((String) o)) {
+            if (o instanceof Identifier && !TagRegistry.INSTANCE.get((Identifier) o).isPresent()) {
                 throw new RuntimeException("OreDict recipe has no candidates for input \"" + o + "\"!");
             }
         }
@@ -59,7 +60,7 @@ public class ShapelessOreDictRecipe implements Recipe {
                                 break;
                             }
                         } else {
-                            if (OreDict.INSTANCE.matches((String) o, itemInCrafting)) {
+                            if (TagRegistry.INSTANCE.matches((Identifier) o, itemInCrafting)) {
                                 var6 = true;
                                 ingredients.remove(o);
                                 break;

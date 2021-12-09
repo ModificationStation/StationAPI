@@ -58,7 +58,7 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
      * It also allows for fast and easy inverse lookup without having a second {@link Map} with inverse values.
      */
     @NotNull
-    private final BiMap<Identifier, T> values = HashBiMap.create();
+    protected final BiMap<Identifier, T> values = HashBiMap.create();
 
     /**
      * Default registry constructor.

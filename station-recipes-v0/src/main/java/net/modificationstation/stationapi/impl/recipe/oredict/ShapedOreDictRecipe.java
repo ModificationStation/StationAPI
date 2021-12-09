@@ -5,7 +5,8 @@ import net.minecraft.inventory.Crafting;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.Recipe;
-import net.modificationstation.stationapi.api.oredict.OreDict;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.tags.TagRegistry;
 
 import java.util.*;
 
@@ -128,8 +129,8 @@ public class ShapedOreDictRecipe implements Recipe {
                     }
                 }
                 else {
-                    String var11 = (String) var9;
-                    if (!OreDict.INSTANCE.matches(var11, var10)) {
+                    Identifier var11 = (Identifier) var9;
+                    if (!TagRegistry.INSTANCE.matches(var11, var10)) {
                         return false;
                     }
                 }

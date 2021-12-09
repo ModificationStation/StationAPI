@@ -7,7 +7,8 @@ import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.event.oredict.OreDictRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.oredict.OreDict;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.tags.TagRegistry;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
@@ -21,156 +22,143 @@ public class OreDictBlockInit {
     private static void registerBlockOreDict(OreDictRegisterEvent event) {
 
         // Basic Blocks
-        addBlock0Damage("stone", BlockBase.STONE);
-        addBlock0Damage("dirt", BlockBase.DIRT);
-        addBlock0Damage("grass", BlockBase.GRASS);
-        addBlock0Damage("cobblestone", BlockBase.COBBLESTONE);
-        addBlock0Damage("bedrock", BlockBase.BEDROCK);
-        addBlock0Damage("sand", BlockBase.SAND);
-        addBlock0Damage("gravel", BlockBase.GRAVEL);
-        addBlock0Damage("sponge", BlockBase.SPONGE);
-        addBlock0Damage("glass", BlockBase.GLASS);
-        addBlock0Damage("sandstone", BlockBase.SANDSTONE);
-        addBlock0Damage("cobweb", BlockBase.COBWEB);
-        addBlock0Damage("wool", BlockBase.WOOL);
-        addBlock0Damage("bricks", BlockBase.BRICKS);
-        addBlock0Damage("bookshelf", BlockBase.BOOKSHELF);
-        addBlock0Damage("cobblestoneMossy", BlockBase.MOSSY_COBBLESTONE);
-        addBlock0Damage("obsidian", BlockBase.OBSIDIAN);
-        addBlock0Damage("ice", BlockBase.ICE);
-        addBlock0Damage("blockSnow", BlockBase.SNOW_BLOCK);
-        addBlock0Damage("blockClay", BlockBase.CLAY);
-        addBlock0Damage("netherrack", BlockBase.NETHERRACK);
-        addBlock0Damage("sandSoul", BlockBase.SOUL_SAND);
-        addBlock0Damage("blockGlowstone", BlockBase.GLOWSTONE);
+        addBlock0Damage("blocks/terrain/stone", BlockBase.STONE);
+        addBlock0Damage("blocks/terrain/dirt", BlockBase.DIRT);
+        addBlock0Damage("blocks/terrain/grass", BlockBase.GRASS);
+        addBlock0Damage("blocks/cobblestone", BlockBase.COBBLESTONE);
+        addBlock0Damage("blocks/invulnerable/bedrock", BlockBase.BEDROCK);
+        addBlock0Damage("blocks/terrain/sand", BlockBase.SAND);
+        addBlock0Damage("blocks/terrain/gravel", BlockBase.GRAVEL);
+        addBlock0Damage("blocks/sponge", BlockBase.SPONGE);
+        addBlock0Damage("blocks/glass", BlockBase.GLASS);
+        addBlock0Damage("blocks/terrain/sandstone", BlockBase.SANDSTONE);
+        addBlock0Damage("blocks/cobweb", BlockBase.COBWEB);
+        addBlock("blocks/wools/white", BlockBase.WOOL, 0);
+        addBlock("blocks/wools/orange", BlockBase.WOOL, 1);
+        addBlock("blocks/wools/magenta", BlockBase.WOOL, 2);
+        addBlock("blocks/wools/light_blue", BlockBase.WOOL, 3);
+        addBlock("blocks/wools/yellow", BlockBase.WOOL, 4);
+        addBlock("blocks/wools/lime", BlockBase.WOOL, 5);
+        addBlock("blocks/wools/pink", BlockBase.WOOL, 6);
+        addBlock("blocks/wools/gray", BlockBase.WOOL, 7);
+        addBlock("blocks/wools/light_gray", BlockBase.WOOL, 8);
+        addBlock("blocks/wools/cyan", BlockBase.WOOL, 9);
+        addBlock("blocks/wools/purple", BlockBase.WOOL, 10);
+        addBlock("blocks/wools/blue", BlockBase.WOOL, 11);
+        addBlock("blocks/wools/brown", BlockBase.WOOL, 12);
+        addBlock("blocks/wools/green", BlockBase.WOOL, 13);
+        addBlock("blocks/wools/red", BlockBase.WOOL, 14);
+        addBlock0Damage("blocks/bricks", BlockBase.BRICKS);
+        addBlock0Damage("blocks/bookshelf", BlockBase.BOOKSHELF);
+        addBlock0Damage("blocks/cobblestone/mossy", BlockBase.MOSSY_COBBLESTONE);
+        addBlock0Damage("blocks/obsidian", BlockBase.OBSIDIAN);
+        addBlock0Damage("blocks/terrain/ice", BlockBase.ICE);
+        addBlock0Damage("blocks/snow/full", BlockBase.SNOW_BLOCK);
+        addBlock0Damage("blocks/clay", BlockBase.CLAY);
+        addBlock0Damage("blocks/netherrack", BlockBase.NETHERRACK);
+        addBlock0Damage("blocks/sand/soul", BlockBase.SOUL_SAND);
+        addBlock0Damage("blocks/glowstone", BlockBase.GLOWSTONE);
 
         // Blocks With Fancy Models
-        addBlock0Damage("slabStoneDouble", BlockBase.DOUBLE_STONE_SLAB);
-        addBlock0Damage("slabStone", BlockBase.STONE_SLAB);
-        addBlock0Damage("torch", BlockBase.TORCH);
-        addBlock0Damage("fire", BlockBase.FIRE);
-        addBlock0Damage("spawnerMob", BlockBase.MOB_SPAWNER);
-        addBlock0Damage("stairsWood", BlockBase.WOOD_STAIRS);
-        addBlock0Damage("stairsCobblestone", BlockBase.COBBLESTONE_STAIRS);
-        addBlockIgnoreDamage("farmland", BlockBase.FARMLAND);
-        addBlockIgnoreDamage("door", BlockBase.WOOD_DOOR);
-        addBlockIgnoreDamage("door", BlockBase.IRON_DOOR);
-        addBlockIgnoreDamage("doorWood", BlockBase.WOOD_DOOR);
-        addBlockIgnoreDamage("doorIron", BlockBase.IRON_DOOR);
-        addBlockIgnoreDamage("ladder", BlockBase.LADDER);
-        addBlockIgnoreDamage("ladderWood", BlockBase.LADDER);
-        addBlock0Damage("snow", BlockBase.SNOW);
-        addBlock0Damage("fence", BlockBase.FENCE);
-        addBlock0Damage("fenceWood", BlockBase.FENCE);
-        addBlockIgnoreDamage("cake", BlockBase.CAKE);
-        addBlockIgnoreDamage("trapdoor", BlockBase.TRAPDOOR);
-        addBlockIgnoreDamage("trapdoorWood", BlockBase.TRAPDOOR);
+        addBlock0Damage("blocks/slabs/stone/double", BlockBase.DOUBLE_STONE_SLAB);
+        addBlock0Damage("blocks/slabs/stone", BlockBase.STONE_SLAB);
+        addBlock0Damage("blocks/torch", BlockBase.TORCH);
+        addBlock0Damage("blocks/fire", BlockBase.FIRE);
+        addBlock0Damage("blocks/spawner", BlockBase.MOB_SPAWNER);
+        addBlock0Damage("blocks/stairs/wood", BlockBase.WOOD_STAIRS);
+        addBlock0Damage("blocks/stairs/cobble", BlockBase.COBBLESTONE_STAIRS);
+        addBlock0Damage("blocks/farmland", BlockBase.FARMLAND);
+        addBlock("blocks/farmland/wet", BlockBase.FARMLAND, 1);
+        addBlockIgnoreDamage("blocks/doors/wood", BlockBase.WOOD_DOOR);
+        addBlockIgnoreDamage("blocks/doors/iron", BlockBase.IRON_DOOR);
+        addBlockIgnoreDamage("blocks/ladders/wood", BlockBase.LADDER);
+        addBlock0Damage("blocks/snow", BlockBase.SNOW);
+        addBlock0Damage("blocks/fences/wood", BlockBase.FENCE);
+        addBlockIgnoreDamage("blocks/cake", BlockBase.CAKE);
+        addBlockIgnoreDamage("blocks/trapdoors/wood", BlockBase.TRAPDOOR);
 
         // Blocks With GUIs/Inventories
-        addBlockIgnoreDamage("chest", BlockBase.CHEST);
-        addBlock0Damage("chestWood", BlockBase.CHEST);
-        addBlockIgnoreDamage("workbench", BlockBase.WORKBENCH);
-        addBlockIgnoreDamage("furnace", BlockBase.FURNACE);
-        addBlockIgnoreDamage("furnaceOff", BlockBase.FURNACE);
-        addBlockIgnoreDamage("furnace", BlockBase.FURNACE_LIT);
-        addBlockIgnoreDamage("furnaceOn", BlockBase.FURNACE_LIT);
-        addBlockIgnoreDamage("sign", BlockBase.STANDING_SIGN);
-        addBlockIgnoreDamage("sign", BlockBase.WALL_SIGN);
-        addBlockIgnoreDamage("signStanding", BlockBase.STANDING_SIGN);
-        addBlockIgnoreDamage("signWall", BlockBase.WALL_SIGN);
-        addBlockIgnoreDamage("jukebox", BlockBase.JUKEBOX);
-        addBlockIgnoreDamage("chestLocked", BlockBase.LOCKED_CHEST);
+        addBlockIgnoreDamage("blocks/storage/chest/wood", BlockBase.CHEST);
+        addBlockIgnoreDamage("blocks/workbench", BlockBase.WORKBENCH);
+        addBlockIgnoreDamage("blocks/furnace/on", BlockBase.FURNACE_LIT);
+        addBlockIgnoreDamage("blocks/furnace/off", BlockBase.FURNACE);
+        addBlockIgnoreDamage("blocks/signs/wood/standing", BlockBase.STANDING_SIGN);
+        addBlockIgnoreDamage("blocks/signs/wood/wall", BlockBase.WALL_SIGN);
+        addBlockIgnoreDamage("blocks/jukebox", BlockBase.JUKEBOX);
+        addBlockIgnoreDamage("blocks/storage/chest/wood/locked", BlockBase.LOCKED_CHEST);
 
         // Ores
-        addBlock0Damage("oreCoal", BlockBase.COAL_ORE);
-        addBlock0Damage("oreIron", BlockBase.IRON_ORE);
-        addBlock0Damage("oreGold", BlockBase.GOLD_ORE);
-        addBlock0Damage("oreDiamond", BlockBase.DIAMOND_ORE);
-        addBlock0Damage("oreLapis", BlockBase.LAPIS_LAZULI_ORE);
-        addBlock0Damage("blockIron", BlockBase.IRON_BLOCK);
-        addBlock0Damage("blockGold", BlockBase.GOLD_BLOCK);
-        addBlock0Damage("blockDiamond", BlockBase.DIAMOND_BLOCK);
-        addBlock0Damage("blockLapis", BlockBase.LAPIS_LAZULI_BLOCK);
+        addBlock0Damage("blocks/ores/coal", BlockBase.COAL_ORE);
+        addBlock0Damage("blocks/ores/iron", BlockBase.IRON_ORE);
+        addBlock0Damage("blocks/ores/gold", BlockBase.GOLD_ORE);
+        addBlock0Damage("blocks/ores/diamond", BlockBase.DIAMOND_ORE);
+        addBlock0Damage("blocks/ores/lapis", BlockBase.LAPIS_LAZULI_ORE);
+        addBlock0Damage("blocks/minerals/iron", BlockBase.IRON_BLOCK);
+        addBlock0Damage("blocks/minerals/gold", BlockBase.GOLD_BLOCK);
+        addBlock0Damage("blocks/minerals/diamond", BlockBase.DIAMOND_BLOCK);
+        addBlock0Damage("blocks/minerals/lapis", BlockBase.LAPIS_LAZULI_BLOCK);
 
-        addBlock0Damage("oreRedstone", BlockBase.REDSTONE_ORE);
-        addBlock0Damage("oreRedstone", BlockBase.REDSTONE_ORE_LIT);
-        addBlock0Damage("oreRedstoneLit", BlockBase.REDSTONE_ORE_LIT);
+        addBlock0Damage("blocks/ores/redstone", BlockBase.REDSTONE_ORE);
+        addBlock0Damage("blocks/ores/redstone/lit", BlockBase.REDSTONE_ORE_LIT);
 
         // Plants
-        addBlockIgnoreDamage("logWood", BlockBase.LOG);
-        addBlock("logWoodOak", BlockBase.LOG, 0);
-        addBlock("logWoodSpruce", BlockBase.LOG, 1);
-        addBlock("logWoodBirch", BlockBase.LOG, 2);
-        addBlockIgnoreDamage("plankWood", BlockBase.WOOD);
-        addBlock("plankWoodOak", BlockBase.WOOD, 0);
-        addBlock("plankWoodSpruce", BlockBase.WOOD, 1);
-        addBlock("plankWoodBirch", BlockBase.WOOD, 2);
-        addBlockIgnoreDamage("plantLeaves", BlockBase.LEAVES);
-        addBlock("plantLeavesOak", BlockBase.WOOD, 0);
-        addBlock("plantLeavesSpruce", BlockBase.WOOD, 1);
-        addBlock("plantLeavesBirch", BlockBase.WOOD, 2);
-        addBlockIgnoreDamage("plantSapling", BlockBase.SAPLING);
-        addBlock("plantSaplingOak", BlockBase.WOOD, 0);
-        addBlock("plantSaplingSpruce", BlockBase.WOOD, 1);
-        addBlock("plantSaplingBirch", BlockBase.WOOD, 2);
-        addBlock0Damage("plantGrass", BlockBase.TALLGRASS);
-        addBlock0Damage("plantBushDead", BlockBase.DEADBUSH);
-        addBlock0Damage("plantDandelion", BlockBase.DANDELION);
-        addBlock0Damage("plantRose", BlockBase.ROSE);
-        addBlock0Damage("plantFlower", BlockBase.DANDELION);
-        addBlock0Damage("plantFlower", BlockBase.ROSE);
-        addBlock0Damage("plantMushroomBrown", BlockBase.BROWN_MUSHROOM);
-        addBlock0Damage("plantMushroomRed", BlockBase.RED_MUSHROOM);
-        addBlock0Damage("plantMushroom", BlockBase.BROWN_MUSHROOM);
-        addBlock0Damage("plantMushroom", BlockBase.RED_MUSHROOM);
-        addBlockIgnoreDamage("plantWheat", BlockBase.CROPS);
-        addBlock0Damage("plantCactus", BlockBase.CACTUS);
-        addBlock0Damage("plantCaneSugar", BlockBase.SUGAR_CANES);
-        addBlock0Damage("pumpkin", BlockBase.PUMPKIN);
+        addBlock("blocks/logs/wood/oak", BlockBase.LOG, 0);
+        addBlock("blocks/logs/wood/spruce", BlockBase.LOG, 1);
+        addBlock("blocks/logs/wood/birch", BlockBase.LOG, 2);
+        addBlock("blocks/planks/wood/oak", BlockBase.WOOD, 0);
+        addBlock("blocks/planks/wood/spruce", BlockBase.WOOD, 1);
+        addBlock("blocks/planks/wood/birch", BlockBase.WOOD, 2);
+        addBlock("blocks/leaves/wood/oak", BlockBase.WOOD, 0);
+        addBlock("blocks/leaves/wood/spruce", BlockBase.WOOD, 1);
+        addBlock("blocks/leaves/wood/birch", BlockBase.WOOD, 2);
+        addBlock("blocks/saplings/oak", BlockBase.WOOD, 0);
+        addBlock("blocks/saplings/spruce", BlockBase.WOOD, 1);
+        addBlock("blocks/saplings/birch", BlockBase.WOOD, 2);
+        addBlock0Damage("blocks/plants/grass", BlockBase.TALLGRASS);
+        addBlock0Damage("blocks/plants/bushes/dead", BlockBase.DEADBUSH);
+        addBlock0Damage("blocks/plants/flowers/dandelion", BlockBase.DANDELION);
+        addBlock0Damage("blocks/plants/flowers/rose", BlockBase.ROSE);
+        addBlock0Damage("blocks/plants/mushrooms/brown", BlockBase.BROWN_MUSHROOM);
+        addBlock0Damage("blocks/plants/mushrooms/red", BlockBase.RED_MUSHROOM);
+        addBlockIgnoreDamage("blocks/plants/crops/wheat", BlockBase.CROPS);
+        addBlock("blocks/plants/crops/wheat/grown", BlockBase.CROPS, 7);
+        addBlock0Damage("blocks/plants/cactus", BlockBase.CACTUS);
+        addBlock0Damage("blocks/plants/canes/sugar", BlockBase.SUGAR_CANES);
+        addBlock0Damage("blocks/plants/pumpkin", BlockBase.PUMPKIN);
 
         // Railway Stuff
-        addBlockIgnoreDamage("rail", BlockBase.RAIL);
-        addBlockIgnoreDamage("railPowered", BlockBase.GOLDEN_RAIL);
-        addBlockIgnoreDamage("railDetector", BlockBase.DETECTOR_RAIL);
+        addBlock0Damage("blocks/rail", BlockBase.RAIL);
+        addBlock0Damage("blocks/rail/powered", BlockBase.GOLDEN_RAIL);
+        addBlock0Damage("blocks/rail/detector", BlockBase.DETECTOR_RAIL);
 
         // Machines
-        addBlock0Damage("dispenser", BlockBase.DISPENSER);
-        addBlock0Damage("noteblock", BlockBase.NOTEBLOCK);
-        addBlock0Damage("railPowered", BlockBase.GOLDEN_RAIL);
-        addBlock0Damage("railDetector", BlockBase.DETECTOR_RAIL);
-        addBlock0Damage("pistonSticky", BlockBase.STICKY_PISTON);
-        addBlock0Damage("piston", BlockBase.PISTON);
-        addBlock0Damage("tnt", BlockBase.TNT);
-        addBlockIgnoreDamage("redstoneDustPlaced", BlockBase.REDSTONE_DUST);
-        addBlockIgnoreDamage("lever", BlockBase.LEVER);
-        addBlock0Damage("pressureplateWood", BlockBase.WOODEN_PRESSURE_PLATE);
-        addBlock0Damage("pressureplateStone", BlockBase.STONE_PRESSURE_PLATE);
-        addBlock0Damage("pressureplate", BlockBase.WOODEN_PRESSURE_PLATE);
-        addBlock0Damage("pressureplate", BlockBase.STONE_PRESSURE_PLATE);
-        addBlockIgnoreDamage("torchRedstone", BlockBase.REDSTONE_TORCH);
-        addBlockIgnoreDamage("torchRedstoneOff", BlockBase.REDSTONE_TORCH);
-        addBlockIgnoreDamage("torchRedstone", BlockBase.REDSTONE_TORCH_LIT);
-        addBlockIgnoreDamage("torchRedstoneOn", BlockBase.REDSTONE_TORCH_LIT);
-        addBlockIgnoreDamage("buttonStone", BlockBase.BUTTON);
-        addBlockIgnoreDamage("repeaterRedstone", BlockBase.REDSTONE_REPEATER);
-        addBlockIgnoreDamage("repeaterRedstone", BlockBase.REDSTONE_REPEATER_LIT);
-        addBlockIgnoreDamage("repeaterRedstoneOff", BlockBase.REDSTONE_REPEATER);
-        addBlockIgnoreDamage("repeaterRedstoneOn", BlockBase.REDSTONE_REPEATER_LIT);
+        addBlock0Damage("blocks/machines/dispenser", BlockBase.DISPENSER);
+        addBlock0Damage("blocks/machines/noteblock", BlockBase.NOTEBLOCK);
+        addBlock0Damage("blocks/machines/pistons/sticky", BlockBase.STICKY_PISTON);
+        addBlock0Damage("blocks/machines/pistons", BlockBase.PISTON);
+        addBlock0Damage("blocks/explosives/tnt", BlockBase.TNT);
+        addBlockIgnoreDamage("blocks/redstone/dust", BlockBase.REDSTONE_DUST);
+        addBlockIgnoreDamage("blocks/redstone/lever", BlockBase.LEVER);
+        addBlock0Damage("blocks/redstone/plates/wood", BlockBase.WOODEN_PRESSURE_PLATE);
+        addBlock0Damage("blocks/redstone/plates/stone", BlockBase.STONE_PRESSURE_PLATE);
+        addBlockIgnoreDamage("blocks/redstone/torch/off", BlockBase.REDSTONE_TORCH);
+        addBlockIgnoreDamage("blocks/redstone/torch/on", BlockBase.REDSTONE_TORCH_LIT);
+        addBlockIgnoreDamage("blocks/redstone/buttons/stone", BlockBase.BUTTON);
+        addBlockIgnoreDamage("blocks/redstone/repeater/off", BlockBase.REDSTONE_REPEATER);
+        addBlockIgnoreDamage("blocks/redstone/repeater/on", BlockBase.REDSTONE_REPEATER_LIT);
 
-        LOGGER.info("Registered vanilla block oredict.");
+        LOGGER.info("Registered vanilla block tags.");
     }
 
     private static void addBlockIgnoreDamage(String oreDictString, BlockBase blockBase) {
-        OreDict.INSTANCE.addBlockIgnoreDamage(oreDictString, blockBase);
+        TagRegistry.INSTANCE.register(Identifier.of(oreDictString), (itemInstance) -> blockBase.id == itemInstance.itemId);
     }
 
-    //TODO: Figure out if referencing ItemInstance before ItemRegister is fine or bad.
-    //TODO: Bad. Decidedly.
     private static void addBlock0Damage(String oreDictString, BlockBase blockBase) {
-        OreDict.INSTANCE.addItemInstance(oreDictString, new ItemInstance(blockBase, 1, 0));
+        TagRegistry.INSTANCE.register(Identifier.of(oreDictString), (itemInstance) -> new ItemInstance(blockBase, 1, 0).isDamageAndIDIdentical(itemInstance));
     }
 
     private static void addBlock(String oreDictString, BlockBase blockBase, int damage) {
-        OreDict.INSTANCE.addItemInstance(oreDictString, new ItemInstance(blockBase, 1, damage));
+        TagRegistry.INSTANCE.register(Identifier.of(oreDictString), (itemInstance) -> new ItemInstance(blockBase, 1, damage).isDamageAndIDIdentical(itemInstance));
     }
 }

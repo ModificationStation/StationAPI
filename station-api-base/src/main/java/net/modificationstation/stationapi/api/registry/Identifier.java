@@ -49,6 +49,9 @@ public final class Identifier implements Comparable<Identifier> {
                     default:
                         throw new IllegalArgumentException("Invalid identifier string! " + identifier);
                 }
+                if (strings[idIndex].startsWith("/")) {
+                    throw new IllegalArgumentException("Invalid identifier string! " + identifier);
+                }
                 return new Identifier(ModID.of(modid.trim()), strings[idIndex].trim());
             });
         } catch (ExecutionException e) {

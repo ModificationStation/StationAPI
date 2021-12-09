@@ -2,7 +2,8 @@ package net.modificationstation.stationapi.api.recipe;
 
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
-import net.modificationstation.stationapi.api.oredict.OreDict;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.tags.TagRegistry;
 import net.modificationstation.stationapi.api.util.API;
 import net.modificationstation.stationapi.impl.recipe.SmeltingRegistryImpl;
 import net.modificationstation.stationapi.mixin.recipe.SmeltingRecipeRegistryAccessor;
@@ -27,7 +28,7 @@ public class SmeltingRegistry {
     @API
     public static ItemInstance getResultFor(ItemInstance input) {
         for (Object o : ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().keySet()) {
-            if (o instanceof ItemInstance && input.isDamageAndIDIdentical((ItemInstance) o) || o instanceof String && OreDict.INSTANCE.matches((String) o, input))
+            if (o instanceof ItemInstance && input.isDamageAndIDIdentical((ItemInstance) o) || o instanceof Identifier && TagRegistry.INSTANCE.matches((Identifier) o, input))
                 return ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().get(o);
         }
         return SmeltingRecipeRegistry.getInstance().getResult(input.getType().id);

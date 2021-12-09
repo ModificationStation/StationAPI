@@ -1,19 +1,32 @@
 package net.modificationstation.sltest;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.event.oredict.OreDictRegisterEvent;
-import net.modificationstation.stationapi.api.oredict.OreDict;
-import net.modificationstation.stationapi.impl.oredict.OreDictEntryObject;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.tags.TagRegistry;
+import uk.co.benjiweber.expressions.tuple.BiTuple;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 public class MainTest {
 
     @EventListener
     public void onInitialize(OreDictRegisterEvent event) {
         SLTest.LOGGER.info("==================================================================================================");
-        String oreDictToTest = "pickaxe*";
-        SLTest.LOGGER.info(oreDictToTest.substring(0, oreDictToTest.length()-1));
-        for (OreDictEntryObject oreDictEntryObject : OreDict.INSTANCE.getOreDictEntryObjects(oreDictToTest)) {
-            SLTest.LOGGER.info(oreDictEntryObject.identifier.toString());
+        Identifier oreDictToTest = Identifier.of("items/tools/pickaxes/");
+        SLTest.LOGGER.info(oreDictToTest);
+        Optional<Map<Identifier, List<Predicate<ItemInstance>>>> predicates = TagRegistry.INSTANCE.getWithIdentifiers(oreDictToTest);
+        if (predicates.isPresent()) {
+            for (Identifier oreDictEntryObject : predicates.get().keySet()) {
+                SLTest.LOGGER.info(oreDictEntryObject);
+            }
+        }
+        else {
+            throw new RuntimeException("Predicates are empty for " + oreDictToTest);
         }
         SLTest.LOGGER.info("==================================================================================================");
         //block.mineableByTool("pickaxe*", 0);
