@@ -66,16 +66,13 @@ public final class JsonModel extends Model {
                 while (parentData.parent != null)
                     inheritance.add(
                             parentData = GSON.fromJson(
-                                    new BufferedReader(
-                                            new InputStreamReader(
-                                                    newTexturePack.getResourceAsStream(
-                                                            ResourceManager.parsePath(
+                                    new BufferedReader(new InputStreamReader(
+                                                    newTexturePack.getResourceAsStream(ResourceManager.ASSETS.toPath(
                                                                     Identifier.of(parentData.parent),
-                                                                    "/" + MODID + "/models", "json")
-                                                    ),
+                                                                    "/" + MODID + "/models", "json"
+                                                    )),
                                                     StandardCharsets.UTF_8
-                                            )
-                                    ).lines().collect(Collectors.joining("\n")), JsonModelData.class)
+                                    )).lines().collect(Collectors.joining("\n")), JsonModelData.class)
                     );
                 Collections.reverse(inheritance);
             }

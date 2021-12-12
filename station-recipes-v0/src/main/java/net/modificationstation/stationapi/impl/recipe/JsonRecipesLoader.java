@@ -8,9 +8,11 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.JsonRecipesRegistry;
+import net.modificationstation.stationapi.api.resource.Filters;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
@@ -22,18 +24,25 @@ public class JsonRecipesLoader {
     @EventListener(priority = ListenerPriority.HIGH)
     private static void loadJsonRecipes(PreInitEvent event) {
         LOGGER.info("Searching for JSON recipes...");
-        ResourceManager.findResources(MODID + "/recipes", file -> file.endsWith(".json")).forEach(recipe -> {
-            try {
-                String rawId = new Gson().fromJson(new InputStreamReader(recipe.openStream()), JsonRecipeType.class).getType();
-                try {
-                    Identifier recipeId = Identifier.of(rawId);
-                    JsonRecipesRegistry.INSTANCE.computeIfAbsent(recipeId, identifier -> new HashSet<>()).add(recipe);
-                } catch (IllegalArgumentException e) {
-                    LOGGER.warn("Found an unknown recipe type " + rawId + ". Ignoring.");
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        String recipePath = MODID + "/recipes";
+        ResourceManager.DATA.find(recipePath, Filters.FileType.JSON).forEach(JsonRecipesLoader::registerRecipe);
+        ResourceManager.ASSETS.find(recipePath, Filters.FileType.JSON).forEach(recipe -> {
+            LOGGER.warn("Found a recipe (" + recipe + ") under assets directory, which is deprecated for recipes!");
+            registerRecipe(recipe);
         });
+    }
+
+    private static void registerRecipe(URL recipe) {
+        try {
+            String rawId = new Gson().fromJson(new InputStreamReader(recipe.openStream()), JsonRecipeType.class).getType();
+            try {
+                Identifier recipeId = Identifier.of(rawId);
+                JsonRecipesRegistry.INSTANCE.computeIfAbsent(recipeId, identifier -> new HashSet<>()).add(recipe);
+            } catch (IllegalArgumentException e) {
+                LOGGER.warn("Found an unknown recipe type " + rawId + ". Ignoring.");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

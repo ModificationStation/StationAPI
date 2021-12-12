@@ -5,12 +5,9 @@ import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.event.oredict.OreDictRegisterEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.*;
+import java.util.function.*;
 
 public class MainTest {
 

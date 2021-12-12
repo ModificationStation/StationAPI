@@ -9,40 +9,73 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 public class ResourceManager {
 
-    public static String parsePath(Identifier identifier, String path, String extension) {
-        return "/assets/" + identifier.modID + path + (identifier.id.startsWith("/") ? identifier.id : ("/" + identifier.id)) + "." + extension;
+    @API
+    public static final ResourceManager
+            ASSETS = new ResourceManager("/assets"),
+            DATA = new ResourceManager("/data");
+
+    @API
+    public final String rootPath;
+
+    @API
+    public ResourceManager(String rootPath) {
+        this.rootPath = rootPath;
     }
 
     @API
-    public static Set<URL> findResources(String path) {
-        return findResources(path, null);
+    public String toPath(Identifier identifier, String subPath, String extension) {
+        identifier = subPath.isEmpty() ? identifier : identifier.prepend(subPath + "/");
+        return toPath(extension.isEmpty() ? identifier : identifier.append("." + extension));
     }
 
     @API
-    public static Set<URL> findResources(String path, Predicate<String> filter) {
-        Set<URL> resources = new HashSet<>();
-        FabricLoader.getInstance().getAllMods().forEach(modContainer -> resources.addAll(findResources(ModID.of(modContainer), path, filter)));
-        return resources;
+    public String toPath(Identifier identifier) {
+        return rootPath + "/" + identifier.modID + "/" + identifier.id;
+    }
+
+    public Set<URL> find(String path, Predicate<String> filter) {
+        return FabricLoader.getInstance().getAllMods().stream().map(modContainer -> find(ModID.of(modContainer), path, filter)).flatMap(Collection::stream).collect(Collectors.toSet());
     }
 
     @API
-    public static Set<URL> findResources(ModID modID, String path) {
-        return findResources(modID, path, null);
-    }
-
-    @API
-    public static Set<URL> findResources(ModID modID, String path, Predicate<String> filter) {
-        Set<URL> resources = new HashSet<>();
-        String fullPath = "/assets/" + modID + "/" + path;
-        if (ResourceManager.class.getResource(fullPath) != null)
+    public Set<URL> find(ModID modID, String path, Predicate<String> filter) {
+        path = rootPath + "/" + modID + "/" + path;
+        if (ResourceManager.class.getResource(path) != null)
             try {
-                resources.addAll(new RecursiveReader(fullPath, filter).read());
+                return new RecursiveReader(path, filter).read();
             } catch (IOException | URISyntaxException e) {
                 throw new RuntimeException(e);
             }
-        return resources;
+        else
+            return Collections.emptySet();
+    }
+
+    @Deprecated
+    public static String parsePath(Identifier identifier, String path, String extension) {
+        return ASSETS.toPath(identifier, path, extension);
+    }
+
+    @Deprecated
+    public static Set<URL> findResources(String path) {
+        return ASSETS.find(path, Filters.ALL);
+    }
+
+    @Deprecated
+    public static Set<URL> findResources(String path, Predicate<String> filter) {
+        return ASSETS.find(path, filter);
+    }
+
+    @Deprecated
+    public static Set<URL> findResources(ModID modID, String path) {
+        return ASSETS.find(modID, path, Filters.ALL);
+    }
+
+    @Deprecated
+    public static Set<URL> findResources(ModID modID, String path, Predicate<String> filter) {
+        return ASSETS.find(modID, path, filter);
     }
 }

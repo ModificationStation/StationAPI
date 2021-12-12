@@ -10,9 +10,6 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
 
-import java.util.List;
-import java.util.function.Predicate;
-
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 /**

@@ -67,6 +67,14 @@ public final class Identifier implements Comparable<Identifier> {
         }
     }
 
+    public @NotNull Identifier prepend(@NotNull String prefix) {
+        return of(modID, prefix + id);
+    }
+
+    public @NotNull Identifier append(@NotNull String suffix) {
+        return of(modID, id + suffix);
+    }
+
     @Override
     public int compareTo(@NotNull Identifier o) {
         return toString().compareTo(o.toString());

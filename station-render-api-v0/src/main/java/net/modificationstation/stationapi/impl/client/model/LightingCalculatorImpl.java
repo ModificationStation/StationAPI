@@ -1,8 +1,6 @@
 package net.modificationstation.stationapi.impl.client.model;
 
 import com.google.common.primitives.Ints;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.BlockView;
 import net.modificationstation.stationapi.api.client.model.Quad;
@@ -16,8 +14,12 @@ import java.util.function.*;
 import static net.minecraft.block.BlockBase.ALLOWS_GRASS_UNDER;
 import static net.minecraft.util.maths.MathHelper.floor;
 
-@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class LightingCalculatorImpl {
+
+    private final int
+            cacheRadius,
+            cacheDiameter,
+            cacheSelf;
 
     private BlockBase block;
     private BlockView blockView;
@@ -30,9 +32,27 @@ public class LightingCalculatorImpl {
     private static final int UNCACHED_ID = -1;
 
     private final float[] shaded = new float[3];
-    private final int[] idMap = new int[343];
-    private final float[] lightMap = new float[343];
+
+    private final int[] emptyIdCache;
+    private final int[] idCache;
+
+    private final float[] emptyLightCache;
+    private final float[] lightCache;
+
     private final int[] quadLight = new int[4];
+
+    LightingCalculatorImpl(int radius) {
+        cacheRadius = radius;
+        cacheDiameter = cacheRadius * 2 + 1;
+        int cacheSize = (int) Math.pow(cacheDiameter, 3);
+        cacheSelf = cacheSize / 2;
+        emptyIdCache = new int[cacheSize];
+        idCache = new int[cacheSize];
+        emptyLightCache = new float[cacheSize];
+        lightCache = new float[cacheSize];
+        Arrays.fill(emptyIdCache, UNCACHED_ID);
+        Arrays.fill(emptyLightCache, Float.NaN);
+    }
 
     public void initialize(
             BlockBase block,
@@ -49,24 +69,24 @@ public class LightingCalculatorImpl {
         this.colourMultiplierGreen = colourMultiplierGreen;
         this.colourMultiplierBlue = colourMultiplierBlue;
         this.ao = ao;
-        Arrays.fill(idMap, UNCACHED_ID);
-        Arrays.fill(lightMap, Float.NaN);
+        System.arraycopy(emptyIdCache, 0, idCache, 0, idCache.length);
+        System.arraycopy(emptyLightCache, 0, lightCache, 0, lightCache.length);
     }
 
     private int id(int x, int y, int z) {
         int index = toIndex(x - this.x, y - this.y, z - this.z);
-        int id = idMap[index];
-        return id == UNCACHED_ID ? idMap[index] = index == 171 ? block.id : blockView.getTileId(x, y, z) : id;
+        int id = idCache[index];
+        return id == UNCACHED_ID ? idCache[index] = index == cacheSelf ? block.id : blockView.getTileId(x, y, z) : id;
     }
 
     private float light(int x, int y, int z) {
         int index = toIndex(x - this.x, y - this.y, z - this.z);
-        float brightness = lightMap[index];
-        return Float.isNaN(brightness) ? lightMap[index] = block.getBrightness(blockView, x, y, z) : brightness;
+        float brightness = lightCache[index];
+        return Float.isNaN(brightness) ? lightCache[index] = block.getBrightness(blockView, x, y, z) : brightness;
     }
 
     private int toIndex(int x, int y, int z) {
-        return ((x + 3) * 7 + y + 3) * 7 + z + 3;
+        return ((x + cacheRadius) * cacheDiameter + y + cacheRadius) * cacheDiameter + z + cacheRadius;
     }
 
     public void calculateForQuad(Quad q) {

@@ -33,7 +33,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     private final BlockRenderer blockRenderer;
     private final BlockRendererAccessor blockRendererAccessor;
     private final BlockRendererCustomAccessor blockRendererCustomAccessor;
-    private final LightingCalculatorImpl light = new LightingCalculatorImpl();
+    private final LightingCalculatorImpl light = new LightingCalculatorImpl(3);
     private final Random random = new Random();
     private final Vec3i pos = new Vec3i();
 

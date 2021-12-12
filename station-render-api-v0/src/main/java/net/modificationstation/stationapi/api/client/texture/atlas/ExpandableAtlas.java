@@ -59,7 +59,7 @@ public class ExpandableAtlas extends Atlas {
     }
 
     public Sprite addTexture(Identifier texture) {
-        return addTexture(ResourceManager.parsePath(texture, "/" + MODID + "/textures", "png"));
+        return addTexture(ResourceManager.ASSETS.toPath(texture, MODID + "/textures", "png"));
     }
 
     public Sprite addTexture(String texturePath) {

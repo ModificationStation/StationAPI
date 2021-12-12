@@ -25,7 +25,7 @@ public abstract class Model implements TexturePackDependent {
 
     protected Model(final Identifier identifier, final String extension) {
         this.id = identifier;
-        modelPath = ResourceManager.parsePath(identifier, "/" + MODID + "/models", extension);
+        modelPath = ResourceManager.ASSETS.toPath(identifier, MODID + "/models", extension);
         //noinspection deprecation
         reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
