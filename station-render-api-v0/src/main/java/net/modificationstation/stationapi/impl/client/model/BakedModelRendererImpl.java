@@ -19,7 +19,6 @@ import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.client.texture.BlockRendererCustomAccessor;
 import net.modificationstation.stationapi.mixin.render.client.BlockRendererAccessor;
-import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -50,7 +49,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     @Override
     public boolean renderWorld(BlockBase block, BakedModel model, BlockView blockView, int x, int y, int z) {
         if (blockRenderer == null || blockRendererAccessor == null || blockRendererCustomAccessor == null)
-            throw new IllegalStateException("BlockRenderer is null!");
+            throw new NullPointerException("BlockRenderer is null!");
         else if (model == null)
             return false;
         else {
@@ -70,13 +69,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
             if (!noTextureOverride) {
                 return true;
             }
-            TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
-            t = atlas.getTessellator();
-            if (!((TessellatorAccessor) t).getDrawing()) {
-                blockRendererCustomAccessor.getStationBlockRenderer().activeAtlases.add(atlas);
-                t.start();
-                t.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
-            }
+            t = blockRendererCustomAccessor.getStationBlockRenderer().prepareTessellator(atlas);
             int colourMultiplier = block.getColourMultiplier(blockView, x, y, z);
             float
                     colourMultiplierRed = (float) (colourMultiplier >> 16 & 255) / 255.0F,
@@ -104,7 +97,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                 face = DIRECTIONS[quadSet];
                 random.setSeed(seed);
                 quads = model.getQuads(blockView, pos, face, random);
-                if (!quads.isEmpty() && (face == null || block.isSideRendered(blockView, x + face.vector.x, y + face.vector.y, z + face.vector.z, quadSet))) {
+                if (!quads.isEmpty() && (blockRendererAccessor.getRenderAllSides() || face == null || block.isSideRendered(blockView, x + face.vector.x, y + face.vector.y, z + face.vector.z, quadSet))) {
                     rendered = true;
                     for (int i = 0, quadsSize = quads.size(); i < quadsSize; i++) {
                         q = quads.get(i);

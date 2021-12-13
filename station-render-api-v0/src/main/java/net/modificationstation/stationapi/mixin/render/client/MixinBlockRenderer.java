@@ -6,7 +6,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
-import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.client.model.BakedModelRenderer;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldRenderer;
@@ -31,16 +30,13 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     @Unique @Getter
     private final BakedModelRenderer bakedModelRenderer = new BakedModelRendererImpl((BlockRenderer) (Object) this);
 
-    @Unique
-    private boolean renderingInInventory;
-
     @Inject(
             method = "renderBed(Lnet/minecraft/block/BlockBase;III)Z",
             at = @At("HEAD"),
             cancellable = true
     )
     private void renderBed_redirect(BlockBase block, int blockX, int blockY, int blockZ, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(stationBlockRenderer.renderBed(block, blockX, blockY, blockZ, renderingInInventory));
+        cir.setReturnValue(stationBlockRenderer.renderBed(block, blockX, blockY, blockZ));
     }
 
     @Inject(
@@ -49,7 +45,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
             cancellable = true
     )
     private void renderPlant_redirect(BlockBase arg, int i, int j, int k, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(stationBlockRenderer.renderPlant(arg, i, j, k, renderingInInventory));
+        cir.setReturnValue(stationBlockRenderer.renderPlant(arg, i, j, k));
     }
 
     @Inject(
@@ -58,7 +54,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
             cancellable = true
     )
     private void renderCrops_redirect(BlockBase arg, int i, int j, int k, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(stationBlockRenderer.renderCrops(arg, i, j, k, renderingInInventory));
+        cir.setReturnValue(stationBlockRenderer.renderCrops(arg, i, j, k));
     }
 
     @Inject(
@@ -67,7 +63,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
             cancellable = true
     )
     private void renderCrossed_redirect(BlockBase arg, int i, double d, double d1, double d2, CallbackInfo ci) {
-        stationBlockRenderer.renderCrossed(arg, i, d, d1, d2, renderingInInventory);
+        stationBlockRenderer.renderCrossed(arg, i, d, d1, d2);
         ci.cancel();
     }
 
@@ -77,7 +73,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
             cancellable = true
     )
     private void renderShhiftedColumn_redirect(BlockBase arg, int i, double d, double d1, double d2, CallbackInfo ci) {
-        stationBlockRenderer.renderShiftedColumn(arg, i, d, d1, d2, renderingInInventory);
+        stationBlockRenderer.renderShiftedColumn(arg, i, d, d1, d2);
         ci.cancel();
     }
 
@@ -87,7 +83,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
             cancellable = true
     )
     private void renderBottomFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
-        stationBlockRenderer.renderBottomFace(arg, d, d1, d2, i, renderingInInventory);
+        stationBlockRenderer.renderBottomFace(arg, d, d1, d2, i);
         ci.cancel();
     }
 
@@ -97,7 +93,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
             cancellable = true
     )
     private void renderTopFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
-        stationBlockRenderer.renderTopFace(arg, d, d1, d2, i, renderingInInventory);
+        stationBlockRenderer.renderTopFace(arg, d, d1, d2, i);
         ci.cancel();
     }
 
@@ -107,7 +103,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
             cancellable = true
     )
     private void renderEastFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
-        stationBlockRenderer.renderEastFace(arg, d, d1, d2, i, renderingInInventory);
+        stationBlockRenderer.renderEastFace(arg, d, d1, d2, i);
         ci.cancel();
     }
 
@@ -117,7 +113,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
             cancellable = true
     )
     private void renderWestFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
-        stationBlockRenderer.renderWestFace(arg, d, d1, d2, i, renderingInInventory);
+        stationBlockRenderer.renderWestFace(arg, d, d1, d2, i);
         ci.cancel();
     }
 
@@ -127,7 +123,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
             cancellable = true
     )
     private void renderNorthFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
-        stationBlockRenderer.renderNorthFace(arg, d, d1, d2, i, renderingInInventory);
+        stationBlockRenderer.renderNorthFace(arg, d, d1, d2, i);
         ci.cancel();
     }
 
@@ -137,32 +133,8 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
             cancellable = true
     )
     private void renderSouthFace_redirect(BlockBase arg, double d, double d1, double d2, int i, CallbackInfo ci) {
-        stationBlockRenderer.renderSouthFace(arg, d, d1, d2, i, renderingInInventory);
+        stationBlockRenderer.renderSouthFace(arg, d, d1, d2, i);
         ci.cancel();
-    }
-
-    @Inject(
-            method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
-            at = @At("HEAD")
-    )
-    private void setRenderingInInventory1(BlockBase arg, int i, float f, CallbackInfo ci) {
-        renderingInInventory = true;
-    }
-
-    @Inject(
-            method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
-            at = @At("RETURN")
-    )
-    private void setRenderingInInventory2(BlockBase arg, int i, float f, CallbackInfo ci) {
-        renderingInInventory = false;
-    }
-
-    @Inject(
-            method = "method_53(Lnet/minecraft/block/BlockBase;Lnet/minecraft/level/Level;III)V",
-            at = @At("RETURN")
-    )
-    private void renderFallingBlockAtlases(BlockBase arg, Level arg1, int i, int j, int k, CallbackInfo ci) {
-        stationBlockRenderer.renderActiveAtlases();
     }
 
     @Inject(
@@ -190,7 +162,6 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     private void onRenderInInventory(BlockBase arg, int i, float f, CallbackInfo ci) {
         if (arg instanceof BlockWithInventoryRenderer) {
             ((BlockWithInventoryRenderer) arg).renderInventory((BlockRenderer) (Object) this, i);
-            renderingInInventory = false;
             ci.cancel();
         }
     }

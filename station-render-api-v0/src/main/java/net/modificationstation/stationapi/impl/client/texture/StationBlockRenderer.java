@@ -17,6 +17,7 @@ import java.util.*;
 
 public class StationBlockRenderer {
 
+    private boolean renderingMesh;
     public final Set<Atlas> activeAtlases = new HashSet<>();
     public final BlockRendererAccessor blockRendererAccessor;
 
@@ -24,7 +25,12 @@ public class StationBlockRenderer {
         blockRendererAccessor = (BlockRendererAccessor) tileRenderer;
     }
 
-    public void renderActiveAtlases() {
+    public void startMeshRender() {
+        renderingMesh = true;
+    }
+
+    public void endMeshRender() {
+        renderingMesh = false;
         if (!activeAtlases.isEmpty()) {
             activeAtlases.forEach(atlas -> {
                 atlas.bindAtlas();
@@ -33,16 +39,13 @@ public class StationBlockRenderer {
                 tessellator.setOffset(0, 0, 0);
             });
             activeAtlases.clear();
-            Atlases.getTerrain().bindAtlas();
         }
+        Atlases.getTerrain().bindAtlas();
     }
 
-    public Tessellator prepareTessellator(Atlas atlas, boolean renderingInInventory) {
+    public Tessellator prepareTessellator(Atlas atlas) {
         Tessellator tessellator;
-        if (renderingInInventory) {
-            tessellator = Tessellator.INSTANCE;
-            atlas.bindAtlas();
-        } else {
+        if (renderingMesh) {
             tessellator = atlas.getTessellator();
             TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
             if (!((TessellatorAccessor) tessellator).getDrawing()) {
@@ -52,13 +55,16 @@ public class StationBlockRenderer {
             }
             if (originalAccessor.getHasColour())
                 tessellator.colour(originalAccessor.getColour());
+        } else {
+            tessellator = Tessellator.INSTANCE;
+            atlas.bindAtlas();
         }
         return tessellator;
     }
 
-    public boolean renderBed(BlockBase block, int blockX, int blockY, int blockZ, boolean renderingInInventory) {
+    public boolean renderBed(BlockBase block, int blockX, int blockY, int blockZ) {
         Atlas atlas = ((CustomAtlasProvider) block).getAtlas();
-        Tessellator var5 = prepareTessellator(atlas, renderingInInventory);
+        Tessellator var5 = prepareTessellator(atlas);
         Atlas.Sprite texture;
         int
                 var6 = blockRendererAccessor.getBlockView().getTileMeta(blockX, blockY, blockZ),
@@ -159,7 +165,7 @@ public class StationBlockRenderer {
 
             var5.colour(var11 * var69, var11 * var69, var11 * var69);
             blockRendererAccessor.setMirrorTexture(rotation == 2);
-            this.renderEastFace(block, blockX, blockY, blockZ, block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 2), renderingInInventory);
+            this.renderEastFace(block, blockX, blockY, blockZ, block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 2));
         }
 
         if (var65 != 3 && (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ + 1, 3))) {
@@ -169,7 +175,7 @@ public class StationBlockRenderer {
 
             var5.colour(var11 * var70, var11 * var70, var11 * var70);
             blockRendererAccessor.setMirrorTexture(rotation == 3);
-            this.renderWestFace(block, blockX, blockY, blockZ, block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 3), renderingInInventory);
+            this.renderWestFace(block, blockX, blockY, blockZ, block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 3));
         }
 
         if (var65 != 4 && (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), blockX - 1, blockY, blockZ, 4))) {
@@ -179,7 +185,7 @@ public class StationBlockRenderer {
 
             var5.colour(var12 * var71, var12 * var71, var12 * var71);
             blockRendererAccessor.setMirrorTexture(rotation == 4);
-            this.renderNorthFace(block, blockX, blockY, blockZ, block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 4), renderingInInventory);
+            this.renderNorthFace(block, blockX, blockY, blockZ, block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 4));
         }
 
         if (var65 != 5 && (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), blockX + 1, blockY, blockZ, 5))) {
@@ -189,18 +195,18 @@ public class StationBlockRenderer {
 
             var5.colour(var12 * var72, var12 * var72, var12 * var72);
             blockRendererAccessor.setMirrorTexture(rotation == 5);
-            this.renderSouthFace(block, blockX, blockY, blockZ, block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 5), renderingInInventory);
+            this.renderSouthFace(block, blockX, blockY, blockZ, block.getTextureForSide(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ, 5));
         }
 
         blockRendererAccessor.setMirrorTexture(false);
         return true;
     }
 
-    public boolean renderPlant(BlockBase block, int x, int y, int z, boolean renderingInInventory) {
+    public boolean renderPlant(BlockBase block, int x, int y, int z) {
         float var6 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
         int var7 = block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
         int meta = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
-        Tessellator var5 = prepareTessellator(((CustomAtlasProvider) block).getAtlas().of(block.getTextureForSide(0, blockRendererAccessor.getBlockView().getTileMeta(x, y, z))), renderingInInventory);
+        Tessellator var5 = prepareTessellator(((CustomAtlasProvider) block).getAtlas().of(block.getTextureForSide(0, blockRendererAccessor.getBlockView().getTileMeta(x, y, z))));
         float var8 = (float)(var7 >> 16 & 255) / 255.0F;
         float var9 = (float)(var7 >> 8 & 255) / 255.0F;
         float var10 = (float)(var7 & 255) / 255.0F;
@@ -225,20 +231,20 @@ public class StationBlockRenderer {
             var15 += ((double)((float)(var17 >> 24 & 15L) / 15.0F) - 0.5D) * 0.5D;
         }
 
-        this.renderCrossed(block, meta, var19, var20, var15, renderingInInventory);
+        this.renderCrossed(block, meta, var19, var20, var15);
         return true;
     }
 
-    public boolean renderCrops(BlockBase block, int x, int y, int z, boolean renderingInInventory) {
+    public boolean renderCrops(BlockBase block, int x, int y, int z) {
         float var6 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
         int meta = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
-        Tessellator var5 = prepareTessellator(((CustomAtlasProvider) block).getAtlas().of(block.getTextureForSide(0, blockRendererAccessor.getBlockView().getTileMeta(x, y, z))), renderingInInventory);
+        Tessellator var5 = prepareTessellator(((CustomAtlasProvider) block).getAtlas().of(block.getTextureForSide(0, blockRendererAccessor.getBlockView().getTileMeta(x, y, z))));
         var5.colour(var6, var6, var6);
-        this.renderShiftedColumn(block, meta, x, (float)y - 0.0625F, z, renderingInInventory);
+        this.renderShiftedColumn(block, meta, x, (float)y - 0.0625F, z);
         return true;
     }
 
-    public void renderCrossed(BlockBase block, int meta, double x, double y, double z, boolean renderingInInventory) {
+    public void renderCrossed(BlockBase block, int meta, double x, double y, double z) {
         Atlas atlas;
         Atlas.Sprite texture;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
@@ -249,7 +255,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
             texture = atlas.getTexture(textureIndex);
         }
-        Tessellator t = prepareTessellator(atlas, renderingInInventory);
+        Tessellator t = prepareTessellator(atlas);
         double
                 var13 = texture.getStartU(),
                 var15 = texture.getEndU(),
@@ -277,7 +283,7 @@ public class StationBlockRenderer {
         t.vertex(var21, y + 1.0D, var27, var15, var17);
     }
 
-    public void renderShiftedColumn(BlockBase block, int meta, double x, double y, double z, boolean renderingInInventory) {
+    public void renderShiftedColumn(BlockBase block, int meta, double x, double y, double z) {
         Atlas atlas;
         Atlas.Sprite texture;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
@@ -288,7 +294,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
             texture = atlas.getTexture(textureIndex);
         }
-        Tessellator t = prepareTessellator(atlas, renderingInInventory);
+        Tessellator t = prepareTessellator(atlas);
         double var13 = texture.getStartU();
         double var15 = texture.getEndU();
         double var17 = texture.getStartV();
@@ -335,7 +341,7 @@ public class StationBlockRenderer {
         t.vertex(var23, y + 1.0D, var27, var15, var17);
     }
 
-    public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
+    public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
         Atlas atlas;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
             textureIndex = blockRendererAccessor.getTextureOverride();
@@ -344,7 +350,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
-        Tessellator t = prepareTessellator(atlas, renderingInInventory);
+        Tessellator t = prepareTessellator(atlas);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
@@ -437,7 +443,7 @@ public class StationBlockRenderer {
         t.vertex(endRenderX, adjustedRenderY, endRenderZ, endU1, endV1);
     }
 
-    public void renderTopFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
+    public void renderTopFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
         Atlas atlas;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
             textureIndex = blockRendererAccessor.getTextureOverride();
@@ -446,7 +452,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
-        Tessellator t = prepareTessellator(atlas, renderingInInventory);
+        Tessellator t = prepareTessellator(atlas);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
@@ -539,7 +545,7 @@ public class StationBlockRenderer {
         t.vertex(startRenderX, adjustedRenderY, endRenderZ, startU2, endV2);
     }
 
-    public void renderEastFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
+    public void renderEastFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
         Atlas atlas;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
             textureIndex = blockRendererAccessor.getTextureOverride();
@@ -548,7 +554,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
-        Tessellator t = prepareTessellator(atlas, renderingInInventory);
+        Tessellator t = prepareTessellator(atlas);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
@@ -646,7 +652,7 @@ public class StationBlockRenderer {
         t.vertex(startRenderX, startRenderY, adjustedRenderZ, endU1, endV1);
     }
 
-    public void renderWestFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
+    public void renderWestFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
         Atlas atlas;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
             textureIndex = blockRendererAccessor.getTextureOverride();
@@ -655,7 +661,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
-        Tessellator t = prepareTessellator(atlas, renderingInInventory);
+        Tessellator t = prepareTessellator(atlas);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
@@ -753,7 +759,7 @@ public class StationBlockRenderer {
         t.vertex(endRenderX, endRenderY, adjustedRenderZ, endU2, startV2);
     }
 
-    public void renderNorthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
+    public void renderNorthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
         Atlas atlas;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
             textureIndex = blockRendererAccessor.getTextureOverride();
@@ -762,7 +768,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
-        Tessellator t = prepareTessellator(atlas, renderingInInventory);
+        Tessellator t = prepareTessellator(atlas);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
@@ -860,7 +866,7 @@ public class StationBlockRenderer {
         t.vertex(adjustedRenderX, startRenderY, endRenderZ, endU1, endV1);
     }
 
-    public void renderSouthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, boolean renderingInInventory) {
+    public void renderSouthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
         Atlas atlas;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
             textureIndex = blockRendererAccessor.getTextureOverride();
@@ -869,7 +875,7 @@ public class StationBlockRenderer {
             atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
         BufferedImage atlasImage = atlas.getImage();
-        Tessellator t = prepareTessellator(atlas, renderingInInventory);
+        Tessellator t = prepareTessellator(atlas);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),

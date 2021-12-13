@@ -25,12 +25,23 @@ public class Mixinclass_66 {
             method = "method_296()V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/Tessellator;draw()V",
-                    shift = At.Shift.AFTER
+                    target = "Lnet/minecraft/client/render/Tessellator;start()V"
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void renderAtlases(CallbackInfo ci, int var1, int var2, int var3, int var4, int var5, int var6, HashSet<List<TileEntityBase>> var21, int var8, WorldPopulationRegion var9, BlockRenderer var10) {
-        stationChunkRenderer.renderAtlases(var10);
+    private void startMeshRender(CallbackInfo ci, int var1, int var2, int var3, int var4, int var5, int var6, HashSet<List<TileEntityBase>> var21, int var8, WorldPopulationRegion var9, BlockRenderer var10) {
+        stationChunkRenderer.startMeshRender(var10);
+    }
+
+    @Inject(
+            method = "method_296()V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/Tessellator;draw()V"
+            ),
+            locals = LocalCapture.CAPTURE_FAILHARD
+    )
+    private void startMeshDraw(CallbackInfo ci, int var1, int var2, int var3, int var4, int var5, int var6, HashSet<List<TileEntityBase>> var21, int var8, WorldPopulationRegion var9, BlockRenderer var10) {
+        stationChunkRenderer.endMeshRender(var10);
     }
 }
