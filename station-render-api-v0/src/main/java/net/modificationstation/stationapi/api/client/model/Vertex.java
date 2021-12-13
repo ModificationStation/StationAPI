@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.model;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.collect.ImmutableList;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.*;
-import java.util.concurrent.*;
 
 @EqualsAndHashCode
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -19,7 +18,7 @@ import java.util.concurrent.*;
 @ToString
 public class Vertex {
 
-    private static final Cache<String, Vertex> CACHE = CacheBuilder.newBuilder().softValues().build();
+    private static final Cache<String, Vertex> CACHE = Caffeine.newBuilder().softValues().build();
 
     double
             x, y, z,
@@ -37,11 +36,7 @@ public class Vertex {
     }
 
     public static Vertex get(double x, double y, double z, double u, double v, Direction face, float normalX, float normalY, float normalZ, boolean shade) {
-        try {
-            return CACHE.get(Arrays.deepToString(new Object[] {x, y, z, u, v, face, normalX, normalY, normalZ, shade}), () -> new Vertex(x, y, z, u, v, face, normalX, normalY, normalZ, shade));
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return CACHE.get(Arrays.deepToString(new Object[] {x, y, z, u, v, face, normalX, normalY, normalZ, shade}), cacheId -> new Vertex(x, y, z, u, v, face, normalX, normalY, normalZ, shade));
     }
 
     public static ImmutableList<Vertex> fromQuads(ImmutableList<Quad> q) {

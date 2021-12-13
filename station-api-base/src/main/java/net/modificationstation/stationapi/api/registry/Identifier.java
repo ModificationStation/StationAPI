@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.registry;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.*;
+import java.util.*;
 
 public final class Identifier implements Comparable<Identifier> {
 
@@ -12,7 +12,7 @@ public final class Identifier implements Comparable<Identifier> {
     public static final String SEPARATOR = ":";
 
     @NotNull
-    private static final Cache<String, Identifier> CACHE = CacheBuilder.newBuilder().softValues().build();
+    private static final Cache<String, Identifier> CACHE = Caffeine.newBuilder().softValues().build();
 
     @NotNull
     public final ModID modID;
@@ -30,41 +30,20 @@ public final class Identifier implements Comparable<Identifier> {
     }
 
     public static @NotNull Identifier of(@NotNull String identifier) {
-        try {
-            return CACHE.get(identifier, () -> {
-                String[] strings = identifier.split(SEPARATOR);
-                String modid;
-                int idIndex;
-                switch(strings.length) {
-                    case 1: {
-                        modid = "minecraft";
-                        idIndex = 0;
-                        break;
-                    }
-                    case 2: {
-                        modid = strings[0];
-                        idIndex = 1;
-                        break;
-                    }
-                    default:
-                        throw new IllegalArgumentException("Invalid identifier string! " + identifier);
-                }
-                if (strings[idIndex].startsWith("/")) {
-                    throw new IllegalArgumentException("Invalid identifier string! " + identifier);
-                }
-                return new Identifier(ModID.of(modid.trim()), strings[idIndex].trim());
-            });
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        if (!identifier.contains(SEPARATOR))
+            identifier = "minecraft" + SEPARATOR + identifier;
+        return Objects.requireNonNull(CACHE.get(identifier, sId -> {
+            String[] strings = sId.split(SEPARATOR);
+            if (strings.length != 2)
+                throw new IllegalArgumentException("Invalid identifier string! " + sId);
+            if (strings[1].startsWith("/"))
+                throw new IllegalArgumentException("Invalid identifier string! " + sId);
+            return new Identifier(ModID.of(strings[0].trim()), strings[1].trim());
+        }));
     }
 
     public static @NotNull Identifier of(@NotNull ModID modID, @NotNull String id) {
-        try {
-            return CACHE.get(modID + SEPARATOR + id, () -> new Identifier(modID, id));
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return Objects.requireNonNull(CACHE.get(modID + SEPARATOR + id, sId -> new Identifier(modID, id)));
     }
 
     public @NotNull Identifier prepend(@NotNull String prefix) {

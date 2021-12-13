@@ -10,6 +10,7 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.JsonRecipesRegistry;
 import net.modificationstation.stationapi.api.resource.Filters;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.util.exception.MissingModException;
 
 import java.io.*;
 import java.net.*;
@@ -35,12 +36,14 @@ public class JsonRecipesLoader {
     private static void registerRecipe(URL recipe) {
         try {
             String rawId = new Gson().fromJson(new InputStreamReader(recipe.openStream()), JsonRecipeType.class).getType();
+            Identifier recipeId;
             try {
-                Identifier recipeId = Identifier.of(rawId);
-                JsonRecipesRegistry.INSTANCE.computeIfAbsent(recipeId, identifier -> new HashSet<>()).add(recipe);
-            } catch (IllegalArgumentException e) {
+                recipeId = Identifier.of(rawId);
+            } catch (MissingModException e) {
                 LOGGER.warn("Found an unknown recipe type " + rawId + ". Ignoring.");
+                return;
             }
+            JsonRecipesRegistry.INSTANCE.computeIfAbsent(recipeId, identifier -> new HashSet<>()).add(recipe);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,19 +1,20 @@
 package net.modificationstation.stationapi.api.registry;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.modificationstation.stationapi.api.util.exception.MissingModException;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.*;
+import java.util.*;
 
 public final class ModID implements Comparable<ModID> {
 
     @NotNull
-    private static final Cache<@NotNull String, @NotNull ModID> CACHE = CacheBuilder.newBuilder().softValues().build();
+    private static final Cache<@NotNull String, @NotNull ModID> CACHE = Caffeine.newBuilder().softValues().build();
 
     @NotNull
     private final String modid;
@@ -27,24 +28,17 @@ public final class ModID implements Comparable<ModID> {
     }
 
     public static @NotNull ModID of(@NotNull String modid) {
-        try {
-            return CACHE.get(modid, () -> new ModID(modid));
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private @NotNull IllegalArgumentException modNotPresent() {
-        return new IllegalArgumentException("ModID " + modid + " isn't present in the runtime!");
+        return Objects.requireNonNull(CACHE.get(modid, ModID::new));
     }
 
     private ModID(@NotNull String modid) {
         this.modid = modid;
-        FabricLoader.getInstance().getModContainer(this.modid).orElseThrow(this::modNotPresent);
+        if (!FabricLoader.getInstance().isModLoaded(this.modid))
+            throw new MissingModException(this.modid);
     }
 
     public @NotNull ModContainer getContainer() {
-        return FabricLoader.getInstance().getModContainer(modid).orElseThrow(this::modNotPresent);
+        return FabricLoader.getInstance().getModContainer(modid).orElseThrow(() -> new MissingModException(modid));
     }
 
     public @NotNull ModMetadata getMetadata() {

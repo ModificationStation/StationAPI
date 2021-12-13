@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.model;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.collect.ImmutableList;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -10,7 +10,6 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.util.*;
-import java.util.concurrent.*;
 import java.util.function.*;
 
 @EqualsAndHashCode
@@ -19,7 +18,7 @@ import java.util.function.*;
 @ToString
 public class Quad {
 
-    private static final Cache<String, Quad> CACHE = CacheBuilder.newBuilder().softValues().build();
+    private static final Cache<String, Quad> CACHE = Caffeine.newBuilder().softValues().build();
 
     Vertex v00, v01, v11, v10;
 
@@ -38,11 +37,7 @@ public class Quad {
     }
 
     public static Quad get(Vertex v01, Vertex v00, Vertex v10, Vertex v11) {
-        try {
-            return CACHE.get(Arrays.deepToString(new Vertex[] {v01, v00, v10, v11}), () -> new Quad(v01, v00, v10, v11));
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return CACHE.get(Arrays.deepToString(new Vertex[] {v01, v00, v10, v11}), cacheId -> new Quad(v01, v00, v10, v11));
     }
 
     public static ImmutableList<Quad> fromVertexes(ImmutableList<Vertex> v) {
