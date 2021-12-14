@@ -14,6 +14,7 @@ import net.modificationstation.stationapi.impl.level.dimension.DimensionHelperIm
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.level.dimension.VanillaDimensions.OVERWORLD;
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public class DimensionHelperClientImpl extends DimensionHelperImpl {
 
@@ -43,7 +44,7 @@ public class DimensionHelperClientImpl extends DimensionHelperImpl {
 
             Dimension dimension = Dimension.getByID(destinationSerial);
             Level var10 = new Level(game.level, dimension);
-            game.showLevelProgress(var10, I18n.translate(dimension instanceof TravelMessageProvider ? ((TravelMessageProvider) dimension).getEnteringTranslationKey() : "gui." + Identifier.of(MODID, "entering"), destination), player);
+            game.showLevelProgress(var10, I18n.translate(dimension instanceof TravelMessageProvider ? ((TravelMessageProvider) dimension).getEnteringTranslationKey() : "gui." + of(MODID, "entering"), destination), player);
         } else {
             var1 = var1 / scale;
             var3 = var3 / scale;
@@ -52,9 +53,8 @@ public class DimensionHelperClientImpl extends DimensionHelperImpl {
                 game.level.method_193(player, false);
             }
 
-            Dimension dimension = Dimension.getByID(overworldSerial);
-            Level var12 = new Level(game.level, dimension);
-            game.showLevelProgress(var12, I18n.translate(dimension instanceof TravelMessageProvider ? ((TravelMessageProvider) dimension).getLeavingTranslationKey() : "gui." + Identifier.of(MODID, "leaving"), destination), player);
+            Level var12 = new Level(game.level, Dimension.getByID(overworldSerial));
+            game.showLevelProgress(var12, I18n.translate(player.level.dimension instanceof TravelMessageProvider ? ((TravelMessageProvider) player.level.dimension).getLeavingTranslationKey() : "gui." + of(MODID, "leaving"), destination), player);
         }
 
         player.level = game.level;
