@@ -11,6 +11,9 @@
     "MixinPlayerBase",
     "MixinPortal"
   ],
+  "server": [
+    "server.MixinMinecraftServer"
+  ],
   "client": [
     "client.MixinAbstractClientPlayer",
     "client.MixinMinecraft"
