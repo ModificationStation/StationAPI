@@ -78,7 +78,7 @@ public class StationAPI implements PreLaunchEntrypoint {
      */
     private void setupEntrypoint(Identifier entrypoint) {
         FabricLoader.getInstance().getEntrypointContainers(entrypoint.toString(), Object.class).forEach(entrypointContainer -> {
-            LOGGER.info("Setting up " + entrypointContainer.getProvider().getMetadata().getId() + " " + entrypoint + " entrypoint...");
+            LOGGER.info("Setting up \"" + entrypointContainer.getProvider().getMetadata().getId() + "\" \"" + entrypoint + "\" \"" + entrypointContainer.getEntrypoint().getClass().getName() + "\" entrypoint...");
             EntrypointManager.setup(entrypointContainer);
         });
     }

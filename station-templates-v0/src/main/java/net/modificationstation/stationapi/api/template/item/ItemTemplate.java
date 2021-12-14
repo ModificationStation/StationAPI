@@ -1,5 +1,8 @@
 package net.modificationstation.stationapi.api.template.item;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.api.EnvironmentInterface;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
@@ -11,6 +14,7 @@ import net.modificationstation.stationapi.api.registry.ModID;
 
 import java.util.function.*;
 
+@EnvironmentInterface(value = EnvType.CLIENT, itf = CustomAtlasProvider.class)
 public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider {
 
     default T setTranslationKey(ModID modID, String translationKey) {
@@ -19,6 +23,7 @@ public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     default Atlas getAtlas() {
         return Atlases.getStationGuiItems();
     }
