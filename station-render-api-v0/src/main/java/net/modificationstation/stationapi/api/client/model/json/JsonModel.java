@@ -69,7 +69,7 @@ public final class JsonModel extends Model {
                                     new BufferedReader(new InputStreamReader(
                                                     newTexturePack.getResourceAsStream(ResourceManager.ASSETS.toPath(
                                                                     Identifier.of(parentData.parent),
-                                                                    "/" + MODID + "/models", "json"
+                                                                    MODID + "/models", "json"
                                                     )),
                                                     StandardCharsets.UTF_8
                                     )).lines().collect(Collectors.joining("\n")), JsonModelData.class)
