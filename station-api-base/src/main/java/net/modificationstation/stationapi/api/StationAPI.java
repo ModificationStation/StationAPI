@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.mine_diver.unsafeevents.EventBus;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
@@ -60,8 +61,17 @@ public class StationAPI implements PreLaunchEntrypoint {
      */
     private void setupMods() {
         FabricLoader fabricLoader = FabricLoader.getInstance();
-        fabricLoader.getEntrypointContainers(Identifier.of(MODID, "event_bus").toString(), Object.class).forEach(EntrypointManager::setup);
-        fabricLoader.getEntrypointContainers(Identifier.of(MODID, "event_bus_" + fabricLoader.getEnvironmentType().name().toLowerCase()).toString(), Object.class).forEach(EntrypointManager::setup);
+        Identifier
+                commonEntrypoint = Identifier.of(MODID, "event_bus"),
+                sidedEntrypoint = Identifier.of(MODID, "event_bus_" + fabricLoader.getEnvironmentType().name().toLowerCase());
+        fabricLoader.getEntrypointContainers(commonEntrypoint.toString(), Object.class).forEach(entrypoint -> {
+            LOGGER.info("Setting up " + entrypoint.getProvider().getMetadata().getId() + " " + commonEntrypoint + " entrypoint...");
+            EntrypointManager.setup(entrypoint);
+        });
+        fabricLoader.getEntrypointContainers(sidedEntrypoint.toString(), Object.class).forEach(entrypoint -> {
+            LOGGER.info("Setting up " + entrypoint.getProvider().getMetadata().getId() + " " + sidedEntrypoint + " entrypoint...");
+            EntrypointManager.setup(entrypoint);
+        });
         LOGGER.info("Invoking PreInit event...");
         EVENT_BUS.post(new PreInitEvent());
         LOGGER.info("Invoking Init event...");
