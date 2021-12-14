@@ -97,4 +97,7 @@ public interface BlockRendererAccessor {
 
     @Accessor
     boolean getShadeTopFace();
+
+    @Accessor
+    void setShadeTopFace(boolean shadeTopFace);
 }

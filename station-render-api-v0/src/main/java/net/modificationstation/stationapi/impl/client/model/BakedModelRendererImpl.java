@@ -132,11 +132,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
 
     private void renderVertexLight(Vertex v, int i) {
         t.colour(light.get(i));
-        t.vertex(pos.x + v.x, pos.y + v.y, pos.z + v.z,
-//                noTextureOverride ? v.u : (textureOverride.getX() + v.lightingFace.axis.get2DX(v.x, v.y, v.z) * textureOverride.getWidth()) / textureOverride.getAtlas().getImage().getWidth(),
-//                noTextureOverride ? v.v : (textureOverride.getY() + v.lightingFace.axis.get2DY(v.x, v.y, v.z) * textureOverride.getHeight()) / textureOverride.getAtlas().getImage().getHeight()
-                v.u, v.v
-        );
+        t.vertex(pos.x + v.x, pos.y + v.y, pos.z + v.z, v.u, v.v);
     }
 
     private void renderVertexNormal(Vertex v) {

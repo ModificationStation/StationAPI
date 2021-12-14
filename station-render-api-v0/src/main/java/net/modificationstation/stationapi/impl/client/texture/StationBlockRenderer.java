@@ -15,6 +15,8 @@ import net.modificationstation.stationapi.mixin.render.client.TessellatorAccesso
 import java.awt.image.*;
 import java.util.*;
 
+import static net.minecraft.client.render.block.BlockRenderer.fancyGraphics;
+
 public class StationBlockRenderer {
 
     private boolean renderingMesh;
@@ -53,8 +55,6 @@ public class StationBlockRenderer {
                 tessellator.start();
                 tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
             }
-            if (originalAccessor.getHasColour())
-                tessellator.colour(originalAccessor.getColour());
         } else {
             tessellator = Tessellator.INSTANCE;
             atlas.bindAtlas();
@@ -207,8 +207,8 @@ public class StationBlockRenderer {
         int var7 = block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
         int meta = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
         Tessellator var5 = prepareTessellator(((CustomAtlasProvider) block).getAtlas().of(block.getTextureForSide(0, blockRendererAccessor.getBlockView().getTileMeta(x, y, z))));
-        float var8 = (float)(var7 >> 16 & 255) / 255.0F;
-        float var9 = (float)(var7 >> 8 & 255) / 255.0F;
+        float var8 = (float)((var7 >> 16) & 255) / 255.0F;
+        float var9 = (float)((var7 >> 8) & 255) / 255.0F;
         float var10 = (float)(var7 & 255) / 255.0F;
         if (GameRenderer.anaglyph3d) {
             float var11 = (var8 * 30.0F + var9 * 59.0F + var10 * 11.0F) / 100.0F;
@@ -226,9 +226,9 @@ public class StationBlockRenderer {
         if (block == BlockBase.TALLGRASS) {
             long var17 = (x * 3129871L) ^ (long)z * 116129781L ^ (long)y;
             var17 = var17 * var17 * 42317861L + var17 * 11L;
-            var19 += ((double)((float)(var17 >> 16 & 15L) / 15.0F) - 0.5D) * 0.5D;
-            var20 += ((double)((float)(var17 >> 20 & 15L) / 15.0F) - 1.0D) * 0.2D;
-            var15 += ((double)((float)(var17 >> 24 & 15L) / 15.0F) - 0.5D) * 0.5D;
+            var19 += ((double)((float)((var17 >> 16) & 15L) / 15.0F) - 0.5D) * 0.5D;
+            var20 += ((double)((float)((var17 >> 20) & 15L) / 15.0F) - 1.0D) * 0.2D;
+            var15 += ((double)((float)((var17 >> 24) & 15L) / 15.0F) - 0.5D) * 0.5D;
         }
 
         this.renderCrossed(block, meta, var19, var20, var15);
@@ -339,6 +339,135 @@ public class StationBlockRenderer {
         t.vertex(var21, y + 0.0D, var27, var13, var19);
         t.vertex(var23, y + 0.0D, var27, var15, var19);
         t.vertex(var23, y + 1.0D, var27, var15, var17);
+    }
+
+    public boolean renderFast(BlockBase block, int x, int y, int z, float r, float g, float b) {
+        blockRendererAccessor.setShadeTopFace(false);
+        Atlas topAtlas = ((CustomAtlasProvider) block).getAtlas();
+        Tessellator tessellator;
+        boolean rendered = false;
+        float initialShadeBottom = 0.5F;
+        float initialShadeTop = 1.0F;
+        float initialShadeEastWest = 0.8F;
+        float initialShadeNorthSouth = 0.6F;
+        float shadeTopRed = initialShadeTop * r;
+        float shadeTopGreen = initialShadeTop * g;
+        float shadeTopBlue = initialShadeTop * b;
+        float shadeBottomRed = initialShadeBottom;
+        float shadeEastWestRed = initialShadeEastWest;
+        float shadeNorthSouthRed = initialShadeNorthSouth;
+        float shadeBottomGreen = initialShadeBottom;
+        float shadeEastWestGreen = initialShadeEastWest;
+        float shadeNorthSouthGreen = initialShadeNorthSouth;
+        float shadeBottomBlue = initialShadeBottom;
+        float shadeEastWestBlue = initialShadeEastWest;
+        float shadeNorthSouthBlue = initialShadeNorthSouth;
+        if (block != BlockBase.GRASS) {
+            shadeBottomRed = initialShadeBottom * r;
+            shadeEastWestRed = initialShadeEastWest * r;
+            shadeNorthSouthRed = initialShadeNorthSouth * r;
+            shadeBottomGreen = initialShadeBottom * g;
+            shadeEastWestGreen = initialShadeEastWest * g;
+            shadeNorthSouthGreen = initialShadeNorthSouth * g;
+            shadeBottomBlue = initialShadeBottom * b;
+            shadeEastWestBlue = initialShadeEastWest * b;
+            shadeNorthSouthBlue = initialShadeNorthSouth * b;
+        }
+
+        float brightness = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
+        if (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), x, y - 1, z, 0)) {
+            float brightnessBottom = block.getBrightness(blockRendererAccessor.getBlockView(), x, y - 1, z);
+            int textureBottom = block.getTextureForSide(blockRendererAccessor.getBlockView(), x, y, z, 0);
+            tessellator = prepareTessellator(topAtlas.of(textureBottom));
+            tessellator.colour(shadeBottomRed * brightnessBottom, shadeBottomGreen * brightnessBottom, shadeBottomBlue * brightnessBottom);
+            this.renderBottomFace(block, x, y, z, textureBottom);
+            rendered = true;
+        }
+
+        if (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), x, y + 1, z, 1)) {
+            float brightnessTop = block.getBrightness(blockRendererAccessor.getBlockView(), x, y + 1, z);
+            if (block.maxY != 1.0D && !block.material.isLiquid()) {
+                brightnessTop = brightness;
+            }
+            int textureTop = block.getTextureForSide(blockRendererAccessor.getBlockView(), x, y, z, 1);
+            tessellator = prepareTessellator(topAtlas.of(textureTop));
+            tessellator.colour(shadeTopRed * brightnessTop, shadeTopGreen * brightnessTop, shadeTopBlue * brightnessTop);
+            this.renderTopFace(block, x, y, z, textureTop);
+            rendered = true;
+        }
+
+        if (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), x, y, z - 1, 2)) {
+            float brightnessEast = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z - 1);
+            if (block.minZ > 0.0D) {
+                brightnessEast = brightness;
+            }
+            int textureEast = block.getTextureForSide(blockRendererAccessor.getBlockView(), x, y, z, 2);
+            tessellator = prepareTessellator(topAtlas.of(textureEast));
+            tessellator.colour(shadeEastWestRed * brightnessEast, shadeEastWestGreen * brightnessEast, shadeEastWestBlue * brightnessEast);
+            this.renderEastFace(block, x, y, z, textureEast);
+            if (fancyGraphics && topAtlas == Atlases.getTerrain() && textureEast == 3 && blockRendererAccessor.getTextureOverride() < 0) {
+                tessellator = prepareTessellator(Atlases.getTerrain());
+                tessellator.colour(shadeEastWestRed * brightnessEast * r, shadeEastWestGreen * brightnessEast * g, shadeEastWestBlue * brightnessEast * b);
+                this.renderEastFace(block, x, y, z, 38);
+            }
+
+            rendered = true;
+        }
+
+        if (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), x, y, z + 1, 3)) {
+            float brightnessWest = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z + 1);
+            if (block.maxZ < 1.0D) {
+                brightnessWest = brightness;
+            }
+            int textureWest = block.getTextureForSide(blockRendererAccessor.getBlockView(), x, y, z, 3);
+            tessellator = prepareTessellator(topAtlas.of(textureWest));
+            tessellator.colour(shadeEastWestRed * brightnessWest, shadeEastWestGreen * brightnessWest, shadeEastWestBlue * brightnessWest);
+            this.renderWestFace(block, x, y, z, textureWest);
+            if (fancyGraphics && topAtlas == Atlases.getTerrain() && textureWest == 3 && blockRendererAccessor.getTextureOverride() < 0) {
+                tessellator = prepareTessellator(Atlases.getTerrain());
+                tessellator.colour(shadeEastWestRed * brightnessWest * r, shadeEastWestGreen * brightnessWest * g, shadeEastWestBlue * brightnessWest * b);
+                this.renderWestFace(block, x, y, z, 38);
+            }
+
+            rendered = true;
+        }
+
+        if (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), x - 1, y, z, 4)) {
+            float brightnessNorth = block.getBrightness(blockRendererAccessor.getBlockView(), x - 1, y, z);
+            if (block.minX > 0.0D) {
+                brightnessNorth = brightness;
+            }
+            int textureNorth = block.getTextureForSide(blockRendererAccessor.getBlockView(), x, y, z, 4);
+            tessellator = prepareTessellator(topAtlas.of(textureNorth));
+            tessellator.colour(shadeNorthSouthRed * brightnessNorth, shadeNorthSouthGreen * brightnessNorth, shadeNorthSouthBlue * brightnessNorth);
+            this.renderNorthFace(block, x, y, z, textureNorth);
+            if (fancyGraphics && topAtlas == Atlases.getTerrain() && textureNorth == 3 && blockRendererAccessor.getTextureOverride() < 0) {
+                tessellator = prepareTessellator(Atlases.getTerrain());
+                tessellator.colour(shadeNorthSouthRed * brightnessNorth * r, shadeNorthSouthGreen * brightnessNorth * g, shadeNorthSouthBlue * brightnessNorth * b);
+                this.renderNorthFace(block, x, y, z, 38);
+            }
+
+            rendered = true;
+        }
+
+        if (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), x + 1, y, z, 5)) {
+            float brightnessSouth = block.getBrightness(blockRendererAccessor.getBlockView(), x + 1, y, z);
+            if (block.maxX < 1.0D) {
+                brightnessSouth = brightness;
+            }
+            int textureSouth = block.getTextureForSide(blockRendererAccessor.getBlockView(), x, y, z, 5);
+            tessellator = prepareTessellator(topAtlas.of(textureSouth));
+            tessellator.colour(shadeNorthSouthRed * brightnessSouth, shadeNorthSouthGreen * brightnessSouth, shadeNorthSouthBlue * brightnessSouth);
+            this.renderSouthFace(block, x, y, z, textureSouth);
+            if (fancyGraphics && topAtlas == Atlases.getTerrain() && textureSouth == 3 && blockRendererAccessor.getTextureOverride() < 0) {
+                tessellator = prepareTessellator(Atlases.getTerrain());
+                tessellator.colour(shadeNorthSouthRed * brightnessSouth * r, shadeNorthSouthGreen * brightnessSouth * g, shadeNorthSouthBlue * brightnessSouth * b);
+                this.renderSouthFace(block, x, y, z, 38);
+            }
+            rendered = true;
+        }
+
+        return rendered;
     }
 
     public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
