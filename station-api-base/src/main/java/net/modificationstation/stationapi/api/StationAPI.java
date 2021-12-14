@@ -17,6 +17,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
+
 /**
  * StationAPI main class. Used for some initialization.
  * @author mine_diver
@@ -60,23 +62,24 @@ public class StationAPI implements PreLaunchEntrypoint {
      * Loads main entrypoints, also invokes preInit, init and postInit events. No Minecraft classes must be referenced here.
      */
     private void setupMods() {
-        FabricLoader fabricLoader = FabricLoader.getInstance();
-        Identifier
-                commonEntrypoint = Identifier.of(MODID, "event_bus"),
-                sidedEntrypoint = Identifier.of(MODID, "event_bus_" + fabricLoader.getEnvironmentType().name().toLowerCase());
-        fabricLoader.getEntrypointContainers(commonEntrypoint.toString(), Object.class).forEach(entrypoint -> {
-            LOGGER.info("Setting up " + entrypoint.getProvider().getMetadata().getId() + " " + commonEntrypoint + " entrypoint...");
-            EntrypointManager.setup(entrypoint);
-        });
-        fabricLoader.getEntrypointContainers(sidedEntrypoint.toString(), Object.class).forEach(entrypoint -> {
-            LOGGER.info("Setting up " + entrypoint.getProvider().getMetadata().getId() + " " + sidedEntrypoint + " entrypoint...");
-            EntrypointManager.setup(entrypoint);
-        });
+        setupEntrypoint(of(MODID, "event_bus"));
+        setupEntrypoint(of(MODID, "event_bus_" + FabricLoader.getInstance().getEnvironmentType().name().toLowerCase()));
         LOGGER.info("Invoking PreInit event...");
         EVENT_BUS.post(new PreInitEvent());
         LOGGER.info("Invoking Init event...");
         EVENT_BUS.post(new InitEvent());
         LOGGER.info("Invoking PostInit event...");
         EVENT_BUS.post(new PostInitEvent());
+    }
+
+    /**
+     * Sets up specified entrypoint.
+     * @param entrypoint the entrypoints to iterate over and setup.
+     */
+    private void setupEntrypoint(Identifier entrypoint) {
+        FabricLoader.getInstance().getEntrypointContainers(entrypoint.toString(), Object.class).forEach(entrypointContainer -> {
+            LOGGER.info("Setting up " + entrypointContainer.getProvider().getMetadata().getId() + " " + entrypoint + " entrypoint...");
+            EntrypointManager.setup(entrypointContainer);
+        });
     }
 }
