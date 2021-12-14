@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.mine_diver.unsafeevents.EventBus;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;

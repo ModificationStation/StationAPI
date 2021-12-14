@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.impl.level.dimension.DimensionHelperIm
 public class DimensionHelperServerImpl extends DimensionHelperImpl {
 
     @Override
-    public void switchDimension(PlayerBase player, Identifier destination, double scale, class_467 travelAgent, String enteringMessage, String leavingMessage) {
+    public void switchDimension(PlayerBase player, Identifier destination, double scale, class_467 travelAgent) {
 
     }
 }

@@ -4,7 +4,7 @@ import net.minecraft.achievement.Achievement;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.gui.screen.menu.Achievements;
 import net.minecraft.client.gui.widgets.Button;
-import net.minecraft.client.resource.language.TranslationStorage;
+import net.minecraft.client.resource.language.I18n;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsEvent;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
@@ -53,7 +53,7 @@ public class MixinAchievements extends ScreenBase {
             if (AchievementPage.getCurrentPageName().equals("Minecraft")) {
                 this.textManager.drawText("Minecraft", this.width / 2 - 69, this.height / 2 + 80, 0);
             } else {
-                this.textManager.drawText(TranslationStorage.getInstance().translate("stationapi:achievementPage." + AchievementPage.getCurrentPageName()), this.width / 2 - 69, this.height / 2 + 80, 0);
+                this.textManager.drawText(I18n.translate("stationapi:achievementPage." + AchievementPage.getCurrentPageName()), this.width / 2 - 69, this.height / 2 + 80, 0);
             }
         }
     }

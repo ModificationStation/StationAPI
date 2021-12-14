@@ -13,7 +13,7 @@ public class DimensionHelper {
     @SuppressWarnings("Convert2MethodRef") // Method references load their target classes on both sides, causing crashes.
     private static final DimensionHelperImpl INSTANCE = SideUtils.get(() -> new DimensionHelperClientImpl(), () -> new DimensionHelperServerImpl());
 
-    public static void switchDimension(PlayerBase player, Identifier destination, double scale, class_467 travelAgent, String enteringMessage, String leavingMessage) {
-        INSTANCE.switchDimension(player, destination, scale, travelAgent, enteringMessage, leavingMessage);
+    public static void switchDimension(PlayerBase player, Identifier destination, double scale, class_467 travelAgent) {
+        INSTANCE.switchDimension(player, destination, scale, travelAgent);
     }
 }

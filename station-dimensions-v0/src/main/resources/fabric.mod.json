@@ -21,7 +21,7 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.level.dimension.DimensionRegistryInit"
+      "net.modificationstation.stationapi.impl.level.dimension.DimensionAPI"
     ]
   },
   "mixins": [

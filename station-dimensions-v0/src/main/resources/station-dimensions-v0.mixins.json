@@ -8,6 +8,7 @@
     "MixinDimensionFile",
     "MixinLevel",
     "MixinMcRegionDimensionFile",
+    "MixinNether",
     "MixinPlayerBase",
     "MixinPortal"
   ],

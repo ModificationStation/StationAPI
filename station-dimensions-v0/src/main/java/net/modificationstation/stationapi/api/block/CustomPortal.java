@@ -10,7 +10,7 @@ public interface CustomPortal extends TeleportationManager {
 
     @Override
     default void switchDimension(PlayerBase player) {
-        DimensionHelper.switchDimension(player, getDimension(player), getDimensionScale(player), getTravelAgent(player), getDimensionEnteringMessage(player), getDimensionLeavingMessage(player));
+        DimensionHelper.switchDimension(player, getDimension(player), getDimensionScale(player), getTravelAgent(player));
     }
 
     Identifier getDimension(PlayerBase player);
@@ -20,8 +20,4 @@ public interface CustomPortal extends TeleportationManager {
     }
 
     class_467 getTravelAgent(PlayerBase player);
-
-    String getDimensionEnteringMessage(PlayerBase player);
-
-    String getDimensionLeavingMessage(PlayerBase player);
 }

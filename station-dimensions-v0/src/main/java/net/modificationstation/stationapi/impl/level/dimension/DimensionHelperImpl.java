@@ -6,5 +6,5 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 
 public abstract class DimensionHelperImpl {
 
-    public abstract void switchDimension(PlayerBase player, Identifier destination, double scale, class_467 travelAgent, String enteringMessage, String leavingMessage);
+    public abstract void switchDimension(PlayerBase player, Identifier destination, double scale, class_467 travelAgent);
 }
