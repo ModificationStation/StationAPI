@@ -9,6 +9,7 @@
     "server.MixinPendingConnection"
   ],
   "client": [
+    "client.MixinClientLevel",
     "client.MixinClientPlayNetworkHandler",
     "client.MixinTextureManager"
   ],
