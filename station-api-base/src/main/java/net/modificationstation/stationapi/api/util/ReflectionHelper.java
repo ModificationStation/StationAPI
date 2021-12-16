@@ -1,20 +1,24 @@
 package net.modificationstation.stationapi.api.util;
 
-import sun.reflect.annotation.AnnotationParser;
+import sun.misc.Unsafe;
 
 import java.lang.annotation.*;
+import java.lang.invoke.*;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.*;
 
 public class ReflectionHelper {
 
-    private static final Field modifiers;
+    private static final VarHandle modifiers;
 
     static {
         try {
-            modifiers = Field.class.getDeclaredField("modifiers");
-        } catch (NoSuchFieldException e) {
+            Unsafe unsafe = UnsafeProvider.theUnsafe;
+            Field implLookupField = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
+            MethodHandles.Lookup lookup = (MethodHandles.Lookup) unsafe.getObject(unsafe.staticFieldBase(implLookupField), unsafe.staticFieldOffset(implLookupField));
+            modifiers = lookup.findVarHandle(Field.class, "modifiers", int.class);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
@@ -62,16 +66,7 @@ public class ReflectionHelper {
             field.setAccessible(false);
     }
 
-    public static <A extends Annotation> A newAnnotation(Class<A> annotationType) {
-        return newAnnotation(annotationType, Collections.emptyMap());
-    }
-
-    public static <A extends Annotation> A newAnnotation(Class<A> annotationType, Map<String, Object> customValues) {
-        Map<String, Object> values = new HashMap<>();
-        for (Method method : annotationType.getDeclaredMethods())
-            values.put(method.getName(), method.getDefaultValue());
-        values.putAll(customValues);
-        //noinspection unchecked
-        return (A) AnnotationParser.annotationForMap(annotationType, values);
+    public static void setPrivateField(VarHandle var, Object instance, Object value) {
+        var.set(instance, value);
     }
 }

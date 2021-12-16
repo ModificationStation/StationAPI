@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.mixin.render.client;
 
-import com.sun.org.apache.xml.internal.utils.IntStack;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
@@ -53,7 +54,7 @@ public class Mixinclass_556 {
         return atlas == null ? textureManager.getTextureId(string) : atlas.getAtlasTextureID();
     }
 
-    private final IntStack method_1862_capturedLocals_texturePosition = new IntStack();
+    private final IntStack method_1862_capturedLocals_texturePosition = new IntArrayList();
 
     @ModifyVariable(
             method = "method_1862(Lnet/minecraft/entity/Living;Lnet/minecraft/item/ItemInstance;)V",
@@ -75,7 +76,7 @@ public class Mixinclass_556 {
     )
     private float modifyStartU(float originalStartU) {
         Atlas atlas = method_1862_customLocals_atlas.peek();
-        Atlas.Sprite texture = atlas == null ? null : atlas.getTexture(method_1862_capturedLocals_texturePosition.peek());
+        Atlas.Sprite texture = atlas == null ? null : atlas.getTexture(method_1862_capturedLocals_texturePosition.peekInt(0));
         method_1862_customLocals_texture.push(texture);
         return texture == null ? originalStartU : (float) texture.getStartU();
     }

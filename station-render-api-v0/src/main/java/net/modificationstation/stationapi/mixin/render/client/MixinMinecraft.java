@@ -22,7 +22,6 @@ public class MixinMinecraft {
         StationAPI.EVENT_BUS.post(new TextureRegisterEvent());
     }
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(
             method = "init()V",
             at = @At(

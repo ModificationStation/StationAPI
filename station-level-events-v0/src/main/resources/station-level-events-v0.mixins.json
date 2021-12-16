@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.modificationstation.stationapi.mixin.level",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "MixinDimensionFile",
     "MixinLevel",
