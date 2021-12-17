@@ -83,7 +83,7 @@ public class MixinMinecraftServer {
             method = "prepareLevel(Lnet/minecraft/level/storage/LevelStorage;Ljava/lang/String;J)V",
             constant = @Constant(
                     intValue = 0,
-                    ordinal = 3
+                    ordinal = 1
             )
     )
     private int modifyOverworldId(int original) {
