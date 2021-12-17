@@ -2,7 +2,9 @@ package net.modificationstation.stationapi.mixin.dimension.server;
 
 import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.ints.IntSortedSet;
+import net.minecraft.level.dimension.DimensionData;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.OtherServerLevel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.network.ServerEntityTracker;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -17,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MinecraftServer.class)
@@ -90,15 +93,16 @@ public class MixinMinecraftServer {
         return DimensionRegistry.INSTANCE.serialView.keySet().toIntArray()[capturedIndex];
     }
 
-    @ModifyConstant(
+    @SuppressWarnings("UnresolvedMixinReference")
+    @Redirect(
             method = "prepareLevel(Lnet/minecraft/level/storage/LevelStorage;Ljava/lang/String;J)V",
-            constant = @Constant(
-                    intValue = -1,
-                    ordinal = 1
+            at = @At(
+                    value = "NEW",
+                    target = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;IJLnet/minecraft/server/level/ServerLevel;)Lnet/minecraft/server/level/OtherServerLevel;"
             )
     )
-    private int modifyCustomDimensionId(int original) {
-        return DimensionRegistry.INSTANCE.serialView.keySet().toIntArray()[capturedIndex];
+    private OtherServerLevel instantiateOtherServerLevel(MinecraftServer minecraftServer, DimensionData arg, String string, int i, long l, ServerLevel arg1) {
+        return new OtherServerLevel(minecraftServer, arg, string, DimensionRegistry.INSTANCE.serialView.keySet().toIntArray()[capturedIndex], l, arg1);
     }
 
     /**
