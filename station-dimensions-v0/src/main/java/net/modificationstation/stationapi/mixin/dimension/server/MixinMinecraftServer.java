@@ -68,8 +68,7 @@ public class MixinMinecraftServer {
             index = 6,
             at = @At(
                     value = "LOAD",
-                    ordinal = 1,
-                    shift = At.Shift.BEFORE
+                    ordinal = 1
             )
     )
     private int captureDimensionIndex(int index) {
