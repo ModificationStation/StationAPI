@@ -35,8 +35,8 @@ public class DimensionHelperClientImpl extends DimensionHelperImpl {
         double var1 = player.x;
         double var3 = player.z;
         if (player.dimensionId == destinationSerial) {
-            var1 = var1 * scale;
-            var3 = var3 * scale;
+            var1 *= scale;
+            var3 *= scale;
             player.setPositionAndAngles(var1, player.y, var3, player.yaw, player.pitch);
             if (player.isAlive()) {
                 game.level.method_193(player, false);
@@ -46,8 +46,8 @@ public class DimensionHelperClientImpl extends DimensionHelperImpl {
             Level var10 = new Level(game.level, dimension);
             game.showLevelProgress(var10, I18n.translate(dimension instanceof TravelMessageProvider ? ((TravelMessageProvider) dimension).getEnteringTranslationKey() : "gui." + of(MODID, "entering"), destination), player);
         } else {
-            var1 = var1 / scale;
-            var3 = var3 / scale;
+            var1 /= scale;
+            var3 /= scale;
             player.setPositionAndAngles(var1, player.y, var3, player.yaw, player.pitch);
             if (player.isAlive()) {
                 game.level.method_193(player, false);

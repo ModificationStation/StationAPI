@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.level.dimension;
+package net.modificationstation.stationapi.api.registry;
 
 import net.minecraft.level.dimension.Dimension;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +9,7 @@ public class DimensionContainer<T extends Dimension> {
 
     @NotNull
     public final Supplier<@NotNull T> factory;
-    public int serialID;
+    int serialID;
 
     public DimensionContainer(@NotNull IntFunction<@NotNull T> factory) {
         this((@NotNull Function<@NotNull DimensionContainer<@NotNull T>, @NotNull Supplier<@NotNull T>>) dimensionContainer -> () -> factory.apply(dimensionContainer.serialID));

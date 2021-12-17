@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.util;
 
-import sun.reflect.annotation.AnnotationParser;
-
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
@@ -72,6 +70,12 @@ public class ReflectionHelper {
             values.put(method.getName(), method.getDefaultValue());
         values.putAll(customValues);
         //noinspection unchecked
-        return (A) AnnotationParser.annotationForMap(annotationType, values);
+        return (A) Proxy.newProxyInstance(ReflectionHelper.class.getClassLoader(), new Class[] { annotationType }, (proxy, method, args) -> {
+            if (method.getName().equals("annotationType"))
+                return annotationType;
+            return values.get(method.getName());
+        });
+//        //noinspection unchecked
+//        return (A) AnnotationParser.annotationForMap(annotationType, values);
     }
 }

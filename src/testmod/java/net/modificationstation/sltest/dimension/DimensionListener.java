@@ -2,7 +2,7 @@ package net.modificationstation.sltest.dimension;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.event.registry.DimensionRegistryEvent;
-import net.modificationstation.stationapi.api.level.dimension.DimensionContainer;
+import net.modificationstation.stationapi.api.registry.DimensionContainer;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 
 import static net.modificationstation.sltest.SLTest.MODID;

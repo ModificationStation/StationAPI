@@ -4,6 +4,7 @@
   "package": "net.modificationstation.stationapi.mixin.lifecycle",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "server.MixinServerPlayerPacketHandler"
   ],
   "server": [
     "server.MixinPendingConnection"

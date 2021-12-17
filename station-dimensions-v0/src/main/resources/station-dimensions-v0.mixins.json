@@ -10,10 +10,13 @@
     "MixinMcRegionDimensionFile",
     "MixinNether",
     "MixinPlayerBase",
-    "MixinPortal"
+    "MixinPortal",
+    "server.MixinServerPlayerPacketHandler"
   ],
   "server": [
-    "server.MixinMinecraftServer"
+    "server.MixinMinecraftServer",
+    "server.MixinServerPlayer",
+    "server.MixinServerPlayerConnectionManager"
   ],
   "client": [
     "client.MixinAbstractClientPlayer",

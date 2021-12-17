@@ -15,13 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(ServerPacketHandler.class)
 public class MixinPendingConnection {
 
-    @Inject(method = "complete(Lnet/minecraft/packet/login/LoginRequest0x1Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/ServerPlayer;method_317()V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void afterLogin(LoginRequest0x1Packet arg, CallbackInfo ci, ServerPlayer var2) {
-        StationAPI.EVENT_BUS.post(new PlayerLoginEvent(arg, var2));
-    }
-
     @Inject(method = "complete(Lnet/minecraft/packet/login/LoginRequest0x1Packet;)V", at = @At("HEAD"))
     private void handleLogin(LoginRequest0x1Packet arg, CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(new PlayerAttemptLoginEvent((ServerPacketHandler) (Object) this, arg));
+    }
+
+    @Inject(method = "complete(Lnet/minecraft/packet/login/LoginRequest0x1Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/ServerPlayer;method_317()V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void afterLogin(LoginRequest0x1Packet arg, CallbackInfo ci, ServerPlayer var2) {
+        StationAPI.EVENT_BUS.post(new PlayerLoginEvent(arg, var2));
     }
 }

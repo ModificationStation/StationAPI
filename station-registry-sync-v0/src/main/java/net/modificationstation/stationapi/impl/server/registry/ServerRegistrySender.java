@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
 import net.modificationstation.stationapi.api.registry.LevelSerialRegistry;
-import net.modificationstation.stationapi.api.server.event.network.PlayerLoginEvent;
+import net.modificationstation.stationapi.api.server.event.network.PlayerPacketHandlerSetEvent;
 
 import java.io.*;
 
@@ -22,7 +22,7 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 public class ServerRegistrySender {
 
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void sendLevelRegistry(PlayerLoginEvent event) {
+    private static void sendLevelRegistry(PlayerPacketHandlerSetEvent event) {
         if (((ModdedPacketHandler) event.player.packetHandler).isModded()) {
             LOGGER.info("Sending level registries to \"" + event.player.name + "\"...");
             CompoundTag registries = new CompoundTag();
