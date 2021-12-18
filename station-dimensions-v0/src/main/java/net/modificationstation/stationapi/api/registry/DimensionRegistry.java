@@ -13,8 +13,6 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public final class DimensionRegistry extends LevelSerialRegistry<DimensionContainer<?>> {
 
-    public static final DimensionRegistry INSTANCE = new DimensionRegistry();
-
     private static final int
             VANILLA_MIN = -1,
             VANILLA_MAX = 0;
@@ -45,6 +43,8 @@ public final class DimensionRegistry extends LevelSerialRegistry<DimensionContai
             return 1;
         return a < b ? -1 : 1;
     };
+
+    public static final DimensionRegistry INSTANCE = new DimensionRegistry();
 
     /**
      * {@link DimensionRegistry#serialView} backend.
