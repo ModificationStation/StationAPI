@@ -17,10 +17,7 @@ public class MixinServerPlayerPacketHandler {
     @SuppressWarnings("DefaultAnnotationParam")
     @ModifyConstant(
             method = "onRespawn(Lnet/minecraft/packet/play/Respawn0x9C2SPacket;)V",
-            constant = @Constant(
-                    intValue = 0,
-                    ordinal = 1
-            )
+            constant = @Constant(intValue = 0)
     )
     private int modifyRespawnDimension(int original) {
         return serverPlayer.level.dimension.canPlayerSleep() ? serverPlayer.dimensionId : DimensionRegistry.INSTANCE.getSerialID(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Overworld not found!"));
