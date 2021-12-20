@@ -6,12 +6,12 @@ import net.modificationstation.stationapi.api.factory.EnumFactory;
 public final class OptionFactory {
     private OptionFactory() {}
 
-    public static Option create(String optionName, boolean isSlider, boolean isToggle) {
+    public static Option create(String optionName, String translationKey, boolean isSlider, boolean isToggle) {
         return EnumFactory.addEnum(
                 Option.class,
                 optionName,
-                new Class[] { boolean.class, boolean.class },
-                new Object[] { isSlider, isToggle }
+                new Class[] { String.class, boolean.class, boolean.class },
+                new Object[] { translationKey, isSlider, isToggle }
         );
     }
 }
