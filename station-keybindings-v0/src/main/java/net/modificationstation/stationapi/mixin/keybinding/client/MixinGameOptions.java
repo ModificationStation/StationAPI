@@ -9,6 +9,7 @@ import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegi
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
@@ -24,15 +25,38 @@ public class MixinGameOptions {
     @Shadow
     public int difficulty;
 
-    @Redirect(method = "<init>*", at = @At(value = "FIELD", target = "Lnet/minecraft/client/options/GameOptions;difficulty:I", opcode = Opcodes.PUTFIELD))
+    @SuppressWarnings("UnresolvedMixinReference")
+    @Redirect(
+            method = "<init>(Lnet/minecraft/client/Minecraft;Ljava/io/File;)V",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/client/options/GameOptions;difficulty:I",
+                    opcode = Opcodes.PUTFIELD
+            )
+    )
     private void redirectKeyBindings1(GameOptions gameOptions, int value) {
-        keyBindings = getKeyBindings(keyBindings);
+        initKeyBindings();
         difficulty = value;
     }
 
-    private KeyBinding[] getKeyBindings(KeyBinding[] keyBindings) {
+    @SuppressWarnings("UnresolvedMixinReference")
+    @Redirect(
+            method = "<init>()V",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/client/options/GameOptions;difficulty:I",
+                    opcode = Opcodes.PUTFIELD
+            )
+    )
+    private void redirectKeyBindings2(GameOptions gameOptions, int value) {
+        initKeyBindings();
+        difficulty = value;
+    }
+
+    @Unique
+    private void initKeyBindings() {
         List<KeyBinding> keyBindingList = new ArrayList<>(Arrays.asList(keyBindings));
         StationAPI.EVENT_BUS.post(new KeyBindingRegisterEvent(keyBindingList));
-        return keyBindingList.toArray(new KeyBinding[0]);
+        keyBindings = keyBindingList.toArray(new KeyBinding[0]);
     }
 }
