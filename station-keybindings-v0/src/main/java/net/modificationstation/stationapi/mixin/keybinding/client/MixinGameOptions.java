@@ -25,7 +25,6 @@ public class MixinGameOptions {
     @Shadow
     public int difficulty;
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(
             method = "<init>(Lnet/minecraft/client/Minecraft;Ljava/io/File;)V",
             at = @At(
@@ -39,7 +38,6 @@ public class MixinGameOptions {
         difficulty = value;
     }
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(
             method = "<init>()V",
             at = @At(

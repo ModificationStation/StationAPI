@@ -99,7 +99,7 @@ public abstract class Atlas implements TexturePackDependent {
         return (T) applyInherited(textureIndex, value -> this, Atlas::of);
     }
 
-    public final Tessellator getTessellator() {
+    public Tessellator getTessellator() {
         return tessellator;
     }
 
