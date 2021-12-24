@@ -48,12 +48,7 @@ public class StationRenderAPI {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void init(TextureRegisterEvent event) {
-        TERRAIN = new SquareAtlas("/terrain.png", 16) {
-            @Override
-            public Tessellator getTessellator() {
-                return Tessellator.INSTANCE;
-            }
-        }.setTessellator(Tessellator.INSTANCE);
+        TERRAIN = new SquareAtlas("/terrain.png", 16).setTessellator(() -> Tessellator.INSTANCE);
         GUI_ITEMS = new SquareAtlas("/gui/items.png", 16);
         STATION_TERRAIN = new ExpandableAtlas(of(StationAPI.MODID, "terrain"), TERRAIN).initTessellator();
         STATION_GUI_ITEMS = new ExpandableAtlas(of(StationAPI.MODID, "gui_items"), GUI_ITEMS);

@@ -30,7 +30,7 @@ public abstract class Atlas implements TexturePackDependent {
     protected int size;
     public final boolean fixedSize;
     protected final List<Sprite> textures = new CopyOnWriteArrayList<>();
-    private Tessellator tessellator;
+    private Function<Atlas, Tessellator> tessellator;
     protected BufferedImage imageCache;
 
     public Atlas(final String spritesheet, final int size, final boolean fixedSize) {
@@ -69,6 +69,14 @@ public abstract class Atlas implements TexturePackDependent {
     }
 
     public final <E extends Atlas> E setTessellator(Tessellator tessellator) {
+        return setTessellator(() -> tessellator);
+    }
+
+    public final <E extends Atlas> E setTessellator(Supplier<Tessellator> tessellator) {
+        return setTessellator(atlas -> tessellator.get());
+    }
+
+    public final <E extends Atlas> E setTessellator(Function<Atlas, Tessellator> tessellator) {
         if (this.tessellator == null) {
             this.tessellator = tessellator;
             //noinspection unchecked
@@ -99,8 +107,8 @@ public abstract class Atlas implements TexturePackDependent {
         return (T) applyInherited(textureIndex, value -> this, Atlas::of);
     }
 
-    public Tessellator getTessellator() {
-        return tessellator;
+    public final Tessellator getTessellator() {
+        return tessellator.apply(this);
     }
 
     public final int getAtlasTextureID() {
