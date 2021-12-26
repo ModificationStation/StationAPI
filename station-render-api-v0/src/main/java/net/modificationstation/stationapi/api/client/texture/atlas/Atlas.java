@@ -9,6 +9,8 @@ import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import uk.co.benjiweber.expressions.function.ObjIntFunction;
 
 import java.awt.image.*;
@@ -25,12 +27,15 @@ public abstract class Atlas implements TexturePackDependent {
         return Collections.unmodifiableSet(atlases);
     }
 
+    private static final Function<Atlas, Tessellator> EMPTY_TESSELLATOR = atlas -> null;
+
     public final String spritesheet;
     protected final Atlas parent;
     protected int size;
     public final boolean fixedSize;
     protected final List<Sprite> textures = new CopyOnWriteArrayList<>();
-    private Function<Atlas, Tessellator> tessellator;
+    @NotNull
+    private Function<Atlas, @Nullable Tessellator> tessellator = EMPTY_TESSELLATOR;
     protected BufferedImage imageCache;
 
     public Atlas(final String spritesheet, final int size, final boolean fixedSize) {
@@ -77,8 +82,9 @@ public abstract class Atlas implements TexturePackDependent {
     }
 
     public final <E extends Atlas> E setTessellator(Function<Atlas, Tessellator> tessellator) {
-        if (this.tessellator == null) {
-            this.tessellator = tessellator;
+        if (this.tessellator.apply(this) == null) {
+            if (tessellator != null)
+                this.tessellator = tessellator;
             //noinspection unchecked
             return (E) this;
         } else
@@ -107,6 +113,7 @@ public abstract class Atlas implements TexturePackDependent {
         return (T) applyInherited(textureIndex, value -> this, Atlas::of);
     }
 
+    @Nullable
     public final Tessellator getTessellator() {
         return tessellator.apply(this);
     }
