@@ -41,7 +41,7 @@ public class MixinDigging implements StationDiggingParticleProvider {
             cancellable = true
     )
     private void redirectRender(Tessellator arg, float f, float f1, float f2, float f3, float f4, float f5, CallbackInfo ci) {
-        stationDiggingParticle.render(f, f1, f2, f3, f4, f5);
+        stationDiggingParticle.render(arg, f, f1, f2, f3, f4, f5);
         ci.cancel();
     }
 }

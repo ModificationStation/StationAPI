@@ -114,8 +114,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     public void renderInventory(BakedModel model) {
         if (model != null) {
             Atlas atlas = model.getSprite().getAtlas();
-            t = atlas.getTessellator();
-            t.start();
+            t = blockRendererCustomAccessor.getStationBlockRenderer().prepareTessellator(atlas);
             Direction face;
             ImmutableList<Quad> quads;
             for (int vertexSet = 0, vertexSetCount = DIRECTIONS.length + 1; vertexSet < vertexSetCount; vertexSet++) {
@@ -125,7 +124,6 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                 for (int i = 0, vertexesSize = quads.size(); i < vertexesSize; i++)
                     quads.get(i).applyToVertexes(renderVertexNormal);
             }
-            atlas.bindAtlas();
             t.draw();
         }
     }

@@ -57,7 +57,27 @@ public class StationBlockRenderer {
             }
         } else {
             tessellator = Tessellator.INSTANCE;
+            TessellatorAccessor accessor = (TessellatorAccessor) tessellator;
+            boolean drawing = accessor.getDrawing();
+            boolean hasColour = accessor.getHasColour();
+            int colour = accessor.getColour();
+            boolean hasNormals = accessor.getHasNormals();
+            int normal = accessor.getNormal();
+            boolean hasTexture = accessor.getHasTexture();
+            double textureX = accessor.getTextureX(), textureY = accessor.getTextureY();
+            if (drawing) {
+                tessellator.draw();
+            }
             atlas.bindAtlas();
+            tessellator.start();
+            if (drawing) {
+                if (hasColour)
+                    tessellator.colour(colour);
+                if (hasNormals)
+                    tessellator.setNormal((normal & 255) / 128F, ((normal >> 8) & 255) / 127F, ((normal >> 16) & 255) / 127F);
+                if (hasTexture)
+                    tessellator.setTextureXY(textureX, textureY);
+            }
         }
         return tessellator;
     }

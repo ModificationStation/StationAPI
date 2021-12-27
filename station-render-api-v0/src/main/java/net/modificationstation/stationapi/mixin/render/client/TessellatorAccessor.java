@@ -14,6 +14,18 @@ public interface TessellatorAccessor {
     @Accessor
     void setHasColour(boolean hasColour);
 
+    @Accessor
+    boolean getHasNormals();
+
+    @Accessor
+    void setHasNormals(boolean hasNormals);
+
+    @Accessor
+    boolean getHasTexture();
+
+    @Accessor
+    void setHasTexture(boolean hasTexture);
+
     @Invoker("<init>")
     static Tessellator newInst(int bufferSize) {
         throw new AssertionError("Mixin!");
@@ -33,4 +45,13 @@ public interface TessellatorAccessor {
 
     @Accessor
     int getColour();
+
+    @Accessor
+    int getNormal();
+
+    @Accessor
+    double getTextureX();
+
+    @Accessor
+    double getTextureY();
 }

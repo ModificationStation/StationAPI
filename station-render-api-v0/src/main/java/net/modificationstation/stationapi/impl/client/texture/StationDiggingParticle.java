@@ -30,9 +30,8 @@ public class StationDiggingParticle {
             texture = ((BlockWorldModelProvider) block).getCustomWorldModel(digging.level, x, y, z).getBaked().getSprite();
     }
 
-    public void render(float delta, float yawX, float pitchX, float yawY, float pitchY1, float pitchY2) {
+    public void render(Tessellator tessellator, float delta, float yawX, float pitchX, float yawY, float pitchY1, float pitchY2) {
         Atlas atlas = texture.getAtlas();
-        Tessellator tessellator = atlas.getTessellator();
         float
                 startU = (texture.getX() + (particleBaseAccessor.getField_2636() / 4) * texture.getWidth()) / atlas.getImage().getWidth(),
                 endU = startU + 0.24975F * texture.getWidth() / atlas.getImage().getWidth(),
