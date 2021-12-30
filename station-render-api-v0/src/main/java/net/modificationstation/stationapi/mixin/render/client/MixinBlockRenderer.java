@@ -32,8 +32,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     private final BakedModelRenderer bakedModelRenderer = new BakedModelRendererImpl((BlockRenderer) (Object) this);
 
     /**
-     * This is done to allow to completely override renderer with a plugin.
-     * It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
+     * @reason This is done to allow to completely override renderer with a plugin. It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
      * @author mine_diver
      */
     @Overwrite
@@ -42,8 +41,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     }
 
     /**
-     * This is done to allow to completely override renderer with a plugin.
-     * It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
+     * @reason This is done to allow to completely override renderer with a plugin. It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
      * @author mine_diver
      */
     @Overwrite
@@ -52,8 +50,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     }
 
     /**
-     * This is done to allow to completely override renderer with a plugin.
-     * It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
+     * @reason This is done to allow to completely override renderer with a plugin. It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
      * @author mine_diver
      */
     @Overwrite
@@ -62,8 +59,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     }
 
     /**
-     * This is done to allow to completely override renderer with a plugin.
-     * It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
+     * @reason This is done to allow to completely override renderer with a plugin. It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
      * @author mine_diver
      */
     @Overwrite
@@ -72,8 +68,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     }
 
     /**
-     * This is done to allow to completely override renderer with a plugin.
-     * It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
+     * @reason This is done to allow to completely override renderer with a plugin. It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
      * @author mine_diver
      */
     @Overwrite
@@ -82,8 +77,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     }
 
     /**
-     * This is done to allow to completely override renderer with a plugin.
-     * It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
+     * @reason This is done to allow to completely override renderer with a plugin. It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
      * @author mine_diver
      */
     @Overwrite
@@ -92,8 +86,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     }
 
     /**
-     * This is done to allow to completely override renderer with a plugin.
-     * It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
+     * @reason This is done to allow to completely override renderer with a plugin. It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
      * @author mine_diver
      */
     @Overwrite
@@ -102,8 +95,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     }
 
     /**
-     * This is done to allow to completely override renderer with a plugin.
-     * It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
+     * @reason This is done to allow to completely override renderer with a plugin. It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
      * @author mine_diver
      */
     @Overwrite
@@ -112,8 +104,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     }
 
     /**
-     * This is done to allow to completely override renderer with a plugin.
-     * It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
+     * @reason This is done to allow to completely override renderer with a plugin. It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
      * @author mine_diver
      */
     @Overwrite
@@ -122,8 +113,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     }
 
     /**
-     * This is done to allow to completely override renderer with a plugin.
-     * It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
+     * @reason This is done to allow to completely override renderer with a plugin. It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
      * @author mine_diver
      */
     @Overwrite
@@ -132,8 +122,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     }
 
     /**
-     * This is done to allow to completely override renderer with a plugin.
-     * It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
+     * @reason This is done to allow to completely override renderer with a plugin. It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
      * @author mine_diver
      */
     @Overwrite
@@ -142,8 +131,7 @@ public class MixinBlockRenderer implements BlockRendererCustomAccessor {
     }
 
     /**
-     * This is done to allow to completely override renderer with a plugin.
-     * It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
+     * @reason This is done to allow to completely override renderer with a plugin. It's either I inject it at head and always cancel, or just overwrite, the latter being more GC friendly.
      * @author mine_diver
      */
     @Overwrite

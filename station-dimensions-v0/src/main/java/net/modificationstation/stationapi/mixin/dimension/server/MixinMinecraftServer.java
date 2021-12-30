@@ -106,7 +106,7 @@ public class MixinMinecraftServer {
     }
 
     /**
-     * There's no point injecting into that code, because I'd have to cancel its entire logic either way.
+     * @reason There's no point injecting into that code, because I'd have to cancel its entire logic either way.
      * @author mine_diver
      */
     @Overwrite
@@ -115,7 +115,7 @@ public class MixinMinecraftServer {
     }
 
     /**
-     * There's no point injecting into that code, because I'd have to cancel its entire logic either way.
+     * @reason There's no point injecting into that code, because I'd have to cancel its entire logic either way.
      * @author mine_diver
      */
     @Overwrite
