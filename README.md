@@ -1,5 +1,9 @@
 # StationAPI for Minecraft Beta 1.7.3 BIN Fabric
 
+<!---
+WHHYYYYY JITPACK?!
+-->
+
 A general use API for Fabric Loader mods on legacy Minecraft versions.
 
 ## Plugin Setup
