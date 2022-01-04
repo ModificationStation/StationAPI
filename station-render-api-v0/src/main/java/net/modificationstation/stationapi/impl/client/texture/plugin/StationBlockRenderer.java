@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.client.texture;
+package net.modificationstation.stationapi.impl.client.texture.plugin;
 
 import net.minecraft.block.Bed;
 import net.minecraft.block.BlockBase;
@@ -6,25 +6,36 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.sortme.GameRenderer;
 import net.minecraft.sortme.MagicBedNumbers;
+import net.modificationstation.stationapi.api.client.model.BakedModelRenderer;
+import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
+import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldRenderer;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
+import net.modificationstation.stationapi.api.client.texture.plugin.BlockRendererPlugin;
+import net.modificationstation.stationapi.impl.client.model.BakedModelRendererImpl;
 import net.modificationstation.stationapi.mixin.render.client.BlockRendererAccessor;
 import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
+import org.lwjgl.opengl.GL11;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.awt.image.*;
 import java.util.*;
 
 import static net.minecraft.client.render.block.BlockRenderer.fancyGraphics;
 
-public class StationBlockRenderer {
+public class StationBlockRenderer extends BlockRendererPlugin {
 
     private boolean renderingMesh;
     public final Set<Atlas> activeAtlases = new HashSet<>();
     public final BlockRendererAccessor blockRendererAccessor;
+    public final BakedModelRenderer bakedModelRenderer;
 
-    public StationBlockRenderer(BlockRenderer tileRenderer) {
-        blockRendererAccessor = (BlockRendererAccessor) tileRenderer;
+    public StationBlockRenderer(BlockRenderer blockRenderer) {
+        super(blockRenderer);
+        blockRendererAccessor = (BlockRendererAccessor) blockRenderer;
+        bakedModelRenderer = new BakedModelRendererImpl(blockRenderer, this);
     }
 
     public void startMeshRender() {
@@ -82,7 +93,16 @@ public class StationBlockRenderer {
         return tessellator;
     }
 
-    public boolean renderBed(BlockBase block, int blockX, int blockY, int blockZ) {
+    @Override
+    public void renderWorld(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
+        if (block instanceof BlockWithWorldRenderer) {
+            block.updateBoundingBox(blockRendererAccessor.getBlockView(), x, y, z);
+            cir.setReturnValue(((BlockWithWorldRenderer) block).renderWorld(blockRenderer, blockRendererAccessor.getBlockView(), x, y, z));
+        }
+    }
+
+    @Override
+    public void renderBed(BlockBase block, int blockX, int blockY, int blockZ, CallbackInfoReturnable<Boolean> cir) {
         Atlas atlas = ((CustomAtlasProvider) block).getAtlas();
         Tessellator var5 = prepareTessellator(atlas);
         Atlas.Sprite texture;
@@ -219,10 +239,11 @@ public class StationBlockRenderer {
         }
 
         blockRendererAccessor.setMirrorTexture(false);
-        return true;
+        cir.setReturnValue(true);
     }
 
-    public boolean renderPlant(BlockBase block, int x, int y, int z) {
+    @Override
+    public void renderPlant(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         float var6 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
         int var7 = block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
         int meta = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
@@ -251,17 +272,24 @@ public class StationBlockRenderer {
             var15 += ((double)((float)((var17 >> 24) & 15L) / 15.0F) - 0.5D) * 0.5D;
         }
 
-        this.renderCrossed(block, meta, var19, var20, var15);
-        return true;
+        renderCrossed(block, meta, var19, var20, var15);
+        cir.setReturnValue(true);
     }
 
-    public boolean renderCrops(BlockBase block, int x, int y, int z) {
+    @Override
+    public void renderCrops(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         float var6 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
         int meta = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
         Tessellator var5 = prepareTessellator(((CustomAtlasProvider) block).getAtlas().of(block.getTextureForSide(0, blockRendererAccessor.getBlockView().getTileMeta(x, y, z))));
         var5.colour(var6, var6, var6);
-        this.renderShiftedColumn(block, meta, x, (float)y - 0.0625F, z);
-        return true;
+        renderShiftedColumn(block, meta, x, (float)y - 0.0625F, z);
+        cir.setReturnValue(true);
+    }
+
+    @Override
+    public void renderCrossed(BlockBase block, int meta, double x, double y, double z, CallbackInfo ci) {
+        renderCrossed(block, meta, x, y, z);
+        ci.cancel();
     }
 
     public void renderCrossed(BlockBase block, int meta, double x, double y, double z) {
@@ -301,6 +329,12 @@ public class StationBlockRenderer {
         t.vertex(var23, y + 0.0D, var25, var13, var19);
         t.vertex(var21, y + 0.0D, var27, var15, var19);
         t.vertex(var21, y + 1.0D, var27, var15, var17);
+    }
+
+    @Override
+    public void renderShiftedColumn(BlockBase block, int meta, double x, double y, double z, CallbackInfo ci) {
+        renderShiftedColumn(block, meta, x, y, z);
+        ci.cancel();
     }
 
     public void renderShiftedColumn(BlockBase block, int meta, double x, double y, double z) {
@@ -361,7 +395,8 @@ public class StationBlockRenderer {
         t.vertex(var23, y + 1.0D, var27, var15, var17);
     }
 
-    public boolean renderFast(BlockBase block, int x, int y, int z, float r, float g, float b) {
+    @Override
+    public void renderFast(BlockBase block, int x, int y, int z, float r, float g, float b, CallbackInfoReturnable<Boolean> cir) {
         blockRendererAccessor.setShadeTopFace(false);
         Atlas topAtlas = ((CustomAtlasProvider) block).getAtlas();
         Tessellator tessellator;
@@ -486,8 +521,13 @@ public class StationBlockRenderer {
             }
             rendered = true;
         }
+        cir.setReturnValue(rendered);
+    }
 
-        return rendered;
+    @Override
+    public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, CallbackInfo ci) {
+        renderBottomFace(block, renderX, renderY, renderZ, textureIndex);
+        ci.cancel();
     }
 
     public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
@@ -592,6 +632,12 @@ public class StationBlockRenderer {
         t.vertex(endRenderX, adjustedRenderY, endRenderZ, endU1, endV1);
     }
 
+    @Override
+    public void renderTopFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, CallbackInfo ci) {
+        renderTopFace(block, renderX, renderY, renderZ, textureIndex);
+        ci.cancel();
+    }
+
     public void renderTopFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
         Atlas atlas;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
@@ -692,6 +738,12 @@ public class StationBlockRenderer {
             t.vertex(startRenderX, adjustedRenderY, startRenderZ, startU1, startV1);
         }
         t.vertex(startRenderX, adjustedRenderY, endRenderZ, startU2, endV2);
+    }
+
+    @Override
+    public void renderEastFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, CallbackInfo ci) {
+        renderEastFace(block, renderX, renderY, renderZ, textureIndex);
+        ci.cancel();
     }
 
     public void renderEastFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
@@ -801,6 +853,12 @@ public class StationBlockRenderer {
         t.vertex(startRenderX, startRenderY, adjustedRenderZ, endU1, endV1);
     }
 
+    @Override
+    public void renderWestFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, CallbackInfo ci) {
+        renderWestFace(block, renderX, renderY, renderZ, textureIndex);
+        ci.cancel();
+    }
+
     public void renderWestFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
         Atlas atlas;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
@@ -906,6 +964,12 @@ public class StationBlockRenderer {
             t.vertex(endRenderX, startRenderY, adjustedRenderZ, endU1, endV1);
         }
         t.vertex(endRenderX, endRenderY, adjustedRenderZ, endU2, startV2);
+    }
+
+    @Override
+    public void renderNorthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, CallbackInfo ci) {
+        renderNorthFace(block, renderX, renderY, renderZ, textureIndex);
+        ci.cancel();
     }
 
     public void renderNorthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
@@ -1015,6 +1079,12 @@ public class StationBlockRenderer {
         t.vertex(adjustedRenderX, startRenderY, endRenderZ, endU1, endV1);
     }
 
+    @Override
+    public void renderSouthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, CallbackInfo ci) {
+        renderSouthFace(block, renderX, renderY, renderZ, textureIndex);
+        ci.cancel();
+    }
+
     public void renderSouthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
         Atlas atlas;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
@@ -1120,5 +1190,20 @@ public class StationBlockRenderer {
             t.vertex(adjustedRenderX, endRenderY, startRenderZ, endU2, startV2);
         }
         t.vertex(adjustedRenderX, endRenderY, endRenderZ, startU1, startV1);
+    }
+
+    @Override
+    public void renderInventory(BlockBase block, int meta, float brightness, CallbackInfo ci) {
+        if (block instanceof BlockWithInventoryRenderer) {
+            if (blockRenderer.itemColourEnabled) {
+                int var5 = block.getBaseColour(meta);
+                float var6 = (float)(var5 >> 16 & 255) / 255.0F;
+                float var7 = (float)(var5 >> 8 & 255) / 255.0F;
+                float var8 = (float)(var5 & 255) / 255.0F;
+                GL11.glColor4f(var6 * brightness, var7 * brightness, var8 * brightness, 1.0F);
+            }
+            ((BlockWithInventoryRenderer) block).renderInventory(blockRenderer, meta);
+            ci.cancel();
+        }
     }
 }

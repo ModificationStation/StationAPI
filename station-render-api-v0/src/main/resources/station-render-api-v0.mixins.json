@@ -9,6 +9,7 @@
   ],
   "client": [
     "client.BlockRendererAccessor",
+    "client.class_66Accessor",
     "client.DiggingAccessor",
     "client.EntityRendererAccessor",
     "client.ItemRendererAccessor",
@@ -16,6 +17,7 @@
     "client.Mixinclass_556",
     "client.Mixinclass_66",
     "client.MixinDigging",
+    "client.MixinInGame",
     "client.MixinItemRenderer",
     "client.MixinMinecraft",
     "client.MixinParticleManager",

@@ -17,7 +17,7 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
-import net.modificationstation.stationapi.impl.client.texture.BlockRendererCustomAccessor;
+import net.modificationstation.stationapi.impl.client.texture.plugin.StationBlockRenderer;
 import net.modificationstation.stationapi.mixin.render.client.BlockRendererAccessor;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,8 +30,10 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
 
     @Nullable
     private final BlockRenderer blockRenderer;
+    @Nullable
     private final BlockRendererAccessor blockRendererAccessor;
-    private final BlockRendererCustomAccessor blockRendererCustomAccessor;
+    @Nullable
+    private final StationBlockRenderer stationBlockRenderer;
     private final LightingCalculatorImpl light = new LightingCalculatorImpl(3);
     private final Random random = new Random();
     private final Vec3i pos = new Vec3i();
@@ -40,15 +42,15 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     private final ObjIntConsumer<Vertex> renderVertexLight = this::renderVertexLight;
     private final Consumer<Vertex> renderVertexNormal = this::renderVertexNormal;
 
-    public BakedModelRendererImpl(@Nullable BlockRenderer blockRenderer) {
+    public BakedModelRendererImpl(@Nullable BlockRenderer blockRenderer, @Nullable StationBlockRenderer stationBlockRenderer) {
         this.blockRenderer = blockRenderer;
         blockRendererAccessor = (BlockRendererAccessor) blockRenderer;
-        blockRendererCustomAccessor = (BlockRendererCustomAccessor) blockRenderer;
+        this.stationBlockRenderer = stationBlockRenderer;
     }
 
     @Override
     public boolean renderWorld(BlockBase block, BakedModel model, BlockView blockView, int x, int y, int z) {
-        if (blockRenderer == null || blockRendererAccessor == null || blockRendererCustomAccessor == null)
+        if (blockRenderer == null || blockRendererAccessor == null || stationBlockRenderer == null)
             throw new NullPointerException("BlockRenderer is null!");
         else if (model == null)
             return false;
@@ -68,7 +70,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
             boolean noTextureOverride = textureOverride == null;
             boolean rendered = false;
             if (noTextureOverride) {
-                t = blockRendererCustomAccessor.getStationBlockRenderer().prepareTessellator(atlas);
+                t = stationBlockRenderer.prepareTessellator(atlas);
                 int colourMultiplier = block.getColourMultiplier(blockView, x, y, z);
                 float
                         colourMultiplierRed = (float) (colourMultiplier >> 16 & 255) / 255.0F,
@@ -162,11 +164,11 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     public void renderInventory(BakedModel model) {
         if (model != null) {
             Atlas atlas = model.getSprite().getAtlas();
-            if (blockRenderer == null || blockRendererAccessor == null || blockRendererCustomAccessor == null) {
+            if (stationBlockRenderer == null) {
                 t = Tessellator.INSTANCE;
                 t.start();
             } else
-                t = blockRendererCustomAccessor.getStationBlockRenderer().prepareTessellator(atlas);
+                t = stationBlockRenderer.prepareTessellator(atlas);
             Direction face;
             ImmutableList<Quad> quads;
             for (int vertexSet = 0, vertexSetCount = DIRECTIONS.length + 1; vertexSet < vertexSetCount; vertexSet++) {

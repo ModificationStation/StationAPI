@@ -11,6 +11,7 @@ import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.resource.TexturePackLoadedEvent;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
+import net.modificationstation.stationapi.api.client.event.texture.plugin.ProvideRenderPluginEvent;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
@@ -20,6 +21,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Null;
+import net.modificationstation.stationapi.impl.client.texture.plugin.StationRenderPlugin;
 import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
 import org.lwjgl.opengl.GL11;
@@ -49,6 +51,11 @@ public class StationRenderAPI {
             STATION_GUI_ITEMS;
 
     public static JsonModelAtlas STATION_JSON_MODELS;
+
+    @EventListener(priority = ListenerPriority.HIGH)
+    private static void preInit(ProvideRenderPluginEvent event) {
+        event.pluginProvider = StationRenderPlugin::new;
+    }
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void init(TextureRegisterEvent event) {

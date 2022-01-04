@@ -56,9 +56,6 @@ public class TextureStitcher {
       } while(this.fit(holder));
 
       throw new RuntimeException("Textures cannot fit!");
-//      throw new TextureStitcherCannotFitException(holder.sprite, (Collection)list.stream().map((holderx) -> {
-//         return holderx.sprite;
-//      }).collect(ImmutableList.toImmutableList()));
    }
 
    public void getStitchedSprites(TextureStitcher.SpriteConsumer spriteConsumer) {

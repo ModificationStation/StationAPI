@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.impl.client.model.BakedModelRendererIm
 
 public interface ItemModelProvider extends ItemWithRenderer {
 
-    BakedModelRenderer RENDERER = new BakedModelRendererImpl(null);
+    BakedModelRenderer RENDERER = new BakedModelRendererImpl(null, null);
 
     default Model getModel(ItemInstance itemInstance) {
         return getModel(itemInstance.getDamage());
