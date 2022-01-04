@@ -38,7 +38,7 @@ public class StationRenderAPI {
     @Entrypoint.ModID
     public static final ModID MODID = Null.get();
 
-    private static final boolean DEBUG_EXPORT_ATLASES = Boolean.parseBoolean(System.getProperty(MODID + ".debug.export_atlases", "false"));
+    private static final boolean DEBUG_EXPORT_ATLASES = Boolean.parseBoolean(System.getProperty(StationAPI.MODID + ".debug.export_atlases", "false"));
 
     public static SquareAtlas
             TERRAIN,
