@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.*;
 
+import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 public class ExpandableAtlas extends Atlas {
@@ -117,12 +118,22 @@ public class ExpandableAtlas extends Atlas {
         });
         textures.forEach(Sprite::updateUVs);
         refreshTextureID();
-        if (DEBUG_EXPORT_ATLASES)
-            try {
-                ImageIO.write(imageCache, "png", new File("debug/exported_atlases/" + id.toString().replace(":", "_") + ".png"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+
+        if (DEBUG_EXPORT_ATLASES) {
+            if (imageCache == null)
+                LOGGER.debug("Empty atlas " + id + ". Skipping export.");
+            else {
+                LOGGER.debug("Exporting atlas " + id + "...");
+                File debug = new File("." + MODID + ".out/exported_atlases/" + id.toString().replace(":", "_") + ".png");
+                //noinspection ResultOfMethodCallIgnored
+                debug.mkdirs();
+                try {
+                    ImageIO.write(imageCache, "png", debug);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
+        }
     }
 
     public <T extends StationTextureBinder> T addTextureBinder(Identifier staticReference, Function<Sprite, T> initializer) {
