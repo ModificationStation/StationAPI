@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.client.texture;
+package net.modificationstation.stationapi.impl.client.texture.plugin;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.Tessellator;
@@ -10,23 +10,25 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
+import net.modificationstation.stationapi.api.client.texture.plugin.ItemRendererPlugin;
 import net.modificationstation.stationapi.mixin.render.client.EntityRendererAccessor;
 import net.modificationstation.stationapi.mixin.render.client.ItemRendererAccessor;
 import org.lwjgl.opengl.GL11;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-public class StationItemRenderer {
+public class StationItemRenderer extends ItemRendererPlugin {
 
-    private final ItemRenderer itemRenderer;
     private final ItemRendererAccessor itemRendererAccessor;
     private final EntityRendererAccessor entityRendererAccessor;
 
     public StationItemRenderer(ItemRenderer itemRenderer) {
-        this.itemRenderer = itemRenderer;
+        super(itemRenderer);
         this.itemRendererAccessor = (ItemRendererAccessor) this.itemRenderer;
         this.entityRendererAccessor = (EntityRendererAccessor) this.itemRenderer;
     }
 
-    public void render(Item item, double x, double y, double z, float rotation, float delta) {
+    @Override
+    public void render(Item item, double x, double y, double z, float rotation, float delta, CallbackInfo ci) {
         itemRendererAccessor.getRand().setSeed(187L);
         ItemInstance var10 = item.item;
         GL11.glPushMatrix();
@@ -73,7 +75,7 @@ public class StationItemRenderer {
         } else {
             GL11.glScalef(0.5F, 0.5F, 0.5F);
             int var14 = var10.getTexturePosition();
-            Atlas atlas = ((CustomAtlasProvider) var10.getType()).getAtlas().of(var14);
+            Atlas atlas = topAtlas.of(var14);
             atlas.bindAtlas();
             Atlas.Sprite texture = atlas.getTexture(var14);
 
@@ -113,5 +115,6 @@ public class StationItemRenderer {
 
         GL11.glDisable(32826);
         GL11.glPopMatrix();
+        ci.cancel();
     }
 }

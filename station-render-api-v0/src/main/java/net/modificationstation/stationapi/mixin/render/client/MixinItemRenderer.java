@@ -14,7 +14,8 @@ import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.client.model.item.ItemWithRenderer;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
-import net.modificationstation.stationapi.impl.client.texture.StationItemRenderer;
+import net.modificationstation.stationapi.api.client.texture.plugin.ItemRendererPlugin;
+import net.modificationstation.stationapi.api.client.texture.plugin.RenderPlugin;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,128 +31,16 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public abstract class MixinItemRenderer extends EntityRenderer {
 
-    private final StationItemRenderer stationItemRenderer = new StationItemRenderer((ItemRenderer) (Object) this);
-
     @Unique
-    private final Stack<Atlas> render_customLocals_atlas = new Stack<>();
+    private final ItemRendererPlugin plugin = RenderPlugin.PLUGIN.createItemRenderer((ItemRenderer) (Object) this);
 
     @Inject(
             method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
-            at = @At("HEAD")
+            at = @At("HEAD"),
+            cancellable = true
     )
     private void render_initCustomLocals(Item arg, double d, double d1, double d2, float f, float f1, CallbackInfo ci) {
-        int itemId = arg.item.itemId;
-        Object item = itemId < BlockBase.BY_ID.length ? BlockBase.BY_ID[itemId] : ItemBase.byId[itemId];
-        render_customLocals_atlas.push(item instanceof CustomAtlasProvider ? ((CustomAtlasProvider) item).getAtlas() : null);
-    }
-
-    @Unique
-    private final Stack<Atlas.Sprite> render_customLocals_texture = new Stack<>();
-
-    @ModifyVariable(
-            method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
-            index = 14,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/item/ItemInstance;getTexturePosition()I",
-                    shift = At.Shift.BY,
-                    by = 2
-            )
-    )
-    private int captureTexturePosition(int texturePosition) {
-        Atlas atlas = render_customLocals_atlas.pop();
-        render_customLocals_atlas.push(atlas = (atlas == null ? null : atlas.of(texturePosition)));
-        render_customLocals_texture.push(atlas == null ? null : atlas.getTexture(texturePosition));
-        return texturePosition;
-    }
-
-    @Redirect(
-            method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/entity/ItemRenderer;bindTexture(Ljava/lang/String;)V",
-                    ordinal = 1
-            )
-    )
-    private void bindTerrainAtlas(ItemRenderer itemRenderer, String texture, Item itemEntity, double d, double d1, double d2, float f, float f1) {
-        Atlas atlas = render_customLocals_atlas.peek();
-        if (atlas == null)
-            ((EntityRendererAccessor) itemRenderer).invokeBindTexture(texture);
-        else
-            atlas.bindAtlas();
-    }
-
-    @Redirect(
-            method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/entity/ItemRenderer;bindTexture(Ljava/lang/String;)V",
-                    ordinal = 2
-            )
-    )
-    private void bindItemAtlas(ItemRenderer itemRenderer, String texture, Item itemEntity, double d, double d1, double d2, float f, float f1) {
-        Atlas atlas = render_customLocals_atlas.peek();
-        if (atlas == null)
-            ((EntityRendererAccessor) itemRenderer).invokeBindTexture(texture);
-        else
-            atlas.bindAtlas();
-    }
-
-    @ModifyVariable(
-            method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
-            index = 16,
-            at = @At(
-                    value = "STORE",
-                    ordinal = 1
-            )
-    )
-    private float modifyStartU(float originalStartU) {
-        Atlas.Sprite texture = render_customLocals_texture.peek();
-        return texture == null ? originalStartU : (float) texture.getStartU();
-    }
-
-    @ModifyVariable(
-            method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
-            index = 17,
-            at = @At(
-                    value = "STORE",
-                    ordinal = 1
-            )
-    )
-    private float modifyEndU(float originalEndU) {
-        Atlas.Sprite texture = render_customLocals_texture.peek();
-        return texture == null ? originalEndU : (float) texture.getEndU();
-    }
-
-    @ModifyVariable(
-            method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
-            index = 18,
-            at = @At(
-                    value = "STORE",
-                    ordinal = 1
-            )
-    )
-    private float modifyStartV(float originalStartV) {
-        Atlas.Sprite texture = render_customLocals_texture.peek();
-        return texture == null ? originalStartV : (float) texture.getStartV();
-    }
-
-    @ModifyVariable(
-            method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
-            index = 19,
-            at = @At("STORE")
-    )
-    private float modifyEndV(float originalEndV) {
-        Atlas.Sprite texture = render_customLocals_texture.pop();
-        return texture == null ? originalEndV : (float) texture.getEndV();
-    }
-
-    @Inject(
-            method = "render(Lnet/minecraft/entity/Item;DDDFF)V",
-            at = @At("RETURN")
-    )
-    private void render_clearCustomLocals(Item arg, double d, double d1, double d2, float f, float f1, CallbackInfo ci) {
-        render_customLocals_atlas.pop();
+        plugin.render(arg, d, d1, d2, f, f1, ci);
     }
 
     @Unique
