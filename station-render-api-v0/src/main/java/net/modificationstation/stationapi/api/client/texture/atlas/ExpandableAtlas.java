@@ -21,12 +21,9 @@ import java.util.List;
 import java.util.*;
 import java.util.function.*;
 
-import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 public class ExpandableAtlas extends Atlas {
-
-    private static final boolean DEBUG_EXPORT_ATLASES = Boolean.parseBoolean(System.getProperty(MODID + ".debug.export_atlases", "false"));
 
     private static final Map<String, ExpandableAtlas> PATH_TO_ATLAS = new HashMap<>();
 
@@ -70,10 +67,6 @@ public class ExpandableAtlas extends Atlas {
     }
 
     public Sprite addTexture(String texturePath) {
-        return addTexture(texturePath, true);
-    }
-
-    private Sprite addTexture(String texturePath, boolean stitch) {
         if (textureCache.containsKey(texturePath))
             return textureCache.get(texturePath);
         else {
@@ -92,10 +85,6 @@ public class ExpandableAtlas extends Atlas {
             textures.add(texture);
             if (animationPresent)
                 addTextureBinder(texture, texture1 -> new AnimationTextureBinder(image, texture1, animationDataOptional.get()));
-            if (stitch) {
-                imageCache = null;
-                stitch();
-            }
             return texture;
         }
     }
@@ -118,22 +107,6 @@ public class ExpandableAtlas extends Atlas {
         });
         textures.forEach(Sprite::updateUVs);
         refreshTextureID();
-
-        if (DEBUG_EXPORT_ATLASES) {
-            if (imageCache == null)
-                LOGGER.debug("Empty atlas " + id + ". Skipping export.");
-            else {
-                LOGGER.debug("Exporting atlas " + id + "...");
-                File debug = new File("." + MODID + ".out/exported_atlases/" + id.toString().replace(":", "_") + ".png");
-                //noinspection ResultOfMethodCallIgnored
-                debug.mkdirs();
-                try {
-                    ImageIO.write(imageCache, "png", debug);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
     }
 
     public <T extends StationTextureBinder> T addTextureBinder(Identifier staticReference, Function<Sprite, T> initializer) {
@@ -155,7 +128,7 @@ public class ExpandableAtlas extends Atlas {
         List<Sprite> sprites = new ArrayList<>(textures);
         textureCache.clear();
         textures.clear();
-        sprites.stream().map(sprite -> (FileSprite) sprite).forEach(sprite -> addTexture(sprite.path, false));
+        sprites.stream().map(sprite -> (FileSprite) sprite).forEach(sprite -> addTexture(sprite.path));
         stitch();
     }
 

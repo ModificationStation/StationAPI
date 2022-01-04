@@ -11,7 +11,6 @@ import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.resource.TexturePackLoadedEvent;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
-import net.modificationstation.stationapi.api.client.registry.ModelRegistry;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
@@ -25,9 +24,12 @@ import net.modificationstation.stationapi.mixin.render.client.TessellatorAccesso
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
 import org.lwjgl.opengl.GL11;
 
+import javax.imageio.*;
+import java.io.*;
 import java.util.*;
 import java.util.stream.*;
 
+import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
@@ -35,6 +37,8 @@ public class StationRenderAPI {
 
     @Entrypoint.ModID
     public static final ModID MODID = Null.get();
+
+    private static final boolean DEBUG_EXPORT_ATLASES = Boolean.parseBoolean(System.getProperty(MODID + ".debug.export_atlases", "false"));
 
     public static SquareAtlas
             TERRAIN,
@@ -71,6 +75,12 @@ public class StationRenderAPI {
         textureManager.addTextureBinder(new StationClockTextureBinder());
     }
 
+    @EventListener(priority = ListenerPriority.LOW)
+    private static void stitchExpandableAtlasesPostInit(TextureRegisterEvent event) {
+        Atlas.getAtlases().stream().filter(atlas -> atlas instanceof ExpandableAtlas).map(atlas -> (ExpandableAtlas) atlas).forEach(ExpandableAtlas::stitch);
+        debugExportAtlases();
+    }
+
     @EventListener(priority = ListenerPriority.HIGH)
     private static void beforeTexturePackApplied(TexturePackLoadedEvent.Before event) {
         Map<String, Integer> textureMap = ((TextureManagerAccessor) event.textureManager).getTextures();
@@ -80,7 +90,27 @@ public class StationRenderAPI {
     @EventListener(priority = ListenerPriority.HIGH)
     private static void texturePackApplied(TexturePackLoadedEvent.After event) {
         Atlas.getAtlases().forEach(atlas -> atlas.reloadFromTexturePack(event.newTexturePack));
-        ModelRegistry.INSTANCE.forEach((identifier, model) -> model.reloadFromTexturePack(event.newTexturePack));
         new ArrayList<>(((TextureManagerAccessor) event.textureManager).getTextureBinders()).stream().filter(textureBinder -> textureBinder instanceof TexturePackDependent).forEach(textureBinder -> ((TexturePackDependent) textureBinder).reloadFromTexturePack(event.newTexturePack));
+        debugExportAtlases();
+    }
+
+    private static void debugExportAtlases() {
+        if (DEBUG_EXPORT_ATLASES) {
+            Atlas.getAtlases().stream().filter(atlas -> atlas instanceof ExpandableAtlas).map(atlas -> (ExpandableAtlas) atlas).forEach(expandableAtlas -> {
+                if (expandableAtlas.getImage() == null)
+                    LOGGER.debug("Empty atlas " + expandableAtlas.id + ". Skipping export.");
+                else {
+                    LOGGER.debug("Exporting atlas " + expandableAtlas.id + "...");
+                    File debug = new File("." + MODID + ".out/exported_atlases/" + expandableAtlas.id.toString().replace(":", "_") + ".png");
+                    //noinspection ResultOfMethodCallIgnored
+                    debug.mkdirs();
+                    try {
+                        ImageIO.write(expandableAtlas.getImage(), "png", debug);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+        }
     }
 }

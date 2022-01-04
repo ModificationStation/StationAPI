@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
 import net.minecraft.client.resource.TexturePack;
+import net.modificationstation.stationapi.api.client.registry.ModelRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderAPI.MODID;
@@ -18,5 +19,7 @@ public final class JsonModelAtlas extends ExpandableAtlas {
         imageCache = null;
         textures.clear();
         textureCache.clear();
+        ModelRegistry.INSTANCE.forEach((identifier, model) -> model.reloadFromTexturePack(newTexturePack));
+        stitch();
     }
 }
