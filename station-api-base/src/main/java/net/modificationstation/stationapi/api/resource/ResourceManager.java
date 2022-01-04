@@ -37,6 +37,23 @@ public class ResourceManager {
         return rootPath + "/" + identifier.modID + "/" + identifier.id;
     }
 
+//    public Identifier toIdentifier(String path, String subPath) {
+//        String startsWith = rootPath + "/";
+//        if (!path.startsWith(startsWith))
+//            throw new IllegalArgumentException("The path \"" + path + "\" doesn't start with the current ResourceManager's root path \"" + rootPath + "\"!");
+//        path = path.substring(startsWith.length());
+//        int indexOfSubpath = path.indexOf("/");
+//        if (indexOfSubpath == -1)
+//            throw new IllegalArgumentException("The path \"" + path + "\" doesn't have a modid!");
+//        ModID modid = ModID.of(path.substring(0, indexOfSubpath));
+//        int indexOfId = indexOfSubpath + 1 + subPath.length();
+//        String subPathCheck = path.substring(indexOfSubpath + 1, indexOfId);
+//        if (!subPathCheck.equals(subPath))
+//            throw new IllegalArgumentException("The path \"" + path + "\" doesn't have a matching subpath \"" + subPath + "\" after modid!");
+//        String id = path.substring(indexOfId + 1);
+//
+//    }
+
     public Set<URL> find(String path, Predicate<String> filter) {
         return FabricLoader.getInstance().getAllMods().stream().map(modContainer -> find(ModID.of(modContainer), path, filter)).flatMap(Collection::stream).collect(Collectors.toSet());
     }

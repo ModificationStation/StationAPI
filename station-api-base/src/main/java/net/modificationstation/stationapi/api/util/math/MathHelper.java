@@ -29,4 +29,14 @@ public class MathHelper {
         l = l * l * 42317861L + l * 11L;
         return l >> 16;
     }
+
+    public static int smallestEncompassingPowerOfTwo(int value) {
+        int i = value - 1;
+        i |= i >> 1;
+        i |= i >> 2;
+        i |= i >> 4;
+        i |= i >> 8;
+        i |= i >> 16;
+        return i + 1;
+    }
 }

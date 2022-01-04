@@ -174,13 +174,17 @@ public abstract class Atlas implements TexturePackDependent {
 
         protected final void updateUVs() {
             BufferedImage image = getAtlas().getImage();
-            int
-                    atlasWidth = image.getWidth(),
-                    atlasHeight = image.getHeight();
-            this.startU = (double) x / atlasWidth;
-            this.endU = (double) (x + width) / atlasWidth;
-            this.startV = (double) y / atlasHeight;
-            this.endV = (double) (y + height) / atlasHeight;
+            if (image != null) {
+                int
+                        atlasWidth = image.getWidth(),
+                        atlasHeight = image.getHeight();
+                this.startU = (double) x / atlasWidth;
+                this.endU = (double) (x + width) / atlasWidth;
+                this.startV = (double) y / atlasHeight;
+                this.endV = (double) (y + height) / atlasHeight;
+            }
         }
+
     }
+
 }

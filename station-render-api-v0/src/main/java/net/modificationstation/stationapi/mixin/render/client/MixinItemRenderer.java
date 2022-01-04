@@ -10,8 +10,11 @@ import net.minecraft.client.render.entity.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.entity.Item;
 import net.minecraft.item.ItemBase;
+import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationapi.api.client.model.item.ItemWithRenderer;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
+import net.modificationstation.stationapi.impl.client.texture.StationItemRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,6 +29,8 @@ import java.util.*;
 @Mixin(ItemRenderer.class)
 @Environment(EnvType.CLIENT)
 public abstract class MixinItemRenderer extends EntityRenderer {
+
+    private final StationItemRenderer stationItemRenderer = new StationItemRenderer((ItemRenderer) (Object) this);
 
     @Unique
     private final Stack<Atlas> render_customLocals_atlas = new Stack<>();
@@ -154,11 +159,17 @@ public abstract class MixinItemRenderer extends EntityRenderer {
 
     @Inject(
             method = "renderItemOnGui(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;IIIII)V",
-            at = @At("HEAD")
+            at = @At("HEAD"),
+            cancellable = true
     )
     private void renderItemOnGui_initCustomLocals(TextRenderer textRenderer, TextureManager textureManagerArg, int itemId, int damage, int textureIndex, int textureX, int textureY, CallbackInfo ci) {
-        Object item = itemId < BlockBase.BY_ID.length ? BlockBase.BY_ID[itemId] : ItemBase.byId[itemId];
-        renderItemOnGui_customLocals_atlas.push(item instanceof CustomAtlasProvider ? ((CustomAtlasProvider) item).getAtlas().of(textureIndex) : null);
+        Object itemOrBlock = itemId < BlockBase.BY_ID.length ? BlockBase.BY_ID[itemId] : ItemBase.byId[itemId];
+        ItemBase item = ItemBase.byId[itemId];
+        if (item instanceof ItemWithRenderer) {
+            ((ItemWithRenderer) item).renderItemOnGui(textRenderer, textureManagerArg, itemId, damage, textureIndex, textureX, textureY);
+            ci.cancel();
+        } else
+            renderItemOnGui_customLocals_atlas.push(itemOrBlock instanceof CustomAtlasProvider ? ((CustomAtlasProvider) itemOrBlock).getAtlas().of(textureIndex) : null);
     }
 
     @Redirect(
@@ -200,6 +211,22 @@ public abstract class MixinItemRenderer extends EntityRenderer {
     )
     private void renderItemOnGui_clearCustomLocals(TextRenderer arg, TextureManager arg1, int i, int j, int k, int i1, int j1, CallbackInfo ci) {
         renderItemOnGui_customLocals_atlas.pop();
+    }
+
+    @Inject(
+            method = "method_1487(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;Lnet/minecraft/item/ItemInstance;II)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/entity/ItemRenderer;renderItemOnGui(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;IIIII)V"
+            ),
+            cancellable = true
+    )
+    private void onRenderItemOnGuiItemInstance(TextRenderer arg1, TextureManager arg2, ItemInstance i, int j, int par5, CallbackInfo ci) {
+        ItemBase itemBase = i.getType();
+        if (itemBase instanceof ItemWithRenderer) {
+            ((ItemWithRenderer) itemBase).renderItemOnGui(arg1, arg2, i, j, par5);
+            ci.cancel();
+        }
     }
 
     @Unique

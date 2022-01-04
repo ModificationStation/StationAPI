@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.api.client.texture.atlas;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
-import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.resource.Resource;
 import net.modificationstation.stationapi.api.client.texture.TextureAnimationData;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
@@ -12,11 +11,13 @@ import net.modificationstation.stationapi.api.client.texture.binder.StationTextu
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
+import org.jetbrains.annotations.ApiStatus;
 
 import javax.imageio.*;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
+import java.util.List;
 import java.util.*;
 import java.util.function.*;
 
@@ -24,16 +25,21 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 public class ExpandableAtlas extends Atlas {
 
+    private static final boolean DEBUG_EXPORT_ATLASES = Boolean.parseBoolean(System.getProperty(MODID + ".debug.export_atlases", "false"));
+
     private static final Map<String, ExpandableAtlas> PATH_TO_ATLAS = new HashMap<>();
 
+    public final Identifier id;
     protected final Map<String, Sprite> textureCache = new HashMap<>();
 
     public ExpandableAtlas(final Identifier identifier) {
-        super("/assets/stationapi/atlases/" + identifier, 0, false);
+        super("/assets/" + MODID + "/atlases/" + identifier, 0, false);
+        id = identifier;
     }
 
     public ExpandableAtlas(final Identifier identifier, final Atlas parent) {
-        super("/assets/stationapi/atlases/" + identifier, 0, false, parent);
+        super("/assets/" + MODID + "/atlases/" + identifier, 0, false, parent);
+        id = identifier;
     }
 
     @Override
@@ -63,66 +69,64 @@ public class ExpandableAtlas extends Atlas {
     }
 
     public Sprite addTexture(String texturePath) {
+        return addTexture(texturePath, true);
+    }
+
+    private Sprite addTexture(String texturePath, boolean stitch) {
         if (textureCache.containsKey(texturePath))
             return textureCache.get(texturePath);
         else {
             Resource textureResource = Resource.of(TextureHelper.getTextureStream(texturePath));
             BufferedImage image = TextureHelper.readTextureStream(textureResource.getResource());
-            int width = image.getWidth();
-            int height = image.getHeight();
-            int previousAtlasWidth = imageCache == null ? 0 : imageCache.getWidth();
             Optional<TextureAnimationData> animationDataOptional = TextureAnimationData.parse(textureResource);
             boolean animationPresent = animationDataOptional.isPresent();
-            BufferedImage frames = null;
-            if (animationPresent) {
+            int width = image.getWidth();
+            int height = image.getHeight();
+            if (animationPresent)
                 //noinspection SuspiciousNameCombination
                 height = width;
-                frames = image;
-                image = image.getSubimage(0, 0, width, height);
-            }
-            drawTextureOnSpritesheet(image);
-            refreshTextureID();
-            textures.forEach(Sprite::updateUVs);
-            FileSprite texture = new FileSprite(
-                    texturePath, size++,
-                    previousAtlasWidth, 0,
-                    width, height
-            );
+            // The texture is yet to be stitched on the atlas, so the coordinates are left uninitialized.
+            FileSprite texture = new FileSprite(texturePath, size++, -1, -1, width, height);
             textureCache.put(texturePath, texture);
             textures.add(texture);
-            if (animationPresent) {
-                BufferedImage finalFrames = frames;
-                addTextureBinder(texture, texture1 -> new AnimationTextureBinder(finalFrames, texture1, animationDataOptional.get()));
+            if (animationPresent)
+                addTextureBinder(texture, texture1 -> new AnimationTextureBinder(image, texture1, animationDataOptional.get()));
+            if (stitch) {
+                imageCache = null;
+                stitch();
             }
             return texture;
         }
     }
 
+    @ApiStatus.Internal
+    public void stitch() {
+        TextureStitcher textureStitcher = new TextureStitcher(Integer.MAX_VALUE, Integer.MAX_VALUE, 0);
+        textures.stream().map(sprite -> (FileSprite) sprite).forEach(textureStitcher::add);
+        textureStitcher.stitch();
+        textureStitcher.getStitchedSprites((spriteInfo, width, height, x, y) -> {
+            spriteInfo.x = x;
+            spriteInfo.y = y;
+            if (imageCache == null)
+                imageCache = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            BufferedImage spriteTexture = TextureHelper.getTexture(spriteInfo.path);
+            spriteTexture.getSubimage(0, 0, spriteInfo.width, spriteInfo.height);
+            Graphics2D graphics = imageCache.createGraphics();
+            graphics.drawImage(TextureHelper.getTexture(spriteInfo.path).getSubimage(0, 0, spriteInfo.width, spriteInfo.height), x, y, null);
+            graphics.dispose();
+        });
+        textures.forEach(Sprite::updateUVs);
+        refreshTextureID();
+        if (DEBUG_EXPORT_ATLASES)
+            try {
+                ImageIO.write(imageCache, "png", new File("debug/exported_atlases/" + id.toString().replace(":", "_") + ".png"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+    }
+
     public <T extends StationTextureBinder> T addTextureBinder(Identifier staticReference, Function<Sprite, T> initializer) {
         return addTextureBinder(addTexture(staticReference), initializer);
-    }
-
-    private void drawTextureOnSpritesheet(BufferedImage image) {
-        if (imageCache == null) {
-            ColorModel cm = image.getColorModel();
-            boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-            WritableRaster raster = image.copyData(null);
-            imageCache = new BufferedImage(cm, raster, isAlphaPremultiplied, null);
-        } else {
-            int previousAtlasWidth = imageCache.getWidth();
-            resizeSpritesheet(imageCache.getWidth() + image.getWidth(), Math.max(image.getHeight(), imageCache.getHeight()));
-            Graphics2D graphics = imageCache.createGraphics();
-            graphics.drawImage(image, previousAtlasWidth, 0, null);
-            graphics.dispose();
-        }
-    }
-
-    private void resizeSpritesheet(int targetWidth, int targetHeight) {
-        BufferedImage previousSpriteSheet = imageCache;
-        imageCache = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics = imageCache.createGraphics();
-        graphics.drawImage(previousSpriteSheet, 0, 0, null);
-        graphics.dispose();
     }
 
     protected void refreshTextureID() {
@@ -137,35 +141,11 @@ public class ExpandableAtlas extends Atlas {
     @Override
     public void reloadFromTexturePack(TexturePack newTexturePack) {
         super.reloadFromTexturePack(newTexturePack);
-        textures.forEach(texture -> {
-            texture.x = imageCache == null ? 0 : imageCache.getWidth();
-            texture.y = 0;
-            Resource textureResource = Resource.of(newTexturePack.getResourceAsStream(((FileSprite) texture).path));
-            BufferedImage image = TextureHelper.readTextureStream(textureResource.getResource());
-            int
-                    width = image.getWidth(),
-                    height = image.getHeight();
-            Optional<TextureAnimationData> animationDataOptional = TextureAnimationData.parse(textureResource);
-            BufferedImage frames = null;
-            boolean animationPresent = animationDataOptional.isPresent();
-            if (animationPresent) {
-                //noinspection SuspiciousNameCombination
-                height = width;
-                frames = image;
-                image = image.getSubimage(0, 0, width, height);
-            }
-            texture.width = width;
-            texture.height = height;
-            drawTextureOnSpritesheet(image);
-            if (animationPresent) {
-                TextureAnimationData animationData = animationDataOptional.get();
-                //noinspection deprecation
-                TextureManager textureManager = ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager;
-                textureManager.addTextureBinder(new AnimationTextureBinder(frames, texture, animationData));
-            }
-        });
-        textures.forEach(Sprite::updateUVs);
-        refreshTextureID();
+        List<Sprite> sprites = new ArrayList<>(textures);
+        textureCache.clear();
+        textures.clear();
+        sprites.stream().map(sprite -> (FileSprite) sprite).forEach(sprite -> addTexture(sprite.path, false));
+        stitch();
     }
 
     public static ExpandableAtlas getByPath(String spritesheet) {

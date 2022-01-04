@@ -53,6 +53,7 @@ public class TextureListener {
         TEST_ATLAS.addTexture(of(MODID, "blocks/FreezerSide"));
 
         farlandsBlockModel = JsonModel.get(of(MODID, "farlandsBlock"));
+        testItemModel = JsonModel.get(of(MODID, "item/testItem"));
     }
 
     public static final int[] altarTextures = new int[6];
@@ -60,4 +61,5 @@ public class TextureListener {
     public static ExpandableAtlas TEST_ATLAS;
 
     public static JsonModel farlandsBlockModel;
+    public static JsonModel testItemModel;
 }

@@ -1,0 +1,45 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "item/generated",
+	"textures": {
+		"0": "sltest:oak_log",
+		"1": "sltest:stone",
+		"particle": "sltest:oak_log"
+	},
+	"elements": [
+		{
+			"from": [3, 0, 7.5],
+			"to": [4, 12, 8.5],
+			"faces": {
+				"north": {"uv": [0, 0, 1, 12], "texture": "#1"},
+				"east": {"uv": [0, 0, 1, 12], "texture": "#1"},
+				"south": {"uv": [0, 0, 1, 12], "texture": "#1"},
+				"west": {"uv": [0, 0, 1, 12], "texture": "#1"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#1"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#1"}
+			}
+		},
+		{
+			"from": [12, 0, 7.5],
+			"to": [13, 12, 8.5],
+			"faces": {
+				"north": {"uv": [0, 0, 1, 12], "texture": "#1"},
+				"east": {"uv": [0, 0, 1, 12], "texture": "#1"},
+				"south": {"uv": [0, 0, 1, 12], "texture": "#1"},
+				"west": {"uv": [0, 0, 1, 12], "texture": "#1"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#1"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#1"}
+			}
+		},
+		{
+			"from": [4, 2, 7.5],
+			"to": [12, 3, 8.5],
+			"faces": {
+				"north": {"uv": [4, 8, 12, 9], "texture": "#0"},
+				"south": {"uv": [4, 8, 12, 9], "texture": "#0"},
+				"up": {"uv": [4, 8, 12, 9], "texture": "#0"},
+				"down": {"uv": [4, 8, 12, 9], "texture": "#0"}
+			}
+		}
+	]
+}

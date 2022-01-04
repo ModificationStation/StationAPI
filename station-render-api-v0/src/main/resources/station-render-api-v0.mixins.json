@@ -11,6 +11,7 @@
     "client.BlockRendererAccessor",
     "client.DiggingAccessor",
     "client.EntityRendererAccessor",
+    "client.ItemRendererAccessor",
     "client.MixinBlockRenderer",
     "client.Mixinclass_556",
     "client.Mixinclass_66",

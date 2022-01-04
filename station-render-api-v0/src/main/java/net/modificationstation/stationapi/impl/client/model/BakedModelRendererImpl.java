@@ -66,55 +66,107 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
             } else
                 atlas = model.getSprite().getAtlas();
             boolean noTextureOverride = textureOverride == null;
-            if (!noTextureOverride) {
-                return true;
-            }
-            t = blockRendererCustomAccessor.getStationBlockRenderer().prepareTessellator(atlas);
-            int colourMultiplier = block.getColourMultiplier(blockView, x, y, z);
-            float
-                    colourMultiplierRed = (float) (colourMultiplier >> 16 & 255) / 255.0F,
-                    colourMultiplierGreen = (float) (colourMultiplier >> 8 & 255) / 255.0F,
-                    colourMultiplierBlue = (float) (colourMultiplier & 255) / 255.0F;
-            if (GameRenderer.anaglyph3d) {
-                float
-                        colourMultiplierGreenTmp = (colourMultiplierRed * 30.0F + colourMultiplierGreen * 70.0F) / 100.0F,
-                        colourMultiplierBlueTmp = (colourMultiplierRed * 30.0F + colourMultiplierBlue * 70.0F) / 100.0F;
-                colourMultiplierRed = (colourMultiplierRed * 30.0F + colourMultiplierGreen * 59.0F + colourMultiplierBlue * 11.0F) / 100.0F;
-                colourMultiplierGreen = colourMultiplierGreenTmp;
-                colourMultiplierBlue = colourMultiplierBlueTmp;
-            }
-            light.initialize(
-                    block,
-                    blockView, x, y, z,
-                    colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue,
-                    Minecraft.isSmoothLightingEnabled() && model.useAmbientOcclusion()
-            );
-            Direction face;
-            ImmutableList<Quad> quads;
-            Quad q;
             boolean rendered = false;
-            for (int quadSet = 0, quadSetCount = DIRECTIONS.length; quadSet < quadSetCount; quadSet++) {
-                face = DIRECTIONS[quadSet];
-                random.setSeed(seed);
-                quads = model.getQuads(blockView, pos, face, random);
-                if (!quads.isEmpty() && (blockRendererAccessor.getRenderAllSides() || face == null || block.isSideRendered(blockView, x + face.vector.x, y + face.vector.y, z + face.vector.z, quadSet))) {
-                    rendered = true;
-                    for (int i = 0, quadsSize = quads.size(); i < quadsSize; i++) {
-                        q = quads.get(i);
-                        light.calculateForQuad(q);
-                        q.applyToVertexesWithIndex(renderVertexLight);
+            if (noTextureOverride) {
+                t = blockRendererCustomAccessor.getStationBlockRenderer().prepareTessellator(atlas);
+                int colourMultiplier = block.getColourMultiplier(blockView, x, y, z);
+                float
+                        colourMultiplierRed = (float) (colourMultiplier >> 16 & 255) / 255.0F,
+                        colourMultiplierGreen = (float) (colourMultiplier >> 8 & 255) / 255.0F,
+                        colourMultiplierBlue = (float) (colourMultiplier & 255) / 255.0F;
+                if (GameRenderer.anaglyph3d) {
+                    float
+                            colourMultiplierGreenTmp = (colourMultiplierRed * 30.0F + colourMultiplierGreen * 70.0F) / 100.0F,
+                            colourMultiplierBlueTmp = (colourMultiplierRed * 30.0F + colourMultiplierBlue * 70.0F) / 100.0F;
+                    colourMultiplierRed = (colourMultiplierRed * 30.0F + colourMultiplierGreen * 59.0F + colourMultiplierBlue * 11.0F) / 100.0F;
+                    colourMultiplierGreen = colourMultiplierGreenTmp;
+                    colourMultiplierBlue = colourMultiplierBlueTmp;
+                }
+                light.initialize(
+                        block,
+                        blockView, x, y, z,
+                        colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue,
+                        Minecraft.isSmoothLightingEnabled() && model.useAmbientOcclusion()
+                );
+                Direction face;
+                ImmutableList<Quad> quads;
+                Quad q;
+                for (int quadSet = 0, quadSetCount = DIRECTIONS.length; quadSet < quadSetCount; quadSet++) {
+                    face = DIRECTIONS[quadSet];
+                    random.setSeed(seed);
+                    quads = model.getQuads(blockView, pos, face, random);
+                    if (!quads.isEmpty() && (blockRendererAccessor.getRenderAllSides() || face == null || block.isSideRendered(blockView, x + face.vector.x, y + face.vector.y, z + face.vector.z, quadSet))) {
+                        rendered = true;
+                        for (int i = 0, quadsSize = quads.size(); i < quadsSize; i++) {
+                            q = quads.get(i);
+                            light.calculateForQuad(q);
+                            q.applyToVertexesWithIndex(renderVertexLight);
+                        }
                     }
                 }
-            }
+            }// else {
+//                t = blockRendererCustomAccessor.getStationBlockRenderer().prepareTessellator(atlas);
+//                int colourMultiplier = block.getColourMultiplier(blockView, x, y, z);
+//                float
+//                        colourMultiplierRed = (float) (colourMultiplier >> 16 & 255) / 255.0F,
+//                        colourMultiplierGreen = (float) (colourMultiplier >> 8 & 255) / 255.0F,
+//                        colourMultiplierBlue = (float) (colourMultiplier & 255) / 255.0F;
+//                if (GameRenderer.anaglyph3d) {
+//                    float
+//                            colourMultiplierGreenTmp = (colourMultiplierRed * 30.0F + colourMultiplierGreen * 70.0F) / 100.0F,
+//                            colourMultiplierBlueTmp = (colourMultiplierRed * 30.0F + colourMultiplierBlue * 70.0F) / 100.0F;
+//                    colourMultiplierRed = (colourMultiplierRed * 30.0F + colourMultiplierGreen * 59.0F + colourMultiplierBlue * 11.0F) / 100.0F;
+//                    colourMultiplierGreen = colourMultiplierGreenTmp;
+//                    colourMultiplierBlue = colourMultiplierBlueTmp;
+//                }
+//                light.initialize(
+//                        block,
+//                        blockView, x, y, z,
+//                        colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue,
+//                        Minecraft.isSmoothLightingEnabled() && model.useAmbientOcclusion()
+//                );
+//                Direction face;
+//                ImmutableList<Quad> quads;
+//                Quad q;
+//                for (int quadSet = 0, quadSetCount = DIRECTIONS.length; quadSet < quadSetCount; quadSet++) {
+//                    face = DIRECTIONS[quadSet];
+//                    random.setSeed(seed);
+//                    quads = splitQuads(model.getQuads(blockView, pos, face, random));
+//                    if (!quads.isEmpty() && (blockRendererAccessor.getRenderAllSides() || face == null || block.isSideRendered(blockView, x + face.vector.x, y + face.vector.y, z + face.vector.z, quadSet))) {
+//                        rendered = true;
+//                        for (int i = 0, quadsSize = quads.size(); i < quadsSize; i++) {
+//                            q = quads.get(i);
+//                            light.calculateForQuad(q);
+//                            q.applyToVertexesWithIndex(renderVertexLight);
+//                        }
+//                    }
+//                }
+//            }
             return rendered;
         }
     }
+
+//    private ImmutableList<Quad> splitQuads(ImmutableList<Quad> quads) {
+//        if (quads.isEmpty())
+//            return quads;
+//        else {
+//            ImmutableList.Builder<Quad> splitQuads = ImmutableList.builder();
+//            for (int i = 0, size = quads.size(); i < size; i++) {
+//                Quad q = quads.get(i);
+//
+//            }
+//        }
+//    }
 
     @Override
     public void renderInventory(BakedModel model) {
         if (model != null) {
             Atlas atlas = model.getSprite().getAtlas();
-            t = blockRendererCustomAccessor.getStationBlockRenderer().prepareTessellator(atlas);
+            if (blockRenderer == null || blockRendererAccessor == null || blockRendererCustomAccessor == null) {
+                t = Tessellator.INSTANCE;
+                t.start();
+            } else
+                t = blockRendererCustomAccessor.getStationBlockRenderer().prepareTessellator(atlas);
             Direction face;
             ImmutableList<Quad> quads;
             for (int vertexSet = 0, vertexSetCount = DIRECTIONS.length + 1; vertexSet < vertexSetCount; vertexSet++) {

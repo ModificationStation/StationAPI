@@ -35,6 +35,8 @@ import static net.modificationstation.stationapi.api.util.math.Direction.values;
 
 public final class JsonModel extends Model {
 
+    public static final Identifier BUILTIN_GENERATED = Identifier.of("builtin/generated");
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static final Gson GSON = new GsonBuilder().registerTypeAdapter(EnumMap.class, (InstanceCreator<EnumMap>) type -> new EnumMap((Class) ((ParameterizedType) type).getActualTypeArguments()[0])).create();
 
@@ -60,20 +62,26 @@ public final class JsonModel extends Model {
         } else {
             data = GSON.fromJson(new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n")), JsonModelData.class);
             List<JsonModelData> inheritance = new ArrayList<>();
+            boolean generated = false;
             {
                 JsonModelData parentData = data;
                 inheritance.add(parentData);
-                while (parentData.parent != null)
-                    inheritance.add(
-                            parentData = GSON.fromJson(
-                                    new BufferedReader(new InputStreamReader(
-                                                    newTexturePack.getResourceAsStream(ResourceManager.ASSETS.toPath(
-                                                                    Identifier.of(parentData.parent),
-                                                                    MODID + "/models", "json"
-                                                    )),
-                                                    StandardCharsets.UTF_8
-                                    )).lines().collect(Collectors.joining("\n")), JsonModelData.class)
-                    );
+                while (parentData.parent != null) {
+                    if (Identifier.of(parentData.parent) == BUILTIN_GENERATED) {
+                        generated = true;
+                        break;
+                    } else
+                        inheritance.add(
+                                parentData = GSON.fromJson(
+                                        new BufferedReader(new InputStreamReader(
+                                                newTexturePack.getResourceAsStream(ResourceManager.ASSETS.toPath(
+                                                        Identifier.of(parentData.parent),
+                                                        MODID + "/models", "json"
+                                                )),
+                                                StandardCharsets.UTF_8
+                                        )).lines().collect(Collectors.joining("\n")), JsonModelData.class)
+                        );
+                }
                 Collections.reverse(inheritance);
             }
             Map<String, String> textures = new HashMap<>();
@@ -98,7 +106,6 @@ public final class JsonModel extends Model {
                 cuboid.postprocess();
                 cuboid.faces.values().forEach(face -> face.postprocess(this.textures.getOrDefault(face.textureId, Atlases.getStationJsonModels().addTexture(MISSING))));
             });
-            updateUVs();
         }
     }
 
@@ -110,6 +117,7 @@ public final class JsonModel extends Model {
 
     @Override
     protected BasicBakedModel bake() {
+        updateUVs();
         Map<Direction, ImmutableList.Builder<Quad>> faceQuadsBuilders = new EnumMap<>(Direction.class);
         Arrays.stream(values()).forEach(direction -> faceQuadsBuilders.put(direction, ImmutableList.builder()));
         ImmutableList.Builder<Quad> quads = ImmutableList.builder();
