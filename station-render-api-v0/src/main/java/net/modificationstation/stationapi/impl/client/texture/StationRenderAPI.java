@@ -101,7 +101,7 @@ public class StationRenderAPI {
                     LOGGER.debug("Empty atlas " + expandableAtlas.id + ". Skipping export.");
                 else {
                     LOGGER.debug("Exporting atlas " + expandableAtlas.id + "...");
-                    File debug = new File("." + MODID + ".out/exported_atlases/" + expandableAtlas.id.toString().replace(":", "_") + ".png");
+                    File debug = new File("." + StationAPI.MODID + ".out/exported_atlases/" + expandableAtlas.id.toString().replace(":", "_") + ".png");
                     //noinspection ResultOfMethodCallIgnored
                     debug.mkdirs();
                     try {
