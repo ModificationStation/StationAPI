@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.util;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum Colors {
+public enum Colours {
 
     @API
     BLACK("§0"),
@@ -39,12 +39,12 @@ public enum Colors {
     WHITE("§f");
 
     @API
-    public static final String COLOR_CHARACTER = "§";
+    public static final String COLOUR_CHARACTER = "§";
 
-    private final String colourCode;
+    public final String code;
 
     @Override
     public String toString() {
-        return colourCode;
+        return code;
     }
 }
