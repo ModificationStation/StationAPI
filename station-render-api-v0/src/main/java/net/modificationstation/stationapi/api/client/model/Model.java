@@ -32,8 +32,8 @@ public abstract class Model implements TexturePackDependent {
 
     public final BakedModel getBaked() {
         if (invalidated) {
-            invalidated = false;
             baked = bake();
+            invalidated = false;
         }
         return baked;
     }

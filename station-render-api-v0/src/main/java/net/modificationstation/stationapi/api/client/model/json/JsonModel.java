@@ -109,8 +109,7 @@ public final class JsonModel extends Model {
         }
     }
 
-    public void updateUVs() {
-        invalidated = true;
+    private void updateUVs() {
         if (data != null)
             data.elements.forEach(cuboid -> cuboid.faces.values().forEach(JsonFaceData::updateUVs));
     }

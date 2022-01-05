@@ -4,6 +4,7 @@
   "package": "net.modificationstation.stationapi.mixin.render",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinBlock",
     "MixinBlockBase",
     "MixinItemBase"
   ],

@@ -1197,8 +1197,8 @@ public class StationBlockRenderer extends BlockRendererPlugin {
         if (block instanceof BlockWithInventoryRenderer) {
             if (blockRenderer.itemColourEnabled) {
                 int var5 = block.getBaseColour(meta);
-                float var6 = (float)(var5 >> 16 & 255) / 255.0F;
-                float var7 = (float)(var5 >> 8 & 255) / 255.0F;
+                float var6 = (float)((var5 >> 16) & 255) / 255.0F;
+                float var7 = (float)((var5 >> 8) & 255) / 255.0F;
                 float var8 = (float)(var5 & 255) / 255.0F;
                 GL11.glColor4f(var6 * brightness, var7 * brightness, var8 * brightness, 1.0F);
             }
