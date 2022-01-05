@@ -38,6 +38,7 @@
     "station-localization-api-v0": "*",
     "station-achievements-v0": "*",
     "station-keybindings-v0": "*",
+    "station-renderer-api-v0": "*",
     "station-audio-loader-v0": "*",
     "station-lifecycle-events-v0": "*",
     "station-vanilla-checker-v0": "*",
@@ -45,6 +46,7 @@
     "station-registry-sync-v0": "*",
     "station-dimensions-v0": "*",
     "station-tools-api-v1": "*",
-    "station-flattening-v0": "*"
+    "station-flattening-v0": "*",
+    "station-renderer-arsenic": "*"
   }
 }
