@@ -28,4 +28,5 @@ include 'station-vanilla-checker-v0'
 include 'station-templates-v0'
 include 'station-registry-sync-v0'
 include 'station-dimensions-v0'
+include 'station-tools-api-v1'
 

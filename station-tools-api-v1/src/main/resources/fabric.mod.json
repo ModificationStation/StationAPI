@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "station-tools-api-v0",
+  "id": "station-tools-api-v1",
   "version": "${version}",
 
-  "name": "Station Tools API (v0)",
+  "name": "Station Tools API (v1)",
   "description": "Makes tools actually work properly. Also, custom shears!",
   "authors": [
     "mine_diver",
@@ -16,15 +16,16 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/station-tools-api-v0/icon.png",
+  "icon": "assets/station-tools-api-v1/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
+      "net.modificationstation.stationapi.impl.item.ToolEffectivenessImplV1"
     ]
   },
   "mixins": [
-    "station-tools-api-v0.mixins.json"
+    "station-tools-api-v1.mixins.json"
   ],
 
   "depends": {
@@ -32,7 +33,6 @@
   },
 
   "custom": {
-    "modmenu:api": true,
-    "stationapi:deprecated" : true
+    "modmenu:api": true
   }
 }

@@ -4,12 +4,8 @@
   "package": "net.modificationstation.stationapi.mixin.tools",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinHatchet",
-    "MixinHoe",
-    "MixinPickaxe",
+    "MixinBlockBase",
     "MixinSheep",
-    "MixinShovel",
-    "MixinSword",
     "MixinToolBase"
   ],
   "server": [
