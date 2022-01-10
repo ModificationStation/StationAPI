@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.oredict;
+package net.modificationstation.stationapi.impl.tags;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;

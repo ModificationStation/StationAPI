@@ -1,4 +1,4 @@
-archivesBaseName = "station-oredict-v0"
+archivesBaseName = "station-tags-v0"
 version = getSubprojectVersion(project, "1.0.0")
 
 moduleDependencies(project, [

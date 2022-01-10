@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.oredict;
+package net.modificationstation.stationapi.mixin.tags;
 
 import net.minecraft.stat.Stats;
 import net.modificationstation.stationapi.api.StationAPI;

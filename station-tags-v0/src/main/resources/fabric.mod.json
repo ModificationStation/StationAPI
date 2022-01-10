@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "station-oredict-v0",
+  "id": "station-tags-v0",
   "version": "${version}",
 
-  "name": "Station Oredict (v0)",
+  "name": "Station Tags (v0)",
   "description": "Provides the ore dictionary system for items and blocks.",
   "authors": [
     "mine_diver",
@@ -16,17 +16,17 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/station-oredict-v0/icon.png",
+  "icon": "assets/station-tags-v0/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.oredict.OreDictItemInit",
-      "net.modificationstation.stationapi.impl.oredict.OreDictBlockInit"
+      "net.modificationstation.stationapi.impl.tags.OreDictItemInit",
+      "net.modificationstation.stationapi.impl.tags.OreDictBlockInit"
     ]
   },
   "mixins": [
-    "station-oredict-v0.mixins.json"
+    "station-tags-v0.mixins.json"
   ],
 
   "depends": {
