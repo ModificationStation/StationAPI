@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.mixin.tools;
 
-import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.tool.ToolBase;

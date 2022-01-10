@@ -7,9 +7,12 @@ import net.minecraft.item.ItemInstance;
 import net.modificationstation.sltest.block.Blocks;
 import net.modificationstation.sltest.item.ItemListener;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
-import net.modificationstation.stationapi.api.item.nbt.HasItemEntity;
+import net.modificationstation.stationapi.api.item.nbt.StationNBT;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
+
+import static net.modificationstation.sltest.SLTest.MODID;
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public class RecipeListener {
 
@@ -41,7 +44,7 @@ public class RecipeListener {
                 SmeltingRegistry.addSmeltingRecipe(new ItemInstance(BlockBase.OBSIDIAN), new ItemInstance(BlockBase.COAL_ORE, 2));
                 SmeltingRegistry.addSmeltingRecipe(new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 0), new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 1));
                 ItemInstance itemInstance = new ItemInstance(ItemListener.testNBTItem);
-                HasItemEntity.cast(itemInstance).setItemEntity(null);
+                StationNBT.cast(itemInstance).getStationNBT().put(of(MODID, "rand_num").toString(), 10);
                 SmeltingRegistry.addSmeltingRecipe(ItemListener.testItem.id, itemInstance);
                 break;
             }

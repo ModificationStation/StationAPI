@@ -2,12 +2,15 @@ package net.modificationstation.stationapi.impl.client.texture.plugin;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.TextRenderer;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.client.render.entity.ItemRenderer;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.entity.Item;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.util.maths.MathHelper;
+import net.modificationstation.stationapi.api.client.model.item.ItemWithRenderer;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.plugin.ItemRendererPlugin;
@@ -116,5 +119,79 @@ public class StationItemRenderer extends ItemRendererPlugin {
         GL11.glDisable(32826);
         GL11.glPopMatrix();
         ci.cancel();
+    }
+
+    @Override
+    public void renderItemOnGui(TextRenderer textRenderer, TextureManager textureManager, ItemInstance itemInstance, int x, int y, CallbackInfo ci) {
+        if (itemInstance != null) {
+            ItemBase itemBase = itemInstance.getType();
+            if (itemBase instanceof ItemWithRenderer) {
+                ((ItemWithRenderer) itemBase).renderItemOnGui(itemRenderer, textRenderer, textureManager, itemInstance, x, y);
+                ci.cancel();
+            }
+        }
+    }
+
+    @Override
+    public void renderItemOnGui(TextRenderer textRenderer, TextureManager textureManager, int id, int damage, int texture, int x, int y, CallbackInfo ci) {
+        ItemBase item = ItemBase.byId[id];
+        if (item instanceof ItemWithRenderer) {
+            ((ItemWithRenderer) item).renderItemOnGui(itemRenderer, textRenderer, textureManager, id, damage, texture, x, y);
+            ci.cancel();
+            return;
+        }
+        Atlas atlas = ((CustomAtlasProvider) item).getAtlas().of(texture);
+        if (id < BlockBase.BY_ID.length && BlockRenderer.method_42(BlockBase.BY_ID[id].getRenderType())) {
+            textureManager.bindTexture(textureManager.getTextureId("/terrain.png"));
+            BlockBase var14 = BlockBase.BY_ID[id];
+            GL11.glPushMatrix();
+            GL11.glTranslatef((float)(x - 2), (float)(y + 3), -3.0F);
+            GL11.glScalef(10.0F, 10.0F, 10.0F);
+            GL11.glTranslatef(1.0F, 0.5F, 1.0F);
+            GL11.glScalef(1.0F, 1.0F, -1.0F);
+            GL11.glRotatef(210.0F, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
+            int var15 = item.getNameColour(damage);
+            float var16 = (float)((var15 >> 16) & 255) / 255.0F;
+            float var12 = (float)((var15 >> 8) & 255) / 255.0F;
+            float var13 = (float)(var15 & 255) / 255.0F;
+            if (itemRenderer.field_1707) {
+                GL11.glColor4f(var16, var12, var13, 1.0F);
+            }
+
+            GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+            itemRendererAccessor.getField_1708().itemColourEnabled = itemRenderer.field_1707;
+            itemRendererAccessor.getField_1708().method_48(var14, damage, 1.0F);
+            itemRendererAccessor.getField_1708().itemColourEnabled = true;
+            GL11.glPopMatrix();
+        } else if (texture >= 0) {
+            GL11.glDisable(2896);
+            atlas.bindAtlas();
+            Atlas.Sprite sprite = atlas.getTexture(texture);
+
+            int var8 = item.getNameColour(damage);
+            float var9 = (float)((var8 >> 16) & 255) / 255.0F;
+            float var10 = (float)((var8 >> 8) & 255) / 255.0F;
+            float var11 = (float)(var8 & 255) / 255.0F;
+            if (itemRenderer.field_1707) {
+                GL11.glColor4f(var9, var10, var11, 1.0F);
+            }
+
+            renderItemQuad(x, y, sprite.getStartU(), sprite.getStartV(), sprite.getEndU(), sprite.getEndV());
+            GL11.glEnable(2896);
+        }
+
+        GL11.glEnable(2884);
+        ci.cancel();
+    }
+
+    public void renderItemQuad(int x, int y, double startU, double startV, double endU, double endV) {
+        Tessellator var10 = Tessellator.INSTANCE;
+        var10.start();
+        var10.vertex(x, y + 16, 0, startU, endV);
+        var10.vertex(x + 16, y + 16, 0, endU, endV);
+        var10.vertex(x + 16, y, 0, endU, startV);
+        var10.vertex(x, y, 0, startU, startV);
+        var10.draw();
     }
 }

@@ -48,6 +48,7 @@ public class StationChunkRenderer extends MeshRendererPlugin {
             BlockRenderer var10 = new BlockRenderer(var9);
             StationBlockRenderer plugin = (StationBlockRenderer) ((BlockRendererPluginProvider) var10).getPlugin();
 
+            //noinspection ConstantConditions notch code broke intellij
             for(int var11 = 0; var11 < 2; ++var11) {
                 boolean var12 = false;
                 boolean var13 = false;
@@ -58,6 +59,7 @@ public class StationChunkRenderer extends MeshRendererPlugin {
                         for(int var17 = var1; var17 < var4; ++var17) {
                             int var18 = var9.getTileId(var17, var15, var16);
                             if (var18 > 0) {
+                                //noinspection ConstantConditions notch code broke intellij
                                 if (!var14) {
                                     var14 = true;
                                     GL11.glNewList(meshRendererAccessor.getField_225() + var11, 4864);
@@ -92,6 +94,7 @@ public class StationChunkRenderer extends MeshRendererPlugin {
                     }
                 }
 
+                //noinspection ConstantConditions notch code broke intellij
                 if (var14) {
                     plugin.endMeshRender();
                     class_66Accessor.getTesselator().draw();
@@ -99,13 +102,16 @@ public class StationChunkRenderer extends MeshRendererPlugin {
                     GL11.glEndList();
                     class_66Accessor.getTesselator().setOffset(0.0D, 0.0D, 0.0D);
                 } else {
+                    //noinspection ConstantConditions notch code broke intellij
                     var13 = false;
                 }
 
+                //noinspection ConstantConditions notch code broke intellij
                 if (var13) {
                     meshRenderer.field_244[var11] = false;
                 }
 
+                //noinspection ConstantConditions notch code broke intellij
                 if (!var12) {
                     break;
                 }

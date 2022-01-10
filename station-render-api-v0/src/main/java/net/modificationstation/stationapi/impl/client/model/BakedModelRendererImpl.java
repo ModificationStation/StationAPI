@@ -19,7 +19,6 @@ import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.client.texture.plugin.StationBlockRenderer;
 import net.modificationstation.stationapi.mixin.render.client.BlockRendererAccessor;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.*;
@@ -28,11 +27,8 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
 
     private static final Direction[] DIRECTIONS = ObjectArrays.concat(Direction.values(), (Direction) null);
 
-    @Nullable
-    private final BlockRenderer blockRenderer;
-    @Nullable
+//    private final BlockRenderer blockRenderer;
     private final BlockRendererAccessor blockRendererAccessor;
-    @Nullable
     private final StationBlockRenderer stationBlockRenderer;
     private final LightingCalculatorImpl light = new LightingCalculatorImpl(3);
     private final Random random = new Random();
@@ -42,17 +38,15 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     private final ObjIntConsumer<Vertex> renderVertexLight = this::renderVertexLight;
     private final Consumer<Vertex> renderVertexNormal = this::renderVertexNormal;
 
-    public BakedModelRendererImpl(@Nullable BlockRenderer blockRenderer, @Nullable StationBlockRenderer stationBlockRenderer) {
-        this.blockRenderer = blockRenderer;
+    public BakedModelRendererImpl(BlockRenderer blockRenderer, StationBlockRenderer stationBlockRenderer) {
+//        this.blockRenderer = blockRenderer;
         blockRendererAccessor = (BlockRendererAccessor) blockRenderer;
         this.stationBlockRenderer = stationBlockRenderer;
     }
 
     @Override
     public boolean renderWorld(BlockBase block, BakedModel model, BlockView blockView, int x, int y, int z) {
-        if (blockRenderer == null || blockRendererAccessor == null || stationBlockRenderer == null)
-            throw new NullPointerException("BlockRenderer is null!");
-        else if (model == null)
+        if (model == null)
             return false;
         else {
             pos.x = x;
@@ -164,11 +158,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     public void renderInventory(BakedModel model) {
         if (model != null) {
             Atlas atlas = model.getSprite().getAtlas();
-            if (stationBlockRenderer == null) {
-                t = Tessellator.INSTANCE;
-                t.start();
-            } else
-                t = stationBlockRenderer.prepareTessellator(atlas);
+            t = stationBlockRenderer.prepareTessellator(atlas);
             Direction face;
             ImmutableList<Quad> quads;
             for (int vertexSet = 0, vertexSetCount = DIRECTIONS.length + 1; vertexSet < vertexSetCount; vertexSet++) {
@@ -181,6 +171,8 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
             t.draw();
         }
     }
+
+    // TODO: add some kind of renderInventory() but for items
 
     private void renderVertexLight(Vertex v, int i) {
         t.colour(light.get(i));

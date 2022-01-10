@@ -6,8 +6,7 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Mixin(BlockBase.class)
 public class MixinBlockBase implements BlockToolLogic {

@@ -26,6 +26,7 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.nio.charset.*;
 import java.util.*;
+import java.util.concurrent.atomic.*;
 import java.util.stream.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
@@ -86,6 +87,7 @@ public final class JsonModel extends Model {
             }
             Map<String, String> textures = new HashMap<>();
             List<JsonCuboidData> elements = new ArrayList<>();
+            AtomicReference<GuiLightType> guiLight = new AtomicReference<>(GuiLightType.SIDE);
             inheritance.forEach(parentData -> {
                 if (parentData.textures != null)
                     textures.putAll(parentData.textures);
@@ -93,9 +95,12 @@ public final class JsonModel extends Model {
                     elements.clear();
                     elements.addAll(parentData.elements);
                 }
+                if (parentData.gui_light != null)
+                    guiLight.set(parentData.gui_light);
             });
             data.textures = textures;
             data.elements = elements;
+            data.gui_light = guiLight.get();
             ImmutableMap.Builder<String, Atlas.Sprite> texturesBuilder = ImmutableMap.builder();
             data.textures.forEach((textureId, texturePath) -> {
                 while (texturePath.startsWith("#")) texturePath = data.textures.get(texturePath.substring(1));

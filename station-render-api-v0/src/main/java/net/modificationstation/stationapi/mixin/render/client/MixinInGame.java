@@ -27,6 +27,6 @@ public class MixinInGame extends DrawableHelper {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void showCurrentRenderer(float flag, boolean i, int j, int par4, CallbackInfo ci, ScreenScaler var5, int var6, int var7, TextRenderer textRenderer) {
-        drawTextWithShadow(textRenderer, "[" + MODID.getName() + "] Current render plugin: " + RenderPlugin.PLUGIN, 2, 96, 14737632);
+        drawTextWithShadow(textRenderer, "[" + MODID.getName() + "] Active render plugin: " + RenderPlugin.PLUGIN, 2, 98, 14737632);
     }
 }

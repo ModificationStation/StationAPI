@@ -1,6 +1,11 @@
 package net.modificationstation.stationapi.impl.client.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public enum GuiLightType {
 
-    SIDE, FRONT
+    @SerializedName("side")
+    SIDE,
+    @SerializedName("front")
+    FRONT
 }

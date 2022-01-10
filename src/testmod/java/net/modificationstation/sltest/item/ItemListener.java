@@ -19,7 +19,7 @@ public class ItemListener {
         testItem = new ModdedItem(of(MODID, "test_item")).setTranslationKey(MODID, "testItem"); //8475
         testMaterial = ToolMaterialFactory.create("testMaterial", 3, Integer.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE - 2);
         testPickaxe = new ModdedPickaxe(of(MODID, "test_pickaxe"), testMaterial).setTranslationKey(MODID, "testPickaxe"); //8476
-        testNBTItem = new NBTItem(of(MODID, "nbt_item")).setMaxStackSize(1).setTranslationKey(MODID, "nbt_item"); //8477
+        testNBTItem = new NBTItem(of(MODID, "nbt_item")).setTranslationKey(MODID, "nbt_item"); //8477
         testModelItem = new ModelItem(of(MODID, "model_item")).setMaxStackSize(1).setTranslationKey(MODID, "idkSomething");
 
         TagRegistry.INSTANCE.register(Identifier.of("items/tools/pickaxes/testpickaxe"), (e) -> e.itemId == testPickaxe.id);

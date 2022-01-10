@@ -12,8 +12,7 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = CustomAtlasProvider.class)
 public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider, BlockToolLogic {
