@@ -5,6 +5,7 @@ import net.modificationstation.stationapi.api.item.tool.ToolLevel;
 
 import java.util.*;
 
+@Deprecated
 public interface BlockMiningLevel {
     int getBlockLevel(int meta, ItemInstance itemInstance);
 
