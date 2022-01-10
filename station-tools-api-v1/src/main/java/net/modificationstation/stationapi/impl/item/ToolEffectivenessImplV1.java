@@ -16,15 +16,7 @@ public class ToolEffectivenessImplV1 {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void isEffective(IsItemEffectiveOnBlockEvent event) {
-        event.effective = event.effective || ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> {
-            return TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> {
-                return predicates.stream().anyMatch(predicate -> {
-                    System.out.println(predicate.test(event.itemInstance));
-                    return predicate.test(event.itemInstance);
-                });
-            }).orElse(false);
-        });
-
+        event.effective = event.effective || ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> predicates.stream().anyMatch(predicate -> predicate.test(event.itemInstance))).orElse(false));
     }
 
     @EventListener(priority = ListenerPriority.HIGH)
