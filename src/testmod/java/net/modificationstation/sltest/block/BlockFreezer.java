@@ -34,7 +34,7 @@ public class BlockFreezer extends TemplateBlockWithEntity
 
     protected BlockFreezer(Identifier blockID)
     {
-        super(blockID, Material.GLASS);
+        super(blockID, Material.SNOW);
         FrozenRand = new Random();
     }
 

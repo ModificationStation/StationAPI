@@ -2,9 +2,10 @@ package net.modificationstation.stationapi.impl.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
-import net.modificationstation.stationapi.api.BlockBaseAccessor;
+import net.modificationstation.stationapi.api.BlockToolLogic;
 import net.modificationstation.stationapi.api.event.item.IsItemEffectiveOnBlockEvent;
 import net.modificationstation.stationapi.api.event.item.ItemStrengthOnBlockEvent;
+import net.modificationstation.stationapi.api.item.IsItemInstanceEffectiveOnMeta;
 import net.modificationstation.stationapi.api.item.tool.ToolLevel;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -15,7 +16,7 @@ public class ToolEffectivenessImplV1 {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void isEffective(IsItemEffectiveOnBlockEvent event) {
-        event.effective = event.effective || ((BlockBaseAccessor) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> {
+        event.effective = event.effective || ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> {
             return TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> {
                 return predicates.stream().anyMatch(predicate -> {
                     System.out.println(predicate.test(event.itemInstance));
@@ -28,7 +29,7 @@ public class ToolEffectivenessImplV1 {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void getStrength(ItemStrengthOnBlockEvent event) {
-        if (event.itemInstance.getType() instanceof ToolLevel) {
+        if (event.itemInstance.getType() instanceof ToolLevel && IsItemInstanceEffectiveOnMeta.cast(event.itemInstance).isEffectiveOn(event.block, event.meta)) {
             event.strength = ((ToolLevel) event.itemInstance.getType()).getMaterial().getMiningSpeed();
         }
     }

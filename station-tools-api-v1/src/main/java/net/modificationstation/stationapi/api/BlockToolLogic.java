@@ -6,7 +6,7 @@ import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.util.List;
 
-public interface BlockBaseAccessor {
+public interface BlockToolLogic {
 
     BlockBase mineableBy(Identifier toolTag, int level);
     List<BiTuple<Identifier, Integer>> getToolTagEffectiveness();

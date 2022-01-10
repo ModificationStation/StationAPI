@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.mixin.metablock;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
+import net.minecraft.item.tool.ToolBase;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.item.IsItemEffectiveOnBlockEvent;
 import net.modificationstation.stationapi.api.event.item.ItemStrengthOnBlockEvent;
