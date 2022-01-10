@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.tools;
 
+import net.minecraft.item.ItemInstance;
 import net.minecraft.item.tool.Sword;
 import net.minecraft.item.tool.ToolMaterial;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,13 +18,16 @@ public class MixinSword implements net.modificationstation.stationapi.api.item.t
         toolMaterial = arg;
     }
 
-    @Override
     public int getToolLevel() {
         return toolMaterial.getMiningLevel();
     }
 
-    @Override
     public ToolMaterial getMaterial() {
         return toolMaterial;
+    }
+
+    @Override
+    public ToolMaterial getMaterial(ItemInstance itemInstance) {
+        return null;
     }
 }

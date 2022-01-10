@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.tools;
 
+import net.minecraft.item.ItemInstance;
 import net.minecraft.item.tool.ToolBase;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationapi.api.item.tool.ToolLevel;
@@ -12,13 +13,16 @@ public class MixinToolBase implements ToolLevel {
     @Shadow
     protected ToolMaterial toolMaterial;
 
-    @Override
     public int getToolLevel() {
         return toolMaterial.getMiningLevel();
     }
 
-    @Override
     public ToolMaterial getMaterial() {
         return toolMaterial;
+    }
+
+    @Override
+    public ToolMaterial getMaterial(ItemInstance itemInstance) {
+        return null;
     }
 }
