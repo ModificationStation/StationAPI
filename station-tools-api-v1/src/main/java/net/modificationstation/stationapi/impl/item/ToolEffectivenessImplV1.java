@@ -22,7 +22,7 @@ public class ToolEffectivenessImplV1 {
     @EventListener(priority = ListenerPriority.HIGH)
     private static void getStrength(ItemStrengthOnBlockEvent event) {
         if (event.itemInstance.getType() instanceof ToolLevel && IsItemInstanceEffectiveOnMeta.cast(event.itemInstance).isEffectiveOn(event.block, event.meta)) {
-            event.strength = ((ToolLevel) event.itemInstance.getType()).getMaterial().getMiningSpeed();
+            event.strength = ((ToolLevel) event.itemInstance.getType()).getMaterial(event.itemInstance).getMiningSpeed();
         }
     }
 }
