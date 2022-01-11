@@ -20,8 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(ContainerBase.class)
 public class MixinContainerBase {
 
-    // TODO: fix stacks with different nbt merging on-click
-
     @Inject(
             method = "clickSlot(IIZLnet/minecraft/entity/player/PlayerBase;)Lnet/minecraft/item/ItemInstance;",
             at = @At(
@@ -53,7 +51,7 @@ public class MixinContainerBase {
             return instance.itemId;
         else {
             notchGodDamnit = true;
-            return 0;
+            return Integer.MIN_VALUE;
         }
     }
 
@@ -72,7 +70,7 @@ public class MixinContainerBase {
     private int fixStackableNBTs(ItemInstance instance) {
         if (notchGodDamnit) {
             notchGodDamnit = false;
-            return 0;
+            return Integer.MAX_VALUE;
         } else
             return instance.itemId;
     }
