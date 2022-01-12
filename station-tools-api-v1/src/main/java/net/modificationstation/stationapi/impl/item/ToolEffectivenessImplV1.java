@@ -55,10 +55,7 @@ public class ToolEffectivenessImplV1 {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void getStrength(ItemStrengthOnBlockEvent event) {
-        if (!(VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getIdentifier(event.itemInstance.getType())) &&
-                BlockRegistry.INSTANCE.getIdentifier(event.block).modID.toString().equals("minecraft")) &&
-                event.itemInstance.getType() instanceof ToolLevel &&
-                ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> predicates.stream().anyMatch(predicate -> predicate.test(event.itemInstance))).orElse(false))) {
+        if (!(VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getIdentifier(event.itemInstance.getType())) && BlockRegistry.INSTANCE.getIdentifier(event.block).modID.toString().equals("minecraft")) && event.itemInstance.getType() instanceof ToolLevel && ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> predicates.stream().anyMatch(predicate -> predicate.test(event.itemInstance))).orElse(false))) {
             event.strength = ((ToolLevel) event.itemInstance.getType()).getMaterial(event.itemInstance).getMiningSpeed();
         }
     }
