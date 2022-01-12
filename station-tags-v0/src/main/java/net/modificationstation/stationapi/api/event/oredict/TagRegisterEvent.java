@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.event.oredict;
 
 import net.mine_diver.unsafeevents.Event;
 
-public class OreDictRegisterEvent extends Event {
+public class TagRegisterEvent extends Event {
 
     @Override
     protected int getEventID() {

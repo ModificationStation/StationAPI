@@ -4,7 +4,7 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.event.oredict.OreDictRegisterEvent;
+import net.modificationstation.stationapi.api.event.oredict.TagRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -16,10 +16,10 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
  * @author calmilamsy
  */
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
-public class OreDictItemInit {
+public class TagItemInit {
 
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void registerItems(OreDictRegisterEvent event) {
+    private static void registerItems(TagRegisterEvent event) {
 
         // Basic Items
         addItem0Damage("items/sticks/wood", ItemBase.stick);

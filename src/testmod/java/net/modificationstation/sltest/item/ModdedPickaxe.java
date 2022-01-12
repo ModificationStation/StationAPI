@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.item.tool.TemplatePickaxe;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
-public class ModdedPickaxe extends TemplatePickaxe {//implements ToolLevel {
+public class ModdedPickaxe extends TemplatePickaxe {
 
     public ModdedPickaxe(Identifier identifier, ToolMaterial material) {
         super(identifier, material);
@@ -29,15 +29,5 @@ public class ModdedPickaxe extends TemplatePickaxe {//implements ToolLevel {
             return true;
         } else
             return false;
-    }
-
-    //@Override
-    public int getToolLevel() {
-        return 3;
-    }
-
-    //@Override
-    public ToolMaterial getMaterial() {
-        return toolMaterial;
     }
 }

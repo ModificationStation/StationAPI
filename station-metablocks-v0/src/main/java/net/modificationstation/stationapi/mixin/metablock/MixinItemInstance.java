@@ -22,6 +22,8 @@ public abstract class MixinItemInstance implements IsItemInstanceEffectiveOnMeta
 
     @Shadow public abstract float getStrengthOnBlock(BlockBase arg);
 
+    @Shadow public int itemId;
+
     @Override
     public boolean isEffectiveOn(BlockBase tile, int meta) {
         this.meta = meta;
@@ -32,7 +34,7 @@ public abstract class MixinItemInstance implements IsItemInstanceEffectiveOnMeta
 
     @Redirect(method = "isEffectiveOn(Lnet/minecraft/block/BlockBase;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemBase;isEffectiveOn(Lnet/minecraft/block/BlockBase;)Z"))
     private boolean isEffectiveOn(ItemBase itemBase, BlockBase tile) {
-        return meta == null ? itemBase.isEffectiveOn(tile) : StationAPI.EVENT_BUS.post(new IsItemEffectiveOnBlockEvent((ItemInstance) (Object) this, tile, meta, ((IsItemEffectiveOnMeta) itemBase).isEffectiveOn((ItemInstance) (Object) this, tile, meta))).effective;
+        return StationAPI.EVENT_BUS.post(new IsItemEffectiveOnBlockEvent((ItemInstance) (Object) this, tile, meta == null? 0 : meta, meta == null ? itemBase.isEffectiveOn(tile) : ((IsItemEffectiveOnMeta) itemBase).isEffectiveOn((ItemInstance) (Object) this, tile, meta))).effective;
     }
 
     @Override

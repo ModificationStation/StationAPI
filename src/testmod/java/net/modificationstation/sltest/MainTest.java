@@ -2,7 +2,7 @@ package net.modificationstation.sltest;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.event.oredict.OreDictRegisterEvent;
+import net.modificationstation.stationapi.api.event.oredict.TagRegisterEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
 
@@ -12,7 +12,7 @@ import java.util.function.*;
 public class MainTest {
 
     @EventListener
-    public void onInitialize(OreDictRegisterEvent event) {
+    public void onInitialize(TagRegisterEvent event) {
         SLTest.LOGGER.info("==================================================================================================");
         Identifier oreDictToTest = Identifier.of("items/tools/pickaxes/");
         SLTest.LOGGER.info(oreDictToTest);

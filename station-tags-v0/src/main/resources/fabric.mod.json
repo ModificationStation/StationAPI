@@ -21,8 +21,8 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.tags.OreDictItemInit",
-      "net.modificationstation.stationapi.impl.tags.OreDictBlockInit"
+      "net.modificationstation.stationapi.impl.tags.TagItemInit",
+      "net.modificationstation.stationapi.impl.tags.TagBlockInit"
     ]
   },
   "mixins": [

@@ -4,7 +4,7 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.event.oredict.OreDictRegisterEvent;
+import net.modificationstation.stationapi.api.event.oredict.TagRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -16,10 +16,10 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
  * @author calmilamsy
  */
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
-public class OreDictBlockInit {
+public class TagBlockInit {
 
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void registerBlockOreDict(OreDictRegisterEvent event) {
+    private static void registerBlockOreDict(TagRegisterEvent event) {
 
         // Basic Blocks
         addBlock0Damage("blocks/terrain/stone", BlockBase.STONE);

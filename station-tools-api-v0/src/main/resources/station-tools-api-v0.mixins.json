@@ -9,8 +9,7 @@
     "MixinPickaxe",
     "MixinSheep",
     "MixinShovel",
-    "MixinSword",
-    "MixinToolBase"
+    "MixinSword"
   ],
   "server": [
   ],

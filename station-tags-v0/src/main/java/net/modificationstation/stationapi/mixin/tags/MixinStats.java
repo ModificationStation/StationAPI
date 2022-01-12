@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.tags;
 
 import net.minecraft.stat.Stats;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.event.oredict.OreDictRegisterEvent;
+import net.modificationstation.stationapi.api.event.oredict.TagRegisterEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,6 +13,6 @@ public class MixinStats {
 
     @Inject(method = "setupCrafting()V", at = @At(value = "NEW", target = "()Ljava/util/HashSet;"))
     private static void beforeRecipeStats(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new OreDictRegisterEvent());
+        StationAPI.EVENT_BUS.post(new TagRegisterEvent());
     }
 }
