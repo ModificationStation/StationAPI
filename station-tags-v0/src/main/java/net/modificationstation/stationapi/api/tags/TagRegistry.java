@@ -40,7 +40,7 @@ public class TagRegistry extends Registry<List<Predicate<ItemInstance>>> {
     @Override
     public @NotNull Optional<List<Predicate<ItemInstance>>> get(@NotNull Identifier identifier) {
         if (identifier.id.endsWith("/")) {
-            return Optional.of(values.entrySet().stream().filter(id -> id.getKey().id.startsWith(identifier.id)).map(Map.Entry::getValue).flatMap(Collection::stream).collect(Collectors.toList()));
+            return Optional.of(values.entrySet().stream().filter(id -> id.getKey().id.startsWith(identifier.id) || id.getKey().id.equals(identifier.id.substring(0, identifier.id.length()-1))).map(Map.Entry::getValue).flatMap(Collection::stream).collect(Collectors.toList()));
         }
         return super.get(identifier);
     }
