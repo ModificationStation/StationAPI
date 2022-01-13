@@ -27,17 +27,17 @@ public class TagItemInit {
         addItem0Damage("items/string", ItemBase.string);
         addItem0Damage("items/feather", ItemBase.feather);
         addItem0Damage("items/gunpowder", ItemBase.gunpowder);
-        addItem0Damage("items/seeds/wheat", ItemBase.wheat);
+        addItem0Damage("items/seeds/wheat", ItemBase.seeds);
+        addItem0Damage("items/wheat", ItemBase.seeds);
         addItem0Damage("blocks/signs/wood", ItemBase.sign);
         addItem0Damage("blocks/doors/wood", ItemBase.woodDoor);
         addItem0Damage("blocks/doors/iron", ItemBase.ironDoor);
-        addItem0Damage("items/redstone", ItemBase.redstoneDust);
         addItem0Damage("items/snowball", ItemBase.snowball);
         addItem0Damage("items/boat", ItemBase.boat);
         addItem0Damage("items/leather", ItemBase.leather);
         addItem0Damage("items/brick", ItemBase.brick);
         addItem0Damage("items/clay", ItemBase.clay);
-        addItem0Damage("blocks/canes", ItemBase.sugarCanes);
+        addItem0Damage("blocks/plants/canes/sugar", ItemBase.sugarCanes);
         addItem0Damage("items/paper", ItemBase.paper);
         addItem0Damage("items/book", ItemBase.book);
         addItem0Damage("items/slime", ItemBase.slimeball);
@@ -51,6 +51,7 @@ public class TagItemInit {
         addItem0Damage("blocks/redstone/repeater", ItemBase.redstoneRepeater);
 
         // Ingots and Minerals
+        addItem0Damage("items/minerals/redstone", ItemBase.redstoneDust);
         addItem0Damage("items/minerals/coal", ItemBase.coal);
         addItem("items/minerals/coal/charcoal", ItemBase.coal, 1);
         addItem0Damage("items/minerals/diamond", ItemBase.diamond);
