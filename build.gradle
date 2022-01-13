@@ -6,7 +6,6 @@ buildscript {
 		}
 		gradlePluginPortal()
 		mavenCentral()
-		jcenter()
 		maven {
 			name = "Jitpack"
 			url 'https://jitpack.io/'
@@ -188,7 +187,6 @@ allprojects {
 		mavenLocal()
 		gradlePluginPortal()
 		mavenCentral()
-		jcenter()
 		maven {
 			name = "Jitpack"
 			url 'https://jitpack.io/'
@@ -374,7 +372,7 @@ publishing {
 		mavenLocal()
 		if (project.hasProperty("glass_maven_username")) {
 			maven {
-				url = "https://maven.glass-launcher.net/repo/"
+				url = "${glass_maven_url}"
 				credentials {
 					username "${glass_maven_username}"
 					password "${glass_maven_password}"
