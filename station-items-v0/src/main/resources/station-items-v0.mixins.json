@@ -6,6 +6,7 @@
   "mixins": [
     "ItemBaseAccessor",
     "MixinContainerBase",
+    "MixinInventoryUpdate0x68S2CPacket",
     "MixinItemBase",
     "MixinItemInstance",
     "MixinPlayerBase",

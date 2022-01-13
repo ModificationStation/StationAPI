@@ -13,21 +13,21 @@ public class CraftingRegistry {
 
     @API
     public static void addShapedRecipe(ItemInstance itemInstance, Object... o) {
-        ((RecipeRegistryAccessor) RecipeRegistry.getInstance()).invokeAddShapedRecipe(itemInstance, o);
+        ((RecipeRegistryAccessor) RecipeRegistry.getInstance()).stationapi$addShapedRecipe(itemInstance, o);
     }
 
     @API
     public static void addShapelessRecipe(ItemInstance itemInstance, Object... o) {
-        ((RecipeRegistryAccessor) RecipeRegistry.getInstance()).invokeAddShapelessRecipe(itemInstance, o);
+        ((RecipeRegistryAccessor) RecipeRegistry.getInstance()).stationapi$addShapelessRecipe(itemInstance, o);
     }
 
     @API
     public static void addShapelessOreDictRecipe(ItemInstance itemInstance, Object... o) {
-        ((RecipeRegistryAccessor) RecipeRegistry.getInstance()).getRecipes().add(new ShapelessOreDictRecipe(itemInstance, Arrays.asList(o)));
+        ((RecipeRegistryAccessor) RecipeRegistry.getInstance()).stationapi$getRecipes().add(new ShapelessOreDictRecipe(itemInstance, Arrays.asList(o)));
     }
 
     @API
     public static void addShapedOreDictRecipe(ItemInstance itemInstance, Object... o) {
-        ((RecipeRegistryAccessor) RecipeRegistry.getInstance()).getRecipes().add(new ShapedOreDictRecipe(itemInstance, Arrays.asList(o)));
+        ((RecipeRegistryAccessor) RecipeRegistry.getInstance()).stationapi$getRecipes().add(new ShapedOreDictRecipe(itemInstance, Arrays.asList(o)));
     }
 }

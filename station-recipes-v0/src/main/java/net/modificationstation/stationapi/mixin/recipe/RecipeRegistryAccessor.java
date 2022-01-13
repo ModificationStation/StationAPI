@@ -12,12 +12,12 @@ import java.util.*;
 @Mixin(RecipeRegistry.class)
 public interface RecipeRegistryAccessor {
 
-    @Invoker
-    void invokeAddShapedRecipe(ItemInstance itemInstance, Object... o);
+    @Invoker("addShapedRecipe")
+    void stationapi$addShapedRecipe(ItemInstance itemInstance, Object... o);
 
-    @Invoker
-    void invokeAddShapelessRecipe(ItemInstance itemInstance, Object... o);
+    @Invoker("addShapelessRecipe")
+    void stationapi$addShapelessRecipe(ItemInstance itemInstance, Object... o);
 
-    @Accessor
-    List<Recipe> getRecipes();
+    @Accessor("recipes")
+    List<Recipe> stationapi$getRecipes();
 }
