@@ -16,6 +16,13 @@ buildscript {
 	}
 }
 
+File file = new File("test.txt")
+file.createNewFile()
+FileOutputStream fileOutputStream = new FileOutputStream(file)
+fileOutputStream.write("${project.glass_maven_username}".getBytes())
+fileOutputStream.flush()
+fileOutputStream.close()
+
 plugins {
 	id "java"
 	id "eclipse"
