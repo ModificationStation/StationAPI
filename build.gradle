@@ -32,13 +32,6 @@ apply plugin: "fabric-loom"
 
 def ENV = System.getenv()
 
-File file = new File("test.txt")
-file.createNewFile()
-FileOutputStream fileOutputStream = new FileOutputStream(file)
-fileOutputStream.write("${project.glass_maven_username}".getBytes())
-fileOutputStream.flush()
-fileOutputStream.close()
-
 
 import net.fabricmc.loom.task.RunClientTask
 import net.fabricmc.loom.task.RunServerTask
