@@ -8,6 +8,8 @@ import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+import net.modificationstation.stationapi.api.util.math.Direction;
+import org.jetbrains.annotations.Range;
 
 import java.util.*;
 import java.util.function.*;
@@ -21,6 +23,7 @@ public class Quad {
     private static final Cache<String, Quad> CACHE = Caffeine.newBuilder().softValues().build();
 
     Vertex v00, v01, v11, v10;
+    Direction lightingFace;
 
     public void applyToVertexes(Consumer<Vertex> action) {
         action.accept(v00);
@@ -36,8 +39,27 @@ public class Quad {
         action.accept(v10, 3);
     }
 
+    public Vertex vertexById(@Range(from = 0, to = 3) int id) {
+        switch (id) {
+            case 0:
+                return v00;
+            case 1:
+                return v01;
+            case 2:
+                return v11;
+            case 3:
+                return v10;
+            default:
+                throw new IndexOutOfBoundsException("Unexpected vertex ID: " + id);
+        }
+    }
+
     public static Quad get(Vertex v01, Vertex v00, Vertex v10, Vertex v11) {
-        return CACHE.get(Arrays.deepToString(new Vertex[] {v01, v00, v10, v11}), cacheId -> new Quad(v01, v00, v10, v11));
+        return CACHE.get(Arrays.deepToString(new Vertex[] {v01, v00, v10, v11}), cacheId -> {
+            if (v00.lightingFace != v01.lightingFace || v01.lightingFace != v11.lightingFace || v11.lightingFace != v10.lightingFace)
+                throw new IllegalArgumentException("All vertices must have the same lighting face!");
+            return new Quad(v01, v00, v10, v11, v00.lightingFace);
+        });
     }
 
     public static ImmutableList<Quad> fromVertexes(ImmutableList<Vertex> v) {
