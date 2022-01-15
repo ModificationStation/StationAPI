@@ -390,7 +390,7 @@ publishing {
 		}
 	}
 
-	setupRepositories()
+	setupRepositories(repositories)
 }
 
 subprojects.each { remapJar.dependsOn("${it.path}:remapJar") }
