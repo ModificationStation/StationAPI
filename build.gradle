@@ -215,6 +215,11 @@ allprojects {
 			}
 		}
 	}
+
+	task sourcesJar(type: Jar, dependsOn: classes) {
+		archiveClassifier = "sources"
+		from sourceSets.main.allSource
+	}
 }
 
 archivesBaseName = project.archives_base_name
