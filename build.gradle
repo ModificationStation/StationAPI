@@ -21,17 +21,12 @@ plugins {
 	id "eclipse"
 	id "idea"
 	id "maven-publish"
-//	id "fabric-loom" version "0.5.43" apply false
-//	id "net.minecrell.licenser" version "0.4.1"
 	id "org.ajoberstar.grgit" version "3.1.1"
 	id "com.matthewprenger.cursegradle" version "1.4.0"
 	id "com.modrinth.minotaur" version "1.1.0"
 }
 
 apply plugin: "fabric-loom"
-
-def ENV = System.getenv()
-
 
 import net.fabricmc.loom.task.RunClientTask
 import net.fabricmc.loom.task.RunServerTask
@@ -220,11 +215,6 @@ allprojects {
 			}
 		}
 	}
-
-	task sourcesJar(type: Jar, dependsOn: classes) {
-		archiveClassifier = "sources"
-		from sourceSets.main.allSource
-	}
 }
 
 archivesBaseName = project.archives_base_name
@@ -266,14 +256,6 @@ tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-//task sourcesJar(type: Jar, dependsOn: classes) {
-//	classifier = "sources"
-//	from sourceSets.main.allSource
-//}
-
 javadoc {
 	options {
 		source = "8"
@@ -313,26 +295,10 @@ subprojects {
 		testmodCompile sourceSets.main.output
 	}
 
-	task remapMavenJar(type: Copy, dependsOn: remapJar) {
-		afterEvaluate {
-			from("${project.buildDir}/libs/$archivesBaseName-${version}.jar")
-			into("${project.buildDir}/libs/")
-			rename { String fn -> "$archivesBaseName-${version}-maven.jar" }
-		}
-	}
-
 	publishing {
 		publications {
 			mavenJava(MavenPublication) {
-				afterEvaluate {
-					artifact(file("${project.buildDir}/libs/$archivesBaseName-${version}-maven.jar")) {
-						builtBy remapMavenJar
-					}
-
-					artifact(sourcesJar) {
-						builtBy remapSourcesJar
-					}
-				}
+				from components.java
 			}
 		}
 
@@ -340,69 +306,66 @@ subprojects {
 	}
 
 	javadoc.enabled = false
+
+	afterEvaluate {
+		// Disable the gen sources task on sub projects
+		genSourcesWithFernFlower.enabled = false
+		genSourcesWithCfr.enabled = false
+		unpickJar.enabled = false
+	}
 }
 
 task remapMavenJar(type: net.fabricmc.loom.task.RemapJarTask, dependsOn: jar) {
 	afterEvaluate {
-		input = file("${project.buildDir}/libs/${archivesBaseName}-${version}-dev.jar")
+		input = jar.archiveFile
 		archiveName = "${archivesBaseName}-${version}-maven.jar"
 		addNestedDependencies = false
 	}
 }
 
+tasks.build.dependsOn(tasks.javadocJar)
+tasks.build.dependsOn(tasks.remapMavenJar)
+
 void setupRepositories(RepositoryHandler repositories) {
 	//repositories.mavenLocal() // uncomment for testing
-	def ENV = System.getenv()
-	if (ENV.MAVEN_URL) {
+	if (project.glass_maven_url) {
 		repositories.maven {
-			url ENV.MAVEN_URL
+			url project.glass_maven_url
 			credentials {
-				username ENV.MAVEN_USERNAME
-				password ENV.MAVEN_PASSWORD
+				username project.glass_maven_username
+				password project.glass_maven_password
 			}
 		}
 	}
 }
 
-tasks.publishToMavenLocal.dependsOn(tasks.build)
-tasks.build.dependsOn(tasks.javadocJar)
-
 publishing {
-	repositories {
-		mavenLocal()
-		if (project.hasProperty("glass_maven_username") && project.hasProperty("glass_maven_password") && project.hasProperty("glass_maven_url")) {
-			maven {
-				url = "${glass_maven_url}"
-				credentials {
-					username "${glass_maven_username}"
-					password "${glass_maven_password}"
-				}
-			}
-		}
-	}
+//	repositories {
+//		mavenLocal()
+//		if (project.hasProperty("glass_maven_username") && project.hasProperty("glass_maven_password") && project.hasProperty("glass_maven_url")) {
+//			maven {
+//				url = "${glass_maven_url}"
+//				credentials {
+//					username "${glass_maven_username}"
+//					password "${glass_maven_password}"
+//				}
+//			}
+//		}
+//	}
 
 	publications {
 		mavenJava(MavenPublication) {
 			artifactId project.archives_base_name
-			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}.jar") {
-				classifier null
-				builtBy remapJar
-			}
 
-			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-dev.jar") {
-				classifier 'dev'
-				builtBy remapJar
-			}
-
-			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-javadoc.jar") {
-				classifier 'javadoc'
-				builtBy javadocJar
-			}
-
-			artifact(file("${project.buildDir}/libs/$archivesBaseName-${version}-maven.jar")) {
-				classifier 'maven'
+			artifact(remapMavenJar) {
 				builtBy remapMavenJar
 			}
+
+			artifact(sourcesJar) {
+				builtBy remapSourcesJar
+			}
+
+			artifact javadocJar
 
 			pom.withXml {
 				asNode().dependencies.dependency.each { dep ->
@@ -410,9 +373,19 @@ publishing {
 						assert dep.parent().remove(dep)
 					}
 				}
+				def depsNode = asNode().appendNode("dependencies")
+				subprojects.each {
+					def depNode = depsNode.appendNode("dependency")
+					depNode.appendNode("groupId", it.group)
+					depNode.appendNode("artifactId", it.name)
+					depNode.appendNode("version", it.version)
+					depNode.appendNode("scope", "compile")
+				}
 			}
 		}
 	}
+
+	setupRepositories()
 }
 
 subprojects.each { remapJar.dependsOn("${it.path}:remapJar") }
