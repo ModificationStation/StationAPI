@@ -366,10 +366,8 @@ publishing {
 			artifact javadocJar
 
 			pom.withXml {
-				asNode().dependencies.dependency.each { dep ->
-					if(dep.artifactId.last().value().last().toLowerCase() in ["cursed-fabric-loader"]) {
-						assert dep.parent().remove(dep)
-					}
+				p -> p.dependencies = p.dependencies.findAll {
+					dep -> dep.artifactId != "cursed-fabric-loader"
 				}
 				def depsNode = asNode().appendNode("dependencies")
 				subprojects.each {
