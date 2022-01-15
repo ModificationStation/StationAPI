@@ -367,7 +367,7 @@ publishing {
 
 			pom.withXml {
 				def depsNode = asNode().appendNode("dependencies")
-				depsNode.dependencies = depsNode.dependencies.findAll {
+				depsNode = depsNode.findAll {
 					dep -> dep.artifactId != "cursed-fabric-loader"
 				}
 				subprojects.each {
