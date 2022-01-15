@@ -366,7 +366,7 @@ publishing {
 			artifact javadocJar
 
 			pom.withXml {
-				def depsNode = asNode().appendNode("dependencies")
+				def depsNode = asNode().dependencies
 				depsNode = depsNode.findAll {
 					dep -> dep.artifactId != "cursed-fabric-loader"
 				}
