@@ -374,8 +374,10 @@ publishing {
 					depNode.appendNode("version", it.version)
 					depNode.appendNode("scope", "compile")
 				}
-				depsNode = depsNode.findAll {
-					dep -> dep.artifactId != "cursed-fabric-loader"
+				depsNode.dependencies.each { dep ->
+					if(dep.artifactId.last().value().last() in ["cursed-fabric-loader"]) {
+						assert dep.parent().remove(dep)
+					}
 				}
 			}
 		}
