@@ -375,6 +375,7 @@ publishing {
 					depNode.appendNode("scope", "compile")
 				}
 				depsNode.dependencies.each { dep ->
+					this.logger.lifecycle("Found dep: " + dep.artifactId.last().value().last())
 					if(dep.artifactId.last().value().last() in ["cursed-fabric-loader"]) {
 						assert dep.parent().remove(dep)
 					}
