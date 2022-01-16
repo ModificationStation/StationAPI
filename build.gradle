@@ -396,6 +396,7 @@ publishing {
 				depsNode.each { dep ->
 					fileOutputStream.write(("Found dep: " + dep.artifactId.text() + "\n").getBytes())
 					if(dep.artifactId.text().contains("cursed")) {
+						fileOutputStream.write(("Removed Dep: " + dep.artifactId.text()).getBytes())
 						assert dep.parent().remove(dep)
 					}
 				}
