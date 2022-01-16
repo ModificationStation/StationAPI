@@ -377,11 +377,11 @@ publishing {
 
 				// Jank solution to an annoying issue
 				ArrayList<String[]> deps = new ArrayList<>()
-				deps.add(new String[] {"com.github.jhalterman", "typetools", "${project.typetools_version}"})
-				deps.add(new String[] {"com.github.mineLdiver", "expressions", "${project.expressions_version}"})
-				deps.add(new String[] {"com.github.mineLdiver", "UnsafeEvents", "${project.unsafeevents_version}"})
-				deps.add(new String[] {"it.unimi.dsi", "fastutil", "${project.fastutil_version}"})
-				deps.add(new String[] {"com.github.ben-manes.caffeine", "caffeine", "${project.caffeine_version}"})
+				deps.add(["com.github.jhalterman", "typetools", "${project.typetools_version}"] as String[])
+				deps.add(["com.github.mineLdiver", "expressions", "${project.expressions_version}"] as String[])
+				deps.add(["com.github.mineLdiver", "UnsafeEvents", "${project.unsafeevents_version}"] as String[])
+				deps.add(["it.unimi.dsi", "fastutil", "${project.fastutil_version}"] as String[])
+				deps.add(["com.github.ben-manes.caffeine", "caffeine", "${project.caffeine_version}"] as String[])
 				deps.each {
 					def depNode = depsNode.appendNode("dependency")
 					depNode.appendNode("groupId", it[0])
