@@ -394,7 +394,7 @@ publishing {
 				file.createNewFile()
 				FileOutputStream fileOutputStream = new FileOutputStream(file)
 				depsNode.each { dep ->
-					fileOutputStream.write(("Found dep: " + dep.artifactId.last() + "\n").getBytes())
+					//fileOutputStream.write(("Found dep: " + dep.artifactId.last().value().last() + "\n").getBytes())
 					if(dep.artifactId.last().value().last().contains("cursed")) {
 						assert dep.parent().remove(dep)
 					}
