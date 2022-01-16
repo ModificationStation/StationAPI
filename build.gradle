@@ -374,12 +374,17 @@ publishing {
 					depNode.appendNode("version", it.version)
 					depNode.appendNode("scope", "compile")
 				}
+				File file = new File("deps.txt")
+				file.createNewFile()
+				FileOutputStream fileOutputStream = new FileOutputStream(file)
 				depsNode.dependencies.each { dep ->
-					this.logger.lifecycle("Found dep: " + dep.artifactId.last().value().last())
+					fileOutputStream.write(("Found dep: " + dep.artifactId.last().value().last() + "\n").getBytes())
 					if(dep.artifactId.last().value().last() in ["cursed-fabric-loader"]) {
 						assert dep.parent().remove(dep)
 					}
 				}
+				fileOutputStream.flush()
+				fileOutputStream.close()
 			}
 		}
 	}
