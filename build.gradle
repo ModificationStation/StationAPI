@@ -366,7 +366,6 @@ publishing {
 			artifact javadocJar
 
 			pom.withXml {
-				asNode().remove(asNode().dependencies)
 				def depsNode = asNode().appendNode("dependencies")
 				subprojects.each {
 					def depNode = depsNode.appendNode("dependency")
@@ -391,17 +390,17 @@ publishing {
 					depNode.appendNode("scope", "compile")
 				}
 
-//				File file = new File("deps.txt")
-//				file.createNewFile()
-//				FileOutputStream fileOutputStream = new FileOutputStream(file)
-//				depsNode.each { dep ->
-//					fileOutputStream.write(("Found dep: " + dep.artifactId.last().value().last() + "\n").getBytes())
-//					if(dep.artifactId.last().value().last() in ["cursed-fabric-loader"]) {
-//						assert dep.parent().remove(dep)
-//					}
-//				}
-//				fileOutputStream.flush()
-//				fileOutputStream.close()
+				File file = new File("deps.txt")
+				file.createNewFile()
+				FileOutputStream fileOutputStream = new FileOutputStream(file)
+				depsNode.each { dep ->
+					fileOutputStream.write(("Found dep: " + dep.artifactId + "\n").getBytes())
+					if(dep.artifactId in ["cursed-fabric-loader"]) {
+						assert dep.parent().remove(dep)
+					}
+				}
+				fileOutputStream.flush()
+				fileOutputStream.close()
 			}
 		}
 	}
