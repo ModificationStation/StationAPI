@@ -389,19 +389,6 @@ publishing {
 					depNode.appendNode("version", it[2])
 					depNode.appendNode("scope", "compile")
 				}
-
-				File file = new File("deps.txt")
-				file.createNewFile()
-				FileOutputStream fileOutputStream = new FileOutputStream(file)
-				depsNode.each { dep ->
-					fileOutputStream.write(("Found dep: " + dep.artifactId.text() + "\n").getBytes())
-					if(dep.artifactId.text().contains("cursed")) {
-						fileOutputStream.write(("Removed Dep: " + dep.artifactId.text()).getBytes())
-						assert dep.parent().remove(dep)
-					}
-				}
-				fileOutputStream.flush()
-				fileOutputStream.close()
 			}
 		}
 	}
