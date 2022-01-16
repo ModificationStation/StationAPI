@@ -374,17 +374,33 @@ publishing {
 					depNode.appendNode("version", it.version)
 					depNode.appendNode("scope", "compile")
 				}
-				File file = new File("deps.txt")
-				file.createNewFile()
-				FileOutputStream fileOutputStream = new FileOutputStream(file)
-				depsNode.each { dep ->
-					fileOutputStream.write(("Found dep: " + dep.artifactId.last().value().last() + "\n").getBytes())
-					if(dep.artifactId.last().value().last() in ["cursed-fabric-loader"]) {
-						assert dep.parent().remove(dep)
-					}
+
+				// Jank solution to an annoying issue
+				ArrayList<String[]> deps = new ArrayList<>()
+				deps.add(new String[] {"com.github.jhalterman", "typetools", "${project.typetools_version}"})
+				deps.add(new String[] {"com.github.mineLdiver", "expressions", "${project.expressions_version}"})
+				deps.add(new String[] {"com.github.mineLdiver", "UnsafeEvents", "${project.unsafeevents_version}"})
+				deps.add(new String[] {"it.unimi.dsi", "fastutil", "${project.fastutil_version}"})
+				deps.add(new String[] {"com.github.ben-manes.caffeine", "caffeine", "${project.caffeine_version}"})
+				deps.each {
+					def depNode = depsNode.appendNode("dependency")
+					depNode.appendNode("groupId", it[0])
+					depNode.appendNode("artifactId", it[1])
+					depNode.appendNode("version", it[2])
+					depNode.appendNode("scope", "compile")
 				}
-				fileOutputStream.flush()
-				fileOutputStream.close()
+
+//				File file = new File("deps.txt")
+//				file.createNewFile()
+//				FileOutputStream fileOutputStream = new FileOutputStream(file)
+//				depsNode.each { dep ->
+//					fileOutputStream.write(("Found dep: " + dep.artifactId.last().value().last() + "\n").getBytes())
+//					if(dep.artifactId.last().value().last() in ["cursed-fabric-loader"]) {
+//						assert dep.parent().remove(dep)
+//					}
+//				}
+//				fileOutputStream.flush()
+//				fileOutputStream.close()
 			}
 		}
 	}
