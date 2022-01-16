@@ -366,6 +366,7 @@ publishing {
 			artifact javadocJar
 
 			pom.withXml {
+				asNode().remove(asNode().dependencies)
 				def depsNode = asNode().appendNode("dependencies")
 				subprojects.each {
 					def depNode = depsNode.appendNode("dependency")
