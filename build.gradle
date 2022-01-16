@@ -305,6 +305,16 @@ subprojects {
 			mavenJava(MavenPublication) {
 				from components.java
 			}
+
+			pom.withXml {
+				def depsNode = asNode().appendNode("dependencies")
+				depsNode.dependencies.each { dep ->
+					this.logger.lifecycle("Found dep: " + dep.artifactId.last().value().last())
+					if(dep.artifactId.last().value().last() in ["cursed-fabric-loader"]) {
+						assert dep.parent().remove(dep)
+					}
+				}
+			}
 		}
 
 		setupRepositories(repositories)
