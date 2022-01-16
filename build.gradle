@@ -394,8 +394,8 @@ publishing {
 				file.createNewFile()
 				FileOutputStream fileOutputStream = new FileOutputStream(file)
 				depsNode.each { dep ->
-					fileOutputStream.write(("Found dep: " + dep.artifactId + "\n").getBytes())
-					if(dep.artifactId in ["cursed-fabric-loader"]) {
+					fileOutputStream.write(("Found dep: " + dep.artifactId.value + "\n").getBytes())
+					if(dep.artifactId.value in ["cursed-fabric-loader"]) {
 						assert dep.parent().remove(dep)
 					}
 				}
