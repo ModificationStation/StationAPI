@@ -326,7 +326,7 @@ tasks.build.dependsOn(tasks.remapMavenJar)
 
 void setupRepositories(RepositoryHandler repositories) {
 	//repositories.mavenLocal() // uncomment for testing
-	if (project.glass_maven_url) {
+	if (project.hasProperty("glass_maven_url")) {
 		repositories.maven {
 			url project.glass_maven_url
 			credentials {
