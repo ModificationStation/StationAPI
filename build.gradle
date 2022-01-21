@@ -61,23 +61,10 @@ def getBranch() {
 }
 
 def moduleDependencies(project, List<String> depNames) {
-    def deps = depNames.iterator().collect { project.dependencies.project(path: ":$it", configuration: 'dev') }
+    def deps = depNames.iterator().collect { project.dependencies.project(path: ":$it") }
     project.dependencies {
         deps.each {
             compile it
-        }
-    }
-    project.publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                pom.withXml {
-                    asNode().dependencies.dependency.each { dep ->
-                        if(dep.artifactId.last().value().last().toLowerCase() in ["cursed-fabric-loader"]) {
-                            assert dep.parent().remove(dep)
-                        }
-                    }
-                }
-            }
         }
     }
 }
@@ -88,8 +75,6 @@ allprojects {
 
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
-
-    group = "net.modificationstation.StationAPI.${project.mod_version}.submodule"
 
     sourceSets {
         testmod {
@@ -207,11 +192,11 @@ allprojects {
         }
 
         processResources {
-            inputs.property "version", project.version
+            inputs.property "version", project.mod_version
 
             from(sourceSets.main.resources.srcDirs) {
                 include "fabric.mod.json"
-                expand "version": project.version
+                expand "version": project.mod_version
             }
 
             from(sourceSets.main.resources.srcDirs) {
@@ -227,7 +212,7 @@ allprojects {
 }
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version
+version = project.hasProperty("override_mod_version")? project.override_mod_version : project.mod_version
 group = project.maven_group
 
 idea {
@@ -246,11 +231,11 @@ eclipse {
 //}
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property "version", project.mod_version
 
     from(sourceSets.main.resources.srcDirs) {
         include "fabric.mod.json"
-        expand "version": project.version
+        expand "version": project.mod_version
     }
 
     from(sourceSets.main.resources.srcDirs) {
@@ -300,6 +285,8 @@ task javadocJar(type: Jar) {
 }
 
 subprojects {
+    group = "net.modificationstation.StationAPI.${project.mod_version}.submodule"
+
     dependencies {
         testmodCompile sourceSets.main.output
     }
@@ -342,18 +329,6 @@ void setupRepositories(RepositoryHandler repositories) {
 }
 
 publishing {
-//	repositories {
-//		mavenLocal()
-//		if (project.hasProperty("glass_maven_username") && project.hasProperty("glass_maven_password") && project.hasProperty("glass_maven_url")) {
-//			maven {
-//				url = "${glass_maven_url}"
-//				credentials {
-//					username "${glass_maven_username}"
-//					password "${glass_maven_password}"
-//				}
-//			}
-//		}
-//	}
 
     publications {
         mavenJava(MavenPublication) {
