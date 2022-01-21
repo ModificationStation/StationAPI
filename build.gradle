@@ -89,7 +89,7 @@ allprojects {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 
-    group = 'net.modificationstation.stationapi'
+    group = "net.modificationstation.StationAPI.${project.mod_version}.submodule"
 
     sourceSets {
         testmod {
