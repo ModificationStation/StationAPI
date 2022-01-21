@@ -82,24 +82,24 @@ public class StationRenderAPI {
 
     @EventListener(priority = ListenerPriority.LOW)
     private static void stitchExpandableAtlasesPostInit(TextureRegisterEvent event) {
-        AtlasRegistry.INSTANCE.stream().map(Map.Entry::getValue).filter(atlas -> atlas instanceof ExpandableAtlas).map(atlas -> (ExpandableAtlas) atlas).forEach(ExpandableAtlas::stitch);
         //noinspection deprecation
         Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
-        TextureManager textureManager = minecraft.textureManager;
         TexturePack texturePack = minecraft.texturePackManager.texturePack;
+        ModelRegistry.INSTANCE.forEach((identifier, model) -> model.reloadFromTexturePack(texturePack));
+        AtlasRegistry.INSTANCE.stream().map(Map.Entry::getValue).filter(atlas -> atlas instanceof ExpandableAtlas).map(atlas -> (ExpandableAtlas) atlas).forEach(ExpandableAtlas::stitch);
+        TextureManager textureManager = minecraft.textureManager;
         AtlasRegistry.INSTANCE.forEach((identifier, atlas) -> atlas.textureBinders.forEach(arg -> {
             if (arg instanceof TexturePackDependent)
                 ((TexturePackDependent) arg).reloadFromTexturePack(texturePack);
             textureManager.addTextureBinder(arg);
         }));
-        ModelRegistry.INSTANCE.forEach((identifier, model) -> model.reloadFromTexturePack(texturePack));
         debugExportAtlases();
     }
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void beforeTexturePackApplied(TexturePackLoadedEvent.Before event) {
         Map<String, Integer> textureMap = ((TextureManagerAccessor) event.textureManager).getTextures();
-        textureMap.keySet().stream().filter(s -> event.newTexturePack.getResourceAsStream(s) == null).forEach(s -> GL11.glDeleteTextures(textureMap.remove(s)));
+        new HashMap<>(textureMap).keySet().stream().filter(s -> event.newTexturePack.getResourceAsStream(s) == null).forEach(s -> GL11.glDeleteTextures(textureMap.remove(s)));
         ModelRegistry.INSTANCE.forEach((identifier, model) -> AtlasRegistry.INSTANCE.unregister(identifier));
         ((TextureManagerAccessor) event.textureManager).getTextureBinders().clear();
         AtlasRegistry.INSTANCE.forEach((identifier, atlas) -> AtlasRegistry.INSTANCE.unregister(identifier));
