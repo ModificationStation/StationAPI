@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.client.model;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.Minecraft;
 import net.modificationstation.stationapi.api.client.registry.ModelRegistry;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -26,8 +24,6 @@ public abstract class Model implements TexturePackDependent {
     protected Model(final Identifier identifier, final String extension) {
         this.id = identifier;
         modelPath = ResourceManager.ASSETS.toPath(identifier, MODID + "/models", extension);
-        //noinspection deprecation
-        reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
     public final BakedModel getBaked() {

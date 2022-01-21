@@ -1,8 +1,6 @@
 package net.modificationstation.stationapi.impl.client.texture;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
@@ -13,8 +11,6 @@ public class StationFireTextureBinder extends StationTextureBinder {
 
     public StationFireTextureBinder(int line) {
         super(Atlases.getTerrain().getTexture(BlockBase.FIRE.texture + 16 * line));
-        //noinspection deprecation
-        reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
     @Override

@@ -8,7 +8,7 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
 import net.minecraft.sortme.GameRenderer;
-import net.minecraft.util.Vec3i;
+import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.client.model.BakedModel;
 import net.modificationstation.stationapi.api.client.model.BakedModelRenderer;
 import net.modificationstation.stationapi.api.client.model.Quad;
@@ -18,6 +18,7 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.client.texture.plugin.StationBlockRenderer;
+import net.modificationstation.stationapi.mixin.render.TilePosAccessor;
 import net.modificationstation.stationapi.mixin.render.client.BlockRendererAccessor;
 
 import java.util.*;
@@ -27,19 +28,18 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
 
     private static final Direction[] DIRECTIONS = ObjectArrays.concat(Direction.values(), (Direction) null);
 
-//    private final BlockRenderer blockRenderer;
     private final BlockRendererAccessor blockRendererAccessor;
     private final StationBlockRenderer stationBlockRenderer;
     private final LightingCalculatorImpl light = new LightingCalculatorImpl(3);
     private final Random random = new Random();
-    private final Vec3i pos = new Vec3i();
+    private final TilePos pos = new TilePos(0, 0, 0);
+    private final TilePosAccessor posAccessor = (TilePosAccessor) pos;
 
     private Tessellator t;
     private final ObjIntConsumer<Vertex> renderVertexLight = this::renderVertexLight;
     private final Consumer<Vertex> renderVertexNormal = this::renderVertexNormal;
 
     public BakedModelRendererImpl(BlockRenderer blockRenderer, StationBlockRenderer stationBlockRenderer) {
-//        this.blockRenderer = blockRenderer;
         blockRendererAccessor = (BlockRendererAccessor) blockRenderer;
         this.stationBlockRenderer = stationBlockRenderer;
     }
@@ -49,9 +49,9 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         if (model == null)
             return false;
         else {
-            pos.x = x;
-            pos.y = y;
-            pos.z = z;
+            posAccessor.stationapi$setX(x);
+            posAccessor.stationapi$setY(y);
+            posAccessor.stationapi$setZ(z);
             long seed = MathHelper.hashCode(x, y, z);
             int textureOverridePosition = blockRendererAccessor.getTextureOverride();
             Atlas.Sprite textureOverride = null;

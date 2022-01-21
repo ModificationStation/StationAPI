@@ -1,8 +1,6 @@
 package net.modificationstation.stationapi.impl.client.texture;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
@@ -16,8 +14,6 @@ public class StationStillWaterTextureBinder extends StationTextureBinder {
 
     public StationStillWaterTextureBinder() {
         super(Atlases.getTerrain().getTexture(BlockBase.FLOWING_WATER.texture));
-        //noinspection deprecation
-        reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
     @Override

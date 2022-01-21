@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.api.util.math;
 
+import com.google.common.primitives.Floats;
+
 public class MathHelper {
 
     public static int lerp(double delta, int start, int end) {
@@ -38,5 +40,27 @@ public class MathHelper {
         i |= i >> 8;
         i |= i >> 16;
         return i + 1;
+    }
+
+    public static float clamp(float value, float min, float max) {
+        return Floats.constrainToRange(value, min, max);
+    }
+
+    public static float fastInverseSqrt(float x) {
+        float f = 0.5F * x;
+        int i = Float.floatToIntBits(x);
+        i = 1597463007 - (i >> 1);
+        x = Float.intBitsToFloat(i);
+        x *= 1.5F - f * x * x;
+        return x;
+    }
+
+    public static float fastInverseCbrt(float x) {
+        int i = Float.floatToIntBits(x);
+        i = 1419967116 - i / 3;
+        float f = Float.intBitsToFloat(i);
+        f = 0.6666667F * f + 1.0F / (3.0F * f * f * x);
+        f = 0.6666667F * f + 1.0F / (3.0F * f * f * x);
+        return f;
     }
 }

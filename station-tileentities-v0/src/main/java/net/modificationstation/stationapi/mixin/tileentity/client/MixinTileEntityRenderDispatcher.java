@@ -14,7 +14,7 @@ import java.util.*;
 @Mixin(TileEntityRenderDispatcher.class)
 public class MixinTileEntityRenderDispatcher {
 
-    @SuppressWarnings({"unchecked", "UnresolvedMixinReference"})
+    @SuppressWarnings("unchecked")
     @Redirect(method = "<init>()V", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 2))
     private <K, V> V initCustomRenderers(Map<K, V> map, K key, V value){
         V ret = map.put(key, value);

@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.api.client.model;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.google.common.collect.ImmutableList;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +21,9 @@ public class Quad {
 
     private static final Cache<String, Quad> CACHE = Caffeine.newBuilder().softValues().build();
 
+    @Deprecated
     Vertex v00, v01, v11, v10;
-    Direction lightingFace;
+    Direction face;
 
     public void applyToVertexes(Consumer<Vertex> action) {
         action.accept(v00);
@@ -54,22 +54,72 @@ public class Quad {
         }
     }
 
+//    public static Quad get(
+//            float fromX, float fromY, float fromZ,
+//            float toX, float toY, float toZ,
+//            Atlas.Sprite texture, Direction side, boolean shade, Identifier modelId
+//    ) {
+//        int[] vertexData;
+//        switch (side) {
+//            case DOWN:
+//                vertexData = new int[] {
+//                        Float.floatToRawIntBits(fromX), Float.floatToRawIntBits(fromY), Float.floatToRawIntBits(toZ), uv[4], uv[7], direction, shade,
+//                        Float.floatToRawIntBits(fromX), Float.floatToRawIntBits(fromY), Float.floatToRawIntBits(fromZ), uv[0], uv[1], direction, shade,
+//                        Float.floatToRawIntBits(toX), Float.floatToRawIntBits(fromY), Float.floatToRawIntBits(fromZ), uv[6], uv[5], direction, shade,
+//                        Float.floatToRawIntBits(toX), Float.floatToRawIntBits(fromY), Float.floatToRawIntBits(toZ), uv[2], uv[3], direction, shade
+//                };
+//                break;
+//            case UP:
+//                q.add(Quad.get(
+//                        Vertex.get(xTo, yTo, toZ, uv[2], uv[3], direction, shade),
+//                        Vertex.get(xTo, yTo, fromZ, uv[6], uv[5], direction, shade),
+//                        Vertex.get(xFrom, yTo, fromZ, uv[0], uv[1], direction, shade),
+//                        Vertex.get(xFrom, yTo, toZ, uv[4], uv[7], direction, shade)
+//                ));
+//                break;
+//            case EAST:
+//                q.add(Quad.get(
+//                        Vertex.get(xFrom, yTo, fromZ, uv[2], uv[1], direction, shade),
+//                        Vertex.get(xTo, yTo, fromZ, uv[0], uv[1], direction, shade),
+//                        Vertex.get(xTo, fromY, fromZ, uv[0], uv[3], direction, shade),
+//                        Vertex.get(xFrom, fromY, fromZ, uv[2], uv[3], direction, shade)
+//                ));
+//                break;
+//            case WEST:
+//                q.add(Quad.get(
+//                        Vertex.get(xFrom, yTo, toZ, uv[0], uv[1], direction, shade),
+//                        Vertex.get(xFrom, fromY, toZ, uv[0], uv[3], direction, shade),
+//                        Vertex.get(xTo, fromY, toZ, uv[2], uv[3], direction, shade),
+//                        Vertex.get(xTo, yTo, toZ, uv[2], uv[1], direction, shade)
+//                ));
+//                break;
+//            case NORTH:
+//                q.add(Quad.get(
+//                        Vertex.get(xFrom, yTo, toZ, uv[2], uv[1], direction, shade),
+//                        Vertex.get(xFrom, yTo, fromZ, uv[0], uv[1], direction, shade),
+//                        Vertex.get(xFrom, fromY, fromZ, uv[0], uv[3], direction, shade),
+//                        Vertex.get(xFrom, fromY, toZ, uv[2], uv[3], direction, shade)
+//                ));
+//                break;
+//            case SOUTH:
+//                q.add(Quad.get(
+//                        Vertex.get(xTo, fromY, toZ, uv[0], uv[3], direction, shade),
+//                        Vertex.get(xTo, fromY, fromZ, uv[2], uv[3], direction, shade),
+//                        Vertex.get(xTo, yTo, fromZ, uv[2], uv[1], direction, shade),
+//                        Vertex.get(xTo, yTo, toZ, uv[0], uv[1], direction, shade)
+//                ));
+//                break;
+//        }
+//    }
+
+
+
+    @Deprecated
     public static Quad get(Vertex v01, Vertex v00, Vertex v10, Vertex v11) {
         return CACHE.get(Arrays.deepToString(new Vertex[] {v01, v00, v10, v11}), cacheId -> {
             if (v00.lightingFace != v01.lightingFace || v01.lightingFace != v11.lightingFace || v11.lightingFace != v10.lightingFace)
-                throw new IllegalArgumentException("All vertices must have the same lighting face!");
+                throw new IllegalArgumentException("All vertices must have the same face!");
             return new Quad(v01, v00, v10, v11, v00.lightingFace);
         });
-    }
-
-    public static ImmutableList<Quad> fromVertexes(ImmutableList<Vertex> v) {
-        int size = v.size();
-        if (size % 4 == 0) {
-            ImmutableList.Builder<Quad> q = ImmutableList.builder();
-            for (int i = 0; i < size; i += 4)
-                q.add(get(v.get(i), v.get(i + 1), v.get(i + 2), v.get(i + 3)));
-            return q.build();
-        } else
-            throw new IllegalArgumentException("The size of vertex's list is not a multiple of 4!");
     }
 }

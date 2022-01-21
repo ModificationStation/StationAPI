@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.impl.client.texture;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
@@ -25,8 +23,6 @@ public class StationVanillaTextureBinder extends StationTextureBinder {
         this.animationPath = animationPath;
         this.originalBinder = originalBinder;
         animatedTextureBinder = new AnimatedTextureBinder(getStaticReference(), animationPath, 1);
-        //noinspection deprecation
-        reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
@@ -169,5 +170,13 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
             register(identifier, value);
             return value;
         });
+    }
+
+    public Stream<Map.Entry<Identifier, T>> stream() {
+        return StreamSupport.stream(spliterator(), false);
+    }
+
+    public Stream<Map.Entry<Identifier, T>> parallelStream() {
+        return StreamSupport.stream(spliterator(), true);
     }
 }

@@ -3,10 +3,8 @@ package net.modificationstation.stationapi.impl.client.texture;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
-import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 import java.awt.image.*;
@@ -20,9 +18,8 @@ public class StationClockTextureBinder extends StationTextureBinder {
     private double currentRotation;
     private double rotationDelay;
 
-    public StationClockTextureBinder() {
-        super(Atlases.getGuiItems().getTexture(ItemBase.clock.getTexturePosition(0)));
-        reloadFromTexturePack(minecraft.texturePackManager.texturePack);
+    public StationClockTextureBinder(Atlas.Sprite staticReference) {
+        super(staticReference);
     }
 
     @Override

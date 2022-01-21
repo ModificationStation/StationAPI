@@ -1,8 +1,6 @@
 package net.modificationstation.stationapi.impl.client.texture;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
@@ -19,8 +17,6 @@ public class StationFlowingLavaTextureBinder extends StationTextureBinder {
     public StationFlowingLavaTextureBinder() {
         super(Atlases.getTerrain().getTexture(BlockBase.FLOWING_LAVA.texture + 1));
         textureSize = 2;
-        //noinspection deprecation
-        reloadFromTexturePack(((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
     @Override

@@ -17,7 +17,11 @@ public final class ModID implements Comparable<ModID> {
     private static final Cache<@NotNull String, @NotNull ModID> CACHE = Caffeine.newBuilder().softValues().build();
 
     @NotNull
+    public static final ModID MINECRAFT = of("minecraft");
+
+    @NotNull
     private final String modid;
+    private final int hashCode;
 
     public static @NotNull ModID of(@NotNull ModContainer modContainer) {
         return of(modContainer.getMetadata());
@@ -32,9 +36,10 @@ public final class ModID implements Comparable<ModID> {
     }
 
     private ModID(@NotNull String modid) {
+        if (!FabricLoader.getInstance().isModLoaded(modid))
+            throw new MissingModException(modid);
         this.modid = modid;
-        if (!FabricLoader.getInstance().isModLoaded(this.modid))
-            throw new MissingModException(this.modid);
+        hashCode = toString().hashCode();
     }
 
     public @NotNull ModContainer getContainer() {
@@ -53,9 +58,15 @@ public final class ModID implements Comparable<ModID> {
         return getMetadata().getVersion();
     }
 
+    public @NotNull Identifier id(String id) {
+        return Identifier.of(this, id);
+    }
+
     @Override
-    public boolean equals(@NotNull Object obj) {
-        return (modid.equals(obj)) || (obj instanceof ModID && modid.equals(((ModID) obj).modid));
+    public boolean equals(@NotNull Object other) {
+        return this == other
+                || (other instanceof ModID && modid.equals(((ModID) other).modid))
+                || (other instanceof String && toString().equals(other));
     }
 
     @Override
@@ -65,12 +76,11 @@ public final class ModID implements Comparable<ModID> {
 
     @Override
     public int hashCode() {
-        return modid.hashCode();
+        return hashCode;
     }
 
     @Override
     public int compareTo(@NotNull ModID o) {
         return modid.compareTo(o.modid);
     }
-
 }

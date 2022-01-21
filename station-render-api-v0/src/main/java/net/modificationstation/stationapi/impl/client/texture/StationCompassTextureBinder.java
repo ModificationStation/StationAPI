@@ -3,10 +3,8 @@ package net.modificationstation.stationapi.impl.client.texture;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
-import net.minecraft.item.ItemBase;
 import net.minecraft.util.Vec3i;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 public class StationCompassTextureBinder extends StationTextureBinder {
@@ -17,9 +15,8 @@ public class StationCompassTextureBinder extends StationTextureBinder {
     private double currentRotation;
     private double rotationDelay;
 
-    public StationCompassTextureBinder() {
-        super(Atlases.getGuiItems().getTexture(ItemBase.compass.getTexturePosition(0)));
-        reloadFromTexturePack(minecraft.texturePackManager.texturePack);
+    public StationCompassTextureBinder(Atlas.Sprite staticReference) {
+        super(staticReference);
     }
 
     @Override
@@ -41,9 +38,9 @@ public class StationCompassTextureBinder extends StationTextureBinder {
                 textureWidth = staticReference.getWidth(),
                 textureHeight = staticReference.getHeight();
         for(int var1 = 0; var1 < textureWidth * textureHeight; ++var1) {
-            int var2 = this.compassTexture[var1] >> 24 & 255;
-            int var3 = this.compassTexture[var1] >> 16 & 255;
-            int var4 = this.compassTexture[var1] >> 8 & 255;
+            int var2 = (this.compassTexture[var1] >> 24) & 255;
+            int var3 = (this.compassTexture[var1] >> 16) & 255;
+            int var4 = (this.compassTexture[var1] >> 8) & 255;
             int var5 = this.compassTexture[var1] & 255;
             if (this.render3d) {
                 int var6 = (var3 * 30 + var4 * 59 + var5 * 11) / 100;

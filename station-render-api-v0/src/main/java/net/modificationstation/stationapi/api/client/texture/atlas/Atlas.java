@@ -1,13 +1,18 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.resource.TexturePack;
+import net.minecraft.client.render.TextureBinder;
+import net.modificationstation.stationapi.api.client.registry.AtlasRegistry;
+import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
-import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,30 +24,30 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
 
-public abstract class Atlas implements TexturePackDependent {
+import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
-    private static final Set<Atlas> atlases = new HashSet<>();
-
-    public static Collection<Atlas> getAtlases() {
-        return Collections.unmodifiableSet(atlases);
-    }
+public abstract class Atlas {
 
     private static final Function<Atlas, Tessellator> EMPTY_TESSELLATOR = atlas -> null;
 
+    public final Identifier id;
     public final String spritesheet;
     protected final Atlas parent;
     protected int size;
     public final boolean fixedSize;
-    protected final List<Sprite> textures = new CopyOnWriteArrayList<>();
+    protected final Map<Identifier, Sprite> idToTex = new IdentityHashMap<>();
+    protected final Int2ObjectMap<Sprite> textures = new Int2ObjectOpenHashMap<>();
+    public final List<TextureBinder> textureBinders = new CopyOnWriteArrayList<>();
     @NotNull
     private Function<Atlas, @Nullable Tessellator> tessellator = EMPTY_TESSELLATOR;
     protected BufferedImage imageCache;
 
-    public Atlas(final String spritesheet, final int size, final boolean fixedSize) {
-        this(spritesheet, size, fixedSize, null);
+    public Atlas(final Identifier id, final String spritesheet, final int size, final boolean fixedSize) {
+        this(id, spritesheet, size, fixedSize, null);
     }
 
-    public Atlas(final String spritesheet, final int size, final boolean fixedSize, final Atlas parent) {
+    public Atlas(final Identifier id, final String spritesheet, final int size, final boolean fixedSize, final Atlas parent) {
+        this.id = id;
         this.spritesheet = spritesheet;
         if (parent == null)
             this.size = size;
@@ -54,7 +59,7 @@ public abstract class Atlas implements TexturePackDependent {
         }
         this.fixedSize = fixedSize;
         this.parent = parent;
-        atlases.add(this);
+        AtlasRegistry.INSTANCE.register(id, this);
         init();
     }
 
@@ -66,11 +71,6 @@ public abstract class Atlas implements TexturePackDependent {
 
     public BufferedImage getImage() {
         return imageCache == null ? imageCache = TextureHelper.getTexture(spritesheet) : imageCache;
-    }
-
-    @Override
-    public void reloadFromTexturePack(TexturePack newTexturePack) {
-        imageCache = null;
     }
 
     public final <E extends Atlas> E setTessellator(Tessellator tessellator) {
@@ -113,6 +113,16 @@ public abstract class Atlas implements TexturePackDependent {
         return (T) applyInherited(textureIndex, value -> this, Atlas::of);
     }
 
+    public final <T extends Atlas> T of(Identifier texture) {
+        Atlas atlas = this;
+        do if (!atlas.getTexture(texture).equals(atlas.getMissingTexture()))
+            //noinspection unchecked
+            return (T) atlas;
+        while ((atlas = atlas.parent) != null);
+        //noinspection unchecked
+        return (T) this;
+    }
+
     @Nullable
     public final Tessellator getTessellator() {
         return tessellator.apply(this);
@@ -128,27 +138,36 @@ public abstract class Atlas implements TexturePackDependent {
         ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.bindTexture(getAtlasTextureID());
     }
 
+    public final Sprite getTexture(Identifier identifier) {
+        return idToTex.get(identifier);
+    }
+
     public final Sprite getTexture(int textureIndex) {
-        return applyInherited(textureIndex, textures::get, Atlas::getTexture);
+        return textures.get(parent == null ? textureIndex : textureIndex - parent.size);
+    }
+
+    protected Sprite getMissingTexture() {
+        return null;
     }
 
     public final int getUnitSize() {
         return parent == null ? size : size - parent.size;
     }
 
-    public <T extends StationTextureBinder> T addTextureBinder(int staticReferenceTextureIndex, Function<Sprite, T> initializer) {
+    public final <T extends StationTextureBinder> T addTextureBinder(int staticReferenceTextureIndex, Function<Sprite, T> initializer) {
         return addTextureBinder(getTexture(staticReferenceTextureIndex), initializer);
     }
 
-    public <T extends StationTextureBinder> T addTextureBinder(Sprite staticReference, Function<Sprite, T> initializer) {
+    public final <T extends StationTextureBinder> T addTextureBinder(Sprite staticReference, Function<Sprite, T> initializer) {
         T textureBinder = initializer.apply(staticReference);
-        //noinspection deprecation
-        ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.addTextureBinder(textureBinder);
+        textureBinders.add(textureBinder);
         return textureBinder;
     }
 
     public class Sprite {
 
+        @Getter
+        protected SpriteIdentifier id;
         public final int index;
         @Getter
         protected int
@@ -159,10 +178,9 @@ public abstract class Atlas implements TexturePackDependent {
                 startU, endU,
                 startV, endV;
 
-        protected Sprite(int index, int x, int y, int width, int height) {
+        public Sprite(Identifier id, int index, int width, int height) {
+            this.id = SpriteIdentifier.of(getAtlas().id, id);
             this.index = index;
-            this.x = x;
-            this.y = y;
             this.width = width;
             this.height = height;
             updateUVs();
@@ -185,6 +203,42 @@ public abstract class Atlas implements TexturePackDependent {
             }
         }
 
+        /* !==========================! */
+        /* !--- DEPRECATED SECTION ---! */
+        /* !==========================! */
+
+        @Deprecated
+        protected Sprite(int index, int x, int y, int width, int height) {
+            this(Identifier.of(Atlas.this.id.modID, String.valueOf(index)), index, width, height);
+            this.x = x;
+            this.y = y;
+        }
     }
 
+    /* !==========================! */
+    /* !--- DEPRECATED SECTION ---! */
+    /* !==========================! */
+
+    @Deprecated
+    private static Identifier calcId(String spritesheet) {
+        LOGGER.warn("Using a deprecated atlas initializer on spritesheet \"" + spritesheet + "\"! Attempting to calculate the identifier...");
+        if (ResourceManager.ASSETS.contains(spritesheet))
+            try {
+                return ResourceManager.ASSETS.toId(spritesheet, "", "png");
+            } catch (IllegalArgumentException e) {
+                LOGGER.warn("Atlas spritesheet path doesn't seem to follow /assets/modid/ format.", e);
+            }
+        LOGGER.warn("Modid calculation failed, generating an identifier under \"minecraft\" modid and the full spritesheet path as the id.");
+        return Identifier.of(spritesheet.substring(1));
+    }
+
+    @Deprecated
+    public Atlas(final String spritesheet, final int size, final boolean fixedSize) {
+        this(calcId(spritesheet), spritesheet, size, fixedSize);
+    }
+
+    @Deprecated
+    public Atlas(final String spritesheet, final int size, final boolean fixedSize, final Atlas parent) {
+        this(calcId(spritesheet), spritesheet, size, fixedSize, parent);
+    }
 }

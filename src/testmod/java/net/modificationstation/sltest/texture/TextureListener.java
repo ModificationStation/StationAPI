@@ -21,7 +21,7 @@ public class TextureListener {
     @EventListener
     public void registerTextures(TextureRegisterEvent event) {
 
-        ExpandableAtlas terrain = Atlases.getStationTerrain();
+        ExpandableAtlas terrain = Atlases.getTerrain();
 
         TEST_BLOCK.get().texture = terrain.addTexture(of(MODID, "blocks/testBlock")).index;
         TEST_ANIMATED_BLOCK.get().texture = terrain.addTexture(of(MODID, "blocks/testAnimatedBlock")).index;

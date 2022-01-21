@@ -6,7 +6,8 @@
   "mixins": [
     "MixinBlock",
     "MixinBlockBase",
-    "MixinItemBase"
+    "MixinItemBase",
+    "TilePosAccessor"
   ],
   "client": [
     "client.BlockRendererAccessor",

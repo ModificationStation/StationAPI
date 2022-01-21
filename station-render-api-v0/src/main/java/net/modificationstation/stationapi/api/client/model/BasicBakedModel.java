@@ -2,17 +2,15 @@ package net.modificationstation.stationapi.api.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import lombok.Getter;
 import net.minecraft.level.BlockView;
-import net.minecraft.util.Vec3i;
+import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.*;
 
 public class BasicBakedModel implements BakedModel {
 
@@ -49,7 +47,7 @@ public class BasicBakedModel implements BakedModel {
     }
 
     @Override
-    public ImmutableList<Quad> getQuads(@Nullable BlockView blockView, @Nullable Vec3i blockPos, @Nullable Direction face, Random random) {
+    public ImmutableList<Quad> getQuads(@Nullable BlockView blockView, @Nullable TilePos blockPos, @Nullable Direction face, Random random) {
         return face == null ? quads : faceQuads.get(face);
     }
 
@@ -78,22 +76,8 @@ public class BasicBakedModel implements BakedModel {
         private ModelTransformation transformation = null;
         private ModelOverrideList overrides = null;
 
-        /** @deprecated use {@link Builder#faceQuads(ImmutableMap)} instead */
-        @Deprecated
-        public Builder faceVertexes(ImmutableMap<Direction, ImmutableList<Vertex>> faceVertexes) {
-            this.faceQuads = Maps.immutableEnumMap(faceVertexes.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> Quad.fromVertexes(e.getValue()), (l, r) -> { throw new IllegalArgumentException("Duplicate keys " + l + "and " + r + "."); }, () -> new EnumMap<>(Direction.class))));
-            return this;
-        }
-
         public Builder faceQuads(ImmutableMap<Direction, ImmutableList<Quad>> faceQuads) {
             this.faceQuads = faceQuads;
-            return this;
-        }
-
-        /** @deprecated use {@link Builder#quads(ImmutableList)} instead */
-        @Deprecated
-        public Builder vertexes(ImmutableList<Vertex> vertexes) {
-            this.quads = Quad.fromVertexes(vertexes);
             return this;
         }
 

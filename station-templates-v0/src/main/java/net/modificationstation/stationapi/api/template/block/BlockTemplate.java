@@ -36,6 +36,6 @@ public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider,
     @Override
     @Environment(EnvType.CLIENT)
     default Atlas getAtlas() {
-        return Atlases.getStationTerrain();
+        return Atlases.getTerrain();
     }
 }

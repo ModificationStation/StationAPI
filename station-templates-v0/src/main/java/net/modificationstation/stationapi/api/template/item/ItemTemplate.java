@@ -25,7 +25,7 @@ public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider {
     @Override
     @Environment(EnvType.CLIENT)
     default Atlas getAtlas() {
-        return Atlases.getStationGuiItems();
+        return Atlases.getGuiItems();
     }
 
     default Atlas.Sprite setTexture(Identifier textureIdentifier) {
@@ -34,6 +34,7 @@ public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider {
         return texture;
     }
 
+    @Deprecated
     default Atlas.Sprite setTexture(String texturePath) {
         Atlas.Sprite texture = ((ExpandableAtlas) getAtlas()).addTexture(texturePath);
         ((ItemBase) this).setTexturePosition(texture.index);

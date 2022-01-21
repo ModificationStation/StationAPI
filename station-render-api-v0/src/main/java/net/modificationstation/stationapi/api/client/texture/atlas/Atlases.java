@@ -4,22 +4,25 @@ import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 
 public final class Atlases {
 
-    public static SquareAtlas getTerrain() {
+    public static ExpandableAtlas getTerrain() {
         return StationRenderAPI.TERRAIN;
     }
 
-    public static SquareAtlas getGuiItems() {
+    public static ExpandableAtlas getGuiItems() {
         return StationRenderAPI.GUI_ITEMS;
     }
 
+    @Deprecated
     public static ExpandableAtlas getStationTerrain() {
-        return StationRenderAPI.STATION_TERRAIN;
+        return getTerrain();
     }
 
+    @Deprecated
     public static ExpandableAtlas getStationGuiItems() {
-        return StationRenderAPI.STATION_GUI_ITEMS;
+        return getGuiItems();
     }
 
+    @Deprecated
     public static JsonModelAtlas getStationJsonModels() {
         return StationRenderAPI.STATION_JSON_MODELS;
     }

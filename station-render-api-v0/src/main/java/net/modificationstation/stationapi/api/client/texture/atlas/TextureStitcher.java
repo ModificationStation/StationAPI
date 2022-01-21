@@ -11,7 +11,7 @@ import java.util.function.*;
 
 @Environment(EnvType.CLIENT)
 public class TextureStitcher {
-   private static final Comparator<TextureStitcher.Holder> COMPARATOR = Comparator.<Holder, Integer>comparing((holder) -> -holder.height).thenComparing((holder) -> -holder.width).thenComparing((holder) -> holder.sprite.path);
+   private static final Comparator<TextureStitcher.Holder> COMPARATOR = Comparator.<Holder, Integer>comparing((holder) -> -holder.height).thenComparing((holder) -> -holder.width).thenComparing((holder) -> holder.sprite.index);
    private final int mipLevel;
    private final Set<TextureStitcher.Holder> holders = Sets.newHashSetWithExpectedSize(256);
    private final List<TextureStitcher.Slot> slots = Lists.newArrayListWithCapacity(256);
