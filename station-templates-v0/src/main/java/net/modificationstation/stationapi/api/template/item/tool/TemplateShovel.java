@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.template.item.tool;
 
 import net.minecraft.item.tool.ToolMaterial;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
@@ -55,10 +54,5 @@ public class TemplateShovel extends net.minecraft.item.tool.Shovel implements It
     @Override
     public TemplateShovel setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateShovel) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.template.item;
 
 import net.minecraft.block.BlockBase;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
@@ -54,10 +53,5 @@ public class TemplateSecondaryBlock extends net.minecraft.item.SecondaryBlock im
     @Override
     public TemplateSecondaryBlock setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateSecondaryBlock) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-
 public class TemplateSapling extends net.minecraft.item.Sapling implements ItemTemplate<TemplateSapling> {
     
     public TemplateSapling(int i) {
@@ -46,10 +44,5 @@ public class TemplateSapling extends net.minecraft.item.Sapling implements ItemT
     @Override
     public TemplateSapling setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateSapling) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

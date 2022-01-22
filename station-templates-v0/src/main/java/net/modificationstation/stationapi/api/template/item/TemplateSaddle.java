@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
@@ -53,10 +52,5 @@ public class TemplateSaddle extends net.minecraft.item.Saddle implements ItemTem
     @Override
     public TemplateSaddle setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateSaddle) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

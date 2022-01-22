@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
@@ -53,10 +52,5 @@ public class TemplateItemBase extends net.minecraft.item.ItemBase implements Ite
     @Override
     public TemplateItemBase setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateItemBase) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

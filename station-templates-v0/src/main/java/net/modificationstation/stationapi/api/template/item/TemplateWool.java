@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-
 public class TemplateWool extends net.minecraft.item.Wool implements ItemTemplate<TemplateWool> {
 
     public TemplateWool(int i) {
@@ -46,10 +44,5 @@ public class TemplateWool extends net.minecraft.item.Wool implements ItemTemplat
     @Override
     public TemplateWool setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateWool) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

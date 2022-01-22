@@ -31,7 +31,7 @@ public class StationClockTextureBinder extends StationTextureBinder {
                 square = textureWidth * textureHeight;
         clockTexture = new int[square];
         dialTexture = new int[square];
-        BufferedImage var2 = TextureHelper.getTexture("/gui/items.png");
+        BufferedImage var2 = staticReference.getAtlas().getImage();
         var2.getRGB(staticReference.getX(), staticReference.getY(), textureWidth, textureHeight, this.clockTexture, 0, textureWidth);
         var2 = TextureHelper.getTexture("/misc/dial.png");
         var2.getRGB(0, 0, textureWidth, textureHeight, this.dialTexture, 0, textureWidth);

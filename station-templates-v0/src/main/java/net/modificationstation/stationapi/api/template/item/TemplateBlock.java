@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-
 public class TemplateBlock extends net.minecraft.item.Block implements ItemTemplate<TemplateBlock> {
     
     public TemplateBlock(int i) {
@@ -46,10 +44,5 @@ public class TemplateBlock extends net.minecraft.item.Block implements ItemTempl
     @Override
     public TemplateBlock setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateBlock) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

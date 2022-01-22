@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.api.template.block;
 
 import net.minecraft.block.BlockSounds;
 import net.minecraft.block.material.Material;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
@@ -74,10 +73,5 @@ public class TemplateBlockBase extends net.minecraft.block.BlockBase implements 
     @Override
     public TemplateBlockBase disableStat() {
         return (TemplateBlockBase) super.disableStat();
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return BlockTemplate.super.getAtlas();
     }
 }

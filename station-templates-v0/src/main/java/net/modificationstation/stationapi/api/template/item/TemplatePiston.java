@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-
 public class TemplatePiston extends net.minecraft.item.Piston implements ItemTemplate<TemplatePiston> {
     
     public TemplatePiston(int i) {
@@ -46,10 +44,5 @@ public class TemplatePiston extends net.minecraft.item.Piston implements ItemTem
     @Override
     public TemplatePiston setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplatePiston) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

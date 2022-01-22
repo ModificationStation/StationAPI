@@ -21,7 +21,7 @@ public class StationFlowingLavaTextureBinder extends StationTextureBinder {
 
     @Override
     public void reloadFromTexturePack(TexturePack newTexturePack) {
-        int square = getStaticReference().getWidth() * getStaticReference().getHeight();
+        int square = (getStaticReference().getWidth() / textureSize) * (getStaticReference().getHeight() / textureSize);
         field_1166 = new float[square];
         field_1167 = new float[square];
         field_1168 = new float[square];
@@ -32,8 +32,8 @@ public class StationFlowingLavaTextureBinder extends StationTextureBinder {
     @Override
     public void update() {
         int
-                textureWidth = getStaticReference().getWidth(),
-                textureHeight = getStaticReference().getHeight();
+                textureWidth = getStaticReference().getWidth() / textureSize,
+                textureHeight = getStaticReference().getHeight() / textureSize;
         ++this.field_1170;
 
         for(int var1 = 0; var1 < textureWidth; ++var1) {

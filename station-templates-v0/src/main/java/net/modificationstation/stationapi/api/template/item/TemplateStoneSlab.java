@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-
 public class TemplateStoneSlab extends net.minecraft.item.StoneSlab implements ItemTemplate<TemplateStoneSlab> {
     
     public TemplateStoneSlab(int i) {
@@ -46,10 +44,5 @@ public class TemplateStoneSlab extends net.minecraft.item.StoneSlab implements I
     @Override
     public TemplateStoneSlab setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateStoneSlab) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

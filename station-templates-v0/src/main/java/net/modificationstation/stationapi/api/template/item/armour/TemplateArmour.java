@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.template.item.armour;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
@@ -54,10 +53,5 @@ public class TemplateArmour extends net.minecraft.item.armour.Armour implements 
     @Override
     public TemplateArmour setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateArmour) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

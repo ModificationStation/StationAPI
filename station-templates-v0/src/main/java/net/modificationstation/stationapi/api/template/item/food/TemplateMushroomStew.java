@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.template.item.food;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
@@ -54,10 +53,5 @@ public class TemplateMushroomStew extends net.minecraft.item.food.MushroomStew i
     @Override
     public TemplateMushroomStew setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateMushroomStew) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

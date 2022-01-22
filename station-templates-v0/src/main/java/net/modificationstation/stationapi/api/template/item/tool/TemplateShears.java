@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.template.item.tool;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
@@ -54,10 +53,5 @@ public class TemplateShears extends net.minecraft.item.tool.Shears implements It
     @Override
     public TemplateShears setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateShears) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

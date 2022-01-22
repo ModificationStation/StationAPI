@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.template.block;
 
 import net.minecraft.block.BlockSounds;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
@@ -64,10 +63,5 @@ public class TemplateFire extends net.minecraft.block.Fire implements BlockTempl
     @Override
     public TemplateFire disableStat() {
         return (TemplateFire) super.disableStat();
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return BlockTemplate.super.getAtlas();
     }
 }

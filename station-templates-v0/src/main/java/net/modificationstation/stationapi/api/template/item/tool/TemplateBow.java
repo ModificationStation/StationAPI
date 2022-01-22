@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.template.item.tool;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
@@ -54,10 +53,5 @@ public class TemplateBow extends net.minecraft.item.tool.Bow implements ItemTemp
     @Override
     public TemplateBow setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateBow) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

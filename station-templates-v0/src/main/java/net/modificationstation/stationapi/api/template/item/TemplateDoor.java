@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.template.item;
 
 import net.minecraft.block.material.Material;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
@@ -54,10 +53,5 @@ public class TemplateDoor extends net.minecraft.item.Door implements ItemTemplat
     @Override
     public TemplateDoor setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateDoor) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

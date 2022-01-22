@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
@@ -25,7 +24,7 @@ public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider {
     @Override
     @Environment(EnvType.CLIENT)
     default Atlas getAtlas() {
-        return Atlases.getGuiItems();
+        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
     }
 
     default Atlas.Sprite setTexture(Identifier textureIdentifier) {

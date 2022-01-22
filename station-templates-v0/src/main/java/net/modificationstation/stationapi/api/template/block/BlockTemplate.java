@@ -6,7 +6,6 @@ import net.fabricmc.api.EnvironmentInterface;
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.BlockToolLogic;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
@@ -19,13 +18,12 @@ public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider,
 
     @Override
     default T mineableBy(Identifier toolTag, int level) {
-        //noinspection unchecked
-        return (T) this;
+        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
     }
 
     @Override
     default List<BiTuple<Identifier, Integer>> getToolTagEffectiveness() {
-        return new ArrayList<>();
+        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
     }
 
     default T setTranslationKey(ModID modID, String translationKey) {
@@ -36,6 +34,6 @@ public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider,
     @Override
     @Environment(EnvType.CLIENT)
     default Atlas getAtlas() {
-        return Atlases.getTerrain();
+        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
     }
 }

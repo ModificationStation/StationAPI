@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
@@ -53,10 +52,5 @@ public class TemplateCoal extends net.minecraft.item.Coal implements ItemTemplat
     @Override
     public TemplateCoal setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateCoal) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

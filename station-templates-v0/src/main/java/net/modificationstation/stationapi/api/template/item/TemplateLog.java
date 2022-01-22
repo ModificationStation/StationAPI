@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-
 public class TemplateLog extends net.minecraft.item.Log implements ItemTemplate<TemplateLog> {
     
     public TemplateLog(int i) {
@@ -46,10 +44,5 @@ public class TemplateLog extends net.minecraft.item.Log implements ItemTemplate<
     @Override
     public TemplateLog setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateLog) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

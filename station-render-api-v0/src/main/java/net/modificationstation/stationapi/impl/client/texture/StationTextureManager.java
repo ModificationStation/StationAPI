@@ -32,9 +32,11 @@ public class StationTextureManager {
 
             if (var2 instanceof StaticReferenceProvider) {
                 Atlas.Sprite staticReference = ((StaticReferenceProvider) var2).getStaticReference();
+                int scaledWidth = staticReference.getWidth() / var2.textureSize;
+                int scaledHeight = staticReference.getHeight() / var2.textureSize;
                 for (int var3 = 0; var3 < var2.textureSize; ++var3)
                     for (int var4 = 0; var4 < var2.textureSize; ++var4)
-                        GL11.glTexSubImage2D(3553, 0, staticReference.getX() + var3 * staticReference.getWidth(), staticReference.getY() + var4 * staticReference.getHeight(), staticReference.getWidth(), staticReference.getHeight(), 6408, 5121, textureManagerAccessor.getCurrentImageBuffer());
+                        GL11.glTexSubImage2D(3553, 0, staticReference.getX() + var3 * scaledWidth, staticReference.getY() + var4 * scaledHeight, scaledWidth, scaledHeight, 6408, 5121, textureManagerAccessor.getCurrentImageBuffer());
             } else {
                 for (int var3 = 0; var3 < var2.textureSize; ++var3)
                     for (int var4 = 0; var4 < var2.textureSize; ++var4)

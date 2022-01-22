@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.api.template.block;
 import net.minecraft.block.BlockSounds;
 import net.minecraft.block.PressurePlateTrigger;
 import net.minecraft.block.material.Material;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
@@ -66,10 +65,5 @@ public class TemplatePressurePlate extends net.minecraft.block.PressurePlate imp
     @Override
     public TemplatePressurePlate disableStat() {
         return (TemplatePressurePlate) super.disableStat();
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return BlockTemplate.super.getAtlas();
     }
 }

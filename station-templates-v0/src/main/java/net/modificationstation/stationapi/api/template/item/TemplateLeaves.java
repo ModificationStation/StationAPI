@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-
 public class TemplateLeaves extends net.minecraft.item.Leaves implements ItemTemplate<TemplateLeaves> {
     
     public TemplateLeaves(int i) {
@@ -46,10 +44,5 @@ public class TemplateLeaves extends net.minecraft.item.Leaves implements ItemTem
     @Override
     public TemplateLeaves setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateLeaves) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.api.template.block;
 
 import net.minecraft.block.BlockSounds;
 import net.minecraft.tileentity.TileEntityBase;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
@@ -65,10 +64,5 @@ public class TemplateSign extends net.minecraft.block.Sign implements BlockTempl
     @Override
     public TemplateSign disableStat() {
         return (TemplateSign) super.disableStat();
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return BlockTemplate.super.getAtlas();
     }
 }

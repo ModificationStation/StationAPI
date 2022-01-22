@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
 import net.minecraft.block.BlockBase;
-import net.minecraft.item.Block;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.SecondaryBlock;
@@ -20,7 +19,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.*;

@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.template.item.tool;
 
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
@@ -54,10 +53,5 @@ public class TemplateFishingRod extends net.minecraft.item.tool.FishingRod imple
     @Override
     public TemplateFishingRod setContainerItem(net.minecraft.item.ItemBase itemType) {
         return (TemplateFishingRod) super.setContainerItem(itemType);
-    }
-
-    @Override
-    public Atlas getAtlas() {
-        return ItemTemplate.super.getAtlas();
     }
 }

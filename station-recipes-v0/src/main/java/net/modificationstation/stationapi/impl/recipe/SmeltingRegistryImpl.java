@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.UnsafeProvider;
 import net.modificationstation.stationapi.mixin.recipe.TileEntityFurnaceAccessor;
 
-import java.util.HashMap;
+import java.util.*;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class SmeltingRegistryImpl {
