@@ -49,7 +49,7 @@ public class ToolEffectivenessImplV1 {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void isEffective(IsItemEffectiveOnBlockEvent event) {
-        event.effective = event.effective || (event.itemInstance.getType() instanceof ToolLevel && ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> predicates.stream().anyMatch(tagEntry -> tagEntry.predicate.test(event.itemInstance) && identifierIntegerBiTuple.two() <= ((ToolLevel) event.itemInstance.getType()).getMaterial(event.itemInstance).getMiningLevel())).orElse(false)));
+        event.effective = event.effective || (event.itemInstance.getType() instanceof ToolLevel && ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> predicates.stream().anyMatch(tagEntry -> tagEntry.test(event.itemInstance) && identifierIntegerBiTuple.two() <= ((ToolLevel) event.itemInstance.getType()).getMaterial(event.itemInstance).getMiningLevel())).orElse(false)));
     }
 
     @EventListener(priority = ListenerPriority.HIGH)
