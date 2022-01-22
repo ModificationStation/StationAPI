@@ -9,6 +9,12 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface TessellatorAccessor {
 
     @Accessor
+    boolean getDisableColour();
+
+    @Accessor
+    void setDisableColour(boolean disableColour);
+
+    @Accessor
     boolean getHasColour();
 
     @Accessor

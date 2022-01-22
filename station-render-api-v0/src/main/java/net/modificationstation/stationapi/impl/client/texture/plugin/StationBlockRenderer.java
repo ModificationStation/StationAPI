@@ -69,6 +69,7 @@ public class StationBlockRenderer extends BlockRendererPlugin {
         } else {
             tessellator = Tessellator.INSTANCE;
             TessellatorAccessor accessor = (TessellatorAccessor) tessellator;
+            boolean disableColour = accessor.getDisableColour();
             boolean drawing = accessor.getDrawing();
             boolean hasColour = accessor.getHasColour();
             int colour = accessor.getColour();
@@ -82,6 +83,8 @@ public class StationBlockRenderer extends BlockRendererPlugin {
             atlas.bindAtlas();
             tessellator.start();
             if (drawing) {
+                if (disableColour)
+                    tessellator.disableColour();
                 if (hasColour)
                     tessellator.colour(colour);
                 if (hasNormals)
