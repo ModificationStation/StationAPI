@@ -117,8 +117,8 @@ public class ExpandableAtlas extends Atlas {
                 Resource textureResource = Resource.of(TextureHelper.getTextureStream(texturePath));
                 Sprite sprite;
                 if (textureResource.getResource() == null) {
-                    sprite = new FileSprite(identifier, null, size, textureResolution, textureResolution);
                     BiTuple<Integer, Integer> resolution = spritesheetHelper.getResolutionMultiplier(size).map((widthMul, heightMul) -> Tuple.tuple(textureResolution * widthMul, textureResolution * heightMul));
+                    sprite = new FileSprite(identifier, null, size, resolution.one(), resolution.two());
                     textures.put(size, sprite);
                     otherSpritesheetLookup.put(identifier, atlas.getSubimage(x * textureResolution, y * textureResolution, resolution.one(), resolution.two()));
                 } else
