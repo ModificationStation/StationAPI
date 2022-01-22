@@ -48,7 +48,7 @@ public class StationBlockRenderer extends BlockRendererPlugin {
             activeAtlases.forEach(atlas -> {
                 atlas.bindAtlas();
                 Tessellator tessellator = atlas.getTessellator();
-                tessellator.draw();
+                Objects.requireNonNull(tessellator).draw();
                 tessellator.setOffset(0, 0, 0);
             });
             activeAtlases.clear();
@@ -61,7 +61,7 @@ public class StationBlockRenderer extends BlockRendererPlugin {
         if (renderingMesh) {
             tessellator = atlas.getTessellator();
             TessellatorAccessor originalAccessor = (TessellatorAccessor) Tessellator.INSTANCE;
-            if (!((TessellatorAccessor) tessellator).getDrawing()) {
+            if (!((TessellatorAccessor) Objects.requireNonNull(tessellator)).getDrawing()) {
                 activeAtlases.add(atlas);
                 tessellator.start();
                 tessellator.setOffset(originalAccessor.getXOffset(), originalAccessor.getYOffset(), originalAccessor.getZOffset());
@@ -284,6 +284,71 @@ public class StationBlockRenderer extends BlockRendererPlugin {
         var5.colour(var6, var6, var6);
         renderShiftedColumn(block, meta, x, (float)y - 0.0625F, z);
         cir.setReturnValue(true);
+    }
+
+    @Override
+    public void renderTorchTilted(BlockBase block, double renderX, double renderY, double renderZ, double width, double length, CallbackInfo ci) {
+        renderTorchTilted(block, renderX, renderY, renderZ, width, length);
+        ci.cancel();
+    }
+
+    public void renderTorchTilted(BlockBase block, double renderX, double renderY, double renderZ, double width, double length) {
+        Atlas atlas;
+        Atlas.Sprite texture;
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
+            atlas = Atlases.getTerrain();
+            texture = atlas.getTexture(blockRendererAccessor.getTextureOverride());
+        } else {
+            int textureIndex = block.getTextureForSide(0);
+            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
+            texture = atlas.getTexture(textureIndex);
+        }
+        Tessellator t = prepareTessellator(atlas);
+
+        float var16 = (float) texture.getStartU();
+        float var17 = (float) texture.getEndU();
+        float var18 = (float) texture.getStartV();
+        float var19 = (float) texture.getEndV();
+        BufferedImage atlasImage = atlas.getImage();
+        int
+                atlasWidth = atlasImage.getWidth(),
+                atlasHeight = atlasImage.getHeight();
+        double var20 = (double)var16 + texture.getWidth() * 0.4375 / atlasWidth;
+        double var22 = (double)var18 + texture.getHeight() * 0.375 / atlasHeight;
+        double var24 = (double)var16 + texture.getWidth() * 0.5625 / atlasWidth;
+        double var26 = (double)var18 + texture.getHeight() * 0.5 / atlasHeight;
+        renderX += 0.5D;
+        renderZ += 0.5D;
+        double var28 = renderX - 0.5D;
+        double var30 = renderX + 0.5D;
+        double var32 = renderZ - 0.5D;
+        double var34 = renderZ + 0.5D;
+        double var36 = 0.0625D;
+        double var38 = 0.625D;
+        double d = renderX + width * (1.0D - var38) - var36;
+        double d2 = renderZ + length * (1.0D - var38) - var36;
+        double d21 = renderZ + length * (1.0D - var38) + var36;
+        double d1 = renderX + width * (1.0D - var38) + var36;
+        t.vertex(d, renderY + var38, d2, var20, var22);
+        t.vertex(d, renderY + var38, d21, var20, var26);
+        t.vertex(d1, renderY + var38, d21, var24, var26);
+        t.vertex(d1, renderY + var38, d2, var24, var22);
+        t.vertex(renderX - var36, renderY + 1.0D, var32, var16, var18);
+        t.vertex(renderX - var36 + width, renderY + 0.0D, var32 + length, var16, var19);
+        t.vertex(renderX - var36 + width, renderY + 0.0D, var34 + length, var17, var19);
+        t.vertex(renderX - var36, renderY + 1.0D, var34, var17, var18);
+        t.vertex(renderX + var36, renderY + 1.0D, var34, var16, var18);
+        t.vertex(renderX + width + var36, renderY + 0.0D, var34 + length, var16, var19);
+        t.vertex(renderX + width + var36, renderY + 0.0D, var32 + length, var17, var19);
+        t.vertex(renderX + var36, renderY + 1.0D, var32, var17, var18);
+        t.vertex(var28, renderY + 1.0D, renderZ + var36, var16, var18);
+        t.vertex(var28 + width, renderY + 0.0D, renderZ + var36 + length, var16, var19);
+        t.vertex(var30 + width, renderY + 0.0D, renderZ + var36 + length, var17, var19);
+        t.vertex(var30, renderY + 1.0D, renderZ + var36, var17, var18);
+        t.vertex(var30, renderY + 1.0D, renderZ - var36, var16, var18);
+        t.vertex(var30 + width, renderY + 0.0D, renderZ - var36 + length, var16, var19);
+        t.vertex(var28 + width, renderY + 0.0D, renderZ - var36 + length, var17, var19);
+        t.vertex(var28, renderY + 1.0D, renderZ - var36, var17, var18);
     }
 
     @Override

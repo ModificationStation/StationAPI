@@ -28,8 +28,8 @@ public class AnimatedTextureBinder extends StationTextureBinder {
         if (stream != null) {
             BufferedImage image = TextureHelper.readTextureStream(stream);
             int
-                    targetWidth = getStaticReference().getWidth(),
-                    targetHeight = getStaticReference().getHeight(),
+                    targetWidth = getStaticReference().getWidth() / textureSize,
+                    targetHeight = getStaticReference().getHeight() / textureSize,
                     images = image.getHeight() / targetHeight;
             frames = new byte[images][];
             for (int i = 0; i < images; i++) {

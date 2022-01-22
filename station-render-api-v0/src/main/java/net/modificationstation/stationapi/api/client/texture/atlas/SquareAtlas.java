@@ -6,6 +6,7 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 
 import java.awt.image.*;
 
+@Deprecated
 public class SquareAtlas extends Atlas {
 
     protected final Int2ObjectMap<Identifier> initIDs = new Int2ObjectOpenHashMap<>();

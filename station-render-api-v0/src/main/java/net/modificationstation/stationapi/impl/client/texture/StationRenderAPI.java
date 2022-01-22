@@ -17,14 +17,12 @@ import net.modificationstation.stationapi.api.client.registry.AtlasRegistry;
 import net.modificationstation.stationapi.api.client.registry.ModelRegistry;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
-import net.modificationstation.stationapi.api.client.texture.atlas.JsonModelAtlas;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.impl.client.texture.plugin.StationRenderPlugin;
-import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
 import org.lwjgl.opengl.GL11;
 
@@ -51,9 +49,9 @@ public class StationRenderAPI {
 //    public static ExpandableAtlas
 //            STATION_TERRAIN,
 //            STATION_GUI_ITEMS;
-
-    @Deprecated
-    public static JsonModelAtlas STATION_JSON_MODELS;
+//
+//    @Deprecated
+//    public static JsonModelAtlas STATION_JSON_MODELS;
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void preInit(ProvideRenderPluginEvent event) {
@@ -68,7 +66,7 @@ public class StationRenderAPI {
         GUI_ITEMS.addSpritesheet("/gui/items.png", 16, GuiItemsHelper.INSTANCE);
 //        STATION_TERRAIN = new ExpandableAtlas(of(StationAPI.MODID, "terrain"), TERRAIN).initTessellator();
 //        STATION_GUI_ITEMS = new ExpandableAtlas(of(StationAPI.MODID, "gui_items"), GUI_ITEMS);
-        STATION_JSON_MODELS = new JsonModelAtlas(of(StationAPI.MODID, "json_textures")).setTessellator(TessellatorAccessor.newInst(8388608));
+//        STATION_JSON_MODELS = new JsonModelAtlas(of(StationAPI.MODID, "json_textures")).setTessellator(TessellatorAccessor.newInst(8388608));
         TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture), staticReference -> new StationVanillaTextureBinder(staticReference, new StationStillWaterTextureBinder(), "/custom_water_still.png"));
         TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture + 1), staticReference -> Util.make(new StationVanillaTextureBinder(staticReference, new StationFlowingWaterTextureBinder(), "/custom_water_flowing.png"), textureBinder -> textureBinder.textureSize = 2));
         TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_LAVA.texture), staticReference -> new StationVanillaTextureBinder(staticReference, new StationStillLavaTextureBinder(), "/custom_lava_still.png"));

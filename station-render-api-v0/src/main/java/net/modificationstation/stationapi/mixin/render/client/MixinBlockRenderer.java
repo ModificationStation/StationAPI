@@ -54,6 +54,15 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
     }
 
     @Inject(
+            method = "renderTorchTilted(Lnet/minecraft/block/BlockBase;DDDDD)V",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    public void renderTorchTilted(BlockBase block, double renderX, double renderY, double renderZ, double width, double length, CallbackInfo ci) {
+        plugin.renderTorchTilted(block, renderX, renderY, renderZ, width, length, ci);
+    }
+
+    @Inject(
             method = "method_47(Lnet/minecraft/block/BlockBase;IDDD)V",
             at = @At("HEAD"),
             cancellable = true

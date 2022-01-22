@@ -21,6 +21,8 @@ public class BlockRendererPlugin {
 
     public void renderCrops(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {}
 
+    public void renderTorchTilted(BlockBase block, double renderX, double renderY, double renderZ, double width, double length, CallbackInfo ci) {}
+
     public void renderCrossed(BlockBase block, int meta, double x, double y, double z, CallbackInfo ci) {}
 
     public void renderShiftedColumn(BlockBase block, int meta, double x, double y, double z, CallbackInfo ci) {}

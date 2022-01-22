@@ -12,6 +12,10 @@ public final class Atlases {
         return StationRenderAPI.GUI_ITEMS;
     }
 
+    /* !==========================! */
+    /* !--- DEPRECATED SECTION ---! */
+    /* !==========================! */
+
     @Deprecated
     public static ExpandableAtlas getStationTerrain() {
         return getTerrain();
@@ -23,7 +27,7 @@ public final class Atlases {
     }
 
     @Deprecated
-    public static JsonModelAtlas getStationJsonModels() {
-        return StationRenderAPI.STATION_JSON_MODELS;
+    public static ExpandableAtlas getStationJsonModels() {
+        return getTerrain();
     }
 }

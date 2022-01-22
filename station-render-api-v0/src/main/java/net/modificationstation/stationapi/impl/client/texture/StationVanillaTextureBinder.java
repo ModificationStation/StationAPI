@@ -29,6 +29,7 @@ public class StationVanillaTextureBinder extends StationTextureBinder {
     public void reloadFromTexturePack(TexturePack newTexturePack) {
         animationImageAbsent = TextureHelper.getTextureStream(animationPath) == null;
         StationTextureBinder textureBinder = animationImageAbsent ? originalBinder : animatedTextureBinder;
+        textureBinder.textureSize = textureSize;
         textureBinder.reloadFromTexturePack(newTexturePack);
         grid = textureBinder.grid;
     }
