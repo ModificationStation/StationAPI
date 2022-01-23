@@ -130,11 +130,11 @@ allprojects {
 
     afterEvaluate {
         processResources {
-            inputs.property 'version', project.version
+            inputs.property 'version', project.mod_version
 
             from(sourceSets.main.resources.srcDirs) {
                 include 'fabric.mod.json'
-                expand 'version': project.version
+                expand 'version': project.mod_version
             }
 
             from(sourceSets.main.resources.srcDirs) {
@@ -166,6 +166,17 @@ allprojects {
     }
 
     publishing {
+        repositories {
+            if (project.hasProperty("glass_maven_url")) {
+                maven {
+                    url = "${project.glass_maven_url}"
+                    credentials {
+                        username "${project.glass_maven_username}"
+                        password "${project.glass_maven_password}"
+                    }
+                }
+            }
+        }
         publications {
             mavenJava(MavenPublication) {
                 afterEvaluate {
@@ -235,9 +246,19 @@ subprojects {subproject ->
     }
 }
 
+dependencies {
+    include "org.apache.commons:commons-lang3:3.5"
+    include "com.github.jhalterman:typetools:${project.typetools_version}"
+    include "com.github.mineLdiver:expressions:${project.expressions_version}"
+    include "com.github.mineLdiver:UnsafeEvents:${project.unsafeevents_version}"
+    include "it.unimi.dsi:fastutil:${project.fastutil_version}"
+    //noinspection GradlePackageUpdate
+    include "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
+}
+
 //Subprojects will set these themselves
 archivesBaseName = archives_base_name
-version = mod_version
+version = project.hasProperty("override_version")? override_version : mod_version
 
 task runTestmodClient(type: RunClientTask) {
     classpath sourceSets.test.runtimeClasspath
