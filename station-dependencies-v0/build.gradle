@@ -1,5 +1,0 @@
-archivesBaseName = "station-dependencies-v0"
-version = getSubprojectVersion(project, "1.0.0")
-
-dependencies {
-}
