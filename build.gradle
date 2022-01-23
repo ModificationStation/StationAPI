@@ -53,6 +53,11 @@ void addDependency(XmlProvider xml, String scope, Object... dependencies) {
     }
 }
 
+//Subprojects will set these themselves
+//Not neatly. - calm
+group = project.maven_group
+name = archivesBaseName = archives_base_name
+version = project.hasProperty("override_version")? override_version : mod_version
 
 allprojects {
     apply plugin: 'maven-publish'
@@ -254,11 +259,6 @@ dependencies {
     //noinspection GradlePackageUpdate
     include "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
 }
-
-//Subprojects will set these themselves
-group = project.maven_group
-archivesBaseName = archives_base_name
-version = project.hasProperty("override_version")? override_version : mod_version
 
 task runTestmodClient(type: RunClientTask) {
     classpath sourceSets.test.runtimeClasspath
