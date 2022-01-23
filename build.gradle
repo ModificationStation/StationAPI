@@ -61,9 +61,6 @@ allprojects {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 
-    //Group is common for all API modules
-    group = project.maven_group
-
     repositories {
         maven {
             name = 'Jitpack'
@@ -201,6 +198,8 @@ subprojects {subproject ->
     assert this.remapJar != remapJar //No accidents moving this around
     this.remapJar.dependsOn(remapJar)
 
+    group = project.maven_group + ".${project.version}"
+
     configurations {
         out {
             canBeConsumed = true
@@ -257,6 +256,7 @@ dependencies {
 }
 
 //Subprojects will set these themselves
+group = project.maven_group
 archivesBaseName = archives_base_name
 version = project.hasProperty("override_version")? override_version : mod_version
 
