@@ -15,12 +15,6 @@ buildscript {
     }
 }
 
-plugins {
-    id 'checkstyle'
-    //From https://gitlab.com/barfuin/gradle-taskinfo, useful for checking the order tasks will run
-    //id 'org.barfuin.gradle.taskinfo' version '1.3.0'
-}
-
 def getSubprojectVersion(project, ver) {
     return "${project.mod_version}-$ver"
 }
