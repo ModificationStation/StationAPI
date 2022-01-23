@@ -1,91 +1,64 @@
 buildscript {
     repositories {
         maven {
-            name = "Fabric"
-            url = "https://maven.fabricmc.net/"
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
         }
-        gradlePluginPortal()
         mavenCentral()
         maven {
-            name = "Jitpack"
+            name = 'Jitpack'
             url 'https://jitpack.io/'
         }
     }
     dependencies {
-        classpath 'com.github.Chocohead:Fabric-Loom:0d0261a'
+        classpath 'com.github.Chocohead:Fabric-Loom:3219e42'
     }
 }
 
 plugins {
-    id "java"
-    id "eclipse"
-    id "idea"
-    id "maven-publish"
-//	id "fabric-loom" version "0.5.43" apply false
-//	id "net.minecrell.licenser" version "0.4.1"
-    id "org.ajoberstar.grgit" version "3.1.1"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-    id "com.modrinth.minotaur" version "1.1.0"
+    id 'checkstyle'
+    //From https://gitlab.com/barfuin/gradle-taskinfo, useful for checking the order tasks will run
+    //id 'org.barfuin.gradle.taskinfo' version '1.3.0'
 }
 
-apply plugin: "fabric-loom"
-
-def ENV = System.getenv()
-
-
-import net.fabricmc.loom.task.RunClientTask
-import net.fabricmc.loom.task.RunServerTask
-
-def getSubprojectVersion(project, version) {
-    if (grgit == null) {
-        return version + "+nogit"
-    }
-
-    def latestCommits = grgit.log(paths: [project.name], maxCommits: 1)
-
-    if (latestCommits.isEmpty()) {
-        return version + "+uncommited"
-    }
-
-    return version + "+" + latestCommits.get(0).id.substring(0, 8) /*+ DigestUtils.sha256Hex({project.minecraft_version}).substring(0, 2)*/
+def getSubprojectVersion(project, ver) {
+    return "${project.mod_version}-$ver"
 }
 
-def getBranch() {
-    def ENV = System.getenv()
-    if (ENV.GITHUB_REF) {
-        def branch = ENV.GITHUB_REF
-        return branch.substring(branch.lastIndexOf("/") + 1)
-    }
+def moduleDependencies(Project project, String... projectNames) {
+    project.with {
+        def modules = projectNames.collect { dependencies.project(path: ":$it", configuration: 'dev') }
 
-    if (grgit == null) {
-        return "unknown"
-    }
-
-    def branch = grgit.branch.current().name
-    return branch.substring(branch.lastIndexOf("/") + 1)
-}
-
-def moduleDependencies(project, List<String> depNames) {
-    def deps = depNames.iterator().collect { project.dependencies.project(path: ":$it", configuration: 'dev') }
-    project.dependencies {
-        deps.each {
-            compile it
+        dependencies {
+            modules.each {
+                implementationOnly it
+            }
         }
-    }
-    project.publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                pom.withXml {
-                    asNode().dependencies.dependency.each { dep ->
-                        if(dep.artifactId.last().value().last().toLowerCase() in ["cursed-fabric-loader"]) {
-                            assert dep.parent().remove(dep)
-                        }
+        publishing {
+            publications {
+                mavenJava(MavenPublication) {
+                    pom.withXml {
+                        addDependency(it, 'compile', *modules)
                     }
                 }
             }
         }
     }
 }
+
+void addDependency(XmlProvider xml, String scope, Object... dependencies) {
+    def dependenciesNode = net.fabricmc.loom.util.GroovyXmlUtil.getOrCreateNode(xml.asNode(), 'dependencies')
+
+    dependencies.each {dependency ->
+        dependenciesNode.appendNode('dependency').with {
+            appendNode('groupId', dependency.group)
+            appendNode('artifactId', dependency.name)
+            appendNode('version', dependency.version)
+            appendNode('scope', scope)
+        }
+    }
+}
+
 
 allprojects {
     apply plugin: 'maven-publish'
@@ -94,58 +67,48 @@ allprojects {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 
-    group = 'net.modificationstation.stationapi'
+    //Group is common for all API modules
+    group = project.maven_group
 
-    sourceSets {
-        testmod {
-            compileClasspath += main.compileClasspath
-            runtimeClasspath += main.runtimeClasspath
+    repositories {
+        maven {
+            name = 'Jitpack'
+            url 'https://jitpack.io/'
+        }
+        maven {
+            name = 'HalfOf2'
+            url = 'https://storage.googleapis.com/devan-maven/'
         }
     }
 
-    task runTestmodClient(type: RunClientTask) {
-        classpath sourceSets.testmod.runtimeClasspath
+    configurations {
+        implementationOnly //A non-transitive implementation
+        runtimeClasspath.extendsFrom implementationOnly
+        compileClasspath.extendsFrom implementationOnly
+
     }
 
-    task runTestmodServer(type: RunServerTask) {
-        classpath sourceSets.testmod.runtimeClasspath
-    }
-
-    compileJava {
-        options.compilerArgs << '-XDignore.symbol.file'
-        options.fork = true
-        options.forkOptions.executable = 'javac'
-    }
-
-    task moveRemappedSrc {
-        if (project.name.equals("station-api"))
-            return
-        doLast {
-            delete './src/main/java/'
-            ant.move file: './remappedSrc/net',
-                    todir: './src/main/java/'
+    minecraft {
+        addLibraryFilter {library ->
+            return !(library.startsWith('net.minecraft:launchwrapper:') ||
+                    library.startsWith('net.sf.jopt-simple:jopt-simple:') ||
+                    library.startsWith('org.ow2.asm:asm-all:'))
         }
     }
 
     dependencies {
-        // fabric loader requires log4j, guava, and gson
-        implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.1'
-        implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.1'
-        annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.1'
-        annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.1'
-        //noinspection GradlePackageUpdate
-        implementation 'com.google.guava:guava:21.0'
-        implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
+        //to change the versions see the gradle.properties file
+        minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
-        // mixin and fabric loader need asm 9
-        implementation 'org.ow2.asm:asm:9.0'
-        implementation 'org.ow2.asm:asm-analysis:9.0'
-        implementation 'org.ow2.asm:asm-commons:9.0'
-        implementation 'org.ow2.asm:asm-tree:9.0'
-        implementation 'org.ow2.asm:asm-util:9.0'
+        mappings loom.fromCommit("calmilamsy/BIN-Mappings", "${project.yarn_mappings}") {spec ->
+            spec.version = "b1.7.3-${project.yarn_mappings}"
+        }
 
-        implementation "org.apache.commons:commons-lang3:3.5"
+        modImplementation("io.github.minecraft-cursed-legacy:cursed-fabric-loader:${project.loader_version}") {
+            transitive false //Avoid leaking Loader's dependencies forwards
+        }
 
+        implementationOnly "org.apache.commons:commons-lang3:3.5"
         implementation "com.github.jhalterman:typetools:${project.typetools_version}"
         implementation "com.github.mineLdiver:expressions:${project.expressions_version}"
         implementation "com.github.mineLdiver:UnsafeEvents:${project.unsafeevents_version}"
@@ -153,181 +116,67 @@ allprojects {
         //noinspection GradlePackageUpdate
         implementation "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
 
-        // to change the versions see the gradle.properties file
-        minecraft "com.mojang:minecraft:${project.minecraft_version}"
-
-        mappings loom.fromCommit("calmilamsy/BIN-Mappings", "${project.yarn_mappings}") {spec ->
-            spec.version = "b1.7.3-${project.yarn_mappings}"
-        }
-
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
         compileOnly 'org.projectlombok:lombok:1.18.16'
         annotationProcessor 'org.projectlombok:lombok:1.18.16'
-        testmodCompileOnly 'org.projectlombok:lombok:1.18.16'
-        testmodAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+        testCompileOnly 'org.projectlombok:lombok:1.18.16'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
         compile 'org.jetbrains:annotations:20.1.0'
-
-        modImplementation "com.github.minecraft-cursed-legacy:cursed-fabric-loader:${project.loader_version}"
     }
 
-    configurations {
-        dev
-    }
-
-//	loom {
-//		shareCaches = true
-//	}
-
-    repositories {
-        maven {
-            name = "Fabric"
-            url = "https://maven.fabricmc.net/"
+    sourceSets {
+        test {
+            compileClasspath += main.compileClasspath + main.output
+            runtimeClasspath += main.runtimeClasspath + main.output
         }
-        mavenLocal()
-        gradlePluginPortal()
-        mavenCentral()
-        maven {
-            name = "Jitpack"
-            url 'https://jitpack.io/'
-        }
-    }
-
-    jar {
-        classifier = "dev"
     }
 
     afterEvaluate {
-        remapJar {
-            input = file("${project.buildDir}/libs/$archivesBaseName-${version}-dev.jar")
-            archiveName = "${archivesBaseName}-${version}.jar"
-        }
-
-        artifacts {
-            dev file: file("${project.buildDir}/libs/$archivesBaseName-${version}-dev.jar"), type: "jar", builtBy: jar
-        }
-
         processResources {
-            inputs.property "version", project.version
+            inputs.property 'version', project.version
 
             from(sourceSets.main.resources.srcDirs) {
-                include "fabric.mod.json"
-                expand "version": project.version
+                include 'fabric.mod.json'
+                expand 'version': project.version
             }
 
             from(sourceSets.main.resources.srcDirs) {
-                exclude "fabric.mod.json"
+                exclude 'fabric.mod.json'
             }
         }
     }
 
+    // ensure that the encoding is set to UTF-8, no matter what the system default is
+    // this fixes some edge cases with special characters not displaying correctly
+    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this task, sources will not be generated.
     task sourcesJar(type: Jar, dependsOn: classes) {
-        archiveClassifier = "sources"
+        classifier = 'sources'
         from sourceSets.main.allSource
     }
-}
 
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group
-
-idea {
-    module {
-        downloadJavadoc = true
-    }
-}
-
-eclipse {
-    classpath {
-        downloadJavadoc = true
-    }
-}
-
-//minecraft {
-//}
-
-processResources {
-    inputs.property "version", project.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
-        expand "version": project.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
-    }
-}
-
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-//task sourcesJar(type: Jar, dependsOn: classes) {
-//	classifier = "sources"
-//	from sourceSets.main.allSource
-//}
-
-javadoc {
-    options {
-        source = "8"
-        encoding = "UTF-8"
-        charSet = "UTF-8"
-        memberLevel = JavadocMemberLevel.PACKAGE
-        links(
-                "https://guava.dev/releases/21.0/api/docs/",
-                "https://docs.oracle.com/javase/8/docs/api/",
-                "http://jenkins.liteloader.com/job/Mixin/javadoc/",
-                "https://logging.apache.org/log4j/2.x/log4j-api/apidocs/"
-                // Need to add minecraft jd publication etc once there is one available
-        )
-        // Disable the crazy super-strict doclint tool in Java 8
-        addStringOption("Xdoclint:none", "-quiet")
-    }
-
-    allprojects.each {
-        source(it.sourceSets.main.allJava.srcDirs)
-    }
-
-    classpath = sourceSets.main.compileClasspath
-    include("**/api/**")
-    failOnError false
-}
-
-task javadocJar(type: Jar) {
-    dependsOn javadoc
-    from javadoc.destinationDir
-    //Set as `fatjavadoc` to prevent an ide form trying to use this javadoc, over using the modules javadoc
-    archiveClassifier = "fatjavadoc"
-}
-
-subprojects {
-    dependencies {
-        testmodCompile sourceSets.main.output
-    }
-
-    task remapMavenJar(type: Copy, dependsOn: remapJar) {
-        afterEvaluate {
-            from("${project.buildDir}/libs/$archivesBaseName-${version}.jar")
-            into("${project.buildDir}/libs/")
-            rename { String fn -> "$archivesBaseName-${version}-maven.jar" }
-        }
+    // Makes java shut up
+    compileJava {
+        options.compilerArgs << '-XDignore.symbol.file'
+        options.fork = true
+        options.forkOptions.executable = 'javac'
     }
 
     publishing {
         publications {
             mavenJava(MavenPublication) {
                 afterEvaluate {
-                    artifact(file("${project.buildDir}/libs/$archivesBaseName-${version}-maven.jar")) {
-                        builtBy remapMavenJar
+                    artifact(remapJar) {
+                        builtBy remapJar
                     }
 
                     artifact(sourcesJar) {
@@ -336,105 +185,75 @@ subprojects {
                 }
             }
         }
-
-        setupRepositories(repositories)
-    }
-
-    javadoc.enabled = false
-}
-
-task remapMavenJar(type: net.fabricmc.loom.task.RemapJarTask, dependsOn: jar) {
-    afterEvaluate {
-        input = file("${project.buildDir}/libs/${archivesBaseName}-${version}-dev.jar")
-        archiveName = "${archivesBaseName}-${version}-maven.jar"
-        addNestedDependencies = false
     }
 }
 
-void setupRepositories(RepositoryHandler repositories) {
-    //repositories.mavenLocal() // uncomment for testing
-    def ENV = System.getenv()
-    if (ENV.MAVEN_URL) {
-        repositories.maven {
-            url ENV.MAVEN_URL
-            credentials {
-                username ENV.MAVEN_USERNAME
-                password ENV.MAVEN_PASSWORD
-            }
+import net.fabricmc.loom.task.RunClientTask
+import net.fabricmc.loom.task.RunServerTask
+
+subprojects {subproject ->
+
+    assert this.remapJar != remapJar //No accidents moving this around
+    this.remapJar.dependsOn(remapJar)
+
+    configurations {
+        out {
+            canBeConsumed = true
+            canBeResolved = false
         }
-    }
-}
-
-tasks.publishToMavenLocal.dependsOn(tasks.build)
-tasks.build.dependsOn(tasks.javadocJar)
-
-publishing {
-    repositories {
-        mavenLocal()
-        if (project.hasProperty("glass_maven_username")) {
-            maven {
-                url = "https://maven.glass-launcher.net/repo/"
-                credentials {
-                    username "${glass_maven_username}"
-                    password "${glass_maven_password}"
-                }
-            }
+        dev {
+            canBeConsumed = true
+            canBeResolved = false
+        }
+        test {
+            canBeConsumed = true
+            canBeResolved = false
         }
     }
 
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId project.archives_base_name
-            artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}.jar") {
-                classifier null
-                builtBy remapJar
-            }
+    task testJar(type: Jar) {
+        from sourceSets.test.output
+        classifier 'test'
+    }
 
-            artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-dev.jar") {
-                classifier 'dev'
-                builtBy remapJar
-            }
+    artifacts {
+        out remapJar
+        dev jar
+        test testJar
+    }
 
-            artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-javadoc.jar") {
-                classifier 'javadoc'
-                builtBy javadocJar
-            }
+    //Attach the subproject to the root project
+    this.dependencies {
+        implementationOnly project(path: ":$name", configuration: 'dev')
+        testImplementation project(path: ":$name", configuration: 'test')
+        include project(path: ":$name", configuration: 'out')
+    }
 
-            artifact(file("${project.buildDir}/libs/$archivesBaseName-${version}-maven.jar")) {
-                classifier 'maven'
-                builtBy remapMavenJar
-            }
-
-            pom.withXml {
-                asNode().dependencies.dependency.each { dep ->
-                    if(dep.artifactId.last().value().last().toLowerCase() in ["cursed-fabric-loader"]) {
-                        assert dep.parent().remove(dep)
-                    }
+    //Mark the subproject as a compile time dependency of the root project
+    this.publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                pom.withXml {xml ->
+                    addDependency(xml, 'compile', subproject)
                 }
             }
         }
     }
 }
 
-subprojects.each { remapJar.dependsOn("${it.path}:remapJar") }
+//Subprojects will set these themselves
+archivesBaseName = archives_base_name
+version = mod_version
 
-sourceSets {
-    testmod
+task runTestmodClient(type: RunClientTask) {
+    classpath sourceSets.test.runtimeClasspath
 }
 
-dependencies {
-    afterEvaluate {
-        subprojects.each {
-            compile project(path: ":${it.name}", configuration: "dev")
-            include project("${it.name}:")
+task runTestmodServer(type: RunServerTask) {
+    classpath sourceSets.test.runtimeClasspath
+}
 
-            testmodCompile project("${it.name}:").sourceSets.testmod.output
-        }
-    }
-
-    include "com.github.jhalterman:typetools:${project.typetools_version}"
-    include "com.github.mineLdiver:expressions:${project.expressions_version}"
-    include "com.github.mineLdiver:UnsafeEvents:${project.unsafeevents_version}"
-    include "it.unimi.dsi:fastutil:${project.fastutil_version}"
-    include "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
+task testJar(type: Jar) {
+    from sourceSets.test.output
+    classifier 'test'
 }

@@ -1,11 +1,11 @@
 archivesBaseName = "station-tool-api-v1"
 version = getSubprojectVersion(project, "1.0.0")
 
-moduleDependencies(project, [
+moduleDependencies(project,
         'station-api-base',
         'station-registry-api-v0',
         'station-items-v0',
         'station-blocks-v0',
         'station-tags-v0',
         'station-metablocks-v0'
-])
+)
