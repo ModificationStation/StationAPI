@@ -8,6 +8,7 @@ import net.modificationstation.stationapi.api.event.oredict.TagRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.tags.TagEntry;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
@@ -151,14 +152,17 @@ public class TagItemInit {
     }
 
     private static void addItemIgnoreDamage(String oreDictString, ItemBase itemBase) {
-        TagRegistry.INSTANCE.register(Identifier.of(oreDictString), (itemInstance -> itemInstance.getType().id == itemBase.id));
+        ItemInstance itemInstanceToUse = new ItemInstance(itemBase);
+        TagRegistry.INSTANCE.register(new TagEntry(new ItemInstance(itemBase), itemInstance -> itemInstanceToUse.itemId == itemInstance.itemId, Identifier.of(oreDictString)));
     }
 
     private static void addItem0Damage(String oreDictString, ItemBase itemBase) {
-        TagRegistry.INSTANCE.register(Identifier.of(oreDictString), (itemInstance) -> new ItemInstance(itemBase, 1, 0).isDamageAndIDIdentical(itemInstance));
+        ItemInstance itemInstanceToUse = new ItemInstance(itemBase, 1, 0);
+        TagRegistry.INSTANCE.register(new TagEntry(itemInstanceToUse, itemInstanceToUse::isDamageAndIDIdentical, Identifier.of(oreDictString)));
     }
 
     private static void addItem(String oreDictString, ItemBase itemBase, int damage) {
-        TagRegistry.INSTANCE.register(Identifier.of(oreDictString), (itemInstance) -> new ItemInstance(itemBase, 1, damage).isDamageAndIDIdentical(itemInstance));
+        ItemInstance itemInstanceToUse = new ItemInstance(itemBase, 1, damage);
+        TagRegistry.INSTANCE.register(new TagEntry(new ItemInstance(itemBase, 1, damage), itemInstanceToUse::isDamageAndIDIdentical, Identifier.of(oreDictString)));
     }
 }

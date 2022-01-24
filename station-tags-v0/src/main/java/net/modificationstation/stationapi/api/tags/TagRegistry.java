@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.api.tags;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,47 +11,40 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
-public class TagRegistry extends Registry<List<Predicate<ItemInstance>>> {
+/**
+ * Not actually a registry.
+ */
+public class TagRegistry {
 
-    public static TagRegistry INSTANCE = new TagRegistry(Identifier.of(StationAPI.MODID, "tags"));
+    private final Map<Identifier, TagEntryList> entries = new IdentityHashMap<>();
 
-    /**
-     * Default registry constructor.
-     *
-     * @param identifier registry's identifier.
-     */
-    public TagRegistry(@NotNull Identifier identifier) {
-        super(identifier);
+    public static TagRegistry INSTANCE = new TagRegistry();
+
+    public void register(Identifier identifier, ItemInstance displayItem, Predicate<ItemInstance> predicate) {
+        entries.computeIfAbsent(identifier, TagEntryList::new).add(new TagEntry(ItemRegistry.INSTANCE.getIdentifier(displayItem.getType()), displayItem, predicate, identifier));
     }
 
-    public void register(Identifier identifier, Predicate<ItemInstance> predicate) {
-        computeIfAbsent(identifier, (identifier1) -> new ArrayList<>()).add(predicate);
+    public void register(TagEntry tagEntry) {
+        entries.computeIfAbsent(tagEntry.fullTag, TagEntryList::new).add(tagEntry);
     }
 
-    public void registerAll(Identifier identifier, Collection<Predicate<ItemInstance>> predicateCollection) {
-        computeIfAbsent(identifier, (identifier1 -> new ArrayList<>())).addAll(predicateCollection);
+    public void registerAll(Identifier identifier, Collection<TagEntry> predicateCollection) {
+        entries.computeIfAbsent(identifier, (TagEntryList::new)).addAll(predicateCollection);
     }
 
-    @Override
-    @Deprecated
-    public void register(@NotNull Identifier identifier, @NotNull List<Predicate<ItemInstance>> value) {
-        super.register(identifier, value);
-    }
-
-    @Override
-    public @NotNull Optional<List<Predicate<ItemInstance>>> get(@NotNull Identifier identifier) {
+    public @NotNull Optional<List<TagEntry>> get(@NotNull Identifier identifier) {
         if (identifier.id.endsWith("/")) {
-            return Optional.of(values.entrySet().stream().filter(id -> id.getKey().id.startsWith(identifier.id) || id.getKey().id.equals(identifier.id.substring(0, identifier.id.length()-1))).map(Map.Entry::getValue).flatMap(Collection::stream).collect(Collectors.toList()));
+            return Optional.of(entries.entrySet().stream().filter(id -> id.getKey().id.startsWith(identifier.id) || id.getKey().id.equals(identifier.id.substring(0, identifier.id.length()-1))).map(Map.Entry::getValue).flatMap(Collection::stream).collect(Collectors.toList()));
         }
-        return super.get(identifier);
+        List<TagEntry> tagEntries = entries.get(identifier);
+        return tagEntries == null? Optional.empty() : Optional.of(tagEntries);
     }
 
-    public @NotNull Optional<Map<Identifier, List<Predicate<ItemInstance>>>> getWithIdentifiers(@NotNull Identifier identifier) {
+    public @NotNull Optional<Map<Identifier, List<TagEntry>>> getWithIdentifiers(@NotNull Identifier identifier) {
         if (identifier.id.endsWith("/")) {
-            return Optional.of(values.entrySet().stream().filter(id -> id.getKey().modID.equals(identifier.modID) && id.getKey().id.startsWith(identifier.id)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+            return Optional.of(entries.entrySet().stream().filter(id -> id.getKey().id.startsWith(identifier.id) || id.getKey().id.equals(identifier.id.substring(0, identifier.id.length()-1))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
-        return Optional.of(values.entrySet().stream().filter(id -> id.getKey().equals(identifier)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-
+        return Optional.of(entries.entrySet().stream().filter(id -> id.getKey().equals(identifier)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
     /**
@@ -59,8 +53,17 @@ public class TagRegistry extends Registry<List<Predicate<ItemInstance>>> {
      * @param itemInstance ItemInstance to verify.
      * @return true if ItemInstance matches Identifier.
      */
-    public boolean matches(Identifier identifier, ItemInstance itemInstance) {
-        Optional<List<Predicate<ItemInstance>>> predicates = get(identifier);
-        return predicates.isPresent() && predicates.get().stream().anyMatch(predicate -> predicate.test(itemInstance));
+    public boolean tagMatches(Identifier identifier, ItemInstance itemInstance) {
+        System.out.println("=============================================================================");
+        System.out.println(identifier.toString());
+        System.out.println(itemInstance.itemId);
+        System.out.println(ItemRegistry.INSTANCE.getIdentifier(itemInstance.getType()).toString());
+        System.out.println("========");
+        Optional<List<TagEntry>> predicates = get(identifier);
+        return predicates.isPresent() && predicates.get().stream().anyMatch(tagEntry -> {
+            System.out.println(tagEntry.fullTag.toString());
+            System.out.println(tagEntry.predicate.test(itemInstance));
+            return tagEntry.predicate.test(itemInstance);
+        });
     }
 }

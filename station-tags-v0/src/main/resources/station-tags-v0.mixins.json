@@ -4,7 +4,6 @@
   "package": "net.modificationstation.stationapi.mixin.tags",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "HahaThisIsMineNow",
     "MixinStats"
   ],
   "injectors": {

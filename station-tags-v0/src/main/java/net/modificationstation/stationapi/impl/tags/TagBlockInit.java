@@ -3,11 +3,13 @@ package net.modificationstation.stationapi.impl.tags;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
+import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.event.oredict.TagRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.tags.TagEntry;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
@@ -150,15 +152,18 @@ public class TagBlockInit {
         LOGGER.info("Registered vanilla block tags.");
     }
 
-    private static void addBlockIgnoreDamage(String oreDictString, BlockBase blockBase) {
-        TagRegistry.INSTANCE.register(Identifier.of(oreDictString), (itemInstance) -> blockBase.id == itemInstance.itemId);
+    private static void addBlockIgnoreDamage(String oreDictString, BlockBase itemBase) {
+        ItemInstance itemInstanceToUse = new ItemInstance(itemBase);
+        TagRegistry.INSTANCE.register(new TagEntry(new ItemInstance(itemBase), itemInstance -> itemInstanceToUse.itemId == itemInstance.itemId, Identifier.of(oreDictString)));
     }
 
-    private static void addBlock0Damage(String oreDictString, BlockBase blockBase) {
-        TagRegistry.INSTANCE.register(Identifier.of(oreDictString), (itemInstance) -> new ItemInstance(blockBase, 1, 0).isDamageAndIDIdentical(itemInstance));
+    private static void addBlock0Damage(String oreDictString, BlockBase itemBase) {
+        ItemInstance itemInstanceToUse = new ItemInstance(itemBase, 1, 0);
+        TagRegistry.INSTANCE.register(new TagEntry(itemInstanceToUse, itemInstanceToUse::isDamageAndIDIdentical, Identifier.of(oreDictString)));
     }
 
-    private static void addBlock(String oreDictString, BlockBase blockBase, int damage) {
-        TagRegistry.INSTANCE.register(Identifier.of(oreDictString), (itemInstance) -> new ItemInstance(blockBase, 1, damage).isDamageAndIDIdentical(itemInstance));
+    private static void addBlock(String oreDictString, BlockBase itemBase, int damage) {
+        ItemInstance itemInstanceToUse = new ItemInstance(itemBase, 1, damage);
+        TagRegistry.INSTANCE.register(new TagEntry(new ItemInstance(itemBase, 1, damage), itemInstanceToUse::isDamageAndIDIdentical, Identifier.of(oreDictString)));
     }
 }

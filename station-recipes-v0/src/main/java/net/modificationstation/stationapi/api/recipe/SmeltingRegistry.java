@@ -28,7 +28,7 @@ public class SmeltingRegistry {
     @API
     public static ItemInstance getResultFor(ItemInstance input) {
         for (Object o : ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().keySet()) {
-            if (o instanceof ItemInstance && input.isDamageAndIDIdentical((ItemInstance) o) || o instanceof Identifier && TagRegistry.INSTANCE.matches((Identifier) o, input))
+            if (o instanceof ItemInstance && input.isDamageAndIDIdentical((ItemInstance) o) || o instanceof Identifier && TagRegistry.INSTANCE.tagMatches((Identifier) o, input))
                 return ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().get(o);
         }
         return SmeltingRecipeRegistry.getInstance().getResult(input.getType().id);

@@ -4,7 +4,9 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.event.oredict.TagRegisterEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.tags.TagEntry;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.*;
@@ -16,7 +18,7 @@ public class MainTest {
         SLTest.LOGGER.info("==================================================================================================");
         Identifier oreDictToTest = Identifier.of("items/tools/pickaxes/");
         SLTest.LOGGER.info(oreDictToTest);
-        Optional<Map<Identifier, List<Predicate<ItemInstance>>>> predicates = TagRegistry.INSTANCE.getWithIdentifiers(oreDictToTest);
+        Optional<Map<Identifier, List<TagEntry>>> predicates = TagRegistry.INSTANCE.getWithIdentifiers(oreDictToTest);
         if (predicates.isPresent()) {
             for (Identifier oreDictEntryObject : predicates.get().keySet()) {
                 SLTest.LOGGER.info(oreDictEntryObject);

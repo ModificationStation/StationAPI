@@ -1,21 +1,31 @@
-package net.modificationstation.stationapi.impl.recipe.oredict;
+package net.modificationstation.stationapi.impl.recipe.tag;
 
+import net.minecraft.block.BlockBase;
 import net.minecraft.inventory.Crafting;
+import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.Recipe;
+import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
 
 import java.util.*;
 
-public class ShapelessOreDictRecipe implements Recipe {
+public class ShapelessTagRecipe implements Recipe, StationRecipe {
 
     private final ItemInstance output;
-    private final List<?> input;
+    private final List<Object> input;
 
-    public ShapelessOreDictRecipe(ItemInstance output, List<?> inputs) {
-        for (Object o : inputs) {
-            if (!(o instanceof ItemInstance) && !(o instanceof Identifier)) {
+    public ShapelessTagRecipe(ItemInstance output, List<Object> inputs) {
+        for (int i = 0; i <= inputs.size()-1; i++) {
+            Object o = inputs.get(i);
+            if (o instanceof BlockBase) {
+                inputs.set(i, new ItemInstance((BlockBase) o));
+            }
+            else if (o instanceof ItemBase) {
+                inputs.set(i, new ItemInstance((ItemBase) o));
+            }
+            else if (!(o instanceof ItemInstance) && !(o instanceof Identifier)) {
                 throw new RuntimeException("Invalid shapeless OreDict recipe! Expected " + String.class.getName() + ", " + ItemInstance.class.getName() + ". Got: \"" + o.getClass().getName() + "\"");
             }
             if (o instanceof Identifier && !TagRegistry.INSTANCE.get((Identifier) o).isPresent()) {
@@ -60,11 +70,13 @@ public class ShapelessOreDictRecipe implements Recipe {
                                 break;
                             }
                         } else {
-                            if (TagRegistry.INSTANCE.matches((Identifier) o, itemInCrafting)) {
+                            if (TagRegistry.INSTANCE.tagMatches((Identifier) o, itemInCrafting)) {
+                                System.out.println("Matches!");
                                 var6 = true;
                                 ingredients.remove(o);
                                 break;
                             }
+                            System.out.println("Nope!");
                         }
                     }
 
@@ -76,5 +88,25 @@ public class ShapelessOreDictRecipe implements Recipe {
         }
 
         return ingredients.isEmpty();
+    }
+
+    @Override
+    public ItemInstance[] getIngredients() {
+        ItemInstance[] items = new ItemInstance[9];
+        for (int i = 0; i < 8; i++) {
+            Object ingredient = input.get(i);
+            if (ingredient instanceof ItemInstance) {
+                items[i] = (ItemInstance) ingredient;
+            }
+            else if (ingredient instanceof Identifier) {
+                items[i] = TagRegistry.INSTANCE.get((Identifier) ingredient).orElseThrow(NullPointerException::new).get(0).displayItem.copy();
+            }
+        }
+        return items;
+    }
+
+    @Override
+    public ItemInstance[] getOutputs() {
+        return new ItemInstance[]{output.copy()};
     }
 }
