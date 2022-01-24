@@ -204,7 +204,7 @@ subprojects {subproject ->
     assert this.remapJar != remapJar //No accidents moving this around
     this.remapJar.dependsOn(remapJar)
 
-    group = project.maven_group + ".${project.version}"
+    group = project.maven_group + ".${project.hasProperty("override_version")? project.override_version : project.mod_version}"
 
     configurations {
         out {
