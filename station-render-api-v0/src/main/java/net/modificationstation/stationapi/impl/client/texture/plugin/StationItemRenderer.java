@@ -19,12 +19,12 @@ import net.modificationstation.stationapi.mixin.render.client.ItemRendererAccess
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-public class StationItemRenderer extends ItemRendererPlugin {
+final class StationItemRenderer extends ItemRendererPlugin {
 
     private final ItemRendererAccessor itemRendererAccessor;
     private final EntityRendererAccessor entityRendererAccessor;
 
-    public StationItemRenderer(ItemRenderer itemRenderer) {
+    StationItemRenderer(ItemRenderer itemRenderer) {
         super(itemRenderer);
         this.itemRendererAccessor = (ItemRendererAccessor) this.itemRenderer;
         this.entityRendererAccessor = (EntityRendererAccessor) this.itemRenderer;

@@ -25,14 +25,14 @@ import java.util.*;
 
 import static net.minecraft.client.render.block.BlockRenderer.fancyGraphics;
 
-public class StationBlockRenderer extends BlockRendererPlugin {
+public final class StationBlockRenderer extends BlockRendererPlugin {
 
     private boolean renderingMesh;
     public final Set<Atlas> activeAtlases = new HashSet<>();
     public final BlockRendererAccessor blockRendererAccessor;
     public final BakedModelRenderer bakedModelRenderer;
 
-    public StationBlockRenderer(BlockRenderer blockRenderer) {
+    StationBlockRenderer(BlockRenderer blockRenderer) {
         super(blockRenderer);
         blockRendererAccessor = (BlockRendererAccessor) blockRenderer;
         bakedModelRenderer = new BakedModelRendererImpl(blockRenderer, this);

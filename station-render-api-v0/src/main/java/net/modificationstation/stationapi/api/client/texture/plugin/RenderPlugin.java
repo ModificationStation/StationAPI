@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.client.texture.plugin;
 
+import net.minecraft.class_556;
 import net.minecraft.class_66;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.client.render.entity.ItemRenderer;
@@ -20,6 +21,10 @@ public class RenderPlugin {
 
     public ItemRendererPlugin createItemRenderer(ItemRenderer itemRenderer) {
         return new ItemRendererPlugin(itemRenderer);
+    }
+
+    public OverlayRendererPlugin createOverlayRenderer(class_556 overlayRenderer) {
+        return new OverlayRendererPlugin(overlayRenderer);
     }
 
     @Override

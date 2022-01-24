@@ -1,11 +1,13 @@
 package net.modificationstation.stationapi.impl.client.texture.plugin;
 
+import net.minecraft.class_556;
 import net.minecraft.class_66;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.client.render.entity.ItemRenderer;
 import net.modificationstation.stationapi.api.client.texture.plugin.BlockRendererPlugin;
 import net.modificationstation.stationapi.api.client.texture.plugin.ItemRendererPlugin;
 import net.modificationstation.stationapi.api.client.texture.plugin.MeshRendererPlugin;
+import net.modificationstation.stationapi.api.client.texture.plugin.OverlayRendererPlugin;
 import net.modificationstation.stationapi.api.client.texture.plugin.RenderPlugin;
 
 public class StationRenderPlugin extends RenderPlugin {
@@ -23,6 +25,11 @@ public class StationRenderPlugin extends RenderPlugin {
     @Override
     public ItemRendererPlugin createItemRenderer(ItemRenderer itemRenderer) {
         return new StationItemRenderer(itemRenderer);
+    }
+
+    @Override
+    public OverlayRendererPlugin createOverlayRenderer(class_556 overlayRenderer) {
+        return new StationOverlayRenderer(overlayRenderer);
     }
 
     @Override

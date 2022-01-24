@@ -15,11 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
-public class StationChunkRenderer extends MeshRendererPlugin {
+final class StationChunkRenderer extends MeshRendererPlugin {
 
     private final class_66Accessor meshRendererAccessor;
 
-    public StationChunkRenderer(class_66 meshRenderer) {
+    StationChunkRenderer(class_66 meshRenderer) {
         super(meshRenderer);
         meshRendererAccessor = (class_66Accessor) meshRenderer;
     }
