@@ -53,12 +53,6 @@ void addDependency(XmlProvider xml, String scope, Object... dependencies) {
     }
 }
 
-//Subprojects will set these themselves
-//Not neatly. - calm
-project.group = project.maven_group
-project.archivesBaseName = project.archives_base_name
-project.version = project.hasProperty("override_version")? project.override_version : project.mod_version
-
 allprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'fabric-loom'
@@ -198,6 +192,12 @@ allprojects {
 
 import net.fabricmc.loom.task.RunClientTask
 import net.fabricmc.loom.task.RunServerTask
+
+//Subprojects will set these themselves
+//Not neatly. - calm
+project.group = project.maven_group
+project.archivesBaseName = project.archives_base_name
+project.version = project.hasProperty("override_version")? project.override_version : project.mod_version
 
 subprojects {subproject ->
 
