@@ -174,8 +174,6 @@ allprojects {
         }
         publications {
             mavenJava(MavenPublication) {
-                artifactId project.archives_base_name
-                
                 afterEvaluate {
                     artifact(remapJar) {
                         builtBy remapJar
@@ -259,6 +257,10 @@ dependencies {
     include "it.unimi.dsi:fastutil:${project.fastutil_version}"
     //noinspection GradlePackageUpdate
     include "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
+}
+
+publishing.publications.mavenJava(MavenPublication) {
+    artifactId project.archives_base_name
 }
 
 task runTestmodClient(type: RunClientTask) {
