@@ -55,16 +55,15 @@ void addDependency(XmlProvider xml, String scope, Object... dependencies) {
 
 //Subprojects will set these themselves
 //Not neatly. - calm
-group = project.maven_group
-archivesBaseName = archives_base_name
-version = project.hasProperty("override_version")? override_version : mod_version
+project.group = project.maven_group
+project.archivesBaseName = project.archives_base_name
+project.version = project.hasProperty("override_version")? project.override_version : project.mod_version
 
 allprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'fabric-loom'
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
     repositories {
         maven {
