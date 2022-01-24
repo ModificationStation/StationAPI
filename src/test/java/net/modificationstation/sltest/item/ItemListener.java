@@ -1,6 +1,7 @@
 package net.modificationstation.sltest.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.minecraft.item.ItemInstance;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.item.tool.ToolMaterialFactory;
@@ -22,7 +23,7 @@ public class ItemListener {
         testNBTItem = new NBTItem(of(MODID, "nbt_item")).setTranslationKey(MODID, "nbt_item"); //8477
         testModelItem = new ModelItem(of(MODID, "model_item")).setMaxStackSize(1).setTranslationKey(MODID, "idkSomething");
 
-        TagRegistry.INSTANCE.register(Identifier.of("items/tools/pickaxes/testpickaxe"), (e) -> e.itemId == testPickaxe.id);
+        TagRegistry.INSTANCE.register(Identifier.of("items/tools/pickaxes/testpickaxe"), new ItemInstance(testPickaxe), (e) -> e.itemId == testPickaxe.id);
     }
 
     public static TemplateItemBase testItem;

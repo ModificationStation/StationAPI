@@ -5,11 +5,14 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MixinCraftingResult",
+    "MixinRecipe",
     "MixinRecipeRegistry",
+    "MixinShapelessRecipe",
     "MixinSmeltingRecipeRegistry",
     "MixinStats",
     "MixinTileEntityFurnace",
     "RecipeRegistryAccessor",
+    "SecondaryBlockAccessor",
     "SmeltingRecipeRegistryAccessor",
     "TileEntityFurnaceAccessor"
   ],

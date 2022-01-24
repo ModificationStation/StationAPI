@@ -1,29 +1,31 @@
-package net.modificationstation.stationapi.impl.recipe.oredict;
+package net.modificationstation.stationapi.impl.recipe.tag;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.inventory.Crafting;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.Recipe;
+import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
 
 import java.util.*;
 
-public class ShapedOreDictRecipe implements Recipe {
+public class ShapedTagRecipe implements Recipe, StationRecipe {
     public final int outputId;
     private final int width;
     private final int height;
     private final Object[] ingredients;
     private final ItemInstance output;
 
-    public ShapedOreDictRecipe(ItemInstance output, List<?> objects) {
+    public ShapedTagRecipe(ItemInstance output, List<?> objects) {
         StringBuilder joinedRecipeString = new StringBuilder();
         int arrayIndex = 0;
         int recipeStringLength = 0;
         int recipeStringHeight = 0;
         if (objects.get(arrayIndex) instanceof String[]) {
-            String[] recipeStrings = (String[]) objects.get(arrayIndex);
+            String[] recipeStrings = (String[]) objects.get(arrayIndex++);
 
             for (String recipeString : recipeStrings) {
                 ++recipeStringHeight;
@@ -39,16 +41,16 @@ public class ShapedOreDictRecipe implements Recipe {
             }
         }
 
-        HashMap<Character, Object> characterToIngredient;
+        HashMap<Character, Object> characterToIngredient = new HashMap<>();
 
-        for(characterToIngredient = new HashMap<>(); arrayIndex < objects.size(); arrayIndex += 2) {
+        for(; arrayIndex < objects.size(); arrayIndex += 2) {
             Character recipeCharacter = (Character)objects.get(arrayIndex);
             Object ingredientToAdd = null;
             if (objects.get(arrayIndex + 1) instanceof ItemBase) {
                 ingredientToAdd = new ItemInstance((ItemBase)objects.get(arrayIndex + 1));
             } else if (objects.get(arrayIndex + 1) instanceof BlockBase) {
                 ingredientToAdd = new ItemInstance((BlockBase)objects.get(arrayIndex + 1), 1, -1);
-            } else if (objects.get(arrayIndex + 1) instanceof ItemInstance || objects.get(arrayIndex + 1) instanceof String) {
+            } else if (objects.get(arrayIndex + 1) instanceof ItemInstance || objects.get(arrayIndex + 1) instanceof Identifier) {
                 ingredientToAdd = objects.get(arrayIndex + 1);
             }
 
@@ -63,8 +65,12 @@ public class ShapedOreDictRecipe implements Recipe {
                 Object ingredient = characterToIngredient.get(character);
                 if (ingredient instanceof ItemInstance)
                     ingredients[characterPosition] = ((ItemInstance) ingredient).copy();
-                else if (ingredient instanceof String) {
+                else if (ingredient instanceof Identifier) {
                     ingredients[characterPosition] = ingredient;
+                }
+                else {
+                    System.out.println(ItemRegistry.INSTANCE.getIdentifier(output.getType()));
+                    throw new UnsupportedOperationException("Shaped ingredient of type \"" + ingredient.getClass() + "\" isn't a valid ingredient!");
                 }
             } else {
                 ingredients[characterPosition] = null;
@@ -130,7 +136,11 @@ public class ShapedOreDictRecipe implements Recipe {
                 }
                 else {
                     Identifier var11 = (Identifier) var9;
-                    if (!TagRegistry.INSTANCE.matches(var11, var10)) {
+                    System.out.println("checking " + ItemRegistry.INSTANCE.getIdentifier(output.getType()).toString());
+                    boolean matches = TagRegistry.INSTANCE.tagMatches(var11, var10);
+                    System.out.println(matches);
+                    if (!matches) {
+                        System.out.println("false!");
                         return false;
                     }
                 }
@@ -142,11 +152,31 @@ public class ShapedOreDictRecipe implements Recipe {
 
     @Override
     public ItemInstance craft(Crafting arg) {
-        return new ItemInstance(this.output.itemId, this.output.count, this.output.getDamage());
+        return output.copy();
     }
 
     @Override
     public int getIngredientCount() {
         return this.width * this.height;
+    }
+
+    @Override
+    public ItemInstance[] getIngredients() {
+        ItemInstance[] items = new ItemInstance[9];
+        for (int i = 0; i < 8; i++) {
+            Object ingredient = ingredients[i];
+            if (ingredient instanceof ItemInstance) {
+                items[i] = (ItemInstance) ingredient;
+            }
+            else if (ingredient instanceof Identifier) {
+                items[i] = TagRegistry.INSTANCE.get((Identifier) ingredient).orElseThrow(NullPointerException::new).get(0).displayItem.copy();
+            }
+        }
+        return items;
+    }
+
+    @Override
+    public ItemInstance[] getOutputs() {
+        return new ItemInstance[]{output.copy()};
     }
 }

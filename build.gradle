@@ -53,16 +53,11 @@ void addDependency(XmlProvider xml, String scope, Object... dependencies) {
     }
 }
 
-
 allprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'fabric-loom'
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-
-    //Group is common for all API modules
-    group = project.maven_group
+    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
     repositories {
         maven {
@@ -130,11 +125,11 @@ allprojects {
 
     afterEvaluate {
         processResources {
-            inputs.property 'version', project.version
+            inputs.property 'version', project.mod_version
 
             from(sourceSets.main.resources.srcDirs) {
                 include 'fabric.mod.json'
-                expand 'version': project.version
+                expand 'version': project.mod_version
             }
 
             from(sourceSets.main.resources.srcDirs) {
@@ -166,6 +161,17 @@ allprojects {
     }
 
     publishing {
+        repositories {
+            if (project.hasProperty("glass_maven_url")) {
+                maven {
+                    url = "${project.glass_maven_url}"
+                    credentials {
+                        username "${project.glass_maven_username}"
+                        password "${project.glass_maven_password}"
+                    }
+                }
+            }
+        }
         publications {
             mavenJava(MavenPublication) {
                 afterEvaluate {
@@ -185,10 +191,18 @@ allprojects {
 import net.fabricmc.loom.task.RunClientTask
 import net.fabricmc.loom.task.RunServerTask
 
+//Subprojects will set these themselves
+//Not neatly. - calm
+project.group = project.maven_group
+project.archivesBaseName = project.archives_base_name
+project.version = project.hasProperty("override_version")? project.override_version : project.mod_version
+
 subprojects {subproject ->
 
     assert this.remapJar != remapJar //No accidents moving this around
     this.remapJar.dependsOn(remapJar)
+
+    group = project.maven_group + ".${project.parent.archivesBaseName}.${project.hasProperty("override_version")? project.override_version : project.mod_version}"
 
     configurations {
         out {
@@ -235,9 +249,19 @@ subprojects {subproject ->
     }
 }
 
-//Subprojects will set these themselves
-archivesBaseName = archives_base_name
-version = mod_version
+dependencies {
+    include "org.apache.commons:commons-lang3:3.5"
+    include "com.github.jhalterman:typetools:${project.typetools_version}"
+    include "com.github.mineLdiver:expressions:${project.expressions_version}"
+    include "com.github.mineLdiver:UnsafeEvents:${project.unsafeevents_version}"
+    include "it.unimi.dsi:fastutil:${project.fastutil_version}"
+    //noinspection GradlePackageUpdate
+    include "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
+}
+
+publishing.publications.mavenJava(MavenPublication) {
+    artifactId project.archives_base_name
+}
 
 task runTestmodClient(type: RunClientTask) {
     classpath sourceSets.test.runtimeClasspath
