@@ -56,7 +56,6 @@ void addDependency(XmlProvider xml, String scope, Object... dependencies) {
 //Subprojects will set these themselves
 //Not neatly. - calm
 group = project.maven_group
-project.name = archives_base_name
 archivesBaseName = archives_base_name
 version = project.hasProperty("override_version")? override_version : mod_version
 
@@ -182,6 +181,8 @@ allprojects {
         }
         publications {
             mavenJava(MavenPublication) {
+                artifactId project.archives_base_name
+                
                 afterEvaluate {
                     artifact(remapJar) {
                         builtBy remapJar
