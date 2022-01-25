@@ -15,7 +15,6 @@ import java.util.*;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class SmeltingRegistryImpl {
-    public static final HashMap<Identifier, Identifier> CONVERSION_TABLE = new HashMap<>();
 
     @Getter
     private static TileEntityFurnaceAccessor warcrimes;

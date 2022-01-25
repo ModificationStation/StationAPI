@@ -17,7 +17,4 @@ public interface RecipeRegistryAccessor {
 
     @Invoker("addShapelessRecipe")
     void stationapi$addShapelessRecipe(ItemInstance itemInstance, Object... o);
-
-    @Accessor("recipes")
-    List<Recipe> stationapi$getRecipes();
 }

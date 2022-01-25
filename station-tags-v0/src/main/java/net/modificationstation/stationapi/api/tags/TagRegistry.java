@@ -54,16 +54,6 @@ public class TagRegistry {
      * @return true if ItemInstance matches Identifier.
      */
     public boolean tagMatches(Identifier identifier, ItemInstance itemInstance) {
-        System.out.println("=============================================================================");
-        System.out.println(identifier.toString());
-        System.out.println(itemInstance.itemId);
-        System.out.println(ItemRegistry.INSTANCE.getIdentifier(itemInstance.getType()).toString());
-        System.out.println("========");
-        Optional<List<TagEntry>> predicates = get(identifier);
-        return predicates.isPresent() && predicates.get().stream().anyMatch(tagEntry -> {
-            System.out.println(tagEntry.fullTag.toString());
-            System.out.println(tagEntry.predicate.test(itemInstance));
-            return tagEntry.predicate.test(itemInstance);
-        });
+        return get(identifier).map(tagEntries -> tagEntries.stream().anyMatch(e -> e.predicate.test(itemInstance))).orElse(false);
     }
 }

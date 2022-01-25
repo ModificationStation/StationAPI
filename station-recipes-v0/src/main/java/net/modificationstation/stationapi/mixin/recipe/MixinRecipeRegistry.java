@@ -3,27 +3,27 @@ package net.modificationstation.stationapi.mixin.recipe;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
-import net.minecraft.item.SecondaryBlock;
-import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeRegistry;
 import net.minecraft.recipe.ShapedRecipe;
+import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.recipe.ToolRecipes;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
-import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
-import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.impl.recipe.SmeltingRegistryImpl;
-import net.modificationstation.stationapi.impl.recipe.tag.ShapedTagRecipe;
+import net.modificationstation.stationapi.impl.recipe.tag.ShapedTagRecipeAccessor;
+import net.modificationstation.stationapi.impl.recipe.tag.TagConversionStorage;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.*;
 
@@ -33,10 +33,17 @@ import static net.modificationstation.stationapi.api.event.recipe.RecipeRegister
 @Mixin(RecipeRegistry.class)
 public class MixinRecipeRegistry {
 
+    @Unique
+    private Object[] capturedRecipe;
+    @Unique
+    private int capturedItemIndex;
+
     @Mutable
     @Shadow
     @Final
     private static RecipeRegistry INSTANCE;
+
+    @Shadow private List recipes;
 
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/util/Collections;sort(Ljava/util/List;Ljava/util/Comparator;)V"))
     private <T> void afterRecipeRegister(List<T> list, Comparator<? super T> c) {
@@ -49,90 +56,78 @@ public class MixinRecipeRegistry {
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/ToolRecipes;register(Lnet/minecraft/recipe/RecipeRegistry;)V"))
     private void initTags(ToolRecipes toolRecipes, RecipeRegistry arg) {
         INSTANCE = (RecipeRegistry) (Object) this;
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.SUGAR_CANES), Identifier.of("blocks/plants/canes/sugar/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.paper), Identifier.of("items/paper/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.stick), Identifier.of("items/stick/wood/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.LOG), Identifier.of("blocks/logs/wood/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.WOOD), Identifier.of("blocks/planks/wood/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.diamond), Identifier.of("items/minerals/diamond/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.redstoneDust), Identifier.of("items/minerals/redstone/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.book), Identifier.of("items/book/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.snowball), Identifier.of("items/snowball/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.clay), Identifier.of("items/clay/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.brick), Identifier.of("items/brick/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.glowstoneDust), Identifier.of("items/glowstone/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.string), Identifier.of("items/string/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.gunpowder), Identifier.of("items/gunpowder/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.SAND), Identifier.of("blocks/sand/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.COBBLESTONE), Identifier.of("blocks/cobblestone/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.STONE), Identifier.of("blocks/terrain/stone/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.SANDSTONE), Identifier.of("blocks/terrain/sandstone/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.ironIngot), Identifier.of("items/minerals/iron/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.milk), Identifier.of("items/tools/buckets/full/milk/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.sugar), Identifier.of("items/sugar/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.wheat), Identifier.of("items/wheat/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.egg), Identifier.of("items/egg/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.coal), Identifier.of("items/minerals/coal/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.goldIngot), Identifier.of("items/minerals/gold/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.WOODEN_PRESSURE_PLATE), Identifier.of("blocks/redstone/plates/wood/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.PUMPKIN), Identifier.of("blocks/plants/pumpkin/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.TORCH), Identifier.of("blocks/torch/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.CHEST), Identifier.of("blocks/chest/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.minecart), Identifier.of("items/minecarts"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.FURNACE), Identifier.of("blocks/furnace/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.flint), Identifier.of("items/flint/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.GOLD_BLOCK), Identifier.of("blocks/minerals/gold/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.apple), Identifier.of("items/foods/apple/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.WOOL), Identifier.of("blocks/wool/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.REDSTONE_TORCH_LIT), Identifier.of("blocks/redstone/torch/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.compass), Identifier.of("items/tools/compass/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.bow), Identifier.of("items/tools/bow/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(ItemBase.slimeball), Identifier.of("items/slime/"));
-        SmeltingRegistryImpl.CONVERSION_TABLE.put(getIdentifier(BlockBase.PISTON), Identifier.of("blocks/redstone/pistons"));
+        TagConversionStorage.init();
         toolRecipes.register(arg);
+    }
+
+    /**
+     * @author calmilamsy
+     * @reason insane jank
+     */
+    @Overwrite
+    public void addShapelessRecipe(ItemInstance output, Object... objects) {
+        ArrayList<Object> var3 = new ArrayList<>();
+
+        for (Object var7 : objects) {
+            if (var7 instanceof ItemInstance) {
+                var3.add(((ItemInstance) var7).copy());
+            } else if (var7 instanceof ItemBase) {
+                var3.add(new ItemInstance((ItemBase) var7));
+            } else if (var7 instanceof BlockBase) {
+                var3.add(new ItemInstance((BlockBase) var7));
+            } else if (var7 instanceof Identifier) {
+                var3.add(var7);
+            } else {
+                throw new RuntimeException("Invalid shapeless recipe ingredient of type " + var7.getClass().getName() + "!");
+            }
+        }
+
+        this.recipes.add(new ShapelessRecipe(output, var3));
     }
 
     @Inject(method = "addShapedRecipe", at = @At(value = "HEAD"), cancellable = true)
     private void hijackShapedRecipes(ItemInstance output, Object[] objects, CallbackInfo ci) {
-        tagify(objects);
-        CraftingRegistry.addShapedOreDictRecipe(output, objects);
-        ci.cancel();
+        TagConversionStorage.tagify(objects);
+        capturedRecipe = objects;
     }
 
-    @Inject(method = "addShapelessRecipe", at = @At(value = "HEAD"), cancellable = true)
-    private void hijackShapelessRecipes(ItemInstance output, Object[] objects, CallbackInfo ci) {
-        tagify(objects);
-        CraftingRegistry.addShapelessOreDictRecipe(output, objects);
-        ci.cancel();
+    @ModifyVariable(method = "addShapedRecipe", at = @At(value = "LOAD", ordinal = 6), index = 4)
+    private int myLocalsNow(int var4) {
+        capturedItemIndex = var4;
+        return var4;
     }
 
-    private void tagify(Object[] objects) {
-        for (int i = 0; i < objects.length; i++) {
-            Object o = objects[i];
-            if (o instanceof ItemInstance) {
-                return;
-            }
-            else if (o instanceof SecondaryBlock) {
-                Identifier identifier = SmeltingRegistryImpl.CONVERSION_TABLE.get(getIdentifier(BlockBase.BY_ID[((SecondaryBlockAccessor) o).getTileId()]));
-                if (identifier != null) {
-                    objects[i] = identifier;
-                }
-            }
-            else if (o instanceof ItemBase || o instanceof BlockBase) {
-                Identifier identifier = SmeltingRegistryImpl.CONVERSION_TABLE.get(getIdentifier(o));
-                if (identifier != null) {
-                    objects[i] = identifier;
-                }
-            }
-        }
-    }
-
-    private static Identifier getIdentifier(Object o) {
-        if (o instanceof BlockBase) {
-            return BlockRegistry.INSTANCE.getIdentifier((BlockBase) o);
+    @Redirect(method = "addShapedRecipe", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
+    private Object hijackShapedRecipes2(Map hashMap, Object key, Object value) {
+        if (capturedRecipe[capturedItemIndex + 1] instanceof Identifier) {
+            return hashMap.put(key, capturedRecipe[capturedItemIndex + 1]);
         }
         else {
-            return ItemRegistry.INSTANCE.getIdentifier((ItemBase) o);
+            return hashMap.put(key, value);
         }
+    }
+
+    @Inject(method = "addShapedRecipe", at = @At(value = "CONSTANT", args = "intValue=0", ordinal = 4, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+    private void hijackShapedRecipes3(ItemInstance output, Object[] objects, CallbackInfo ci, String a, int itemIndex, int c, int d, HashMap itemMap) {
+        ShapedRecipe recipe = new ShapedRecipe(c, d, null, output);
+        Object[] var14 = new Object[c * d];
+
+        for(int var16 = 0; var16 < c * d; ++var16) {
+            char var10 = a.charAt(var16);
+            if (itemMap.containsKey(var10)) {
+                Object item = itemMap.get(var10);
+                if (item instanceof ItemInstance) {
+                    var14[var16] = ((ItemInstance) item).copy();
+                }
+                else if (item instanceof Identifier) {
+                    var14[var16] = item;
+                }
+            } else {
+                var14[var16] = null;
+            }
+        }
+        ((ShapedTagRecipeAccessor) recipe).setTaggedIngredients(var14);
+        recipes.add(recipe);
+        ci.cancel();
     }
 }

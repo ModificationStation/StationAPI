@@ -49,6 +49,7 @@ public class TagItemInit {
         addItem0Damage("items/sugar", ItemBase.sugar);
         addItem0Damage("blocks/cake", ItemBase.cake);
         addItem0Damage("items/bed", ItemBase.bed);
+        addItem0Damage("items/flint", ItemBase.flint);
         addItem0Damage("blocks/redstone/repeater", ItemBase.redstoneRepeater);
 
         // Ingots and Minerals
@@ -147,6 +148,29 @@ public class TagItemInit {
         addItemIgnoreDamage("items/armours/chestplates/diamond", ItemBase.diamondChestplate);
         addItemIgnoreDamage("items/armours/leggings/diamond", ItemBase.diamondLeggings);
         addItemIgnoreDamage("items/armours/boots/diamond", ItemBase.diamondBoots);
+
+        // Dyes
+        addItem0Damage("items/dyes/black", ItemBase.dyePowder);
+        addItem("items/dyes/red", ItemBase.dyePowder, 1);
+        addItem("items/dyes/green", ItemBase.dyePowder, 2);
+        addItem("items/dyes/brown", ItemBase.dyePowder, 3);
+        addItem("items/dyes/blue", ItemBase.dyePowder, 4);
+        addItem("items/dyes/purple", ItemBase.dyePowder, 5);
+        addItem("items/dyes/cyan", ItemBase.dyePowder, 6);
+        addItem("items/dyes/lightgray", ItemBase.dyePowder, 7);
+        addItem("items/dyes/gray", ItemBase.dyePowder, 8);
+        addItem("items/dyes/pink", ItemBase.dyePowder, 9);
+        addItem("items/dyes/lime", ItemBase.dyePowder, 10);
+        addItem("items/dyes/yellow", ItemBase.dyePowder, 11);
+        addItem("items/dyes/lightblue", ItemBase.dyePowder, 12);
+        addItem("items/dyes/magenta", ItemBase.dyePowder, 13);
+        addItem("items/dyes/orange", ItemBase.dyePowder, 14);
+        addItem("items/dyes/white", ItemBase.dyePowder, 15);
+
+        addItem0Damage("items/inksac", ItemBase.dyePowder);
+        addItem("items/cocoa", ItemBase.dyePowder, 3);
+        addItem("items/minerals/lapis", ItemBase.dyePowder, 4);
+        addItem("items/bonemeal", ItemBase.dyePowder, 15);
 
         LOGGER.info("Registered vanilla item tags.");
     }

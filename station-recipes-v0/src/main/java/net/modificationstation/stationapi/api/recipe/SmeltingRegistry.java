@@ -21,13 +21,11 @@ public class SmeltingRegistry {
     }
 
     @API
-    public static void addOreDictSmeltingRecipe(String input, ItemInstance output) {
-        ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().put(input, output);
-    }
-
-    @API
     public static ItemInstance getResultFor(ItemInstance input) {
         for (Object o : ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().keySet()) {
+            if (o instanceof Identifier && TagRegistry.INSTANCE.tagMatches((Identifier) o, input)) {
+                return ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().get(o);
+            }
             if (o instanceof ItemInstance && input.isDamageAndIDIdentical((ItemInstance) o) || o instanceof Identifier && TagRegistry.INSTANCE.tagMatches((Identifier) o, input))
                 return ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().get(o);
         }

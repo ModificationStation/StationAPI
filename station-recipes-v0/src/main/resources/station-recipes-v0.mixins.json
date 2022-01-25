@@ -7,6 +7,7 @@
     "MixinCraftingResult",
     "MixinRecipe",
     "MixinRecipeRegistry",
+    "MixinShapedRecipe",
     "MixinShapelessRecipe",
     "MixinSmeltingRecipeRegistry",
     "MixinStats",
