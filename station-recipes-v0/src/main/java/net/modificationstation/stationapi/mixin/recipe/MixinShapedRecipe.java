@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.mixin.recipe;
 import net.minecraft.inventory.Crafting;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.ShapedRecipe;
+import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
 import net.modificationstation.stationapi.impl.recipe.tag.ShapedTagRecipeAccessor;
@@ -10,11 +11,16 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Mixin(ShapedRecipe.class)
-public class MixinShapedRecipe implements ShapedTagRecipeAccessor {
+public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe {
 
     @Shadow private int width;
     @Shadow private int height;
+    @Shadow private ItemInstance output;
     private Object[] taggedIngredients = new Object[]{};
 
     @Override
@@ -63,5 +69,24 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor {
         }
 
         return true;
+    }
+
+    @Override
+    public ItemInstance[] getIngredients() {
+        List<ItemInstance> itemInstances = new ArrayList<>();
+        Arrays.asList(taggedIngredients).forEach(entry -> {
+            if (entry instanceof Identifier) {
+                itemInstances.add(TagRegistry.INSTANCE.get((Identifier) entry).get().get(0).displayItem);
+            }
+            else {
+                itemInstances.add((ItemInstance) entry);
+            }
+        });
+        return itemInstances.toArray(new ItemInstance[]{});
+    }
+
+    @Override
+    public ItemInstance[] getOutputs() {
+        return new ItemInstance[]{output};
     }
 }
