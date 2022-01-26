@@ -61,7 +61,7 @@ public class TagConversionStorage {
         CONVERSION_TABLE.put(getIdentifier(ItemBase.compass), Identifier.of("items/tools/compass/"));
         CONVERSION_TABLE.put(getIdentifier(ItemBase.bow), Identifier.of("items/tools/bow/"));
         CONVERSION_TABLE.put(getIdentifier(ItemBase.slimeball), Identifier.of("items/slime/"));
-        CONVERSION_TABLE.put(getIdentifier(BlockBase.PISTON), Identifier.of("blocks/redstone/pistons"));
+        CONVERSION_TABLE.put(getIdentifier(BlockBase.PISTON), Identifier.of("blocks/machines/pistons"));
         CONVERSION_TABLE.put(getIdentifier(BlockBase.IRON_ORE), Identifier.of("blocks/ores/iron"));
         CONVERSION_TABLE.put(getIdentifier(BlockBase.GOLD_ORE), Identifier.of("blocks/ores/gold"));
         CONVERSION_TABLE.put(getIdentifier(BlockBase.DIAMOND_ORE), Identifier.of("blocks/ores/diamond"));

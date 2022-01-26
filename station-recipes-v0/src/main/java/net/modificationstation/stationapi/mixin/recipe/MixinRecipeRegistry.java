@@ -10,6 +10,7 @@ import net.minecraft.recipe.ToolRecipes;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.tags.TagRegistry;
 import net.modificationstation.stationapi.impl.recipe.tag.ShapedTagRecipeAccessor;
 import net.modificationstation.stationapi.impl.recipe.tag.TagConversionStorage;
 import org.spongepowered.asm.mixin.Final;
@@ -76,6 +77,9 @@ public class MixinRecipeRegistry {
             } else if (var7 instanceof BlockBase) {
                 var3.add(new ItemInstance((BlockBase) var7));
             } else if (var7 instanceof Identifier) {
+                if (!TagRegistry.INSTANCE.get((Identifier) var7).isPresent()) {
+                    throw new RuntimeException("Identifier ingredient \"" + var7.toString() + "\" has no entry in the tag registry!");
+                }
                 var3.add(var7);
             } else {
                 throw new RuntimeException("Invalid shapeless recipe ingredient of type " + var7.getClass().getName() + "!");
@@ -97,6 +101,7 @@ public class MixinRecipeRegistry {
         return var4;
     }
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(method = "addShapedRecipe", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
     private Object hijackShapedRecipes2(Map hashMap, Object key, Object value) {
         if (capturedRecipe[capturedItemIndex + 1] instanceof Identifier) {
@@ -120,6 +125,9 @@ public class MixinRecipeRegistry {
                     var14[var16] = ((ItemInstance) item).copy();
                 }
                 else if (item instanceof Identifier) {
+                    if (!TagRegistry.INSTANCE.get((Identifier) item).isPresent()) {
+                        throw new RuntimeException("Identifier ingredient \"" + item.toString() + "\" has no entry in the tag registry!");
+                    }
                     var14[var16] = item;
                 }
             } else {
