@@ -1,10 +1,8 @@
 package net.modificationstation.stationapi.api.tags;
 
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

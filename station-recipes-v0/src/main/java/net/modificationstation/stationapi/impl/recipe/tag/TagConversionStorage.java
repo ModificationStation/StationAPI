@@ -10,9 +10,7 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.mixin.recipe.SecondaryBlockAccessor;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
+import java.util.*;
 
 public class TagConversionStorage {
 

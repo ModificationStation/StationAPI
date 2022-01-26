@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.mixin.recipe;
 import net.minecraft.inventory.Crafting;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.ShapedRecipe;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tags.TagEntry;
@@ -13,10 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Mixin(ShapedRecipe.class)
 public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe {

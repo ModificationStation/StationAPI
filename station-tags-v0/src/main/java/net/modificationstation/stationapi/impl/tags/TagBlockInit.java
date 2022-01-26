@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.impl.tags;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.event.oredict.TagRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;

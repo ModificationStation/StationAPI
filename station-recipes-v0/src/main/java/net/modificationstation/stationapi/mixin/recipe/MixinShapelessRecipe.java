@@ -7,37 +7,30 @@ import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tags.TagEntry;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Mixin(ShapelessRecipe.class)
 public class MixinShapelessRecipe implements StationRecipe {
 
+    @SuppressWarnings("rawtypes")
     @Shadow @Final private List input;
 
     @Shadow @Final private ItemInstance output;
-    
+
     private static final Random RANDOM = new Random();
 
     /**
      * @author calmilamsy
+     * @reason need to insert a break statement.
      */
     @Overwrite
     public boolean canCraft(Crafting arg) {
-        ArrayList var2 = new ArrayList(this.input);
+        ArrayList<Object> var2 = new ArrayList<Object>(this.input);
 
         for(int var3 = 0; var3 < 3; ++var3) {
             for(int var4 = 0; var4 < 3; ++var4) {
@@ -71,6 +64,7 @@ public class MixinShapelessRecipe implements StationRecipe {
     @Override
     public ItemInstance[] getIngredients() {
         List<ItemInstance> itemInstances = new ArrayList<>();
+        //noinspection unchecked
         input.forEach(entry -> {
             if (entry instanceof Identifier) {
                 List<TagEntry> tagEntries = TagRegistry.INSTANCE.get((Identifier) entry).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + entry.toString() + "\" has no entry in the tag registry!"));

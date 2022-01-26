@@ -1,11 +1,8 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
-import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
-import net.modificationstation.stationapi.api.recipe.StationRecipe;
-import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.impl.recipe.tag.TagConversionStorage;
@@ -16,14 +13,12 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
-import java.util.Optional;
+import java.util.*;
 
 import static net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent.Vanilla.SMELTING;
-import static net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent.Vanilla.valueOf;
 
 @Mixin(SmeltingRecipeRegistry.class)
 public class MixinSmeltingRecipeRegistry {
