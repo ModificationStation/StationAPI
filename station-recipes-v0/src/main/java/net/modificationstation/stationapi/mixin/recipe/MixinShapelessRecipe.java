@@ -5,6 +5,7 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.ShapelessRecipe;
 import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.tags.TagEntry;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 @Mixin(ShapelessRecipe.class)
 public class MixinShapelessRecipe implements StationRecipe {
@@ -27,6 +29,8 @@ public class MixinShapelessRecipe implements StationRecipe {
     @Shadow @Final private List input;
 
     @Shadow @Final private ItemInstance output;
+    
+    private static final Random RANDOM = new Random();
 
     /**
      * @author calmilamsy
@@ -69,7 +73,8 @@ public class MixinShapelessRecipe implements StationRecipe {
         List<ItemInstance> itemInstances = new ArrayList<>();
         input.forEach(entry -> {
             if (entry instanceof Identifier) {
-                itemInstances.add(TagRegistry.INSTANCE.get((Identifier) entry).get().get(0).displayItem);
+                List<TagEntry> tagEntries = TagRegistry.INSTANCE.get((Identifier) entry).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + entry.toString() + "\" has no entry in the tag registry!"));
+                itemInstances.add(tagEntries.get(RANDOM.nextInt(tagEntries.size())).displayItem);
             }
             else {
                 itemInstances.add((ItemInstance) entry);
