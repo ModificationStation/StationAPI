@@ -48,7 +48,7 @@ public class TagConversionStorage {
         CONVERSION_TABLE.put(getIdentifier(BlockBase.WOODEN_PRESSURE_PLATE), Identifier.of("blocks/redstone/plates/wood/"));
         CONVERSION_TABLE.put(getIdentifier(BlockBase.PUMPKIN), Identifier.of("blocks/plants/pumpkin/"));
         CONVERSION_TABLE.put(getIdentifier(BlockBase.TORCH), Identifier.of("blocks/torch/"));
-        CONVERSION_TABLE.put(getIdentifier(BlockBase.CHEST), Identifier.of("blocks/chest/"));
+        CONVERSION_TABLE.put(getIdentifier(BlockBase.CHEST), Identifier.of("blocks/storage/chest/"));
         CONVERSION_TABLE.put(getIdentifier(ItemBase.minecart), Identifier.of("items/minecarts"));
         CONVERSION_TABLE.put(getIdentifier(BlockBase.FURNACE), Identifier.of("blocks/furnace/"));
         CONVERSION_TABLE.put(getIdentifier(ItemBase.flint), Identifier.of("items/flint/"));
@@ -56,7 +56,7 @@ public class TagConversionStorage {
         CONVERSION_TABLE.put(getIdentifier(ItemBase.apple), Identifier.of("items/foods/apple/"));
         CONVERSION_TABLE.put(getIdentifier(BlockBase.WOOL), Identifier.of("blocks/wools/"));
         CONVERSION_TABLE.put(getIdentifier(BlockBase.REDSTONE_TORCH_LIT), Identifier.of("blocks/redstone/torch/"));
-        CONVERSION_TABLE.put(getIdentifier(ItemBase.compass), Identifier.of("items/tools/compass/"));
+        CONVERSION_TABLE.put(getIdentifier(ItemBase.compass), Identifier.of("items/compass/"));
         CONVERSION_TABLE.put(getIdentifier(ItemBase.bow), Identifier.of("items/tools/bow/"));
         CONVERSION_TABLE.put(getIdentifier(ItemBase.slimeball), Identifier.of("items/slime/"));
         CONVERSION_TABLE.put(getIdentifier(BlockBase.PISTON), Identifier.of("blocks/machines/pistons"));
