@@ -75,40 +75,24 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe
     @Override
     public ItemInstance[] getIngredients() {
         ItemInstance[] itemInstances = new ItemInstance[9];
-        for (int h = 0; h < 3; h++) {
-            for (int w = 0; w < 3; w++) {
-                int index = (h * 3) + w;
-                if (w >= width || h >= height) {
-                    itemInstances[index] = null;
+        for (int h = 0; h < height; h++) {
+            for (int w = 0; w < width; w++) {
+                int localId = (h * width) + w;
+                int id = (h * 3) + w;
+
+                Object entry = taggedIngredients[localId];
+
+                if (entry instanceof Identifier) {
+                    List<TagEntry> tagEntries = TagRegistry.INSTANCE.get((Identifier) entry).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + entry.toString() + "\" has no entry in the tag registry!"));
+                    itemInstances[id] = tagEntries.get(RANDOM.nextInt(tagEntries.size())).displayItem;
                 }
                 else {
-                    Object entry = taggedIngredients[index];
-
-                    if (entry instanceof Identifier) {
-                        List<TagEntry> tagEntries = TagRegistry.INSTANCE.get((Identifier) entry).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + entry.toString() + "\" has no entry in the tag registry!"));
-                        itemInstances[index] = tagEntries.get(RANDOM.nextInt(tagEntries.size())).displayItem;
-                    }
-                    else {
-                        itemInstances[index] = (ItemInstance) entry;
-                    }
+                    itemInstances[id] = (ItemInstance) entry;
                 }
             }
         }
 
         return itemInstances;
-
-//        List<ItemInstance> itemInstances = new ArrayList<>();
-//        Arrays.asList(taggedIngredients).forEach(entry -> {
-//
-//            if (entry instanceof Identifier) {
-//                List<TagEntry> tagEntries = TagRegistry.INSTANCE.get((Identifier) entry).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + entry.toString() + "\" has no entry in the tag registry!"));
-//                itemInstances.add(tagEntries.get(RANDOM.nextInt(tagEntries.size())).displayItem);
-//            }
-//            else {
-//                itemInstances.add((ItemInstance) entry);
-//            }
-//        });
-//        return itemInstances.toArray(new ItemInstance[]{});
     }
 
     @Override
