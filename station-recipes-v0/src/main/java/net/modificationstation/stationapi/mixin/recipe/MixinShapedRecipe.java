@@ -29,7 +29,8 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe
     }
 
     /**
-     * @author I made a huge mistake
+     * @author calmilamsy
+     * @reason Modified if statement
      */
     @Overwrite
     private boolean matchesSmall(Crafting arg, int i, int j, boolean flag) {
@@ -73,17 +74,41 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe
 
     @Override
     public ItemInstance[] getIngredients() {
-        List<ItemInstance> itemInstances = new ArrayList<>();
-        Arrays.asList(taggedIngredients).forEach(entry -> {
-            if (entry instanceof Identifier) {
-                List<TagEntry> tagEntries = TagRegistry.INSTANCE.get((Identifier) entry).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + entry.toString() + "\" has no entry in the tag registry!"));
-                itemInstances.add(tagEntries.get(RANDOM.nextInt(tagEntries.size())).displayItem);
+        ItemInstance[] itemInstances = new ItemInstance[9];
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int index = i + j;
+                if (i >= width || j >= height) {
+                    itemInstances[index] = null;
+                }
+                else {
+                    Object entry = taggedIngredients[index];
+
+                    if (entry instanceof Identifier) {
+                        List<TagEntry> tagEntries = TagRegistry.INSTANCE.get((Identifier) entry).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + entry.toString() + "\" has no entry in the tag registry!"));
+                        itemInstances[index] = tagEntries.get(RANDOM.nextInt(tagEntries.size())).displayItem;
+                    }
+                    else {
+                        itemInstances[index] = (ItemInstance) entry;
+                    }
+                }
             }
-            else {
-                itemInstances.add((ItemInstance) entry);
-            }
-        });
-        return itemInstances.toArray(new ItemInstance[]{});
+        }
+
+        return itemInstances;
+
+//        List<ItemInstance> itemInstances = new ArrayList<>();
+//        Arrays.asList(taggedIngredients).forEach(entry -> {
+//
+//            if (entry instanceof Identifier) {
+//                List<TagEntry> tagEntries = TagRegistry.INSTANCE.get((Identifier) entry).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + entry.toString() + "\" has no entry in the tag registry!"));
+//                itemInstances.add(tagEntries.get(RANDOM.nextInt(tagEntries.size())).displayItem);
+//            }
+//            else {
+//                itemInstances.add((ItemInstance) entry);
+//            }
+//        });
+//        return itemInstances.toArray(new ItemInstance[]{});
     }
 
     @Override
