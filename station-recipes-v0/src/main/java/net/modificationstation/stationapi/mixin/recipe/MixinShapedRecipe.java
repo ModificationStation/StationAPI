@@ -78,10 +78,7 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 int index = i + j;
-                if (i >= width || j >= height) {
-                    itemInstances[index] = null;
-                }
-                else {
+                if (i < width || j < height) {
                     Object entry = taggedIngredients[index];
 
                     if (entry instanceof Identifier) {
@@ -91,6 +88,9 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe
                     else {
                         itemInstances[index] = (ItemInstance) entry;
                     }
+                }
+                else {
+                    itemInstances[index] = null;
                 }
             }
         }
