@@ -73,7 +73,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
             Direction face = DIRECTIONS[quadSet];
             random.setSeed(seed);
             qs = model.getQuads(blockView, pos, face, random);
-            if (!qs.isEmpty() && (face == null || block.isSideRendered(blockView, face.vector.x, face.vector.y, face.vector.z, quadSet))) {
+            if (!qs.isEmpty() && (face == null || block.isSideRendered(blockView, x + face.vector.x, y + face.vector.y, z + face.vector.z, quadSet))) {
                 rendered = true;
                 for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
                     q = qs.get(j);
