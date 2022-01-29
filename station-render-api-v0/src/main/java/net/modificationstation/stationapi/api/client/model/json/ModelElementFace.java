@@ -37,7 +37,7 @@ public class ModelElementFace {
             Direction direction = this.deserializeCullFace(jsonObject);
             int i = this.deserializeTintIndex(jsonObject);
             String string = this.deserializeTexture(jsonObject);
-            ModelElementTexture modelElementTexture = (ModelElementTexture)jsonDeserializationContext.deserialize(jsonObject, ModelElementTexture.class);
+            ModelElementTexture modelElementTexture = jsonDeserializationContext.deserialize(jsonObject, ModelElementTexture.class);
             return new ModelElementFace(direction, i, string, modelElementTexture);
         }
 

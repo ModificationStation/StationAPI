@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.util.math;
 
 import com.google.common.primitives.Floats;
+import com.google.common.primitives.Ints;
 
 public class MathHelper {
 
@@ -46,6 +47,10 @@ public class MathHelper {
         return Floats.constrainToRange(value, min, max);
     }
 
+    public static int clamp(int value, int min, int max) {
+        return Ints.constrainToRange(value, min, max);
+    }
+
     public static float fastInverseSqrt(float x) {
         float f = 0.5F * x;
         int i = Float.floatToIntBits(x);
@@ -62,5 +67,9 @@ public class MathHelper {
         f = 0.6666667F * f + 1.0F / (3.0F * f * f * x);
         f = 0.6666667F * f + 1.0F / (3.0F * f * f * x);
         return f;
+    }
+
+    public static boolean approximatelyEquals(float a, float b) {
+        return Math.abs(b - a) < 1.0E-5F;
     }
 }

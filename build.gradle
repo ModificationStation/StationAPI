@@ -98,12 +98,14 @@ allprojects {
         }
 
         implementationOnly "org.apache.commons:commons-lang3:3.5"
+        implementationOnly "commons-io:commons-io:2.5"
         implementation "com.github.jhalterman:typetools:${project.typetools_version}"
         implementation "com.github.mineLdiver:expressions:${project.expressions_version}"
         implementation "com.github.mineLdiver:UnsafeEvents:${project.unsafeevents_version}"
         implementation "it.unimi.dsi:fastutil:${project.fastutil_version}"
         //noinspection GradlePackageUpdate
         implementation "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
+        implementation "com.mojang:datafixerupper:${project.dfu_version}"
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies

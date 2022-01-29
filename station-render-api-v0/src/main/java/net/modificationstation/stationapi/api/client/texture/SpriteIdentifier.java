@@ -4,9 +4,8 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.client.registry.AtlasRegistry;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -29,8 +28,8 @@ public class SpriteIdentifier {
       this.texture = texture;
    }
 
-   public Atlas.Sprite getSprite() {
-      return AtlasRegistry.INSTANCE.get(atlas).map(atlas -> atlas.getTexture(texture)).orElseThrow(() -> new NullPointerException("Atlas " + atlas + " doesn't exist!"));
+   public Sprite getSprite() {
+      return StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(atlas).getSprite(atlas);
    }
 
    @Override

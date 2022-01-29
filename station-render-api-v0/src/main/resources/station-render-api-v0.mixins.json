@@ -7,11 +7,11 @@
     "MixinBlock",
     "MixinBlockBase",
     "MixinItemBase",
-    "TilePosAccessor",
-    "client.class_556Accessor"
+    "TilePosAccessor"
   ],
   "client": [
     "client.BlockRendererAccessor",
+    "client.class_556Accessor",
     "client.class_66Accessor",
     "client.DiggingAccessor",
     "client.EntityRendererAccessor",
@@ -24,6 +24,7 @@
     "client.MixinItemRenderer",
     "client.MixinMinecraft",
     "client.MixinParticleManager",
+    "client.MixinTessellator",
     "client.MixinTextureManager",
     "client.MixinTexturePack",
     "client.MixinZippedTexturePack",

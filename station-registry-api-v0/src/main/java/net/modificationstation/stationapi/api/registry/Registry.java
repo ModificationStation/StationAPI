@@ -2,6 +2,18 @@ package net.modificationstation.stationapi.api.registry;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
+import com.mojang.serialization.Keyable;
+import com.mojang.serialization.Lifecycle;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
+import net.modificationstation.stationapi.api.util.Util;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -29,7 +41,7 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
  * @see AbstractSerialRegistry
  * @see LevelSerialRegistry
  */
-public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
+public class Registry<T> implements Iterable<Map.Entry<Identifier, T>>, Codec<T>, Keyable {
 
     /**
      * Registry of registries.
@@ -61,6 +73,13 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
     @NotNull
     protected final BiMap<Identifier, T> values = HashBiMap.create();
 
+    private final Lifecycle lifecycle;
+
+    private final ObjectList<T> rawIdToEntry = new ObjectArrayList<>(256);
+    private final Object2IntMap<T> entryToRawId = new Object2IntOpenCustomHashMap<>(Util.identityHashStrategy());
+    private int nextId;
+    private final Map<T, Lifecycle> entryToLifecycle = new IdentityHashMap<>();
+
     /**
      * Default registry constructor.
      * @param identifier registry's identifier.
@@ -83,6 +102,7 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
             register(id, (T) this);
         else
             REGISTRIES.register(id, this);
+        this.lifecycle = Lifecycle.experimental();
     }
 
     /**
@@ -91,7 +111,18 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
      * @param value the object to assign to the identifier.
      */
     public void register(final @NotNull Identifier identifier, final @NotNull T value) {
+        register(nextId, identifier, value, Lifecycle.stable());
+    }
+
+    private void register(int rawId, final @NotNull Identifier identifier, final @NotNull T value, Lifecycle lifecycle) {
+        rawIdToEntry.size(Math.max(this.rawIdToEntry.size(), rawId + 1));
+        this.rawIdToEntry.set(rawId, value);
+        this.entryToRawId.put(value, rawId);
         values.put(Objects.requireNonNull(identifier), Objects.requireNonNull(value));
+        entryToLifecycle.put(value, lifecycle);
+        if (nextId <= rawId) {
+            nextId = rawId + 1;
+        }
     }
 
     /**
@@ -123,6 +154,20 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
      */
     public @NotNull Identifier getIdentifier(final @NotNull T value) {
         return values.inverse().get(Objects.requireNonNull(value));
+    }
+
+    @ApiStatus.Internal
+    public T getByRawId(int rawId) {
+        return rawIdToEntry.get(rawId);
+    }
+
+    @ApiStatus.Internal
+    public int getRawId(T value) {
+        return entryToRawId.getInt(value);
+    }
+
+    protected Lifecycle getEntryLifecycle(T value) {
+        return entryToLifecycle.get(value);
     }
 
     /**
@@ -178,5 +223,32 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>> {
 
     public Stream<Map.Entry<Identifier, T>> parallelStream() {
         return StreamSupport.stream(spliterator(), true);
+    }
+
+    @Override
+    public <U> DataResult<Pair<T, U>> decode(DynamicOps<U> dynamicOps, U object) {
+        return dynamicOps.compressMaps() ? dynamicOps.getNumberValue(object).flatMap((number) -> {
+            T value = this.getByRawId(number.intValue());
+            return value == null ? DataResult.error("Unknown registry id: " + number) : DataResult.success(value, this.getEntryLifecycle(value));
+        }).map((objectx) -> Pair.of(objectx, dynamicOps.empty())) : Identifier.CODEC.decode(dynamicOps, object).flatMap((pair) -> {
+            Optional<T> valueOptional = this.get(pair.getFirst());
+            return valueOptional.map(t -> DataResult.success(Pair.of(t, pair.getSecond()), this.getEntryLifecycle(t))).orElseGet(() -> DataResult.error("Unknown registry key: " + pair.getFirst()));
+        });
+    }
+
+    @Override
+    public <U> DataResult<U> encode(T object, DynamicOps<U> dynamicOps, U object2) {
+        Identifier identifier = this.getIdentifier(object);
+        //noinspection ConstantConditions
+        if (identifier == null) {
+            return DataResult.error("Unknown registry element " + object);
+        } else {
+            return dynamicOps.compressMaps() ? dynamicOps.mergeToPrimitive(object2, dynamicOps.createInt(this.getRawId(object))).setLifecycle(this.lifecycle) : dynamicOps.mergeToPrimitive(object2, dynamicOps.createString(identifier.toString())).setLifecycle(this.lifecycle);
+        }
+    }
+
+    @Override
+    public <U> Stream<U> keys(DynamicOps<U> dynamicOps) {
+        return values.keySet().stream().map((identifier) -> dynamicOps.createString(identifier.toString()));
     }
 }

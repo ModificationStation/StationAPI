@@ -9,7 +9,6 @@ import net.modificationstation.stationapi.api.util.math.MathHelper;
 import java.util.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public final class ModelPredicateProviderRegistry extends Registry<ModelPredicateProvider> {
 
@@ -22,7 +21,7 @@ public final class ModelPredicateProviderRegistry extends Registry<ModelPredicat
     private final Map<ItemBase, Map<Identifier, ModelPredicateProvider>> ITEM_SPECIFIC = new HashMap<>();
 
     private ModelPredicateProviderRegistry() {
-        super(of(MODID, "model_predicate_providers"));
+        super(Identifier.of(MODID, "model_predicate_providers"));
     }
 
     public ModelPredicateProvider get(ItemBase item, Identifier identifier) {

@@ -27,6 +27,8 @@ public class BlockRendererPlugin {
 
     public void renderShiftedColumn(BlockBase block, int meta, double x, double y, double z, CallbackInfo ci) {}
 
+    public void renderFluid(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {}
+
     public void renderFast(BlockBase block, int x, int y, int z, float r, float g, float b, CallbackInfoReturnable<Boolean> cir) {}
 
     public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex, CallbackInfo ci) {}

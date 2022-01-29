@@ -9,6 +9,7 @@ import com.google.gson.JsonParseException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.json.JsonHelper;
+import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.*;
@@ -16,11 +17,117 @@ import java.lang.reflect.*;
 @Environment(EnvType.CLIENT)
 public class ModelElementTexture {
    public float[] uvs;
-   public final int rotation;
+   public int rotation;
 
    public ModelElementTexture(@SuppressWarnings("NullableProblems") @Nullable float[] uvs, int rotation) {
       this.uvs = uvs;
       this.rotation = rotation;
+   }
+
+   public float getU(int rotation, Direction direction) {
+//      if (this.uvs == null) {
+//         throw new NullPointerException("uvs");
+//      } else {
+//         switch (direction) {
+//            case DOWN:
+//               switch (rotation) {
+//                  case 0:
+//                  case 1:
+//                     return uvs[0];
+//                  case 2:
+//                  case 3:
+//                     return uvs[2];
+//                  default:
+//                     throw new IllegalStateException("Unexpected value: " + rotation);
+//               }
+//            case UP:
+//               switch (rotation) {
+//
+//               }
+//            case EAST:
+//               break;
+//            case WEST:
+//               break;
+//            case NORTH:
+//               break;
+//            case SOUTH:
+//               break;
+//            default:
+//               throw new IllegalStateException("Unexpected value: " + direction);
+//         }
+//      }
+      if (this.uvs == null) {
+         throw new NullPointerException("uvs");
+      } else {
+         int i = this.getRotatedUVIndex(rotation);
+         switch (direction) {
+            case DOWN:
+            case UP:
+            case WEST:
+               return this.uvs[i == 0 || i == 1 ? 0 : 2];
+            case EAST:
+            case NORTH:
+               return this.uvs[i == 0 || i == 3 ? 2 : 0];
+            case SOUTH:
+               return this.uvs[i == 0 || i == 3 ? 0 : 2];
+            default:
+               throw new IllegalStateException("Unexpected value: " + direction);
+         }
+      }
+   }
+
+   public float getV(int rotation, Direction direction) {
+//      if (this.uvs == null) {
+//         throw new NullPointerException("uvs");
+//      } else {
+//         switch (direction) {
+//            case DOWN:
+//               switch (rotation) {
+//                  case 0:
+//                     return uvs[3];
+//                  case 1:
+//                     return uvs[1];
+//                  case 2:
+//                     return uvs[1];
+//                  case 3:
+//                     return uvs[3];
+//                  default:
+//                     throw new IllegalStateException("Unexpected value: " + rotation);
+//               }
+//            case UP:
+//               switch (rotation) {
+//
+//               }
+//            case EAST:
+//               break;
+//            case WEST:
+//               break;
+//            case NORTH:
+//               break;
+//            case SOUTH:
+//               break;
+//            default:
+//               throw new IllegalStateException("Unexpected value: " + direction);
+//         }
+//      }
+      if (this.uvs == null) {
+         throw new NullPointerException("uvs");
+      } else {
+         int i = this.getRotatedUVIndex(rotation);
+         switch (direction) {
+            case DOWN:
+            case UP:
+            case WEST:
+               return this.uvs[i == 0 || i == 3 ? 1 : 3];
+            case EAST:
+            case NORTH:
+               return this.uvs[i == 0 || i == 1 ? 1 : 3];
+            case SOUTH:
+               return this.uvs[i == 0 || i == 1 ? 3 : 1];
+            default:
+               throw new IllegalStateException("Unexpected value: " + direction);
+         }
+      }
    }
 
    public float getU(int rotation) {

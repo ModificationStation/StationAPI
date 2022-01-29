@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.client.texture.binder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
-import net.modificationstation.stationapi.api.client.texture.TextureAnimationData;
+import net.modificationstation.stationapi.api.client.texture.AnimationResourceMetadata;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
@@ -12,17 +12,16 @@ import java.awt.image.*;
 
 public class AnimationTextureBinder extends StationTextureBinder {
 
-    private final TextureAnimationData animationData;
+    private final AnimationResourceMetadata animationData;
     private final byte[][] frames;
     private final byte[][][] interpolatedFrames;
     @SuppressWarnings("deprecation")
     private final TexturePack currentTexturePack = ((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack;
-    private final boolean customFrameData;
-    private TextureAnimationData.Frame currentFrame;
     private int currentFrameIndex;
     private int timer;
+    private final boolean customFrames;
 
-    public AnimationTextureBinder(BufferedImage image, Atlas.Sprite staticReference, TextureAnimationData animationData) {
+    public AnimationTextureBinder(BufferedImage image, Atlas.Sprite staticReference, AnimationResourceMetadata animationData) {
         super(staticReference);
         this.animationData = animationData;
         int
@@ -46,24 +45,22 @@ public class AnimationTextureBinder extends StationTextureBinder {
                 frames[i][j * 4 + 3] = (byte) a;
             }
         }
-        customFrameData = animationData.frames.size() > 0;
-        if (customFrameData) {
-            currentFrame = animationData.frames.get(currentFrameIndex);
-            grid = frames[currentFrame.index];
-            if (animationData.interpolate) {
-                interpolatedFrames = new byte[animationData.frames.size()][][];
-                for (int frameIndex = 0, framesSize = animationData.frames.size(); frameIndex < framesSize; frameIndex++) {
-                    TextureAnimationData.Frame
-                            frame = animationData.frames.get(frameIndex),
-                            nextFrame = animationData.frames.get(frameIndex == framesSize - 1 ? 0 : frameIndex + 1);
+        customFrames = animationData.getFrameCount() > 0;
+        if (customFrames) {
+            grid = frames[animationData.getFrameIndex(currentFrameIndex)];
+            if (animationData.shouldInterpolate()) {
+                interpolatedFrames = new byte[animationData.getFrameCount()][][];
+                for (int frameIndex = 0, framesSize = animationData.getFrameCount(); frameIndex < framesSize; frameIndex++) {
+                    int frame = animationData.getFrameIndex(frameIndex);
+                    int nextFrame = animationData.getFrameIndex(frameIndex == framesSize - 1 ? 0 : frameIndex + 1);
                     byte[]
-                            frameGrid = frames[frame.index],
-                            nextFrameGrid = frames[nextFrame.index];
-                    byte[][] interpolations = new byte[frame.time - 1][];
-                    for (int interpolatedFrame = 0; interpolatedFrame < frame.time - 1; interpolatedFrame++) {
+                            frameGrid = frames[frame],
+                            nextFrameGrid = frames[nextFrame];
+                    byte[][] interpolations = new byte[animationData.getFrameTime(frame) - 1][];
+                    for (int interpolatedFrame = 0; interpolatedFrame < animationData.getFrameTime(frame) - 1; interpolatedFrame++) {
                         byte[] interpolatedFrameGrid = new byte[frameGrid.length];
                         for (int i = 0; i < interpolatedFrameGrid.length; i++)
-                            interpolatedFrameGrid[i] = (byte) MathHelper.lerp((double) (interpolatedFrame + 1) / frame.time, Byte.toUnsignedInt(frameGrid[i]), Byte.toUnsignedInt(nextFrameGrid[i]));
+                            interpolatedFrameGrid[i] = (byte) MathHelper.lerp((double) (interpolatedFrame + 1) / animationData.getFrameTime(frame), Byte.toUnsignedInt(frameGrid[i]), Byte.toUnsignedInt(nextFrameGrid[i]));
                         interpolations[interpolatedFrame] = interpolatedFrameGrid;
                     }
                     interpolatedFrames[frameIndex] = interpolations;
@@ -72,17 +69,18 @@ public class AnimationTextureBinder extends StationTextureBinder {
                 interpolatedFrames = null;
         } else {
             grid = frames[currentFrameIndex];
-            if (animationData.interpolate) {
+            if (animationData.shouldInterpolate()) {
                 interpolatedFrames = new byte[frames.length][][];
-                for (int frameIndex = 0; frameIndex < frames.length; frameIndex++) {
+                for (int frameIndex = 0, framesSize = frames.length; frameIndex < framesSize; frameIndex++) {
+                    int nextFrame = frameIndex == framesSize - 1 ? 0 : frameIndex + 1;
                     byte[]
                             frameGrid = frames[frameIndex],
-                            nextFrameGrid = frames[frameIndex == frames.length - 1 ? 0 : frameIndex + 1];
-                    byte[][] interpolations = new byte[animationData.frametime - 1][];
-                    for (int interpolatedFrame = 0; interpolatedFrame < animationData.frametime - 1; interpolatedFrame++) {
+                            nextFrameGrid = frames[nextFrame];
+                    byte[][] interpolations = new byte[animationData.getDefaultFrameTime() - 1][];
+                    for (int interpolatedFrame = 0; interpolatedFrame < animationData.getDefaultFrameTime() - 1; interpolatedFrame++) {
                         byte[] interpolatedFrameGrid = new byte[frameGrid.length];
                         for (int i = 0; i < interpolatedFrameGrid.length; i++)
-                            interpolatedFrameGrid[i] = (byte) MathHelper.lerp((double) (interpolatedFrame + 1) / animationData.frametime, Byte.toUnsignedInt(frameGrid[i]), Byte.toUnsignedInt(nextFrameGrid[i]));
+                            interpolatedFrameGrid[i] = (byte) MathHelper.lerp((double) (interpolatedFrame + 1) / animationData.getDefaultFrameTime(), Byte.toUnsignedInt(frameGrid[i]), Byte.toUnsignedInt(nextFrameGrid[i]));
                         interpolations[interpolatedFrame] = interpolatedFrameGrid;
                     }
                     interpolatedFrames[frameIndex] = interpolations;
@@ -101,22 +99,21 @@ public class AnimationTextureBinder extends StationTextureBinder {
 
     @Override
     public void update() {
-        if (customFrameData) {
-            if (++timer >= currentFrame.time) {
+        if (customFrames) {
+            if (++timer >= animationData.getFrameTime(currentFrameIndex)) {
                 timer = 0;
-                if (++currentFrameIndex >= animationData.frames.size())
+                if (++currentFrameIndex >= animationData.getFrameCount())
                     currentFrameIndex = 0;
-                currentFrame = animationData.frames.get(currentFrameIndex);
-                grid = frames[currentFrame.index];
-            } else if (animationData.interpolate)
+                grid = frames[animationData.getFrameIndex(currentFrameIndex)];
+            } else if (animationData.shouldInterpolate())
                 grid = interpolatedFrames[currentFrameIndex][timer - 1];
         } else {
-            if (++timer >= animationData.frametime) {
+            if (++timer >= animationData.getDefaultFrameTime()) {
                 timer = 0;
                 if (++currentFrameIndex >= frames.length)
                     currentFrameIndex = 0;
                 grid = frames[currentFrameIndex];
-            } else if (animationData.interpolate)
+            } else if (animationData.shouldInterpolate())
                 grid = interpolatedFrames[currentFrameIndex][timer - 1];
         }
     }

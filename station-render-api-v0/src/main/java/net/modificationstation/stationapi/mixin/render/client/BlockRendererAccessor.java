@@ -1,9 +1,11 @@
 package net.modificationstation.stationapi.mixin.render.client;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(BlockRenderer.class)
 public interface BlockRendererAccessor {
@@ -100,4 +102,7 @@ public interface BlockRendererAccessor {
 
     @Accessor
     void setShadeTopFace(boolean shadeTopFace);
+
+    @Invoker("method_43")
+    float stationapi$method_43(int x, int y, int z, Material material);
 }

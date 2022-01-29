@@ -1,15 +1,18 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.modificationstation.stationapi.api.client.resource.Resource;
-import net.modificationstation.stationapi.api.client.texture.TextureAnimationData;
+import net.modificationstation.stationapi.api.client.texture.AnimationResourceMetadata;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.binder.AnimationTextureBinder;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.util.json.JsonHelper;
 import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
 import org.jetbrains.annotations.ApiStatus;
@@ -20,10 +23,12 @@ import javax.imageio.*;
 import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
+import java.nio.charset.*;
 import java.util.*;
 import java.util.function.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.impl.client.texture.StationRenderAPI.LOGGER;
 
 public class ExpandableAtlas extends Atlas {
 
@@ -33,6 +38,7 @@ public class ExpandableAtlas extends Atlas {
 
     @ApiStatus.Internal
     private final Map<Identifier, BufferedImage> otherSpritesheetLookup = new IdentityHashMap<>();
+    private final Map<Identifier, net.modificationstation.stationapi.api.client.texture.Sprite> sprites = new IdentityHashMap<>();
 
     public ExpandableAtlas(final Identifier identifier) {
         super(identifier, "/assets/" + MODID + "/atlases/" + identifier, 0, false);
@@ -75,18 +81,28 @@ public class ExpandableAtlas extends Atlas {
             String texturePath = ResourceManager.ASSETS.toPath(identifier, MODID + "/textures", "png");
             Resource textureResource = Resource.of(TextureHelper.getTextureStream(texturePath));
             BufferedImage image = TextureHelper.readTextureStream(textureResource.getResource());
-            Optional<TextureAnimationData> animationDataOptional = TextureAnimationData.parse(textureResource);
-            boolean animationPresent = animationDataOptional.isPresent();
+            boolean animationPresent = textureResource.getMeta().isPresent();
+            AnimationResourceMetadata animationData = null;
+            if (animationPresent) {
+                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(textureResource.getMeta().get(), StandardCharsets.UTF_8))) {
+                    JsonObject jsonObject = JsonHelper.deserialize(bufferedReader);
+                    animationData = AnimationResourceMetadata.READER.fromJson(jsonObject.getAsJsonObject(AnimationResourceMetadata.READER.getKey()));
+                } catch (JsonParseException | IOException exception) {
+                    LOGGER.error("Couldn't load {} metadata", AnimationResourceMetadata.READER.getKey(), exception);
+                }
+            }
             int width = image.getWidth();
             int height = image.getHeight();
             if (animationPresent)
                 //noinspection SuspiciousNameCombination
                 height = width;
-            FileSprite texture = new FileSprite(identifier, texturePath, size, width, height);
+            FileSprite texture = new FileSprite(identifier, texturePath, size, width, height, animationPresent ? animationData : AnimationResourceMetadata.EMPTY);
             idToTex.put(identifier, texture);
             textures.put(size, texture);
-            if (animationPresent)
-                addTextureBinder(texture, texture1 -> new AnimationTextureBinder(image, texture1, animationDataOptional.get()));
+            if (animationPresent) {
+                AnimationResourceMetadata finalAnimationData = animationData;
+                addTextureBinder(texture, texture1 -> new AnimationTextureBinder(image, texture1, finalAnimationData));
+            }
             if (incrementSize)
                 size++;
             return texture;
@@ -118,7 +134,7 @@ public class ExpandableAtlas extends Atlas {
                 Sprite sprite;
                 if (textureResource.getResource() == null) {
                     BiTuple<Integer, Integer> resolution = spritesheetHelper.getResolutionMultiplier(size).map((widthMul, heightMul) -> Tuple.tuple(textureResolution * widthMul, textureResolution * heightMul));
-                    sprite = new FileSprite(identifier, null, size, resolution.one(), resolution.two());
+                    sprite = new FileSprite(identifier, null, size, resolution.one(), resolution.two(), AnimationResourceMetadata.EMPTY);
                     textures.put(size, sprite);
                     otherSpritesheetLookup.put(identifier, atlas.getSubimage(x * textureResolution, y * textureResolution, resolution.one(), resolution.two()));
                 } else
@@ -141,16 +157,21 @@ public class ExpandableAtlas extends Atlas {
         textureStitcher.getStitchedSprites((spriteInfo, width, height, x, y) -> {
             spriteInfo.x = x;
             spriteInfo.y = y;
-            if (imageCache == null)
+            if (imageCache == null || imageCache.getWidth() != width || imageCache.getHeight() != height)
                 imageCache = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            BufferedImage spriteTexture = spriteInfo.path == null ? otherSpritesheetLookup.get(spriteInfo.id.texture) : TextureHelper.getTexture(spriteInfo.path);
-            spriteTexture.getSubimage(0, 0, spriteInfo.width, spriteInfo.height);
+            BufferedImage fullTexture = spriteInfo.path == null ? otherSpritesheetLookup.get(spriteInfo.id) : TextureHelper.getTexture(spriteInfo.path);
+            BufferedImage spriteTexture = fullTexture.getSubimage(0, 0, spriteInfo.width, spriteInfo.height);
             Graphics2D graphics = imageCache.createGraphics();
             graphics.drawImage(spriteTexture.getSubimage(0, 0, spriteInfo.width, spriteInfo.height), x, y, null);
             graphics.dispose();
+            sprites.put(spriteInfo.id, new net.modificationstation.stationapi.api.client.texture.Sprite(this, spriteInfo, 0, width, height, x, y, fullTexture));
         });
-        textures.values().forEach(Sprite::updateUVs);
+//        textures.values().forEach(Sprite::updateUVs);
         refreshTextureID();
+    }
+
+    public net.modificationstation.stationapi.api.client.texture.Sprite getSprite(Identifier identifier) {
+        return sprites.get(identifier);
     }
 
     @Override
@@ -181,9 +202,29 @@ public class ExpandableAtlas extends Atlas {
 
         public final String path;
 
-        protected FileSprite(Identifier id, String path, int index, int width, int height) {
-            super(id, index, width, height);
+        protected FileSprite(Identifier id, String path, int index, int width, int height, AnimationResourceMetadata animationData) {
+            super(id, index, width, height, animationData);
             this.path = path;
+        }
+
+        @Override
+        public double getStartU() {
+            return sprites.get(id).getMinU();
+        }
+
+        @Override
+        public double getEndU() {
+            return sprites.get(id).getMaxU();
+        }
+
+        @Override
+        public double getStartV() {
+            return sprites.get(id).getMinV();
+        }
+
+        @Override
+        public double getEndV() {
+            return sprites.get(id).getMaxV();
         }
     }
 }

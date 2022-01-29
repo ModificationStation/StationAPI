@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "meta=0": {
+      "model": "sltest:farlandsBlock"
+    },
+    "meta=1": {
+      "model": "sltest:farlandsBlock",
+      "y": 90
+    },
+    "meta=2": {
+      "model": "sltest:farlandsBlock",
+      "y": 180
+    },
+    "meta=3": {
+      "model": "sltest:farlandsBlock",
+      "y": 270
+    }
+  }
+}

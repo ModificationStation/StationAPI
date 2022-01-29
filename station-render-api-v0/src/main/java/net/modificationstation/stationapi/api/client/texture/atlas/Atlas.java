@@ -7,9 +7,11 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.TextureBinder;
-import net.modificationstation.stationapi.api.client.registry.AtlasRegistry;
-import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
+import net.minecraft.client.resource.TexturePack;
+import net.minecraft.client.texture.TextureManager;
+import net.modificationstation.stationapi.api.client.texture.AnimationResourceMetadata;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
+import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
@@ -59,7 +61,7 @@ public abstract class Atlas {
         }
         this.fixedSize = fixedSize;
         this.parent = parent;
-        AtlasRegistry.INSTANCE.register(id, this);
+//        AtlasRegistry.INSTANCE.register(id, this);
         init();
     }
 
@@ -164,10 +166,18 @@ public abstract class Atlas {
         return textureBinder;
     }
 
+    public void registerTextureBinders(TextureManager textureManager, TexturePack texturePack) {
+        textureBinders.forEach(arg -> {
+            if (arg instanceof TexturePackDependent)
+                ((TexturePackDependent) arg).reloadFromTexturePack(texturePack);
+            textureManager.addTextureBinder(arg);
+        });
+    }
+
     public class Sprite {
 
         @Getter
-        protected SpriteIdentifier id;
+        protected Identifier id;
         public final int index;
         @Getter
         protected int
@@ -177,12 +187,14 @@ public abstract class Atlas {
         protected double
                 startU, endU,
                 startV, endV;
+        public final AnimationResourceMetadata animationData;
 
-        public Sprite(Identifier id, int index, int width, int height) {
-            this.id = SpriteIdentifier.of(getAtlas().id, id);
+        public Sprite(Identifier id, int index, int width, int height, AnimationResourceMetadata animationData) {
+            this.id = id;
             this.index = index;
             this.width = width;
             this.height = height;
+            this.animationData = animationData;
             updateUVs();
         }
 
@@ -209,7 +221,7 @@ public abstract class Atlas {
 
         @Deprecated
         protected Sprite(int index, int x, int y, int width, int height) {
-            this(Identifier.of(Atlas.this.id.modID, String.valueOf(index)), index, width, height);
+            this(Identifier.of(Atlas.this.id.modID, String.valueOf(index)), index, width, height, AnimationResourceMetadata.EMPTY);
             this.x = x;
             this.y = y;
         }

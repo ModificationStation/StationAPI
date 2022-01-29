@@ -12,6 +12,7 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.model.item.ItemWithRenderer;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.plugin.ItemRendererPlugin;
 import net.modificationstation.stationapi.mixin.render.client.EntityRendererAccessor;
@@ -55,7 +56,7 @@ final class StationItemRenderer extends ItemRendererPlugin {
         Atlas topAtlas = ((CustomAtlasProvider) var10.getType()).getAtlas();
         if (var10.itemId < BlockBase.BY_ID.length && BlockRenderer.method_42(BlockBase.BY_ID[var10.itemId].getRenderType())) {
             GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
-            entityRendererAccessor.invokeBindTexture("/terrain.png");
+            Atlases.getTerrain().bindAtlas();
             float var28 = 0.25F;
             if (!BlockBase.BY_ID[var10.itemId].isFullCube() && var10.itemId != BlockBase.STONE_SLAB.id && BlockBase.BY_ID[var10.itemId].getRenderType() != 16) {
                 var28 = 0.5F;
@@ -142,7 +143,7 @@ final class StationItemRenderer extends ItemRendererPlugin {
         }
         Atlas atlas = ((CustomAtlasProvider) item).getAtlas().of(texture);
         if (id < BlockBase.BY_ID.length && BlockRenderer.method_42(BlockBase.BY_ID[id].getRenderType())) {
-            textureManager.bindTexture(textureManager.getTextureId("/terrain.png"));
+            Atlases.getTerrain().bindAtlas();
             BlockBase var14 = BlockBase.BY_ID[id];
             GL11.glPushMatrix();
             GL11.glTranslatef((float)(x - 2), (float)(y + 3), -3.0F);

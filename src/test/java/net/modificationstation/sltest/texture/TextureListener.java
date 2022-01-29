@@ -5,7 +5,7 @@ import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.block.BlockFreezer;
 import net.modificationstation.sltest.item.ItemListener;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
-import net.modificationstation.stationapi.api.client.model.json.JsonModel;
+import net.modificationstation.stationapi.api.client.model.json.JsonUnbakedModel;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.util.math.Direction;
@@ -52,14 +52,14 @@ public class TextureListener {
         TEST_ATLAS.addTexture(of(MODID, "blocks/FreezerTop"));
         TEST_ATLAS.addTexture(of(MODID, "blocks/FreezerSide"));
 
-        farlandsBlockModel = JsonModel.get(of(MODID, "farlandsBlock"));
-        testItemModel = JsonModel.get(of(MODID, "item/testItem"));
+//        farlandsBlockModel = JsonUnbakedModel.get(of(MODID, "farlandsBlock"));
+//        testItemModel = JsonUnbakedModel.get(of(MODID, "item/testItem"));
     }
 
     public static final int[] altarTextures = new int[6];
 
     public static ExpandableAtlas TEST_ATLAS;
 
-    public static JsonModel farlandsBlockModel;
-    public static JsonModel testItemModel;
+    public static JsonUnbakedModel farlandsBlockModel;
+    public static JsonUnbakedModel testItemModel;
 }

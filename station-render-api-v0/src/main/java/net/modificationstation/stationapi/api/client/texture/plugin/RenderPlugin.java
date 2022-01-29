@@ -4,6 +4,7 @@ import net.minecraft.class_556;
 import net.minecraft.class_66;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.client.render.entity.ItemRenderer;
+import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.texture.plugin.ProvideRenderPluginEvent;
 
@@ -27,8 +28,12 @@ public class RenderPlugin {
         return new OverlayRendererPlugin(overlayRenderer);
     }
 
+    public TextureManagerPlugin createTextureManager(TextureManager textureManager) {
+        return new TextureManagerPlugin(textureManager);
+    }
+
     @Override
     public String toString() {
-        return "VanillaRenderer";
+        return "Vanilla";
     }
 }

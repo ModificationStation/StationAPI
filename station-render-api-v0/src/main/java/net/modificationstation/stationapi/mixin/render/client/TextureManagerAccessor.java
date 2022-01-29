@@ -38,4 +38,13 @@ public interface TextureManagerAccessor {
 
     @Accessor
     BufferedImage getMissingTexImage();
+
+    @Accessor("isBlurTexture")
+    boolean stationapi$isBlurTexture();
+
+    @Accessor("isClampTexture")
+    boolean stationapi$isClampTexture();
+
+    @Invoker("method_1098")
+    int stationapi$method_1098(int i, int j);
 }

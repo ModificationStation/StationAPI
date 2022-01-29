@@ -2,6 +2,8 @@ package net.modificationstation.stationapi.api.registry;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,6 +12,15 @@ import java.util.*;
 import static net.modificationstation.stationapi.api.registry.ModID.MINECRAFT;
 
 public final class Identifier implements Comparable<Identifier> {
+
+    @NotNull
+    public static final Codec<Identifier> CODEC = Codec.STRING.comapFlatMap(s -> {
+        try {
+            return DataResult.success(of(s));
+        } catch (IllegalArgumentException var2) {
+            return DataResult.error("Not a valid identifier: " + s + " " + var2.getMessage());
+        }
+    }, Identifier::toString).stable();
 
     @NotNull
     public static final String SEPARATOR = ":";

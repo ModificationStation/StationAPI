@@ -49,7 +49,7 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void renderCrops(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
+    private void renderCrops(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         plugin.renderCrops(block, x, y, z, cir);
     }
 
@@ -58,7 +58,7 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void renderTorchTilted(BlockBase block, double renderX, double renderY, double renderZ, double width, double length, CallbackInfo ci) {
+    private void renderTorchTilted(BlockBase block, double renderX, double renderY, double renderZ, double width, double length, CallbackInfo ci) {
         plugin.renderTorchTilted(block, renderX, renderY, renderZ, width, length, ci);
     }
 
@@ -67,7 +67,7 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void method_47(BlockBase block, int meta, double x, double y, double z, CallbackInfo ci) {
+    private void method_47(BlockBase block, int meta, double x, double y, double z, CallbackInfo ci) {
         plugin.renderCrossed(block, meta, x, y, z, ci);
     }
 
@@ -76,8 +76,17 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void method_56(BlockBase block, int meta, double x, double y, double z, CallbackInfo ci) {
+    private void method_56(BlockBase block, int meta, double x, double y, double z, CallbackInfo ci) {
         plugin.renderShiftedColumn(block, meta, x, y, z, ci);
+    }
+
+    @Inject(
+            method = "renderFluid(Lnet/minecraft/block/BlockBase;III)Z",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void renderFluid(BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
+        plugin.renderFluid(i, j, k, par4, cir);
     }
 
     @Inject(
@@ -85,7 +94,7 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void renderFast(BlockBase block, int x, int y, int z, float r, float g, float b, CallbackInfoReturnable<Boolean> cir) {
+    private void renderFast(BlockBase block, int x, int y, int z, float r, float g, float b, CallbackInfoReturnable<Boolean> cir) {
         plugin.renderFast(block, x, y, z, r, g, b, cir);
     }
 
@@ -94,7 +103,7 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void renderBottomFace(BlockBase block, double x, double y, double z, int texture, CallbackInfo ci) {
+    private void renderBottomFace(BlockBase block, double x, double y, double z, int texture, CallbackInfo ci) {
         plugin.renderBottomFace(block, x, y, z, texture, ci);
     }
 
@@ -103,7 +112,7 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void renderTopFace(BlockBase block, double x, double y, double z, int texture, CallbackInfo ci) {
+    private void renderTopFace(BlockBase block, double x, double y, double z, int texture, CallbackInfo ci) {
         plugin.renderTopFace(block, x, y, z, texture, ci);
     }
 
@@ -112,7 +121,7 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void renderEastFace(BlockBase block, double x, double y, double z, int texture, CallbackInfo ci) {
+    private void renderEastFace(BlockBase block, double x, double y, double z, int texture, CallbackInfo ci) {
         plugin.renderEastFace(block, x, y, z, texture, ci);
     }
 
@@ -121,7 +130,7 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void renderWestFace(BlockBase block, double x, double y, double z, int texture, CallbackInfo ci) {
+    private void renderWestFace(BlockBase block, double x, double y, double z, int texture, CallbackInfo ci) {
         plugin.renderWestFace(block, x, y, z, texture, ci);
     }
 
@@ -130,7 +139,7 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void renderNorthFace(BlockBase block, double x, double y, double z, int texture, CallbackInfo ci) {
+    private void renderNorthFace(BlockBase block, double x, double y, double z, int texture, CallbackInfo ci) {
         plugin.renderNorthFace(block, x, y, z, texture, ci);
     }
 
@@ -139,7 +148,7 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void renderSouthFace(BlockBase block, double x, double y, double z, int texture, CallbackInfo ci) {
+    private void renderSouthFace(BlockBase block, double x, double y, double z, int texture, CallbackInfo ci) {
         plugin.renderSouthFace(block, x, y, z, texture, ci);
     }
 

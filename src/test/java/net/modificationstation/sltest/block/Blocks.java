@@ -43,6 +43,7 @@ public enum Blocks {
 
         @EventListener
         private static void registerBlocks(BlockRegistryEvent event) {
+//            BlockBase.ALLOWS_GRASS_UNDER[BlockBase.STILL_WATER.id] = BlockBase.ALLOWS_GRASS_UNDER[BlockBase.FLOWING_WATER.id] = true;
             Arrays.stream(values()).forEach(blocks -> blocks.register.run());
         }
     }

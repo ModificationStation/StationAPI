@@ -6,6 +6,7 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.particle.Digging;
 import net.minecraft.entity.ParticleBase;
 import net.modificationstation.stationapi.api.client.model.block.BlockWorldModelProvider;
+import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.mixin.render.client.DiggingAccessor;
@@ -26,8 +27,10 @@ public class StationDiggingParticle {
 
     public void checkBlockCoords(int x, int y, int z) {
         BlockBase block = ((DiggingAccessor) digging).getField_2383();
-        if (block instanceof BlockWorldModelProvider)
-            texture = ((BlockWorldModelProvider) block).getCustomWorldModel(digging.level, x, y, z).getBaked().getSprite();
+        if (block instanceof BlockWorldModelProvider) {
+            Sprite sprite = ((BlockWorldModelProvider) block).getCustomWorldModel(digging.level, x, y, z).getBaked().getSprite();
+            texture = sprite.getAtlas().getTexture(sprite.getId());
+        }
     }
 
     public void render(Tessellator tessellator, float delta, float yawX, float pitchX, float yawY, float pitchY1, float pitchY2) {

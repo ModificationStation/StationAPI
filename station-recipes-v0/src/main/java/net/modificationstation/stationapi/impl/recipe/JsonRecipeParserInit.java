@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.impl.recipe;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
@@ -38,7 +37,7 @@ public class JsonRecipeParserInit {
     private static void parseCraftingShaped(URL recipe) {
         JsonElement rawJson;
         try {
-            rawJson = JsonParser.parseReader(new BufferedReader(new InputStreamReader(recipe.openStream())));
+            rawJson = new Gson().fromJson(new BufferedReader(new InputStreamReader(recipe.openStream())), JsonElement.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
