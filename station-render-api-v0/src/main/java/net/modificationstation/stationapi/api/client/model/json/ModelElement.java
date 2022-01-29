@@ -147,8 +147,6 @@ public class ModelElement {
          if (direction == null) {
             throw new JsonParseException("Unknown facing: " + name);
          } else {
-            if (direction == Direction.WEST || direction == Direction.EAST)
-               direction = direction.getOpposite();
             return direction;
          }
       }
