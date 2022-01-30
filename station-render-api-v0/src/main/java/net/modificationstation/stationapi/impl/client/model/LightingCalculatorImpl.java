@@ -94,14 +94,16 @@ public class LightingCalculatorImpl {
         return quadLight;
     }
 
+    @SuppressWarnings("DuplicateExpressions")
     private void quadSmooth(BakedQuad q) {
         shaded[0] = colourMultiplierRed;
         shaded[1] = colourMultiplierGreen;
         shaded[2] = colourMultiplierBlue;
+        Direction face = q.getFace();
         if (q.hasShade())
-            shadeFace(q.getFace());
+            shadeFace(face);
         float brightness;
-        float
+        double
                 v00x = Float.intBitsToFloat(q.getVertexData()[0]),
                 v00y = Float.intBitsToFloat(q.getVertexData()[1]),
                 v00z = Float.intBitsToFloat(q.getVertexData()[2]),
@@ -114,9 +116,6 @@ public class LightingCalculatorImpl {
                 v10x = Float.intBitsToFloat(q.getVertexData()[24]),
                 v10y = Float.intBitsToFloat(q.getVertexData()[25]),
                 v10z = Float.intBitsToFloat(q.getVertexData()[26]);
-//        v00x0 = floor(this.x + v00x - .5);
-//        v00y0 = floor(this.y + v00y - .5);
-//        v00z0 = floor(this.z + v00z - .5);
         int
                 v00x0 = floor(this.x + v00x - .5),
                 v00y0 = floor(this.y + v00y - .5),
@@ -155,7 +154,6 @@ public class LightingCalculatorImpl {
                 v10dx = this.x + v10x - v10x0,
                 v10dy = this.y + v10y - v10y0,
                 v10dz = this.z + v10z - v10z0;
-        Direction face = q.getFace();
         switch (face.axis) {
             case X:
                 v00dy = v00dy < .5 ? v00dy + .5 : v00dy - .5;
@@ -340,8 +338,8 @@ public class LightingCalculatorImpl {
                 v01dy = v01dy < .5 ? v01dy + .5 : v01dy - .5;
                 v11dx = v11dx < .5 ? v11dx + .5 : v11dx - .5;
                 v11dy = v11dy < .5 ? v11dy + .5 : v11dy - .5;
-                v01dx = v01dx < .5 ? v01dx + .5 : v01dx - .5;
-                v01dy = v01dy < .5 ? v01dy + .5 : v01dy - .5;
+                v10dx = v10dx < .5 ? v10dx + .5 : v10dx - .5;
+                v10dy = v10dy < .5 ? v10dy + .5 : v10dy - .5;
                 switch (face.direction) {
                     case POSITIVE:
                         brightness = MathHelper.interpolate3D(

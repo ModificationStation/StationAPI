@@ -16,8 +16,8 @@ public enum CubeFace {
    private static final CubeFace[] DIRECTION_LOOKUP = Util.make(new CubeFace[6], (cubeFaces) -> {
       cubeFaces[DirectionIds.DOWN] = DOWN;
       cubeFaces[DirectionIds.UP] = UP;
-      cubeFaces[DirectionIds.WEST] = WEST;
       cubeFaces[DirectionIds.EAST] = EAST;
+      cubeFaces[DirectionIds.WEST] = WEST;
       cubeFaces[DirectionIds.NORTH] = NORTH;
       cubeFaces[DirectionIds.SOUTH] = SOUTH;
    });
