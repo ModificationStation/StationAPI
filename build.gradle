@@ -259,6 +259,7 @@ dependencies {
     include "it.unimi.dsi:fastutil:${project.fastutil_version}"
     //noinspection GradlePackageUpdate
     include "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
+    include "com.mojang:datafixerupper:${project.dfu_version}"
 }
 
 publishing.publications.mavenJava(MavenPublication) {
