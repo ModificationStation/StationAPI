@@ -9,6 +9,7 @@ import net.modificationstation.stationapi.api.util.ReflectionHelper;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.message.ParameterizedMessageFactory;
 
 import java.lang.reflect.*;
 import java.util.function.*;
@@ -63,7 +64,7 @@ public class EntrypointManager {
                 ReflectionHelper.setFieldsWithAnnotation(o, Entrypoint.ModID.class, modID -> modID.value().isEmpty() ? ModID.of(modContainer) : ModID.of(modID.value()));
                 ReflectionHelper.setFieldsWithAnnotation(o, Entrypoint.Logger.class, logger -> {
                     String name = logger.value().isEmpty() ? modContainer.getMetadata().getId() + "|Mod" : logger.value();
-                    org.apache.logging.log4j.Logger log = LogManager.getFormatterLogger(name);
+                    org.apache.logging.log4j.Logger log = LogManager.getLogger(name, ParameterizedMessageFactory.INSTANCE);
                     Configurator.setLevel(name, Level.INFO);
                     return log;
                 });

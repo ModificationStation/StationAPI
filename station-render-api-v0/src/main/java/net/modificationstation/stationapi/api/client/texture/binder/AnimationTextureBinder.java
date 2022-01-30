@@ -59,8 +59,20 @@ public class AnimationTextureBinder extends StationTextureBinder {
                     byte[][] interpolations = new byte[animationData.getFrameTime(frame) - 1][];
                     for (int interpolatedFrame = 0; interpolatedFrame < animationData.getFrameTime(frame) - 1; interpolatedFrame++) {
                         byte[] interpolatedFrameGrid = new byte[frameGrid.length];
-                        for (int i = 0; i < interpolatedFrameGrid.length; i++)
+                        for (int i = 0; i < interpolatedFrameGrid.length; i++) {
+                            if (i % 4 == 3) {
+                                if (nextFrameGrid[i] == 0 && frameGrid[i] != 0) {
+                                    interpolatedFrameGrid[i - 3] = frameGrid[i - 3];
+                                    interpolatedFrameGrid[i - 2] = frameGrid[i - 2];
+                                    interpolatedFrameGrid[i - 1] = frameGrid[i - 1];
+                                } else if (nextFrameGrid[i] != 0 && frameGrid[i] == 0) {
+                                    interpolatedFrameGrid[i - 3] = nextFrameGrid[i - 3];
+                                    interpolatedFrameGrid[i - 2] = nextFrameGrid[i - 2];
+                                    interpolatedFrameGrid[i - 1] = nextFrameGrid[i - 1];
+                                }
+                            }
                             interpolatedFrameGrid[i] = (byte) MathHelper.lerp((double) (interpolatedFrame + 1) / animationData.getFrameTime(frame), Byte.toUnsignedInt(frameGrid[i]), Byte.toUnsignedInt(nextFrameGrid[i]));
+                        }
                         interpolations[interpolatedFrame] = interpolatedFrameGrid;
                     }
                     interpolatedFrames[frameIndex] = interpolations;

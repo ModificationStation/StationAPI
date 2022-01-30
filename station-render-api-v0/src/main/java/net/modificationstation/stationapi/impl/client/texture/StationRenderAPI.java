@@ -40,7 +40,7 @@ public class StationRenderAPI {
     @Entrypoint.ModID
     public static final ModID MODID = Null.get();
 
-    @Entrypoint.Logger
+    @Entrypoint.Logger("StationRender|API")
     public static final Logger LOGGER = Null.get();
 
     private static final boolean DEBUG_EXPORT_ATLASES = Boolean.parseBoolean(System.getProperty(StationAPI.MODID + ".debug.export_atlases", "false"));
