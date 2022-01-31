@@ -7,6 +7,7 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.binder.StaticReferenceProvider;
 import net.modificationstation.stationapi.api.client.texture.plugin.TextureManagerPlugin;
+import net.modificationstation.stationapi.impl.client.texture.CustomTextureManager;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -16,7 +17,7 @@ import java.awt.image.*;
 
 import static net.minecraft.client.texture.TextureManager.field_1245;
 
-final class StationTextureManager extends TextureManagerPlugin {
+final class StationTextureManager extends TextureManagerPlugin implements CustomTextureManager {
 
     private final TextureManagerAccessor textureManagerAccessor;
 
@@ -210,5 +211,15 @@ final class StationTextureManager extends TextureManagerPlugin {
         textureManagerAccessor.getCurrentImageBuffer().put(var5);
         textureManagerAccessor.getCurrentImageBuffer().position(0).limit(var5.length);
         GL11.glTexSubImage2D(3553, 0, 0, 0, width, height, 6408, 5121, textureManagerAccessor.getCurrentImageBuffer());
+    }
+
+
+    @Override
+    public void allocateTexture(String texture) {
+        if (!textureManagerAccessor.getTextures().containsKey(texture)) {
+            textureManagerAccessor.stationapi$getField_1249().clear();
+            class_214.method_742(textureManagerAccessor.stationapi$getField_1249());
+            textureManagerAccessor.getTextures().put(texture, textureManagerAccessor.stationapi$getField_1249().get(0));
+        }
     }
 }

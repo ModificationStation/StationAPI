@@ -14,7 +14,7 @@ import net.modificationstation.stationapi.api.client.model.ModelBakeSettings;
 import net.modificationstation.stationapi.api.client.model.ModelLoader;
 import net.modificationstation.stationapi.api.client.model.UnbakedModel;
 import net.modificationstation.stationapi.api.client.model.WeightedBakedModel;
-import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +60,7 @@ public class WeightedUnbakedModel implements UnbakedModel {
    }
 
    @Nullable
-   public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+   public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, BakedSprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
       if (this.getVariants().isEmpty()) {
          return null;
       } else {

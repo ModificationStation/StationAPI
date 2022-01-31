@@ -22,6 +22,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.util.profiler.DummyProfiler;
 import net.modificationstation.stationapi.impl.client.resource.ResourceReloader;
 import net.modificationstation.stationapi.impl.client.texture.plugin.StationRenderPlugin;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
@@ -52,14 +53,6 @@ public class StationRenderAPI {
             TERRAIN,
             GUI_ITEMS;
 
-//    @Deprecated
-//    public static ExpandableAtlas
-//            STATION_TERRAIN,
-//            STATION_GUI_ITEMS;
-//
-//    @Deprecated
-//    public static JsonModelAtlas STATION_JSON_MODELS;
-
     @EventListener(priority = ListenerPriority.HIGH)
     private static void preInit(ProvideRenderPluginEvent event) {
         event.pluginProvider = StationRenderPlugin::new;
@@ -75,9 +68,6 @@ public class StationRenderAPI {
         GUI_ITEMS = new ExpandableAtlas(Atlases.ITEM_ATLAS_TEXTURE);
         TERRAIN.addSpritesheet("/terrain.png", 16, TerrainHelper.INSTANCE);
         GUI_ITEMS.addSpritesheet("/gui/items.png", 16, GuiItemsHelper.INSTANCE);
-//        STATION_TERRAIN = new ExpandableAtlas(of(StationAPI.MODID, "terrain"), TERRAIN).initTessellator();
-//        STATION_GUI_ITEMS = new ExpandableAtlas(of(StationAPI.MODID, "gui_items"), GUI_ITEMS);
-//        STATION_JSON_MODELS = new JsonModelAtlas(of(StationAPI.MODID, "json_textures")).setTessellator(TessellatorAccessor.newInst(8388608));
         TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture), staticReference -> new StationVanillaTextureBinder(staticReference, new StationStillWaterTextureBinder(), "/custom_water_still.png"));
         TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture + 1), staticReference -> Util.make(new StationVanillaTextureBinder(staticReference, new StationFlowingWaterTextureBinder(), "/custom_water_flowing.png"), textureBinder -> textureBinder.textureSize = 2));
         TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_LAVA.texture), staticReference -> new StationVanillaTextureBinder(staticReference, new StationStillLavaTextureBinder(), "/custom_lava_still.png"));
@@ -96,7 +86,7 @@ public class StationRenderAPI {
         TexturePack texturePack = minecraft.texturePackManager.texturePack;
 //        ModelRegistry.INSTANCE.forEach((identifier, model) -> model.reloadFromTexturePack(texturePack));
         ResourceReloader.create(minecraft.texturePackManager.texturePack, Collections.singletonList(BAKED_MODEL_MANAGER), Util.getMainWorkerExecutor(), Runnable::run, COMPLETED_UNIT_FUTURE);
-        GUI_ITEMS.stitch();
+        GUI_ITEMS.upload(GUI_ITEMS.stitch(texturePack, Stream.empty(), DummyProfiler.INSTANCE, 0));
         TERRAIN.registerTextureBinders(minecraft.textureManager, texturePack);
         GUI_ITEMS.registerTextureBinders(minecraft.textureManager, texturePack);
         debugExportAtlases();
@@ -106,15 +96,11 @@ public class StationRenderAPI {
     private static void beforeTexturePackApplied(TexturePackLoadedEvent.Before event) {
         Map<String, Integer> textureMap = ((TextureManagerAccessor) event.textureManager).getTextures();
         new HashMap<>(textureMap).keySet().stream().filter(s -> event.newTexturePack.getResourceAsStream(s) == null).forEach(s -> GL11.glDeleteTextures(textureMap.remove(s)));
-//        ModelRegistry.INSTANCE.forEach((identifier, model) -> AtlasRegistry.INSTANCE.unregister(identifier));
         ((TextureManagerAccessor) event.textureManager).getTextureBinders().clear();
-//        AtlasRegistry.INSTANCE.forEach((identifier, atlas) -> AtlasRegistry.INSTANCE.unregister(identifier));
     }
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void texturePackApplied(TexturePackLoadedEvent.After event) {
-//        AtlasRegistry.INSTANCE.forEach((identifier, atlas) -> atlas.reloadFromTexturePack(event.newTexturePack));
-//        new ArrayList<>(((TextureManagerAccessor) event.textureManager).getTextureBinders()).stream().filter(textureBinder -> textureBinder instanceof TexturePackDependent).forEach(textureBinder -> ((TexturePackDependent) textureBinder).reloadFromTexturePack(event.newTexturePack));
         StationAPI.EVENT_BUS.post(new TextureRegisterEvent());
     }
 

@@ -8,7 +8,7 @@ import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.client.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.model.json.ModelTransformation;
-import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.util.collection.WeightedPicker;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +47,7 @@ public class WeightedBakedModel implements BakedModel {
       return this.defaultModel.isBuiltin();
    }
 
-   public Sprite getSprite() {
+   public BakedSprite getSprite() {
       return this.defaultModel.getSprite();
    }
 

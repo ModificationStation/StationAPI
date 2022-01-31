@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.client.model.json.JsonUnbakedModel
 import net.modificationstation.stationapi.api.client.model.json.ModelElement;
 import net.modificationstation.stationapi.api.client.model.json.ModelElementFace;
 import net.modificationstation.stationapi.api.client.model.json.ModelElementTexture;
-import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Vector3f;
@@ -20,7 +20,7 @@ import java.util.function.*;
 public class ItemModelGenerator {
    public static final List<String> LAYERS = Lists.newArrayList("layer0", "layer1", "layer2", "layer3", "layer4");
 
-   public JsonUnbakedModel create(Function<SpriteIdentifier, Sprite> textureGetter, JsonUnbakedModel blockModel) {
+   public JsonUnbakedModel create(Function<SpriteIdentifier, BakedSprite> textureGetter, JsonUnbakedModel blockModel) {
       Map<String, Either<SpriteIdentifier, String>> map = new HashMap<>();
       List<ModelElement> list = new ArrayList<>();
 
@@ -32,7 +32,7 @@ public class ItemModelGenerator {
 
          SpriteIdentifier spriteIdentifier = blockModel.resolveSprite(string);
          map.put(string, Either.left(spriteIdentifier));
-         Sprite sprite = textureGetter.apply(spriteIdentifier);
+         BakedSprite sprite = textureGetter.apply(spriteIdentifier);
          list.addAll(this.addLayerElements(i, string, sprite));
       }
 
@@ -42,7 +42,7 @@ public class ItemModelGenerator {
       return jsonUnbakedModel;
    }
 
-   private List<ModelElement> addLayerElements(int layer, String key, Sprite sprite) {
+   private List<ModelElement> addLayerElements(int layer, String key, BakedSprite sprite) {
       Map<Direction, ModelElementFace> map = new EnumMap<>(Direction.class);
       map.put(Direction.WEST, new ModelElementFace(null, layer, key, new ModelElementTexture(new float[]{0.0F, 0.0F, 16.0F, 16.0F}, 0)));
       map.put(Direction.EAST, new ModelElementFace(null, layer, key, new ModelElementTexture(new float[]{16.0F, 0.0F, 0.0F, 16.0F}, 0)));
@@ -52,7 +52,7 @@ public class ItemModelGenerator {
       return list;
    }
 
-   private List<ModelElement> addSubComponents(Sprite sprite, String key, int layer) {
+   private List<ModelElement> addSubComponents(BakedSprite sprite, String key, int layer) {
       float f = (float)sprite.getWidth();
       float g = (float)sprite.getHeight();
       List<ModelElement> list = new ArrayList<>();
@@ -140,7 +140,7 @@ public class ItemModelGenerator {
       return list;
    }
 
-   private List<ItemModelGenerator.Frame> getFrames(Sprite sprite) {
+   private List<ItemModelGenerator.Frame> getFrames(BakedSprite sprite) {
       int i = sprite.getWidth();
       int j = sprite.getHeight();
       List<ItemModelGenerator.Frame> list = new ArrayList<>();
@@ -160,7 +160,7 @@ public class ItemModelGenerator {
       return list;
    }
 
-   private void buildCube(ItemModelGenerator.Side side, List<ItemModelGenerator.Frame> cubes, Sprite sprite, int frame, int x, int y, int i, int j, boolean bl) {
+   private void buildCube(ItemModelGenerator.Side side, List<ItemModelGenerator.Frame> cubes, BakedSprite sprite, int frame, int x, int y, int i, int j, boolean bl) {
       boolean bl2 = this.isPixelTransparent(sprite, frame, x + side.getOffsetX(), y + side.getOffsetY(), i, j) && bl;
       if (bl2) {
          this.buildCube(cubes, side, x, y);
@@ -191,7 +191,7 @@ public class ItemModelGenerator {
 
    }
 
-   private boolean isPixelTransparent(Sprite sprite, int frame, int x, int y, int i, int j) {
+   private boolean isPixelTransparent(BakedSprite sprite, int frame, int x, int y, int i, int j) {
       return x < 0 || y < 0 || x >= i || y >= j || sprite.isPixelTransparent(frame, x, y);
    }
 

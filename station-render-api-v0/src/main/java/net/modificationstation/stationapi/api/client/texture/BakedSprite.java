@@ -5,17 +5,17 @@ import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.impl.client.texture.NativeImage;
 
-import java.awt.image.*;
 import java.util.*;
 
 @Environment(value=EnvType.CLIENT)
-public class Sprite
+public class BakedSprite
 /*implements AutoCloseable*/ {
     private final ExpandableAtlas atlas;
     private final Atlas.Sprite info;
     private final AnimationResourceMetadata animationMetadata;
-    protected final BufferedImage[] images;
+    protected final NativeImage[] images;
     private final int[] frameXs;
     private final int[] frameYs;
 //    @Nullable
@@ -29,7 +29,7 @@ public class Sprite
 //    private int frameIndex;
 //    private int frameTicks;
 
-    public Sprite(ExpandableAtlas spriteAtlasTexture, Atlas.Sprite info, int maxLevel, int atlasWidth, int atlasHeight, int x, int y, BufferedImage nativeImage) {
+    public BakedSprite(ExpandableAtlas spriteAtlasTexture, Atlas.Sprite info, int maxLevel, int atlasWidth, int atlasHeight, int x, int y, NativeImage nativeImage) {
         this.atlas = spriteAtlasTexture;
         AnimationResourceMetadata animationResourceMetadata = info.animationData;
         int i = info.getWidth();
@@ -108,17 +108,17 @@ public class Sprite
 //        this.interpolation = animationResourceMetadata.shouldInterpolate() ? new Interpolation(info, maxLevel) : null;
     }
 
-//    private void upload(int frame) {
-//        int i = this.frameXs[frame] * this.info.getWidth();
-//        int j = this.frameYs[frame] * this.info.getHeight();
-//        this.upload(i, j, this.images);
-//    }
-//
-//    private void upload(int frameX, int frameY, BufferedImage[] output) {
-//        for (int i = 0; i < this.images.length; ++i) {
-//            output[i].upload(i, this.x >> i, this.y >> i, frameX >> i, frameY >> i, this.info.getWidth() >> i, this.info.getHeight() >> i, this.images.length > 1, false);
-//        }
-//    }
+    private void upload(int frame) {
+        int i = this.frameXs[frame] * this.info.getWidth();
+        int j = this.frameYs[frame] * this.info.getHeight();
+        this.upload(i, j, this.images);
+    }
+
+    private void upload(int frameX, int frameY, NativeImage[] output) {
+        for (int i = 0; i < this.images.length; ++i) {
+            output[i].upload(i, this.x >> i, this.y >> i, frameX >> i, frameY >> i, this.info.getWidth() >> i, this.info.getHeight() >> i, this.images.length > 1, false);
+        }
+    }
 
     public int getWidth() {
         return this.info.getWidth();
@@ -182,12 +182,12 @@ public class Sprite
     }
 
     public boolean isPixelTransparent(int frame, int x, int y) {
-        return (this.images[0].getRGB(x + this.frameXs[frame] * this.info.getWidth(), y + this.frameYs[frame] * this.info.getHeight()) >> 24 & 0xFF) == 0;
+        return (this.images[0].getPixelColor(x + this.frameXs[frame] * this.info.getWidth(), y + this.frameYs[frame] * this.info.getHeight()) >> 24 & 0xFF) == 0;
     }
 
-//    public void upload() {
-//        this.upload(0);
-//    }
+    public void upload() {
+        this.upload(0);
+    }
 
     private float getFrameDeltaFactor() {
         float f = (float)this.info.getWidth() / (this.uMax - this.uMin);

@@ -12,6 +12,7 @@ import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.model.BakedModel;
 import net.modificationstation.stationapi.api.client.model.BakedModelRenderer;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
+import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldRenderer;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
@@ -50,11 +51,10 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
         BakedModel model = StationRenderAPI.BAKED_MODEL_MANAGER.getBlockModels().getModel(((BlockStateProvider) blockRendererAccessor.getBlockView()).getBlockState(x, y, z));
         if (!model.isBuiltin()) {
             cir.setReturnValue(bakedModelRenderer.renderWorld(block, model, blockRendererAccessor.getBlockView(), x, y, z));
+        } else if (block instanceof BlockWithWorldRenderer) {
+            block.updateBoundingBox(blockRendererAccessor.getBlockView(), x, y, z);
+            cir.setReturnValue(((BlockWithWorldRenderer) block).renderWorld(blockRenderer, blockRendererAccessor.getBlockView(), x, y, z));
         }
-//        if (block instanceof BlockWithWorldRenderer) {
-//            block.updateBoundingBox(blockRendererAccessor.getBlockView(), x, y, z);
-//            cir.setReturnValue(((BlockWithWorldRenderer) block).renderWorld(blockRenderer, blockRendererAccessor.getBlockView(), x, y, z));
-//        }
     }
 
     @Override
@@ -462,10 +462,6 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                     notchCode = 2;
                 }
 
-//                int var30 = (var28 & 15) << 4;
-//                int var31 = var28 & 240;
-//                double var32 = ((double)var30 + 8.0D) / 256.0D;
-//                double var34 = ((double)var31 + 8.0D) / 256.0D;
                 double var32 = (var28.getX() + var28.getWidth() / notchCode / 2D) / terrain.getImage().getWidth();
                 double var34 = (var28.getY() + var28.getHeight() / notchCode / 2D) / terrain.getImage().getHeight();
                 if (var29 < -999.0F) {
@@ -514,8 +510,6 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 }
 
                 Atlas.Sprite var56 = terrain.getTexture(arg.getTextureForSide(var53 + 2, var23));
-//                int var33 = (var56 & 15) << 4;
-//                int var57 = var56 & 240;
                 if (blockRendererAccessor.getRenderAllSides() || var12[var53]) {
                     float var35;
                     float var39;

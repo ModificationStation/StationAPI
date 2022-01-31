@@ -6,7 +6,7 @@ import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.client.model.BakedModel;
 import net.modificationstation.stationapi.api.client.model.BakedModelManager;
 import net.modificationstation.stationapi.api.client.model.ModelIdentifier;
-import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.block.BlockBaseBlockState;
@@ -25,7 +25,7 @@ public class BlockModels {
       this.modelManager = bakedModelManager;
    }
 
-   public Sprite getSprite(BlockState blockState) {
+   public BakedSprite getSprite(BlockState blockState) {
       return this.getModel(blockState).getSprite();
    }
 

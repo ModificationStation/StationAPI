@@ -9,7 +9,7 @@ import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.client.model.json.JsonUnbakedModel;
 import net.modificationstation.stationapi.api.client.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.model.json.ModelTransformation;
-import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,11 +22,11 @@ public class BasicBakedModel implements BakedModel {
    protected final boolean usesAo;
    protected final boolean hasDepth;
    protected final boolean isSideLit;
-   protected final Sprite sprite;
+   protected final BakedSprite sprite;
    protected final ModelTransformation transformation;
    protected final ModelOverrideList itemPropertyOverrides;
 
-   private BasicBakedModel(ImmutableList<BakedQuad> quads, ImmutableMap<Direction, ImmutableList<BakedQuad>> faceQuads, boolean usesAo, boolean isSideLit, boolean hasDepth, Sprite sprite, ModelTransformation modelTransformation, ModelOverrideList modelOverrideList) {
+   private BasicBakedModel(ImmutableList<BakedQuad> quads, ImmutableMap<Direction, ImmutableList<BakedQuad>> faceQuads, boolean usesAo, boolean isSideLit, boolean hasDepth, BakedSprite sprite, ModelTransformation modelTransformation, ModelOverrideList modelOverrideList) {
       this.quads = quads;
       this.faceQuads = faceQuads;
       this.usesAo = usesAo;
@@ -57,7 +57,7 @@ public class BasicBakedModel implements BakedModel {
       return false;
    }
 
-   public Sprite getSprite() {
+   public BakedSprite getSprite() {
       return this.sprite;
    }
 
@@ -75,7 +75,7 @@ public class BasicBakedModel implements BakedModel {
       private final Map<Direction, ImmutableList.Builder<BakedQuad>> faceQuads;
       private final ModelOverrideList itemPropertyOverrides;
       private final boolean usesAo;
-      private Sprite particleTexture;
+      private BakedSprite particleTexture;
       private final boolean isSideLit;
       private final boolean hasDepth;
       private final ModelTransformation transformation;
@@ -110,7 +110,7 @@ public class BasicBakedModel implements BakedModel {
          return this;
       }
 
-      public BasicBakedModel.Builder setParticle(Sprite sprite) {
+      public BasicBakedModel.Builder setParticle(BakedSprite sprite) {
          this.particleTexture = sprite;
          return this;
       }

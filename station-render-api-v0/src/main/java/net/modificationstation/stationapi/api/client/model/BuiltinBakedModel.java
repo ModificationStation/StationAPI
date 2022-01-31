@@ -7,7 +7,7 @@ import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.client.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.model.json.ModelTransformation;
-import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,10 +17,10 @@ import java.util.*;
 public class BuiltinBakedModel implements BakedModel {
    private final ModelTransformation transformation;
    private final ModelOverrideList itemPropertyOverrides;
-   private final Sprite sprite;
+   private final BakedSprite sprite;
    private final boolean sideLit;
 
-   public BuiltinBakedModel(ModelTransformation transformation, ModelOverrideList itemPropertyOverrides, Sprite sprite, boolean sideLit) {
+   public BuiltinBakedModel(ModelTransformation transformation, ModelOverrideList itemPropertyOverrides, BakedSprite sprite, boolean sideLit) {
       this.transformation = transformation;
       this.itemPropertyOverrides = itemPropertyOverrides;
       this.sprite = sprite;
@@ -47,7 +47,7 @@ public class BuiltinBakedModel implements BakedModel {
       return true;
    }
 
-   public Sprite getSprite() {
+   public BakedSprite getSprite() {
       return this.sprite;
    }
 

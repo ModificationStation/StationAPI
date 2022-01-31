@@ -47,4 +47,7 @@ public interface TextureManagerAccessor {
 
     @Invoker("method_1098")
     int stationapi$method_1098(int i, int j);
+
+    @Accessor("field_1249")
+    IntBuffer stationapi$getField_1249();
 }

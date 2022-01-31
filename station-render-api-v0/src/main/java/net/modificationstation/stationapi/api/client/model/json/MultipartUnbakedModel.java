@@ -16,7 +16,7 @@ import net.modificationstation.stationapi.api.client.model.ModelBakeSettings;
 import net.modificationstation.stationapi.api.client.model.ModelLoader;
 import net.modificationstation.stationapi.api.client.model.MultipartBakedModel;
 import net.modificationstation.stationapi.api.client.model.UnbakedModel;
-import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.block.BlockState;
@@ -76,7 +76,7 @@ public class MultipartUnbakedModel implements UnbakedModel {
    }
 
    @Nullable
-   public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+   public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, BakedSprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
       MultipartBakedModel.Builder builder = new MultipartBakedModel.Builder();
 
       for (MultipartModelComponent multipartModelComponent : this.getComponents()) {

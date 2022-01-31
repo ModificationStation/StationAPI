@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.client.texture.atlas;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
@@ -22,7 +22,7 @@ public class SpriteAtlasManager implements AutoCloseable {
       return this.atlases.get(id);
    }
 
-   public Sprite getSprite(SpriteIdentifier id) {
+   public BakedSprite getSprite(SpriteIdentifier id) {
       return this.atlases.get(id.atlas).getSprite(id.texture);
    }
 

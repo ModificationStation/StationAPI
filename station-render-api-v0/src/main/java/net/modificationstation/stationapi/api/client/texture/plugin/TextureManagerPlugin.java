@@ -21,4 +21,9 @@ public class TextureManagerPlugin {
     public void bindImageToId(BufferedImage imageToBind, int targetId, CallbackInfo ci) {}
 
     public void bindImageToId(int[] pixels, int width, int height, int targetId, CallbackInfo ci) {}
+
+    public interface Provider {
+
+        <T extends TextureManagerPlugin> T getPlugin();
+    }
 }

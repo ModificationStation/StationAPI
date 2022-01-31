@@ -3,8 +3,7 @@ package net.modificationstation.stationapi.api.client.texture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.Util;
-
-import java.awt.image.*;
+import net.modificationstation.stationapi.impl.client.texture.NativeImage;
 
 @Environment(value=EnvType.CLIENT)
 public class MipmapHelper {
@@ -14,26 +13,26 @@ public class MipmapHelper {
         }
     });
 
-    public static BufferedImage[] getMipmapLevelsImages(BufferedImage image, int mipmap) {
-        BufferedImage[] nativeImages = new BufferedImage[mipmap + 1];
+    public static NativeImage[] getMipmapLevelsImages(NativeImage image, int mipmap) {
+        NativeImage[] nativeImages = new NativeImage[mipmap + 1];
         nativeImages[0] = image;
         if (mipmap > 0) {
             boolean bl = false;
             block0: for (int i = 0; i < image.getWidth(); ++i) {
                 for (int j = 0; j < image.getHeight(); ++j) {
-                    if (image.getRGB(i, j) >> 24 != 0) continue;
+                    if (image.getPixelColor(i, j) >> 24 != 0) continue;
                     bl = true;
                     break block0;
                 }
             }
             for (int k = 1; k <= mipmap; ++k) {
-                BufferedImage nativeImage = nativeImages[k - 1];
-                BufferedImage nativeImage2 = new BufferedImage(nativeImage.getWidth() >> 1, nativeImage.getHeight() >> 1, BufferedImage.TYPE_INT_ARGB);
+                NativeImage nativeImage = nativeImages[k - 1];
+                NativeImage nativeImage2 = new NativeImage(nativeImage.getWidth() >> 1, nativeImage.getHeight() >> 1, false);
                 int l = nativeImage2.getWidth();
                 int m = nativeImage2.getHeight();
                 for (int n = 0; n < l; ++n) {
                     for (int o = 0; o < m; ++o) {
-                        nativeImage2.setRGB(n, o, MipmapHelper.blend(nativeImage.getRGB(n * 2, o * 2), nativeImage.getRGB(n * 2 + 1, o * 2), nativeImage.getRGB(n * 2, o * 2 + 1), nativeImage.getRGB(n * 2 + 1, o * 2 + 1), bl));
+                        nativeImage2.setPixelColor(n, o, MipmapHelper.blend(nativeImage.getPixelColor(n * 2, o * 2), nativeImage.getPixelColor(n * 2 + 1, o * 2), nativeImage.getPixelColor(n * 2, o * 2 + 1), nativeImage.getPixelColor(n * 2 + 1, o * 2 + 1), bl));
                     }
                 }
                 nativeImages[k] = nativeImage2;

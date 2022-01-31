@@ -25,7 +25,7 @@ import net.modificationstation.stationapi.api.client.model.ItemModelGenerator;
 import net.modificationstation.stationapi.api.client.model.ModelBakeSettings;
 import net.modificationstation.stationapi.api.client.model.ModelLoader;
 import net.modificationstation.stationapi.api.client.model.UnbakedModel;
-import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
@@ -170,12 +170,12 @@ public final class JsonUnbakedModel implements UnbakedModel {
         return set2;
     }
 
-    public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, BakedSprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
         return this.bake(loader, this, textureGetter, rotationContainer, modelId, true);
     }
 
-    public BakedModel bake(ModelLoader loader, JsonUnbakedModel parent, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings settings, Identifier id, boolean hasDepth) {
-        Sprite sprite = textureGetter.apply(this.resolveSprite("particle"));
+    public BakedModel bake(ModelLoader loader, JsonUnbakedModel parent, Function<SpriteIdentifier, BakedSprite> textureGetter, ModelBakeSettings settings, Identifier id, boolean hasDepth) {
+        BakedSprite sprite = textureGetter.apply(this.resolveSprite("particle"));
         if (this.getRootModel() == ModelLoader.BLOCK_ENTITY_MARKER) {
             return new BuiltinBakedModel(this.getTransformations(), this.compileOverrides(loader, parent), sprite, this.getGuiLight().isSide());
         } else {
@@ -184,7 +184,7 @@ public final class JsonUnbakedModel implements UnbakedModel {
             for (ModelElement modelElement : this.getElements()) {
                 for (Direction direction : modelElement.faces.keySet()) {
                     ModelElementFace modelElementFace = modelElement.faces.get(direction);
-                    Sprite sprite2 = textureGetter.apply(this.resolveSprite(modelElementFace.textureId));
+                    BakedSprite sprite2 = textureGetter.apply(this.resolveSprite(modelElementFace.textureId));
                     if (modelElementFace.cullFace == null) {
                         builder.addQuad(createQuad(modelElement, modelElementFace, sprite2, direction, settings, id));
                     } else {
@@ -197,7 +197,7 @@ public final class JsonUnbakedModel implements UnbakedModel {
         }
     }
 
-    private static BakedQuad createQuad(ModelElement element, ModelElementFace elementFace, Sprite sprite, Direction side, ModelBakeSettings settings, Identifier id) {
+    private static BakedQuad createQuad(ModelElement element, ModelElementFace elementFace, BakedSprite sprite, Direction side, ModelBakeSettings settings, Identifier id) {
         return QUAD_FACTORY.bake(element.from, element.to, elementFace, sprite, side, settings, element.rotation, element.shade, id);
     }
 

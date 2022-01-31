@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.util.maths.Vec3i;
 import net.modificationstation.stationapi.api.client.model.json.ModelElementFace;
 import net.modificationstation.stationapi.api.client.model.json.ModelElementTexture;
-import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.math.AffineTransformation;
 import net.modificationstation.stationapi.api.util.math.AffineTransformations;
@@ -24,7 +24,7 @@ public class BakedQuadFactory {
    private static final float MIN_SCALE = 1.0F / (float)Math.cos(0.39269909262657166D) - 1.0F;
    private static final float MAX_SCALE = 1.0F / (float)Math.cos(0.7853981852531433D) - 1.0F;
 
-   public BakedQuad bake(Vector3f from, Vector3f to, ModelElementFace face, Sprite texture, Direction side, ModelBakeSettings settings, @Nullable ModelRotation rotation, boolean shade, Identifier modelId) {
+   public BakedQuad bake(Vector3f from, Vector3f to, ModelElementFace face, BakedSprite texture, Direction side, ModelBakeSettings settings, @Nullable ModelRotation rotation, boolean shade, Identifier modelId) {
       ModelElementTexture modelElementTexture = face.textureData;
       if (settings.uvlock()) {
          modelElementTexture = uvLock(face.textureData, side, settings.getRotation(), modelId);
@@ -91,7 +91,7 @@ public class BakedQuadFactory {
       return new ModelElementTexture(new float[]{p, t, q, u}, w);
    }
 
-   private int[] packVertexData(ModelElementTexture texture, Sprite sprite, Direction direction, float[] positionMatrix, AffineTransformation orientation, @Nullable ModelRotation rotation, boolean shaded) {
+   private int[] packVertexData(ModelElementTexture texture, BakedSprite sprite, Direction direction, float[] positionMatrix, AffineTransformation orientation, @Nullable ModelRotation rotation, boolean shaded) {
       int[] is = new int[32];
 
       for(int i = 0; i < 4; ++i) {
@@ -112,7 +112,7 @@ public class BakedQuadFactory {
       return fs;
    }
 
-   private void packVertexData(int[] vertices, int cornerIndex, Direction direction, ModelElementTexture texture, float[] positionMatrix, Sprite sprite, AffineTransformation orientation, @Nullable ModelRotation rotation, boolean shaded) {
+   private void packVertexData(int[] vertices, int cornerIndex, Direction direction, ModelElementTexture texture, float[] positionMatrix, BakedSprite sprite, AffineTransformation orientation, @Nullable ModelRotation rotation, boolean shaded) {
       CubeFace.Corner corner = CubeFace.getFace(direction).getCorner(cornerIndex);
       Vector3f vector3f = new Vector3f(positionMatrix[corner.xSide], positionMatrix[corner.ySide], positionMatrix[corner.zSide]);
       this.rotateVertex(vector3f, rotation);
@@ -120,7 +120,7 @@ public class BakedQuadFactory {
       this.packVertexData(vertices, cornerIndex, vector3f, sprite, texture, direction);
    }
 
-   private void packVertexData(int[] vertices, int cornerIndex, Vector3f position, Sprite sprite, ModelElementTexture modelElementTexture, Direction direction) {
+   private void packVertexData(int[] vertices, int cornerIndex, Vector3f position, BakedSprite sprite, ModelElementTexture modelElementTexture, Direction direction) {
       int i = cornerIndex * 8;
       vertices[i] = Float.floatToRawIntBits(position.getX());
       vertices[i + 1] = Float.floatToRawIntBits(position.getY());

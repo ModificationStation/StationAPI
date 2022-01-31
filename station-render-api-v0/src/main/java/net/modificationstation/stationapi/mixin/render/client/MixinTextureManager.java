@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.render.client;
 
+import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureManager;
@@ -16,9 +17,10 @@ import java.awt.image.*;
 
 @Mixin(TextureManager.class)
 @Environment(EnvType.CLIENT)
-public class MixinTextureManager {
+public class MixinTextureManager implements TextureManagerPlugin.Provider {
 
     @Unique
+    @Getter
     private final TextureManagerPlugin plugin = RenderPlugin.PLUGIN.createTextureManager((TextureManager) (Object) this);
 
     @Inject(

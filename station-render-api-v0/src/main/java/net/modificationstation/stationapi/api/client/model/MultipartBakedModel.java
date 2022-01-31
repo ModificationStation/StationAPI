@@ -9,7 +9,7 @@ import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.client.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.model.json.ModelTransformation;
-import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.impl.block.BlockState;
@@ -26,7 +26,7 @@ public class MultipartBakedModel implements BakedModel {
    protected final boolean ambientOcclusion;
    protected final boolean depthGui;
    protected final boolean sideLit;
-   protected final Sprite sprite;
+   protected final BakedSprite sprite;
    protected final ModelTransformation transformations;
    protected final ModelOverrideList itemPropertyOverrides;
    private final Map<BlockState, BitSet> stateCache = new Object2ObjectOpenCustomHashMap<>(Util.identityHashStrategy());
@@ -90,7 +90,7 @@ public class MultipartBakedModel implements BakedModel {
       return false;
    }
 
-   public Sprite getSprite() {
+   public BakedSprite getSprite() {
       return this.sprite;
    }
 

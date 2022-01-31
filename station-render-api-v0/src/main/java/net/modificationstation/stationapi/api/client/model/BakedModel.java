@@ -5,7 +5,7 @@ import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.client.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.model.json.ModelTransformation;
-import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +32,7 @@ public interface BakedModel {
 
     boolean isBuiltin();
 
-    Sprite getSprite();
+    BakedSprite getSprite();
 
     ModelTransformation getTransformation();
 
