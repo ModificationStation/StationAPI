@@ -185,6 +185,37 @@ allprojects {
                         builtBy remapSourcesJar
                     }
                 }
+
+                pom {
+                    withXml {
+                        def depsNode = asNode().appendNode("dependencies")
+                        subprojects.each {
+                            def depNode = depsNode.appendNode("dependency")
+                            depNode.appendNode("groupId", it.group)
+                            depNode.appendNode("artifactId", it.name)
+                            depNode.appendNode("version", it.version)
+                            depNode.appendNode("scope", "compile")
+                        }
+
+                        // Jank solution to an annoying issue
+                        ArrayList<String[]> deps = new ArrayList<>()
+                        deps.add(["com.github.jhalterman", "typetools", "${project.typetools_version}"] as String[])
+                        deps.add(["com.github.mineLdiver", "expressions", "${project.expressions_version}"] as String[])
+                        deps.add(["com.github.mineLdiver", "UnsafeEvents", "${project.unsafeevents_version}"] as String[])
+                        deps.add(["it.unimi.dsi", "fastutil", "${project.fastutil_version}"] as String[])
+                        deps.add(["com.github.ben-manes.caffeine", "caffeine", "${project.caffeine_version}"] as String[])
+                        deps.add(["com.mojang", "datafixerupper", "${project.dfu_version}"] as String[])
+                        deps.add(["org.apache.commons", "commons-lang3", "3.5"] as String[])
+                        deps.add(["commons-io", "commons-io", "2.5"] as String[])
+                        deps.each {
+                            def depNode = depsNode.appendNode("dependency")
+                            depNode.appendNode("groupId", it[0])
+                            depNode.appendNode("artifactId", it[1])
+                            depNode.appendNode("version", it[2])
+                            depNode.appendNode("scope", "compile")
+                        }
+                    }
+                }
             }
         }
     }
