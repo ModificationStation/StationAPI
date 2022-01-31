@@ -6,12 +6,13 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.client.texture.NativeImage;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.*;
 
 @Environment(value=EnvType.CLIENT)
 public class BakedSprite
-/*implements AutoCloseable*/ {
+implements AutoCloseable {
     private final ExpandableAtlas atlas;
     private final Atlas.Sprite info;
     private final AnimationResourceMetadata animationMetadata;
@@ -166,15 +167,16 @@ public class BakedSprite
         return this.frameXs.length;
     }
 
-//    public void close() {
-//        for (BufferedImage nativeImage : this.images) {
-//            if (nativeImage == null) continue;
-//            nativeImage.close();
-//        }
+    @Override
+    public void close() {
+        for (NativeImage nativeImage : this.images) {
+            if (nativeImage == null) continue;
+            nativeImage.close();
+        }
 //        if (this.interpolation != null) {
 //            this.interpolation.close();
 //        }
-//    }
+    }
 
     public String toString() {
         int i = this.frameXs.length;
@@ -221,6 +223,11 @@ public class BakedSprite
 
     public boolean isAnimated() {
         return this.animationMetadata.getFrameCount() > 1;
+    }
+
+    @ApiStatus.Internal
+    public NativeImage getBaseFrame() {
+        return images[0];
     }
 
 //    public VertexConsumer getTextureSpecificVertexConsumer(VertexConsumer vertexConsumer) {

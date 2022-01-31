@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 import java.awt.image.*;
@@ -29,11 +30,10 @@ public class StationClockTextureBinder extends StationTextureBinder {
                 textureWidth = staticReference.getWidth(),
                 textureHeight = staticReference.getHeight(),
                 square = textureWidth * textureHeight;
-        clockTexture = new int[square];
         dialTexture = new int[square];
-        BufferedImage var2 = staticReference.getAtlas().getImage();
-        var2.getRGB(staticReference.getX(), staticReference.getY(), textureWidth, textureHeight, this.clockTexture, 0, textureWidth);
-        var2 = TextureHelper.getTexture("/misc/dial.png");
+        //noinspection deprecation
+        clockTexture = ((ExpandableAtlas) staticReference.getAtlas()).getSprite(staticReference.getId()).getBaseFrame().makePixelArray();
+        BufferedImage var2 = TextureHelper.getTexture("/misc/dial.png");
         var2.getRGB(0, 0, textureWidth, textureHeight, this.dialTexture, 0, textureWidth);
         grid = new byte[square * 4];
     }

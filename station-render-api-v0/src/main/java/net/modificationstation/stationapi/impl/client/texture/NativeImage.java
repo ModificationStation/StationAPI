@@ -230,7 +230,7 @@ implements AutoCloseable {
                 int m = NativeImage.getBlue(k);
                 int n = NativeImage.getGreen(k);
                 int o = NativeImage.getRed(k);
-                is[j + i * this.getWidth()] = l << 24 | o << 16 | n << 8 | m;
+                is[j + i * this.getWidth()] = l << 24 | m << 16 | n << 8 | o;
             }
         }
         return is;

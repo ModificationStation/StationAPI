@@ -52,6 +52,9 @@ public interface BlockRendererAccessor {
     @Accessor
     int getTextureOverride();
 
+    @Accessor("textureOverride")
+    void stationapi$setTextureOverride(int textureOverride);
+
     @Accessor
     boolean getMirrorTexture();
 

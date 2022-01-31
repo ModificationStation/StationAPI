@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.util.Vec3i;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 public class StationCompassTextureBinder extends StationTextureBinder {
@@ -26,8 +27,7 @@ public class StationCompassTextureBinder extends StationTextureBinder {
                 textureWidth = staticReference.getWidth(),
                 textureHeight = staticReference.getHeight(),
                 square = textureWidth * textureHeight;
-        compassTexture = new int[square];
-        staticReference.getAtlas().getImage().getRGB(staticReference.getX(), staticReference.getY(), textureWidth, textureHeight, this.compassTexture, 0, textureWidth);
+        compassTexture = ((ExpandableAtlas) staticReference.getAtlas()).getSprite(staticReference.getId()).getBaseFrame().makePixelArray();
         grid = new byte[square * 4];
     }
 

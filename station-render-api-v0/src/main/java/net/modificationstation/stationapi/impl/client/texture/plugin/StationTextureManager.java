@@ -81,11 +81,10 @@ final class StationTextureManager extends TextureManagerPlugin implements Custom
         GL11.glBindTexture(3553, targetId);
         if (field_1245) {
             GL11.glTexParameteri(3553, 10241, 9986);
-            GL11.glTexParameteri(3553, 10240, 9728);
         } else {
             GL11.glTexParameteri(3553, 10241, 9728);
-            GL11.glTexParameteri(3553, 10240, 9728);
         }
+        GL11.glTexParameteri(3553, 10240, 9728);
 
         if (textureManagerAccessor.stationapi$isBlurTexture()) {
             GL11.glTexParameteri(3553, 10241, 9729);
@@ -164,11 +163,10 @@ final class StationTextureManager extends TextureManagerPlugin implements Custom
         GL11.glBindTexture(3553, targetId);
         if (field_1245) {
             GL11.glTexParameteri(3553, 10241, 9986);
-            GL11.glTexParameteri(3553, 10240, 9728);
         } else {
             GL11.glTexParameteri(3553, 10241, 9728);
-            GL11.glTexParameteri(3553, 10240, 9728);
         }
+        GL11.glTexParameteri(3553, 10240, 9728);
 
         if (textureManagerAccessor.stationapi$isBlurTexture()) {
             GL11.glTexParameteri(3553, 10241, 9729);

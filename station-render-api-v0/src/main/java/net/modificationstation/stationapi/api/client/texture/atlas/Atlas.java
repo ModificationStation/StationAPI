@@ -10,18 +10,12 @@ import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.texture.AnimationResourceMetadata;
-import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
-import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import uk.co.benjiweber.expressions.function.ObjIntFunction;
 
-import java.awt.image.*;
-import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
@@ -40,15 +34,12 @@ public abstract class Atlas {
     protected final Map<Identifier, Sprite> idToTex = new IdentityHashMap<>();
     protected final Int2ObjectMap<Sprite> textures = new Int2ObjectOpenHashMap<>();
     public final List<TextureBinder> textureBinders = new CopyOnWriteArrayList<>();
-    @NotNull
-    private Function<Atlas, @Nullable Tessellator> tessellator = EMPTY_TESSELLATOR;
-    protected BufferedImage imageCache;
 
-    public Atlas(final Identifier id, final String spritesheet, final int size, final boolean fixedSize) {
+    Atlas(final Identifier id, final String spritesheet, final int size, final boolean fixedSize) {
         this(id, spritesheet, size, fixedSize, null);
     }
 
-    public Atlas(final Identifier id, final String spritesheet, final int size, final boolean fixedSize, final Atlas parent) {
+    Atlas(final Identifier id, final String spritesheet, final int size, final boolean fixedSize, final Atlas parent) {
         this.id = id;
         this.spritesheet = spritesheet;
         if (parent == null)
@@ -61,40 +52,6 @@ public abstract class Atlas {
         }
         this.fixedSize = fixedSize;
         this.parent = parent;
-//        AtlasRegistry.INSTANCE.register(id, this);
-        init();
-    }
-
-    protected abstract void init();
-
-    public InputStream getStream() {
-        return TextureHelper.getTextureStream(spritesheet);
-    }
-
-    public BufferedImage getImage() {
-        return imageCache == null ? imageCache = TextureHelper.getTexture(spritesheet) : imageCache;
-    }
-
-    public final <E extends Atlas> E setTessellator(Tessellator tessellator) {
-        return setTessellator(() -> tessellator);
-    }
-
-    public final <E extends Atlas> E setTessellator(Supplier<Tessellator> tessellator) {
-        return setTessellator(atlas -> tessellator.get());
-    }
-
-    public final <E extends Atlas> E setTessellator(Function<Atlas, Tessellator> tessellator) {
-        if (this.tessellator.apply(this) == null) {
-            if (tessellator != null)
-                this.tessellator = tessellator;
-            //noinspection unchecked
-            return (E) this;
-        } else
-            throw new UnsupportedOperationException("Tried setting a new tessellator for " + spritesheet + " texture atlas, but there's already a tessellator set up.");
-    }
-
-    public final <E extends Atlas> E initTessellator() {
-        return setTessellator(TessellatorAccessor.newInst(2097152));
     }
 
     protected final <T> T applyInherited(int textureIndex, IntFunction<T> atlasBounds, ObjIntFunction<Atlas, T> parentBounds) {
@@ -125,11 +82,6 @@ public abstract class Atlas {
         return (T) this;
     }
 
-    @Nullable
-    public final Tessellator getTessellator() {
-        return tessellator.apply(this);
-    }
-
     public final int getAtlasTextureID() {
         //noinspection deprecation
         return ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId(spritesheet);
@@ -152,10 +104,6 @@ public abstract class Atlas {
         return null;
     }
 
-    public final int getUnitSize() {
-        return parent == null ? size : size - parent.size;
-    }
-
     public final <T extends StationTextureBinder> T addTextureBinder(int staticReferenceTextureIndex, Function<Sprite, T> initializer) {
         return addTextureBinder(getTexture(staticReferenceTextureIndex), initializer);
     }
@@ -174,7 +122,7 @@ public abstract class Atlas {
         });
     }
 
-    public class Sprite {
+    public abstract class Sprite {
 
         @Getter
         protected Identifier id;
@@ -183,10 +131,6 @@ public abstract class Atlas {
         protected int
                 x, y,
                 width, height;
-        @Getter
-        protected double
-                startU, endU,
-                startV, endV;
         public final AnimationResourceMetadata animationData;
 
         public Sprite(Identifier id, int index, int width, int height, AnimationResourceMetadata animationData) {
@@ -195,24 +139,10 @@ public abstract class Atlas {
             this.width = width;
             this.height = height;
             this.animationData = animationData;
-            updateUVs();
         }
 
         public final Atlas getAtlas() {
             return Atlas.this;
-        }
-
-        protected final void updateUVs() {
-            BufferedImage image = getAtlas().getImage();
-            if (image != null) {
-                int
-                        atlasWidth = image.getWidth(),
-                        atlasHeight = image.getHeight();
-                this.startU = (double) x / atlasWidth;
-                this.endU = (double) (x + width) / atlasWidth;
-                this.startV = (double) y / atlasHeight;
-                this.endV = (double) (y + height) / atlasHeight;
-            }
         }
 
         /* !==========================! */
@@ -225,6 +155,14 @@ public abstract class Atlas {
             this.x = x;
             this.y = y;
         }
+
+        public abstract double getStartU();
+
+        public abstract double getEndU();
+
+        public abstract double getStartV();
+
+        public abstract double getEndV();
     }
 
     /* !==========================! */

@@ -6,7 +6,6 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -29,8 +28,6 @@ import net.modificationstation.stationapi.mixin.render.client.TextureManagerAcce
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
-import javax.imageio.*;
-import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.*;
@@ -64,7 +61,7 @@ public class StationRenderAPI {
         Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
         if (BAKED_MODEL_MANAGER == null)
             BAKED_MODEL_MANAGER = new BakedModelManager(minecraft.textureManager, BlockColors.create(), 0);
-        TERRAIN = new ExpandableAtlas(Atlases.BLOCK_ATLAS_TEXTURE).setTessellator(() -> Tessellator.INSTANCE);
+        TERRAIN = new ExpandableAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
         GUI_ITEMS = new ExpandableAtlas(Atlases.ITEM_ATLAS_TEXTURE);
         TERRAIN.addSpritesheet("/terrain.png", 16, TerrainHelper.INSTANCE);
         GUI_ITEMS.addSpritesheet("/gui/items.png", 16, GuiItemsHelper.INSTANCE);
@@ -84,7 +81,6 @@ public class StationRenderAPI {
         //noinspection deprecation
         Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
         TexturePack texturePack = minecraft.texturePackManager.texturePack;
-//        ModelRegistry.INSTANCE.forEach((identifier, model) -> model.reloadFromTexturePack(texturePack));
         ResourceReloader.create(minecraft.texturePackManager.texturePack, Collections.singletonList(BAKED_MODEL_MANAGER), Util.getMainWorkerExecutor(), Runnable::run, COMPLETED_UNIT_FUTURE);
         GUI_ITEMS.upload(GUI_ITEMS.stitch(texturePack, Stream.empty(), DummyProfiler.INSTANCE, 0));
         TERRAIN.registerTextureBinders(minecraft.textureManager, texturePack);
@@ -105,22 +101,22 @@ public class StationRenderAPI {
     }
 
     private static void debugExportAtlases() {
-        if (DEBUG_EXPORT_ATLASES) {
-            Stream.of(TERRAIN, GUI_ITEMS).forEach(expandableAtlas -> {
-                if (expandableAtlas.getImage() == null)
-                    LOGGER.debug("Empty atlas " + expandableAtlas.id + ". Skipping export.");
-                else {
-                    LOGGER.debug("Exporting atlas " + expandableAtlas.id + "...");
-                    File debug = new File("." + StationAPI.MODID + ".out/exported_atlases/" + expandableAtlas.id.toString().replace(":", "_") + ".png");
-                    //noinspection ResultOfMethodCallIgnored
-                    debug.mkdirs();
-                    try {
-                        ImageIO.write(expandableAtlas.getImage(), "png", debug);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-        }
+//        if (DEBUG_EXPORT_ATLASES) {
+//            Stream.of(TERRAIN, GUI_ITEMS).forEach(expandableAtlas -> {
+//                if (expandableAtlas.getImage() == null)
+//                    LOGGER.debug("Empty atlas " + expandableAtlas.id + ". Skipping export.");
+//                else {
+//                    LOGGER.debug("Exporting atlas " + expandableAtlas.id + "...");
+//                    File debug = new File("." + StationAPI.MODID + ".out/exported_atlases/" + expandableAtlas.id.toString().replace(":", "_") + ".png");
+//                    //noinspection ResultOfMethodCallIgnored
+//                    debug.mkdirs();
+//                    try {
+//                        ImageIO.write(expandableAtlas.getImage(), "png", debug);
+//                    } catch (IOException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                }
+//            });
+//        }
     }
 }

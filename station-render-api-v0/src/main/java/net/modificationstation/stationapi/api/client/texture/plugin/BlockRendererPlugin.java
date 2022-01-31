@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.client.texture.plugin;
 
 import net.minecraft.block.BlockBase;
+import net.minecraft.block.Rail;
 import net.minecraft.client.render.block.BlockRenderer;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -16,6 +17,14 @@ public class BlockRendererPlugin {
     public void renderWorld(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {}
 
     public void renderBed(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {}
+
+    public void renderLever(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {}
+
+    public void renderFire(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {}
+
+    public void renderRails(Rail rail, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {}
+
+    public void renderLadder(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {}
 
     public void renderPlant(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {}
 

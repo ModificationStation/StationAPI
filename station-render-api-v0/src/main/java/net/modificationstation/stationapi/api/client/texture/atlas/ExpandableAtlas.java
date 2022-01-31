@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -27,13 +28,11 @@ import net.modificationstation.stationapi.api.util.profiler.Profiler;
 import net.modificationstation.stationapi.impl.client.texture.CustomTextureManager;
 import net.modificationstation.stationapi.impl.client.texture.NativeImage;
 import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
-import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 import uk.co.benjiweber.expressions.tuple.Tuple;
 
-import javax.imageio.*;
 import java.awt.image.*;
 import java.io.*;
 import java.nio.charset.*;
@@ -52,6 +51,8 @@ public class ExpandableAtlas extends Atlas {
     @ApiStatus.Internal
     private final Map<Identifier, NativeImage> otherSpritesheetLookup = new IdentityHashMap<>();
     private final Map<Identifier, BakedSprite> sprites = new IdentityHashMap<>();
+    @Getter
+    private int width, height;
 
     public ExpandableAtlas(final Identifier identifier) {
         super(identifier, "/assets/" + MODID + "/atlases/" + identifier, 0, false);
@@ -59,26 +60,6 @@ public class ExpandableAtlas extends Atlas {
 
     public ExpandableAtlas(final Identifier identifier, final Atlas parent) {
         super(identifier, "/assets/" + MODID + "/atlases/" + identifier, 0, false, parent);
-    }
-
-    @Override
-    protected void init() {}
-
-    @Override
-    public BufferedImage getImage() {
-        return imageCache;
-    }
-
-    @Override
-    public InputStream getStream() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            //noinspection deprecation
-            ImageIO.write(imageCache == null ? ((TextureManagerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager).getMissingTexImage() : imageCache, "png", outputStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return new ByteArrayInputStream(outputStream.toByteArray());
     }
 
     public Sprite addTexture(Identifier identifier) {
@@ -164,6 +145,8 @@ public class ExpandableAtlas extends Atlas {
 //        this.spritesToLoad.clear();
 //        this.spritesToLoad.addAll(data.spriteIds);
         LOGGER.info("Created: {}x{}x{} {}-atlas", data.width, data.height, data.maxLevel, this.id);
+        width = data.width;
+        height = data.height;
         //noinspection deprecation
         TextureManager textureManager = ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager;
         CustomTextureManager cTextureManager = ((TextureManagerPlugin.Provider) textureManager).getPlugin();
@@ -225,8 +208,6 @@ public class ExpandableAtlas extends Atlas {
         textureStitcher.getStitchedSprites((info, atlasWidth, atlasHeight, x, y) -> {
             info.x = x;
             info.y = y;
-            if (imageCache == null || imageCache.getWidth() != atlasWidth || imageCache.getHeight() != atlasHeight)
-                imageCache = new BufferedImage(atlasWidth, atlasHeight, BufferedImage.TYPE_INT_ARGB);
 //            if (info == getMissingTexture()) {
 //                MissingSprite missingSprite = MissingSprite.getMissingSprite(this, maxLevel, atlasWidth, atlasHeight, x, y);
 //                concurrentLinkedQueue.add(missingSprite);

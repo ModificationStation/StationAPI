@@ -3,19 +3,21 @@ package net.modificationstation.stationapi.impl.client.texture.plugin;
 import net.minecraft.block.Bed;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.Fluid;
+import net.minecraft.block.Rail;
+import net.minecraft.block.RedstoneDust;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.sortme.GameRenderer;
 import net.minecraft.sortme.MagicBedNumbers;
 import net.minecraft.util.maths.MathHelper;
+import net.minecraft.util.maths.Vec3f;
 import net.modificationstation.stationapi.api.client.model.BakedModel;
 import net.modificationstation.stationapi.api.client.model.BakedModelRenderer;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldRenderer;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
-import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.client.texture.plugin.BlockRendererPlugin;
 import net.modificationstation.stationapi.impl.block.BlockStateProvider;
@@ -25,9 +27,6 @@ import net.modificationstation.stationapi.mixin.render.client.BlockRendererAcces
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.awt.image.*;
-import java.util.*;
 
 import static net.minecraft.client.render.block.BlockRenderer.fancyGraphics;
 
@@ -43,7 +42,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public Tessellator prepareTessellator(Atlas atlas) {
-        return atlas.getTessellator();
+        return Tessellator.INSTANCE;
     }
 
     @Override
@@ -59,7 +58,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
 
     @Override
     public void renderBed(BlockBase block, int blockX, int blockY, int blockZ, CallbackInfoReturnable<Boolean> cir) {
-        Atlas atlas = ((CustomAtlasProvider) block).getAtlas();
+        ExpandableAtlas atlas = Atlases.getTerrain();
         Tessellator var5 = prepareTessellator(atlas);
         Atlas.Sprite texture;
         int
@@ -199,11 +198,699 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     @Override
+    public void renderLever(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(renderLever(block, x, y, z));
+    }
+
+    public boolean renderLever(BlockBase block, int x, int y, int z) {
+        int var5 = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
+        int var6 = var5 & 7;
+        boolean var7 = (var5 & 8) > 0;
+        ExpandableAtlas atlas = Atlases.getTerrain();
+        Tessellator var8 = prepareTessellator(atlas);
+        boolean var9 = blockRendererAccessor.getTextureOverride() >= 0;
+        if (!var9) {
+            blockRendererAccessor.stationapi$setTextureOverride(BlockBase.COBBLESTONE.texture);
+        }
+
+        float var10 = 0.25F;
+        float var11 = 0.1875F;
+        float var12 = 0.1875F;
+        if (var6 == 5) {
+            block.setBoundingBox(0.5F - var11, 0.0F, 0.5F - var10, 0.5F + var11, var12, 0.5F + var10);
+        } else if (var6 == 6) {
+            block.setBoundingBox(0.5F - var10, 0.0F, 0.5F - var11, 0.5F + var10, var12, 0.5F + var11);
+        } else if (var6 == 4) {
+            block.setBoundingBox(0.5F - var11, 0.5F - var10, 1.0F - var12, 0.5F + var11, 0.5F + var10, 1.0F);
+        } else if (var6 == 3) {
+            block.setBoundingBox(0.5F - var11, 0.5F - var10, 0.0F, 0.5F + var11, 0.5F + var10, var12);
+        } else if (var6 == 2) {
+            block.setBoundingBox(1.0F - var12, 0.5F - var10, 0.5F - var11, 1.0F, 0.5F + var10, 0.5F + var11);
+        } else if (var6 == 1) {
+            block.setBoundingBox(0.0F, 0.5F - var10, 0.5F - var11, var12, 0.5F + var10, 0.5F + var11);
+        }
+
+        blockRenderer.renderStandardBlock(block, x, y, z);
+        if (!var9) {
+            blockRendererAccessor.stationapi$setTextureOverride(-1);
+        }
+
+        float var13 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
+        if (BlockBase.EMITTANCE[block.id] > 0) {
+            var13 = 1.0F;
+        }
+
+        var8.colour(var13, var13, var13);
+        int var14 = block.getTextureForSide(0);
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
+            var14 = blockRendererAccessor.getTextureOverride();
+        }
+
+        Atlas.Sprite texture = atlas.getTexture(var14);
+        float var17 = (float) texture.getStartU();
+        float var18 = (float) texture.getEndU();
+        float var19 = (float) texture.getStartV();
+        float var20 = (float) texture.getEndV();
+        Vec3f[] var21 = new Vec3f[8];
+        float var22 = 0.0625F;
+        float var23 = 0.0625F;
+        float var24 = 0.625F;
+        var21[0] = Vec3f.from(-var22, 0.0D, -var23);
+        var21[1] = Vec3f.from(var22, 0.0D, -var23);
+        var21[2] = Vec3f.from(var22, 0.0D, var23);
+        var21[3] = Vec3f.from(-var22, 0.0D, var23);
+        var21[4] = Vec3f.from(-var22, var24, -var23);
+        var21[5] = Vec3f.from(var22, var24, -var23);
+        var21[6] = Vec3f.from(var22, var24, var23);
+        var21[7] = Vec3f.from(-var22, var24, var23);
+
+        for(int var25 = 0; var25 < 8; ++var25) {
+            if (var7) {
+                var21[var25].z -= 0.0625D;
+                var21[var25].method_1306(0.69813174F);
+            } else {
+                var21[var25].z += 0.0625D;
+                var21[var25].method_1306(-0.69813174F);
+            }
+
+            if (var6 == 6) {
+                var21[var25].method_1308(((float)Math.PI / 2F));
+            }
+
+            if (var6 < 5) {
+                var21[var25].y -= 0.375D;
+                var21[var25].method_1306(((float)Math.PI / 2F));
+                if (var6 == 4) {
+                    var21[var25].method_1308(0.0F);
+                }
+
+                if (var6 == 3) {
+                    var21[var25].method_1308((float)Math.PI);
+                }
+
+                if (var6 == 2) {
+                    var21[var25].method_1308(((float)Math.PI / 2F));
+                }
+
+                if (var6 == 1) {
+                    var21[var25].method_1308((-(float)Math.PI / 2F));
+                }
+
+                var21[var25].x += (double)x + 0.5D;
+                var21[var25].y += (float)y + 0.5F;
+                var21[var25].z += (double)z + 0.5D;
+            } else {
+                var21[var25].x += (double)x + 0.5D;
+                var21[var25].y += (float)y + 0.125F;
+                var21[var25].z += (double)z + 0.5D;
+            }
+        }
+
+        Vec3f var30 = null;
+        Vec3f var26 = null;
+        Vec3f var27 = null;
+        Vec3f var28 = null;
+
+        for(int var29 = 0; var29 < 6; ++var29) {
+            if (var29 == 0) {
+                var17 = ((texture.getX() + texture.getWidth() * 0.4375F) / atlas.getWidth());
+                var18 = ((texture.getX() + texture.getWidth() * 0.5625F) / atlas.getWidth());
+                var19 = ((texture.getY() + texture.getHeight() * 0.375F) / atlas.getHeight());
+                var20 = ((texture.getY() + texture.getHeight() * 0.5F) / atlas.getHeight());
+            } else if (var29 == 2) {
+                var17 = ((texture.getX() + texture.getWidth() * 0.4375F) / atlas.getWidth());
+                var18 = ((texture.getX() + texture.getWidth() * 0.5625F) / atlas.getWidth());
+                var19 = ((texture.getY() + texture.getHeight() * 0.375F) / atlas.getHeight());
+                var20 = (float) texture.getEndV();
+            }
+
+            if (var29 == 0) {
+                var30 = var21[0];
+                var26 = var21[1];
+                var27 = var21[2];
+                var28 = var21[3];
+            } else if (var29 == 1) {
+                var30 = var21[7];
+                var26 = var21[6];
+                var27 = var21[5];
+                var28 = var21[4];
+            } else if (var29 == 2) {
+                var30 = var21[1];
+                var26 = var21[0];
+                var27 = var21[4];
+                var28 = var21[5];
+            } else if (var29 == 3) {
+                var30 = var21[2];
+                var26 = var21[1];
+                var27 = var21[5];
+                var28 = var21[6];
+            } else if (var29 == 4) {
+                var30 = var21[3];
+                var26 = var21[2];
+                var27 = var21[6];
+                var28 = var21[7];
+            } else if (var29 == 5) {
+                var30 = var21[0];
+                var26 = var21[3];
+                var27 = var21[7];
+                var28 = var21[4];
+            }
+
+            var8.vertex(var30.x, var30.y, var30.z, var17, var20);
+            var8.vertex(var26.x, var26.y, var26.z, var18, var20);
+            var8.vertex(var27.x, var27.y, var27.z, var18, var19);
+            var8.vertex(var28.x, var28.y, var28.z, var17, var19);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void renderFire(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(renderFire(block, x, y, z));
+    }
+
+    public boolean renderFire(BlockBase block, int x, int y, int z) {
+        ExpandableAtlas atlas = Atlases.getTerrain();
+        Tessellator var5 = prepareTessellator(atlas);
+        int var6 = block.getTextureForSide(0);
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
+            var6 = blockRendererAccessor.getTextureOverride();
+        }
+
+        float var7 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
+        var5.colour(var7, var7, var7);
+        Atlas.Sprite texture = atlas.getTexture(var6);
+        double var10 = texture.getStartU();
+        double var12 = texture.getEndU();
+        double var14 = texture.getStartV();
+        double var16 = texture.getEndV();
+        float var18 = 1.4F;
+        Atlas.Sprite nextTex = atlas.getTexture(var6 + 16);
+        if (!blockRendererAccessor.getBlockView().canSuffocate(x, y - 1, z) && !BlockBase.FIRE.method_1824(blockRendererAccessor.getBlockView(), x, y - 1, z)) {
+            float var60 = 0.2F;
+            float var20 = 0.0625F;
+            if ((x + y + z & 1) == 1) {
+                var10 = nextTex.getStartU();
+                var12 = nextTex.getEndU();
+                var14 = nextTex.getStartV();
+                var16 = nextTex.getEndV();
+            }
+
+            if ((x / 2 + y / 2 + z / 2 & 1) == 1) {
+                double var62 = var12;
+                var12 = var10;
+                var10 = var62;
+            }
+
+            if (BlockBase.FIRE.method_1824(blockRendererAccessor.getBlockView(), x - 1, y, z)) {
+                var5.vertex((float) x + var60, (float) y + var18 + var20, z + 1, var12, var14);
+                var5.vertex(x, (float) (y) + var20, z + 1, var12, var16);
+                var5.vertex(x, (float) (y) + var20, z, var10, var16);
+                var5.vertex((float) x + var60, (float) y + var18 + var20, z, var10, var14);
+                var5.vertex((float) x + var60, (float) y + var18 + var20, z, var10, var14);
+                var5.vertex(x, (float) (y) + var20, z, var10, var16);
+                var5.vertex(x, (float) (y) + var20, z + 1, var12, var16);
+                var5.vertex((float) x + var60, (float) y + var18 + var20, z + 1, var12, var14);
+            }
+
+            if (BlockBase.FIRE.method_1824(blockRendererAccessor.getBlockView(), x + 1, y, z)) {
+                var5.vertex((float) (x + 1) - var60, (float) y + var18 + var20, z, var10, var14);
+                var5.vertex(x + 1, (float) (y) + var20, z, var10, var16);
+                var5.vertex(x + 1, (float) (y) + var20, z + 1, var12, var16);
+                var5.vertex((float) (x + 1) - var60, (float) y + var18 + var20, z + 1, var12, var14);
+                var5.vertex((float) (x + 1) - var60, (float) y + var18 + var20, z + 1, var12, var14);
+                var5.vertex(x + 1, (float) (y) + var20, z + 1, var12, var16);
+                var5.vertex(x + 1, (float) (y) + var20, z, var10, var16);
+                var5.vertex((float) (x + 1) - var60, (float) y + var18 + var20, z, var10, var14);
+            }
+
+            if (BlockBase.FIRE.method_1824(blockRendererAccessor.getBlockView(), x, y, z - 1)) {
+                var5.vertex(x, (float) y + var18 + var20, (float) z + var60, var12, var14);
+                var5.vertex(x, (float) (y) + var20, z, var12, var16);
+                var5.vertex(x + 1, (float) (y) + var20, z, var10, var16);
+                var5.vertex(x + 1, (float) y + var18 + var20, (float) z + var60, var10, var14);
+                var5.vertex(x + 1, (float) y + var18 + var20, (float) z + var60, var10, var14);
+                var5.vertex(x + 1, (float) (y) + var20, z, var10, var16);
+                var5.vertex(x, (float) (y) + var20, z, var12, var16);
+                var5.vertex(x, (float) y + var18 + var20, (float) z + var60, var12, var14);
+            }
+
+            if (BlockBase.FIRE.method_1824(blockRendererAccessor.getBlockView(), x, y, z + 1)) {
+                var5.vertex(x + 1, (float) y + var18 + var20, (float) (z + 1) - var60, var10, var14);
+                var5.vertex(x + 1, (float) (y) + var20, z + 1, var10, var16);
+                var5.vertex(x, (float) (y) + var20, z + 1, var12, var16);
+                var5.vertex(x, (float) y + var18 + var20, (float) (z + 1) - var60, var12, var14);
+                var5.vertex(x, (float) y + var18 + var20, (float) (z + 1) - var60, var12, var14);
+                var5.vertex(x, (float) (y) + var20, z + 1, var12, var16);
+                var5.vertex(x + 1, (float) (y) + var20, z + 1, var10, var16);
+                var5.vertex(x + 1, (float) y + var18 + var20, (float) (z + 1) - var60, var10, var14);
+            }
+
+            if (BlockBase.FIRE.method_1824(blockRendererAccessor.getBlockView(), x, y + 1, z)) {
+                double var63 = (double) x + 0.5D + 0.5D;
+                double var65 = (double) x + 0.5D - 0.5D;
+                double var67 = (double) z + 0.5D + 0.5D;
+                double var69 = (double) z + 0.5D - 0.5D;
+                double var71 = (double) x + 0.5D - 0.5D;
+                double var73 = (double) x + 0.5D + 0.5D;
+                double var75 = (double) z + 0.5D - 0.5D;
+                double var35 = (double) z + 0.5D + 0.5D;
+                var10 = texture.getStartU();
+                var12 = texture.getEndU();
+                var14 = texture.getStartV();
+                var16 = texture.getEndV();
+                ++y;
+                var18 = -0.2F;
+                if ((x + y + z & 1) == 0) {
+                    var5.vertex(var71, (float) y + var18, z, var12, var14);
+                    var5.vertex(var63, y, z, var12, var16);
+                    var5.vertex(var63, y, z + 1, var10, var16);
+                    var5.vertex(var71, (float) y + var18, z + 1, var10, var14);
+                    var10 = nextTex.getStartU();
+                    var12 = nextTex.getEndU();
+                    var14 = nextTex.getStartV();
+                    var16 = nextTex.getEndV();
+                    var5.vertex(var73, (float) y + var18, z + 1, var12, var14);
+                    var5.vertex(var65, y, z + 1, var12, var16);
+                    var5.vertex(var65, y, z, var10, var16);
+                    var5.vertex(var73, (float) y + var18, z, var10, var14);
+                } else {
+                    var5.vertex(x, (float) y + var18, var35, var12, var14);
+                    var5.vertex(x, y, var69, var12, var16);
+                    var5.vertex(x + 1, y, var69, var10, var16);
+                    var5.vertex(x + 1, (float) y + var18, var35, var10, var14);
+                    var10 = nextTex.getStartU();
+                    var12 = nextTex.getEndU();
+                    var14 = nextTex.getStartV();
+                    var16 = nextTex.getEndV();
+                    var5.vertex(x + 1, (float) y + var18, var75, var12, var14);
+                    var5.vertex(x + 1, y, var67, var12, var16);
+                    var5.vertex(x, y, var67, var10, var16);
+                    var5.vertex(x, (float) y + var18, var75, var10, var14);
+                }
+            }
+        } else {
+            double var19 = (double) x + 0.5D + 0.2D;
+            double var21 = (double) x + 0.5D - 0.2D;
+            double var23 = (double) z + 0.5D + 0.2D;
+            double var25 = (double) z + 0.5D - 0.2D;
+            double var27 = (double) x + 0.5D - 0.3D;
+            double var29 = (double) x + 0.5D + 0.3D;
+            double var31 = (double) z + 0.5D - 0.3D;
+            double var33 = (double) z + 0.5D + 0.3D;
+            var5.vertex(var27, (float) y + var18, z + 1, var12, var14);
+            var5.vertex(var19, y, z + 1, var12, var16);
+            var5.vertex(var19, y, z, var10, var16);
+            var5.vertex(var27, (float) y + var18, z, var10, var14);
+            var5.vertex(var29, (float) y + var18, z, var12, var14);
+            var5.vertex(var21, y, z, var12, var16);
+            var5.vertex(var21, y, z + 1, var10, var16);
+            var5.vertex(var29, (float) y + var18, z + 1, var10, var14);
+            var10 = nextTex.getStartU();
+            var12 = nextTex.getEndU();
+            var14 = nextTex.getStartV();
+            var16 = nextTex.getEndV();
+            var5.vertex(x + 1, (float) y + var18, var33, var12, var14);
+            var5.vertex(x + 1, y, var25, var12, var16);
+            var5.vertex(x, y, var25, var10, var16);
+            var5.vertex(x, (float) y + var18, var33, var10, var14);
+            var5.vertex(x, (float) y + var18, var31, var12, var14);
+            var5.vertex(x, y, var23, var12, var16);
+            var5.vertex(x + 1, y, var23, var10, var16);
+            var5.vertex(x + 1, (float) y + var18, var31, var10, var14);
+            var19 = (double) x + 0.5D - 0.5D;
+            var21 = (double) x + 0.5D + 0.5D;
+            var23 = (double) z + 0.5D - 0.5D;
+            var25 = (double) z + 0.5D + 0.5D;
+            var27 = (double) x + 0.5D - 0.4D;
+            var29 = (double) x + 0.5D + 0.4D;
+            var31 = (double) z + 0.5D - 0.4D;
+            var33 = (double) z + 0.5D + 0.4D;
+            var5.vertex(var27, (float) y + var18, z, var10, var14);
+            var5.vertex(var19, y, z, var10, var16);
+            var5.vertex(var19, y, z + 1, var12, var16);
+            var5.vertex(var27, (float) y + var18, z + 1, var12, var14);
+            var5.vertex(var29, (float) y + var18, z + 1, var10, var14);
+            var5.vertex(var21, y, z + 1, var10, var16);
+            var5.vertex(var21, y, z, var12, var16);
+            var5.vertex(var29, (float) y + var18, z, var12, var14);
+            var10 = texture.getStartU();
+            var12 = texture.getEndU();
+            var14 = texture.getStartV();
+            var16 = texture.getEndV();
+            var5.vertex(x, (float) y + var18, var33, var10, var14);
+            var5.vertex(x, y, var25, var10, var16);
+            var5.vertex(x + 1, y, var25, var12, var16);
+            var5.vertex(x + 1, (float) y + var18, var33, var12, var14);
+            var5.vertex(x + 1, (float) y + var18, var31, var10, var14);
+            var5.vertex(x + 1, y, var23, var10, var16);
+            var5.vertex(x, y, var23, var12, var16);
+            var5.vertex(x, (float) y + var18, var31, var12, var14);
+        }
+
+        return true;
+    }
+
+    public boolean renderRedstoneDust(BlockBase block, int x, int y, int z) {
+        Tessellator var5 = Tessellator.INSTANCE;
+        int var6 = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
+        int var7 = block.getTextureForSide(1, var6);
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
+            var7 = blockRendererAccessor.getTextureOverride();
+        }
+        Atlas.Sprite sprite = Atlases.getTerrain().getTexture(var7);
+
+        float var8 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
+        float var9 = (float)var6 / 15.0F;
+        float var10 = var9 * 0.6F + 0.4F;
+        if (var6 == 0) {
+            var10 = 0.3F;
+        }
+
+        float var11 = var9 * var9 * 0.7F - 0.5F;
+        float var12 = var9 * var9 * 0.6F - 0.7F;
+        if (var11 < 0.0F) {
+            var11 = 0.0F;
+        }
+
+        if (var12 < 0.0F) {
+            var12 = 0.0F;
+        }
+
+        var5.colour(var8 * var10, var8 * var11, var8 * var12);
+        double var15 = sprite.getStartU();
+        double var17 = sprite.getEndU();
+        double var19 = sprite.getStartV();
+        double var21 = sprite.getEndV();
+        boolean var26 = RedstoneDust.method_1287(blockRendererAccessor.getBlockView(), x - 1, y, z, 1) || !blockRendererAccessor.getBlockView().canSuffocate(x - 1, y, z) && RedstoneDust.method_1287(blockRendererAccessor.getBlockView(), x - 1, y - 1, z, -1);
+        boolean var27 = RedstoneDust.method_1287(blockRendererAccessor.getBlockView(), x + 1, y, z, 3) || !blockRendererAccessor.getBlockView().canSuffocate(x + 1, y, z) && RedstoneDust.method_1287(blockRendererAccessor.getBlockView(), x + 1, y - 1, z, -1);
+        boolean var28 = RedstoneDust.method_1287(blockRendererAccessor.getBlockView(), x, y, z - 1, 2) || !blockRendererAccessor.getBlockView().canSuffocate(x, y, z - 1) && RedstoneDust.method_1287(blockRendererAccessor.getBlockView(), x, y - 1, z - 1, -1);
+        boolean var29 = RedstoneDust.method_1287(blockRendererAccessor.getBlockView(), x, y, z + 1, 0) || !blockRendererAccessor.getBlockView().canSuffocate(x, y, z + 1) && RedstoneDust.method_1287(blockRendererAccessor.getBlockView(), x, y - 1, z + 1, -1);
+        if (!blockRendererAccessor.getBlockView().canSuffocate(x, y + 1, z)) {
+            if (blockRendererAccessor.getBlockView().canSuffocate(x - 1, y, z) && RedstoneDust.method_1287(blockRendererAccessor.getBlockView(), x - 1, y + 1, z, -1)) {
+                var26 = true;
+            }
+
+            if (blockRendererAccessor.getBlockView().canSuffocate(x + 1, y, z) && RedstoneDust.method_1287(blockRendererAccessor.getBlockView(), x + 1, y + 1, z, -1)) {
+                var27 = true;
+            }
+
+            if (blockRendererAccessor.getBlockView().canSuffocate(x, y, z - 1) && RedstoneDust.method_1287(blockRendererAccessor.getBlockView(), x, y + 1, z - 1, -1)) {
+                var28 = true;
+            }
+
+            if (blockRendererAccessor.getBlockView().canSuffocate(x, y, z + 1) && RedstoneDust.method_1287(blockRendererAccessor.getBlockView(), x, y + 1, z + 1, -1)) {
+                var29 = true;
+            }
+        }
+
+        float var31 = (float)(x);
+        float var32 = (float)(x + 1);
+        float var33 = (float)(z);
+        float var34 = (float)(z + 1);
+        byte var35 = 0;
+        if ((var26 || var27) && !var28 && !var29) {
+            var35 = 1;
+        }
+
+        if ((var28 || var29) && !var27 && !var26) {
+            var35 = 2;
+        }
+
+        if (var35 != 0) {
+            sprite = Atlases.getTerrain().getTexture(var7 + 1);
+            var15 = sprite.getStartU();
+            var17 = sprite.getEndU();
+            var19 = sprite.getStartV();
+            var21 = sprite.getEndV();
+        }
+
+        if (var35 == 0) {
+            if (var27 || var28 || var29 || var26) {
+                if (!var26) {
+                    var31 += 0.3125F;
+                }
+
+                if (!var26) {
+                    var15 += sprite.getWidth() * 0.3125 / Atlases.getTerrain().getWidth();
+                }
+
+                if (!var27) {
+                    var32 -= 0.3125F;
+                }
+
+                if (!var27) {
+                    var17 -= sprite.getHeight() * 0.3125 / Atlases.getTerrain().getHeight();
+                }
+
+                if (!var28) {
+                    var33 += 0.3125F;
+                }
+
+                if (!var28) {
+                    var19 += sprite.getWidth() * 0.3125 / Atlases.getTerrain().getWidth();
+                }
+
+                if (!var29) {
+                    var34 -= 0.3125F;
+                }
+
+                if (!var29) {
+                    var21 -= sprite.getHeight() * 0.3125 / Atlases.getTerrain().getHeight();
+                }
+            }
+
+            var5.vertex(var32, (float)y + 0.015625F, var34, var17, var21);
+            var5.vertex(var32, (float)y + 0.015625F, var33, var17, var19);
+            var5.vertex(var31, (float)y + 0.015625F, var33, var15, var19);
+            var5.vertex(var31, (float)y + 0.015625F, var34, var15, var21);
+            var5.colour(var8, var8, var8);
+            var5.vertex(var32, (float)y + 0.015625F, var34, var17, var21 + 0.0625D);
+            var5.vertex(var32, (float)y + 0.015625F, var33, var17, var19 + 0.0625D);
+            var5.vertex(var31, (float)y + 0.015625F, var33, var15, var19 + 0.0625D);
+            var5.vertex(var31, (float)y + 0.015625F, var34, var15, var21 + 0.0625D);
+        } else if (var35 == 1) {
+            var5.vertex(var32, (float)y + 0.015625F, var34, var17, var21);
+            var5.vertex(var32, (float)y + 0.015625F, var33, var17, var19);
+            var5.vertex(var31, (float)y + 0.015625F, var33, var15, var19);
+            var5.vertex(var31, (float)y + 0.015625F, var34, var15, var21);
+            var5.colour(var8, var8, var8);
+            var5.vertex(var32, (float)y + 0.015625F, var34, var17, var21 + 0.0625D);
+            var5.vertex(var32, (float)y + 0.015625F, var33, var17, var19 + 0.0625D);
+            var5.vertex(var31, (float)y + 0.015625F, var33, var15, var19 + 0.0625D);
+            var5.vertex(var31, (float)y + 0.015625F, var34, var15, var21 + 0.0625D);
+        } else if (var35 == 2) {
+            var5.vertex(var32, (float)y + 0.015625F, var34, var17, var21);
+            var5.vertex(var32, (float)y + 0.015625F, var33, var15, var21);
+            var5.vertex(var31, (float)y + 0.015625F, var33, var15, var19);
+            var5.vertex(var31, (float)y + 0.015625F, var34, var17, var19);
+            var5.colour(var8, var8, var8);
+            var5.vertex(var32, (float)y + 0.015625F, var34, var17, var21 + 0.0625D);
+            var5.vertex(var32, (float)y + 0.015625F, var33, var15, var21 + 0.0625D);
+            var5.vertex(var31, (float)y + 0.015625F, var33, var15, var19 + 0.0625D);
+            var5.vertex(var31, (float)y + 0.015625F, var34, var17, var19 + 0.0625D);
+        }
+
+        if (!blockRendererAccessor.getBlockView().canSuffocate(x, y + 1, z)) {
+//            var15 = (float)(var13 + 16) / 256.0F;
+//            var17 = ((float)(var13 + 16) + 15.99F) / 256.0F;
+//            var19 = (float)var14 / 256.0F;
+//            var21 = ((float)var14 + 15.99F) / 256.0F;
+            if (blockRendererAccessor.getBlockView().canSuffocate(x - 1, y, z) && blockRendererAccessor.getBlockView().getTileId(x - 1, y + 1, z) == BlockBase.REDSTONE_DUST.id) {
+                var5.colour(var8 * var10, var8 * var11, var8 * var12);
+                var5.vertex((float)x + 0.015625F, (float)(y + 1) + 0.021875F, z + 1, var17, var19);
+                var5.vertex((float)x + 0.015625F, y, z + 1, var15, var19);
+                var5.vertex((float)x + 0.015625F, y, z, var15, var21);
+                var5.vertex((float)x + 0.015625F, (float)(y + 1) + 0.021875F, z, var17, var21);
+                var5.colour(var8, var8, var8);
+                var5.vertex((float)x + 0.015625F, (float)(y + 1) + 0.021875F, z + 1, var17, var19 + 0.0625D);
+                var5.vertex((float)x + 0.015625F, y, z + 1, var15, var19 + 0.0625D);
+                var5.vertex((float)x + 0.015625F, y, z, var15, var21 + 0.0625D);
+                var5.vertex((float)x + 0.015625F, (float)(y + 1) + 0.021875F, z, var17, var21 + 0.0625D);
+            }
+
+            if (blockRendererAccessor.getBlockView().canSuffocate(x + 1, y, z) && blockRendererAccessor.getBlockView().getTileId(x + 1, y + 1, z) == BlockBase.REDSTONE_DUST.id) {
+                var5.colour(var8 * var10, var8 * var11, var8 * var12);
+                var5.vertex((float)(x + 1) - 0.015625F, y, z + 1, var15, var21);
+                var5.vertex((float)(x + 1) - 0.015625F, (float)(y + 1) + 0.021875F, z + 1, var17, var21);
+                var5.vertex((float)(x + 1) - 0.015625F, (float)(y + 1) + 0.021875F, z, var17, var19);
+                var5.vertex((float)(x + 1) - 0.015625F, y, z, var15, var19);
+                var5.colour(var8, var8, var8);
+                var5.vertex((float)(x + 1) - 0.015625F, y, z + 1, var15, var21 + 0.0625D);
+                var5.vertex((float)(x + 1) - 0.015625F, (float)(y + 1) + 0.021875F, z + 1, var17, var21 + 0.0625D);
+                var5.vertex((float)(x + 1) - 0.015625F, (float)(y + 1) + 0.021875F, z, var17, var19 + 0.0625D);
+                var5.vertex((float)(x + 1) - 0.015625F, y, z, var15, var19 + 0.0625D);
+            }
+
+            if (blockRendererAccessor.getBlockView().canSuffocate(x, y, z - 1) && blockRendererAccessor.getBlockView().getTileId(x, y + 1, z - 1) == BlockBase.REDSTONE_DUST.id) {
+                var5.colour(var8 * var10, var8 * var11, var8 * var12);
+                var5.vertex(x + 1, y, (float)z + 0.015625F, var15, var21);
+                var5.vertex(x + 1, (float)(y + 1) + 0.021875F, (float)z + 0.015625F, var17, var21);
+                var5.vertex(x, (float)(y + 1) + 0.021875F, (float)z + 0.015625F, var17, var19);
+                var5.vertex(x, y, (float)z + 0.015625F, var15, var19);
+                var5.colour(var8, var8, var8);
+                var5.vertex(x + 1, y, (float)z + 0.015625F, var15, var21 + 0.0625D);
+                var5.vertex(x + 1, (float)(y + 1) + 0.021875F, (float)z + 0.015625F, var17, var21 + 0.0625D);
+                var5.vertex(x, (float)(y + 1) + 0.021875F, (float)z + 0.015625F, var17, var19 + 0.0625D);
+                var5.vertex(x, y, (float)z + 0.015625F, var15, var19 + 0.0625D);
+            }
+
+            if (blockRendererAccessor.getBlockView().canSuffocate(x, y, z + 1) && blockRendererAccessor.getBlockView().getTileId(x, y + 1, z + 1) == BlockBase.REDSTONE_DUST.id) {
+                var5.colour(var8 * var10, var8 * var11, var8 * var12);
+                var5.vertex(x + 1, (float)(y + 1) + 0.021875F, (float)(z + 1) - 0.015625F, var17, var19);
+                var5.vertex(x + 1, y, (float)(z + 1) - 0.015625F, var15, var19);
+                var5.vertex(x, y, (float)(z + 1) - 0.015625F, var15, var21);
+                var5.vertex(x, (float)(y + 1) + 0.021875F, (float)(z + 1) - 0.015625F, var17, var21);
+                var5.colour(var8, var8, var8);
+                var5.vertex(x + 1, (float)(y + 1) + 0.021875F, (float)(z + 1) - 0.015625F, var17, var19 + 0.0625D);
+                var5.vertex(x + 1, y, (float)(z + 1) - 0.015625F, var15, var19 + 0.0625D);
+                var5.vertex(x, y, (float)(z + 1) - 0.015625F, var15, var21 + 0.0625D);
+                var5.vertex(x, (float)(y + 1) + 0.021875F, (float)(z + 1) - 0.015625F, var17, var21 + 0.0625D);
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public void renderRails(Rail rail, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(renderRails(rail, x, y, z));
+    }
+
+    public boolean renderRails(Rail rail, int x, int y, int z) {
+        ExpandableAtlas atlas = Atlases.getTerrain();
+        Tessellator var5 = prepareTessellator(atlas);
+        int var6 = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
+        int var7 = rail.getTextureForSide(0, var6);
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
+            var7 = blockRendererAccessor.getTextureOverride();
+        }
+
+        if (rail.method_1108()) {
+            var6 &= 7;
+        }
+
+        float var8 = rail.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
+        var5.colour(var8, var8, var8);
+        Atlas.Sprite sprite = atlas.getTexture(var7);
+        double var11 = sprite.getStartU();
+        double var13 = sprite.getEndU();
+        double var15 = sprite.getStartV();
+        double var17 = sprite.getEndV();
+        float var19 = 0.0625F;
+        float var20 = (float)(x + 1);
+        float var21 = (float)(x + 1);
+        float var22 = (float)(x);
+        float var23 = (float)(x);
+        float var24 = (float)(z);
+        float var25 = (float)(z + 1);
+        float var26 = (float)(z + 1);
+        float var27 = (float)(z);
+        float var28 = (float)y + var19;
+        float var29 = (float)y + var19;
+        float var30 = (float)y + var19;
+        float var31 = (float)y + var19;
+        if (var6 != 1 && var6 != 2 && var6 != 3 && var6 != 7) {
+            if (var6 == 8) {
+                var20 = var21 = (float)(x);
+                var22 = var23 = (float)(x + 1);
+                var24 = var27 = (float)(z + 1);
+                var25 = var26 = (float)(z);
+            } else if (var6 == 9) {
+                var20 = var23 = (float)(x);
+                var21 = var22 = (float)(x + 1);
+                var24 = var25 = (float)(z);
+                var26 = var27 = (float)(z + 1);
+            }
+        } else {
+            var20 = var23 = (float)(x + 1);
+            var21 = var22 = (float)(x);
+            var24 = var25 = (float)(z + 1);
+            var26 = var27 = (float)(z);
+        }
+
+        if (var6 != 2 && var6 != 4) {
+            if (var6 == 3 || var6 == 5) {
+                ++var29;
+                ++var30;
+            }
+        } else {
+            ++var28;
+            ++var31;
+        }
+
+        var5.vertex(var20, var28, var24, var13, var15);
+        var5.vertex(var21, var29, var25, var13, var17);
+        var5.vertex(var22, var30, var26, var11, var17);
+        var5.vertex(var23, var31, var27, var11, var15);
+        var5.vertex(var23, var31, var27, var11, var15);
+        var5.vertex(var22, var30, var26, var11, var17);
+        var5.vertex(var21, var29, var25, var13, var17);
+        var5.vertex(var20, var28, var24, var13, var15);
+        return true;
+    }
+
+    @Override
+    public void renderLadder(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
+        cir.setReturnValue(renderLadder(block, x, y, z));
+    }
+
+    public boolean renderLadder(BlockBase block, int x, int y, int z) {
+        ExpandableAtlas atlas = Atlases.getTerrain();
+        Tessellator var5 = prepareTessellator(atlas);
+        int var6 = block.getTextureForSide(0);
+        if (blockRendererAccessor.getTextureOverride() >= 0) {
+            var6 = blockRendererAccessor.getTextureOverride();
+        }
+
+        float var7 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
+        var5.colour(var7, var7, var7);
+        Atlas.Sprite texture = atlas.getTexture(var6);
+        double var10 = texture.getStartU();
+        double var12 = texture.getEndU();
+        double var14 = texture.getStartV();
+        double var16 = texture.getEndV();
+        int var18 = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
+        float var19 = 0.0F;
+        float var20 = 0.05F;
+        if (var18 == 5) {
+            var5.vertex((float)x + var20, (float)(y + 1) + var19, (float)(z + 1) + var19, var10, var14);
+            var5.vertex((float)x + var20, (float)(y) - var19, (float)(z + 1) + var19, var10, var16);
+            var5.vertex((float)x + var20, (float)(y) - var19, (float)(z) - var19, var12, var16);
+            var5.vertex((float)x + var20, (float)(y + 1) + var19, (float)(z) - var19, var12, var14);
+        }
+
+        if (var18 == 4) {
+            var5.vertex((float)(x + 1) - var20, (float)(y) - var19, (float)(z + 1) + var19, var12, var16);
+            var5.vertex((float)(x + 1) - var20, (float)(y + 1) + var19, (float)(z + 1) + var19, var12, var14);
+            var5.vertex((float)(x + 1) - var20, (float)(y + 1) + var19, (float)(z) - var19, var10, var14);
+            var5.vertex((float)(x + 1) - var20, (float)(y) - var19, (float)(z) - var19, var10, var16);
+        }
+
+        if (var18 == 3) {
+            var5.vertex((float)(x + 1) + var19, (float)(y) - var19, (float)z + var20, var12, var16);
+            var5.vertex((float)(x + 1) + var19, (float)(y + 1) + var19, (float)z + var20, var12, var14);
+            var5.vertex((float)(x) - var19, (float)(y + 1) + var19, (float)z + var20, var10, var14);
+            var5.vertex((float)(x) - var19, (float)(y) - var19, (float)z + var20, var10, var16);
+        }
+
+        if (var18 == 2) {
+            var5.vertex((float)(x + 1) + var19, (float)(y + 1) + var19, (float)(z + 1) - var20, var10, var14);
+            var5.vertex((float)(x + 1) + var19, (float)(y) - var19, (float)(z + 1) - var20, var10, var16);
+            var5.vertex((float)(x) - var19, (float)(y) - var19, (float)(z + 1) - var20, var12, var16);
+            var5.vertex((float)(x) - var19, (float)(y + 1) + var19, (float)(z + 1) - var20, var12, var14);
+        }
+
+        return true;
+    }
+
+    @Override
     public void renderPlant(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         float var6 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
         int var7 = block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
         int meta = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
-        Tessellator var5 = prepareTessellator(((CustomAtlasProvider) block).getAtlas().of(block.getTextureForSide(0, blockRendererAccessor.getBlockView().getTileMeta(x, y, z))));
+        Tessellator var5 = prepareTessellator(Atlases.getTerrain());
         float var8 = (float)((var7 >> 16) & 255) / 255.0F;
         float var9 = (float)((var7 >> 8) & 255) / 255.0F;
         float var10 = (float)(var7 & 255) / 255.0F;
@@ -236,8 +923,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     public void renderCrops(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         float var6 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
         int meta = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
-        Tessellator var5 = prepareTessellator(((CustomAtlasProvider) block).getAtlas().of(block.getTextureForSide(0, blockRendererAccessor.getBlockView().getTileMeta(x, y, z))));
-        var5.colour(var6, var6, var6);
+        Tessellator t = prepareTessellator(Atlases.getTerrain());
+        t.colour(var6, var6, var6);
         renderShiftedColumn(block, meta, x, (float)y - 0.0625F, z);
         cir.setReturnValue(true);
     }
@@ -249,15 +936,12 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderTorchTilted(BlockBase block, double renderX, double renderY, double renderZ, double width, double length) {
-        Atlas atlas;
+        ExpandableAtlas atlas = Atlases.getTerrain();
         Atlas.Sprite texture;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
-            atlas = Atlases.getTerrain();
             texture = atlas.getTexture(blockRendererAccessor.getTextureOverride());
         } else {
-            int textureIndex = block.getTextureForSide(0);
-            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
-            texture = atlas.getTexture(textureIndex);
+            texture = atlas.getTexture(block.getTextureForSide(0));
         }
         Tessellator t = prepareTessellator(atlas);
 
@@ -265,10 +949,9 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
         float var17 = (float) texture.getEndU();
         float var18 = (float) texture.getStartV();
         float var19 = (float) texture.getEndV();
-        BufferedImage atlasImage = atlas.getImage();
         int
-                atlasWidth = atlasImage.getWidth(),
-                atlasHeight = atlasImage.getHeight();
+                atlasWidth = atlas.getWidth(),
+                atlasHeight = atlas.getHeight();
         double var20 = (double)var16 + texture.getWidth() * 0.4375 / atlasWidth;
         double var22 = (double)var18 + texture.getHeight() * 0.375 / atlasHeight;
         double var24 = (double)var16 + texture.getWidth() * 0.5625 / atlasWidth;
@@ -314,15 +997,12 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderCrossed(BlockBase block, int meta, double x, double y, double z) {
-        Atlas atlas;
+        ExpandableAtlas atlas = Atlases.getTerrain();
         Atlas.Sprite texture;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
-            atlas = Atlases.getTerrain();
             texture = atlas.getTexture(blockRendererAccessor.getTextureOverride());
         } else {
-            int textureIndex = block.getTextureForSide(0, meta);
-            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
-            texture = atlas.getTexture(textureIndex);
+            texture = atlas.getTexture(block.getTextureForSide(0, meta));
         }
         Tessellator t = prepareTessellator(atlas);
         double
@@ -359,15 +1039,12 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderShiftedColumn(BlockBase block, int meta, double x, double y, double z) {
-        Atlas atlas;
+        ExpandableAtlas atlas = Atlases.getTerrain();
         Atlas.Sprite texture;
         if (blockRendererAccessor.getTextureOverride() >= 0) {
-            atlas = Atlases.getTerrain();
             texture = atlas.getTexture(blockRendererAccessor.getTextureOverride());
         } else {
-            int textureIndex = block.getTextureForSide(0, meta);
-            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
-            texture = atlas.getTexture(textureIndex);
+            texture = atlas.getTexture(block.getTextureForSide(0, meta));
         }
         Tessellator t = prepareTessellator(atlas);
         double var13 = texture.getStartU();
@@ -421,20 +1098,20 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
         cir.setReturnValue(renderFluid(block, x, y, z));
     }
 
-    public boolean renderFluid(BlockBase arg, int x, int y, int z) {
-        ExpandableAtlas terrain = Atlases.getTerrain();
-        Tessellator var5 = Objects.requireNonNull(terrain.getTessellator());
-        int var6 = arg.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
+    public boolean renderFluid(BlockBase block, int x, int y, int z) {
+        ExpandableAtlas atlas = Atlases.getTerrain();
+        Tessellator t = prepareTessellator(atlas);
+        int var6 = block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
         float var7 = (float)((var6 >> 16) & 255) / 255.0F;
         float var8 = (float)((var6 >> 8) & 255) / 255.0F;
         float var9 = (float)(var6 & 255) / 255.0F;
-        boolean var10 = arg.isSideRendered(blockRendererAccessor.getBlockView(), x, y + 1, z, 1);
-        boolean var11 = arg.isSideRendered(blockRendererAccessor.getBlockView(), x, y - 1, z, 0);
+        boolean var10 = block.isSideRendered(blockRendererAccessor.getBlockView(), x, y + 1, z, 1);
+        boolean var11 = block.isSideRendered(blockRendererAccessor.getBlockView(), x, y - 1, z, 0);
         boolean[] var12 = new boolean[] {
-                arg.isSideRendered(blockRendererAccessor.getBlockView(), x, y, z - 1, 2),
-                arg.isSideRendered(blockRendererAccessor.getBlockView(), x, y, z + 1, 3),
-                arg.isSideRendered(blockRendererAccessor.getBlockView(), x - 1, y, z, 4),
-                arg.isSideRendered(blockRendererAccessor.getBlockView(), x + 1, y, z, 5)
+                block.isSideRendered(blockRendererAccessor.getBlockView(), x, y, z - 1, 2),
+                block.isSideRendered(blockRendererAccessor.getBlockView(), x, y, z + 1, 3),
+                block.isSideRendered(blockRendererAccessor.getBlockView(), x - 1, y, z, 4),
+                block.isSideRendered(blockRendererAccessor.getBlockView(), x + 1, y, z, 5)
         };
         if (!var10 && !var11 && !var12[0] && !var12[1] && !var12[2] && !var12[3]) {
             return false;
@@ -446,7 +1123,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
             float var17 = 0.6F;
             double var18 = 0.0D;
             double var20 = 1.0D;
-            Material var22 = arg.material;
+            Material var22 = block.material;
             int var23 = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
             float var24 = blockRendererAccessor.stationapi$method_43(x, y, z, var22);
             float var25 = blockRendererAccessor.stationapi$method_43(x, y, z + 1, var22);
@@ -454,39 +1131,39 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
             float var27 = blockRendererAccessor.stationapi$method_43(x + 1, y, z, var22);
             if (blockRendererAccessor.getRenderAllSides() || var10) {
                 var13 = true;
-                Atlas.Sprite var28 = terrain.getTexture(arg.getTextureForSide(1, var23));
+                Atlas.Sprite var28 = atlas.getTexture(block.getTextureForSide(1, var23));
                 float notchCode = 1;
                 float var29 = (float) Fluid.method_1223(blockRendererAccessor.getBlockView(), x, y, z, var22);
                 if (var29 > -999.0F) {
-                    var28 = terrain.getTexture(arg.getTextureForSide(2, var23));
+                    var28 = atlas.getTexture(block.getTextureForSide(2, var23));
                     notchCode = 2;
                 }
 
-                double var32 = (var28.getX() + var28.getWidth() / notchCode / 2D) / terrain.getImage().getWidth();
-                double var34 = (var28.getY() + var28.getHeight() / notchCode / 2D) / terrain.getImage().getHeight();
+                double var32 = (var28.getX() + var28.getWidth() / notchCode / 2D) / atlas.getWidth();
+                double var34 = (var28.getY() + var28.getHeight() / notchCode / 2D) / atlas.getHeight();
                 if (var29 < -999.0F) {
                     var29 = 0.0F;
                 } else {
-                    var32 = (var28.getX() + var28.getWidth() / notchCode) / terrain.getImage().getWidth();
-                    var34 = (var28.getY() + var28.getHeight() / notchCode) / terrain.getImage().getHeight();
+                    var32 = (var28.getX() + var28.getWidth() / notchCode) / atlas.getWidth();
+                    var34 = (var28.getY() + var28.getHeight() / notchCode) / atlas.getHeight();
                 }
 
-                float us = MathHelper.sin(var29) * (var28.getWidth() / notchCode / 2F) / terrain.getImage().getWidth();
-                float uc = MathHelper.cos(var29) * (var28.getWidth() / notchCode / 2F) / terrain.getImage().getWidth();
-                float vs = MathHelper.sin(var29) * (var28.getHeight() / notchCode / 2F) / terrain.getImage().getHeight();
-                float vc = MathHelper.cos(var29) * (var28.getHeight() / notchCode / 2F) / terrain.getImage().getHeight();
-                float var38 = arg.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
-                var5.colour(var15 * var38 * var7, var15 * var38 * var8, var15 * var38 * var9);
-                var5.vertex(x, y + var24, z, var32 - uc - us, var34 - vc + vs);
-                var5.vertex(x, y + var25, z + 1, var32 - uc + us, var34 + vc + vs);
-                var5.vertex(x + 1, y + var26, z + 1, var32 + uc + us, var34 + vc - vs);
-                var5.vertex(x + 1, y + var27, z, var32 + uc - us, var34 - vc - vs);
+                float us = MathHelper.sin(var29) * (var28.getWidth() / notchCode / 2F) / atlas.getWidth();
+                float uc = MathHelper.cos(var29) * (var28.getWidth() / notchCode / 2F) / atlas.getWidth();
+                float vs = MathHelper.sin(var29) * (var28.getHeight() / notchCode / 2F) / atlas.getHeight();
+                float vc = MathHelper.cos(var29) * (var28.getHeight() / notchCode / 2F) / atlas.getHeight();
+                float var38 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
+                t.colour(var15 * var38 * var7, var15 * var38 * var8, var15 * var38 * var9);
+                t.vertex(x, y + var24, z, var32 - uc - us, var34 - vc + vs);
+                t.vertex(x, y + var25, z + 1, var32 - uc + us, var34 + vc + vs);
+                t.vertex(x + 1, y + var26, z + 1, var32 + uc + us, var34 + vc - vs);
+                t.vertex(x + 1, y + var27, z, var32 + uc - us, var34 - vc - vs);
             }
 
             if (blockRendererAccessor.getRenderAllSides() || var11) {
-                float var52 = arg.getBrightness(blockRendererAccessor.getBlockView(), x, y - 1, z);
-                var5.colour(var14 * var52, var14 * var52, var14 * var52);
-                this.renderBottomFace(arg, x, y, z, arg.getTextureForSide(0));
+                float var52 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y - 1, z);
+                t.colour(var14 * var52, var14 * var52, var14 * var52);
+                this.renderBottomFace(block, x, y, z, block.getTextureForSide(0));
                 var13 = true;
             }
 
@@ -509,7 +1186,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                     ++var54;
                 }
 
-                Atlas.Sprite var56 = terrain.getTexture(arg.getTextureForSide(var53 + 2, var23));
+                Atlas.Sprite var56 = atlas.getTexture(block.getTextureForSide(var53 + 2, var23));
                 if (blockRendererAccessor.getRenderAllSides() || var12[var53]) {
                     float var35;
                     float var39;
@@ -549,27 +1226,27 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
 
                     var13 = true;
                     double var41 = var56.getStartU();
-                    double var43 = (var56.getX() + var56.getWidth() / 2F) / terrain.getImage().getWidth();
-                    double var45 = (var56.getY() + (1.0F - var35) * var56.getHeight() / 2) / terrain.getImage().getHeight();
-                    double var47 = (var56.getY() + (1.0F - var58) * var56.getHeight() / 2) / terrain.getImage().getHeight();
-                    double var49 = (var56.getY() + var56.getHeight() / 2F) / terrain.getImage().getHeight();
-                    float var51 = arg.getBrightness(blockRendererAccessor.getBlockView(), var54, y, var55);
+                    double var43 = (var56.getX() + var56.getWidth() / 2F) / atlas.getWidth();
+                    double var45 = (var56.getY() + (1.0F - var35) * var56.getHeight() / 2) / atlas.getHeight();
+                    double var47 = (var56.getY() + (1.0F - var58) * var56.getHeight() / 2) / atlas.getHeight();
+                    double var49 = (var56.getY() + var56.getHeight() / 2F) / atlas.getHeight();
+                    float var51 = block.getBrightness(blockRendererAccessor.getBlockView(), var54, y, var55);
                     if (var53 < 2) {
                         var51 *= var16;
                     } else {
                         var51 *= var17;
                     }
 
-                    var5.colour(var15 * var51 * var7, var15 * var51 * var8, var15 * var51 * var9);
-                    var5.vertex(var59, (float)y + var35, var60, var41, var45);
-                    var5.vertex(var39, (float)y + var58, var40, var43, var47);
-                    var5.vertex(var39, y, var40, var43, var49);
-                    var5.vertex(var59, y, var60, var41, var49);
+                    t.colour(var15 * var51 * var7, var15 * var51 * var8, var15 * var51 * var9);
+                    t.vertex(var59, (float)y + var35, var60, var41, var45);
+                    t.vertex(var39, (float)y + var58, var40, var43, var47);
+                    t.vertex(var39, y, var40, var43, var49);
+                    t.vertex(var59, y, var60, var41, var49);
                 }
             }
 
-            arg.minY = var18;
-            arg.maxY = var20;
+            block.minY = var18;
+            block.maxY = var20;
             return var13;
         }
     }
@@ -577,8 +1254,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     @Override
     public void renderFast(BlockBase block, int x, int y, int z, float r, float g, float b, CallbackInfoReturnable<Boolean> cir) {
         blockRendererAccessor.setShadeTopFace(false);
-        Atlas topAtlas = ((CustomAtlasProvider) block).getAtlas();
-        Tessellator tessellator;
+        ExpandableAtlas atlas = Atlases.getTerrain();
+        Tessellator tessellator = prepareTessellator(atlas);
         boolean rendered = false;
         float initialShadeBottom = 0.5F;
         float initialShadeTop = 1.0F;
@@ -612,7 +1289,6 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
         if (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), x, y - 1, z, 0)) {
             float brightnessBottom = block.getBrightness(blockRendererAccessor.getBlockView(), x, y - 1, z);
             int textureBottom = block.getTextureForSide(blockRendererAccessor.getBlockView(), x, y, z, 0);
-            tessellator = prepareTessellator(topAtlas.of(textureBottom));
             tessellator.colour(shadeBottomRed * brightnessBottom, shadeBottomGreen * brightnessBottom, shadeBottomBlue * brightnessBottom);
             this.renderBottomFace(block, x, y, z, textureBottom);
             rendered = true;
@@ -624,7 +1300,6 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 brightnessTop = brightness;
             }
             int textureTop = block.getTextureForSide(blockRendererAccessor.getBlockView(), x, y, z, 1);
-            tessellator = prepareTessellator(topAtlas.of(textureTop));
             tessellator.colour(shadeTopRed * brightnessTop, shadeTopGreen * brightnessTop, shadeTopBlue * brightnessTop);
             this.renderTopFace(block, x, y, z, textureTop);
             rendered = true;
@@ -636,11 +1311,9 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 brightnessEast = brightness;
             }
             int textureEast = block.getTextureForSide(blockRendererAccessor.getBlockView(), x, y, z, 2);
-            tessellator = prepareTessellator(topAtlas.of(textureEast));
             tessellator.colour(shadeEastWestRed * brightnessEast, shadeEastWestGreen * brightnessEast, shadeEastWestBlue * brightnessEast);
             this.renderEastFace(block, x, y, z, textureEast);
-            if (fancyGraphics && topAtlas == Atlases.getTerrain() && textureEast == 3 && blockRendererAccessor.getTextureOverride() < 0) {
-                tessellator = prepareTessellator(Atlases.getTerrain());
+            if (fancyGraphics && atlas == Atlases.getTerrain() && textureEast == 3 && blockRendererAccessor.getTextureOverride() < 0) {
                 tessellator.colour(shadeEastWestRed * brightnessEast * r, shadeEastWestGreen * brightnessEast * g, shadeEastWestBlue * brightnessEast * b);
                 this.renderEastFace(block, x, y, z, 38);
             }
@@ -654,11 +1327,9 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 brightnessWest = brightness;
             }
             int textureWest = block.getTextureForSide(blockRendererAccessor.getBlockView(), x, y, z, 3);
-            tessellator = prepareTessellator(topAtlas.of(textureWest));
             tessellator.colour(shadeEastWestRed * brightnessWest, shadeEastWestGreen * brightnessWest, shadeEastWestBlue * brightnessWest);
             this.renderWestFace(block, x, y, z, textureWest);
-            if (fancyGraphics && topAtlas == Atlases.getTerrain() && textureWest == 3 && blockRendererAccessor.getTextureOverride() < 0) {
-                tessellator = prepareTessellator(Atlases.getTerrain());
+            if (fancyGraphics && atlas == Atlases.getTerrain() && textureWest == 3 && blockRendererAccessor.getTextureOverride() < 0) {
                 tessellator.colour(shadeEastWestRed * brightnessWest * r, shadeEastWestGreen * brightnessWest * g, shadeEastWestBlue * brightnessWest * b);
                 this.renderWestFace(block, x, y, z, 38);
             }
@@ -672,11 +1343,9 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 brightnessNorth = brightness;
             }
             int textureNorth = block.getTextureForSide(blockRendererAccessor.getBlockView(), x, y, z, 4);
-            tessellator = prepareTessellator(topAtlas.of(textureNorth));
             tessellator.colour(shadeNorthSouthRed * brightnessNorth, shadeNorthSouthGreen * brightnessNorth, shadeNorthSouthBlue * brightnessNorth);
             this.renderNorthFace(block, x, y, z, textureNorth);
-            if (fancyGraphics && topAtlas == Atlases.getTerrain() && textureNorth == 3 && blockRendererAccessor.getTextureOverride() < 0) {
-                tessellator = prepareTessellator(Atlases.getTerrain());
+            if (fancyGraphics && atlas == Atlases.getTerrain() && textureNorth == 3 && blockRendererAccessor.getTextureOverride() < 0) {
                 tessellator.colour(shadeNorthSouthRed * brightnessNorth * r, shadeNorthSouthGreen * brightnessNorth * g, shadeNorthSouthBlue * brightnessNorth * b);
                 this.renderNorthFace(block, x, y, z, 38);
             }
@@ -690,11 +1359,9 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 brightnessSouth = brightness;
             }
             int textureSouth = block.getTextureForSide(blockRendererAccessor.getBlockView(), x, y, z, 5);
-            tessellator = prepareTessellator(topAtlas.of(textureSouth));
             tessellator.colour(shadeNorthSouthRed * brightnessSouth, shadeNorthSouthGreen * brightnessSouth, shadeNorthSouthBlue * brightnessSouth);
             this.renderSouthFace(block, x, y, z, textureSouth);
-            if (fancyGraphics && topAtlas == Atlases.getTerrain() && textureSouth == 3 && blockRendererAccessor.getTextureOverride() < 0) {
-                tessellator = prepareTessellator(Atlases.getTerrain());
+            if (fancyGraphics && atlas == Atlases.getTerrain() && textureSouth == 3 && blockRendererAccessor.getTextureOverride() < 0) {
                 tessellator.colour(shadeNorthSouthRed * brightnessSouth * r, shadeNorthSouthGreen * brightnessSouth * g, shadeNorthSouthBlue * brightnessSouth * b);
                 this.renderSouthFace(block, x, y, z, 38);
             }
@@ -710,22 +1377,18 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
-        Atlas atlas;
-        if (blockRendererAccessor.getTextureOverride() >= 0) {
+        ExpandableAtlas atlas = Atlases.getTerrain();
+        if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
-            atlas = Atlases.getTerrain();
-        } else
-            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
-        BufferedImage atlasImage = atlas.getImage();
         Tessellator t = prepareTessellator(atlas);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
                 textureWidth = texture.getWidth(),
                 textureHeight = texture.getHeight(),
-                atlasWidth = atlasImage.getWidth(),
-                atlasHeight = atlasImage.getHeight();
+                atlasWidth = atlas.getWidth(),
+                atlasHeight = atlas.getHeight();
         double
                 startU1 = (texX + block.minX * textureWidth) / atlasWidth,
                 endU1 = (texX + block.maxX * textureWidth) / atlasWidth,
@@ -818,22 +1481,18 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderTopFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
-        Atlas atlas;
-        if (blockRendererAccessor.getTextureOverride() >= 0) {
+        ExpandableAtlas atlas = Atlases.getTerrain();
+        if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
-            atlas = Atlases.getTerrain();
-        } else
-            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
-        BufferedImage atlasImage = atlas.getImage();
         Tessellator t = prepareTessellator(atlas);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
                 textureWidth = texture.getWidth(),
                 textureHeight = texture.getHeight(),
-                atlasWidth = atlasImage.getWidth(),
-                atlasHeight = atlasImage.getHeight();
+                atlasWidth = atlas.getWidth(),
+                atlasHeight = atlas.getHeight();
         double
                 startU1 = (texX + block.minX * textureWidth) / atlasWidth,
                 endU1 = (texX + block.maxX * textureWidth) / atlasWidth,
@@ -926,22 +1585,18 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderEastFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
-        Atlas atlas;
-        if (blockRendererAccessor.getTextureOverride() >= 0) {
+        ExpandableAtlas atlas = Atlases.getTerrain();
+        if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
-            atlas = Atlases.getTerrain();
-        } else
-            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
-        BufferedImage atlasImage = atlas.getImage();
         Tessellator t = prepareTessellator(atlas);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
                 textureWidth = texture.getWidth(),
                 textureHeight = texture.getHeight(),
-                atlasWidth = atlasImage.getWidth(),
-                atlasHeight = atlasImage.getHeight();
+                atlasWidth = atlas.getWidth(),
+                atlasHeight = atlas.getHeight();
         double
                 startU1 = (texX + block.minX * textureWidth) / atlasWidth,
                 endU1 = (texX + block.maxX * textureWidth) / atlasWidth,
@@ -1039,22 +1694,18 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderWestFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
-        Atlas atlas;
-        if (blockRendererAccessor.getTextureOverride() >= 0) {
+        ExpandableAtlas atlas = Atlases.getTerrain();
+        if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
-            atlas = Atlases.getTerrain();
-        } else
-            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
-        BufferedImage atlasImage = atlas.getImage();
         Tessellator t = prepareTessellator(atlas);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
                 textureWidth = texture.getWidth(),
                 textureHeight = texture.getHeight(),
-                atlasWidth = atlasImage.getWidth(),
-                atlasHeight = atlasImage.getHeight();
+                atlasWidth = atlas.getWidth(),
+                atlasHeight = atlas.getHeight();
         double
                 startU1 = (texX + block.minX * textureWidth) / atlasWidth,
                 endU1 = (texX + block.maxX * textureWidth) / atlasWidth,
@@ -1152,22 +1803,18 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderNorthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
-        Atlas atlas;
-        if (blockRendererAccessor.getTextureOverride() >= 0) {
+        ExpandableAtlas atlas = Atlases.getTerrain();
+        if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
-            atlas = Atlases.getTerrain();
-        } else
-            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
-        BufferedImage atlasImage = atlas.getImage();
         Tessellator t = prepareTessellator(atlas);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
                 textureWidth = texture.getWidth(),
                 textureHeight = texture.getHeight(),
-                atlasWidth = atlasImage.getWidth(),
-                atlasHeight = atlasImage.getHeight();
+                atlasWidth = atlas.getWidth(),
+                atlasHeight = atlas.getHeight();
         double
                 startU1 = (texX + block.minZ * textureWidth) / atlasWidth,
                 endU1 = (texX + block.maxZ * textureWidth) / atlasWidth,
@@ -1265,22 +1912,18 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderSouthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
-        Atlas atlas;
-        if (blockRendererAccessor.getTextureOverride() >= 0) {
+        ExpandableAtlas atlas = Atlases.getTerrain();
+        if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
-            atlas = Atlases.getTerrain();
-        } else
-            atlas = ((CustomAtlasProvider) block).getAtlas().of(textureIndex);
         Atlas.Sprite texture = atlas.getTexture(textureIndex);
-        BufferedImage atlasImage = atlas.getImage();
         Tessellator t = prepareTessellator(atlas);
         int
                 texX = texture.getX(),
                 texY = texture.getY(),
                 textureWidth = texture.getWidth(),
                 textureHeight = texture.getHeight(),
-                atlasWidth = atlasImage.getWidth(),
-                atlasHeight = atlasImage.getHeight();
+                atlasWidth = atlas.getWidth(),
+                atlasHeight = atlas.getHeight();
         double
                 startU1 = (texX + block.minZ * textureWidth) / atlasWidth,
                 endU1 = (texX + block.maxZ * textureWidth) / atlasWidth,

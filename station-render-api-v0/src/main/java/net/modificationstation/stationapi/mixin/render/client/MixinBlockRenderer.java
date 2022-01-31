@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
+import net.minecraft.block.Rail;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
@@ -78,6 +79,42 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
     )
     private void method_56(BlockBase block, int meta, double x, double y, double z, CallbackInfo ci) {
         plugin.renderShiftedColumn(block, meta, x, y, z, ci);
+    }
+
+    @Inject(
+            method = "renderLever(Lnet/minecraft/block/BlockBase;III)Z",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void renderLever(BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
+        plugin.renderLever(i, j, k, par4, cir);
+    }
+
+    @Inject(
+            method = "renderFire(Lnet/minecraft/block/BlockBase;III)Z",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void renderFire(BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
+        plugin.renderFire(i, j, k, par4, cir);
+    }
+
+    @Inject(
+            method = "renderRails(Lnet/minecraft/block/Rail;III)Z",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void renderRails(Rail i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
+        plugin.renderRails(i, j, k, par4, cir);
+    }
+
+    @Inject(
+            method = "renderLadder(Lnet/minecraft/block/BlockBase;III)Z",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void renderLadder(BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
+        plugin.renderLadder(i, j, k, par4, cir);
     }
 
     @Inject(

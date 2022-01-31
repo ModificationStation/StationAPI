@@ -7,7 +7,8 @@ import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.entity.Living;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
-import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
+import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.client.texture.plugin.OverlayRendererPlugin;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -34,10 +35,10 @@ final class StationOverlayRenderer extends OverlayRendererPlugin {
         else {
             Tessellator var3 = Tessellator.INSTANCE;
             int var4 = entity.method_917(item);
-            Atlas atlas = ((CustomAtlasProvider) item.getType()).getAtlas().of(var4);
+            ExpandableAtlas atlas = item.itemId < BlockBase.BY_ID.length ? Atlases.getTerrain() : Atlases.getGuiItems();
             atlas.bindAtlas();
             Atlas.Sprite texture = atlas.getTexture(var4);
-            float var5 = (float) (texture.getX() + texture.getWidth() * 0.000625) / atlas.getImage().getWidth();
+            float var5 = (float) (texture.getX() + texture.getWidth() * 0.000625) / atlas.getWidth();
             float var6 = (float) texture.getEndU();
             float var7 = (float) texture.getStartV();
             float var8 = (float) texture.getEndV();

@@ -9,6 +9,7 @@ import net.modificationstation.stationapi.api.client.model.block.BlockWorldModel
 import net.modificationstation.stationapi.api.client.texture.BakedSprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
+import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.mixin.render.client.DiggingAccessor;
 import net.modificationstation.stationapi.mixin.render.client.ParticleBaseAccessor;
 
@@ -34,12 +35,12 @@ public class StationDiggingParticle {
     }
 
     public void render(Tessellator tessellator, float delta, float yawX, float pitchX, float yawY, float pitchY1, float pitchY2) {
-        Atlas atlas = texture.getAtlas();
+        ExpandableAtlas atlas = (ExpandableAtlas) texture.getAtlas();
         float
-                startU = (texture.getX() + (particleBaseAccessor.getField_2636() / 4) * texture.getWidth()) / atlas.getImage().getWidth(),
-                endU = startU + 0.24975F * texture.getWidth() / atlas.getImage().getWidth(),
-                startV = (texture.getY() + (particleBaseAccessor.getField_2637() / 4) * texture.getHeight()) / atlas.getImage().getHeight(),
-                endV = startV + 0.24975F * texture.getHeight() / atlas.getImage().getHeight(),
+                startU = (texture.getX() + (particleBaseAccessor.getField_2636() / 4) * texture.getWidth()) / atlas.getWidth(),
+                endU = startU + 0.24975F * texture.getWidth() / atlas.getWidth(),
+                startV = (texture.getY() + (particleBaseAccessor.getField_2637() / 4) * texture.getHeight()) / atlas.getHeight(),
+                endV = startV + 0.24975F * texture.getHeight() / atlas.getHeight(),
                 randomMultiplier = 0.1F * particleBaseAccessor.getField_2640(),
                 renderX = (float)(digging.prevX + (digging.x - digging.prevX) * (double)delta - ParticleBase.field_2645),
                 renderY = (float)(digging.prevY + (digging.y - digging.prevY) * (double)delta - ParticleBase.field_2646),
