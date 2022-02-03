@@ -32,24 +32,26 @@ public class CustomArmourValuesImpl {
         public boolean damageEntityBase(int initialDamage) {
             double damageAmount = initialDamage;
             ItemInstance[] armour = player.inventory.armour;
-            int armourSlot = 0;
 
-            for (ItemInstance armourInstance : armour) {
+            for (int i = 0; i< armour.length; i++) {
+                ItemInstance armourInstance = armour[i];
                 // This solution is not exact with vanilla, but is WAY better than previous solutions which weren't even close to vanilla.
                 if (armourInstance != null) {
                     if (armourInstance.getType() instanceof CustomArmourValue) {
                         CustomArmourValue armor = (CustomArmourValue) armourInstance.getType();
-                        double damageNegated = armor.modifyDamageDealt(player, armourSlot, initialDamage, damageAmount);
+                        double damageNegated = armor.modifyDamageDealt(player, i, initialDamage, damageAmount);
                         damageAmount -= damageNegated;
                     } else {
                         damageAmount -= ArmourUtils.getVanillaArmourReduction(armourInstance);
                         armourInstance.applyDamage(initialDamage, null);
+                        if (armourInstance.count <= 0) {
+                            armour[i] = null;
+                        }
                     }
                     if (damageAmount < 0) {
                         damageAmount = 0;
                     }
                 }
-                armourSlot++;
             }
             ((PlayerBaseSuper) player).superDamageEntity((int) damageAmount);
             return true;
