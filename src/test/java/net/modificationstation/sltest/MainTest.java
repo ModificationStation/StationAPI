@@ -1,7 +1,7 @@
 package net.modificationstation.sltest;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.modificationstation.stationapi.api.event.oredict.TagRegisterEvent;
+import net.modificationstation.stationapi.api.event.tags.TagRegisterEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tags.TagEntry;
 import net.modificationstation.stationapi.api.tags.TagRegistry;

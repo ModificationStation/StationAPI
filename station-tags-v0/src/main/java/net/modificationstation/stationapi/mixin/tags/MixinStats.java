@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.tags;
 
 import net.minecraft.stat.Stats;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.event.oredict.TagRegisterEvent;
+import net.modificationstation.stationapi.api.event.tags.TagRegisterEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

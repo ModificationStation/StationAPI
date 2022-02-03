@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.event.oredict;
+package net.modificationstation.stationapi.api.event.tags;
 
 import net.mine_diver.unsafeevents.Event;
 
