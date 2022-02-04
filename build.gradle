@@ -11,7 +11,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.github.calmilamsy:Fabric-Loom:da28742'
+        classpath 'com.github.calmilamsy:Fabric-Loom:d4e2c31'
     }
 }
 
@@ -61,15 +61,16 @@ allprojects {
 
     repositories {
         maven {
-            name = 'Jitpack'
-            url 'https://jitpack.io/'
-        }
-        maven {
             name = 'HalfOf2'
             url = 'https://storage.googleapis.com/devan-maven/'
         }
         maven {
+            name = 'Froge'
             url 'https://maven.minecraftforge.net/'
+        }
+        maven {
+            name = 'Jitpack'
+            url 'https://jitpack.io/'
         }
     }
 

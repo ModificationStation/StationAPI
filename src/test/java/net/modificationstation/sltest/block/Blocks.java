@@ -18,8 +18,8 @@ public enum Blocks {
 
     TEST_BLOCK("test_block", "testBlock", id -> new TemplateBlockBase(id, Material.CLAY).setHardness(1)),
     TEST_ANIMATED_BLOCK("test_animated_block", "testAnimatedBlock", id -> new ModdedMetaBlock(id, Material.PORTAL)),
-    CUSTOM_MODEL_BLOCK("farlands_block", "farlands_block", id -> new ModdedModelBlock(id, Material.DIRT).setHardness(1)),
-    FREEZER("freezer", "freezer", id -> new BlockFreezer(id).setHardness(2.5F).setSounds(TemplateBlockBase.STONE_SOUNDS).mineableBy(Identifier.of("items/tools/pickaxes/"), 0)),
+    CUSTOM_MODEL_BLOCK("farlands_block", "farlands_block", id -> new ModdedModelBlock(id, Material.DIRT).setHardness(1).mineableBy(of("items/tools/shovels/"), 0)),
+    FREEZER("freezer", "freezer", id -> new BlockFreezer(id).setHardness(2.5F).setSounds(TemplateBlockBase.STONE_SOUNDS).mineableBy(of("items/tools/pickaxes/"), 0)),
     ALTAR("altar", "altar", id -> new BlockAltar(id, Material.STONE).setHardness(3));
 
     private final Runnable register;
