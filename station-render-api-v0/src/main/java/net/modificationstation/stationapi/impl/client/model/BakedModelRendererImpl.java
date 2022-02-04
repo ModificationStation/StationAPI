@@ -9,9 +9,9 @@ import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
 import net.minecraft.sortme.GameRenderer;
 import net.minecraft.util.maths.TilePos;
-import net.modificationstation.stationapi.api.client.model.BakedModel;
-import net.modificationstation.stationapi.api.client.model.BakedModelRenderer;
-import net.modificationstation.stationapi.api.client.model.BakedQuad;
+import net.modificationstation.stationapi.api.client.render.model.BakedModel;
+import net.modificationstation.stationapi.api.client.render.model.BakedModelRenderer;
+import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.client.texture.plugin.TessellatorPlugin;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
@@ -46,7 +46,8 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         long seed = MathHelper.hashCode(x, y, z);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             return true;
-        Tessellator t = stationBlockRenderer.prepareTessellator(model.getSprite().getAtlas());
+//        Tessellator t = stationBlockRenderer.prepareTessellator(model.getSprite().getAtlas());
+        Tessellator t = Tessellator.INSTANCE;
         FastTessellator fastT = ((TessellatorPlugin.Provider) t).getPlugin();
         int colourMultiplier = block.getColourMultiplier(blockView, x, y, z);
         float

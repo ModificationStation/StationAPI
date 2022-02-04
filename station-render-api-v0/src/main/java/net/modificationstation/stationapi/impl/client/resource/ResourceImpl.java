@@ -18,7 +18,7 @@ public class ResourceImpl extends InputStream implements Resource {
     }
 
     @Override
-    public InputStream getResource() {
+    public InputStream getInputStream() {
         return resource;
     }
 

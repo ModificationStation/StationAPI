@@ -3,23 +3,39 @@ package net.modificationstation.stationapi.impl.client.texture.plugin;
 import net.minecraft.class_214;
 import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.texture.TextureManager;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.client.texture.AbstractTexture;
+import net.modificationstation.stationapi.api.client.texture.MissingSprite;
+import net.modificationstation.stationapi.api.client.texture.ResourceTexture;
+import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.TextureTickListener;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.binder.StaticReferenceProvider;
 import net.modificationstation.stationapi.api.client.texture.plugin.TextureManagerPlugin;
-import net.modificationstation.stationapi.impl.client.texture.CustomTextureManager;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.exception.CrashException;
+import net.modificationstation.stationapi.api.util.exception.CrashReport;
+import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
+import net.modificationstation.stationapi.impl.client.texture.IdentifierTextureManager;
+import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.awt.image.*;
+import java.io.*;
+import java.util.*;
 
 import static net.minecraft.client.texture.TextureManager.field_1245;
+import static net.modificationstation.stationapi.impl.client.texture.StationRenderAPI.LOGGER;
 
-final class StationTextureManager extends TextureManagerPlugin implements CustomTextureManager {
+final class StationTextureManager extends TextureManagerPlugin implements IdentifierTextureManager {
+
+    public static final Identifier MISSING_IDENTIFIER = Identifier.of("");
 
     private final TextureManagerAccessor textureManagerAccessor;
+    private final Map<Identifier, AbstractTexture> textures = new HashMap<>();
+    private final Set<TextureTickListener> tickListeners = new HashSet<>();
 
     StationTextureManager(TextureManager textureManager) {
         super(textureManager);
@@ -33,24 +49,28 @@ final class StationTextureManager extends TextureManagerPlugin implements Custom
     }
 
     public void tick() {
+        tickListeners.forEach(TextureTickListener::tick);
+        StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).bindTexture();
+        GL11.glPixelStorei(3314, 0);
+        GL11.glPixelStorei(3315, 0);
+        GL11.glPixelStorei(3316, 0);
         for(int var1 = 0; var1 < textureManagerAccessor.getTextureBinders().size(); ++var1) {
             TextureBinder var2 = textureManagerAccessor.getTextureBinders().get(var1);
             var2.render3d = textureManagerAccessor.getGameOptions().anaglyph3d;
             var2.update();
             textureManagerAccessor.getCurrentImageBuffer().clear();
-            if (var2.grid.length != textureManagerAccessor.getCurrentImageBuffer().capacity())
+            if (var2.grid.length > textureManagerAccessor.getCurrentImageBuffer().capacity())
                 textureManagerAccessor.setCurrentImageBuffer(class_214.method_744(var2.grid.length));
             textureManagerAccessor.getCurrentImageBuffer().put(var2.grid);
             textureManagerAccessor.getCurrentImageBuffer().position(0).limit(var2.grid.length);
-            var2.bindTexture(textureManager);
 
             if (var2 instanceof StaticReferenceProvider) {
-                Atlas.Sprite staticReference = ((StaticReferenceProvider) var2).getStaticReference();
+                Sprite staticReference = ((StaticReferenceProvider) var2).getStaticReference().getSprite();
                 int scaledWidth = staticReference.getWidth() / var2.textureSize;
                 int scaledHeight = staticReference.getHeight() / var2.textureSize;
                 for (int var3 = 0; var3 < var2.textureSize; ++var3)
                     for (int var4 = 0; var4 < var2.textureSize; ++var4)
-                        GL11.glTexSubImage2D(3553, 0, staticReference.getX() + var3 * scaledWidth, staticReference.getY() + var4 * scaledHeight, scaledWidth, scaledHeight, 6408, 5121, textureManagerAccessor.getCurrentImageBuffer());
+                        GL11.glTexSubImage2D(3553, 0, ((int) (staticReference.getMinU() * staticReference.getWidth() / (staticReference.getMaxU() - staticReference.getMinU()))) + var3 * scaledWidth, ((int) (staticReference.getMinV() * staticReference.getHeight() / (staticReference.getMaxV() - staticReference.getMinV()))) + var4 * scaledHeight, scaledWidth, scaledHeight, 6408, 5121, textureManagerAccessor.getCurrentImageBuffer());
             } else {
                 for (int var3 = 0; var3 < var2.textureSize; ++var3)
                     for (int var4 = 0; var4 < var2.textureSize; ++var4)
@@ -63,10 +83,8 @@ final class StationTextureManager extends TextureManagerPlugin implements Custom
     public void getTextureId(String par1, CallbackInfoReturnable<Integer> cir) {
         switch (par1) {
             case "/terrain.png":
-                cir.setReturnValue(Atlases.getTerrain().getAtlasTextureID());
-                break;
             case "/gui/items.png":
-                cir.setReturnValue(Atlases.getGuiItems().getAtlasTextureID());
+                cir.setReturnValue(StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).getGlId());
                 break;
         }
     }
@@ -126,7 +144,7 @@ final class StationTextureManager extends TextureManagerPlugin implements Custom
         }
 
         textureManagerAccessor.getCurrentImageBuffer().clear();
-        if (var6.length != textureManagerAccessor.getCurrentImageBuffer().capacity())
+        if (var6.length > textureManagerAccessor.getCurrentImageBuffer().capacity())
             textureManagerAccessor.setCurrentImageBuffer(class_214.method_744(var6.length));
         textureManagerAccessor.getCurrentImageBuffer().put(var6);
         textureManagerAccessor.getCurrentImageBuffer().position(0).limit(var6.length);
@@ -204,20 +222,73 @@ final class StationTextureManager extends TextureManagerPlugin implements Custom
         }
 
         textureManagerAccessor.getCurrentImageBuffer().clear();
-        if (var5.length != textureManagerAccessor.getCurrentImageBuffer().capacity())
+        if (var5.length > textureManagerAccessor.getCurrentImageBuffer().capacity())
             textureManagerAccessor.setCurrentImageBuffer(class_214.method_744(var5.length));
         textureManagerAccessor.getCurrentImageBuffer().put(var5);
         textureManagerAccessor.getCurrentImageBuffer().position(0).limit(var5.length);
         GL11.glTexSubImage2D(3553, 0, 0, 0, width, height, 6408, 5121, textureManagerAccessor.getCurrentImageBuffer());
     }
 
+    @Override
+    public void registerTexture(Identifier identifier, AbstractTexture texture) {
+        texture = this.loadSafely(identifier, texture);
+        AbstractTexture abstractTexture2 = this.textures.put(identifier, texture);
+        if (abstractTexture2 != texture) {
+            if (abstractTexture2 != null && abstractTexture2 != MissingSprite.getMissingSpriteTexture()) {
+                //noinspection SuspiciousMethodCalls
+                this.tickListeners.remove(abstractTexture2);
+                this.close(identifier, abstractTexture2);
+            }
+
+            if (texture instanceof TextureTickListener) {
+                this.tickListeners.add((TextureTickListener)texture);
+            }
+        }
+    }
+
+    private void close(Identifier identifier, AbstractTexture abstractTexture) {
+        if (abstractTexture != MissingSprite.getMissingSpriteTexture()) {
+            try {
+                abstractTexture.close();
+            } catch (Exception var4) {
+                LOGGER.warn("Failed to close texture {}", identifier, var4);
+            }
+        }
+
+        abstractTexture.clearGlId();
+    }
+
+    private AbstractTexture loadSafely(Identifier identifier, AbstractTexture abstractTexture) {
+        try {
+            abstractTexture.load(this.textureManagerAccessor.stationapi$getTexturePackManager().texturePack);
+            return abstractTexture;
+        } catch (IOException var6) {
+            if (identifier != MISSING_IDENTIFIER) {
+                LOGGER.warn("Failed to load texture: {}", identifier, var6);
+            }
+
+            return MissingSprite.getMissingSpriteTexture();
+        } catch (Throwable var7) {
+            CrashReport crashReport = CrashReport.create(var7, "Registering texture");
+            CrashReportSection crashReportSection = crashReport.addElement("Resource location being registered");
+            crashReportSection.add("Resource location", identifier);
+            crashReportSection.add("Texture object class", () -> abstractTexture.getClass().getName());
+            throw new CrashException(crashReport);
+        }
+    }
 
     @Override
-    public void allocateTexture(String texture) {
-        if (!textureManagerAccessor.getTextures().containsKey(texture)) {
-            textureManagerAccessor.stationapi$getField_1249().clear();
-            class_214.method_742(textureManagerAccessor.stationapi$getField_1249());
-            textureManagerAccessor.getTextures().put(texture, textureManagerAccessor.stationapi$getField_1249().get(0));
+    public void bindTexture(Identifier id) {
+        this.bindTextureInner(id);
+    }
+
+    private void bindTextureInner(Identifier id) {
+        AbstractTexture abstractTexture = this.textures.get(id);
+        if (abstractTexture == null) {
+            abstractTexture = new ResourceTexture(id);
+            this.registerTexture(id, abstractTexture);
         }
+
+        abstractTexture.bindTexture();
     }
 }

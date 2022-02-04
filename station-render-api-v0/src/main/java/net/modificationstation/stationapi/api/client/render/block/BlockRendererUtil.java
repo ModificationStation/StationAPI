@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.render.block;
 
 import net.minecraft.client.render.block.BlockRenderer;
-import net.modificationstation.stationapi.api.client.model.BakedModelRenderer;
+import net.modificationstation.stationapi.api.client.render.model.BakedModelRenderer;
 import net.modificationstation.stationapi.api.client.texture.plugin.BlockRendererPlugin;
 import net.modificationstation.stationapi.api.client.texture.plugin.BlockRendererPluginProvider;
 import net.modificationstation.stationapi.impl.client.texture.plugin.StationBlockRenderer;

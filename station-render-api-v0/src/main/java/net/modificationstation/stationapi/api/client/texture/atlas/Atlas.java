@@ -3,17 +3,17 @@ package net.modificationstation.stationapi.api.client.texture.atlas;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import lombok.Getter;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
-import net.modificationstation.stationapi.api.client.texture.AnimationResourceMetadata;
+import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
+import org.jetbrains.annotations.ApiStatus;
 import uk.co.benjiweber.expressions.function.ObjIntFunction;
 
 import java.util.*;
@@ -24,15 +24,15 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 public abstract class Atlas {
 
-    private static final Function<Atlas, Tessellator> EMPTY_TESSELLATOR = atlas -> null;
-
     public final Identifier id;
     public final String spritesheet;
     protected final Atlas parent;
     protected int size;
     public final boolean fixedSize;
-    protected final Map<Identifier, Sprite> idToTex = new IdentityHashMap<>();
-    protected final Int2ObjectMap<Sprite> textures = new Int2ObjectOpenHashMap<>();
+    @ApiStatus.Internal
+    public final Map<Identifier, Sprite> idToTex = new IdentityHashMap<>();
+    private final Sprite missing = new Sprite(MissingSprite.getMissingSpriteId(), -1);
+    protected final Int2ObjectMap<Sprite> textures = Util.make(new Int2ObjectOpenHashMap<>(), map -> map.defaultReturnValue(missing));
     public final List<TextureBinder> textureBinders = new CopyOnWriteArrayList<>();
 
     Atlas(final Identifier id, final String spritesheet, final int size, final boolean fixedSize) {
@@ -74,7 +74,7 @@ public abstract class Atlas {
 
     public final <T extends Atlas> T of(Identifier texture) {
         Atlas atlas = this;
-        do if (!atlas.getTexture(texture).equals(atlas.getMissingTexture()))
+        do if (atlas.getTexture(texture).id != atlas.getMissingTexture().id)
             //noinspection unchecked
             return (T) atlas;
         while ((atlas = atlas.parent) != null);
@@ -83,25 +83,23 @@ public abstract class Atlas {
     }
 
     public final int getAtlasTextureID() {
-        //noinspection deprecation
-        return ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.getTextureId(spritesheet);
+        return StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).getGlId();
     }
 
     public final void bindAtlas() {
-        //noinspection deprecation
-        ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager.bindTexture(getAtlasTextureID());
+        StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).bindTexture();
     }
 
     public final Sprite getTexture(Identifier identifier) {
-        return idToTex.get(identifier);
+        return of(identifier).idToTex.get(identifier);
     }
 
     public final Sprite getTexture(int textureIndex) {
-        return textures.get(parent == null ? textureIndex : textureIndex - parent.size);
+        return applyInherited(textureIndex, textures::get, Atlas::getTexture);
     }
 
     protected Sprite getMissingTexture() {
-        return null;
+        return missing;
     }
 
     public final <T extends StationTextureBinder> T addTextureBinder(int staticReferenceTextureIndex, Function<Sprite, T> initializer) {
@@ -122,27 +120,57 @@ public abstract class Atlas {
         });
     }
 
-    public abstract class Sprite {
+    public class Sprite {
 
         @Getter
         protected Identifier id;
         public final int index;
-        @Getter
-        protected int
-                x, y,
-                width, height;
-        public final AnimationResourceMetadata animationData;
 
-        public Sprite(Identifier id, int index, int width, int height, AnimationResourceMetadata animationData) {
+        public Sprite(Identifier id, int index) {
             this.id = id;
             this.index = index;
-            this.width = width;
-            this.height = height;
-            this.animationData = animationData;
         }
 
         public final Atlas getAtlas() {
             return Atlas.this;
+        }
+
+        public int getX() {
+            net.modificationstation.stationapi.api.client.texture.Sprite sprite = getSprite();
+            return (int) (sprite.getMinU() * sprite.getWidth() / (sprite.getMaxU() - sprite.getMinU()));
+        }
+
+        public int getY() {
+            net.modificationstation.stationapi.api.client.texture.Sprite sprite = getSprite();
+            return (int) (sprite.getMinV() * sprite.getHeight() / (sprite.getMaxV() - sprite.getMinV()));
+        }
+
+        public int getWidth() {
+            return getSprite().getWidth();
+        }
+
+        public int getHeight() {
+            return getSprite().getHeight();
+        }
+
+        public double getStartU() {
+            return getSprite().getMinU();
+        }
+
+        public double getEndU() {
+            return getSprite().getMaxU();
+        }
+
+        public double getStartV() {
+            return getSprite().getMinV();
+        }
+
+        public double getEndV() {
+            return getSprite().getMaxV();
+        }
+
+        public net.modificationstation.stationapi.api.client.texture.Sprite getSprite() {
+            return StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).getSprite(id);
         }
 
         /* !==========================! */
@@ -151,18 +179,8 @@ public abstract class Atlas {
 
         @Deprecated
         protected Sprite(int index, int x, int y, int width, int height) {
-            this(Identifier.of(Atlas.this.id.modID, String.valueOf(index)), index, width, height, AnimationResourceMetadata.EMPTY);
-            this.x = x;
-            this.y = y;
+            this(Identifier.of(Atlas.this.id.modID, String.valueOf(index)), index);
         }
-
-        public abstract double getStartU();
-
-        public abstract double getEndU();
-
-        public abstract double getStartV();
-
-        public abstract double getEndV();
     }
 
     /* !==========================! */

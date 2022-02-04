@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.modificationstation.stationapi.api.client.texture.atlas.SpritesheetHelper;
+import net.modificationstation.stationapi.api.client.texture.SpritesheetHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
@@ -169,6 +169,7 @@ final class TerrainHelper implements SpritesheetHelper {
         f.accept("sandstone_bottom", 208);
         f.accept("cyan_wool", 209);
         f.accept("orange_wool", 210);
+        f.accept("light_gray_wool", 225);
         f.accept("lava_still", 237);
         f.accept("lava_flow", 238);
         f.accept("destroy_stage_0", 240);

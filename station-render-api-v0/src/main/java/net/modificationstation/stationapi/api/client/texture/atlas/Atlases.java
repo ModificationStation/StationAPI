@@ -7,9 +7,7 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public final class Atlases {
 
-    public static final Identifier
-            BLOCK_ATLAS_TEXTURE = of("terrain"),
-            ITEM_ATLAS_TEXTURE = of("gui_items");
+    public static final Identifier BLOCK_ATLAS_TEXTURE = of("textures/atlas/terrain.png");
 
     public static ExpandableAtlas getTerrain() {
         return StationRenderAPI.TERRAIN;
@@ -31,10 +29,5 @@ public final class Atlases {
     @Deprecated
     public static ExpandableAtlas getStationGuiItems() {
         return getGuiItems();
-    }
-
-    @Deprecated
-    public static ExpandableAtlas getStationJsonModels() {
-        return getTerrain();
     }
 }

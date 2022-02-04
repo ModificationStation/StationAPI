@@ -23,7 +23,6 @@
     "client.MixinInGame",
     "client.MixinItemRenderer",
     "client.MixinMinecraft",
-    "client.MixinParticleManager",
     "client.MixinTessellator",
     "client.MixinTextureManager",
     "client.MixinTexturePack",

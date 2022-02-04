@@ -6,10 +6,9 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.particle.Digging;
 import net.minecraft.entity.ParticleBase;
 import net.modificationstation.stationapi.api.client.model.block.BlockWorldModelProvider;
-import net.modificationstation.stationapi.api.client.texture.BakedSprite;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
-import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.mixin.render.client.DiggingAccessor;
 import net.modificationstation.stationapi.mixin.render.client.ParticleBaseAccessor;
 
@@ -18,29 +17,26 @@ public class StationDiggingParticle {
     private final Digging digging;
     private final ParticleBaseAccessor particleBaseAccessor;
     @Getter
-    private Atlas.Sprite texture;
+    private Sprite texture;
 
     public StationDiggingParticle(Digging digging) {
         this.digging = digging;
         particleBaseAccessor = (ParticleBaseAccessor) digging;
-        texture = ((CustomAtlasProvider) ((DiggingAccessor) digging).getField_2383()).getAtlas().of(particleBaseAccessor.getField_2635()).getTexture(particleBaseAccessor.getField_2635());
+        texture = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).getSprite(((CustomAtlasProvider) ((DiggingAccessor) digging).getField_2383()).getAtlas().getTexture(particleBaseAccessor.getField_2635()).getId());
     }
 
     public void checkBlockCoords(int x, int y, int z) {
         BlockBase block = ((DiggingAccessor) digging).getField_2383();
-        if (block instanceof BlockWorldModelProvider) {
-            BakedSprite sprite = ((BlockWorldModelProvider) block).getCustomWorldModel(digging.level, x, y, z).getBaked().getSprite();
-            texture = sprite.getAtlas().getTexture(sprite.getId());
-        }
+        if (block instanceof BlockWorldModelProvider)
+            texture = ((BlockWorldModelProvider) block).getCustomWorldModel(digging.level, x, y, z).getBaked().getSprite();
     }
 
     public void render(Tessellator tessellator, float delta, float yawX, float pitchX, float yawY, float pitchY1, float pitchY2) {
-        ExpandableAtlas atlas = (ExpandableAtlas) texture.getAtlas();
         float
-                startU = (texture.getX() + (particleBaseAccessor.getField_2636() / 4) * texture.getWidth()) / atlas.getWidth(),
-                endU = startU + 0.24975F * texture.getWidth() / atlas.getWidth(),
-                startV = (texture.getY() + (particleBaseAccessor.getField_2637() / 4) * texture.getHeight()) / atlas.getHeight(),
-                endV = startV + 0.24975F * texture.getHeight() / atlas.getHeight(),
+                startU = texture.getMinU() + (particleBaseAccessor.getField_2636() / 4) * (texture.getMaxU() - texture.getMinU()),
+                endU = startU + 0.24975F * (texture.getMaxU() - texture.getMinU()),
+                startV = texture.getMinV() + (particleBaseAccessor.getField_2637() / 4) * (texture.getMaxV() - texture.getMinV()),
+                endV = startV + 0.24975F * (texture.getMaxV() - texture.getMinV()),
                 randomMultiplier = 0.1F * particleBaseAccessor.getField_2640(),
                 renderX = (float)(digging.prevX + (digging.x - digging.prevX) * (double)delta - ParticleBase.field_2645),
                 renderY = (float)(digging.prevY + (digging.y - digging.prevY) * (double)delta - ParticleBase.field_2646),

@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.api.client.texture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.impl.client.texture.NativeImage;
 
 @Environment(value=EnvType.CLIENT)
 public class MipmapHelper {

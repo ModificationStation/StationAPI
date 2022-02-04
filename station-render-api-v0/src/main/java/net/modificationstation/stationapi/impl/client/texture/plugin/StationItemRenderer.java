@@ -11,10 +11,12 @@ import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.model.item.ItemWithRenderer;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.plugin.ItemRendererPlugin;
+import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 import net.modificationstation.stationapi.mixin.render.client.EntityRendererAccessor;
 import net.modificationstation.stationapi.mixin.render.client.ItemRendererAccessor;
 import org.lwjgl.opengl.GL11;
@@ -53,10 +55,10 @@ final class StationItemRenderer extends ItemRendererPlugin {
 
         GL11.glTranslatef((float)x, (float)y + var11, (float)z);
         GL11.glEnable(32826);
-        Atlas topAtlas = ((CustomAtlasProvider) var10.getType()).getAtlas();
+        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
         if (var10.itemId < BlockBase.BY_ID.length && BlockRenderer.method_42(BlockBase.BY_ID[var10.itemId].getRenderType())) {
             GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
-            Atlases.getTerrain().bindAtlas();
+            atlas.bindTexture();
             float var28 = 0.25F;
             if (!BlockBase.BY_ID[var10.itemId].isFullCube() && var10.itemId != BlockBase.STONE_SLAB.id && BlockBase.BY_ID[var10.itemId].getRenderType() != 16) {
                 var28 = 0.5F;
@@ -79,9 +81,8 @@ final class StationItemRenderer extends ItemRendererPlugin {
         } else {
             GL11.glScalef(0.5F, 0.5F, 0.5F);
             int var14 = var10.getTexturePosition();
-            Atlas atlas = topAtlas.of(var14);
-            atlas.bindAtlas();
-            Atlas.Sprite texture = atlas.getTexture(var14);
+            atlas.bindTexture();
+            Sprite texture = atlas.getSprite(((CustomAtlasProvider) var10.getType()).getAtlas().getTexture(var14).getId());
 
             Tessellator var15 = Tessellator.INSTANCE;
             float var20 = 1.0F;
@@ -108,10 +109,10 @@ final class StationItemRenderer extends ItemRendererPlugin {
                 GL11.glRotatef(180.0F - entityRendererAccessor.getDispatcher().field_2497, 0.0F, 1.0F, 0.0F);
                 var15.start();
                 var15.setNormal(0.0F, 1.0F, 0.0F);
-                var15.vertex(0.0F - var21, 0.0F - var22, 0.0D, texture.getStartU(), texture.getEndV());
-                var15.vertex(var20 - var21, 0.0F - var22, 0.0D, texture.getEndU(), texture.getEndV());
-                var15.vertex(var20 - var21, 1.0F - var22, 0.0D, texture.getEndU(), texture.getStartV());
-                var15.vertex(0.0F - var21, 1.0F - var22, 0.0D, texture.getStartU(), texture.getStartV());
+                var15.vertex(0.0F - var21, 0.0F - var22, 0.0D, texture.getMinU(), texture.getMaxV());
+                var15.vertex(var20 - var21, 0.0F - var22, 0.0D, texture.getMaxU(), texture.getMaxV());
+                var15.vertex(var20 - var21, 1.0F - var22, 0.0D, texture.getMaxU(), texture.getMinV());
+                var15.vertex(0.0F - var21, 1.0F - var22, 0.0D, texture.getMinU(), texture.getMinV());
                 var15.draw();
                 GL11.glPopMatrix();
             }
@@ -141,9 +142,9 @@ final class StationItemRenderer extends ItemRendererPlugin {
             ci.cancel();
             return;
         }
-        Atlas atlas = ((CustomAtlasProvider) item).getAtlas().of(texture);
+        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
         if (id < BlockBase.BY_ID.length && BlockRenderer.method_42(BlockBase.BY_ID[id].getRenderType())) {
-            Atlases.getTerrain().bindAtlas();
+            atlas.bindTexture();
             BlockBase var14 = BlockBase.BY_ID[id];
             GL11.glPushMatrix();
             GL11.glTranslatef((float)(x - 2), (float)(y + 3), -3.0F);
@@ -167,8 +168,8 @@ final class StationItemRenderer extends ItemRendererPlugin {
             GL11.glPopMatrix();
         } else if (texture >= 0) {
             GL11.glDisable(2896);
-            atlas.bindAtlas();
-            Atlas.Sprite sprite = atlas.getTexture(texture);
+            atlas.bindTexture();
+            Sprite sprite = atlas.getSprite(((CustomAtlasProvider) item).getAtlas().getTexture(texture).getId());
 
             int var8 = item.getNameColour(damage);
             float var9 = (float)((var8 >> 16) & 255) / 255.0F;
@@ -178,7 +179,7 @@ final class StationItemRenderer extends ItemRendererPlugin {
                 GL11.glColor4f(var9, var10, var11, 1.0F);
             }
 
-            renderItemQuad(x, y, sprite.getStartU(), sprite.getStartV(), sprite.getEndU(), sprite.getEndV());
+            renderItemQuad(x, y, sprite.getMinU(), sprite.getMinV(), sprite.getMaxU(), sprite.getMaxV());
             GL11.glEnable(2896);
         }
 

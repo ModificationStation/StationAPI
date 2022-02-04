@@ -6,9 +6,9 @@ import net.minecraft.client.render.entity.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.client.model.BakedModel;
 import net.modificationstation.stationapi.api.client.model.Model;
 import net.modificationstation.stationapi.api.client.render.block.BlockRendererUtil;
+import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.mixin.render.client.ItemRendererAccessor;
 import org.lwjgl.opengl.GL11;
 

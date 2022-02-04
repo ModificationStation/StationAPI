@@ -9,11 +9,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
 import net.modificationstation.stationapi.api.client.event.resource.TexturePackLoadedEvent;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.event.texture.plugin.ProvideRenderPluginEvent;
-import net.modificationstation.stationapi.api.client.model.BakedModelManager;
-import net.modificationstation.stationapi.api.client.model.block.BlockColors;
+import net.modificationstation.stationapi.api.client.render.model.BakedModelManager;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -21,7 +21,6 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.api.util.profiler.DummyProfiler;
 import net.modificationstation.stationapi.impl.client.resource.ResourceReloader;
 import net.modificationstation.stationapi.impl.client.texture.plugin.StationRenderPlugin;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
@@ -30,7 +29,8 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.*;
+
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class StationRenderAPI {
@@ -60,9 +60,9 @@ public class StationRenderAPI {
         //noinspection deprecation
         Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
         if (BAKED_MODEL_MANAGER == null)
-            BAKED_MODEL_MANAGER = new BakedModelManager(minecraft.textureManager, BlockColors.create(), 0);
+            BAKED_MODEL_MANAGER = new BakedModelManager(minecraft.textureManager, BlockColours.create(), 0);
         TERRAIN = new ExpandableAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
-        GUI_ITEMS = new ExpandableAtlas(Atlases.ITEM_ATLAS_TEXTURE);
+        GUI_ITEMS = new ExpandableAtlas(of("textures/atlas/gui/items.png"));
         TERRAIN.addSpritesheet("/terrain.png", 16, TerrainHelper.INSTANCE);
         GUI_ITEMS.addSpritesheet("/gui/items.png", 16, GuiItemsHelper.INSTANCE);
         TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture), staticReference -> new StationVanillaTextureBinder(staticReference, new StationStillWaterTextureBinder(), "/custom_water_still.png"));
@@ -82,7 +82,6 @@ public class StationRenderAPI {
         Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
         TexturePack texturePack = minecraft.texturePackManager.texturePack;
         ResourceReloader.create(minecraft.texturePackManager.texturePack, Collections.singletonList(BAKED_MODEL_MANAGER), Util.getMainWorkerExecutor(), Runnable::run, COMPLETED_UNIT_FUTURE);
-        GUI_ITEMS.upload(GUI_ITEMS.stitch(texturePack, Stream.empty(), DummyProfiler.INSTANCE, 0));
         TERRAIN.registerTextureBinders(minecraft.textureManager, texturePack);
         GUI_ITEMS.registerTextureBinders(minecraft.textureManager, texturePack);
         debugExportAtlases();

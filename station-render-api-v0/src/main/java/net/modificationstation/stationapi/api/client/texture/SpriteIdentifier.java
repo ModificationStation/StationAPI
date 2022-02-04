@@ -28,7 +28,7 @@ public class SpriteIdentifier {
       this.texture = texture;
    }
 
-   public BakedSprite getSprite() {
+   public Sprite getSprite() {
       return StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(atlas).getSprite(atlas);
    }
 

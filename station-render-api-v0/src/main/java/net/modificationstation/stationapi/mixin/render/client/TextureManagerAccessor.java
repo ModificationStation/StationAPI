@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.render.client;
 
+import net.minecraft.client.TexturePackManager;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.texture.TextureManager;
@@ -50,4 +51,7 @@ public interface TextureManagerAccessor {
 
     @Accessor("field_1249")
     IntBuffer stationapi$getField_1249();
+
+    @Accessor("texturePackManager")
+    TexturePackManager stationapi$getTexturePackManager();
 }

@@ -49,9 +49,10 @@ public final class Identifier implements Comparable<Identifier> {
         if (!identifier.contains(SEPARATOR))
             identifier = MINECRAFT + SEPARATOR + identifier;
         return Objects.requireNonNull(CACHE.get(identifier, sId -> {
-            String[] strings = sId.split(SEPARATOR);
-            if (strings.length != 2)
-                throw new IllegalArgumentException("Invalid identifier string! " + sId);
+            String[] strings = new String[2];
+            int i = sId.indexOf(SEPARATOR);
+            strings[0] = sId.substring(0, i);
+            strings[1] = sId.substring(i + 1);
             if (strings[1].startsWith("/"))
                 throw new IllegalArgumentException("Invalid identifier string! " + sId);
             return new Identifier(ModID.of(strings[0].trim()), strings[1].trim());

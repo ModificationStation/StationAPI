@@ -7,10 +7,12 @@ import it.unimi.dsi.fastutil.Hash;
 import net.fabricmc.loader.api.FabricLoader;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 
+import java.lang.management.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import java.util.function.*;
+import java.util.stream.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
@@ -125,6 +127,10 @@ public class Util {
 
     public static long getMeasuringTimeNano() {
         return nanoTimeSupplier.getAsLong();
+    }
+
+    public static Stream<String> getJVMFlags() {
+        return ManagementFactory.getRuntimeMXBean().getInputArguments().stream().filter((string) -> string.startsWith("-X"));
     }
 
     enum IdentityHashStrategy implements Hash.Strategy<Object> {

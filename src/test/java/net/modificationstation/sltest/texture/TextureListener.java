@@ -5,7 +5,7 @@ import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.block.BlockFreezer;
 import net.modificationstation.sltest.item.ItemListener;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
-import net.modificationstation.stationapi.api.client.model.json.JsonUnbakedModel;
+import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbakedModel;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.util.math.Direction;

@@ -5,6 +5,8 @@ import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
+import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 
 public abstract class StationTextureBinder extends TextureBinder implements StaticReferenceProvider, TexturePackDependent {
 
@@ -18,6 +20,6 @@ public abstract class StationTextureBinder extends TextureBinder implements Stat
 
     @Override
     public void bindTexture(TextureManager manager) {
-        staticReference.getAtlas().bindAtlas();
+        StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).bindTexture();
     }
 }

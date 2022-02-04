@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.client.model;
 import com.google.common.primitives.Ints;
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.BlockView;
-import net.modificationstation.stationapi.api.client.model.BakedQuad;
+import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 
