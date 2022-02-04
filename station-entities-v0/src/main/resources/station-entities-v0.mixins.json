@@ -4,6 +4,7 @@
   "package": "net.modificationstation.stationapi.mixin.entity",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "EntityTypeAccessor",
     "MixinEntityRegistry"
   ],
   "server": [

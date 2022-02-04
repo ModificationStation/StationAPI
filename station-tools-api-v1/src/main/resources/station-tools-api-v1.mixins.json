@@ -6,7 +6,8 @@
   "mixins": [
     "MixinBlockBase",
     "MixinSheep",
-    "MixinToolBase"
+    "MixinToolBase",
+    "ToolMaterialAccessor"
   ],
   "server": [
   ],

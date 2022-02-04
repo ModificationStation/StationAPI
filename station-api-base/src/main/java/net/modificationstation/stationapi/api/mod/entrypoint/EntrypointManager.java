@@ -53,11 +53,11 @@ public class EntrypointManager {
             StationAPI.EVENT_BUS.register((Method) o);
         else {
             Class<?> oCl = o.getClass();
-            Entrypoint entrypoint = oCl.isAnnotationPresent(Entrypoint.class) ? oCl.getAnnotation(Entrypoint.class) : ReflectionHelper.newAnnotation(Entrypoint.class);
-            EventBusPolicy eventBus = entrypoint.eventBus();
-            if (eventBus.registerStatic())
+            Entrypoint entrypoint = oCl.getAnnotation(Entrypoint.class);
+            EventBusPolicy eventBus = entrypoint == null ? null : entrypoint.eventBus();
+            if (eventBus == null || eventBus.registerStatic())
                 StationAPI.EVENT_BUS.register(oCl);
-            if (eventBus.registerInstance())
+            if (eventBus == null || eventBus.registerInstance())
                 StationAPI.EVENT_BUS.register(o);
             try {
                 ReflectionHelper.setFieldsWithAnnotation(o, Entrypoint.Instance.class, o);

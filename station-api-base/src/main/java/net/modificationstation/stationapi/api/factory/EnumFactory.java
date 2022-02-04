@@ -1,105 +1,70 @@
 package net.modificationstation.stationapi.api.factory;
 
-import sun.reflect.ConstructorAccessor;
-import sun.reflect.FieldAccessor;
-import sun.reflect.ReflectionFactory;
+import net.modificationstation.stationapi.api.util.UnsafeProvider;
+import sun.misc.Unsafe;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.function.*;
 
 public class EnumFactory {
 
-    private static final ReflectionFactory reflectionFactory;
-
-    static {
+    public static <T extends Enum<T>> T addEnum(Class<T> enumClass, String name, Consumer<T> initializer) {
         try {
-            reflectionFactory = ReflectionFactory.getReflectionFactory();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+            Unsafe unsafe = UnsafeProvider.theUnsafe;
 
-    private static ConstructorAccessor getConstructorAccessor(Class<?> enumClass, Class<?>[] additionalParameterTypes) throws Exception {
-        Class<?>[] parameterTypes = new Class[additionalParameterTypes.length + 2];
-        parameterTypes[0] = String.class;
-        parameterTypes[1] = int.class;
-        System.arraycopy(additionalParameterTypes, 0, parameterTypes, 2, additionalParameterTypes.length);
-        return reflectionFactory.newConstructorAccessor(enumClass.getDeclaredConstructor(parameterTypes));
-    }
+            //noinspection unchecked
+            T newEnum = (T) unsafe.allocateInstance(enumClass);
 
-    private static <T extends Enum<?>> T makeEnum(Class<T> enumClass, String value, int ordinal, Class<?>[] additionalTypes, Object[] additionalValues) throws Exception {
-        Object[] parms = new Object[additionalValues.length + 2];
-        parms[0] = value;
-        parms[1] = ordinal;
-        System.arraycopy(additionalValues, 0, parms, 2, additionalValues.length);
-        return enumClass.cast(getConstructorAccessor(enumClass, additionalTypes).newInstance(parms));
-    }
-
-    private static void setFailsafeFieldValue(Field field, Object target, Object value) throws Exception {
-        field.setAccessible(true);
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-        FieldAccessor fieldAccessor = reflectionFactory.newFieldAccessor(field, false);
-        fieldAccessor.set(target, value);
-    }
-
-    private static void blankField(Class<?> enumClass, String fieldName) throws Exception {
-        for (Field field : Class.class.getDeclaredFields())
-            if (field.getName().contains(fieldName)) {
-                field.setAccessible(true);
-                setFailsafeFieldValue(field, enumClass, null);
-                break;
+            try {
+                //noinspection ConstantConditions
+                Enum.valueOf(enumClass, null);
+            } catch (NullPointerException ignored) {
             }
-    }
+            //noinspection ClassGetClass
+            Field enumConstantDirectoryField = enumClass.getClass().getDeclaredField("enumConstantDirectory");
+            long enumConstantDirectoryOffset = unsafe.objectFieldOffset(enumConstantDirectoryField);
+            //noinspection unchecked
+            Map<String, T> enumConstantDirectory = (Map<String, T>) unsafe.getObjectVolatile(enumClass, enumConstantDirectoryOffset);
+            enumConstantDirectory.put(name, newEnum);
 
-    private static void cleanEnumCache(Class<?> enumClass) throws Exception {
-        blankField(enumClass, "enumConstantDirectory");
-        blankField(enumClass, "enumConstants");
-    }
+            //noinspection ClassGetClass
+            Field enumConstantsField = enumClass.getClass().getDeclaredField("enumConstants");
+            long enumConstantsOffset = unsafe.objectFieldOffset(enumConstantsField);
+            unsafe.putObject(enumClass, enumConstantsOffset, null);
 
-    public static <T extends Enum<?>> T addEnum(Class<T> enumType, String enumName, Class<?>[] paramTypes, Object[] paramValues) {
-        Field valuesField = null;
-        Field[] fields = enumType.getDeclaredFields();
-
-        for (Field field : fields) {
-            String name = field.getName();
-            if (name.equals("$VALUES") || name.equals("ENUM$VALUES")) { //Added 'ENUM$VALUES' because Eclipse's internal compiler doesn't follow standards
-                valuesField = field;
-                break;
+            Field valuesField = null;
+            try {
+                valuesField = enumClass.getDeclaredField("$VALUES");
+            } catch (NoSuchFieldException e) {
+                int flags = Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL | 0x1000 /*SYNTHETIC*/;
+                String valueType = String.format("[L%s;", enumClass.getName().replace('.', '/'));
+                for (Field field : enumClass.getDeclaredFields())
+                    if ((field.getModifiers() & flags) == flags &&
+                            field.getType().getName().replace('.', '/').equals(valueType)) { //Apparently some JVMs return .'s and some don't..
+                        valuesField = field;
+                        break;
+                    }
             }
-        }
+            Object valuesBase = unsafe.staticFieldBase(valuesField);
+            long valuesOffset = unsafe.staticFieldOffset(valuesField);
+            //noinspection unchecked
+            T[] values = (T[]) unsafe.getObject(valuesBase, valuesOffset);
+            values = Arrays.copyOf(values, values.length + 1);
+            values[values.length - 1] = newEnum;
+            unsafe.putObject(valuesBase, valuesOffset, values);
 
-        int flags = Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL | 0x1000 /*SYNTHETIC*/;
-        if (valuesField == null) {
-            String valueType = String.format("[L%s;", enumType.getName().replace('.', '/'));
+            Field ordinalField = enumClass.getSuperclass().getDeclaredField("ordinal");
+            long ordinalOffset = unsafe.objectFieldOffset(ordinalField);
+            unsafe.putInt(newEnum, ordinalOffset, values.length - 1);
 
-            for (Field field : fields)
-                if ((field.getModifiers() & flags) == flags &&
-                        field.getType().getName().replace('.', '/').equals(valueType)) { //Apparently some JVMs return .'s and some don't..
-                    valuesField = field;
-                    break;
-                }
-        }
+            Field nameField = enumClass.getSuperclass().getDeclaredField("name");
+            long nameOffset = unsafe.objectFieldOffset(nameField);
+            unsafe.putObject(newEnum, nameOffset, name);
 
-        if (valuesField == null)
-            return null;
-
-        valuesField.setAccessible(true);
-
-        try {
-            Object[] previousValues = (Object[]) valuesField.get(enumType);
-            List<T> values = new ArrayList<>();
-            for (Object previousValue : previousValues)
-                values.add(enumType.cast(previousValue));
-            T newValue = makeEnum(enumType, enumName, values.size(), paramTypes, paramValues);
-            values.add(newValue);
-            @SuppressWarnings("unchecked")
-            T[] valuesArray = values.toArray((T[]) Array.newInstance(enumType, 0));
-            setFailsafeFieldValue(valuesField, null, valuesArray);
-            cleanEnumCache(enumType);
-            return enumType.cast(newValue);
-        } catch (Exception e) {
+            initializer.accept(newEnum);
+            return newEnum;
+        } catch (NoSuchFieldException | InstantiationException e) {
             throw new RuntimeException(e);
         }
     }
