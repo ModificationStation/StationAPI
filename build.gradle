@@ -294,6 +294,13 @@ dependencies {
     include "com.mojang:datafixerupper:${project.dfu_version}"
 }
 
+// Makes java shut up
+compileTestJava {
+    options.compilerArgs << '-XDignore.symbol.file'
+    options.fork = true
+    options.forkOptions.executable = project.hasProperty("override_javac")? project.override_javac : 'javac'
+}
+
 publishing.publications.mavenJava(MavenPublication) {
     artifactId project.archives_base_name
 }
