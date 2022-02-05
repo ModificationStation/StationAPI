@@ -41,7 +41,7 @@ def moduleDependencies(Project project, String... projectNames) {
 }
 
 void addDependency(XmlProvider xml, String scope, Object... dependencies) {
-    def dependenciesNode = net.fabricmc.loom.util.GroovyXmlUtil.getOrCreateNode(xml.asNode(), 'dependencies')
+    def dependenciesNode = net.fabricmc.loom.util.GroovyXmlUtil.getOrCreateNode(xml.asNode(), "dependencies")
 
     dependencies.each {dependency ->
         dependenciesNode.appendNode('dependency').with {
