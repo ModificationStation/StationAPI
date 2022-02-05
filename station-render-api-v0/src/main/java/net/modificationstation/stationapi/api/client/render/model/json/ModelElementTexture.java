@@ -29,19 +29,11 @@ public class ModelElementTexture {
          throw new NullPointerException("uvs");
       } else {
          int i = this.getRotatedUVIndex(rotation);
-         switch (direction) {
-            case DOWN:
-            case UP:
-            case WEST:
-               return this.uvs[i == 0 || i == 1 ? 0 : 2];
-            case EAST:
-            case NORTH:
-               return this.uvs[i == 0 || i == 3 ? 2 : 0];
-            case SOUTH:
-               return this.uvs[i == 0 || i == 3 ? 0 : 2];
-            default:
-               throw new IllegalStateException("Unexpected value: " + direction);
-         }
+         return switch (direction) {
+            case DOWN, UP, WEST -> this.uvs[i == 0 || i == 1 ? 0 : 2];
+            case EAST, NORTH -> this.uvs[i == 0 || i == 3 ? 2 : 0];
+            case SOUTH -> this.uvs[i == 0 || i == 3 ? 0 : 2];
+         };
       }
    }
 
@@ -50,19 +42,11 @@ public class ModelElementTexture {
          throw new NullPointerException("uvs");
       } else {
          int i = this.getRotatedUVIndex(rotation);
-         switch (direction) {
-            case DOWN:
-            case UP:
-            case WEST:
-               return this.uvs[i == 0 || i == 3 ? 1 : 3];
-            case EAST:
-            case NORTH:
-               return this.uvs[i == 0 || i == 1 ? 1 : 3];
-            case SOUTH:
-               return this.uvs[i == 0 || i == 1 ? 3 : 1];
-            default:
-               throw new IllegalStateException("Unexpected value: " + direction);
-         }
+         return switch (direction) {
+            case DOWN, UP, WEST -> this.uvs[i == 0 || i == 3 ? 1 : 3];
+            case EAST, NORTH -> this.uvs[i == 0 || i == 1 ? 1 : 3];
+            case SOUTH -> this.uvs[i == 0 || i == 1 ? 3 : 1];
+         };
       }
    }
 

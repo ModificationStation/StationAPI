@@ -52,9 +52,9 @@ import java.util.function.*;
 import java.util.stream.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.impl.client.texture.StationRenderAPI.GUI_ITEMS;
-import static net.modificationstation.stationapi.impl.client.texture.StationRenderAPI.LOGGER;
-import static net.modificationstation.stationapi.impl.client.texture.StationRenderAPI.TERRAIN;
+import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.GUI_ITEMS;
+import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
+import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.TERRAIN;
 
 @Environment(EnvType.CLIENT)
 public class ModelLoader {
@@ -430,8 +430,7 @@ public class ModelLoader {
             throw new IllegalStateException("bake called too early");
         } else {
             UnbakedModel unbakedModel = this.getOrLoadModel(identifier);
-            if (unbakedModel instanceof JsonUnbakedModel) {
-                JsonUnbakedModel jsonUnbakedModel = (JsonUnbakedModel)unbakedModel;
+            if (unbakedModel instanceof JsonUnbakedModel jsonUnbakedModel) {
                 if (jsonUnbakedModel.getRootModel() == GENERATION_MARKER) {
                     return ITEM_MODEL_GENERATOR.create(this.spriteAtlasManager::getSprite, jsonUnbakedModel).bake(this, jsonUnbakedModel, this.spriteAtlasManager::getSprite, settings, identifier, false);
                 }
@@ -519,10 +518,9 @@ public class ModelLoader {
         public boolean equals(Object o) {
             if (this == o) {
                 return true;
-            } else if (!(o instanceof ModelLoader.ModelDefinition)) {
+            } else if (!(o instanceof ModelDefinition modelDefinition)) {
                 return false;
             } else {
-                ModelLoader.ModelDefinition modelDefinition = (ModelLoader.ModelDefinition)o;
                 return Objects.equals(this.components, modelDefinition.components) && Objects.equals(this.values, modelDefinition.values);
             }
         }

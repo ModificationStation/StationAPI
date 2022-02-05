@@ -11,8 +11,8 @@ public interface VanillaSpawnDataProvider extends CustomSpawnDataProvider {
     default AbstractPacket getSpawnData() {
         EntityBase entityBase = (EntityBase) this;
         int ownerId = 0;
-        if (entityBase instanceof HasOwner) {
-            EntityBase owner = ((HasOwner) entityBase).getOwner();
+        if (entityBase instanceof HasOwner hasOwner) {
+            EntityBase owner = hasOwner.getOwner();
             owner = owner == null ? entityBase : owner;
             ownerId = owner.entityId;
         }

@@ -55,16 +55,11 @@ public enum Direction implements StringIdentifiable {
     private Direction opposite;
 
     public static Direction from(Axis axis, AxisDirection direction) {
-        switch (axis) {
-            case X:
-                return direction == AxisDirection.NEGATIVE ? NORTH : SOUTH;
-            case Y:
-                return direction == AxisDirection.NEGATIVE ? DOWN : UP;
-            case Z:
-                return direction == AxisDirection.NEGATIVE ? EAST : WEST;
-            default:
-                throw new IllegalStateException("Unexpected value: " + axis);
-        }
+        return switch (axis) {
+            case X -> direction == AxisDirection.NEGATIVE ? NORTH : SOUTH;
+            case Y -> direction == AxisDirection.NEGATIVE ? DOWN : UP;
+            case Z -> direction == AxisDirection.NEGATIVE ? EAST : WEST;
+        };
     }
 
     public static Direction getFacing(float x, float y, float z) {

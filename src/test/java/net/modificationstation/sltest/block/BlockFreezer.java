@@ -10,7 +10,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Item;
 import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.tileentity.TileEntityBase;
@@ -22,6 +21,9 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockWithEntity;
 
 import java.util.*;
+
+import static net.modificationstation.sltest.SLTest.MODID;
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 // Referenced classes of package net.minecraft.src:
 //            BlockContainer, Material, ModLoader, Level, 
@@ -111,8 +113,8 @@ public class BlockFreezer extends TemplateBlockWithEntity
     public boolean canUse(Level world, int i, int j, int k, PlayerBase entityplayer)
     {
         TileEntityBase tileentityFreezer = world.getTileEntity(i, j, k);
-        if (tileentityFreezer instanceof TileEntityFreezer)
-            GuiHelper.openGUI(entityplayer, Identifier.of("sltest:freezer"), (InventoryBase) tileentityFreezer, new ContainerFreezer(entityplayer.inventory, (TileEntityFreezer) tileentityFreezer));
+        if (tileentityFreezer instanceof TileEntityFreezer freezer)
+            GuiHelper.openGUI(entityplayer, of(MODID, "freezer"), freezer, new ContainerFreezer(entityplayer.inventory, freezer));
         return true;
     }
 

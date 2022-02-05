@@ -134,21 +134,20 @@ public class BakedQuadFactory {
       if (rotation != null) {
          Vector3f vector3f7;
          Vector3f vector3f8;
-         switch(rotation.axis) {
-         case X:
-            vector3f7 = new Vector3f(1.0F, 0.0F, 0.0F);
-            vector3f8 = new Vector3f(0.0F, 1.0F, 1.0F);
-            break;
-         case Y:
-            vector3f7 = new Vector3f(0.0F, 1.0F, 0.0F);
-            vector3f8 = new Vector3f(1.0F, 0.0F, 1.0F);
-            break;
-         case Z:
-            vector3f7 = new Vector3f(0.0F, 0.0F, 1.0F);
-            vector3f8 = new Vector3f(1.0F, 1.0F, 0.0F);
-            break;
-         default:
-            throw new IllegalArgumentException("There are only 3 axes");
+         switch (rotation.axis) {
+            case X -> {
+               vector3f7 = new Vector3f(1.0F, 0.0F, 0.0F);
+               vector3f8 = new Vector3f(0.0F, 1.0F, 1.0F);
+            }
+            case Y -> {
+               vector3f7 = new Vector3f(0.0F, 1.0F, 0.0F);
+               vector3f8 = new Vector3f(1.0F, 0.0F, 1.0F);
+            }
+            case Z -> {
+               vector3f7 = new Vector3f(0.0F, 0.0F, 1.0F);
+               vector3f8 = new Vector3f(1.0F, 1.0F, 0.0F);
+            }
+            default -> throw new IllegalArgumentException("There are only 3 axes");
          }
 
          Quaternion quaternion = new Quaternion(vector3f7, rotation.angle, true);

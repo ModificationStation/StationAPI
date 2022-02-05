@@ -3,10 +3,10 @@ package net.modificationstation.stationapi.api.client.texture.binder;
 import lombok.Getter;
 import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.texture.TextureManager;
+import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
-import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 
 public abstract class StationTextureBinder extends TextureBinder implements StaticReferenceProvider, TexturePackDependent {
 

@@ -594,13 +594,13 @@ implements AutoCloseable {
 
         private static Format getFormat(int glFormat) {
             switch (glFormat) {
-                case 1: {
+                case 1 -> {
                     return LUMINANCE;
                 }
-                case 2: {
+                case 2 -> {
                     return LUMINANCE_ALPHA;
                 }
-                case 3: {
+                case 3 -> {
                     return BGR;
                 }
             }

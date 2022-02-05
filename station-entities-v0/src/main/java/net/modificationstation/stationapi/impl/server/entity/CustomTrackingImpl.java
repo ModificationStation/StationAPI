@@ -29,7 +29,7 @@ public final class CustomTrackingImpl {
      */
     @EventListener(priority = ListenerPriority.HIGH)
     private static void trackEntity(TrackEntityEvent event) {
-        if (event.entityToTrack instanceof CustomTracking)
-            ((CustomTracking) event.entityToTrack).track(event.entityTracker, event.trackedEntities);
+        if (event.entityToTrack instanceof CustomTracking trackable)
+            trackable.track(event.entityTracker, event.trackedEntities);
     }
 }

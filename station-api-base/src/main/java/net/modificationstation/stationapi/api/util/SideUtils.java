@@ -21,14 +21,10 @@ public class SideUtils {
     @API
     public static <T> T get(Supplier<T> clientSupplier, Supplier<T> serverSupplier) {
         EnvType side = FabricLoader.getInstance().getEnvironmentType();
-        switch (side) {
-            case CLIENT:
-                return clientSupplier.get();
-            case SERVER:
-                return serverSupplier.get();
-            default:
-                throw new IllegalArgumentException("Unknown side " + side + "!");
-        }
+        return switch (side) {
+            case CLIENT -> clientSupplier.get();
+            case SERVER -> serverSupplier.get();
+        };
     }
 
     /**
@@ -40,14 +36,9 @@ public class SideUtils {
     public static void run(Runnable clientRunnable, Runnable serverRunnable) {
         EnvType side = FabricLoader.getInstance().getEnvironmentType();
         switch (side) {
-            case CLIENT: {
-                clientRunnable.run();
-                break;
-            } case SERVER: {
-                serverRunnable.run();
-                break;
-            } default:
-                throw new IllegalArgumentException("Unknown side " + side + "!");
+            case CLIENT -> clientRunnable.run();
+            case SERVER -> serverRunnable.run();
+            default -> throw new IllegalArgumentException("Unknown side " + side + "!");
         }
     }
 }

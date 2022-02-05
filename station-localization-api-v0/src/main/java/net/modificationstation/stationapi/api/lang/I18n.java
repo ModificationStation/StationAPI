@@ -46,8 +46,8 @@ public class I18n {
                 properties = new Properties();
                 Properties finalProperties = properties;
                 rawProp.forEach((key, value) -> {
-                    if (key instanceof String) {
-                        String[] strings = ((String) key).split("\\.");
+                    if (key instanceof String string) {
+                        String[] strings = string.split("\\.");
                         if (strings.length > 1)
                             strings[1] = modid + ":" + strings[1];
                         key = String.join(".", strings);

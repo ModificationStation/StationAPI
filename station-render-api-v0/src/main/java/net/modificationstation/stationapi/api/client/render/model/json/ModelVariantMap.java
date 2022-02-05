@@ -57,8 +57,7 @@ public class ModelVariantMap {
       if (this == o) {
          return true;
       } else {
-         if (o instanceof ModelVariantMap) {
-            ModelVariantMap modelVariantMap = (ModelVariantMap)o;
+         if (o instanceof ModelVariantMap modelVariantMap) {
             if (this.variantMap.equals(modelVariantMap.variantMap)) {
                return this.hasMultipartModel() ? this.multipartModel.equals(modelVariantMap.multipartModel) : !modelVariantMap.hasMultipartModel();
             }

@@ -6,13 +6,13 @@ import lombok.Getter;
 import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
+import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 import org.jetbrains.annotations.ApiStatus;
 import uk.co.benjiweber.expressions.function.ObjIntFunction;
 
@@ -114,8 +114,8 @@ public abstract class Atlas {
 
     public void registerTextureBinders(TextureManager textureManager, TexturePack texturePack) {
         textureBinders.forEach(arg -> {
-            if (arg instanceof TexturePackDependent)
-                ((TexturePackDependent) arg).reloadFromTexturePack(texturePack);
+            if (arg instanceof TexturePackDependent dependent)
+                dependent.reloadFromTexturePack(texturePack);
             textureManager.addTextureBinder(arg);
         });
     }

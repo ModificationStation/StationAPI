@@ -67,8 +67,7 @@ public final class ModelIdentifier {
    public boolean equals(Object object) {
       if (this == object) {
          return true;
-      } else if (object instanceof ModelIdentifier && id.equals(((ModelIdentifier) object).id)) {
-         ModelIdentifier modelIdentifier = (ModelIdentifier)object;
+      } else if (object instanceof ModelIdentifier modelIdentifier && id.equals(((ModelIdentifier) object).id)) {
          return this.variant.equals(modelIdentifier.variant);
       } else {
          return false;

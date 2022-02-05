@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.nio.*;
 
-import static net.modificationstation.stationapi.impl.client.texture.StationRenderAPI.LOGGER;
+import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 public class RenderSystem {
 

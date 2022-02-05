@@ -23,7 +23,7 @@ public abstract class MixinPlayerBase extends Living {
 
     @Inject(method = "interactWith(Lnet/minecraft/entity/EntityBase;)V", at = @At(value = "HEAD"), cancellable = true)
     private void hijackInteractWith(EntityBase arg, CallbackInfo ci) {
-        if (getHeldItem() != null && getHeldItem().getType() instanceof UseOnEntityFirst && ((UseOnEntityFirst)getHeldItem().getType()).onUseOnEntityFirst(getHeldItem(), (PlayerBase) (Object) this, this.level, arg))
+        if (getHeldItem() != null && getHeldItem().getType() instanceof UseOnEntityFirst use && use.onUseOnEntityFirst(getHeldItem(), (PlayerBase) (Object) this, this.level, arg))
             ci.cancel();
     }
 }

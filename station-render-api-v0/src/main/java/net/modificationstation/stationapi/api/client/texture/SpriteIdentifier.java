@@ -4,8 +4,8 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

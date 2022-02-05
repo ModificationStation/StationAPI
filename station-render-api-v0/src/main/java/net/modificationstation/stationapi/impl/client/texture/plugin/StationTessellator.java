@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.nio.*;
 import java.util.*;
 
-import static net.modificationstation.stationapi.impl.client.texture.StationRenderAPI.LOGGER;
+import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 final class StationTessellator extends TessellatorPlugin implements FastTessellator {
 

@@ -25,7 +25,7 @@ public class DimensionContainer<T extends Dimension> {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof DimensionContainer && serialID == ((@NotNull DimensionContainer<?>) obj).serialID;
+        return obj instanceof @NotNull DimensionContainer<?> dimensionContainer && serialID == dimensionContainer.serialID;
     }
 
     @Override

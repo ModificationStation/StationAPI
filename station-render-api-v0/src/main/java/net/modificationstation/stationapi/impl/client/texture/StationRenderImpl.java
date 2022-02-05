@@ -9,11 +9,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
+import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.event.resource.TexturePackLoadedEvent;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.event.texture.plugin.ProvideRenderPluginEvent;
-import net.modificationstation.stationapi.api.client.render.model.BakedModelManager;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -33,7 +32,7 @@ import java.util.concurrent.*;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
-public class StationRenderAPI {
+public class StationRenderImpl {
 
     @Entrypoint.ModID
     public static final ModID MODID = Null.get();
@@ -44,7 +43,6 @@ public class StationRenderAPI {
     private static final boolean DEBUG_EXPORT_ATLASES = Boolean.parseBoolean(System.getProperty(StationAPI.MODID + ".debug.export_atlases", "false"));
 
     private static final CompletableFuture<Unit> COMPLETED_UNIT_FUTURE = CompletableFuture.completedFuture(Unit.INSTANCE);
-    public static BakedModelManager BAKED_MODEL_MANAGER;
 
     public static ExpandableAtlas
             TERRAIN,
@@ -57,10 +55,6 @@ public class StationRenderAPI {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void init(TextureRegisterEvent event) {
-        //noinspection deprecation
-        Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
-        if (BAKED_MODEL_MANAGER == null)
-            BAKED_MODEL_MANAGER = new BakedModelManager(minecraft.textureManager, BlockColours.create(), 0);
         TERRAIN = new ExpandableAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
         GUI_ITEMS = new ExpandableAtlas(of("textures/atlas/gui/items.png"));
         TERRAIN.addSpritesheet("/terrain.png", 16, TerrainHelper.INSTANCE);
@@ -81,7 +75,7 @@ public class StationRenderAPI {
         //noinspection deprecation
         Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
         TexturePack texturePack = minecraft.texturePackManager.texturePack;
-        ResourceReloader.create(minecraft.texturePackManager.texturePack, Collections.singletonList(BAKED_MODEL_MANAGER), Util.getMainWorkerExecutor(), Runnable::run, COMPLETED_UNIT_FUTURE);
+        ResourceReloader.create(minecraft.texturePackManager.texturePack, Collections.singletonList(StationRenderAPI.BAKED_MODEL_MANAGER), Util.getMainWorkerExecutor(), Runnable::run, COMPLETED_UNIT_FUTURE);
         TERRAIN.registerTextureBinders(minecraft.textureManager, texturePack);
         GUI_ITEMS.registerTextureBinders(minecraft.textureManager, texturePack);
         debugExportAtlases();

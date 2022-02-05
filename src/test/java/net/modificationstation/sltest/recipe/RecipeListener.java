@@ -20,7 +20,7 @@ public class RecipeListener {
     public void registerRecipes(RecipeRegisterEvent event) {
         RecipeRegisterEvent.Vanilla type = RecipeRegisterEvent.Vanilla.fromType(event.recipeId);
         switch (type) {
-            case CRAFTING_SHAPELESS: {
+            case CRAFTING_SHAPELESS -> {
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(ItemListener.testItem), new ItemInstance(BlockBase.DIRT));
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(Blocks.TEST_BLOCK.get()), new ItemInstance(BlockBase.SAND));
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(ItemBase.flintAndSteel), new ItemInstance(Blocks.TEST_BLOCK.get()));
@@ -34,19 +34,14 @@ public class RecipeListener {
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(BlockBase.OBSIDIAN), new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get()));
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 1), new ItemInstance(BlockBase.OBSIDIAN));
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(ItemBase.dyePowder, 1, 5), new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 1));
-                break;
             }
-            case CRAFTING_SHAPED: {
-                CraftingRegistry.addShapedRecipe(new ItemInstance(ItemListener.testPickaxe), "X X", " Y ", " Y ", 'X', Blocks.TEST_ANIMATED_BLOCK.get(), 'Y', BlockBase.OBSIDIAN);
-                break;
-            }
-            case SMELTING: {
+            case CRAFTING_SHAPED -> CraftingRegistry.addShapedRecipe(new ItemInstance(ItemListener.testPickaxe), "X X", " Y ", " Y ", 'X', Blocks.TEST_ANIMATED_BLOCK.get(), 'Y', BlockBase.OBSIDIAN);
+            case SMELTING -> {
                 SmeltingRegistry.addSmeltingRecipe(new ItemInstance(BlockBase.OBSIDIAN), new ItemInstance(BlockBase.COAL_ORE, 2));
                 SmeltingRegistry.addSmeltingRecipe(new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 0), new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 1));
                 ItemInstance itemInstance = new ItemInstance(ItemListener.testNBTItem);
                 StationNBT.cast(itemInstance).getStationNBT().put(of(MODID, "rand_num").toString(), 10);
                 SmeltingRegistry.addSmeltingRecipe(ItemListener.testItem.id, itemInstance);
-                break;
             }
         }
     }

@@ -21,7 +21,7 @@ public class MixinPortal implements TeleportationManager {
             )
     )
     private void onEntityCollision(Level level, int x, int y, int z, EntityBase entityBase, CallbackInfo ci) {
-        if (entityBase instanceof HasTeleportationManager)
-            ((HasTeleportationManager) entityBase).setTeleportationManager(this);
+        if (entityBase instanceof HasTeleportationManager manager)
+            manager.setTeleportationManager(this);
     }
 }

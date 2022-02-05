@@ -18,7 +18,7 @@ public class MixinTrackedEntity {
 
     @Inject(method = "method_600", at = @At(value = "HEAD"), cancellable = true)
     private void getSpawnData(CallbackInfoReturnable<AbstractPacket> cir) {
-        if (this.entityToSync instanceof CustomSpawnDataProvider)
-            cir.setReturnValue(((CustomSpawnDataProvider) entityToSync).getSpawnData());
+        if (this.entityToSync instanceof CustomSpawnDataProvider provider)
+            cir.setReturnValue(provider.getSpawnData());
     }
 }

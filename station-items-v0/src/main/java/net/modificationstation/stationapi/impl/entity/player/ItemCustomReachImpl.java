@@ -17,8 +17,8 @@ public class ItemCustomReachImpl {
         ItemInstance itemInstance = event.player.getHeldItem();
         if (itemInstance != null) {
             ItemBase item = itemInstance.getType();
-            if (item instanceof CustomReachProvider)
-                event.currentReach = ((CustomReachProvider) item).getReach(itemInstance, event.player, event.type, event.currentReach);
+            if (item instanceof CustomReachProvider provider)
+                event.currentReach = provider.getReach(itemInstance, event.player, event.type, event.currentReach);
         }
     }
 }

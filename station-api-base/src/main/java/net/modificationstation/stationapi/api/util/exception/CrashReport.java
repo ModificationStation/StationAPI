@@ -233,8 +233,8 @@ public class CrashReport {
       }
 
       CrashReport crashReport2;
-      if (cause instanceof CrashException) {
-         crashReport2 = ((CrashException)cause).getReport();
+      if (cause instanceof CrashException crashException) {
+         crashReport2 = crashException.getReport();
       } else {
          crashReport2 = new CrashReport(title, cause);
       }

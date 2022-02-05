@@ -37,8 +37,7 @@ public class CustomArmourValuesImpl {
                 ItemInstance armourInstance = armour[i];
                 // This solution is not exact with vanilla, but is WAY better than previous solutions which weren't even close to vanilla.
                 if (armourInstance != null) {
-                    if (armourInstance.getType() instanceof CustomArmourValue) {
-                        CustomArmourValue armor = (CustomArmourValue) armourInstance.getType();
+                    if (armourInstance.getType() instanceof CustomArmourValue armor) {
                         double damageNegated = armor.modifyDamageDealt(player, i, initialDamage, damageAmount);
                         damageAmount -= damageNegated;
                     } else {

@@ -73,7 +73,7 @@ public class ItemModelGenerator {
          float t = (float) frame.getLevel();
          Side side = frame.getSide();
          switch (side) {
-            case UP:
+            case UP -> {
                l = r;
                h = r;
                j = m = s + 1.0F;
@@ -81,8 +81,8 @@ public class ItemModelGenerator {
                i = t;
                k = t;
                o = t + 1.0F;
-               break;
-            case DOWN:
+            }
+            case DOWN -> {
                n = t;
                o = t + 1.0F;
                l = r;
@@ -90,8 +90,8 @@ public class ItemModelGenerator {
                j = m = s + 1.0F;
                i = t + 1.0F;
                k = t + 1.0F;
-               break;
-            case LEFT:
+            }
+            case LEFT -> {
                l = t;
                h = t;
                j = t;
@@ -99,8 +99,8 @@ public class ItemModelGenerator {
                o = r;
                i = r;
                k = n = s + 1.0F;
-               break;
-            case RIGHT:
+            }
+            case RIGHT -> {
                l = t;
                m = t + 1.0F;
                h = t + 1.0F;
@@ -108,6 +108,7 @@ public class ItemModelGenerator {
                o = r;
                i = r;
                k = n = s + 1.0F;
+            }
          }
 
          h *= p;
@@ -123,17 +124,10 @@ public class ItemModelGenerator {
          Map<Direction, ModelElementFace> map = new EnumMap<>(Direction.class);
          map.put(side.getDirection(), new ModelElementFace(null, layer, key, new ModelElementTexture(new float[]{l, n, m, o}, 0)));
          switch (side) {
-            case UP:
-               list.add(new ModelElement(new Vector3f(h, i, 7.5F), new Vector3f(j, i, 8.5F), map, null, true));
-               break;
-            case DOWN:
-               list.add(new ModelElement(new Vector3f(h, k, 7.5F), new Vector3f(j, k, 8.5F), map, null, true));
-               break;
-            case LEFT:
-               list.add(new ModelElement(new Vector3f(h, i, 7.5F), new Vector3f(h, k, 8.5F), map, null, true));
-               break;
-            case RIGHT:
-               list.add(new ModelElement(new Vector3f(j, i, 7.5F), new Vector3f(j, k, 8.5F), map, null, true));
+            case UP -> list.add(new ModelElement(new Vector3f(h, i, 7.5F), new Vector3f(j, i, 8.5F), map, null, true));
+            case DOWN -> list.add(new ModelElement(new Vector3f(h, k, 7.5F), new Vector3f(j, k, 8.5F), map, null, true));
+            case LEFT -> list.add(new ModelElement(new Vector3f(h, i, 7.5F), new Vector3f(h, k, 8.5F), map, null, true));
+            case RIGHT -> list.add(new ModelElement(new Vector3f(j, i, 7.5F), new Vector3f(j, k, 8.5F), map, null, true));
          }
       }
 

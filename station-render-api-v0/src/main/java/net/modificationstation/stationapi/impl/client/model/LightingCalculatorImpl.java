@@ -155,7 +155,7 @@ public class LightingCalculatorImpl {
                 v10dy = this.y + v10y - v10y0,
                 v10dz = this.z + v10z - v10z0;
         switch (face.axis) {
-            case X:
+            case X -> {
                 v00dy = v00dy < .5 ? v00dy + .5 : v00dy - .5;
                 v00dz = v00dz < .5 ? v00dz + .5 : v00dz - .5;
                 v01dy = v01dy < .5 ? v01dy + .5 : v01dy - .5;
@@ -165,7 +165,7 @@ public class LightingCalculatorImpl {
                 v10dy = v10dy < .5 ? v10dy + .5 : v10dy - .5;
                 v10dz = v10dz < .5 ? v10dz + .5 : v10dz - .5;
                 switch (face.direction) {
-                    case POSITIVE:
+                    case POSITIVE -> {
                         brightness = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0), light(v00x0, v00y1, v00z0), light(v00x1, v00y1, v00z0),
@@ -198,8 +198,8 @@ public class LightingCalculatorImpl {
                                 light(v10x1, ALLOWS_GRASS_UNDER[id(v10x1, v10y1, v10z0)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z1)] ? v10y1 : v10y0, v10z1)
                         );
                         quadLight[3] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        break;
-                    case NEGATIVE:
+                    }
+                    case NEGATIVE -> {
                         v00x0--;
                         v00x1--;
                         v01x0--;
@@ -240,10 +240,10 @@ public class LightingCalculatorImpl {
                                 light(v10x0, v10y1, v10z1), light(v10x1, v10y1, v10z1)
                         );
                         quadLight[3] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        break;
+                    }
                 }
-                break;
-            case Y:
+            }
+            case Y -> {
                 v00dx = v00dx < .5 ? v00dx + .5 : v00dx - .5;
                 v00dz = v00dz < .5 ? v00dz + .5 : v00dz - .5;
                 v01dx = v01dx < .5 ? v01dx + .5 : v01dx - .5;
@@ -253,7 +253,7 @@ public class LightingCalculatorImpl {
                 v10dx = v10dx < .5 ? v10dx + .5 : v10dx - .5;
                 v10dz = v10dz < .5 ? v10dz + .5 : v10dz - .5;
                 switch (face.direction) {
-                    case POSITIVE:
+                    case POSITIVE -> {
                         brightness = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0),
@@ -286,8 +286,8 @@ public class LightingCalculatorImpl {
                                 light(v10x0, v10y1, ALLOWS_GRASS_UNDER[id(v10x1, v10y1, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z0)] ? v10z1 : v10z0), light(v10x1, v10y1, v10z1)
                         );
                         quadLight[3] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        break;
-                    case NEGATIVE:
+                    }
+                    case NEGATIVE -> {
                         v00y0--;
                         v00y1--;
                         v01y0--;
@@ -328,10 +328,10 @@ public class LightingCalculatorImpl {
                                 light(v10x0, v10y1, v10z1), light(v10x1, v10y1, ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y1, v10z0)] ? v10z1 : v10z0)
                         );
                         quadLight[3] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        break;
+                    }
                 }
-                break;
-            case Z:
+            }
+            case Z -> {
                 v00dx = v00dx < .5 ? v00dx + .5 : v00dx - .5;
                 v00dy = v00dy < .5 ? v00dy + .5 : v00dy - .5;
                 v01dx = v01dx < .5 ? v01dx + .5 : v01dx - .5;
@@ -341,7 +341,7 @@ public class LightingCalculatorImpl {
                 v10dx = v10dx < .5 ? v10dx + .5 : v10dx - .5;
                 v10dy = v10dy < .5 ? v10dy + .5 : v10dy - .5;
                 switch (face.direction) {
-                    case POSITIVE:
+                    case POSITIVE -> {
                         brightness = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0),
@@ -374,8 +374,8 @@ public class LightingCalculatorImpl {
                                 light(v10x0, v10y1, v10z1), light(v10x1, ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z1)] ? v10y1 : v10y0, v10z1)
                         );
                         quadLight[3] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        break;
-                    case NEGATIVE:
+                    }
+                    case NEGATIVE -> {
                         v00z0--;
                         v00z1--;
                         v01z0--;
@@ -416,9 +416,9 @@ public class LightingCalculatorImpl {
                                 light(v10x0, v10y1, v10z1), light(v10x1, v10y1, v10z1)
                         );
                         quadLight[3] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        break;
+                    }
                 }
-                break;
+            }
         }
     }
 

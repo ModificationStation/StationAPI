@@ -11,6 +11,7 @@ import net.minecraft.sortme.GameRenderer;
 import net.minecraft.sortme.MagicBedNumbers;
 import net.minecraft.util.maths.MathHelper;
 import net.minecraft.util.maths.Vec3f;
+import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldRenderer;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
@@ -24,7 +25,6 @@ import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtl
 import net.modificationstation.stationapi.api.client.texture.plugin.BlockRendererPlugin;
 import net.modificationstation.stationapi.impl.block.BlockStateProvider;
 import net.modificationstation.stationapi.impl.client.model.BakedModelRendererImpl;
-import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 import net.modificationstation.stationapi.mixin.render.client.BlockRendererAccessor;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -50,9 +50,9 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
         BakedModel model = StationRenderAPI.BAKED_MODEL_MANAGER.getBlockModels().getModel(((BlockStateProvider) blockRendererAccessor.getBlockView()).getBlockState(x, y, z));
         if (!model.isBuiltin()) {
             cir.setReturnValue(bakedModelRenderer.renderWorld(block, model, blockRendererAccessor.getBlockView(), x, y, z));
-        } else if (block instanceof BlockWithWorldRenderer) {
+        } else if (block instanceof BlockWithWorldRenderer renderer) {
             block.updateBoundingBox(blockRendererAccessor.getBlockView(), x, y, z);
-            cir.setReturnValue(((BlockWithWorldRenderer) block).renderWorld(blockRenderer, blockRendererAccessor.getBlockView(), x, y, z));
+            cir.setReturnValue(renderer.renderWorld(blockRenderer, blockRendererAccessor.getBlockView(), x, y, z));
         }
     }
 
@@ -136,22 +136,12 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
         if (var8)
             var65 = MagicBedNumbers.field_792[MagicBedNumbers.field_793[var7]];
 
-        int rotation;
-        switch(var7) {
-            case 0:
-                rotation = 5;
-                break;
-            case 1:
-                rotation = 3;
-                break;
-            case 2:
-            default:
-                rotation = 4;
-                break;
-            case 3:
-                rotation = 2;
-                break;
-        }
+        int rotation = switch (var7) {
+            case 0 -> 5;
+            case 1 -> 3;
+            default -> 4;
+            case 3 -> 2;
+        };
 
         if (var65 != 2 && (blockRendererAccessor.getRenderAllSides() || block.isSideRendered(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ - 1, 2))) {
             float var69 = block.getBrightness(blockRendererAccessor.getBlockView(), blockX, blockY, blockZ - 1);
@@ -324,36 +314,43 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 var20 = texture.getMaxV();
             }
 
-            if (var29 == 0) {
-                var30 = var21[0];
-                var26 = var21[1];
-                var27 = var21[2];
-                var28 = var21[3];
-            } else if (var29 == 1) {
-                var30 = var21[7];
-                var26 = var21[6];
-                var27 = var21[5];
-                var28 = var21[4];
-            } else if (var29 == 2) {
-                var30 = var21[1];
-                var26 = var21[0];
-                var27 = var21[4];
-                var28 = var21[5];
-            } else if (var29 == 3) {
-                var30 = var21[2];
-                var26 = var21[1];
-                var27 = var21[5];
-                var28 = var21[6];
-            } else if (var29 == 4) {
-                var30 = var21[3];
-                var26 = var21[2];
-                var27 = var21[6];
-                var28 = var21[7];
-            } else if (var29 == 5) {
-                var30 = var21[0];
-                var26 = var21[3];
-                var27 = var21[7];
-                var28 = var21[4];
+            switch (var29) {
+                case 0 -> {
+                    var30 = var21[0];
+                    var26 = var21[1];
+                    var27 = var21[2];
+                    var28 = var21[3];
+                }
+                case 1 -> {
+                    var30 = var21[7];
+                    var26 = var21[6];
+                    var27 = var21[5];
+                    var28 = var21[4];
+                }
+                case 2 -> {
+                    var30 = var21[1];
+                    var26 = var21[0];
+                    var27 = var21[4];
+                    var28 = var21[5];
+                }
+                case 3 -> {
+                    var30 = var21[2];
+                    var26 = var21[1];
+                    var27 = var21[5];
+                    var28 = var21[6];
+                }
+                case 4 -> {
+                    var30 = var21[3];
+                    var26 = var21[2];
+                    var27 = var21[6];
+                    var28 = var21[7];
+                }
+                case 5 -> {
+                    var30 = var21[0];
+                    var26 = var21[3];
+                    var27 = var21[7];
+                    var28 = var21[4];
+                }
             }
 
             var8.vertex(var30.x, var30.y, var30.z, var17, var20);
@@ -1287,7 +1284,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startV2 = startV1,
                 endV2 = endV1;
         switch (blockRendererAccessor.getBottomFaceRotation()) {
-            case 1:
+            case 1 -> {
                 startU1 = (texX + textureWidth - block.maxZ * textureWidth) / atlasWidth;
                 startV1 = (texY + block.minX * textureHeight) / atlasHeight;
                 endU1 = (texX + textureWidth - block.minZ * textureWidth) / atlasWidth;
@@ -1298,8 +1295,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 endU1 = startU2;
                 startV2 = endV1;
                 endV2 = startV1;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 startU1 = (texX + block.minZ * textureWidth) / atlasWidth;
                 startV1 = (texY + textureHeight - block.maxX * textureHeight) / atlasHeight;
                 endU1 = (texX + block.maxZ * textureWidth) / atlasWidth;
@@ -1310,8 +1307,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startU2 = endU1;
                 startV1 = endV1;
                 endV1 = startV2;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 startU1 = (texX + textureWidth - block.minX * textureWidth) / atlasWidth;
                 endU1 = (texX + textureWidth - block.maxX * textureWidth) / atlasWidth;
                 startV1 = (texY + textureHeight - block.minZ * textureHeight) / atlasHeight;
@@ -1320,7 +1317,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startU2 = startU1;
                 startV2 = startV1;
                 endV2 = endV1;
-                break;
+            }
         }
         double
                 startRenderX = renderX + block.minX,
@@ -1390,7 +1387,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startV2 = startV1,
                 endV2 = endV1;
         switch (blockRendererAccessor.getTopFaceRotation()) {
-            case 1:
+            case 1 -> {
                 startU1 = (texX + block.minZ * textureWidth) / atlasWidth;
                 startV1 = (texY + textureHeight - block.maxX * textureHeight) / atlasHeight;
                 endU1 = (texX + block.maxZ * textureWidth) / atlasWidth;
@@ -1401,8 +1398,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startU2 = endU1;
                 startV1 = endV1;
                 endV1 = startV2;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 startU1 = (texX + textureWidth - block.maxZ * textureWidth) / atlasWidth;
                 startV1 = (texY + block.minX * textureHeight) / atlasHeight;
                 endU1 = (texX + textureWidth - block.minZ * textureWidth) / atlasWidth;
@@ -1413,8 +1410,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 endU1 = startU2;
                 startV2 = endV1;
                 endV2 = startV1;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 startU1 = (texX + textureWidth - block.minX * textureWidth) / atlasWidth;
                 endU1 = (texX + textureWidth - block.maxX * textureWidth) / atlasWidth;
                 startV1 = (texY + textureHeight - block.minZ * textureHeight) / atlasHeight;
@@ -1423,7 +1420,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startU2 = startU1;
                 startV2 = startV1;
                 endV2 = endV1;
-                break;
+            }
         }
         double
                 startRenderX = renderX + block.minX,
@@ -1498,7 +1495,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startV2 = startV1,
                 endV2 = endV1;
         switch (blockRendererAccessor.getEastFaceRotation()) {
-            case 1:
+            case 1 -> {
                 startU1 = (texX + textureWidth - block.maxY * textureWidth) / atlasWidth;
                 startV1 = (texY + block.maxX * textureHeight) / atlasHeight;
                 endU1 = (texX + textureWidth - block.minY * textureWidth) / atlasWidth;
@@ -1509,8 +1506,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 endU1 = startU2;
                 startV2 = endV1;
                 endV2 = startV1;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 startU1 = (texX + block.minY * textureWidth) / atlasWidth;
                 startV1 = (texY + textureHeight - block.minX * textureHeight) / atlasHeight;
                 endU1 = (texX + block.maxY * textureWidth) / atlasWidth;
@@ -1521,8 +1518,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startU2 = endU1;
                 startV1 = endV1;
                 endV1 = startV2;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 startU1 = (texX + textureWidth - block.minX * textureWidth) / atlasWidth;
                 endU1 = (texX + textureWidth - block.maxX * textureWidth) / atlasWidth;
                 startV1 = (texY + block.maxY * textureHeight) / atlasHeight;
@@ -1531,7 +1528,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startU2 = startU1;
                 startV2 = startV1;
                 endV2 = endV1;
-                break;
+            }
         }
         double
                 startRenderX = renderX + block.minX,
@@ -1606,7 +1603,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startV2 = startV1,
                 endV2 = endV1;
         switch (blockRendererAccessor.getWestFaceRotation()) {
-            case 1:
+            case 1 -> {
                 startU1 = (texX + block.minY * textureWidth) / atlasWidth;
                 endV1 = (texY + textureHeight - block.minX * textureHeight) / atlasHeight;
                 endU1 = (texX + block.maxY * textureWidth) / atlasWidth;
@@ -1617,8 +1614,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startU2 = endU1;
                 startV1 = endV1;
                 endV1 = startV2;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 startU1 = (texX + textureWidth - block.maxY * textureWidth) / atlasWidth;
                 startV1 = (texY + block.minX * textureHeight) / atlasHeight;
                 endU1 = (texX + textureWidth - block.minY * textureWidth) / atlasWidth;
@@ -1629,8 +1626,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 endU1 = startU2;
                 startV2 = endV1;
                 endV2 = startV1;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 startU1 = (texX + textureWidth - block.minX * textureWidth) / atlasWidth;
                 endU1 = (texX + textureWidth - block.maxX * textureWidth) / atlasWidth;
                 startV1 = (texY + block.maxY * textureHeight) / atlasHeight;
@@ -1639,7 +1636,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startU2 = startU1;
                 startV2 = startV1;
                 endV2 = endV1;
-                break;
+            }
         }
         double
                 startRenderX = renderX + block.minX,
@@ -1714,7 +1711,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startV2 = startV1,
                 endV2 = endV1;
         switch (blockRendererAccessor.getNorthFaceRotation()) {
-            case 1:
+            case 1 -> {
                 startU1 = (texX + block.minY * textureWidth) / atlasWidth;
                 startV1 = (texY + textureHeight - block.maxZ * textureHeight) / atlasHeight;
                 endU1 = (texX + block.maxY * textureWidth) / atlasWidth;
@@ -1725,8 +1722,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startU2 = endU1;
                 startV1 = endV1;
                 endV1 = startV2;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 startU1 = (texX + textureWidth - block.maxY * textureWidth) / atlasWidth;
                 startV1 = (texY + block.minZ * textureHeight) / atlasHeight;
                 endU1 = (texX + textureWidth - block.minY * textureWidth) / atlasWidth;
@@ -1737,8 +1734,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 endU1 = startU2;
                 startV2 = endV1;
                 endV2 = startV1;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 startU1 = (texX + textureWidth - block.minZ * textureWidth) / atlasWidth;
                 endU1 = (texX + textureWidth - block.maxZ * textureWidth) / atlasWidth;
                 startV1 = (texY + block.maxY * textureHeight) / atlasHeight;
@@ -1747,7 +1744,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startU2 = startU1;
                 startV2 = startV1;
                 endV2 = endV1;
-                break;
+            }
         }
         double
                 adjustedRenderX = renderX + block.minX,
@@ -1822,7 +1819,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startV2 = startV1,
                 endV2 = endV1;
         switch (blockRendererAccessor.getSouthFaceRotation()) {
-            case 1:
+            case 1 -> {
                 startU1 = (texX + textureWidth - block.maxY * textureWidth) / atlasWidth;
                 startV1 = (texY + block.maxZ * textureHeight) / atlasHeight;
                 endU1 = (texX + textureWidth - block.minY * textureWidth) / atlasWidth;
@@ -1833,8 +1830,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 endU1 = startU2;
                 startV2 = endV1;
                 endV2 = startV1;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 startU1 = (texX + block.minY * textureWidth) / atlasWidth;
                 startV1 = (texY + textureHeight - block.minZ * textureHeight) / atlasHeight;
                 endU1 = (texX + block.maxY * textureWidth) / atlasWidth;
@@ -1845,8 +1842,8 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startU2 = endU1;
                 startV1 = endV1;
                 endV1 = startV2;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 startU1 = (texX + textureWidth - block.minZ * textureWidth) / atlasWidth;
                 endU1 = (texX + textureWidth - block.maxZ * textureWidth) / atlasWidth;
                 startV1 = (texY + block.maxY * textureHeight) / atlasHeight;
@@ -1855,7 +1852,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 startU2 = startU1;
                 startV2 = startV1;
                 endV2 = endV1;
-                break;
+            }
         }
         double
                 adjustedRenderX = renderX + block.maxX,
@@ -1889,7 +1886,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
 
     @Override
     public void renderInventory(BlockBase block, int meta, float brightness, CallbackInfo ci) {
-        if (block instanceof BlockWithInventoryRenderer) {
+        if (block instanceof BlockWithInventoryRenderer renderer) {
             if (blockRenderer.itemColourEnabled) {
                 int var5 = block.getBaseColour(meta);
                 float var6 = (float)((var5 >> 16) & 255) / 255.0F;
@@ -1897,7 +1894,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
                 float var8 = (float)(var5 & 255) / 255.0F;
                 GL11.glColor4f(var6 * brightness, var7 * brightness, var8 * brightness, 1.0F);
             }
-            ((BlockWithInventoryRenderer) block).renderInventory(blockRenderer, meta);
+            renderer.renderInventory(blockRenderer, meta);
             ci.cancel();
         }
     }

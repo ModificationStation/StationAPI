@@ -143,15 +143,11 @@ public enum DirectionTransformation implements StringIdentifiable {
    }
 
    public boolean shouldFlipDirection(Direction.Axis axis) {
-      switch(axis) {
-      case X:
-         return this.flipX;
-      case Y:
-         return this.flipY;
-      case Z:
-      default:
-         return this.flipZ;
-      }
+      return switch (axis) {
+         case X -> this.flipX;
+         case Y -> this.flipY;
+         case Z -> this.flipZ;
+      };
    }
 
    public JigsawOrientation mapJigsawOrientation(JigsawOrientation orientation) {

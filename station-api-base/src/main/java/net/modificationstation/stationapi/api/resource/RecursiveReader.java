@@ -35,8 +35,8 @@ public class RecursiveReader {
             URL rPath = urls.nextElement();
             URLConnection connection = rPath.openConnection();
             try {
-                if (connection instanceof JarURLConnection) {
-                    Enumeration<JarEntry> entries = ((JarURLConnection) connection).getJarFile().entries();
+                if (connection instanceof JarURLConnection jarConnection) {
+                    Enumeration<JarEntry> entries = jarConnection.getJarFile().entries();
                     for (JarEntry jarEntry = entries.nextElement(); entries.hasMoreElements(); jarEntry = entries.nextElement()) {
                         String name = jarEntry.getName();
                         if (!jarEntry.isDirectory() && name.startsWith(path) && filter.test(name)) {

@@ -53,10 +53,9 @@ public class ModelVariant implements ModelBakeSettings {
    public boolean equals(Object o) {
       if (this == o) {
          return true;
-      } else if (!(o instanceof ModelVariant)) {
+      } else if (!(o instanceof ModelVariant modelVariant)) {
          return false;
       } else {
-         ModelVariant modelVariant = (ModelVariant)o;
          return this.location.equals(modelVariant.location) && Objects.equals(this.rotation, modelVariant.rotation) && this.uvLock == modelVariant.uvLock && this.weight == modelVariant.weight;
       }
    }

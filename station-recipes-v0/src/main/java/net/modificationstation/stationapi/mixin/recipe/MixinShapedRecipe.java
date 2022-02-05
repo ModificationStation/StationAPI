@@ -53,12 +53,12 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe
                         return false;
                     }
 
-                    if (var9 instanceof ItemInstance) {
-                        if (((ItemInstance) var9).itemId != var10.itemId) {
+                    if (var9 instanceof ItemInstance item) {
+                        if (item.itemId != var10.itemId) {
                             return false;
                         }
 
-                        if (((ItemInstance) var9).getDamage() != -1 && ((ItemInstance) var9).getDamage() != var10.getDamage()) {
+                        if (item.getDamage() != -1 && item.getDamage() != var10.getDamage()) {
                             return false;
                         }
                     }
@@ -82,8 +82,8 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe
 
                 Object entry = taggedIngredients[localId];
 
-                if (entry instanceof Identifier) {
-                    List<TagEntry> tagEntries = TagRegistry.INSTANCE.get((Identifier) entry).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + entry.toString() + "\" has no entry in the tag registry!"));
+                if (entry instanceof Identifier identifier) {
+                    List<TagEntry> tagEntries = TagRegistry.INSTANCE.get(identifier).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + identifier + "\" has no entry in the tag registry!"));
                     itemInstances[id] = tagEntries.get(RANDOM.nextInt(tagEntries.size())).displayItem;
                 }
                 else {

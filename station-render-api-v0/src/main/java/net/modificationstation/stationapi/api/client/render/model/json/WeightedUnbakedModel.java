@@ -39,8 +39,7 @@ public class WeightedUnbakedModel implements UnbakedModel {
    public boolean equals(Object o) {
       if (this == o) {
          return true;
-      } else if (o instanceof WeightedUnbakedModel) {
-         WeightedUnbakedModel weightedUnbakedModel = (WeightedUnbakedModel)o;
+      } else if (o instanceof WeightedUnbakedModel weightedUnbakedModel) {
          return this.variants.equals(weightedUnbakedModel.variants);
       } else {
          return false;

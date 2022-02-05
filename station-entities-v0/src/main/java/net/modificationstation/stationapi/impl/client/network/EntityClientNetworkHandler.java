@@ -59,12 +59,12 @@ public final class EntityClientNetworkHandler {
                 entity.entityId = message.ints[0];
                 level.method_1495(message.ints[0], entity);
                 if (message.ints[4] > 0) {
-                    if (entity instanceof HasOwner)
-                        ((HasOwner) entity).setOwner(networkHandler.invokeMethod_1645(message.ints[4]));
+                    if (entity instanceof HasOwner hasOwner)
+                        hasOwner.setOwner(networkHandler.invokeMethod_1645(message.ints[4]));
                     entity.setVelocity((double) message.shorts[0] / 8000.0D, (double) message.shorts[1] / 8000.0D, (double) message.shorts[2] / 8000.0D);
                 }
-                if (entity instanceof StationSpawnDataProvider)
-                    ((StationSpawnDataProvider) entity).readFromMessage(message);
+                if (entity instanceof StationSpawnDataProvider provider)
+                    provider.readFromMessage(message);
             }
         });
     }
@@ -93,8 +93,8 @@ public final class EntityClientNetworkHandler {
                 List<class_270> data = DataTracker.readTrackedData(new DataInputStream(new ByteArrayInputStream(Arrays.copyOfRange(message.bytes, 2, message.bytes.length))));
                 if (data != null)
                     mob.getDataTracker().method_1511(data);
-                if (mob instanceof StationSpawnDataProvider)
-                    ((StationSpawnDataProvider) mob).readFromMessage(message);
+                if (mob instanceof StationSpawnDataProvider provider)
+                    provider.readFromMessage(message);
             }
         });
     }

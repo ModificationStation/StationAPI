@@ -10,13 +10,13 @@ import net.minecraft.entity.Item;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.util.maths.MathHelper;
+import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.item.ItemWithRenderer;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.plugin.ItemRendererPlugin;
-import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 import net.modificationstation.stationapi.mixin.render.client.EntityRendererAccessor;
 import net.modificationstation.stationapi.mixin.render.client.ItemRendererAccessor;
 import org.lwjgl.opengl.GL11;
@@ -127,8 +127,8 @@ final class StationItemRenderer extends ItemRendererPlugin {
     public void renderItemOnGui(TextRenderer textRenderer, TextureManager textureManager, ItemInstance itemInstance, int x, int y, CallbackInfo ci) {
         if (itemInstance != null) {
             ItemBase itemBase = itemInstance.getType();
-            if (itemBase instanceof ItemWithRenderer) {
-                ((ItemWithRenderer) itemBase).renderItemOnGui(itemRenderer, textRenderer, textureManager, itemInstance, x, y);
+            if (itemBase instanceof ItemWithRenderer renderer) {
+                renderer.renderItemOnGui(itemRenderer, textRenderer, textureManager, itemInstance, x, y);
                 ci.cancel();
             }
         }
@@ -137,8 +137,8 @@ final class StationItemRenderer extends ItemRendererPlugin {
     @Override
     public void renderItemOnGui(TextRenderer textRenderer, TextureManager textureManager, int id, int damage, int texture, int x, int y, CallbackInfo ci) {
         ItemBase item = ItemBase.byId[id];
-        if (item instanceof ItemWithRenderer) {
-            ((ItemWithRenderer) item).renderItemOnGui(itemRenderer, textRenderer, textureManager, id, damage, texture, x, y);
+        if (item instanceof ItemWithRenderer renderer) {
+            renderer.renderItemOnGui(itemRenderer, textRenderer, textureManager, id, damage, texture, x, y);
             ci.cancel();
             return;
         }

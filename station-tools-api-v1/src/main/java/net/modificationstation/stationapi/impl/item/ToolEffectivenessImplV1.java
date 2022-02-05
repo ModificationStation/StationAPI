@@ -49,13 +49,13 @@ public class ToolEffectivenessImplV1 {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void isEffective(IsItemEffectiveOnBlockEvent event) {
-        event.effective = event.effective || (event.itemInstance.getType() instanceof ToolLevel && ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> predicates.stream().anyMatch(tagEntry -> tagEntry.predicate.test(event.itemInstance) && identifierIntegerBiTuple.two() <= ((ToolLevel) event.itemInstance.getType()).getMaterial(event.itemInstance).getMiningLevel())).orElse(false)));
+        event.effective = event.effective || (event.itemInstance.getType() instanceof ToolLevel toolLevel && ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> predicates.stream().anyMatch(tagEntry -> tagEntry.predicate.test(event.itemInstance) && identifierIntegerBiTuple.two() <= toolLevel.getMaterial(event.itemInstance).getMiningLevel())).orElse(false)));
     }
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void getStrength(ItemStrengthOnBlockEvent event) {
-        if (!(VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getIdentifier(event.itemInstance.getType())) && BlockRegistry.INSTANCE.getIdentifier(event.block).modID.toString().equals("minecraft")) && event.itemInstance.getType() instanceof ToolLevel && ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> predicates.stream().anyMatch(tagEntry -> tagEntry.predicate.test(event.itemInstance))).orElse(false))) {
-            event.strength = ((ToolLevel) event.itemInstance.getType()).getMaterial(event.itemInstance).getMiningSpeed();
+        if (!(VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getIdentifier(event.itemInstance.getType())) && BlockRegistry.INSTANCE.getIdentifier(event.block).modID.toString().equals("minecraft")) && event.itemInstance.getType() instanceof ToolLevel toolLevel && ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> predicates.stream().anyMatch(tagEntry -> tagEntry.predicate.test(event.itemInstance))).orElse(false))) {
+            event.strength = toolLevel.getMaterial(event.itemInstance).getMiningSpeed();
         }
     }
 }

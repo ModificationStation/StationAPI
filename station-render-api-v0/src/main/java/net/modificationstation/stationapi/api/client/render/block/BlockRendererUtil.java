@@ -35,8 +35,8 @@ public final class BlockRendererUtil {
 
     public static BakedModelRenderer getBakedModelRenderer(BlockRenderer blockRenderer) {
         BlockRendererPlugin plugin = ((BlockRendererPluginProvider) blockRenderer).getPlugin();
-        if (plugin instanceof StationBlockRenderer)
-            return ((StationBlockRenderer) plugin).bakedModelRenderer;
+        if (plugin instanceof StationBlockRenderer stapiRender)
+            return stapiRender.bakedModelRenderer;
         else
             throw new IllegalStateException("Current plugin isn't instance of StationBlockRenderer!");
     }

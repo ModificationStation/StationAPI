@@ -6,13 +6,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.Rail;
 import net.minecraft.client.render.block.BlockRenderer;
-import net.minecraft.level.BlockView;
-import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
 import net.modificationstation.stationapi.api.client.texture.plugin.BlockRendererPlugin;
 import net.modificationstation.stationapi.api.client.texture.plugin.BlockRendererPluginProvider;
 import net.modificationstation.stationapi.api.client.texture.plugin.RenderPlugin;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockRenderer.class)
 public class MixinBlockRenderer implements BlockRendererPluginProvider {
 
-    @Shadow private BlockView blockView;
     @Unique @Getter
     private final BlockRendererPlugin plugin = RenderPlugin.PLUGIN.createBlockRenderer((BlockRenderer) (Object) this);
 
@@ -208,9 +204,5 @@ public class MixinBlockRenderer implements BlockRendererPluginProvider {
     )
     private void onRenderInInventory(BlockBase arg, int meta, float brightness, CallbackInfo ci) {
         plugin.renderInventory(arg, meta, brightness, ci);
-        if (arg instanceof BlockWithInventoryRenderer) {
-            ((BlockWithInventoryRenderer) arg).renderInventory((BlockRenderer) (Object) this, meta);
-            ci.cancel();
-        }
     }
 }

@@ -5,10 +5,13 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.particle.Digging;
 import net.minecraft.entity.ParticleBase;
+import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.block.BlockWorldModelProvider;
+import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
+import net.modificationstation.stationapi.impl.block.BlockStateProvider;
 import net.modificationstation.stationapi.mixin.render.client.DiggingAccessor;
 import net.modificationstation.stationapi.mixin.render.client.ParticleBaseAccessor;
 
@@ -27,8 +30,13 @@ public class StationDiggingParticle {
 
     public void checkBlockCoords(int x, int y, int z) {
         BlockBase block = ((DiggingAccessor) digging).getField_2383();
-        if (block instanceof BlockWorldModelProvider)
-            texture = ((BlockWorldModelProvider) block).getCustomWorldModel(digging.level, x, y, z).getBaked().getSprite();
+        if (block instanceof BlockWorldModelProvider provider)
+            texture = provider.getCustomWorldModel(digging.level, x, y, z).getBaked().getSprite();
+        else {
+            BakedModel model = StationRenderAPI.BAKED_MODEL_MANAGER.getBlockModels().getModel(((BlockStateProvider) digging.level).getBlockState(x, y, z));
+            if (!model.isBuiltin())
+                texture = model.getSprite();
+        }
     }
 
     public void render(Tessellator tessellator, float delta, float yawX, float pitchX, float yawY, float pitchY1, float pitchY2) {

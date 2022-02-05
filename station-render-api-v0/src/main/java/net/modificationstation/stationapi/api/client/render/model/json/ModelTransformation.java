@@ -49,26 +49,17 @@ public class ModelTransformation {
    }
 
    public Transformation getTransformation(ModelTransformation.Mode renderMode) {
-      switch(renderMode) {
-      case THIRD_PERSON_LEFT_HAND:
-         return this.thirdPersonLeftHand;
-      case THIRD_PERSON_RIGHT_HAND:
-         return this.thirdPersonRightHand;
-      case FIRST_PERSON_LEFT_HAND:
-         return this.firstPersonLeftHand;
-      case FIRST_PERSON_RIGHT_HAND:
-         return this.firstPersonRightHand;
-      case HEAD:
-         return this.head;
-      case GUI:
-         return this.gui;
-      case GROUND:
-         return this.ground;
-      case FIXED:
-         return this.fixed;
-      default:
-         return Transformation.IDENTITY;
-      }
+      return switch (renderMode) {
+         case THIRD_PERSON_LEFT_HAND -> this.thirdPersonLeftHand;
+         case THIRD_PERSON_RIGHT_HAND -> this.thirdPersonRightHand;
+         case FIRST_PERSON_LEFT_HAND -> this.firstPersonLeftHand;
+         case FIRST_PERSON_RIGHT_HAND -> this.firstPersonRightHand;
+         case HEAD -> this.head;
+         case GUI -> this.gui;
+         case GROUND -> this.ground;
+         case FIXED -> this.fixed;
+         default -> Transformation.IDENTITY;
+      };
    }
 
    public boolean isTransformationDefined(ModelTransformation.Mode renderMode) {

@@ -86,12 +86,12 @@ public class TagConversionStorage {
     public static void tagify(Object[] objects) {
         for (int i = 0; i < objects.length; i++) {
             Object object = objects[i];
-            if (object instanceof ItemInstance) {
-                Identifier identifier = CONVERSION_TABLE.get(getIdentifier(((ItemInstance) object).getType(), ((ItemInstance) object).getDamage()));
+            if (object instanceof ItemInstance item) {
+                Identifier identifier = CONVERSION_TABLE.get(getIdentifier(item.getType(), item.getDamage()));
                 if (identifier != null) {
                     objects[i] = identifier;
                 }
-                else System.out.println(((ItemInstance) object).getTranslationKey());
+                else System.out.println(item.getTranslationKey());
             }
             else if (object instanceof SecondaryBlock) {
                 Identifier identifier = CONVERSION_TABLE.get(getIdentifier(BlockBase.BY_ID[((SecondaryBlockAccessor) object).getTileId()]));
@@ -109,12 +109,7 @@ public class TagConversionStorage {
     }
 
     private static BiTuple<Identifier, Integer> getIdentifier(Object o, int meta) {
-        if (o instanceof BlockBase) {
-            return BiTuple.of(BlockRegistry.INSTANCE.getIdentifier((BlockBase) o), meta);
-        }
-        else {
-            return BiTuple.of(ItemRegistry.INSTANCE.getIdentifier((ItemBase) o), meta);
-        }
+        return o instanceof BlockBase block ? BiTuple.of(BlockRegistry.INSTANCE.getIdentifier(block), meta) : BiTuple.of(ItemRegistry.INSTANCE.getIdentifier((ItemBase) o), meta);
     }
 
     private static BiTuple<Identifier, Integer> getIdentifier(Object o) {

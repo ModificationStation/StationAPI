@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.impl.client.texture.plugin;
 import net.minecraft.class_214;
 import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.texture.TextureManager;
+import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.AbstractTexture;
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.ResourceTexture;
@@ -16,7 +17,6 @@ import net.modificationstation.stationapi.api.util.exception.CrashException;
 import net.modificationstation.stationapi.api.util.exception.CrashReport;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
 import net.modificationstation.stationapi.impl.client.texture.IdentifierTextureManager;
-import net.modificationstation.stationapi.impl.client.texture.StationRenderAPI;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -27,7 +27,7 @@ import java.io.*;
 import java.util.*;
 
 import static net.minecraft.client.texture.TextureManager.field_1245;
-import static net.modificationstation.stationapi.impl.client.texture.StationRenderAPI.LOGGER;
+import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 final class StationTextureManager extends TextureManagerPlugin implements IdentifierTextureManager {
 
@@ -64,8 +64,8 @@ final class StationTextureManager extends TextureManagerPlugin implements Identi
             textureManagerAccessor.getCurrentImageBuffer().put(var2.grid);
             textureManagerAccessor.getCurrentImageBuffer().position(0).limit(var2.grid.length);
 
-            if (var2 instanceof StaticReferenceProvider) {
-                Sprite staticReference = ((StaticReferenceProvider) var2).getStaticReference().getSprite();
+            if (var2 instanceof StaticReferenceProvider provider) {
+                Sprite staticReference = provider.getStaticReference().getSprite();
                 int scaledWidth = staticReference.getWidth() / var2.textureSize;
                 int scaledHeight = staticReference.getHeight() / var2.textureSize;
                 for (int var3 = 0; var3 < var2.textureSize; ++var3)
@@ -82,10 +82,7 @@ final class StationTextureManager extends TextureManagerPlugin implements Identi
     @Override
     public void getTextureId(String par1, CallbackInfoReturnable<Integer> cir) {
         switch (par1) {
-            case "/terrain.png":
-            case "/gui/items.png":
-                cir.setReturnValue(StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).getGlId());
-                break;
+            case "/terrain.png", "/gui/items.png" -> cir.setReturnValue(StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).getGlId());
         }
     }
 
@@ -240,8 +237,8 @@ final class StationTextureManager extends TextureManagerPlugin implements Identi
                 this.close(identifier, abstractTexture2);
             }
 
-            if (texture instanceof TextureTickListener) {
-                this.tickListeners.add((TextureTickListener)texture);
+            if (texture instanceof TextureTickListener listener) {
+                this.tickListeners.add(listener);
             }
         }
     }

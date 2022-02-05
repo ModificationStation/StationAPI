@@ -39,14 +39,14 @@ public class MixinShapelessRecipe implements StationRecipe {
                     boolean var6 = false;
 
                     for (Object var8 : var2) {
-                        if (var8 instanceof Identifier && TagRegistry.INSTANCE.tagMatches((Identifier) var8, var5)) {
+                        if (var8 instanceof Identifier id && TagRegistry.INSTANCE.tagMatches(id, var5)) {
                             var6 = true;
-                            var2.remove(var8);
+                            var2.remove(id);
                             break;
                         }
-                        if (var8 instanceof ItemInstance && (var5.itemId == ((ItemInstance) var8).itemId && (((ItemInstance) var8).getDamage() == -1 || var5.getDamage() == ((ItemInstance) var8).getDamage()))) {
+                        if (var8 instanceof ItemInstance item && (var5.itemId == item.itemId && (item.getDamage() == -1 || var5.getDamage() == item.getDamage()))) {
                             var6 = true;
-                            var2.remove(var8);
+                            var2.remove(item);
                             break;
                         }
                     }
@@ -66,8 +66,8 @@ public class MixinShapelessRecipe implements StationRecipe {
         List<ItemInstance> itemInstances = new ArrayList<>();
         //noinspection unchecked
         input.forEach(entry -> {
-            if (entry instanceof Identifier) {
-                List<TagEntry> tagEntries = TagRegistry.INSTANCE.get((Identifier) entry).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + entry.toString() + "\" has no entry in the tag registry!"));
+            if (entry instanceof Identifier id) {
+                List<TagEntry> tagEntries = TagRegistry.INSTANCE.get(id).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + id + "\" has no entry in the tag registry!"));
                 itemInstances.add(tagEntries.get(RANDOM.nextInt(tagEntries.size())).displayItem);
             }
             else {

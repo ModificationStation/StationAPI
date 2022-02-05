@@ -180,8 +180,7 @@ public class CrashReportSection {
          this.name = name;
          if (detail == null) {
             this.detail = "~~NULL~~";
-         } else if (detail instanceof Throwable) {
-            Throwable throwable = (Throwable)detail;
+         } else if (detail instanceof Throwable throwable) {
             this.detail = "~~ERROR~~ " + throwable.getClass().getSimpleName() + ": " + throwable.getMessage();
          } else {
             this.detail = detail.toString();

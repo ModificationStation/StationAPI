@@ -30,8 +30,8 @@ public class MixinTileEntityFurnace {
 
     @Inject(method = "getFuelTime(Lnet/minecraft/item/ItemInstance;)I", at = @At(value = "HEAD"), cancellable = true)
     private void getCustomBurnTime(ItemInstance arg, CallbackInfoReturnable<Integer> cir) {
-        if (arg != null && arg.getType() instanceof Fuel)
-            cir.setReturnValue(((Fuel) arg.getType()).getFuelTime(arg));
+        if (arg != null && arg.getType() instanceof Fuel fuel)
+            cir.setReturnValue(fuel.getFuelTime(arg));
     }
 
     @Inject(method = "craftRecipe()V", at = @At(value = "FIELD", target = "Lnet/minecraft/item/ItemInstance;count:I", opcode = Opcodes.GETFIELD, ordinal = 0, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)

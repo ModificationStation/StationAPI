@@ -43,8 +43,8 @@ public class MixinItemInstance implements HasItemEntity, StationNBTSetter, Stati
     private void onFreshInstance(int id, int count, int damage, CallbackInfo ci) {
         ItemRegistry.INSTANCE.getIdentifier(itemId).ifPresent(identifier -> ItemInstanceRemapper.ITEM_INSTANCE_TO_IDENTIFIER.put((ItemInstance) (Object) this, identifier));
         ItemBase itemBase = ItemBase.byId[id];
-        if (itemBase instanceof ItemWithEntity)
-            itemEntity = ((ItemWithEntity) itemBase).getItemEntityFactory().get();
+        if (itemBase instanceof ItemWithEntity itemWithEntity)
+            itemEntity = itemWithEntity.getItemEntityFactory().get();
     }
 
     @Deprecated
@@ -52,8 +52,8 @@ public class MixinItemInstance implements HasItemEntity, StationNBTSetter, Stati
     private void fromTag(CompoundTag tag, CallbackInfo ci) {
         ItemRegistry.INSTANCE.getIdentifier(itemId).ifPresent(identifier -> ItemInstanceRemapper.ITEM_INSTANCE_TO_IDENTIFIER.put((ItemInstance) (Object) this, identifier));
         ItemBase itemBase = ItemBase.byId[itemId];
-        if (itemBase instanceof ItemWithEntity)
-            itemEntity = ((ItemWithEntity) itemBase).getItemEntityNBTFactory().apply(tag);
+        if (itemBase instanceof ItemWithEntity itemWithEntity)
+            itemEntity = itemWithEntity.getItemEntityNBTFactory().apply(tag);
     }
 
     @Deprecated

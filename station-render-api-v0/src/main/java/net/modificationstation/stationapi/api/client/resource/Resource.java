@@ -47,6 +47,6 @@ public interface Resource extends AutoCloseable {
     }
 
     static Resource of(InputStream stream) {
-        return stream instanceof Resource ? (Resource) stream : () -> stream;
+        return stream instanceof Resource resource ? resource : () -> stream;
     }
 }

@@ -72,9 +72,9 @@ public abstract class LevelSerialRegistry<T> extends AbstractSerialRegistry<T> {
      */
     public static void saveAll(CompoundTag tag) {
         Registry.REGISTRIES.forEach((identifier, registry) -> {
-            if (registry instanceof LevelSerialRegistry) {
+            if (registry instanceof LevelSerialRegistry lsRegistry) {
                 CompoundTag registryTag = new CompoundTag();
-                ((LevelSerialRegistry<?>) registry).save(registryTag);
+                lsRegistry.save(registryTag);
                 tag.put(identifier.toString(), registryTag);
             }
         });
@@ -88,9 +88,9 @@ public abstract class LevelSerialRegistry<T> extends AbstractSerialRegistry<T> {
     public static void loadAll(CompoundTag tag) {
         Registry.REGISTRIES.forEach((identifier, registry) -> {
             String id = registry.id.toString();
-            if (registry instanceof LevelSerialRegistry<?> && tag.containsKey(id)) {
+            if (registry instanceof LevelSerialRegistry<?> lsRegistry && tag.containsKey(id)) {
                 LOGGER.info("Remapping \"" + id + "\" registry...");
-                ((LevelSerialRegistry<?>) registry).load(tag.getCompoundTag(id));
+                lsRegistry.load(tag.getCompoundTag(id));
             }
         });
         StationAPI.EVENT_BUS.post(new PostRegistryRemapEvent());

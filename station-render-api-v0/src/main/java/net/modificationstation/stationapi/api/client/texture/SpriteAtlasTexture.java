@@ -27,7 +27,7 @@ import java.util.concurrent.*;
 import java.util.stream.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.impl.client.texture.StationRenderAPI.LOGGER;
+import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 @Environment(value=EnvType.CLIENT)
 public class SpriteAtlasTexture

@@ -37,8 +37,8 @@ public class HasCustomBlockItemFactoryImpl {
      */
     @EventListener(priority = ListenerPriority.HIGH)
     private static void getBlockItemFactory(BlockItemFactoryEvent event) {
-        if (event.block instanceof CustomBlockItemFactoryProvider)
-            event.currentFactory = ((CustomBlockItemFactoryProvider) event.block).getBlockItemFactory();
+        if (event.block instanceof CustomBlockItemFactoryProvider provider)
+            event.currentFactory = provider.getBlockItemFactory();
         Class<? extends BlockBase> blockClass = event.block.getClass();
         if (blockClass.isAnnotationPresent(HasCustomBlockItemFactory.class)) {
             MethodHandles.Lookup lookup = MethodHandles.lookup();

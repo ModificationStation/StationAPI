@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.mixin.recipe;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeRegistry;
 import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.recipe.ShapelessRecipe;
@@ -44,7 +45,7 @@ public class MixinRecipeRegistry {
     @Final
     private static RecipeRegistry INSTANCE;
 
-    @Shadow private List recipes;
+    @Shadow private List<Recipe> recipes;
 
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/util/Collections;sort(Ljava/util/List;Ljava/util/Comparator;)V"))
     private <T> void afterRecipeRegister(List<T> list, Comparator<? super T> c) {
@@ -70,17 +71,17 @@ public class MixinRecipeRegistry {
         ArrayList<Object> var3 = new ArrayList<>();
 
         for (Object var7 : objects) {
-            if (var7 instanceof ItemInstance) {
-                var3.add(((ItemInstance) var7).copy());
-            } else if (var7 instanceof ItemBase) {
-                var3.add(new ItemInstance((ItemBase) var7));
-            } else if (var7 instanceof BlockBase) {
-                var3.add(new ItemInstance((BlockBase) var7));
-            } else if (var7 instanceof Identifier) {
-                if (!TagRegistry.INSTANCE.get((Identifier) var7).isPresent()) {
-                    throw new RuntimeException("Identifier ingredient \"" + var7.toString() + "\" has no entry in the tag registry!");
+            if (var7 instanceof ItemInstance item) {
+                var3.add(item.copy());
+            } else if (var7 instanceof ItemBase item) {
+                var3.add(new ItemInstance(item));
+            } else if (var7 instanceof BlockBase block) {
+                var3.add(new ItemInstance(block));
+            } else if (var7 instanceof Identifier id) {
+                if (TagRegistry.INSTANCE.get(id).isEmpty()) {
+                    throw new RuntimeException("Identifier ingredient \"" + id + "\" has no entry in the tag registry!");
                 }
-                var3.add(var7);
+                var3.add(id);
             } else {
                 throw new RuntimeException("Invalid shapeless recipe ingredient of type " + var7.getClass().getName() + "!");
             }
@@ -89,7 +90,7 @@ public class MixinRecipeRegistry {
         this.recipes.add(new ShapelessRecipe(output, var3));
     }
 
-    @Inject(method = "addShapedRecipe", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "addShapedRecipe", at = @At(value = "HEAD"))
     private void hijackShapedRecipes(ItemInstance output, Object[] objects, CallbackInfo ci) {
         TagConversionStorage.tagify(objects);
         capturedRecipe = objects;
@@ -101,11 +102,10 @@ public class MixinRecipeRegistry {
         return var4;
     }
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Redirect(method = "addShapedRecipe", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
-    private Object hijackShapedRecipes2(Map hashMap, Object key, Object value) {
-        if (capturedRecipe[capturedItemIndex + 1] instanceof Identifier) {
-            return hashMap.put(key, capturedRecipe[capturedItemIndex + 1]);
+    private Object hijackShapedRecipes2(Map<Object, Object> hashMap, Object key, Object value) {
+        if (capturedRecipe[capturedItemIndex + 1] instanceof Identifier id) {
+            return hashMap.put(key, id);
         }
         else {
             return hashMap.put(key, value);
@@ -113,7 +113,7 @@ public class MixinRecipeRegistry {
     }
 
     @Inject(method = "addShapedRecipe", at = @At(value = "CONSTANT", args = "intValue=0", ordinal = 4, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    private void hijackShapedRecipes3(ItemInstance output, Object[] objects, CallbackInfo ci, String a, int itemIndex, int c, int d, HashMap itemMap) {
+    private void hijackShapedRecipes3(ItemInstance output, Object[] objects, CallbackInfo ci, String a, int itemIndex, int c, int d, HashMap<Object, Object> itemMap) {
         ShapedRecipe recipe = new ShapedRecipe(c, d, null, output);
         Object[] var14 = new Object[c * d];
 
@@ -121,14 +121,14 @@ public class MixinRecipeRegistry {
             char var10 = a.charAt(var16);
             if (itemMap.containsKey(var10)) {
                 Object item = itemMap.get(var10);
-                if (item instanceof ItemInstance) {
-                    var14[var16] = ((ItemInstance) item).copy();
+                if (item instanceof ItemInstance inst) {
+                    var14[var16] = inst.copy();
                 }
-                else if (item instanceof Identifier) {
-                    if (!TagRegistry.INSTANCE.get((Identifier) item).isPresent()) {
-                        throw new RuntimeException("Identifier ingredient \"" + item.toString() + "\" has no entry in the tag registry!");
+                else if (item instanceof Identifier id) {
+                    if (TagRegistry.INSTANCE.get(id).isEmpty()) {
+                        throw new RuntimeException("Identifier ingredient \"" + id + "\" has no entry in the tag registry!");
                     }
-                    var14[var16] = item;
+                    var14[var16] = id;
                 }
             } else {
                 var14[var16] = null;

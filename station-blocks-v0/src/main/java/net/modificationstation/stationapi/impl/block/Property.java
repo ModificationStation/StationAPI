@@ -61,10 +61,9 @@ public abstract class Property<T extends Comparable<T>> {
    public boolean equals(Object object) {
       if (this == object) {
          return true;
-      } else if (!(object instanceof Property)) {
+      } else if (!(object instanceof Property<?> property)) {
          return false;
       } else {
-         Property<?> property = (Property)object;
          return this.type.equals(property.type) && this.name.equals(property.name);
       }
    }
@@ -109,10 +108,9 @@ public abstract class Property<T extends Comparable<T>> {
       public boolean equals(Object object) {
          if (this == object) {
             return true;
-         } else if (!(object instanceof Property.Value)) {
+         } else if (!(object instanceof Value<?> value)) {
             return false;
          } else {
-            Property.Value<?> value = (Property.Value<?>)object;
             return this.property == value.property && this.value.equals(value.value);
          }
       }

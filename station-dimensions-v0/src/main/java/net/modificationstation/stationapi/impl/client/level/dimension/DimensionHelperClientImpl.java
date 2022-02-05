@@ -44,7 +44,7 @@ public class DimensionHelperClientImpl extends DimensionHelperImpl {
 
             Dimension dimension = Dimension.getByID(destinationSerial);
             Level var10 = new Level(game.level, dimension);
-            game.showLevelProgress(var10, I18n.translate(dimension instanceof TravelMessageProvider ? ((TravelMessageProvider) dimension).getEnteringTranslationKey() : "gui." + of(MODID, "entering"), destination), player);
+            game.showLevelProgress(var10, I18n.translate(dimension instanceof TravelMessageProvider provider ? provider.getEnteringTranslationKey() : "gui." + of(MODID, "entering"), destination), player);
         } else {
             var1 /= scale;
             var3 /= scale;
@@ -54,7 +54,7 @@ public class DimensionHelperClientImpl extends DimensionHelperImpl {
             }
 
             Level var12 = new Level(game.level, Dimension.getByID(overworldSerial));
-            game.showLevelProgress(var12, I18n.translate(player.level.dimension instanceof TravelMessageProvider ? ((TravelMessageProvider) player.level.dimension).getLeavingTranslationKey() : "gui." + of(MODID, "leaving"), destination), player);
+            game.showLevelProgress(var12, I18n.translate(player.level.dimension instanceof TravelMessageProvider provider ? provider.getLeavingTranslationKey() : "gui." + of(MODID, "leaving"), destination), player);
         }
 
         player.level = game.level;

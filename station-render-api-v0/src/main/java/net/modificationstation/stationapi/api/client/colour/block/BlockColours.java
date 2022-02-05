@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.client.colour.block;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
@@ -20,7 +19,7 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public class BlockColours {
    private final IdList<BlockColorProvider> providers = new IdList<>(32);
-   private final Map<BlockBase, Set<Property<?>>> properties = Maps.newHashMap();
+   private final Map<BlockBase, Set<Property<?>>> properties = new HashMap<>();
 
    public static BlockColours create() {
       return new BlockColours();

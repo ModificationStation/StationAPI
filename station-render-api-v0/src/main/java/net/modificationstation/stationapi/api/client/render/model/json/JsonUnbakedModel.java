@@ -40,7 +40,7 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
-import static net.modificationstation.stationapi.impl.client.texture.StationRenderAPI.LOGGER;
+import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 public final class JsonUnbakedModel implements UnbakedModel {
 
@@ -137,11 +137,11 @@ public final class JsonUnbakedModel implements UnbakedModel {
                 unbakedModel = unbakedModelGetter.apply(JsonModel.parentId);
             }
 
-            if (!(unbakedModel instanceof JsonUnbakedModel)) {
+            if (!(unbakedModel instanceof JsonUnbakedModel jsonModel)) {
                 throw new IllegalStateException("BlockModel parent has to be a block model.");
             }
 
-            JsonModel.parent = (JsonUnbakedModel)unbakedModel;
+            JsonModel.parent = jsonModel;
         }
 
         Set<SpriteIdentifier> set2 = Sets.newHashSet(this.resolveSprite("particle"));
