@@ -1,6 +1,9 @@
 buildscript {
     repositories {
         maven {
+            url = "https://maven.glass-launcher.net/snapshots"
+        }
+        maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
@@ -11,7 +14,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.github.calmilamsy:Fabric-Loom:a158883'
+        classpath 'net.fabricmc:fabric-loom:0.2.8-SNAPSHOT'
     }
 }
 
