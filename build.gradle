@@ -161,7 +161,7 @@ allprojects {
     compileJava {
         options.compilerArgs << '-XDignore.symbol.file'
         options.fork = true
-        options.forkOptions.executable = 'javac'
+        options.forkOptions.executable = project.hasProperty("override_javac")? project.overrideJavac : 'javac'
     }
 
     publishing {
