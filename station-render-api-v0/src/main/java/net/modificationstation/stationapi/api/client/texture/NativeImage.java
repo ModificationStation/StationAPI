@@ -40,6 +40,8 @@ implements AutoCloseable {
     private final boolean isStbImage;
 //    private long pointer;
     private BufferedImage igiveup;
+    private final int[] igiveup2;
+    private final byte[] igiveup3;
     private final long sizeBytes;
 
     public NativeImage(int width, int height, boolean useStb) {
@@ -54,6 +56,8 @@ implements AutoCloseable {
         this.isStbImage = false;
 //        this.pointer = useStb ? MemoryUtil.nmemCalloc((long)1L, (long)this.sizeBytes) : MemoryUtil.nmemAlloc((long)this.sizeBytes);
         igiveup = new BufferedImage(width, height, FORMAT_TO_BUFFERED_IMAGE_FORMAT[format.ordinal()]);
+        igiveup2 = new int[getWidth() * getHeight()];
+        igiveup3 = new byte[getWidth() * getHeight() * format.getChannelCount()];
     }
 
 //    private NativeImage(Format format, int width, int height, boolean useStb, long pointer) {
@@ -70,9 +74,11 @@ implements AutoCloseable {
         this.format = format;
         this.width = width;
         this.height = height;
-        this.isStbImage = useStb;
+        isStbImage = useStb;
         this.igiveup = igiveup;
-        this.sizeBytes = (long) width * height * format.getChannelCount();
+        igiveup2 = new int[getWidth() * getHeight()];
+        igiveup3 = new byte[getWidth() * getHeight() * format.getChannelCount()];
+        sizeBytes = (long) width * height * format.getChannelCount();
     }
 
     public String toString() {
@@ -261,17 +267,15 @@ implements AutoCloseable {
         GL11.glPixelStorei(3315, unpackSkipRows);
         this.format.setUnpackAlignment();
 
-        int[] var5 = new int[getWidth() * getHeight()];
-        byte[] var6 = new byte[getWidth() * getHeight() * format.getChannelCount()];
-        igiveup.getRGB(0, 0, getWidth(), getHeight(), var5, 0, getWidth());
+        igiveup.getRGB(0, 0, getWidth(), getHeight(), igiveup2, 0, getWidth());
 
         //noinspection deprecation
         GameOptions gameOptions = ((Minecraft) FabricLoader.getInstance().getGameInstance()).options;
-        for(int var7 = 0; var7 < var5.length; ++var7) {
-            int var8 = (var5[var7] >> 24) & 255;
-            int var9 = (var5[var7] >> 16) & 255;
-            int var10 = (var5[var7] >> 8) & 255;
-            int var11 = var5[var7] & 255;
+        for(int var7 = 0; var7 < igiveup2.length; ++var7) {
+            int var8 = (igiveup2[var7] >> 24) & 255;
+            int var9 = (igiveup2[var7] >> 16) & 255;
+            int var10 = (igiveup2[var7] >> 8) & 255;
+            int var11 = igiveup2[var7] & 255;
             if (gameOptions != null && gameOptions.anaglyph3d) {
                 int var12 = (var9 * 30 + var10 * 59 + var11 * 11) / 100;
                 int var13 = (var9 * 30 + var10 * 70) / 100;
@@ -281,17 +285,17 @@ implements AutoCloseable {
                 var11 = var14;
             }
 
-            var6[var7 * 4] = (byte)var9;
-            var6[var7 * 4 + 1] = (byte)var10;
-            var6[var7 * 4 + 2] = (byte)var11;
-            var6[var7 * 4 + 3] = (byte)var8;
+            igiveup3[var7 * 4] = (byte)var9;
+            igiveup3[var7 * 4 + 1] = (byte)var10;
+            igiveup3[var7 * 4 + 2] = (byte)var11;
+            igiveup3[var7 * 4 + 3] = (byte)var8;
         }
 
         this.buffer.clear();
-        if (var6.length != buffer.capacity())
-            buffer = class_214.method_744(var6.length);
-        this.buffer.put(var6);
-        this.buffer.position(0).limit(var6.length);
+        if (igiveup3.length > buffer.capacity())
+            buffer = class_214.method_744(igiveup3.length);
+        this.buffer.put(igiveup3);
+        this.buffer.position(0).limit(igiveup3.length);
         GL11.glTexSubImage2D(3553, level, xOffset, yOffset, width, height, this.format.getPixelDataFormat(), 5121, this.buffer);
         if (close) {
             this.close();
