@@ -32,7 +32,6 @@ public class StationClockTextureBinder extends StationTextureBinder {
                 textureHeight = staticReference.getHeight(),
                 square = textureWidth * textureHeight;
         dialTexture = new int[square];
-        //noinspection deprecation
         clockTexture = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).getSprite(staticReference.getId()).getBaseFrame().makePixelArray();
         BufferedImage var2 = TextureHelper.getTexture("/misc/dial.png");
         var2.getRGB(0, 0, textureWidth, textureHeight, this.dialTexture, 0, textureWidth);

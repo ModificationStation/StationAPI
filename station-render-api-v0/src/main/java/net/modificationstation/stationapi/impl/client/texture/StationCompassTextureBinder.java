@@ -26,7 +26,6 @@ public class StationCompassTextureBinder extends StationTextureBinder {
                 textureWidth = staticReference.getWidth(),
                 textureHeight = staticReference.getHeight(),
                 square = textureWidth * textureHeight;
-        //noinspection deprecation
         compassTexture = staticReference.getSprite().getBaseFrame().makePixelArray();
         grid = new byte[square * 4];
     }
