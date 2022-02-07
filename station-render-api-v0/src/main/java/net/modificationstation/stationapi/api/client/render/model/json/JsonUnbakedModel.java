@@ -222,7 +222,7 @@ public final class JsonUnbakedModel implements UnbakedModel {
             spriteName = either.right().orElseThrow(NullPointerException::new);
             if (list.contains(spriteName)) {
                 LOGGER.warn("Unable to resolve texture due to reference chain {}->{} in {}", Joiner.on("->").join(list), spriteName, this.id);
-                return SpriteIdentifier.of(Atlases.BLOCK_ATLAS_TEXTURE, MissingSprite.getMissingSpriteId());
+                return SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, MissingSprite.getMissingSpriteId());
             }
 
             list.add(spriteName);
@@ -237,7 +237,7 @@ public final class JsonUnbakedModel implements UnbakedModel {
             }
         }
 
-        return Either.left(SpriteIdentifier.of(Atlases.BLOCK_ATLAS_TEXTURE, MissingSprite.getMissingSpriteId()));
+        return Either.left(SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, MissingSprite.getMissingSpriteId()));
     }
 
     private static boolean isTextureReference(String reference) {

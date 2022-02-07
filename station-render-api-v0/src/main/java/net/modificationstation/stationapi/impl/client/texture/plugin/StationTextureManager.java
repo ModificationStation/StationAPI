@@ -50,7 +50,7 @@ final class StationTextureManager extends TextureManagerPlugin implements Identi
 
     public void tick() {
         tickListeners.forEach(TextureTickListener::tick);
-        StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).bindTexture();
+        StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE).bindTexture();
         GL11.glPixelStorei(3314, 0);
         GL11.glPixelStorei(3315, 0);
         GL11.glPixelStorei(3316, 0);
@@ -82,7 +82,7 @@ final class StationTextureManager extends TextureManagerPlugin implements Identi
     @Override
     public void getTextureId(String par1, CallbackInfoReturnable<Integer> cir) {
         switch (par1) {
-            case "/terrain.png", "/gui/items.png" -> cir.setReturnValue(StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).getGlId());
+            case "/terrain.png", "/gui/items.png" -> cir.setReturnValue(StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE).getGlId());
         }
     }
 

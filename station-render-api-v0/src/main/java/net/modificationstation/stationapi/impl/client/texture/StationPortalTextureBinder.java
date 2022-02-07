@@ -1,9 +1,8 @@
 package net.modificationstation.stationapi.impl.client.texture;
 
-import net.minecraft.block.BlockBase;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.util.maths.MathHelper;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 import java.util.*;
@@ -12,8 +11,8 @@ public class StationPortalTextureBinder extends StationTextureBinder {
     private int updatesRan = 0;
     private final byte[][] texture = new byte[32][];
 
-    public StationPortalTextureBinder() {
-        super(Atlases.getTerrain().getTexture(BlockBase.PORTAL.texture));
+    public StationPortalTextureBinder(Atlas.Sprite staticReference) {
+        super(staticReference);
     }
 
     @Override

@@ -55,7 +55,7 @@ final class StationItemRenderer extends ItemRendererPlugin {
 
         GL11.glTranslatef((float)x, (float)y + var11, (float)z);
         GL11.glEnable(32826);
-        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
+        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (var10.itemId < BlockBase.BY_ID.length && BlockRenderer.method_42(BlockBase.BY_ID[var10.itemId].getRenderType())) {
             GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
             atlas.bindTexture();
@@ -142,7 +142,7 @@ final class StationItemRenderer extends ItemRendererPlugin {
             ci.cancel();
             return;
         }
-        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
+        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (id < BlockBase.BY_ID.length && BlockRenderer.method_42(BlockBase.BY_ID[id].getRenderType())) {
             atlas.bindTexture();
             BlockBase var14 = BlockBase.BY_ID[id];

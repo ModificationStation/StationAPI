@@ -15,7 +15,7 @@ import java.util.function.*;
 import java.util.stream.*;
 
 public abstract class State<O, S> {
-   private static final Function<Entry<Property<?>, Comparable<?>>, String> PROPERTY_MAP_PRINTER = new Function<Entry<Property<?>, Comparable<?>>, String>() {
+   private static final Function<Entry<Property<?>, Comparable<?>>, String> PROPERTY_MAP_PRINTER = new Function<>() {
       public String apply(@Nullable Entry<Property<?>, Comparable<?>> entry) {
          if (entry == null) {
             return "<NULL>";

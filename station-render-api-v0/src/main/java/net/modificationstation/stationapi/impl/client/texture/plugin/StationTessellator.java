@@ -86,24 +86,24 @@ final class StationTessellator extends TessellatorPlugin implements FastTessella
     }
 
     @Override
-    public void quad(int[] vertexData, float x, float y, float z, int[] colour) {
+    public void quad(int[] vertexData, float x, float y, float z, int colour0, int colour1, int colour2, int colour3) {
         System.arraycopy(vertexData, 0, fastVertexData, 0, 32);
         fastVertexData[0] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[0]) + x + a.getXOffset()));
         fastVertexData[1] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[1]) + y + a.getYOffset()));
         fastVertexData[2] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[2]) + z + a.getZOffset()));
-        fastVertexData[5] = colour[0];
+        fastVertexData[5] = colour0;
         fastVertexData[8] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[8]) + x + a.getXOffset()));
         fastVertexData[9] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[9]) + y + a.getYOffset()));
         fastVertexData[10] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[10]) + z + a.getZOffset()));
-        fastVertexData[13] = colour[1];
+        fastVertexData[13] = colour1;
         fastVertexData[16] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[16]) + x + a.getXOffset()));
         fastVertexData[17] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[17]) + y + a.getYOffset()));
         fastVertexData[18] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[18]) + z + a.getZOffset()));
-        fastVertexData[21] = colour[2];
+        fastVertexData[21] = colour2;
         fastVertexData[24] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[24]) + x + a.getXOffset()));
         fastVertexData[25] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[25]) + y + a.getYOffset()));
         fastVertexData[26] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[26]) + z + a.getZOffset()));
-        fastVertexData[29] = colour[3];
+        fastVertexData[29] = colour3;
         a.setHasColour(true);
         a.setHasTexture(true);
         System.arraycopy(fastVertexData, 0, a.stationapi$getBufferArray(), a.stationapi$getBufferPosition(), 24);

@@ -9,6 +9,7 @@ import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
+import net.modificationstation.stationapi.api.client.texture.binder.StaticReferenceProvider;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
@@ -83,11 +84,11 @@ public abstract class Atlas {
     }
 
     public final int getAtlasTextureID() {
-        return StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).getGlId();
+        return StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE).getGlId();
     }
 
     public final void bindAtlas() {
-        StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).bindTexture();
+        StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE).bindTexture();
     }
 
     public final Sprite getTexture(Identifier identifier) {
@@ -113,7 +114,7 @@ public abstract class Atlas {
     }
 
     public void registerTextureBinders(TextureManager textureManager, TexturePack texturePack) {
-        textureBinders.forEach(arg -> {
+        textureBinders.stream().filter(textureBinder -> !(textureBinder instanceof StaticReferenceProvider provider && provider.getStaticReference().getSprite().isAnimated())).forEach(arg -> {
             if (arg instanceof TexturePackDependent dependent)
                 dependent.reloadFromTexturePack(texturePack);
             textureManager.addTextureBinder(arg);
@@ -170,7 +171,7 @@ public abstract class Atlas {
         }
 
         public net.modificationstation.stationapi.api.client.texture.Sprite getSprite() {
-            return StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).getSprite(id);
+            return StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(id);
         }
 
         /* !==========================! */

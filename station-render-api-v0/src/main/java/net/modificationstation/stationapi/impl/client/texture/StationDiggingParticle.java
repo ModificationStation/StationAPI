@@ -25,7 +25,7 @@ public class StationDiggingParticle {
     public StationDiggingParticle(Digging digging) {
         this.digging = digging;
         particleBaseAccessor = (ParticleBaseAccessor) digging;
-        texture = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).getSprite(((CustomAtlasProvider) ((DiggingAccessor) digging).getField_2383()).getAtlas().getTexture(particleBaseAccessor.getField_2635()).getId());
+        texture = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(((CustomAtlasProvider) ((DiggingAccessor) digging).getField_2383()).getAtlas().getTexture(particleBaseAccessor.getField_2635()).getId());
     }
 
     public void checkBlockCoords(int x, int y, int z) {

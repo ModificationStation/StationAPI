@@ -1036,7 +1036,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderShiftedColumn(BlockBase block, int meta, double x, double y, double z) {
-        Sprite texture = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).getSprite(Atlases.getTerrain().getTexture(blockRendererAccessor.getTextureOverride() >= 0 ? blockRendererAccessor.getTextureOverride() : block.getTextureForSide(0, meta)).getId());
+        Sprite texture = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(Atlases.getTerrain().getTexture(blockRendererAccessor.getTextureOverride() >= 0 ? blockRendererAccessor.getTextureOverride() : block.getTextureForSide(0, meta)).getId());
         Tessellator t = Tessellator.INSTANCE;
         double var13 = texture.getMinU();
         double var15 = texture.getMaxU();
@@ -1090,7 +1090,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public boolean renderFluid(BlockBase block, int x, int y, int z) {
-        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
+        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         Tessellator t = Tessellator.INSTANCE;
         int var6 = block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
         float var7 = (float)((var6 >> 16) & 255) / 255.0F;
@@ -1253,7 +1253,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderBottomFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
-        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
+        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
         Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
@@ -1356,7 +1356,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderTopFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
-        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
+        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
         Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
@@ -1459,7 +1459,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderEastFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
-        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
+        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
         Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
@@ -1567,7 +1567,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderWestFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
-        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
+        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
         Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
@@ -1675,7 +1675,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderNorthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
-        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
+        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
         Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
@@ -1783,7 +1783,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
     }
 
     public void renderSouthFace(BlockBase block, double renderX, double renderY, double renderZ, int textureIndex) {
-        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
+        SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
         Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());

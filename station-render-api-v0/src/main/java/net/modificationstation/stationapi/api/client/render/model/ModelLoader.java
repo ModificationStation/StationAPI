@@ -73,7 +73,7 @@ public class ModelLoader {
     private final TexturePack resourceManager;
     @Nullable
     private SpriteAtlasManager spriteAtlasManager;
-    private final BlockColours blockColors;
+    private final BlockColours blockColours;
     private final Set<Identifier> modelsToLoad = Sets.newIdentityHashSet();
     private final ModelVariantMap.DeserializationContext variantMapDeserializationContext = new ModelVariantMap.DeserializationContext();
     private final Map<Identifier, UnbakedModel> unbakedModels = new IdentityHashMap<>();
@@ -84,9 +84,9 @@ public class ModelLoader {
     private int nextStateId = 1;
     private final Object2IntMap<BlockState> stateLookup = Util.make(new Object2IntOpenHashMap<>(), (object2IntOpenHashMap) -> object2IntOpenHashMap.defaultReturnValue(-1));
 
-    public ModelLoader(TexturePack resourceManager, BlockColours blockColors, Profiler profiler, int i) {
+    public ModelLoader(TexturePack resourceManager, BlockColours blockColours, Profiler profiler, int i) {
         this.resourceManager = resourceManager;
-        this.blockColors = blockColors;
+        this.blockColours = blockColours;
         profiler.push("missing_model");
 
         try {
@@ -116,8 +116,8 @@ public class ModelLoader {
         profiler.swap("textures");
         Set<Pair<String, String>> set = new LinkedHashSet<>();
         Set<SpriteIdentifier> set2 = this.modelsToBake.values().stream().flatMap((unbakedModel) -> unbakedModel.getTextureDependencies(this::getOrLoadModel, set).stream()).collect(Collectors.toSet());
-        set2.addAll(TERRAIN.idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.BLOCK_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
-        set2.addAll(GUI_ITEMS.idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.BLOCK_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
+        set2.addAll(TERRAIN.idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
+        set2.addAll(GUI_ITEMS.idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
         set.stream().filter((pair) -> !pair.getSecond().equals(MISSING_STRING)).forEach((pair) -> LOGGER.warn("Unable to resolve texture reference: {} in {}", pair.getFirst(), pair.getSecond()));
         Map<Identifier, List<SpriteIdentifier>> map = set2.stream().collect(Collectors.groupingBy(spriteIdentifier -> spriteIdentifier.atlas));
         profiler.swap("stitching");
@@ -296,7 +296,7 @@ public class ModelLoader {
             Identifier identifier = Identifier.of(modelIdentifier.id.modID, modelIdentifier.id.id);
             StateManager<BlockBase, BlockState> stateManager = /*Optional.ofNullable(STATIC_DEFINITIONS.get(identifier)).orElseGet(() -> */((BlockBaseBlockState) BlockRegistry.INSTANCE.get(identifier).orElseThrow(NullPointerException::new)).getStateManager()/*)*/;
             this.variantMapDeserializationContext.setStateFactory(stateManager);
-            ImmutableList<Property<?>> list = ImmutableList.copyOf(this.blockColors.getProperties(stateManager.getOwner()));
+            ImmutableList<Property<?>> list = ImmutableList.copyOf(this.blockColours.getProperties(stateManager.getOwner()));
             ImmutableList<BlockState> immutableList = stateManager.getStates();
             Map<ModelIdentifier, BlockState> map = new HashMap<>();
             immutableList.forEach(state -> map.put(BlockModels.getModelId(identifier, state), state));

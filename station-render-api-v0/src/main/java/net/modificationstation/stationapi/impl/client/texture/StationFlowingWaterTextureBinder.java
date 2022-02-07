@@ -1,8 +1,7 @@
 package net.modificationstation.stationapi.impl.client.texture;
 
-import net.minecraft.block.BlockBase;
 import net.minecraft.client.resource.TexturePack;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 public class StationFlowingWaterTextureBinder extends StationTextureBinder {
@@ -13,8 +12,8 @@ public class StationFlowingWaterTextureBinder extends StationTextureBinder {
     protected float[] field_2121;
     private int field_2122 = 0;
 
-    public StationFlowingWaterTextureBinder() {
-        super(Atlases.getTerrain().getTexture(BlockBase.FLOWING_WATER.texture + 1));
+    public StationFlowingWaterTextureBinder(Atlas.Sprite staticReference) {
+        super(staticReference);
         textureSize = 2;
     }
 

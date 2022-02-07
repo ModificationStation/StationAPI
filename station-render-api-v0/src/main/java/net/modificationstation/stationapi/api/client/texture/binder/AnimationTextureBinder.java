@@ -10,12 +10,12 @@ import net.modificationstation.stationapi.mixin.render.client.TextureManagerAcce
 
 import java.awt.image.*;
 
+@Deprecated
 public class AnimationTextureBinder extends StationTextureBinder {
 
     private final AnimationResourceMetadata animationData;
     private final byte[][] frames;
     private final byte[][][] interpolatedFrames;
-    @SuppressWarnings("deprecation")
     private final TexturePack currentTexturePack = ((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack;
     private int currentFrameIndex;
     private int timer;
@@ -105,7 +105,6 @@ public class AnimationTextureBinder extends StationTextureBinder {
     @Override
     public void reloadFromTexturePack(TexturePack newTexturePack) {
         if (!currentTexturePack.equals(newTexturePack))
-            //noinspection deprecation
             ((TextureManagerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager).getTextureBinders().remove(this);
     }
 

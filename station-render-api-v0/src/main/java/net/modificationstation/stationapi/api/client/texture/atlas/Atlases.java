@@ -7,7 +7,7 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public final class Atlases {
 
-    public static final Identifier BLOCK_ATLAS_TEXTURE = of("textures/atlas/terrain.png");
+    public static final Identifier GAME_ATLAS_TEXTURE = of("textures/atlas/game.png");
 
     public static ExpandableAtlas getTerrain() {
         return StationRenderImpl.TERRAIN;

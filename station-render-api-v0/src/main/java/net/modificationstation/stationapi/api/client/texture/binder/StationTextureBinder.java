@@ -20,6 +20,6 @@ public abstract class StationTextureBinder extends TextureBinder implements Stat
 
     @Override
     public void bindTexture(TextureManager manager) {
-        StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE).bindTexture();
+        StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE).bindTexture();
     }
 }

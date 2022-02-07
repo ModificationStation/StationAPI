@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.client.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ObjectArrays;
+import com.google.common.primitives.Ints;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Tessellator;
@@ -9,12 +10,15 @@ import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
 import net.minecraft.sortme.GameRenderer;
 import net.minecraft.util.maths.TilePos;
+import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelRenderer;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.client.texture.plugin.TessellatorPlugin;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
+import net.modificationstation.stationapi.impl.block.BlockState;
+import net.modificationstation.stationapi.impl.block.BlockStateProvider;
 import net.modificationstation.stationapi.impl.client.texture.FastTessellator;
 import net.modificationstation.stationapi.impl.client.texture.plugin.StationBlockRenderer;
 import net.modificationstation.stationapi.mixin.render.TilePosAccessor;
@@ -46,31 +50,31 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         long seed = MathHelper.hashCode(x, y, z);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             return true;
-//        Tessellator t = stationBlockRenderer.prepareTessellator(model.getSprite().getAtlas());
         Tessellator t = Tessellator.INSTANCE;
         FastTessellator fastT = ((TessellatorPlugin.Provider) t).getPlugin();
-        int colourMultiplier = block.getColourMultiplier(blockView, x, y, z);
-        float
-                colourMultiplierRed = (float) (colourMultiplier >> 16 & 255) / 255.0F,
-                colourMultiplierGreen = (float) (colourMultiplier >> 8 & 255) / 255.0F,
-                colourMultiplierBlue = (float) (colourMultiplier & 255) / 255.0F;
-        if (GameRenderer.anaglyph3d) {
-            float
-                    colourMultiplierGreenTmp = (colourMultiplierRed * 30.0F + colourMultiplierGreen * 70.0F) / 100.0F,
-                    colourMultiplierBlueTmp = (colourMultiplierRed * 30.0F + colourMultiplierBlue * 70.0F) / 100.0F;
-            colourMultiplierRed = (colourMultiplierRed * 30.0F + colourMultiplierGreen * 59.0F + colourMultiplierBlue * 11.0F) / 100.0F;
-            colourMultiplierGreen = colourMultiplierGreenTmp;
-            colourMultiplierBlue = colourMultiplierBlueTmp;
-        }
+//        int colourMultiplier = block.getColourMultiplier(blockView, x, y, z);
+//        float
+//                colourMultiplierRed = (float) (colourMultiplier >> 16 & 255) / 255.0F,
+//                colourMultiplierGreen = (float) (colourMultiplier >> 8 & 255) / 255.0F,
+//                colourMultiplierBlue = (float) (colourMultiplier & 255) / 255.0F;
+//        if (GameRenderer.anaglyph3d) {
+//            float
+//                    colourMultiplierGreenTmp = (colourMultiplierRed * 30.0F + colourMultiplierGreen * 70.0F) / 100.0F,
+//                    colourMultiplierBlueTmp = (colourMultiplierRed * 30.0F + colourMultiplierBlue * 70.0F) / 100.0F;
+//            colourMultiplierRed = (colourMultiplierRed * 30.0F + colourMultiplierGreen * 59.0F + colourMultiplierBlue * 11.0F) / 100.0F;
+//            colourMultiplierGreen = colourMultiplierGreenTmp;
+//            colourMultiplierBlue = colourMultiplierBlueTmp;
+//        }
         light.initialize(
                 block,
                 blockView, x, y, z,
-                colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue,
                 Minecraft.isSmoothLightingEnabled() && model.useAmbientOcclusion()
         );
         boolean rendered = false;
         ImmutableList<BakedQuad> qs;
         BakedQuad q;
+        float[] qlight;
+        BlockState state = ((BlockStateProvider) blockView).getBlockState(x, y, z);
         for (int quadSet = 0, size = DIRECTIONS.length; quadSet < size; quadSet++) {
             Direction face = DIRECTIONS[quadSet];
             random.setSeed(seed);
@@ -79,11 +83,57 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                 rendered = true;
                 for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
                     q = qs.get(j);
-                    fastT.quad(q.getVertexData(), x, y, z, light.calculateForQuad(q));
+                    qlight = light.calculateForQuad(q);
+                    if (q.hasColor()) {
+                        int i = StationRenderAPI.BAKED_MODEL_MANAGER.colourMap.getColour(state, blockView, pos, q.getColorIndex());
+                        float r = redI2F(i);
+                        float g = greenI2F(i);
+                        float b = blueI2F(i);
+                        if (GameRenderer.anaglyph3d) {
+                            float
+                                    colourMultiplierGreenTmp = (r * 30F + g * 70F) / 100F,
+                                    colourMultiplierBlueTmp = (r * 30F + b * 70F) / 100F;
+                            r = (r * 30F + g * 59F + b * 11F) / 100F;
+                            g = colourMultiplierGreenTmp;
+                            b = colourMultiplierBlueTmp;
+                        }
+                        fastT.quad(q.getVertexData(), x, y, z,
+                                colourF2I(r * qlight[0], g * qlight[0], b * qlight[0]),
+                                colourF2I(r * qlight[1], g * qlight[1], b * qlight[1]),
+                                colourF2I(r * qlight[2], g * qlight[2], b * qlight[2]),
+                                colourF2I(r * qlight[3], g * qlight[3], b * qlight[3])
+                        );
+                    } else
+                        fastT.quad(q.getVertexData(), x, y, z,
+                                colourF2I(qlight[0], qlight[0], qlight[0]),
+                                colourF2I(qlight[1], qlight[1], qlight[1]),
+                                colourF2I(qlight[2], qlight[2], qlight[2]),
+                                colourF2I(qlight[3], qlight[3], qlight[3])
+                        );
                 }
             }
         }
         return rendered;
+    }
+
+    private float redI2F(int colour) {
+        return ((colour >> 16) & 255) / 255F;
+    }
+
+    private float greenI2F(int colour) {
+        return ((colour >> 8) & 255) / 255F;
+    }
+
+    private float blueI2F(int colour) {
+        return (colour & 255) / 255F;
+    }
+
+    private int colourF2I(float r, float g, float b) {
+        return (255 << 24) | (colourChannelF2I(r) << 16) | (colourChannelF2I(g) << 8) | colourChannelF2I(b);
+    }
+
+    private int colourChannelF2I(float colourChannel) {
+        return Ints.constrainToRange((int) (colourChannel * 255), 0, 255);
     }
 
     @Override

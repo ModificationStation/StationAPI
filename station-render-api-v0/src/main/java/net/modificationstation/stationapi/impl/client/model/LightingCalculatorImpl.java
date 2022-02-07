@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.impl.client.model;
 
-import com.google.common.primitives.Ints;
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.BlockView;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
@@ -12,7 +11,7 @@ import java.util.*;
 import static net.minecraft.block.BlockBase.ALLOWS_GRASS_UNDER;
 import static net.minecraft.util.maths.MathHelper.floor;
 
-public class LightingCalculatorImpl {
+final class LightingCalculatorImpl {
 
     private final int
             cacheRadius,
@@ -22,12 +21,9 @@ public class LightingCalculatorImpl {
     private BlockBase block;
     private BlockView blockView;
     private int x, y, z;
-    private float colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue;
     private boolean ao;
 
     private static final int UNCACHED_ID = -1;
-
-    private final float[] shaded = new float[3];
 
     private final int[] emptyIdCache;
     private final int[] idCache;
@@ -35,7 +31,7 @@ public class LightingCalculatorImpl {
     private final float[] emptyLightCache;
     private final float[] lightCache;
 
-    private final int[] quadLight = new int[4];
+    private final float[] quadLight = new float[4];
 
     LightingCalculatorImpl(int radius) {
         cacheRadius = radius;
@@ -50,10 +46,9 @@ public class LightingCalculatorImpl {
         Arrays.fill(emptyLightCache, Float.NaN);
     }
 
-    public void initialize(
+    void initialize(
             BlockBase block,
             BlockView blockView, int x, int y, int z,
-            float colourMultiplierRed, float colourMultiplierGreen, float colourMultiplierBlue,
             boolean ao
     ) {
         this.block = block;
@@ -61,9 +56,6 @@ public class LightingCalculatorImpl {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.colourMultiplierRed = colourMultiplierRed;
-        this.colourMultiplierGreen = colourMultiplierGreen;
-        this.colourMultiplierBlue = colourMultiplierBlue;
         this.ao = ao;
         System.arraycopy(emptyIdCache, 0, idCache, 0, idCache.length);
         System.arraycopy(emptyLightCache, 0, lightCache, 0, lightCache.length);
@@ -85,24 +77,18 @@ public class LightingCalculatorImpl {
         return ((x + cacheRadius) * cacheDiameter + y + cacheRadius) * cacheDiameter + z + cacheRadius;
     }
 
-    public int[] calculateForQuad(BakedQuad q) {
+    float[] calculateForQuad(BakedQuad q) {
         if (ao)
             quadSmooth(q);
 //        else
 //            q.applyToVertexesWithIndex(vertexFast);
-
+        if (q.hasShade())
+            shadeFace(q.getFace());
         return quadLight;
     }
 
     @SuppressWarnings("DuplicateExpressions")
     private void quadSmooth(BakedQuad q) {
-        shaded[0] = colourMultiplierRed;
-        shaded[1] = colourMultiplierGreen;
-        shaded[2] = colourMultiplierBlue;
-        Direction face = q.getFace();
-        if (q.hasShade())
-            shadeFace(face);
-        float brightness;
         double
                 v00x = Float.intBitsToFloat(q.getVertexData()[0]),
                 v00y = Float.intBitsToFloat(q.getVertexData()[1]),
@@ -154,6 +140,7 @@ public class LightingCalculatorImpl {
                 v10dx = this.x + v10x - v10x0,
                 v10dy = this.y + v10y - v10y0,
                 v10dz = this.z + v10z - v10z0;
+        Direction face = q.getFace();
         switch (face.axis) {
             case X -> {
                 v00dy = v00dy < .5 ? v00dy + .5 : v00dy - .5;
@@ -166,38 +153,34 @@ public class LightingCalculatorImpl {
                 v10dz = v10dz < .5 ? v10dz + .5 : v10dz - .5;
                 switch (face.direction) {
                     case POSITIVE -> {
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0), light(v00x0, v00y1, v00z0), light(v00x1, v00y1, v00z0),
                                 light(v00x0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z0)] || ALLOWS_GRASS_UNDER[id(v00x0, v00y1, v00z1)] ? v00y0 : v00y1, v00z1),
                                 light(v00x1, ALLOWS_GRASS_UNDER[id(v00x1, v00y0, v00z0)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z1)] ? v00y0 : v00y1, v00z1),
                                 light(v00x0, v00y1, v00z1), light(v00x1, v00y1, v00z1)
                         );
-                        quadLight[0] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
                                 light(v01x0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z1)] || ALLOWS_GRASS_UNDER[id(v01x0, v01y1, v01z0)] ? v01y0 : v01y1, v01z0),
                                 light(v01x1, ALLOWS_GRASS_UNDER[id(v01x1, v01y0, v01z1)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z0)] ? v01y0 : v01y1, v01z0),
                                 light(v01x0, v01y1, v01z0), light(v01x1, v01y1, v01z0), light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1),
                                 light(v01x0, v01y1, v01z1), light(v01x1, v01y1, v01z1)
                         );
-                        quadLight[1] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
                                 light(v11x0, v11y0, v11z0), light(v11x1, v11y0, v11z0),
                                 light(v11x0, ALLOWS_GRASS_UNDER[id(v11x0, v11y1, v11z1)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z0)] ? v11y1 : v11y0, v11z0),
                                 light(v11x1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z1)] || ALLOWS_GRASS_UNDER[id(v11x1, v11y0, v11z0)] ? v11y1 : v11y0, v11z0),
                                 light(v11x0, v11y0, v11z1), light(v11x1, v11y0, v11z1), light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
                         );
-                        quadLight[2] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[3] = MathHelper.interpolate3D(
                                 v10dx, v10dy, v10dz,
                                 light(v10x0, v10y0, v10z0), light(v10x1, v10y0, v10z0),
                                 light(v10x0, v10y1, v10z0), light(v10x1, v10y1, v10z0), light(v10x0, v10y0, v10z1), light(v10x1, v10y0, v10z1),
                                 light(v10x0, ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z0)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y0, v10z1)] ? v10y1 : v10y0, v10z1),
                                 light(v10x1, ALLOWS_GRASS_UNDER[id(v10x1, v10y1, v10z0)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z1)] ? v10y1 : v10y0, v10z1)
                         );
-                        quadLight[3] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
                     }
                     case NEGATIVE -> {
                         v00x0--;
@@ -208,38 +191,34 @@ public class LightingCalculatorImpl {
                         v11x1--;
                         v10x0--;
                         v10x1--;
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0), light(v00x0, v00y1, v00z0), light(v00x1, v00y1, v00z0),
                                 light(v00x0, v00y0, v00z1), light(v00x1, v00y0, v00z1),
                                 light(v00x0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x0, v00y1, v00z0)] ? v00y1 : v00y0, v00z1),
                                 light(v00x1, ALLOWS_GRASS_UNDER[id(v00x1, v00y0, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z0)] ? v00y1 : v00y0, v00z1)
                         );
-                        quadLight[0] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
                                 light(v01x0, v01y0, v01z0), light(v01x1, v01y0, v01z0),
                                 light(v01x0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x0, v01y1, v01z1)] ? v01y1 : v01y0, v01z0),
                                 light(v01x1, ALLOWS_GRASS_UNDER[id(v01x1, v01y0, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z1)] ? v01y1 : v01y0, v01z0),
                                 light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1), light(v01x0, v01y1, v01z1), light(v01x1, v01y1, v01z1)
                         );
-                        quadLight[1] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
                                 light(v11x0, ALLOWS_GRASS_UNDER[id(v11x0, v11y1, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z1)] ? v11y0 : v11y1, v11z0),
                                 light(v11x1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x1, v11y0, v11z1)] ? v11y0 : v11y1, v11z0),
                                 light(v11x0, v11y1, v11z0), light(v11x1, v11y1, v11z0), light(v11x0, v11y0, v11z1), light(v11x1, v11y0, v11z1),
                                 light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
                         );
-                        quadLight[2] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[3] = MathHelper.interpolate3D(
                                 v10dx, v10dy, v10dz,
                                 light(v10x0, v10y0, v10z0), light(v10x1, v10y0, v10z0), light(v10x0, v10y1, v10z0), light(v10x1, v10y1, v10z0),
                                 light(v10x0, ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y0, v10z0)] ? v10y0 : v10y1, v10z1),
                                 light(v10x1, ALLOWS_GRASS_UNDER[id(v10x1, v10y1, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z0)] ? v10y0 : v10y1, v10z1),
                                 light(v10x0, v10y1, v10z1), light(v10x1, v10y1, v10z1)
                         );
-                        quadLight[3] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
                     }
                 }
             }
@@ -254,38 +233,34 @@ public class LightingCalculatorImpl {
                 v10dz = v10dz < .5 ? v10dz + .5 : v10dz - .5;
                 switch (face.direction) {
                     case POSITIVE -> {
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0),
                                 light(v00x0, v00y1, v00z0), light(v00x1, v00y1, v00z0),
                                 light(v00x0, v00y0, v00z1), light(v00x1, v00y0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y0, v00z0)] ? v00z1 : v00z0),
                                 light(v00x0, v00y1, v00z1), light(v00x1, v00y1, ALLOWS_GRASS_UNDER[id(v00x0, v00y1, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z0)] ? v00z1 : v00z0)
                         );
-                        quadLight[0] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
                                 light(v01x0, v01y0, v01z0), light(v01x1, v01y0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y0, v01z1)] ? v01z0 : v01z1),
                                 light(v01x0, v01y1, v01z0), light(v01x1, v01y1, ALLOWS_GRASS_UNDER[id(v01x0, v01y1, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z1)] ? v01z0 : v01z1),
                                 light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1),
                                 light(v01x0, v01y1, v01z1), light(v01x1, v01y1, v01z1)
                         );
-                        quadLight[1] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
                                 light(v11x0, v11y0, ALLOWS_GRASS_UNDER[id(v11x1, v11y0, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z1)] ? v11z0 : v11z1), light(v11x1, v11y0, v11z0),
                                 light(v11x0, v11y1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y1, v11z1)] ? v11z0 : v11z1), light(v11x1, v11y1, v11z0),
                                 light(v11x0, v11y0, v11z1), light(v11x1, v11y0, v11z1),
                                 light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
                         );
-                        quadLight[2] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[3] = MathHelper.interpolate3D(
                                 v10dx, v10dy, v10dz,
                                 light(v10x0, v10y0, v10z0), light(v10x1, v10y0, v10z0),
                                 light(v10x0, v10y1, v10z0), light(v10x1, v10y1, v10z0),
                                 light(v10x0, v10y0, ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y0, v10z0)] ? v10z1 : v10z0), light(v10x1, v10y0, v10z1),
                                 light(v10x0, v10y1, ALLOWS_GRASS_UNDER[id(v10x1, v10y1, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z0)] ? v10z1 : v10z0), light(v10x1, v10y1, v10z1)
                         );
-                        quadLight[3] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
                     }
                     case NEGATIVE -> {
                         v00y0--;
@@ -296,38 +271,34 @@ public class LightingCalculatorImpl {
                         v11y1--;
                         v10y0--;
                         v10y1--;
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0),
                                 light(v00x0, v00y1, v00z0), light(v00x1, v00y1, v00z0),
                                 light(v00x0, v00y0, ALLOWS_GRASS_UNDER[id(v00x1, v00y0, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z0)] ? v00z1 : v00z0), light(v00x1, v00y0, v00z1),
                                 light(v00x0, v00y1, ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x0, v00y1, v00z0)] ? v00z1 : v00z0), light(v00x1, v00y1, v00z1)
                         );
-                        quadLight[0] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
                                 light(v01x0, v01y0, ALLOWS_GRASS_UNDER[id(v01x1, v01y0, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z1)] ? v01z0 : v01z1), light(v01x1, v01y0, v01z0),
                                 light(v01x0, v01y1, ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x0, v01y1, v01z1)] ? v01z0 : v01z1), light(v01x1, v01y1, v01z0),
                                 light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1),
                                 light(v01x0, v01y1, v01z1), light(v01x1, v01y1, v01z1)
                         );
-                        quadLight[1] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
                                 light(v11x0, v11y0, v11z0), light(v11x1, v11y0, ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x1, v11y0, v11z1)] ? v11z0 : v11z1),
                                 light(v11x0, v11y1, v11z0), light(v11x1, v11y1, ALLOWS_GRASS_UNDER[id(v11x0, v11y1, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z1)] ? v11z0 : v11z1),
                                 light(v11x0, v11y0, v11z1), light(v11x1, v11y0, v11z1),
                                 light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
                         );
-                        quadLight[2] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[3] = MathHelper.interpolate3D(
                                 v10dx, v10dy, v10dz,
                                 light(v10x0, v10y0, v10z0), light(v10x1, v10y0, v10z0),
                                 light(v10x0, v10y1, v10z0), light(v10x1, v10y1, v10z0),
                                 light(v10x0, v10y0, v10z1), light(v10x1, v10y0, ALLOWS_GRASS_UNDER[id(v10x0, v10y0, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z0)] ? v10z1 : v10z0),
                                 light(v10x0, v10y1, v10z1), light(v10x1, v10y1, ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y1, v10z0)] ? v10z1 : v10z0)
                         );
-                        quadLight[3] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
                     }
                 }
             }
@@ -342,38 +313,34 @@ public class LightingCalculatorImpl {
                 v10dy = v10dy < .5 ? v10dy + .5 : v10dy - .5;
                 switch (face.direction) {
                     case POSITIVE -> {
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0),
                                 light(v00x0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z0)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z0)] ? v00y1 : v00y0, v00z0), light(v00x1, v00y1, v00z0),
                                 light(v00x0, v00y0, v00z1), light(v00x1, v00y0, v00z1),
                                 light(v00x0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z1)] ? v00y1 : v00y0, v00z1), light(v00x1, v00y1, v00z1)
                         );
-                        quadLight[0] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
                                 light(v01x0, v01y0, v01z0), light(v01x1, v01y0, v01z0),
                                 light(v01x0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z0)] ? v01y1 : v01y0, v01z0), light(v01x1, v01y1, v01z0),
                                 light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1),
                                 light(v01x0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z1)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z1)] ? v01y1 : v01y0, v01z1), light(v01x1, v01y1, v01z1)
                         );
-                        quadLight[1] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
                                 light(v11x0, v11y0, v11z0), light(v11x1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z0)] ? v11y0 : v11y1, v11z0),
                                 light(v11x0, v11y1, v11z0), light(v11x1, v11y1, v11z0),
                                 light(v11x0, v11y0, v11z1), light(v11x1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z1)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z1)] ? v11y0 : v11y1, v11z1),
                                 light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
                         );
-                        quadLight[2] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[3] = MathHelper.interpolate3D(
                                 v10dx, v10dy, v10dz,
                                 light(v10x0, v10y0, v10z0), light(v10x1, v10y0, v10z0),
                                 light(v10x0, v10y1, v10z0), light(v10x1, ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z0)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z0)] ? v10y1 : v10y0, v10z0),
                                 light(v10x0, v10y0, v10z1), light(v10x1, v10y0, v10z1),
                                 light(v10x0, v10y1, v10z1), light(v10x1, ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z1)] ? v10y1 : v10y0, v10z1)
                         );
-                        quadLight[3] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
                     }
                     case NEGATIVE -> {
                         v00z0--;
@@ -384,38 +351,34 @@ public class LightingCalculatorImpl {
                         v11z1--;
                         v10z0--;
                         v10z1--;
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0),
                                 light(v00x0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z0)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z0)] ? v00y1 : v00y0, v00z0), light(v00x1, v00y1, v00z0),
                                 light(v00x0, v00y0, v00z1), light(v00x1, v00y0, v00z1),
                                 light(v00x0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z1)] ? v00y1 : v00y0, v00z1), light(v00x1, v00y1, v00z1)
                         );
-                        quadLight[0] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
                                 light(v01x0, v01y0, v01z0), light(v01x1, v01y0, v01z0),
                                 light(v01x0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z0)] ? v01y1 : v01y0, v01z0), light(v01x1, v01y1, v01z0),
                                 light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1),
                                 light(v01x0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z1)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z1)] ? v01y1 : v01y0, v01z1), light(v01x1, v01y1, v01z1)
                         );
-                        quadLight[1] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
                                 light(v11x0, v11y0, v11z0), light(v11x1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z0)] ? v11y0 : v11y1, v11z0),
                                 light(v11x0, v11y1, v11z0), light(v11x1, v11y1, v11z0),
                                 light(v11x0, v11y0, v11z1), light(v11x1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z1)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z1)] ? v11y0 : v11y1, v11z1),
                                 light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
                         );
-                        quadLight[2] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
-                        brightness = MathHelper.interpolate3D(
+                        quadLight[3] = MathHelper.interpolate3D(
                                 v10dx, v10dy, v10dz,
                                 light(v10x0, ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z0)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z0)] ? v10y0 : v10y1, v10z0), light(v10x1, v10y0, v10z0),
                                 light(v10x0, v10y1, v10z0), light(v10x1, v10y1, v10z0),
                                 light(v10x0, ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z1)] ? v10y0 : v10y1, v10z1), light(v10x1, v10y0, v10z1),
                                 light(v10x0, v10y1, v10z1), light(v10x1, v10y1, v10z1)
                         );
-                        quadLight[3] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
                     }
                 }
             }
@@ -433,52 +396,36 @@ public class LightingCalculatorImpl {
 //            switch (v.lightingFace) {
 //                case DOWN:
 //                case UP:
-//                    brightness = v.y % 1 == 0 ? light(x, y + v.lightingFace.vector.y, z) : light(x, y, z);
+//                    v.y % 1 == 0 ? light(x, y + v.lightingFace.vector.y, z) : light(x, y, z);
 //                    break;
 //                case EAST:
 //                case WEST:
-//                    brightness = v.z % 1 == 0 ? light(x, y, z + v.lightingFace.vector.z) : light(x, y, z);
+//                    v.z % 1 == 0 ? light(x, y, z + v.lightingFace.vector.z) : light(x, y, z);
 //                    break;
 //                case NORTH:
 //                case SOUTH:
-//                    brightness = v.x % 1 == 0 ? light(x + v.lightingFace.vector.x, y, z) : light(x, y, z);
+//                    v.x % 1 == 0 ? light(x + v.lightingFace.vector.x, y, z) : light(x, y, z);
 //                    break;
 //                default:
 //                    throw new IllegalStateException("Unexpected value: " + v.lightingFace);
 //            }
-//            quadLight[i] = colourFloatToInt(shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness);
+//            quadLight[i] = shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness;
 //        } else
-//            quadLight[i] = colourFloatToInt(colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue);
+//            quadLight[i] = colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue);
 //    }
 
     private void shadeFace(Direction face) {
-        switch (face) {
-            case DOWN:
-                shaded[0] *= 0.5F;
-                shaded[1] *= 0.5F;
-                shaded[2] *= 0.5F;
-                break;
-            case UP:
-                break;
-            case EAST:
-            case WEST:
-                shaded[0] *= 0.8F;
-                shaded[1] *= 0.8F;
-                shaded[2] *= 0.8F;
-                break;
-            case NORTH:
-            case SOUTH:
-                shaded[0] *= 0.6F;
-                shaded[1] *= 0.6F;
-                shaded[2] *= 0.6F;
-                break;
+        if (face != Direction.UP) {
+            float shade = switch (face) {
+                case DOWN -> 0.5F;
+                case EAST, WEST -> 0.8F;
+                case NORTH, SOUTH -> 0.6F;
+                default -> throw new IllegalStateException("Unexpected value: " + face);
+            };
+            quadLight[0] *= shade;
+            quadLight[1] *= shade;
+            quadLight[2] *= shade;
+            quadLight[3] *= shade;
         }
-    }
-
-    private int colourFloatToInt(float r, float g, float b) {
-        return (255 << 24) |
-                (Ints.constrainToRange((int) (r * 255), 0, 255) << 16) |
-                (Ints.constrainToRange((int) (g * 255), 0, 255) << 8) |
-                (Ints.constrainToRange((int) (b * 255), 0, 255));
     }
 }

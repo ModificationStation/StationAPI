@@ -1,16 +1,15 @@
 package net.modificationstation.stationapi.impl.client.texture;
 
-import net.minecraft.block.BlockBase;
 import net.minecraft.client.resource.TexturePack;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 public class StationFireTextureBinder extends StationTextureBinder {
     protected float[] currentFireFrame;
     protected float[] lastFireFrame;
 
-    public StationFireTextureBinder(int line) {
-        super(Atlases.getTerrain().getTexture(BlockBase.FIRE.texture + 16 * line));
+    public StationFireTextureBinder(Atlas.Sprite staticReference) {
+        super(staticReference);
     }
 
     @Override

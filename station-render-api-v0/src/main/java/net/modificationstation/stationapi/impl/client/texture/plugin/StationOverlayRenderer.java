@@ -37,7 +37,7 @@ final class StationOverlayRenderer extends OverlayRendererPlugin {
         else {
             Tessellator var3 = Tessellator.INSTANCE;
             int var4 = entity.method_917(item);
-            SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
+            SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE);
             atlas.bindTexture();
             Sprite texture = atlas.getSprite(((CustomAtlasProvider) item.getType()).getAtlas().getTexture(var4).getId());
             float var5 = texture.getMinU() + (texture.getMaxU() - texture.getMinU()) * 0.000625F;

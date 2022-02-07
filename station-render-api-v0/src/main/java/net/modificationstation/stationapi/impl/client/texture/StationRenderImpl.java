@@ -55,17 +55,17 @@ public class StationRenderImpl {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void init(TextureRegisterEvent event) {
-        TERRAIN = new ExpandableAtlas(Atlases.BLOCK_ATLAS_TEXTURE);
+        TERRAIN = new ExpandableAtlas(Atlases.GAME_ATLAS_TEXTURE);
         GUI_ITEMS = new ExpandableAtlas(of("textures/atlas/gui/items.png"));
         TERRAIN.addSpritesheet("/terrain.png", 16, TerrainHelper.INSTANCE);
         GUI_ITEMS.addSpritesheet("/gui/items.png", 16, GuiItemsHelper.INSTANCE);
-        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture), staticReference -> new StationVanillaTextureBinder(staticReference, new StationStillWaterTextureBinder(), "/custom_water_still.png"));
-        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture + 1), staticReference -> Util.make(new StationVanillaTextureBinder(staticReference, new StationFlowingWaterTextureBinder(), "/custom_water_flowing.png"), textureBinder -> textureBinder.textureSize = 2));
-        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_LAVA.texture), staticReference -> new StationVanillaTextureBinder(staticReference, new StationStillLavaTextureBinder(), "/custom_lava_still.png"));
-        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_LAVA.texture + 1), staticReference -> Util.make(new StationVanillaTextureBinder(staticReference, new StationFlowingLavaTextureBinder(), "/custom_lava_flowing.png"), textureBinder -> textureBinder.textureSize = 2));
-        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FIRE.texture), staticReference -> new StationVanillaTextureBinder(staticReference, new StationFireTextureBinder(0), "/custom_fire_e_w.png"));
-        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FIRE.texture + 16), staticReference -> new StationVanillaTextureBinder(staticReference, new StationFireTextureBinder(1), "/custom_fire_n_s.png"));
-        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.PORTAL.texture), staticReference -> new StationVanillaTextureBinder(staticReference, new StationPortalTextureBinder(), "/custom_portal.png"));
+        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture), StationStillWaterTextureBinder::new);
+        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_WATER.texture + 1), StationFlowingWaterTextureBinder::new);
+        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_LAVA.texture), StationStillLavaTextureBinder::new);
+        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FLOWING_LAVA.texture + 1), StationFlowingLavaTextureBinder::new);
+        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FIRE.texture), StationFireTextureBinder::new);
+        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.FIRE.texture + 16), StationFireTextureBinder::new);
+        TERRAIN.addTextureBinder(TERRAIN.getTexture(BlockBase.PORTAL.texture), StationPortalTextureBinder::new);
         GUI_ITEMS.addTextureBinder(GUI_ITEMS.getTexture(ItemBase.compass.getTexturePosition(0)), StationCompassTextureBinder::new);
         GUI_ITEMS.addTextureBinder(GUI_ITEMS.getTexture(ItemBase.clock.getTexturePosition(0)), StationClockTextureBinder::new);
     }

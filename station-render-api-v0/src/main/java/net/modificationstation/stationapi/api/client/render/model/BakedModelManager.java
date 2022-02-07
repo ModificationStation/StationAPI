@@ -23,14 +23,14 @@ public class BakedModelManager extends SinglePreparationResourceReloadListener<M
    private SpriteAtlasManager atlasManager;
    private final BlockModels blockModelCache;
    private final TextureManager textureManager;
-   private final BlockColours colorMap;
+   public final BlockColours colourMap;
    private int mipmap;
    private BakedModel missingModel;
    private Object2IntMap<BlockState> stateLookup;
 
-   public BakedModelManager(TextureManager textureManager, BlockColours colorMap, int mipmap) {
+   public BakedModelManager(TextureManager textureManager, BlockColours colourMap, int mipmap) {
       this.textureManager = textureManager;
-      this.colorMap = colorMap;
+      this.colourMap = colourMap;
       this.mipmap = mipmap;
       this.blockModelCache = new BlockModels(this);
    }
@@ -50,7 +50,7 @@ public class BakedModelManager extends SinglePreparationResourceReloadListener<M
    @Override
    public ModelLoader prepare(TexturePack resourceManager, Profiler profiler) {
       profiler.startTick();
-      ModelLoader modelLoader = new ModelLoader(resourceManager, this.colorMap, profiler, this.mipmap);
+      ModelLoader modelLoader = new ModelLoader(resourceManager, this.colourMap, profiler, this.mipmap);
       profiler.endTick();
       return modelLoader;
    }

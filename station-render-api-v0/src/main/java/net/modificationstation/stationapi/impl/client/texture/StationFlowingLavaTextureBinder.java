@@ -1,9 +1,8 @@
 package net.modificationstation.stationapi.impl.client.texture;
 
-import net.minecraft.block.BlockBase;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.util.maths.MathHelper;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
 public class StationFlowingLavaTextureBinder extends StationTextureBinder {
@@ -14,8 +13,8 @@ public class StationFlowingLavaTextureBinder extends StationTextureBinder {
     protected float[] field_1169;
     int field_1170 = 0;
 
-    public StationFlowingLavaTextureBinder() {
-        super(Atlases.getTerrain().getTexture(BlockBase.FLOWING_LAVA.texture + 1));
+    public StationFlowingLavaTextureBinder(Atlas.Sprite staticReference) {
+        super(staticReference);
         textureSize = 2;
     }
 
