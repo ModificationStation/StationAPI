@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class AddVanillaBlocksEvent {
 
     @EventListener(priority = ListenerPriority.HIGHEST)
-    public void registerBlockstuff(BlockRegistryEvent event) {
+    public void registerBlocks(BlockRegistryEvent event) {
 
         // PICKAXES
         mineableBy(BlockBase.STONE, Tools.PICKAXE, 0);
@@ -63,7 +63,6 @@ public class AddVanillaBlocksEvent {
 
         // SWORDS
         mineableBy(BlockBase.COBWEB, Tools.SWORD, 0);
-        mineableBy(BlockBase.LEAVES, Tools.SWORD, 0);
 
         // AXES
         mineableBy(BlockBase.WOOD, Tools.AXE, 0);
@@ -92,11 +91,11 @@ public class AddVanillaBlocksEvent {
 
     @RequiredArgsConstructor
     private enum Tools {
-        PICKAXE("pickaxes/"),
-        AXE("axes/"),
-        SHOVEL("shovels/"),
-        SWORD("swords/"),
-        SHEARS("shears/");
+        PICKAXE("pickaxes"),
+        AXE("axes"),
+        SHOVEL("shovels"),
+        SWORD("swords"),
+        SHEARS("shears");
 
         public final String name;
 
@@ -107,6 +106,6 @@ public class AddVanillaBlocksEvent {
     }
 
     private void mineableBy(BlockBase blockBase, Tools tool, int level) {
-        ((BlockToolLogic) blockBase).mineableBy(Identifier.of("items/tools/" + tool), level);
+        ((BlockToolLogic) blockBase).mineableBy(Identifier.of("tools/" + tool), level);
     }
 }

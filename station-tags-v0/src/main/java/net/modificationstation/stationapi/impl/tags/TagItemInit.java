@@ -23,154 +23,155 @@ public class TagItemInit {
     private static void registerItems(TagRegisterEvent event) {
 
         // Basic Items
-        addItem0Damage("items/sticks/wood", ItemBase.stick);
-        addItem0Damage("items/bowls/wood", ItemBase.bowl);
-        addItem0Damage("items/string", ItemBase.string);
-        addItem0Damage("items/feather", ItemBase.feather);
-        addItem0Damage("items/gunpowder", ItemBase.gunpowder);
-        addItem0Damage("items/seeds/wheat", ItemBase.seeds);
-        addItem0Damage("items/wheat", ItemBase.seeds);
-        addItem0Damage("blocks/signs/wood", ItemBase.sign);
-        addItem0Damage("blocks/doors/wood", ItemBase.woodDoor);
-        addItem0Damage("blocks/doors/iron", ItemBase.ironDoor);
-        addItem0Damage("items/snowball", ItemBase.snowball);
-        addItem0Damage("items/boat", ItemBase.boat);
-        addItem0Damage("items/leather", ItemBase.leather);
-        addItem0Damage("items/brick", ItemBase.brick);
-        addItem0Damage("items/clay", ItemBase.clay);
-        addItem0Damage("blocks/plants/canes/sugar", ItemBase.sugarCanes);
-        addItem0Damage("items/paper", ItemBase.paper);
-        addItem0Damage("items/book", ItemBase.book);
-        addItem0Damage("items/slime", ItemBase.slimeball);
-        addItem0Damage("items/egg", ItemBase.egg);
-        addItem0Damage("items/glowstone", ItemBase.egg);
-        addItem0Damage("items/dye", ItemBase.dyePowder);
-        addItem0Damage("items/bone", ItemBase.bone);
-        addItem0Damage("items/sugar", ItemBase.sugar);
-        addItem0Damage("blocks/cake", ItemBase.cake);
-        addItem0Damage("items/bed", ItemBase.bed);
-        addItem0Damage("items/flint", ItemBase.flint);
-        addItem0Damage("blocks/redstone/repeater", ItemBase.redstoneRepeater);
+        addItem0Damage("sticks", ItemBase.stick);
+        addItem0Damage("bowls", ItemBase.bowl);
+        addItem0Damage("strings", ItemBase.string);
+        addItem0Damage("feathers", ItemBase.feather);
+        addItem0Damage("gunpowders", ItemBase.gunpowder);
+        addItem0Damage("seeds/wheat", ItemBase.seeds);
+        addItem0Damage("wheats", ItemBase.wheat);
+        addItem0Damage("signs/wood", ItemBase.sign);
+        addItem0Damage("doors/wood", ItemBase.woodDoor);
+        addItem0Damage("doors/iron", ItemBase.ironDoor);
+        addItem0Damage("snowballs", ItemBase.snowball);
+        addItem0Damage("boats", ItemBase.boat);
+        addItem0Damage("leathers", ItemBase.leather);
+        addItem0Damage("ingots/brick", ItemBase.brick);
+        addItem0Damage("clayballs", ItemBase.clay);
+        addItem0Damage("canes/sugar", ItemBase.sugarCanes);
+        addItem0Damage("papers", ItemBase.paper);
+        addItem0Damage("books", ItemBase.book);
+        addItem0Damage("slimeballs", ItemBase.slimeball);
+        addItem0Damage("eggs", ItemBase.egg);
+        addItem0Damage("dusts/glowstone", ItemBase.glowstoneDust);
+        addItemIgnoreDamage("dyes", ItemBase.dyePowder);
+        addItem0Damage("bones", ItemBase.bone);
+        addItem0Damage("sugars", ItemBase.sugar);
+        addItem0Damage("cakes", ItemBase.cake);
+        addItem0Damage("beds", ItemBase.bed);
+        addItem0Damage("flints", ItemBase.flint);
+        addItem0Damage("repeaters", ItemBase.redstoneRepeater);
 
         // Ingots and Minerals
-        addItem0Damage("items/minerals/redstone", ItemBase.redstoneDust);
-        addItem0Damage("items/minerals/coal", ItemBase.coal);
-        addItem("items/minerals/coal/charcoal", ItemBase.coal, 1);
-        addItem0Damage("items/minerals/diamond", ItemBase.diamond);
-        addItem0Damage("items/minerals/iron", ItemBase.ironIngot);
-        addItem0Damage("items/minerals/gold", ItemBase.goldIngot);
+        addItem0Damage("coals", ItemBase.coal);
+        addItem("coals/charcoal", ItemBase.coal, 1);
+        addItem0Damage("gems/diamond", ItemBase.diamond);
+        addItem0Damage("ingots/iron", ItemBase.ironIngot);
+        addItem0Damage("ingots/gold", ItemBase.goldIngot);
+
+        addItem0Damage("dusts/redstone", ItemBase.redstoneDust);
 
         // Tools
-        addItemIgnoreDamage("items/tools/pickaxes/wood", ItemBase.woodPickaxe);
-        addItemIgnoreDamage("items/tools/pickaxes/stone", ItemBase.stonePickaxe);
-        addItemIgnoreDamage("items/tools/pickaxes/iron", ItemBase.ironPickaxe);
-        addItemIgnoreDamage("items/tools/pickaxes/gold", ItemBase.goldPickaxe);
-        addItemIgnoreDamage("items/tools/pickaxes/diamond", ItemBase.diamondPickaxe);
+        addItemIgnoreDamage("tools/pickaxes", ItemBase.woodPickaxe);
+        addItemIgnoreDamage("tools/pickaxes", ItemBase.stonePickaxe);
+        addItemIgnoreDamage("tools/pickaxes", ItemBase.ironPickaxe);
+        addItemIgnoreDamage("tools/pickaxes", ItemBase.goldPickaxe);
+        addItemIgnoreDamage("tools/pickaxes", ItemBase.diamondPickaxe);
 
-        addItemIgnoreDamage("items/tools/axes/wood", ItemBase.woodAxe);
-        addItemIgnoreDamage("items/tools/axes/stone", ItemBase.stoneAxe);
-        addItemIgnoreDamage("items/tools/axes/iron", ItemBase.ironAxe);
-        addItemIgnoreDamage("items/tools/axes/gold", ItemBase.goldAxe);
-        addItemIgnoreDamage("items/tools/axes/diamond", ItemBase.diamondAxe);
+        addItemIgnoreDamage("tools/axes", ItemBase.woodAxe);
+        addItemIgnoreDamage("tools/axes", ItemBase.stoneAxe);
+        addItemIgnoreDamage("tools/axes", ItemBase.ironAxe);
+        addItemIgnoreDamage("tools/axes", ItemBase.goldAxe);
+        addItemIgnoreDamage("tools/axes", ItemBase.diamondAxe);
 
-        addItemIgnoreDamage("items/tools/shovels/wood", ItemBase.woodShovel);
-        addItemIgnoreDamage("items/tools/shovels/stone", ItemBase.stoneShovel);
-        addItemIgnoreDamage("items/tools/shovels/iron", ItemBase.ironShovel);
-        addItemIgnoreDamage("items/tools/shovels/gold", ItemBase.goldShovel);
-        addItemIgnoreDamage("items/tools/shovels/diamond", ItemBase.diamondShovel);
+        addItemIgnoreDamage("tools/shovels", ItemBase.woodShovel);
+        addItemIgnoreDamage("tools/shovels", ItemBase.stoneShovel);
+        addItemIgnoreDamage("tools/shovels", ItemBase.ironShovel);
+        addItemIgnoreDamage("tools/shovels", ItemBase.goldShovel);
+        addItemIgnoreDamage("tools/shovels", ItemBase.diamondShovel);
 
-        addItemIgnoreDamage("items/tools/hoes/wood", ItemBase.woodHoe);
-        addItemIgnoreDamage("items/tools/hoes/stone", ItemBase.stoneHoe);
-        addItemIgnoreDamage("items/tools/hoes/iron", ItemBase.ironHoe);
-        addItemIgnoreDamage("items/tools/hoes/gold", ItemBase.goldHoe);
-        addItemIgnoreDamage("items/tools/hoes/diamond", ItemBase.diamondHoe);
+        addItemIgnoreDamage("tools/hoes", ItemBase.woodHoe);
+        addItemIgnoreDamage("tools/hoes", ItemBase.stoneHoe);
+        addItemIgnoreDamage("tools/hoes", ItemBase.ironHoe);
+        addItemIgnoreDamage("tools/hoes", ItemBase.goldHoe);
+        addItemIgnoreDamage("tools/hoes", ItemBase.diamondHoe);
 
-        addItemIgnoreDamage("items/tools/firestarter", ItemBase.flintAndSteel);
-        addItem0Damage("items/tools/buckets/empty/iron", ItemBase.bucket);
-        addItem0Damage("items/tools/buckets/full/water", ItemBase.waterBucket);
-        addItem0Damage("items/tools/buckets/full/lava", ItemBase.lavaBucket);
-        addItem0Damage("items/tools/buckets/full/milk", ItemBase.milk);
+        addItemIgnoreDamage("tools/firestarter", ItemBase.flintAndSteel);
+        addItem0Damage("tools/buckets/empty", ItemBase.bucket);
+        addItem0Damage("tools/buckets/full/water", ItemBase.waterBucket);
+        addItem0Damage("tools/buckets/full/lava", ItemBase.lavaBucket);
+        addItem0Damage("tools/buckets/full/milk", ItemBase.milk);
 
-        addItem0Damage("items/minecarts", ItemBase.minecart);
-        addItem0Damage("items/minecarts/chest", ItemBase.minecartChest);
-        addItem0Damage("items/minecarts/furnace", ItemBase.minecartFurnace);
-        addItem0Damage("items/saddle", ItemBase.saddle);
-        addItem0Damage("items/compass", ItemBase.compass);
-        addItem0Damage("items/rod/fishing", ItemBase.fishingRod);
-        addItem0Damage("items/clock", ItemBase.clock);
-        addItemIgnoreDamage("items/map", ItemBase.map);
-        addItemIgnoreDamage("items/tools/shears/iron", ItemBase.shears);
-        addItem0Damage("items/records", ItemBase.recordCat);
-        addItem0Damage("items/records", ItemBase.record13);
+        addItem0Damage("minecarts", ItemBase.minecart);
+        addItem0Damage("minecarts/chest", ItemBase.minecartChest);
+        addItem0Damage("minecarts/furnace", ItemBase.minecartFurnace);
+        addItem0Damage("saddles", ItemBase.saddle);
+        addItem0Damage("compasses", ItemBase.compass);
+        addItem0Damage("fishing_rods", ItemBase.fishingRod);
+        addItem0Damage("clocks", ItemBase.clock);
+        addItemIgnoreDamage("maps", ItemBase.map);
+        addItemIgnoreDamage("tools/shears", ItemBase.shears);
+        addItem0Damage("records", ItemBase.recordCat);
+        addItem0Damage("records", ItemBase.record13);
 
         // Weapons
-        addItem0Damage("items/tools/bow", ItemBase.bow);
-        addItem0Damage("items/tools/arrow", ItemBase.arrow);
-        addItemIgnoreDamage("items/swords/wood", ItemBase.woodSword);
-        addItemIgnoreDamage("items/swords/stone", ItemBase.stoneSword);
-        addItemIgnoreDamage("items/swords/iron", ItemBase.ironSword);
-        addItemIgnoreDamage("items/swords/gold", ItemBase.goldSword);
-        addItemIgnoreDamage("items/swords/diamond", ItemBase.diamondSword);
+        addItem0Damage("tools/bows", ItemBase.bow);
+        addItem0Damage("tools/arrows", ItemBase.arrow);
+        addItemIgnoreDamage("tools/swords", ItemBase.woodSword);
+        addItemIgnoreDamage("tools/swords", ItemBase.stoneSword);
+        addItemIgnoreDamage("tools/swords", ItemBase.ironSword);
+        addItemIgnoreDamage("tools/swords", ItemBase.goldSword);
+        addItemIgnoreDamage("tools/swords", ItemBase.diamondSword);
 
         // Food
-        addItem0Damage("items/foods/apple", ItemBase.apple);
-        addItem0Damage("items/foods/stews/mushroom", ItemBase.mushroomStew);
-        addItem0Damage("items/foods/bread", ItemBase.bread);
-        addItem0Damage("items/foods/porkchop/raw", ItemBase.rawPorkchop);
-        addItem0Damage("items/foods/porkchop/cooked", ItemBase.cookedPorkchop);
-        addItem0Damage("items/foods/apple/gold", ItemBase.goldenApple);
-        addItem0Damage("items/foods/fish/raw", ItemBase.rawFish);
-        addItem0Damage("items/foods/fish/cooked", ItemBase.cookedFish);
-        addItem0Damage("items/foods/cookie", ItemBase.cookie);
+        addItem0Damage("foods/apple", ItemBase.apple);
+        addItem0Damage("foods/stews/mushroom", ItemBase.mushroomStew);
+        addItem0Damage("foods/bread", ItemBase.bread);
+        addItem0Damage("foods/porkchop/raw", ItemBase.rawPorkchop);
+        addItem0Damage("foods/porkchop/cooked", ItemBase.cookedPorkchop);
+        addItem0Damage("foods/apple/gold", ItemBase.goldenApple);
+        addItem0Damage("foods/fish/raw", ItemBase.rawFish);
+        addItem0Damage("foods/fish/cooked", ItemBase.cookedFish);
+        addItem0Damage("foods/cookie", ItemBase.cookie);
 
         // Armour
-        addItemIgnoreDamage("items/armours/helmets/leather", ItemBase.leatherHelmet);
-        addItemIgnoreDamage("items/armours/chestplates/leather", ItemBase.leatherChestplate);
-        addItemIgnoreDamage("items/armours/leggings/leather", ItemBase.leatherLeggings);
-        addItemIgnoreDamage("items/armours/boots/leather", ItemBase.leatherBoots);
+        addItemIgnoreDamage("armours/helmets", ItemBase.leatherHelmet);
+        addItemIgnoreDamage("armours/chestplates", ItemBase.leatherChestplate);
+        addItemIgnoreDamage("armours/leggings", ItemBase.leatherLeggings);
+        addItemIgnoreDamage("armours/boots", ItemBase.leatherBoots);
 
-        addItemIgnoreDamage("items/armours/helmets/chainmail", ItemBase.chainHelmet);
-        addItemIgnoreDamage("items/armours/chestplates/chainmail", ItemBase.chainChestplate);
-        addItemIgnoreDamage("items/armours/leggings/chainmail", ItemBase.chainLeggings);
-        addItemIgnoreDamage("items/armours/boots/chainmail", ItemBase.chainBoots);
+        addItemIgnoreDamage("armours/helmets", ItemBase.chainHelmet);
+        addItemIgnoreDamage("armours/chestplates", ItemBase.chainChestplate);
+        addItemIgnoreDamage("armours/leggings", ItemBase.chainLeggings);
+        addItemIgnoreDamage("armours/boots", ItemBase.chainBoots);
 
-        addItemIgnoreDamage("items/armours/helmets/iron", ItemBase.ironHelmet);
-        addItemIgnoreDamage("items/armours/chestplates/iron", ItemBase.ironChestplate);
-        addItemIgnoreDamage("items/armours/leggings/iron", ItemBase.ironLeggings);
-        addItemIgnoreDamage("items/armours/boots/iron", ItemBase.ironBoots);
+        addItemIgnoreDamage("armours/helmets", ItemBase.ironHelmet);
+        addItemIgnoreDamage("armours/chestplates", ItemBase.ironChestplate);
+        addItemIgnoreDamage("armours/leggings", ItemBase.ironLeggings);
+        addItemIgnoreDamage("armours/boots", ItemBase.ironBoots);
 
-        addItemIgnoreDamage("items/armours/helmet/gold", ItemBase.goldHelmet);
-        addItemIgnoreDamage("items/armours/chestplates/gold", ItemBase.goldChestplate);
-        addItemIgnoreDamage("items/armours/leggings/gold", ItemBase.goldLeggings);
-        addItemIgnoreDamage("items/armours/boots/gold", ItemBase.goldBoots);
+        addItemIgnoreDamage("armours/helmet", ItemBase.goldHelmet);
+        addItemIgnoreDamage("armours/chestplates", ItemBase.goldChestplate);
+        addItemIgnoreDamage("armours/leggings", ItemBase.goldLeggings);
+        addItemIgnoreDamage("armours/boots", ItemBase.goldBoots);
 
-        addItemIgnoreDamage("items/armours/helmets/diamond", ItemBase.diamondHelmet);
-        addItemIgnoreDamage("items/armours/chestplates/diamond", ItemBase.diamondChestplate);
-        addItemIgnoreDamage("items/armours/leggings/diamond", ItemBase.diamondLeggings);
-        addItemIgnoreDamage("items/armours/boots/diamond", ItemBase.diamondBoots);
+        addItemIgnoreDamage("armours/helmets", ItemBase.diamondHelmet);
+        addItemIgnoreDamage("armours/chestplates", ItemBase.diamondChestplate);
+        addItemIgnoreDamage("armours/leggings", ItemBase.diamondLeggings);
+        addItemIgnoreDamage("armours/boots", ItemBase.diamondBoots);
 
         // Dyes
-        addItem0Damage("items/dyes/black", ItemBase.dyePowder);
-        addItem("items/dyes/red", ItemBase.dyePowder, 1);
-        addItem("items/dyes/green", ItemBase.dyePowder, 2);
-        addItem("items/dyes/brown", ItemBase.dyePowder, 3);
-        addItem("items/dyes/blue", ItemBase.dyePowder, 4);
-        addItem("items/dyes/purple", ItemBase.dyePowder, 5);
-        addItem("items/dyes/cyan", ItemBase.dyePowder, 6);
-        addItem("items/dyes/lightgray", ItemBase.dyePowder, 7);
-        addItem("items/dyes/gray", ItemBase.dyePowder, 8);
-        addItem("items/dyes/pink", ItemBase.dyePowder, 9);
-        addItem("items/dyes/lime", ItemBase.dyePowder, 10);
-        addItem("items/dyes/yellow", ItemBase.dyePowder, 11);
-        addItem("items/dyes/lightblue", ItemBase.dyePowder, 12);
-        addItem("items/dyes/magenta", ItemBase.dyePowder, 13);
-        addItem("items/dyes/orange", ItemBase.dyePowder, 14);
-        addItem("items/dyes/white", ItemBase.dyePowder, 15);
+        addItem0Damage("dyes/black", ItemBase.dyePowder);
+        addItem("dyes/red", ItemBase.dyePowder, 1);
+        addItem("dyes/green", ItemBase.dyePowder, 2);
+        addItem("dyes/brown", ItemBase.dyePowder, 3);
+        addItem("dyes/blue", ItemBase.dyePowder, 4);
+        addItem("dyes/purple", ItemBase.dyePowder, 5);
+        addItem("dyes/cyan", ItemBase.dyePowder, 6);
+        addItem("dyes/lightgray", ItemBase.dyePowder, 7);
+        addItem("dyes/gray", ItemBase.dyePowder, 8);
+        addItem("dyes/pink", ItemBase.dyePowder, 9);
+        addItem("dyes/lime", ItemBase.dyePowder, 10);
+        addItem("dyes/yellow", ItemBase.dyePowder, 11);
+        addItem("dyes/lightblue", ItemBase.dyePowder, 12);
+        addItem("dyes/magenta", ItemBase.dyePowder, 13);
+        addItem("dyes/orange", ItemBase.dyePowder, 14);
+        addItem("dyes/white", ItemBase.dyePowder, 15);
 
-        addItem0Damage("items/inksac", ItemBase.dyePowder);
-        addItem("items/cocoa", ItemBase.dyePowder, 3);
-        addItem("items/minerals/lapis", ItemBase.dyePowder, 4);
-        addItem("items/bonemeal", ItemBase.dyePowder, 15);
+        addItem0Damage("ink_sac", ItemBase.dyePowder);
+        addItem("cocoa", ItemBase.dyePowder, 3);
+        addItem("gems/lapis", ItemBase.dyePowder, 4);
+        addItem("fertilisers", ItemBase.dyePowder, 15);
 
         LOGGER.info("Registered vanilla item tags.");
     }
