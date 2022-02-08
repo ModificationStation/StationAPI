@@ -20,16 +20,12 @@ public final class MissingSprite extends Sprite {
    private static NativeImageBackedTexture texture;
    private static final Lazy<NativeImage> IMAGE = new Lazy<>(() -> {
       NativeImage nativeImage = new NativeImage(16, 16, false);
-      int i = 0xff000000;
-      int j = 0xfff800f8;
+      int i = 0xff6b3f7f;
+      int j = 0xffd67fff;
 
       for (int k = 0; k < 16; ++k) {
          for (int l = 0; l < 16; ++l) {
-            if (k < 8 ^ l < 8) {
-               nativeImage.setPixelColor(l, k, j);
-            } else {
-               nativeImage.setPixelColor(l, k, i);
-            }
+            nativeImage.setPixelColor(l, k, k == 0 || l == 0 ? i : j);
          }
       }
 

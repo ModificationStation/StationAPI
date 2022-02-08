@@ -8,7 +8,6 @@ import net.minecraft.block.material.MaterialColour;
 import net.minecraft.client.render.block.FoliageColour;
 import net.minecraft.client.render.block.GrassColour;
 import net.minecraft.level.BlockView;
-import net.minecraft.level.Level;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.client.colour.world.BiomeColours;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
@@ -45,7 +44,7 @@ public class BlockColours {
         return blockColours;
     }
 
-    public int getColour(BlockState state, Level world, TilePos pos) {
+    public int getColour(BlockState state, BlockView world, TilePos pos) {
         BlockColorProvider blockColorProvider = this.providers.get(BlockRegistry.INSTANCE.getRawId(state.getBlock()));
         if (blockColorProvider != null) {
             return blockColorProvider.getColor(state, null, null, 0);
