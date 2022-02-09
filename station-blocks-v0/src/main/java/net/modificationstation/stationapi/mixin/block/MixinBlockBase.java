@@ -3,11 +3,11 @@ package net.modificationstation.stationapi.mixin.block;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.BlockStateHolder;
+import net.modificationstation.stationapi.api.block.StateManager;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
-import net.modificationstation.stationapi.impl.block.BlockBaseBlockState;
-import net.modificationstation.stationapi.impl.block.BlockState;
-import net.modificationstation.stationapi.impl.block.StateManager;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -16,10 +16,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.modificationstation.stationapi.impl.block.Properties.META;
+import static net.modificationstation.stationapi.api.block.Properties.META;
 
 @Mixin(BlockBase.class)
-public class MixinBlockBase implements BlockBaseBlockState {
+public class MixinBlockBase implements BlockStateHolder {
 
     @ModifyVariable(
             method = "setTranslationKey(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;",
@@ -51,7 +51,7 @@ public class MixinBlockBase implements BlockBaseBlockState {
         StateManager.Builder<BlockBase, BlockState> builder = new StateManager.Builder<>((BlockBase) (Object) this);
         builder.add(META);
         this.appendProperties(builder);
-        stateManager = builder.build(blockBase -> ((BlockBaseBlockState) blockBase).getDefaultState(), BlockState::new);
+        stateManager = builder.build(blockBase -> ((BlockStateHolder) blockBase).getDefaultState(), BlockState::new);
         this.setDefaultState(stateManager.getDefaultState().with(META, 0));
     }
 
@@ -61,19 +61,23 @@ public class MixinBlockBase implements BlockBaseBlockState {
     private BlockState defaultState;
 
     @Override
+    @Unique
     public StateManager<BlockBase, BlockState> getStateManager() {
         return stateManager;
     }
 
     @Override
-    public BlockState getDefaultState() {
+    @Unique
+    public final BlockState getDefaultState() {
         return defaultState;
     }
 
     @Override
+    @Unique
     public void appendProperties(StateManager.Builder<BlockBase, BlockState> builder) {}
 
     @Override
+    @Unique
     public void setDefaultState(BlockState defaultState) {
         this.defaultState = defaultState;
     }

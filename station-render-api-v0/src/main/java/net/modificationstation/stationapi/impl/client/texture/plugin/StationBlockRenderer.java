@@ -12,6 +12,7 @@ import net.minecraft.sortme.MagicBedNumbers;
 import net.minecraft.util.maths.MathHelper;
 import net.minecraft.util.maths.TilePos;
 import net.minecraft.util.maths.Vec3f;
+import net.modificationstation.stationapi.api.block.BlockStateView;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldRenderer;
@@ -24,7 +25,6 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.client.texture.plugin.BlockRendererPlugin;
-import net.modificationstation.stationapi.impl.block.BlockStateProvider;
 import net.modificationstation.stationapi.impl.client.model.BakedModelRendererImpl;
 import net.modificationstation.stationapi.mixin.render.client.BlockRendererAccessor;
 import org.lwjgl.opengl.GL11;
@@ -48,7 +48,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
 
     @Override
     public void renderWorld(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
-        BakedModel model = StationRenderAPI.BAKED_MODEL_MANAGER.getBlockModels().getModel(((BlockStateProvider) blockRendererAccessor.getBlockView()).getBlockState(x, y, z));
+        BakedModel model = StationRenderAPI.BAKED_MODEL_MANAGER.getBlockModels().getModel(((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z));
         if (!model.isBuiltin()) {
             cir.setReturnValue(bakedModelRenderer.renderWorld(block, model, blockRendererAccessor.getBlockView(), x, y, z));
         } else if (block instanceof BlockWithWorldRenderer renderer) {
@@ -1094,7 +1094,7 @@ public final class StationBlockRenderer extends BlockRendererPlugin {
         SpriteAtlasTexture atlas = StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         Tessellator t = Tessellator.INSTANCE;
 
-        int var6 = (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) && Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().isAnimated() ? StationRenderAPI.BAKED_MODEL_MANAGER.colourMap.getColour(((BlockStateProvider) blockRendererAccessor.getBlockView()).getBlockState(x, y, z), blockRendererAccessor.getBlockView(), new TilePos(x, y, z), -1) : block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
+        int var6 = (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) && Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().isAnimated() ? StationRenderAPI.BAKED_MODEL_MANAGER.colourMap.getColour(((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z), blockRendererAccessor.getBlockView(), new TilePos(x, y, z), -1) : block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
         float var7 = (float)((var6 >> 16) & 255) / 255.0F;
         float var8 = (float)((var6 >> 8) & 255) / 255.0F;
         float var9 = (float)(var6 & 255) / 255.0F;

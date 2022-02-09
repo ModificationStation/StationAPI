@@ -12,9 +12,9 @@ import com.google.gson.JsonParseException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.StateManager;
 import net.modificationstation.stationapi.api.util.json.JsonHelper;
-import net.modificationstation.stationapi.impl.block.BlockState;
-import net.modificationstation.stationapi.impl.block.StateManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;

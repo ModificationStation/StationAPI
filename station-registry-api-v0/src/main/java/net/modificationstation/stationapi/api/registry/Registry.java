@@ -15,6 +15,7 @@ import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.*;
@@ -110,15 +111,15 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>>, Codec<T>
      * @param identifier the identifier to assign to the object.
      * @param value the object to assign to the identifier.
      */
-    public void register(final @NotNull Identifier identifier, final @NotNull T value) {
+    public void register(final @NotNull Identifier identifier, final @Nullable T value) {
         register(nextId, identifier, value, Lifecycle.stable());
     }
 
-    private void register(int rawId, final @NotNull Identifier identifier, final @NotNull T value, Lifecycle lifecycle) {
+    private void register(int rawId, final @NotNull Identifier identifier, final @Nullable T value, Lifecycle lifecycle) {
         rawIdToEntry.size(Math.max(this.rawIdToEntry.size(), rawId + 1));
         this.rawIdToEntry.set(rawId, value);
         this.entryToRawId.put(value, rawId);
-        values.put(Objects.requireNonNull(identifier), Objects.requireNonNull(value));
+        values.put(Objects.requireNonNull(identifier), value);
         entryToLifecycle.put(value, lifecycle);
         if (nextId <= rawId) {
             nextId = rawId + 1;
@@ -152,8 +153,8 @@ public class Registry<T> implements Iterable<Map.Entry<Identifier, T>>, Codec<T>
      * @param value the object associated to the requested identifier.
      * @return the identifier of the given object.
      */
-    public @NotNull Identifier getIdentifier(final @NotNull T value) {
-        return values.inverse().get(Objects.requireNonNull(value));
+    public @NotNull Identifier getIdentifier(final T value) {
+        return values.inverse().get(value);
     }
 
     @ApiStatus.Internal

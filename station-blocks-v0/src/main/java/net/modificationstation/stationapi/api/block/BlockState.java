@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.block;
+package net.modificationstation.stationapi.api.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
@@ -18,6 +18,6 @@ public class BlockState extends AbstractBlockState {
    }
 
    static {
-      CODEC = createCodec(BlockRegistry.INSTANCE, blockBase -> ((BlockBaseBlockState) blockBase).getDefaultState()).stable();
+      CODEC = createCodec(BlockRegistry.INSTANCE, blockBase -> ((BlockStateHolder) blockBase).getDefaultState()).stable();
    }
 }

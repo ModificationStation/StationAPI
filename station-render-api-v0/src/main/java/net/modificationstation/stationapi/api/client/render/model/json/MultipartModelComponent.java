@@ -10,13 +10,13 @@ import com.google.gson.JsonParseException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.StateManager;
 import net.modificationstation.stationapi.api.client.render.model.AndMultipartModelSelector;
 import net.modificationstation.stationapi.api.client.render.model.MultipartModelSelector;
 import net.modificationstation.stationapi.api.client.render.model.OrMultipartModelSelector;
 import net.modificationstation.stationapi.api.client.render.model.SimpleMultipartModelSelector;
 import net.modificationstation.stationapi.api.util.json.JsonHelper;
-import net.modificationstation.stationapi.impl.block.BlockState;
-import net.modificationstation.stationapi.impl.block.StateManager;
 
 import java.lang.reflect.*;
 import java.util.*;

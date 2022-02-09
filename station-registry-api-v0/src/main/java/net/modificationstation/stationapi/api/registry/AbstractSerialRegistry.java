@@ -72,7 +72,7 @@ public abstract class AbstractSerialRegistry<T> extends Registry<T> {
      * @param value the object associated to the requested serial ID.
      * @return the serial ID of the given object.
      */
-    public abstract int getSerialID(@NotNull T value);
+    public abstract int getSerialID(T value);
 
     /**
      * Returns the serial ID of object associated to the given identifier.

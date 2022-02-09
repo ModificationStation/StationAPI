@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.block;
+package net.modificationstation.stationapi.api.block;
 
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.JigsawOrientation;
@@ -139,55 +139,55 @@ public class Properties {
     * 
     * <p>This property only allows a block to be oriented to the X and Z axes.
     */
-   public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS;
+   public static final EnumProperty<Direction.Axis> HORIZONTAL_AXIS = EnumProperty.of("axis", Direction.Axis.class, Direction.Axis.X, Direction.Axis.Z);
    /**
     * A property that specifies the axis a block is oriented to.
     */
-   public static final EnumProperty<Direction.Axis> AXIS;
+   public static final EnumProperty<Direction.Axis> AXIS = EnumProperty.of("axis", Direction.Axis.class);
    /**
     * A property that specifies if this block is connected to another block from the top.
     */
-   public static final BooleanProperty UP;
+   public static final BooleanProperty UP = BooleanProperty.of("up");
    /**
     * A property that specifies if this block is connected to another block from the below.
     */
-   public static final BooleanProperty DOWN;
+   public static final BooleanProperty DOWN = BooleanProperty.of("down");
    /**
     * A property that specifies if this block is connected to another block from the north.
     */
-   public static final BooleanProperty NORTH;
+   public static final BooleanProperty NORTH = BooleanProperty.of("north");
    /**
     * A property that specifies if this block is connected to another block from the east.
     */
-   public static final BooleanProperty EAST;
+   public static final BooleanProperty EAST = BooleanProperty.of("east");
    /**
     * A property that specifies if this block is connected to another block from the south.
     */
-   public static final BooleanProperty SOUTH;
+   public static final BooleanProperty SOUTH = BooleanProperty.of("south");
    /**
     * A property that specifies if this block is connected to another block from the west.
     */
-   public static final BooleanProperty WEST;
+   public static final BooleanProperty WEST = BooleanProperty.of("west");
    /**
     * A property that specifies the direction a block is facing.
     */
-   public static final DirectionProperty FACING;
+   public static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP, Direction.DOWN);
    /**
     * A property that specifies the direction a hopper's output faces.
     * 
     * <p>This property does not allow the hopper's output to face upwards.
     */
-   public static final DirectionProperty HOPPER_FACING;
+   public static final DirectionProperty HOPPER_FACING = DirectionProperty.of("facing", (facing) -> facing != Direction.UP);
    /**
     * A property that specifies the direction a block is facing.
     * 
     * <p>This property only allows a block to face in one of the cardinal directions (north, south, east and west).
     */
-   public static final DirectionProperty HORIZONTAL_FACING;
+   public static final DirectionProperty HORIZONTAL_FACING = DirectionProperty.of("facing", Direction.Type.HORIZONTAL);
    /**
     * A property that specifies the orientation of a jigsaw.
     */
-   public static final EnumProperty<JigsawOrientation> ORIENTATION;
+   public static final EnumProperty<JigsawOrientation> ORIENTATION = EnumProperty.of("orientation", JigsawOrientation.class);
 //   /**
 //    * A property that specifies the type of wall a block is attached to.
 //    */
@@ -250,109 +250,125 @@ public class Properties {
     * A property that specifies the metadata of the block.
     */
    public static final IntProperty META = IntProperty.of("meta", 0, 15);
+   //      WALL_MOUNT_LOCATION = EnumProperty.of("face", WallMountLocation.class);
+//      ATTACHMENT = EnumProperty.of("attachment", Attachment.class);
+//      EAST_WALL_SHAPE = EnumProperty.of("east", WallShape.class);
+//      NORTH_WALL_SHAPE = EnumProperty.of("north", WallShape.class);
+//      SOUTH_WALL_SHAPE = EnumProperty.of("south", WallShape.class);
+//      WEST_WALL_SHAPE = EnumProperty.of("west", WallShape.class);
+//      EAST_WIRE_CONNECTION = EnumProperty.of("east", WireConnection.class);
+//      NORTH_WIRE_CONNECTION = EnumProperty.of("north", WireConnection.class);
+//      SOUTH_WIRE_CONNECTION = EnumProperty.of("south", WireConnection.class);
+//      WEST_WIRE_CONNECTION = EnumProperty.of("west", WireConnection.class);
+//      DOUBLE_BLOCK_HALF = EnumProperty.of("half", DoubleBlockHalf.class);
+//      BLOCK_HALF = EnumProperty.of("half", BlockHalf.class);
+//      RAIL_SHAPE = EnumProperty.of("shape", RailShape.class);
+//      STRAIGHT_RAIL_SHAPE = EnumProperty.of("shape", RailShape.class, (shape) -> {
+//         return shape != RailShape.NORTH_EAST && shape != RailShape.NORTH_WEST && shape != RailShape.SOUTH_EAST && shape != RailShape.SOUTH_WEST;
+//      });
    /**
     * A property that specifies the age of a block on a scale of 0 to 1.
     */
-   public static final IntProperty AGE_1;
+   public static final IntProperty AGE_1 = IntProperty.of("age", 0, 1);
    /**
     * A property that specifies the age of a block on a scale of 0 to 2.
     */
-   public static final IntProperty AGE_2;
+   public static final IntProperty AGE_2 = IntProperty.of("age", 0, 2);
    /**
     * A property that specifies the age of a block on a scale of 0 to 3.
     */
-   public static final IntProperty AGE_3;
+   public static final IntProperty AGE_3 = IntProperty.of("age", 0, 3);
    /**
     * A property that specifies the age of a block on a scale of 0 to 5.
     */
-   public static final IntProperty AGE_5;
+   public static final IntProperty AGE_5 = IntProperty.of("age", 0, 5);
    /**
     * A property that specifies the age of a block on a scale of 0 to 7.
     */
-   public static final IntProperty AGE_7;
+   public static final IntProperty AGE_7 = IntProperty.of("age", 0, 7);
    /**
     * A property that specifies the age of a block on a scale of 0 to 15.
     */
-   public static final IntProperty AGE_15;
+   public static final IntProperty AGE_15 = IntProperty.of("age", 0, 15);
    /**
     * A property that specifies the age of a block on a scale of 0 to 25.
     */
-   public static final IntProperty AGE_25;
+   public static final IntProperty AGE_25 = IntProperty.of("age", 0, 25);
    /**
     * A property that specifies the bites taken out of a cake.
     */
-   public static final IntProperty BITES;
+   public static final IntProperty BITES = IntProperty.of("bites", 0, 6);
    /**
     * A property that specifies the delay a repeater will apply.
     */
-   public static final IntProperty DELAY;
+   public static final IntProperty DELAY = IntProperty.of("delay", 1, 4);
    /**
     * A property that specifies the overhang distance of a block on a scale of 1-7.
     */
-   public static final IntProperty DISTANCE_1_7;
+   public static final IntProperty DISTANCE_1_7 = IntProperty.of("distance", 1, 7);
    /**
     * A property that specifies the amount of eggs in a turtle egg block.
     */
-   public static final IntProperty EGGS;
+   public static final IntProperty EGGS = IntProperty.of("eggs", 1, 4);
    /**
     * A property that specifies how close an egg is hatching.
     */
-   public static final IntProperty HATCH;
+   public static final IntProperty HATCH = IntProperty.of("hatch", 0, 2);
    /**
     * A property that specifies how many layers of snow are in a snow block.
     */
-   public static final IntProperty LAYERS;
+   public static final IntProperty LAYERS = IntProperty.of("layers", 1, 8);
    /**
     * A property that specifies how many levels of water there are in a cauldron.
     */
-   public static final IntProperty LEVEL_3;
+   public static final IntProperty LEVEL_3 = IntProperty.of("level", 0, 3);
    /**
     * A property that specifies the level of a composter.
     */
-   public static final IntProperty LEVEL_8;
+   public static final IntProperty LEVEL_8 = IntProperty.of("level", 0, 8);
    /**
     * A property that specifies the height of a fluid on a scale of 1 to 8.
     */
-   public static final IntProperty LEVEL_1_8;
+   public static final IntProperty LEVEL_1_8 = IntProperty.of("level", 1, 8);
    /**
     * A property that specifies the honey level of a beehive.
     */
-   public static final IntProperty HONEY_LEVEL;
-   public static final IntProperty LEVEL_15;
+   public static final IntProperty HONEY_LEVEL = IntProperty.of("honey_level", 0, 5);
+   public static final IntProperty LEVEL_15 = IntProperty.of("level", 0, 15);
    /**
     * A property that specifies the moisture of farmland.
     */
-   public static final IntProperty MOISTURE;
+   public static final IntProperty MOISTURE = IntProperty.of("moisture", 0, 7);
    /**
     * A property that specifies the pitch of a note block.
     */
-   public static final IntProperty NOTE;
+   public static final IntProperty NOTE = IntProperty.of("note", 0, 24);
    /**
     * A property that specifies how many pickles are in a sea pickle.
     */
-   public static final IntProperty PICKLES;
+   public static final IntProperty PICKLES = IntProperty.of("pickles", 1, 4);
    /**
     * A property that specifies the redstone power of a block.
     */
-   public static final IntProperty POWER;
+   public static final IntProperty POWER = IntProperty.of("power", 0, 15);
    /**
     * A property that specifies a growth stage on a scale of 0 to 1.
     */
-   public static final IntProperty STAGE;
+   public static final IntProperty STAGE = IntProperty.of("stage", 0, 1);
    /**
     * A property that specifies the overhang distance of a scaffolding.
     */
-   public static final IntProperty DISTANCE_0_7;
+   public static final IntProperty DISTANCE_0_7 = IntProperty.of("distance", 0, 7);
    /**
     * A property that specifies the amount of charges a respawn anchor has.
     */
-   public static final IntProperty CHARGES;
+   public static final IntProperty CHARGES = IntProperty.of("charges", 0, 4);
    /**
     * A property that specifies the rotation of a block on a 0 to 15 scale.
     * 
     * <p>Each rotation is 22.5 degrees.
     */
-   public static final IntProperty ROTATION;
+   public static final IntProperty ROTATION = IntProperty.of("rotation", 0, 15);
 //   /**
 //    * A property that specifies what part of a bed a block is.
 //    */
@@ -395,61 +411,7 @@ public class Properties {
 //   public static final EnumProperty<BambooLeaves> BAMBOO_LEAVES;
 
    static {
-      HORIZONTAL_AXIS = EnumProperty.of("axis", Direction.Axis.class, Direction.Axis.X, Direction.Axis.Z);
-      AXIS = EnumProperty.of("axis", Direction.Axis.class);
-      UP = BooleanProperty.of("up");
-      DOWN = BooleanProperty.of("down");
-      NORTH = BooleanProperty.of("north");
-      EAST = BooleanProperty.of("east");
-      SOUTH = BooleanProperty.of("south");
-      WEST = BooleanProperty.of("west");
-      FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP, Direction.DOWN);
-      HOPPER_FACING = DirectionProperty.of("facing", (facing) -> facing != Direction.UP);
-      HORIZONTAL_FACING = DirectionProperty.of("facing", Direction.Type.HORIZONTAL);
-      ORIENTATION = EnumProperty.of("orientation", JigsawOrientation.class);
-//      WALL_MOUNT_LOCATION = EnumProperty.of("face", WallMountLocation.class);
-//      ATTACHMENT = EnumProperty.of("attachment", Attachment.class);
-//      EAST_WALL_SHAPE = EnumProperty.of("east", WallShape.class);
-//      NORTH_WALL_SHAPE = EnumProperty.of("north", WallShape.class);
-//      SOUTH_WALL_SHAPE = EnumProperty.of("south", WallShape.class);
-//      WEST_WALL_SHAPE = EnumProperty.of("west", WallShape.class);
-//      EAST_WIRE_CONNECTION = EnumProperty.of("east", WireConnection.class);
-//      NORTH_WIRE_CONNECTION = EnumProperty.of("north", WireConnection.class);
-//      SOUTH_WIRE_CONNECTION = EnumProperty.of("south", WireConnection.class);
-//      WEST_WIRE_CONNECTION = EnumProperty.of("west", WireConnection.class);
-//      DOUBLE_BLOCK_HALF = EnumProperty.of("half", DoubleBlockHalf.class);
-//      BLOCK_HALF = EnumProperty.of("half", BlockHalf.class);
-//      RAIL_SHAPE = EnumProperty.of("shape", RailShape.class);
-//      STRAIGHT_RAIL_SHAPE = EnumProperty.of("shape", RailShape.class, (shape) -> {
-//         return shape != RailShape.NORTH_EAST && shape != RailShape.NORTH_WEST && shape != RailShape.SOUTH_EAST && shape != RailShape.SOUTH_WEST;
-//      });
-      AGE_1 = IntProperty.of("age", 0, 1);
-      AGE_2 = IntProperty.of("age", 0, 2);
-      AGE_3 = IntProperty.of("age", 0, 3);
-      AGE_5 = IntProperty.of("age", 0, 5);
-      AGE_7 = IntProperty.of("age", 0, 7);
-      AGE_15 = IntProperty.of("age", 0, 15);
-      AGE_25 = IntProperty.of("age", 0, 25);
-      BITES = IntProperty.of("bites", 0, 6);
-      DELAY = IntProperty.of("delay", 1, 4);
-      DISTANCE_1_7 = IntProperty.of("distance", 1, 7);
-      EGGS = IntProperty.of("eggs", 1, 4);
-      HATCH = IntProperty.of("hatch", 0, 2);
-      LAYERS = IntProperty.of("layers", 1, 8);
-      LEVEL_3 = IntProperty.of("level", 0, 3);
-      LEVEL_8 = IntProperty.of("level", 0, 8);
-      LEVEL_1_8 = IntProperty.of("level", 1, 8);
-      HONEY_LEVEL = IntProperty.of("honey_level", 0, 5);
-      LEVEL_15 = IntProperty.of("level", 0, 15);
-      MOISTURE = IntProperty.of("moisture", 0, 7);
-      NOTE = IntProperty.of("note", 0, 24);
-      PICKLES = IntProperty.of("pickles", 1, 4);
-      POWER = IntProperty.of("power", 0, 15);
-      STAGE = IntProperty.of("stage", 0, 1);
-      DISTANCE_0_7 = IntProperty.of("distance", 0, 7);
-      CHARGES = IntProperty.of("charges", 0, 4);
-      ROTATION = IntProperty.of("rotation", 0, 15);
-//      BED_PART = EnumProperty.of("part", BedPart.class);
+      //      BED_PART = EnumProperty.of("part", BedPart.class);
 //      CHEST_TYPE = EnumProperty.of("type", ChestType.class);
 //      COMPARATOR_MODE = EnumProperty.of("mode", ComparatorMode.class);
 //      DOOR_HINGE = EnumProperty.of("hinge", DoorHinge.class);

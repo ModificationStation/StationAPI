@@ -9,16 +9,16 @@ import net.minecraft.client.render.block.FoliageColour;
 import net.minecraft.client.render.block.GrassColour;
 import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.Property;
 import net.modificationstation.stationapi.api.client.colour.world.BiomeColours;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.util.collection.IdList;
-import net.modificationstation.stationapi.impl.block.BlockState;
-import net.modificationstation.stationapi.impl.block.Property;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static net.modificationstation.stationapi.impl.block.Properties.META;
+import static net.modificationstation.stationapi.api.block.Properties.META;
 
 @Environment(EnvType.CLIENT)
 public class BlockColours {

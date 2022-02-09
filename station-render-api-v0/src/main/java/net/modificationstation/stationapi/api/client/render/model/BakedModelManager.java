@@ -5,12 +5,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
+import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
-import net.modificationstation.stationapi.impl.block.BlockState;
 import net.modificationstation.stationapi.impl.client.resource.SinglePreparationResourceReloadListener;
 import org.jetbrains.annotations.Nullable;
 

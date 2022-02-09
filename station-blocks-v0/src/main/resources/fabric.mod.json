@@ -21,7 +21,8 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.block.BlockRegistryInit"
+      "net.modificationstation.stationapi.impl.block.BlockRegistryInit",
+      "net.modificationstation.stationapi.api.block.States"
     ]
   },
   "mixins": [

@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.block;
+package net.modificationstation.stationapi.api.block;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;
@@ -65,6 +65,7 @@ public class EnumProperty<T extends Enum<T> & StringIdentifiable> extends Proper
     * @param type the type this property contains
     */
    public static <T extends Enum<T> & StringIdentifiable> EnumProperty<T> of(String name, Class<T> type) {
+      //noinspection Guava
       return of(name, type, Predicates.alwaysTrue());
    }
 
@@ -79,6 +80,7 @@ public class EnumProperty<T extends Enum<T> & StringIdentifiable> extends Proper
       return of(name, type, Arrays.stream(type.getEnumConstants()).filter(filter).collect(Collectors.toList()));
    }
 
+   @SafeVarargs
    public static <T extends Enum<T> & StringIdentifiable> EnumProperty<T> of(String name, Class<T> type, T... values) {
       return of(name, type, Lists.newArrayList(values));
    }

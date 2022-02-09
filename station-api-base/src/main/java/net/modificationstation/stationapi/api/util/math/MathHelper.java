@@ -87,4 +87,13 @@ public class MathHelper {
     public static int log2(int i) {
         return log2DeBruijn(i) - (isPowerOfTwo(i) ? 0 : 1);
     }
+
+    public static int idealHash(int i) {
+        i ^= i >>> 16;
+        i *= -2048144789;
+        i ^= i >>> 13;
+        i *= -1028477387;
+        i ^= i >>> 16;
+        return i;
+    }
 }

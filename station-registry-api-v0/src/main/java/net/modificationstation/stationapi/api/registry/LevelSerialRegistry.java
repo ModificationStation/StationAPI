@@ -63,7 +63,7 @@ public abstract class LevelSerialRegistry<T> extends AbstractSerialRegistry<T> {
      * @param newSerialID the new serial ID that the object should be remapped to.
      * @param value the object that should be remapped.
      */
-    protected abstract void remap(int newSerialID, @NotNull T value);
+    protected abstract void remap(int newSerialID, T value);
 
     /**
      * Writes all LevelSerialRegistries into an NBT tag.

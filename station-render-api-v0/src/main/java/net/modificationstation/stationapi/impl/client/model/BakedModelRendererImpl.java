@@ -10,6 +10,8 @@ import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
 import net.minecraft.sortme.GameRenderer;
 import net.minecraft.util.maths.TilePos;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.BlockStateView;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelRenderer;
@@ -17,8 +19,6 @@ import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.client.texture.plugin.TessellatorPlugin;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
-import net.modificationstation.stationapi.impl.block.BlockState;
-import net.modificationstation.stationapi.impl.block.BlockStateProvider;
 import net.modificationstation.stationapi.impl.client.texture.FastTessellator;
 import net.modificationstation.stationapi.impl.client.texture.plugin.StationBlockRenderer;
 import net.modificationstation.stationapi.mixin.render.TilePosAccessor;
@@ -74,7 +74,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         ImmutableList<BakedQuad> qs;
         BakedQuad q;
         float[] qlight;
-        BlockState state = ((BlockStateProvider) blockView).getBlockState(x, y, z);
+        BlockState state = ((BlockStateView) blockView).getBlockState(x, y, z);
         for (int quadSet = 0, size = DIRECTIONS.length; quadSet < size; quadSet++) {
             Direction face = DIRECTIONS[quadSet];
             random.setSeed(seed);

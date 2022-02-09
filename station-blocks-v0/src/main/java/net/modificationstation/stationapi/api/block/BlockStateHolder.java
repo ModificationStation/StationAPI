@@ -1,8 +1,8 @@
-package net.modificationstation.stationapi.impl.block;
+package net.modificationstation.stationapi.api.block;
 
 import net.minecraft.block.BlockBase;
 
-public interface BlockBaseBlockState {
+public interface BlockStateHolder {
 
     StateManager<BlockBase, BlockState> getStateManager();
 

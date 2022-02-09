@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
+import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -116,6 +117,7 @@ public class BlockRegistryInit {
     private static void registerBlocks(BlockRegistryEvent event) {
         BlockRegistry r = event.registry;
 
+        r.register(of("air"), (BlockBase) null);
         r.register(of("stone"), STONE);
         r.register(of("grass_block"), GRASS);
         r.register(of("dirt"), DIRT);

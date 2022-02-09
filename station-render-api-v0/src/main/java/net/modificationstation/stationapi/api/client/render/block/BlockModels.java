@@ -3,15 +3,15 @@ package net.modificationstation.stationapi.api.client.render.block;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.BlockStateHolder;
+import net.modificationstation.stationapi.api.block.Property;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelManager;
 import net.modificationstation.stationapi.api.client.render.model.ModelIdentifier;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.impl.block.BlockBaseBlockState;
-import net.modificationstation.stationapi.impl.block.BlockState;
-import net.modificationstation.stationapi.impl.block.Property;
 
 import java.util.*;
 import java.util.Map.*;
@@ -47,7 +47,8 @@ public class BlockModels {
 
       for (Entry<Identifier, BlockBase> identifierBlockBaseEntry : BlockRegistry.INSTANCE) {
          BlockBase block = identifierBlockBaseEntry.getValue();
-         ((BlockBaseBlockState) block).getStateManager().getStates().forEach((blockState) -> this.models.put(blockState, this.modelManager.getModel(getModelId(blockState))));
+         if (block != null)
+            ((BlockStateHolder) block).getStateManager().getStates().forEach((blockState) -> this.models.put(blockState, this.modelManager.getModel(getModelId(blockState))));
       }
    }
 

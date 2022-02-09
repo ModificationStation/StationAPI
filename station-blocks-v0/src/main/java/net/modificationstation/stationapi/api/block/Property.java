@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.block;
+package net.modificationstation.stationapi.api.block;
 
 import com.google.common.base.MoreObjects;
 import com.mojang.serialization.Codec;
@@ -11,6 +11,7 @@ public abstract class Property<T extends Comparable<T>> {
    private final Class<T> type;
    private final String name;
    private Integer hashCodeCache;
+   @SuppressWarnings("FieldCanBeLocal")
    private final Codec<T> codec;
    private final Codec<Property.Value<T>> valueCodec;
 
@@ -22,11 +23,11 @@ public abstract class Property<T extends Comparable<T>> {
    }
 
    public Property.Value<T> createValue(T value) {
-      return new Property.Value(this, value);
+      return new Property.Value<>(this, value);
    }
 
    public Property.Value<T> createValue(State<?, ?> state) {
-      return new Property.Value(this, state.get(this));
+      return new Property.Value<>(this, state.get(this));
    }
 
    public Stream<Property.Value<T>> stream() {
@@ -80,6 +81,7 @@ public abstract class Property<T extends Comparable<T>> {
       return 31 * this.type.hashCode() + this.name.hashCode();
    }
 
+   @SuppressWarnings("ClassCanBeRecord")
    public static final class Value<T extends Comparable<T>> {
       private final Property<T> property;
       private final T value;

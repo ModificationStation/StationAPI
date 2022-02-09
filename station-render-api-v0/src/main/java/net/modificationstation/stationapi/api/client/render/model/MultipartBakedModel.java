@@ -7,13 +7,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.BlockStateView;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.math.Direction;
-import net.modificationstation.stationapi.impl.block.BlockState;
-import net.modificationstation.stationapi.impl.block.BlockStateProvider;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,7 +46,7 @@ public class MultipartBakedModel implements BakedModel {
       if (blockView == null || pos == null) {
          return ImmutableList.of();
       } else {
-         BlockState state = ((BlockStateProvider) blockView).getBlockState(pos.x, pos.y, pos.z);
+         BlockState state = ((BlockStateView) blockView).getBlockState(pos.x, pos.y, pos.z);
          BitSet bitSet = this.stateCache.get(state);
          if (bitSet == null) {
             bitSet = new BitSet();

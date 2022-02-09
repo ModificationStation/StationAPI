@@ -14,6 +14,10 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.item.ItemBase;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.BlockStateHolder;
+import net.modificationstation.stationapi.api.block.Property;
+import net.modificationstation.stationapi.api.block.StateManager;
 import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
 import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbakedModel;
@@ -33,10 +37,6 @@ import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.math.AffineTransformation;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
-import net.modificationstation.stationapi.impl.block.BlockBaseBlockState;
-import net.modificationstation.stationapi.impl.block.BlockState;
-import net.modificationstation.stationapi.impl.block.Property;
-import net.modificationstation.stationapi.impl.block.StateManager;
 import net.modificationstation.stationapi.impl.client.texture.IdentifierTextureManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Triple;
@@ -103,7 +103,8 @@ public class ModelLoader {
 
         for (Entry<Identifier, BlockBase> identifierBlockBaseEntry : BlockRegistry.INSTANCE) {
             BlockBase block = identifierBlockBaseEntry.getValue();
-            ((BlockBaseBlockState) block).getStateManager().getStates().forEach((blockState) -> this.addModel(BlockModels.getModelId(blockState).asIdentifier()));
+            if (block != null)
+                ((BlockStateHolder) block).getStateManager().getStates().forEach((blockState) -> this.addModel(BlockModels.getModelId(blockState).asIdentifier()));
         }
 
         profiler.swap("items");
@@ -294,7 +295,7 @@ public class ModelLoader {
             this.unbakedModels.put(identifier, jsonUnbakedModel);
         } else {
             Identifier identifier = Identifier.of(modelIdentifier.id.modID, modelIdentifier.id.id);
-            StateManager<BlockBase, BlockState> stateManager = /*Optional.ofNullable(STATIC_DEFINITIONS.get(identifier)).orElseGet(() -> */((BlockBaseBlockState) BlockRegistry.INSTANCE.get(identifier).orElseThrow(NullPointerException::new)).getStateManager()/*)*/;
+            StateManager<BlockBase, BlockState> stateManager = /*Optional.ofNullable(STATIC_DEFINITIONS.get(identifier)).orElseGet(() -> */((BlockStateHolder) BlockRegistry.INSTANCE.get(identifier).orElseThrow(NullPointerException::new)).getStateManager()/*)*/;
             this.variantMapDeserializationContext.setStateFactory(stateManager);
             ImmutableList<Property<?>> list = ImmutableList.copyOf(this.blockColours.getProperties(stateManager.getOwner()));
             ImmutableList<BlockState> immutableList = stateManager.getStates();
@@ -530,7 +531,7 @@ public class ModelLoader {
         }
 
         public static ModelLoader.ModelDefinition create(BlockState state, MultipartUnbakedModel rawModel, Collection<Property<?>> properties) {
-            StateManager<BlockBase, BlockState> stateManager = ((BlockBaseBlockState) state.getBlock()).getStateManager();
+            StateManager<BlockBase, BlockState> stateManager = ((BlockStateHolder) state.getBlock()).getStateManager();
             List<UnbakedModel> list = rawModel.getComponents().stream().filter((multipartModelComponent) -> multipartModelComponent.getPredicate(stateManager).test(state)).map(MultipartModelComponent::getModel).collect(ImmutableList.toImmutableList());
             ImmutableList<Object> list2 = getStateValues(state, properties);
             return new ModelLoader.ModelDefinition(list, list2);
