@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.MoreExecutors;
 import it.unimi.dsi.fastutil.Hash;
 import net.fabricmc.loader.api.FabricLoader;
+import net.modificationstation.stationapi.api.util.exception.CrashException;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 
 import java.lang.management.*;
@@ -54,10 +55,10 @@ public class Util {
             throwable = throwable.getCause();
         }
 
-//        if (throwable instanceof CrashException) {
-//            System.out.println(((CrashException)throwable).getReport().asString());
-//            System.exit(-1);
-//        }
+        if (throwable instanceof CrashException crash) {
+            System.out.println(crash.getReport().asString());
+            System.exit(-1);
+        }
 
         LOGGER.error(String.format("Caught exception in thread %s", thread), throwable);
     }
@@ -143,5 +144,9 @@ public class Util {
         public boolean equals(Object object, Object object2) {
             return object == object2;
         }
+    }
+
+    public static <T> T assertMixin() {
+        throw new AssertionError("Mixin!");
     }
 }

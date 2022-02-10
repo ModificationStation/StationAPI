@@ -25,20 +25,17 @@ public class IntProperty extends Property<Integer> {
       }
    }
 
+   @Override
    public Collection<Integer> getValues() {
       return this.values;
    }
 
+   @Override
    public boolean equals(Object object) {
-      if (this == object) {
-         return true;
-      } else if (object instanceof IntProperty intProperty && super.equals(object)) {
-         return this.values.equals(intProperty.values);
-      } else {
-         return false;
-      }
+      return this == object || object instanceof IntProperty intProperty && super.equals(object) && this.values.equals(intProperty.values);
    }
 
+   @Override
    public int computeHashCode() {
       return 31 * super.computeHashCode() + this.values.hashCode();
    }
@@ -58,6 +55,7 @@ public class IntProperty extends Property<Integer> {
       return new IntProperty(name, min, max);
    }
 
+   @Override
    public Optional<Integer> parse(String name) {
       try {
          Integer integer = Integer.valueOf(name);
@@ -67,6 +65,7 @@ public class IntProperty extends Property<Integer> {
       }
    }
 
+   @Override
    public String name(Integer integer) {
       return integer.toString();
    }

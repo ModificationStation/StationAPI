@@ -27,14 +27,14 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 
       protected AbstractBlockState(BlockBase block, ImmutableMap<Property<?>, Comparable<?>> propertyMap, MapCodec<BlockState> mapCodec) {
          super(block, propertyMap, mapCodec);
-         this.luminance = BlockBase.EMITTANCE[block == null ? 0 : block.id];
+         this.luminance = BlockBase.EMITTANCE[block.id];
 //         this.hasSidedTransparency = block.hasSidedTransparency(this.asBlockState());
-         this.isAir = block == null || block.material == Material.AIR;
-         this.material = block == null ? Material.AIR : block.material;
-         this.materialColor = block == null ? Material.AIR.materialColour : block.material.materialColour;
-         this.hardness = block == null ? 0 : block.getHardness();
-         this.toolRequired = block == null ? !Material.AIR.doesRequireTool() : !block.material.doesRequireTool();
-         this.opaque = block != null && block.isFullOpaque();
+         this.isAir = block.material == Material.AIR;
+         this.material = block.material;
+         this.materialColor = block.material.materialColour;
+         this.hardness = block.getHardness();
+         this.toolRequired = !block.material.doesRequireTool();
+         this.opaque = block.isFullOpaque();
 //         this.solidBlockPredicate = settings.solidBlockPredicate;
 //         this.suffocationPredicate = settings.suffocationPredicate;
 //         this.blockVisionPredicate = settings.blockVisionPredicate;

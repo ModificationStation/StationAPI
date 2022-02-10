@@ -29,28 +29,27 @@ public class EnumProperty<T extends Enum<T> & StringIdentifiable> extends Proper
 
    }
 
+   @Override
    public Collection<T> getValues() {
       return this.values;
    }
 
+   @Override
    public Optional<T> parse(String name) {
       return Optional.ofNullable(this.byName.get(name));
    }
 
+   @Override
    public String name(T enum_) {
       return enum_.asString();
    }
 
+   @Override
    public boolean equals(Object object) {
-      if (this == object) {
-         return true;
-      } else if (object instanceof EnumProperty<?> enumProperty && super.equals(object)) {
-         return this.values.equals(enumProperty.values) && this.byName.equals(enumProperty.byName);
-      } else {
-         return false;
-      }
+      return this == object || object instanceof EnumProperty<?> enumProperty && super.equals(object) && this.values.equals(enumProperty.values) && this.byName.equals(enumProperty.byName);
    }
 
+   @Override
    public int computeHashCode() {
       int i = super.computeHashCode();
       i = 31 * i + this.values.hashCode();

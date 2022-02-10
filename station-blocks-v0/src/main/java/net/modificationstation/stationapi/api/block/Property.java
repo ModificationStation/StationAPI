@@ -55,20 +55,17 @@ public abstract class Property<T extends Comparable<T>> {
 
    public abstract Optional<T> parse(String name);
 
+   @Override
    public String toString() {
       return MoreObjects.toStringHelper(this).add("name", this.name).add("clazz", this.type).add("values", this.getValues()).toString();
    }
 
+   @Override
    public boolean equals(Object object) {
-      if (this == object) {
-         return true;
-      } else if (!(object instanceof Property<?> property)) {
-         return false;
-      } else {
-         return this.type.equals(property.type) && this.name.equals(property.name);
-      }
+      return this == object || object instanceof Property<?> property && this.type.equals(property.type) && this.name.equals(property.name);
    }
 
+   @Override
    public final int hashCode() {
       if (this.hashCodeCache == null) {
          this.hashCodeCache = this.computeHashCode();
@@ -107,16 +104,12 @@ public abstract class Property<T extends Comparable<T>> {
          return this.property.getName() + "=" + this.property.name(this.value);
       }
 
+      @Override
       public boolean equals(Object object) {
-         if (this == object) {
-            return true;
-         } else if (!(object instanceof Value<?> value)) {
-            return false;
-         } else {
-            return this.property == value.property && this.value.equals(value.value);
-         }
+         return this == object || object instanceof Value<?> value && this.property == value.property && this.value.equals(value.value);
       }
 
+      @Override
       public int hashCode() {
          int i = this.property.hashCode();
          i = 31 * i + this.value.hashCode();

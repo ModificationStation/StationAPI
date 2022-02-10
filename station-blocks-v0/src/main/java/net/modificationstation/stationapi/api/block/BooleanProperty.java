@@ -11,6 +11,7 @@ public class BooleanProperty extends Property<Boolean> {
       super(name, Boolean.class);
    }
 
+   @Override
    public Collection<Boolean> getValues() {
       return this.values;
    }
@@ -19,24 +20,22 @@ public class BooleanProperty extends Property<Boolean> {
       return new BooleanProperty(name);
    }
 
+   @Override
    public Optional<Boolean> parse(String name) {
-      return !"true".equals(name) && !"false".equals(name) ? Optional.empty() : Optional.of(Boolean.valueOf(name));
+      return "true".equals(name) || "false".equals(name) ? Optional.of(Boolean.valueOf(name)) : Optional.empty();
    }
 
+   @Override
    public String name(Boolean boolean_) {
       return boolean_.toString();
    }
 
+   @Override
    public boolean equals(Object object) {
-      if (this == object) {
-         return true;
-      } else if (object instanceof BooleanProperty booleanProperty && super.equals(object)) {
-         return this.values.equals(booleanProperty.values);
-      } else {
-         return false;
-      }
+      return this == object || object instanceof BooleanProperty booleanProperty && super.equals(object) && this.values.equals(booleanProperty.values);
    }
 
+   @Override
    public int computeHashCode() {
       return 31 * super.computeHashCode() + this.values.hashCode();
    }

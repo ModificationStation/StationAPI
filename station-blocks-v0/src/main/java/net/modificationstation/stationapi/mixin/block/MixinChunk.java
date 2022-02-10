@@ -158,7 +158,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Overwrite
     public boolean setTileWithMetadata(int x, int y, int z, int blockId, int meta) {
         int var7 = this.heightmap[(z << 4) | x] & 255;
-        BlockState newBlockState = blockId == 0 ? States.AIR.get() : ((BlockStateHolder) BlockBase.BY_ID[blockId]).getDefaultState().with(META, meta);
+        BlockState newBlockState = ((BlockStateHolder) BlockBase.BY_ID[blockId]).getDefaultState().with(META, meta);
         BlockState oldBlockState = getBlockState(x, y, z);
         if (oldBlockState == newBlockState) {
             return false;
@@ -166,7 +166,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             int levelX = this.x * 16 + x;
             int levelZ = this.z * 16 + z;
             setBlockState(x, y, z, newBlockState);
-            if (oldBlockState != States.AIR.get() && !this.level.isClient) {
+            if (!this.level.isClient) {
                 oldBlockState.getBlock().onBlockRemoved(this.level, levelX, y, levelZ);
             }
 
@@ -182,8 +182,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
 
             this.level.method_166(LightType.BLOCK, levelX, y, levelZ, levelX, y, levelZ);
             this.method_887(x, z);
-            if (newBlockState != States.AIR.get())
-                newBlockState.getBlock().onBlockPlaced(this.level, levelX, y, levelZ);
+            newBlockState.getBlock().onBlockPlaced(this.level, levelX, y, levelZ);
 
             this.field_967 = true;
             return true;
@@ -271,7 +270,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Overwrite
     public boolean method_860(int x, int y, int z, int blockId) {
         int var6 = this.heightmap[(z << 4) | x] & 255;
-        BlockState newBlockState = blockId == 0 ? States.AIR.get() : ((BlockStateHolder) BlockBase.BY_ID[blockId]).getDefaultState();
+        BlockState newBlockState = ((BlockStateHolder) BlockBase.BY_ID[blockId]).getDefaultState();
         BlockState oldBlockState = getBlockState(x, y, z);
         if (oldBlockState == newBlockState) {
             return false;
@@ -279,9 +278,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             int var8 = this.x * 16 + x;
             int var9 = this.z * 16 + z;
             setBlockState(x, y, z, newBlockState);
-            if (oldBlockState != States.AIR.get()) {
-                oldBlockState.getBlock().onBlockRemoved(this.level, var8, y, var9);
-            }
+            oldBlockState.getBlock().onBlockRemoved(this.level, var8, y, var9);
 
             if (BlockBase.LIGHT_OPACITY[blockId] != 0) {
                 if (y >= var6) {
@@ -294,7 +291,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             this.level.method_166(LightType.SKY, var8, y, var9, var8, y, var9);
             this.level.method_166(LightType.BLOCK, var8, y, var9, var8, y, var9);
             this.method_887(x, z);
-            if (newBlockState != States.AIR.get() && !this.level.isClient) {
+            if (!this.level.isClient) {
                 newBlockState.getBlock().onBlockPlaced(this.level, var8, y, var9);
             }
 
@@ -328,15 +325,14 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
      */
     @Overwrite
     public int getTileId(int x, int y, int z) {
-        BlockState state = getBlockState(x, y, z);
-        return state == States.AIR.get() ? 0 : state.getBlock().id;
+        return getBlockState(x, y, z).getBlock().id;
     }
 
     @Override
     @Unique
     public BlockState getBlockState(int x, int y, int z) {
         int yOffset = y >> 4;
-        return (sections[yOffset] == null ? States.AIR.get() : sections[yOffset].getBlockState(x, y & 15, z));
+        return sections[yOffset] == null ? States.AIR.get() : sections[yOffset].getBlockState(x, y & 15, z);
     }
 
     @Override

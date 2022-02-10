@@ -7,6 +7,7 @@ import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.util.Lazy;
 
 import static net.minecraft.block.BlockBase.BED;
 import static net.minecraft.block.BlockBase.BEDROCK;
@@ -113,11 +114,13 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class BlockRegistryInit {
 
+    public static final Lazy<BlockBase> AIR = new Lazy<>(() -> new Air(0));
+
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerBlocks(BlockRegistryEvent event) {
         BlockRegistry r = event.registry;
 
-        r.register(of("air"), (BlockBase) null);
+        r.register(of("air"), AIR.get());
         r.register(of("stone"), STONE);
         r.register(of("grass_block"), GRASS);
         r.register(of("dirt"), DIRT);

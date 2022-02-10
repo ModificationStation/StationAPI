@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.registry;
 
+import net.modificationstation.stationapi.api.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -72,7 +73,7 @@ public abstract class AbstractSerialRegistry<T> extends Registry<T> {
      * @param value the object associated to the requested serial ID.
      * @return the serial ID of the given object.
      */
-    public abstract int getSerialID(T value);
+    public abstract int getSerialID(@NotNull T value);
 
     /**
      * Returns the serial ID of object associated to the given identifier.
@@ -125,7 +126,9 @@ public abstract class AbstractSerialRegistry<T> extends Registry<T> {
      *
      * @return the serial ID shift (inclusive).
      */
-    public abstract int getSerialIDShift();
+    public int getSerialIDShift() {
+        return 0;
+    }
 
     /**
      * Searches for a free serial ID starting from {@link AbstractSerialRegistry#getSerialIDShift()} (inclusive)
@@ -138,9 +141,21 @@ public abstract class AbstractSerialRegistry<T> extends Registry<T> {
      * @throws IndexOutOfBoundsException if there are no free serial IDs left in the range.
      */
     public int getNextSerialID() {
-        for (int i = getSerialIDShift(); i < getSize(); i++) if (!get(i).isPresent())
-            return i;
+        int i = getSerialIDShift();
+        do while (i < getSize()) {
+            if (get(i).isEmpty()) return i;
+            i++;
+        } while (growSize());
         throw new IndexOutOfBoundsException("No more free serial IDs left for " + id + " registry!");
+    }
+
+    protected boolean growSize() {
+        int currentSize = getSize();
+        return currentSize < Integer.MAX_VALUE && setSize(MathHelper.isPowerOfTwo(currentSize) ? currentSize * 2 : MathHelper.smallestEncompassingPowerOfTwo(currentSize));
+    }
+
+    protected boolean setSize(int newSize) {
+        return getSize() == newSize;
     }
 
     /**

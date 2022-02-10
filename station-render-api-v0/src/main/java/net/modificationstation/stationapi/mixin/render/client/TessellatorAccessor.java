@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.mixin.render.client;
 
 import net.minecraft.client.render.Tessellator;
+import net.modificationstation.stationapi.api.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
@@ -36,7 +37,7 @@ public interface TessellatorAccessor {
 
     @Invoker("<init>")
     static Tessellator newInst(int bufferSize) {
-        throw new AssertionError("Mixin!");
+        return Util.assertMixin();
     }
 
     @Accessor
@@ -71,7 +72,7 @@ public interface TessellatorAccessor {
 
     @Accessor("useTriangles")
     static boolean stationapi$getUseTriangles() {
-        throw new AssertionError("Mixin!");
+        return Util.assertMixin();
     }
 
     @Accessor("drawingMode")
