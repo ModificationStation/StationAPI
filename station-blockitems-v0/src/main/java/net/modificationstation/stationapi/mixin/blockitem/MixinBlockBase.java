@@ -18,7 +18,13 @@ public class MixinBlockBase {
     public static BlockBase[] BY_ID;
 
     @SuppressWarnings("UnresolvedMixinReference")
-    @Redirect(method = "<clinit>", at = @At(value = "NEW", target = "(I)Lnet/minecraft/item/Block;"))
+    @Redirect(
+            method = "<clinit>",
+            at = @At(
+                    value = "NEW",
+                    target = "(I)Lnet/minecraft/item/Block;"
+            )
+    )
     private static Block getBlockItem(int blockID) {
         return StationAPI.EVENT_BUS.post(new BlockItemFactoryEvent(BY_ID[blockID + BY_ID.length], Block::new)).currentFactory.apply(blockID);
     }

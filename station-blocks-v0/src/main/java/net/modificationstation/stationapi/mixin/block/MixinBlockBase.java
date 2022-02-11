@@ -8,18 +8,27 @@ import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.block.StateManager;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.registry.serial.SerialIDHolder;
 import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.modificationstation.stationapi.api.block.Properties.META;
 
 @Mixin(BlockBase.class)
-public class MixinBlockBase implements BlockStateHolder {
+public class MixinBlockBase implements BlockStateHolder, SerialIDHolder {
+
+    @Shadow @Final public int id;
 
     @ModifyVariable(
             method = "setTranslationKey(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;",
@@ -80,5 +89,27 @@ public class MixinBlockBase implements BlockStateHolder {
     @Unique
     public void setDefaultState(BlockState defaultState) {
         this.defaultState = defaultState;
+    }
+
+    @Override
+    @Unique
+    public int getSerialID() {
+        return id;
+    }
+
+    @ModifyConstant(
+            method = "<clinit>",
+            constant = @Constant(intValue = 256),
+            slice = @Slice(
+                    from = @At(
+                            value = "FIELD",
+                            target = "Lnet/minecraft/block/BlockBase;TRAPDOOR:Lnet/minecraft/block/BlockBase;",
+                            opcode = Opcodes.PUTSTATIC,
+                            shift = At.Shift.AFTER
+                    )
+            )
+    )
+    private static int getBlocksSize(int constant) {
+        return BlockRegistry.INSTANCE.getSize();
     }
 }

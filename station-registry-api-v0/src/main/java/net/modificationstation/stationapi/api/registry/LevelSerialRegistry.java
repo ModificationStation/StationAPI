@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 /**
- * An abstract extension of {@link AbstractSerialRegistry} that has different serial ID mappings for each Minecraft world.
+ * An interface extension of {@link AbstractSerialRegistry} that has different serial ID mappings for each Minecraft world.
  *
  * <p>Such implementation is necessary for block and item registries, because there's no way to provide unique serial IDs
  * for each modded setup without collisions, so we store the unique {@link Identifier} to serial ID mappings of those objects
@@ -17,19 +17,7 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
  * @param <T> the object's type that's stored in the registry.
  * @author mine_diver
  */
-public abstract class LevelSerialRegistry<T> extends AbstractSerialRegistry<T> {
-
-    /**
-     * Default registry constructor.
-     * @param identifier registry's identifier.
-     */
-    public LevelSerialRegistry(@NotNull Identifier identifier) {
-        super(identifier);
-    }
-
-    public LevelSerialRegistry(@NotNull Identifier identifier, boolean shiftSerialIDOnRegister) {
-        super(identifier, shiftSerialIDOnRegister);
-    }
+public interface LevelSerialRegistry<T> {
 
     /**
      * This method writes the {@code Identifier -> Serial ID} mappings of this registry
@@ -37,8 +25,10 @@ public abstract class LevelSerialRegistry<T> extends AbstractSerialRegistry<T> {
      *
      * @param tag the level properties NBT tag.
      */
-    public void save(@NotNull CompoundTag tag) {
-        forEach((identifier, value) -> tag.put(identifier.toString(), getSerialID(value)));
+    private void save(@NotNull CompoundTag tag) {
+        //noinspection unchecked
+        AbstractSerialRegistry<T> registry = (AbstractSerialRegistry<T>) this;
+        registry.forEach((identifier, value) -> tag.put(identifier.toString(), registry.getSerialID(value)));
     }
 
     /**
@@ -47,8 +37,10 @@ public abstract class LevelSerialRegistry<T> extends AbstractSerialRegistry<T> {
      *
      * @param tag the level properties NBT tag.
      */
-    public void load(@NotNull CompoundTag tag) {
-        forEach((identifier, t) -> {
+    private void load(@NotNull CompoundTag tag) {
+        //noinspection unchecked
+        AbstractSerialRegistry<T> registry = (AbstractSerialRegistry<T>) this;
+        registry.forEach((identifier, t) -> {
             String id = identifier.toString();
             if (tag.containsKey(id))
                 remap(tag.getInt(id), t);
@@ -63,14 +55,14 @@ public abstract class LevelSerialRegistry<T> extends AbstractSerialRegistry<T> {
      * @param newSerialID the new serial ID that the object should be remapped to.
      * @param value the object that should be remapped.
      */
-    protected abstract void remap(int newSerialID, T value);
+    void remap(int newSerialID, T value);
 
     /**
      * Writes all LevelSerialRegistries into an NBT tag.
      *
      * @param tag the tag to save all registries to.
      */
-    public static void saveAll(CompoundTag tag) {
+    static void saveAll(CompoundTag tag) {
         Registry.REGISTRIES.forEach((identifier, registry) -> {
             if (registry instanceof LevelSerialRegistry lsRegistry) {
                 CompoundTag registryTag = new CompoundTag();
@@ -85,7 +77,7 @@ public abstract class LevelSerialRegistry<T> extends AbstractSerialRegistry<T> {
      *
      * @param tag the tag to load all registries from.
      */
-    public static void loadAll(CompoundTag tag) {
+    static void loadAll(CompoundTag tag) {
         Registry.REGISTRIES.forEach((identifier, registry) -> {
             String id = registry.id.toString();
             if (registry instanceof LevelSerialRegistry<?> lsRegistry && tag.containsKey(id)) {

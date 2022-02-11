@@ -1,11 +1,12 @@
 package net.modificationstation.stationapi.api.registry;
 
 import net.minecraft.level.dimension.Dimension;
+import net.modificationstation.stationapi.api.registry.serial.SerialIDHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.*;
 
-public class DimensionContainer<T extends Dimension> {
+public class DimensionContainer<T extends Dimension> implements SerialIDHolder {
 
     @NotNull
     public final Supplier<@NotNull T> factory;
@@ -30,6 +31,11 @@ public class DimensionContainer<T extends Dimension> {
 
     @Override
     public int hashCode() {
+        return serialID;
+    }
+
+    @Override
+    public int getSerialID() {
         return serialID;
     }
 }

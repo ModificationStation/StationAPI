@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.registry;
 
+import net.modificationstation.stationapi.api.registry.serial.SerialIDHolder;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
@@ -73,7 +74,16 @@ public abstract class AbstractSerialRegistry<T> extends Registry<T> {
      * @param value the object associated to the requested serial ID.
      * @return the serial ID of the given object.
      */
-    public abstract int getSerialID(@NotNull T value);
+    public int getSerialID(@NotNull T value) {
+        if (value instanceof SerialIDHolder holder)
+            return holder.getSerialID();
+        else for (int i = 0; i < getSize(); i++) {
+            Optional<T> item = get(i);
+            if (item.isPresent() && item.get().equals(value))
+                return i;
+        }
+        throw new NoSuchElementException("Couldn't find given object in the registry!");
+    }
 
     /**
      * Returns the serial ID of object associated to the given identifier.

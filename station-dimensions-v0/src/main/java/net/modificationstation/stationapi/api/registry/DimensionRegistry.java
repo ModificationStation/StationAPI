@@ -1,17 +1,15 @@
 package net.modificationstation.stationapi.api.registry;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectAVLTreeMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectSortedMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectSortedMaps;
 import it.unimi.dsi.fastutil.ints.IntComparator;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
-public final class DimensionRegistry extends LevelSerialRegistry<DimensionContainer<?>> {
+public final class DimensionRegistry extends AbstractInt2ObjectMapBackedRegistry<DimensionContainer<?>> implements LevelSerialRegistry<DimensionContainer<?>> {
 
     private static final int
             VANILLA_MIN = -1,
@@ -69,31 +67,16 @@ public final class DimensionRegistry extends LevelSerialRegistry<DimensionContai
     private boolean registering;
 
     private DimensionRegistry() {
-        super(of(MODID, "dimensions"));
+        super(Identifier.of(MODID, "dimensions"));
     }
 
     @Override
-    public int getSize() {
-        return Integer.MAX_VALUE;
+    protected Int2ObjectMap<DimensionContainer<?>> getBackingInt2ObjectMap() {
+        return serialView;
     }
 
     @Override
-    public int getSerialID(@NotNull DimensionContainer<?> value) {
-        return value.serialID;
-    }
-
-    @Override
-    public @NotNull Optional<DimensionContainer<?>> get(int serialID) {
-        return Optional.ofNullable(serialView.get(serialID));
-    }
-
-    @Override
-    public int getSerialIDShift() {
-        return 0;
-    }
-
-    @Override
-    protected void remap(int newSerialID, @NotNull DimensionContainer<?> value) {
+    public void remap(int newSerialID, @NotNull DimensionContainer<?> value) {
         Identifier id = getIdentifier(value);
         unregister(id);
         values.remove(getSerialID(value));

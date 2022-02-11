@@ -4,14 +4,23 @@ import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.item.ItemEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.registry.serial.SerialIDHolder;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemBase.class)
-public class MixinItemBase {
+public class MixinItemBase implements SerialIDHolder {
+
+    @Shadow @Final public int id;
 
     @Inject(
             method = "<clinit>",
@@ -32,5 +41,19 @@ public class MixinItemBase {
     )
     private String getName(String name) {
         return StationAPI.EVENT_BUS.post(new ItemEvent.TranslationKeyChanged((ItemBase) (Object) this, name)).currentTranslationKey;
+    }
+
+    @Override
+    @Unique
+    public int getSerialID() {
+        return id;
+    }
+
+    @ModifyConstant(
+            method = "<init>(I)V",
+            constant = @Constant(intValue = 256)
+    )
+    private int getBlocksSize(int constant) {
+        return BlockRegistry.INSTANCE.getSize();
     }
 }

@@ -53,9 +53,12 @@ public final class BlockRegistry extends AbstractSerialRegistry<BlockBase> {
             ItemBase[] oldItems = ItemBase.byId.clone();
             for (int i = oldSize; i < oldItems.length; i++) {
                 ItemBase item = oldItems[i];
-                int newId = i - oldSize + newSize;
-                ((ItemBaseAccessor) item).setId(newId);
-                (newId < ItemBase.byId.length ? ItemBase.byId : (ItemBase.byId = Arrays.copyOf(ItemBase.byId, MathHelper.isPowerOfTwo(ItemBase.byId.length) ? ItemBase.byId.length * 2 : MathHelper.smallestEncompassingPowerOfTwo(ItemBase.byId.length))))[newId] = item;
+                if (item != null) {
+                    ItemBase.byId[i] = null;
+                    int newId = i - oldSize + newSize;
+                    ((ItemBaseAccessor) item).setId(newId);
+                    (newId < ItemBase.byId.length ? ItemBase.byId : (ItemBase.byId = Arrays.copyOf(ItemBase.byId, MathHelper.isPowerOfTwo(newId + 1) ? newId + 1 : MathHelper.smallestEncompassingPowerOfTwo(newId))))[newId] = item;
+                }
             }
         }
         return true;

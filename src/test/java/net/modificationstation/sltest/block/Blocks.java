@@ -45,6 +45,13 @@ public enum Blocks {
         private static void registerBlocks(BlockRegistryEvent event) {
 //            BlockBase.ALLOWS_GRASS_UNDER[BlockBase.STILL_WATER.id] = BlockBase.ALLOWS_GRASS_UNDER[BlockBase.FLOWING_WATER.id] = true;
             Arrays.stream(values()).forEach(blocks -> blocks.register.run());
+//            int blocksAmount = 100000;
+//            BLOCKS = new TemplateBlockBase[blocksAmount];
+//            Random random = new Random(42);
+//            for (int i = 0; i < blocksAmount; i++)
+//                BLOCKS[i] = new ColouredBlock(of(MODID, "test_block_" + i), Material.DIRT, random.nextInt()).setHardness(0.8F).setSounds(BlockBase.GLASS_SOUNDS).setTranslationKey(MODID, "testBlock" + i);
         }
+
+        public static TemplateBlockBase[] BLOCKS;
     }
 }
