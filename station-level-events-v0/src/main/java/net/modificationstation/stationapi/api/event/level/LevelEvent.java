@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.mine_diver.unsafeevents.Event;
+import net.minecraft.block.BlockBase;
 import net.minecraft.level.Level;
 import net.minecraft.level.chunk.Chunk;
 
@@ -48,6 +49,33 @@ public abstract class LevelEvent extends Event {
             this.z = z;
             this.blockId = blockId;
             this.blockMeta = blockMeta;
+        }
+
+        @Override
+        protected int getEventID() {
+            return ID;
+        }
+
+        public static final int ID = NEXT_ID.incrementAndGet();
+    }
+
+    public static class IsBlockReplaceable extends LevelEvent {
+
+        public final int x, y, z;
+        public final BlockBase block;
+        public final BlockBase replacedBy;
+        public final int replacedByMeta;
+        public boolean replace;
+
+        public IsBlockReplaceable(Level level, int x, int y, int z, BlockBase block, BlockBase replacedBy, int replacedByMeta, boolean replace) {
+            super(level);
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.block = block;
+            this.replacedBy = replacedBy;
+            this.replacedByMeta = replacedByMeta;
+            this.replace = replace;
         }
 
         @Override

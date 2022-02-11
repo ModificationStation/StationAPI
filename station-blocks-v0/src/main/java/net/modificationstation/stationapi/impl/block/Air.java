@@ -7,18 +7,19 @@ import net.minecraft.level.Level;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.maths.Box;
 import net.minecraft.util.maths.Vec3f;
+import net.modificationstation.stationapi.api.block.ReplaceableBlock;
 
 import java.util.*;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
-final class Air extends BlockBase {
+final class Air extends BlockBase implements ReplaceableBlock {
 
     Air(int id) {
         super(id, Material.AIR);
         setHardness(0);
         setBlastResistance(0);
-        setSounds(null);
+        setSounds(BlockBase.GLASS_SOUNDS);
         setTranslationKey(of("air").toString());
         disableNotifyOnMetaDataChange();
         disableStat();
@@ -62,5 +63,10 @@ final class Air extends BlockBase {
     @Override
     public HitResult method_1564(Level arg, int x, int y, int z, Vec3f arg1, Vec3f arg2) {
         return null;
+    }
+
+    @Override
+    public boolean canBeReplaced(Level level, int x, int y, int z, BlockBase replacedBy, int replacedByMeta) {
+        return true;
     }
 }

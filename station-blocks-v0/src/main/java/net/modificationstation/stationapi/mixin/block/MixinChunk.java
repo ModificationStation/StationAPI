@@ -165,10 +165,10 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         } else {
             int levelX = this.x * 16 + x;
             int levelZ = this.z * 16 + z;
-            setBlockState(x, y, z, newBlockState);
             if (!this.level.isClient) {
                 oldBlockState.getBlock().onBlockRemoved(this.level, levelX, y, levelZ);
             }
+            setBlockState(x, y, z, newBlockState);
 
             if (!this.level.dimension.halvesMapping) {
                 if (BlockBase.LIGHT_OPACITY[blockId] != 0) {
@@ -277,8 +277,8 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         } else {
             int var8 = this.x * 16 + x;
             int var9 = this.z * 16 + z;
-            setBlockState(x, y, z, newBlockState);
             oldBlockState.getBlock().onBlockRemoved(this.level, var8, y, var9);
+            setBlockState(x, y, z, newBlockState);
 
             if (BlockBase.LIGHT_OPACITY[blockId] != 0) {
                 if (y >= var6) {
