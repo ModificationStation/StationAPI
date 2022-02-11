@@ -6,8 +6,7 @@
   "name": "Station Vanilla Checker (v0)",
   "description": "Verifies client mods when it connects to a server, or checks if server is vanilla-friendly.",
   "authors": [
-    "mine_diver",
-    "calmilamsy"
+    "Modification Station"
   ],
   "contact": {
     "homepage": "https://glass-launcher.net/repo/mod/stationapi",
@@ -15,7 +14,7 @@
     "issues": "https://github.com/ModificationStation/StationAPI/issues"
   },
 
-  "license": "CC0-1.0",
+  "license": "MIT",
   "icon": "assets/station-vanilla-checker-v0/icon.png",
 
   "environment": "*",
@@ -35,6 +34,7 @@
   ],
 
   "depends": {
+    "fabricloader": "*",
     "minecraft": "1.0.0-beta.7.3"
   },
 

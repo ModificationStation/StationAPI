@@ -6,8 +6,7 @@
   "name": "Station Armour API (v0)",
   "description": "Essential systems for modded armour.",
   "authors": [
-    "mine_diver",
-    "calmilamsy"
+    "Modification Station"
   ],
   "contact": {
     "homepage": "https://glass-launcher.net/repo/mod/stationapi",
@@ -15,7 +14,7 @@
     "issues": "https://github.com/ModificationStation/StationAPI/issues"
   },
 
-  "license": "CC0-1.0",
+  "license": "MIT",
   "icon": "assets/station-armour-api-v0/icon.png",
 
   "environment": "*",
@@ -29,6 +28,7 @@
   ],
 
   "depends": {
+    "fabricloader": "*",
     "minecraft": "1.0.0-beta.7.3"
   },
 
