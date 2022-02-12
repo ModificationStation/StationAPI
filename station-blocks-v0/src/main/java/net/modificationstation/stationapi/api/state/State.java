@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.block;
+package net.modificationstation.stationapi.api.state;
 
 import com.google.common.collect.ArrayTable;
 import com.google.common.collect.HashBasedTable;
@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import net.modificationstation.stationapi.api.state.property.Property;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;

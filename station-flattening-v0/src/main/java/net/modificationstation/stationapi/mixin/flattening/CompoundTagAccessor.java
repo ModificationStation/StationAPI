@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.block;
+package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.util.io.AbstractTag;
 import net.minecraft.util.io.CompoundTag;

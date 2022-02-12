@@ -12,7 +12,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.StateManager;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.ModelBakeSettings;
 import net.modificationstation.stationapi.api.client.render.model.ModelLoader;
@@ -21,6 +20,7 @@ import net.modificationstation.stationapi.api.client.render.model.UnbakedModel;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.state.StateManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.*;

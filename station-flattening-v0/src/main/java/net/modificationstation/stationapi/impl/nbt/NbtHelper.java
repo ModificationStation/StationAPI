@@ -1,17 +1,17 @@
-package net.modificationstation.stationapi.impl.block;
+package net.modificationstation.stationapi.impl.nbt;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.block.BlockBase;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.block.Property;
-import net.modificationstation.stationapi.api.block.State;
-import net.modificationstation.stationapi.api.block.StateManager;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.mixin.block.CompoundTagAccessor;
+import net.modificationstation.stationapi.api.state.State;
+import net.modificationstation.stationapi.api.state.StateManager;
+import net.modificationstation.stationapi.api.state.property.Property;
+import net.modificationstation.stationapi.mixin.flattening.CompoundTagAccessor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

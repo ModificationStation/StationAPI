@@ -11,11 +11,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.StateManager;
 import net.modificationstation.stationapi.api.client.render.model.AndMultipartModelSelector;
 import net.modificationstation.stationapi.api.client.render.model.MultipartModelSelector;
 import net.modificationstation.stationapi.api.client.render.model.OrMultipartModelSelector;
 import net.modificationstation.stationapi.api.client.render.model.SimpleMultipartModelSelector;
+import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.util.json.JsonHelper;
 
 import java.lang.reflect.*;
@@ -73,7 +73,7 @@ public class MultipartModelComponent {
          if (set.isEmpty()) {
             throw new JsonParseException("No elements found in selector");
          } else if (set.size() == 1) {
-            List list2;
+            List<MultipartModelSelector> list2;
             if (object.has("OR")) {
                list2 = Streams.stream(JsonHelper.getArray(object, "OR")).map((jsonElement) -> deserializeSelector(jsonElement.getAsJsonObject())).collect(Collectors.toList());
                return new OrMultipartModelSelector(list2);
@@ -89,7 +89,7 @@ public class MultipartModelComponent {
       }
 
       private static MultipartModelSelector createStatePropertySelector(Entry<String, JsonElement> entry) {
-         return new SimpleMultipartModelSelector((String)entry.getKey(), entry.getValue().getAsString());
+         return new SimpleMultipartModelSelector(entry.getKey(), entry.getValue().getAsString());
       }
    }
 }

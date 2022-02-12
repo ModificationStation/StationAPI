@@ -1,4 +1,6 @@
-package net.modificationstation.stationapi.api.block;
+package net.modificationstation.stationapi.api.level;
+
+import net.modificationstation.stationapi.api.block.BlockState;
 
 public interface BlockStateView {
 

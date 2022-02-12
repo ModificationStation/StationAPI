@@ -5,6 +5,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.state.property.Property;
 
 public class BlockState extends AbstractBlockState {
    public static final Codec<BlockState> CODEC;

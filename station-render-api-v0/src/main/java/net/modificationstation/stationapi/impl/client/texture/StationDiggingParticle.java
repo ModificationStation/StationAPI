@@ -5,13 +5,13 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.particle.Digging;
 import net.minecraft.entity.ParticleBase;
-import net.modificationstation.stationapi.api.block.BlockStateView;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.block.BlockWorldModelProvider;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
+import net.modificationstation.stationapi.api.level.BlockStateView;
 import net.modificationstation.stationapi.mixin.render.client.DiggingAccessor;
 import net.modificationstation.stationapi.mixin.render.client.ParticleBaseAccessor;
 

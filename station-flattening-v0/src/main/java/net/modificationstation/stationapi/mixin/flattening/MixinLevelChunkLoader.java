@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.block;
+package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.level.chunk.LevelChunkLoader;
 import org.spongepowered.asm.mixin.Mixin;

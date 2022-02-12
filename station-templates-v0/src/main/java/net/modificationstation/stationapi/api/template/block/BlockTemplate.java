@@ -7,11 +7,11 @@ import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.BlockToolLogic;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.block.StateManager;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.state.StateManager;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.util.*;

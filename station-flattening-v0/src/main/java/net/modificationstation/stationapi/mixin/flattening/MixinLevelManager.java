@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.block;
+package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.level.Level;
 import net.minecraft.level.LevelManager;
@@ -46,16 +46,6 @@ public class MixinLevelManager {
     )
     private static void stopSavingBlocks(CompoundTag instance, String item, byte[] bytes) {}
 
-    @Redirect(
-            method = "method_1480(Lnet/minecraft/level/chunk/Chunk;Lnet/minecraft/level/Level;Lnet/minecraft/util/io/CompoundTag;)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/util/io/CompoundTag;put(Ljava/lang/String;[B)V",
-                    ordinal = 1
-            )
-    )
-    private static void stopSavingMeta(CompoundTag instance, String item, byte[] bytes) {}
-
     @Inject(
             method = "method_1480(Lnet/minecraft/level/chunk/Chunk;Lnet/minecraft/level/Level;Lnet/minecraft/util/io/CompoundTag;)V",
             at = @At(
@@ -89,18 +79,6 @@ public class MixinLevelManager {
             )
     )
     private static byte[] stopLoadingBlocks(CompoundTag instance, String s) {
-        return null;
-    }
-
-    @Redirect(
-            method = "method_1479(Lnet/minecraft/level/Level;Lnet/minecraft/util/io/CompoundTag;)Lnet/minecraft/level/chunk/Chunk;",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/util/io/CompoundTag;getByteArray(Ljava/lang/String;)[B",
-                    ordinal = 1
-            )
-    )
-    private static byte[] stopLoadingMeta(CompoundTag instance, String s) {
         return null;
     }
 

@@ -1,8 +1,9 @@
-package net.modificationstation.stationapi.api.block;
+package net.modificationstation.stationapi.api.state.property;
 
 import com.google.common.base.MoreObjects;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import net.modificationstation.stationapi.api.state.State;
 
 import java.util.*;
 import java.util.stream.*;

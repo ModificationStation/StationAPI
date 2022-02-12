@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.packet.Message;
-import net.modificationstation.stationapi.impl.block.NbtHelper;
+import net.modificationstation.stationapi.impl.nbt.NbtHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.*;

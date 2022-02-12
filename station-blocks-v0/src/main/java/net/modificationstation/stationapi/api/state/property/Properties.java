@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.block;
+package net.modificationstation.stationapi.api.state.property;
 
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.JigsawOrientation;
@@ -246,10 +246,6 @@ public class Properties {
 //    * <p>This property does not allow for a rail to turn.
 //    */
 //   public static final EnumProperty<RailShape> STRAIGHT_RAIL_SHAPE;
-   /**
-    * A property that specifies the metadata of the block.
-    */
-   public static final IntProperty META = IntProperty.of("meta", 0, 15);
    //      WALL_MOUNT_LOCATION = EnumProperty.of("face", WallMountLocation.class);
 //      ATTACHMENT = EnumProperty.of("attachment", Attachment.class);
 //      EAST_WALL_SHAPE = EnumProperty.of("east", WallShape.class);

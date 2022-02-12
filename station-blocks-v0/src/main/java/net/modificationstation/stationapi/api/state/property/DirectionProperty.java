@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.block;
+package net.modificationstation.stationapi.api.state.property;
 
 import com.google.common.collect.Lists;
 import net.modificationstation.stationapi.api.util.math.Direction;

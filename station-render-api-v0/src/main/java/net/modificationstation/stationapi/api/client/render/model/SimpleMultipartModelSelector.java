@@ -6,8 +6,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.Property;
-import net.modificationstation.stationapi.api.block.StateManager;
+import net.modificationstation.stationapi.api.state.StateManager;
+import net.modificationstation.stationapi.api.state.property.Property;
 
 import java.util.*;
 import java.util.function.*;
@@ -54,7 +54,7 @@ public class SimpleMultipartModelSelector implements MultipartModelSelector {
 
    private Predicate<BlockState> createPredicate(StateManager<BlockBase, BlockState> stateFactory, Property<?> property, String valueString) {
       Optional<?> optional = property.parse(valueString);
-      if (!optional.isPresent()) {
+      if (optional.isEmpty()) {
          throw new RuntimeException(String.format("Unknown value '%s' for property '%s' on '%s' in '%s'", valueString, this.key, stateFactory.getOwner().toString(), this.valueString));
       } else {
          return (blockState) -> blockState.get(property).equals(optional.get());

@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.block;
+package net.modificationstation.stationapi.api.state.property;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableSet;

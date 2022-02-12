@@ -1,11 +1,11 @@
-package net.modificationstation.stationapi.mixin.block;
+package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.Level;
 import net.minecraft.level.chunk.Chunk;
 import net.minecraft.util.maths.Vec2i;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.BlockStateView;
+import net.modificationstation.stationapi.api.level.BlockStateView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;

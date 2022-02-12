@@ -5,13 +5,13 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.block.Property;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelManager;
 import net.modificationstation.stationapi.api.client.render.model.ModelIdentifier;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.state.property.Property;
 
 import java.util.*;
 import java.util.Map.*;

@@ -29,4 +29,5 @@ include 'station-templates-v0'
 include 'station-registry-sync-v0'
 include 'station-dimensions-v0'
 include 'station-tools-api-v1'
+include 'station-flattening-v0'
 

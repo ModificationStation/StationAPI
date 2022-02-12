@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.block;
+package net.modificationstation.stationapi.api.state;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
@@ -12,6 +12,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.Decoder;
 import com.mojang.serialization.Encoder;
 import com.mojang.serialization.MapCodec;
+import net.modificationstation.stationapi.api.state.property.Property;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;

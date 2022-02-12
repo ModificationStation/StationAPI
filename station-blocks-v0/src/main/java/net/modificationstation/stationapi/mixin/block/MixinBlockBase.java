@@ -5,11 +5,11 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.block.StateManager;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.serial.SerialIDHolder;
+import net.modificationstation.stationapi.api.state.StateManager;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,8 +22,6 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static net.modificationstation.stationapi.api.block.Properties.META;
 
 @Mixin(BlockBase.class)
 public class MixinBlockBase implements BlockStateHolder, SerialIDHolder {
@@ -58,10 +56,9 @@ public class MixinBlockBase implements BlockStateHolder, SerialIDHolder {
     )
     private void onInit(int material, Material par2, CallbackInfo ci) {
         StateManager.Builder<BlockBase, BlockState> builder = new StateManager.Builder<>((BlockBase) (Object) this);
-        builder.add(META);
-        this.appendProperties(builder);
+        appendProperties(builder);
         stateManager = builder.build(blockBase -> ((BlockStateHolder) blockBase).getDefaultState(), BlockState::new);
-        this.setDefaultState(stateManager.getDefaultState().with(META, 0));
+        setDefaultState(stateManager.getDefaultState());
     }
 
     @Unique

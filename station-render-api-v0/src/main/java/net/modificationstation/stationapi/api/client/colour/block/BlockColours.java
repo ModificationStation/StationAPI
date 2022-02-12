@@ -10,15 +10,13 @@ import net.minecraft.client.render.block.GrassColour;
 import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.Property;
 import net.modificationstation.stationapi.api.client.colour.world.BiomeColours;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.util.collection.IdList;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-
-import static net.modificationstation.stationapi.api.block.Properties.META;
 
 @Environment(EnvType.CLIENT)
 public class BlockColours {
@@ -32,11 +30,11 @@ public class BlockColours {
             if (world == null || pos == null)
                 return FoliageColour.method_1083();
             else {
-                int meta = state.get(META);
+                int meta = world.getTileMeta(pos.x, pos.y, pos.z);
                 return (meta & 1) == 1 ? FoliageColour.method_1079() : (meta & 2) == 2 ? FoliageColour.method_1082() : BiomeColours.getFoliageColour(world, pos);
             }
         }, BlockBase.LEAVES);
-        blockColours.registerColourProperty(META, BlockBase.LEAVES);
+//        blockColours.registerColourProperty(META, BlockBase.LEAVES);
         blockColours.registerColourProvider(
                 (state, world, pos, tintIndex) -> world == null || pos == null ? -1 : BiomeColours.getWaterColour(world, pos),
                 BlockBase.FLOWING_WATER, BlockBase.STILL_WATER

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "station-flattening-v0",
+  "version": "${version}",
+
+  "name": "Station Flattening (v0)",
+  "description": "MC1.13+ world save format for legacy Minecraft versions! Allows us to have infinite block and item IDs, as well as block states.",
+  "authors": [
+    "Modification Station"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/repo/mod/stationapi",
+    "sources": "https://github.com/ModificationStation/StationAPI",
+    "issues": "https://github.com/ModificationStation/StationAPI/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/station-flattening-v0/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "stationapi:event_bus": [
+
+    ]
+  },
+  "mixins": [
+    "station-flattening-v0.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  },
+
+  "custom": {
+    "modmenu:api": true
+  }
+}

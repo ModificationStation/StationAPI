@@ -7,6 +7,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColour;
 import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
+import net.modificationstation.stationapi.api.state.State;
+import net.modificationstation.stationapi.api.state.property.Property;
 
 public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
       private final int luminance;
