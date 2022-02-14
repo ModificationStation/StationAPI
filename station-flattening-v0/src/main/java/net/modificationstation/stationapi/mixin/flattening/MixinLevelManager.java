@@ -7,6 +7,7 @@ import net.minecraft.util.io.CompoundTag;
 import net.minecraft.util.io.ListTag;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSectionsAccessor;
+import net.modificationstation.stationapi.impl.nbt.LongArrayCompound;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -101,21 +102,7 @@ public class MixinLevelManager {
                 int k = section.getByte("Y");
                 if (section.containsKey("Palette") && section.containsKey("BlockStates")) {
                     ChunkSection chunkSection = new ChunkSection(k << 4);
-                    byte[] bytes = section.getByteArray("BlockStates");
-                    long[] longs = new long[bytes.length / 8];
-                    for (int j = 0; j < longs.length; j++) {
-                        int index = j * 8;
-                        longs[j] =
-                                ((long) Byte.toUnsignedInt(bytes[index]) << 56L)
-                                | (((long) Byte.toUnsignedInt(bytes[index + 1])) << 48L)
-                                | (((long) Byte.toUnsignedInt(bytes[index + 2])) << 40L)
-                                | (((long) Byte.toUnsignedInt(bytes[index + 3])) << 32L)
-                                | (((long) Byte.toUnsignedInt(bytes[index + 4])) << 24L)
-                                | (((long) Byte.toUnsignedInt(bytes[index + 5])) << 16L)
-                                | (((long) Byte.toUnsignedInt(bytes[index + 6])) << 8L)
-                                | ((long) Byte.toUnsignedInt(bytes[index + 7]));
-                    }
-                    chunkSection.getContainer().read(section.getListTag("Palette"), longs);
+                    chunkSection.getContainer().read(section.getListTag("Palette"), ((LongArrayCompound) section).getLongArray("BlockStates"));
                     chunkSection.calculateCounts();
                     if (!chunkSection.isEmpty()) {
                         sections[k] = chunkSection;

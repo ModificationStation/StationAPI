@@ -18,7 +18,7 @@ import java.util.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
-public class NbtHelper {
+public class BlockStateHelper {
 
     public static BlockState toBlockState(CompoundTag tag) {
         if (tag.containsKey("Name")) {

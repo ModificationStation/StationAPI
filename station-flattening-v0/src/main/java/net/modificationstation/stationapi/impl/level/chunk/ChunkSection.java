@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.packet.Message;
-import net.modificationstation.stationapi.impl.nbt.NbtHelper;
+import net.modificationstation.stationapi.impl.nbt.BlockStateHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.*;
@@ -29,7 +29,7 @@ public class ChunkSection {
       this.nonEmptyBlockCount = nonEmptyBlockCount;
       this.randomTickableBlockCount = randomTickableBlockCount;
       this.nonEmptyFluidCount = nonEmptyFluidCount;
-      this.container = new PalettedContainer<>(PALETTE, States.STATE_IDS, NbtHelper::toBlockState, NbtHelper::fromBlockState, States.AIR.get());
+      this.container = new PalettedContainer<>(PALETTE, States.STATE_IDS, BlockStateHelper::toBlockState, BlockStateHelper::fromBlockState, States.AIR.get());
    }
 
    public BlockState getBlockState(int x, int y, int z) {

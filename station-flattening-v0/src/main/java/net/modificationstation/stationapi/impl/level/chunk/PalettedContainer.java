@@ -13,6 +13,7 @@ import net.modificationstation.stationapi.api.util.exception.CrashException;
 import net.modificationstation.stationapi.api.util.exception.CrashReport;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
+import net.modificationstation.stationapi.impl.nbt.LongArrayCompound;
 
 import java.util.*;
 import java.util.concurrent.locks.*;
@@ -207,20 +208,7 @@ public class PalettedContainer<T> implements PaletteResizeListener<T> {
          packedIntegerArray.set(l, is[l]);
       }
 
-      long[] longArray = packedIntegerArray.getStorage();
-      byte[] array = new byte[longArray.length * 8];
-      for (int l = 0; l < longArray.length; l++) {
-         int index = l * 8;
-         array[index] = (byte) ((longArray[l] >> 56L) & 255);
-         array[index + 1] = (byte) ((longArray[l] >> 48L) & 255);
-         array[index + 2] = (byte) ((longArray[l] >> 40L) & 255);
-         array[index + 3] = (byte) ((longArray[l] >> 32L) & 255);
-         array[index + 4] = (byte) ((longArray[l] >> 24L) & 255);
-         array[index + 5] = (byte) ((longArray[l] >> 16L) & 255);
-         array[index + 6] = (byte) ((longArray[l] >> 8L) & 255);
-         array[index + 7] = (byte) (longArray[l] & 255);
-      }
-      compoundTag.put(string2, array);
+      ((LongArrayCompound) compoundTag).put(string2, packedIntegerArray.getStorage());
       this.unlock();
    }
 
