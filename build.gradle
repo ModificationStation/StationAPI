@@ -1,22 +1,10 @@
-buildscript {
-    repositories {
-        maven {
-            url = "https://maven.glass-launcher.net/snapshots"
-        }
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
-        mavenCentral()
-        maven {
-            name = 'Jitpack'
-            url 'https://jitpack.io/'
-        }
-    }
-    dependencies {
-        classpath 'net.fabricmc:fabric-loom:0.2.8-SNAPSHOT'
-    }
+plugins {
+    id "maven-publish"
+    id "fabric-loom" version "0.2.9-SNAPSHOT"
 }
+
+import net.fabricmc.loom.task.RunClientTask
+import net.fabricmc.loom.task.RunServerTask
 
 def getSubprojectVersion(project, ver) {
     return "${project.mod_version}-$ver"
@@ -226,9 +214,6 @@ allprojects {
         }
     }
 }
-
-import net.fabricmc.loom.task.RunClientTask
-import net.fabricmc.loom.task.RunServerTask
 
 //Subprojects will set these themselves
 //Not neatly. - calm
