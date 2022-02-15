@@ -21,7 +21,6 @@
   "entrypoints": {
     "stationapi:event_bus": [
       "net.modificationstation.stationapi.impl.entity.player.ItemCustomReachImpl",
-      "net.modificationstation.stationapi.impl.registry.ItemInstanceRemapper",
       "net.modificationstation.stationapi.impl.item.ItemRegistryInit"
     ],
     "stationapi:event_bus_client": [

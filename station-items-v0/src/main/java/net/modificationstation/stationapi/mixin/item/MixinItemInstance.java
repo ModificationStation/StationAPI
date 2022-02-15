@@ -16,7 +16,6 @@ import net.modificationstation.stationapi.api.item.nbt.StationNBT;
 import net.modificationstation.stationapi.api.nbt.NBTHelper;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.impl.item.nbt.StationNBTSetter;
-import net.modificationstation.stationapi.impl.registry.ItemInstanceRemapper;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -46,7 +45,6 @@ public class MixinItemInstance implements HasItemEntity, StationNBTSetter, Stati
     @Deprecated
     @Inject(method = "<init>(III)V", at = @At("RETURN"))
     private void onFreshInstance(int id, int count, int damage, CallbackInfo ci) {
-        ItemRegistry.INSTANCE.getIdentifier(itemId).ifPresent(identifier -> ItemInstanceRemapper.ITEM_INSTANCE_TO_IDENTIFIER.put((ItemInstance) (Object) this, identifier));
         ItemBase itemBase = ItemBase.byId[id];
         if (itemBase instanceof ItemWithEntity itemWithEntity)
             itemEntity = itemWithEntity.getItemEntityFactory().get();
@@ -55,7 +53,6 @@ public class MixinItemInstance implements HasItemEntity, StationNBTSetter, Stati
     @Deprecated
     @Inject(method = "fromTag(Lnet/minecraft/util/io/CompoundTag;)V", at = @At("RETURN"))
     private void fromTag(CompoundTag tag, CallbackInfo ci) {
-        ItemRegistry.INSTANCE.getIdentifier(itemId).ifPresent(identifier -> ItemInstanceRemapper.ITEM_INSTANCE_TO_IDENTIFIER.put((ItemInstance) (Object) this, identifier));
         ItemBase itemBase = ItemBase.byId[itemId];
         if (itemBase instanceof ItemWithEntity itemWithEntity)
             itemEntity = itemWithEntity.getItemEntityNBTFactory().apply(tag);
