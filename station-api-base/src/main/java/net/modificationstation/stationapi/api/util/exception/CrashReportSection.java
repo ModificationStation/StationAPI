@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.util.exception;
 
 import com.google.common.collect.Lists;
+import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,15 +18,15 @@ public class CrashReportSection {
       this.title = title;
    }
 
-   public static String createPositionString(double x, double y, double z) {
-      return String.format(Locale.ROOT, "%.2f,%.2f,%.2f - %s", x, y, z, createPositionString(new TilePos((int) x, (int) y, (int) z)));
+   public static String createPositionString(BlockView world, double x, double y, double z) {
+      return String.format(Locale.ROOT, "%.2f,%.2f,%.2f - %s", x, y, z, CrashReportSection.createPositionString(world, new TilePos((int) x, (int) y, (int) z)));
    }
 
-   public static String createPositionString(TilePos pos) {
-      return createPositionString(pos.x, pos.y, pos.z);
+   public static String createPositionString(BlockView world, TilePos pos) {
+      return CrashReportSection.createPositionString(world, pos.x, pos.y, pos.z);
    }
 
-   public static String createPositionString(int x, int y, int z) {
+   public static String createPositionString(BlockView world, int x, int y, int z) {
       StringBuilder stringBuilder = new StringBuilder();
 
       try {
@@ -162,14 +163,6 @@ public class CrashReportSection {
 
    public StackTraceElement[] getStackTrace() {
       return this.stackTrace;
-   }
-
-   public static void addBlockInfo(CrashReportSection element, TilePos pos, @Nullable Object state) {
-      if (state != null) {
-         element.add("Block", state::toString);
-      }
-
-      element.add("Block location", () -> createPositionString(pos));
    }
 
    static class Element {

@@ -55,7 +55,7 @@ public class MixinWorldRenderer {
 //                this.textureManager.bindTexture(this.textureManager.getTextureId(ExpandableTextureAtlas.STATION_GUI_ITEMS.spritesheet));
 //                ((CustomAtlasProvider) ItemListener.testItem).getAtlas().of(ItemListener.testItem.getTexturePosition(0)).bindAtlas();
 //                Atlases.getStationJsonModels().bindAtlas();
-                this.textureManager.bindTexture(StationRenderAPI.BAKED_MODEL_MANAGER.getAtlas(Atlases.GAME_ATLAS_TEXTURE).getGlId());
+                this.textureManager.bindTexture(StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getGlId());
                 GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);
             }
 

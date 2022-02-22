@@ -54,6 +54,10 @@ public enum Direction implements StringIdentifiable {
     @Getter
     private Direction opposite;
 
+    public int getId() {
+        return this.ordinal();
+    }
+
     public static Direction from(Axis axis, AxisDirection direction) {
         return switch (axis) {
             case X -> direction == AxisDirection.NEGATIVE ? NORTH : SOUTH;

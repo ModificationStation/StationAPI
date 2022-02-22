@@ -23,9 +23,6 @@
       "net.modificationstation.stationapi.impl.registry.LevelRegistryRemapper"
     ]
   },
-  "mixins": [
-    "station-registry-api-v0.mixins.json"
-  ],
 
   "depends": {
     "fabricloader": "*",

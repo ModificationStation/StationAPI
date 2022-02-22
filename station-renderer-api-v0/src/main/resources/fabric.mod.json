@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "station-renderer-api-v0",
+  "version": "${version}",
+
+  "name": "Station Renderer API (v0)",
+  "description": "Textures, models, text color, etc.",
+  "authors": [
+    "Modification Station"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/repo/mod/stationapi",
+    "sources": "https://github.com/ModificationStation/StationAPI",
+    "issues": "https://github.com/ModificationStation/StationAPI/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/station-renderer-api-v0/icon.png",
+
+  "environment": "client",
+  "entrypoints": {
+    "stationapi:event_bus_client": [
+      "net.modificationstation.stationapi.impl.client.texture.StationRenderImpl"
+    ]
+  },
+  "mixins": [
+    "station-renderer-api-v0.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  },
+
+  "custom": {
+    "modmenu:api": true
+  }
+}

@@ -2,6 +2,8 @@ package net.modificationstation.stationapi.api.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColour;
@@ -9,6 +11,7 @@ import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.state.State;
 import net.modificationstation.stationapi.api.state.property.Property;
+import net.modificationstation.stationapi.api.util.math.MathHelper;
 
 public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
       private final int luminance;
@@ -354,10 +357,10 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
           return BlockBase.TICKS_RANDOMLY[getBlock().id];
       }
 
-//      @Environment(EnvType.CLIENT)
-//      public long getRenderingSeed(BlockPos pos) {
-//         return this.getBlock().getRenderingSeed(this.asBlockState(), pos);
-//      }
+      @Environment(EnvType.CLIENT)
+      public long getRenderingSeed(TilePos pos) {
+          return MathHelper.hashCode(pos.x, pos.y, pos.z);
+      }
 //
 //      public BlockSoundGroup getSoundGroup() {
 //         return this.getBlock().getSoundGroup(this.asBlockState());
@@ -384,4 +387,4 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
       public boolean isToolRequired() {
          return this.toolRequired;
       }
-   }
+}
