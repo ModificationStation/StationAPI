@@ -23,7 +23,7 @@ public class BakedModelManager extends SinglePreparationResourceReloadListener<M
    private SpriteAtlasManager atlasManager;
    private final BlockModels blockModelCache;
    private final TextureManager textureManager;
-   public final BlockColours colourMap;
+   private final BlockColours colourMap;
    private int mipmap;
    private BakedModel missingModel;
    private Object2IntMap<BlockState> stateLookup;

@@ -26,8 +26,8 @@ import net.modificationstation.stationapi.api.client.resource.Resource;
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
+import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
-import net.modificationstation.stationapi.api.client.texture.plugin.TextureManagerPlugin;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
@@ -37,7 +37,6 @@ import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.math.AffineTransformation;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
-import net.modificationstation.stationapi.impl.client.texture.IdentifierTextureManager;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
@@ -171,9 +170,9 @@ public class ModelLoader {
             SpriteAtlasTexture spriteAtlasTexture = spriteAtlasTextureDataPair.getFirst();
             SpriteAtlasTexture.Data data = spriteAtlasTextureDataPair.getSecond();
             spriteAtlasTexture.upload(data);
-            IdentifierTextureManager cTextureManager = ((TextureManagerPlugin.Provider) textureManager).getPlugin();
-            cTextureManager.registerTexture(spriteAtlasTexture.getId(), spriteAtlasTexture);
-            cTextureManager.bindTexture(spriteAtlasTexture.getId());
+            StationTextureManager tm = StationTextureManager.get(textureManager);
+            tm.registerTexture(spriteAtlasTexture.getId(), spriteAtlasTexture);
+            tm.bindTexture(spriteAtlasTexture.getId());
             spriteAtlasTexture.applyTextureFilter(data);
         }
 

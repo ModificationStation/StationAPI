@@ -32,13 +32,7 @@ public interface TextureManagerAccessor {
     void setCurrentImageBuffer(ByteBuffer byteBuffer);
 
     @Invoker
-    void invokeBindImageToId(BufferedImage bufferedImage, int i);
-
-    @Invoker
     BufferedImage invokeReadImage(InputStream var1);
-
-    @Accessor
-    BufferedImage getMissingTexImage();
 
     @Accessor("isBlurTexture")
     boolean stationapi$isBlurTexture();
@@ -48,9 +42,6 @@ public interface TextureManagerAccessor {
 
     @Invoker("method_1098")
     int stationapi$method_1098(int i, int j);
-
-    @Accessor("field_1249")
-    IntBuffer stationapi$getField_1249();
 
     @Accessor("texturePackManager")
     TexturePackManager stationapi$getTexturePackManager();
