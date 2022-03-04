@@ -175,8 +175,9 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             for (int i = 0; i < tiles.length; i++) {
                 int id = Byte.toUnsignedInt(tiles[i]);
                 if (id == 0) continue;
-                int x = (i >> 11) & 15;
                 int y = i & 127;
+                if (y > lastBlock) continue;
+                int x = (i >> 11) & 15;
                 int z = (i >> 7) & 15;
                 int yOffset = y >> 4;
                 if (sections[yOffset] == ChunkSection.EMPTY_SECTION) {
@@ -227,10 +228,8 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
 
         this.field_961 = minHeight;
 
-        for(int x = 0; x < 16; ++x) {
-            for(int z = 0; z < 16; ++z) {
-                this.method_887(x, z);
-            }
+        for (short i = 0; i < 256; i++) {
+            this.method_887(i & 15, i >> 4);
         }
 
         this.field_967 = true;
@@ -333,6 +332,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     public boolean setTileWithMetadata(int x, int y, int z, int blockId, int meta) {
         BlockState state = ((BlockStateHolder) BlockBase.BY_ID[blockId]).getDefaultState();
         ChunkSection section = getOrCreateSection(y);
+        if (section == null) return false;
         boolean sameMeta = section.getMeta(x, y, z) == meta;
         if (state.isAir() && sameMeta) return false;
         short var6 = getShortHeight(x, z);
@@ -393,26 +393,19 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Override
     @Unique
     public BlockState getBlockState(int x, int y, int z) {
-        int yOffset = y >> 4;
-        return sections[yOffset] == null ? States.AIR.get() : sections[yOffset].getBlockState(x, y & 15, z);
+        ChunkSection section = getSection(y);
+        return section == null ? States.AIR.get() : section.getBlockState(x, y & 15, z);
     }
 
     @Override
     @Unique
     public BlockState setBlockState(int x, int y, int z, BlockState state) {
-        int yOffset = y >> 4;
-        ChunkSection section = sections[yOffset];
-        if (section == ChunkSection.EMPTY_SECTION) {
-            if (state.isAir())
-                return null;
-            section = new ChunkSection(yOffset << 4);
-            this.sections[yOffset] = section;
-        }
-        short topY = getShortHeight(x, z);
+        ChunkSection section = getOrCreateSection(y);
+        if (section == null) return null;
         BlockState oldState = section.getBlockState(x, y & 15, z);
-        if (oldState == state)
-            return null;
+        if (oldState == state) return null;
         else {
+            short topY = getShortHeight(x, z);
             int levelX = this.x << 4 | x;
             int levelZ = this.z << 4 | z;
             oldState.getBlock().onBlockRemoved(this.level, levelX, y, levelZ);

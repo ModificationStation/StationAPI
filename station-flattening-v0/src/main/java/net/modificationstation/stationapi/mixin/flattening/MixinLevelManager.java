@@ -102,10 +102,11 @@ public class MixinLevelManager {
             ListTag listTag = chunkTag.getListTag(SECTIONS_TAG);
             for (int i = 0; i < listTag.size(); i++) {
                 CompoundTag sectionTag = CompoundTag.class.cast(listTag.get(i));
-                int k = sectionTag.getByte(HEIGHT_KEY);
-                ChunkSection chunkSection = new ChunkSection(k << 4);
+                int sectionY = sectionTag.getByte(HEIGHT_KEY);
+                if (sectionY < 0 || sectionY >= sections.length) continue;
+                ChunkSection chunkSection = new ChunkSection(sectionY << 4);
                 chunkSection.fromNBT(chunkTag, sectionTag);
-                sections[k] = chunkSection;
+                sections[sectionY] = chunkSection;
             }
         }
         StationHeigtmapProvider provider = StationHeigtmapProvider.class.cast(chunk);
