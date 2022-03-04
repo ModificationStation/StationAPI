@@ -2,29 +2,41 @@ package net.modificationstation.stationapi.impl.level.chunk;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.level.LightType;
+import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.impl.nbt.BlockStateHelper;
+import net.modificationstation.stationapi.impl.nbt.LongArrayCompound;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.*;
 
 public class ChunkSection {
+   private static final String PALETTE_KEY = "Palette";
+   private static final String BLOCKSTATES_KEY = "BlockStates";
+   private static final String METADATA_KEY = "Data";
+   private static final String SKY_LIGHT_KEY = "SkyLight";
+   private static final String BLOCK_LIGHT_KEY = "BlockLight";
+   
    private static final Palette<BlockState> PALETTE;
    @Nullable
    public static final ChunkSection EMPTY_SECTION = null;
-   private final int yOffset;
+   private final short yOffset;
    private short nonEmptyBlockCount;
    private short randomTickableBlockCount;
    private short nonEmptyFluidCount;
    private final PalettedContainer<BlockState> container;
+   private final NibbleArray metadataArray = new NibbleArray(4096);
+   private final NibbleArray skyLightArray = new NibbleArray(4096);
+   private final NibbleArray blockLightArray = new NibbleArray(4096);
 
    public ChunkSection(int yOffset) {
-      this(yOffset, (short)0, (short)0, (short)0);
+      this((short) yOffset, (short) 0, (short) 0, (short) 0);
    }
 
-   public ChunkSection(int yOffset, short nonEmptyBlockCount, short randomTickableBlockCount, short nonEmptyFluidCount) {
+   public ChunkSection(short yOffset, short nonEmptyBlockCount, short randomTickableBlockCount, short nonEmptyFluidCount) {
       this.yOffset = yOffset;
       this.nonEmptyBlockCount = nonEmptyBlockCount;
       this.randomTickableBlockCount = randomTickableBlockCount;
@@ -157,6 +169,90 @@ public class ChunkSection {
       return this.container.hasAny(predicate);
    }
 
+   public int getMeta(int index) {
+      return metadataArray.getValue(index);
+   }
+   
+   public int getMeta(int x, int y, int z) {
+      return getMeta(getIndex(x, y, z));
+   }
+   
+   public void setMeta(int index, int meta) {
+      metadataArray.setValue(index, meta);
+   }
+   
+   public void setMeta(int x, int y, int z, int meta) {
+      setMeta(getIndex(x, y, z), meta);
+   }
+   
+   public int getLight(LightType type, int index) {
+      return getLightArray(type).getValue(index);
+   }
+   
+   public int getLight(LightType type, int x, int y, int z) {
+      return getLight(type, getIndex(x, y, z));
+   }
+   
+   public void setLight(LightType type, int index, int meta) {
+      getLightArray(type).setValue(index, meta);
+   }
+   
+   public void setLight(LightType type, int x, int y, int z, int meta) {
+      setLight(type, getIndex(x, y, z), meta);
+   }
+   
+   public CompoundTag toNBT() {
+      CompoundTag tag = new CompoundTag();
+      tag.put("Y", (byte) (yOffset >> 4));
+      getContainer().write(tag, "Palette", "BlockStates");
+      tag.put(METADATA_KEY, metadataArray.toTag());
+      tag.put(SKY_LIGHT_KEY, skyLightArray.toTag());
+      tag.put(BLOCK_LIGHT_KEY, blockLightArray.toTag());
+      return tag;
+   }
+   
+   public void fromNBT(CompoundTag chunkTag, CompoundTag sectionTag) {
+      if (sectionTag.containsKey(PALETTE_KEY) && sectionTag.containsKey(BLOCKSTATES_KEY)) {
+         long[] data = LongArrayCompound.class.cast(sectionTag).getLongArray(BLOCKSTATES_KEY);
+         getContainer().read(sectionTag.getListTag(PALETTE_KEY), data);
+      }
+      metadataArray.copyArray(sectionTag.getByteArray(METADATA_KEY));
+      skyLightArray.copyArray(sectionTag.getByteArray(SKY_LIGHT_KEY));
+      blockLightArray.copyArray(sectionTag.getByteArray(BLOCK_LIGHT_KEY));
+      if (chunkTag.containsKey(METADATA_KEY)) {
+         fillArrayPart(chunkTag.getByteArray(METADATA_KEY), metadataArray);
+      }
+      if (chunkTag.containsKey(SKY_LIGHT_KEY)) {
+         fillArrayPart(chunkTag.getByteArray(SKY_LIGHT_KEY), skyLightArray);
+      }
+      if (chunkTag.containsKey(BLOCK_LIGHT_KEY)) {
+         fillArrayPart(chunkTag.getByteArray(BLOCK_LIGHT_KEY), blockLightArray);
+      }
+   }
+   
+   // vanilla order x << 11 | z << 7 | y
+   private void fillArrayPart(byte[] src, NibbleArray res) {
+      int index = 0;
+      final short maxY = (short) (yOffset + 16);
+      for (short y = yOffset; y < maxY; y++) {
+         for (byte z = 0; z < 16; z++) {
+            for (byte x = 0; x < 16; x++) {
+               int srcIndex = x << 11 | z << 7 | y;
+               byte offset = (byte) (srcIndex & 1);
+               res.setValue(index++, (src[srcIndex >> 1] >> offset) & 15);
+            }
+         }
+      }
+   }
+   
+   private int getIndex(int x, int y, int z) {
+      return x << 8 | y << 4 | z;
+   }
+   
+   private NibbleArray getLightArray(LightType type) {
+      return type == LightType.BLOCK ? blockLightArray : skyLightArray;
+   }
+   
    static {
       PALETTE = new IdListPalette<>(States.STATE_IDS, States.AIR.get());
    }

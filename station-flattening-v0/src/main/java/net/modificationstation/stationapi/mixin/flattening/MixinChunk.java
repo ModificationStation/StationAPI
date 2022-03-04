@@ -4,7 +4,6 @@ import lombok.Getter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
-import net.minecraft.class_257;
 import net.minecraft.level.Level;
 import net.minecraft.level.LightType;
 import net.minecraft.level.chunk.Chunk;
@@ -29,6 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Chunk.class)
 public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateView, StationHeigtmapProvider {
+    @Shadow public static boolean field_953;
     @Shadow public Level level;
     @Shadow @Final public int x;
     @Shadow @Final public int z;
@@ -38,8 +38,6 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Shadow public boolean field_967;
     @Shadow public byte[] tiles;
     @Shadow public int field_961;
-    @Shadow public class_257 field_958;
-    @Shadow public class_257 field_957;
     @Unique
     @Getter
     private ChunkSection[] sections;
@@ -75,13 +73,44 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     
     @Inject(method = "getHeight(II)I", at = @At("HEAD"), cancellable = true)
     private void getHeight(int x, int z, CallbackInfoReturnable<Integer> info) {
-        info.setReturnValue((int) stationHeightmap[z << 4 | x]);
+        info.setReturnValue((int) getShortHeight(x, z));
     }
     
     @Inject(method = "isAboveGround", at = @At("HEAD"), cancellable = true)
     private void isAboveGround(int localX, int y, int localZ, CallbackInfoReturnable<Boolean> info) {
-        short height = stationHeightmap[localZ << 4 | localX];
-        info.setReturnValue(y >= height);
+        info.setReturnValue(y >= getShortHeight(localX, localZ));
+    }
+    
+    @Inject(method = "method_864", at = @At("HEAD"), cancellable = true)
+    private void getLight(LightType type, int x, int y, int z, CallbackInfoReturnable<Integer> info) {
+        ChunkSection section = getSection(y);
+        info.setReturnValue(section == null ? type == LightType.SKY ? 15 : 0 : section.getLight(type, x, y & 15, z));
+    }
+    
+    @Inject(method = "method_865", at = @At("HEAD"), cancellable = true)
+    private void setLight(LightType type, int x, int y, int z, int light, CallbackInfo info) {
+        this.field_967 = true;
+        ChunkSection section = getOrCreateSection(y);
+        if (section != null) {
+            section.setLight(type, x, y & 15, z, light);
+        }
+    }
+    
+    @Inject(method = "method_880", at = @At("HEAD"), cancellable = true)
+    private void getLightLevel(int x, int y, int z, int light, CallbackInfoReturnable<Integer> info) {
+        ChunkSection section = getSection(y);
+        int lightLevel = section == null ? 15 : section.getLight(LightType.SKY, x, y & 15, z);
+        if (lightLevel > 0) {
+            this.field_953 = true;
+        }
+    
+        lightLevel -= light;
+        int blockLight = section == null ? 0 : section.getLight(LightType.BLOCK, x, y & 15, z);
+        if (blockLight > lightLevel) {
+            lightLevel = blockLight;
+        }
+        
+        info.setReturnValue(lightLevel);
     }
     
     @Override
@@ -125,7 +154,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
                 for (height = lastBlock; height >0; height--) {
                     if (BlockBase.LIGHT_OPACITY[getTileId(x, height - 1, z)] != 0) break;
                 }
-                stationHeightmap[z << 4 | x] = height;
+                setShortHeight(x, z, height);
                 if (height < chunkHeight) {
                     chunkHeight = height;
                 }
@@ -171,8 +200,8 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
                     if (BlockBase.LIGHT_OPACITY[getTileId(x, height - 1, z)] != 0) break;
                     --height;
                 }
-    
-                stationHeightmap[z << 4 | x] = height;
+                
+                setShortHeight(x, z, height);
                 if (height < minHeight) {
                     minHeight = height;
                 }
@@ -184,7 +213,10 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
                     do {
                         light -= BlockBase.LIGHT_OPACITY[getTileId(x, lightY, z)];
                         if (light > 0) {
-                            this.field_958.method_1704(x, lightY, z, light);
+                            ChunkSection section = getSection(lightY);
+                            if (section != null) {
+                                section.setLight(LightType.SKY, x, lightY & 15, z, light);
+                            }
                         }
 
                         --lightY;
@@ -210,7 +242,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
      */
     @Overwrite
     private void method_889(int x, int y, int z) {
-        short height = stationHeightmap[z << 4 | x];
+        short height = getShortHeight(x, z);
         short maxHeight = (short) Math.max(y, height);
 
         while (maxHeight > 0 && BlockBase.LIGHT_OPACITY[getTileId(x, maxHeight - 1, z)] == 0) {
@@ -219,17 +251,17 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
 
         if (maxHeight != height) {
             this.level.method_240(x, z, maxHeight, height);
-            stationHeightmap[z << 4 | x] = maxHeight;
+            setShortHeight(x, z, maxHeight);
             if (maxHeight < this.field_961) {
                 this.field_961 = maxHeight;
-            } else {
+            }
+            else {
                 int var7 = lastBlock;
-
-                for(int var8 = 0; var8 < 16; ++var8) {
-                    for(int var9 = 0; var9 < 16; ++var9) {
-                        if ((stationHeightmap[(var9 << 4) | var8]) < var7) {
-                            var7 = stationHeightmap[(var9 << 4) | var8];
-                        }
+                
+                for (int i = 0; i < 256; i++) {
+                    short mapHeight = stationHeightmap[i];
+                    if (mapHeight < var7) {
+                        var7 = mapHeight;
                     }
                 }
 
@@ -240,20 +272,26 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             int var13 = this.z << 4 | z;
             if (maxHeight < height) {
                 for(int var14 = maxHeight; var14 < height; ++var14) {
-                    this.field_958.method_1704(x, var14, z, 15);
+                    ChunkSection section = getSection(y);
+                    if (section != null) {
+                        section.setLight(LightType.SKY, x, var14 & 15, z, 15);
+                    }
                 }
-            } else {
+            }
+            else {
                 this.level.method_166(LightType.SKY, var12, height, var13, var12, maxHeight, var13);
-
                 for(int var15 = height; var15 < maxHeight; ++var15) {
-                    this.field_958.method_1704(x, var15, z, 0);
+                    ChunkSection section = getSection(y);
+                    if (section != null) {
+                        section.setLight(LightType.SKY, x, var15 & 15, z, 0);
+                    }
                 }
             }
 
             int var16 = 15;
 
             int var10;
-            for(var10 = maxHeight; maxHeight > 0 && var16 > 0; this.field_958.method_1704(x, maxHeight, z, var16)) {
+            for(var10 = maxHeight; maxHeight > 0 && var16 > 0; getSection(maxHeight).setLight(LightType.SKY, x, maxHeight & 15, z, var16)) {
                 --maxHeight;
                 int var11 = BlockBase.LIGHT_OPACITY[this.getTileId(x, maxHeight, z)];
                 if (var11 == 0) {
@@ -294,16 +332,10 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Overwrite
     public boolean setTileWithMetadata(int x, int y, int z, int blockId, int meta) {
         BlockState state = ((BlockStateHolder) BlockBase.BY_ID[blockId]).getDefaultState();
-        int yOffset = y >> 4;
-        ChunkSection section = sections[yOffset];
-        boolean sameMeta = this.field_957.method_1703(x, y, z) == meta;
-        if (section == ChunkSection.EMPTY_SECTION) {
-            if (state.isAir() && sameMeta)
-                return false;
-            section = new ChunkSection(yOffset << 4);
-            this.sections[yOffset] = section;
-        }
-        short var6 = stationHeightmap[z << 4 | x];
+        ChunkSection section = getOrCreateSection(y);
+        boolean sameMeta = section.getMeta(x, y, z) == meta;
+        if (state.isAir() && sameMeta) return false;
+        short var6 = getShortHeight(x, z);
         BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state && sameMeta)
             return false;
@@ -312,7 +344,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             int levelZ = this.z << 4 | z;
             section.setBlockState(x, y & 15, z, state);
             oldState.getBlock().onBlockRemoved(this.level, levelX, y, levelZ);
-            this.field_957.method_1704(x, y, z, meta);
+            section.setMeta(x, y, z, meta);
 
             if (!this.level.dimension.halvesMapping) {
                 if (BlockBase.LIGHT_OPACITY[state.getBlock().id] != 0) {
@@ -326,7 +358,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
 
             this.level.method_166(LightType.BLOCK, levelX, y, levelZ, levelX, y, levelZ);
             this.method_887(x, z);
-            this.field_957.method_1704(x, y, z, meta);
+            section.setMeta(x, y, z, meta);
             state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ);
 
             this.field_967 = true;
@@ -341,6 +373,21 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Overwrite
     public boolean method_860(int x, int y, int z, int blockId) {
         return setBlockState(x, y, z, ((BlockStateHolder) BlockBase.BY_ID[blockId]).getDefaultState()) != null;
+    }
+    
+    @Inject(method = "method_875", at = @At("HEAD"), cancellable = true)
+    private void getTileMeta(int x, int y, int z, CallbackInfoReturnable<Integer> info) {
+        ChunkSection section = getSection(y);
+        info.setReturnValue(section == null ? 0 : section.getMeta(x, y & 15, z));
+    }
+    
+    @Inject(method = "method_876", at = @At("HEAD"), cancellable = true)
+    private void setTileMeta(int x, int y, int z, int meta, CallbackInfo info) {
+        info.cancel();
+        ChunkSection section = getSection(y);
+        if (section != null) {
+            section.setMeta(x, y & 15, z, meta);
+        }
     }
 
     @Override
@@ -361,7 +408,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             section = new ChunkSection(yOffset << 4);
             this.sections[yOffset] = section;
         }
-        short topY = stationHeightmap[z << 4 | x];
+        short topY = getShortHeight(x, z);
         BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state)
             return null;
@@ -371,8 +418,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             oldState.getBlock().onBlockRemoved(this.level, levelX, y, levelZ);
             // moving this to after onBlockRemoved because some blocks may want to get their blockstate before being removed
             section.setBlockState(x, y & 15, z, state);
-
-            this.field_957.method_1704(x, y, z, 0);
+            section.setMeta(x, y, z, 0);
             if (!this.level.dimension.halvesMapping) {
                 if (BlockBase.LIGHT_OPACITY[state.getBlock().id] != 0) {
                     if (y >= topY)
@@ -401,4 +447,36 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             )
     )
     private void stopRemoval(byte[] bs) {}
+    
+    @Unique
+    private ChunkSection getSection(int y) {
+        if (y < 0 || y > lastBlock) {
+            return null;
+        }
+        return sections[y >> 4];
+    }
+    
+    @Unique
+    private ChunkSection getOrCreateSection(int y) {
+        if (y < 0 || y > lastBlock) {
+            return null;
+        }
+        int index = y >> 4;
+        ChunkSection section = sections[index];
+        if (section == null) {
+            section = new ChunkSection(index << 4);
+            sections[index] = section;
+        }
+        return section;
+    }
+    
+    @Unique
+    private short getShortHeight(int x, int z) {
+        return stationHeightmap[z << 4 | x];
+    }
+    
+    @Unique
+    private void setShortHeight(int x, int z, short height) {
+        stationHeightmap[z << 4 | x] = height;
+    }
 }
