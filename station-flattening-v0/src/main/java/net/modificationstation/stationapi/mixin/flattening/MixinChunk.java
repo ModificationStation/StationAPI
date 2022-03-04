@@ -459,6 +459,17 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         if (section == null) {
             section = new ChunkSection(index << 4);
             sections[index] = section;
+            // fast sky light propagation
+            for (byte x = 0; x < 16; x++) {
+                for (byte z = 0; z < 16; z++) {
+                    int height = getShortHeight(x, z) - section.getYOffset();
+                    if (height >= 0 && height < 16) {
+                        for (y = height; y < 16; y++) {
+                            section.setLight(LightType.SKY, x, y, z, 15);
+                        }
+                    }
+                }
+            }
         }
         return section;
     }
