@@ -149,4 +149,8 @@ public class Util {
     public static <T> T assertMixin() {
         throw new AssertionError("Mixin!");
     }
+
+    public static <T> T assertImpl() {
+        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
+    }
 }

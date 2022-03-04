@@ -10,6 +10,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.event.resource.TexturePackLoadedEvent;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
+import net.modificationstation.stationapi.api.client.render.item.ItemModels;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -55,7 +56,10 @@ public class StationRenderImpl {
         //noinspection deprecation
         Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
         TexturePack texturePack = minecraft.texturePackManager.texturePack;
-        ResourceReloader.create(minecraft.texturePackManager.texturePack, Collections.singletonList(StationRenderAPI.getBakedModelManager()), Util.getMainWorkerExecutor(), Runnable::run, COMPLETED_UNIT_FUTURE);
+        ResourceReloader.create(minecraft.texturePackManager.texturePack, Collections.singletonList(
+                StationRenderAPI.getBakedModelManager()
+        ), Util.getMainWorkerExecutor(), Runnable::run, COMPLETED_UNIT_FUTURE);
+        ItemModels.reloadModelsAll();
         TERRAIN.registerTextureBinders(minecraft.textureManager, texturePack);
         GUI_ITEMS.registerTextureBinders(minecraft.textureManager, texturePack);
         debugExportAtlases();

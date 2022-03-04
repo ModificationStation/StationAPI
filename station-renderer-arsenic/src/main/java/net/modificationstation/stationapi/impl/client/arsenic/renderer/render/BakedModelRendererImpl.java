@@ -67,7 +67,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                 for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
                     q = qs.get(j);
                     light.calculateForQuad(q);
-                    if (q.hasColor()) {
+                    if (q.hasColour()) {
                         int i = StationRenderAPI.getBlockColours().getColour(state, blockView, pos, q.getColorIndex());
                         float r = redI2F(i);
                         float g = greenI2F(i);

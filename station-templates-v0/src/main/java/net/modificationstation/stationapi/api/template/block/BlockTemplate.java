@@ -4,29 +4,32 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.minecraft.block.BlockBase;
+import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.BlockToolLogic;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
+import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.state.StateManager;
+import net.modificationstation.stationapi.api.util.Util;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.util.*;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = CustomAtlasProvider.class)
-public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider, BlockToolLogic, BlockStateHolder {
+public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider, BlockToolLogic, BlockStateHolder, ItemConvertible {
 
     @Override
     default T mineableBy(Identifier toolTag, int level) {
-        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
+        return Util.assertImpl();
     }
 
     @Override
     default List<BiTuple<Identifier, Integer>> getToolTagEffectiveness() {
-        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
+        return Util.assertImpl();
     }
 
     default T setTranslationKey(ModID modID, String translationKey) {
@@ -37,26 +40,31 @@ public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider,
     @Override
     @Environment(EnvType.CLIENT)
     default Atlas getAtlas() {
-        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
+        return Util.assertImpl();
     }
 
     @Override
     default StateManager<BlockBase, BlockState> getStateManager() {
-        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
+        return Util.assertImpl();
     }
 
     @Override
     default BlockState getDefaultState() {
-        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
+        return Util.assertImpl();
     }
 
     @Override
     default void appendProperties(StateManager.Builder<BlockBase, BlockState> builder) {
-        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
+        Util.assertImpl();
     }
 
     @Override
     default void setDefaultState(BlockState state) {
-        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
+        Util.assertImpl();
+    }
+
+    @Override
+    default ItemBase asItem() {
+        return Util.assertImpl();
     }
 }

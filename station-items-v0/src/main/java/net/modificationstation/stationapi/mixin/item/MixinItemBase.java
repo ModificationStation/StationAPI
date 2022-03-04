@@ -4,6 +4,7 @@ import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.item.ItemEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
+import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.serial.SerialIDHolder;
 import org.spongepowered.asm.mixin.Final;
@@ -18,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemBase.class)
-public class MixinItemBase implements SerialIDHolder {
+public class MixinItemBase implements SerialIDHolder, ItemConvertible {
 
     @Shadow @Final public int id;
 
@@ -55,5 +56,11 @@ public class MixinItemBase implements SerialIDHolder {
     )
     private int getBlocksSize(int constant) {
         return BlockRegistry.INSTANCE.getSize();
+    }
+
+    @Override
+    @Unique
+    public ItemBase asItem() {
+        return (ItemBase) (Object) this;
     }
 }

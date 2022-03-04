@@ -8,13 +8,15 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
+import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Util;
 
 import java.util.function.*;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = CustomAtlasProvider.class)
-public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider {
+public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider, ItemConvertible {
 
     default T setTranslationKey(ModID modID, String translationKey) {
         //noinspection unchecked
@@ -24,7 +26,7 @@ public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider {
     @Override
     @Environment(EnvType.CLIENT)
     default Atlas getAtlas() {
-        throw new AssertionError("This method was never supposed to be called, as it should have been overriden by a mixin. Something is very broken!");
+        return Util.assertImpl();
     }
 
     default Atlas.Sprite setTexture(Identifier textureIdentifier) {
@@ -44,5 +46,10 @@ public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider {
         E textureBinder = ((ExpandableAtlas) getAtlas()).addTextureBinder(staticReference, initializer);
         ((ItemBase) this).setTexturePosition(textureBinder.index);
         return textureBinder;
+    }
+
+    @Override
+    default ItemBase asItem() {
+        return Util.assertImpl();
     }
 }

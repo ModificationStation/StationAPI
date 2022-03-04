@@ -8,6 +8,6 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
-public interface BlockColorProvider {
+public interface BlockColourProvider {
    int getColor(BlockState state, @Nullable BlockView world, @Nullable TilePos pos, int tintIndex);
 }

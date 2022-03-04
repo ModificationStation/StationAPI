@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.util.math;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.Util;
 
 import java.util.*;
@@ -61,7 +59,6 @@ public class MatrixStack {
       return this.stack.size() == 1;
    }
 
-   @Environment(EnvType.CLIENT)
    public static final class Entry {
       private final Matrix4f modelMatrix;
       private final Matrix3f normalMatrix;

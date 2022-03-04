@@ -20,7 +20,7 @@ import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class BlockColours {
-    private final IdList<BlockColorProvider> providers = new IdList<>(32);
+    private final IdList<BlockColourProvider> providers = new IdList<>(32);
     private final Map<BlockBase, Set<Property<?>>> properties = new HashMap<>();
 
     public static BlockColours create() {
@@ -43,7 +43,7 @@ public class BlockColours {
     }
 
     public int getColour(BlockState state, BlockView world, TilePos pos) {
-        BlockColorProvider blockColorProvider = this.providers.get(BlockRegistry.INSTANCE.getRawId(state.getBlock()));
+        BlockColourProvider blockColorProvider = this.providers.get(BlockRegistry.INSTANCE.getRawId(state.getBlock()));
         if (blockColorProvider != null) {
             return blockColorProvider.getColor(state, null, null, 0);
         } else {
@@ -53,11 +53,11 @@ public class BlockColours {
     }
 
     public int getColour(BlockState state, @Nullable BlockView world, @Nullable TilePos pos, int tint) {
-        BlockColorProvider blockColorProvider = this.providers.get(BlockRegistry.INSTANCE.getRawId(state.getBlock()));
+        BlockColourProvider blockColorProvider = this.providers.get(BlockRegistry.INSTANCE.getRawId(state.getBlock()));
         return blockColorProvider == null ? -1 : blockColorProvider.getColor(state, world, pos, tint);
     }
 
-    public void registerColourProvider(BlockColorProvider provider, BlockBase... blocks) {
+    public void registerColourProvider(BlockColourProvider provider, BlockBase... blocks) {
 
         for (BlockBase block : blocks) {
             this.providers.set(provider, BlockRegistry.INSTANCE.getRawId(block));
