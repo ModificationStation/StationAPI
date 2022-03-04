@@ -11,7 +11,8 @@
     "MixinLevel",
     "MixinLevelChunkLoader",
     "MixinLevelManager",
-    "MixinWorldPopulationRegion"
+    "MixinWorldPopulationRegion",
+    "MixinLevelProperties"
   ],
   "injectors": {
     "defaultRequire": 1

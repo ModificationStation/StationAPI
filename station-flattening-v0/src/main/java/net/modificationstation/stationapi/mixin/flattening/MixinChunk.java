@@ -12,6 +12,7 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.impl.level.StationLevelProperties;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSectionsAccessor;
 import org.spongepowered.asm.mixin.Final;
@@ -20,7 +21,9 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Chunk.class)
 public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateView {
@@ -39,7 +42,9 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Shadow public class_257 field_957;
     @Unique
     @Getter
-    private final ChunkSection[] sections = new ChunkSection[8];
+    private ChunkSection[] sections;
+    @Unique
+    private short lastBlock;
 
 //    @Inject(
 //            method = "<init>(Lnet/minecraft/level/Level;[BII)V",
@@ -58,6 +63,14 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
 //            value[i] = 0;
 //        }
 //    }
+    
+    @Inject(method = "<init>(Lnet/minecraft/level/Level;II)V", at = @At("TAIL"))
+    private void bhc_onChunkCreation(Level level, int x, int z, CallbackInfo info) {
+        StationLevelProperties properties = StationLevelProperties.class.cast(level.getProperties());
+        sections = new ChunkSection[8];//new ChunkSection[properties.getSectionCount()];
+        lastBlock = 127;//(short) (properties.getLevelHeight() - 1);
+        System.out.println(properties.getSectionCount());
+    }
 
     /**
      * @reason early version
