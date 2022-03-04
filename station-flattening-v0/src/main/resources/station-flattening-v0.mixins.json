@@ -17,7 +17,8 @@
     "MixinBlock"
   ],
   "client": [
-    "MixinClientLevel"
+    "MixinClientLevel",
+    "MixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

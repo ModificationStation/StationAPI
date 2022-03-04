@@ -48,7 +48,11 @@ public class MixinWorldPopulationRegion implements BlockStateView {
         return States.AIR.get();
     }
     
-    @ModifyConstant(method = { "method_142(IIIZ)I", "getTileMeta(III)I" }, constant = @Constant(intValue = 128))
+    @ModifyConstant(method = {
+        "method_142(IIIZ)I",
+        "getTileId(III)I",
+        "getTileMeta(III)I"
+    }, constant = @Constant(intValue = 128))
     private int changeMaxHeight(int value) {
         return getLevelHeight();
     }
