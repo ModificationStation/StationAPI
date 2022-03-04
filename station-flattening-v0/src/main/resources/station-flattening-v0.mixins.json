@@ -12,7 +12,12 @@
     "MixinLevelChunkLoader",
     "MixinLevelManager",
     "MixinWorldPopulationRegion",
-    "MixinLevelProperties"
+    "MixinLevelProperties",
+    "MixinWorldPopulationRegion",
+    "MixinBlock"
+  ],
+  "client": [
+    "MixinClientLevel"
   ],
   "injectors": {
     "defaultRequire": 1
