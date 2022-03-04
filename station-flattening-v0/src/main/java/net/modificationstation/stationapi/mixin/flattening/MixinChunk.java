@@ -243,6 +243,9 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     private void method_889(int x, int y, int z) {
         short height = getShortHeight(x, z);
         short maxHeight = (short) Math.max(y, height);
+        if (maxHeight > lastBlock) {
+            maxHeight = lastBlock;
+        }
 
         while (maxHeight > 0 && BlockBase.LIGHT_OPACITY[getTileId(x, maxHeight - 1, z)] == 0) {
             --maxHeight;
@@ -267,39 +270,39 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
                 this.field_961 = var7;
             }
 
-            int var12 = this.x << 4 | x;
-            int var13 = this.z << 4 | z;
+            int posX = this.x << 4 | x;
+            int posZ = this.z << 4 | z;
+            
             if (maxHeight < height) {
-                for(int var14 = maxHeight; var14 < height; ++var14) {
-                    ChunkSection section = getSection(y);
+                for (int h = maxHeight; h < height; ++h) {
+                    ChunkSection section = getSection(h);
                     if (section != null) {
-                        section.setLight(LightType.SKY, x, var14 & 15, z, 15);
+                        section.setLight(LightType.SKY, x, h & 15, z, 15);
                     }
                 }
             }
             else {
-                this.level.method_166(LightType.SKY, var12, height, var13, var12, maxHeight, var13);
-                for(int var15 = height; var15 < maxHeight; ++var15) {
-                    ChunkSection section = getSection(y);
+                this.level.method_166(LightType.SKY, posX, height, posZ, posX, maxHeight, posZ);
+                for (int h = height; h < maxHeight; ++h) {
+                    ChunkSection section = getSection(h);
                     if (section != null) {
-                        section.setLight(LightType.SKY, x, var15 & 15, z, 0);
+                        section.setLight(LightType.SKY, x, h & 15, z, 0);
                     }
                 }
             }
-
-            int var16 = 15;
-
-            int var10;
-            for(var10 = maxHeight; maxHeight > 0 && var16 > 0; getSection(maxHeight).setLight(LightType.SKY, x, maxHeight & 15, z, var16)) {
+            
+            int h;
+            int light = 15;
+            for(h = maxHeight; maxHeight > 0 && light > 0; getSection(maxHeight).setLight(LightType.SKY, x, maxHeight & 15, z, light)) {
                 --maxHeight;
                 int var11 = BlockBase.LIGHT_OPACITY[this.getTileId(x, maxHeight, z)];
                 if (var11 == 0) {
                     var11 = 1;
                 }
 
-                var16 -= var11;
-                if (var16 < 0) {
-                    var16 = 0;
+                light -= var11;
+                if (light < 0) {
+                    light = 0;
                 }
             }
 
@@ -307,8 +310,8 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
                 --maxHeight;
             }
 
-            if (maxHeight != var10) {
-                this.level.method_166(LightType.SKY, var12 - 1, maxHeight, var13 - 1, var12 + 1, var10, var13 + 1);
+            if (maxHeight != h) {
+                this.level.method_166(LightType.SKY, posX - 1, maxHeight, posZ - 1, posX + 1, h, posZ + 1);
             }
 
             this.field_967 = true;
@@ -333,37 +336,35 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         BlockState state = ((BlockStateHolder) BlockBase.BY_ID[blockId]).getDefaultState();
         ChunkSection section = getOrCreateSection(y);
         if (section == null) return false;
-        boolean sameMeta = section.getMeta(x, y, z) == meta;
+        boolean sameMeta = section.getMeta(x, y & 15, z) == meta;
         if (state.isAir() && sameMeta) return false;
         short var6 = getShortHeight(x, z);
         BlockState oldState = section.getBlockState(x, y & 15, z);
-        if (oldState == state && sameMeta)
-            return false;
-        else {
-            int levelX = this.x << 4 | x;
-            int levelZ = this.z << 4 | z;
-            section.setBlockState(x, y & 15, z, state);
-            oldState.getBlock().onBlockRemoved(this.level, levelX, y, levelZ);
-            section.setMeta(x, y, z, meta);
+        if (oldState == state && sameMeta) return false;
+        
+        int levelX = this.x << 4 | x;
+        int levelZ = this.z << 4 | z;
+        section.setBlockState(x, y & 15, z, state);
+        oldState.getBlock().onBlockRemoved(this.level, levelX, y, levelZ);
+        section.setMeta(x, y & 15, z, meta);
 
-            if (!this.level.dimension.halvesMapping) {
-                if (BlockBase.LIGHT_OPACITY[state.getBlock().id] != 0) {
-                    if (y >= var6)
-                        this.method_889(x, y + 1, z);
-                } else if (y == var6 - 1)
-                    this.method_889(x, y, z);
+        if (!this.level.dimension.halvesMapping) {
+            if (BlockBase.LIGHT_OPACITY[state.getBlock().id] != 0) {
+                if (y >= var6)
+                    this.method_889(x, y + 1, z);
+            } else if (y == var6 - 1)
+                this.method_889(x, y, z);
 
-                this.level.method_166(LightType.SKY, levelX, y, levelZ, levelX, y, levelZ);
-            }
-
-            this.level.method_166(LightType.BLOCK, levelX, y, levelZ, levelX, y, levelZ);
-            this.method_887(x, z);
-            section.setMeta(x, y, z, meta);
-            state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ);
-
-            this.field_967 = true;
-            return true;
+            this.level.method_166(LightType.SKY, levelX, y, levelZ, levelX, y, levelZ);
         }
+
+        this.level.method_166(LightType.BLOCK, levelX, y, levelZ, levelX, y, levelZ);
+        this.method_887(x, z);
+        section.setMeta(x, y & 15, z, meta);
+        state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ);
+
+        this.field_967 = true;
+        return true;
     }
 
     /**
@@ -404,32 +405,31 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         if (section == null) return null;
         BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state) return null;
-        else {
-            short topY = getShortHeight(x, z);
-            int levelX = this.x << 4 | x;
-            int levelZ = this.z << 4 | z;
-            oldState.getBlock().onBlockRemoved(this.level, levelX, y, levelZ);
-            // moving this to after onBlockRemoved because some blocks may want to get their blockstate before being removed
-            section.setBlockState(x, y & 15, z, state);
-            section.setMeta(x, y, z, 0);
-            if (!this.level.dimension.halvesMapping) {
-                if (BlockBase.LIGHT_OPACITY[state.getBlock().id] != 0) {
-                    if (y >= topY)
-                        this.method_889(x, y + 1, z);
-                } else if (y == topY - 1)
-                    this.method_889(x, y, z);
-                this.level.method_166(LightType.SKY, levelX, y, levelZ, levelX, y, levelZ);
-            }
-
-            this.level.method_166(LightType.BLOCK, levelX, y, levelZ, levelX, y, levelZ);
-            this.method_887(x, z);
-            if (!this.level.isClient) {
-                state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ);
-            }
-
-            this.field_967 = true;
-            return oldState;
+        
+        short topY = getShortHeight(x, z);
+        int levelX = this.x << 4 | x;
+        int levelZ = this.z << 4 | z;
+        oldState.getBlock().onBlockRemoved(this.level, levelX, y, levelZ);
+        // moving this to after onBlockRemoved because some blocks may want to get their blockstate before being removed
+        section.setBlockState(x, y & 15, z, state);
+        section.setMeta(x, y & 15, z, 0);
+        if (!this.level.dimension.halvesMapping) {
+            if (BlockBase.LIGHT_OPACITY[state.getBlock().id] != 0) {
+                if (y >= topY)
+                    this.method_889(x, y + 1, z);
+            } else if (y == topY - 1)
+                this.method_889(x, y, z);
+            this.level.method_166(LightType.SKY, levelX, y, levelZ, levelX, y, levelZ);
         }
+
+        this.level.method_166(LightType.BLOCK, levelX, y, levelZ, levelX, y, levelZ);
+        this.method_887(x, z);
+        if (!this.level.isClient) {
+            state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ);
+        }
+
+        this.field_967 = true;
+        return oldState;
     }
 
     @Redirect(

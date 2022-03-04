@@ -6,11 +6,14 @@ import net.minecraft.level.chunk.Chunk;
 import net.minecraft.util.maths.Vec2i;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.impl.level.StationLevelProperties;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,8 +23,6 @@ import java.util.*;
 
 @Mixin(Level.class)
 public abstract class MixinLevel implements BlockStateView {
-
-
     @Shadow public abstract Chunk getChunk(int x, int z);
 
     @Override
@@ -78,5 +79,41 @@ public abstract class MixinLevel implements BlockStateView {
     private int modifyId(int original) {
         BlockBase block = ((BlockStateView) stationapi$capturedChunk).getBlockState(stationapi$capturedX, stationapi$capturedY, stationapi$capturedZ).getBlock();
         return block == null ? 0 : block.id;
+    }
+    
+    @ModifyConstant(method = {
+        "getTileId",
+        "isTileLoaded",
+        "method_155",
+        "setTileWithMetadata",
+        "setTileInChunk",
+        "getTileMeta",
+        "method_223",
+        "isAboveGround",
+        "getLightLevel",
+        "placeTile(IIIZ)I",
+        "method_164",
+        "method_205",
+        "method_193",
+        "method_248"
+    }, constant = @Constant(intValue = 128))
+    private int changeMaxHeight(int value) {
+        return getLevelHeight();
+    }
+    
+    @ModifyConstant(method = {
+        "getLightLevel",
+        "placeTile(IIIZ)I",
+        "method_164",
+        "method_228"
+    }, constant = @Constant(intValue = 127))
+    private int changeMaxBlockHeight(int value) {
+        return getLevelHeight() - 1;
+    }
+    
+    @Unique
+    private int getLevelHeight() {
+        StationLevelProperties properties = StationLevelProperties.class.cast(Level.class.cast(this).getProperties());
+        return properties.getLevelHeight();
     }
 }
