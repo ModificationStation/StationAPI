@@ -234,9 +234,9 @@ public class ChunkSection {
    private void fillArrayPart(byte[] src, NibbleArray res) {
       int index = 0;
       final short maxY = (short) (yOffset + 16);
-      for (short y = yOffset; y < maxY; y++) {
+      for (byte x = 0; x < 16; x++) {
          for (byte z = 0; z < 16; z++) {
-            for (byte x = 0; x < 16; x++) {
+            for (short y = yOffset; y < maxY; y++) {
                int srcIndex = x << 11 | z << 7 | y;
                byte offset = (byte) (srcIndex & 1);
                res.setValue(index++, (src[srcIndex >> 1] >> offset) & 15);
