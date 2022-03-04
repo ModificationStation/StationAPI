@@ -22,17 +22,13 @@ public class MixinLevelProperties implements StationLevelProperties {
 	@Inject(method = "<init>(Lnet/minecraft/util/io/CompoundTag;)V", at = @At("TAIL"))
 	private void onPropertiesLoad(CompoundTag worldTag, CallbackInfo info) {
 		levelHeight = worldTag.getShort(WORLD_HEIGHT_KEY);
-		if (levelHeight == 0) {
-			levelHeight = 128;
-		}
-		sectionCount = (short) (levelHeight >> 4);
+		setWorldHeight(levelHeight);
 	}
 	
 	@Inject(method = "<init>(Lnet/minecraft/level/LevelProperties;)V", at = @At("TAIL"))
 	private void onPropertiesLoad(LevelProperties levelProperties, CallbackInfo info) {
-		StationLevelProperties coreProperties = StationLevelProperties.class.cast(levelProperties);
-		levelHeight = coreProperties.getLevelHeight();
-		sectionCount = coreProperties.getSectionCount();
+		StationLevelProperties properties = StationLevelProperties.class.cast(levelProperties);
+		setWorldHeight(properties.getLevelHeight());
 	}
 	
 	@Inject(method = "<init>(JLjava/lang/String;)V", at = @At("TAIL"))
@@ -53,7 +49,18 @@ public class MixinLevelProperties implements StationLevelProperties {
 	
 	@Override
 	public short getSectionCount() {
-		System.out.println(levelHeight + " " + sectionCount);
 		return sectionCount;
+	}
+	
+	private void setWorldHeight(int height) {
+		if (height == 0) {
+			levelHeight = 128;
+			sectionCount = 8;
+			return;
+		}
+		if ((height & 15) != 0) {
+			levelHeight = (short) (1 << (int) Math.ceil(Math.log(height) / Math.log(2)));
+		}
+		sectionCount = (short) (levelHeight >> 4);
 	}
 }
