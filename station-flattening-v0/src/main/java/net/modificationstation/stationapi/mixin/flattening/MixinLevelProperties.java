@@ -52,7 +52,8 @@ public class MixinLevelProperties implements StationLevelProperties {
 		return sectionCount;
 	}
 	
-	private void setWorldHeight(int height) {
+	@Override
+	public void setWorldHeight(int height) {
 		if (height == 0) {
 			levelHeight = 128;
 			sectionCount = 8;

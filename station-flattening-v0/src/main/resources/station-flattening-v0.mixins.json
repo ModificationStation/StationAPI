@@ -14,7 +14,8 @@
     "MixinWorldPopulationRegion",
     "MixinLevelProperties",
     "MixinWorldPopulationRegion",
-    "MixinBlock"
+    "MixinBlock",
+    "MixinTestOverworldLevelSource"
   ],
   "client": [
     "MixinClientLevel",
