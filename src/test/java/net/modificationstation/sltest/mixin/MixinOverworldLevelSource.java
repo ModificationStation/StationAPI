@@ -1,6 +1,5 @@
-package net.modificationstation.stationapi.mixin.flattening;
+package net.modificationstation.sltest.mixin;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
@@ -9,41 +8,26 @@ import net.minecraft.level.source.OverworldLevelSource;
 import net.minecraft.util.noise.PerlinOctaveNoise;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.level.BlockStateView;
 import net.modificationstation.stationapi.impl.level.StationLevelProperties;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(OverworldLevelSource.class)
-public class MixinTestOverworldLevelSource {
+public class MixinOverworldLevelSource {
 	@Shadow private PerlinOctaveNoise interpolationNoise;
 	@Shadow private Level level;
 	
-	// KEEP THIS
-	@ModifyConstant(method = "decorate(Lnet/minecraft/level/source/LevelSource;II)V", constant = @Constant(intValue = 128))
-	private int changeMaxHeight(int value) {
-		return StationLevelProperties.class.cast(level.getProperties()).getLevelHeight();
-	}
-	
-	/**
-	 * For testing only!
-	 * Should be removed in release
-	 */
-	@Deprecated(forRemoval = true)
 	@Inject(method = "getChunk(II)Lnet/minecraft/level/chunk/Chunk;", at = @At(
 		value = "INVOKE",
 		target = "Lnet/minecraft/level/source/OverworldLevelSource;shapeChunk(II[B[Lnet/minecraft/level/biome/Biome;[D)V"
 	), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> info, byte[] blocks, Chunk chunk, double[] var5) {
-		if (!FabricLoader.getInstance().isDevelopmentEnvironment()) return;
 		short height = StationLevelProperties.class.cast(level.getProperties()).getLevelHeight();
 		if (height < 129) return;
 		
@@ -85,39 +69,16 @@ public class MixinTestOverworldLevelSource {
 		}
 	}
 	
-	/**
-	 * For testing only!
-	 * Should be removed in release
-	 */
-	@Deprecated(forRemoval = true)
 	@Inject(method = "shapeChunk(II[B[Lnet/minecraft/level/biome/Biome;[D)V", at = @At("HEAD"), cancellable = true)
 	private void disableShapeChunk(int chunkX, int chunkZ, byte[] tiles, Biome[] biomes, double[] temperatures, CallbackInfo info) {
-		if (!FabricLoader.getInstance().isDevelopmentEnvironment()) return;
-		short height = StationLevelProperties.class.cast(level.getProperties()).getLevelHeight();
-		if (height < 129) return;
-		
 		info.cancel();
 	}
 	
-	/**
-	 * For testing only!
-	 * Should be removed in release
-	 */
-	@Deprecated(forRemoval = true)
 	@Inject(method = "buildSurface(II[B[Lnet/minecraft/level/biome/Biome;)V", at = @At("HEAD"), cancellable = true)
 	private void disableBuildSurface(int chunkX, int chunkZ, byte[] tiles, Biome[] biomes, CallbackInfo info) {
-		if (!FabricLoader.getInstance().isDevelopmentEnvironment()) return;
-		short height = StationLevelProperties.class.cast(level.getProperties()).getLevelHeight();
-		if (height < 129) return;
-		
 		info.cancel();
 	}
 	
-	/**
-	 * For testing only!
-	 * Should be removed in release
-	 */
-	@Deprecated(forRemoval = true)
 	private float getNoise(double x, double z) {
 		float noise = (float) interpolationNoise.sample(x, z);
 		return (noise + 150.0F) / 300.0F;
