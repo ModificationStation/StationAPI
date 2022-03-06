@@ -21,13 +21,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.concurrent.ForkJoinPool;
+import java.util.stream.IntStream;
+
 @Mixin(OverworldLevelSource.class)
 public class MixinOverworldLevelSource {
 	@Shadow private PerlinOctaveNoise interpolationNoise;
 	@Shadow private Level level;
 	
 	@Unique
-	private ChunkSection stoneSection;
+	private ForkJoinPool customPool = new ForkJoinPool(8);
 	
 	@Inject(method = "getChunk(II)Lnet/minecraft/level/chunk/Chunk;", at = @At(
 		value = "INVOKE",
@@ -43,13 +46,6 @@ public class MixinOverworldLevelSource {
 		BlockState water = BlockStateHolder.class.cast(BlockBase.STILL_WATER).getDefaultState();
 		BlockState gravel = BlockStateHolder.class.cast(BlockBase.GRAVEL).getDefaultState();
 		BlockStateView view = BlockStateView.class.cast(chunk);
-		
-		if (stoneSection == null) {
-			stoneSection = new ChunkSection(0);
-			for (short i = 0; i < 4096; i++) {
-				stoneSection.setBlockState(i & 15, (i >> 4) & 15, (i >> 8) & 15, stone);
-			}
-		}
 		
 		ChunkSectionsAccessor accessor = ChunkSectionsAccessor.class.cast(chunk);
 		ChunkSection[] sections = accessor.getSections();
@@ -81,36 +77,66 @@ public class MixinOverworldLevelSource {
 			}
 		}
 		
-		for (short y = 0; y < minSection; y++) {
-			ChunkSection section = sections[y];
+		final int finalMin = minSection;
+		final int finalMax = maxSection;
+		customPool.submit(() -> IntStream.range(0, finalMin).parallel().forEach(n -> {
+			ChunkSection section = sections[n];
 			for (short i = 0; i < 4096; i++) {
-				section.setBlockState(i & 15, (i >> 4) & 15, (i >> 8) & 15, stone);
+				section.setBlockState(i & 15, (i >> 4) & 15, (i >> 8) & 15, stone, false);
 			}
-		}
+		}));
 		
-		short startY = (short) (minSection << 4);
-		for (short i = 0; i < 256; i++) {
-			byte x = (byte) (i & 15);
-			byte z = (byte) (i >> 4);
-			short h = map[i];
-			short dirtLevel = (short) (h - 3);
-			short grassLevel = (short) (h - 1);
-			
-			for (short y = startY; y < dirtLevel; y++) {
-				view.setBlockState(x, y, z, stone);
-			}
-			if (h < 62) {
-				for (short y = dirtLevel; y <= grassLevel; y++) {
-					view.setBlockState(x, y, z, gravel);
+		customPool.submit(() -> IntStream.range(finalMin, finalMax).parallel().forEach(n -> {
+			ChunkSection section = sections[n];
+			for (short i = 0; i < 256; i++) {
+				byte x = (byte) (i & 15);
+				byte z = (byte) (i >> 4);
+				short maxY = (short) (map[i] - section.getYOffset());
+				short waterLevel = (short) (62 - section.getYOffset());
+				
+				if (maxY > 0 || waterLevel > 0) {
+					if (maxY > 16) {
+						maxY = 16;
+					}
+					
+					for (short y = 0; y < maxY; y++) {
+						section.setBlockState(x, y, z, stone, false);
+					}
+					
+					short dirtLevel = (short) (maxY - 3);
+					short grassLevel = (short) (maxY - 1);
+					
+					if (map[i] < 62) {
+						if (dirtLevel >= 0 && dirtLevel < 16) {
+							for (byte y = (byte) dirtLevel; y <= grassLevel; y++) {
+								section.setBlockState(x, y, z, gravel, false);
+							}
+						}
+						if (waterLevel >= 0) {
+							if (waterLevel > 16) {
+								waterLevel = 16;
+							}
+							for (byte y = 0; y < waterLevel; y++) {
+								section.setBlockState(x, y, z, water, false);
+							}
+						}
+					}
+					else {
+						if (dirtLevel >= 0 && dirtLevel < 16) {
+							if (grassLevel > 16) {
+								grassLevel = 16;
+							}
+							for (byte y = (byte) dirtLevel; y < grassLevel; y++) {
+								section.setBlockState(x, y, z, dirt, false);
+							}
+						}
+						if (grassLevel >= 0 && grassLevel < 16) {
+							section.setBlockState(x, grassLevel, z, grass, false);
+						}
+					}
 				}
 			}
-			else {
-				for (short y = dirtLevel; y < grassLevel; y++) {
-					view.setBlockState(x, y, z, dirt);
-				}
-				view.setBlockState(x, grassLevel, z, grass);
-			}
-		}
+		}));
 	}
 	
 	@Inject(method = "shapeChunk(II[B[Lnet/minecraft/level/biome/Biome;[D)V", at = @At("HEAD"), cancellable = true)
