@@ -45,7 +45,6 @@ public class MixinOverworldLevelSource {
 		BlockState grass = BlockStateHolder.class.cast(BlockBase.GRASS).getDefaultState();
 		BlockState water = BlockStateHolder.class.cast(BlockBase.STILL_WATER).getDefaultState();
 		BlockState gravel = BlockStateHolder.class.cast(BlockBase.GRAVEL).getDefaultState();
-		BlockStateView view = BlockStateView.class.cast(chunk);
 		
 		ChunkSectionsAccessor accessor = ChunkSectionsAccessor.class.cast(chunk);
 		ChunkSection[] sections = accessor.getSections();
@@ -141,12 +140,16 @@ public class MixinOverworldLevelSource {
 	
 	@Inject(method = "shapeChunk(II[B[Lnet/minecraft/level/biome/Biome;[D)V", at = @At("HEAD"), cancellable = true)
 	private void disableShapeChunk(int chunkX, int chunkZ, byte[] tiles, Biome[] biomes, double[] temperatures, CallbackInfo info) {
-		info.cancel();
+		if (canApply()) {
+			info.cancel();
+		}
 	}
 	
 	@Inject(method = "buildSurface(II[B[Lnet/minecraft/level/biome/Biome;)V", at = @At("HEAD"), cancellable = true)
 	private void disableBuildSurface(int chunkX, int chunkZ, byte[] tiles, Biome[] biomes, CallbackInfo info) {
-		info.cancel();
+		if (canApply()) {
+			info.cancel();
+		}
 	}
 	
 	@Unique
@@ -166,5 +169,11 @@ public class MixinOverworldLevelSource {
 			map[i] = (short) (noise * delta + 32);
 		}
 		return map;
+	}
+	
+	@Unique
+	private boolean canApply() {
+		short height = StationLevelProperties.class.cast(level.getProperties()).getLevelHeight();
+		return height > 128;
 	}
 }

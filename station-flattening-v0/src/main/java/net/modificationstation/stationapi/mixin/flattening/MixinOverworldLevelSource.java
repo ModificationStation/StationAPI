@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class MixinOverworldLevelSource {
 	@Shadow private Level level;
 	
-	@ModifyConstant(method = "decorate(Lnet/minecraft/level/source/LevelSource;II)V", constant = @Constant(intValue = 128))
+	/*@ModifyConstant(method = "decorate(Lnet/minecraft/level/source/LevelSource;II)V", constant = @Constant(intValue = 128))
 	private int changeMaxHeight(int value) {
 		return StationLevelProperties.class.cast(level.getProperties()).getLevelHeight();
-	}
+	}*/
 }
