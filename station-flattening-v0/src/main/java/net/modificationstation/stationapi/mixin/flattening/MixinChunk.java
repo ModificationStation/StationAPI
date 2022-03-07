@@ -38,6 +38,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Shadow public boolean field_967;
     @Shadow public byte[] tiles;
     @Shadow public int field_961;
+    @Shadow public byte[] heightmap;
     @Unique
     @Getter
     private ChunkSection[] sections;
@@ -192,36 +193,41 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             tiles = null;
         }
         
+        short maxYH;
         int minHeight = lastBlock;
-        for(int x = 0; x < 16; ++x) {
-            for(int z = 0; z < 16; ++z) {
-                short height = lastBlock;
-
-                while (height > 0) {
-                    if (BlockBase.LIGHT_OPACITY[getTileId(x, height - 1, z)] != 0) break;
-                    --height;
+        for (maxYH = (short) (sections.length - 1); maxYH >= 0 && sections[maxYH] == null; maxYH--);
+        maxYH = (short) ((maxYH << 4) + 16);
+        
+        for (short i = 0; i < 256; i++) {
+            byte x = (byte) (i & 15);
+            byte z = (byte) (i >> 4);
+            short height = maxYH;
+            for (short y = maxYH; y >= 0; y--) {
+                ChunkSection section = getSection(y);
+                if (section != null) {
+                    BlockState state = section.getBlockState(x, y & 15, z);
+                    int id = state == null ? 0 : state.getBlock().id;
+                    if (BlockBase.LIGHT_OPACITY[id] != 0) break;
+                    height = y;
                 }
-                
-                setShortHeight(x, z, height);
-                if (height < minHeight) {
-                    minHeight = height;
-                }
-
-                if (!this.level.dimension.halvesMapping) {
-                    int light = 15;
-                    int lightY = lastBlock;
-
-                    do {
-                        light -= BlockBase.LIGHT_OPACITY[getTileId(x, lightY, z)];
-                        if (light > 0) {
-                            ChunkSection section = getSection(lightY);
-                            if (section != null) {
-                                section.setLight(LightType.SKY, x, lightY & 15, z, light);
-                            }
-                        }
-
-                        --lightY;
-                    } while (lightY > 0 && light > 0);
+            }
+            
+            stationHeightmap[i] = height;
+            if (height < minHeight) {
+                minHeight = height;
+            }
+    
+            byte light = 15;
+            if (!this.level.dimension.halvesMapping) {
+                for (int y = maxYH; y >= 0; y--) {
+                    ChunkSection section = getSection(y);
+                    if (section != null) {
+                        BlockState state = section.getBlockState(x, y & 15, z);
+                        int id = state == null ? 0 : state.getBlock().id;
+                        light -= BlockBase.LIGHT_OPACITY[state.getBlock().id];
+                        if (light <= 0) break;
+                        section.setLight(LightType.SKY, x, y & 15, z, light);
+                    }
                 }
             }
         }
