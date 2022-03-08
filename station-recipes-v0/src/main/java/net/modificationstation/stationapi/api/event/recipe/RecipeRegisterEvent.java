@@ -3,8 +3,13 @@ package net.modificationstation.stationapi.api.event.recipe;
 import lombok.RequiredArgsConstructor;
 import net.mine_diver.unsafeevents.Event;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 /**
  * Event that allows mods to listen for any type of recipe being registered.
@@ -26,15 +31,17 @@ public class RecipeRegisterEvent extends Event {
         CRAFTING_SHAPELESS,
         SMELTING;
 
-        private static final ModID modID = ModID.of("minecraft");
+        private static final Map<Identifier, Vanilla> ID_LOOKUP = Util.createIdentityLookupBy(Vanilla::type, values());
 
-        public static @NotNull Vanilla fromType(@NotNull Identifier type) {
-            if (modID.equals(type.modID)) return valueOf(type.id.toUpperCase());
-            throw new IllegalArgumentException("Tried to get a vanilla recipe enum from an identifier but the modid wasn't \"minecraft\"!");
+        public static @Nullable Vanilla fromType(@NotNull Identifier type) {
+            return ID_LOOKUP.get(type);
         }
 
+        @NotNull
+        private final Identifier type = of(name().toLowerCase());
+
         public @NotNull Identifier type() {
-            return Identifier.of(modID, name().toLowerCase());
+            return type;
         }
     }
 

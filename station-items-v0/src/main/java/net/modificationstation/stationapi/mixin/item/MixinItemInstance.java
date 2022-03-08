@@ -29,6 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
+@SuppressWarnings("deprecation")
 @Mixin(ItemInstance.class)
 public class MixinItemInstance implements HasItemEntity, StationNBTSetter, StationNBT {
 
