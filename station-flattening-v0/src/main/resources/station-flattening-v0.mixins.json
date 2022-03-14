@@ -15,7 +15,8 @@
     "MixinLevelProperties",
     "MixinWorldPopulationRegion",
     "MixinBlock",
-	"MixinOverworldLevelSource"
+	"MixinOverworldLevelSource",
+    "MixinLevelMonsterSpawner"
   ],
   "client": [
     "MixinClientLevel",
