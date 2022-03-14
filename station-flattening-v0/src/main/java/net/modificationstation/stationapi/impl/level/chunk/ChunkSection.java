@@ -193,12 +193,12 @@ public class ChunkSection {
       return getLight(type, getIndex(x, y, z));
    }
    
-   public void setLight(LightType type, int index, int meta) {
-      getLightArray(type).setValue(index, meta);
+   public void setLight(LightType type, int index, int light) {
+      getLightArray(type).setValue(index, light);
    }
    
-   public void setLight(LightType type, int x, int y, int z, int meta) {
-      setLight(type, getIndex(x, y, z), meta);
+   public void setLight(LightType type, int x, int y, int z, int light) {
+      setLight(type, getIndex(x, y, z), light);
    }
    
    public CompoundTag toNBT() {

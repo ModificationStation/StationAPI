@@ -91,7 +91,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Inject(method = "method_865", at = @At("HEAD"), cancellable = true)
     private void setLight(LightType type, int x, int y, int z, int light, CallbackInfo info) {
         this.field_967 = true;
-        ChunkSection section = getOrCreateSection(y);
+        ChunkSection section = getOrCreateSection(y, true);
         if (section != null) {
             section.setLight(type, x, y & 15, z, light);
         }
@@ -224,7 +224,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
                     if (section != null) {
                         BlockState state = section.getBlockState(x, y & 15, z);
                         int id = state == null ? 0 : state.getBlock().id;
-                        light -= BlockBase.LIGHT_OPACITY[state.getBlock().id];
+                        light -= BlockBase.LIGHT_OPACITY[id];
                         if (light <= 0) break;
                         section.setLight(LightType.SKY, x, y & 15, z, light);
                     }
@@ -340,7 +340,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Overwrite
     public boolean setTileWithMetadata(int x, int y, int z, int blockId, int meta) {
         BlockState state = ((BlockStateHolder) BlockBase.BY_ID[blockId]).getDefaultState();
-        ChunkSection section = getOrCreateSection(y);
+        ChunkSection section = getOrCreateSection(y, true);
         if (section == null) return false;
         boolean sameMeta = section.getMeta(x, y & 15, z) == meta;
         if (state.isAir() && sameMeta) return false;
@@ -407,7 +407,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Override
     @Unique
     public BlockState setBlockState(int x, int y, int z, BlockState state) {
-        ChunkSection section = getOrCreateSection(y);
+        ChunkSection section = getOrCreateSection(y, true);
         if (section == null) return null;
         BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state) return null;
@@ -456,7 +456,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     }
     
     @Unique
-    private ChunkSection getOrCreateSection(int y) {
+    private ChunkSection getOrCreateSection(int y, boolean fillSkyLight) {
         if (y < 0 || y > lastBlock) {
             return null;
         }
@@ -464,6 +464,11 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         ChunkSection section = sections[index];
         if (section == null) {
             section = new ChunkSection(index << 4);
+            if (fillSkyLight) {
+                for (short i = 0; i < 4096; i++) {
+                    section.setLight(LightType.SKY, i, 15);
+                }
+            }
             sections[index] = section;
         }
         return section;
