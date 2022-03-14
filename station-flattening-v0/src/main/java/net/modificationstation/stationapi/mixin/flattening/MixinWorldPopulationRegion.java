@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.client.level.ClientLevel;
 import net.minecraft.level.Level;
 import net.minecraft.level.WorldPopulationRegion;
 import net.minecraft.level.chunk.Chunk;

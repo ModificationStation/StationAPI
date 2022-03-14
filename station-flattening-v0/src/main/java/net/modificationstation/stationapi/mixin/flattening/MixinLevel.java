@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.*;
+import java.util.Iterator;
 
 @Mixin(Level.class)
 public abstract class MixinLevel implements BlockStateView {
@@ -109,6 +109,13 @@ public abstract class MixinLevel implements BlockStateView {
     }, constant = @Constant(intValue = 127))
     private int changeMaxBlockHeight(int value) {
         return getLevelHeight() - 1;
+    }
+    
+    @ModifyConstant(method = {
+        "method_162"
+    }, constant = @Constant(intValue = 200))
+    private int changeMaxEntityCalcHeight(int value) {
+        return getLevelHeight() + 64;
     }
     
     @Unique

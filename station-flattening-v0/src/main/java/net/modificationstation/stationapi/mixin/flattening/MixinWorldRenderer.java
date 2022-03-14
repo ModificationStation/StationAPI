@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.client.level.ClientLevel;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.impl.level.StationLevelProperties;

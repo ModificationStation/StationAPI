@@ -8,7 +8,6 @@ import net.minecraft.util.io.ListTag;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSectionsAccessor;
 import net.modificationstation.stationapi.impl.level.chunk.StationHeigtmapProvider;
-import net.modificationstation.stationapi.impl.nbt.LongArrayCompound;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

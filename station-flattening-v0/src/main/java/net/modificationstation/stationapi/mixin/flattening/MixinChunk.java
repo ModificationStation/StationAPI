@@ -26,6 +26,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mixin(Chunk.class)
 public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateView, StationHeigtmapProvider {
     @Shadow public static boolean field_953;
@@ -39,6 +42,8 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Shadow public byte[] tiles;
     @Shadow public int field_961;
     @Shadow public byte[] heightmap;
+    @Shadow public List[] entities;
+    
     @Unique
     @Getter
     private ChunkSection[] sections;
@@ -70,6 +75,10 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         StationLevelProperties properties = StationLevelProperties.class.cast(level.getProperties());
         sections = new ChunkSection[properties.getSectionCount()];
         lastBlock = (short) (properties.getLevelHeight() - 1);
+        entities = new List[properties.getSectionCount()];
+        for(short i = 0; i < entities.length; i++) {
+            this.entities[i] = new ArrayList();
+        }
     }
     
     @Inject(method = "getHeight(II)I", at = @At("HEAD"), cancellable = true)

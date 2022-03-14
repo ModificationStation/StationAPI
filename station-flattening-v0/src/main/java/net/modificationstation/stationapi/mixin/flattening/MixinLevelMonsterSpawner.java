@@ -5,7 +5,6 @@ import net.minecraft.sortme.LevelMonsterSpawner;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.impl.level.StationLevelProperties;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
