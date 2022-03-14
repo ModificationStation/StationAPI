@@ -8,7 +8,8 @@ import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.util.collection.IdList;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class ArrayPalette<T> implements Palette<T> {
    private final IdList<T> idList;

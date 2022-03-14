@@ -6,7 +6,7 @@ import net.minecraft.util.io.ListTag;
 import net.modificationstation.stationapi.api.packet.Message;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.*;
+import java.util.function.Predicate;
 
 public interface Palette<T> {
    int getIndex(T object);

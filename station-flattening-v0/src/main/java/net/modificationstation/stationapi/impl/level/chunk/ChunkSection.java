@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.impl.nbt.BlockStateHelper;
 import net.modificationstation.stationapi.impl.nbt.LongArrayCompound;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.*;
+import java.util.function.Predicate;
 
 public class ChunkSection {
    private static final String PALETTE_KEY = "Palette";

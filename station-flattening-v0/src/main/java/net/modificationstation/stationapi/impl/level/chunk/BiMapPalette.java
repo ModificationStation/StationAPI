@@ -9,7 +9,8 @@ import net.modificationstation.stationapi.api.util.collection.IdList;
 import net.modificationstation.stationapi.api.util.collection.Int2ObjectBiMap;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class BiMapPalette<T> implements Palette<T> {
    private final IdList<T> idList;

@@ -14,7 +14,8 @@ import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.mixin.flattening.CompoundTagAccessor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
