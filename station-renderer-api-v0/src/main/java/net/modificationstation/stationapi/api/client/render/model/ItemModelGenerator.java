@@ -233,8 +233,8 @@ public class ItemModelGenerator {
    enum Side {
       UP(Direction.UP, 0, -1),
       DOWN(Direction.DOWN, 0, 1),
-      LEFT(Direction.NORTH, -1, 0),
-      RIGHT(Direction.SOUTH, 1, 0);
+      LEFT(Direction.SOUTH, -1, 0),
+      RIGHT(Direction.NORTH, 1, 0);
 
       private final Direction direction;
       private final int offsetX;

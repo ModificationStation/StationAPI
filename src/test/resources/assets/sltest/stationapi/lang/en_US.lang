@@ -10,3 +10,4 @@ item.nbt_item.name=NBT Item
 tile.freezer.name=Freezer
 tile.altar.name=Altar
 item.ironOre.name=Iron Chunk
+item.generatedItem.name=Generated Item

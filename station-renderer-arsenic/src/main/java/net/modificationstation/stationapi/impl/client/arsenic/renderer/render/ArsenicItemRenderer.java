@@ -55,6 +55,7 @@ public final class ArsenicItemRenderer {
     });
     private final Lazy<ItemColours> colours = new Lazy<>(StationRenderAPI::getItemColours);
     private final MatrixStack matrices = new MatrixStack();
+    private final Random random = new Random();
 
     public ArsenicItemRenderer(ItemRenderer itemRenderer) {
         this.itemRenderer = itemRenderer;
@@ -63,7 +64,6 @@ public final class ArsenicItemRenderer {
     }
 
     private void renderBakedItemModel(BakedModel model, ItemInstance stack, MatrixStack matrices, VertexConsumer vertices) {
-        Random random = new Random();
         for (Direction direction : Direction.values()) {
             random.setSeed(42L);
             this.renderBakedItemQuads(model.getQuads(null, direction, random), stack, matrices, vertices);
