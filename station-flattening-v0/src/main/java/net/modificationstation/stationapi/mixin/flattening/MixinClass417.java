@@ -13,22 +13,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(class_417.class)
 public class MixinClass417 {
-	@Unique
-	private Level currentLevel;
+	@Unique private short maxBlock;
 	
 	@Inject(method = "method_1402(Lnet/minecraft/level/Level;)V", at = @At("HEAD"))
 	private void method_1869(Level level, CallbackInfo info) {
-		currentLevel = level;
+		StationDimension dimension = StationDimension.class.cast(level.dimension);
+		maxBlock = (short) (dimension.getActualLevelHeight() - 1);
 	}
 	
 	@ModifyConstant(method = "method_1402(Lnet/minecraft/level/Level;)V", constant = @Constant(intValue = 128))
 	private int changeMaxHeight(int value) {
-		return getLevelHeight(currentLevel) - 1;
-	}
-	
-	@Unique
-	private int getLevelHeight(Level level) {
-		StationDimension dimension = StationDimension.class.cast(level.dimension);
-		return dimension.getActualLevelHeight();
+		return maxBlock;
 	}
 }

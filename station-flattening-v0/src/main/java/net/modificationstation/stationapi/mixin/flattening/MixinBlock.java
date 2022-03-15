@@ -15,17 +15,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Block.class)
 public class MixinBlock {
-	@Unique
-	private Level level;
+	@Unique private short maxHeight;
 	
 	@Inject(method = "useOnTile", at = @At("HEAD"))
 	private void storeLevel(ItemInstance item, PlayerBase player, Level level, int x, int y, int z, int facing, CallbackInfoReturnable<Boolean> info) {
-		this.level = level;
+		StationDimension dimension = StationDimension.class.cast(level.dimension);
+		maxHeight = (short) (dimension.getActualLevelHeight() - 1);
 	}
 	
 	@ModifyConstant(method = "useOnTile", constant = @Constant(intValue = 127))
 	private int changeMaxHeight(int value) {
-		StationDimension dimension = StationDimension.class.cast(level.dimension);
-		return dimension.getActualLevelHeight() - 1;
+		return maxHeight;
 	}
 }
