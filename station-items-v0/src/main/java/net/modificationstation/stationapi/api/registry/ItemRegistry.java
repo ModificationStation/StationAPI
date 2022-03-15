@@ -26,24 +26,6 @@ public final class ItemRegistry extends AbstractArrayBackedRegistry<ItemBase> {
     }
 
     @Override
-    public @NotNull Optional<ItemBase> get(@NotNull Identifier identifier) {
-        Optional<ItemBase> item = super.get(identifier);
-        if (item.isPresent())
-            return item;
-        else {
-            OptionalInt serialID = BlockRegistry.INSTANCE.getSerialID(identifier);
-            return serialID.isPresent() ? get(serialID.getAsInt()) : Optional.empty();
-        }
-    }
-
-    @Override
-    public @NotNull Identifier getIdentifier(@NotNull ItemBase value) {
-        Identifier identifier = super.getIdentifier(value);
-        //noinspection ConstantConditions
-        return identifier == null ? BlockRegistry.INSTANCE.get(getSerialID(value)).map(BlockRegistry.INSTANCE::getIdentifier).orElse(null) : identifier;
-    }
-
-    @Override
     protected boolean setSize(int newSize) {
         if (!super.setSize(newSize))
             ItemBase.byId = Arrays.copyOf(ItemBase.byId, newSize);

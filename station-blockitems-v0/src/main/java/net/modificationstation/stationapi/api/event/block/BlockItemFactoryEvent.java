@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.event.block;
 
+import lombok.Getter;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.block.CustomBlockItemFactoryProvider;
@@ -8,6 +9,7 @@ import net.modificationstation.stationapi.api.block.HasMetaBlockItem;
 import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
 import net.modificationstation.stationapi.api.block.MetaBlockItemProvider;
 import net.modificationstation.stationapi.api.block.MetaNamedBlockItemProvider;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.*;
 
@@ -23,12 +25,16 @@ import java.util.function.*;
  */
 public class BlockItemFactoryEvent extends BlockEvent {
 
+    @Getter
+    private final boolean cancellable = true;
+
     /**
      * Current factory that's going to be executed to get block item instance.
+     * <p>Can not return null due to limitations from mixin's side. Cancel instead.
      */
-    public IntFunction<Block> currentFactory;
+    public @NotNull IntFunction<@NotNull Block> currentFactory;
 
-    public BlockItemFactoryEvent(BlockBase block, IntFunction<Block> currentFactory) {
+    public BlockItemFactoryEvent(BlockBase block, @NotNull IntFunction<@NotNull Block> currentFactory) {
         super(block);
         this.currentFactory = currentFactory;
     }

@@ -14,15 +14,12 @@ import net.modificationstation.stationapi.api.item.nbt.ItemEntity;
 import net.modificationstation.stationapi.api.item.nbt.ItemWithEntity;
 import net.modificationstation.stationapi.api.item.nbt.StationNBT;
 import net.modificationstation.stationapi.api.nbt.NBTHelper;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.impl.item.nbt.StationNBTSetter;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -32,9 +29,6 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 @SuppressWarnings("deprecation")
 @Mixin(ItemInstance.class)
 public class MixinItemInstance implements HasItemEntity, StationNBTSetter, StationNBT {
-
-    @Unique
-    private static final String STATION_ID = of(MODID, "id").toString();
 
     @Shadow
     public int itemId;
@@ -168,37 +162,11 @@ public class MixinItemInstance implements HasItemEntity, StationNBTSetter, Stati
 
     @Inject(
             method = "isStackIdentical2(Lnet/minecraft/item/ItemInstance;)Z",
-            at = @At("HEAD")
+            at = @At("HEAD"),
+            cancellable = true
     )
     private void isStackIdentical2(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
         if (!NBTHelper.equals(stationNBT, StationNBT.cast(par1).getStationNBT()))
             cir.setReturnValue(false);
-    }
-
-    @Redirect(
-            method = "toTag(Lnet/minecraft/util/io/CompoundTag;)Lnet/minecraft/util/io/CompoundTag;",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/util/io/CompoundTag;put(Ljava/lang/String;S)V",
-                    ordinal = 0
-            )
-    )
-    private void saveIdentifier(CompoundTag instance, String item, short i) {
-        instance.put(STATION_ID, ItemRegistry.INSTANCE.getIdentifier(itemId).orElseThrow().toString());
-    }
-
-    @Inject(
-            method = "fromTag(Lnet/minecraft/util/io/CompoundTag;)V",
-            at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/item/ItemInstance;itemId:I",
-                    opcode = Opcodes.PUTFIELD,
-                    shift = At.Shift.AFTER
-            )
-    )
-    private void loadIdentifier(CompoundTag par1, CallbackInfo ci) {
-        String id = par1.getString(STATION_ID);
-        if (!id.isEmpty())
-            itemId = ItemRegistry.INSTANCE.getSerialID(of(id)).orElseThrow();
     }
 }

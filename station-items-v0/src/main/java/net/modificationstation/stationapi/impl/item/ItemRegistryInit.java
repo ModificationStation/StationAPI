@@ -2,12 +2,9 @@ package net.modificationstation.stationapi.impl.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
-import net.minecraft.item.ItemBase;
-import net.modificationstation.stationapi.api.event.registry.AfterBlockAndItemRegisterEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
 import static net.minecraft.item.ItemBase.apple;
@@ -237,14 +234,5 @@ public class ItemRegistryInit {
         r.register(of("music_disc_cat"), recordCat);
 
         LOGGER.info("Added vanilla items to the registry.");
-    }
-
-    @EventListener(priority = ListenerPriority.HIGH)
-    private static void registerBlockItems(AfterBlockAndItemRegisterEvent event) {
-        for (int i = 0; i < BlockRegistry.INSTANCE.getSize(); i++) {
-            ItemBase item = ItemBase.byId[i];
-            if (item != null)
-                ItemRegistry.INSTANCE.register(BlockRegistry.INSTANCE.getIdentifier(i).orElseThrow(), item);
-        }
     }
 }
