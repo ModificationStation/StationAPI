@@ -81,6 +81,29 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         }
     }
     
+    @Inject(method = "<init>(Lnet/minecraft/level/Level;[BII)V", at = @At("TAIL"))
+    private void onChunkCreation(Level level, byte[] tiles, int x, int z, CallbackInfo info) {
+        StationDimension dimension = StationDimension.class.cast(level.dimension);
+        sections = new ChunkSection[dimension.getSectionCount()];
+        lastBlock = (short) (dimension.getActualLevelHeight() - 1);
+        entities = new List[dimension.getSectionCount()];
+        for(short i = 0; i < entities.length; i++) {
+            this.entities[i] = new ArrayList();
+        }
+        for(int i = 0; i < tiles.length; i++) {
+            int id = Byte.toUnsignedInt(tiles[i]);
+            if (id <= 0 || id >= BlockBase.BY_ID.length) continue;
+            int by = i & 127;
+            if (by > lastBlock) continue;
+            int bx = (i >> 11) & 15;
+            int bz = (i >> 7) & 15;
+            ChunkSection section = getOrCreateSection(by, false);
+            BlockStateHolder holder = BlockStateHolder.class.cast(BlockBase.BY_ID[id]);
+            section.setBlockState(bx, by & 15, bz, holder.getDefaultState());
+        }
+        this.tiles = null;
+    }
+    
     @Inject(method = "getHeight(II)I", at = @At("HEAD"), cancellable = true)
     private void getHeight(int x, int z, CallbackInfoReturnable<Integer> info) {
         info.setReturnValue((int) getShortHeight(x, z));
