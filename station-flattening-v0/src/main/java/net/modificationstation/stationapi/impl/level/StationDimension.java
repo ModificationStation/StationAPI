@@ -18,7 +18,7 @@ public interface StationDimension {
 	 * it will return value from {@code getDefaultLevelHeight}.
 	 * @return
 	 */
-	short getActualLevelHeight();
+	default short getActualLevelHeight() { return 128; }
 	
 	/**
 	 * Get count of chunk sections based on current world height.
