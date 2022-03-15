@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.item.nbt.StationNBT;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
 
-import java.util.*;
+import java.util.Random;
 
 import static net.modificationstation.sltest.SLTest.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;

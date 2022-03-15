@@ -4,7 +4,7 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.Block;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
-import net.modificationstation.stationapi.impl.level.StationLevelProperties;
+import net.modificationstation.stationapi.impl.level.StationDimension;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,7 +25,7 @@ public class MixinBlock {
 	
 	@ModifyConstant(method = "useOnTile", constant = @Constant(intValue = 127))
 	private int changeMaxHeight(int value) {
-		StationLevelProperties properties = StationLevelProperties.class.cast(level.getProperties());
-		return properties.getLevelHeight() - 1;
+		StationDimension dimension = StationDimension.class.cast(level.dimension);
+		return dimension.getActualLevelHeight() - 1;
 	}
 }

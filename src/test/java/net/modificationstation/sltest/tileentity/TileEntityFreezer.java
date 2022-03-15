@@ -15,7 +15,8 @@ import net.minecraft.util.io.CompoundTag;
 import net.minecraft.util.io.ListTag;
 import net.modificationstation.sltest.util.Frozen;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
 //            TileEntity, IInventory, ItemInstance, NBTTagCompound, 

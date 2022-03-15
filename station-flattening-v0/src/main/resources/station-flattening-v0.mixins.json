@@ -17,7 +17,9 @@
     "MixinBlock",
 	"MixinOverworldLevelSource",
     "MixinLevelMonsterSpawner",
-    "MixinClass417"
+    "MixinClass417",
+    "MixinDimension",
+    "MixinClass467"
   ],
   "client": [
     "MixinClientLevel",

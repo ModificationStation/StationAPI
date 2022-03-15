@@ -1,7 +1,8 @@
 package net.modificationstation.stationapi.impl.level;
 
+import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.registry.Identifier;
+
 public interface StationLevelProperties {
-	short getLevelHeight();
-	short getSectionCount();
-	void setWorldHeight(int height);
+	CompoundTag getDimensionTag(Identifier id);
 }

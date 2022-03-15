@@ -6,7 +6,7 @@ import net.minecraft.level.chunk.Chunk;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.level.BlockStateView;
-import net.modificationstation.stationapi.impl.level.StationLevelProperties;
+import net.modificationstation.stationapi.impl.level.StationDimension;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -58,7 +58,7 @@ public class MixinWorldPopulationRegion implements BlockStateView {
     
     @Unique
     private int getLevelHeight() {
-        StationLevelProperties properties = StationLevelProperties.class.cast(level.getProperties());
-        return properties.getLevelHeight();
+        StationDimension dimension = StationDimension.class.cast(level.dimension);
+        return dimension.getActualLevelHeight();
     }
 }

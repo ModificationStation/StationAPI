@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.level.Level;
 import net.minecraft.level.source.OverworldLevelSource;
-import net.modificationstation.stationapi.impl.level.StationLevelProperties;
+import net.modificationstation.stationapi.impl.level.StationDimension;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -14,6 +14,7 @@ public class MixinOverworldLevelSource {
 	
 	@ModifyConstant(method = "decorate(Lnet/minecraft/level/source/LevelSource;II)V", constant = @Constant(intValue = 128))
 	private int changeMaxHeight(int value) {
-		return StationLevelProperties.class.cast(level.getProperties()).getLevelHeight();
+		StationDimension dimension = StationDimension.class.cast(level.dimension);
+		return dimension.getActualLevelHeight();
 	}
 }

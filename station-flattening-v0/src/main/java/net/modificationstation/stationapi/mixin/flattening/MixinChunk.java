@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.level.BlockStateView;
-import net.modificationstation.stationapi.impl.level.StationLevelProperties;
+import net.modificationstation.stationapi.impl.level.StationDimension;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSectionsAccessor;
 import net.modificationstation.stationapi.impl.level.chunk.StationHeigtmapProvider;
@@ -72,10 +72,10 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     
     @Inject(method = "<init>(Lnet/minecraft/level/Level;II)V", at = @At("TAIL"))
     private void onChunkCreation(Level level, int x, int z, CallbackInfo info) {
-        StationLevelProperties properties = StationLevelProperties.class.cast(level.getProperties());
-        sections = new ChunkSection[properties.getSectionCount()];
-        lastBlock = (short) (properties.getLevelHeight() - 1);
-        entities = new List[properties.getSectionCount()];
+        StationDimension dimension = StationDimension.class.cast(level.dimension);
+        sections = new ChunkSection[dimension.getSectionCount()];
+        lastBlock = (short) (dimension.getActualLevelHeight() - 1);
+        entities = new List[dimension.getSectionCount()];
         for(short i = 0; i < entities.length; i++) {
             this.entities[i] = new ArrayList();
         }
@@ -226,8 +226,8 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
                 minHeight = height;
             }
     
-            byte light = 15;
             if (!this.level.dimension.halvesMapping) {
+                byte light = 15;
                 for (int y = maxYH; y >= 0; y--) {
                     ChunkSection section = getSection(y);
                     if (section != null) {
@@ -242,7 +242,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         }
 
         this.field_961 = minHeight;
-
+    
         for (short i = 0; i < 256; i++) {
             this.method_887(i & 15, i >> 4);
         }
@@ -308,8 +308,12 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             
             int h;
             int light = 15;
-            for(h = maxHeight; maxHeight > 0 && light > 0; getSection(maxHeight).setLight(LightType.SKY, x, maxHeight & 15, z, light)) {
+            for(h = maxHeight; maxHeight > 0 && light > 0;) {
                 --maxHeight;
+                ChunkSection section = getSection(maxHeight);
+                if (section != null) {
+                    section.setLight(LightType.SKY, x, maxHeight & 15, z, light);
+                }
                 int var11 = BlockBase.LIGHT_OPACITY[this.getTileId(x, maxHeight, z)];
                 if (var11 == 0) {
                     var11 = 1;

@@ -6,7 +6,9 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tags.TagEntry;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class MainTest {
 

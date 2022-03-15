@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.client.level.ClientLevel;
-import net.modificationstation.stationapi.impl.level.StationLevelProperties;
+import net.modificationstation.stationapi.impl.level.StationDimension;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -16,7 +16,8 @@ public class MixinClientLevel {
 	
 	@Unique
 	private int getLevelHeight() {
-		StationLevelProperties properties = StationLevelProperties.class.cast(ClientLevel.class.cast(this).getProperties());
-		return properties.getLevelHeight();
+		ClientLevel level = ClientLevel.class.cast(this);
+		StationDimension dimension = StationDimension.class.cast(level.dimension);
+		return dimension.getActualLevelHeight();
 	}
 }
