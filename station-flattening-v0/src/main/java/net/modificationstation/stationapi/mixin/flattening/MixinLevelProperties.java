@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelProperties.class)
 public class MixinLevelProperties implements StationLevelProperties {
-	@Unique private static final String DIMENSIONS_KEY = "StAPIDimensions";
+	@Unique private static final String DIMENSIONS_KEY = Identifier.of(StationAPI.MODID, "dimensions").toString();
 	@Unique private static CompoundTag dimensionsRoot;
 	
 	@Inject(method = "<init>(Lnet/minecraft/util/io/CompoundTag;)V", at = @At("TAIL"))
