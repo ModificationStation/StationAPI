@@ -12,7 +12,19 @@
     "MixinLevel",
     "MixinLevelChunkLoader",
     "MixinLevelManager",
-    "MixinWorldPopulationRegion"
+    "MixinWorldPopulationRegion",
+    "MixinLevelProperties",
+    "MixinWorldPopulationRegion",
+    "MixinBlock",
+	"MixinOverworldLevelSource",
+    "MixinLevelMonsterSpawner",
+    "MixinClass417",
+    "MixinDimension",
+    "MixinClass467"
+  ],
+  "client": [
+    "MixinClientLevel",
+    "MixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

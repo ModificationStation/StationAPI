@@ -20,7 +20,7 @@ import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockWithEntity;
 
-import java.util.*;
+import java.util.Random;
 
 import static net.modificationstation.sltest.SLTest.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;

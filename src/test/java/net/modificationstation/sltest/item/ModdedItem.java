@@ -12,7 +12,7 @@ import net.modificationstation.stationapi.api.packet.PacketHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
 
-import java.util.*;
+import java.util.Random;
 
 public class ModdedItem extends TemplateItemBase implements CustomReachProvider, CustomTooltipProvider {
     public ModdedItem(Identifier id) {

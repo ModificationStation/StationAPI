@@ -6,7 +6,7 @@ import net.minecraft.util.io.ListTag;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.util.collection.IdList;
 
-import java.util.function.*;
+import java.util.function.Predicate;
 
 @SuppressWarnings("ClassCanBeRecord")
 public class IdListPalette<T> implements Palette<T> {

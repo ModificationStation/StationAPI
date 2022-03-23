@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.block.BlockTemplate;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Arrays;
+import java.util.function.Function;
 
 import static net.modificationstation.sltest.SLTest.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;

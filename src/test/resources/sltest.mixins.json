@@ -4,6 +4,8 @@
   "package": "net.modificationstation.sltest.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinOverworldLevelSource",
+    "MixinNetherLevelSource"
   ],
   "server": [
   ],

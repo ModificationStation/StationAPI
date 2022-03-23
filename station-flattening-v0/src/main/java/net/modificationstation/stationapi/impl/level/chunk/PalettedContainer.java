@@ -15,10 +15,12 @@ import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.nbt.LongArrayCompound;
 
-import java.util.*;
-import java.util.concurrent.locks.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class PalettedContainer<T> implements PaletteResizeListener<T> {
    private final Palette<T> fallbackPalette;

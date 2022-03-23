@@ -7,7 +7,7 @@ import net.minecraft.util.io.CompoundTag;
 import net.minecraft.util.io.ListTag;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSectionsAccessor;
-import net.modificationstation.stationapi.impl.nbt.LongArrayCompound;
+import net.modificationstation.stationapi.impl.level.chunk.StationHeigtmapProvider;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -25,9 +25,12 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Mixin(LevelManager.class)
 public class MixinLevelManager {
-
     @Unique
     private static final String SECTIONS_TAG = of(MODID, "sections").toString();
+    @Unique
+    private static final String HEIGHTMAP_KEY = "HeightMap";
+    @Unique
+    private static final String HEIGHT_KEY = "Y";
 
     @ModifyConstant(
             method = "getChunk(Lnet/minecraft/level/Level;II)Lnet/minecraft/level/chunk/Chunk;",
@@ -56,19 +59,18 @@ public class MixinLevelManager {
                     shift = At.Shift.AFTER
             )
     )
-    private static void saveBlockStates(Chunk chunk, Level level, CompoundTag tag, CallbackInfo ci) {
-        ChunkSection[] sections = ((ChunkSectionsAccessor) chunk).getSections();
+    private static void saveStationData(Chunk chunk, Level level, CompoundTag tag, CallbackInfo ci) {
+        ChunkSection[] sections = ChunkSectionsAccessor.class.cast(chunk).getSections();
         ListTag listTag = new ListTag();
         for(int i = 0; i < sections.length; ++i) {
             ChunkSection section = sections[i];
             if (section != ChunkSection.EMPTY_SECTION) {
-                CompoundTag compoundTag7 = new CompoundTag();
-                compoundTag7.put("Y", (byte) (i & 255));
-                section.getContainer().write(compoundTag7, "Palette", "BlockStates");
-                listTag.add(compoundTag7);
+                listTag.add(section.toNBT());
             }
         }
         tag.put(SECTIONS_TAG, listTag);
+        StationHeigtmapProvider provider = StationHeigtmapProvider.class.cast(chunk);
+        tag.put(HEIGHTMAP_KEY, provider.getStoredHeightmap());
     }
 
     @Redirect(
@@ -93,25 +95,21 @@ public class MixinLevelManager {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private static void loadBlockState(Level arg, CompoundTag arg1, CallbackInfoReturnable<Chunk> cir, int var2, int var3, Chunk var4) {
-        ChunkSection[] sections = ((ChunkSectionsAccessor) var4).getSections();
-        if (arg1.containsKey(SECTIONS_TAG)) {
-            ListTag listTag = arg1.getListTag(SECTIONS_TAG);
+    private static void loadStationData(Level level, CompoundTag chunkTag, CallbackInfoReturnable<Chunk> info, int var2, int var3, Chunk chunk) {
+        ChunkSection[] sections = ChunkSectionsAccessor.class.cast(chunk).getSections();
+        if (chunkTag.containsKey(SECTIONS_TAG)) {
+            ListTag listTag = chunkTag.getListTag(SECTIONS_TAG);
             for (int i = 0; i < listTag.size(); i++) {
-                CompoundTag section = (CompoundTag) listTag.get(i);
-                int k = section.getByte("Y");
-                if (section.containsKey("Palette") && section.containsKey("BlockStates")) {
-                    ChunkSection chunkSection = new ChunkSection(k << 4);
-                    chunkSection.getContainer().read(section.getListTag("Palette"), ((LongArrayCompound) section).getLongArray("BlockStates"));
-                    chunkSection.calculateCounts();
-                    if (!chunkSection.isEmpty()) {
-                        sections[k] = chunkSection;
-                    }
-
-//                    poiStorage.initForPalette(pos, chunkSection);
-                }
+                CompoundTag sectionTag = CompoundTag.class.cast(listTag.get(i));
+                int sectionY = sectionTag.getByte(HEIGHT_KEY);
+                if (sectionY < 0 || sectionY >= sections.length) continue;
+                ChunkSection chunkSection = new ChunkSection(sectionY << 4);
+                chunkSection.fromNBT(chunkTag, sectionTag);
+                sections[sectionY] = chunkSection;
             }
         }
+        StationHeigtmapProvider provider = StationHeigtmapProvider.class.cast(chunk);
+        provider.loadStoredHeightmap(chunkTag.getByteArray(HEIGHTMAP_KEY));
     }
 
     @Redirect(
@@ -124,5 +122,93 @@ public class MixinLevelManager {
     )
     private static int getTileLength(byte[] array) {
         return '耀';
+    }
+    
+    @Redirect(
+        method = "method_1480",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/util/io/CompoundTag;put(Ljava/lang/String;[B)V",
+            ordinal = 4
+        )
+    )
+    private static void disableHeightmapSaving(CompoundTag compoundTag, String key, byte[] item) {}
+    
+    @Redirect(
+        method = "method_1479",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/util/io/CompoundTag;getByteArray(Ljava/lang/String;)[B",
+            ordinal = 4
+        )
+    )
+    private static byte[] stopLoadingHeightmap(CompoundTag instance, String s) {
+        return null;
+    }
+    
+    @Redirect(
+        method = "method_1480",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/util/io/CompoundTag;put(Ljava/lang/String;[B)V",
+            ordinal = 1
+        )
+    )
+    private static void disableMetaSaving(CompoundTag compoundTag, String key, byte[] item) {}
+    
+    @Redirect(
+        method = "method_1480",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/util/io/CompoundTag;put(Ljava/lang/String;[B)V",
+            ordinal = 2
+        )
+    )
+    private static void disableSkyLightSaving(CompoundTag compoundTag, String key, byte[] item) {}
+    
+    @Redirect(
+        method = "method_1480",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/util/io/CompoundTag;put(Ljava/lang/String;[B)V",
+            ordinal = 3
+        )
+    )
+    private static void disableBlockLightSaving(CompoundTag compoundTag, String key, byte[] item) {}
+    
+    @Redirect(
+        method = "method_1479",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/util/io/CompoundTag;getByteArray(Ljava/lang/String;)[B",
+            ordinal = 1
+        )
+    )
+    private static byte[] stopLoadingMeta(CompoundTag instance, String s) {
+        return null;
+    }
+    
+    @Redirect(
+        method = "method_1479",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/util/io/CompoundTag;getByteArray(Ljava/lang/String;)[B",
+            ordinal = 2
+        )
+    )
+    private static byte[] stopLoadingSkyLight(CompoundTag instance, String s) {
+        return null;
+    }
+    
+    @Redirect(
+        method = "method_1479",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/util/io/CompoundTag;getByteArray(Ljava/lang/String;)[B",
+            ordinal = 3
+        )
+    )
+    private static byte[] stopLoadingBlockLight(CompoundTag instance, String s) {
+        return null;
     }
 }

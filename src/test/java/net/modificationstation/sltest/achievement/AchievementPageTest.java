@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
 import net.modificationstation.stationapi.api.registry.ModID;
 
-import java.util.*;
+import java.util.Random;
 
 public class AchievementPageTest extends AchievementPage {
 

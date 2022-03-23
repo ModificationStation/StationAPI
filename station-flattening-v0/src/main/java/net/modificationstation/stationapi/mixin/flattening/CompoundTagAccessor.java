@@ -5,7 +5,7 @@ import net.minecraft.util.io.CompoundTag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-import java.util.*;
+import java.util.Map;
 
 @Mixin(CompoundTag.class)
 public interface CompoundTagAccessor {
