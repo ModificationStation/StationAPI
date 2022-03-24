@@ -5,5 +5,7 @@ moduleDependencies(project,
         'station-api-base',
         'station-registry-api-v0',
         'station-blocks-v0',
-        'station-networking-v0'
+        'station-networking-v0',
+        'station-dimensions-v0',
+        'station-tools-api-v1'
 )

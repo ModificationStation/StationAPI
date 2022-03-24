@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.level.LevelProperties;
 import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.level.StationLevelProperties;
 import org.spongepowered.asm.mixin.Mixin;
