@@ -101,7 +101,6 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             BlockStateHolder holder = BlockStateHolder.class.cast(BlockBase.BY_ID[id]);
             section.setBlockState(bx, by & 15, bz, holder.getDefaultState());
         }
-        this.tiles = null;
     }
     
     @Inject(method = "getHeight(II)I", at = @At("HEAD"), cancellable = true)
