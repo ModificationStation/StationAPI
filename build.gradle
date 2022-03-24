@@ -222,7 +222,7 @@ allprojects {
 //Not neatly. - calm
 project.group = project.maven_group
 project.archivesBaseName = project.archives_base_name
-project.version = project.hasProperty("override_version")? project.override_version : project.mod_version
+project.version = project.hasProperty("override_version")? project.override_version.substring(0, 7) : project.mod_version
 
 subprojects {subproject ->
 
@@ -290,7 +290,7 @@ dependencies {
 compileTestJava {
     options.compilerArgs << '-XDignore.symbol.file'
     options.fork = true
-    options.forkOptions.executable = project.hasProperty("override_javac")? project.override_javac : 'javac'
+    options.forkOptions.executable = System.getProperty("java.home") + "/bin/javac" + (System.getProperty("os.name").startsWith("Windows")? ".exe" : "")
 }
 
 publishing.publications.mavenJava(MavenPublication) {
