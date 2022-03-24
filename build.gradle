@@ -156,7 +156,7 @@ allprojects {
     compileJava {
         options.compilerArgs << '-XDignore.symbol.file'
         options.fork = true
-        options.forkOptions.executable = project.hasProperty("override_javac")? project.override_javac : 'javac'
+        options.forkOptions.executable = System.getProperty("java.home") + "/bin/javac" + (System.getProperty("os.name").startsWith("Windows")? ".exe" : "")
     }
 
     publishing {
