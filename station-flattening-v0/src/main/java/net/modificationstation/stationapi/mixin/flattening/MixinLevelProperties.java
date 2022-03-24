@@ -21,6 +21,11 @@ public class MixinLevelProperties implements StationLevelProperties {
 		dimensionsRoot = worldTag.getCompoundTag(DIMENSIONS_KEY);
 	}
 	
+	@Inject(method = "<init>(JLjava/lang/String;)V", at = @At("TAIL"))
+	private void onPropertiesCreate(long seed, String name, CallbackInfo info) {
+		dimensionsRoot = new CompoundTag();
+	}
+	
 	@Inject(method = "updateProperties", at = @At("HEAD"))
 	private void updateProperties(CompoundTag worldTag, CompoundTag playerTag, CallbackInfo ci) {
 		worldTag.put(DIMENSIONS_KEY, dimensionsRoot);
