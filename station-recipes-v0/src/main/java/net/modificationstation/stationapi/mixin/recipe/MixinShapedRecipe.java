@@ -33,7 +33,7 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe
      * @reason Modified if statement
      */
     @Overwrite
-    private boolean matchesSmall(Crafting arg, int i, int j, boolean flag) {
+    private boolean matches(Crafting arg, int i, int j, boolean flag) {
         for(int var5 = 0; var5 < 3; ++var5) {
             for(int var6 = 0; var6 < 3; ++var6) {
                 int var7 = var5 - i;
@@ -47,7 +47,7 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe
                     }
                 }
 
-                ItemInstance var10 = arg.method_974(var5, var6);
+                ItemInstance var10 = arg.getInventoryItemXY(var5, var6);
                 if (var10 != null || var9 != null) {
                     if (var10 == null && var9 != null || var10 != null && var9 == null) {
                         return false;

@@ -28,7 +28,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
      * @author mine_diver
      */
     @Overwrite
-    public void render(Item arg, double d, double d1, double d2, float f, float f1) {
+    public void method_1484(Item arg, double d, double d1, double d2, float f, float f1) {
         arsenic_plugin.render(arg, d, d1, d2, f, f1);
     }
 

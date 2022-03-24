@@ -12,7 +12,7 @@ public class PacketHelperClientImpl extends PacketHelperImpl {
     public void send(AbstractPacket packet) {
         //noinspection deprecation
         Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
-        if (minecraft.level.isClient)
+        if (minecraft.level.isServerSide)
             minecraft.getNetworkHandler().sendPacket(packet);
         else
             packet.apply(null);
@@ -20,7 +20,7 @@ public class PacketHelperClientImpl extends PacketHelperImpl {
 
     @Override
     public void sendTo(PlayerBase player, AbstractPacket packet) {
-        if (!player.level.isClient)
+        if (!player.level.isServerSide)
             packet.apply(null);
     }
 }

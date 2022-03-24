@@ -1,8 +1,8 @@
 pluginManagement {
     repositories {
         maven {
-            name = "Glass"
-            url "https://maven.glass-launcher.net/snapshots"
+            name = "Babric"
+            url "https://maven.glass-launcher.net/babric"
         }
         maven {
             name = 'Fabrick'

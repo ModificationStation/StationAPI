@@ -18,11 +18,11 @@ public class MixinServerPlayerPacketHandler {
 
     @ModifyConstant(method = "onPlayerDigging(Lnet/minecraft/packet/play/PlayerDigging0xEC2SPacket;)V", constant = @Constant(doubleValue = 36))
     private double getBlockReach(double originalReach) {
-        return Math.pow(StationAPI.EVENT_BUS.post(new PlayerEvent.Reach(serverPlayer, HitType.TILE, Math.sqrt(originalReach))).currentReach, 2);
+        return Math.pow(StationAPI.EVENT_BUS.post(new PlayerEvent.Reach(serverPlayer, HitType.field_789, Math.sqrt(originalReach))).currentReach, 2);
     }
 
     @ModifyConstant(method = "onEntityInteract(Lnet/minecraft/packet/play/EntityInteract0x7C2SPacket;)V", constant = @Constant(doubleValue = 36))
     private double getEntityReach(double originalReach) {
-        return Math.pow(StationAPI.EVENT_BUS.post(new PlayerEvent.Reach(serverPlayer, HitType.ENTITY, Math.sqrt(originalReach))).currentReach, 2);
+        return Math.pow(StationAPI.EVENT_BUS.post(new PlayerEvent.Reach(serverPlayer, HitType.field_790, Math.sqrt(originalReach))).currentReach, 2);
     }
 }

@@ -34,8 +34,8 @@ public class ModdedItem extends TemplateItemBase implements CustomReachProvider,
     @Override
     public double getReach(ItemInstance itemInstance, PlayerBase player, HitType type, double currentReach) {
         return switch (type) {
-            case TILE -> 50;
-            case ENTITY -> 10;
+            case field_789 -> 50;
+            case field_790 -> 10;
         };
     }
 

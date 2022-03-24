@@ -25,7 +25,7 @@ public final class GuiClientNetworkHandler {
     }
 
     private static void handleGui(PlayerBase player, Message message) {
-        boolean isClient = player.level.isClient;
+        boolean isClient = player.level.isServerSide;
         //noinspection deprecation
         GuiHandlerRegistry.INSTANCE.get(Identifier.of(message.strings[0])).ifPresent(guiHandler -> ((Minecraft) FabricLoader.getInstance().getGameInstance()).openScreen(guiHandler.one().apply(player, isClient ? guiHandler.two().get() : (InventoryBase) message.objects[0], message)));
         if (isClient)

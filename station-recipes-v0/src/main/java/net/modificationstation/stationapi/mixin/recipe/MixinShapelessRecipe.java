@@ -34,7 +34,7 @@ public class MixinShapelessRecipe implements StationRecipe {
 
         for(int var3 = 0; var3 < 3; ++var3) {
             for(int var4 = 0; var4 < 3; ++var4) {
-                ItemInstance var5 = arg.method_974(var4, var3);
+                ItemInstance var5 = arg.getInventoryItemXY(var4, var3);
                 if (var5 != null) {
                     boolean var6 = false;
 

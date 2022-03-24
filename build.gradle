@@ -1,10 +1,9 @@
+import net.fabricmc.loom.task.RunGameTask
+
 plugins {
     id "maven-publish"
-    id "fabric-loom" version "0.2.9-SNAPSHOT"
+    id 'babric-loom' version '0.12-SNAPSHOT'
 }
-
-import net.fabricmc.loom.task.RunClientTask
-import net.fabricmc.loom.task.RunServerTask
 
 def getSubprojectVersion(project, ver) {
     return "${project.mod_version}-$ver"
@@ -46,22 +45,26 @@ void addDependency(XmlProvider xml, String scope, Object... dependencies) {
 
 allprojects {
     apply plugin: 'maven-publish'
-    apply plugin: 'fabric-loom'
+    apply plugin: 'babric-loom'
 
     sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 
     repositories {
         maven {
-            name = 'HalfOf2'
-            url = 'https://storage.googleapis.com/devan-maven/'
+            name = 'Froge'
+            url = 'https://maven.minecraftforge.net/'
         }
         maven {
-            name = 'Froge'
-            url 'https://maven.minecraftforge.net/'
+            name = 'Babric'
+            url = 'https://maven.glass-launcher.net/babric'
+        }
+        maven {
+            name = 'Glass Releases'
+            url = 'https://maven.glass-launcher.net/releases'
         }
         maven {
             name = 'Jitpack'
-            url 'https://jitpack.io/'
+            url = 'https://jitpack.io/'
         }
         mavenCentral()
     }
@@ -70,33 +73,22 @@ allprojects {
         implementationOnly //A non-transitive implementation
         runtimeClasspath.extendsFrom implementationOnly
         compileClasspath.extendsFrom implementationOnly
-
-    }
-
-    minecraft {
-        addLibraryFilter {library ->
-            return !(library.startsWith('net.minecraft:launchwrapper:') ||
-                    library.startsWith('net.sf.jopt-simple:jopt-simple:') ||
-                    library.startsWith('org.ow2.asm:asm-all:') ||
-                    library.startsWith('net.fabricmc:sponge-mixin:'))
-        }
     }
 
     dependencies {
-        implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.0'
-        annotationProcessor group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.0'
-        implementation 'net.fabricmc:sponge-mixin:0.11.1+mixin.0.8.5'
+        implementation "org.slf4j:slf4j-api:1.8.0-beta4"
+        implementation 'org.apache.logging.log4j:log4j-slf4j18-impl:2.17.1'
+
+        implementation "org.apache.logging.log4j:log4j-core:2.17.2"
+        implementation "com.google.guava:guava:31.1-jre"
+        implementation "com.google.code.gson:gson:2.9.0"
 
         //to change the versions see the gradle.properties file
         minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
-        mappings loom.fromCommit("calmilamsy/BIN-Mappings", "${project.yarn_mappings}") {spec ->
-            spec.version = "b1.7.3-${project.yarn_mappings}"
-        }
+        mappings "net.glasslauncher:bin:${project.yarn_mappings}"
 
-        modImplementation("com.github.calmilamsy:cursed-fabric-loader:91f8c4c") {
-            transitive false //Avoid leaking Loader's dependencies forwards
-        }
+        modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
         implementationOnly 'org.apache.commons:commons-lang3:3.12.0'
         implementationOnly 'commons-io:commons-io:2.11.0'
@@ -116,7 +108,12 @@ allprojects {
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
-        implementationOnly 'org.jetbrains:annotations:22.0.0'
+        implementationOnly 'org.jetbrains:annotations:23.0.0'
+    }
+
+    loom {
+        gluedMinecraftJar()
+        customMinecraftManifest.set("https://babric.github.io/manifest-polyfill/${minecraft_version}.json")
     }
 
     sourceSets {
@@ -134,6 +131,20 @@ allprojects {
         }
     }
 
+    java {
+        // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+        // if it is present.
+        // If you remove this line, sources will not be generated.
+        withSourcesJar()
+    }
+
+    // Include license inside of the mod jar
+    jar {
+        from("LICENSE") {
+            rename { "${it}_${project.archivesBaseName}" }
+        }
+    }
+
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly
     // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
@@ -141,15 +152,7 @@ allprojects {
         options.encoding = 'UTF-8'
     }
 
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this task, sources will not be generated.
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    // Makes java shut up
+    // Makes gradle shut up
     compileJava {
         options.compilerArgs << '-XDignore.symbol.file'
         options.fork = true
@@ -294,12 +297,17 @@ publishing.publications.mavenJava(MavenPublication) {
     artifactId project.archives_base_name
 }
 
-task runTestmodClient(type: RunClientTask) {
-    classpath sourceSets.test.runtimeClasspath
-}
-
-task runTestmodServer(type: RunServerTask) {
-    classpath sourceSets.test.runtimeClasspath
+loom {
+    runs {
+        register("runTestmodClient") {
+            source("test")
+            client()
+        }
+        register("runTestmodServer") {
+            source("test")
+            server()
+        }
+    }
 }
 
 task testJar(type: Jar) {

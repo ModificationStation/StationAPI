@@ -250,7 +250,7 @@ public class ChunkSection {
    }
    
    private NibbleArray getLightArray(LightType type) {
-      return type == LightType.BLOCK ? blockLightArray : skyLightArray;
+      return type == LightType.field_2758 ? blockLightArray : skyLightArray;
    }
    
    static {

@@ -49,7 +49,7 @@ public class BlockFreezer extends TemplateBlockWithEntity
 
     private void setDefaultDirection(Level world, int i, int j, int k)
     {
-        if(world.isClient)
+        if(world.isServerSide)
         {
             return;
         }
@@ -81,7 +81,7 @@ public class BlockFreezer extends TemplateBlockWithEntity
     public void randomDisplayTick(Level world, int i, int j, int k, Random random)
     {
         TileEntityFreezer tileentity = (TileEntityFreezer)world.getTileEntity(i, j, k);
-        if(world.isClient ? tileentity.getCachedId() == 1 : tileentity.isBurning())
+        if(world.isServerSide ? tileentity.getCachedId() == 1 : tileentity.isBurning())
         {
             float f = (float)i + 0.5F;
             float f1 = (float)j + 1.0F + (random.nextFloat() * 6F) / 16F;

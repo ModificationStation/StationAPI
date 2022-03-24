@@ -151,7 +151,7 @@ public final class ArsenicItemRenderer {
                 float var21 = 0.5F;
                 float var22 = 0.25F;
                 if (itemRenderer.field_1707) {
-                    int var23 = ItemBase.byId[var10.itemId].getNameColour(var10.getDamage());
+                    int var23 = ItemBase.byId[var10.itemId].getColourMultiplier(var10.getDamage());
                     float var24 = (float) ((var23 >> 16) & 255) / 255.0F;
                     float var25 = (float) ((var23 >> 8) & 255) / 255.0F;
                     float var26 = (float) (var23 & 255) / 255.0F;
@@ -223,7 +223,7 @@ public final class ArsenicItemRenderer {
             GL11.glScalef(1.0F, 1.0F, -1.0F);
             GL11.glRotatef(210.0F, 1.0F, 0.0F, 0.0F);
             GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
-            int var15 = item.getNameColour(damage);
+            int var15 = item.getColourMultiplier(damage);
             float var16 = (float)((var15 >> 16) & 255) / 255.0F;
             float var12 = (float)((var15 >> 8) & 255) / 255.0F;
             float var13 = (float)(var15 & 255) / 255.0F;
@@ -241,7 +241,7 @@ public final class ArsenicItemRenderer {
             atlas.bindTexture();
             Sprite sprite = atlas.getSprite(((CustomAtlasProvider) item).getAtlas().getTexture(texture).getId());
 
-            int var8 = item.getNameColour(damage);
+            int var8 = item.getColourMultiplier(damage);
             float var9 = (float)((var8 >> 16) & 255) / 255.0F;
             float var10 = (float)((var8 >> 8) & 255) / 255.0F;
             float var11 = (float)(var8 & 255) / 255.0F;

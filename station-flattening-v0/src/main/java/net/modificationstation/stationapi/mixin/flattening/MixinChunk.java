@@ -116,7 +116,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Inject(method = "method_864", at = @At("HEAD"), cancellable = true)
     private void getLight(LightType type, int x, int y, int z, CallbackInfoReturnable<Integer> info) {
         ChunkSection section = getSection(y);
-        info.setReturnValue(section == null ? type == LightType.SKY ? 15 : 0 : section.getLight(type, x, y & 15, z));
+        info.setReturnValue(section == null ? type == LightType.field_2757 ? 15 : 0 : section.getLight(type, x, y & 15, z));
     }
     
     @Inject(method = "method_865", at = @At("HEAD"), cancellable = true)
@@ -131,13 +131,13 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Inject(method = "method_880", at = @At("HEAD"), cancellable = true)
     private void getLightLevel(int x, int y, int z, int light, CallbackInfoReturnable<Integer> info) {
         ChunkSection section = getSection(y);
-        int lightLevel = section == null ? 15 : section.getLight(LightType.SKY, x, y & 15, z);
+        int lightLevel = section == null ? 15 : section.getLight(LightType.field_2757, x, y & 15, z);
         if (lightLevel > 0) {
             this.field_953 = true;
         }
     
         lightLevel -= light;
-        int blockLight = section == null ? 0 : section.getLight(LightType.BLOCK, x, y & 15, z);
+        int blockLight = section == null ? 0 : section.getLight(LightType.field_2758, x, y & 15, z);
         if (blockLight > lightLevel) {
             lightLevel = blockLight;
         }
@@ -257,7 +257,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
                         int id = state == null ? 0 : state.getBlock().id;
                         light -= BlockBase.LIGHT_OPACITY[id];
                         if (light <= 0) break;
-                        section.setLight(LightType.SKY, x, y & 15, z, light);
+                        section.setLight(LightType.field_2757, x, y & 15, z, light);
                     }
                 }
             }
@@ -314,16 +314,16 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
                 for (int h = maxHeight; h < height; ++h) {
                     ChunkSection section = getSection(h);
                     if (section != null) {
-                        section.setLight(LightType.SKY, x, h & 15, z, 15);
+                        section.setLight(LightType.field_2757, x, h & 15, z, 15);
                     }
                 }
             }
             else {
-                this.level.method_166(LightType.SKY, posX, height, posZ, posX, maxHeight, posZ);
+                this.level.method_166(LightType.field_2757, posX, height, posZ, posX, maxHeight, posZ);
                 for (int h = height; h < maxHeight; ++h) {
                     ChunkSection section = getSection(h);
                     if (section != null) {
-                        section.setLight(LightType.SKY, x, h & 15, z, 0);
+                        section.setLight(LightType.field_2757, x, h & 15, z, 0);
                     }
                 }
             }
@@ -334,7 +334,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
                 --maxHeight;
                 ChunkSection section = getSection(maxHeight);
                 if (section != null) {
-                    section.setLight(LightType.SKY, x, maxHeight & 15, z, light);
+                    section.setLight(LightType.field_2757, x, maxHeight & 15, z, light);
                 }
                 int var11 = BlockBase.LIGHT_OPACITY[this.getTileId(x, maxHeight, z)];
                 if (var11 == 0) {
@@ -352,7 +352,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             }
 
             if (maxHeight != h) {
-                this.level.method_166(LightType.SKY, posX - 1, maxHeight, posZ - 1, posX + 1, h, posZ + 1);
+                this.level.method_166(LightType.field_2757, posX - 1, maxHeight, posZ - 1, posX + 1, h, posZ + 1);
             }
 
             this.field_967 = true;
@@ -396,10 +396,10 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             } else if (y == var6 - 1)
                 this.method_889(x, y, z);
 
-            this.level.method_166(LightType.SKY, levelX, y, levelZ, levelX, y, levelZ);
+            this.level.method_166(LightType.field_2757, levelX, y, levelZ, levelX, y, levelZ);
         }
 
-        this.level.method_166(LightType.BLOCK, levelX, y, levelZ, levelX, y, levelZ);
+        this.level.method_166(LightType.field_2758, levelX, y, levelZ, levelX, y, levelZ);
         this.method_887(x, z);
         section.setMeta(x, y & 15, z, meta);
         state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ);
@@ -460,12 +460,12 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
                     this.method_889(x, y + 1, z);
             } else if (y == topY - 1)
                 this.method_889(x, y, z);
-            this.level.method_166(LightType.SKY, levelX, y, levelZ, levelX, y, levelZ);
+            this.level.method_166(LightType.field_2757, levelX, y, levelZ, levelX, y, levelZ);
         }
 
-        this.level.method_166(LightType.BLOCK, levelX, y, levelZ, levelX, y, levelZ);
+        this.level.method_166(LightType.field_2758, levelX, y, levelZ, levelX, y, levelZ);
         this.method_887(x, z);
-        if (!this.level.isClient) {
+        if (!this.level.isServerSide) {
             state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ);
         }
 
@@ -501,7 +501,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             section = new ChunkSection(index << 4);
             if (fillSkyLight) {
                 for (short i = 0; i < 4096; i++) {
-                    section.setLight(LightType.SKY, i, 15);
+                    section.setLight(LightType.field_2757, i, 15);
                 }
             }
             sections[index] = section;
