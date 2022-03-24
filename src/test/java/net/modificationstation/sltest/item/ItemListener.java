@@ -23,6 +23,7 @@ public class ItemListener {
         testNBTItem = new NBTItem(of(MODID, "nbt_item")).setTranslationKey(MODID, "nbt_item"); //8477
         testModelItem = new ModelItem(of(MODID, "model_item")).setMaxStackSize(1).setTranslationKey(MODID, "idkSomething");
         ironOre = new TemplateItemBase(Identifier.of(MODID, "ironOre")).setTranslationKey(MODID, "ironOre");
+        generatedItem = new TemplateItemBase(Identifier.of(MODID, "generated_item")).setTranslationKey(MODID, "generatedItem");
         TagRegistry.INSTANCE.register(Identifier.of("blocks/ores/iron"), new ItemInstance(ironOre), e -> ironOre.id == e.itemId);
 
         TagRegistry.INSTANCE.register(Identifier.of("items/tools/pickaxes/testpickaxe"), new ItemInstance(testPickaxe), (e) -> e.itemId == testPickaxe.id);
@@ -34,4 +35,5 @@ public class ItemListener {
     public static TemplateItemBase testNBTItem;
     public static TemplateItemBase testModelItem;
     public static TemplateItemBase ironOre;
+    public static TemplateItemBase generatedItem;
 }

@@ -8,6 +8,7 @@
     "MixinAbstractTag",
     "MixinChunk",
     "MixinCompoundTag",
+    "MixinItemInstance",
     "MixinLevel",
     "MixinLevelChunkLoader",
     "MixinLevelManager",

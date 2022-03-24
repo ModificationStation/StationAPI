@@ -94,6 +94,10 @@ public class Util {
         return Arrays.stream(values).collect(ImmutableMap.toImmutableMap(keyMapper, Function.identity()));
     }
 
+    public static <T, R> Map<T, R> createIdentityLookupBy(Function<R, T> keyMapper, R[] values) {
+        return Collections.unmodifiableMap(Arrays.stream(values).collect(Collectors.toMap(keyMapper, Function.identity(), (u, v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); }, IdentityHashMap::new)));
+    }
+
     public static <K> Hash.Strategy<K> identityHashStrategy() {
         //noinspection unchecked
         return (Hash.Strategy<K>) IdentityHashStrategy.INSTANCE;

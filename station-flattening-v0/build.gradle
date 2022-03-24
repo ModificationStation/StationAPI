@@ -8,4 +8,5 @@ moduleDependencies(project,
         'station-networking-v0',
         'station-dimensions-v0',
         'station-tools-api-v1'
+        'station-items-v0'
 )

@@ -22,7 +22,8 @@
     "stationapi:event_bus": [
       "net.modificationstation.stationapi.impl.block.HasMetaBlockItemImpl",
       "net.modificationstation.stationapi.impl.block.HasMetaNamedBlockItemImpl",
-      "net.modificationstation.stationapi.impl.block.HasCustomBlockItemFactoryImpl"
+      "net.modificationstation.stationapi.impl.block.HasCustomBlockItemFactoryImpl",
+      "net.modificationstation.stationapi.impl.block.BlockFormOnlyHandler"
     ]
   },
   "mixins": [
