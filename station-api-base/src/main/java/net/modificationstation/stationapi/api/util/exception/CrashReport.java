@@ -11,11 +11,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
-import java.nio.charset.*;
-import java.text.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.*;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.CompletionException;
+import java.util.stream.Collectors;
 
 public class CrashReport {
    private static final Logger LOGGER = LogManager.getLogger();

@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.client.texture;
 
 import org.lwjgl.opengl.GL11;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
 
 public class TextureUtil {
 

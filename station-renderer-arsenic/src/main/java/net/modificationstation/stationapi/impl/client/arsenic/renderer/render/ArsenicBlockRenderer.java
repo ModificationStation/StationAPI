@@ -16,9 +16,7 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldRenderer;
-import net.modificationstation.stationapi.api.client.render.RendererAccess;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
-import net.modificationstation.stationapi.api.client.render.model.BakedModelRenderer;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
@@ -31,18 +29,15 @@ import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.*;
-
 public final class ArsenicBlockRenderer {
 
     private final BlockRenderer blockRenderer;
     private final BlockRendererAccessor blockRendererAccessor;
-    private final BakedModelRenderer bakedModelRenderer;
 
     public ArsenicBlockRenderer(BlockRenderer blockRenderer) {
         this.blockRenderer = blockRenderer;
         blockRendererAccessor = (BlockRendererAccessor) blockRenderer;
-        bakedModelRenderer = RendererAccess.INSTANCE.hasRenderer() ? Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer() : null;
+//        bakedModelRenderer = RendererAccess.INSTANCE.hasRenderer() ? Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer() : null;
     }
 
     public Tessellator prepareTessellator(Atlas atlas) {
@@ -53,10 +48,12 @@ public final class ArsenicBlockRenderer {
         BlockState state = ((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z);
         BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state);
         if (!model.isBuiltin()) {
-            cir.setReturnValue(bakedModelRenderer.renderWorld(state, model, blockRendererAccessor.getBlockView(), x, y, z, blockRendererAccessor.getTextureOverride()));
-        } else if (block instanceof BlockWithWorldRenderer renderer) {
-            block.updateBoundingBox(blockRendererAccessor.getBlockView(), x, y, z);
-            cir.setReturnValue(renderer.renderWorld(blockRenderer, blockRendererAccessor.getBlockView(), x, y, z));
+            cir.setReturnValue(RendererHolder.RENDERER.renderWorld(blockRenderer, state, model, blockRendererAccessor.getBlockView(), x, y, z, blockRendererAccessor.getTextureOverride()));
+        } else //noinspection deprecation
+            if (block instanceof BlockWithWorldRenderer renderer) {
+                block.updateBoundingBox(blockRendererAccessor.getBlockView(), x, y, z);
+                //noinspection deprecation
+                cir.setReturnValue(renderer.renderWorld(blockRenderer, blockRendererAccessor.getBlockView(), x, y, z));
         }
     }
 
@@ -1051,7 +1048,7 @@ public final class ArsenicBlockRenderer {
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         Tessellator t = Tessellator.INSTANCE;
 
-        int var6 = (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) && Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().isAnimated() ? StationRenderAPI.getBlockColours().getColour(((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z), blockRendererAccessor.getBlockView(), new TilePos(x, y, z), -1) : block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
+        int var6 = (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) && Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().getAnimation() != null ? StationRenderAPI.getBlockColours().getColour(((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z), blockRendererAccessor.getBlockView(), new TilePos(x, y, z), -1) : block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
         float var7 = (float)((var6 >> 16) & 255) / 255.0F;
         float var8 = (float)((var6 >> 8) & 255) / 255.0F;
         float var9 = (float)(var6 & 255) / 255.0F;

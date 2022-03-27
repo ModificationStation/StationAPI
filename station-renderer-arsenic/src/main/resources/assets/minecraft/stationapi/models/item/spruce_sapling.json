@@ -1,0 +1,6 @@
+{
+  "parent": "item/sapling",
+  "textures": {
+    "layer0": "block/spruce_sapling"
+  }
+}

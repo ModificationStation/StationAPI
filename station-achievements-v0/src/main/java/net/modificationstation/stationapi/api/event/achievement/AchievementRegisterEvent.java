@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.achievement.Achievement;
 
-import java.util.*;
+import java.util.List;
 
 @RequiredArgsConstructor
 public class AchievementRegisterEvent extends Event {

@@ -2,11 +2,7 @@ package net.modificationstation.stationapi.api.client.render.model.json;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Streams;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
@@ -18,11 +14,12 @@ import net.modificationstation.stationapi.api.client.render.model.SimpleMultipar
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.util.json.JsonHelper;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.Map.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class MultipartModelComponent {

@@ -4,7 +4,7 @@ import net.minecraft.entity.player.PlayerBase;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.packet.Message;
 
-import java.util.function.*;
+import java.util.function.BiConsumer;
 
 /**
  * Registry that holds {@link Message} listeners.

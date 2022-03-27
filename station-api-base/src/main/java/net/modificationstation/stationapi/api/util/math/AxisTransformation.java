@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.util.math;
 
 import net.modificationstation.stationapi.api.util.Util;
 
-import java.util.*;
+import java.util.Arrays;
 
 public enum AxisTransformation {
    P123(0, 1, 2),

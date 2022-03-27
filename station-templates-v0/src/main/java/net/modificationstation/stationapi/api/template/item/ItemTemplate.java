@@ -13,7 +13,7 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Util;
 
-import java.util.function.*;
+import java.util.function.Function;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = CustomAtlasProvider.class)
 public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider, ItemConvertible {

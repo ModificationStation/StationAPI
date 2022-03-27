@@ -6,8 +6,8 @@ import net.modificationstation.stationapi.api.client.render.StationTessellator;
 import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
 
-import java.nio.*;
-import java.util.*;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
@@ -17,8 +17,6 @@ public class StationTessellatorImpl implements StationTessellator {
     private final TessellatorAccessor access;
     private double vx, vy, vz;
 
-    private final int[] fastVertexData = new int[32];
-
     public StationTessellatorImpl(Tessellator tessellator) {
         self = tessellator;
         access = (TessellatorAccessor) tessellator;
@@ -26,36 +24,6 @@ public class StationTessellatorImpl implements StationTessellator {
 
     public static StationTessellatorImpl get(Tessellator tessellator) {
         return ((StationTessellatorAccess) tessellator).stationapi$stationTessellator();
-    }
-
-    @Override
-    public void quad(int[] vertexData, float x, float y, float z, int colour0, int colour1, int colour2, int colour3) {
-        System.arraycopy(vertexData, 0, fastVertexData, 0, 32);
-        fastVertexData[0] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[0]) + x + access.getXOffset()));
-        fastVertexData[1] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[1]) + y + access.getYOffset()));
-        fastVertexData[2] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[2]) + z + access.getZOffset()));
-        fastVertexData[5] = colour0;
-        fastVertexData[8] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[8]) + x + access.getXOffset()));
-        fastVertexData[9] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[9]) + y + access.getYOffset()));
-        fastVertexData[10] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[10]) + z + access.getZOffset()));
-        fastVertexData[13] = colour1;
-        fastVertexData[16] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[16]) + x + access.getXOffset()));
-        fastVertexData[17] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[17]) + y + access.getYOffset()));
-        fastVertexData[18] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[18]) + z + access.getZOffset()));
-        fastVertexData[21] = colour2;
-        fastVertexData[24] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[24]) + x + access.getXOffset()));
-        fastVertexData[25] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[25]) + y + access.getYOffset()));
-        fastVertexData[26] = Float.floatToRawIntBits((float) (Float.intBitsToFloat(fastVertexData[26]) + z + access.getZOffset()));
-        fastVertexData[29] = colour3;
-        access.setHasColour(true);
-        access.setHasTexture(true);
-        System.arraycopy(fastVertexData, 0, access.stationapi$getBufferArray(), access.stationapi$getBufferPosition(), 24);
-        System.arraycopy(fastVertexData, 0, access.stationapi$getBufferArray(), access.stationapi$getBufferPosition() + 24, 8);
-        System.arraycopy(fastVertexData, 16, access.stationapi$getBufferArray(), access.stationapi$getBufferPosition() + 32, 16);
-        access.stationapi$setVertexAmount(access.stationapi$getVertexAmount() + 4);
-        access.stationapi$setBufferPosition(access.stationapi$getBufferPosition() + 48);
-        access.stationapi$setVertexCount(access.stationapi$getVertexCount() + 6);
-        ensureBufferCapacity(48);
     }
 
     @Override

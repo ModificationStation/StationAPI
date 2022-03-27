@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.block;
 import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 
-import java.util.function.*;
+import java.util.function.IntFunction;
 
 /**
  * Interface that blocks can use to provide a custom block item factory on register via {@link BlockItemFactoryEvent} hook.

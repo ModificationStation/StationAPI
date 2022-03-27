@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Unit;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
 
 public interface ResourceReloadMonitor {
    CompletableFuture<Unit> whenComplete();

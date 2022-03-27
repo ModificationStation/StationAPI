@@ -13,7 +13,9 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 @Environment(EnvType.CLIENT)
 public class ItemModels {

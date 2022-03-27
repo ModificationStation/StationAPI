@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Indexes an atlas sprite to allow fast lookup of Sprites from

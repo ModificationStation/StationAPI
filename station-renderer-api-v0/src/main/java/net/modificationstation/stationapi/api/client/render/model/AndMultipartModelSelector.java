@@ -7,9 +7,9 @@ import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.state.StateManager;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class AndMultipartModelSelector implements MultipartModelSelector {

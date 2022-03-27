@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.client.texture.Sprite.Info;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class TextureStitcher {

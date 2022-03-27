@@ -4,7 +4,7 @@ import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.client.render.StationTextureManagerImpl;
 
-import java.util.*;
+import java.util.Set;
 
 public interface StationTextureManager {
 

@@ -1,5 +1,3 @@
-import net.fabricmc.loom.task.RunGameTask
-
 plugins {
     id "maven-publish"
     id 'babric-loom' version '0.12-SNAPSHOT'

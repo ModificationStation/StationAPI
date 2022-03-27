@@ -15,7 +15,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class ToolEffectivenessImplV1 {

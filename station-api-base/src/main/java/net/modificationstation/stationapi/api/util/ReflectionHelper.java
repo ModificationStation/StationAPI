@@ -2,11 +2,13 @@ package net.modificationstation.stationapi.api.util;
 
 import sun.misc.Unsafe;
 
-import java.lang.annotation.*;
-import java.lang.invoke.*;
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.function.*;
+import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.function.Function;
 
 public class ReflectionHelper {
 

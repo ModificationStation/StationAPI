@@ -1,18 +1,14 @@
 package net.modificationstation.stationapi.impl.client.render;
 
 import net.minecraft.client.texture.TextureManager;
-import net.modificationstation.stationapi.api.client.texture.AbstractTexture;
-import net.modificationstation.stationapi.api.client.texture.MissingSprite;
-import net.modificationstation.stationapi.api.client.texture.ResourceTexture;
-import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
-import net.modificationstation.stationapi.api.client.texture.TextureTickListener;
+import net.modificationstation.stationapi.api.client.texture.*;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.exception.CrashException;
 import net.modificationstation.stationapi.api.util.exception.CrashReport;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.*;
 
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;

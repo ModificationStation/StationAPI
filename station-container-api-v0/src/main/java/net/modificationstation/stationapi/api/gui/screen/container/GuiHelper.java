@@ -13,7 +13,7 @@ import net.modificationstation.stationapi.impl.client.gui.screen.container.GuiHe
 import net.modificationstation.stationapi.impl.gui.screen.container.GuiHelperImpl;
 import net.modificationstation.stationapi.impl.server.gui.screen.container.GuiHelperServerImpl;
 
-import java.util.function.*;
+import java.util.function.Consumer;
 
 /**
  * Sided container GUI helper class.

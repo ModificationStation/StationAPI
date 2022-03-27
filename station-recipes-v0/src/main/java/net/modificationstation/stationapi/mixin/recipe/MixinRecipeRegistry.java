@@ -3,23 +3,14 @@ package net.modificationstation.stationapi.mixin.recipe;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeRegistry;
-import net.minecraft.recipe.ShapedRecipe;
-import net.minecraft.recipe.ShapelessRecipe;
-import net.minecraft.recipe.ToolRecipes;
+import net.minecraft.recipe.*;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
 import net.modificationstation.stationapi.impl.recipe.tag.ShapedTagRecipeAccessor;
 import net.modificationstation.stationapi.impl.recipe.tag.TagConversionStorage;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -66,6 +57,7 @@ public class MixinRecipeRegistry {
      * @author calmilamsy
      * @reason insane jank
      */
+    @SuppressWarnings("OverwriteModifiers")
     @Overwrite
     public void addShapelessRecipe(ItemInstance output, Object... objects) {
         ArrayList<Object> var3 = new ArrayList<>();

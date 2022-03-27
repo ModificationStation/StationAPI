@@ -1,0 +1,16 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "block/oak_sapling"
+  },
+  "overrides": [
+    {
+      "predicate": {"meta": 1},
+      "model": "block/spruce_sapling"
+    },
+    {
+      "predicate": {"meta": 2},
+      "model": "block/birch_sapling"
+    }
+  ]
+}

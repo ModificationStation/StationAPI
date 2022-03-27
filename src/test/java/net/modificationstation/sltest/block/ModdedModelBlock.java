@@ -12,7 +12,7 @@ import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
-import static net.modificationstation.stationapi.api.state.property.Properties.FACING;
+import static net.modificationstation.stationapi.api.state.property.Properties.HORIZONTAL_FACING;
 
 public class ModdedModelBlock extends TemplateBlockBase {
 
@@ -29,12 +29,12 @@ public class ModdedModelBlock extends TemplateBlockBase {
 
     @Override
     public void afterPlaced(Level level, int x, int y, int z, Living living) {
-        ((BlockStateView) level).setBlockState(x, y, z, getDefaultState().with(FACING, DIRECTIONS[MathHelper.floor((double)(living.yaw * 4.0F / 360.0F) + 0.5D) & 3]));
+        ((BlockStateView) level).setBlockState(x, y, z, getDefaultState().with(HORIZONTAL_FACING, DIRECTIONS[MathHelper.floor((double)(living.yaw * 4.0F / 360.0F) + 0.5D) & 3]));
     }
 
     @Override
     public void appendProperties(StateManager.Builder<BlockBase, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(FACING);
+        builder.add(HORIZONTAL_FACING);
     }
 }

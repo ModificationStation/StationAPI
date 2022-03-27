@@ -20,12 +20,14 @@ import net.modificationstation.stationapi.impl.client.texture.RenderSystem;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import javax.imageio.*;
-import java.awt.image.*;
-import java.io.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
@@ -35,7 +37,7 @@ public class SpriteAtlasTexture
 extends AbstractTexture
 implements TextureTickListener {
 
-    private final List<Sprite> animatedSprites = new ArrayList<>();
+    private final List<TextureTickListener> animatedSprites = new ArrayList<>();
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private final Set<Identifier> spritesToLoad = new HashSet<>();
     private final Map<Identifier, Sprite> sprites = new IdentityHashMap<>();
@@ -68,8 +70,9 @@ implements TextureTickListener {
                 crashReportSection.add("Sprite", sprite);
                 throw new CrashException(crashReport);
             }
-            if (!sprite.isAnimated()) continue;
-            this.animatedSprites.add(sprite);
+            TextureTickListener textureTickListener = sprite.getAnimation();
+            if (textureTickListener == null) continue;
+            this.animatedSprites.add(textureTickListener);
         }
         spriteFinder = null;
     }
@@ -140,7 +143,7 @@ implements TextureTickListener {
                     AnimationResourceMetadata animationResourceMetadata = resource.getMetadata(AnimationResourceMetadata.READER);
                     if (animationResourceMetadata == null)
                         animationResourceMetadata = AnimationResourceMetadata.EMPTY;
-                    Pair<Integer, Integer> pair = animationResourceMetadata.getResolution(image.getWidth(), image.getHeight());
+                    Pair<Integer, Integer> pair = animationResourceMetadata.ensureImageSize(image.getWidth(), image.getHeight());
                     info3 = new Sprite.Info(identifier, pair.getFirst(), pair.getSecond(), animationResourceMetadata);
                 }
                 catch (RuntimeException runtimeException) {
@@ -200,9 +203,7 @@ implements TextureTickListener {
 
     public void tickAnimatedSprites() {
         this.bindTexture();
-        for (Sprite sprite : this.animatedSprites) {
-            sprite.tickAnimation();
-        }
+        animatedSprites.forEach(TextureTickListener::tick);
     }
 
     @Override
@@ -234,6 +235,7 @@ implements TextureTickListener {
         this.setFilter(false, data.maxLevel > 0);
     }
 
+    @SuppressWarnings("ClassCanBeRecord")
     @Environment(EnvType.CLIENT)
     public static class Data {
         final Set<Identifier> spriteIds;

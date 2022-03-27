@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.util;
 
 import sun.misc.Unsafe;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
 
 public class UnsafeProvider {
 

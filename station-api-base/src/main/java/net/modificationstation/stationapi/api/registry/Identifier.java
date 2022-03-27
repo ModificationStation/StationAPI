@@ -7,7 +7,7 @@ import com.mojang.serialization.DataResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Objects;
 
 import static net.modificationstation.stationapi.api.registry.ModID.MINECRAFT;
 

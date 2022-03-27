@@ -2,7 +2,8 @@ package net.modificationstation.stationapi.api.state.property;
 
 import com.google.common.collect.ImmutableSet;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
 
 public class BooleanProperty extends Property<Boolean> {
    private final ImmutableSet<Boolean> values = ImmutableSet.of(true, false);

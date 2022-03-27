@@ -3,9 +3,11 @@ package net.modificationstation.stationapi.api.factory;
 import net.modificationstation.stationapi.api.util.UnsafeProvider;
 import sun.misc.Unsafe;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.function.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class EnumFactory {
 

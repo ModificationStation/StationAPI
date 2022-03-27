@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 import uk.co.benjiweber.expressions.tuple.Tuple;
 
-import java.util.*;
+import java.util.Objects;
 
 public final class AffineTransformation {
    private final Matrix4f matrix;

@@ -1,25 +1,40 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
-import net.minecraft.client.render.Tessellator;
 import net.modificationstation.stationapi.api.client.render.RenderContext;
-import net.modificationstation.stationapi.api.client.render.StationTessellator;
+import net.modificationstation.stationapi.api.client.render.VertexConsumer;
+import net.modificationstation.stationapi.api.util.math.Matrix3f;
+import net.modificationstation.stationapi.api.util.math.Matrix4f;
+import net.modificationstation.stationapi.api.util.math.Vector3f;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc.LightingCalculatorImpl;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.helper.ColourHelper;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MutableQuadViewImpl;
 
+import java.util.function.Supplier;
+
 public abstract class AbstractQuadRenderer {
 
+    static final int FULL_BRIGHTNESS = 0xF000F0;
+
+    protected final Supplier<VertexConsumer> bufferFunc;
     protected final BlockRenderInfo blockInfo;
     protected final LightingCalculatorImpl aoCalc;
     protected final RenderContext.QuadTransform transform;
+    protected final Vector3f normalVec = new Vector3f();
 
-    AbstractQuadRenderer(BlockRenderInfo blockInfo, LightingCalculatorImpl aoCalc, RenderContext.QuadTransform transform) {
+    protected abstract Matrix4f matrix();
+
+    protected abstract Matrix3f normalMatrix();
+
+    protected abstract int overlay();
+
+    AbstractQuadRenderer(BlockRenderInfo blockInfo, Supplier<VertexConsumer> bufferFunc, LightingCalculatorImpl aoCalc, RenderContext.QuadTransform transform) {
         this.blockInfo = blockInfo;
+        this.bufferFunc = bufferFunc;
         this.aoCalc = aoCalc;
         this.transform = transform;
     }
 
-    /** handles block color and red-blue swizzle, common to all renders. */
+    /** handles block colour and red-blue swizzle, common to all renders. */
     private void colorizeQuad(MutableQuadViewImpl q, int blockColourIndex) {
         if (blockColourIndex == -1) {
             for (int i = 0; i < 4; i++) {
@@ -34,15 +49,37 @@ public abstract class AbstractQuadRenderer {
         }
     }
 
-    private void tessellateQuad(MutableQuadViewImpl q) {
-        StationTessellator.get(Tessellator.INSTANCE).quad(
-                q.data(),
-                0, 0, 0,
-                q.spriteColour(0, 0),
-                q.spriteColour(1, 0),
-                q.spriteColour(2, 0),
-                q.spriteColour(3, 0)
-        );
+    private void bufferQuad(MutableQuadViewImpl q) {
+        bufferQuad(bufferFunc.get(), q, matrix(), overlay(), normalMatrix(), normalVec);
+    }
+
+    public static void bufferQuad(VertexConsumer buff, MutableQuadViewImpl quad, Matrix4f matrix, int overlay, Matrix3f normalMatrix, Vector3f normalVec) {
+        final boolean useNormals = quad.hasVertexNormals();
+
+        if (useNormals) {
+            quad.populateMissingNormals();
+        } else {
+            final Vector3f faceNormal = quad.faceNormal();
+            normalVec.set(faceNormal.getX(), faceNormal.getY(), faceNormal.getZ());
+            normalVec.transform(normalMatrix);
+        }
+
+        for (int i = 0; i < 4; i++) {
+            buff.vertex(matrix, quad.x(i), quad.y(i), quad.z(i));
+            final int colour = quad.spriteColour(i, 0);
+            buff.colour(colour & 0xFF, (colour >> 8) & 0xFF, (colour >> 16) & 0xFF, (colour >> 24) & 0xFF);
+            buff.texture(quad.spriteU(i, 0), quad.spriteV(i, 0));
+            buff.overlay(overlay);
+            buff.light(quad.lightmap(i));
+
+            if (useNormals) {
+                normalVec.set(quad.normalX(i), quad.normalY(i), quad.normalZ(i));
+                normalVec.transform(normalMatrix);
+            }
+
+            buff.normal(normalVec.getX(), normalVec.getY(), normalVec.getZ());
+            buff.next();
+        }
     }
 
     // routines below have a bit of copy-paste code reuse to avoid conditional execution inside a hot loop
@@ -57,7 +94,7 @@ public abstract class AbstractQuadRenderer {
 //            q.lightmap(i, ColourHelper.maxBrightness(q.lightmap(i), aoCalc.light[i]));
         }
 
-        tessellateQuad(q);
+        bufferQuad(q);
     }
 
     /** for emissive mesh quads with smooth lighting. */
@@ -69,7 +106,7 @@ public abstract class AbstractQuadRenderer {
 //            q.lightmap(i, FULL_BRIGHTNESS);
 //        }
 
-        tessellateQuad(q);
+        bufferQuad(q);
     }
 
     /** for non-emissive mesh quads and all fallback quads with flat lighting. */
@@ -84,7 +121,7 @@ public abstract class AbstractQuadRenderer {
 //            quad.lightmap(i, ColourHelper.maxBrightness(quad.lightmap(i), brightness));
         }
 
-        tessellateQuad(quad);
+        bufferQuad(quad);
     }
 
     /** for emissive mesh quads with flat lighting. */
@@ -96,7 +133,7 @@ public abstract class AbstractQuadRenderer {
 //            quad.lightmap(i, FULL_BRIGHTNESS);
 //        }
 
-        tessellateQuad(quad);
+        bufferQuad(quad);
     }
 
     private void shadeFlatQuad(MutableQuadViewImpl quad) {

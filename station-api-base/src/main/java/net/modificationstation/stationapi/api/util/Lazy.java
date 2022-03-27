@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.util;
 
-import java.util.function.*;
+import java.util.function.Supplier;
 
 public class Lazy<T> {
    private Supplier<T> supplier;

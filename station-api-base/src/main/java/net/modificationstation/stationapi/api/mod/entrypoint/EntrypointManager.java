@@ -11,8 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.message.ParameterizedMessageFactory;
 
-import java.lang.reflect.*;
-import java.util.function.*;
+import java.lang.reflect.Method;
+import java.util.function.Consumer;
 
 /**
  * Entrypoint utility class for easier mod initialization.

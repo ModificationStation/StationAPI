@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.*;
+import java.util.Map;
 
 @Mixin(TileEntityRenderDispatcher.class)
 public class MixinTileEntityRenderDispatcher {

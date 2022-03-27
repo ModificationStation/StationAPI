@@ -20,7 +20,8 @@
   "environment": "client",
   "entrypoints": {
     "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.client.arsenic.Arsenic"
+      "net.modificationstation.stationapi.impl.client.arsenic.Arsenic",
+      "net.modificationstation.stationapi.impl.client.arsenic.renderer.render.VanillaModelsAdapter"
     ]
   },
   "mixins": [

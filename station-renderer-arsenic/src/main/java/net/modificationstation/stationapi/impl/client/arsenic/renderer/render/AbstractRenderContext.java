@@ -3,10 +3,15 @@ package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.modificationstation.stationapi.api.client.render.RenderContext;
 import net.modificationstation.stationapi.api.client.render.mesh.MutableQuadView;
+import net.modificationstation.stationapi.api.util.math.Matrix3f;
+import net.modificationstation.stationapi.api.util.math.Matrix4f;
 
 abstract class AbstractRenderContext implements RenderContext {
 	private final ObjectArrayList<QuadTransform> transformStack = new ObjectArrayList<>();
 	private static final RenderContext.QuadTransform NO_TRANSFORM = (q) -> true;
+	protected Matrix4f matrix;
+	protected Matrix3f normalMatrix;
+	protected int overlay;
 
 	private final QuadTransform stackTransform = (q) -> {
 		int i = transformStack.size() - 1;

@@ -13,6 +13,9 @@ public interface BlockRendererAccessor {
     @Accessor
     BlockView getBlockView();
 
+    @Accessor("blockView")
+    void stationapi$setBlockView(BlockView blockView);
+
     @Accessor
     float getColourRed00();
 

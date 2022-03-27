@@ -9,8 +9,8 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.mixin.item.client.DrawableHelperInvoker;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class CustomTooltipRendererImpl {

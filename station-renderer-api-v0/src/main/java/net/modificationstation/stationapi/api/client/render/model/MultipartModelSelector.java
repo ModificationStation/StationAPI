@@ -6,7 +6,7 @@ import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.state.StateManager;
 
-import java.util.function.*;
+import java.util.function.Predicate;
 
 @FunctionalInterface
 @Environment(EnvType.CLIENT)

@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.registry;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Optional;
 
 public abstract class AbstractArrayBackedRegistry<T> extends AbstractSerialRegistry<T> {
 

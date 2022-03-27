@@ -7,8 +7,8 @@ import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import org.lwjgl.opengl.GL11;
 
-import java.io.*;
-import java.util.concurrent.*;
+import java.io.IOException;
+import java.util.concurrent.Executor;
 
 @Environment(EnvType.CLIENT)
 public abstract class AbstractTexture implements AutoCloseable {

@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.registry;
 import net.minecraft.item.ItemBase;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 

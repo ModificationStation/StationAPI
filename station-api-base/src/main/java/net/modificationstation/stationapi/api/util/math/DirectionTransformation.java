@@ -9,8 +9,9 @@ import org.jetbrains.annotations.Nullable;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 import uk.co.benjiweber.expressions.tuple.Tuple;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public enum DirectionTransformation implements StringIdentifiable {
    IDENTITY("identity", AxisTransformation.P123, false, false, false),

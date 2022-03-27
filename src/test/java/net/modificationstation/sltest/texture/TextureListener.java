@@ -11,9 +11,7 @@ import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtl
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import static net.modificationstation.sltest.SLTest.MODID;
-import static net.modificationstation.sltest.block.Blocks.FREEZER;
-import static net.modificationstation.sltest.block.Blocks.TEST_ANIMATED_BLOCK;
-import static net.modificationstation.sltest.block.Blocks.TEST_BLOCK;
+import static net.modificationstation.sltest.block.Blocks.*;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public class TextureListener {

@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh;
 import net.modificationstation.stationapi.api.client.render.mesh.Mesh;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadView;
 
-import java.util.function.*;
+import java.util.function.Consumer;
 
 /**
  * Implementation of {@link Mesh}.

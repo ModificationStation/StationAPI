@@ -4,7 +4,7 @@ import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 
-import java.util.function.*;
+import java.util.function.Predicate;
 
 public class TagEntry {
 

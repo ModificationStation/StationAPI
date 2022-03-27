@@ -21,8 +21,8 @@ import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.impl.client.resource.ResourceReloader;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 

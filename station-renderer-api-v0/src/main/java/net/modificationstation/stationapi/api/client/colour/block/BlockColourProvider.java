@@ -9,5 +9,5 @@ import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public interface BlockColourProvider {
-   int getColor(BlockState state, @Nullable BlockView world, @Nullable TilePos pos, int tintIndex);
+   int getColour(BlockState state, @Nullable BlockView world, @Nullable TilePos pos, int tintIndex);
 }

@@ -5,7 +5,9 @@ import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 public class CrashReportSection {
    private final CrashReport report;

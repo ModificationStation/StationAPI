@@ -3,15 +3,10 @@ package net.modificationstation.stationapi.api.event.block;
 import lombok.Getter;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.Block;
-import net.modificationstation.stationapi.api.block.CustomBlockItemFactoryProvider;
-import net.modificationstation.stationapi.api.block.HasCustomBlockItemFactory;
-import net.modificationstation.stationapi.api.block.HasMetaBlockItem;
-import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
-import net.modificationstation.stationapi.api.block.MetaBlockItemProvider;
-import net.modificationstation.stationapi.api.block.MetaNamedBlockItemProvider;
+import net.modificationstation.stationapi.api.block.*;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.*;
+import java.util.function.IntFunction;
 
 /**
  * When blocks are being registered, this event is called to make it possible to replace the default block item for the current block.

@@ -9,20 +9,7 @@ import net.modificationstation.stationapi.impl.client.arsenic.renderer.RenderMat
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.helper.GeometryHelper;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.helper.NormalHelper;
 
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.HEADER_BITS;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.HEADER_COLOR_INDEX;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.HEADER_STRIDE;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.HEADER_TAG;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.QUAD_STRIDE;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_COLOR;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_LIGHTMAP;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_NORMAL;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_STRIDE;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_U;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_V;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_X;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_Y;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_Z;
+import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.*;
 
 /**
  * Base class for all quads / quad makers. Handles the ugly bits

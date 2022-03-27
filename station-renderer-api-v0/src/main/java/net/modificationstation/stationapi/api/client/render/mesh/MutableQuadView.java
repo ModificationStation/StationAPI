@@ -123,7 +123,7 @@ public interface MutableQuadView extends QuadView {
 	 * Value functions identically to {@link BakedQuad#getColorIndex()} and is
 	 * used by renderer / model builder in same way. Default value is -1.
 	 */
-	MutableQuadView colorIndex(int colorIndex);
+	MutableQuadView colourIndex(int colourIndex);
 
 	/**
 	 * Enables bulk vertex data transfer using the standard Minecraft vertex formats.

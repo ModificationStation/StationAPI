@@ -25,4 +25,13 @@ public class Mixinclass_556 {
     public void method_1862(Living entity, ItemInstance item) {
         arsenic_plugin.renderItem3D(entity, item);
     }
+
+    /**
+     * @reason there's no saving notch code
+     * @author mine_diver
+     */
+    @Overwrite
+    public void method_1860(float f) {
+        arsenic_plugin.renderItem(f);
+    }
 }

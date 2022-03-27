@@ -13,7 +13,9 @@ import net.modificationstation.stationapi.api.util.Lazy;
 import net.modificationstation.stationapi.api.util.UnsafeProvider;
 import net.modificationstation.stationapi.api.util.Util;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class BlockFormOnlyHandler {

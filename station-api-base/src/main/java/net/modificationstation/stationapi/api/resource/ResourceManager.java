@@ -5,11 +5,14 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.API;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class ResourceManager {
 

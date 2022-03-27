@@ -1,0 +1,16 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "block/oak_sapling"
+  },
+  "overrides": [
+    {
+      "predicate": {"meta": 1},
+      "model": "item/spruce_sapling"
+    },
+    {
+      "predicate": {"meta": 2},
+      "model": "item/birch_sapling"
+    }
+  ]
+}

@@ -1,18 +1,18 @@
 {
   "variants": {
     "facing=north": {
-      "model": "sltest:farlandsBlock"
+      "model": "sltest:block/farlandsBlock"
     },
     "facing=west": {
-      "model": "sltest:farlandsBlock",
+      "model": "sltest:block/farlandsBlock",
       "y": 90
     },
     "facing=south": {
-      "model": "sltest:farlandsBlock",
+      "model": "sltest:block/farlandsBlock",
       "y": 180
     },
     "facing=east": {
-      "model": "sltest:farlandsBlock",
+      "model": "sltest:block/farlandsBlock",
       "y": 270
     }
   }

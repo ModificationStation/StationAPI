@@ -17,9 +17,12 @@ import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import uk.co.benjiweber.expressions.function.ObjIntFunction;
 
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.*;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
+import java.util.function.IntFunction;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
@@ -114,7 +117,7 @@ public abstract class Atlas {
     }
 
     public void registerTextureBinders(TextureManager textureManager, TexturePack texturePack) {
-        textureBinders.stream().filter(textureBinder -> !(textureBinder instanceof StaticReferenceProvider provider && provider.getStaticReference().getSprite().isAnimated())).forEach(arg -> {
+        textureBinders.stream().filter(textureBinder -> !(textureBinder instanceof StaticReferenceProvider provider && provider.getStaticReference().getSprite().getAnimation() != null)).forEach(arg -> {
             if (arg instanceof TexturePackDependent dependent)
                 dependent.reloadFromTexturePack(texturePack);
             textureManager.addTextureBinder(arg);

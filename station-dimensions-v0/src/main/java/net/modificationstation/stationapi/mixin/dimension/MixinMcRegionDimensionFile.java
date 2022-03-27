@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import java.io.*;
+import java.io.File;
 
 @Mixin(McRegionDimensionFile.class)
 public class MixinMcRegionDimensionFile extends DimensionFile {

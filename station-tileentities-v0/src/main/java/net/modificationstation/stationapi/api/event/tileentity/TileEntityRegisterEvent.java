@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.tileentity.TileEntityBase;
 
-import java.util.function.*;
+import java.util.function.BiConsumer;
 
 @RequiredArgsConstructor
 public class TileEntityRegisterEvent extends Event {

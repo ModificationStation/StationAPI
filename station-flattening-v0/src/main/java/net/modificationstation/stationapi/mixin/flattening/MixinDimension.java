@@ -30,7 +30,7 @@ public class MixinDimension implements StationDimension {
 		shift = Shift.AFTER
 	))
 	private void onDimensionInit(Level level, CallbackInfo info) {
-		StationLevelProperties properties = StationLevelProperties.class.cast(level.getProperties());
+		StationLevelProperties properties = (StationLevelProperties) level.getProperties();
 		Optional<Identifier> optional = DimensionRegistry.INSTANCE.getIdentifier(this.id);
 		if (optional.isPresent()) {
 			Identifier id = optional.get();

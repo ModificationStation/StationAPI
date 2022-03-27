@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
-import java.util.*;
+import java.util.Optional;
 
 import static net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent.Vanilla.SMELTING;
 

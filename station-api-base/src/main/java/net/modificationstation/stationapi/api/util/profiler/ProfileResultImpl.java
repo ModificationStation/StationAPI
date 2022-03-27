@@ -12,10 +12,12 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
-import java.nio.charset.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.Map.*;
+import java.util.Map.Entry;
 
 public class ProfileResultImpl implements ProfileResult {
    private static final Logger LOGGER = LogManager.getLogger();

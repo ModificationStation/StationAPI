@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Map;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 

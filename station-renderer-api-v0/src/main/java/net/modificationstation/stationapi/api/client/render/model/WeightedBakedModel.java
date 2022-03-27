@@ -16,8 +16,10 @@ import net.modificationstation.stationapi.api.util.collection.WeightedPicker;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class WeightedBakedModel implements BakedModel {

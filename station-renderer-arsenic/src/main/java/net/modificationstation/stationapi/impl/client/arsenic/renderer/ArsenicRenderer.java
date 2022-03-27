@@ -8,10 +8,12 @@ import net.modificationstation.stationapi.api.client.render.material.RenderMater
 import net.modificationstation.stationapi.api.client.render.mesh.MeshBuilder;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelRenderer;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Lazy;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MeshBuilderImpl;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.BakedModelRendererImpl;
 
-import java.util.*;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ArsenicRenderer implements Renderer {
@@ -52,6 +54,8 @@ public final class ArsenicRenderer implements Renderer {
 
     @Override
     public BakedModelRenderer bakedModelRenderer() {
-        return new BakedModelRendererImpl();
+        return bakedModelRenderer.get();
     }
+
+    private final Lazy<BakedModelRenderer> bakedModelRenderer = new Lazy<>(BakedModelRendererImpl::new);
 }

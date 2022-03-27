@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.client.options.KeyBinding;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Used to add keybindings to the keybinding screen.

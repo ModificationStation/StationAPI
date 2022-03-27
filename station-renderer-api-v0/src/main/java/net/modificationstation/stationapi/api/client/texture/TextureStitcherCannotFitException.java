@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.client.texture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import java.util.*;
+import java.util.Collection;
 
 @Environment(EnvType.CLIENT)
 public class TextureStitcherCannotFitException extends RuntimeException {

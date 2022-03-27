@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.registry;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Optional;
 
 public abstract class AbstractInt2ObjectMapBackedRegistry<T> extends AbstractSerialRegistry<T> {
 

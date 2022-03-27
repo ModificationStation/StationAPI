@@ -1,0 +1,6 @@
+{
+  "parent": "block/log",
+  "textures": {
+    "side": "block/spruce_log"
+  }
+}

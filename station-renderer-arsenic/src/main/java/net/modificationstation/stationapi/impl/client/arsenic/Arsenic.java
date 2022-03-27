@@ -15,19 +15,13 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.ArsenicRenderer;
-import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder.ArsenicClock;
-import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder.ArsenicCompass;
-import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder.ArsenicFire;
-import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder.ArsenicFlowingLava;
-import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder.ArsenicFlowingWater;
-import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder.ArsenicPortal;
-import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder.ArsenicStillLava;
-import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder.ArsenicStillWater;
+import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder.*;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class Arsenic {

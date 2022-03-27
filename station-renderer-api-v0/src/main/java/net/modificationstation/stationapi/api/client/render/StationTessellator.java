@@ -9,62 +9,66 @@ import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.api.util.math.Vector3f;
 import net.modificationstation.stationapi.api.util.math.Vector4f;
 import net.modificationstation.stationapi.impl.client.render.StationTessellatorImpl;
+import org.jetbrains.annotations.ApiStatus;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 public interface StationTessellator extends VertexConsumer {
 
-    ByteBuffer BUFFER = class_214.method_744(32);
+    @ApiStatus.Internal
+    ByteBuffer buffer = class_214.method_744(32);
+    @ApiStatus.Internal
+    IntBuffer bufferAsInt = buffer.asIntBuffer();
+    @ApiStatus.Internal
+    Vector4f pos = new Vector4f();
+    @ApiStatus.Internal
+    Vector3f normal = new Vector3f();
 
     static StationTessellator get(Tessellator tessellator) {
         return StationTessellatorImpl.get(tessellator);
     }
 
-    void quad(int[] vertexData, float x, float y, float z, int colour0, int colour1, int colour2, int colour3);
-
     void ensureBufferCapacity(int criticalCapacity);
 
     @Override
     default void quad(MatrixStack.Entry matrixEntry, BakedQuad quad, float[] brightnesses, float red, float green, float blue, int[] lights, int overlay, boolean useQuadColorData) {
-        float[] fs = new float[]{brightnesses[0], brightnesses[1], brightnesses[2], brightnesses[3]};
-        int[] is = new int[]{lights[0], lights[1], lights[2], lights[3]};
         int[] js = quad.getVertexData();
         Vec3i vec3i = quad.getFace().vector;
-        Vector3f vec3f = new Vector3f(vec3i.x, vec3i.y, vec3i.z);
-        Matrix4f matrix4f = matrixEntry.getModel();
-        vec3f.transform(matrixEntry.getNormal());
+        normal.set(vec3i.x, vec3i.y, vec3i.z);
+        Matrix4f matrix4f = matrixEntry.getPositionMatrix();
+        normal.transform(matrixEntry.getNormalMatrix());
         int j = js.length / 8;
-        ByteBuffer byteBuffer = BUFFER;
-        IntBuffer intBuffer = byteBuffer.asIntBuffer();
+        ByteBuffer byteBuffer = buffer;
         for (int k = 0; k < j; ++k) {
             float q;
             float p;
             float o;
             float n;
             float m;
-            intBuffer.clear();
-            intBuffer.put(js, k * 8, 8);
+            bufferAsInt.clear();
+            bufferAsInt.put(js, k * 8, 8);
             float f = byteBuffer.getFloat(0);
             float g = byteBuffer.getFloat(4);
             float h = byteBuffer.getFloat(8);
             if (useQuadColorData) {
-                float l = (float) (byteBuffer.get(20) & 0xFF) / 255.0f;
-                m = (float) (byteBuffer.get(21) & 0xFF) / 255.0f;
-                n = (float) (byteBuffer.get(22) & 0xFF) / 255.0f;
-                o = l * fs[k] * red;
-                p = m * fs[k] * green;
-                q = n * fs[k] * blue;
+                float l = (float) (byteBuffer.get(12) & 0xFF) / 255.0f;
+                m = (float) (byteBuffer.get(13) & 0xFF) / 255.0f;
+                n = (float) (byteBuffer.get(14) & 0xFF) / 255.0f;
+                o = l * brightnesses[k] * red;
+                p = m * brightnesses[k] * green;
+                q = n * brightnesses[k] * blue;
             } else {
-                o = fs[k] * red;
-                p = fs[k] * green;
-                q = fs[k] * blue;
+                o = brightnesses[k] * red;
+                p = brightnesses[k] * green;
+                q = brightnesses[k] * blue;
             }
-            int r = is[k];
-            m = byteBuffer.getFloat(12);
-            n = byteBuffer.getFloat(16);
-            Vector4f vector4f = new Vector4f(f, g, h, 1.0f);
-            vector4f.transform(matrix4f);
-            this.vertex(vector4f.getX(), vector4f.getY(), vector4f.getZ(), o, p, q, 1.0f, m, n, overlay, r, vec3f.getX(), vec3f.getY(), vec3f.getZ());
+            int r = lights[k];
+            m = byteBuffer.getFloat(16);
+            n = byteBuffer.getFloat(20);
+            pos.set(f, g, h, 1);
+            pos.transform(matrix4f);
+            this.vertex(pos.getX(), pos.getY(), pos.getZ(), o, p, q, 1.0f, m, n, overlay, r, normal.getX(), normal.getY(), normal.getZ());
         }
     }
 }

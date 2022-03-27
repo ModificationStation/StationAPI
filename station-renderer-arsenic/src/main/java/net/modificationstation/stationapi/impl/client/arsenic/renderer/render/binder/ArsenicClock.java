@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
 
 public class ArsenicClock extends StationTextureBinder {
 

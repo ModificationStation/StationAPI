@@ -11,8 +11,8 @@ import net.modificationstation.stationapi.api.client.render.model.json.ModelTran
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Random;
+import java.util.function.Supplier;
 
 /**
  * Base class for specialized model implementations that need to wrap other baked models.

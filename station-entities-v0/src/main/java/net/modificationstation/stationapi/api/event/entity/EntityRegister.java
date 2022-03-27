@@ -5,7 +5,7 @@ import net.mine_diver.unsafeevents.Event;
 import net.minecraft.entity.EntityBase;
 import uk.co.benjiweber.expressions.function.TriConsumer;
 
-import java.util.function.*;
+import java.util.function.BiConsumer;
 
 @RequiredArgsConstructor
 public class EntityRegister extends Event {

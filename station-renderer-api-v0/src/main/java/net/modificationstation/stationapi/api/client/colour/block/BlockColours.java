@@ -16,7 +16,9 @@ import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.util.collection.IdList;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public class BlockColours {
@@ -25,15 +27,20 @@ public class BlockColours {
 
     public static BlockColours create() {
         BlockColours blockColours = new BlockColours();
-        blockColours.registerColourProvider((state, world, pos, tintIndex) -> world == null || pos == null ? GrassColour.get(0.5, 1.0) : BiomeColours.getGrassColour(world, pos), BlockBase.GRASS, BlockBase.TALLGRASS);
+        blockColours.registerColourProvider(
+                (state, world, pos, tintIndex) -> world == null || pos == null ? GrassColour.get(0.5, 1.0) : BiomeColours.getGrassColour(world, pos),
+                BlockBase.GRASS, BlockBase.TALLGRASS
+        );
         blockColours.registerColourProvider((state, world, pos, tintIndex) -> {
-            if (world == null || pos == null)
-                return FoliageColour.method_1083();
-            else {
-                int meta = world.getTileMeta(pos.x, pos.y, pos.z);
-                return (meta & 1) == 1 ? FoliageColour.method_1079() : (meta & 2) == 2 ? FoliageColour.method_1082() : BiomeColours.getFoliageColour(world, pos);
-            }
-        }, BlockBase.LEAVES);
+                    if (world == null || pos == null)
+                        return FoliageColour.method_1083();
+                    else {
+                        int meta = world.getTileMeta(pos.x, pos.y, pos.z);
+                        return (meta & 1) == 1 ? FoliageColour.method_1079() : (meta & 2) == 2 ? FoliageColour.method_1082() : BiomeColours.getFoliageColour(world, pos);
+                    }
+                },
+                BlockBase.LEAVES
+        );
 //        blockColours.registerColourProperty(META, BlockBase.LEAVES);
         blockColours.registerColourProvider(
                 (state, world, pos, tintIndex) -> world == null || pos == null ? -1 : BiomeColours.getWaterColour(world, pos),
@@ -45,7 +52,7 @@ public class BlockColours {
     public int getColour(BlockState state, BlockView world, TilePos pos) {
         BlockColourProvider blockColorProvider = this.providers.get(BlockRegistry.INSTANCE.getRawId(state.getBlock()));
         if (blockColorProvider != null) {
-            return blockColorProvider.getColor(state, null, null, 0);
+            return blockColorProvider.getColour(state, null, null, 0);
         } else {
             MaterialColour materialColor = state.getTopMaterialColor(world, pos);
             return materialColor != null ? materialColor.colour : -1;
@@ -53,8 +60,8 @@ public class BlockColours {
     }
 
     public int getColour(BlockState state, @Nullable BlockView world, @Nullable TilePos pos, int tint) {
-        BlockColourProvider blockColorProvider = this.providers.get(BlockRegistry.INSTANCE.getRawId(state.getBlock()));
-        return blockColorProvider == null ? -1 : blockColorProvider.getColor(state, world, pos, tint);
+        BlockColourProvider blockColourProvider = this.providers.get(BlockRegistry.INSTANCE.getRawId(state.getBlock()));
+        return blockColourProvider == null ? -1 : blockColourProvider.getColour(state, world, pos, tint);
     }
 
     public void registerColourProvider(BlockColourProvider provider, BlockBase... blocks) {

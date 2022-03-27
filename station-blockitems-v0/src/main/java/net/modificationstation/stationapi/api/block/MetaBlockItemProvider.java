@@ -5,7 +5,7 @@ import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 import net.modificationstation.stationapi.api.template.item.MetaBlock;
 import net.modificationstation.stationapi.impl.block.HasMetaBlockItemImpl;
 
-import java.util.function.*;
+import java.util.function.IntFunction;
 
 /**
  * Interface that pre-defines block item's factory to be {@link MetaBlock#MetaBlock(int)}

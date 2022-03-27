@@ -4,7 +4,9 @@ import net.minecraft.client.render.Tessellator;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 @Mixin(Tessellator.class)
 public interface TessellatorAccessor {

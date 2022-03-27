@@ -3,7 +3,9 @@ package net.modificationstation.stationapi.api.state.property;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
 
 public class IntProperty extends Property<Integer> {
    private final ImmutableSet<Integer> values;

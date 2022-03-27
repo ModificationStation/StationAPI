@@ -7,8 +7,9 @@ import net.modificationstation.stationapi.api.util.math.DirectionTransformation;
 import net.modificationstation.stationapi.api.util.math.Quaternion;
 import net.modificationstation.stationapi.api.util.math.Vector3f;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public enum ModelBakeRotation implements ModelBakeSettings {

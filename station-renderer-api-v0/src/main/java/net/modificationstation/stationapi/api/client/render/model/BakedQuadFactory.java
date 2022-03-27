@@ -7,16 +7,7 @@ import net.modificationstation.stationapi.api.client.render.model.json.ModelElem
 import net.modificationstation.stationapi.api.client.render.model.json.ModelElementTexture;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.util.math.AffineTransformation;
-import net.modificationstation.stationapi.api.util.math.AffineTransformations;
-import net.modificationstation.stationapi.api.util.math.CubeFace;
-import net.modificationstation.stationapi.api.util.math.Direction;
-import net.modificationstation.stationapi.api.util.math.MathHelper;
-import net.modificationstation.stationapi.api.util.math.Matrix3f;
-import net.modificationstation.stationapi.api.util.math.Matrix4f;
-import net.modificationstation.stationapi.api.util.math.Quaternion;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
-import net.modificationstation.stationapi.api.util.math.Vector4f;
+import net.modificationstation.stationapi.api.util.math.*;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
@@ -125,9 +116,9 @@ public class BakedQuadFactory {
       vertices[i] = Float.floatToRawIntBits(position.getX());
       vertices[i + 1] = Float.floatToRawIntBits(position.getY());
       vertices[i + 2] = Float.floatToRawIntBits(position.getZ());
-//      vertices[i + 3] = -1;
-      vertices[i + 3] = Float.floatToRawIntBits(sprite.getFrameU(modelElementTexture.getU(cornerIndex, direction)));
-      vertices[i + 3 + 1] = Float.floatToRawIntBits(sprite.getFrameV(modelElementTexture.getV(cornerIndex, direction)));
+      vertices[i + 3] = -1;
+      vertices[i + 4] = Float.floatToRawIntBits(sprite.getFrameU(modelElementTexture.getU(cornerIndex, direction)));
+      vertices[i + 4 + 1] = Float.floatToRawIntBits(sprite.getFrameV(modelElementTexture.getV(cornerIndex, direction)));
    }
 
    private void rotateVertex(Vector3f vector, @Nullable ModelRotation rotation) {
@@ -273,8 +264,8 @@ public class BakedQuadFactory {
             float s = Float.intBitsToFloat(is[q + 1]);
             float t = Float.intBitsToFloat(is[q + 2]);
             if (MathHelper.approximatelyEquals(h, r) && MathHelper.approximatelyEquals(n, s) && MathHelper.approximatelyEquals(o, t)) {
-               rotationMatrix[l + 3] = is[q + 3];
-               rotationMatrix[l + 3 + 1] = is[q + 3 + 1];
+               rotationMatrix[l + 4] = is[q + 4];
+               rotationMatrix[l + 4 + 1] = is[q + 4 + 1];
             }
          }
       }

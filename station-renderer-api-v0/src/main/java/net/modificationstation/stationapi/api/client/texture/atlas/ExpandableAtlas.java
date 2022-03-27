@@ -10,9 +10,11 @@ import net.modificationstation.stationapi.api.resource.ResourceManager;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 import uk.co.benjiweber.expressions.tuple.Tuple;
 
-import java.awt.image.*;
-import java.util.*;
-import java.util.function.*;
+import java.awt.image.BufferedImage;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 

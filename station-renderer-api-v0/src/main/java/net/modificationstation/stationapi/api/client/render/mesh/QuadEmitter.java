@@ -30,7 +30,7 @@ public interface QuadEmitter extends MutableQuadView {
 	QuadEmitter nominalFace(Direction face);
 
 	@Override
-	QuadEmitter colorIndex(int colorIndex);
+	QuadEmitter colourIndex(int colourIndex);
 
 	@Override
 	QuadEmitter tag(int tag);
@@ -118,41 +118,41 @@ public interface QuadEmitter extends MutableQuadView {
 
 		nominalFace(nominalFace);
 		switch (nominalFace) {
-		case UP:
-			depth = 1 - depth;
-			top = 1 - top;
-			bottom = 1 - bottom;
+			case UP:
+				depth = 1 - depth;
+				top = 1 - top;
+				bottom = 1 - bottom;
 
-		case DOWN:
-			pos(0, left, depth, top);
-			pos(1, left, depth, bottom);
-			pos(2, right, depth, bottom);
-			pos(3, right, depth, top);
-			break;
+			case DOWN:
+				pos(0, left, depth, top);
+				pos(1, left, depth, bottom);
+				pos(2, right, depth, bottom);
+				pos(3, right, depth, top);
+				break;
 
-		case EAST:
-			depth = 1 - depth;
-			left = 1 - left;
-			right = 1 - right;
+			case WEST:
+				depth = 1 - depth;
+				left = 1 - left;
+				right = 1 - right;
 
-		case WEST:
-			pos(0, depth, top, left);
-			pos(1, depth, bottom, left);
-			pos(2, depth, bottom, right);
-			pos(3, depth, top, right);
-			break;
+			case EAST:
+				pos(0, 1 - left, top, depth);
+				pos(1, 1 - left, bottom, depth);
+				pos(2, 1 - right, bottom, depth);
+				pos(3, 1 - right, top, depth);
+				break;
 
-		case SOUTH:
-			depth = 1 - depth;
-			left = 1 - left;
-			right = 1 - right;
+			case SOUTH:
+				depth = 1 - depth;
+				left = 1 - left;
+				right = 1 - right;
 
-		case NORTH:
-			pos(0, 1 - left, top, depth);
-			pos(1, 1 - left, bottom, depth);
-			pos(2, 1 - right, bottom, depth);
-			pos(3, 1 - right, top, depth);
-			break;
+			case NORTH:
+				pos(0, depth, top, left);
+				pos(1, depth, bottom, left);
+				pos(2, depth, bottom, right);
+				pos(3, depth, top, right);
+				break;
 		}
 
 		return this;

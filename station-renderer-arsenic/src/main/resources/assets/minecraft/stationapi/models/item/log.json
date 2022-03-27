@@ -1,0 +1,13 @@
+{
+  "parent": "block/log",
+  "overrides": [
+    {
+      "predicate": {"meta": 1},
+      "model": "block/spruce_log"
+    },
+    {
+      "predicate": {"meta": 2},
+      "model": "block/birch_log"
+    }
+  ]
+}

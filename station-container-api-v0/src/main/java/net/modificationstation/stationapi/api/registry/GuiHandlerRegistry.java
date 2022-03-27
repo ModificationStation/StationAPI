@@ -9,7 +9,8 @@ import uk.co.benjiweber.expressions.function.TriFunction;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 import uk.co.benjiweber.expressions.tuple.Tuple;
 
-import java.util.function.*;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 public final class GuiHandlerRegistry extends Registry<BiTuple<TriFunction<PlayerBase, InventoryBase, Message, ScreenBase>, Supplier<InventoryBase>>> {
 

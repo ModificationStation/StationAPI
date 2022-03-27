@@ -1,0 +1,16 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "block/grass"
+  },
+  "overrides": [
+    {
+      "predicate": {"meta": 0},
+      "model": "item/dead_bush"
+    },
+    {
+      "predicate": {"meta": 2},
+      "model": "item/fern"
+    }
+  ]
+}

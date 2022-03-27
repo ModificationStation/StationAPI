@@ -1,6 +1,9 @@
 package net.modificationstation.stationapi.api.util;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Marks methods, constructors and fields that are a part of API to suppress the "unused" warning.

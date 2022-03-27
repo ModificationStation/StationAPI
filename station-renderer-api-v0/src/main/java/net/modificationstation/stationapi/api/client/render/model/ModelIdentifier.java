@@ -9,6 +9,7 @@ import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 
+@SuppressWarnings("ClassCanBeRecord")
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Environment(EnvType.CLIENT)
 public final class ModelIdentifier {

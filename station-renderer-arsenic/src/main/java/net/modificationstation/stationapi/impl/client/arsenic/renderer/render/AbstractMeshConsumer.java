@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import net.minecraft.client.Minecraft;
 import net.modificationstation.stationapi.api.client.render.RenderContext;
+import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.mesh.Mesh;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.ArsenicRenderer;
@@ -11,15 +12,16 @@ import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.Enco
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MeshImpl;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MutableQuadViewImpl;
 
-import java.util.function.*;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * Consumer for pre-baked meshes.  Works by copying the mesh data to a
  * "editor" quad held in the instance, where all transformations are applied before buffering.
  */
 public abstract class AbstractMeshConsumer extends AbstractQuadRenderer implements Consumer<Mesh> {
-	protected AbstractMeshConsumer(BlockRenderInfo blockInfo, LightingCalculatorImpl aoCalc, RenderContext.QuadTransform transform) {
-		super(blockInfo, aoCalc, transform);
+	protected AbstractMeshConsumer(BlockRenderInfo blockInfo, Supplier<VertexConsumer> bufferFunc, LightingCalculatorImpl aoCalc, RenderContext.QuadTransform transform) {
+		super(blockInfo, bufferFunc, aoCalc, transform);
 	}
 
 	/**
@@ -66,6 +68,10 @@ public abstract class AbstractMeshConsumer extends AbstractQuadRenderer implemen
 
 	private void renderQuad(MutableQuadViewImpl q) {
 		if (!transform.transform(editorQuad)) {
+			return;
+		}
+
+		if (!blockInfo.shouldDrawQuad(q)) {
 			return;
 		}
 

@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.level.LevelProperties;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.level.StationLevelProperties;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,9 +10,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
+
 @Mixin(LevelProperties.class)
 public class MixinLevelProperties implements StationLevelProperties {
-	@Unique private static final String DIMENSIONS_KEY = Identifier.of(StationAPI.MODID, "dimensions").toString();
+	@Unique private static final String DIMENSIONS_KEY = of(MODID, "dimensions").toString();
 	@Unique private static CompoundTag dimensionsRoot;
 	
 	@Inject(method = "<init>(Lnet/minecraft/util/io/CompoundTag;)V", at = @At("TAIL"))

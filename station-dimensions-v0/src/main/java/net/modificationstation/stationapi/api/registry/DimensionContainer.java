@@ -4,7 +4,9 @@ import net.minecraft.level.dimension.Dimension;
 import net.modificationstation.stationapi.api.registry.serial.SerialIDHolder;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.*;
+import java.util.function.Function;
+import java.util.function.IntFunction;
+import java.util.function.Supplier;
 
 public class DimensionContainer<T extends Dimension> implements SerialIDHolder {
 

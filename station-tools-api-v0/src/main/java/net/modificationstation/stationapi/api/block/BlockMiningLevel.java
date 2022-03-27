@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.block;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.item.tool.ToolLevel;
 
-import java.util.*;
+import java.util.List;
 
 @Deprecated
 public interface BlockMiningLevel {

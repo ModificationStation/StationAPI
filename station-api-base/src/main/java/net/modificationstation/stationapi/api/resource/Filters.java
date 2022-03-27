@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.resource;
 
-import java.util.function.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public final class Filters {
 

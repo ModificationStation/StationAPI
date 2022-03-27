@@ -12,23 +12,14 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
-import net.modificationstation.stationapi.api.client.colour.item.ItemColours;
 import net.modificationstation.stationapi.api.client.model.item.ItemWithRenderer;
 import net.modificationstation.stationapi.api.client.render.StationTessellator;
-import net.modificationstation.stationapi.api.client.render.VertexConsumer;
-import net.modificationstation.stationapi.api.client.render.item.ItemModels;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
-import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
-import net.modificationstation.stationapi.api.client.render.model.ModelIdentifier;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.util.Lazy;
-import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.api.util.math.Quaternion;
 import net.modificationstation.stationapi.api.util.math.Vector3f;
@@ -37,25 +28,12 @@ import net.modificationstation.stationapi.mixin.arsenic.client.ItemRendererAcces
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.*;
-
 public final class ArsenicItemRenderer {
 
     private final ItemRenderer itemRenderer;
     private final ItemRendererAccessor itemRendererAccessor;
     private final EntityRendererAccessor entityRendererAccessor;
-    private final Lazy<ItemModels> models = new Lazy<>(() -> {
-        ItemModels models = new ItemModels(StationRenderAPI.getBakedModelManager());
-        for (Map.Entry<Identifier, ItemBase> entry : ItemRegistry.INSTANCE) {
-//            if (WITHOUT_MODELS.contains(entry.getValue())) continue;
-            models.putModel(entry.getValue(), ModelIdentifier.of(entry.getKey(), "inventory"));
-        }
-        models.reloadModels();
-        return models;
-    });
-    private final Lazy<ItemColours> colours = new Lazy<>(StationRenderAPI::getItemColours);
     private final MatrixStack matrices = new MatrixStack();
-    private final Random random = new Random();
 
     public ArsenicItemRenderer(ItemRenderer itemRenderer) {
         this.itemRenderer = itemRenderer;
@@ -63,60 +41,40 @@ public final class ArsenicItemRenderer {
         this.entityRendererAccessor = (EntityRendererAccessor) this.itemRenderer;
     }
 
-    private void renderBakedItemModel(BakedModel model, ItemInstance stack, MatrixStack matrices, VertexConsumer vertices) {
-        for (Direction direction : Direction.values()) {
-            random.setSeed(42L);
-            this.renderBakedItemQuads(model.getQuads(null, direction, random), stack, matrices, vertices);
-        }
-        random.setSeed(42L);
-        this.renderBakedItemQuads(model.getQuads(null, null, random), stack, matrices, vertices);
-    }
-
     public void render(Item item, double x, double y, double z, float rotation, float delta) {
         itemRendererAccessor.getRand().setSeed(187L);
         ItemInstance var10 = item.item;
-        GL11.glPushMatrix();
         float var11 = MathHelper.sin(((float)item.age + delta) / 10.0F + item.field_567) * 0.1F + 0.1F;
         float var12 = (((float)item.age + delta) / 20.0F + item.field_567) * (180F / (float)Math.PI);
-        byte var13 = 1;
-        if (item.item.count > 1) {
-            var13 = 2;
-        }
-
-        if (item.item.count > 5) {
-            var13 = 3;
-        }
-
-        if (item.item.count > 20) {
-            var13 = 4;
-        }
+        byte renderedAmount = (byte) (item.item.count > 20 ? 4 : item.item.count > 5 ? 3 : item.item.count > 1 ? 2 : 1);
 
         GL11.glEnable(32826);
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (var10.itemId != States.AIR.get().getBlock().id) {
             matrices.push();
-            BakedModel model = models.get().getModel(var10);
-            if (model.isBuiltin()) {
-
-            } else {
+            BakedModel model = RendererHolder.RENDERER.getModel(var10, item.level, null, item.entityId);
+            if (!model.isBuiltin()) {
                 atlas.bindTexture();
                 matrices.translate(x, y + var11, z);
                 matrices.multiply(new Quaternion(Vector3f.POSITIVE_Y, var12, true));
-                model.getTransformation().getTransformation(ModelTransformation.Mode.GROUND).apply(false, matrices);
-                matrices.translate(-.5, -.5, -.5);
-                float var28 = var10.itemId < BlockBase.BY_ID.length && !BlockBase.BY_ID[var10.itemId].isFullCube() && var10.itemId != BlockBase.STONE_SLAB.id && BlockBase.BY_ID[var10.itemId].getRenderType() != 16 ? 0.5F : 0.25F;
                 Tessellator.INSTANCE.start();
-                for (int var29 = 0; var29 < var13; ++var29) {
+                for (int var29 = 0; var29 < renderedAmount; ++var29) {
                     matrices.push();
-                    if (var29 > 0)
-                        matrices.translate((itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28);
-                    renderBakedItemModel(model, var10, matrices, StationTessellator.get(Tessellator.INSTANCE));
+                    if (var29 > 0) {
+                        if (model.hasDepth()) {
+                            matrices.translate((itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F * 0.15F);
+                        } else {
+                            matrices.translate(0, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F * 0.5F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F);
+                        }
+                    }
+                    RendererHolder.RENDERER.renderItem(var10, ModelTransformation.Mode.GROUND, false, matrices, StationTessellator.get(Tessellator.INSTANCE), -1, -1, model);
                     matrices.pop();
                 }
                 Tessellator.INSTANCE.draw();
             }
             matrices.pop();
         } else {
+            GL11.glPushMatrix();
             GL11.glTranslatef((float)x, (float)y + var11, (float)z);
             if (var10.itemId < BlockBase.BY_ID.length && BlockRenderer.method_42(BlockBase.BY_ID[var10.itemId].getRenderType())) {
                 GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
@@ -128,7 +86,7 @@ public final class ArsenicItemRenderer {
 
                 GL11.glScalef(var28, var28, var28);
 
-                for (int var29 = 0; var29 < var13; ++var29) {
+                for (int var29 = 0; var29 < renderedAmount; ++var29) {
                     GL11.glPushMatrix();
                     if (var29 > 0) {
                         float var30 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
@@ -159,7 +117,7 @@ public final class ArsenicItemRenderer {
                     GL11.glColor4f(var24 * var27, var25 * var27, var26 * var27, 1.0F);
                 }
 
-                for (int var33 = 0; var33 < var13; ++var33) {
+                for (int var33 = 0; var33 < renderedAmount; ++var33) {
                     GL11.glPushMatrix();
                     if (var33 > 0) {
                         float var34 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
@@ -179,21 +137,10 @@ public final class ArsenicItemRenderer {
                     GL11.glPopMatrix();
                 }
             }
+            GL11.glPopMatrix();
         }
 
         GL11.glDisable(32826);
-        GL11.glPopMatrix();
-    }
-
-    private void renderBakedItemQuads(List<BakedQuad> quads, ItemInstance stack, MatrixStack matrices, VertexConsumer vertices) {
-        boolean bl = stack == null || stack.itemId == 0 || stack.getType() == null || stack.count > 0;
-        for (BakedQuad bakedQuad : quads) {
-            int i = bl && bakedQuad.hasColour() ? this.colours.get().getColour(stack, bakedQuad.getColorIndex()) : -1;
-            float f = (float)((i >> 16) & 0xFF) / 255.0f;
-            float g = (float)((i >> 8) & 0xFF) / 255.0f;
-            float h = (float)(i & 0xFF) / 255.0f;
-            vertices.quad(matrices.peek(), bakedQuad, f, g, h, -1, -1);
-        }
     }
 
     public void renderItemOnGui(TextRenderer textRenderer, TextureManager textureManager, ItemInstance itemInstance, int x, int y, CallbackInfo ci) {
@@ -201,8 +148,11 @@ public final class ArsenicItemRenderer {
             ItemBase itemBase = itemInstance.getType();
             if (itemBase instanceof ItemWithRenderer renderer) {
                 renderer.renderItemOnGui(itemRenderer, textRenderer, textureManager, itemInstance, x, y);
-                ci.cancel();
+            } else {
+                StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).bindTexture();
+                RendererHolder.RENDERER.renderInGuiWithOverrides(itemInstance, x, y);
             }
+            ci.cancel();
         }
     }
 

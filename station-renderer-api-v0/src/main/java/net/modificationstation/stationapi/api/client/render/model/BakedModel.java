@@ -6,14 +6,16 @@ import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.render.RenderContext;
+import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Random;
+import java.util.function.Supplier;
 
 public interface BakedModel {
 
@@ -66,7 +68,7 @@ public interface BakedModel {
      * <p>Also called to render block models outside of chunk rebuild or block entity rendering.
      * Typically this happens when the block is being rendered as an entity, not as a block placed in the world.
      * Currently this happens for falling blocks and blocks being pushed by a piston, but renderers
-     * should invoke this for all calls to {@link BlockModelRenderer#render(BlockRenderView, BakedModel, BlockState, BlockPos, MatrixStack, VertexConsumer, boolean, Random, long, int)}
+     * should invoke this for all calls to {@link BlockModelRenderer#render(BlockView, BakedModel, BlockState, TilePos, MatrixStack, VertexConsumer, boolean, Random, long, int)}
      * that occur outside of chunk rebuilds to allow for features added by mods, unless
      * {@link #isVanillaAdapter()} returns true.
      *

@@ -1,0 +1,37 @@
+{
+  "parent": "block/oak_leaves",
+  "overrides": [
+    {
+      "predicate": {"meta": 1},
+      "model": "block/spruce_leaves"
+    },
+    {
+      "predicate": {"meta": 2},
+      "model": "block/oak_leaves"
+    },
+    {
+      "predicate": {"meta": 5},
+      "model": "block/spruce_leaves"
+    },
+    {
+      "predicate": {"meta": 6},
+      "model": "block/oak_leaves"
+    },
+    {
+      "predicate": {"meta": 9},
+      "model": "block/spruce_leaves"
+    },
+    {
+      "predicate": {"meta": 10},
+      "model": "block/oak_leaves"
+    },
+    {
+      "predicate": {"meta": 13},
+      "model": "block/spruce_leaves"
+    },
+    {
+      "predicate": {"meta": 14},
+      "model": "block/oak_leaves"
+    }
+  ]
+}

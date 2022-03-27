@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.client.render.mesh.MutableQuadView
 import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 
-import java.util.function.*;
+import java.util.function.Consumer;
 
 /**
  * This defines the instance made available to models for buffering vertex data at render time.

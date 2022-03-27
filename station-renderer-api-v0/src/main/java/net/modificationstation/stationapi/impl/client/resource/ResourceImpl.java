@@ -4,8 +4,9 @@ import net.modificationstation.stationapi.api.client.resource.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
 
 public class ResourceImpl extends InputStream implements Resource {
 

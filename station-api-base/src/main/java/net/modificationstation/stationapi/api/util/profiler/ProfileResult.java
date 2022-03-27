@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.api.util.profiler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.List;
 
 public interface ProfileResult {
    @Environment(EnvType.CLIENT)

@@ -23,9 +23,10 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MutableQuadViewImpl;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Random;
+import java.util.function.Supplier;
 
 /**
  * Holds, manages and provides access to the block/world related state
@@ -79,5 +80,10 @@ public class BlockRenderInfo {
 
 	boolean shouldDrawFace(Direction face) {
 		return true;
+	}
+
+	boolean shouldDrawQuad(MutableQuadViewImpl quad) {
+		Direction cull = quad.cullFace();
+		return cull == null || blockState.getBlock().isSideRendered(blockView, blockPos.x + cull.vector.x, blockPos.y + cull.vector.y, blockPos.z + cull.vector.z, cull.ordinal());
 	}
 }

@@ -20,6 +20,6 @@ public interface BlockWorldModelProvider extends BlockWithWorldRenderer {
     @Override
     @Deprecated
     default boolean renderWorld(BlockRenderer blockRenderer, BlockView blockView, int x, int y, int z) {
-        return BAKED_MODEL_RENDERER.get().renderWorld(((BlockStateView) blockView).getBlockState(x, y, z), getCustomWorldModel(blockView, x, y, z).getBaked(), blockView, x, y, z, ((BlockRendererAccessor) blockRenderer).getTextureOverride());
+        return BAKED_MODEL_RENDERER.get().renderWorld(blockRenderer, ((BlockStateView) blockView).getBlockState(x, y, z), getCustomWorldModel(blockView, x, y, z).getBaked(), blockView, x, y, z, ((BlockRendererAccessor) blockRenderer).getTextureOverride());
     }
 }

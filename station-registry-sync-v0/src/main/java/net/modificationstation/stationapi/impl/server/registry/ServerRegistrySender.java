@@ -12,7 +12,7 @@ import net.modificationstation.stationapi.api.packet.PacketHelper;
 import net.modificationstation.stationapi.api.registry.LevelSerialRegistry;
 import net.modificationstation.stationapi.api.server.event.network.PlayerPacketHandlerSetEvent;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;

@@ -4,27 +4,12 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.client.render.model.BakedModel;
-import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
-import net.modificationstation.stationapi.api.client.render.model.BakedQuadFactory;
-import net.modificationstation.stationapi.api.client.render.model.BasicBakedModel;
-import net.modificationstation.stationapi.api.client.render.model.BuiltinBakedModel;
-import net.modificationstation.stationapi.api.client.render.model.ItemModelGenerator;
-import net.modificationstation.stationapi.api.client.render.model.ModelBakeSettings;
-import net.modificationstation.stationapi.api.client.render.model.ModelLoader;
-import net.modificationstation.stationapi.api.client.render.model.UnbakedModel;
+import net.modificationstation.stationapi.api.client.render.model.*;
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
@@ -34,11 +19,12 @@ import net.modificationstation.stationapi.api.util.json.JsonHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
-import java.lang.reflect.*;
+import java.io.Reader;
+import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
@@ -104,7 +90,7 @@ public final class JsonUnbakedModel implements UnbakedModel {
     }
 
     public Collection<Identifier> getModelDependencies() {
-        Set<Identifier> set = new HashSet<>();
+        Set<Identifier> set = Sets.newIdentityHashSet();
 
         for (ModelOverride modelOverride : this.overrides) {
             set.add(modelOverride.getModelId());

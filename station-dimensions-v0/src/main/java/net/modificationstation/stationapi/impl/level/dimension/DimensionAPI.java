@@ -17,9 +17,7 @@ import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Null;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
-import static net.modificationstation.stationapi.api.level.dimension.VanillaDimensions.OVERWORLD;
-import static net.modificationstation.stationapi.api.level.dimension.VanillaDimensions.SKYLANDS;
-import static net.modificationstation.stationapi.api.level.dimension.VanillaDimensions.THE_NETHER;
+import static net.modificationstation.stationapi.api.level.dimension.VanillaDimensions.*;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class DimensionAPI {

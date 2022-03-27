@@ -3,9 +3,10 @@ package net.modificationstation.stationapi.api.state.property;
 import com.google.common.collect.Lists;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class DirectionProperty extends EnumProperty<Direction> {
    protected DirectionProperty(String name, Collection<Direction> values) {

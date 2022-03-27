@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.util.hit.HitType;
 import net.modificationstation.stationapi.api.entity.player.PlayerHandler;
 
-import java.util.*;
+import java.util.List;
 
 @RequiredArgsConstructor
 public abstract class PlayerEvent extends Event {

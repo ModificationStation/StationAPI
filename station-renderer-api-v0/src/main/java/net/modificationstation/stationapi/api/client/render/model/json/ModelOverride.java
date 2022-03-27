@@ -1,86 +1,76 @@
 package net.modificationstation.stationapi.api.client.render.model.json;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.level.ClientLevel;
-import net.minecraft.entity.Living;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.client.model.item.ModelPredicateProvider;
-import net.modificationstation.stationapi.api.client.registry.ModelPredicateProviderRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.json.JsonHelper;
-import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.Map.*;
+import java.lang.reflect.Type;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
+@SuppressWarnings("ClassCanBeRecord")
 @Environment(EnvType.CLIENT)
 public class ModelOverride {
-   private final Identifier modelId;
-   private final Map<Identifier, Float> predicateToThresholds;
+    private final Identifier modelId;
+    private final List<Condition> conditions;
 
-   public ModelOverride(Identifier modelId, Map<Identifier, Float> predicateToThresholds) {
-      this.modelId = modelId;
-      this.predicateToThresholds = predicateToThresholds;
-   }
+    public ModelOverride(Identifier modelId, List<Condition> conditions) {
+        this.modelId = modelId;
+        this.conditions = ImmutableList.copyOf(conditions);
+    }
 
-   public Identifier getModelId() {
-      return this.modelId;
-   }
+    public Identifier getModelId() {
+        return this.modelId;
+    }
 
-   boolean matches(ItemInstance stack, @Nullable ClientLevel world, @Nullable Living entity) {
-      ItemBase item = stack.getType();
-      Iterator<Entry<Identifier, Float>> var5 = this.predicateToThresholds.entrySet().iterator();
+    public Stream<Condition> streamConditions() {
+        return this.conditions.stream();
+    }
 
-      Entry<Identifier, Float> entry;
-      ModelPredicateProvider modelPredicateProvider;
-      if (!var5.hasNext()) {
-         return true;
-      }
+    @SuppressWarnings("ClassCanBeRecord")
+    @Environment(EnvType.CLIENT)
+    public static class Condition {
+        private final Identifier type;
+        private final float threshold;
 
-      entry = var5.next();
-      modelPredicateProvider = ModelPredicateProviderRegistry.INSTANCE.get(item, entry.getKey());
-      while (modelPredicateProvider != null && modelPredicateProvider.call(stack, world, entity) >= entry.getValue()) {
-         if (!var5.hasNext()) {
-            return true;
-         }
+        public Condition(Identifier type, float threshold) {
+            this.type = type;
+            this.threshold = threshold;
+        }
 
-         entry = var5.next();
-         modelPredicateProvider = ModelPredicateProviderRegistry.INSTANCE.get(item, entry.getKey());
-      }
+        public Identifier getType() {
+            return this.type;
+        }
 
-      return false;
-   }
+        public float getThreshold() {
+            return this.threshold;
+        }
+    }
 
-   @Environment(EnvType.CLIENT)
-   public static class Deserializer implements JsonDeserializer<ModelOverride> {
-      protected Deserializer() {
-      }
+    @Environment(EnvType.CLIENT)
+    public static class Deserializer implements JsonDeserializer<ModelOverride> {
+        protected Deserializer() {
+        }
 
-      public ModelOverride deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-         JsonObject jsonObject = jsonElement.getAsJsonObject();
-         Identifier identifier = Identifier.of(JsonHelper.getString(jsonObject, "model"));
-         Map<Identifier, Float> map = this.deserializeMinPropertyValues(jsonObject);
-         return new ModelOverride(identifier, map);
-      }
+        public ModelOverride deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            Identifier identifier = Identifier.of(JsonHelper.getString(jsonObject, "model"));
+            List<Condition> list = this.deserializeMinPropertyValues(jsonObject);
+            return new ModelOverride(identifier, list);
+        }
 
-      protected Map<Identifier, Float> deserializeMinPropertyValues(JsonObject object) {
-         Map<Identifier, Float> map = Maps.newLinkedHashMap();
-         JsonObject jsonObject = JsonHelper.getObject(object, "predicate");
-
-         for (Entry<String, JsonElement> stringJsonElementEntry : jsonObject.entrySet()) {
-            map.put(Identifier.of(stringJsonElementEntry.getKey()), JsonHelper.asFloat(stringJsonElementEntry.getValue(), stringJsonElementEntry.getKey()));
-         }
-
-         return map;
-      }
-   }
+        protected List<Condition> deserializeMinPropertyValues(JsonObject object) {
+            LinkedHashMap<Identifier, Float> map = Maps.newLinkedHashMap();
+            JsonObject jsonObject = JsonHelper.getObject(object, "predicate");
+            for (Map.Entry<String, JsonElement> entry2 : jsonObject.entrySet())
+                map.put(Identifier.of(entry2.getKey()), JsonHelper.asFloat(entry2.getValue(), entry2.getKey()));
+            return map.entrySet().stream().map(entry -> new Condition(entry.getKey(), entry.getValue())).collect(ImmutableList.toImmutableList());
+        }
+    }
 }

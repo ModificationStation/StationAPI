@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.util.Util;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 import uk.co.benjiweber.expressions.tuple.Tuple;
 
-import java.util.function.*;
+import java.util.function.ObjIntConsumer;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class TerrainHelper implements SpritesheetHelper {

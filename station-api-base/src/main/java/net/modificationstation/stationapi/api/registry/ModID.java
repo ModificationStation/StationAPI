@@ -9,7 +9,7 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.modificationstation.stationapi.api.util.exception.MissingModException;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Objects;
 
 public final class ModID implements Comparable<ModID> {
 

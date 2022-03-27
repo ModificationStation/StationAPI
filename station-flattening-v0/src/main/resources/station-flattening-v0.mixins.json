@@ -6,21 +6,20 @@
   "mixins": [
     "CompoundTagAccessor",
     "MixinAbstractTag",
+    "MixinBlock",
     "MixinChunk",
+    "MixinClass417",
+    "MixinClass467",
     "MixinCompoundTag",
+    "MixinDimension",
     "MixinItemInstance",
     "MixinLevel",
     "MixinLevelChunkLoader",
     "MixinLevelManager",
-    "MixinWorldPopulationRegion",
-    "MixinLevelProperties",
-    "MixinWorldPopulationRegion",
-    "MixinBlock",
-	"MixinOverworldLevelSource",
     "MixinLevelMonsterSpawner",
-    "MixinClass417",
-    "MixinDimension",
-    "MixinClass467"
+    "MixinLevelProperties",
+    "MixinOverworldLevelSource",
+    "MixinWorldPopulationRegion"
   ],
   "client": [
     "MixinClientLevel",

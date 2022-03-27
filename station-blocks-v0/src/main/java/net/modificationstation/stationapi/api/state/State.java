@@ -1,19 +1,15 @@
 package net.modificationstation.stationapi.api.state;
 
-import com.google.common.collect.ArrayTable;
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Table;
+import com.google.common.collect.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.modificationstation.stationapi.api.state.property.Property;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.Map.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Map.Entry;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public abstract class State<O, S> {
    private static final Function<Entry<Property<?>, Comparable<?>>, String> PROPERTY_MAP_PRINTER = new Function<>() {

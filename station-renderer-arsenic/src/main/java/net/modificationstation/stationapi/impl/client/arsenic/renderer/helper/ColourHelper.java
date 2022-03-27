@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.impl.client.arsenic.renderer.helper;
 
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 
-import java.nio.*;
+import java.nio.ByteOrder;
 
 /**
  * Static routines of general utility for renderer implementations.

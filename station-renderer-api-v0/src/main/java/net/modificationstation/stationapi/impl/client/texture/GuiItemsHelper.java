@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
-import java.util.function.*;
+import java.util.function.ObjIntConsumer;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 final class GuiItemsHelper implements SpritesheetHelper {

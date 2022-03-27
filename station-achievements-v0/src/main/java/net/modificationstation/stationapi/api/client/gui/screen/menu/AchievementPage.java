@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.util.API;
 import uk.co.benjiweber.expressions.property.Named;
 
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 /**
  * Instantiates and adds an achievement page to the achievement page list.

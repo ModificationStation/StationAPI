@@ -13,7 +13,7 @@ import net.modificationstation.stationapi.mixin.render.client.TextureManagerAcce
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
 
 import static net.minecraft.client.texture.TextureManager.field_1245;
 

@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Random;
 
 @Environment(EnvType.CLIENT)
 public class BuiltinBakedModel implements BakedModel {

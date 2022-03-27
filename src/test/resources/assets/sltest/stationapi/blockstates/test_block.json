@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": {"model": "sltest:block/test_block"}
+  }
+}

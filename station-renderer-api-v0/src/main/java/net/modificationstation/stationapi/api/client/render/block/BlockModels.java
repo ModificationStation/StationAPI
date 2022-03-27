@@ -13,8 +13,9 @@ import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.state.property.Property;
 
-import java.util.*;
-import java.util.Map.*;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 @Environment(EnvType.CLIENT)
 public class BlockModels {

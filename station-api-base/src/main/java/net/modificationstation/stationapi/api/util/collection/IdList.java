@@ -4,7 +4,10 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 public class IdList<T> implements IndexedIterable<T> {
    private int nextId;

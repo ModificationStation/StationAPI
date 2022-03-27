@@ -10,7 +10,8 @@ import net.modificationstation.stationapi.api.util.json.JsonHelper;
 import net.modificationstation.stationapi.impl.client.resource.ResourceMetadataReader;
 import org.apache.commons.lang3.Validate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Environment(value=EnvType.CLIENT)
 public class AnimationResourceMetadataReader

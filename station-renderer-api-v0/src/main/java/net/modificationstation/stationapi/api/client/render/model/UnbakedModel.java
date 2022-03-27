@@ -8,8 +8,9 @@ import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Collection;
+import java.util.Set;
+import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public interface UnbakedModel {

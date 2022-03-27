@@ -4,8 +4,11 @@ import net.modificationstation.stationapi.api.registry.serial.SerialIDHolder;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.function.IntFunction;
 
 /**
  * Abstract extension of {@link Registry} which allows interaction with objects that also have serial IDs assigned to them.

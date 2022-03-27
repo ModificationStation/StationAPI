@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import uk.co.benjiweber.expressions.function.QuadFunction;
 
-import java.util.*;
+import java.util.Optional;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 

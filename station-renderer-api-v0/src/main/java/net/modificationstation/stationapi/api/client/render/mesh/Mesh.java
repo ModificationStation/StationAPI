@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.client.render.mesh;
 
 import net.modificationstation.stationapi.api.client.render.Renderer;
 
-import java.util.function.*;
+import java.util.function.Consumer;
 
 /**
  * A bundle of one or more {@link QuadView} instances encoded by the renderer,

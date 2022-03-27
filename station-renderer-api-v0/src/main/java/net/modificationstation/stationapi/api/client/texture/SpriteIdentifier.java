@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class SpriteIdentifier {

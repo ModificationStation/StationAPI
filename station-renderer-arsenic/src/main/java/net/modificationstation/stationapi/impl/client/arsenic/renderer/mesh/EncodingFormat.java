@@ -38,7 +38,7 @@ public abstract class EncodingFormat {
 	public static final int TOTAL_STRIDE;
 
 	static {
-		final VertexFormat format = VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL;
+		final VertexFormat format = VertexFormats.POSITION_TEXTURE_COLOR_NORMAL;
 		VERTEX_X = HEADER_STRIDE;
 		VERTEX_Y = HEADER_STRIDE + 1;
 		VERTEX_Z = HEADER_STRIDE + 2;

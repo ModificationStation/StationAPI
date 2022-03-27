@@ -5,8 +5,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import net.modificationstation.stationapi.api.state.State;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public abstract class Property<T extends Comparable<T>> {
    private final Class<T> type;

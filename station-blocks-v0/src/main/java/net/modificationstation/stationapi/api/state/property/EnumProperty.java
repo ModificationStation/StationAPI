@@ -6,9 +6,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.modificationstation.stationapi.api.util.StringIdentifiable;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class EnumProperty<T extends Enum<T> & StringIdentifiable> extends Property<T> {
    private final ImmutableSet<T> values;

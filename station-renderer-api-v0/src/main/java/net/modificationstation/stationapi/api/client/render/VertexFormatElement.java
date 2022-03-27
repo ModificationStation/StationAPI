@@ -8,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 
-import java.util.function.*;
+import java.util.function.IntConsumer;
 
 @Environment(EnvType.CLIENT)
 public class VertexFormatElement {

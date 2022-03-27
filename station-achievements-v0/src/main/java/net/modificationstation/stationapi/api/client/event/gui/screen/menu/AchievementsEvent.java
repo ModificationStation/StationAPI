@@ -7,7 +7,7 @@ import net.mine_diver.unsafeevents.Event;
 import net.minecraft.achievement.Achievement;
 import net.minecraft.client.gui.screen.menu.Achievements;
 
-import java.util.*;
+import java.util.Random;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class AchievementsEvent extends Event {

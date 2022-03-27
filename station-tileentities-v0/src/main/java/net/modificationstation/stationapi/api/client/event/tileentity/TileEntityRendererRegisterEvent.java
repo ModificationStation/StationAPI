@@ -5,7 +5,7 @@ import net.mine_diver.unsafeevents.Event;
 import net.minecraft.client.render.tileentity.TileEntityRenderer;
 import net.minecraft.tileentity.TileEntityBase;
 
-import java.util.*;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class TileEntityRendererRegisterEvent extends Event {

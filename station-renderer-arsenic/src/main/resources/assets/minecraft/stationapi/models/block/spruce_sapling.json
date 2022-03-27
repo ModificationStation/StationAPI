@@ -1,0 +1,6 @@
+{
+  "parent": "block/sapling",
+  "textures": {
+    "cross": "block/spruce_sapling"
+  }
+}

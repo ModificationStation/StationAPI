@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.util.Util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.EnumMap;
+import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class AffineTransformations {

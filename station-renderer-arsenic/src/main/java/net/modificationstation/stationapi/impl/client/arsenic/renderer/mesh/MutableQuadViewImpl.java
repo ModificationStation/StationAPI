@@ -11,18 +11,7 @@ import net.modificationstation.stationapi.impl.client.arsenic.renderer.RenderMat
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.helper.NormalHelper;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.helper.TextureHelper;
 
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.EMPTY;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.HEADER_BITS;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.HEADER_COLOR_INDEX;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.HEADER_STRIDE;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.HEADER_TAG;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.QUAD_STRIDE;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_COLOR;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_LIGHTMAP;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_NORMAL;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_STRIDE;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_U;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.VERTEX_X;
+import static net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat.*;
 
 /**
  * Almost-concrete implementation of a mutable quad. The only missing part is {@link #emit()},
@@ -41,7 +30,7 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 		nominalFace = null;
 		normalFlags(0);
 		tag(0);
-		colorIndex(-1);
+		colourIndex(-1);
 		cullFace(null);
 		material(ArsenicRenderer.MATERIAL_STANDARD);
 	}
@@ -70,8 +59,8 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 	}
 
 	@Override
-	public final MutableQuadViewImpl colorIndex(int colorIndex) {
-		data[baseIndex + HEADER_COLOR_INDEX] = colorIndex;
+	public final MutableQuadViewImpl colourIndex(int colourIndex) {
+		data[baseIndex + HEADER_COLOR_INDEX] = colourIndex;
 		return this;
 	}
 
@@ -86,7 +75,7 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 		System.arraycopy(quad.getVertexData(), 0, data, baseIndex + HEADER_STRIDE, QUAD_STRIDE);
 		data[baseIndex + HEADER_BITS] = EncodingFormat.cullFace(0, cullFace);
 		nominalFace(quad.getFace());
-		colorIndex(quad.getColorIndex());
+		colourIndex(quad.getColorIndex());
 		material(material);
 		tag(0);
 		shade(quad.hasShade());

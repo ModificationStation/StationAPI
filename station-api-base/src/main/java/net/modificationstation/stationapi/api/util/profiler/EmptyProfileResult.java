@@ -3,8 +3,9 @@ package net.modificationstation.stationapi.api.util.profiler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
 
 public class EmptyProfileResult implements ProfileResult {
    public static final EmptyProfileResult INSTANCE = new EmptyProfileResult();

@@ -5,14 +5,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.class_214;
 import net.minecraft.util.maths.Vec3i;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
-import net.modificationstation.stationapi.api.util.math.ColourHelper;
-import net.modificationstation.stationapi.api.util.math.Matrix3f;
-import net.modificationstation.stationapi.api.util.math.Matrix4f;
-import net.modificationstation.stationapi.api.util.math.MatrixStack;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
-import net.modificationstation.stationapi.api.util.math.Vector4f;
+import net.modificationstation.stationapi.api.util.math.*;
 
-import java.nio.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 @Environment(value=EnvType.CLIENT)
 public interface VertexConsumer {
@@ -73,8 +69,8 @@ public interface VertexConsumer {
         int[] js = quad.getVertexData();
         Vec3i vec3i = quad.getFace().vector;
         Vector3f vec3f = new Vector3f(vec3i.x, vec3i.y, vec3i.z);
-        Matrix4f matrix4f = matrixEntry.getModel();
-        vec3f.transform(matrixEntry.getNormal());
+        Matrix4f matrix4f = matrixEntry.getPositionMatrix();
+        vec3f.transform(matrixEntry.getNormalMatrix());
         int j = js.length / 8;
         ByteBuffer byteBuffer = BUFFER;
         IntBuffer intBuffer = byteBuffer.asIntBuffer();
@@ -90,9 +86,9 @@ public interface VertexConsumer {
             float g = byteBuffer.getFloat(4);
             float h = byteBuffer.getFloat(8);
             if (useQuadColorData) {
-                float l = (float) (byteBuffer.get(12) & 0xFF) / 255.0f;
-                m = (float) (byteBuffer.get(13) & 0xFF) / 255.0f;
-                n = (float) (byteBuffer.get(14) & 0xFF) / 255.0f;
+                float l = (float) (byteBuffer.get(10) & 0xFF) / 255.0f;
+                m = (float) (byteBuffer.get(11) & 0xFF) / 255.0f;
+                n = (float) (byteBuffer.get(12) & 0xFF) / 255.0f;
                 o = l * fs[k] * red;
                 p = m * fs[k] * green;
                 q = n * fs[k] * blue;

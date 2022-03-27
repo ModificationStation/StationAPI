@@ -3,8 +3,6 @@ package net.modificationstation.stationapi.api.client.model.block;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.modificationstation.stationapi.api.client.model.Model;
 
-import static net.modificationstation.stationapi.api.client.model.block.RendererHolder.BAKED_MODEL_RENDERER;
-
 @Deprecated
 public interface BlockInventoryModelProvider extends BlockWithInventoryRenderer {
 
@@ -17,6 +15,7 @@ public interface BlockInventoryModelProvider extends BlockWithInventoryRenderer 
     @Override
     @Deprecated
     default void renderInventory(BlockRenderer blockRenderer, int meta) {
-        BAKED_MODEL_RENDERER.get().renderInventory(getInventoryModel(meta).getBaked());
+        // TODO: maybe implement this later for backwards compat with PRE2
+//        BAKED_MODEL_RENDERER.get().renderInventory(getInventoryModel(meta).getBaked());
     }
 }

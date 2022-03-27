@@ -2,12 +2,13 @@ package net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.BlockView;
+import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MutableQuadViewImpl;
 
-import java.util.*;
+import java.util.Arrays;
 
 import static net.minecraft.block.BlockBase.ALLOWS_GRASS_UNDER;
 import static net.minecraft.util.maths.MathHelper.floor;
@@ -101,10 +102,10 @@ public final class LightingCalculatorImpl {
     public void calculateForQuad(MutableQuadViewImpl q) {
         calculateForQuad(
                 q.lightFace(),
-                q.x(0), q.y(0), q.z(0),
-                q.x(1), q.y(1), q.z(1),
-                q.x(2), q.y(2), q.z(2),
-                q.x(3), q.y(3), q.z(3),
+                x + q.x(0), y + q.y(0), z + q.z(0),
+                x + q.x(1), y + q.y(1), z + q.z(1),
+                x + q.x(2), y + q.y(2), z + q.z(2),
+                x + q.x(3), y + q.y(3), z + q.z(3),
                 q.hasShade()
         );
     }
@@ -125,8 +126,14 @@ public final class LightingCalculatorImpl {
                     v11x, v11y, v11z,
                     v10x, v10y, v10z
             );
-//        else
-//            quadFast();
+        else
+            quadFast(
+                    face,
+                    v00x, v00y, v00z,
+                    v01x, v01y, v01z,
+                    v11x, v11y, v11z,
+                    v10x, v10y, v10z
+            );
         if (shade)
             shadeFace(face);
     }
@@ -421,34 +428,25 @@ public final class LightingCalculatorImpl {
         }
     }
 
-//    private void vertexFast(Vertex v, int i) {
-//        if (v.shade) {
-//            shadeFace(v.lightingFace);
-//            int
-//                    x = floor(this.x + v.x),
-//                    y = floor(this.y + v.y),
-//                    z = floor(this.z + v.z);
-//            float brightness;
-//            switch (v.lightingFace) {
-//                case DOWN:
-//                case UP:
-//                    v.y % 1 == 0 ? light(x, y + v.lightingFace.vector.y, z) : light(x, y, z);
-//                    break;
-//                case EAST:
-//                case WEST:
-//                    v.z % 1 == 0 ? light(x, y, z + v.lightingFace.vector.z) : light(x, y, z);
-//                    break;
-//                case NORTH:
-//                case SOUTH:
-//                    v.x % 1 == 0 ? light(x + v.lightingFace.vector.x, y, z) : light(x, y, z);
-//                    break;
-//                default:
-//                    throw new IllegalStateException("Unexpected value: " + v.lightingFace);
-//            }
-//            quadLight[i] = shaded[0] * brightness, shaded[1] * brightness, shaded[2] * brightness;
-//        } else
-//            quadLight[i] = colourMultiplierRed, colourMultiplierGreen, colourMultiplierBlue);
-//    }
+    private void quadFast(
+            Direction face,
+            double v00x, double v00y, double v00z,
+            double v01x, double v01y, double v01z,
+            double v11x, double v11y, double v11z,
+            double v10x, double v10y, double v10z
+    ) {
+        double mX = (v00x + v01x + v11x + v10x) / 4;
+        double mY = (v00y + v01y + v11y + v10y) / 4;
+        double mZ = (v00z + v01z + v11z + v10z) / 4;
+        this.light[0] = this.light[1] = this.light[2] = this.light[3] =
+                switch (face.axis) {
+                    case X -> Math.abs(mX - x);
+                    case Y -> Math.abs(mY - y);
+                    case Z -> Math.abs(mZ - z);
+                } < QuadEmitter.CULL_FACE_EPSILON ?
+                        light(floor(mX) + face.vector.x, floor(mY) + face.vector.y, floor(mZ) + face.vector.z) :
+                        light(floor(mX), floor(mY), floor(mZ));
+    }
 
     private void shadeFace(Direction face) {
         if (face != Direction.UP) {

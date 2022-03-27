@@ -8,7 +8,9 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
 import org.jetbrains.annotations.ApiStatus;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * Universal packet class that can hold any kind of data,

@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.util.profiler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-import java.util.function.*;
+import java.util.function.Supplier;
 
 public interface Profiler {
    void startTick();

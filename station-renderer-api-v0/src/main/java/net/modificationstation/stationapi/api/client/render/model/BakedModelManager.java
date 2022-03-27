@@ -14,7 +14,8 @@ import net.modificationstation.stationapi.api.util.profiler.Profiler;
 import net.modificationstation.stationapi.impl.client.resource.SinglePreparationResourceReloadListener;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class BakedModelManager extends SinglePreparationResourceReloadListener<ModelLoader> implements AutoCloseable {

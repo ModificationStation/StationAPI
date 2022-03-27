@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.awt.image.*;
+import java.awt.image.BufferedImage;
 
 @Mixin(TextureManager.class)
 @Environment(EnvType.CLIENT)

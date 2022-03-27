@@ -5,7 +5,7 @@ import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
-import java.util.*;
+import java.util.Random;
 
 public class ArsenicPortal extends StationTextureBinder {
     private int updatesRan = 0;

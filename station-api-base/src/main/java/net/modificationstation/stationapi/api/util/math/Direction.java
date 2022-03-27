@@ -11,13 +11,14 @@ import net.modificationstation.stationapi.api.util.StringIdentifiable;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Random;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
-import static net.modificationstation.stationapi.api.util.math.Direction.Axis.X;
-import static net.modificationstation.stationapi.api.util.math.Direction.Axis.Y;
-import static net.modificationstation.stationapi.api.util.math.Direction.Axis.Z;
+import static net.modificationstation.stationapi.api.util.math.Direction.Axis.*;
 
 @RequiredArgsConstructor
 public enum Direction implements StringIdentifiable {

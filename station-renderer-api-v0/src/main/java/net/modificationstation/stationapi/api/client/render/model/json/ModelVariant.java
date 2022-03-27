@@ -1,10 +1,6 @@
 package net.modificationstation.stationapi.api.client.render.model.json;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.client.render.model.ModelBakeRotation;
@@ -13,8 +9,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.json.JsonHelper;
 import net.modificationstation.stationapi.api.util.math.AffineTransformation;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Type;
+import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class ModelVariant implements ModelBakeSettings {

@@ -4,14 +4,13 @@ import net.minecraft.entity.Living;
 import net.minecraft.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.*;
+import java.util.function.Function;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public final class MobHandlerRegistry extends Registry<Function<Level, Living>> {
 
-    public static final MobHandlerRegistry INSTANCE = new MobHandlerRegistry(of(MODID, "mob_handlers"));
+    public static final MobHandlerRegistry INSTANCE = new MobHandlerRegistry(Identifier.of(MODID, "mob_handlers"));
 
     /**
      * Default registry constructor.
