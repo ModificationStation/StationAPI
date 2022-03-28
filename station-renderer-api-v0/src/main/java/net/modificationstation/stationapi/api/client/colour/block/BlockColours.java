@@ -5,12 +5,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.MaterialColour;
-import net.minecraft.client.render.block.FoliageColour;
-import net.minecraft.client.render.block.GrassColour;
 import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.client.colour.world.BiomeColours;
+import net.modificationstation.stationapi.api.client.event.colour.block.BlockColoursRegisterEvent;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.util.collection.IdList;
@@ -27,25 +26,7 @@ public class BlockColours {
 
     public static BlockColours create() {
         BlockColours blockColours = new BlockColours();
-        blockColours.registerColourProvider(
-                (state, world, pos, tintIndex) -> world == null || pos == null ? GrassColour.get(0.5, 1.0) : BiomeColours.getGrassColour(world, pos),
-                BlockBase.GRASS, BlockBase.TALLGRASS
-        );
-        blockColours.registerColourProvider((state, world, pos, tintIndex) -> {
-                    if (world == null || pos == null)
-                        return FoliageColour.method_1083();
-                    else {
-                        int meta = world.getTileMeta(pos.x, pos.y, pos.z);
-                        return (meta & 1) == 1 ? FoliageColour.method_1079() : (meta & 2) == 2 ? FoliageColour.method_1082() : BiomeColours.getFoliageColour(world, pos);
-                    }
-                },
-                BlockBase.LEAVES
-        );
-//        blockColours.registerColourProperty(META, BlockBase.LEAVES);
-        blockColours.registerColourProvider(
-                (state, world, pos, tintIndex) -> world == null || pos == null ? -1 : BiomeColours.getWaterColour(world, pos),
-                BlockBase.FLOWING_WATER, BlockBase.STILL_WATER
-        );
+        StationAPI.EVENT_BUS.post(BlockColoursRegisterEvent.maker().blockColours(blockColours).make());
         return blockColours;
     }
 
@@ -72,7 +53,7 @@ public class BlockColours {
 
     }
 
-    private void registerColourProperties(Set<Property<?>> properties, BlockBase... blocks) {
+    public void registerColourProperties(Set<Property<?>> properties, BlockBase... blocks) {
 
         for (BlockBase block : blocks) {
             this.properties.put(block, properties);
@@ -80,7 +61,7 @@ public class BlockColours {
 
     }
 
-    private void registerColourProperty(Property<?> property, BlockBase... blocks) {
+    public void registerColourProperty(Property<?> property, BlockBase... blocks) {
         this.registerColourProperties(ImmutableSet.of(property), blocks);
     }
 
