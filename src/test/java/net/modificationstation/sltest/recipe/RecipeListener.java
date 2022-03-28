@@ -27,10 +27,8 @@ public class RecipeListener {
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(BlockBase.REDSTONE_DUST), new ItemInstance(ItemBase.flintAndSteel));
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(BlockBase.RAIL), new ItemInstance(BlockBase.REDSTONE_DUST));
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(BlockBase.GOLDEN_RAIL), new ItemInstance(BlockBase.RAIL));
-                CraftingRegistry.addShapelessRecipe(new ItemInstance(BlockBase.REDSTONE_REPEATER), new ItemInstance(BlockBase.GOLDEN_RAIL));
-                CraftingRegistry.addShapelessRecipe(new ItemInstance(BlockBase.PISTON), new ItemInstance(BlockBase.REDSTONE_REPEATER));
-                CraftingRegistry.addShapelessRecipe(new ItemInstance(BlockBase.FLOWING_WATER), new ItemInstance(BlockBase.PISTON));
-                CraftingRegistry.addShapelessRecipe(new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get()), new ItemInstance(BlockBase.FLOWING_WATER));
+                CraftingRegistry.addShapelessRecipe(new ItemInstance(BlockBase.PISTON), new ItemInstance(BlockBase.GOLDEN_RAIL));
+                CraftingRegistry.addShapelessRecipe(new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get()), new ItemInstance(BlockBase.PISTON));
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(BlockBase.OBSIDIAN), new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get()));
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 1), new ItemInstance(BlockBase.OBSIDIAN));
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(ItemBase.dyePowder, 1, 5), new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 1));

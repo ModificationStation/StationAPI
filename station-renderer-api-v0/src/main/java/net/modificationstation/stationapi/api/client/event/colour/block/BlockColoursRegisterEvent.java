@@ -19,7 +19,6 @@ public class BlockColoursRegisterEvent extends Event {
         return MAKER.clear();
     }
 
-    @SuppressWarnings("ClassCanBeRecord")
     @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Maker {
 

@@ -1,0 +1,65 @@
+{
+  "parent": "item/ink_sac",
+  "overrides": [
+    {
+      "predicate": {"meta": 1},
+      "model": "item/red_dye"
+    },
+    {
+      "predicate": {"meta": 2},
+      "model": "item/green_dye"
+    },
+    {
+      "predicate": {"meta": 3},
+      "model": "item/cocoa_beans"
+    },
+    {
+      "predicate": {"meta": 4},
+      "model": "item/lapis_lazuli"
+    },
+    {
+      "predicate": {"meta": 5},
+      "model": "item/purple_dye"
+    },
+    {
+      "predicate": {"meta": 6},
+      "model": "item/cyan_dye"
+    },
+    {
+      "predicate": {"meta": 7},
+      "model": "item/light_gray_dye"
+    },
+    {
+      "predicate": {"meta": 8},
+      "model": "item/gray_dye"
+    },
+    {
+      "predicate": {"meta": 9},
+      "model": "item/pink_dye"
+    },
+    {
+      "predicate": {"meta": 10},
+      "model": "item/lime_dye"
+    },
+    {
+      "predicate": {"meta": 11},
+      "model": "item/yellow_dye"
+    },
+    {
+      "predicate": {"meta": 12},
+      "model": "item/light_blue_dye"
+    },
+    {
+      "predicate": {"meta": 13},
+      "model": "item/magenta_dye"
+    },
+    {
+      "predicate": {"meta": 14},
+      "model": "item/orange_dye"
+    },
+    {
+      "predicate": {"meta": 15},
+      "model": "item/bone_meal"
+    }
+  ]
+}
