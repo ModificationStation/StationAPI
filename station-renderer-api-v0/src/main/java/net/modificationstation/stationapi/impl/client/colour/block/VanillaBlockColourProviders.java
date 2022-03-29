@@ -12,7 +12,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
-public class VanillaBlockColoursHandler {
+public class VanillaBlockColourProviders {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerBlockColours(BlockColoursRegisterEvent event) {

@@ -2,11 +2,10 @@ package net.modificationstation.stationapi.api.client.colour.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.BlockStateHolder;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
+import net.modificationstation.stationapi.api.client.event.colour.item.ItemColoursRegisterEvent;
 import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.util.collection.IdList;
@@ -16,13 +15,10 @@ public class ItemColours {
 
     private final IdList<ItemColourProvider> providers = new IdList<>(32);
 
-    public static ItemColours create(BlockColours blockColors) {
-        ItemColours itemColors = new ItemColours();
-        itemColors.register((stack, tintIndex) -> {
-            BlockState blockState = ((BlockStateHolder) BlockBase.BY_ID[stack.itemId]).getDefaultState();
-            return blockColors.getColour(blockState, null, null, tintIndex);
-        }, (ItemConvertible) BlockBase.GRASS, (ItemConvertible) BlockBase.TALLGRASS, (ItemConvertible) BlockBase.LEAVES);
-        return itemColors;
+    public static ItemColours create(BlockColours blockColours) {
+        ItemColours itemColours = new ItemColours();
+        StationAPI.EVENT_BUS.post(ItemColoursRegisterEvent.maker().blockColours(blockColours).itemColours(itemColours).make());
+        return itemColours;
     }
 
     public int getColour(ItemInstance item, int tintIndex) {

@@ -131,10 +131,10 @@ final class GuiItemsHelper implements SpritesheetHelper {
         f.accept("oak_boat", 136);
         f.accept("lapis_lazuli", 142);
         f.accept("light_blue_dye", 143);
-        f.accept("chest_minecraft", 151);
+        f.accept("chest_minecart", 151);
         f.accept("purple_dye", 158);
         f.accept("magenta_dye", 159);
-        f.accept("furnace_minecraft", 167);
+        f.accept("furnace_minecart", 167);
         f.accept("cyan_dye", 174);
         f.accept("orange_dye", 175);
         f.accept("light_gray_dye", 190);
