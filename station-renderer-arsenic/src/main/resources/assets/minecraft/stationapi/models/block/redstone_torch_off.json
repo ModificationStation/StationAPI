@@ -1,0 +1,25 @@
+{
+  "parent": "block/redstone_torch_off_floor",
+  "overrides": [
+    {
+      "predicate": {"meta": 1},
+      "model": "block/redstone_torch_off_wall_w"
+    },
+    {
+      "predicate": {"meta": 2},
+      "model": "block/redstone_torch_off_wall_e"
+    },
+    {
+      "predicate": {"meta": 3},
+      "model": "block/redstone_torch_off_wall_n"
+    },
+    {
+      "predicate": {"meta": 4},
+      "model": "block/redstone_torch_off_wall_s"
+    },
+    {
+      "predicate": {"meta": 5},
+      "model": "block/redstone_torch_off_floor"
+    }
+  ]
+}

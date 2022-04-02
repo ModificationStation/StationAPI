@@ -1,0 +1,25 @@
+{
+  "parent": "block/torch_floor",
+  "overrides": [
+    {
+      "predicate": {"meta": 1},
+      "model": "block/torch_wall_w"
+    },
+    {
+      "predicate": {"meta": 2},
+      "model": "block/torch_wall_e"
+    },
+    {
+      "predicate": {"meta": 3},
+      "model": "block/torch_wall_n"
+    },
+    {
+      "predicate": {"meta": 4},
+      "model": "block/torch_wall_s"
+    },
+    {
+      "predicate": {"meta": 5},
+      "model": "block/torch_floor"
+    }
+  ]
+}
