@@ -1,0 +1,13 @@
+{
+  "parent": "block/template_farmland",
+  "textures": {
+    "dirt": "block/dirt",
+    "top": "block/farmland"
+  },
+  "overrides": [
+    {
+      "predicate": {"meta": 7},
+      "model": "block/farmland_moist"
+    }
+  ]
+}

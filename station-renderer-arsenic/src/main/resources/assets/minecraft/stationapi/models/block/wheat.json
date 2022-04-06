@@ -1,0 +1,36 @@
+{
+  "overrides": [
+    {
+      "predicate": {"meta": 0},
+      "model": "block/wheat_stage0"
+    },
+    {
+      "predicate": {"meta": 1},
+      "model": "block/wheat_stage1"
+    },
+    {
+      "predicate": {"meta": 2},
+      "model": "block/wheat_stage2"
+    },
+    {
+      "predicate": {"meta": 3},
+      "model": "block/wheat_stage3"
+    },
+    {
+      "predicate": {"meta": 4},
+      "model": "block/wheat_stage4"
+    },
+    {
+      "predicate": {"meta": 5},
+      "model": "block/wheat_stage5"
+    },
+    {
+      "predicate": {"meta": 6},
+      "model": "block/wheat_stage6"
+    },
+    {
+      "predicate": {"meta": 7},
+      "model": "block/wheat_stage7"
+    }
+  ]
+}
