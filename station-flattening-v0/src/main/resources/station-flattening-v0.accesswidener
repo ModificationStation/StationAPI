@@ -1,0 +1,5 @@
+accessWidener	v1	named
+
+# Methods
+accessible	method	net/minecraft/util/io/AbstractTag	write	(Ljava/io/DataOutput;)V
+accessible	method	net/minecraft/util/io/AbstractTag	read	(Ljava/io/DataInput;)V
