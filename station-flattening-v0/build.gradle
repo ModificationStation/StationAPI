@@ -10,3 +10,7 @@ moduleDependencies(project,
         'station-tools-api-v1',
         'station-items-v0'
 )
+
+loom {
+	accessWidenerPath = file("src/main/resources/station-flattening-v0.accesswidener")
+}

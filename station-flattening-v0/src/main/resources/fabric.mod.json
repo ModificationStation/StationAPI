@@ -23,6 +23,7 @@
 
     ]
   },
+  "accessWidener" : "station-flattening-v0.accesswidener",
   "mixins": [
     "station-flattening-v0.mixins.json"
   ],

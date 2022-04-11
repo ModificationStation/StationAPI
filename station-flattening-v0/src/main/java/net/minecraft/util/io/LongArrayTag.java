@@ -15,7 +15,7 @@ public class LongArrayTag extends AbstractTag {
     }
 
     @Override
-    void write(DataOutput out) {
+    public void write(DataOutput out) {
         try {
             out.writeInt(this.data.length);
             for (long l : data)
@@ -26,7 +26,7 @@ public class LongArrayTag extends AbstractTag {
     }
 
     @Override
-    void read(DataInput in) {
+    public void read(DataInput in) {
         try {
             int length = in.readInt();
             data = new long[length];
