@@ -4,7 +4,7 @@ import net.minecraft.util.maths.Vec3i;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadView;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,7 +32,7 @@ public abstract class NormalHelper {
 	/**
 	 * Version of {@link #packNormal(float, float, float, float)} that accepts a vector type.
 	 */
-	public static int packNormal(Vector3f normal, float w) {
+	public static int packNormal(Vec3f normal, float w) {
 		return packNormal(normal.getX(), normal.getY(), normal.getZ(), w);
 	}
 
@@ -53,7 +53,7 @@ public abstract class NormalHelper {
 	 * <p>Will work with triangles also. Assumes counter-clockwise winding order, which is the norm.
 	 * Expects convex quads with all points co-planar.
 	 */
-	public static void computeFaceNormal(@NotNull Vector3f saveTo, QuadView q) {
+	public static void computeFaceNormal(@NotNull Vec3f saveTo, QuadView q) {
 		final Direction nominalFace = q.nominalFace();
 
 		if (GeometryHelper.isQuadParallelToFace(nominalFace, q)) {

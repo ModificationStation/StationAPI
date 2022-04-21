@@ -16,7 +16,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 @Mixin(ZippedTexturePack.class)
-public class MixinZippedTexturePack {
+public class MixinZippedTexturePack extends TexturePack {
 
     @Shadow private ZipFile zipFile;
 
@@ -29,7 +29,7 @@ public class MixinZippedTexturePack {
                 ZipEntry metaEntry = zipFile.getEntry(name.substring(1) + ".mcmeta");
                 meta = metaEntry == null ? null : zipFile.getInputStream(metaEntry);
             } catch (IOException ignored) {}
-            cir.setReturnValue(new ResourceImpl(resource, meta));
+            cir.setReturnValue(new ResourceImpl(resource, meta, this.name));
         }
     }
 
@@ -37,6 +37,6 @@ public class MixinZippedTexturePack {
     private void retrieveMeta(String name, CallbackInfoReturnable<InputStream> cir) {
         InputStream resource = cir.getReturnValue();
         if (resource != null)
-            cir.setReturnValue(new ResourceImpl(resource, TexturePack.class.getResourceAsStream(name + ".mcmeta")));
+            cir.setReturnValue(new ResourceImpl(resource, TexturePack.class.getResourceAsStream(name + ".mcmeta"), this.name));
     }
 }

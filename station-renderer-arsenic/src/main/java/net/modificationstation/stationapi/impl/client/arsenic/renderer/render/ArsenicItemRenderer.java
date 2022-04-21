@@ -22,7 +22,7 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.api.util.math.Quaternion;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.mixin.arsenic.client.EntityRendererAccessor;
 import net.modificationstation.stationapi.mixin.arsenic.client.ItemRendererAccessor;
 import org.lwjgl.opengl.GL11;
@@ -56,7 +56,7 @@ public final class ArsenicItemRenderer {
             if (!model.isBuiltin()) {
                 atlas.bindTexture();
                 matrices.translate(x, y + var11, z);
-                matrices.multiply(new Quaternion(Vector3f.POSITIVE_Y, var12, true));
+                matrices.multiply(new Quaternion(Vec3f.POSITIVE_Y, var12, true));
                 Tessellator.INSTANCE.start();
                 for (int var29 = 0; var29 < renderedAmount; ++var29) {
                     matrices.push();

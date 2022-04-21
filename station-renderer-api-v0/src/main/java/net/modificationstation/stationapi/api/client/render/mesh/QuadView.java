@@ -5,7 +5,7 @@ import net.modificationstation.stationapi.api.client.render.material.RenderMater
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,7 +86,7 @@ public interface QuadView {
 	 * <p>Not typically needed by models. Exposed to enable standard lighting
 	 * utility functions for use by renderers.
 	 */
-	Vector3f faceNormal();
+	Vec3f faceNormal();
 
 	/**
 	 * Generates a new BakedQuad instance with texture
@@ -121,7 +121,7 @@ public interface QuadView {
 	 * Pass a non-null target to avoid allocation - will be returned with values.
 	 * Otherwise returns a new instance.
 	 */
-	Vector3f copyPos(int vertexIndex, @Nullable Vector3f target);
+	Vec3f copyPos(int vertexIndex, @Nullable Vec3f target);
 
 	/**
 	 * Convenience: access x, y, z by index 0-2.
@@ -154,7 +154,7 @@ public interface QuadView {
 	 * Otherwise returns a new instance. Returns null if normal not present.
 	 */
 	@Nullable
-	Vector3f copyNormal(int vertexIndex, @Nullable Vector3f target);
+	Vec3f copyNormal(int vertexIndex, @Nullable Vec3f target);
 
 	/**
 	 * Will return {@link Float#NaN} if normal not present.

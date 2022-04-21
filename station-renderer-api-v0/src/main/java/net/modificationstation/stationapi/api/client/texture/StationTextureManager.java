@@ -8,6 +8,10 @@ import java.util.Set;
 
 public interface StationTextureManager {
 
+    AbstractTexture getTexture(Identifier id);
+
+    Identifier registerDynamicTexture(String prefix, NativeImageBackedTexture texture);
+
     static StationTextureManager get(TextureManager textureManager) {
         return StationTextureManagerImpl.get(textureManager);
     }

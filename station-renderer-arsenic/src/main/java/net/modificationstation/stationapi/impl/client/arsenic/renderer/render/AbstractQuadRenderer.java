@@ -4,7 +4,7 @@ import net.modificationstation.stationapi.api.client.render.RenderContext;
 import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.util.math.Matrix3f;
 import net.modificationstation.stationapi.api.util.math.Matrix4f;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc.LightingCalculatorImpl;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.helper.ColourHelper;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MutableQuadViewImpl;
@@ -19,7 +19,7 @@ public abstract class AbstractQuadRenderer {
     protected final BlockRenderInfo blockInfo;
     protected final LightingCalculatorImpl aoCalc;
     protected final RenderContext.QuadTransform transform;
-    protected final Vector3f normalVec = new Vector3f();
+    protected final Vec3f normalVec = new Vec3f();
 
     protected abstract Matrix4f matrix();
 
@@ -53,13 +53,13 @@ public abstract class AbstractQuadRenderer {
         bufferQuad(bufferFunc.get(), q, matrix(), overlay(), normalMatrix(), normalVec);
     }
 
-    public static void bufferQuad(VertexConsumer buff, MutableQuadViewImpl quad, Matrix4f matrix, int overlay, Matrix3f normalMatrix, Vector3f normalVec) {
+    public static void bufferQuad(VertexConsumer buff, MutableQuadViewImpl quad, Matrix4f matrix, int overlay, Matrix3f normalMatrix, Vec3f normalVec) {
         final boolean useNormals = quad.hasVertexNormals();
 
         if (useNormals) {
             quad.populateMissingNormals();
         } else {
-            final Vector3f faceNormal = quad.faceNormal();
+            final Vec3f faceNormal = quad.faceNormal();
             normalVec.set(faceNormal.getX(), faceNormal.getY(), faceNormal.getZ());
             normalVec.transform(normalMatrix);
         }

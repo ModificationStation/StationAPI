@@ -6,8 +6,8 @@ import net.modificationstation.stationapi.api.client.render.material.RenderMater
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.api.util.math.Vector2f;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -152,7 +152,7 @@ public interface MutableQuadView extends QuadView {
 	/**
 	 * Same as {@link #pos(int, float, float, float)} but accepts vector type.
 	 */
-	default MutableQuadView pos(int vertexIndex, Vector3f vec) {
+	default MutableQuadView pos(int vertexIndex, Vec3f vec) {
 		return pos(vertexIndex, vec.getX(), vec.getY(), vec.getZ());
 	}
 
@@ -170,7 +170,7 @@ public interface MutableQuadView extends QuadView {
 	/**
 	 * Same as {@link #normal(int, float, float, float)} but accepts vector type.
 	 */
-	default MutableQuadView normal(int vertexIndex, Vector3f vec) {
+	default MutableQuadView normal(int vertexIndex, Vec3f vec) {
 		return normal(vertexIndex, vec.getX(), vec.getY(), vec.getZ());
 	}
 

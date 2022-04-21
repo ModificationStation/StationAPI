@@ -55,6 +55,27 @@ public enum Direction implements StringIdentifiable {
     @Getter
     private Direction opposite;
 
+    public Quaternion getRotationQuaternion() {
+        Quaternion quaternion = Vec3f.POSITIVE_X.getDegreesQuaternion(90.0f);
+        return switch (this) {
+            case DOWN -> Vec3f.POSITIVE_X.getDegreesQuaternion(180.0f);
+            case UP -> Quaternion.IDENTITY.copy();
+            case EAST -> {
+                quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f));
+                yield quaternion;
+            }
+            case WEST -> quaternion;
+            case NORTH -> {
+                quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(90.0f));
+                yield quaternion;
+            }
+            case SOUTH -> {
+                quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(-90.0f));
+                yield quaternion;
+            }
+        };
+    }
+
     public int getId() {
         return this.ordinal();
     }

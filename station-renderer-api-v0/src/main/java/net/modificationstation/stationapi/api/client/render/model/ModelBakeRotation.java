@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.math.AffineTransformation;
 import net.modificationstation.stationapi.api.util.math.DirectionTransformation;
 import net.modificationstation.stationapi.api.util.math.Quaternion;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -41,8 +41,8 @@ public enum ModelBakeRotation implements ModelBakeSettings {
 
    ModelBakeRotation(int x, int y) {
       this.index = getIndex(x, y);
-      Quaternion quaternion = new Quaternion(new Vector3f(0.0F, 1.0F, 0.0F), (float)(-y), true);
-      quaternion.hamiltonProduct(new Quaternion(new Vector3f(1.0F, 0.0F, 0.0F), (float)(-x), true));
+      Quaternion quaternion = new Quaternion(new Vec3f(0.0F, 1.0F, 0.0F), (float)(-y), true);
+      quaternion.hamiltonProduct(new Quaternion(new Vec3f(1.0F, 0.0F, 0.0F), (float)(-x), true));
       DirectionTransformation directionTransformation = DirectionTransformation.IDENTITY;
 
       int k;

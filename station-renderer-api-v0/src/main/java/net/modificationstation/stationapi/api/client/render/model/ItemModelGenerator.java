@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.api.client.render.model.json.ModelElem
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 
 import java.util.*;
 import java.util.function.Function;
@@ -55,7 +55,7 @@ public class ItemModelGenerator {
         Map<Direction, ModelElementFace> map = new EnumMap<>(Direction.class);
         map.put(Direction.WEST, new ModelElementFace(null, layer, key, createUnlerpedTexture(new float[] { 0.0F, 0.0F, 16.0F, 16.0F }, 0, animationFrameDelta)));
         map.put(Direction.EAST, new ModelElementFace(null, layer, key, createUnlerpedTexture(new float[] { 16.0F, 0.0F, 0.0F, 16.0F }, 0, animationFrameDelta)));
-        elements.add(new ModelElement(new Vector3f(0.0F, 0.0F, 7.5F), new Vector3f(16.0F, 16.0F, 8.5F), map, null, true));
+        elements.add(new ModelElement(new Vec3f(0.0F, 0.0F, 7.5F), new Vec3f(16.0F, 16.0F, 8.5F), map, null, true));
 
         int first1 = -1;
         int first2 = -1;
@@ -142,13 +142,13 @@ public class ItemModelGenerator {
     private static ModelElement createHorizontalOutlineElement(Direction direction, int layer, String key, int start, int end, int y, int height, float animationFrameDelta, float xFactor, float yFactor) {
         Map<Direction, ModelElementFace> faces = new EnumMap<>(Direction.class);
         faces.put(direction, new ModelElementFace(null, layer, key, createUnlerpedTexture(new float[] { (direction == Direction.UP ? (end + 1) : start) / xFactor, y / yFactor, (direction == Direction.UP ? start : (end + 1)) / xFactor, (y + 1) / yFactor }, 0, animationFrameDelta)));
-        return new ModelElement(new Vector3f(start / xFactor, (height - (y + 1)) / yFactor, 7.5F), new Vector3f((end + 1) / xFactor, (height - y) / yFactor, 8.5F), faces, null, true);
+        return new ModelElement(new Vec3f(start / xFactor, (height - (y + 1)) / yFactor, 7.5F), new Vec3f((end + 1) / xFactor, (height - y) / yFactor, 8.5F), faces, null, true);
     }
 
     private static ModelElement createVerticalOutlineElement(Direction direction, int layer, String key, int start, int end, int x, int height, float animationFrameDelta, float xFactor, float yFactor) {
         Map<Direction, ModelElementFace> faces = new EnumMap<>(Direction.class);
         faces.put(direction, new ModelElementFace(null, layer, key, createUnlerpedTexture(new float[] { (x + 1) / xFactor, start / yFactor, x / xFactor, (end + 1) / yFactor }, 0, animationFrameDelta)));
-        return new ModelElement(new Vector3f(x / xFactor, (height - (end + 1)) / yFactor, 7.5F), new Vector3f((x + 1) / xFactor, (height - start) / yFactor, 8.5F), faces, null, true);
+        return new ModelElement(new Vec3f(x / xFactor, (height - (end + 1)) / yFactor, 7.5F), new Vec3f((x + 1) / xFactor, (height - start) / yFactor, 8.5F), faces, null, true);
     }
 
     private static ModelElementTexture createUnlerpedTexture(float[] uvs, @SuppressWarnings("SameParameterValue") int rotation, float delta) {

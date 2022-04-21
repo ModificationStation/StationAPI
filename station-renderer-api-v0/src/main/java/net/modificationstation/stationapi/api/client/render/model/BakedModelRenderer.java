@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.client.render.model;
 
-import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.entity.Living;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
+import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.item.ItemModels;
@@ -12,9 +12,13 @@ import net.modificationstation.stationapi.api.client.render.model.json.ModelTran
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Random;
+
 public interface BakedModelRenderer {
 
-    boolean renderWorld(BlockRenderer blockRenderer, BlockState block, BakedModel model, BlockView blockView, int x, int y, int z, int textureOverride);
+    boolean renderBlock(BlockState state, TilePos pos, BlockView world, MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random);
+
+    boolean render(BlockView world, BakedModel model, BlockState state, TilePos pos, MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random, long seed, int overlay);
 
     ItemModels getItemModels();
 

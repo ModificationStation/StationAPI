@@ -23,7 +23,7 @@ import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.mixin.arsenic.client.class_556Accessor;
 import org.lwjgl.opengl.GL11;
 
@@ -237,7 +237,7 @@ public final class ArsenicOverlayRenderer {
                 applySwingOffset(matrices, false, var17);
 
                 if (var5.getType().shouldSpinWhenRendering()) {
-                    matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(180));
+                    matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180));
                 }
 
                 SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
@@ -284,11 +284,11 @@ public final class ArsenicOverlayRenderer {
     private void applySwingOffset(MatrixStack matrices, boolean leftHanded, float swingProgress) {
         int i = leftHanded ? -1 : 1;
         float f = MathHelper.sin(swingProgress * swingProgress * (float)Math.PI);
-        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((float)i * (45.0f + f * -20.0f)));
+        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float)i * (45.0f + f * -20.0f)));
         float g = MathHelper.sin(MathHelper.sqrt(swingProgress) * (float)Math.PI);
-        matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion((float)i * g * -20.0f));
-        matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(g * -80.0f));
-        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((float)i * -45.0f));
+        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float)i * g * -20.0f));
+        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(g * -80.0f));
+        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float)i * -45.0f));
     }
 
     public void renderItem(Living entity, ItemInstance item, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumer vertexConsumer, int light) {

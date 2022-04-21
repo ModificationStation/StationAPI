@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.TexturePack;
+import net.modificationstation.stationapi.api.client.blaze3d.systems.RenderSystem;
 import net.modificationstation.stationapi.api.client.resource.Resource;
 import net.modificationstation.stationapi.api.client.resource.metadata.AnimationResourceMetadata;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -16,7 +17,6 @@ import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
 import net.modificationstation.stationapi.impl.client.render.SpriteFinderImpl;
-import net.modificationstation.stationapi.impl.client.texture.RenderSystem;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +57,7 @@ implements TextureTickListener {
         this.spritesToLoad.clear();
         this.spritesToLoad.addAll(data.spriteIds);
         LOGGER.info("Created: {}x{}x{} {}-atlas", data.width, data.height, data.maxLevel, this.id);
-        TextureUtil.allocate(this.getGlId(), data.maxLevel, data.width, data.height);
+        TextureUtil.prepareImage(this.getGlId(), data.maxLevel, data.width, data.height);
         this.clear();
         for (Sprite sprite : data.sprites) {
             this.sprites.put(sprite.getId(), sprite);

@@ -15,11 +15,11 @@ public class AffineTransformations {
    private static final Logger LOGGER = LogManager.getLogger();
    public static final EnumMap<Direction, AffineTransformation> DIRECTION_ROTATIONS = Util.make(Maps.newEnumMap(Direction.class), (enumMap) -> {
       enumMap.put(Direction.SOUTH, AffineTransformation.identity());
-      enumMap.put(Direction.EAST, new AffineTransformation(null, new Quaternion(new Vector3f(0.0F, 1.0F, 0.0F), 90.0F, true), null, null));
-      enumMap.put(Direction.WEST, new AffineTransformation(null, new Quaternion(new Vector3f(0.0F, 1.0F, 0.0F), -90.0F, true), null, null));
-      enumMap.put(Direction.NORTH, new AffineTransformation(null, new Quaternion(new Vector3f(0.0F, 1.0F, 0.0F), 180.0F, true), null, null));
-      enumMap.put(Direction.UP, new AffineTransformation(null, new Quaternion(new Vector3f(1.0F, 0.0F, 0.0F), -90.0F, true), null, null));
-      enumMap.put(Direction.DOWN, new AffineTransformation(null, new Quaternion(new Vector3f(1.0F, 0.0F, 0.0F), 90.0F, true), null, null));
+      enumMap.put(Direction.EAST, new AffineTransformation(null, new Quaternion(new Vec3f(0.0F, 1.0F, 0.0F), 90.0F, true), null, null));
+      enumMap.put(Direction.WEST, new AffineTransformation(null, new Quaternion(new Vec3f(0.0F, 1.0F, 0.0F), -90.0F, true), null, null));
+      enumMap.put(Direction.NORTH, new AffineTransformation(null, new Quaternion(new Vec3f(0.0F, 1.0F, 0.0F), 180.0F, true), null, null));
+      enumMap.put(Direction.UP, new AffineTransformation(null, new Quaternion(new Vec3f(1.0F, 0.0F, 0.0F), -90.0F, true), null, null));
+      enumMap.put(Direction.DOWN, new AffineTransformation(null, new Quaternion(new Vec3f(1.0F, 0.0F, 0.0F), 90.0F, true), null, null));
    });
    public static final EnumMap<Direction, AffineTransformation> INVERTED_DIRECTION_ROTATIONS = Util.make(Maps.newEnumMap(Direction.class), (enumMap) -> {
       Direction[] var1 = Direction.values();
@@ -42,7 +42,7 @@ public class AffineTransformations {
       AffineTransformation affineTransformation2 = affineTransformation.invert();
       if (affineTransformation2 == null) {
          LOGGER.warn(supplier.get());
-         return new AffineTransformation(null, null, new Vector3f(0.0F, 0.0F, 0.0F), null);
+         return new AffineTransformation(null, null, new Vec3f(0.0F, 0.0F, 0.0F), null);
       } else {
          AffineTransformation affineTransformation3 = INVERTED_DIRECTION_ROTATIONS.get(direction).multiply(affineTransformation2).multiply(DIRECTION_ROTATIONS.get(direction2));
          return setupUvLock(affineTransformation3);

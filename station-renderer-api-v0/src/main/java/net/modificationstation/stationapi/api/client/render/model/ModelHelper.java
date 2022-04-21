@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.client.render.model.json.ModelTran
 import net.modificationstation.stationapi.api.client.render.model.json.Transformation;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.util.math.Direction;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -92,10 +92,10 @@ public abstract class ModelHelper {
 	 * This means you can use values from a vanilla JSON file as inputs to this method.
 	 */
 	private static Transformation makeTransform(float rotationX, float rotationY, @SuppressWarnings("SameParameterValue") float rotationZ, @SuppressWarnings("SameParameterValue") float translationX, float translationY, @SuppressWarnings("SameParameterValue") float translationZ, float scaleX, float scaleY, float scaleZ) {
-		Vector3f translation = new Vector3f(translationX, translationY, translationZ);
+		Vec3f translation = new Vec3f(translationX, translationY, translationZ);
 		translation.scale(0.0625f);
 		translation.clamp(-5.0F, 5.0F);
-		return new Transformation(new Vector3f(rotationX, rotationY, rotationZ), translation, new Vector3f(scaleX, scaleY, scaleZ));
+		return new Transformation(new Vec3f(rotationX, rotationY, rotationZ), translation, new Vec3f(scaleX, scaleY, scaleZ));
 	}
 
 	public static final Transformation TRANSFORM_BLOCK_GUI = makeTransform(30, 225, 0, 0, 0, 0, 0.625f, 0.625f, 0.625f);

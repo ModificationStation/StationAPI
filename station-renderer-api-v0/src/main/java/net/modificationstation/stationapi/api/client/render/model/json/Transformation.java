@@ -6,18 +6,18 @@ import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.json.JsonHelper;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.api.util.math.Quaternion;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 
 import java.lang.reflect.Type;
 
 @Environment(EnvType.CLIENT)
 public class Transformation {
-   public static final Transformation IDENTITY = new Transformation(new Vector3f(), new Vector3f(), new Vector3f(1.0F, 1.0F, 1.0F));
-   public final Vector3f rotation;
-   public final Vector3f translation;
-   public final Vector3f scale;
+   public static final Transformation IDENTITY = new Transformation(new Vec3f(), new Vec3f(), new Vec3f(1.0F, 1.0F, 1.0F));
+   public final Vec3f rotation;
+   public final Vec3f translation;
+   public final Vec3f scale;
 
-   public Transformation(Vector3f rotation, Vector3f translation, Vector3f scale) {
+   public Transformation(Vec3f rotation, Vec3f translation, Vec3f scale) {
       this.rotation = rotation.copy();
       this.translation = translation.copy();
       this.scale = scale.copy();
@@ -60,25 +60,25 @@ public class Transformation {
 
    @Environment(EnvType.CLIENT)
    public static class Deserializer implements JsonDeserializer<Transformation> {
-      private static final Vector3f DEFAULT_ROTATION = new Vector3f(0.0F, 0.0F, 0.0F);
-      private static final Vector3f DEFAULT_TRANSLATION = new Vector3f(0.0F, 0.0F, 0.0F);
-      private static final Vector3f DEFAULT_SCALE = new Vector3f(1.0F, 1.0F, 1.0F);
+      private static final Vec3f DEFAULT_ROTATION = new Vec3f(0.0F, 0.0F, 0.0F);
+      private static final Vec3f DEFAULT_TRANSLATION = new Vec3f(0.0F, 0.0F, 0.0F);
+      private static final Vec3f DEFAULT_SCALE = new Vec3f(1.0F, 1.0F, 1.0F);
 
       protected Deserializer() {
       }
 
       public Transformation deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
          JsonObject jsonObject = jsonElement.getAsJsonObject();
-         Vector3f vector3f = this.parseVector3f(jsonObject, "rotation", DEFAULT_ROTATION);
-         Vector3f vector3f2 = this.parseVector3f(jsonObject, "translation", DEFAULT_TRANSLATION);
+         Vec3f vector3f = this.parseVector3f(jsonObject, "rotation", DEFAULT_ROTATION);
+         Vec3f vector3f2 = this.parseVector3f(jsonObject, "translation", DEFAULT_TRANSLATION);
          vector3f2.scale(0.0625F);
          vector3f2.clamp(-5.0F, 5.0F);
-         Vector3f vector3f3 = this.parseVector3f(jsonObject, "scale", DEFAULT_SCALE);
+         Vec3f vector3f3 = this.parseVector3f(jsonObject, "scale", DEFAULT_SCALE);
          vector3f3.clamp(-4.0F, 4.0F);
          return new Transformation(vector3f, vector3f2, vector3f3);
       }
 
-      private Vector3f parseVector3f(JsonObject json, String key, Vector3f fallback) {
+      private Vec3f parseVector3f(JsonObject json, String key, Vec3f fallback) {
          if (!json.has(key)) {
             return fallback;
          } else {
@@ -92,7 +92,7 @@ public class Transformation {
                   fs[i] = JsonHelper.asFloat(jsonArray.get(i), key + "[" + i + "]");
                }
 
-               return new Vector3f(fs[0], fs[1], fs[2]);
+               return new Vec3f(fs[0], fs[1], fs[2]);
             }
          }
       }

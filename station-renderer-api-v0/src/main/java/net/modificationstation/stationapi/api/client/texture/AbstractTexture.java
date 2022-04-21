@@ -35,7 +35,7 @@ public abstract class AbstractTexture implements AutoCloseable {
 
    public int getGlId() {
       if (this.glId == -1) {
-         this.glId = TextureUtil.generateId();
+         this.glId = TextureUtil.generateTextureId();
       }
 
       return this.glId;
@@ -43,7 +43,7 @@ public abstract class AbstractTexture implements AutoCloseable {
 
    public void clearGlId() {
       if (this.glId != -1) {
-         TextureUtil.deleteId(this.glId);
+         TextureUtil.releaseTextureId(this.glId);
          this.glId = -1;
       }
    }

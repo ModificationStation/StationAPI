@@ -19,6 +19,7 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
 import net.modificationstation.stationapi.api.client.event.render.model.LoadUnbakedModelEvent;
+import net.modificationstation.stationapi.api.client.render.RenderLayer;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
 import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbakedModel;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelVariantMap;
@@ -52,6 +53,7 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.*;
@@ -59,6 +61,14 @@ import static net.modificationstation.stationapi.impl.client.texture.StationRend
 @Environment(EnvType.CLIENT)
 public class ModelLoader {
 
+    public static final List<Identifier> BLOCK_DESTRUCTION_STAGES = IntStream.range(0, 10).mapToObj(stage -> Identifier.of("block/destroy_stage_" + stage)).collect(Collectors.toList());
+    public static final List<Identifier> BLOCK_DESTRUCTION_STAGE_TEXTURES = BLOCK_DESTRUCTION_STAGES.stream().map(id -> Identifier.of("textures/" + id.id + ".png")).collect(Collectors.toList());
+    public static final List<RenderLayer> BLOCK_DESTRUCTION_RENDER_LAYERS = BLOCK_DESTRUCTION_STAGE_TEXTURES.stream().map(RenderLayer::getBlockBreaking).collect(Collectors.toList());
+    private static final Set<SpriteIdentifier> DEFAULT_TEXTURES = Util.make(new HashSet<>(), hashSet -> {
+        for (Identifier identifier : BLOCK_DESTRUCTION_STAGES) {
+            hashSet.add(SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier));
+        }
+    });
     public static final ModelIdentifier MISSING;
     private static final String MISSING_STRING;
     @VisibleForTesting

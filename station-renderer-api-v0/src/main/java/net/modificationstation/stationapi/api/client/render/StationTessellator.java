@@ -6,7 +6,7 @@ import net.minecraft.util.maths.Vec3i;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.util.math.Matrix4f;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.api.util.math.Vector4f;
 import net.modificationstation.stationapi.impl.client.render.StationTessellatorImpl;
 import org.jetbrains.annotations.ApiStatus;
@@ -23,7 +23,7 @@ public interface StationTessellator extends VertexConsumer {
     @ApiStatus.Internal
     Vector4f pos = new Vector4f();
     @ApiStatus.Internal
-    Vector3f normal = new Vector3f();
+    Vec3f normal = new Vec3f();
 
     static StationTessellator get(Tessellator tessellator) {
         return StationTessellatorImpl.get(tessellator);

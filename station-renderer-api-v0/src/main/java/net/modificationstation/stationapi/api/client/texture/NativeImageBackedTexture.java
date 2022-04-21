@@ -15,13 +15,13 @@ public class NativeImageBackedTexture extends AbstractTexture {
 
    public NativeImageBackedTexture(@Nullable NativeImage image) {
       this.image = image;
-      TextureUtil.allocate(this.getGlId(), this.image.getWidth(), this.image.getHeight());
+      TextureUtil.prepareImage(this.getGlId(), this.image.getWidth(), this.image.getHeight());
       this.upload();
    }
 
    public NativeImageBackedTexture(int width, int height, boolean useStb) {
       this.image = new NativeImage(width, height, useStb);
-      TextureUtil.allocate(this.getGlId(), this.image.getWidth(), this.image.getHeight());
+      TextureUtil.prepareImage(this.getGlId(), this.image.getWidth(), this.image.getHeight());
    }
 
    public void load(TexturePack manager) {}

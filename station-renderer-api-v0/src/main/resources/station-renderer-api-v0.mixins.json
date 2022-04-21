@@ -6,13 +6,14 @@
   "mixins": [
     "MixinBlock",
     "MixinBlockBase",
-    "MixinItemBase",
-    "client.MixinTessellator"
+    "MixinItemBase"
   ],
   "client": [
     "client.BlockRendererAccessor",
+    "client.MinecraftAccessor",
     "client.MixinInGame",
     "client.MixinMinecraft",
+    "client.MixinTessellator",
     "client.MixinTextureManager",
     "client.MixinTexturePack",
     "client.MixinZippedTexturePack",

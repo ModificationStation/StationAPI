@@ -22,6 +22,7 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
 import net.modificationstation.stationapi.api.client.colour.item.ItemColours;
+import net.modificationstation.stationapi.api.client.render.OverlayTexture;
 import net.modificationstation.stationapi.api.client.render.StationTessellator;
 import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.item.ItemModels;
@@ -41,6 +42,7 @@ import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.exception.CrashException;
 import net.modificationstation.stationapi.api.util.exception.CrashReport;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
+import net.modificationstation.stationapi.api.util.exception.CrashReportSectionBlockState;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc.LightingCalculatorImpl;
@@ -72,32 +74,46 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     private final ThreadLocal<BlockRenderContext> BLOCK_CONTEXTS = ThreadLocal.withInitial(BlockRenderContext::new);
     private final ThreadLocal<ItemRenderContext> ITEM_CONTEXTS = ThreadLocal.withInitial(() -> new ItemRenderContext(itemColours));
     private final MatrixStack matrices = new MatrixStack();
+    private final BlockRenderer blockRenderer = new BlockRenderer();
 
     @Override
-    public boolean renderWorld(BlockRenderer blockRenderer, BlockState state, BakedModel model, BlockView blockView, int x, int y, int z, int textureOverride) {
-        posAccessor.stationapi$setX(x);
-        posAccessor.stationapi$setY(y);
-        posAccessor.stationapi$setZ(z);
-        long seed = state.getRenderingSeed(pos);
-        Tessellator t = Tessellator.INSTANCE;
-        StationTessellator st = StationTessellator.get(t);
-        if (state.getBlock().getRenderType() == 4)
-            return renderFluid(blockRenderer, blockView, pos, st, state);
-        model = Objects.requireNonNull(model.getOverrides().apply(model, state, blockView, pos, (int) seed));
+    public boolean renderBlock(BlockState state, TilePos pos, BlockView world, MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random) {
+        try {
+//            BlockRenderType blockRenderType = state.getRenderType();
+//            if (blockRenderType != BlockRenderType.MODEL) {
+//                return false;
+//            }
+            return render(world, StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state), state, pos, matrices, vertexConsumer, cull, random, state.getRenderingSeed(pos), OverlayTexture.DEFAULT_UV);
+        }
+        catch (Throwable throwable) {
+            CrashReport crashReport = CrashReport.create(throwable, "Tesselating block in world");
+            CrashReportSection crashReportSection = crashReport.addElement("Block being tesselated");
+            CrashReportSectionBlockState.addBlockInfo(crashReportSection, world, pos, state);
+            throw new CrashException(crashReport);
+        }
+    }
+
+    @Override
+    public boolean render(BlockView world, BakedModel model, BlockState state, TilePos pos, MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random, long seed, int overlay) {
+        if (state.getBlock().getRenderType() == 4) {
+            ((BlockRendererAccessor) blockRenderer).stationapi$setBlockView(world);
+            return renderFluid(blockRenderer, world, pos, vertexConsumer, state);
+        }
+        model = Objects.requireNonNull(model.getOverrides().apply(model, state, world, pos, (int) seed));
         matrices.push();
-        matrices.translate(x, y, z);
+        matrices.translate(pos.x, pos.y, pos.z);
         boolean rendered = false;
         if (!model.isVanillaAdapter()) {
-            rendered = BLOCK_CONTEXTS.get().render(blockView, model, state, pos, matrices, st, random, seed, -1);
+            rendered = BLOCK_CONTEXTS.get().render(world, model, state, pos, matrices, vertexConsumer, random, seed, -1);
         } else {
             BlockBase block = state.getBlock();
-            if (textureOverride >= 0) {
-                matrices.pop();
-                return true;
-            }
+//            if (textureOverride >= 0) {
+//                matrices.pop();
+//                return true;
+//            }
             light.initialize(
                     block,
-                    blockView, x, y, z,
+                    world, pos.x, pos.y, pos.z,
                     Minecraft.isSmoothLightingEnabled() && model.useAmbientOcclusion()
             );
             ImmutableList<BakedQuad> qs;
@@ -107,12 +123,12 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                 Direction face = DIRECTIONS[quadSet];
                 random.setSeed(seed);
                 qs = model.getQuads(state, face, random);
-                if (!qs.isEmpty() && (face == null || block.isSideRendered(blockView, x + face.vector.x, y + face.vector.y, z + face.vector.z, quadSet))) {
+                if (!qs.isEmpty() && (face == null || block.isSideRendered(world, pos.x + face.vector.x, pos.y + face.vector.y, pos.z + face.vector.z, quadSet))) {
                     rendered = true;
                     for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
                         q = qs.get(j);
                         light.calculateForQuad(q);
-                        renderQuad(blockView, state, pos, st, matrices.peek(), q, qlight, -1, -1, -1, -1, -1);
+                        renderQuad(world, state, pos, vertexConsumer, matrices.peek(), q, qlight, -1);
                     }
                 }
             }
@@ -121,7 +137,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         return rendered;
     }
 
-    private void renderQuad(BlockView world, BlockState state, TilePos pos, VertexConsumer vertexConsumer, MatrixStack.Entry matrixEntry, BakedQuad quad, float[] brightness, int light0, int light1, int light2, int light3, int overlay) {
+    private void renderQuad(BlockView world, BlockState state, TilePos pos, VertexConsumer vertexConsumer, MatrixStack.Entry matrixEntry, BakedQuad quad, float[] brightness, int overlay) {
         float h;
         float g;
         float f;
@@ -135,7 +151,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
             g = 1.0f;
             h = 1.0f;
         }
-        vertexConsumer.quad(matrixEntry, quad, brightness, f, g, h, new int[]{light0, light1, light2, light3}, overlay, true);
+        vertexConsumer.quad(matrixEntry, quad, brightness, f, g, h, new int[]{0, 0, 0, 0}, overlay, true);
     }
 
     private boolean renderFluid(BlockRenderer blockRenderer, BlockView world, TilePos pos, VertexConsumer vertexConsumer, BlockState state) {
@@ -205,10 +221,10 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                 float r = var15 * var38 * var7;
                 float g = var15 * var38 * var8;
                 float b = var15 * var38 * var9;
-                vertex(vertexConsumer, x, y + var24, z, r, g, b, (float) (var32 - uc - us), (float) (var34 - vc + vs), -1);
-                vertex(vertexConsumer, x, y + var25, z + 1, r, g, b, (float) (var32 - uc + us), (float) (var34 + vc + vs), -1);
-                vertex(vertexConsumer, x + 1, y + var26, z + 1, r, g, b, (float) (var32 + uc + us), (float) (var34 + vc - vs), -1);
-                vertex(vertexConsumer, x + 1, y + var27, z, r, g, b, (float) (var32 + uc - us), (float) (var34 - vc - vs), -1);
+                vertex(vertexConsumer, x, y + var24, z, r, g, b, (float) (var32 - uc - us), (float) (var34 - vc + vs));
+                vertex(vertexConsumer, x, y + var25, z + 1, r, g, b, (float) (var32 - uc + us), (float) (var34 + vc + vs));
+                vertex(vertexConsumer, x + 1, y + var26, z + 1, r, g, b, (float) (var32 + uc + us), (float) (var34 + vc - vs));
+                vertex(vertexConsumer, x + 1, y + var27, z, r, g, b, (float) (var32 + uc - us), (float) (var34 - vc - vs));
             }
 
             if (blockRendererAccessor.getRenderAllSides() || var11) {
@@ -216,10 +232,10 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                 float colour = var14 * var52;
                 Sprite sprite = Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite();
                 blockRenderer.renderBottomFace(block, x, y, z, block.getTextureForSide(0));
-                vertex(vertexConsumer, x, y, z + 1, colour, colour, colour, sprite.getMinU(), sprite.getMaxV(), -1);
-                vertex(vertexConsumer, x, y, z, colour, colour, colour, sprite.getMinU(), sprite.getMinV(), -1);
-                vertex(vertexConsumer, x + 1, y, z, colour, colour, colour, sprite.getMaxU(), sprite.getMinV(), -1);
-                vertex(vertexConsumer, x + 1, y, z + 1, colour, colour, colour, sprite.getMaxU(), sprite.getMaxV(), -1);
+                vertex(vertexConsumer, x, y, z + 1, colour, colour, colour, sprite.getMinU(), sprite.getMaxV());
+                vertex(vertexConsumer, x, y, z, colour, colour, colour, sprite.getMinU(), sprite.getMinV());
+                vertex(vertexConsumer, x + 1, y, z, colour, colour, colour, sprite.getMaxU(), sprite.getMinV());
+                vertex(vertexConsumer, x + 1, y, z + 1, colour, colour, colour, sprite.getMaxU(), sprite.getMaxV());
                 var13 = true;
             }
 
@@ -296,10 +312,10 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                     float r = var15 * var51 * var7;
                     float g = var15 * var51 * var8;
                     float b = var15 * var51 * var9;
-                    vertex(vertexConsumer, var59, (float)y + var35, var60, r, g, b, (float) var41, (float) var45, -1);
-                    vertex(vertexConsumer, var39, (float)y + var58, var40, r, g, b, (float) var43, (float) var47, -1);
-                    vertex(vertexConsumer, var39, y, var40, r, g, b, (float) var43, (float) var49, -1);
-                    vertex(vertexConsumer, var59, y, var60, r, g, b, (float) var41, (float) var49, -1);
+                    vertex(vertexConsumer, var59, (float)y + var35, var60, r, g, b, (float) var41, (float) var45);
+                    vertex(vertexConsumer, var39, (float)y + var58, var40, r, g, b, (float) var43, (float) var47);
+                    vertex(vertexConsumer, var39, y, var40, r, g, b, (float) var43, (float) var49);
+                    vertex(vertexConsumer, var59, y, var60, r, g, b, (float) var41, (float) var49);
                 }
             }
 
@@ -309,8 +325,9 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         }
     }
 
-    private void vertex(VertexConsumer vertexConsumer, double x, double y, double z, float red, float green, float blue, float u, float v, int light) {
-        vertexConsumer.vertex(x, y, z).colour(red, green, blue, 1.0f).texture(u, v).light(light).normal(0.0f, 1.0f, 0.0f).next();
+    private void vertex(VertexConsumer vertexConsumer, double x, double y, double z, float red, float green, float blue, float u, float v) {
+//        vertexConsumer.vertex(x, y, z).colour(red, green, blue, 1.0f).texture(u, v).light(0).normal(0.0f, 1.0f, 0.0f).next();
+        vertexConsumer.vertex(x, y, z).texture(u, v).colour(red, green, blue, 1.0f).normal(0.0f, 1.0f, 0.0f).next();
     }
 
     private float redI2F(int colour) {

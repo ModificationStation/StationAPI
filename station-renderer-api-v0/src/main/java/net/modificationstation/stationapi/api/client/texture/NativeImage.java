@@ -462,22 +462,21 @@ implements AutoCloseable {
         }
     }
 
-    @Environment(EnvType.CLIENT)
-    public enum GLFormat {
-        ABGR(6408),
-        BGR(6407),
-        LUMINANCE_ALPHA(6410),
-        LUMINANCE(6409),
-        INTENSITY(32841);
+    @Environment(value=EnvType.CLIENT)
+    public enum InternalFormat {
+        RGBA(6408),
+        RGB(6407),
+        RG(33319),
+        RED(6403);
 
-        private final int glConstant;
+        private final int value;
 
-        GLFormat(int glConstant) {
-            this.glConstant = glConstant;
+        InternalFormat(int value) {
+            this.value = value;
         }
 
-        int getGlConstant() {
-            return this.glConstant;
+        public int getValue() {
+            return this.value;
         }
     }
 }

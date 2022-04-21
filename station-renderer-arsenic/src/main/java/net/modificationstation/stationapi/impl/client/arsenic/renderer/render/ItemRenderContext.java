@@ -13,7 +13,7 @@ import net.modificationstation.stationapi.api.client.render.model.json.ModelTran
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Matrix4f;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.ArsenicRenderer;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.RenderMaterialImpl;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.helper.ColourHelper;
@@ -40,7 +40,7 @@ public class ItemRenderContext extends AbstractRenderContext {
     private final ItemColours colorMap;
     private final Random random = new Random();
     private final Consumer<BakedModel> fallbackConsumer;
-    private final Vector3f normalVec = new Vector3f();
+    private final Vec3f normalVec = new Vec3f();
 
     private MatrixStack matrixStack;
     private Matrix4f matrix;

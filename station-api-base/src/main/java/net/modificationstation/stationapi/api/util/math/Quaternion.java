@@ -14,7 +14,7 @@ public final class Quaternion {
       this.w = w;
    }
 
-   public Quaternion(Vector3f axis, float rotationAngle, boolean degrees) {
+   public Quaternion(Vec3f axis, float rotationAngle, boolean degrees) {
       if (degrees) {
          rotationAngle *= 0.017453292F;
       }

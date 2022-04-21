@@ -4,8 +4,8 @@ import net.modificationstation.stationapi.api.client.render.RenderContext;
 import net.modificationstation.stationapi.api.client.render.material.RenderMaterial;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.api.util.math.Vector2f;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
 
 /**
  * Specialized {@link MutableQuadView} obtained via {@link MeshBuilder#getEmitter()}
@@ -39,13 +39,13 @@ public interface QuadEmitter extends MutableQuadView {
 	QuadEmitter pos(int vertexIndex, float x, float y, float z);
 
 	@Override
-	default QuadEmitter pos(int vertexIndex, Vector3f vec) {
+	default QuadEmitter pos(int vertexIndex, Vec3f vec) {
 		MutableQuadView.super.pos(vertexIndex, vec);
 		return this;
 	}
 
 	@Override
-	default QuadEmitter normal(int vertexIndex, Vector3f vec) {
+	default QuadEmitter normal(int vertexIndex, Vec3f vec) {
 		MutableQuadView.super.normal(vertexIndex, vec);
 		return this;
 	}

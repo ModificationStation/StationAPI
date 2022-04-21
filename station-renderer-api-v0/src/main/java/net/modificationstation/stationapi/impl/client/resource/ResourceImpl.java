@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.impl.client.resource;
 
+import lombok.Getter;
 import net.modificationstation.stationapi.api.client.resource.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,10 +13,13 @@ public class ResourceImpl extends InputStream implements Resource {
 
     private final InputStream resource;
     private final InputStream meta;
+    @Getter
+    private final String resourcePackName;
 
-    public ResourceImpl(InputStream resource, @Nullable InputStream meta) {
+    public ResourceImpl(InputStream resource, @Nullable InputStream meta, String resourcePackName) {
         this.resource = resource;
         this.meta = meta;
+        this.resourcePackName = resourcePackName;
     }
 
     @Override

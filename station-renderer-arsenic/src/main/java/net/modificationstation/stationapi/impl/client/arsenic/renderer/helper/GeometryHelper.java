@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.client.arsenic.renderer.helper;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadView;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.util.math.Direction;
-import net.modificationstation.stationapi.api.util.math.Vector3f;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 import org.jetbrains.annotations.NotNull;
 
 import static net.modificationstation.stationapi.api.util.math.MathHelper.approximatelyEquals;
@@ -170,7 +170,7 @@ public abstract class GeometryHelper {
 	 * <p>Derived from the quad face normal and expects convex quads with all points co-planar.
 	 */
 	public static Direction lightFace(QuadView quad) {
-		final Vector3f normal = quad.faceNormal();
+		final Vec3f normal = quad.faceNormal();
 		return switch (GeometryHelper.longestAxis(normal)) {
 			case X -> normal.getX() > 0 ? Direction.EAST : Direction.WEST;
 			case Y -> normal.getY() > 0 ? Direction.UP : Direction.DOWN;
@@ -199,7 +199,7 @@ public abstract class GeometryHelper {
 	/**
 	 * @see #longestAxis(float, float, float)
 	 */
-	public static Direction.Axis longestAxis(Vector3f vec) {
+	public static Direction.Axis longestAxis(Vec3f vec) {
 		return longestAxis(vec.getX(), vec.getY(), vec.getZ());
 	}
 

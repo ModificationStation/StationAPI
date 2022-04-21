@@ -96,4 +96,16 @@ public class MathHelper {
         i ^= i >>> 16;
         return i;
     }
+
+    /**
+     * Returns a value farther than or as far as {@code value} from zero that
+     * is a multiple of {@code divisor}.
+     */
+    public static int roundUpToMultiple(int value, int divisor) {
+        return MathHelper.ceilDiv(value, divisor) * divisor;
+    }
+
+    public static int ceilDiv(int a, int b) {
+        return -Math.floorDiv(-a, b);
+    }
 }

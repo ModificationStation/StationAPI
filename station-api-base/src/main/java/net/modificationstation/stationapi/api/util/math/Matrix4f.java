@@ -118,6 +118,73 @@ public final class Matrix4f {
         this.a33 = source.a33;
     }
 
+    /**
+     * Writes this matrix to the buffer in column-major order.
+     *
+     * @see #writeRowMajor(FloatBuffer)
+     * @see #write(FloatBuffer, boolean)
+     */
+    public void writeColumnMajor(FloatBuffer buf) {
+        buf.put(Matrix4f.pack(0, 0), this.a00);
+        buf.put(Matrix4f.pack(0, 1), this.a01);
+        buf.put(Matrix4f.pack(0, 2), this.a02);
+        buf.put(Matrix4f.pack(0, 3), this.a03);
+        buf.put(Matrix4f.pack(1, 0), this.a10);
+        buf.put(Matrix4f.pack(1, 1), this.a11);
+        buf.put(Matrix4f.pack(1, 2), this.a12);
+        buf.put(Matrix4f.pack(1, 3), this.a13);
+        buf.put(Matrix4f.pack(2, 0), this.a20);
+        buf.put(Matrix4f.pack(2, 1), this.a21);
+        buf.put(Matrix4f.pack(2, 2), this.a22);
+        buf.put(Matrix4f.pack(2, 3), this.a23);
+        buf.put(Matrix4f.pack(3, 0), this.a30);
+        buf.put(Matrix4f.pack(3, 1), this.a31);
+        buf.put(Matrix4f.pack(3, 2), this.a32);
+        buf.put(Matrix4f.pack(3, 3), this.a33);
+    }
+
+    /**
+     * Writes this matrix to the buffer in row-major order.
+     *
+     * @see #writeColumnMajor(FloatBuffer)
+     * @see #write(FloatBuffer, boolean)
+     */
+    public void writeRowMajor(FloatBuffer buf) {
+        buf.put(Matrix4f.pack(0, 0), this.a00);
+        buf.put(Matrix4f.pack(1, 0), this.a01);
+        buf.put(Matrix4f.pack(2, 0), this.a02);
+        buf.put(Matrix4f.pack(3, 0), this.a03);
+        buf.put(Matrix4f.pack(0, 1), this.a10);
+        buf.put(Matrix4f.pack(1, 1), this.a11);
+        buf.put(Matrix4f.pack(2, 1), this.a12);
+        buf.put(Matrix4f.pack(3, 1), this.a13);
+        buf.put(Matrix4f.pack(0, 2), this.a20);
+        buf.put(Matrix4f.pack(1, 2), this.a21);
+        buf.put(Matrix4f.pack(2, 2), this.a22);
+        buf.put(Matrix4f.pack(3, 2), this.a23);
+        buf.put(Matrix4f.pack(0, 3), this.a30);
+        buf.put(Matrix4f.pack(1, 3), this.a31);
+        buf.put(Matrix4f.pack(2, 3), this.a32);
+        buf.put(Matrix4f.pack(3, 3), this.a33);
+    }
+
+    /**
+     * Writes this matrix to the buffer.
+     *
+     * @see #writeRowMajor(FloatBuffer)
+     * @see #writeColumnMajor(FloatBuffer)
+     *
+     * @param rowMajor {@code true} to write in row-major order; {@code false} to write in
+     * column-major order
+     */
+    public void write(FloatBuffer buf, boolean rowMajor) {
+        if (rowMajor) {
+            this.writeRowMajor(buf);
+        } else {
+            this.writeColumnMajor(buf);
+        }
+    }
+
     private static int pack(int x, int y) {
         return y * 4 + x;
     }
@@ -357,7 +424,22 @@ public final class Matrix4f {
         return matrix4f;
     }
 
-    public void addToLastColumn(Vector3f vector) {
+    public static Matrix4f projectionMatrix(float left, float right, float bottom, float top, float nearPlane, float farPlane) {
+        Matrix4f matrix4f = new Matrix4f();
+        float f = right - left;
+        float g = bottom - top;
+        float h = farPlane - nearPlane;
+        matrix4f.a00 = 2.0f / f;
+        matrix4f.a11 = 2.0f / g;
+        matrix4f.a22 = -2.0f / h;
+        matrix4f.a03 = -(right + left) / f;
+        matrix4f.a13 = -(bottom + top) / g;
+        matrix4f.a23 = -(farPlane + nearPlane) / h;
+        matrix4f.a33 = 1.0f;
+        return matrix4f;
+    }
+
+    public void addToLastColumn(Vec3f vector) {
         this.a03 += vector.getX();
         this.a13 += vector.getY();
         this.a23 += vector.getZ();

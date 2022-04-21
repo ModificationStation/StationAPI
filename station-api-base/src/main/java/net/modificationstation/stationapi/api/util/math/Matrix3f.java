@@ -4,6 +4,8 @@ import org.apache.commons.lang3.tuple.Triple;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 import uk.co.benjiweber.expressions.tuple.Tuple;
 
+import java.nio.FloatBuffer;
+
 public final class Matrix3f {
     private static final float THREE_PLUS_TWO_SQRT_TWO = 3.0F + 2.0F * (float)Math.sqrt(2.0D);
     private static final float COS_PI_OVER_EIGHT = (float)Math.cos(0.39269908169872414D);
@@ -203,7 +205,7 @@ public final class Matrix3f {
         this.a21 = f;
     }
 
-    public Triple<Quaternion, Vector3f, Quaternion> decomposeLinearTransformation() {
+    public Triple<Quaternion, Vec3f, Quaternion> decomposeLinearTransformation() {
         Quaternion quaternion = Quaternion.IDENTITY.copy();
         Quaternion quaternion2 = Quaternion.IDENTITY.copy();
         Matrix3f matrix3f = this.copy();
@@ -271,7 +273,7 @@ public final class Matrix3f {
         matrix3f5.multiply(matrix3f4);
         f = 1.0F / f;
         quaternion.scale((float)Math.sqrt(f));
-        Vector3f vector3f = new Vector3f(matrix3f5.a00 * f, matrix3f5.a11 * f, matrix3f5.a22 * f);
+        Vec3f vector3f = new Vec3f(matrix3f5.a00 * f, matrix3f5.a11 * f, matrix3f5.a22 * f);
         return Triple.of(quaternion, vector3f, quaternion2);
     }
 
@@ -299,6 +301,10 @@ public final class Matrix3f {
         return i;
     }
 
+    private static int pack(int x, int y) {
+        return y * 3 + x;
+    }
+
     public void load(Matrix3f source) {
         this.a00 = source.a00;
         this.a01 = source.a01;
@@ -309,6 +315,59 @@ public final class Matrix3f {
         this.a20 = source.a20;
         this.a21 = source.a21;
         this.a22 = source.a22;
+    }
+
+    /**
+     * Writes this matrix to the buffer in column-major order.
+     *
+     * @see #writeRowMajor(FloatBuffer)
+     * @see #write(FloatBuffer, boolean)
+     */
+    public void writeColumnMajor(FloatBuffer buf) {
+        buf.put(Matrix3f.pack(0, 0), this.a00);
+        buf.put(Matrix3f.pack(0, 1), this.a01);
+        buf.put(Matrix3f.pack(0, 2), this.a02);
+        buf.put(Matrix3f.pack(1, 0), this.a10);
+        buf.put(Matrix3f.pack(1, 1), this.a11);
+        buf.put(Matrix3f.pack(1, 2), this.a12);
+        buf.put(Matrix3f.pack(2, 0), this.a20);
+        buf.put(Matrix3f.pack(2, 1), this.a21);
+        buf.put(Matrix3f.pack(2, 2), this.a22);
+    }
+
+    /**
+     * Writes this matrix to the buffer in row-major order.
+     *
+     * @see #writeColumnMajor(FloatBuffer)
+     * @see #write(FloatBuffer, boolean)
+     */
+    public void writeRowMajor(FloatBuffer buf) {
+        buf.put(Matrix3f.pack(0, 0), this.a00);
+        buf.put(Matrix3f.pack(1, 0), this.a01);
+        buf.put(Matrix3f.pack(2, 0), this.a02);
+        buf.put(Matrix3f.pack(0, 1), this.a10);
+        buf.put(Matrix3f.pack(1, 1), this.a11);
+        buf.put(Matrix3f.pack(2, 1), this.a12);
+        buf.put(Matrix3f.pack(0, 2), this.a20);
+        buf.put(Matrix3f.pack(1, 2), this.a21);
+        buf.put(Matrix3f.pack(2, 2), this.a22);
+    }
+
+    /**
+     * Writes this matrix to the buffer.
+     *
+     * @see #writeRowMajor(FloatBuffer)
+     * @see #writeColumnMajor(FloatBuffer)
+     *
+     * @param rowMajor {@code true} to write in row-major order; {@code false} to write in
+     * column-major order
+     */
+    public void write(FloatBuffer buf, boolean rowMajor) {
+        if (rowMajor) {
+            this.writeRowMajor(buf);
+        } else {
+            this.writeColumnMajor(buf);
+        }
     }
 
     public String toString() {

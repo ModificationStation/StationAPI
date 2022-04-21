@@ -12,12 +12,12 @@ public class MatrixStack {
 
     public void translate(double x, double y, double z) {
         MatrixStack.Entry entry = this.stack.get(n);
-        entry.modelMatrix.multiply(Matrix4f.translateTmp((float)x, (float)y, (float)z));
+        entry.positionMatrix.multiply(Matrix4f.translateTmp((float)x, (float)y, (float)z));
     }
 
     public void scale(float x, float y, float z) {
         MatrixStack.Entry entry = this.stack.get(n);
-        entry.modelMatrix.multiply(Matrix4f.scaleTmp(x, y, z));
+        entry.positionMatrix.multiply(Matrix4f.scaleTmp(x, y, z));
         if (x == y && y == z) {
             if (x > 0.0F) {
                 return;
@@ -35,7 +35,7 @@ public class MatrixStack {
 
     public void multiply(Quaternion quaternion) {
         MatrixStack.Entry entry = this.stack.get(n);
-        entry.modelMatrix.multiply(quaternion);
+        entry.positionMatrix.multiply(quaternion);
         entry.normalMatrix.multiply(quaternion);
     }
 
@@ -46,7 +46,7 @@ public class MatrixStack {
             stack.add(new Entry(Util.make(new Matrix4f(), Matrix4f::loadIdentity), Util.make(new Matrix3f(), Matrix3f::loadIdentity)));
         }
         Entry nextEntry = stack.get(n);
-        nextEntry.modelMatrix.load(entry.modelMatrix);
+        nextEntry.positionMatrix.load(entry.positionMatrix);
         nextEntry.normalMatrix.load(entry.normalMatrix);
     }
 
@@ -62,17 +62,23 @@ public class MatrixStack {
         return this.stack.size() == 1;
     }
 
+    public void loadIdentity() {
+        Entry entry = this.stack.get(n);
+        entry.positionMatrix.loadIdentity();
+        entry.normalMatrix.loadIdentity();
+    }
+
     public static final class Entry {
-        private final Matrix4f modelMatrix;
+        private final Matrix4f positionMatrix;
         private final Matrix3f normalMatrix;
 
         private Entry(Matrix4f matrix4f, Matrix3f matrix3f) {
-            this.modelMatrix = matrix4f;
+            this.positionMatrix = matrix4f;
             this.normalMatrix = matrix3f;
         }
 
         public Matrix4f getPositionMatrix() {
-            return this.modelMatrix;
+            return this.positionMatrix;
         }
 
         public Matrix3f getNormalMatrix() {

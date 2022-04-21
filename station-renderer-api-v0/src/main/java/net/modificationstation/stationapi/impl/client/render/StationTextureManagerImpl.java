@@ -21,6 +21,7 @@ public final class StationTextureManagerImpl implements StationTextureManager {
     private final Map<Identifier, AbstractTexture> textures = new HashMap<>();
     private final Set<TextureTickListener> tickListeners = new HashSet<>();
     private final Set<TextureTickListener> tickListenersView = Collections.unmodifiableSet(tickListeners);
+    private final Map<String, Integer> dynamicIdCounters = new HashMap<>();
 
     public StationTextureManagerImpl(TextureManager textureManager) {
         textureManagerAccessor = (TextureManagerAccessor) textureManager;
@@ -92,6 +93,30 @@ public final class StationTextureManagerImpl implements StationTextureManager {
     @Override
     public Set<TextureTickListener> getTickListeners() {
         return tickListenersView;
+    }
+
+    @Override
+    public AbstractTexture getTexture(Identifier id) {
+        AbstractTexture abstractTexture = this.textures.get(id);
+        if (abstractTexture == null) {
+            abstractTexture = new ResourceTexture(id);
+            this.registerTexture(id, abstractTexture);
+        }
+        return abstractTexture;
+    }
+
+    @Override
+    public Identifier registerDynamicTexture(String prefix, NativeImageBackedTexture texture) {
+        Integer integer = this.dynamicIdCounters.get(prefix);
+        if (integer == null) {
+            integer = 1;
+        } else {
+            integer = integer + 1;
+        }
+        this.dynamicIdCounters.put(prefix, integer);
+        Identifier identifier = Identifier.of(String.format(Locale.ROOT, "dynamic/%s_%d", prefix, integer));
+        this.registerTexture(identifier, texture);
+        return identifier;
     }
 
     public static StationTextureManagerImpl get(TextureManager textureManager) {

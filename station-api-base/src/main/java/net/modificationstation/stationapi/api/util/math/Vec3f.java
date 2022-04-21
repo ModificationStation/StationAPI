@@ -1,29 +1,33 @@
 package net.modificationstation.stationapi.api.util.math;
 
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
-import net.minecraft.util.maths.Vec3f;
 
-public final class Vector3f {
-   public static Vector3f NEGATIVE_X = new Vector3f(-1.0F, 0.0F, 0.0F);
-   public static Vector3f POSITIVE_X = new Vector3f(1.0F, 0.0F, 0.0F);
-   public static Vector3f NEGATIVE_Y = new Vector3f(0.0F, -1.0F, 0.0F);
-   public static Vector3f POSITIVE_Y = new Vector3f(0.0F, 1.0F, 0.0F);
-   public static Vector3f NEGATIVE_Z = new Vector3f(0.0F, 0.0F, -1.0F);
-   public static Vector3f POSITIVE_Z = new Vector3f(0.0F, 0.0F, 1.0F);
+public final class Vec3f {
+   public static Vec3f NEGATIVE_X = new Vec3f(-1.0F, 0.0F, 0.0F);
+   public static Vec3f POSITIVE_X = new Vec3f(1.0F, 0.0F, 0.0F);
+   public static Vec3f NEGATIVE_Y = new Vec3f(0.0F, -1.0F, 0.0F);
+   public static Vec3f POSITIVE_Y = new Vec3f(0.0F, 1.0F, 0.0F);
+   public static Vec3f NEGATIVE_Z = new Vec3f(0.0F, 0.0F, -1.0F);
+   public static Vec3f POSITIVE_Z = new Vec3f(0.0F, 0.0F, 1.0F);
+   public static Vec3f ZERO = new Vec3f(0.0F, 0.0F, 0.0F);
    private float x;
    private float y;
    private float z;
 
-   public Vector3f() {
+   public Vec3f() {
    }
 
-   public Vector3f(float x, float y, float z) {
+   public Vec3f(float x, float y, float z) {
       this.x = x;
       this.y = y;
       this.z = z;
    }
 
-   public Vector3f(Vec3f other) {
+   public Vec3f(Vector4f vec) {
+      this(vec.getX(), vec.getY(), vec.getZ());
+   }
+
+   public Vec3f(net.minecraft.util.maths.Vec3f other) {
       this((float)other.x, (float)other.y, (float)other.z);
    }
 
@@ -31,7 +35,7 @@ public final class Vector3f {
       if (this == o) {
          return true;
       } else if (o != null && this.getClass() == o.getClass()) {
-         Vector3f vector3f = (Vector3f)o;
+         Vec3f vector3f = (Vec3f)o;
          if (Float.compare(vector3f.x, this.x) != 0) {
             return false;
          } else if (Float.compare(vector3f.y, this.y) != 0) {
@@ -93,19 +97,19 @@ public final class Vector3f {
       this.z += z;
    }
 
-   public void add(Vector3f vector) {
+   public void add(Vec3f vector) {
       this.x += vector.x;
       this.y += vector.y;
       this.z += vector.z;
    }
 
-   public void subtract(Vector3f other) {
+   public void subtract(Vec3f other) {
       this.x -= other.x;
       this.y -= other.y;
       this.z -= other.z;
    }
 
-   public float dot(Vector3f other) {
+   public float dot(Vec3f other) {
       return this.x * other.x + this.y * other.y + this.z * other.z;
    }
 
@@ -122,7 +126,7 @@ public final class Vector3f {
       }
    }
 
-   public void cross(Vector3f vector) {
+   public void cross(Vec3f vector) {
       float f = this.x;
       float g = this.y;
       float h = this.z;
@@ -152,7 +156,7 @@ public final class Vector3f {
       this.set(quaternion.getX(), quaternion.getY(), quaternion.getZ());
    }
 
-   public void lerp(Vector3f vector, float delta) {
+   public void lerp(Vec3f vector, float delta) {
       float f = 1.0F - delta;
       this.x = this.x * f + vector.x * delta;
       this.y = this.y * f + vector.y * delta;
@@ -167,8 +171,8 @@ public final class Vector3f {
       return new Quaternion(this, angle, true);
    }
 
-   public Vector3f copy() {
-      return new Vector3f(this.x, this.y, this.z);
+   public Vec3f copy() {
+      return new Vec3f(this.x, this.y, this.z);
    }
 
    public void modify(Float2FloatFunction function) {

@@ -1,19 +1,18 @@
 package net.modificationstation.stationapi.api.client.resource;
 
 import com.google.gson.JsonObject;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
 import net.modificationstation.stationapi.api.util.json.JsonHelper;
 import net.modificationstation.stationapi.impl.client.resource.ResourceMetadataReader;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-public interface Resource extends AutoCloseable {
+public interface Resource extends Closeable {
 
     InputStream getInputStream();
 
@@ -21,10 +20,15 @@ public interface Resource extends AutoCloseable {
         return Optional.empty();
     }
 
+    default String getResourcePackName() {
+        //noinspection deprecation
+        return ((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack.name;
+    }
+
     @Nullable
     default <T> T getMetadata(ResourceMetadataReader<T> reader) {
         Optional<InputStream> meta = getMeta();
-        if (!meta.isPresent())
+        if (meta.isEmpty())
             return null;
         BufferedReader bufferedReader = null;
         JsonObject mcmeta;

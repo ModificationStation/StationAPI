@@ -33,4 +33,14 @@ public interface ColourResolver {
 
         int getColour(Biome biome, double x, double z);
     }
+
+    interface ByBlockCoordinates extends ColourResolver {
+
+        @Override
+        default int getColour(BlockView world, double x, double y, double z) {
+            return getColour(world, MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z));
+        }
+
+        int getColour(BlockView world, int x, int y, int z);
+    }
 }
