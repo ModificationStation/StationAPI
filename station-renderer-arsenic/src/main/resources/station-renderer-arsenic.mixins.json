@@ -6,8 +6,6 @@
   "plugin": "net.modificationstation.stationapi.impl.client.arsenic.ArsenicMixinConfigPlugin",
   "mixins": [
     "TilePosAccessor",
-    "client.class_66Accessor",
-    "client.RenderListAccessor"
   ],
   "client": [
     "client.BlockRendererAccessor",
@@ -25,7 +23,10 @@
     "client.MixinTextureManager",
     "client.MixinWorldRenderer",
     "client.ParticleBaseAccessor",
-    "client.TessellatorAccessor"
+    "client.TessellatorAccessor",
+    "client.class_66Accessor",
+    "client.MixinGameRenderer",
+    "client.RenderListAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
