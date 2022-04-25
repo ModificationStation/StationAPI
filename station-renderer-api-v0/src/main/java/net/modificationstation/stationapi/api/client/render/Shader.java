@@ -70,6 +70,10 @@ public class Shader implements GlShader, AutoCloseable {
 	@Nullable
 	public final GlUniform light1Direction;
 	@Nullable
+	public final GlUniform fogMode;
+	@Nullable
+	public final GlUniform fogDensity;
+	@Nullable
 	public final GlUniform fogStart;
 	@Nullable
 	public final GlUniform fogEnd;
@@ -185,6 +189,8 @@ public class Shader implements GlShader, AutoCloseable {
 		this.colorModulator = this.getUniform("ColorModulator");
 		this.light0Direction = this.getUniform("Light0_Direction");
 		this.light1Direction = this.getUniform("Light1_Direction");
+		this.fogMode = this.getUniform("FogMode");
+		this.fogDensity = this.getUniform("FogDensity");
 		this.fogStart = this.getUniform("FogStart");
 		this.fogEnd = this.getUniform("FogEnd");
 		this.fogColor = this.getUniform("FogColor");

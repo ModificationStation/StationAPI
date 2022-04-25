@@ -103,6 +103,14 @@ public abstract class MixinWorldRenderer {
             shader.colorModulator.set(RenderSystem.getShaderColor());
         }
 
+        if (shader.fogMode != null) {
+            shader.fogMode.set(RenderSystem.getShaderFogMode().getId());
+        }
+
+        if (shader.fogDensity != null) {
+            shader.fogDensity.set(RenderSystem.getShaderFogDensity());
+        }
+
         if (shader.fogStart != null) {
             shader.fogStart.set(RenderSystem.getShaderFogStart());
         }

@@ -140,6 +140,12 @@ implements AutoCloseable {
         if (shader.colorModulator != null) {
             shader.colorModulator.set(RenderSystem.getShaderColor());
         }
+        if (shader.fogMode != null) {
+            shader.fogMode.set(RenderSystem.getShaderFogMode().getId());
+        }
+        if (shader.fogDensity != null) {
+            shader.fogDensity.set(RenderSystem.getShaderFogDensity());
+        }
         if (shader.fogStart != null) {
             shader.fogStart.set(RenderSystem.getShaderFogStart());
         }
@@ -159,8 +165,6 @@ implements AutoCloseable {
             shader.gameTime.set(RenderSystem.getShaderGameTime());
         }
         if (shader.screenSize != null) {
-//            Window window = MinecraftClient.getInstance().getWindow();
-//            shader.screenSize.set((float)window.getFramebufferWidth(), (float)window.getFramebufferHeight());
             shader.screenSize.set((float) Display.getWidth(), (float) Display.getHeight());
         }
         if (shader.lineWidth != null && (this.drawMode == VertexFormat.DrawMode.LINES || this.drawMode == VertexFormat.DrawMode.LINE_STRIP)) {

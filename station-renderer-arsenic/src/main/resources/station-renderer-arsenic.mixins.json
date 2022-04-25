@@ -5,11 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "net.modificationstation.stationapi.impl.client.arsenic.ArsenicMixinConfigPlugin",
   "mixins": [
-    "TilePosAccessor",
+    "TilePosAccessor"
   ],
   "client": [
     "client.BlockRendererAccessor",
     "client.class_556Accessor",
+    "client.class_66Accessor",
     "client.DiggingAccessor",
     "client.EntityRendererAccessor",
     "client.ItemRendererAccessor",
@@ -17,16 +18,15 @@
     "client.Mixinclass_556",
     "client.Mixinclass_66",
     "client.MixinDigging",
+    "client.MixinGameRenderer",
     "client.MixinItemRenderer",
     "client.MixinMinecraft",
     "client.MixinTessellator",
     "client.MixinTextureManager",
     "client.MixinWorldRenderer",
     "client.ParticleBaseAccessor",
-    "client.TessellatorAccessor",
-    "client.class_66Accessor",
-    "client.MixinGameRenderer",
-    "client.RenderListAccessor"
+    "client.RenderListAccessor",
+    "client.TessellatorAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

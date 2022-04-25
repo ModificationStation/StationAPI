@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
 import net.minecraft.block.BlockBase;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
@@ -8,14 +9,18 @@ import net.minecraft.sortme.GameRenderer;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.blaze3d.systems.RenderSystem;
+import net.modificationstation.stationapi.api.client.render.FogMode;
 import net.modificationstation.stationapi.api.util.math.Matrix4f;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.api.util.math.Vec3f;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.GLU;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+
+import java.nio.FloatBuffer;
 
 @Mixin(GameRenderer.class)
 public abstract class MixinGameRenderer {
@@ -51,6 +56,14 @@ public abstract class MixinGameRenderer {
     @Shadow private float field_2364;
 
     @Shadow private float field_2363;
+
+    @Shadow protected abstract FloatBuffer method_1839(float f, float g, float h, float i);
+
+    @Shadow private float field_2346;
+
+    @Shadow private float field_2347;
+
+    @Shadow private float field_2348;
 
     /**
      * @author mine_diver
@@ -318,5 +331,83 @@ public abstract class MixinGameRenderer {
         d2 = living.prevY + (living.y - living.prevY) * (double)f - (double)f2;
         d3 = living.prevZ + (living.z - living.prevZ) * (double)f;
         this.field_2330 = this.minecraft.worldRenderer.method_1538(d, d2, d3, f);
+    }
+
+    /**
+     * @author mine_diver
+     */
+    @Overwrite
+    private void method_1842(int i, float f) {
+        Living living = this.minecraft.viewEntity;
+
+        RenderSystem.setShaderFogColor(field_2346, field_2347, field_2348);
+
+        // DEPRECATED
+        GL11.glFog(2918, this.method_1839(this.field_2346, this.field_2347, this.field_2348, 1.0f));
+        GL11.glNormal3f(0.0f, -1.0f, 0.0f);
+        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        // ----------
+        if (this.field_2330) {
+
+            RenderSystem.setShaderFogMode(FogMode.EXP);
+            RenderSystem.setShaderFogDensity(0.1f);
+
+            // DEPRECATED
+            GL11.glFogi(2917, 2048);
+            GL11.glFogf(2914, 0.1f);
+            // ----------
+        } else if (living.isInFluid(Material.WATER)) {
+
+            RenderSystem.setShaderFogMode(FogMode.EXP);
+            RenderSystem.setShaderFogDensity(0.1f);
+
+            // DEPRECATED
+            GL11.glFogi(2917, 2048);
+            GL11.glFogf(2914, 0.1f);
+            // ----------
+        } else if (living.isInFluid(Material.LAVA)) {
+
+            RenderSystem.setShaderFogMode(FogMode.EXP);
+            RenderSystem.setShaderFogDensity(2.0f);
+
+            // DEPRECATED
+            GL11.glFogi(2917, 2048);
+            GL11.glFogf(2914, 2.0f);
+            // ----------
+        } else {
+
+            RenderSystem.setShaderFogMode(FogMode.LINEAR);
+            RenderSystem.setShaderFogStart(this.field_2350 * 0.25f);
+            RenderSystem.setShaderFogEnd(this.field_2350);
+
+            // DEPRECATED
+            GL11.glFogi(2917, 9729);
+            GL11.glFogf(2915, this.field_2350 * 0.25f);
+            GL11.glFogf(2916, this.field_2350);
+            // ----------
+            if (i < 0) {
+
+                RenderSystem.setShaderFogStart(0.0f);
+                RenderSystem.setShaderFogEnd(this.field_2350 * 0.8f);
+
+                // DEPRECATED
+                GL11.glFogf(2915, 0.0f);
+                GL11.glFogf(2916, this.field_2350 * 0.8f);
+                // ----------
+            }
+            if (GLContext.getCapabilities().GL_NV_fog_distance) {
+                GL11.glFogi(34138, 34139);
+            }
+            if (this.minecraft.level.dimension.blocksCompassAndClock) {
+
+                RenderSystem.setShaderFogStart(0.0f);
+
+                // DEPRECATED
+                GL11.glFogf(2915, 0.0f);
+                // ----------
+            }
+        }
+        GL11.glEnable(2903);
+        GL11.glColorMaterial(1028, 4608);
     }
 }
