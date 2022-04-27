@@ -17,6 +17,7 @@
     "client.MixinTextureManager",
     "client.MixinTexturePack",
     "client.MixinZippedTexturePack",
+    "client.RenderListAccessor",
     "client.TessellatorAccessor",
     "client.TextureManagerAccessor",
     "client.WaterColourAccessor"
