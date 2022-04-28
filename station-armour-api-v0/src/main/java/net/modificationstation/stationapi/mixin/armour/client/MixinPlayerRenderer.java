@@ -7,7 +7,8 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.armour.Armour;
-import net.modificationstation.stationapi.api.client.item.ArmorTextureProvider;
+import net.modificationstation.stationapi.api.client.item.ArmourTextureProvider;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,8 +24,12 @@ public class MixinPlayerRenderer extends LivingEntityRenderer {
 
     @Inject(method = "method_344(Lnet/minecraft/entity/player/PlayerBase;IF)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/PlayerRenderer;bindTexture(Ljava/lang/String;)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onArmorTexture(PlayerBase arg, int i, float f, CallbackInfoReturnable<Boolean> cir, ItemInstance var4, ItemBase var5, Armour var6) {
-        if (var6 instanceof ArmorTextureProvider var7) {
-            bindTexture(i == 2 ? var7.getChestplateModelTexture(var4) : var7.getOtherModelTexture(var4));
+        if (var6 instanceof ArmourTextureProvider armourTextureProvider) {
+            bindTexture(getTexturePath(armourTextureProvider.getTexture(var6), i));
         }
+    }
+
+    private String getTexturePath(Identifier identifier, int armourIndex) {
+        return "assets/" + identifier.modID + "/stationapi/textures/armour/" + identifier.id.replace(".", "/") + (armourIndex == 2 ? "_2" : "_1") + ".png";
     }
 }
