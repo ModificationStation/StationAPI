@@ -20,6 +20,8 @@ public interface BakedModelRenderer {
 
     boolean render(BlockView world, BakedModel model, BlockState state, TilePos pos, MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random, long seed, int overlay);
 
+    void renderDamage(BlockState state, TilePos pos, BlockView world, MatrixStack matrices, VertexConsumer vertexConsumer);
+
     ItemModels getItemModels();
 
     void renderItem(ItemInstance stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumer vertexConsumers, int light, int overlay, BakedModel model);

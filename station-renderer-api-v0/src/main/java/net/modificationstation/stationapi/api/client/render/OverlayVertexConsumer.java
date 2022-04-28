@@ -52,7 +52,8 @@ public class OverlayVertexConsumer extends FixedColourVertexConsumer {
         vector4f.rotate(direction.getRotationQuaternion());
         float f = -vector4f.getX();
         float g = -vector4f.getY();
-        this.vertexConsumer.vertex(this.x, this.y, this.z).colour(1.0F, 1.0F, 1.0F, 1.0F).texture(f, g).overlay(this.u1, this.v1).light(this.light).normal(this.normalX, this.normalY, this.normalZ).next();
+        this.vertexConsumer.vertex(this.x, this.y, this.z).texture(f, g).color(1.0F, 1.0F, 1.0F, 1.0F).overlay(this.u1, this.v1).normal(this.normalX, this.normalY, this.normalZ).next();
+//        this.vertexConsumer.vertex(this.x, this.y, this.z).color(1.0F, 1.0F, 1.0F, 1.0F).texture(f, g).overlay(this.u1, this.v1).light(this.light).normal(this.normalX, this.normalY, this.normalZ).next();
         this.init();
     }
 
@@ -65,7 +66,7 @@ public class OverlayVertexConsumer extends FixedColourVertexConsumer {
     }
 
     @Override
-    public VertexConsumer colour(int red, int green, int blue, int alpha) {
+    public VertexConsumer color(int red, int green, int blue, int alpha) {
         return this;
     }
 

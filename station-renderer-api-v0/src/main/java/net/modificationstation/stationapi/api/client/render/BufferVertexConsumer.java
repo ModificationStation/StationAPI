@@ -33,7 +33,7 @@ extends VertexConsumer {
     }
 
     @Override
-    default VertexConsumer colour(int red, int green, int blue, int alpha) {
+    default VertexConsumer color(int red, int green, int blue, int alpha) {
         VertexFormatElement vertexFormatElement = this.getCurrentElement();
         if (vertexFormatElement.getType() != VertexFormatElement.Type.COLOUR) {
             return this;

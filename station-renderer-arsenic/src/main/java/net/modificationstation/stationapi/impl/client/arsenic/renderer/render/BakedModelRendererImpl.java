@@ -128,13 +128,23 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                     for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
                         q = qs.get(j);
                         light.calculateForQuad(q);
-                        renderQuad(world, state, pos, vertexConsumer, matrices.peek(), q, qlight, -1);
+                        renderQuad(world, state, pos, vertexConsumer, matrices.peek(), q, qlight, OverlayTexture.DEFAULT_UV);
                     }
                 }
             }
         }
         matrices.pop();
         return rendered;
+    }
+
+    @Override
+    public void renderDamage(BlockState state, TilePos pos, BlockView world, MatrixStack matrices, VertexConsumer vertexConsumer) {
+//        if (state.getRenderType() != BlockRenderType.MODEL) {
+//            return;
+//        }
+        BakedModel bakedModel = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state);
+        long l = state.getRenderingSeed(pos);
+        render(world, bakedModel, state, pos, matrices, vertexConsumer, true, this.random, l, OverlayTexture.DEFAULT_UV);
     }
 
     private void renderQuad(BlockView world, BlockState state, TilePos pos, VertexConsumer vertexConsumer, MatrixStack.Entry matrixEntry, BakedQuad quad, float[] brightness, int overlay) {
@@ -326,8 +336,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     }
 
     private void vertex(VertexConsumer vertexConsumer, double x, double y, double z, float red, float green, float blue, float u, float v) {
-//        vertexConsumer.vertex(x, y, z).colour(red, green, blue, 1.0f).texture(u, v).light(0).normal(0.0f, 1.0f, 0.0f).next();
-        vertexConsumer.vertex(x, y, z).texture(u, v).colour(red, green, blue, 1.0f).normal(0.0f, 1.0f, 0.0f).next();
+        vertexConsumer.vertex(x, y, z).texture(u, v).color(red, green, blue, 1.0f).normal(0.0f, 1.0f, 0.0f).next();
     }
 
     private float redI2F(int colour) {

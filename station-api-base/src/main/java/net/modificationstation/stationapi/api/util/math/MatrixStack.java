@@ -68,6 +68,10 @@ public class MatrixStack {
         entry.normalMatrix.loadIdentity();
     }
 
+    public void multiplyPositionMatrix(Matrix4f matrix) {
+        this.stack.get(n).positionMatrix.multiply(matrix);
+    }
+
     public static final class Entry {
         private final Matrix4f positionMatrix;
         private final Matrix3f normalMatrix;

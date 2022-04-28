@@ -48,7 +48,7 @@ public class StationTessellatorImpl implements StationTessellator {
     }
 
     @Override
-    public VertexConsumer colour(int r, int g, int b, int a) {
+    public VertexConsumer color(int r, int g, int b, int a) {
         self.colour(r, g, b, a);
         return this;
     }

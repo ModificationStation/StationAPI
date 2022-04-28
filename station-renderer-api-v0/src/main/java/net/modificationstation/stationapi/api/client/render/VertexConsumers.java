@@ -55,9 +55,9 @@ public class VertexConsumers {
         }
 
         @Override
-        public VertexConsumer colour(int red, int green, int blue, int alpha) {
-            this.first.colour(red, green, blue, alpha);
-            this.second.colour(red, green, blue, alpha);
+        public VertexConsumer color(int red, int green, int blue, int alpha) {
+            this.first.color(red, green, blue, alpha);
+            this.second.color(red, green, blue, alpha);
             return this;
         }
 
@@ -142,8 +142,8 @@ public class VertexConsumers {
         }
 
         @Override
-        public VertexConsumer colour(int red, int green, int blue, int alpha) {
-            this.delegate(i -> i.colour(red, green, blue, alpha));
+        public VertexConsumer color(int red, int green, int blue, int alpha) {
+            this.delegate(i -> i.color(red, green, blue, alpha));
             return this;
         }
 

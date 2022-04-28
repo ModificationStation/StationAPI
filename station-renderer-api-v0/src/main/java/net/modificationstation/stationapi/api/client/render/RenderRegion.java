@@ -7,6 +7,7 @@ import net.modificationstation.stationapi.api.client.gl.VertexBuffer;
 import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.mixin.render.client.RenderListAccessor;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,10 @@ public class RenderRegion extends RenderList {
 
     private final RenderListAccessor _super = (RenderListAccessor) this;
     private final List<VertexBuffer> buffers = new ArrayList<>();
+
+    public RenderRegion() {
+        _super.stationapi$setField_2486(IntBuffer.allocate(0));
+    }
 
     @Override
     public void method_1912(int i, int j, int k, double d, double e, double f) {

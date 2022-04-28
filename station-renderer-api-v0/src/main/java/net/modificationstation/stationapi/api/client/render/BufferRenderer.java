@@ -6,8 +6,10 @@ import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.client.blaze3d.platform.GlStateManager;
 import net.modificationstation.stationapi.api.client.blaze3d.systems.RenderSystem;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.Display;
 
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 @Environment(value=EnvType.CLIENT)
 public class BufferRenderer {
@@ -81,53 +83,51 @@ public class BufferRenderer {
             GlStateManager._glBufferData(34963, buffer, 35048);
             k = elementFormat.type;
         }
-//        Shader shader = RenderSystem.getShader();
-//        for (j = 0; j < 8; ++j) {
-//            int m = RenderSystem.getShaderTexture(j);
-//            Objects.requireNonNull(shader).addSampler("Sampler" + j, m);
-//        }
-//        if (shader.modelViewMat != null) {
-//            shader.modelViewMat.set(RenderSystem.getModelViewMatrix());
-//        }
-//        if (shader.projectionMat != null) {
-//            shader.projectionMat.set(RenderSystem.getProjectionMatrix());
-//        }
-//        if (shader.viewRotationMat != null) {
-//            shader.viewRotationMat.set(RenderSystem.getInverseViewRotationMatrix());
-//        }
-//        if (shader.colorModulator != null) {
-//            shader.colorModulator.set(RenderSystem.getShaderColor());
-//        }
-//        if (shader.fogStart != null) {
-//            shader.fogStart.set(RenderSystem.getShaderFogStart());
-//        }
-//        if (shader.fogEnd != null) {
-//            shader.fogEnd.set(RenderSystem.getShaderFogEnd());
-//        }
-//        if (shader.fogColor != null) {
-//            shader.fogColor.set(RenderSystem.getShaderFogColor());
-//        }
-//        if (shader.fogShape != null) {
-//            shader.fogShape.set(RenderSystem.getShaderFogShape().getId());
-//        }
-//        if (shader.textureMat != null) {
-//            shader.textureMat.set(RenderSystem.getTextureMatrix());
-//        }
-//        if (shader.gameTime != null) {
-//            shader.gameTime.set(RenderSystem.getShaderGameTime());
-//        }
-//        if (shader.screenSize != null) {
-//            //noinspection deprecation
-//            Minecraft mc = (Minecraft) FabricLoader.getInstance().getGameInstance();
-//            shader.screenSize.set((float)mc.actualWidth, (float)mc.actualHeight);
-//        }
-//        if (shader.lineWidth != null && (drawMode == VertexFormat.DrawMode.LINES || drawMode == VertexFormat.DrawMode.LINE_STRIP)) {
-//            shader.lineWidth.set(RenderSystem.getShaderLineWidth());
-//        }
-//        RenderSystem.setupShaderLights(shader);
-//        shader.bind();
+        Shader shader = RenderSystem.getShader();
+        for (j = 0; j < 8; ++j) {
+            int m = RenderSystem.getShaderTexture(j);
+            Objects.requireNonNull(shader).addSampler("Sampler" + j, m);
+        }
+        if (shader.modelViewMat != null) {
+            shader.modelViewMat.set(RenderSystem.getModelViewMatrix());
+        }
+        if (shader.projectionMat != null) {
+            shader.projectionMat.set(RenderSystem.getProjectionMatrix());
+        }
+        if (shader.viewRotationMat != null) {
+            shader.viewRotationMat.set(RenderSystem.getInverseViewRotationMatrix());
+        }
+        if (shader.colorModulator != null) {
+            shader.colorModulator.set(RenderSystem.getShaderColor());
+        }
+        if (shader.fogStart != null) {
+            shader.fogStart.set(RenderSystem.getShaderFogStart());
+        }
+        if (shader.fogEnd != null) {
+            shader.fogEnd.set(RenderSystem.getShaderFogEnd());
+        }
+        if (shader.fogColor != null) {
+            shader.fogColor.set(RenderSystem.getShaderFogColor());
+        }
+        if (shader.fogShape != null) {
+            shader.fogShape.set(RenderSystem.getShaderFogShape().getId());
+        }
+        if (shader.textureMat != null) {
+            shader.textureMat.set(RenderSystem.getTextureMatrix());
+        }
+        if (shader.gameTime != null) {
+            shader.gameTime.set(RenderSystem.getShaderGameTime());
+        }
+        if (shader.screenSize != null) {
+            shader.screenSize.set((float) Display.getWidth(), (float) Display.getHeight());
+        }
+        if (shader.lineWidth != null && (drawMode == VertexFormat.DrawMode.LINES || drawMode == VertexFormat.DrawMode.LINE_STRIP)) {
+            shader.lineWidth.set(RenderSystem.getShaderLineWidth());
+        }
+        RenderSystem.setupShaderLights(shader);
+        shader.bind();
         GlStateManager._drawElements(drawMode.mode, vertexCount, k, 0L);
-//        shader.unbind();
+        shader.unbind();
         buffer.position(0);
     }
 

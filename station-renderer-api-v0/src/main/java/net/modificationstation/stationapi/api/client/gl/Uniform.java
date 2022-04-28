@@ -78,6 +78,6 @@ public class Uniform {
 	public void set(Matrix4f values) {
 	}
 
-	public void method_39978(Matrix3f matrix3f) {
+	public void set(Matrix3f matrix3f) {
 	}
 }

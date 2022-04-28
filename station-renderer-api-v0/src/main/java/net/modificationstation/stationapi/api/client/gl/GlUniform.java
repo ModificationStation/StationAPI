@@ -386,7 +386,7 @@ public class GlUniform extends Uniform implements AutoCloseable {
 		this.markStateDirty();
 	}
 
-	public final void method_39978(Matrix3f matrix3f) {
+	public final void set(Matrix3f matrix3f) {
 		this.floatData.position(0);
 		matrix3f.writeColumnMajor(this.floatData);
 		this.markStateDirty();

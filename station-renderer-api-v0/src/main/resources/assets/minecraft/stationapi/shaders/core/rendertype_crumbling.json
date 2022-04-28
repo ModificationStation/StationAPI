@@ -8,9 +8,8 @@
     "fragment": "rendertype_crumbling",
     "attributes": [
         "Position",
-        "Color",
         "UV0",
-        "UV2",
+        "Color",
         "Normal"
     ],
     "samplers": [

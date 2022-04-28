@@ -4,8 +4,13 @@ import net.minecraft.client.render.RenderList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
+import java.nio.IntBuffer;
+
 @Mixin(RenderList.class)
 public interface RenderListAccessor {
+
+    @Accessor("field_2486")
+    void stationapi$setField_2486(IntBuffer intBuffer);
 
     @Accessor("field_2487")
     boolean stationapi$getField_2487();

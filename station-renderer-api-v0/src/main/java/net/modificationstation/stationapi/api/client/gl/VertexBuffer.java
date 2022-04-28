@@ -135,7 +135,7 @@ implements AutoCloseable {
             shader.projectionMat.set(projectionMatrix);
         }
         if (shader.viewRotationMat != null) {
-            shader.viewRotationMat.method_39978(RenderSystem.getInverseViewRotationMatrix());
+            shader.viewRotationMat.set(RenderSystem.getInverseViewRotationMatrix());
         }
         if (shader.colorModulator != null) {
             shader.colorModulator.set(RenderSystem.getShaderColor());

@@ -267,16 +267,16 @@ implements BufferVertexConsumer {
             this.nextElement();
         }
         if (this.colourFixed && this.currentElement.getType() == VertexFormatElement.Type.COLOUR) {
-            BufferVertexConsumer.super.colour(this.fixedRed, this.fixedGreen, this.fixedBlue, this.fixedAlpha);
+            BufferVertexConsumer.super.color(this.fixedRed, this.fixedGreen, this.fixedBlue, this.fixedAlpha);
         }
     }
 
     @Override
-    public VertexConsumer colour(int red, int green, int blue, int alpha) {
+    public VertexConsumer color(int red, int green, int blue, int alpha) {
         if (this.colourFixed) {
             throw new IllegalStateException();
         }
-        return BufferVertexConsumer.super.colour(red, green, blue, alpha);
+        return BufferVertexConsumer.super.color(red, green, blue, alpha);
     }
 
     @Override
@@ -317,7 +317,7 @@ implements BufferVertexConsumer {
             if (vertexFormatElement == VertexFormats.POSITION_ELEMENT) {
                 vertex(x, y, z);
             } else if (vertexFormatElement == VertexFormats.COLOR_ELEMENT) {
-                colour(red, green, blue, alpha);
+                color(red, green, blue, alpha);
             } else if (vertexFormatElement == VertexFormats.TEXTURE_ELEMENT) {
                 texture(u, v);
             } else if (vertexFormatElement == VertexFormats.OVERLAY_ELEMENT) {

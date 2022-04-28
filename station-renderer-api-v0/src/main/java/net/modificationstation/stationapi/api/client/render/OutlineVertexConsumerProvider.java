@@ -78,7 +78,7 @@ implements VertexConsumerProvider {
         }
 
         @Override
-        public VertexConsumer colour(int red, int green, int blue, int alpha) {
+        public VertexConsumer color(int red, int green, int blue, int alpha) {
             return this;
         }
 
@@ -106,12 +106,12 @@ implements VertexConsumerProvider {
 
         @Override
         public void vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, int overlay, int light, float normalX, float normalY, float normalZ) {
-            this.delegate.vertex(x, y, z).colour(this.fixedRed, this.fixedGreen, this.fixedBlue, this.fixedAlpha).texture(u, v).next();
+            this.delegate.vertex(x, y, z).color(this.fixedRed, this.fixedGreen, this.fixedBlue, this.fixedAlpha).texture(u, v).next();
         }
 
         @Override
         public void next() {
-            this.delegate.vertex(this.x, this.y, this.z).colour(this.fixedRed, this.fixedGreen, this.fixedBlue, this.fixedAlpha).texture(this.u, this.v).next();
+            this.delegate.vertex(this.x, this.y, this.z).color(this.fixedRed, this.fixedGreen, this.fixedBlue, this.fixedAlpha).texture(this.u, this.v).next();
         }
     }
 }

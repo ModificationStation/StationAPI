@@ -44,8 +44,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -62,7 +60,7 @@ import static net.modificationstation.stationapi.impl.client.texture.StationRend
 public class ModelLoader {
 
     public static final List<Identifier> BLOCK_DESTRUCTION_STAGES = IntStream.range(0, 10).mapToObj(stage -> Identifier.of("block/destroy_stage_" + stage)).collect(Collectors.toList());
-    public static final List<Identifier> BLOCK_DESTRUCTION_STAGE_TEXTURES = BLOCK_DESTRUCTION_STAGES.stream().map(id -> Identifier.of("textures/" + id.id + ".png")).collect(Collectors.toList());
+    public static final List<Identifier> BLOCK_DESTRUCTION_STAGE_TEXTURES = BLOCK_DESTRUCTION_STAGES.stream().map(id -> Identifier.of(MODID + "/textures/" + id.id + ".png")).collect(Collectors.toList());
     public static final List<RenderLayer> BLOCK_DESTRUCTION_RENDER_LAYERS = BLOCK_DESTRUCTION_STAGE_TEXTURES.stream().map(RenderLayer::getBlockBreaking).collect(Collectors.toList());
     private static final Set<SpriteIdentifier> DEFAULT_TEXTURES = Util.make(new HashSet<>(), hashSet -> {
         for (Identifier identifier : BLOCK_DESTRUCTION_STAGES) {
@@ -134,40 +132,9 @@ public class ModelLoader {
         profiler.swap("stitching");
         this.spriteAtlasData = new IdentityHashMap<>();
 
-        TexturePack container = new TexturePack() {
-            @Override
-            public InputStream getResourceAsStream(String name) {
-                InputStream stream = resourceManager.getResourceAsStream(name);
-                if (stream == null) {
-                    Identifier identifier = ResourceManager.ASSETS.toId(name, MODID + "/textures", "png");
-                    if (TERRAIN.slicedSpritesheetView.containsKey(identifier)) {
-                        BufferedImage image = TERRAIN.slicedSpritesheetView.get(identifier);
-                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                        try {
-                            ImageIO.write(image, "png", outputStream);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        return new ByteArrayInputStream(outputStream.toByteArray());
-                    } else if (GUI_ITEMS.slicedSpritesheetView.containsKey(identifier)) {
-                        BufferedImage image = GUI_ITEMS.slicedSpritesheetView.get(identifier);
-                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                        try {
-                            ImageIO.write(image, "png", outputStream);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        return new ByteArrayInputStream(outputStream.toByteArray());
-                    } else {
-                        return null;
-                    }
-                } else
-                    return stream;
-            }
-        };
         for (Entry<Identifier, List<SpriteIdentifier>> identifierListEntry : map.entrySet()) {
             SpriteAtlasTexture spriteAtlasTexture = new SpriteAtlasTexture(identifierListEntry.getKey());
-            SpriteAtlasTexture.Data data = spriteAtlasTexture.stitch(container, identifierListEntry.getValue().stream().map(spriteIdentifier -> spriteIdentifier.texture), profiler, i);
+            SpriteAtlasTexture.Data data = spriteAtlasTexture.stitch(resourceManager, identifierListEntry.getValue().stream().map(spriteIdentifier -> spriteIdentifier.texture), profiler, i);
             this.spriteAtlasData.put(identifierListEntry.getKey(), Pair.of(spriteAtlasTexture, data));
         }
 

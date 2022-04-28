@@ -1,12 +1,24 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
+import net.minecraft.block.BlockBase;
 import net.minecraft.class_66;
 import net.minecraft.client.render.RenderList;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.entity.Living;
+import net.minecraft.entity.player.PlayerBase;
+import net.minecraft.item.ItemInstance;
+import net.minecraft.level.Level;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.maths.TilePos;
+import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.blaze3d.systems.RenderSystem;
 import net.modificationstation.stationapi.api.client.gl.VertexBuffer;
 import net.modificationstation.stationapi.api.client.render.*;
+import net.modificationstation.stationapi.api.client.render.model.ModelLoader;
+import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ChunkBuilderVBO;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,10 +30,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.Objects;
+
 @Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer {
 
     @Shadow private RenderList[] field_1794;
+
+    @Shadow private Level level;
+    private static final BufferBuilderStorage bufferBuilders = new BufferBuilderStorage();
+    private final MatrixStack matrices = new MatrixStack();
 
     @SuppressWarnings({"InvalidMemberReference", "UnresolvedMixinReference", "MixinAnnotationTarget", "InvalidInjectorMethodSignature"})
     @Redirect(
@@ -139,6 +157,66 @@ public abstract class MixinWorldRenderer {
         VertexBuffer.unbind();
         VertexBuffer.unbindVertexArray();
         layer.endDrawing();
+        GL11.glEnable(2929);
+    }
+
+    @Redirect(
+            method = "method_1547(Lnet/minecraft/entity/player/PlayerBase;Lnet/minecraft/util/hit/HitResult;ILnet/minecraft/item/ItemInstance;F)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/Tessellator;start()V"
+            )
+    )
+    private void begoneTessellator1(Tessellator instance) {}
+
+    @Redirect(
+            method = "method_1547(Lnet/minecraft/entity/player/PlayerBase;Lnet/minecraft/util/hit/HitResult;ILnet/minecraft/item/ItemInstance;F)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/Tessellator;setOffset(DDD)V"
+            )
+    )
+    private void begoneTessellator2(Tessellator instance, double e, double f, double v) {}
+
+    @Redirect(
+            method = "method_1547(Lnet/minecraft/entity/player/PlayerBase;Lnet/minecraft/util/hit/HitResult;ILnet/minecraft/item/ItemInstance;F)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/Tessellator;disableColour()V"
+            )
+    )
+    private void begoneTessellator3(Tessellator instance) {}
+
+    @Redirect(
+            method = "method_1547(Lnet/minecraft/entity/player/PlayerBase;Lnet/minecraft/util/hit/HitResult;ILnet/minecraft/item/ItemInstance;F)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/Tessellator;draw()V"
+            )
+    )
+    private void begoneTessellator4(Tessellator instance) {}
+
+    @Redirect(
+            method = "method_1547(Lnet/minecraft/entity/player/PlayerBase;Lnet/minecraft/util/hit/HitResult;ILnet/minecraft/item/ItemInstance;F)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/block/BlockRenderer;renderWithTexture(Lnet/minecraft/block/BlockBase;IIII)V"
+            )
+    )
+    private void renderDamage(BlockRenderer instance, BlockBase block, int j, int k, int l, int texture, PlayerBase arg, HitResult arg2, int i, ItemInstance arg3, float f) {
+        matrices.push();
+        double d = arg.prevRenderX + (arg.x - arg.prevRenderX) * (double)f;
+        double d2 = arg.prevRenderY + (arg.y - arg.prevRenderY) * (double)f;
+        double d3 = arg.prevRenderZ + (arg.z - arg.prevRenderZ) * (double)f;
+        matrices.translate(-d, -d2, -d3);
+        MatrixStack.Entry entry = matrices.peek();
+        OverlayVertexConsumer vertexConsumer = new OverlayVertexConsumer(bufferBuilders.getEffectVertexConsumers().getBuffer(ModelLoader.BLOCK_DESTRUCTION_RENDER_LAYERS.get(texture - 240)), entry.getPositionMatrix(), entry.getNormalMatrix());
+        BlockState state = ((BlockStateView) level).getBlockState(j, k, l);
+        Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer().renderDamage(state, new TilePos(j, k, l), level, matrices, vertexConsumer);
+        matrices.pop();
+        bufferBuilders.getEffectVertexConsumers().draw();
+        VertexBuffer.unbindVertexArray();
+        VertexBuffer.unbind();
         GL11.glEnable(2929);
     }
 }

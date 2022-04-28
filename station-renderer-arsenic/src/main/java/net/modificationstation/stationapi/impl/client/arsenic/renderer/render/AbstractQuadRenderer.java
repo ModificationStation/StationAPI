@@ -67,7 +67,7 @@ public abstract class AbstractQuadRenderer {
         for (int i = 0; i < 4; i++) {
             buff.vertex(matrix, quad.x(i), quad.y(i), quad.z(i));
             final int colour = quad.spriteColour(i, 0);
-            buff.colour(colour & 0xFF, (colour >> 8) & 0xFF, (colour >> 16) & 0xFF, (colour >> 24) & 0xFF);
+            buff.color(colour & 0xFF, (colour >> 8) & 0xFF, (colour >> 16) & 0xFF, (colour >> 24) & 0xFF);
             buff.texture(quad.spriteU(i, 0), quad.spriteV(i, 0));
             buff.overlay(overlay);
             buff.light(quad.lightmap(i));

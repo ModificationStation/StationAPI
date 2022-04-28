@@ -17,7 +17,7 @@ public interface VertexConsumer {
 
     VertexConsumer vertex(double var1, double var3, double var5);
 
-    VertexConsumer colour(int var1, int var2, int var3, int var4);
+    VertexConsumer color(int var1, int var2, int var3, int var4);
 
     VertexConsumer texture(float var1, float var2);
 
@@ -31,7 +31,7 @@ public interface VertexConsumer {
 
     default void vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, int overlay, int light, float normalX, float normalY, float normalZ) {
         this.vertex(x, y, z);
-        this.colour(red, green, blue, alpha);
+        this.color(red, green, blue, alpha);
         this.texture(u, v);
         this.overlay(overlay);
         this.light(light);
@@ -43,12 +43,12 @@ public interface VertexConsumer {
 
     void unfixColour();
 
-    default VertexConsumer colour(float red, float green, float blue, float alpha) {
-        return this.colour((int)(red * 255.0f), (int)(green * 255.0f), (int)(blue * 255.0f), (int)(alpha * 255.0f));
+    default VertexConsumer color(float red, float green, float blue, float alpha) {
+        return this.color((int)(red * 255.0f), (int)(green * 255.0f), (int)(blue * 255.0f), (int)(alpha * 255.0f));
     }
 
-    default VertexConsumer colour(int argb) {
-        return this.colour(ColourHelper.Argb.getRed(argb), ColourHelper.Argb.getGreen(argb), ColourHelper.Argb.getBlue(argb), ColourHelper.Argb.getAlpha(argb));
+    default VertexConsumer color(int argb) {
+        return this.color(ColourHelper.Argb.getRed(argb), ColourHelper.Argb.getGreen(argb), ColourHelper.Argb.getBlue(argb), ColourHelper.Argb.getAlpha(argb));
     }
 
     default VertexConsumer light(int uv) {
