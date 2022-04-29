@@ -30,7 +30,9 @@ public class MixinWorldRenderer {
 	
 	@Unique
 	private int getLevelHeight() {
-		StationDimension dimension = StationDimension.class.cast(level.dimension);
-		return dimension.getActualLevelHeight();
+		if (level != null) {
+			return ((StationDimension) level.dimension).getActualLevelHeight();
+		}
+		return 128;
 	}
 }
