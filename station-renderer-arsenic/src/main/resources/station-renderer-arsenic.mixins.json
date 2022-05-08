@@ -16,6 +16,7 @@
     "client.ItemRendererAccessor",
     "client.MixinBlockRenderer",
     "client.Mixinclass_556",
+    "client.Mixinclass_598",
     "client.Mixinclass_66",
     "client.MixinDigging",
     "client.MixinGameRenderer",

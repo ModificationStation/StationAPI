@@ -13,6 +13,8 @@ import java.util.List;
 
 public class RenderRegion extends RenderList {
 
+    public static final VboPool VBO_POOL = new VboPool(VertexFormats.POSITION_TEXTURE_COLOR_NORMAL);
+
     private final RenderListAccessor _super = (RenderListAccessor) this;
     private final List<VertexBuffer> buffers = new ArrayList<>();
 
@@ -50,8 +52,9 @@ public class RenderRegion extends RenderList {
                 chunkOffset.upload();
             }
             for (int buffer = 0, size = buffers.size(); buffer < size; buffer++) {
-                buffers.get(buffer).drawVertices();
+                buffers.get(buffer).startPoolDrawing();
             }
+            VBO_POOL.drawAll();
             if (chunkOffset != null) {
                 chunkOffset.set(Vec3f.ZERO);
             }

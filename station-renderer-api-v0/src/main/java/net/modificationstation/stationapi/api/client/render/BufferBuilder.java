@@ -129,10 +129,10 @@ implements BufferVertexConsumer {
             return;
         }
         this.format = format;
-        boolean bl = format == VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL;
-        boolean bl2 = format == VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL;
-        this.textured = bl || bl2;
-        this.hasOverlay = bl;
+//        boolean bl = format == VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL;
+        boolean bl2 = format == VertexFormats.POSITION_TEXTURE_COLOR_NORMAL;
+        this.textured = /*bl ||*/ bl2;
+//        this.hasOverlay = bl;
     }
 
     private IntConsumer createIndexWriter(VertexFormat.IntType elementFormat) {
@@ -285,51 +285,23 @@ implements BufferVertexConsumer {
             throw new IllegalStateException();
         }
         if (this.textured) {
-            int i;
             this.putFloat(0, x);
             this.putFloat(4, y);
             this.putFloat(8, z);
-            this.putByte(12, (byte)(red * 255.0f));
-            this.putByte(13, (byte)(green * 255.0f));
-            this.putByte(14, (byte)(blue * 255.0f));
-            this.putByte(15, (byte)(alpha * 255.0f));
-            this.putFloat(16, u);
-            this.putFloat(20, v);
-            if (this.hasOverlay) {
-                this.putShort(24, (short)(overlay & 0xFFFF));
-                this.putShort(26, (short)(overlay >> 16 & 0xFFFF));
-                i = 28;
-            } else {
-                i = 24;
-            }
-            this.putShort(i, (short)(light & (LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE | 0xFF0F)));
-            this.putShort(i + 2, (short)(light >> 16 & (LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE | 0xFF0F)));
-            this.putByte(i + 4, BufferVertexConsumer.packByte(normalX));
-            this.putByte(i + 5, BufferVertexConsumer.packByte(normalY));
-            this.putByte(i + 6, BufferVertexConsumer.packByte(normalZ));
-            this.elementOffset += i + 8;
+            this.putFloat(12, u);
+            this.putFloat(16, v);
+            this.putByte(20, (byte)(red * 255.0f));
+            this.putByte(21, (byte)(green * 255.0f));
+            this.putByte(22, (byte)(blue * 255.0f));
+            this.putByte(23, (byte)(alpha * 255.0f));
+            this.putByte(24, BufferVertexConsumer.packByte(normalX));
+            this.putByte(25, BufferVertexConsumer.packByte(normalY));
+            this.putByte(26, BufferVertexConsumer.packByte(normalZ));
+            this.elementOffset += 28;
             this.next();
             return;
         }
-        ImmutableList<VertexFormatElement> elements = format.getElements();
-        for (int i = 0, elementsSize = elements.size(); i < elementsSize; i++) {
-            VertexFormatElement vertexFormatElement = elements.get(i);
-            if (vertexFormatElement == VertexFormats.POSITION_ELEMENT) {
-                vertex(x, y, z);
-            } else if (vertexFormatElement == VertexFormats.COLOR_ELEMENT) {
-                color(red, green, blue, alpha);
-            } else if (vertexFormatElement == VertexFormats.TEXTURE_ELEMENT) {
-                texture(u, v);
-            } else if (vertexFormatElement == VertexFormats.OVERLAY_ELEMENT) {
-                overlay(overlay);
-            } else if (vertexFormatElement == VertexFormats.LIGHT_ELEMENT) {
-                light(light);
-            } else if (vertexFormatElement == VertexFormats.NORMAL_ELEMENT) {
-                normal(normalX, normalY, normalZ);
-            }
-        }
-        next();
-//        super.vertex(x, y, z, red, green, blue, alpha, u, v, overlay, light, normalX, normalY, normalZ);
+        super.vertex(x, y, z, red, green, blue, alpha, u, v, overlay, light, normalX, normalY, normalZ);
     }
 
     public Pair<DrawArrayParameters, ByteBuffer> popData() {

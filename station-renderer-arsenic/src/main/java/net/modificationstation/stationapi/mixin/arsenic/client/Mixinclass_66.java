@@ -110,7 +110,7 @@ public abstract class Mixinclass_66 implements ChunkBuilderVBO {
 //            GL11.glNewList(this.field_225 + 2, 4864);
 //            ItemRenderer.method_2024(Box.createButWasteMemory((float)this.field_240 - var4, (float)this.field_241 - var4, (float)this.field_242 - var4, (float)(this.field_240 + this.field_234) + var4, (float)(this.field_241 + this.field_235) + var4, (float)(this.field_242 + this.field_236) + var4));
 //            GL11.glEndList();
-            this.buffers = RenderLayer.getBlockLayers().stream().collect(Collectors.toMap(renderLayer -> renderLayer, renderLayer -> new VertexBuffer()));
+            this.buffers = RenderLayer.getBlockLayers().stream().collect(Collectors.toMap(renderLayer -> renderLayer, renderLayer -> new VertexBuffer(RenderRegion.VBO_POOL)));
             this.method_305();
         }
     }

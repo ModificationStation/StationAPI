@@ -59,11 +59,14 @@ public abstract class MixinGameRenderer {
 
     @Shadow protected abstract FloatBuffer method_1839(float f, float g, float h, float i);
 
-    @Shadow private float field_2346;
+    @Shadow
+    float field_2346;
 
-    @Shadow private float field_2347;
+    @Shadow
+    float field_2347;
 
-    @Shadow private float field_2348;
+    @Shadow
+    float field_2348;
 
     /**
      * @author mine_diver

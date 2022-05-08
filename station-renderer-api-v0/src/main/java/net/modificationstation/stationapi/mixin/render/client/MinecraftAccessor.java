@@ -13,4 +13,7 @@ public interface MinecraftAccessor {
     static EnumOperatingSystems stationapi$getOperatingSystem() {
         return Util.assertMixin();
     }
+
+    @Invoker("printOpenGLError")
+    void stationapi$printOpenGLError(String message);
 }

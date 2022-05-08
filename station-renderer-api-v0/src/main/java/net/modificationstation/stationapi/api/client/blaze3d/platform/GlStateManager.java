@@ -278,6 +278,16 @@ public class GlStateManager {
         GL15.glBufferData(target, size, usage);
     }
 
+    public static void _glBufferSubData(int target, long offset, ByteBuffer data) {
+        RenderSystem.assertOnRenderThread();
+        GL15.glBufferSubData(target, offset, data);
+    }
+
+    public static void _glCopyBufferSubData(int readTarget, int writeTarget, long readOffset, long writeOffset, long size) {
+        RenderSystem.assertOnRenderThread();
+        GL31.glCopyBufferSubData(readTarget, writeTarget, readOffset, writeOffset, size);
+    }
+
     @Nullable
     public static ByteBuffer mapBuffer(int target, int access) {
         RenderSystem.assertOnRenderThreadOrInit();
@@ -667,6 +677,11 @@ public class GlStateManager {
     public static void _drawElements(int mode, int count, int type, long indices) {
         RenderSystem.assertOnRenderThread();
         GL11.glDrawElements(mode, count, type, indices);
+    }
+
+    public static void _multiDrawElementsIndirect(int mode, int type, IntBuffer indirect, int primcount, int stride) {
+        RenderSystem.assertOnRenderThread();
+        GL43.glMultiDrawElementsIndirect(mode, type, indirect, primcount, stride);
     }
 
     public static void _pixelStore(int pname, int param) {

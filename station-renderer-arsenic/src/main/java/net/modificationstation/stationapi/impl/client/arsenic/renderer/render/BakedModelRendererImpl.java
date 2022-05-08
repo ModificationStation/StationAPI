@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.primitives.Ints;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.Fluid;
@@ -337,26 +336,6 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
 
     private void vertex(VertexConsumer vertexConsumer, double x, double y, double z, float red, float green, float blue, float u, float v) {
         vertexConsumer.vertex(x, y, z).texture(u, v).color(red, green, blue, 1.0f).normal(0.0f, 1.0f, 0.0f).next();
-    }
-
-    private float redI2F(int colour) {
-        return ((colour >> 16) & 255) / 255F;
-    }
-
-    private float greenI2F(int colour) {
-        return ((colour >> 8) & 255) / 255F;
-    }
-
-    private float blueI2F(int colour) {
-        return (colour & 255) / 255F;
-    }
-
-    private int colourF2I(float r, float g, float b) {
-        return (255 << 24) | (colourChannelF2I(r) << 16) | (colourChannelF2I(g) << 8) | colourChannelF2I(b);
-    }
-
-    private int colourChannelF2I(float colourChannel) {
-        return Ints.constrainToRange((int) (colourChannel * 255), 0, 255);
     }
 
     @Override
