@@ -205,6 +205,7 @@ allprojects {
                             }
                         }
 
+                        def depsNode = asNode().appendNode("dependencies")
                         // Jank solution to an annoying issue
                         ArrayList<String[]> deps = new ArrayList<>()
                         deps.add(["net.jodah", "typetools", "${project.typetools_version}"] as String[])
