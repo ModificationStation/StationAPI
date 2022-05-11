@@ -199,15 +199,6 @@ allprojects {
 
                 pom {
                     withXml {
-                        def depsNode = asNode().appendNode("dependencies")
-                        subprojects.each {
-                            def depNode = depsNode.appendNode("dependency")
-                            depNode.appendNode("groupId", it.group)
-                            depNode.appendNode("artifactId", it.name)
-                            depNode.appendNode("version", it.version)
-                            depNode.appendNode("scope", "compile")
-                        }
-
                         // Jank solution to an annoying issue
                         ArrayList<String[]> deps = new ArrayList<>()
                         deps.add(["net.jodah", "typetools", "${project.typetools_version}"] as String[])
@@ -225,6 +216,13 @@ allprojects {
                             depNode.appendNode("version", it[2])
                             depNode.appendNode("scope", "compile")
                         }
+                    }
+                }
+
+                pom.whenConfigured {
+                    List<String> removeThese = ["HowManyItems-Fabric", "glass-config-api", "ModMenu"]
+                    p -> p.dependencies = p.dependencies.findAll {
+                        dep -> removeThese.contains(dep.artifactId)
                     }
                 }
             }
