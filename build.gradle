@@ -199,13 +199,10 @@ allprojects {
 
                 pom {
                     withXml {
-                        def depsNode = asNode().appendNode("dependencies")
-                        subprojects.each {
-                            def depNode = depsNode.appendNode("dependency")
-                            depNode.appendNode("groupId", it.group)
-                            depNode.appendNode("artifactId", it.name)
-                            depNode.appendNode("version", it.version)
-                            depNode.appendNode("scope", "compile")
+                        asNode().dependencies.dependency.each { dep ->
+                            if(dep.artifactId.last().value().last() in ["HowManyItems-Fabric", "glass-config-api", "ModMenu"]) {
+                                assert dep.parent().remove(dep)
+                            }
                         }
 
                         // Jank solution to an annoying issue
