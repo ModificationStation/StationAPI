@@ -112,15 +112,15 @@ allprojects {
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
         implementationOnly 'org.jetbrains:annotations:23.0.0'
 
-        modImplementation("com.github.calmilamsy:ModMenu:${project.modmenu_version}") {
+        modLocalRuntime("com.github.calmilamsy:ModMenu:${project.modmenu_version}") {
             transitive false
         }
 
         implementation "blue.endless:jankson:1.2.1"
-        modImplementation("com.github.calmilamsy:glass-config-api:${project.gcapi_version}") {
+        modLocalRuntime("com.github.calmilamsy:glass-config-api:${project.gcapi_version}") {
             transitive false
         }
-        modImplementation("net.glasslauncher:HowManyItems-Fabric-Unofficial:5.0.5") {
+        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:5.0.5") {
             transitive false
         }
     }
@@ -200,14 +200,6 @@ allprojects {
                 pom {
                     withXml {
                         def depsNode = asNode().appendNode("dependencies")
-                        subprojects.each {
-                            def depNode = depsNode.appendNode("dependency")
-                            depNode.appendNode("groupId", it.group)
-                            depNode.appendNode("artifactId", it.name)
-                            depNode.appendNode("version", it.version)
-                            depNode.appendNode("scope", "compile")
-                        }
-
                         // Jank solution to an annoying issue
                         ArrayList<String[]> deps = new ArrayList<>()
                         deps.add(["net.jodah", "typetools", "${project.typetools_version}"] as String[])
