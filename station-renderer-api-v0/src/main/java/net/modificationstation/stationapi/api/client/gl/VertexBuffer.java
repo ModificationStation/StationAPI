@@ -206,9 +206,9 @@ implements AutoCloseable {
         RenderSystem.drawElements(this.drawMode.mode, this.vertexCount, this.elementFormat.type);
     }
 
-    public void startPoolDrawing() {
+    public void uploadToPool() {
         if (this.pool != null) {
-            this.pool.startDrawing(VertexFormat.DrawMode.QUADS, this.poolPos);
+            this.pool.upload(VertexFormat.DrawMode.QUADS, this.poolPos);
         }
     }
 
@@ -230,10 +230,6 @@ implements AutoCloseable {
         if (this.vertexArrayId > 0) {
             RenderSystem.glDeleteVertexArrays(this.vertexArrayId);
             this.vertexArrayId = 0;
-        }
-        if (this.pool != null) {
-            this.pool = null;
-            this.poolPos = null;
         }
     }
 

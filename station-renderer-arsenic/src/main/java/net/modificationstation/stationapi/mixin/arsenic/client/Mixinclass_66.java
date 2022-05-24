@@ -1,7 +1,9 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
 import net.minecraft.class_66;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.entity.TileEntityRenderDispatcher;
 import net.minecraft.level.Level;
@@ -110,7 +112,8 @@ public abstract class Mixinclass_66 implements ChunkBuilderVBO {
 //            GL11.glNewList(this.field_225 + 2, 4864);
 //            ItemRenderer.method_2024(Box.createButWasteMemory((float)this.field_240 - var4, (float)this.field_241 - var4, (float)this.field_242 - var4, (float)(this.field_240 + this.field_234) + var4, (float)(this.field_241 + this.field_235) + var4, (float)(this.field_242 + this.field_236) + var4));
 //            GL11.glEndList();
-            this.buffers = RenderLayer.getBlockLayers().stream().collect(Collectors.toMap(renderLayer -> renderLayer, renderLayer -> new VertexBuffer(RenderRegion.VBO_POOL)));
+            //noinspection deprecation
+            this.buffers = RenderLayer.getBlockLayers().stream().collect(Collectors.toMap(renderLayer -> renderLayer, renderLayer -> new VertexBuffer(StationWorldRenderer.get(((Minecraft) FabricLoader.getInstance().getGameInstance()).worldRenderer).getTerrainVboPool())));
             this.method_305();
         }
     }

@@ -23,6 +23,7 @@ import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.Ch
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -36,10 +37,11 @@ import java.util.Objects;
 public abstract class MixinWorldRenderer {
 
     @Shadow private RenderList[] field_1794;
-
     @Shadow private Level level;
+
     private static final BufferBuilderStorage bufferBuilders = new BufferBuilderStorage();
-    private final MatrixStack matrices = new MatrixStack();
+    @Unique
+    private final MatrixStack damageMtrx = new MatrixStack();
 
     @SuppressWarnings({"InvalidMemberReference", "UnresolvedMixinReference", "MixinAnnotationTarget", "InvalidInjectorMethodSignature"})
     @Redirect(
@@ -50,7 +52,7 @@ public abstract class MixinWorldRenderer {
             )
     )
     private RenderList injectRenderRegion() {
-        return new RenderRegion();
+        return new RenderRegion((WorldRenderer) (Object) this);
     }
 
     @Inject(
@@ -204,16 +206,16 @@ public abstract class MixinWorldRenderer {
             )
     )
     private void renderDamage(BlockRenderer instance, BlockBase block, int j, int k, int l, int texture, PlayerBase arg, HitResult arg2, int i, ItemInstance arg3, float f) {
-        matrices.push();
+        damageMtrx.push();
         double d = arg.prevRenderX + (arg.x - arg.prevRenderX) * (double)f;
         double d2 = arg.prevRenderY + (arg.y - arg.prevRenderY) * (double)f;
         double d3 = arg.prevRenderZ + (arg.z - arg.prevRenderZ) * (double)f;
-        matrices.translate(-d, -d2, -d3);
-        MatrixStack.Entry entry = matrices.peek();
+        damageMtrx.translate(-d, -d2, -d3);
+        MatrixStack.Entry entry = damageMtrx.peek();
         OverlayVertexConsumer vertexConsumer = new OverlayVertexConsumer(bufferBuilders.getEffectVertexConsumers().getBuffer(ModelLoader.BLOCK_DESTRUCTION_RENDER_LAYERS.get(texture - 240)), entry.getPositionMatrix(), entry.getNormalMatrix());
         BlockState state = ((BlockStateView) level).getBlockState(j, k, l);
-        Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer().renderDamage(state, new TilePos(j, k, l), level, matrices, vertexConsumer);
-        matrices.pop();
+        Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer().renderDamage(state, new TilePos(j, k, l), level, damageMtrx, vertexConsumer);
+        damageMtrx.pop();
         bufferBuilders.getEffectVertexConsumers().draw();
         VertexBuffer.unbindVertexArray();
         VertexBuffer.unbind();

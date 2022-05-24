@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.client.render;
 
 import net.minecraft.client.render.RenderList;
+import net.minecraft.client.render.WorldRenderer;
 import net.modificationstation.stationapi.api.client.blaze3d.systems.RenderSystem;
 import net.modificationstation.stationapi.api.client.gl.GlUniform;
 import net.modificationstation.stationapi.api.client.gl.VertexBuffer;
@@ -13,13 +14,13 @@ import java.util.List;
 
 public class RenderRegion extends RenderList {
 
-    public static final VboPool VBO_POOL = new VboPool(VertexFormats.POSITION_TEXTURE_COLOR_NORMAL);
-
     private final RenderListAccessor _super = (RenderListAccessor) this;
+    private final StationWorldRenderer stationWorldRenderer;
     private final List<VertexBuffer> buffers = new ArrayList<>();
 
-    public RenderRegion() {
+    public RenderRegion(WorldRenderer worldRenderer) {
         _super.stationapi$setField_2486(IntBuffer.allocate(0));
+        stationWorldRenderer = StationWorldRenderer.get(worldRenderer);
     }
 
     @Override
@@ -44,20 +45,17 @@ public class RenderRegion extends RenderList {
         if (!buffers.isEmpty()) {
             Shader shader = RenderSystem.getShader();
             GlUniform chunkOffset = null;
-            if (shader != null) {
+            if (shader != null)
                 chunkOffset = shader.chunkOffset;
-            }
             if (chunkOffset != null) {
                 chunkOffset.set(_super.stationapi$getField_2480() - _super.stationapi$getField_2483(), _super.stationapi$getField_2481() - _super.stationapi$getField_2484(), _super.stationapi$getField_2482() - _super.stationapi$getField_2485());
                 chunkOffset.upload();
             }
-            for (int buffer = 0, size = buffers.size(); buffer < size; buffer++) {
-                buffers.get(buffer).startPoolDrawing();
-            }
-            VBO_POOL.drawAll();
-            if (chunkOffset != null) {
+            for (int buffer = 0, size = buffers.size(); buffer < size; buffer++)
+                buffers.get(buffer).uploadToPool();
+            stationWorldRenderer.getTerrainVboPool().drawAll();
+            if (chunkOffset != null)
                 chunkOffset.set(Vec3f.ZERO);
-            }
         }
     }
 }

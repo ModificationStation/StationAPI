@@ -16,11 +16,13 @@
     "client.MixinTessellator",
     "client.MixinTextureManager",
     "client.MixinTexturePack",
+    "client.MixinWorldRenderer",
     "client.MixinZippedTexturePack",
     "client.RenderListAccessor",
     "client.TessellatorAccessor",
     "client.TextureManagerAccessor",
-    "client.WaterColourAccessor"
+    "client.WaterColourAccessor",
+    "client.WorldRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

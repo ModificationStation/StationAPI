@@ -207,7 +207,7 @@ public class VboPool implements AutoCloseable {
         GlStateManager._glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vertexBufferId);
     }
 
-    public void startDrawing(VertexFormat.DrawMode drawMode, Pos range) {
+    public void upload(VertexFormat.DrawMode drawMode, Pos range) {
         if (this.drawMode != drawMode) {
             if (this.bufferIndirect.position() > 0) {
                 throw new IllegalArgumentException("Mixed region draw modes: " + this.drawMode + " != " + drawMode);
@@ -229,11 +229,11 @@ public class VboPool implements AutoCloseable {
         format.startDrawing();
 
         int i = this.drawMode.getSize(this.nextPos);
-        RenderSystem.IndexBuffer rendersystem$autostorageindexbuffer = RenderSystem.getSequentialBuffer(this.drawMode, i);
-        VertexFormat.IntType vertexformat$indextype = rendersystem$autostorageindexbuffer.getElementFormat();
-        GlStateManager._glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, rendersystem$autostorageindexbuffer.getId());
+        RenderSystem.IndexBuffer autostorageindexbuffer = RenderSystem.getSequentialBuffer(this.drawMode, i);
+        VertexFormat.IntType indextype = autostorageindexbuffer.getElementFormat();
+        GlStateManager._glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, autostorageindexbuffer.getId());
         this.bufferIndirect.flip();
-        GlStateManager._multiDrawElementsIndirect(this.drawMode.mode, vertexformat$indextype.type, this.bufferIndirect, bufferIndirect.limit() / 5, 0);
+        GlStateManager._multiDrawElementsIndirect(this.drawMode.mode, indextype.type, this.bufferIndirect, bufferIndirect.limit() / 5, 0);
         this.bufferIndirect.limit(this.bufferIndirect.capacity());
 
         if (this.nextPos > this.size * 11 / 10) {
@@ -248,6 +248,17 @@ public class VboPool implements AutoCloseable {
 
     public static void unbindVertexArray() {
         GlStateManager._glBindVertexArray(0);
+    }
+
+    public void deleteGlBuffers() {
+        if (this.vertexArrayId >= 0) {
+            RenderSystem.glDeleteVertexArrays(this.vertexArrayId);
+            this.vertexArrayId = -1;
+        }
+        if (this.vertexBufferId >= 0) {
+            RenderSystem.glDeleteBuffers(this.vertexBufferId);
+            this.vertexBufferId = -1;
+        }
     }
 
     public static class Pos {
