@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.event.item.ItemInstanceEvent;
 public class TooltipRenderEvent extends ItemInstanceEvent {
 
     @Getter
-    private final boolean cancellable = true;
+    private final boolean cancelable = true;
 
     public final ContainerBase container;
     public final TextRenderer textManager;

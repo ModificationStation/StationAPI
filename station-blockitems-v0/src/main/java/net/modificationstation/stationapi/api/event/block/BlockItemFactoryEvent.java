@@ -21,7 +21,7 @@ import java.util.function.IntFunction;
 public class BlockItemFactoryEvent extends BlockEvent {
 
     @Getter
-    private final boolean cancellable = true;
+    private final boolean cancelable = true;
 
     /**
      * Current factory that's going to be executed to get block item instance.

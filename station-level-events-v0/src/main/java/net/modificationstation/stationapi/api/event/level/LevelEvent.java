@@ -30,7 +30,7 @@ public abstract class LevelEvent extends Event {
     public static class BlockSet extends LevelEvent {
         
         @Getter
-        private final boolean cancellable = true;
+        private final boolean cancelable = true;
 
         public final Chunk chunk;
         public final int

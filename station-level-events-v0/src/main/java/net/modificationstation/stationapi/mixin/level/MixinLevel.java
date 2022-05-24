@@ -42,7 +42,7 @@ public abstract class MixinLevel {
             cancellable = true
     )
     private void onBlockSetWithMeta(int x, int y, int z, int blockId, int blockMeta, CallbackInfoReturnable<Boolean> cir, Chunk chunk) {
-        if (StationAPI.EVENT_BUS.post(new LevelEvent.BlockSet((Level) (Object) this, chunk, x, y, z, blockId, blockMeta)).isCancelled())
+        if (StationAPI.EVENT_BUS.post(new LevelEvent.BlockSet((Level) (Object) this, chunk, x, y, z, blockId, blockMeta)).isCanceled())
             cir.setReturnValue(false);
     }
 
@@ -58,7 +58,7 @@ public abstract class MixinLevel {
             cancellable = true
     )
     private void onBlockSet(int x, int y, int z, int blockId, CallbackInfoReturnable<Boolean> cir, Chunk chunk) {
-        if (StationAPI.EVENT_BUS.post(new LevelEvent.BlockSet((Level) (Object) this, chunk, x, y, z, blockId)).isCancelled())
+        if (StationAPI.EVENT_BUS.post(new LevelEvent.BlockSet((Level) (Object) this, chunk, x, y, z, blockId)).isCanceled())
             cir.setReturnValue(false);
     }
 

@@ -30,7 +30,7 @@ public class MixinContainerBase extends ScreenBase {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void renderTooltip(int mouseX, int mouseY, float delta, CallbackInfo ci, int containerX, int containerY, Slot slot, PlayerInventory inventory, String originalTooltip) {
-        cancelTooltipRender = StationAPI.EVENT_BUS.post(new TooltipRenderEvent(slot.getItem(), (ContainerBase) (Object) this, this.textManager, inventory, containerX, containerY, mouseX, mouseY, delta, originalTooltip)).isCancelled();
+        cancelTooltipRender = StationAPI.EVENT_BUS.post(new TooltipRenderEvent(slot.getItem(), (ContainerBase) (Object) this, this.textManager, inventory, containerX, containerY, mouseX, mouseY, delta, originalTooltip)).isCanceled();
     }
 
     @Redirect(

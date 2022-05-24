@@ -40,7 +40,7 @@ public abstract class AchievementsEvent extends Event {
     public static class AchievementIconRender extends AchievementsEvent {
 
         @Getter // @Override
-        private final boolean cancellable = true;
+        private final boolean cancelable = true;
         public final Achievement achievement;
 
         public AchievementIconRender(Achievements achievementsScreen, Achievement achievement) {
@@ -59,7 +59,7 @@ public abstract class AchievementsEvent extends Event {
     public static class LineRender extends AchievementsEvent {
 
         @Getter // @Override
-        private final boolean cancellable = true;
+        private final boolean cancelable = true;
         public final Achievement achievement;
 
         public LineRender(Achievements achievementsScreen, Achievement achievement) {

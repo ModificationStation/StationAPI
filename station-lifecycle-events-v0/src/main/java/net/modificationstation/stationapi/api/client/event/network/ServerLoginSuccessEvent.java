@@ -10,7 +10,7 @@ import net.minecraft.packet.login.LoginRequest0x1Packet;
 public class ServerLoginSuccessEvent extends Event {
 
     @Getter
-    private final boolean cancellable = true;
+    private final boolean cancelable = true;
 
     public final ClientPlayNetworkHandler networkHandler;
     public final LoginRequest0x1Packet loginRequestPacket;

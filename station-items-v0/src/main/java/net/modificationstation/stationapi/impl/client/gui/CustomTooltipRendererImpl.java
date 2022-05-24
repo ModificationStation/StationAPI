@@ -18,7 +18,7 @@ public class CustomTooltipRendererImpl {
     @EventListener(priority = ListenerPriority.HIGH)
     private static void renderCustomTooltips(TooltipRenderEvent event) {
         ItemBase item = event.itemInstance.getType();
-        if (!event.isCancelled() && item instanceof CustomTooltipProvider provider) {
+        if (!event.isCanceled() && item instanceof CustomTooltipProvider provider) {
             String[] newTooltip = provider.getTooltip(event.itemInstance, event.originalTooltip);
             if (newTooltip != null) Arrays.stream(newTooltip).mapToInt(event.textManager::getTextWidth).max().ifPresent(tooltipWidth -> {
                 int tooltipX = event.mouseX - event.containerX + 12;

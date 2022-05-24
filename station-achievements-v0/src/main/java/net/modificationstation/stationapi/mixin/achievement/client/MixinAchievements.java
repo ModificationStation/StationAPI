@@ -73,7 +73,7 @@ public class MixinAchievements extends ScreenBase {
 
     @Redirect(method = "method_1998(IIF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/achievement/Achievement;parent:Lnet/minecraft/achievement/Achievement;", opcode = Opcodes.GETFIELD, ordinal = 0))
     private Achievement overrideLineRender(Achievement achievement) {
-        return StationAPI.EVENT_BUS.post(new AchievementsEvent.LineRender((Achievements) (Object) this, achievement)).isCancelled() ? null : achievement.parent;
+        return StationAPI.EVENT_BUS.post(new AchievementsEvent.LineRender((Achievements) (Object) this, achievement)).isCanceled() ? null : achievement.parent;
     }
 
     @SuppressWarnings("DefaultAnnotationParam")
@@ -88,7 +88,7 @@ public class MixinAchievements extends ScreenBase {
     }
 
     private int onRenderAchievement(int achievementOrdinal) {
-        while (achievementOrdinal < ACHIEVEMENTS.size() && StationAPI.EVENT_BUS.post(new AchievementsEvent.AchievementIconRender((Achievements) (Object) this, (Achievement) ACHIEVEMENTS.get(achievementOrdinal))).isCancelled())
+        while (achievementOrdinal < ACHIEVEMENTS.size() && StationAPI.EVENT_BUS.post(new AchievementsEvent.AchievementIconRender((Achievements) (Object) this, (Achievement) ACHIEVEMENTS.get(achievementOrdinal))).isCanceled())
             achievementOrdinal++;
         return achievementOrdinal;
     }

@@ -28,6 +28,6 @@ public class MixinBlockBase {
     )
     private static Block getBlockItem(int blockID) {
         BlockItemFactoryEvent event = StationAPI.EVENT_BUS.post(new BlockItemFactoryEvent(BY_ID[blockID + BY_ID.length], Block::new));
-        return event.isCancelled() ? BlockFormOnlyHandler.EMPTY_BLOCK_ITEM.get() : event.currentFactory.apply(blockID);
+        return event.isCanceled() ? BlockFormOnlyHandler.EMPTY_BLOCK_ITEM.get() : event.currentFactory.apply(blockID);
     }
 }
