@@ -1,6 +1,6 @@
 plugins {
     id "maven-publish"
-    id 'babric-loom' version '0.12-SNAPSHOT'
+    id 'babric-loom' version '0.12.8'
 }
 
 def getSubprojectVersion(project, ver) {
@@ -75,6 +75,10 @@ allprojects {
         implementationOnly //A non-transitive implementation
         runtimeClasspath.extendsFrom implementationOnly
         compileClasspath.extendsFrom implementationOnly
+
+        // Required cause loom 0.14 for some reason doesn't remove asm-all 4.1. Ew.
+        all*.exclude group: 'org.ow2.asm', module: "asm-debug-all"
+        all*.exclude group: 'org.ow2.asm', module: "asm-all"
     }
 
     dependencies {
@@ -90,7 +94,7 @@ allprojects {
 
         mappings "net.glasslauncher:bin:${project.yarn_mappings}"
 
-        modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+        modImplementation "babric:fabric-loader:${project.loader_version}"
 
         implementationOnly 'org.apache.commons:commons-lang3:3.12.0'
         implementationOnly 'commons-io:commons-io:2.11.0'
