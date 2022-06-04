@@ -17,7 +17,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = "station-api"
+rootProject.name = "Station API"
 
 include 'station-api-base'
 
