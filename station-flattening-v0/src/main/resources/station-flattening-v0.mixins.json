@@ -19,7 +19,8 @@
     "MixinLevelMonsterSpawner",
     "MixinLevelProperties",
     "MixinOverworldLevelSource",
-    "MixinWorldPopulationRegion"
+    "MixinWorldPopulationRegion",
+    "MixinInGame"
   ],
   "client": [
     "MixinClientLevel",
