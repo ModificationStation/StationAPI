@@ -53,7 +53,8 @@ public abstract class MixinInGame extends DrawableHelper {
 				
 				Iterator<Property<?>> iterator = properties.iterator();
 				while (iterator.hasNext()) {
-					text = iterator.next().toString();
+					Property<?> property = iterator.next();
+					text = property.getName() + ": " + state.get(property);
 					drawTextWithShadow(var8, text, var6 - var8.getTextWidth(text) - 2, offset += 10, 14737632);
 				}
 			}
