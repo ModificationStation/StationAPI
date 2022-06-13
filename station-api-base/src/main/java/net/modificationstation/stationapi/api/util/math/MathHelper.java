@@ -12,6 +12,10 @@ public class MathHelper {
         return (float)Math.sqrt(value);
     }
 
+    public static double square(double n) {
+        return n * n;
+    }
+
     public static int lerp(double delta, int start, int end) {
         return (int) Math.round(start + (end - start) * delta);
     }
@@ -48,6 +52,11 @@ public class MathHelper {
         i |= i >> 8;
         i |= i >> 16;
         return i + 1;
+    }
+
+    public static int ceilLog2(int value) {
+        value = MathHelper.isPowerOfTwo(value) ? value : MathHelper.smallestEncompassingPowerOfTwo(value);
+        return MULTIPLY_DE_BRUIJN_BIT_POSITION[(int)((long)value * 125613361L >> 27) & 0x1F];
     }
 
     public static float clamp(float value, float min, float max) {

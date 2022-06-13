@@ -3,10 +3,13 @@ package net.modificationstation.stationapi.mixin.flattening;
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.Level;
 import net.minecraft.level.chunk.Chunk;
+import net.minecraft.level.dimension.Dimension;
 import net.minecraft.util.maths.Vec2i;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.impl.level.HeightLimitView;
 import net.modificationstation.stationapi.impl.level.StationDimension;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,8 +20,10 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Iterator;
 
 @Mixin(Level.class)
-public abstract class MixinLevel implements BlockStateView {
+public abstract class MixinLevel implements BlockStateView, HeightLimitView {
     @Shadow public abstract Chunk getChunk(int x, int z);
+
+    @Shadow @Final public Dimension dimension;
 
     @Override
     public BlockState getBlockState(int x, int y, int z) {
@@ -93,7 +98,52 @@ public abstract class MixinLevel implements BlockStateView {
         "method_248"
     }, constant = @Constant(intValue = 128))
     private int changeMaxHeight(int value) {
-        return getLevelHeight();
+        return getTopY();
+    }
+
+    @SuppressWarnings("MixinAnnotationTarget")
+    @ModifyConstant(method = {
+            "getTileId",
+            "setTileWithMetadata",
+            "setTileInChunk",
+            "getTileMeta",
+            "method_223",
+            "isAboveGround",
+            "getLightLevel",
+            "placeTile(IIIZ)I",
+            "method_164",
+            "method_205"
+    }, constant = @Constant(expandZeroConditions = Constant.Condition.GREATER_THAN_OR_EQUAL_TO_ZERO))
+    private int changeBottomYGE(int value) {
+        return getBottomY();
+    }
+
+    @SuppressWarnings("MixinAnnotationTarget")
+    @ModifyConstant(method = {
+            "isTileLoaded",
+            "method_155",
+            "method_164",
+            "method_248",
+            "method_162"
+    }, constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_ZERO))
+    private int changeBottomYLT(int value) {
+        return getBottomY();
+    }
+
+    @SuppressWarnings("MixinAnnotationTarget")
+    @ModifyConstant(method = {
+            "method_228"
+    }, constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_OR_EQUAL_TO_ZERO))
+    private int changeBottomYLE(int value) {
+        return getBottomY();
+    }
+
+    @ModifyConstant(method = {
+            "method_193",
+            "method_164"
+    }, constant = @Constant(intValue = 0, ordinal = 0))
+    private int changeBottomY(int value) {
+        return getBottomY();
     }
     
     @ModifyConstant(method = {
@@ -103,20 +153,24 @@ public abstract class MixinLevel implements BlockStateView {
         "method_228"
     }, constant = @Constant(intValue = 127))
     private int changeMaxBlockHeight(int value) {
-        return getLevelHeight() - 1;
+        return getTopY() - 1;
     }
     
     @ModifyConstant(method = {
         "method_162"
     }, constant = @Constant(intValue = 200))
     private int changeMaxEntityCalcHeight(int value) {
-        return getLevelHeight() + 64;
+        return getTopY() + 64;
     }
-    
+
     @Unique
-    private int getLevelHeight() {
-        Level level = Level.class.cast(this);
-        StationDimension dimension = StationDimension.class.cast(level.dimension);
-        return dimension.getActualLevelHeight();
+    @Override
+    public int getHeight() {
+        return ((StationDimension) this.dimension).getActualLevelHeight();
+    }
+
+    @Override
+    public int getBottomY() {
+        return ((StationDimension) this.dimension).getActualBottomY();
     }
 }

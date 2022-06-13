@@ -1,109 +1,110 @@
 package net.modificationstation.stationapi.impl.level.chunk;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.util.io.CompoundTag;
-import net.minecraft.util.io.ListTag;
-import net.modificationstation.stationapi.api.packet.Message;
-import net.modificationstation.stationapi.api.util.collection.IdList;
+import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 import net.modificationstation.stationapi.api.util.collection.Int2ObjectBiMap;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
-public class BiMapPalette<T> implements Palette<T> {
-   private final IdList<T> idList;
-   private final Int2ObjectBiMap<T> map;
-   private final PaletteResizeListener<T> resizeHandler;
-   private final Function<CompoundTag, T> elementDeserializer;
-   private final Function<T, CompoundTag> elementSerializer;
-   private final int indexBits;
+/**
+ * A palette backed by a bidirectional hash table.
+ */
+public class BiMapPalette<T>
+implements Palette<T> {
+    private final IndexedIterable<T> idList;
+    private final Int2ObjectBiMap<T> map;
+    private final PaletteResizeListener<T> listener;
+    private final int indexBits;
 
-   public BiMapPalette(IdList<T> idList, int indexBits, PaletteResizeListener<T> resizeHandler, Function<CompoundTag, T> elementDeserializer, Function<T, CompoundTag> elementSerializer) {
-      this.idList = idList;
-      this.indexBits = indexBits;
-      this.resizeHandler = resizeHandler;
-      this.elementDeserializer = elementDeserializer;
-      this.elementSerializer = elementSerializer;
-      this.map = new Int2ObjectBiMap<>(1 << indexBits);
-   }
+    public BiMapPalette(IndexedIterable<T> idList, int bits, PaletteResizeListener<T> listener, List<T> entries) {
+        this(idList, bits, listener);
+        entries.forEach(this.map::add);
+    }
 
-   public int getIndex(T object) {
-      int i = this.map.getRawId(object);
-      if (i == -1) {
-         i = this.map.add(object);
-         if (i >= 1 << this.indexBits) {
-            i = this.resizeHandler.onResize(this.indexBits + 1, object);
-         }
-      }
+    public BiMapPalette(IndexedIterable<T> idList, int indexBits, PaletteResizeListener<T> listener) {
+        this(idList, indexBits, listener, Int2ObjectBiMap.create(1 << indexBits));
+    }
 
-      return i;
-   }
+    private BiMapPalette(IndexedIterable<T> indexedIterable, int i, PaletteResizeListener<T> paletteResizeListener, Int2ObjectBiMap<T> int2ObjectBiMap) {
+        this.idList = indexedIterable;
+        this.indexBits = i;
+        this.listener = paletteResizeListener;
+        this.map = int2ObjectBiMap;
+    }
 
-   public boolean accepts(Predicate<T> predicate) {
-      for(int i = 0; i < this.getIndexBits(); ++i) {
-         if (predicate.test(this.map.get(i))) {
+    public static <A> Palette<A> create(int bits, IndexedIterable<A> idList, PaletteResizeListener<A> listener, List<A> entries) {
+        return new BiMapPalette<>(idList, bits, listener, entries);
+    }
+
+    @Override
+    public int index(T object) {
+        int i = this.map.getRawId(object);
+        if (i == -1 && (i = this.map.add(object)) >= 1 << this.indexBits) {
+            i = this.listener.onResize(this.indexBits + 1, object);
+        }
+        return i;
+    }
+
+    @Override
+    public boolean hasAny(Predicate<T> predicate) {
+        for (int i = 0; i < this.getSize(); ++i) {
+            if (!predicate.test(this.map.get(i))) continue;
             return true;
-         }
-      }
+        }
+        return false;
+    }
 
-      return false;
-   }
+    @Override
+    public T get(int id) {
+        T object = this.map.get(id);
+        if (object == null) {
+            throw new EntryMissingException(id);
+        }
+        return object;
+    }
 
-   @Nullable
-   public T getByIndex(int index) {
-      return this.map.get(index);
-   }
-
-   @Environment(EnvType.CLIENT)
-   public void fromPacket(Message buf) {
-      this.map.clear();
-      int i = buf.ints.length;
-
-      for(int j = 0; j < i; ++j) {
-         this.map.add(this.idList.get(buf.ints[j]));
-      }
-
-   }
-
-   public void toPacket(Message buf) {
-      int i = this.getIndexBits();
-      buf.ints = new int[i];
-
-      for(int j = 0; j < i; ++j) {
-         buf.ints[j] = (this.idList.getRawId(this.map.get(j)));
-      }
-
-   }
-
-//   public int getPacketSize() {
-//      int i = PacketByteBuf.getVarIntSizeBytes(this.getIndexBits());
+//    @Override
+//    public void readPacket(PacketByteBuf buf) {
+//        this.map.clear();
+//        int i = buf.readVarInt();
+//        for (int j = 0; j < i; ++j) {
+//            this.map.add(this.idList.getOrThrow(buf.readVarInt()));
+//        }
+//    }
 //
-//      for(int j = 0; j < this.getIndexBits(); ++j) {
-//         i += PacketByteBuf.getVarIntSizeBytes(this.idList.getRawId(this.map.get(j)));
-//      }
+//    @Override
+//    public void writePacket(PacketByteBuf buf) {
+//        int i = this.getSize();
+//        buf.writeVarInt(i);
+//        for (int j = 0; j < i; ++j) {
+//            buf.writeVarInt(this.idList.getRawId(this.map.get(j)));
+//        }
+//    }
 //
-//      return i;
-//   }
+//    @Override
+//    public int getPacketSize() {
+//        int i = PacketByteBuf.getVarIntLength(this.getSize());
+//        for (int j = 0; j < this.getSize(); ++j) {
+//            i += PacketByteBuf.getVarIntLength(this.idList.getRawId(this.map.get(j)));
+//        }
+//        return i;
+//    }
 
-   public int getIndexBits() {
-      return this.map.size();
-   }
+    public List<T> getElements() {
+        List<T> arrayList = new ArrayList<>();
+        this.map.iterator().forEachRemaining(arrayList::add);
+        return arrayList;
+    }
 
-   public void fromTag(ListTag tag) {
-      this.map.clear();
+    @Override
+    public int getSize() {
+        return this.map.size();
+    }
 
-      for(int i = 0; i < tag.size(); ++i) {
-         this.map.add(this.elementDeserializer.apply((CompoundTag) tag.get(i)));
-      }
-
-   }
-
-   public void toTag(ListTag tag) {
-      for(int i = 0; i < this.getIndexBits(); ++i) {
-         tag.add(this.elementSerializer.apply(this.map.get(i)));
-      }
-
-   }
+    @Override
+    public Palette<T> copy() {
+        return new BiMapPalette<>(this.idList, this.indexBits, this.listener, this.map.copy());
+    }
 }
+

@@ -19,7 +19,7 @@ public class MixinBlock {
 	
 	@Inject(method = "useOnTile", at = @At("HEAD"))
 	private void storeLevel(ItemInstance item, PlayerBase player, Level level, int x, int y, int z, int facing, CallbackInfoReturnable<Boolean> info) {
-		StationDimension dimension = StationDimension.class.cast(level.dimension);
+		StationDimension dimension = (StationDimension) level.dimension;
 		maxHeight = (short) (dimension.getActualLevelHeight() - 1);
 	}
 	

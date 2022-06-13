@@ -4,6 +4,8 @@ import com.google.common.collect.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.modificationstation.stationapi.api.state.property.Property;
+import net.modificationstation.stationapi.api.util.collection.FastImmutableTable;
+import net.modificationstation.stationapi.api.util.collection.FastImmutableTableCache;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -127,6 +129,8 @@ public abstract class State<O, S> {
 
          this.withTable = table.isEmpty() ? table : ArrayTable.create(table);
       }
+      FastImmutableTableCache<Property<?>, Comparable<?>, S> fitCache = StatePropertyTableCache.getTableCache(owner);
+      if (fitCache != null) withTable = new FastImmutableTable<>(withTable, fitCache);
    }
 
    private Map<Property<?>, Comparable<?>> toMapWith(Property<?> property, Comparable<?> value) {

@@ -8,7 +8,7 @@ import net.minecraft.level.source.OverworldLevelSource;
 import net.minecraft.util.noise.PerlinOctaveNoise;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.impl.level.StationDimension;
+import net.modificationstation.stationapi.impl.level.HeightLimitView;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSectionsAccessor;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,17 +36,16 @@ public class MixinOverworldLevelSource {
 		target = "Lnet/minecraft/level/source/OverworldLevelSource;shapeChunk(II[B[Lnet/minecraft/level/biome/Biome;[D)V"
 	), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> info, byte[] blocks, Chunk chunk, double[] var5) {
-		StationDimension dimension = StationDimension.class.cast(level.dimension);
-		short height = dimension.getActualLevelHeight();
+		short height = (short) ((HeightLimitView) level).getTopY();
 		if (height < 129) return;
 		
-		BlockState stone = BlockStateHolder.class.cast(BlockBase.STONE).getDefaultState();
-		BlockState dirt = BlockStateHolder.class.cast(BlockBase.DIRT).getDefaultState();
-		BlockState grass = BlockStateHolder.class.cast(BlockBase.GRASS).getDefaultState();
-		BlockState water = BlockStateHolder.class.cast(BlockBase.STILL_WATER).getDefaultState();
-		BlockState gravel = BlockStateHolder.class.cast(BlockBase.GRAVEL).getDefaultState();
+		BlockState stone = ((BlockStateHolder) BlockBase.STONE).getDefaultState();
+		BlockState dirt = ((BlockStateHolder) BlockBase.DIRT).getDefaultState();
+		BlockState grass = ((BlockStateHolder) BlockBase.GRASS).getDefaultState();
+		BlockState water = ((BlockStateHolder) BlockBase.STILL_WATER).getDefaultState();
+		BlockState gravel = ((BlockStateHolder) BlockBase.GRAVEL).getDefaultState();
 		
-		ChunkSectionsAccessor accessor = ChunkSectionsAccessor.class.cast(chunk);
+		ChunkSectionsAccessor accessor = (ChunkSectionsAccessor) chunk;
 		ChunkSection[] sections = accessor.getSections();
 		
 		short max = 0;
@@ -81,7 +80,7 @@ public class MixinOverworldLevelSource {
 		customPool.submit(() -> IntStream.range(0, finalMin).parallel().forEach(n -> {
 			ChunkSection section = sections[n];
 			for (short i = 0; i < 4096; i++) {
-				section.setBlockState(i & 15, (i >> 4) & 15, (i >> 8) & 15, stone, false);
+				section.setBlockState(i & 15, (i >> 4) & 15, (i >> 8) & 15, stone);
 			}
 		}));
 		
@@ -99,7 +98,7 @@ public class MixinOverworldLevelSource {
 					}
 					
 					for (short y = 0; y < maxY; y++) {
-						section.setBlockState(x, y, z, stone, false);
+						section.setBlockState(x, y, z, stone);
 					}
 					
 					short dirtLevel = (short) (maxY - 3);
@@ -108,7 +107,7 @@ public class MixinOverworldLevelSource {
 					if (map[i] < 62) {
 						if (dirtLevel >= 0 && dirtLevel < 16) {
 							for (byte y = (byte) dirtLevel; y <= grassLevel; y++) {
-								section.setBlockState(x, y, z, gravel, false);
+								section.setBlockState(x, y, z, gravel);
 							}
 						}
 						if (waterLevel >= 0) {
@@ -116,7 +115,7 @@ public class MixinOverworldLevelSource {
 								waterLevel = 16;
 							}
 							for (byte y = 0; y < waterLevel; y++) {
-								section.setBlockState(x, y, z, water, false);
+								section.setBlockState(x, y, z, water);
 							}
 						}
 					}
@@ -126,11 +125,11 @@ public class MixinOverworldLevelSource {
 								grassLevel = 16;
 							}
 							for (byte y = (byte) dirtLevel; y < grassLevel; y++) {
-								section.setBlockState(x, y, z, dirt, false);
+								section.setBlockState(x, y, z, dirt);
 							}
 						}
 						if (grassLevel >= 0 && grassLevel < 16) {
-							section.setBlockState(x, grassLevel, z, grass, false);
+							section.setBlockState(x, grassLevel, z, grass);
 						}
 					}
 				}
@@ -173,7 +172,6 @@ public class MixinOverworldLevelSource {
 	
 	@Unique
 	private boolean canApply() {
-		StationDimension dimension = StationDimension.class.cast(level.dimension);
-		return dimension.getActualLevelHeight() > 128;
+		return ((HeightLimitView) level).getTopY() > 128;
 	}
 }

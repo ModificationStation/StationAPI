@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.Hash;
 import net.fabricmc.loader.api.FabricLoader;
 import net.modificationstation.stationapi.api.util.exception.CrashException;
@@ -24,6 +25,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
@@ -211,6 +213,40 @@ public class Util {
     public static <T, U, R> BiFunction<T, U, R> memoize(final BiFunction<T, U, R> biFunction) {
         final Map<Pair<T, U>, R> cache = new HashMap<>();
         return (object, object2) -> cache.computeIfAbsent(Pair.of(object, object2), pair -> biFunction.apply(pair.getFirst(), pair.getSecond()));
+    }
+
+    public static DataResult<int[]> toArray(IntStream stream, int length) {
+        int[] is = stream.limit(length + 1).toArray();
+        if (is.length != length) {
+            String string = "Input is not a list of " + length + " ints";
+            if (is.length >= length) {
+                return DataResult.error(string, Arrays.copyOf(is, length));
+            }
+            return DataResult.error(string);
+        }
+        return DataResult.success(is);
+    }
+
+    public static <T> DataResult<List<T>> toArray(List<T> list, int length) {
+        if (list.size() != length) {
+            String string = "Input is not a list of " + length + " elements";
+            if (list.size() >= length) {
+                return DataResult.error(string, list.subList(0, length));
+            }
+            return DataResult.error(string);
+        }
+        return DataResult.success(list);
+    }
+
+    public static <T> T getRandom(List<T> list, Random random) {
+        return list.get(random.nextInt(list.size()));
+    }
+
+    public static <T> Optional<T> getRandomOrEmpty(List<T> list, Random random) {
+        if (list.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(Util.getRandom(list, random));
     }
 
     public enum OperatingSystem {

@@ -20,8 +20,10 @@ import java.util.Optional;
 @Mixin(Dimension.class)
 public class MixinDimension implements StationDimension {
 	@Unique private static final String HEIGHT_KEY = "LevelHeight";
+	@Unique private static final String BOTTOM_Y_KEY = "BottomY";
 	@Unique private short sectionCount = 8;
 	@Unique private short height = 128;
+	@Unique private short bottomY = 0;
 	@Shadow public int id;
 	
 	@Inject(method = "initDimension(Lnet/minecraft/level/Level;)V", at = @At(
@@ -54,7 +56,12 @@ public class MixinDimension implements StationDimension {
 	public short getActualLevelHeight() {
 		return height;
 	}
-	
+
+	@Override
+	public short getActualBottomY() {
+		return bottomY;
+	}
+
 	@Unique
 	@Override
 	public short getSectionCount() {
@@ -63,12 +70,8 @@ public class MixinDimension implements StationDimension {
 	
 	@Unique
 	public void loadFromNBT(CompoundTag tag) {
-		if (tag.containsKey(HEIGHT_KEY)) {
-			height = tag.getShort(HEIGHT_KEY);
-		}
-		else {
-			height = getDefaultLevelHeight();
-		}
+		height = tag.containsKey(HEIGHT_KEY) ? tag.getShort(HEIGHT_KEY) : getDefaultLevelHeight();
+		bottomY = tag.containsKey(BOTTOM_Y_KEY) ? tag.getShort(BOTTOM_Y_KEY) : getDefaultBottomY();
 		
 		if (height <= 0) {
 			height = 16;
@@ -82,5 +85,6 @@ public class MixinDimension implements StationDimension {
 	@Unique
 	public void saveToNBT(CompoundTag tag) {
 		tag.put(HEIGHT_KEY, getActualLevelHeight());
+		tag.put(BOTTOM_Y_KEY, getActualBottomY());
 	}
 }

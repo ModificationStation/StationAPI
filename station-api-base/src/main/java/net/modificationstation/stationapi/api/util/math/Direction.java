@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import net.minecraft.util.maths.Vec3i;
 import net.modificationstation.stationapi.api.util.StringIdentifiable;
 import net.modificationstation.stationapi.api.util.Util;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -150,7 +151,7 @@ public enum Direction implements StringIdentifiable {
         }
 
         @Override
-        public Iterator<Direction> iterator() {
+        public @NotNull Iterator<Direction> iterator() {
             return Iterators.forArray(this.facingArray);
         }
 
@@ -188,14 +189,10 @@ public enum Direction implements StringIdentifiable {
     public enum Axis implements StringIdentifiable {
 
         X("x") {
-            @Override
-            public double get2DX(double x, double y, double z) {
-                return z;
-            }
 
             @Override
-            public double get2DY(double x, double y, double z) {
-                return y;
+            public int choose(int x, int y, int z) {
+                return x;
             }
 
             @Override
@@ -204,14 +201,10 @@ public enum Direction implements StringIdentifiable {
             }
         },
         Y("y") {
-            @Override
-            public double get2DX(double x, double y, double z) {
-                return x;
-            }
 
             @Override
-            public double get2DY(double x, double y, double z) {
-                return z;
+            public int choose(int x, int y, int z) {
+                return y;
             }
 
             @Override
@@ -220,14 +213,10 @@ public enum Direction implements StringIdentifiable {
             }
         },
         Z("z") {
-            @Override
-            public double get2DX(double x, double y, double z) {
-                return x;
-            }
 
             @Override
-            public double get2DY(double x, double y, double z) {
-                return y;
+            public int choose(int x, int y, int z) {
+                return z;
             }
 
             @Override
@@ -247,9 +236,7 @@ public enum Direction implements StringIdentifiable {
             return NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
         }
 
-        public abstract double get2DX(double x, double y, double z);
-
-        public abstract double get2DY(double x, double y, double z);
+        public abstract int choose(int x, int y, int z);
 
         public abstract Direction.Type getType();
 

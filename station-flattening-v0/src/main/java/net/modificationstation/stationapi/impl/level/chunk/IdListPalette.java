@@ -1,54 +1,67 @@
 package net.modificationstation.stationapi.impl.level.chunk;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.util.io.ListTag;
-import net.modificationstation.stationapi.api.packet.Message;
-import net.modificationstation.stationapi.api.util.collection.IdList;
+import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 
+import java.util.List;
 import java.util.function.Predicate;
 
-@SuppressWarnings("ClassCanBeRecord")
-public class IdListPalette<T> implements Palette<T> {
-   private final IdList<T> idList;
-   private final T defaultValue;
+/**
+ * A palette that directly stores the raw ID of entries to the palette
+ * container storage.
+ */
+public class IdListPalette<T>
+implements Palette<T> {
+    private final IndexedIterable<T> idList;
 
-   public IdListPalette(IdList<T> idList, T defaultValue) {
-      this.idList = idList;
-      this.defaultValue = defaultValue;
-   }
+    public IdListPalette(IndexedIterable<T> idList) {
+        this.idList = idList;
+    }
 
-   @Override
-   public int getIndex(T object) {
-      int i = this.idList.getRawId(object);
-      return i == -1 ? 0 : i;
-   }
+    public static <A> Palette<A> create(int bits, IndexedIterable<A> idList, PaletteResizeListener<A> listener, List<A> list) {
+        return new IdListPalette<>(idList);
+    }
 
-   @Override
-   public boolean accepts(Predicate<T> predicate) {
-      return true;
-   }
+    @Override
+    public int index(T object) {
+        int i = this.idList.getRawId(object);
+        return i == -1 ? 0 : i;
+    }
 
-   @Override
-   public T getByIndex(int index) {
-      T object = this.idList.get(index);
-      return object == null ? this.defaultValue : object;
-   }
+    @Override
+    public boolean hasAny(Predicate<T> predicate) {
+        return true;
+    }
 
-   @Override
-   @Environment(EnvType.CLIENT)
-   public void fromPacket(Message buf) {
-   }
+    @Override
+    public T get(int id) {
+        T object = this.idList.get(id);
+        if (object == null) {
+            throw new EntryMissingException(id);
+        }
+        return object;
+    }
 
-   @Override
-   public void toPacket(Message buf) {
-   }
+//    @Override
+//    public void readPacket(PacketByteBuf buf) {
+//    }
+//
+//    @Override
+//    public void writePacket(PacketByteBuf buf) {
+//    }
+//
+//    @Override
+//    public int getPacketSize() {
+//        return PacketByteBuf.getVarIntLength(0);
+//    }
 
-//   public int getPacketSize() {
-//      return PacketByteBuf.getVarIntSizeBytes(0);
-//   }
+    @Override
+    public int getSize() {
+        return this.idList.size();
+    }
 
-   @Override
-   public void fromTag(ListTag tag) {
-   }
+    @Override
+    public Palette<T> copy() {
+        return this;
+    }
 }
+

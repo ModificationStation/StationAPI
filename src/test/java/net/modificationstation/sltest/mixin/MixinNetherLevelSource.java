@@ -7,6 +7,7 @@ import net.minecraft.level.source.NetherLevelSource;
 import net.minecraft.util.noise.PerlinOctaveNoise;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
+import net.modificationstation.stationapi.impl.level.HeightLimitView;
 import net.modificationstation.stationapi.impl.level.StationDimension;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSectionsAccessor;
@@ -31,9 +32,8 @@ public class MixinNetherLevelSource {
 	
 	@Inject(method = "getChunk(II)Lnet/minecraft/level/chunk/Chunk;", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> info, byte[] blocks, Chunk chunk) {
-		StationDimension dimension = StationDimension.class.cast(level.dimension);
-		short height = dimension.getActualLevelHeight();
-		if (height == 128) return;
+		short height = (short) ((HeightLimitView) level).getTopY();
+		if (height < 129) return;
 		
 		BlockState netherrack = BlockStateHolder.class.cast(BlockBase.NETHERRACK).getDefaultState();
 		BlockState lava = BlockStateHolder.class.cast(BlockBase.STILL_LAVA).getDefaultState();
@@ -73,7 +73,7 @@ public class MixinNetherLevelSource {
 		customPool.submit(() -> IntStream.range(0, finalMin).parallel().forEach(n -> {
 			ChunkSection section = sections[n];
 			for (short i = 0; i < 4096; i++) {
-				section.setBlockState(i & 15, (i >> 4) & 15, (i >> 8) & 15, netherrack, false);
+				section.setBlockState(i & 15, (i >> 4) & 15, (i >> 8) & 15, netherrack);
 			}
 		}));
 		
@@ -91,7 +91,7 @@ public class MixinNetherLevelSource {
 					}
 					
 					for (short y = 0; y < maxY; y++) {
-						section.setBlockState(x, y, z, netherrack, false);
+						section.setBlockState(x, y, z, netherrack);
 					}
 					
 					/*if (waterLevel >= 0) {

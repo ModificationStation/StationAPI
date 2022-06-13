@@ -1,16 +1,18 @@
-package net.minecraft.util.io;
+package net.modificationstation.stationapi.api.util.io;
+
+import net.minecraft.util.io.AbstractTag;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class LongArrayTag extends AbstractTag {
+public class IntArrayTag extends AbstractTag {
 
-    public long[] data;
+    public int[] data;
 
-    public LongArrayTag() {}
+    public IntArrayTag() {}
 
-    public LongArrayTag(long[] value) {
+    public IntArrayTag(int[] value) {
         this.data = value;
     }
 
@@ -18,8 +20,8 @@ public class LongArrayTag extends AbstractTag {
     public void write(DataOutput out) {
         try {
             out.writeInt(this.data.length);
-            for (long l : data)
-                out.writeLong(l);
+            for (int l : data)
+                out.writeInt(l);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -29,9 +31,9 @@ public class LongArrayTag extends AbstractTag {
     public void read(DataInput in) {
         try {
             int length = in.readInt();
-            data = new long[length];
+            data = new int[length];
             for (int i = 0; i < length; i++)
-                data[i] = in.readLong();
+                data[i] = in.readInt();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -39,11 +41,6 @@ public class LongArrayTag extends AbstractTag {
 
     @Override
     public byte getId() {
-        return 12;
-    }
-
-    @Override
-    public String toString() {
-        return "[" + this.data.length + " longs]";
+        return 11;
     }
 }

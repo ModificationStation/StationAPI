@@ -1,7 +1,8 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.util.io.AbstractTag;
-import net.minecraft.util.io.LongArrayTag;
+import net.modificationstation.stationapi.api.util.io.IntArrayTag;
+import net.modificationstation.stationapi.api.util.io.LongArrayTag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -21,8 +22,10 @@ public class MixinAbstractTag {
             cancellable = true
     )
     private static void getCustomTag(byte id, CallbackInfoReturnable<AbstractTag> cir) {
-        if (id == 12)
-            cir.setReturnValue(new LongArrayTag());
+        switch (id) {
+            case 11 -> cir.setReturnValue(new IntArrayTag());
+            case 12 -> cir.setReturnValue(new LongArrayTag());
+        }
     }
 
     @ModifyConstant(
@@ -30,6 +33,10 @@ public class MixinAbstractTag {
             constant = @Constant(stringValue = "UNKNOWN")
     )
     private static String getCustomTagName(String constant, byte id) {
-        return id == 12 ? "TAG_Long_Array" : constant;
+        return switch (id) {
+            case 11 -> "TAG_Int_Array";
+            case 12 -> "TAG_Long_Array";
+            default -> constant;
+        };
     }
 }

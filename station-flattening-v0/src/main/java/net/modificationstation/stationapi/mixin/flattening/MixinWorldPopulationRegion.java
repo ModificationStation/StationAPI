@@ -6,10 +6,9 @@ import net.minecraft.level.chunk.Chunk;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.level.BlockStateView;
-import net.modificationstation.stationapi.impl.level.StationDimension;
+import net.modificationstation.stationapi.impl.level.HeightLimitView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
@@ -22,7 +21,7 @@ public class MixinWorldPopulationRegion implements BlockStateView {
 
     @Override
     public BlockState getBlockState(int x, int y, int z) {
-        if (y >= 0 && y < getLevelHeight()) {
+        if (y >= ((HeightLimitView) level).getBottomY() && y < ((HeightLimitView) level).getTopY()) {
             int var4 = (x >> 4) - this.field_166;
             int var5 = (z >> 4) - this.field_167;
             if (var4 >= 0 && var4 < this.chunks.length && var5 >= 0 && var5 < this.chunks[var4].length) {
@@ -35,7 +34,7 @@ public class MixinWorldPopulationRegion implements BlockStateView {
 
     @Override
     public BlockState setBlockState(int x, int y, int z, BlockState blockState) {
-        if (y >= 0 && y < getLevelHeight()) {
+        if (y >= ((HeightLimitView) level).getBottomY() && y < ((HeightLimitView) level).getTopY()) {
             int var4 = (x >> 4) - this.field_166;
             int var5 = (z >> 4) - this.field_167;
             if (var4 >= 0 && var4 < this.chunks.length && var5 >= 0 && var5 < this.chunks[var4].length) {
@@ -53,12 +52,23 @@ public class MixinWorldPopulationRegion implements BlockStateView {
         "getTileMeta(III)I"
     }, constant = @Constant(intValue = 128))
     private int changeMaxHeight(int value) {
-        return getLevelHeight();
+        return ((HeightLimitView) level).getTopY();
     }
-    
-    @Unique
-    private int getLevelHeight() {
-        StationDimension dimension = StationDimension.class.cast(level.dimension);
-        return dimension.getActualLevelHeight();
+
+    @SuppressWarnings("MixinAnnotationTarget")
+    @ModifyConstant(method = {
+            "method_142",
+            "getTileId(III)I",
+            "getTileMeta(III)I"
+    }, constant = @Constant(expandZeroConditions = Constant.Condition.GREATER_THAN_OR_EQUAL_TO_ZERO, ordinal = 0))
+    private int changeMinHeightGE(int value) {
+        return ((HeightLimitView) level).getBottomY();
+    }
+
+    @ModifyConstant(method = {
+            "method_142"
+    }, constant = @Constant(intValue = 0, ordinal = 5))
+    private int changeMinHeight(int value) {
+        return ((HeightLimitView) level).getBottomY();
     }
 }

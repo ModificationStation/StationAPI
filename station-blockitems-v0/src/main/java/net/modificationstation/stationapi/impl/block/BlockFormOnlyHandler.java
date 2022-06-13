@@ -5,7 +5,6 @@ import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.Block;
 import net.minecraft.item.ItemBase;
-import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 import net.modificationstation.stationapi.api.event.registry.AfterBlockAndItemRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -29,7 +28,7 @@ public class BlockFormOnlyHandler {
         }
     });
     private static final Lazy<Set<BlockBase>> BLOCK_ONLY_BLOCKS = new Lazy<>(() -> Util.make(Collections.newSetFromMap(new IdentityHashMap<>()), m -> {
-        m.add(States.AIR.get().getBlock());
+        m.add(BlockBase.BY_ID[0]);
 //        m.add(BlockBase.FLOWING_WATER);
 //        m.add(BlockBase.STILL_WATER);
 //        m.add(BlockBase.FLOWING_LAVA);

@@ -18,7 +18,13 @@ public class ModdedPickaxe extends TemplatePickaxe {
 
     @Override
     public boolean useOnTile(ItemInstance item, PlayerBase player, Level level, int x, int y, int z, int facing) {
-        if (facing == Direction.UP.ordinal()) {
+        if (player.method_1373()) {
+            if (!level.isServerSide) {
+                level.setTile(x, y, z, 0);
+            }
+            item.cooldown = 20;
+            return true;
+        } else if (facing == Direction.UP.ordinal()) {
             if (!level.isServerSide) {
                 Living entity = (Living) EntityRegistry.create("GPoor", level);
                 entity.setPosition(x + 0.5, y + 1, z + 0.5);

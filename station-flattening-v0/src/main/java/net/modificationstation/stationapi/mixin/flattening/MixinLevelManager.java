@@ -1,13 +1,20 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.level.Level;
 import net.minecraft.level.LevelManager;
+import net.minecraft.level.LightType;
 import net.minecraft.level.chunk.Chunk;
 import net.minecraft.util.io.CompoundTag;
 import net.minecraft.util.io.ListTag;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.States;
+import net.modificationstation.stationapi.impl.level.HeightLimitView;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSectionsAccessor;
+import net.modificationstation.stationapi.impl.level.chunk.PalettedContainer;
 import net.modificationstation.stationapi.impl.level.chunk.StationHeigtmapProvider;
+import net.modificationstation.stationapi.impl.nbt.NbtOps;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -16,17 +23,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Mixin(LevelManager.class)
 public class MixinLevelManager {
+
+    @Unique
+    private static final Codec<PalettedContainer<BlockState>> CODEC = PalettedContainer.createCodec(States.STATE_IDS, BlockState.CODEC, PalettedContainer.PaletteProvider.BLOCK_STATE, States.AIR.get());
     @Unique
     private static final String SECTIONS_TAG = of(MODID, "sections").toString();
     @Unique
-    private static final String HEIGHTMAP_KEY = "HeightMap";
+    private static final String METADATA_KEY = "data";
     @Unique
-    private static final String HEIGHT_KEY = "Y";
+    private static final String SKY_LIGHT_KEY = "sky_light";
+    @Unique
+    private static final String BLOCK_LIGHT_KEY = "block_light";
+    @Unique
+    private static final String HEIGHTMAP_KEY = "height_map";
+    @Unique
+    private static final String HEIGHT_KEY = "y";
 
     @ModifyConstant(
             method = "getChunk(Lnet/minecraft/level/Level;II)Lnet/minecraft/level/chunk/Chunk;",
@@ -56,18 +73,37 @@ public class MixinLevelManager {
             )
     )
     private static void saveStationData(Chunk chunk, Level level, CompoundTag tag, CallbackInfo ci) {
-        ChunkSection[] sections = ChunkSectionsAccessor.class.cast(chunk).getSections();
+        ChunkSection[] sections = ((ChunkSectionsAccessor) chunk).getSections();
         ListTag listTag = new ListTag();
-        for(int i = 0; i < sections.length; ++i) {
-            ChunkSection section = sections[i];
+        HeightLimitView heightLimitView = (HeightLimitView) level;
+        for (int sectionY = heightLimitView.getBottomSectionCoord(); sectionY < heightLimitView.getTopSectionCoord() + 2; ++sectionY) {
+            int index = heightLimitView.sectionCoordToIndex(sectionY);
+            if (index < 0 || index >= sections.length) continue;
+            ChunkSection section = sections[index];
             if (section != ChunkSection.EMPTY_SECTION) {
-                listTag.add(section.toNBT());
+                CompoundTag sectionTag = new CompoundTag();
+                sectionTag.put(HEIGHT_KEY, (byte)sectionY);
+                sectionTag.put("block_states", CODEC.encodeStart(NbtOps.INSTANCE, section.getBlockStateContainer()).getOrThrow(false, LOGGER::error));
+                sectionTag.put(METADATA_KEY, section.getMetadataArray().toTag());
+                sectionTag.put(SKY_LIGHT_KEY, section.getLightArray(LightType.field_2757).toTag());
+                sectionTag.put(BLOCK_LIGHT_KEY, section.getLightArray(LightType.field_2758).toTag());
+                listTag.add(sectionTag);
             }
         }
         tag.put(SECTIONS_TAG, listTag);
-        StationHeigtmapProvider provider = StationHeigtmapProvider.class.cast(chunk);
+        StationHeigtmapProvider provider = (StationHeigtmapProvider) chunk;
         tag.put(HEIGHTMAP_KEY, provider.getStoredHeightmap());
     }
+
+    @Redirect(
+            method = "method_1480",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/util/io/CompoundTag;put(Ljava/lang/String;[B)V",
+                    ordinal = 4
+            )
+    )
+    private static void disableHeightmapSaving(CompoundTag compoundTag, String key, byte[] item) {}
 
     @Redirect(
             method = "method_1479(Lnet/minecraft/level/Level;Lnet/minecraft/util/io/CompoundTag;)Lnet/minecraft/level/chunk/Chunk;",
@@ -92,20 +128,28 @@ public class MixinLevelManager {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private static void loadStationData(Level level, CompoundTag chunkTag, CallbackInfoReturnable<Chunk> info, int var2, int var3, Chunk chunk) {
-        ChunkSection[] sections = ChunkSectionsAccessor.class.cast(chunk).getSections();
+        ChunkSection[] sections = ((ChunkSectionsAccessor) chunk).getSections();
         if (chunkTag.containsKey(SECTIONS_TAG)) {
             ListTag listTag = chunkTag.getListTag(SECTIONS_TAG);
             for (int i = 0; i < listTag.size(); i++) {
-                CompoundTag sectionTag = CompoundTag.class.cast(listTag.get(i));
+                CompoundTag sectionTag = (CompoundTag) listTag.get(i);
                 int sectionY = sectionTag.getByte(HEIGHT_KEY);
-                if (sectionY < 0 || sectionY >= sections.length) continue;
-                ChunkSection chunkSection = new ChunkSection(sectionY << 4);
-                chunkSection.fromNBT(chunkTag, sectionTag);
-                sections[sectionY] = chunkSection;
+                int index = ((HeightLimitView) level).sectionCoordToIndex(sectionY);
+                if (index < 0 || index >= sections.length) continue;
+                PalettedContainer<BlockState> blockStates = sectionTag.containsKey("block_states") ? CODEC.parse(NbtOps.INSTANCE, sectionTag.getCompoundTag("block_states")).promotePartial(errorMessage -> logRecoverableError(var2, var3, sectionY, errorMessage)).getOrThrow(false, LOGGER::error) : new PalettedContainer<>(States.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
+                ChunkSection chunkSection = new ChunkSection(sectionY, blockStates);
+                chunkSection.getMetadataArray().copyArray(sectionTag.getByteArray(METADATA_KEY));
+                chunkSection.getLightArray(LightType.field_2757).copyArray(sectionTag.getByteArray(SKY_LIGHT_KEY));
+                chunkSection.getLightArray(LightType.field_2758).copyArray(sectionTag.getByteArray(BLOCK_LIGHT_KEY));
+                sections[index] = chunkSection;
             }
         }
-        StationHeigtmapProvider provider = StationHeigtmapProvider.class.cast(chunk);
+        StationHeigtmapProvider provider = (StationHeigtmapProvider) chunk;
         provider.loadStoredHeightmap(chunkTag.getByteArray(HEIGHTMAP_KEY));
+    }
+
+    private static void logRecoverableError(int chunkX, int chunkZ, int y, String message) {
+        LOGGER.error("Recoverable errors when loading section [" + chunkX + ", " + y + ", " + chunkZ + "]: " + message);
     }
 
     @Redirect(
@@ -119,17 +163,7 @@ public class MixinLevelManager {
     private static int getTileLength(byte[] array) {
         return '耀';
     }
-    
-    @Redirect(
-        method = "method_1480",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/util/io/CompoundTag;put(Ljava/lang/String;[B)V",
-            ordinal = 4
-        )
-    )
-    private static void disableHeightmapSaving(CompoundTag compoundTag, String key, byte[] item) {}
-    
+
     @Redirect(
         method = "method_1479",
         at = @At(
