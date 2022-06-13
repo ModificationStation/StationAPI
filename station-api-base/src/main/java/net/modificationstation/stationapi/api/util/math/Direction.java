@@ -196,6 +196,11 @@ public enum Direction implements StringIdentifiable {
             }
 
             @Override
+            public double choose(double x, double y, double z) {
+                return x;
+            }
+
+            @Override
             public Type getType() {
                 return Type.HORIZONTAL;
             }
@@ -208,6 +213,11 @@ public enum Direction implements StringIdentifiable {
             }
 
             @Override
+            public double choose(double x, double y, double z) {
+                return y;
+            }
+
+            @Override
             public Type getType() {
                 return Type.VERTICAL;
             }
@@ -216,6 +226,11 @@ public enum Direction implements StringIdentifiable {
 
             @Override
             public int choose(int x, int y, int z) {
+                return z;
+            }
+
+            @Override
+            public double choose(double x, double y, double z) {
                 return z;
             }
 
@@ -237,6 +252,8 @@ public enum Direction implements StringIdentifiable {
         }
 
         public abstract int choose(int x, int y, int z);
+
+        public abstract double choose(double var1, double var3, double var5);
 
         public abstract Direction.Type getType();
 

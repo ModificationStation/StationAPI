@@ -34,7 +34,7 @@ public class AchievementPageImpl {
         List<Achievement> list = new ArrayList<>();
         for (Object o : Achievements.ACHIEVEMENTS)
             list.add((Achievement) o);
-        page.addAchievements(list.toArray(new Achievement[0]));
+        page.addAchievements(list.toArray(Achievement[]::new));
     }
 
     @EventListener(priority = ListenerPriority.HIGH)

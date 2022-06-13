@@ -44,6 +44,7 @@ import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSectionBlockState;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
+import net.modificationstation.stationapi.api.util.math.Vector4f;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc.LightingCalculatorImpl;
 import net.modificationstation.stationapi.mixin.arsenic.TilePosAccessor;
 import net.modificationstation.stationapi.mixin.arsenic.client.BlockRendererAccessor;
@@ -74,6 +75,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     private final ThreadLocal<ItemRenderContext> ITEM_CONTEXTS = ThreadLocal.withInitial(() -> new ItemRenderContext(itemColours));
     private final MatrixStack matrices = new MatrixStack();
     private final BlockRenderer blockRenderer = new BlockRenderer();
+    private final Vector4f fluidRenderTransformThingy = new Vector4f();
 
     @Override
     public boolean renderBlock(BlockState state, TilePos pos, BlockView world, MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random) {
@@ -94,40 +96,37 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
 
     @Override
     public boolean render(BlockView world, BakedModel model, BlockState state, TilePos pos, MatrixStack matrices, VertexConsumer vertexConsumer, boolean cull, Random random, long seed, int overlay) {
-        if (state.getBlock().getRenderType() == 4) {
-            ((BlockRendererAccessor) blockRenderer).stationapi$setBlockView(world);
-            return renderFluid(blockRenderer, world, pos, vertexConsumer, state);
-        }
-        model = Objects.requireNonNull(model.getOverrides().apply(model, state, world, pos, (int) seed));
         matrices.push();
         matrices.translate(pos.x, pos.y, pos.z);
         boolean rendered = false;
-        if (!model.isVanillaAdapter()) {
-            rendered = BLOCK_CONTEXTS.get().render(world, model, state, pos, matrices, vertexConsumer, random, seed, -1);
+        if (state.getBlock().getRenderType() == 4) {
+            ((BlockRendererAccessor) blockRenderer).stationapi$setBlockView(world);
+            rendered = renderFluid(blockRenderer, world, pos, vertexConsumer, state, matrices);
         } else {
-            BlockBase block = state.getBlock();
-//            if (textureOverride >= 0) {
-//                matrices.pop();
-//                return true;
-//            }
-            light.initialize(
-                    block,
-                    world, pos.x, pos.y, pos.z,
-                    Minecraft.isSmoothLightingEnabled() && model.useAmbientOcclusion()
-            );
-            ImmutableList<BakedQuad> qs;
-            BakedQuad q;
-            float[] qlight = light.light;
-            for (int quadSet = 0, size = DIRECTIONS.length; quadSet < size; quadSet++) {
-                Direction face = DIRECTIONS[quadSet];
-                random.setSeed(seed);
-                qs = model.getQuads(state, face, random);
-                if (!qs.isEmpty() && (face == null || block.isSideRendered(world, pos.x + face.vector.x, pos.y + face.vector.y, pos.z + face.vector.z, quadSet))) {
-                    rendered = true;
-                    for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
-                        q = qs.get(j);
-                        light.calculateForQuad(q);
-                        renderQuad(world, state, pos, vertexConsumer, matrices.peek(), q, qlight, OverlayTexture.DEFAULT_UV);
+            model = Objects.requireNonNull(model.getOverrides().apply(model, state, world, pos, (int) seed));
+            if (!model.isVanillaAdapter()) {
+                rendered = BLOCK_CONTEXTS.get().render(world, model, state, pos, matrices, vertexConsumer, random, seed, -1);
+            } else {
+                BlockBase block = state.getBlock();
+                light.initialize(
+                        block,
+                        world, pos.x, pos.y, pos.z,
+                        Minecraft.isSmoothLightingEnabled() && model.useAmbientOcclusion()
+                );
+                ImmutableList<BakedQuad> qs;
+                BakedQuad q;
+                float[] qlight = light.light;
+                for (int quadSet = 0, size = DIRECTIONS.length; quadSet < size; quadSet++) {
+                    Direction face = DIRECTIONS[quadSet];
+                    random.setSeed(seed);
+                    qs = model.getQuads(state, face, random);
+                    if (!qs.isEmpty() && (face == null || block.isSideRendered(world, pos.x + face.vector.x, pos.y + face.vector.y, pos.z + face.vector.z, quadSet))) {
+                        rendered = true;
+                        for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
+                            q = qs.get(j);
+                            light.calculateForQuad(q);
+                            renderQuad(world, state, pos, vertexConsumer, matrices.peek(), q, qlight, OverlayTexture.DEFAULT_UV);
+                        }
                     }
                 }
             }
@@ -163,11 +162,17 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         vertexConsumer.quad(matrixEntry, quad, brightness, f, g, h, new int[]{0, 0, 0, 0}, overlay, true);
     }
 
-    private boolean renderFluid(BlockRenderer blockRenderer, BlockView world, TilePos pos, VertexConsumer vertexConsumer, BlockState state) {
+    private boolean renderFluid(BlockRenderer blockRenderer, BlockView world, TilePos pos, VertexConsumer vertexConsumer, BlockState state, MatrixStack matrices) {
         BlockRendererAccessor blockRendererAccessor = (BlockRendererAccessor) blockRenderer;
         int x = pos.x;
         int y = pos.y;
         int z = pos.z;
+        fluidRenderTransformThingy.set(0, 0, 0, 1);
+        fluidRenderTransformThingy.transform(matrices.peek().getPositionMatrix());
+        double rX = fluidRenderTransformThingy.getX();
+        double rY = fluidRenderTransformThingy.getY();
+        double rZ = fluidRenderTransformThingy.getZ();
+
         BlockBase block = state.getBlock();
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
 
@@ -230,10 +235,10 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                 float r = var15 * var38 * var7;
                 float g = var15 * var38 * var8;
                 float b = var15 * var38 * var9;
-                vertex(vertexConsumer, x, y + var24, z, r, g, b, (float) (var32 - uc - us), (float) (var34 - vc + vs));
-                vertex(vertexConsumer, x, y + var25, z + 1, r, g, b, (float) (var32 - uc + us), (float) (var34 + vc + vs));
-                vertex(vertexConsumer, x + 1, y + var26, z + 1, r, g, b, (float) (var32 + uc + us), (float) (var34 + vc - vs));
-                vertex(vertexConsumer, x + 1, y + var27, z, r, g, b, (float) (var32 + uc - us), (float) (var34 - vc - vs));
+                vertex(vertexConsumer, rX, rY + var24, rZ, r, g, b, (float) (var32 - uc - us), (float) (var34 - vc + vs));
+                vertex(vertexConsumer, rX, rY + var25, rZ + 1, r, g, b, (float) (var32 - uc + us), (float) (var34 + vc + vs));
+                vertex(vertexConsumer, rX + 1, rY + var26, rZ + 1, r, g, b, (float) (var32 + uc + us), (float) (var34 + vc - vs));
+                vertex(vertexConsumer, rX + 1, rY + var27, rZ, r, g, b, (float) (var32 + uc - us), (float) (var34 - vc - vs));
             }
 
             if (blockRendererAccessor.getRenderAllSides() || var11) {
@@ -241,10 +246,10 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                 float colour = var14 * var52;
                 Sprite sprite = Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite();
                 blockRenderer.renderBottomFace(block, x, y, z, block.getTextureForSide(0));
-                vertex(vertexConsumer, x, y, z + 1, colour, colour, colour, sprite.getMinU(), sprite.getMaxV());
-                vertex(vertexConsumer, x, y, z, colour, colour, colour, sprite.getMinU(), sprite.getMinV());
-                vertex(vertexConsumer, x + 1, y, z, colour, colour, colour, sprite.getMaxU(), sprite.getMinV());
-                vertex(vertexConsumer, x + 1, y, z + 1, colour, colour, colour, sprite.getMaxU(), sprite.getMaxV());
+                vertex(vertexConsumer, rX, rY, rZ + 1, colour, colour, colour, sprite.getMinU(), sprite.getMaxV());
+                vertex(vertexConsumer, rX, rY, rZ, colour, colour, colour, sprite.getMinU(), sprite.getMinV());
+                vertex(vertexConsumer, rX + 1, rY, rZ, colour, colour, colour, sprite.getMaxU(), sprite.getMinV());
+                vertex(vertexConsumer, rX + 1, rY, rZ + 1, colour, colour, colour, sprite.getMaxU(), sprite.getMaxV());
                 var13 = true;
             }
 
@@ -278,31 +283,31 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                     if (var53 == 0) {
                         var35 = var24;
                         var58 = var27;
-                        var59 = (float)x;
-                        var39 = (float)(x + 1);
-                        var60 = (float)z;
-                        var40 = (float)z;
+                        var59 = (float)rX;
+                        var39 = (float)(rX + 1);
+                        var60 = (float)rZ;
+                        var40 = (float)rZ;
                     } else if (var53 == 1) {
                         var35 = var26;
                         var58 = var25;
-                        var59 = (float)(x + 1);
-                        var39 = (float)x;
-                        var60 = (float)(z + 1);
-                        var40 = (float)(z + 1);
+                        var59 = (float)(rX + 1);
+                        var39 = (float)rX;
+                        var60 = (float)(rZ + 1);
+                        var40 = (float)(rZ + 1);
                     } else if (var53 == 2) {
                         var35 = var25;
                         var58 = var24;
-                        var59 = (float)x;
-                        var39 = (float)x;
-                        var60 = (float)(z + 1);
-                        var40 = (float)z;
+                        var59 = (float)rX;
+                        var39 = (float)rX;
+                        var60 = (float)(rZ + 1);
+                        var40 = (float)rZ;
                     } else {
                         var35 = var27;
                         var58 = var26;
-                        var59 = (float)(x + 1);
-                        var39 = (float)(x + 1);
-                        var60 = (float)z;
-                        var40 = (float)(z + 1);
+                        var59 = (float)(rX + 1);
+                        var39 = (float)(rX + 1);
+                        var60 = (float)rZ;
+                        var40 = (float)(rZ + 1);
                     }
 
                     var13 = true;
@@ -321,10 +326,10 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                     float r = var15 * var51 * var7;
                     float g = var15 * var51 * var8;
                     float b = var15 * var51 * var9;
-                    vertex(vertexConsumer, var59, (float)y + var35, var60, r, g, b, (float) var41, (float) var45);
-                    vertex(vertexConsumer, var39, (float)y + var58, var40, r, g, b, (float) var43, (float) var47);
-                    vertex(vertexConsumer, var39, y, var40, r, g, b, (float) var43, (float) var49);
-                    vertex(vertexConsumer, var59, y, var60, r, g, b, (float) var41, (float) var49);
+                    vertex(vertexConsumer, var59, (float)rY + var35, var60, r, g, b, (float) var41, (float) var45);
+                    vertex(vertexConsumer, var39, (float)rY + var58, var40, r, g, b, (float) var43, (float) var47);
+                    vertex(vertexConsumer, var39, rY, var40, r, g, b, (float) var43, (float) var49);
+                    vertex(vertexConsumer, var59, rY, var60, r, g, b, (float) var41, (float) var49);
                 }
             }
 

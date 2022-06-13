@@ -24,6 +24,10 @@ public class MathHelper {
         return (float) (start + (end - start) * delta);
     }
 
+    public static double lerp(double delta, double start, double end) {
+        return start + delta * (end - start);
+    }
+
     public static float interpolate2D(
             double x, double y,
             float v1, float v2, float v3, float v4
