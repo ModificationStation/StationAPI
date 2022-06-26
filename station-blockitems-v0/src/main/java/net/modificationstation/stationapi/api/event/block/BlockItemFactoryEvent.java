@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.event.block;
 
 import lombok.Getter;
-import net.minecraft.block.BlockBase;
+import lombok.experimental.SuperBuilder;
 import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.block.*;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +18,7 @@ import java.util.function.IntFunction;
  * @see MetaNamedBlockItemProvider
  * @see HasMetaNamedBlockItem
  */
+@SuperBuilder
 public class BlockItemFactoryEvent extends BlockEvent {
 
     @Getter
@@ -28,11 +29,6 @@ public class BlockItemFactoryEvent extends BlockEvent {
      * <p>Can not return null due to limitations from mixin's side. Cancel instead.
      */
     public @NotNull IntFunction<@NotNull Block> currentFactory;
-
-    public BlockItemFactoryEvent(BlockBase block, @NotNull IntFunction<@NotNull Block> currentFactory) {
-        super(block);
-        this.currentFactory = currentFactory;
-    }
 
     @Override
     protected int getEventID() {

@@ -5,17 +5,16 @@ import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.Block;
 import net.minecraft.item.ItemBase;
+import net.modificationstation.stationapi.api.block.BlockItemToggle;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 import net.modificationstation.stationapi.api.event.registry.AfterBlockAndItemRegisterEvent;
+import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.util.Lazy;
 import net.modificationstation.stationapi.api.util.UnsafeProvider;
-import net.modificationstation.stationapi.api.util.Util;
 
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Set;
+import java.util.function.Consumer;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class BlockFormOnlyHandler {
@@ -27,37 +26,39 @@ public class BlockFormOnlyHandler {
             throw new RuntimeException(e);
         }
     });
-    private static final Lazy<Set<BlockBase>> BLOCK_ONLY_BLOCKS = new Lazy<>(() -> Util.make(Collections.newSetFromMap(new IdentityHashMap<>()), m -> {
-        m.add(BlockBase.BY_ID[0]);
-//        m.add(BlockBase.FLOWING_WATER);
-//        m.add(BlockBase.STILL_WATER);
-//        m.add(BlockBase.FLOWING_LAVA);
-//        m.add(BlockBase.STILL_LAVA);
-        m.add(BlockBase.BED);
-//        m.add(BlockBase.PISTON_HEAD);
-//        m.add(BlockBase.MOVING_PISTON);
-//        m.add(BlockBase.DOUBLE_STONE_SLAB);
-//        m.add(BlockBase.FIRE);
-//        m.add(BlockBase.REDSTONE_DUST);
-        m.add(BlockBase.CROPS);
-//        m.add(BlockBase.FURNACE_LIT);
-        m.add(BlockBase.STANDING_SIGN);
-        m.add(BlockBase.WOOD_DOOR);
-//        m.add(BlockBase.WALL_SIGN);
-        m.add(BlockBase.IRON_DOOR);
-//        m.add(BlockBase.REDSTONE_ORE_LIT);
-//        m.add(BlockBase.REDSTONE_TORCH);
-        m.add(BlockBase.SUGAR_CANES);
-//        m.add(BlockBase.PORTAL);
-        m.add(BlockBase.CAKE);
-        m.add(BlockBase.REDSTONE_REPEATER);
-//        m.add(BlockBase.REDSTONE_REPEATER_LIT);
-    }));
+
+    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 - Integer.MAX_VALUE / 8)
+    private static void registerBlocksAsBlockOnly(BlockRegistryEvent event) {
+        Consumer<BlockBase> c = block -> ((BlockItemToggle<?>) block).disableBlockItem();
+        c.accept(BlockBase.BY_ID[0]);
+//        c.accept(BlockBase.FLOWING_WATER);
+//        c.accept(BlockBase.STILL_WATER);
+//        c.accept(BlockBase.FLOWING_LAVA);
+//        c.accept(BlockBase.STILL_LAVA);
+        c.accept(BlockBase.BED);
+//        c.accept(BlockBase.PISTON_HEAD);
+//        c.accept(BlockBase.MOVING_PISTON);
+//        c.accept(BlockBase.DOUBLE_STONE_SLAB);
+//        c.accept(BlockBase.FIRE);
+//        c.accept(BlockBase.REDSTONE_DUST);
+        c.accept(BlockBase.CROPS);
+//        c.accept(BlockBase.FURNACE_LIT);
+        c.accept(BlockBase.STANDING_SIGN);
+        c.accept(BlockBase.WOOD_DOOR);
+//        c.accept(BlockBase.WALL_SIGN);
+        c.accept(BlockBase.IRON_DOOR);
+//        c.accept(BlockBase.REDSTONE_ORE_LIT);
+//        c.accept(BlockBase.REDSTONE_TORCH);
+        c.accept(BlockBase.SUGAR_CANES);
+//        c.accept(BlockBase.PORTAL);
+        c.accept(BlockBase.CAKE);
+        c.accept(BlockBase.REDSTONE_REPEATER);
+//        c.accept(BlockBase.REDSTONE_REPEATER_LIT);
+    }
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerBlockItem(BlockItemFactoryEvent event) {
-        if (BLOCK_ONLY_BLOCKS.get().contains(event.block))
-            event.cancel();
+        if (((BlockItemToggle<?>) event.block).isBlockItemDisabled()) event.cancel();
     }
 
     @EventListener(priority = ListenerPriority.HIGH)

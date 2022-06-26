@@ -4,6 +4,7 @@
   "package": "net.modificationstation.stationapi.mixin.flattening",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BlockBaseAccessor",
     "CompoundTagAccessor",
     "ListTagAccessor",
     "MixinAbstractTag",

@@ -9,6 +9,10 @@ public interface BlockStateView {
 
     BlockState setBlockState(int x, int y, int z, BlockState blockState);
 
+    default BlockState setBlockStateWithNotify(int x, int y, int z, BlockState blockState) {
+        return setBlockState(x, y, z, blockState);
+    }
+
     default BlockState getBlockState(TilePos pos) {
         return getBlockState(pos.x, pos.y, pos.z);
     }

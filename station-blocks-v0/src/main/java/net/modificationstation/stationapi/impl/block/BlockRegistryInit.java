@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.impl.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -21,7 +20,7 @@ public class BlockRegistryInit {
 
     public static final Lazy<BlockBase> AIR = new Lazy<>(() -> new Air(0));
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
     private static void registerBlocks(BlockRegistryEvent event) {
         BlockRegistry r = event.registry;
 

@@ -9,6 +9,7 @@
     "ItemBaseAccessor",
     "MixinBlock",
     "MixinBlockBase",
+    "MixinSecondaryBlock",
     "MixinStats",
     "StatAccessor",
     "StatEntityAccessor",

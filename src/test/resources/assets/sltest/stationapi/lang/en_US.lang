@@ -11,3 +11,7 @@ tile.freezer.name=Freezer
 tile.altar.name=Altar
 item.ironOre.name=Iron Chunk
 item.generatedItem.name=Generated Item
+tile.variationBlock.name=Variation Block
+item.variationBlockIdle.name=Variation Block Idle
+item.variationBlockPassive.name=Variation Block Passive
+item.variationBlockActive.name=Variation Block Active

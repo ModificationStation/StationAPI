@@ -5,9 +5,13 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
+import net.minecraft.item.ItemInstance;
+import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.BlockToolLogic;
+import net.modificationstation.stationapi.api.block.BlockItemToggle;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
+import net.modificationstation.stationapi.api.block.DropListProvider;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.item.ItemConvertible;
@@ -20,7 +24,7 @@ import uk.co.benjiweber.expressions.tuple.BiTuple;
 import java.util.List;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = CustomAtlasProvider.class)
-public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider, BlockToolLogic, BlockStateHolder, ItemConvertible {
+public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider, BlockToolLogic, BlockStateHolder, ItemConvertible, BlockItemToggle<T>, DropListProvider {
 
     @Override
     default T mineableBy(Identifier toolTag, int level) {
@@ -65,6 +69,21 @@ public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider,
 
     @Override
     default ItemBase asItem() {
+        return Util.assertImpl();
+    }
+
+    @Override
+    default T disableBlockItem() {
+        return Util.assertImpl();
+    }
+
+    @Override
+    default boolean isBlockItemDisabled() {
+        return Util.assertImpl();
+    }
+
+    @Override
+    default List<ItemInstance> getDropList(Level level, int x, int y, int z, int meta, BlockState blockState) {
         return Util.assertImpl();
     }
 }

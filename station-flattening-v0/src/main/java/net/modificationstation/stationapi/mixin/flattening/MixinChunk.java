@@ -9,10 +9,11 @@ import net.minecraft.level.Level;
 import net.minecraft.level.LightType;
 import net.minecraft.level.chunk.Chunk;
 import net.minecraft.util.maths.Box;
-import net.modificationstation.stationapi.api.block.BeforeBlockRemoved;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.block.States;
+import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.level.BlockStateView;
 import net.modificationstation.stationapi.impl.level.HeightLimitView;
 import net.modificationstation.stationapi.impl.level.StationDimension;
@@ -392,8 +393,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         int levelX = this.x << 4 | x;
         int levelZ = this.z << 4 | z;
         BlockBase oldBlock = oldState.getBlock();
-        if (oldBlock instanceof BeforeBlockRemoved listener)
-            listener.beforeBlockRemoved(this.level, levelX, y, levelZ);
+        if (StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder().block(oldBlock).level(level).x(levelX).y(y).z(levelZ).build()).isCanceled()) return false;
         section.setBlockState(x, y & 15, z, state);
         oldBlock.onBlockRemoved(this.level, levelX, y, levelZ);
         section.setMeta(x, y & 15, z, meta);
@@ -460,8 +460,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         int levelX = this.x << 4 | x;
         int levelZ = this.z << 4 | z;
         BlockBase oldBlock = oldState.getBlock();
-        if (oldBlock instanceof BeforeBlockRemoved listener)
-            listener.beforeBlockRemoved(this.level, levelX, y, levelZ);
+        if (StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder().block(oldBlock).level(level).x(levelX).y(y).z(levelZ).build()).isCanceled()) return null;
         section.setBlockState(x, y & 15, z, state);
         oldBlock.onBlockRemoved(this.level, levelX, y, levelZ);
         section.setMeta(x, y & 15, z, 0);

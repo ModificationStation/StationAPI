@@ -21,7 +21,7 @@
   "entrypoints": {
     "stationapi:event_bus": [
       "net.modificationstation.stationapi.impl.block.BlockRegistryInit",
-      "net.modificationstation.stationapi.api.block.States",
+      "net.modificationstation.stationapi.impl.block.BlockInteractionImpl",
       "net.modificationstation.stationapi.impl.block.ReplaceableBlockImpl"
     ]
   },

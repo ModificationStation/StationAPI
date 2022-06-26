@@ -25,6 +25,8 @@ public abstract class MixinLevel implements BlockStateView, HeightLimitView {
 
     @Shadow @Final public Dimension dimension;
 
+    @Shadow protected abstract void method_235(int i, int j, int k, int l);
+
     @Override
     public BlockState getBlockState(int x, int y, int z) {
         return ((BlockStateView) getChunk(x, z)).getBlockState(x & 15, y, z & 15);
@@ -33,6 +35,16 @@ public abstract class MixinLevel implements BlockStateView, HeightLimitView {
     @Override
     public BlockState setBlockState(int x, int y, int z, BlockState blockState) {
         return ((BlockStateView) getChunk(x, z)).setBlockState(x & 15, y, z & 15, blockState);
+    }
+
+    @Override
+    public BlockState setBlockStateWithNotify(int x, int y, int z, BlockState blockState) {
+        BlockState oldBlockState = setBlockState(x, y, z, blockState);
+        if (oldBlockState != null) {
+            method_235(x, y, z, blockState.getBlock().id);
+            return oldBlockState;
+        }
+        return null;
     }
 
     @Inject(

@@ -19,7 +19,6 @@ public class MixinAchievements {
     @Shadow
     public static List<Achievement> ACHIEVEMENTS;
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/achievement/Achievements;FLY_PIG:Lnet/minecraft/achievement/Achievement;", opcode = Opcodes.PUTSTATIC, shift = At.Shift.AFTER))
     private static void afterAchievementRegister(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(new AchievementRegisterEvent(ACHIEVEMENTS));

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "variant=idle": {
+      "model": "sltest:block/variation_block_idle"
+    },
+    "variant=passive": {
+      "model": "sltest:block/variation_block_passive"
+    },
+    "variant=active": {
+      "model": "sltest:block/variation_block_active"
+    }
+  }
+}
