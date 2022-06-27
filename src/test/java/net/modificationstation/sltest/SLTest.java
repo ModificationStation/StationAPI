@@ -1,5 +1,6 @@
 package net.modificationstation.sltest;
 
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.EventBus;
 import net.mine_diver.unsafeevents.listener.EventListener;
@@ -29,7 +30,7 @@ public class SLTest {
         eventBus.register(this::onTestEventbutCOOLER, ListenerPriority.HIGH.numPriority);
         eventBus.register(this::onTestEventButNo);
 //        eventBus.register(this::lol);
-        eventBus.post(new TestEvent());
+        eventBus.post(TestEvent.builder().build());
 //        TextureAtlas atlas = new TextureAtlas(true, null, null, 0);
 //        try {
 //            int firstTexture = atlas.addTexture("/assets/sltest/textures/blocks/FreezerSide.png");
@@ -104,6 +105,7 @@ public class SLTest {
 //        System.out.println("lol");
 //    }
 
+    @SuperBuilder
     public static class TestEvent extends Event {
 
         @Override

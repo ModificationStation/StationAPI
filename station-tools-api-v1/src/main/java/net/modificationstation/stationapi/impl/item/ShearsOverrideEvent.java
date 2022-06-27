@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.impl.item;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.item.ItemInstance;
 
-@RequiredArgsConstructor
+@SuperBuilder
 public class ShearsOverrideEvent extends Event {
 
-    public boolean overrideShears = false;
     public final ItemInstance itemInstance;
+    public boolean overrideShears;
 
     @Override
     protected int getEventID() {

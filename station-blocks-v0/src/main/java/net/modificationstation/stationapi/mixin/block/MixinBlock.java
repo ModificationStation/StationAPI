@@ -35,14 +35,16 @@ public class MixinBlock {
             Level level, int x, int y, int z, int id, int meta,
             ItemInstance blockItem, PlayerBase player, Level argLevel, int argX, int argY, int argZ, int side
     ) {
-        return StationAPI.EVENT_BUS.post(BlockEvent.BeforePlacedByItem.builder()
-                .level(level)
-                .player(player)
-                .x(x).y(y).z(z)
-                .block(BlockRegistry.INSTANCE.get(id).orElseThrow())
-                .meta(meta)
-                .blockItem(blockItem)
-                .placeFunction(() -> level.placeBlockWithMetaData(x, y, z, id, meta))
-                .build()).placeFunction.getAsBoolean();
+        return StationAPI.EVENT_BUS.post(
+                BlockEvent.BeforePlacedByItem.builder()
+                        .level(level)
+                        .player(player)
+                        .x(x).y(y).z(z)
+                        .block(BlockRegistry.INSTANCE.get(id).orElseThrow())
+                        .meta(meta)
+                        .blockItem(blockItem)
+                        .placeFunction(() -> level.placeBlockWithMetaData(x, y, z, id, meta))
+                        .build()
+        ).placeFunction.getAsBoolean();
     }
 }

@@ -15,9 +15,12 @@ public class MixinSheep {
 
     @Redirect(method = "interact(Lnet/minecraft/entity/player/PlayerBase;)Z", at = @At(value = "FIELD", target = "Lnet/minecraft/item/ItemInstance;itemId:I", opcode = Opcodes.GETFIELD))
     private int hijackSheepShearing(ItemInstance itemInstance) {
-        ShearsOverrideEvent shearEvent = new ShearsOverrideEvent(itemInstance);
-        StationAPI.EVENT_BUS.post(shearEvent);
-        return shearEvent.overrideShears ? ItemBase.shears.id : itemInstance.itemId;
+        return StationAPI.EVENT_BUS.post(
+                ShearsOverrideEvent.builder()
+                        .itemInstance(itemInstance)
+                        .overrideShears(false)
+                        .build()
+        ).overrideShears ? ItemBase.shears.id : itemInstance.itemId;
     }
 
 }

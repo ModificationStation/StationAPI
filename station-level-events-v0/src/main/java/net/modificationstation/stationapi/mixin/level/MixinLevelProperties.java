@@ -14,11 +14,22 @@ public class MixinLevelProperties {
 
     @Inject(method = "<init>(Lnet/minecraft/util/io/CompoundTag;)V", at = @At("RETURN"))
     private void onLoadFromTag(CompoundTag arg, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new LevelPropertiesEvent.Load((LevelProperties) (Object) this, arg));
+        StationAPI.EVENT_BUS.post(
+                LevelPropertiesEvent.Load.builder()
+                        .levelProperties((LevelProperties) (Object) this)
+                        .tag(arg)
+                        .build()
+        );
     }
 
     @Inject(method = "updateProperties(Lnet/minecraft/util/io/CompoundTag;Lnet/minecraft/util/io/CompoundTag;)V", at = @At("RETURN"))
     private void onSaveToTag(CompoundTag arg, CompoundTag arg1, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new LevelPropertiesEvent.Save((LevelProperties) (Object) this, arg, arg1));
+        StationAPI.EVENT_BUS.post(
+                LevelPropertiesEvent.Save.builder()
+                        .levelProperties((LevelProperties) (Object) this)
+                        .tag(arg)
+                        .spPlayerData(arg1)
+                        .build()
+        );
     }
 }

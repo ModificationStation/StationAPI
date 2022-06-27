@@ -17,7 +17,7 @@ import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
+import net.modificationstation.stationapi.api.client.colour.block.BlockColors;
 import net.modificationstation.stationapi.api.client.event.render.model.LoadUnbakedModelEvent;
 import net.modificationstation.stationapi.api.client.render.RenderLayer;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
@@ -81,7 +81,7 @@ public class ModelLoader {
     private final TexturePack resourceManager;
     @Nullable
     private SpriteAtlasManager spriteAtlasManager;
-    private final BlockColours blockColours;
+    private final BlockColors blockColours;
     private final Set<Identifier> modelsToLoad = Sets.newIdentityHashSet();
     private final ModelVariantMap.DeserializationContext variantMapDeserializationContext = new ModelVariantMap.DeserializationContext();
     private final Map<Identifier, UnbakedModel> unbakedModels = new IdentityHashMap<>();
@@ -92,7 +92,7 @@ public class ModelLoader {
     private int nextStateId = 1;
     private final Object2IntMap<BlockState> stateLookup = Util.make(new Object2IntOpenHashMap<>(), (object2IntOpenHashMap) -> object2IntOpenHashMap.defaultReturnValue(-1));
 
-    public ModelLoader(TexturePack resourceManager, BlockColours blockColours, Profiler profiler, int i) {
+    public ModelLoader(TexturePack resourceManager, BlockColors blockColours, Profiler profiler, int i) {
         this.resourceManager = resourceManager;
         this.blockColours = blockColours;
         profiler.push("missing_model");
@@ -418,7 +418,12 @@ public class ModelLoader {
     }
 
     private UnbakedModel loadModelFromResource(Identifier id) throws IOException {
-        return StationAPI.EVENT_BUS.post(LoadUnbakedModelEvent.maker().identifier(id).model(loadModelFromJson(id)).make()).model;
+        return StationAPI.EVENT_BUS.post(
+                LoadUnbakedModelEvent.builder()
+                        .identifier(id)
+                        .model(loadModelFromJson(id))
+                        .build()
+        ).model;
     }
 
     private JsonUnbakedModel loadModelFromJson(Identifier id) throws IOException {

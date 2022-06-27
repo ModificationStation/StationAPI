@@ -56,7 +56,7 @@ public class MixinGameOptions {
     @Unique
     private void initKeyBindings() {
         List<KeyBinding> keyBindingList = new ArrayList<>(Arrays.asList(keyBindings));
-        StationAPI.EVENT_BUS.post(new KeyBindingRegisterEvent(keyBindingList));
+        StationAPI.EVENT_BUS.post(KeyBindingRegisterEvent.builder().keyBindings(keyBindingList).build());
         keyBindings = keyBindingList.toArray(new KeyBinding[0]);
     }
 }

@@ -18,6 +18,12 @@ public abstract class MixinServerEntityTracker {
 
     @Inject(method = "syncEntity(Lnet/minecraft/entity/EntityBase;)V", at = @At("RETURN"))
     private void afterVanillaEntries(EntityBase arg, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new TrackEntityEvent((ServerEntityTracker) (Object) this, entityHashes, arg));
+        StationAPI.EVENT_BUS.post(
+                TrackEntityEvent.builder()
+                        .entityTracker((ServerEntityTracker) (Object) this)
+                        .trackedEntities(entityHashes)
+                        .entityToTrack(arg)
+                        .build()
+        );
     }
 }

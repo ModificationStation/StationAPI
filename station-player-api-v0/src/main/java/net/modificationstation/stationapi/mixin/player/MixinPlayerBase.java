@@ -50,7 +50,12 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseSetter
     public List<PlayerHandler> getPlayerBases() {
         if (playerBases == null) {
             playerBases = new ArrayList<>();
-            StationAPI.EVENT_BUS.post(new PlayerEvent.HandlerRegister((PlayerBase) (Object) this, playerBases));
+            StationAPI.EVENT_BUS.post(
+                    PlayerEvent.HandlerRegister.builder()
+                            .player((PlayerBase) (Object) this)
+                            .playerHandlers(playerBases)
+                            .build()
+            );
         }
         return playerBases;
     }

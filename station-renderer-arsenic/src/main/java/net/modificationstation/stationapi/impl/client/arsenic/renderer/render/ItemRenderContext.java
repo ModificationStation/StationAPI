@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.client.colour.item.ItemColours;
+import net.modificationstation.stationapi.api.client.colour.item.ItemColors;
 import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.material.BlendMode;
 import net.modificationstation.stationapi.api.client.render.mesh.Mesh;
@@ -37,7 +37,7 @@ public class ItemRenderContext extends AbstractRenderContext {
         void accept(BakedModel model, ItemInstance stack, int color, int overlay, MatrixStack matrixStack, VertexConsumer buffer);
     }
 
-    private final ItemColours colorMap;
+    private final ItemColors colorMap;
     private final Random random = new Random();
     private final Consumer<BakedModel> fallbackConsumer;
     private final Vec3f normalVec = new Vec3f();
@@ -61,7 +61,7 @@ public class ItemRenderContext extends AbstractRenderContext {
 
     private final int[] quadData = new int[EncodingFormat.TOTAL_STRIDE];
 
-    public ItemRenderContext(ItemColours colorMap) {
+    public ItemRenderContext(ItemColors colorMap) {
         this.colorMap = colorMap;
         fallbackConsumer = this::fallbackConsumer;
     }
@@ -138,7 +138,7 @@ public class ItemRenderContext extends AbstractRenderContext {
 
     private int indexColor() {
         final int colorIndex = editorQuad.colorIndex();
-        return colorIndex == -1 ? -1 : (colorMap.getColour(itemStack, colorIndex) | 0xFF000000);
+        return colorIndex == -1 ? -1 : (colorMap.getColor(itemStack, colorIndex) | 0xFF000000);
     }
 
     private void renderQuad() {

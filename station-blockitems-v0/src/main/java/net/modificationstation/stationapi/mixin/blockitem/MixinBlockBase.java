@@ -32,7 +32,12 @@ public class MixinBlockBase implements BlockItemToggle<BlockBase> {
             )
     )
     private static Block getBlockItem(int blockID) {
-        BlockItemFactoryEvent event = StationAPI.EVENT_BUS.post(BlockItemFactoryEvent.builder().block(BY_ID[blockID + BY_ID.length]).currentFactory(Block::new).build());
+        BlockItemFactoryEvent event = StationAPI.EVENT_BUS.post(
+                BlockItemFactoryEvent.builder()
+                        .block(BY_ID[blockID + BY_ID.length])
+                        .currentFactory(Block::new)
+                        .build()
+        );
         return event.isCanceled() ? BlockFormOnlyHandler.EMPTY_BLOCK_ITEM.get() : event.currentFactory.apply(blockID);
     }
 

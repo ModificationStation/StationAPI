@@ -68,12 +68,26 @@ public class MixinAchievements extends ScreenBase {
 
     @ModifyVariable(method = "method_1998(IIF)V", index = 26, at = @At(value = "FIELD", target = "Lnet/minecraft/block/BlockBase;texture:I", opcode = Opcodes.GETFIELD, ordinal = 7, shift = At.Shift.BY, by = 3))
     private int renderBackgroundTexture(int var26) {
-        return StationAPI.EVENT_BUS.post(new AchievementsEvent.BackgroundTextureRender((Achievements) (Object) this, capturedRandom, capturedColumn, capturedRow, capturedRowRandomized, var26)).backgroundTexture;
+        return StationAPI.EVENT_BUS.post(
+                AchievementsEvent.BackgroundTextureRender.builder()
+                        .achievementsScreen((Achievements) (Object) this)
+                        .random(capturedRandom)
+                        .column(capturedColumn)
+                        .row(capturedRow)
+                        .randomizedRow(capturedRowRandomized)
+                        .backgroundTexture(var26)
+                        .build()
+        ).backgroundTexture;
     }
 
     @Redirect(method = "method_1998(IIF)V", at = @At(value = "FIELD", target = "Lnet/minecraft/achievement/Achievement;parent:Lnet/minecraft/achievement/Achievement;", opcode = Opcodes.GETFIELD, ordinal = 0))
     private Achievement overrideLineRender(Achievement achievement) {
-        return StationAPI.EVENT_BUS.post(new AchievementsEvent.LineRender((Achievements) (Object) this, achievement)).isCanceled() ? null : achievement.parent;
+        return StationAPI.EVENT_BUS.post(
+                AchievementsEvent.LineRender.builder()
+                        .achievementsScreen((Achievements) (Object) this)
+                        .achievement(achievement)
+                        .build()
+        ).isCanceled() ? null : achievement.parent;
     }
 
     @SuppressWarnings("DefaultAnnotationParam")
@@ -88,7 +102,14 @@ public class MixinAchievements extends ScreenBase {
     }
 
     private int onRenderAchievement(int achievementOrdinal) {
-        while (achievementOrdinal < ACHIEVEMENTS.size() && StationAPI.EVENT_BUS.post(new AchievementsEvent.AchievementIconRender((Achievements) (Object) this, (Achievement) ACHIEVEMENTS.get(achievementOrdinal))).isCanceled())
+        while (
+                achievementOrdinal < ACHIEVEMENTS.size() && StationAPI.EVENT_BUS.post(
+                        AchievementsEvent.AchievementIconRender.builder()
+                                .achievementsScreen((Achievements) (Object) this)
+                                .achievement((Achievement) ACHIEVEMENTS.get(achievementOrdinal))
+                                .build()
+                ).isCanceled()
+        )
             achievementOrdinal++;
         return achievementOrdinal;
     }

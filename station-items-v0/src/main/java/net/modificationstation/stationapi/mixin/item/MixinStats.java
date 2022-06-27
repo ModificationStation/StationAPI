@@ -32,6 +32,6 @@ public class MixinStats {
             )
     )
     private static void afterBlockAndItemRegister(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new AfterBlockAndItemRegisterEvent());
+        StationAPI.EVENT_BUS.post(AfterBlockAndItemRegisterEvent.builder().build());
     }
 }

@@ -64,11 +64,11 @@ public class StationAPI implements PreLaunchEntrypoint {
         setupEntrypoint(of(MODID, "event_bus"));
         setupEntrypoint(of(MODID, "event_bus_" + FabricLoader.getInstance().getEnvironmentType().name().toLowerCase()));
         LOGGER.info("Invoking PreInit event...");
-        EVENT_BUS.post(new PreInitEvent());
+        EVENT_BUS.post(PreInitEvent.builder().build());
         LOGGER.info("Invoking Init event...");
-        EVENT_BUS.post(new InitEvent());
+        EVENT_BUS.post(InitEvent.builder().build());
         LOGGER.info("Invoking PostInit event...");
-        EVENT_BUS.post(new PostInitEvent());
+        EVENT_BUS.post(PostInitEvent.builder().build());
     }
 
     /**

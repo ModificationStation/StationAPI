@@ -16,6 +16,6 @@ public class MixinMinecraft {
 
     @Inject(method = "init()V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;textureManager:Lnet/minecraft/client/texture/TextureManager;", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
     private void textureManagerInit(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new TextureRegisterEvent());
+        StationAPI.EVENT_BUS.post(TextureRegisterEvent.builder().build());
     }
 }

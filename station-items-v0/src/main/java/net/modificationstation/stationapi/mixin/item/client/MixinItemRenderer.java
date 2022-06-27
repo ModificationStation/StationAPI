@@ -16,6 +16,14 @@ public class MixinItemRenderer {
 
     @Inject(method = "method_1488(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;Lnet/minecraft/item/ItemInstance;II)V", at = @At(value = "RETURN"))
     private void fancyItemOverlays(TextRenderer arg, TextureManager arg1, ItemInstance item, int i, int j, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new ItemOverlayRenderEvent(i, j, item, arg, arg1, (ItemRenderer) (Object) this));
+        StationAPI.EVENT_BUS.post(
+                ItemOverlayRenderEvent.builder()
+                        .itemX(i).itemY(j)
+                        .itemInstance(item)
+                        .textRenderer(arg)
+                        .textureManager(arg1)
+                        .itemRenderer((ItemRenderer) (Object) this)
+                        .build()
+        );
     }
 }

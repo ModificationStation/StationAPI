@@ -13,14 +13,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Biome.class)
 public class MixinBiome {
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/level/biome/Biome;createBiomeArray()V", shift = At.Shift.BEFORE))
     private static void afterVanillaBiomes(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new BiomeRegisterEvent());
+        StationAPI.EVENT_BUS.post(BiomeRegisterEvent.builder().build());
     }
 
     @Inject(method = "getClimateBiome(FF)Lnet/minecraft/level/biome/Biome;", at = @At("RETURN"), cancellable = true)
     private static void getBiome(float temperature, float rainfall, CallbackInfoReturnable<Biome> cir) {
-        cir.setReturnValue(StationAPI.EVENT_BUS.post(new BiomeByClimateEvent(temperature, rainfall, cir.getReturnValue())).currentBiome);
+        cir.setReturnValue(StationAPI.EVENT_BUS.post(
+                BiomeByClimateEvent.builder()
+                        .temperature(temperature)
+                        .rainfall(rainfall)
+                        .currentBiome(cir.getReturnValue())
+                        .build()
+        ).currentBiome);
     }
 }

@@ -19,8 +19,8 @@ import net.minecraft.util.maths.MathHelper;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
-import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
-import net.modificationstation.stationapi.api.client.colour.item.ItemColours;
+import net.modificationstation.stationapi.api.client.colour.block.BlockColors;
+import net.modificationstation.stationapi.api.client.colour.item.ItemColors;
 import net.modificationstation.stationapi.api.client.render.OverlayTexture;
 import net.modificationstation.stationapi.api.client.render.StationTessellator;
 import net.modificationstation.stationapi.api.client.render.VertexConsumer;
@@ -69,8 +69,8 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
             models.putModel(entry.getValue(), ModelIdentifier.of(entry.getKey(), "inventory"));
         models.reloadModels();
     });
-    private final BlockColours blockColours = StationRenderAPI.getBlockColours();
-    private final ItemColours itemColours = StationRenderAPI.getItemColours();
+    private final BlockColors blockColours = StationRenderAPI.getBlockColours();
+    private final ItemColors itemColours = StationRenderAPI.getItemColours();
     private final ThreadLocal<BlockRenderContext> BLOCK_CONTEXTS = ThreadLocal.withInitial(BlockRenderContext::new);
     private final ThreadLocal<ItemRenderContext> ITEM_CONTEXTS = ThreadLocal.withInitial(() -> new ItemRenderContext(itemColours));
     private final MatrixStack matrices = new MatrixStack();
@@ -150,7 +150,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         float g;
         float f;
         if (quad.hasColour()) {
-            int i = blockColours.getColour(state, world, pos, quad.getColorIndex());
+            int i = blockColours.getColor(state, world, pos, quad.getColorIndex());
             f = (float)(i >> 16 & 0xFF) / 255.0f;
             g = (float)(i >> 8 & 0xFF) / 255.0f;
             h = (float)(i & 0xFF) / 255.0f;
@@ -176,7 +176,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         BlockBase block = state.getBlock();
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
 
-        int var6 = (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) && Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().getAnimation() != null ? StationRenderAPI.getBlockColours().getColour(((BlockStateView) world).getBlockState(x, y, z), world, new TilePos(x, y, z), -1) : block.getColourMultiplier(world, x, y, z);
+        int var6 = (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) && Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().getAnimation() != null ? StationRenderAPI.getBlockColours().getColor(((BlockStateView) world).getBlockState(x, y, z), world, new TilePos(x, y, z), -1) : block.getColourMultiplier(world, x, y, z);
         float var7 = (float)((var6 >> 16) & 255) / 255.0F;
         float var8 = (float)((var6 >> 8) & 255) / 255.0F;
         float var9 = (float)(var6 & 255) / 255.0F;
@@ -377,7 +377,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         boolean bl = stack != null && stack.itemId != 0 && stack.count > 0;
         MatrixStack.Entry entry = matrices.peek();
         for (BakedQuad bakedQuad : quads) {
-            int i = bl && bakedQuad.hasColour() ? this.itemColours.getColour(stack, bakedQuad.getColorIndex()) : -1;
+            int i = bl && bakedQuad.hasColour() ? this.itemColours.getColor(stack, bakedQuad.getColorIndex()) : -1;
             float f = (float)(i >> 16 & 0xFF) / 255.0f;
             float g = (float)(i >> 8 & 0xFF) / 255.0f;
             float h = (float)(i & 0xFF) / 255.0f;

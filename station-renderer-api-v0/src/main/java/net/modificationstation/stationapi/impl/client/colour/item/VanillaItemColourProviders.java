@@ -5,9 +5,9 @@ import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
-import net.modificationstation.stationapi.api.client.colour.item.ItemColours;
-import net.modificationstation.stationapi.api.client.event.colour.item.ItemColoursRegisterEvent;
+import net.modificationstation.stationapi.api.client.colour.block.BlockColors;
+import net.modificationstation.stationapi.api.client.colour.item.ItemColors;
+import net.modificationstation.stationapi.api.client.event.colour.item.ItemColorsRegisterEvent;
 import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -16,12 +16,12 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 public class VanillaItemColourProviders {
 
     @EventListener(priority = ListenerPriority.HIGH)
-    private static void registerItemColours(ItemColoursRegisterEvent event) {
-        BlockColours blockColours = event.getBlockColours();
-        ItemColours itemColours = event.getItemColours();
-        itemColours.register((stack, tintIndex) -> {
+    private static void registerItemColors(ItemColorsRegisterEvent event) {
+        BlockColors blockColors = event.blockColors;
+        ItemColors itemColors = event.itemColors;
+        itemColors.register((stack, tintIndex) -> {
             BlockState blockState = ((BlockStateHolder) BlockBase.BY_ID[stack.itemId]).getDefaultState();
-            return blockColours.getColour(blockState, null, null, tintIndex);
+            return blockColors.getColor(blockState, null, null, tintIndex);
         }, (ItemConvertible) BlockBase.GRASS, (ItemConvertible) BlockBase.TALLGRASS, (ItemConvertible) BlockBase.LEAVES);
     }
 }

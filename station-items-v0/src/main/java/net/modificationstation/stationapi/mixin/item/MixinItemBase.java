@@ -37,7 +37,12 @@ public class MixinItemBase implements SerialIDHolder, ItemConvertible {
             argsOnly = true
     )
     private String getName(String name) {
-        return StationAPI.EVENT_BUS.post(new ItemEvent.TranslationKeyChanged((ItemBase) (Object) this, name)).currentTranslationKey;
+        return StationAPI.EVENT_BUS.post(
+                ItemEvent.TranslationKeyChanged.builder()
+                        .item((ItemBase) (Object) this)
+                        .currentTranslationKey(name)
+                        .build()
+        ).currentTranslationKey;
     }
 
     @Override

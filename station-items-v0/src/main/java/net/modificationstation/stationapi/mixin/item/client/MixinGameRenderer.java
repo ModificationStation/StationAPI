@@ -18,6 +18,12 @@ public class MixinGameRenderer {
 
     @ModifyConstant(method = "method_1838(F)V", constant = @Constant(doubleValue = 3))
     private double getEntityReach(double originalReach) {
-        return StationAPI.EVENT_BUS.post(new PlayerEvent.Reach(minecraft.player, HitType.field_790, originalReach)).currentReach;
+        return StationAPI.EVENT_BUS.post(
+                PlayerEvent.Reach.builder()
+                        .player(minecraft.player)
+                        .type(HitType.field_790)
+                        .currentReach(originalReach)
+                        .build()
+        ).currentReach;
     }
 }

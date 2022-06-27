@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.client.event.option;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.client.options.KeyBinding;
 
@@ -18,7 +18,7 @@ import java.util.List;
  * @see KeyBinding
  * @see List#add(Object)
  */
-@RequiredArgsConstructor
+@SuperBuilder
 public class KeyBindingRegisterEvent extends Event {
 
     public final List<KeyBinding> keyBindings;

@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.api.server.event.network;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.packet.login.LoginRequest0x1Packet;
 import net.minecraft.server.network.ServerPacketHandler;
 
-@RequiredArgsConstructor
+@SuperBuilder
 public class PlayerAttemptLoginEvent extends Event {
 
     public final ServerPacketHandler serverPacketHandler;

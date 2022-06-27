@@ -1,22 +1,18 @@
 package net.modificationstation.stationapi.api.event.level;
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.level.LevelProperties;
 import net.minecraft.util.io.CompoundTag;
 
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@SuperBuilder
 public abstract class LevelPropertiesEvent extends Event {
 
     public final LevelProperties levelProperties;
     public final CompoundTag tag;
 
+    @SuperBuilder
     public static class Load extends LevelPropertiesEvent {
-
-        public Load(LevelProperties levelProperties, CompoundTag tag) {
-            super(levelProperties, tag);
-        }
 
         @Override
         protected int getEventID() {
@@ -26,15 +22,11 @@ public abstract class LevelPropertiesEvent extends Event {
         public static final int ID = NEXT_ID.incrementAndGet();
     }
 
+    @SuperBuilder
     public static class Save extends LevelPropertiesEvent {
 
         public final CompoundTag spPlayerData;
 
-        public Save(LevelProperties levelProperties, CompoundTag tag, CompoundTag spPlayerData) {
-            super(levelProperties, tag);
-            this.spPlayerData = spPlayerData;
-        }
-
         @Override
         protected int getEventID() {
             return ID;
@@ -43,11 +35,8 @@ public abstract class LevelPropertiesEvent extends Event {
         public static final int ID = NEXT_ID.incrementAndGet();
     }
 
+    @SuperBuilder
     public static class LoadOnLevelInit extends LevelPropertiesEvent {
-
-        public LoadOnLevelInit(LevelProperties levelProperties, CompoundTag tag) {
-            super(levelProperties, tag);
-        }
 
         @Override
         protected int getEventID() {

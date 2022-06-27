@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.api.event.tileentity;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.tileentity.TileEntityBase;
 
 import java.util.function.BiConsumer;
 
-@RequiredArgsConstructor
+@SuperBuilder
 public class TileEntityRegisterEvent extends Event {
 
     public final BiConsumer<Class<? extends TileEntityBase>, String> register;

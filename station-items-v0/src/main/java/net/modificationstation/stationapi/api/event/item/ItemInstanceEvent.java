@@ -1,26 +1,21 @@
 package net.modificationstation.stationapi.api.event.item;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 
-@RequiredArgsConstructor
+@SuperBuilder
 public abstract class ItemInstanceEvent extends Event {
 
     public final ItemInstance itemInstance;
 
+    @SuperBuilder
     public static class Crafted extends ItemInstanceEvent {
 
         public final Level level;
         public final PlayerBase player;
-
-        public Crafted(ItemInstance itemInstance, Level level, PlayerBase player) {
-            super(itemInstance);
-            this.level = level;
-            this.player = player;
-        }
 
         @Override
         protected int getEventID() {

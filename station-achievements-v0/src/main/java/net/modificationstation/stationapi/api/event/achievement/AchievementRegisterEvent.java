@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.api.event.achievement;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.achievement.Achievement;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+@SuperBuilder
 public class AchievementRegisterEvent extends Event {
 
     public final List<Achievement> achievements;

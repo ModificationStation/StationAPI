@@ -6,7 +6,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
+import net.modificationstation.stationapi.api.client.colour.block.BlockColors;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -24,12 +24,12 @@ public class BakedModelManager extends SinglePreparationResourceReloadListener<M
    private SpriteAtlasManager atlasManager;
    private final BlockModels blockModelCache;
    private final TextureManager textureManager;
-   private final BlockColours colourMap;
+   private final BlockColors colourMap;
    private int mipmap;
    private BakedModel missingModel;
    private Object2IntMap<BlockState> stateLookup;
 
-   public BakedModelManager(TextureManager textureManager, BlockColours colourMap, int mipmap) {
+   public BakedModelManager(TextureManager textureManager, BlockColors colourMap, int mipmap) {
       this.textureManager = textureManager;
       this.colourMap = colourMap;
       this.mipmap = mipmap;

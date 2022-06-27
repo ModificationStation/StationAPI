@@ -29,7 +29,12 @@ public abstract class MixinBlockBase implements SerialIDHolder {
             argsOnly = true
     )
     private String getTranslationKey(String name) {
-        return StationAPI.EVENT_BUS.post(BlockEvent.TranslationKeyChanged.builder().block((BlockBase) (Object) this).currentTranslationKey(name).build()).currentTranslationKey;
+        return StationAPI.EVENT_BUS.post(
+                BlockEvent.TranslationKeyChanged.builder()
+                        .block((BlockBase) (Object) this)
+                        .currentTranslationKey(name)
+                        .build()
+        ).currentTranslationKey;
     }
 
     @Inject(
@@ -81,12 +86,12 @@ public abstract class MixinBlockBase implements SerialIDHolder {
     private void beforeDrop(Level level, int x, int y, int z, int meta, float chance, CallbackInfo ci) {
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeDrop.builder()
-                .level(level)
-                .x(x).y(y).z(z)
-                .chance(chance)
-                .block(BlockBase.class.cast(this))
-                .build()).isCanceled()
-        )
-            ci.cancel();
+                        .level(level)
+                        .x(x).y(y).z(z)
+                        .chance(chance)
+                        .block(BlockBase.class.cast(this))
+                        .build()
+                ).isCanceled()
+        ) ci.cancel();
     }
 }

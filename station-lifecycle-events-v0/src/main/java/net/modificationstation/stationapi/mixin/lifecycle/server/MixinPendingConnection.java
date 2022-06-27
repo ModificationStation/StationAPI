@@ -17,11 +17,20 @@ public class MixinPendingConnection {
 
     @Inject(method = "complete(Lnet/minecraft/packet/login/LoginRequest0x1Packet;)V", at = @At("HEAD"))
     private void handleLogin(LoginRequest0x1Packet arg, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new PlayerAttemptLoginEvent((ServerPacketHandler) (Object) this, arg));
+        StationAPI.EVENT_BUS.post(
+                PlayerAttemptLoginEvent.builder()
+                        .serverPacketHandler((ServerPacketHandler) (Object) this)
+                        .loginRequestPacket(arg)
+                        .build()
+        );
     }
 
     @Inject(method = "complete(Lnet/minecraft/packet/login/LoginRequest0x1Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/ServerPlayer;method_317()V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
     private void afterLogin(LoginRequest0x1Packet arg, CallbackInfo ci, ServerPlayer var2) {
-        StationAPI.EVENT_BUS.post(new PlayerLoginEvent(arg, var2));
+        StationAPI.EVENT_BUS.post(
+                PlayerLoginEvent.builder()
+                        .loginPacket(arg)
+                        .player(var2).build()
+        );
     }
 }

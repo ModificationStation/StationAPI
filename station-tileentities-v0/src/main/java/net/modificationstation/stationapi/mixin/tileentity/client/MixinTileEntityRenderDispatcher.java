@@ -18,7 +18,7 @@ public class MixinTileEntityRenderDispatcher {
     @Redirect(method = "<init>()V", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 2))
     private <K, V> V initCustomRenderers(Map<K, V> map, K key, V value){
         V ret = map.put(key, value);
-        StationAPI.EVENT_BUS.post(new TileEntityRendererRegisterEvent((Map<Class<? extends TileEntityBase>, TileEntityRenderer>) map));
+        StationAPI.EVENT_BUS.post(TileEntityRendererRegisterEvent.builder().renderers((Map<Class<? extends TileEntityBase>, TileEntityRenderer>) map).build());
         return ret;
     }
 }

@@ -26,6 +26,14 @@ public class MixinCraftingResult {
 
     @Inject(method = "onCrafted(Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/InventoryBase;setInventoryItem(ILnet/minecraft/item/ItemInstance;)V", shift = At.Shift.BY, by = 2), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onCrafted(ItemInstance arg, CallbackInfo ci, int var2, ItemInstance var3) {
-        StationAPI.EVENT_BUS.post(new ItemUsedInCraftingEvent(player, resultInventory, var2, var3, arg));
+        StationAPI.EVENT_BUS.post(
+                ItemUsedInCraftingEvent.builder()
+                        .player(player)
+                        .craftingMatrix(resultInventory)
+                        .itemOrdinal(var2)
+                        .itemCrafted(arg)
+                        .itemUsed(var3)
+                        .build()
+        );
     }
 }

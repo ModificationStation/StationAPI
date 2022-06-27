@@ -27,7 +27,7 @@ public abstract class MixinLevel {
             at = @At("RETURN")
     )
     private void onCor1(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new LevelEvent.Init((Level) (Object) this));
+        StationAPI.EVENT_BUS.post(LevelEvent.Init.builder().level((Level) (Object) this).build());
     }
 
     @Inject(
@@ -42,8 +42,15 @@ public abstract class MixinLevel {
             cancellable = true
     )
     private void onBlockSetWithMeta(int x, int y, int z, int blockId, int blockMeta, CallbackInfoReturnable<Boolean> cir, Chunk chunk) {
-        if (StationAPI.EVENT_BUS.post(new LevelEvent.BlockSet((Level) (Object) this, chunk, x, y, z, blockId, blockMeta)).isCanceled())
-            cir.setReturnValue(false);
+        if (
+                StationAPI.EVENT_BUS.post(LevelEvent.BlockSet.builder()
+                        .level((Level) (Object) this)
+                        .chunk(chunk)
+                        .x(x).y(y).z(z)
+                        .blockId(blockId).blockMeta(blockMeta)
+                        .build()
+                ).isCanceled()
+        ) cir.setReturnValue(false);
     }
 
     @Inject(
@@ -58,8 +65,15 @@ public abstract class MixinLevel {
             cancellable = true
     )
     private void onBlockSet(int x, int y, int z, int blockId, CallbackInfoReturnable<Boolean> cir, Chunk chunk) {
-        if (StationAPI.EVENT_BUS.post(new LevelEvent.BlockSet((Level) (Object) this, chunk, x, y, z, blockId)).isCanceled())
-            cir.setReturnValue(false);
+        if (
+                StationAPI.EVENT_BUS.post(LevelEvent.BlockSet.builder()
+                        .level((Level) (Object) this)
+                        .chunk(chunk)
+                        .x(x).y(y).z(z)
+                        .blockId(blockId)
+                        .build()
+                ).isCanceled()
+        ) cir.setReturnValue(false);
     }
 
     @Inject(
@@ -77,6 +91,14 @@ public abstract class MixinLevel {
             cancellable = true
     )
     private void isBlockReplaceable(int id, int x, int y, int z, boolean noCollision, int meta, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(StationAPI.EVENT_BUS.post(new LevelEvent.IsBlockReplaceable((Level) (Object) this, x, y, z, BlockBase.BY_ID[getTileId(x, y, z)], BlockBase.BY_ID[id], meta, cir.getReturnValue())).replace);
+        cir.setReturnValue(StationAPI.EVENT_BUS.post(
+                LevelEvent.IsBlockReplaceable.builder()
+                        .level((Level) (Object) this)
+                        .x(x).y(y).z(z)
+                        .block(BlockBase.BY_ID[getTileId(x, y, z)])
+                        .replacedBy(BlockBase.BY_ID[id]).replacedByMeta(meta)
+                        .replace(cir.getReturnValue())
+                        .build()
+        ).replace);
     }
 }

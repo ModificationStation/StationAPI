@@ -20,6 +20,12 @@ public class Mixinclass_608 extends BaseClientInteractionManager {
 
     @Inject(method = "getBlockReachDistance()F", at = @At("RETURN"), cancellable = true)
     private void getBlockReach(CallbackInfoReturnable<Float> cir) {
-        cir.setReturnValue((float) StationAPI.EVENT_BUS.post(new PlayerEvent.Reach(minecraft.player, HitType.field_789, cir.getReturnValueF())).currentReach);
+        cir.setReturnValue((float) StationAPI.EVENT_BUS.post(
+                PlayerEvent.Reach.builder()
+                        .player(minecraft.player)
+                        .type(HitType.field_789)
+                        .currentReach(cir.getReturnValueF())
+                        .build()
+        ).currentReach);
     }
 }

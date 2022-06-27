@@ -21,7 +21,7 @@ import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
-import net.modificationstation.stationapi.api.client.colour.block.BlockColours;
+import net.modificationstation.stationapi.api.client.colour.block.BlockColors;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MutableQuadViewImpl;
 
@@ -36,7 +36,7 @@ import java.util.function.Supplier;
  * so they can be applied together with chunk offsets.
  */
 public class BlockRenderInfo {
-	private final BlockColours blockColorMap = StationRenderAPI.getBlockColours();
+	private final BlockColors blockColorMap = StationRenderAPI.getBlockColours();
 	public final Random random = new Random();
 	public BlockView blockView;
 	public TilePos blockPos;
@@ -75,7 +75,7 @@ public class BlockRenderInfo {
 	}
 
 	int blockColour(int colorIndex) {
-		return 0xFF000000 | blockColorMap.getColour(blockState, blockView, blockPos, colorIndex);
+		return 0xFF000000 | blockColorMap.getColor(blockState, blockView, blockPos, colorIndex);
 	}
 
 	boolean shouldDrawFace(Direction face) {

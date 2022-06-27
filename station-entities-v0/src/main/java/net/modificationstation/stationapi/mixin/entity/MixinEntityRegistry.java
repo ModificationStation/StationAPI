@@ -22,12 +22,16 @@ public class MixinEntityRegistry {
 
     @Shadow private static Map<Class<? extends EntityBase>, String> CLASS_TO_STRING_ID;
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void onEntityRegister(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new EntityRegister(MixinEntityRegistry::register, (aClass, s) -> {
-            STRING_ID_TO_CLASS.put(s, aClass);
-            CLASS_TO_STRING_ID.put(aClass, s);
-        }));
+        StationAPI.EVENT_BUS.post(
+                EntityRegister.builder()
+                        .register(MixinEntityRegistry::register)
+                        .registerNoID((aClass, s) -> {
+                            STRING_ID_TO_CLASS.put(s, aClass);
+                            CLASS_TO_STRING_ID.put(aClass, s);
+                        })
+                        .build()
+        );
     }
 }

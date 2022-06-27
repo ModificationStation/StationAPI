@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.server.event.entity;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.network.EntityHashSet;
@@ -17,7 +17,7 @@ import net.modificationstation.stationapi.api.util.API;
  * @see TrackingParametersProvider
  * @see HasTrackingParameters
  */
-@RequiredArgsConstructor
+@SuperBuilder
 public class TrackEntityEvent extends Event {
 
     /**

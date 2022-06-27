@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.event.registry;
 
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 
 /**
@@ -9,6 +10,7 @@ import net.mine_diver.unsafeevents.Event;
  * @author mine_diver
  * @see net.modificationstation.stationapi.api.registry.LevelSerialRegistry
  */
+@SuperBuilder
 public class PostRegistryRemapEvent extends Event {
 
     @Override

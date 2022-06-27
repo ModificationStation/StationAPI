@@ -18,11 +18,21 @@ public class MixinDimensionFile {
 
     @Inject(method = "getLevelProperties()Lnet/minecraft/level/LevelProperties;", at = @At(value = "RETURN", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onLoadLevelPropertiesOnLevelInit(CallbackInfoReturnable<LevelProperties> cir, File file, CompoundTag var7, CompoundTag var8) {
-        StationAPI.EVENT_BUS.post(new LevelPropertiesEvent.LoadOnLevelInit(cir.getReturnValue(), var8));
+        StationAPI.EVENT_BUS.post(
+                LevelPropertiesEvent.LoadOnLevelInit.builder()
+                        .levelProperties(cir.getReturnValue())
+                        .tag(var8)
+                        .build()
+        );
     }
 
     @Inject(method = "getLevelProperties()Lnet/minecraft/level/LevelProperties;", at = @At(value = "RETURN", ordinal = 1), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onLoadLevelPropertiesOnLevelInit_old(CallbackInfoReturnable<LevelProperties> cir, File file, CompoundTag var2, CompoundTag var3) {
-        StationAPI.EVENT_BUS.post(new LevelPropertiesEvent.LoadOnLevelInit(cir.getReturnValue(), var3));
+        StationAPI.EVENT_BUS.post(
+                LevelPropertiesEvent.LoadOnLevelInit.builder()
+                        .levelProperties(cir.getReturnValue())
+                        .tag(var3)
+                        .build()
+        );
     }
 }

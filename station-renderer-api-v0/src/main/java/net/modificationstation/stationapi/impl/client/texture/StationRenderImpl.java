@@ -541,7 +541,7 @@ public class StationRenderImpl {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void texturePackApplied(TexturePackLoadedEvent.After event) {
-        StationAPI.EVENT_BUS.post(new TextureRegisterEvent());
+        StationAPI.EVENT_BUS.post(TextureRegisterEvent.builder().build());
     }
 
     private static void debugExportAtlases() {

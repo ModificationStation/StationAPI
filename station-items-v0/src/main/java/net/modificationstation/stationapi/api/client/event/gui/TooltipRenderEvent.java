@@ -1,12 +1,13 @@
 package net.modificationstation.stationapi.api.client.event.gui;
 
 import lombok.Getter;
+import lombok.experimental.SuperBuilder;
 import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.render.TextRenderer;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.event.item.ItemInstanceEvent;
 
+@SuperBuilder
 public class TooltipRenderEvent extends ItemInstanceEvent {
 
     @Getter
@@ -22,19 +23,6 @@ public class TooltipRenderEvent extends ItemInstanceEvent {
             mouseY;
     public final float delta;
     public final String originalTooltip;
-
-    public TooltipRenderEvent(ItemInstance itemInstance, ContainerBase container, TextRenderer textManager, PlayerInventory inventory, int containerX, int containerY, int mouseX, int mouseY, float delta, String originalTooltip) {
-        super(itemInstance);
-        this.container = container;
-        this.textManager = textManager;
-        this.inventory = inventory;
-        this.containerX = containerX;
-        this.containerY = containerY;
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
-        this.delta = delta;
-        this.originalTooltip = originalTooltip;
-    }
 
     @Override
     protected int getEventID() {

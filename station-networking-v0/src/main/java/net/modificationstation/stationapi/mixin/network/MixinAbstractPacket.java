@@ -16,9 +16,8 @@ public class MixinAbstractPacket {
     static void register(int id, boolean flag, boolean flag1, Class<? extends AbstractPacket> arg) {
     }
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/packet/AbstractPacket;register(IZZLjava/lang/Class;)V", ordinal = 56, shift = At.Shift.AFTER))
     private static void afterVanillaPackets(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new PacketRegisterEvent(MixinAbstractPacket::register));
+        StationAPI.EVENT_BUS.post(PacketRegisterEvent.builder().register(MixinAbstractPacket::register).build());
     }
 }

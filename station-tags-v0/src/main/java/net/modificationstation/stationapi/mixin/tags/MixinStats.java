@@ -11,8 +11,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Stats.class)
 public class MixinStats {
 
+    @SuppressWarnings({"MixinAnnotationTarget", "InvalidMemberReference", "UnresolvedMixinReference"})
     @Inject(method = "setupCrafting()V", at = @At(value = "NEW", target = "()Ljava/util/HashSet;"))
     private static void beforeRecipeStats(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new TagRegisterEvent());
+        StationAPI.EVENT_BUS.post(TagRegisterEvent.builder().build());
     }
 }

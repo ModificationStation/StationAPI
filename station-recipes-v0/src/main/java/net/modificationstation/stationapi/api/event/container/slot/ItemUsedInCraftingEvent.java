@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.api.event.container.slot;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.inventory.InventoryBase;
 import net.minecraft.item.ItemInstance;
 
-@RequiredArgsConstructor
+@SuperBuilder
 public class ItemUsedInCraftingEvent extends Event {
 
     public final PlayerBase player;

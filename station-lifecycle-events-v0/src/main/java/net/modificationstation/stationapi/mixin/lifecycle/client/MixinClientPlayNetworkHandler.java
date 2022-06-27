@@ -20,8 +20,14 @@ public abstract class MixinClientPlayNetworkHandler {
             cancellable = true
     )
     private void onLoginSuccess(LoginRequest0x1Packet packet, CallbackInfo ci) {
-        if (StationAPI.EVENT_BUS.post(new ServerLoginSuccessEvent((ClientPlayNetworkHandler) (Object) this, packet)).isCanceled())
-            ci.cancel();
+        if (
+                StationAPI.EVENT_BUS.post(
+                        ServerLoginSuccessEvent.builder()
+                                .networkHandler((ClientPlayNetworkHandler) (Object) this)
+                                .loginRequestPacket(packet)
+                                .build()
+                ).isCanceled()
+        ) ci.cancel();
     }
 
     @Inject(
@@ -29,7 +35,13 @@ public abstract class MixinClientPlayNetworkHandler {
             at = @At("HEAD")
     )
     private void onKicked(Disconnect0xFFPacket packet, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new MultiplayerLogoutEvent(packet, null, false));
+        StationAPI.EVENT_BUS.post(
+                MultiplayerLogoutEvent.builder()
+                        .packet(packet)
+                        .stacktrace(null)
+                        .dropped(false)
+                        .build()
+        );
     }
 
     @Inject(
@@ -37,6 +49,12 @@ public abstract class MixinClientPlayNetworkHandler {
             at = @At("HEAD")
     )
     private void onDropped(String reason, Object[] stacktrace, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new MultiplayerLogoutEvent(new Disconnect0xFFPacket(reason), (String[]) stacktrace, true));
+        StationAPI.EVENT_BUS.post(
+                MultiplayerLogoutEvent.builder()
+                        .packet(new Disconnect0xFFPacket(reason))
+                        .stacktrace((String[]) stacktrace)
+                        .dropped(true)
+                        .build()
+        );
     }
 }

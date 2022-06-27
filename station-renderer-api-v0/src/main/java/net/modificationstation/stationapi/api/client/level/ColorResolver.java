@@ -5,15 +5,15 @@ import net.minecraft.level.biome.Biome;
 import net.minecraft.util.maths.MathHelper;
 
 @FunctionalInterface
-public interface ColourResolver {
+public interface ColorResolver {
 
-    int getColour(BlockView blockView, double x, double y, double z);
+    int getColor(BlockView blockView, double x, double y, double z);
 
     @FunctionalInterface
-    interface ByTemperatureAndRainfall extends ColourResolver {
+    interface ByTemperatureAndRainfall extends ColorResolver {
 
         @Override
-        default int getColour(BlockView world, double x, double y, double z) {
+        default int getColor(BlockView world, double x, double y, double z) {
             world.getBiomeSource().getBiomes(MathHelper.floor(x), MathHelper.floor(z), 1, 1);
             double temperature = world.getBiomeSource().temperatureNoises[0];
             double rainfall = world.getBiomeSource().rainfallNoises[0];
@@ -24,20 +24,20 @@ public interface ColourResolver {
     }
 
     @FunctionalInterface
-    interface ByBiomeAndPosition extends ColourResolver {
+    interface ByBiomeAndPosition extends ColorResolver {
 
         @Override
-        default int getColour(BlockView blockView, double x, double y, double z) {
+        default int getColor(BlockView blockView, double x, double y, double z) {
             return getColour(blockView.getBiomeSource().getBiome(MathHelper.floor(x), MathHelper.floor(z)), x, z);
         }
 
         int getColour(Biome biome, double x, double z);
     }
 
-    interface ByBlockCoordinates extends ColourResolver {
+    interface ByBlockCoordinates extends ColorResolver {
 
         @Override
-        default int getColour(BlockView world, double x, double y, double z) {
+        default int getColor(BlockView world, double x, double y, double z) {
             return getColour(world, MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z));
         }
 

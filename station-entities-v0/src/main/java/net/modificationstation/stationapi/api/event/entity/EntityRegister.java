@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.api.event.entity;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.entity.EntityBase;
 import uk.co.benjiweber.expressions.function.TriConsumer;
 
 import java.util.function.BiConsumer;
 
-@RequiredArgsConstructor
+@SuperBuilder
 public class EntityRegister extends Event {
 
     public final TriConsumer<Class<? extends EntityBase>, String, Integer> register;

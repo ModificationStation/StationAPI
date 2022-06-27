@@ -1,21 +1,18 @@
 package net.modificationstation.stationapi.api.client.event.resource;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
 
-@RequiredArgsConstructor
+@SuperBuilder
 public abstract class TexturePackLoadedEvent extends Event {
 
     public final TextureManager textureManager;
     public final TexturePack newTexturePack;
 
+    @SuperBuilder
     public static class Before extends TexturePackLoadedEvent {
-
-        public Before(TextureManager textureManager, TexturePack newTexturePack) {
-            super(textureManager, newTexturePack);
-        }
 
         @Override
         protected int getEventID() {
@@ -25,11 +22,8 @@ public abstract class TexturePackLoadedEvent extends Event {
         public static final int ID = NEXT_ID.incrementAndGet();
     }
 
+    @SuperBuilder
     public static class After extends TexturePackLoadedEvent {
-
-        public After(TextureManager textureManager, TexturePack newTexturePack) {
-            super(textureManager, newTexturePack);
-        }
 
         @Override
         protected int getEventID() {

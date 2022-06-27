@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.event.packet;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationapi.api.packet.Message;
@@ -15,7 +15,7 @@ import uk.co.benjiweber.expressions.function.QuadConsumer;
  *
  * @author mine_diver
  */
-@RequiredArgsConstructor
+@SuperBuilder
 public class PacketRegisterEvent extends Event {
 
     /**

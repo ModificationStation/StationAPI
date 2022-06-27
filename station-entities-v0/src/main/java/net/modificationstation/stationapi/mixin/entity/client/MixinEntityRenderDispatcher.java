@@ -14,11 +14,11 @@ import java.util.Map;
 @Mixin(EntityRenderDispatcher.class)
 public class MixinEntityRenderDispatcher {
 
-    @SuppressWarnings({"unchecked", "UnresolvedMixinReference"}) // Fernflower bad, CFR good.
     @Redirect(method = "<init>()V", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 27))
     private <K, V> V afterVanillaRender(Map<K, V> map, K key, V value) {
         V ret = map.put(key, value);
-        StationAPI.EVENT_BUS.post(new EntityRendererRegisterEvent((Map<Class<? extends EntityBase>, EntityRenderer>) map));
+        //noinspection unchecked
+        StationAPI.EVENT_BUS.post(EntityRendererRegisterEvent.builder().renderers((Map<Class<? extends EntityBase>, EntityRenderer>) map).build());
         return ret;
     }
 }

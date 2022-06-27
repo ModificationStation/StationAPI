@@ -393,7 +393,14 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         int levelX = this.x << 4 | x;
         int levelZ = this.z << 4 | z;
         BlockBase oldBlock = oldState.getBlock();
-        if (StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder().block(oldBlock).level(level).x(levelX).y(y).z(levelZ).build()).isCanceled()) return false;
+        if (
+                StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
+                        .block(oldBlock)
+                        .level(level)
+                        .x(levelX).y(y).z(levelZ)
+                        .build()
+                ).isCanceled()
+        ) return false;
         section.setBlockState(x, y & 15, z, state);
         oldBlock.onBlockRemoved(this.level, levelX, y, levelZ);
         section.setMeta(x, y & 15, z, meta);
@@ -460,7 +467,14 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         int levelX = this.x << 4 | x;
         int levelZ = this.z << 4 | z;
         BlockBase oldBlock = oldState.getBlock();
-        if (StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder().block(oldBlock).level(level).x(levelX).y(y).z(levelZ).build()).isCanceled()) return null;
+        if (
+                StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
+                        .block(oldBlock)
+                        .level(level)
+                        .x(levelX).y(y).z(levelZ)
+                        .build()
+                ).isCanceled()
+        ) return null;
         section.setBlockState(x, y & 15, z, state);
         oldBlock.onBlockRemoved(this.level, levelX, y, levelZ);
         section.setMeta(x, y & 15, z, 0);

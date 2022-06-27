@@ -19,20 +19,20 @@ public class MixinMinecraft {
 
     @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ScreenBase;onKeyboardEvent()V", shift = At.Shift.AFTER))
     private void keyPressInGUI(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new KeyStateChangedEvent(KeyStateChangedEvent.Environment.IN_GUI));
+        StationAPI.EVENT_BUS.post(KeyStateChangedEvent.builder().environment(KeyStateChangedEvent.Environment.IN_GUI).build());
     }
 
     @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;hasLevel()Z", shift = At.Shift.BEFORE, ordinal = 0))
     private void keyPressInGame(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new KeyStateChangedEvent(KeyStateChangedEvent.Environment.IN_GAME));
+        StationAPI.EVENT_BUS.post(KeyStateChangedEvent.builder().environment(KeyStateChangedEvent.Environment.IN_GAME).build());
     }
 
     @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lorg/lwjgl/input/Keyboard;getEventKeyState()Z", ordinal = 1, shift = At.Shift.BEFORE, remap = false))
     private void keyReleased(CallbackInfo ci) {
         if (!Keyboard.getEventKeyState())
             if (currentScreen == null)
-                StationAPI.EVENT_BUS.post(new KeyStateChangedEvent(KeyStateChangedEvent.Environment.IN_GAME));
+                StationAPI.EVENT_BUS.post(KeyStateChangedEvent.builder().environment(KeyStateChangedEvent.Environment.IN_GAME).build());
             else
-                StationAPI.EVENT_BUS.post(new KeyStateChangedEvent(KeyStateChangedEvent.Environment.IN_GUI));
+                StationAPI.EVENT_BUS.post(KeyStateChangedEvent.builder().environment(KeyStateChangedEvent.Environment.IN_GUI).build());
     }
 }

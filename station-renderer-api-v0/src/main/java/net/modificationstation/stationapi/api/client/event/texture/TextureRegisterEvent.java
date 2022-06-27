@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.client.event.texture;
 
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 
 /**
@@ -7,6 +8,7 @@ import net.mine_diver.unsafeevents.Event;
  *
  * @author mine_diver
  */
+@SuperBuilder
 public class TextureRegisterEvent extends Event {
 
     @Override

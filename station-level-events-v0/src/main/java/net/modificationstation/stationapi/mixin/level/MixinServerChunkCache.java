@@ -31,6 +31,14 @@ public class MixinServerChunkCache {
         long xRandomMultiplier = (modRandom.nextLong() / 2L) * 2L + 1L;
         long zRandomMultiplier = (modRandom.nextLong() / 2L) * 2L + 1L;
         modRandom.setSeed((long) chunkX * xRandomMultiplier + (long) chunkZ * zRandomMultiplier ^ level.getSeed());
-        StationAPI.EVENT_BUS.post(new LevelGenEvent.ChunkDecoration(level, this.levelSource, level.getBiomeSource().getBiome(blockX + 16, blockZ + 16), blockX, blockZ, modRandom));
+        StationAPI.EVENT_BUS.post(
+                LevelGenEvent.ChunkDecoration.builder()
+                        .level(level)
+                        .levelSource(this.levelSource)
+                        .biome(level.getBiomeSource().getBiome(blockX + 16, blockZ + 16))
+                        .x(blockX).z(blockZ)
+                        .random(modRandom)
+                        .build()
+        );
     }
 }

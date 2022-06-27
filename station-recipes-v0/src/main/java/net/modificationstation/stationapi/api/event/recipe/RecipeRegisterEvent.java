@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.event.recipe;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
@@ -17,7 +17,7 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
  * @see Vanilla
  * @author mine_diver
  */
-@RequiredArgsConstructor
+@SuperBuilder
 public class RecipeRegisterEvent extends Event {
 
     public final Identifier recipeId;

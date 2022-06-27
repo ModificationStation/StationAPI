@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.api.client.event.network;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.packet.misc.Disconnect0xFFPacket;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@RequiredArgsConstructor
+@SuperBuilder
 public class MultiplayerLogoutEvent extends Event {
 
     @NotNull public final Disconnect0xFFPacket packet;

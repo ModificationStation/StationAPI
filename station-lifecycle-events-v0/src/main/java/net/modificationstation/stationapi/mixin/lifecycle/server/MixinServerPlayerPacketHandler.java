@@ -19,6 +19,6 @@ public class MixinServerPlayerPacketHandler {
             at = @At("RETURN")
     )
     private void created(MinecraftServer minecraftServer, ClientConnection arg, ServerPlayer arg1, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new PlayerPacketHandlerSetEvent(arg1));
+        StationAPI.EVENT_BUS.post(PlayerPacketHandlerSetEvent.builder().player(arg1).build());
     }
 }

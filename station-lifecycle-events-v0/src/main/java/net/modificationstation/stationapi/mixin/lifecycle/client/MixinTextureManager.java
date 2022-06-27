@@ -20,7 +20,12 @@ public class MixinTextureManager {
             at = @At("HEAD")
     )
     private void beforeTextureRefresh(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new TexturePackLoadedEvent.Before((TextureManager) (Object) this, texturePackManager.texturePack));
+        StationAPI.EVENT_BUS.post(
+                TexturePackLoadedEvent.Before.builder()
+                        .textureManager((TextureManager) (Object) this)
+                        .newTexturePack(texturePackManager.texturePack)
+                        .build()
+        );
     }
 
     @Inject(
@@ -28,6 +33,11 @@ public class MixinTextureManager {
             at = @At("RETURN")
     )
     private void texturesRefresh(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new TexturePackLoadedEvent.After((TextureManager) (Object) this, texturePackManager.texturePack));
+        StationAPI.EVENT_BUS.post(
+                TexturePackLoadedEvent.After.builder()
+                        .textureManager((TextureManager) (Object) this)
+                        .newTexturePack(texturePackManager.texturePack)
+                        .build()
+        );
     }
 }

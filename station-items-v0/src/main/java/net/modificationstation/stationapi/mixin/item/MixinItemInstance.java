@@ -89,7 +89,13 @@ public class MixinItemInstance implements HasItemEntity, StationNBTSetter, Stati
 
     @Inject(method = "onCrafted(Lnet/minecraft/level/Level;Lnet/minecraft/entity/player/PlayerBase;)V", at = @At("RETURN"))
     private void onCreation(Level arg, PlayerBase arg1, CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new ItemInstanceEvent.Crafted((ItemInstance) (Object) this, arg, arg1));
+        StationAPI.EVENT_BUS.post(
+                ItemInstanceEvent.Crafted.builder()
+                        .itemInstance((ItemInstance) (Object) this)
+                        .level(arg)
+                        .player(arg1)
+                        .build()
+        );
     }
 
     @Unique

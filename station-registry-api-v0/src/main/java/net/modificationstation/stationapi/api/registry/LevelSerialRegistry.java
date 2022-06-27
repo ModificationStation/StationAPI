@@ -85,6 +85,6 @@ public interface LevelSerialRegistry<T> {
                 lsRegistry.load(tag.getCompoundTag(id));
             }
         });
-        StationAPI.EVENT_BUS.post(new PostRegistryRemapEvent());
+        StationAPI.EVENT_BUS.post(PostRegistryRemapEvent.builder().build());
     }
 }

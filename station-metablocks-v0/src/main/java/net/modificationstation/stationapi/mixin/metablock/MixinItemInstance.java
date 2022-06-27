@@ -34,7 +34,13 @@ public abstract class MixinItemInstance implements IsItemInstanceEffectiveOnMeta
 
     @Redirect(method = "isEffectiveOn(Lnet/minecraft/block/BlockBase;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemBase;isEffectiveOn(Lnet/minecraft/block/BlockBase;)Z"))
     private boolean isEffectiveOn(ItemBase itemBase, BlockBase tile) {
-        return StationAPI.EVENT_BUS.post(new IsItemEffectiveOnBlockEvent((ItemInstance) (Object) this, tile, meta == null? 0 : meta, meta == null ? itemBase.isEffectiveOn(tile) : ((IsItemEffectiveOnMeta) itemBase).isEffectiveOn((ItemInstance) (Object) this, tile, meta))).effective;
+        return StationAPI.EVENT_BUS.post(
+                IsItemEffectiveOnBlockEvent.builder()
+                        .itemInstance((ItemInstance) (Object) this)
+                        .block(tile).meta(meta == null ? 0 : meta)
+                        .effective(meta == null ? itemBase.isEffectiveOn(tile) : ((IsItemEffectiveOnMeta) itemBase).isEffectiveOn((ItemInstance) (Object) this, tile, meta))
+                        .build()
+        ).effective;
     }
 
     @Override
@@ -47,7 +53,13 @@ public abstract class MixinItemInstance implements IsItemInstanceEffectiveOnMeta
 
     @Redirect(method = "getStrengthOnBlock(Lnet/minecraft/block/BlockBase;)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemBase;getStrengthOnBlock(Lnet/minecraft/item/ItemInstance;Lnet/minecraft/block/BlockBase;)F"))
     private float getStrengthOnBlock(ItemBase itemBase, ItemInstance item, BlockBase tile) {
-        return meta == null ? itemBase.getStrengthOnBlock(item, tile) : StationAPI.EVENT_BUS.post(new ItemStrengthOnBlockEvent(item, tile, meta, ((ItemStrengthOnMetaBlock) itemBase).getStrengthOnBlock(item, tile, meta))).strength;
+        return meta == null ? itemBase.getStrengthOnBlock(item, tile) : StationAPI.EVENT_BUS.post(
+                ItemStrengthOnBlockEvent.builder()
+                        .itemInstance(item)
+                        .block(tile).meta(meta)
+                        .strength(((ItemStrengthOnMetaBlock) itemBase).getStrengthOnBlock(item, tile, meta))
+                        .build()
+        ).strength;
     }
 
     private Integer meta;

@@ -16,9 +16,8 @@ public class MixinTileEntityBase {
     private static void register(Class<?> arg, String string) {
     }
 
-    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "TAIL"))
     private static void registerModdedTileEntities(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(new TileEntityRegisterEvent(MixinTileEntityBase::register));
+        StationAPI.EVENT_BUS.post(TileEntityRegisterEvent.builder().register(MixinTileEntityBase::register).build());
     }
 }

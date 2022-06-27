@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.client.event.keyboard;
 
-import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.minecraft.client.options.KeyBinding;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegisterEvent;
@@ -15,7 +15,7 @@ import org.lwjgl.input.Keyboard;
  * @author mine_diver
  * @see KeyBindingRegisterEvent
  */
-@RequiredArgsConstructor
+@SuperBuilder
 public class KeyStateChangedEvent extends Event {
 
     public final Environment environment;

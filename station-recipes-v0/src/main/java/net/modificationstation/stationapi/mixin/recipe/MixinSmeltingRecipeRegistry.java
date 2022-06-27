@@ -44,6 +44,6 @@ public class MixinSmeltingRecipeRegistry {
     @Inject(method = "<init>()V", at = @At("RETURN"))
     private void afterRecipeRegister(CallbackInfo ci) {
         INSTANCE = (SmeltingRecipeRegistry) (Object) this;
-        StationAPI.EVENT_BUS.post(new RecipeRegisterEvent(SMELTING.type()));
+        StationAPI.EVENT_BUS.post(RecipeRegisterEvent.builder().recipeId(SMELTING.type()).build());
     }
 }

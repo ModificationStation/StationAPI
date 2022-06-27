@@ -18,6 +18,12 @@ public class MixinClientLevel {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ClientPlayNetworkHandler;method_1646(Lnet/minecraft/packet/AbstractPacket;)V")
     )
     private void onDisconnect(ClientPlayNetworkHandler clientPlayNetworkHandler, AbstractPacket arg) {
-        StationAPI.EVENT_BUS.post(new MultiplayerLogoutEvent((Disconnect0xFFPacket) arg, null, false));
+        StationAPI.EVENT_BUS.post(
+                MultiplayerLogoutEvent.builder()
+                        .packet((Disconnect0xFFPacket) arg)
+                        .stacktrace(null)
+                        .dropped(false)
+                        .build()
+        );
     }
 }
