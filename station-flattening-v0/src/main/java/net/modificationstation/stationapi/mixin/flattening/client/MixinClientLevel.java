@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.flattening;
+package net.modificationstation.stationapi.mixin.flattening.client;
 
 import net.minecraft.client.level.ClientLevel;
 import net.modificationstation.stationapi.impl.level.HeightLimitView;

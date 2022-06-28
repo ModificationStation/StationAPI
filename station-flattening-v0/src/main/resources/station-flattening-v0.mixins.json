@@ -27,10 +27,14 @@
     "MixinWorldPopulationRegion"
   ],
   "client": [
-    "MixinClientLevel",
-    "MixinWorldRenderer"
+    "client.MixinClientLevel",
+    "client.MixinSinglePlayerClientInteractionManager",
+    "client.MixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "server": [
+    "server.Mixinclass_70"
+  ]
 }

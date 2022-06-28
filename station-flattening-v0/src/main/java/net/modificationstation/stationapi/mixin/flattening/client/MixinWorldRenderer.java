@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.flattening;
+package net.modificationstation.stationapi.mixin.flattening.client;
 
 import net.minecraft.class_66;
 import net.minecraft.client.render.WorldRenderer;

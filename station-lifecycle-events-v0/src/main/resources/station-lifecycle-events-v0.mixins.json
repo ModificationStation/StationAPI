@@ -7,11 +7,13 @@
     "server.MixinServerPlayerPacketHandler"
   ],
   "server": [
+    "server.MixinMinecraftServer",
     "server.MixinPendingConnection"
   ],
   "client": [
     "client.MixinClientLevel",
     "client.MixinClientPlayNetworkHandler",
+    "client.MixinMinecraft",
     "client.MixinTextureManager"
   ],
   "injectors": {

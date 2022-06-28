@@ -40,7 +40,7 @@ public class VariationBlock extends TemplateBlockBase {
     }
 
     @Override
-    public List<ItemInstance> getDropList(Level level, int x, int y, int z, int meta, BlockState blockState) {
+    public List<ItemInstance> getDropList(Level level, int x, int y, int z, BlockState blockState, int meta) {
         return List.of(new ItemInstance(switch (blockState.get(VARIANT)) {
             case IDLE -> ItemListener.variationBlockIdle;
             case PASSIVE -> ItemListener.variationBlockPassive;

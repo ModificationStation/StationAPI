@@ -8,7 +8,8 @@ moduleDependencies(project,
         'station-networking-v0',
         'station-dimensions-v0',
         'station-tools-api-v1',
-        'station-items-v0'
+        'station-items-v0',
+		'station-lifecycle-events-v0'
 )
 
 loom {

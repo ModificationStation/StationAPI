@@ -23,14 +23,25 @@ public class BlockStateItem extends TemplateItemBase {
 
     @Override
     public boolean useOnTile(ItemInstance itemInstance, PlayerBase player, Level level, int clickX, int clickY, int clickZ, int side) {
-        Direction direction = level.getTileId(clickX, clickY, clickZ) == BlockBase.SNOW.id ? Direction.DOWN : Direction.values()[side];
-        int x = clickX + direction.vector.x;
-        int y = clickY + direction.vector.y;
-        int z = clickZ + direction.vector.z;
+        final Direction direction;
+        final int x;
+        final int y;
+        final int z;
+        if (level.getTileId(clickX, clickY, clickZ) == BlockBase.SNOW.id) {
+            direction = Direction.DOWN;
+            x = clickX;
+            y = clickY;
+            z = clickZ;
+        } else {
+            direction = Direction.values()[side];
+            x = clickX + direction.vector.x;
+            y = clickY + direction.vector.y;
+            z = clickZ + direction.vector.z;
+        }
         if (itemInstance.count == 0) return false;
         if (y == ((HeightLimitView) level).getTopY() - 1 && blockState.getMaterial().isSolid()) return false;
         BlockBase block = blockState.getBlock();
-        if (level.canPlaceTile(block.id, x, y, z, false, side)) {
+        if (level.canPlaceTile(block.id, x, y, z, false, direction.getId())) {
             if (StationAPI.EVENT_BUS.post(BlockEvent.BeforePlacedByItem.builder()
                     .level(level)
                     .player(player)
@@ -40,7 +51,7 @@ public class BlockStateItem extends TemplateItemBase {
                     .placeFunction(() -> ((BlockStateView) level).setBlockStateWithNotify(x, y, z, blockState) != null)
                     .build()).placeFunction.getAsBoolean()
             ) {
-                block.onBlockPlaced(level, x, y, z, side);
+                block.onBlockPlaced(level, x, y, z, direction.getId());
                 block.afterPlaced(level, x, y, z, player);
                 level.playSound((float)x + 0.5f, (float)y + 0.5f, (float)z + 0.5f, block.sounds.getWalkSound(), (block.sounds.getVolume() + 1.0f) / 2.0f, block.sounds.getPitch() * 0.8f);
                 --itemInstance.count;

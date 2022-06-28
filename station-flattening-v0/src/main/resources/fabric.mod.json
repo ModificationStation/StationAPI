@@ -20,8 +20,7 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.api.block.States",
-      "net.modificationstation.stationapi.impl.block.BlockDropImpl"
+      "net.modificationstation.stationapi.api.block.States"
     ]
   },
   "accessWidener" : "station-flattening-v0.accesswidener",

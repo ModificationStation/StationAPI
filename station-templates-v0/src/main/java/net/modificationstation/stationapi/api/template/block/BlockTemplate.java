@@ -8,10 +8,7 @@ import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.BlockToolLogic;
-import net.modificationstation.stationapi.api.block.BlockItemToggle;
-import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.block.DropListProvider;
+import net.modificationstation.stationapi.api.block.*;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.item.ItemConvertible;
@@ -24,7 +21,7 @@ import uk.co.benjiweber.expressions.tuple.BiTuple;
 import java.util.List;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = CustomAtlasProvider.class)
-public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider, BlockToolLogic, BlockStateHolder, ItemConvertible, BlockItemToggle<T>, DropListProvider {
+public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider, BlockToolLogic, BlockStateHolder, ItemConvertible, BlockItemToggle<T>, DropWithBlockState, DropListProvider {
 
     @Override
     default T mineableBy(Identifier toolTag, int level) {
@@ -83,7 +80,12 @@ public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider,
     }
 
     @Override
-    default List<ItemInstance> getDropList(Level level, int x, int y, int z, int meta, BlockState blockState) {
+    default List<ItemInstance> getDropList(Level level, int x, int y, int z, BlockState blockState, int meta) {
         return Util.assertImpl();
+    }
+
+    @Override
+    default void dropWithChance(Level arg, int i, int j, int k, BlockState state, int l, float f) {
+        Util.assertImpl();
     }
 }
