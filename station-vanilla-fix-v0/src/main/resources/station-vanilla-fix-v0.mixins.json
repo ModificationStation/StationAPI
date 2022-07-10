@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.vanillafix",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MixinBlockBase",
+    "MixinDyeRecipes",
+    "MixinWool"
+  ],
+  "server": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

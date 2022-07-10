@@ -1,25 +1,142 @@
-package net.modificationstation.stationapi.impl.tags;
+package net.modificationstation.stationapi.impl.vanillafix.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.event.tags.TagRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.tags.TagEntry;
 import net.modificationstation.stationapi.api.tags.TagRegistry;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 /**
+ * @author mine_diver
  * @author calmilamsy
  */
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
-public class TagItemInit {
+public final class VanillaItemFixImpl {
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    private static void registerItems(ItemRegistryEvent event) {
+        ItemRegistry r = event.registry;
+
+        r.register(of("iron_shovel"), ItemBase.ironShovel);
+        r.register(of("iron_pickaxe"), ItemBase.ironPickaxe);
+        r.register(of("iron_axe"), ItemBase.ironAxe);
+        r.register(of("flint_and_steel"), ItemBase.flintAndSteel);
+        r.register(of("apple"), ItemBase.apple);
+        r.register(of("bow"), ItemBase.bow);
+        r.register(of("arrow"), ItemBase.arrow);
+        r.register(of("coal"), ItemBase.coal);
+        r.register(of("diamond"), ItemBase.diamond);
+        r.register(of("iron_ingot"), ItemBase.ironIngot);
+        r.register(of("gold_ingot"), ItemBase.goldIngot);
+        r.register(of("iron_sword"), ItemBase.ironSword);
+        r.register(of("wooden_sword"), ItemBase.woodSword);
+        r.register(of("wooden_shovel"), ItemBase.woodShovel);
+        r.register(of("wooden_pickaxe"), ItemBase.woodPickaxe);
+        r.register(of("wooden_axe"), ItemBase.woodAxe);
+        r.register(of("stone_sword"), ItemBase.stoneSword);
+        r.register(of("stone_shovel"), ItemBase.stoneShovel);
+        r.register(of("stone_pickaxe"), ItemBase.stonePickaxe);
+        r.register(of("stone_axe"), ItemBase.stoneAxe);
+        r.register(of("diamond_sword"), ItemBase.diamondSword);
+        r.register(of("diamond_shovel"), ItemBase.diamondShovel);
+        r.register(of("diamond_pickaxe"), ItemBase.diamondPickaxe);
+        r.register(of("diamond_axe"), ItemBase.diamondAxe);
+        r.register(of("stick"), ItemBase.stick);
+        r.register(of("bowl"), ItemBase.bowl);
+        r.register(of("mushroom_stew"), ItemBase.mushroomStew);
+        r.register(of("golden_sword"), ItemBase.goldSword);
+        r.register(of("golden_shovel"), ItemBase.goldShovel);
+        r.register(of("golden_pickaxe"), ItemBase.goldPickaxe);
+        r.register(of("golden_axe"), ItemBase.goldAxe);
+        r.register(of("string"), ItemBase.string);
+        r.register(of("feather"), ItemBase.feather);
+        r.register(of("gunpowder"), ItemBase.gunpowder);
+        r.register(of("wooden_hoe"), ItemBase.woodHoe);
+        r.register(of("stone_hoe"), ItemBase.stoneHoe);
+        r.register(of("iron_hoe"), ItemBase.ironHoe);
+        r.register(of("diamond_hoe"), ItemBase.diamondHoe);
+        r.register(of("golden_hoe"), ItemBase.goldHoe);
+        r.register(of("wheat_seeds"), ItemBase.seeds);
+        r.register(of("wheat"), ItemBase.wheat);
+        r.register(of("bread"), ItemBase.bread);
+        r.register(of("leather_helmet"), ItemBase.leatherHelmet);
+        r.register(of("leather_chestplate"), ItemBase.leatherChestplate);
+        r.register(of("leather_leggings"), ItemBase.leatherLeggings);
+        r.register(of("leather_boots"), ItemBase.leatherBoots);
+        r.register(of("chainmail_helmet"), ItemBase.chainHelmet);
+        r.register(of("chainmail_chestplate"), ItemBase.chainChestplate);
+        r.register(of("chainmail_leggings"), ItemBase.chainLeggings);
+        r.register(of("chainmail_boots"), ItemBase.chainBoots);
+        r.register(of("iron_helmet"), ItemBase.ironHelmet);
+        r.register(of("iron_chestplate"), ItemBase.ironChestplate);
+        r.register(of("iron_leggings"), ItemBase.ironLeggings);
+        r.register(of("iron_boots"), ItemBase.ironBoots);
+        r.register(of("diamond_helmet"), ItemBase.diamondHelmet);
+        r.register(of("diamond_chestplate"), ItemBase.diamondChestplate);
+        r.register(of("diamond_leggings"), ItemBase.diamondLeggings);
+        r.register(of("diamond_boots"), ItemBase.diamondBoots);
+        r.register(of("golden_helmet"), ItemBase.goldHelmet);
+        r.register(of("golden_chestplate"), ItemBase.goldChestplate);
+        r.register(of("golden_leggings"), ItemBase.goldLeggings);
+        r.register(of("golden_boots"), ItemBase.goldBoots);
+        r.register(of("flint"), ItemBase.flint);
+        r.register(of("porkchop"), ItemBase.rawPorkchop);
+        r.register(of("cooked_porkchop"), ItemBase.cookedPorkchop);
+        r.register(of("painting"), ItemBase.painting);
+        r.register(of("golden_apple"), ItemBase.goldenApple);
+        r.register(of("sign"), ItemBase.sign);
+        r.register(of("oak_door"), ItemBase.woodDoor);
+        r.register(of("bucket"), ItemBase.bucket);
+        r.register(of("water_bucket"), ItemBase.waterBucket);
+        r.register(of("lava_bucket"), ItemBase.lavaBucket);
+        r.register(of("minecart"), ItemBase.minecart);
+        r.register(of("saddle"), ItemBase.saddle);
+        r.register(of("iron_door"), ItemBase.ironDoor);
+        r.register(of("redstone"), ItemBase.redstoneDust);
+        r.register(of("snowball"), ItemBase.snowball);
+        r.register(of("oak_boat"), ItemBase.boat);
+        r.register(of("leather"), ItemBase.leather);
+        r.register(of("milk_bucket"), ItemBase.milk);
+        r.register(of("brick"), ItemBase.brick);
+        r.register(of("clay_ball"), ItemBase.clay);
+        r.register(of("sugar_cane"), ItemBase.sugarCanes);
+        r.register(of("paper"), ItemBase.paper);
+        r.register(of("book"), ItemBase.book);
+        r.register(of("slime_ball"), ItemBase.slimeball);
+        r.register(of("chest_minecart"), ItemBase.minecartChest);
+        r.register(of("furnace_minecart"), ItemBase.minecartFurnace);
+        r.register(of("egg"), ItemBase.egg);
+        r.register(of("compass"), ItemBase.compass);
+        r.register(of("fishing_rod"), ItemBase.fishingRod);
+        r.register(of("clock"), ItemBase.clock);
+        r.register(of("glowstone_dust"), ItemBase.glowstoneDust);
+        r.register(of("fish"), ItemBase.rawFish);
+        r.register(of("cooked_fish"), ItemBase.cookedFish);
+        r.register(of("dye"), ItemBase.dyePowder);
+        r.register(of("bone"), ItemBase.bone);
+        r.register(of("sugar"), ItemBase.sugar);
+        r.register(of("cake"), ItemBase.cake);
+        r.register(of("bed"), ItemBase.bed);
+        r.register(of("repeater"), ItemBase.redstoneRepeater);
+        r.register(of("cookie"), ItemBase.cookie);
+        r.register(of("map"), ItemBase.map);
+        r.register(of("shears"), ItemBase.shears);
+        r.register(of("music_disc_13"), ItemBase.record13);
+        r.register(of("music_disc_cat"), ItemBase.recordCat);
+
+        LOGGER.info("Added vanilla items to the registry.");
+    }
+
+    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
     private static void registerItems(TagRegisterEvent event) {
 
         // Basic Items

@@ -18,12 +18,7 @@
   "icon": "assets/station-tags-v0/icon.png",
 
   "environment": "*",
-  "entrypoints": {
-    "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.tags.TagItemInit",
-      "net.modificationstation.stationapi.impl.tags.TagBlockInit"
-    ]
-  },
+  "entrypoints": {},
   "mixins": [
     "station-tags-v0.mixins.json"
   ],

@@ -1,20 +1,31 @@
 package net.modificationstation.stationapi.api.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
+import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.util.Lazy;
 import net.modificationstation.stationapi.api.util.collection.IdList;
-import net.modificationstation.stationapi.impl.block.BlockRegistryInit;
 
-public class States {
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
-    public static final Lazy<BlockState> AIR = new Lazy<>(() -> ((BlockStateHolder) BlockRegistryInit.AIR.get()).getDefaultState());
+@Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+public final class States {
+
+    private static final Lazy<BlockBase> AIR_BLOCK = new Lazy<>(() -> new Air(0));
+
+    public static final Lazy<BlockState> AIR = new Lazy<>(() -> ((BlockStateHolder) AIR_BLOCK.get()).getDefaultState());
 
     public static final IdList<BlockState> STATE_IDS = new IdList<>();
 
-    @EventListener(priority = ListenerPriority.LOW)
+    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    private static void registerBlocks(BlockRegistryEvent event) {
+        event.registry.register(of("air"), AIR_BLOCK.get());
+    }
+
+    @EventListener(numPriority = Integer.MIN_VALUE / 2 + Integer.MIN_VALUE / 4)
     private static void registerStates(BlockRegistryEvent event) {
         BlockRegistry.INSTANCE.forEach((identifier, blockBase) -> ((BlockStateHolder) blockBase).getStateManager().getStates().forEach(STATE_IDS::add));
     }

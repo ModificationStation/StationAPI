@@ -50,4 +50,5 @@ include 'station-dimensions-v0'
 include 'station-tools-api-v1'
 include 'station-flattening-v0'
 include 'station-renderer-arsenic'
+include 'station-vanilla-fix-v0'
 

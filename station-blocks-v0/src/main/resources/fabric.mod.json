@@ -20,7 +20,6 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.block.BlockRegistryInit",
       "net.modificationstation.stationapi.impl.block.BlockInteractionImpl",
       "net.modificationstation.stationapi.impl.block.ReplaceableBlockImpl"
     ]

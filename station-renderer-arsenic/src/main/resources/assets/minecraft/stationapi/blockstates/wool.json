@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "color=black" : {
+      "model": "block/black_wool"
+    },
+    "color=red" : {
+      "model": "block/red_wool"
+    },
+    "color=green" : {
+      "model": "block/green_wool"
+    },
+    "color=brown" : {
+      "model": "block/brown_wool"
+    },
+    "color=blue" : {
+      "model": "block/blue_wool"
+    },
+    "color=purple" : {
+      "model": "block/purple_wool"
+    },
+    "color=cyan" : {
+      "model": "block/cyan_wool"
+    },
+    "color=light_gray" : {
+      "model": "block/light_gray_wool"
+    },
+    "color=gray" : {
+      "model": "block/gray_wool"
+    },
+    "color=pink" : {
+      "model": "block/pink_wool"
+    },
+    "color=lime" : {
+      "model": "block/lime_wool"
+    },
+    "color=yellow" : {
+      "model": "block/yellow_wool"
+    },
+    "color=light_blue" : {
+      "model": "block/light_blue_wool"
+    },
+    "color=magenta" : {
+      "model": "block/magenta_wool"
+    },
+    "color=orange" : {
+      "model": "block/orange_wool"
+    },
+    "color=white" : {
+      "model": "block/white_wool"
+    }
+  }
+}

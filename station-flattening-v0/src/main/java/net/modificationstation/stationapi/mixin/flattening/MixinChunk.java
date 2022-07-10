@@ -14,6 +14,8 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
+import net.modificationstation.stationapi.api.event.level.BlockSetEvent;
+import net.modificationstation.stationapi.api.event.level.MetaSetEvent;
 import net.modificationstation.stationapi.api.level.BlockStateView;
 import net.modificationstation.stationapi.impl.level.HeightLimitView;
 import net.modificationstation.stationapi.impl.level.StationDimension;
@@ -382,6 +384,18 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Overwrite
     public boolean setTileWithMetadata(int x, int y, int z, int blockId, int meta) {
         BlockState state = ((BlockStateHolder) BlockBase.BY_ID[blockId]).getDefaultState();
+        int levelX = this.x << 4 | x;
+        int levelZ = this.z << 4 | z;
+        BlockSetEvent event =
+                BlockSetEvent.builder()
+                        .level(level).chunk(Chunk.class.cast(this))
+                        .x(levelX).y(y).z(levelZ)
+                        .blockState(state).blockMeta(meta)
+                        .overrideState(state).overrideMeta(meta)
+                        .build();
+        if (StationAPI.EVENT_BUS.post(event).isCanceled()) return false;
+        state = event.overrideState;
+        meta = event.overrideMeta;
         ChunkSection section = getOrCreateSection(y, true);
         if (section == null) return false;
         boolean sameMeta = section.getMeta(x, y & 15, z) == meta;
@@ -389,9 +403,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         short var6 = getShortHeight(x, z);
         BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state && sameMeta) return false;
-        
-        int levelX = this.x << 4 | x;
-        int levelZ = this.z << 4 | z;
+
         BlockBase oldBlock = oldState.getBlock();
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
@@ -442,6 +454,15 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Inject(method = "method_876", at = @At("HEAD"), cancellable = true)
     private void setTileMeta(int x, int y, int z, int meta, CallbackInfo info) {
         info.cancel();
+        MetaSetEvent event =
+                MetaSetEvent.builder()
+                        .level(level).chunk(Chunk.class.cast(this))
+                        .x(this.x << 4 | x).y(y).z(this.z << 4 | z)
+                        .blockMeta(meta)
+                        .overrideMeta(meta)
+                        .build();
+        if (event.isCanceled()) return;
+        meta = event.overrideMeta;
         ChunkSection section = getSection(y);
         if (section != null) {
             section.setMeta(x, y & 15, z, meta);
@@ -458,14 +479,23 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     @Override
     @Unique
     public BlockState setBlockState(int x, int y, int z, BlockState state) {
+        int levelX = this.x << 4 | x;
+        int levelZ = this.z << 4 | z;
+        if (
+                StationAPI.EVENT_BUS.post(
+                        BlockSetEvent.builder()
+                                .level(level).chunk(Chunk.class.cast(this))
+                                .x(levelX).y(y).z(levelZ)
+                                .blockState(state)
+                                .build()
+                ).isCanceled()
+        ) return null;
         ChunkSection section = getOrCreateSection(y, true);
         if (section == null) return null;
         BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state) return null;
         
         short topY = getShortHeight(x, z);
-        int levelX = this.x << 4 | x;
-        int levelZ = this.z << 4 | z;
         BlockBase oldBlock = oldState.getBlock();
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "station-vanilla-fix-v0",
+  "version": "${version}",
+
+  "name": "Station Vanilla Fix (v0)",
+  "description": "Integrates vanilla game content into StationAPI systems.",
+  "authors": [
+    "Modification Station"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/repo/mod/stationapi",
+    "sources": "https://github.com/ModificationStation/StationAPI",
+    "issues": "https://github.com/ModificationStation/StationAPI/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/station-vanilla-fix-v0/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "stationapi:event_bus": [
+      "net.modificationstation.stationapi.impl.vanillafix.block.VanillaBlockFixImpl",
+      "net.modificationstation.stationapi.impl.vanillafix.item.VanillaItemFixImpl",
+      "net.modificationstation.stationapi.impl.vanillafix.dimension.VanillaDimensionFixImpl",
+      "net.modificationstation.stationapi.api.vanillafix.item.VanillaBlockStateItems"
+    ]
+  },
+  "mixins": [
+    "station-vanilla-fix-v0.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  },
+
+  "custom": {
+    "modmenu:api": true
+  }
+}
