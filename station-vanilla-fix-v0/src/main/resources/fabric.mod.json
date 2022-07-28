@@ -22,8 +22,7 @@
     "stationapi:event_bus": [
       "net.modificationstation.stationapi.impl.vanillafix.block.VanillaBlockFixImpl",
       "net.modificationstation.stationapi.impl.vanillafix.item.VanillaItemFixImpl",
-      "net.modificationstation.stationapi.impl.vanillafix.dimension.VanillaDimensionFixImpl",
-      "net.modificationstation.stationapi.api.vanillafix.item.VanillaBlockStateItems"
+      "net.modificationstation.stationapi.impl.vanillafix.dimension.VanillaDimensionFixImpl"
     ]
   },
   "mixins": [

@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.tools;
 
 import net.minecraft.block.BlockBase;
-import net.modificationstation.stationapi.api.BlockToolLogic;
+import net.modificationstation.stationapi.api.block.BlockToolLogic;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import uk.co.benjiweber.expressions.tuple.BiTuple;

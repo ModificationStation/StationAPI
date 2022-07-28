@@ -4,6 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.mixin.block.BlockBaseAccessor;
+import net.modificationstation.stationapi.mixin.block.FireAccessor;
 import net.modificationstation.stationapi.mixin.block.ItemBaseAccessor;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +25,11 @@ public final class BlockRegistry extends AbstractSerialRegistry<BlockBase> {
     @Override
     public int getSize() {
         return BlockBase.BY_ID.length;
+    }
+
+    @Override
+    public int getSerialIDShift() {
+        return 1;
     }
 
     @Override
@@ -62,6 +68,9 @@ public final class BlockRegistry extends AbstractSerialRegistry<BlockBase> {
                     (newId < ItemBase.byId.length ? ItemBase.byId : (ItemBase.byId = Arrays.copyOf(ItemBase.byId, MathHelper.isPowerOfTwo(newId + 1) ? newId + 1 : MathHelper.smallestEncompassingPowerOfTwo(newId))))[newId] = item;
                 }
             }
+            FireAccessor fireAccessor = (FireAccessor) BlockBase.FIRE;
+            fireAccessor.setField_2307(Arrays.copyOf(fireAccessor.getField_2307(), newSize));
+            fireAccessor.setSpreadDelayChance(Arrays.copyOf(fireAccessor.getSpreadDelayChance(), newSize));
         }
         return true;
     }

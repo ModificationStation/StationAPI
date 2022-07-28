@@ -55,7 +55,7 @@ public class TagConversionStorage {
         CONVERSION_TABLE.put(getIdentifier(ItemBase.flint), Identifier.of("flints"));
         CONVERSION_TABLE.put(getIdentifier(BlockBase.GOLD_BLOCK), Identifier.of("storage_blocks/gold"));
         CONVERSION_TABLE.put(getIdentifier(ItemBase.apple), Identifier.of("foods/apple"));
-        CONVERSION_TABLE.put(getIdentifier(BlockBase.WOOL), Identifier.of("wools/"));
+//        CONVERSION_TABLE.put(getIdentifier(BlockBase.WOOL), Identifier.of("wools/"));
         CONVERSION_TABLE.put(getIdentifier(BlockBase.REDSTONE_TORCH_LIT), Identifier.of("redstone_torches/on"));
         CONVERSION_TABLE.put(getIdentifier(ItemBase.compass), Identifier.of("compasses"));
         CONVERSION_TABLE.put(getIdentifier(ItemBase.bow), Identifier.of("tools/bows"));

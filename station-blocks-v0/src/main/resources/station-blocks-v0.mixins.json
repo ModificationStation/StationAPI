@@ -6,9 +6,11 @@
   "mixins": [
     "AchievementGUIDAccessor",
     "BlockBaseAccessor",
+    "FireAccessor",
     "ItemBaseAccessor",
     "MixinBlock",
     "MixinBlockBase",
+    "MixinFire",
     "MixinSecondaryBlock",
     "MixinStats",
     "StatAccessor",

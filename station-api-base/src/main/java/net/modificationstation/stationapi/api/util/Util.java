@@ -6,6 +6,9 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceMaps;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.modificationstation.stationapi.api.util.exception.CrashException;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
@@ -109,6 +112,10 @@ public class Util {
 
     public static <T, R> Map<T, R> createIdentityLookupBy(Function<R, T> keyMapper, R[] values) {
         return Collections.unmodifiableMap(Arrays.stream(values).collect(Collectors.toMap(keyMapper, Function.identity(), (u, v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); }, IdentityHashMap::new)));
+    }
+
+    public static <T, R> Reference2ReferenceMap<T, R> createReference2ReferenceLookupBy(Function<R, T> keyMapper, R[] values, IntFunction<T[]> keyArrayFactory) {
+        return Reference2ReferenceMaps.unmodifiable(new Reference2ReferenceOpenHashMap<>(Arrays.stream(values).map(keyMapper).toArray(keyArrayFactory), values));
     }
 
     public static <K> Hash.Strategy<K> identityHashStrategy() {

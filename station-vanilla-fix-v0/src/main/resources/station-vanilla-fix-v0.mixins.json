@@ -6,7 +6,10 @@
   "mixins": [
     "MixinBlockBase",
     "MixinDyeRecipes",
-    "MixinWool"
+    "MixinFire",
+    "MixinRecipeRegistry",
+    "MixinShears",
+    "MixinSheep"
   ],
   "server": [
   ],

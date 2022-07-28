@@ -1,16 +1,14 @@
 package net.modificationstation.stationapi.mixin.vanillafix;
 
 import net.minecraft.block.BlockBase;
-import net.minecraft.block.Wool;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.DyeRecipes;
-import net.modificationstation.stationapi.api.vanillafix.item.VanillaBlockStateItems;
+import net.modificationstation.stationapi.api.vanillafix.item.Items;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-// TODO: make this use separate blocks rather than blockstates
 @Mixin(DyeRecipes.class)
 public class MixinDyeRecipes {
 
@@ -23,7 +21,7 @@ public class MixinDyeRecipes {
             )
     )
     private int redirectWoolItemId(BlockBase instance) {
-        return VanillaBlockStateItems.WHITE_WOOL.id;
+        return Items.WHITE_WOOL.id;
     }
 
     @SuppressWarnings({"InvalidMemberReference", "UnresolvedMixinReference", "MixinAnnotationTarget", "InvalidInjectorMethodSignature"})
@@ -35,6 +33,6 @@ public class MixinDyeRecipes {
             )
     )
     private ItemInstance redirectCraftingResult(BlockBase block, int count, int meta) {
-        return new ItemInstance(VanillaBlockStateItems.getWoolByColor(Wool.getColour(meta)), count);
+        return new ItemInstance(Items.woolMetaToBlock(meta), count);
     }
 }

@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api;
+package net.modificationstation.stationapi.api.block;
 
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.registry.Identifier;

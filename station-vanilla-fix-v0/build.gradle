@@ -11,5 +11,6 @@ moduleDependencies(project,
         'station-tags-v0',
         'station-flattening-v0',
         'station-templates-v0',
-        'station-renderer-api-v0'
+        'station-renderer-api-v0',
+        'station-tools-api-v1'
 )
