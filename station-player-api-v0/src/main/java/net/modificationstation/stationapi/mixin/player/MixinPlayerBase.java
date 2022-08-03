@@ -24,6 +24,7 @@ import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
 import net.modificationstation.stationapi.impl.entity.player.PlayerAPI;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -40,6 +41,7 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseSetter
     public PlayerInventory inventory;
     @Shadow
     protected boolean sleeping;
+    @Unique
     private List<PlayerHandler> playerBases;
 
     public MixinPlayerBase(Level world) {
@@ -47,7 +49,7 @@ public abstract class MixinPlayerBase extends Living implements PlayerBaseSetter
     }
 
     @Override
-    public List<PlayerHandler> getPlayerBases() {
+    public List<PlayerHandler> getPlayerHandlers() {
         if (playerBases == null) {
             playerBases = new ArrayList<>();
             StationAPI.EVENT_BUS.post(

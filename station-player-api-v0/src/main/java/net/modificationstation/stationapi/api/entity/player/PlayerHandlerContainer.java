@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface PlayerHandlerContainer {
 
-    List<PlayerHandler> getPlayerBases();
+    List<PlayerHandler> getPlayerHandlers();
 }

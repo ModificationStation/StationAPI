@@ -26,7 +26,7 @@ public abstract class MixinBlockRenderer {
      * @author mine_diver
      */
     @Overwrite
-    private boolean renderBed(BlockBase block, int x, int y, int z) {
+    public boolean renderBed(BlockBase block, int x, int y, int z) {
         return arsenic_plugin.renderBed(block, x, y, z);
     }
 
