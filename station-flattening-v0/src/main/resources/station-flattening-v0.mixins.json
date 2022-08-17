@@ -16,7 +16,7 @@
     "MixinCompoundTag",
     "MixinDimension",
     "MixinEntityBase",
-    "MixinInGame",
+    "MixinItemBase",
     "MixinItemInstance",
     "MixinLevel",
     "MixinLevelChunkLoader",
@@ -24,10 +24,14 @@
     "MixinLevelMonsterSpawner",
     "MixinLevelProperties",
     "MixinOverworldLevelSource",
+    "MixinPlayerBase",
+    "MixinPlayerInventory",
     "MixinWorldPopulationRegion"
   ],
   "client": [
     "client.MixinClientLevel",
+    "client.MixinInGame",
+    "client.MixinMultiPlayerClientInteractionManager",
     "client.MixinSinglePlayerClientInteractionManager",
     "client.MixinWorldRenderer"
   ],

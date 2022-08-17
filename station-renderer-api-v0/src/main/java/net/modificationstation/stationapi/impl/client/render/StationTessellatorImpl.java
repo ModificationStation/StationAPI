@@ -81,12 +81,12 @@ public class StationTessellatorImpl implements StationTessellator {
     }
 
     @Override
-    public void fixedColour(int var1, int var2, int var3, int var4) {
+    public void fixedColor(int var1, int var2, int var3, int var4) {
         throw new UnsupportedOperationException("Fixed colour isn't supported in the default tessellator implementation!");
     }
 
     @Override
-    public void unfixColour() {}
+    public void unfixColor() {}
 
     public interface StationTessellatorAccess {
 

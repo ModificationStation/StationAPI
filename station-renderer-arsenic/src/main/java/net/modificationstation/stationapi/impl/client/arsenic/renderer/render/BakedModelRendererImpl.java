@@ -11,7 +11,6 @@ import net.minecraft.client.render.RenderHelper;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.entity.Living;
-import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
@@ -51,7 +50,10 @@ import net.modificationstation.stationapi.mixin.arsenic.client.BlockRendererAcce
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 public class BakedModelRendererImpl implements BakedModelRenderer {
 
@@ -65,12 +67,12 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     private final TilePos pos = new TilePos(0, 0, 0);
     private final TilePosAccessor posAccessor = (TilePosAccessor) pos;
     private final ItemModels itemModels = Util.make(new ItemModels(StationRenderAPI.getBakedModelManager()), models -> {
-        for (Map.Entry<Identifier, ItemBase> entry : ItemRegistry.INSTANCE)
-            models.putModel(entry.getValue(), ModelIdentifier.of(entry.getKey(), "inventory"));
+        for (Identifier id : ItemRegistry.INSTANCE.getIds())
+            models.putModel(ItemRegistry.INSTANCE.get(id), ModelIdentifier.of(id, "inventory"));
         models.reloadModels();
     });
-    private final BlockColors blockColours = StationRenderAPI.getBlockColours();
-    private final ItemColors itemColours = StationRenderAPI.getItemColours();
+    private final BlockColors blockColours = StationRenderAPI.getBlockColors();
+    private final ItemColors itemColours = StationRenderAPI.getItemColors();
     private final ThreadLocal<BlockRenderContext> BLOCK_CONTEXTS = ThreadLocal.withInitial(BlockRenderContext::new);
     private final ThreadLocal<ItemRenderContext> ITEM_CONTEXTS = ThreadLocal.withInitial(() -> new ItemRenderContext(itemColours));
     private final MatrixStack matrices = new MatrixStack();
@@ -176,7 +178,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         BlockBase block = state.getBlock();
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
 
-        int var6 = (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) && Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().getAnimation() != null ? StationRenderAPI.getBlockColours().getColor(((BlockStateView) world).getBlockState(x, y, z), world, new TilePos(x, y, z), -1) : block.getColourMultiplier(world, x, y, z);
+        int var6 = (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) && Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().getAnimation() != null ? StationRenderAPI.getBlockColors().getColor(((BlockStateView) world).getBlockState(x, y, z), world, new TilePos(x, y, z), -1) : block.getColourMultiplier(world, x, y, z);
         float var7 = (float)((var6 >> 16) & 255) / 255.0F;
         float var8 = (float)((var6 >> 8) & 255) / 255.0F;
         float var9 = (float)(var6 & 255) / 255.0F;

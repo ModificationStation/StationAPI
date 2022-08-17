@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateStone extends net.minecraft.block.Stone implements BlockTemplate<TemplateStone> {
     
     public TemplateStone(Identifier identifier, int j) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), j);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), j);
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplateStone(int i, int j) {

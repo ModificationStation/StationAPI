@@ -1,16 +1,16 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
 import com.google.common.collect.ImmutableList;
-import net.modificationstation.stationapi.api.client.resource.Resource;
 import net.modificationstation.stationapi.api.client.texture.SpritesheetHelper;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.resource.ResourceHelper;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 import uk.co.benjiweber.expressions.tuple.Tuple;
 
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class ExpandableAtlas extends Atlas {
         if (idToTex.containsKey(identifier))
             return idToTex.get(identifier);
         else {
-            String texturePath = ResourceManager.ASSETS.toPath(identifier, MODID + "/textures", "png");
+            String texturePath = ResourceHelper.ASSETS.toPath(identifier, MODID + "/textures", "png");
             FileSprite texture = new FileSprite(identifier, texturePath, size);
             idToTex.put(identifier, texture);
             textures.put(size, texture);
@@ -51,11 +51,11 @@ public class ExpandableAtlas extends Atlas {
 
     @Deprecated
     public Sprite addTexture(String texturePath) {
-        return addTexture(ResourceManager.ASSETS.toId(texturePath, "/" + MODID + "/textures", "png"));
+        return addTexture(ResourceHelper.ASSETS.toId(texturePath, "/" + MODID + "/textures", "png"));
     }
 
     public ImmutableList<Sprite> addSpritesheet(Identifier atlas, int texturesPerLine, SpritesheetHelper spritesheetHelper) {
-        return addSpritesheet(ResourceManager.ASSETS.toPath(atlas, MODID + "/atlases", "png"), texturesPerLine, spritesheetHelper);
+        return addSpritesheet(ResourceHelper.ASSETS.toPath(atlas, MODID + "/atlases", "png"), texturesPerLine, spritesheetHelper);
     }
 
     public ImmutableList<Sprite> addSpritesheet(String pathToAtlas, int texturesPerLine, SpritesheetHelper spritesheetHelper) {
@@ -67,10 +67,10 @@ public class ExpandableAtlas extends Atlas {
         for (int y = 0; y < texturesPerLine; y++) for (int x = 0; x < texturesPerLine; x++) {
             Identifier identifier = spritesheetHelper.generateIdentifier(size);
             if (identifier != null) {
-                String texturePath = ResourceManager.ASSETS.toPath(identifier, MODID + "/textures", "png");
-                Resource textureResource = Resource.of(TextureHelper.getTextureStream(texturePath));
+                String texturePath = ResourceHelper.ASSETS.toPath(identifier, MODID + "/textures", "png");
+                InputStream textureStream = TextureHelper.getTextureStream(texturePath);
                 Sprite sprite;
-                if (textureResource.getInputStream() == null) {
+                if (textureStream == null) {
                     BiTuple<Integer, Integer> resolution = spritesheetHelper.getResolutionMultiplier(size).map((widthMul, heightMul) -> Tuple.tuple(textureResolution * widthMul, textureResolution * heightMul));
                     sprite = new FileSprite(identifier, null, size);
                     textures.put(size, sprite);

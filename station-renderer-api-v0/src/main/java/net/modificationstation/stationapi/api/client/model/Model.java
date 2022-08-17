@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.client.model;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.resource.ResourceHelper;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
@@ -22,7 +22,7 @@ public abstract class Model implements TexturePackDependent {
 
     protected Model(final Identifier identifier, final String extension) {
         this.id = identifier;
-        modelPath = ResourceManager.ASSETS.toPath(identifier, MODID + "/models", extension);
+        modelPath = ResourceHelper.ASSETS.toPath(identifier, MODID + "/models", extension);
     }
 
     public final BakedModel getBaked() {

@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateButton extends net.minecraft.block.Button implements BlockTemplate<TemplateButton> {
 
     public TemplateButton(Identifier identifier, int texture) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), texture);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), texture);
+        BlockTemplate.onConstructor(this, identifier);
     }
 
     public TemplateButton(int id, int texture) {

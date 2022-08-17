@@ -10,6 +10,7 @@ import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.Living;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.player.PlayerBase;
+import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.entity.HasOwner;
 import net.modificationstation.stationapi.api.event.registry.EntityHandlerRegistryEvent;
@@ -20,13 +21,16 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.registry.EntityHandlerRegistry;
 import net.modificationstation.stationapi.api.registry.MobHandlerRegistry;
+import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.server.entity.StationSpawnDataProvider;
 import net.modificationstation.stationapi.mixin.entity.client.ClientPlayNetworkHandlerAccessor;
+import uk.co.benjiweber.expressions.function.QuadFunction;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
@@ -36,14 +40,15 @@ public final class EntityClientNetworkHandler {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerMessageListeners(MessageListenerRegistryEvent event) {
-        event.registry.register(of(MODID, "spawn_entity"), EntityClientNetworkHandler::handleEntitySpawn);
+        Registry.register(event.registry, MODID.id("spawn_entity"), EntityClientNetworkHandler::handleEntitySpawn);
         StationAPI.EVENT_BUS.post(new EntityHandlerRegistryEvent());
-        event.registry.register(of(MODID, "spawn_mob"), EntityClientNetworkHandler::handleMobSpawn);
+        Registry.register(event.registry, MODID.id("spawn_mob"), EntityClientNetworkHandler::handleMobSpawn);
         StationAPI.EVENT_BUS.post(new MobHandlerRegistryEvent());
     }
 
     private static void handleEntitySpawn(PlayerBase player, Message message) {
-        EntityHandlerRegistry.INSTANCE.get(of(message.strings[0])).ifPresent(entityProvider -> {
+        QuadFunction<Level, Double, Double, Double, EntityBase> entityHandler = EntityHandlerRegistry.INSTANCE.get(of(message.strings[0]));
+        if (entityHandler != null) {
             double
                     x = message.ints[1] / 32D,
                     y = message.ints[2] / 32D,
@@ -51,7 +56,7 @@ public final class EntityClientNetworkHandler {
             //noinspection deprecation
             ClientPlayNetworkHandlerAccessor networkHandler = (ClientPlayNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
             ClientLevel level = networkHandler.getLevel();
-            EntityBase entity = entityProvider.apply(level, x, y, z);
+            EntityBase entity = entityHandler.apply(level, x, y, z);
             if (entity != null) {
                 entity.clientX = message.ints[1];
                 entity.clientY = message.ints[2];
@@ -68,11 +73,12 @@ public final class EntityClientNetworkHandler {
                 if (entity instanceof StationSpawnDataProvider provider)
                     provider.readFromMessage(message);
             }
-        });
+        }
     }
 
     private static void handleMobSpawn(PlayerBase player, Message message) {
-        MobHandlerRegistry.INSTANCE.get(of(message.strings[0])).ifPresent(levelLivingFunction -> {
+        Function<Level, Living> mobHandler = MobHandlerRegistry.INSTANCE.get(of(message.strings[0]));
+        if (mobHandler != null) {
             double
                     x = message.ints[1] / 32D,
                     y = message.ints[2] / 32D,
@@ -82,7 +88,7 @@ public final class EntityClientNetworkHandler {
             //noinspection deprecation
             ClientPlayNetworkHandlerAccessor networkHandler = (ClientPlayNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
             ClientLevel level = networkHandler.getLevel();
-            Living mob = levelLivingFunction.apply(level);
+            Living mob = mobHandler.apply(level);
             if (mob != null) {
                 mob.clientX = message.ints[1];
                 mob.clientY = message.ints[2];
@@ -98,6 +104,6 @@ public final class EntityClientNetworkHandler {
                 if (mob instanceof StationSpawnDataProvider provider)
                     provider.readFromMessage(message);
             }
-        });
+        }
     }
 }

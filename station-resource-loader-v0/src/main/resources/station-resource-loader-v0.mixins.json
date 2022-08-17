@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.resourceloader",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "client.MixinMinecraft",
+    "client.MixinTexturePack",
+    "client.MixinZippedTexturePack"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

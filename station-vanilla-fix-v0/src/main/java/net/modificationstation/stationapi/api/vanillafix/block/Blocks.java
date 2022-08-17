@@ -10,7 +10,13 @@ public final class Blocks {
             DIRT,
             COBBLESTONE,
             PLANKS,
-            SAPLING,
+
+    // SAPLING MODIFIED BY STATIONAPI TO EXPAND METADATA VARIATIONS INTO SEPARATE BLOCKS
+            OAK_SAPLING,
+            SPRUCE_SAPLING,
+            BIRCH_SAPLING,
+    // SAPLING END
+
             BEDROCK,
             FLOWING_WATER,
             WATER,

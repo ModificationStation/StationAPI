@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateDispenser extends net.minecraft.block.Dispenser implements BlockTemplate<TemplateDispenser> {
 
     public TemplateDispenser(Identifier identifier) {
-        this(BlockRegistry.INSTANCE.getNextSerialID());
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId());
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplateDispenser(int id) {

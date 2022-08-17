@@ -1,35 +1,39 @@
 package net.modificationstation.stationapi.api.client.gl;
 
-import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.modificationstation.stationapi.api.client.blaze3d.platform.GlConst;
+import net.modificationstation.stationapi.api.client.blaze3d.platform.GlStateManager;
 import net.modificationstation.stationapi.api.client.blaze3d.systems.RenderSystem;
 import net.modificationstation.stationapi.api.client.render.*;
 import net.modificationstation.stationapi.api.util.math.Matrix4f;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL15;
 
 import java.nio.ByteBuffer;
-import java.util.concurrent.CompletableFuture;
 
 @Environment(value=EnvType.CLIENT)
 public class VertexBuffer
 implements AutoCloseable {
     private int vertexBufferId;
     private int indexBufferId;
-    private VertexFormat.IntType elementFormat;
     private int vertexArrayId;
+    @Nullable
+    private VertexFormat vertexFormat;
+    @Nullable
+    private RenderSystem.IndexBuffer indexBuffer;
+    private VertexFormat.IndexType indexType;
     private int vertexCount;
     private VertexFormat.DrawMode drawMode;
-    private boolean hasNoIndexBuffer;
-    private VertexFormat vertexFormat;
     private VboPool pool;
     private VboPool.Pos poolPos;
 
     public VertexBuffer() {
-        RenderSystem.glGenBuffers(id -> this.vertexBufferId = id);
-        RenderSystem.glGenVertexArrays(id -> this.vertexArrayId = id);
-        RenderSystem.glGenBuffers(id -> this.indexBufferId = id);
+        RenderSystem.assertOnRenderThread();
+        this.vertexBufferId = GlStateManager._glGenBuffers();
+        this.indexBufferId = GlStateManager._glGenBuffers();
+        this.vertexArrayId = GlStateManager._glGenVertexArrays();
     }
 
     public VertexBuffer(VboPool pool) {
@@ -37,106 +41,96 @@ implements AutoCloseable {
         this.poolPos = new VboPool.Pos();
     }
 
-    public void bind() {
-        RenderSystem.glBindBuffer(GL15.GL_ARRAY_BUFFER, () -> this.vertexBufferId);
-        if (this.hasNoIndexBuffer) {
-            RenderSystem.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, () -> {
-                RenderSystem.IndexBuffer indexBuffer = RenderSystem.getSequentialBuffer(this.drawMode, this.vertexCount);
-                this.elementFormat = indexBuffer.getElementFormat();
-                return indexBuffer.getId();
-            });
-        } else {
-            RenderSystem.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, () -> this.indexBufferId);
-        }
-    }
-
-    public void upload(BufferBuilder buffer) {
-        if (!RenderSystem.isOnRenderThread()) {
-            RenderSystem.recordRenderCall(() -> this.uploadInternal(buffer));
-        } else {
-            this.uploadInternal(buffer);
-        }
-    }
-
-    public CompletableFuture<Void> submitUpload(BufferBuilder buffer) {
-        if (!RenderSystem.isOnRenderThread()) {
-            return CompletableFuture.runAsync(() -> this.uploadInternal(buffer), action -> RenderSystem.recordRenderCall(action::run));
-        }
-        this.uploadInternal(buffer);
-        return CompletableFuture.completedFuture(null);
-    }
-
-    private void uploadInternal(BufferBuilder buffer) {
-        Pair<BufferBuilder.DrawArrayParameters, ByteBuffer> pair = buffer.popData();
-        BufferBuilder.DrawArrayParameters drawArrayParameters = pair.getFirst();
-        if (pool == null) {
-            if (this.vertexBufferId == 0) {
-                return;
-            }
-            BufferRenderer.unbindAll();
-            ByteBuffer byteBuffer = pair.getSecond();
-            int i = drawArrayParameters.getIndexBufferStart();
-            this.vertexCount = drawArrayParameters.getVertexCount();
-            this.elementFormat = drawArrayParameters.getElementFormat();
-            this.vertexFormat = drawArrayParameters.getVertexFormat();
-            this.drawMode = drawArrayParameters.getMode();
-            this.hasNoIndexBuffer = drawArrayParameters.hasNoIndexBuffer();
-            this.bindVertexArray();
-            this.bind();
-            if (!drawArrayParameters.hasNoVertexBuffer()) {
-                byteBuffer.limit(i);
-                RenderSystem.glBufferData(GL15.GL_ARRAY_BUFFER, byteBuffer, GL15.GL_STATIC_DRAW);
-                byteBuffer.position(i);
-            }
-            if (!this.hasNoIndexBuffer) {
-                byteBuffer.limit(drawArrayParameters.getIndexBufferEnd());
-                RenderSystem.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, byteBuffer, GL15.GL_STATIC_DRAW);
-                byteBuffer.position(0);
-            } else {
-                byteBuffer.limit(drawArrayParameters.getIndexBufferEnd());
-                byteBuffer.position(0);
-            }
-            VertexBuffer.unbind();
-            VertexBuffer.unbindVertexArray();
-        } else {
-            ByteBuffer bytebuffer1 = pair.getSecond();
-            bytebuffer1.position(0);
-            bytebuffer1.limit(drawArrayParameters.getIndexBufferStart());
-            this.pool.bufferData(bytebuffer1, this.poolPos);
-            bytebuffer1.position(0);
-            bytebuffer1.limit(drawArrayParameters.getIndexBufferEnd());
-        }
-    }
-
-    private void bindVertexArray() {
-        RenderSystem.glBindVertexArray(() -> this.vertexArrayId);
-    }
-
-    public static void unbindVertexArray() {
-        RenderSystem.glBindVertexArray(() -> 0);
-    }
-
-    public void drawElements() {
-        if (this.vertexCount == 0) {
-            return;
-        }
-        RenderSystem.drawElements(this.drawMode.mode, this.vertexCount, this.elementFormat.type);
-    }
-
-    public void setShader(Matrix4f viewMatrix, Matrix4f projectionMatrix, Shader shader) {
-        if (!RenderSystem.isOnRenderThread()) {
-            RenderSystem.recordRenderCall(() -> this.innerSetShader(viewMatrix.copy(), projectionMatrix.copy(), shader));
-        } else {
-            this.innerSetShader(viewMatrix, projectionMatrix, shader);
-        }
-    }
-
-    public void innerSetShader(Matrix4f viewMatrix, Matrix4f projectionMatrix, Shader shader) {
-        if (this.vertexCount == 0) {
+    public void upload(BufferBuilder.BuiltBuffer buffer) {
+        if (this.isClosed()) {
             return;
         }
         RenderSystem.assertOnRenderThread();
-        BufferRenderer.unbindAll();
+        try {
+            BufferBuilder.DrawArrayParameters drawArrayParameters = buffer.getParameters();
+            if (pool == null) {
+                this.vertexFormat = this.configureVertexFormat(drawArrayParameters, buffer.getVertexBuffer());
+                this.indexBuffer = this.configureIndexBuffer(drawArrayParameters, buffer.getIndexBuffer());
+                this.vertexCount = drawArrayParameters.indexCount();
+                this.indexType = drawArrayParameters.indexType();
+                this.drawMode = drawArrayParameters.mode();
+            } else {
+                ByteBuffer bytebuffer1 = buffer.getVertexBuffer();
+//                bytebuffer1.position(0);
+//                bytebuffer1.limit(drawArrayParameters.getIndexBufferStart());
+                this.pool.bufferData(bytebuffer1, this.poolPos);
+//                bytebuffer1.position(0);
+//                bytebuffer1.limit(drawArrayParameters.getIndexBufferEnd());
+            }
+        }
+        finally {
+            buffer.release();
+        }
+    }
+
+    private VertexFormat configureVertexFormat(BufferBuilder.DrawArrayParameters parameters, ByteBuffer data) {
+        boolean bl = false;
+        if (!parameters.format().equals(this.vertexFormat)) {
+            if (this.vertexFormat != null) {
+                this.vertexFormat.clearState();
+            }
+            GlStateManager._glBindBuffer(GlConst.GL_ARRAY_BUFFER, this.vertexBufferId);
+            parameters.format().setupState();
+            bl = true;
+        }
+        if (!parameters.indexOnly()) {
+            if (!bl) {
+                GlStateManager._glBindBuffer(GlConst.GL_ARRAY_BUFFER, this.vertexBufferId);
+            }
+            RenderSystem.glBufferData(GlConst.GL_ARRAY_BUFFER, data, GlConst.GL_STATIC_DRAW);
+        }
+        return parameters.format();
+    }
+
+    @Nullable
+    private RenderSystem.IndexBuffer configureIndexBuffer(BufferBuilder.DrawArrayParameters parameters, ByteBuffer data) {
+        if (parameters.sequentialIndex()) {
+            RenderSystem.IndexBuffer indexBuffer = RenderSystem.getSequentialBuffer(parameters.mode());
+            if (indexBuffer != this.indexBuffer || !indexBuffer.isSizeLessThanOrEqual(parameters.indexCount())) {
+                indexBuffer.bindAndGrow(parameters.indexCount());
+            }
+            return indexBuffer;
+        }
+        GlStateManager._glBindBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, this.indexBufferId);
+        RenderSystem.glBufferData(GlConst.GL_ELEMENT_ARRAY_BUFFER, data, GlConst.GL_STATIC_DRAW);
+        return null;
+    }
+
+    public void bind() {
+        BufferRenderer.resetCurrentVertexBuffer();
+        GlStateManager._glBindVertexArray(this.vertexArrayId);
+    }
+
+    public static void unbind() {
+        BufferRenderer.resetCurrentVertexBuffer();
+        GlStateManager._glBindVertexArray(0);
+        GlStateManager._glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        GlStateManager._glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+
+    public void drawElements() {
+        RenderSystem.drawElements(this.drawMode.glMode, this.vertexCount, this.getIndexType().glType);
+    }
+
+    private VertexFormat.IndexType getIndexType() {
+        RenderSystem.IndexBuffer indexBuffer = this.indexBuffer;
+        return indexBuffer != null ? indexBuffer.getIndexType() : this.indexType;
+    }
+
+    public void draw(Matrix4f viewMatrix, Matrix4f projectionMatrix, Shader shader) {
+        if (!RenderSystem.isOnRenderThread()) {
+            RenderSystem.recordRenderCall(() -> this.drawInternal(viewMatrix.copy(), projectionMatrix.copy(), shader));
+        } else {
+            this.drawInternal(viewMatrix, projectionMatrix, shader);
+        }
+    }
+
+    private void drawInternal(Matrix4f viewMatrix, Matrix4f projectionMatrix, Shader shader) {
         for (int i = 0; i < 12; ++i) {
             int j = RenderSystem.getShaderTexture(i);
             shader.addSampler("Sampler" + i, j);
@@ -184,26 +178,9 @@ implements AutoCloseable {
             shader.lineWidth.set(RenderSystem.getShaderLineWidth());
         }
         RenderSystem.setupShaderLights(shader);
-        this.bindVertexArray();
-        this.bind();
-        this.getVertexFormat().startDrawing();
         shader.bind();
-        RenderSystem.drawElements(this.drawMode.mode, this.vertexCount, this.elementFormat.type);
+        this.drawElements();
         shader.unbind();
-        this.getVertexFormat().endDrawing();
-        VertexBuffer.unbind();
-        VertexBuffer.unbindVertexArray();
-    }
-
-    public void drawVertices() {
-        if (this.vertexCount == 0) {
-            return;
-        }
-        RenderSystem.assertOnRenderThread();
-        this.bindVertexArray();
-        this.bind();
-        this.vertexFormat.startDrawing();
-        RenderSystem.drawElements(this.drawMode.mode, this.vertexCount, this.elementFormat.type);
     }
 
     public void uploadToPool() {
@@ -212,29 +189,28 @@ implements AutoCloseable {
         }
     }
 
-    public static void unbind() {
-        RenderSystem.glBindBuffer(GL15.GL_ARRAY_BUFFER, () -> 0);
-        RenderSystem.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, () -> 0);
-    }
-
     @Override
     public void close() {
+        if (this.vertexBufferId >= 0) {
+            RenderSystem.glDeleteBuffers(this.vertexBufferId);
+            this.vertexBufferId = -1;
+        }
         if (this.indexBufferId >= 0) {
             RenderSystem.glDeleteBuffers(this.indexBufferId);
             this.indexBufferId = -1;
         }
-        if (this.vertexBufferId > 0) {
-            RenderSystem.glDeleteBuffers(this.vertexBufferId);
-            this.vertexBufferId = 0;
-        }
-        if (this.vertexArrayId > 0) {
+        if (this.vertexArrayId >= 0) {
             RenderSystem.glDeleteVertexArrays(this.vertexArrayId);
-            this.vertexArrayId = 0;
+            this.vertexArrayId = -1;
         }
     }
 
     public VertexFormat getVertexFormat() {
         return this.vertexFormat;
+    }
+
+    public boolean isClosed() {
+        return this.vertexArrayId == -1;
     }
 }
 

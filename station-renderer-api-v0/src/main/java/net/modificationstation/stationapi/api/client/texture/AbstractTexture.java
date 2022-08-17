@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.client.texture;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.resource.ResourceManager;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
@@ -48,13 +48,13 @@ public abstract class AbstractTexture implements AutoCloseable {
       }
    }
 
-   public abstract void load(TexturePack manager) throws IOException;
+   public abstract void load(ResourceManager manager) throws IOException;
 
    public void bindTexture() {
       GL11.glBindTexture(3553, this.getGlId());
    }
 
-   public void registerTexture(TextureManager textureManager, TexturePack resourceManager, Identifier identifier, Executor executor) {
+   public void registerTexture(TextureManager textureManager, ResourceManager resourceManager, Identifier identifier, Executor executor) {
       StationTextureManager.get(textureManager).registerTexture(identifier, this);
    }
 

@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateFlowingFluid extends net.minecraft.block.FlowingFluid implements BlockTemplate<TemplateFlowingFluid> {
 
     public TemplateFlowingFluid(Identifier identifier, Material material) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), material);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), material);
+        BlockTemplate.onConstructor(this, identifier);
     }
 
     public TemplateFlowingFluid(int i, Material arg) {

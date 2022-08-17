@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplatePlant extends net.minecraft.block.Plant implements BlockTemplate<TemplatePlant> {
 
     public TemplatePlant(Identifier identifier, int texture) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), texture);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), texture);
+        BlockTemplate.onConstructor(this, identifier);
     }
 
     public TemplatePlant(int id, int texture) {

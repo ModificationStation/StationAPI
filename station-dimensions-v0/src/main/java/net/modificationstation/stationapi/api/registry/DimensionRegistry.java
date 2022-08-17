@@ -1,11 +1,14 @@
 package net.modificationstation.stationapi.api.registry;
 
+import com.mojang.serialization.Lifecycle;
 import it.unimi.dsi.fastutil.ints.*;
+import net.modificationstation.stationapi.api.registry.legacy.AbstractInt2ObjectMapBackedLegacyRegistry;
+import net.modificationstation.stationapi.api.registry.legacy.LevelLegacyRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-public final class DimensionRegistry extends AbstractInt2ObjectMapBackedRegistry<DimensionContainer<?>> implements LevelSerialRegistry<DimensionContainer<?>> {
+public final class DimensionRegistry extends AbstractInt2ObjectMapBackedLegacyRegistry<DimensionContainer<?>> implements LevelLegacyRegistry<DimensionContainer<?>> {
 
     private static final int
             VANILLA_MIN = -1,
@@ -38,7 +41,8 @@ public final class DimensionRegistry extends AbstractInt2ObjectMapBackedRegistry
         return a < b ? -1 : 1;
     };
 
-    public static final DimensionRegistry INSTANCE = new DimensionRegistry();
+    public static final RegistryKey<Registry<DimensionContainer<?>>> KEY = RegistryKey.ofRegistry(MODID.id("dimensions"));
+    public static final DimensionRegistry INSTANCE = Registry.create(KEY, new DimensionRegistry(), Lifecycle.experimental());
 
     /**
      * {@link DimensionRegistry#serialView} backend.
@@ -63,7 +67,7 @@ public final class DimensionRegistry extends AbstractInt2ObjectMapBackedRegistry
     private boolean registering;
 
     private DimensionRegistry() {
-        super(Identifier.of(MODID, "dimensions"));
+        super(KEY);
     }
 
     @Override
@@ -72,21 +76,20 @@ public final class DimensionRegistry extends AbstractInt2ObjectMapBackedRegistry
     }
 
     @Override
-    public void remap(int newSerialID, @NotNull DimensionContainer<?> value) {
-        Identifier id = getIdentifier(value);
-        unregister(id);
-        values.remove(getSerialID(value));
-        if (serialView.containsKey(newSerialID))
-            remap(getNextSerialID(), serialView.get(newSerialID));
-        value.serialID = newSerialID;
-        super.register(id, value);
-        values.put(newSerialID, value);
+    public void remap(int newLegacyId, @NotNull DimensionContainer<?> value) {
+//        Identifier id = getId(value);
+//        unregister(id);
+        values.remove(getLegacyId(value));
+        if (serialView.containsKey(newLegacyId))
+            remap(getNextLegacyId(), serialView.get(newLegacyId));
+        value.serialID = newLegacyId;
+//        super.register(id, value);
+        values.put(newLegacyId, value);
     }
 
-    @Override
     public void register(@NotNull Identifier identifier, @NotNull DimensionContainer<?> value) {
         if (registering)
-            super.register(identifier, value);
+            Registry.register(this, identifier, value);
         else {
             registering = true;
             register(identifier, id -> {
@@ -101,6 +104,6 @@ public final class DimensionRegistry extends AbstractInt2ObjectMapBackedRegistry
     public void register(@NotNull Identifier identifier, int serialID, @NotNull DimensionContainer<?> value) {
         value.serialID = serialID;
         values.put(serialID, value);
-        super.register(identifier, value);
+        Registry.register(this, identifier, value);
     }
 }

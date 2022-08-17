@@ -17,10 +17,9 @@ public class MixinSheep {
     private int hijackSheepShearing(ItemInstance itemInstance) {
         return StationAPI.EVENT_BUS.post(
                 ShearsOverrideEvent.builder()
-                        .itemInstance(itemInstance)
+                        .itemStack(itemInstance)
                         .overrideShears(false)
                         .build()
         ).overrideShears ? ItemBase.shears.id : itemInstance.itemId;
     }
-
 }

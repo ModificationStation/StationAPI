@@ -1,0 +1,12 @@
+{
+  "values": [
+    "#base_stone_overworld",
+    "#dirt",
+    "#sand",
+    "#iron_ores",
+    "water",
+    "gravel",
+    "sandstone",
+    "snow"
+  ]
+}

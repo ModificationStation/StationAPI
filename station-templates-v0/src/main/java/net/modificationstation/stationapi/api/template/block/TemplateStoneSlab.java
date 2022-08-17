@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateStoneSlab extends net.minecraft.block.StoneSlab implements BlockTemplate<TemplateStoneSlab> {
     
     public TemplateStoneSlab(Identifier identifier, boolean flag) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), flag);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), flag);
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplateStoneSlab(int i, boolean flag) {

@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateTnt extends net.minecraft.block.Tnt implements BlockTemplate<TemplateTnt> {
     
     public TemplateTnt(Identifier identifier, int j) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), j);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), j);
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplateTnt(int i, int j) {

@@ -6,8 +6,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.util.json.JsonHelper;
-import net.modificationstation.stationapi.impl.client.resource.ResourceMetadataReader;
+import net.modificationstation.stationapi.api.resource.metadata.ResourceMetadataReader;
+import net.modificationstation.stationapi.api.util.JsonHelper;
 import org.apache.commons.lang3.Validate;
 
 import java.util.ArrayList;

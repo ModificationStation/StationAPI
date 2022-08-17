@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateTrapdoor extends net.minecraft.block.Trapdoor implements BlockTemplate<TemplateTrapdoor> {
     
     public TemplateTrapdoor(Identifier identifier, Material arg) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), arg);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), arg);
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplateTrapdoor(int i, Material arg) {

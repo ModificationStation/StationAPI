@@ -5,7 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.render.model.ModelRotation;
-import net.modificationstation.stationapi.api.util.json.JsonHelper;
+import net.modificationstation.stationapi.api.util.JsonHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Vec3f;
 import org.jetbrains.annotations.Nullable;

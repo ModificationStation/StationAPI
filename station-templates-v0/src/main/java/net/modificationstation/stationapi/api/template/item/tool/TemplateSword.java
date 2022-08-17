@@ -5,11 +5,11 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateSword extends net.minecraft.item.tool.Sword implements ItemTemplate<TemplateSword> {
+public class TemplateSword extends net.minecraft.item.tool.Sword implements ItemTemplate<TemplateSword>, ToolTemplate {
     
     public TemplateSword(Identifier identifier, ToolMaterial arg) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), arg);
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted(), arg);
+        ItemTemplate.onConstructor(this, identifier);
     }
     
     public TemplateSword(int i, ToolMaterial arg) {

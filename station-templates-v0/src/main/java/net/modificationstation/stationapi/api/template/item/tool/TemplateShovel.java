@@ -5,11 +5,11 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateShovel extends net.minecraft.item.tool.Shovel implements ItemTemplate<TemplateShovel> {
+public class TemplateShovel extends net.minecraft.item.tool.Shovel implements ItemTemplate<TemplateShovel>, ToolTemplate {
     
     public TemplateShovel(Identifier identifier, ToolMaterial arg) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), arg);
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted(), arg);
+        ItemTemplate.onConstructor(this, identifier);
     }
     
     public TemplateShovel(int id, ToolMaterial arg) {

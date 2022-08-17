@@ -102,15 +102,15 @@ public class VertexConsumers {
         }
 
         @Override
-        public void fixedColour(int red, int green, int blue, int alpha) {
-            this.first.fixedColour(red, green, blue, alpha);
-            this.second.fixedColour(red, green, blue, alpha);
+        public void fixedColor(int red, int green, int blue, int alpha) {
+            this.first.fixedColor(red, green, blue, alpha);
+            this.second.fixedColor(red, green, blue, alpha);
         }
 
         @Override
-        public void unfixColour() {
-            this.first.unfixColour();
-            this.second.unfixColour();
+        public void unfixColor() {
+            this.first.unfixColor();
+            this.second.unfixColor();
         }
     }
 
@@ -182,13 +182,13 @@ public class VertexConsumers {
         }
 
         @Override
-        public void fixedColour(int red, int green, int blue, int alpha) {
-            this.delegate(i -> i.fixedColour(red, green, blue, alpha));
+        public void fixedColor(int red, int green, int blue, int alpha) {
+            this.delegate(i -> i.fixedColor(red, green, blue, alpha));
         }
 
         @Override
-        public void unfixColour() {
-            this.delegate(VertexConsumer::unfixColour);
+        public void unfixColor() {
+            this.delegate(VertexConsumer::unfixColor);
         }
     }
 }

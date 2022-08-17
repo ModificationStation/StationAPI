@@ -33,7 +33,7 @@ public class VboPool implements AutoCloseable {
 
     public VboPool(VertexFormat format) {
         this.format = format;
-        vertexBytes = format.getVertexSize();
+        vertexBytes = format.getVertexSizeByte();
         this.bindBuffer();
         long i = this.toBytes(this.capacity);
         GlStateManager._glBufferData(GL15.GL_ARRAY_BUFFER, i, GL15.GL_STATIC_DRAW);
@@ -216,7 +216,7 @@ public class VboPool implements AutoCloseable {
             this.drawMode = drawMode;
         }
 
-        this.bufferIndirect.put(drawMode.getSize(range.getSize()));
+        this.bufferIndirect.put(drawMode.getIndexCount(range.getSize()));
         bufferIndirect.put(1);
         this.bufferIndirect.put(0);
         bufferIndirect.put(range.getPosition());
@@ -226,14 +226,15 @@ public class VboPool implements AutoCloseable {
     public void drawAll() {
         this.bindVertexArray();
         this.bindBuffer();
-        format.startDrawing();
+        format.setupState();
 
-        int i = this.drawMode.getSize(this.nextPos);
-        RenderSystem.IndexBuffer autostorageindexbuffer = RenderSystem.getSequentialBuffer(this.drawMode, i);
-        VertexFormat.IntType indextype = autostorageindexbuffer.getElementFormat();
-        GlStateManager._glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, autostorageindexbuffer.getId());
+        int i = this.drawMode.getIndexCount(this.nextPos);
+        RenderSystem.IndexBuffer autostorageindexbuffer = RenderSystem.getSequentialBuffer(this.drawMode);
+        VertexFormat.IndexType indextype = autostorageindexbuffer.getIndexType();
+        autostorageindexbuffer.bindAndGrow(i);
+//        GlStateManager._glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, autostorageindexbuffer.getId());
         this.bufferIndirect.flip();
-        GlStateManager._multiDrawElementsIndirect(this.drawMode.mode, indextype.type, this.bufferIndirect, bufferIndirect.limit() / 5, 0);
+        GlStateManager._multiDrawElementsIndirect(this.drawMode.glMode, indextype.glType, this.bufferIndirect, bufferIndirect.limit() / 5, 0);
         this.bufferIndirect.limit(this.bufferIndirect.capacity());
 
         if (this.nextPos > this.size * 11 / 10) {

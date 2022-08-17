@@ -2,36 +2,42 @@ package net.modificationstation.stationapi.impl.client.texture;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.datafixers.util.Unit;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.blaze3d.systems.RenderSystem;
-import net.modificationstation.stationapi.api.client.event.resource.TexturePackLoadedEvent;
-import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
+import net.modificationstation.stationapi.api.client.event.resource.ClientResourceReloaderRegisterEvent;
+import net.modificationstation.stationapi.api.client.event.resource.ClientResourcesReloadEvent;
 import net.modificationstation.stationapi.api.client.gl.Program;
 import net.modificationstation.stationapi.api.client.render.Shader;
 import net.modificationstation.stationapi.api.client.render.VertexFormats;
 import net.modificationstation.stationapi.api.client.render.item.ItemModels;
-import net.modificationstation.stationapi.api.client.resource.ResourceFactory;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.resource.FakeResourceManager;
+import net.modificationstation.stationapi.api.resource.ResourceHelper;
+import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.resource.SynchronousResourceReloader;
 import net.modificationstation.stationapi.api.util.Null;
-import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.impl.client.resource.ResourceReloader;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
@@ -46,8 +52,6 @@ public class StationRenderImpl {
     public static final Logger LOGGER = Null.get();
 
     private static final boolean DEBUG_EXPORT_ATLASES = Boolean.parseBoolean(System.getProperty(StationAPI.MODID + ".debug.export_atlases", "false"));
-
-    private static final CompletableFuture<Unit> COMPLETED_UNIT_FUTURE = CompletableFuture.completedFuture(Unit.INSTANCE);
 
     public static ExpandableAtlas
             TERRAIN,
@@ -163,17 +167,57 @@ public class StationRenderImpl {
     @Nullable
     private static Shader renderTypeCrumblingShader;
 
-    @EventListener(priority = ListenerPriority.HIGH)
-    private static void init(TextureRegisterEvent event) {
+    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    private static void registerReloaders(ClientResourceReloaderRegisterEvent event) {
+        FakeResourceManager.registerProvider(path -> {
+            try {
+                Identifier identifier = ResourceHelper.ASSETS.toId(path, StationAPI.MODID + "/textures", "png");
+                if (TERRAIN.slicedSpritesheetView.containsKey(identifier)) {
+                    BufferedImage image = TERRAIN.slicedSpritesheetView.get(identifier);
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    try {
+                        ImageIO.write(image, "png", outputStream);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return new ByteArrayInputStream(outputStream.toByteArray());
+                }
+            } catch (IllegalArgumentException ignored) {}
+            return null;
+        });
+        FakeResourceManager.registerProvider(path -> {
+            try {
+                Identifier identifier = ResourceHelper.ASSETS.toId(path, StationAPI.MODID + "/textures", "png");
+                if (GUI_ITEMS.slicedSpritesheetView.containsKey(identifier)) {
+                    BufferedImage image = GUI_ITEMS.slicedSpritesheetView.get(identifier);
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    try {
+                        ImageIO.write(image, "png", outputStream);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return new ByteArrayInputStream(outputStream.toByteArray());
+                }
+            } catch (IllegalArgumentException ignored) {}
+            return null;
+        });
+        event.resourceManager.registerReloader((SynchronousResourceReloader) StationRenderImpl::loadShaders);
+        event.resourceManager.registerReloader(StationRenderAPI.getBakedModelManager());
+        event.resourceManager.registerReloader((SynchronousResourceReloader) manager -> ItemModels.reloadModelsAll());
+    }
+
+    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 + Integer.MAX_VALUE / 8)
+    private static void init(ClientResourcesReloadEvent event) {
         TERRAIN = new ExpandableAtlas(Atlases.GAME_ATLAS_TEXTURE);
         GUI_ITEMS = new ExpandableAtlas(of("textures/atlas/gui/items.png"));
         TERRAIN.addSpritesheet("/terrain.png", 16, TerrainHelper.INSTANCE);
         GUI_ITEMS.addSpritesheet("/gui/items.png", 16, GuiItemsHelper.INSTANCE);
-        //noinspection deprecation
-        loadShaders((ResourceFactory) ((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
+        RenderSystem.maxSupportedTextureSize();
+//        //noinspection deprecation
+//        loadShaders((ResourceFactory) ((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
     }
 
-    public static void loadShaders(ResourceFactory manager) {
+    public static void loadShaders(ResourceManager manager) {
         RenderSystem.assertOnRenderThread();
         List<Program> list = Lists.newArrayList();
         list.addAll(Program.Type.FRAGMENT.getProgramCache().values());
@@ -525,23 +569,18 @@ public class StationRenderImpl {
         return renderTypeCrumblingShader;
     }
 
-    @EventListener(priority = ListenerPriority.LOW)
-    private static void stitchExpandableAtlasesPostInit(TextureRegisterEvent event) {
+    @EventListener(numPriority = Integer.MIN_VALUE / 2 + Integer.MIN_VALUE / 4 - Integer.MAX_VALUE / 8)
+    private static void stitchExpandableAtlasesPostInit(ClientResourcesReloadEvent event) {
         //noinspection deprecation
         Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
         TexturePack texturePack = minecraft.texturePackManager.texturePack;
-        ResourceReloader.create(minecraft.texturePackManager.texturePack, Collections.singletonList(
-                StationRenderAPI.getBakedModelManager()
-        ), Util.getMainWorkerExecutor(), Runnable::run, COMPLETED_UNIT_FUTURE);
-        ItemModels.reloadModelsAll();
+//        SimpleResourceReload.create((ResourceManager) minecraft.texturePackManager.texturePack, Collections.singletonList(
+//                StationRenderAPI.getBakedModelManager()
+//        ), Util.getMainWorkerExecutor(), Runnable::run, COMPLETED_UNIT_FUTURE);
+//        ItemModels.reloadModelsAll();
         TERRAIN.registerTextureBinders(minecraft.textureManager, texturePack);
         GUI_ITEMS.registerTextureBinders(minecraft.textureManager, texturePack);
         debugExportAtlases();
-    }
-
-    @EventListener(priority = ListenerPriority.HIGH)
-    private static void texturePackApplied(TexturePackLoadedEvent.After event) {
-        StationAPI.EVENT_BUS.post(TextureRegisterEvent.builder().build());
     }
 
     private static void debugExportAtlases() {

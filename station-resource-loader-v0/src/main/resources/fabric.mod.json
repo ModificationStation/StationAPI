@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "station-resource-loader-v0",
+  "version": "${version}",
+
+  "name": "Station Resource Loader (v0)",
+  "description": "Handles resource loading, such as textures, tags, etc.",
+  "authors": [
+    "Modification Station"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/repo/mod/stationapi",
+    "sources": "https://github.com/ModificationStation/StationAPI",
+    "issues": "https://github.com/ModificationStation/StationAPI/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/station-resource-loader-v0/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "stationapi:event_bus": [
+      "net.modificationstation.stationapi.api.resource.Resources"
+    ],
+    "stationapi:event_bus_client": [
+      "net.modificationstation.stationapi.api.client.resource.ClientResources"
+    ]
+  },
+  "mixins": [
+    "station-resource-loader-v0.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  },
+
+  "custom": {
+    "modmenu:api": true
+  }
+}

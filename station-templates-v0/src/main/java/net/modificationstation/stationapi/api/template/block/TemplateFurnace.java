@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateFurnace extends net.minecraft.block.Furnace implements BlockTemplate<TemplateFurnace> {
 
     public TemplateFurnace(Identifier identifier, boolean flag) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), flag);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), flag);
+        BlockTemplate.onConstructor(this, identifier);
     }
 
     public TemplateFurnace(int i, boolean flag) {

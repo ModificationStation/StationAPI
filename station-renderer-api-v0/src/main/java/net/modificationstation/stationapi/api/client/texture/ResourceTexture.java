@@ -2,10 +2,9 @@ package net.modificationstation.stationapi.api.client.texture;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.TexturePack;
-import net.modificationstation.stationapi.api.client.resource.Resource;
 import net.modificationstation.stationapi.api.client.resource.metadata.TextureResourceMetadata;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Environment(EnvType.CLIENT)
 public class ResourceTexture extends AbstractTexture {
@@ -23,7 +23,7 @@ public class ResourceTexture extends AbstractTexture {
       this.location = location;
    }
 
-   public void load(TexturePack manager) throws IOException {
+   public void load(ResourceManager manager) throws IOException {
       ResourceTexture.TextureData textureData = this.loadTextureData(manager);
       textureData.checkException();
       TextureResourceMetadata textureResourceMetadata = textureData.getMetadata();
@@ -46,7 +46,7 @@ public class ResourceTexture extends AbstractTexture {
       nativeImage.upload(0, 0, 0, 0, 0, nativeImage.getWidth(), nativeImage.getHeight(), blur, clamp, false, true);
    }
 
-   protected ResourceTexture.TextureData loadTextureData(TexturePack resourceManager) {
+   protected ResourceTexture.TextureData loadTextureData(ResourceManager resourceManager) {
       return ResourceTexture.TextureData.load(resourceManager, this.location);
    }
 
@@ -71,30 +71,25 @@ public class ResourceTexture extends AbstractTexture {
          this.image = image;
       }
 
-      public static ResourceTexture.TextureData load(TexturePack resourceManager, Identifier identifier) {
-         try {
-            Resource resource = Resource.of(resourceManager.getResourceAsStream(ResourceManager.ASSETS.toPath(identifier)));
-
-            ResourceTexture.TextureData var6;
-            try {
-               NativeImage nativeImage = NativeImage.read(resource.getInputStream());
-               TextureResourceMetadata textureResourceMetadata = null;
-
-               try {
-                  textureResourceMetadata = resource.getMetadata(TextureResourceMetadata.READER);
-               } catch (RuntimeException var17) {
-                  ResourceTexture.LOGGER.warn("Failed reading metadata of: {}", identifier, var17);
-               }
-
-               var6 = new ResourceTexture.TextureData(textureResourceMetadata, nativeImage);
-            } finally {
-               resource.close();
-            }
-
-            return var6;
-         } catch (IOException var20) {
-            return new ResourceTexture.TextureData(var20);
-         }
+      public static ResourceTexture.TextureData load(ResourceManager resourceManager, Identifier identifier) {
+          try {
+              NativeImage nativeImage;
+              Resource resource = resourceManager.getResourceOrThrow(identifier);
+              try (InputStream inputStream = resource.getInputStream()){
+                  nativeImage = NativeImage.read(inputStream);
+              }
+              TextureResourceMetadata textureResourceMetadata = null;
+              try {
+                  textureResourceMetadata = resource.getMetadata().decode(TextureResourceMetadata.READER).orElse(null);
+              }
+              catch (RuntimeException runtimeException) {
+                  LOGGER.warn("Failed reading metadata of: {}", identifier, runtimeException);
+              }
+              return new TextureData(textureResourceMetadata, nativeImage);
+          }
+          catch (IOException iOException) {
+              return new TextureData(iOException);
+          }
       }
 
       @Nullable

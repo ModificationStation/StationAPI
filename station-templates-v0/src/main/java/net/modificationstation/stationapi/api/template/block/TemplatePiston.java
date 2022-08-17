@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplatePiston extends net.minecraft.block.Piston implements BlockTemplate<TemplatePiston> {
 
     public TemplatePiston(Identifier identifier, int j, boolean flag) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), j, flag);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), j, flag);
+        BlockTemplate.onConstructor(this, identifier);
     }
 
     public TemplatePiston(int i, int j, boolean flag) {

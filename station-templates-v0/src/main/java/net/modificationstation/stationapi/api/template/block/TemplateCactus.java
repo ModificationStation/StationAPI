@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateCactus extends net.minecraft.block.Cactus implements BlockTemplate<TemplateCactus> {
 
     public TemplateCactus(Identifier identifier, int texture) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), texture);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), texture);
+        BlockTemplate.onConstructor(this, identifier);
     }
 
     public TemplateCactus(int id, int texture) {

@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateMaterialBlock extends net.minecraft.block.MaterialBlock implements BlockTemplate<TemplateMaterialBlock> {
     
     public TemplateMaterialBlock(Identifier identifier, int j) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), j);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), j);
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplateMaterialBlock(int i, int j) {

@@ -26,7 +26,7 @@ public abstract class MixinAbstractClientPlayer extends PlayerBase implements Ha
             constant = @Constant(intValue = 0)
     )
     private int getRespawnDimension(int constant) {
-        return level.dimension.canPlayerSleep() ? dimensionId : DimensionRegistry.INSTANCE.getSerialID(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Couldn't find overworld dimension in the registry!"));
+        return level.dimension.canPlayerSleep() ? dimensionId : DimensionRegistry.INSTANCE.getLegacyId(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Couldn't find overworld dimension in the registry!"));
     }
 
     @Redirect(

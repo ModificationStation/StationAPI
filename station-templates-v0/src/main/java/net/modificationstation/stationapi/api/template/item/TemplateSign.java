@@ -6,8 +6,8 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateSign extends net.minecraft.item.Sign implements ItemTemplate<TemplateSign> {
     
     public TemplateSign(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted());
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted());
+        ItemTemplate.onConstructor(this, identifier);
     }
     
     public TemplateSign(int i) {

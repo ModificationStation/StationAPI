@@ -1,10 +1,15 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.modificationstation.stationapi.api.item.Fuel;
 import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
+import net.modificationstation.stationapi.impl.recipe.SmeltingRegistryImpl;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,8 +31,16 @@ public class MixinTileEntityFurnace {
 
     @Inject(method = "getFuelTime(Lnet/minecraft/item/ItemInstance;)I", at = @At(value = "HEAD"), cancellable = true)
     private void getCustomBurnTime(ItemInstance arg, CallbackInfoReturnable<Integer> cir) {
-        if (arg != null && arg.getType() instanceof Fuel fuel)
-            cir.setReturnValue(fuel.getFuelTime(arg));
+        if (arg != null) {
+            if (arg.getType() instanceof Fuel fuel)
+                cir.setReturnValue(fuel.getFuelTime(arg));
+            else {
+                RegistryEntry<ItemBase> entry = ItemRegistry.INSTANCE.getEntry(ItemRegistry.INSTANCE.getKey(arg.getType()).orElseThrow()).orElseThrow();
+                int[] fuelTimes = SmeltingRegistryImpl.TAG_FUEL_TIME.reference2IntEntrySet().stream().filter(e -> entry.isIn(e.getKey())).mapToInt(Reference2IntMap.Entry::getIntValue).toArray();
+                if (fuelTimes.length > 0)
+                    cir.setReturnValue(fuelTimes[0]);
+            }
+        }
     }
 
     @Inject(method = "craftRecipe()V", at = @At(value = "FIELD", target = "Lnet/minecraft/item/ItemInstance;count:I", opcode = Opcodes.GETFIELD, ordinal = 0, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)

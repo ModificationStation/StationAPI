@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateDetectorRail extends net.minecraft.block.DetectorRail implements BlockTemplate<TemplateDetectorRail> {
     
     public TemplateDetectorRail(Identifier identifier, int texture) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), texture);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), texture);
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplateDetectorRail(int id, int texture) {

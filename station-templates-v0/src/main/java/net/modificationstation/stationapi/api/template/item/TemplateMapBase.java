@@ -6,8 +6,8 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateMapBase extends net.minecraft.item.MapBase implements ItemTemplate<TemplateMapBase> {
 
     public TemplateMapBase(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted());
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted());
+        ItemTemplate.onConstructor(this, identifier);
     }
 
     public TemplateMapBase(int i) {

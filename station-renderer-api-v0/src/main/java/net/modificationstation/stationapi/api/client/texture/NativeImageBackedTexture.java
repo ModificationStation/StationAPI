@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.client.texture;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.TexturePack;
+import net.modificationstation.stationapi.api.resource.ResourceManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +24,7 @@ public class NativeImageBackedTexture extends AbstractTexture {
       TextureUtil.prepareImage(this.getGlId(), this.image.getWidth(), this.image.getHeight());
    }
 
-   public void load(TexturePack manager) {}
+   public void load(ResourceManager manager) {}
 
    public void upload() {
       if (this.image != null) {

@@ -3,5 +3,6 @@ version = getSubprojectVersion(project, "1.0.0")
 
 moduleDependencies(project,
         'station-api-base',
+        'station-resource-loader-v0',
         'station-level-events-v0'
 )

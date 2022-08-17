@@ -8,14 +8,16 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.JsonRecipesRegistry;
+import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.resource.Filters;
-import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.resource.ResourceHelper;
 import net.modificationstation.stationapi.api.util.exception.MissingModException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashSet;
+import java.util.Objects;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
@@ -27,8 +29,8 @@ public class JsonRecipesLoader {
     private static void loadJsonRecipes(PreInitEvent event) {
         LOGGER.info("Searching for JSON recipes...");
         String recipePath = MODID + "/recipes";
-        ResourceManager.DATA.find(recipePath, Filters.FileType.JSON).forEach(JsonRecipesLoader::registerRecipe);
-        ResourceManager.ASSETS.find(recipePath, Filters.FileType.JSON).forEach(recipe -> {
+        ResourceHelper.DATA.find(recipePath, Filters.FileType.JSON).forEach(JsonRecipesLoader::registerRecipe);
+        ResourceHelper.ASSETS.find(recipePath, Filters.FileType.JSON).forEach(recipe -> {
             LOGGER.warn("Found a recipe (" + recipe + ") under assets directory, which is deprecated for recipes!");
             registerRecipe(recipe);
         });
@@ -44,7 +46,9 @@ public class JsonRecipesLoader {
                 LOGGER.warn("Found an unknown recipe type " + rawId + ". Ignoring.");
                 return;
             }
-            JsonRecipesRegistry.INSTANCE.computeIfAbsent(recipeId, identifier -> new HashSet<>()).add(recipe);
+            if (!JsonRecipesRegistry.INSTANCE.containsId(recipeId))
+                Registry.register(JsonRecipesRegistry.INSTANCE, recipeId, new HashSet<>());
+            Objects.requireNonNull(JsonRecipesRegistry.INSTANCE.get(recipeId)).add(recipe);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

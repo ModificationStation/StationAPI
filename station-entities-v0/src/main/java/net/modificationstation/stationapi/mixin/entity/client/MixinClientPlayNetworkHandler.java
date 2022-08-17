@@ -6,7 +6,6 @@ import net.minecraft.level.Level;
 import net.minecraft.network.ClientPlayNetworkHandler;
 import net.minecraft.packet.play.EntitySpawn0x17S2CPacket;
 import net.modificationstation.stationapi.api.registry.EntityHandlerRegistry;
-import net.modificationstation.stationapi.api.registry.ModID;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,8 +16,6 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import uk.co.benjiweber.expressions.function.QuadFunction;
-
-import java.util.Optional;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
@@ -59,9 +56,9 @@ public class MixinClientPlayNetworkHandler {
             )
     )
     private EntityBase onEntitySpawn(EntityBase entity, EntitySpawn0x17S2CPacket packet) {
-        Optional<QuadFunction<Level, Double, Double, Double, EntityBase>> entityHandler = EntityHandlerRegistry.INSTANCE.get(of(ModID.of("minecraft"), String.valueOf(packet.type)));
-        if (entityHandler.isPresent())
-            entity = entityHandler.get().apply(level, capturedX, capturedY, capturedZ);
+        QuadFunction<Level, Double, Double, Double, EntityBase> entityHandler = EntityHandlerRegistry.INSTANCE.get(of(String.valueOf(packet.type)));
+        if (entityHandler != null)
+            entity = entityHandler.apply(level, capturedX, capturedY, capturedZ);
         return entity;
     }
 }

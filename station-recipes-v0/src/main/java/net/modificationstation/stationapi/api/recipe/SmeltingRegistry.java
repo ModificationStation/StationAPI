@@ -1,14 +1,17 @@
 package net.modificationstation.stationapi.api.recipe;
 
+import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.tags.TagRegistry;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
+import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.API;
 import net.modificationstation.stationapi.impl.recipe.SmeltingRegistryImpl;
 import net.modificationstation.stationapi.mixin.recipe.SmeltingRecipeRegistryAccessor;
 
-public class SmeltingRegistry {
+public final class SmeltingRegistry {
 
     @API
     public static void addSmeltingRecipe(int input, ItemInstance output) {
@@ -22,21 +25,24 @@ public class SmeltingRegistry {
 
     @API
     public static ItemInstance getResultFor(ItemInstance input) {
-        for (Object o : ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().keySet()) {
-            if (o instanceof Identifier id && TagRegistry.INSTANCE.tagMatches(id, input)) {
+        RegistryEntry<ItemBase> entry = ItemRegistry.INSTANCE.getEntry(ItemRegistry.INSTANCE.getKey(input.getType()).orElseThrow()).orElseThrow();
+        for (Object o : ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().keySet())
+            //noinspection unchecked
+            if (o instanceof ItemInstance item && input.isDamageAndIDIdentical(item) || o instanceof TagKey<?> tag && entry.isIn((TagKey<ItemBase>) tag))
                 return ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().get(o);
-            }
-            if (o instanceof ItemInstance item && input.isDamageAndIDIdentical(item) || o instanceof Identifier id && TagRegistry.INSTANCE.tagMatches(id, input))
-                return ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().get(o);
-        }
         return SmeltingRecipeRegistry.getInstance().getResult(input.getType().id);
     }
 
     @API
     public static int getFuelTime(ItemInstance itemInstance) {
         if (SmeltingRegistryImpl.getWarcrimes() == null)
-            throw new RuntimeException("Accessed Lnet/modificationstation/stationapi/api/common/recipe/SmeltingRegistry;getFuelTime(Lnet/minecraft/item/ItemInstance;)I too early!");
+            throw new RuntimeException("Accessed Lnet/modificationstation/stationapi/api/recipe/SmeltingRegistry;getFuelTime(Lnet/minecraft/item/ItemInstance;)I too early!");
         else
             return SmeltingRegistryImpl.getWarcrimes().invokeGetFuelTime(itemInstance);
+    }
+
+    @API
+    public static void addFuelTag(Identifier tag, int fuelTime) {
+        SmeltingRegistryImpl.TAG_FUEL_TIME.put(TagKey.of(ItemRegistry.INSTANCE.getKey(), tag), fuelTime);
     }
 }

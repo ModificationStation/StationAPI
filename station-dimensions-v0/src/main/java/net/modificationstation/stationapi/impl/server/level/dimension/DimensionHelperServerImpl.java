@@ -23,8 +23,8 @@ public class DimensionHelperServerImpl extends DimensionHelperImpl {
         ServerLevel var2 = server.getLevel(serverPlayer.dimensionId);
         DimensionRegistry dimensions = DimensionRegistry.INSTANCE;
 
-        int overworldSerial = dimensions.getSerialID(OVERWORLD).orElseThrow(() -> new IllegalStateException("Overworld not found!"));
-        int destinationSerial = dimensions.getSerialID(destination).orElseThrow(() -> new IllegalArgumentException("Unknown dimension: " + destination + "!"));
+        int overworldSerial = dimensions.getLegacyId(OVERWORLD).orElseThrow(() -> new IllegalStateException("Overworld not found!"));
+        int destinationSerial = dimensions.getLegacyId(destination).orElseThrow(() -> new IllegalArgumentException("Unknown dimension: " + destination + "!"));
 
         player.dimensionId = player.dimensionId == destinationSerial ? overworldSerial : destinationSerial;
 

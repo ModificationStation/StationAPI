@@ -12,7 +12,7 @@ import net.modificationstation.stationapi.api.client.texture.TexturePackDependen
 import net.modificationstation.stationapi.api.client.texture.binder.StaticReferenceProvider;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.resource.ResourceHelper;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import uk.co.benjiweber.expressions.function.ObjIntFunction;
@@ -194,9 +194,9 @@ public abstract class Atlas {
     @Deprecated
     private static Identifier calcId(String spritesheet) {
         LOGGER.warn("Using a deprecated atlas initializer on spritesheet \"" + spritesheet + "\"! Attempting to calculate the identifier...");
-        if (ResourceManager.ASSETS.contains(spritesheet))
+        if (ResourceHelper.ASSETS.contains(spritesheet))
             try {
-                return ResourceManager.ASSETS.toId(spritesheet, "", "png");
+                return ResourceHelper.ASSETS.toId(spritesheet, "", "png");
             } catch (IllegalArgumentException e) {
                 LOGGER.warn("Atlas spritesheet path doesn't seem to follow /assets/modid/ format.", e);
             }

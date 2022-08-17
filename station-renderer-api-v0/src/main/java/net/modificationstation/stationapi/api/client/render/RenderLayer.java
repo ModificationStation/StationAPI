@@ -347,9 +347,9 @@ extends RenderPhase {
         if (this.translucent) {
             buffer.sortFrom(cameraX, cameraY, cameraZ);
         }
-        buffer.end();
+        BufferBuilder.BuiltBuffer builtBuffer = buffer.end();
         this.startDrawing();
-        BufferRenderer.draw(buffer);
+        BufferRenderer.drawWithShader(builtBuffer);
         this.endDrawing();
     }
 

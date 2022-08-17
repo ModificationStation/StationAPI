@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.packet;
 
 import com.google.gson.Gson;
+import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.network.PacketHandler;
 import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationapi.api.entity.player.PlayerHelper;
@@ -11,6 +12,7 @@ import org.jetbrains.annotations.ApiStatus;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.function.BiConsumer;
 
 /**
  * Universal packet class that can hold any kind of data,
@@ -443,7 +445,9 @@ public class Message extends AbstractPacket {
      */
     @Override
     public void apply(PacketHandler handler) {
-        MessageListenerRegistry.INSTANCE.get(identifier).ifPresent(playerBaseMessageBiConsumer -> playerBaseMessageBiConsumer.accept(PlayerHelper.getPlayerFromPacketHandler(handler), this));
+        BiConsumer<PlayerBase, Message> messageListener = MessageListenerRegistry.INSTANCE.get(identifier);
+        if (messageListener != null)
+            messageListener.accept(PlayerHelper.getPlayerFromPacketHandler(handler), this);
     }
 
     /**

@@ -71,6 +71,13 @@ public final class Identifier implements Comparable<Identifier> {
         }
     }
 
+    public static DataResult<Identifier> validate(String id) {
+        try {
+            return DataResult.success(of(id));
+        } catch (IllegalArgumentException e) {
+            return DataResult.error("Not a valid identifier: " + id + " " + e.getMessage());
+        }
+    }
 
     public @NotNull Identifier prepend(@NotNull String prefix) {
         return of(modID, prefix + id);

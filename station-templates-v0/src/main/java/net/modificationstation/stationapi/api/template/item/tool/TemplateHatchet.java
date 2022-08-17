@@ -5,11 +5,11 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateHatchet extends net.minecraft.item.tool.Hatchet implements ItemTemplate<TemplateHatchet> {
+public class TemplateHatchet extends net.minecraft.item.tool.Hatchet implements ItemTemplate<TemplateHatchet>, ToolTemplate {
     
     public TemplateHatchet(Identifier identifier, ToolMaterial material) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), material);
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted(), material);
+        ItemTemplate.onConstructor(this, identifier);
     }
     
     public TemplateHatchet(int id, ToolMaterial material) {

@@ -8,9 +8,9 @@ moduleDependencies(project,
         'station-items-v0',
         'station-blockitems-v0',
         'station-dimensions-v0',
-        'station-tags-v0',
         'station-flattening-v0',
         'station-templates-v0',
         'station-renderer-api-v0',
-        'station-tools-api-v1'
+        'station-tools-api-v1',
+        'station-recipes-v0'
 )

@@ -6,7 +6,7 @@ import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.client.render.model.ModelBakeRotation;
 import net.modificationstation.stationapi.api.client.render.model.ModelBakeSettings;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.util.json.JsonHelper;
+import net.modificationstation.stationapi.api.util.JsonHelper;
 import net.modificationstation.stationapi.api.util.math.AffineTransformation;
 
 import java.lang.reflect.Type;

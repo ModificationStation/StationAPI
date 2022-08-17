@@ -12,7 +12,7 @@ import net.modificationstation.stationapi.api.client.render.model.MultipartModel
 import net.modificationstation.stationapi.api.client.render.model.OrMultipartModelSelector;
 import net.modificationstation.stationapi.api.client.render.model.SimpleMultipartModelSelector;
 import net.modificationstation.stationapi.api.state.StateManager;
-import net.modificationstation.stationapi.api.util.json.JsonHelper;
+import net.modificationstation.stationapi.api.util.JsonHelper;
 
 import java.lang.reflect.Type;
 import java.util.List;

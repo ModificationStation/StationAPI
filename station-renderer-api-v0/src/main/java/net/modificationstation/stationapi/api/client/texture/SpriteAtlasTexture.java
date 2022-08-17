@@ -4,11 +4,10 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.client.blaze3d.systems.RenderSystem;
-import net.modificationstation.stationapi.api.client.resource.Resource;
 import net.modificationstation.stationapi.api.client.resource.metadata.AnimationResourceMetadata;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.exception.CrashException;
@@ -23,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
-@Environment(value=EnvType.CLIENT)
+@Environment(EnvType.CLIENT)
 public class SpriteAtlasTexture
 extends AbstractTexture
 implements TextureTickListener {
@@ -51,7 +51,7 @@ implements TextureTickListener {
     }
 
     @Override
-    public void load(TexturePack manager) {}
+    public void load(ResourceManager manager) {}
 
     public void upload(Data data) {
         this.spritesToLoad.clear();
@@ -81,7 +81,7 @@ implements TextureTickListener {
         return spriteFinder == null ? spriteFinder = new SpriteFinderImpl(sprites, this) : spriteFinder;
     }
 
-    public Data stitch(TexturePack resourceManager, Stream<Identifier> idStream, Profiler profiler, int mipmapLevel) {
+    public Data stitch(ResourceManager resourceManager, Stream<Identifier> idStream, Profiler profiler, int mipmapLevel) {
         int p;
         profiler.push("preparing");
         Set<Identifier> set = idStream.peek(identifier -> {
@@ -130,38 +130,45 @@ implements TextureTickListener {
         return new Data(set, textureStitcher.getWidth(), textureStitcher.getHeight(), p, list);
     }
 
-    private Collection<Sprite.Info> loadSprites(TexturePack resourceManager, Set<Identifier> ids) {
-        ArrayList<CompletableFuture<Void>> list = new ArrayList<>();
-        ConcurrentLinkedQueue<Sprite.Info> concurrentLinkedQueue = new ConcurrentLinkedQueue<>();
+    private Collection<Sprite.Info> loadSprites(ResourceManager resourceManager, Set<Identifier> ids) {
+        ArrayList<CompletableFuture<Void>> list = Lists.newArrayList();
+        ConcurrentLinkedQueue<Sprite.Info> queue = new ConcurrentLinkedQueue<Sprite.Info>();
         for (Identifier identifier : ids) {
             if (MissingSprite.getMissingSpriteId().equals(identifier)) continue;
             list.add(CompletableFuture.runAsync(() -> {
-                Sprite.Info info3;
+                AnimationResourceMetadata animationResourceMetadata;
+                BufferedImage image;
                 Identifier identifier2 = this.getTexturePath(identifier);
-                try (Resource resource = Resource.of(resourceManager.getResourceAsStream(ResourceManager.ASSETS.toPath(identifier2)))){
-                    BufferedImage image = ImageIO.read(resource.getInputStream());
-                    AnimationResourceMetadata animationResourceMetadata = resource.getMetadata(AnimationResourceMetadata.READER);
-                    if (animationResourceMetadata == null)
-                        animationResourceMetadata = AnimationResourceMetadata.EMPTY;
-                    Pair<Integer, Integer> pair = animationResourceMetadata.ensureImageSize(image.getWidth(), image.getHeight());
-                    info3 = new Sprite.Info(identifier, pair.getFirst(), pair.getSecond(), animationResourceMetadata);
-                }
-                catch (RuntimeException runtimeException) {
-                    LOGGER.error("Unable to parse metadata from {} : {}", identifier2, runtimeException);
+                Optional<Resource> optional = resourceManager.getResource(identifier2);
+                if (optional.isEmpty()) {
+                    LOGGER.error("Using missing texture, file {} not found", identifier2);
                     return;
+                }
+                Resource resource = optional.get();
+                try (InputStream inputStream = resource.getInputStream();){
+                    image = ImageIO.read(inputStream);
                 }
                 catch (IOException iOException) {
                     LOGGER.error("Using missing texture, unable to load {} : {}", identifier2, iOException);
                     return;
                 }
-                concurrentLinkedQueue.add(info3);
+                try {
+                    animationResourceMetadata = resource.getMetadata().decode(AnimationResourceMetadata.READER).orElse(AnimationResourceMetadata.EMPTY);
+                }
+                catch (Exception exception) {
+                    LOGGER.error("Unable to parse metadata from {} : {}", identifier2, exception);
+                    return;
+                }
+                Pair<Integer, Integer> pair = animationResourceMetadata.ensureImageSize(image.getWidth(), image.getHeight());
+                Sprite.Info info = new Sprite.Info(identifier, pair.getFirst(), pair.getSecond(), animationResourceMetadata);
+                queue.add(info);
             }, Util.getMainWorkerExecutor()));
         }
         CompletableFuture.allOf(list.toArray(new CompletableFuture[0])).join();
-        return concurrentLinkedQueue;
+        return queue;
     }
 
-    private List<Sprite> loadSprites(TexturePack resourceManager, TextureStitcher textureStitcher, int maxLevel) {
+    private List<Sprite> loadSprites(ResourceManager resourceManager, TextureStitcher textureStitcher, int maxLevel) {
         ConcurrentLinkedQueue<Sprite> concurrentLinkedQueue = new ConcurrentLinkedQueue<>();
         List<CompletableFuture<Void>> list = new ArrayList<>();
         textureStitcher.getStitchedSprites((arg_0, arg_1, arg_2, arg_3, arg_4) -> {
@@ -182,16 +189,14 @@ implements TextureTickListener {
     }
 
     @Nullable
-    private Sprite loadSprite(TexturePack container, Sprite.Info info, int atlasWidth, int atlasHeight, int maxLevel, int x, int y) {
+    private Sprite loadSprite(ResourceManager container, Sprite.Info info, int atlasWidth, int atlasHeight, int maxLevel, int x, int y) {
         Identifier identifier = this.getTexturePath(info.getId());
-        try (Resource resource = Resource.of(container.getResourceAsStream(ResourceManager.ASSETS.toPath(identifier)))){
-            return new Sprite(this, info, maxLevel, atlasWidth, atlasHeight, x, y, NativeImage.read(resource.getInputStream()));
-        }
-        catch (RuntimeException runtimeException) {
+        try (InputStream inputStream = container.open(identifier)){
+            return new Sprite(this, info, maxLevel, atlasWidth, atlasHeight, x, y, NativeImage.read(inputStream));
+        } catch (RuntimeException runtimeException) {
             LOGGER.error("Unable to parse metadata from {}", identifier, runtimeException);
             return null;
-        }
-        catch (IOException iOException) {
+        } catch (IOException iOException) {
             LOGGER.error("Using missing texture, unable to load {}", identifier, iOException);
             return null;
         }
@@ -235,7 +240,6 @@ implements TextureTickListener {
         this.setFilter(false, data.maxLevel > 0);
     }
 
-    @SuppressWarnings("ClassCanBeRecord")
     @Environment(EnvType.CLIENT)
     public static class Data {
         final Set<Identifier> spriteIds;

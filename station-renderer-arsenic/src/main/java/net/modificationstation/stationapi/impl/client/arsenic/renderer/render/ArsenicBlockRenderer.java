@@ -1048,7 +1048,7 @@ public final class ArsenicBlockRenderer {
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         Tessellator t = Tessellator.INSTANCE;
 
-        int var6 = (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) && Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().getAnimation() != null ? StationRenderAPI.getBlockColours().getColor(((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z), blockRendererAccessor.getBlockView(), new TilePos(x, y, z), -1) : block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
+        int var6 = (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) && Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().getAnimation() != null ? StationRenderAPI.getBlockColors().getColor(((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z), blockRendererAccessor.getBlockView(), new TilePos(x, y, z), -1) : block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
         float var7 = (float)((var6 >> 16) & 255) / 255.0F;
         float var8 = (float)((var6 >> 8) & 255) / 255.0F;
         float var9 = (float)(var6 & 255) / 255.0F;

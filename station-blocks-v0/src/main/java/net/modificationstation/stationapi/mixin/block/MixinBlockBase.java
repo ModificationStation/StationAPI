@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.registry.serial.SerialIDHolder;
+import net.modificationstation.stationapi.api.registry.serial.LegacyIDHolder;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockBase.class)
-public abstract class MixinBlockBase implements SerialIDHolder {
+public abstract class MixinBlockBase implements LegacyIDHolder {
 
     @Shadow @Final public int id;
 
@@ -52,7 +52,7 @@ public abstract class MixinBlockBase implements SerialIDHolder {
 
     @Override
     @Unique
-    public int getSerialID() {
+    public int getLegacyID() {
         return id;
     }
 

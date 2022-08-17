@@ -10,13 +10,18 @@ import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtl
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.Util;
 
 import java.util.function.Function;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = CustomAtlasProvider.class)
-public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider, ItemConvertible {
+public interface ItemTemplate<T extends ItemBase> extends
+        CustomAtlasProvider,
+        ItemConvertible
+{
 
     default T setTranslationKey(ModID modID, String translationKey) {
         //noinspection unchecked
@@ -51,5 +56,9 @@ public interface ItemTemplate<T extends ItemBase> extends CustomAtlasProvider, I
     @Override
     default ItemBase asItem() {
         return Util.assertImpl();
+    }
+
+    static void onConstructor(ItemBase item, Identifier id) {
+        Registry.register(ItemRegistry.INSTANCE, id, item);
     }
 }

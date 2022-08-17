@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateRedstoneOre extends net.minecraft.block.RedstoneOre implements BlockTemplate<TemplateRedstoneOre> {
     
     public TemplateRedstoneOre(Identifier identifier, int j, boolean isLit) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), j, isLit);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), j, isLit);
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplateRedstoneOre(int i, int j, boolean isLit) {

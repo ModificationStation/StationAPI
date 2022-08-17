@@ -1,18 +1,18 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
 import net.minecraft.inventory.Crafting;
+import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.ShapedRecipe;
 import net.modificationstation.stationapi.api.recipe.StationRecipe;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.tags.TagEntry;
-import net.modificationstation.stationapi.api.tags.TagRegistry;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.registry.RegistryEntryList;
+import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.impl.recipe.tag.ShapedTagRecipeAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.List;
 import java.util.Random;
 
 @Mixin(ShapedRecipe.class)
@@ -63,7 +63,8 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe
                             return false;
                         }
                     }
-                    else if (!TagRegistry.INSTANCE.tagMatches((Identifier) var9, var10)) {
+                    else //noinspection unchecked
+                        if (!ItemRegistry.INSTANCE.getEntry(ItemRegistry.INSTANCE.getKey(var10.getType()).orElseThrow()).orElseThrow().isIn((TagKey<ItemBase>) var9)) {
                         return false;
                     }
                 }
@@ -83,9 +84,11 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe
 
                 Object entry = taggedIngredients[localId];
 
-                if (entry instanceof Identifier identifier) {
-                    List<TagEntry> tagEntries = TagRegistry.INSTANCE.get(identifier).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + identifier + "\" has no entry in the tag registry!"));
-                    itemInstances[id] = tagEntries.get(RANDOM.nextInt(tagEntries.size())).displayItem;
+                if (entry instanceof TagKey<?> tag) {
+                    //noinspection unchecked
+                    TagKey<ItemBase> itemTag = (TagKey<ItemBase>) tag;
+                    RegistryEntryList.Named<ItemBase> tagEntries = ItemRegistry.INSTANCE.getEntryList(itemTag).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + tag.id() + "\" has no entry in the tag registry!"));
+                    itemInstances[id] = new ItemInstance(tagEntries.getRandom(RANDOM).orElseThrow().value());
                 }
                 else {
                     itemInstances[id] = (ItemInstance) entry;

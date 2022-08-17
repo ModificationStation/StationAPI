@@ -8,7 +8,7 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.event.item.ItemInstanceEvent;
+import net.modificationstation.stationapi.api.event.item.ItemStackEvent;
 import net.modificationstation.stationapi.api.item.nbt.HasItemEntity;
 import net.modificationstation.stationapi.api.item.nbt.ItemEntity;
 import net.modificationstation.stationapi.api.item.nbt.ItemWithEntity;
@@ -90,8 +90,8 @@ public class MixinItemInstance implements HasItemEntity, StationNBTSetter, Stati
     @Inject(method = "onCrafted(Lnet/minecraft/level/Level;Lnet/minecraft/entity/player/PlayerBase;)V", at = @At("RETURN"))
     private void onCreation(Level arg, PlayerBase arg1, CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(
-                ItemInstanceEvent.Crafted.builder()
-                        .itemInstance((ItemInstance) (Object) this)
+                ItemStackEvent.Crafted.builder()
+                        .itemStack((ItemInstance) (Object) this)
                         .level(arg)
                         .player(arg1)
                         .build()

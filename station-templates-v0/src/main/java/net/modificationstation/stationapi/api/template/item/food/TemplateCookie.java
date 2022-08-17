@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplateCookie extends net.minecraft.item.food.Cookie implements ItemTemplate<TemplateCookie> {
     
     public TemplateCookie(Identifier identifier, int healAmount, boolean isWolfFood, int maxStackSize) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), healAmount, isWolfFood, maxStackSize);
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted(), healAmount, isWolfFood, maxStackSize);
+        ItemTemplate.onConstructor(this, identifier);
     }
     
     public TemplateCookie(int id, int healAmount, boolean isWolfFood, int maxStackSize) {

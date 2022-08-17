@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.api.registry;
 
 import net.minecraft.level.dimension.Dimension;
-import net.modificationstation.stationapi.api.registry.serial.SerialIDHolder;
+import net.modificationstation.stationapi.api.registry.serial.LegacyIDHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
-public class DimensionContainer<T extends Dimension> implements SerialIDHolder {
+public class DimensionContainer<T extends Dimension> implements LegacyIDHolder {
 
     @NotNull
     public final Supplier<@NotNull T> factory;
@@ -37,7 +37,7 @@ public class DimensionContainer<T extends Dimension> implements SerialIDHolder {
     }
 
     @Override
-    public int getSerialID() {
+    public int getLegacyID() {
         return serialID;
     }
 }

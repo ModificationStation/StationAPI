@@ -6,8 +6,8 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateEgg extends net.minecraft.item.Egg implements ItemTemplate<TemplateEgg> {
 
     public TemplateEgg(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted());
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted());
+        ItemTemplate.onConstructor(this, identifier);
     }
 
     public TemplateEgg(int i) {

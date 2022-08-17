@@ -155,9 +155,9 @@ public abstract class MixinWorldRenderer {
             shader.unbind();
         }
 
-        format.endDrawing();
+        format.clearState();
         VertexBuffer.unbind();
-        VertexBuffer.unbindVertexArray();
+//        VertexBuffer.unbindVertexArray();
         layer.endDrawing();
         GL11.glEnable(2929);
     }
@@ -217,7 +217,7 @@ public abstract class MixinWorldRenderer {
         Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer().renderDamage(state, new TilePos(j, k, l), level, damageMtrx, vertexConsumer);
         damageMtrx.pop();
         bufferBuilders.getEffectVertexConsumers().draw();
-        VertexBuffer.unbindVertexArray();
+//        VertexBuffer.unbindVertexArray();
         VertexBuffer.unbind();
         GL11.glEnable(2929);
     }

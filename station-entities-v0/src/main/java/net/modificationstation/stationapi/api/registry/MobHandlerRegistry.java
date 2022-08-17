@@ -1,23 +1,19 @@
 package net.modificationstation.stationapi.api.registry;
 
+import com.mojang.serialization.Lifecycle;
 import net.minecraft.entity.Living;
 import net.minecraft.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-public final class MobHandlerRegistry extends Registry<Function<Level, Living>> {
+public final class MobHandlerRegistry extends SimpleRegistry<Function<Level, Living>> {
 
-    public static final MobHandlerRegistry INSTANCE = new MobHandlerRegistry(Identifier.of(MODID, "mob_handlers"));
+    public static final RegistryKey<Registry<Function<Level, Living>>> KEY = RegistryKey.ofRegistry(MODID.id("mob_handlers"));
+    public static final MobHandlerRegistry INSTANCE = Registry.create(KEY, new MobHandlerRegistry(), Lifecycle.experimental());
 
-    /**
-     * Default registry constructor.
-     *
-     * @param identifier registry's identifier.
-     */
-    private MobHandlerRegistry(@NotNull Identifier identifier) {
-        super(identifier);
+    private MobHandlerRegistry() {
+        super(KEY, Lifecycle.experimental(), null);
     }
 }

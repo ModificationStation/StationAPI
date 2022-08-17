@@ -10,14 +10,15 @@ import net.modificationstation.stationapi.api.event.registry.MessageListenerRegi
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
+import net.modificationstation.stationapi.api.registry.Registry;
 
 public class MessageListenerListener {
 
     @EventListener
     public void registerMessageListeners(MessageListenerRegistryEvent event) {
         MessageListenerRegistry registry = event.registry;
-        registry.register(Identifier.of(SLTest.MODID, "give_me_diamonds"), this::handleGiveMeDiamonds);
-        registry.register(Identifier.of(SLTest.MODID, "send_an_object"), this::handleSendCoords);
+        Registry.register(registry, Identifier.of(SLTest.MODID, "give_me_diamonds"), this::handleGiveMeDiamonds);
+        Registry.register(registry, Identifier.of(SLTest.MODID, "send_an_object"), this::handleSendCoords);
     }
 
     public void handleGiveMeDiamonds(PlayerBase playerBase, Message message) {

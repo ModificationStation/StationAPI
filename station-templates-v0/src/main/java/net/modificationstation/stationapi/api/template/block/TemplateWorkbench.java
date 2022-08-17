@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateWorkbench extends net.minecraft.block.Workbench implements BlockTemplate<TemplateWorkbench> {
     
     public TemplateWorkbench(Identifier identifier) {
-        this(BlockRegistry.INSTANCE.getNextSerialID());
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId());
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplateWorkbench(int i) {

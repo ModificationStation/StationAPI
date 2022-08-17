@@ -7,7 +7,6 @@ moduleDependencies(project,
         'station-blocks-v0',
         'station-networking-v0',
         'station-dimensions-v0',
-        'station-tools-api-v1',
         'station-items-v0',
 		'station-lifecycle-events-v0',
 		'station-level-events-v0'

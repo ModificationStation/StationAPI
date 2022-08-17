@@ -3,22 +3,22 @@ package net.modificationstation.stationapi.api.client.render.model;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.colour.block.BlockColors;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.resource.SinglePreparationResourceReloader;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
-import net.modificationstation.stationapi.impl.client.resource.SinglePreparationResourceReloadListener;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public class BakedModelManager extends SinglePreparationResourceReloadListener<ModelLoader> implements AutoCloseable {
+public class BakedModelManager extends SinglePreparationResourceReloader<ModelLoader> implements AutoCloseable {
    private Map<Identifier, BakedModel> models;
    @Nullable
    private SpriteAtlasManager atlasManager;
@@ -49,7 +49,7 @@ public class BakedModelManager extends SinglePreparationResourceReloadListener<M
    }
 
    @Override
-   public ModelLoader prepare(TexturePack resourceManager, Profiler profiler) {
+   public ModelLoader prepare(ResourceManager resourceManager, Profiler profiler) {
       profiler.startTick();
       ModelLoader modelLoader = new ModelLoader(resourceManager, this.colourMap, profiler, this.mipmap);
       profiler.endTick();
@@ -57,7 +57,7 @@ public class BakedModelManager extends SinglePreparationResourceReloadListener<M
    }
 
    @Override
-   public void apply(ModelLoader modelLoader, TexturePack resourceManager, Profiler profiler) {
+   public void apply(ModelLoader modelLoader, ResourceManager resourceManager, Profiler profiler) {
       profiler.startTick();
       profiler.push("upload");
       if (this.atlasManager != null) {

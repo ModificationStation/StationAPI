@@ -13,6 +13,8 @@ import java.util.Objects;
 
 public final class ModID implements Comparable<ModID> {
 
+    private static final boolean CHECK_MISSING_MODS = false;
+
     @NotNull
     private static final Cache<@NotNull String, @NotNull ModID> CACHE = Caffeine.newBuilder().softValues().build();
 
@@ -36,7 +38,7 @@ public final class ModID implements Comparable<ModID> {
     }
 
     private ModID(@NotNull String modid) {
-        if (!FabricLoader.getInstance().isModLoaded(modid))
+        if (CHECK_MISSING_MODS && !FabricLoader.getInstance().isModLoaded(modid))
             throw new MissingModException(modid);
         this.modid = modid;
         hashCode = toString().hashCode();

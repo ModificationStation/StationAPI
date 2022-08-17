@@ -55,11 +55,11 @@ public class VanillaUnbakedModel implements UnbakedModel {
         AtomicReference<Sprite> particle = new AtomicReference<>();
         particle.set(textureGetter.apply(SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, MissingSprite.getMissingSpriteId())));
 
-        OptionalInt optionalId = ItemRegistry.INSTANCE.getSerialID(itemId);
+        OptionalInt optionalId = ItemRegistry.INSTANCE.getLegacyId(itemId);
         if (optionalId.isPresent()) {
             int id = optionalId.getAsInt();
             if (id < BlockRegistry.INSTANCE.getSize()) {
-                return BlockRegistry.INSTANCE.get(id).map(block -> {
+                return BlockRegistry.INSTANCE.getByLegacyId(id).map(block -> {
                     if (block.getRenderType() == 0) {
                         block.method_1605();
                         ExpandableAtlas atlas = Atlases.getTerrain();

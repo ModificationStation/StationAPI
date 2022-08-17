@@ -6,8 +6,8 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateFlintAndSteel extends net.minecraft.item.FlintAndSteel implements ItemTemplate<TemplateFlintAndSteel> {
 
     public TemplateFlintAndSteel(Identifier identifier) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted());
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted());
+        ItemTemplate.onConstructor(this, identifier);
     }
 
     public TemplateFlintAndSteel(int i) {

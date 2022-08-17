@@ -6,7 +6,7 @@ import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.event.level.LevelPropertiesEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.LevelSerialRegistry;
+import net.modificationstation.stationapi.api.registry.legacy.LevelLegacyRegistry;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
@@ -17,7 +17,7 @@ public class LevelRegistryRemapper {
     @EventListener(priority = ListenerPriority.HIGH)
     private static void saveProperties(LevelPropertiesEvent.Save event) {
         CompoundTag registriesTag = new CompoundTag();
-        LevelSerialRegistry.saveAll(registriesTag);
+        LevelLegacyRegistry.saveAll(registriesTag);
         event.tag.put(of(MODID, "level_serial_registries").toString(), registriesTag);
     }
 
@@ -25,6 +25,6 @@ public class LevelRegistryRemapper {
     private static void loadProperties(LevelPropertiesEvent.LoadOnLevelInit event) {
         String lsr = of(MODID, "level_serial_registries").toString();
         if (event.tag.containsKey(lsr))
-            LevelSerialRegistry.loadAll(event.tag.getCompoundTag(lsr));
+            LevelLegacyRegistry.loadAll(event.tag.getCompoundTag(lsr));
     }
 }

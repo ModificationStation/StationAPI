@@ -6,7 +6,7 @@ import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.util.json.JsonHelper;
+import net.modificationstation.stationapi.api.util.JsonHelper;
 
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;

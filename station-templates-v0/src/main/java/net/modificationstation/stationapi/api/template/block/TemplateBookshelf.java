@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateBookshelf extends net.minecraft.block.Bookshelf implements BlockTemplate<TemplateBookshelf> {
 
     public TemplateBookshelf(Identifier identifier, int texture) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), texture);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), texture);
+        BlockTemplate.onConstructor(this, identifier);
     }
 
     public TemplateBookshelf(int id, int texture) {

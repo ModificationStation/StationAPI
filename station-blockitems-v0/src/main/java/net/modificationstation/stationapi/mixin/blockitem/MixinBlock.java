@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.mixin.blockitem;
 import net.minecraft.item.Block;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,6 +20,6 @@ public class MixinBlock {
             at = @At("RETURN")
     )
     private void register(int par1, CallbackInfo ci) {
-        ItemRegistry.INSTANCE.register(BlockRegistry.INSTANCE.getIdentifier(blockId).orElseThrow(), (Block) (Object) this);
+        Registry.register(ItemRegistry.INSTANCE, BlockRegistry.INSTANCE.getIdByLegacyId(blockId).orElseThrow(), (Block) (Object) this);
     }
 }

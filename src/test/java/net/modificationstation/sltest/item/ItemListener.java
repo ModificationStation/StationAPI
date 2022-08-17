@@ -1,14 +1,11 @@
 package net.modificationstation.sltest.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.item.ItemInstance;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.sltest.block.Blocks;
 import net.modificationstation.sltest.block.VariationBlock;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.item.tool.ToolMaterialFactory;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.tags.TagRegistry;
 import net.modificationstation.stationapi.api.template.item.BlockStateItem;
 import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
 import net.modificationstation.stationapi.api.template.item.tool.TemplatePickaxe;
@@ -29,9 +26,6 @@ public class ItemListener {
         variationBlockIdle = new BlockStateItem(MODID.id("variation_block_idle"), Blocks.VARIATION_BLOCK.get().getDefaultState()).setTranslationKey(MODID, "variationBlockIdle");
         variationBlockPassive = new BlockStateItem(MODID.id("variation_block_passive"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.PASSIVE)).setTranslationKey(MODID, "variationBlockPassive");
         variationBlockActive = new BlockStateItem(MODID.id("variation_block_active"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.ACTIVE)).setTranslationKey(MODID, "variationBlockActive");
-        TagRegistry.INSTANCE.register(Identifier.of("blocks/ores/iron"), new ItemInstance(ironOre), e -> ironOre.id == e.itemId);
-
-        TagRegistry.INSTANCE.register(Identifier.of("items/tools/pickaxes/testpickaxe"), new ItemInstance(testPickaxe), (e) -> e.itemId == testPickaxe.id);
     }
 
     public static TemplateItemBase testItem;

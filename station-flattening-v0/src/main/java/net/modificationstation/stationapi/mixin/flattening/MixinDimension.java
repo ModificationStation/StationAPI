@@ -33,7 +33,7 @@ public class MixinDimension implements StationDimension {
 	))
 	private void onDimensionInit(Level level, CallbackInfo info) {
 		StationLevelProperties properties = (StationLevelProperties) level.getProperties();
-		Optional<Identifier> optional = DimensionRegistry.INSTANCE.getIdentifier(this.id);
+		Optional<Identifier> optional = DimensionRegistry.INSTANCE.getIdByLegacyId(this.id);
 		if (optional.isPresent()) {
 			Identifier id = optional.get();
 			CompoundTag tag = properties.getDimensionTag(id);

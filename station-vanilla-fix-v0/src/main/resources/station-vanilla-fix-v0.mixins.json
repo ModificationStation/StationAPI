@@ -4,16 +4,21 @@
   "package": "net.modificationstation.stationapi.mixin.vanillafix",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinBlockBase",
-    "MixinDyeRecipes",
-    "MixinFire",
-    "MixinRecipeRegistry",
-    "MixinShears",
-    "MixinSheep"
+    "block.leaves.MixinBlockBase",
+    "block.sapling.MixinBlockBase",
+    "block.sapling.MixinTileEntityFurnace",
+    "block.wool.MixinBlockBase",
+    "block.wool.MixinDyeRecipes",
+    "block.wool.MixinFire",
+    "block.wool.MixinRecipeRegistry",
+    "block.wool.MixinShears",
+    "block.wool.MixinSheep"
   ],
   "server": [
   ],
   "client": [
+    "block.sapling.client.MixinSession",
+    "block.wool.client.MixinSession"
   ],
   "injectors": {
     "defaultRequire": 1

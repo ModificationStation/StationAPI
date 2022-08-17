@@ -196,8 +196,7 @@ public abstract class Mixinclass_66 implements ChunkBuilderVBO {
                 }
             }
             if (bl3) {
-                builder.end();
-                buffers.get(renderLayer).upload(builder);
+                buffers.get(renderLayer).upload(builder.end());
                 matrices.pop();
 //                layers.add(scheduleUpload(blockBuffers.get(renderLayer), buffers.get(renderLayer)));
 

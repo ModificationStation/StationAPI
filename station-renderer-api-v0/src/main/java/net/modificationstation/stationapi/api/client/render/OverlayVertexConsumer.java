@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.math.*;
 
 @Environment(EnvType.CLIENT)
-public class OverlayVertexConsumer extends FixedColourVertexConsumer {
+public class OverlayVertexConsumer extends FixedColorVertexConsumer {
     private final VertexConsumer vertexConsumer;
     private final Matrix4f textureMatrix;
     private final Matrix3f normalMatrix;

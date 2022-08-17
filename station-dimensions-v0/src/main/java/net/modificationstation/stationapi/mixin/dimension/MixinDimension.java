@@ -19,6 +19,6 @@ public class MixinDimension {
             cancellable = true
     )
     private static void getDimension(int id, CallbackInfoReturnable<Dimension> cir) {
-        cir.setReturnValue(DimensionRegistry.INSTANCE.get(id).map(dimensionFactory -> dimensionFactory.factory.get()).orElse(null));
+        cir.setReturnValue(DimensionRegistry.INSTANCE.getByLegacyId(id).map(dimensionFactory -> dimensionFactory.factory.get()).orElse(null));
     }
 }

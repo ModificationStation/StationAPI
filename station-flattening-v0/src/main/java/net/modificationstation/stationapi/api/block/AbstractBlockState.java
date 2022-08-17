@@ -7,21 +7,28 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColour;
+import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.registry.RegistryEntryList;
 import net.modificationstation.stationapi.api.state.State;
 import net.modificationstation.stationapi.api.state.property.Property;
+import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
-      private final int luminance;
-//      private final boolean hasSidedTransparency;
-      private final boolean isAir;
-      private final Material material;
-      private final MaterialColour materialColor;
-      private final float hardness;
-      private final boolean toolRequired;
-      private final boolean opaque;
+    private final int luminance;
+    //      private final boolean hasSidedTransparency;
+    private final boolean isAir;
+    private final Material material;
+    private final MaterialColour materialColor;
+    private final float hardness;
+    private final boolean toolRequired;
+    private final boolean opaque;
 //      private final AbstractBlock.ContextPredicate solidBlockPredicate;
 //      private final AbstractBlock.ContextPredicate suffocationPredicate;
 //      private final AbstractBlock.ContextPredicate blockVisionPredicate;
@@ -30,22 +37,22 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 //      @Nullable
 //      protected AbstractBlock.AbstractBlockState.ShapeCache shapeCache;
 
-      protected AbstractBlockState(BlockBase block, ImmutableMap<Property<?>, Comparable<?>> propertyMap, MapCodec<BlockState> mapCodec) {
-         super(block, propertyMap, mapCodec);
-         this.luminance = BlockBase.EMITTANCE[block.id];
+    protected AbstractBlockState(BlockBase block, ImmutableMap<Property<?>, Comparable<?>> propertyMap, MapCodec<BlockState> mapCodec) {
+        super(block, propertyMap, mapCodec);
+        this.luminance = BlockBase.EMITTANCE[block.id];
 //         this.hasSidedTransparency = block.hasSidedTransparency(this.asBlockState());
-         this.isAir = block.material == Material.AIR;
-         this.material = block.material;
-         this.materialColor = block.material.materialColour;
-         this.hardness = block.getHardness();
-         this.toolRequired = !block.material.doesRequireTool();
-         this.opaque = block.isFullOpaque();
+        this.isAir = block.material == Material.AIR;
+        this.material = block.material;
+        this.materialColor = block.material.materialColour;
+        this.hardness = block.getHardness();
+        this.toolRequired = !block.material.doesRequireTool();
+        this.opaque = block.isFullOpaque();
 //         this.solidBlockPredicate = settings.solidBlockPredicate;
 //         this.suffocationPredicate = settings.suffocationPredicate;
 //         this.blockVisionPredicate = settings.blockVisionPredicate;
 //         this.postProcessPredicate = settings.postProcessPredicate;
 //         this.emissiveLightingPredicate = settings.emissiveLightingPredicate;
-      }
+    }
 
 //      public void initShapeCache() {
 //         if (!this.getBlock().hasDynamicBounds()) {
@@ -54,13 +61,13 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 //
 //      }
 
-      public BlockBase getBlock() {
-         return this.owner;
-      }
+    public BlockBase getBlock() {
+        return this.owner;
+    }
 
-      public Material getMaterial() {
-         return this.material;
-      }
+    public Material getMaterial() {
+        return this.material;
+    }
 
 //      public boolean allowsSpawning(BlockView world, BlockPos pos, EntityType<?> type) {
 //         return this.getBlock().settings.allowsSpawningPredicate.test(this.asBlockState(), world, pos, type);
@@ -90,20 +97,20 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 //         return this.hasSidedTransparency;
 //      }
 
-      /**
-       * Returns the light level emitted by this block state.
-       */
-      public int getLuminance() {
-         return this.luminance;
-      }
+    /**
+     * Returns the light level emitted by this block state.
+     */
+    public int getLuminance() {
+        return this.luminance;
+    }
 
-      public boolean isAir() {
-         return this.isAir;
-      }
+    public boolean isAir() {
+        return this.isAir;
+    }
 
-      public MaterialColour getTopMaterialColor(BlockView world, TilePos pos) {
-         return this.materialColor;
-      }
+    public MaterialColour getTopMaterialColor(BlockView world, TilePos pos) {
+        return this.materialColor;
+    }
 
 //      public BlockState rotate(BlockRotation rotation) {
 //         return this.getBlock().rotate(this.asBlockState(), rotation);
@@ -147,14 +154,14 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 //         return this.getBlock().getComparatorOutput(this.asBlockState(), world, pos);
 //      }
 
-      public float getHardness(BlockView world, TilePos pos) {
-         return this.hardness;
-      }
+    public float getHardness(BlockView world, TilePos pos) {
+        return ((HardnessWithBlockState) getBlock()).getHardness(asBlockState(), world, pos);
+    }
 
-//      public float calcBlockBreakingDelta(PlayerEntity player, BlockView world, BlockPos pos) {
-//         return this.getBlock().calcBlockBreakingDelta(this.asBlockState(), player, world, pos);
-//      }
-//
+    public float calcBlockBreakingDelta(PlayerBase player, BlockView world, TilePos pos) {
+        return ((HardnessWithBlockState) getBlock()).calcBlockBreakingDelta(asBlockState(), player, world, pos);
+    }
+
 //      public int getStrongRedstonePower(BlockView world, BlockPos pos, Direction direction) {
 //         return this.getBlock().getStrongRedstonePower(this.asBlockState(), world, pos, direction);
 //      }
@@ -172,9 +179,9 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 //         }
 //      }
 
-      public boolean isOpaque() {
-         return this.opaque;
-      }
+    public boolean isOpaque() {
+        return this.opaque;
+    }
 
 //      @Environment(EnvType.CLIENT)
 //      public boolean isSideInvisible(BlockState state, Direction direction) {
@@ -336,15 +343,23 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 //      public NamedScreenHandlerFactory createScreenHandlerFactory(World world, BlockPos pos) {
 //         return this.getBlock().createScreenHandlerFactory(this.asBlockState(), world, pos);
 //      }
-//
-//      public boolean isIn(Tag<BlockBase> tag) {
-//         return this.getBlock().isIn(tag);
-//      }
-//
-//      public boolean method_27851(Tag<BlockBase> tag, Predicate<AbstractBlock.AbstractBlockState> predicate) {
-//         return this.getBlock().isIn(tag) && predicate.test(this);
-//      }
-//
+
+    public boolean isIn(TagKey<BlockBase> tag) {
+        return BlockRegistry.INSTANCE.getEntry(BlockRegistry.INSTANCE.getKey(getBlock()).orElseThrow()).orElseThrow().isIn(tag);
+    }
+
+    public boolean isIn(TagKey<BlockBase> tag, Predicate<AbstractBlockState> predicate) {
+        return this.isIn(tag) && predicate.test(this);
+    }
+
+    public boolean isIn(RegistryEntryList<BlockBase> blocks) {
+        return blocks.contains(BlockRegistry.INSTANCE.getEntry(BlockRegistry.INSTANCE.getKey(getBlock()).orElseThrow()).orElseThrow());
+    }
+
+    public Stream<TagKey<BlockBase>> streamTags() {
+        return BlockRegistry.INSTANCE.getEntry(BlockRegistry.INSTANCE.getKey(getBlock()).orElseThrow()).orElseThrow().streamTags();
+    }
+
 //      public boolean isOf(BlockBase block) {
 //         return this.getBlock().is(block);
 //      }
@@ -353,14 +368,14 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 //         return this.getBlock().getFluidState(this.asBlockState());
 //      }
 
-      public boolean hasRandomTicks() {
-          return BlockBase.TICKS_RANDOMLY[getBlock().id];
-      }
+    public boolean hasRandomTicks() {
+        return BlockBase.TICKS_RANDOMLY[getBlock().id];
+    }
 
-      @Environment(EnvType.CLIENT)
-      public long getRenderingSeed(TilePos pos) {
-          return MathHelper.hashCode(pos.x, pos.y, pos.z);
-      }
+    @Environment(EnvType.CLIENT)
+    public long getRenderingSeed(TilePos pos) {
+        return MathHelper.hashCode(pos.x, pos.y, pos.z);
+    }
 //
 //      public BlockSoundGroup getSoundGroup() {
 //         return this.getBlock().getSoundGroup(this.asBlockState());
@@ -382,9 +397,9 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 //         return this.shapeCache != null ? this.shapeCache.isFullCube : BlockBase.isShapeFullCube(this.getCollisionShape(world, pos));
 //      }
 
-      protected abstract BlockState asBlockState();
+    protected abstract BlockState asBlockState();
 
-      public boolean isToolRequired() {
-         return this.toolRequired;
-      }
+    public boolean isToolRequired() {
+        return this.toolRequired;
+    }
 }

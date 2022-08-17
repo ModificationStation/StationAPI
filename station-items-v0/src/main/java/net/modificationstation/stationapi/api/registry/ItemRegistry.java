@@ -1,18 +1,22 @@
 package net.modificationstation.stationapi.api.registry;
 
+import com.mojang.serialization.Lifecycle;
 import net.minecraft.item.ItemBase;
+import net.modificationstation.stationapi.api.registry.legacy.AbstractArrayBackedLegacyRegistry;
+import net.modificationstation.stationapi.api.registry.serial.LegacyIDHolder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-public final class ItemRegistry extends AbstractArrayBackedRegistry<ItemBase> {
+public final class ItemRegistry extends AbstractArrayBackedLegacyRegistry<ItemBase> {
 
-    public static final ItemRegistry INSTANCE = new ItemRegistry(Identifier.of(MODID, "items"));
+    public static final RegistryKey<Registry<ItemBase>> KEY = RegistryKey.ofRegistry(MODID.id("items"));
+    public static final ItemRegistry INSTANCE = Registry.create(KEY, new ItemRegistry(), Lifecycle.experimental());
 
-    private ItemRegistry(@NotNull Identifier identifier) {
-        super(identifier, true);
+    private ItemRegistry() {
+        super(KEY, true);
     }
 
     @Override
@@ -21,7 +25,12 @@ public final class ItemRegistry extends AbstractArrayBackedRegistry<ItemBase> {
     }
 
     @Override
-    public int getSerialIDShift() {
+    public int getLegacyId(@NotNull ItemBase value) {
+        return ((LegacyIDHolder) value).getLegacyID();
+    }
+
+    @Override
+    public int getLegacyIdShift() {
         return BlockRegistry.INSTANCE.getSize();
     }
 

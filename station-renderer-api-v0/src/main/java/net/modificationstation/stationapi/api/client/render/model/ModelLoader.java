@@ -11,9 +11,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.resource.TexturePack;
 import net.minecraft.client.texture.TextureManager;
-import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
@@ -25,7 +23,6 @@ import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbak
 import net.modificationstation.stationapi.api.client.render.model.json.ModelVariantMap;
 import net.modificationstation.stationapi.api.client.render.model.json.MultipartModelComponent;
 import net.modificationstation.stationapi.api.client.render.model.json.MultipartUnbakedModel;
-import net.modificationstation.stationapi.api.client.resource.Resource;
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
@@ -45,7 +42,6 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
@@ -78,7 +74,7 @@ public class ModelLoader {
     public static final JsonUnbakedModel BLOCK_ENTITY_MARKER;
     private static final ItemModelGenerator ITEM_MODEL_GENERATOR;
     private static final Map<Identifier, StateManager<BlockBase, BlockState>> STATIC_DEFINITIONS;
-    private final TexturePack resourceManager;
+    private final ResourceManager resourceManager;
     @Nullable
     private SpriteAtlasManager spriteAtlasManager;
     private final BlockColors blockColours;
@@ -92,7 +88,7 @@ public class ModelLoader {
     private int nextStateId = 1;
     private final Object2IntMap<BlockState> stateLookup = Util.make(new Object2IntOpenHashMap<>(), (object2IntOpenHashMap) -> object2IntOpenHashMap.defaultReturnValue(-1));
 
-    public ModelLoader(TexturePack resourceManager, BlockColors blockColours, Profiler profiler, int i) {
+    public ModelLoader(ResourceManager resourceManager, BlockColors blockColours, Profiler profiler, int i) {
         this.resourceManager = resourceManager;
         this.blockColours = blockColours;
         profiler.push("missing_model");
@@ -109,18 +105,13 @@ public class ModelLoader {
         STATIC_DEFINITIONS.forEach((identifierx, stateManager) -> stateManager.getStates().forEach((blockState) -> this.addModel(BlockModels.getModelId(identifierx, blockState).asIdentifier())));
         profiler.swap("blocks");
 
-        for (Entry<Identifier, BlockBase> identifierBlockBaseEntry : BlockRegistry.INSTANCE) {
-            BlockBase block = identifierBlockBaseEntry.getValue();
-            if (block != null)
-                ((BlockStateHolder) block).getStateManager().getStates().forEach((blockState) -> this.addModel(BlockModels.getModelId(blockState).asIdentifier()));
-        }
+        for (BlockBase block : BlockRegistry.INSTANCE)
+            ((BlockStateHolder) block).getStateManager().getStates().forEach((blockState) -> this.addModel(BlockModels.getModelId(blockState).asIdentifier()));
 
         profiler.swap("items");
 
-        for (Entry<Identifier, ItemBase> identifierItemBaseEntry : ItemRegistry.INSTANCE) {
-            Identifier identifier = identifierItemBaseEntry.getKey();
+        for (Identifier identifier : ItemRegistry.INSTANCE.getIds())
             this.addModel(ModelIdentifier.of(identifier, "inventory").asIdentifier());
-        }
 
         profiler.swap("textures");
         Set<Pair<String, String>> set = new LinkedHashSet<>();
@@ -276,7 +267,7 @@ public class ModelLoader {
             this.unbakedModels.put(identifier, unbakedModel);
         } else {
             Identifier identifier = Identifier.of(modelIdentifier.id.modID, modelIdentifier.id.id);
-            StateManager<BlockBase, BlockState> stateManager = /*Optional.ofNullable(STATIC_DEFINITIONS.get(identifier)).orElseGet(() -> */((BlockStateHolder) BlockRegistry.INSTANCE.get(identifier).orElseThrow(NullPointerException::new)).getStateManager()/*)*/;
+            StateManager<BlockBase, BlockState> stateManager = /*Optional.ofNullable(STATIC_DEFINITIONS.get(identifier)).orElseGet(() -> */((BlockStateHolder) Objects.requireNonNull(BlockRegistry.INSTANCE.get(identifier))).getStateManager()/*)*/;
             this.variantMapDeserializationContext.setStateFactory(stateManager);
             ImmutableList<Property<?>> list = ImmutableList.copyOf(this.blockColours.getProperties(stateManager.getOwner()));
             ImmutableList<BlockState> immutableList = stateManager.getStates();
@@ -288,37 +279,37 @@ public class ModelLoader {
             ModelDefinition modelDefinition2 = new ModelDefinition(ImmutableList.of(unbakedModel), ImmutableList.of());
             Pair<UnbakedModel, Supplier<ModelDefinition>> pair = Pair.of(unbakedModel, () -> modelDefinition2);
             try {
-                List<Pair<String, ModelVariantMap>> list2;
-                String path = ResourceManager.ASSETS.toPath(identifier2, MODID.toString(), "");
-                List<InputStream> list1 = new ArrayList<>();
-                InputStream bs = this.resourceManager.getResourceAsStream(path);
-                if (bs != null)
-                    list1.add(bs);
-                list2 = list1.stream().map(resource -> {
+                List<Pair<String, ModelVariantMap>> list2 = this.resourceManager.getAllResources(identifier2.prepend(MODID + "/")).stream().map(resource -> {
                     Pair<String, ModelVariantMap> pair1;
+                    BufferedReader reader;
                     try {
-                        pair1 = Pair.of(resourceManager.name, ModelVariantMap.deserialize(this.variantMapDeserializationContext, new InputStreamReader(resource, StandardCharsets.UTF_8)));
+                        reader = resource.getReader();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    try {
+                        pair1 = Pair.of(resource.getResourcePackName(), ModelVariantMap.deserialize(this.variantMapDeserializationContext, reader));
                     } catch (Throwable throwable) {
                         try {
-                            if (resource != null) {
+                            if (reader != null) {
                                 try {
-                                    resource.close();
+                                    reader.close();
                                 } catch (Throwable throwable2) {
                                     throwable.addSuppressed(throwable2);
                                 }
                             }
                             throw throwable;
                         } catch (Exception exception) {
-                            throw new ModelLoaderException(String.format("Exception loading blockstate definition: '%s' in texturepack: '%s': %s", path, resourceManager.name, exception.getMessage()));
+                            throw new ModelLoaderException(String.format("Exception loading blockstate definition: '%s' in texturepack: '%s': %s", identifier2, resource.getResourcePackName(), exception.getMessage()));
                         }
                     }
                     try {
-                        resource.close();
+                        reader.close();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                     return pair1;
-                }).collect(Collectors.toList());
+                }).toList();
                 for (Pair<String, ModelVariantMap> pair2 : list2) {
                     MultipartUnbakedModel multipartUnbakedModel;
                     ModelVariantMap modelVariantMap = pair2.getSecond();
@@ -427,46 +418,36 @@ public class ModelLoader {
     }
 
     private JsonUnbakedModel loadModelFromJson(Identifier id) throws IOException {
-        Reader reader = null;
-        Resource resource = null;
+        Reader reader;
 
         JsonUnbakedModel jsonUnbakedModel;
-        try {
-            ModelIdentifier modelIdentifier = ModelIdentifier.of(id.toString());
-            String string = modelIdentifier.id.id;
-            if (!"builtin/generated".equals(string)) {
-                if ("builtin/entity".equals(string)) {
-                    jsonUnbakedModel = BLOCK_ENTITY_MARKER;
-                    return jsonUnbakedModel;
-                }
-
-                if (string.startsWith("builtin/")) {
-                    String string2 = string.substring("builtin/".length());
-                    String string3 = BUILTIN_MODEL_DEFINITIONS.get(string2);
-                    if (string3 == null) {
-                        throw new FileNotFoundException(id.toString());
-                    }
-
-                    reader = new StringReader(string3);
-                } else {
-                    resource = Resource.of(this.resourceManager.getResourceAsStream(ResourceManager.ASSETS.toPath(modelIdentifier.id, MODID + "/models", "json")));
-                    InputStream inputStream = resource.getInputStream();
-                    if (inputStream == null)
-                        return null;
-                    reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-                }
-
-                jsonUnbakedModel = JsonUnbakedModel.deserialize(reader);
-                jsonUnbakedModel.id = id.toString();
+        ModelIdentifier modelIdentifier = ModelIdentifier.of(id.toString());
+        String string = modelIdentifier.id.id;
+        if (!"builtin/generated".equals(string)) {
+            if ("builtin/entity".equals(string)) {
+                jsonUnbakedModel = BLOCK_ENTITY_MARKER;
                 return jsonUnbakedModel;
             }
 
-            jsonUnbakedModel = GENERATION_MARKER;
-        } finally {
+            if (string.startsWith("builtin/")) {
+                String string2 = string.substring("builtin/".length());
+                String string3 = BUILTIN_MODEL_DEFINITIONS.get(string2);
+                if (string3 == null) {
+                    throw new FileNotFoundException(id.toString());
+                }
+
+                reader = new StringReader(string3);
+            } else {
+                reader = this.resourceManager.openAsReader(modelIdentifier.id.prepend(MODID + "/models/").append(".json"));
+            }
+
+            jsonUnbakedModel = JsonUnbakedModel.deserialize(reader);
+            jsonUnbakedModel.id = id.toString();
             IOUtils.closeQuietly(reader);
-            if (resource != null)
-                IOUtils.closeQuietly(resource.getInputStream());
+            return jsonUnbakedModel;
         }
+
+        jsonUnbakedModel = GENERATION_MARKER;
 
         return jsonUnbakedModel;
     }

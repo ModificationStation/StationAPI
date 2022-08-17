@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateSandstone extends net.minecraft.block.Sandstone implements BlockTemplate<TemplateSandstone> {
     
     public TemplateSandstone(Identifier identifier) {
-        this(BlockRegistry.INSTANCE.getNextSerialID());
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId());
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplateSandstone(int i) {

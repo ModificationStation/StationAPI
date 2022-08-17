@@ -36,7 +36,7 @@ import java.util.function.Supplier;
  * so they can be applied together with chunk offsets.
  */
 public class BlockRenderInfo {
-	private final BlockColors blockColorMap = StationRenderAPI.getBlockColours();
+	private final BlockColors blockColorMap = StationRenderAPI.getBlockColors();
 	public final Random random = new Random();
 	public BlockView blockView;
 	public TilePos blockPos;

@@ -48,7 +48,7 @@ implements VertexConsumerProvider {
 
     @Environment(value=EnvType.CLIENT)
     static class OutlineVertexConsumer
-    extends FixedColourVertexConsumer {
+    extends FixedColorVertexConsumer {
         private final VertexConsumer delegate;
         private double x;
         private double y;
@@ -58,15 +58,15 @@ implements VertexConsumerProvider {
 
         OutlineVertexConsumer(VertexConsumer delegate, int red, int green, int blue, int alpha) {
             this.delegate = delegate;
-            super.fixedColour(red, green, blue, alpha);
+            super.fixedColor(red, green, blue, alpha);
         }
 
         @Override
-        public void fixedColour(int red, int green, int blue, int alpha) {
+        public void fixedColor(int red, int green, int blue, int alpha) {
         }
 
         @Override
-        public void unfixColour() {
+        public void unfixColor() {
         }
 
         @Override

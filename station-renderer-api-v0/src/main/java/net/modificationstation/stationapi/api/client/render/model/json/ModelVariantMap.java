@@ -7,7 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.state.StateManager;
-import net.modificationstation.stationapi.api.util.json.JsonHelper;
+import net.modificationstation.stationapi.api.util.JsonHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Reader;

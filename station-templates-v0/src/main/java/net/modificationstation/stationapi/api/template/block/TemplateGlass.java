@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateGlass extends net.minecraft.block.Glass implements BlockTemplate<TemplateGlass> {
 
     public TemplateGlass(Identifier identifier, int j, Material arg, boolean flag) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), j, arg, flag);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), j, arg, flag);
+        BlockTemplate.onConstructor(this, identifier);
     }
 
     public TemplateGlass(int i, int j, Material arg, boolean flag) {

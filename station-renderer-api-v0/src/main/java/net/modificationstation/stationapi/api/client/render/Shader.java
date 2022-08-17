@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.render;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.common.collect.UnmodifiableIterator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,40 +10,42 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.client.blaze3d.platform.GlConst;
 import net.modificationstation.stationapi.api.client.blaze3d.platform.GlStateManager;
 import net.modificationstation.stationapi.api.client.blaze3d.systems.RenderSystem;
 import net.modificationstation.stationapi.api.client.gl.*;
-import net.modificationstation.stationapi.api.client.resource.Resource;
-import net.modificationstation.stationapi.api.client.resource.ResourceFactory;
 import net.modificationstation.stationapi.api.client.texture.AbstractTexture;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.resource.Resource;
+import net.modificationstation.stationapi.api.resource.ResourceFactory;
 import net.modificationstation.stationapi.api.util.FileNameUtil;
-import net.modificationstation.stationapi.api.util.json.JsonHelper;
+import net.modificationstation.stationapi.api.util.JsonHelper;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.*;
 
+import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 @Environment(EnvType.CLIENT)
 public class Shader implements GlShader, AutoCloseable {
-	private static final String CORE_DIRECTORY = StationAPI.MODID + "/shaders/core/";
-	private static final String INCLUDE_DIRECTORY = StationAPI.MODID + "/shaders/include/";
+	private static final String CORE_DIRECTORY = MODID + "/shaders/core/";
+	private static final String INCLUDE_DIRECTORY = MODID + "/shaders/include/";
 	private static final Uniform DEFAULT_UNIFORM = new Uniform();
 	private static final boolean field_32780 = true;
 	private static Shader activeShader;
-	private static int activeShaderId = -1;
-	private final Map<String, Object> samplers = new HashMap<>();
-	private final List<String> samplerNames = new ArrayList<>();
-	private final List<Integer> loadedSamplerIds = new ArrayList<>();
-	private final List<GlUniform> uniforms = new ArrayList<>();
-	private final List<Integer> loadedUniformIds = new ArrayList<>();
-	private final Map<String, GlUniform> loadedUniforms = new HashMap<>();
+	private static int activeShaderId;
+	private final Map<String, Object> samplers = Maps.newHashMap();
+	private final List<String> samplerNames = Lists.newArrayList();
+	private final List<Integer> loadedSamplerIds = Lists.newArrayList();
+	private final List<GlUniform> uniforms = Lists.newArrayList();
+	private final List<Integer> loadedUniformIds = Lists.newArrayList();
+	private final Map<String, GlUniform> loadedUniforms = Maps.newHashMap();
 	private final int programId;
 	private final String name;
 	private boolean dirty;
@@ -92,94 +94,80 @@ public class Shader implements GlShader, AutoCloseable {
 		this.name = name;
 		this.format = format;
 		Identifier identifier = Identifier.of(CORE_DIRECTORY + name + ".json");
-		Resource resource = null;
-
-		try {
-			resource = factory.getResource(identifier);
-			JsonObject jsonObject = JsonHelper.deserialize(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8));
+		try (BufferedReader reader = factory.openAsReader(identifier);){
+			JsonArray jsonArray3;
+			JsonArray jsonArray2;
+			JsonObject jsonObject = JsonHelper.deserialize(reader);
 			String string = JsonHelper.getString(jsonObject, "vertex");
 			String string2 = JsonHelper.getString(jsonObject, "fragment");
 			JsonArray jsonArray = JsonHelper.getArray(jsonObject, "samplers", null);
 			if (jsonArray != null) {
 				int i = 0;
-
-				for(Iterator<JsonElement> var11 = jsonArray.iterator(); var11.hasNext(); ++i) {
-					JsonElement jsonElement = var11.next();
-
+				for (JsonElement jsonElement : jsonArray) {
 					try {
 						this.readSampler(jsonElement);
-					} catch (Exception var25) {
-						ShaderParseException shaderParseException = ShaderParseException.wrap(var25);
+					}
+					catch (Exception exception) {
+						ShaderParseException shaderParseException = ShaderParseException.wrap(exception);
 						shaderParseException.addFaultyElement("samplers[" + i + "]");
 						throw shaderParseException;
 					}
+					++i;
 				}
 			}
-
-			JsonArray jsonArray2 = JsonHelper.getArray(jsonObject, "attributes", null);
-			if (jsonArray2 != null) {
+			if ((jsonArray2 = JsonHelper.getArray(jsonObject, "attributes", null)) != null) {
 				int j = 0;
 				this.loadedAttributeIds = Lists.newArrayListWithCapacity(jsonArray2.size());
 				this.attributeNames = Lists.newArrayListWithCapacity(jsonArray2.size());
-
-				for(Iterator<JsonElement> var32 = jsonArray2.iterator(); var32.hasNext(); ++j) {
-					JsonElement jsonElement2 = var32.next();
-
+				for (JsonElement jsonElement2 : jsonArray2) {
 					try {
 						this.attributeNames.add(JsonHelper.asString(jsonElement2, "attribute"));
-					} catch (Exception var24) {
-						ShaderParseException shaderParseException2 = ShaderParseException.wrap(var24);
+					}
+					catch (Exception exception2) {
+						ShaderParseException shaderParseException2 = ShaderParseException.wrap(exception2);
 						shaderParseException2.addFaultyElement("attributes[" + j + "]");
 						throw shaderParseException2;
 					}
+					++j;
 				}
 			} else {
 				this.loadedAttributeIds = null;
 				this.attributeNames = null;
 			}
-
-			JsonArray jsonArray3 = JsonHelper.getArray(jsonObject, "uniforms", null);
-			int k;
-			if (jsonArray3 != null) {
-				k = 0;
-
-				for(Iterator<JsonElement> var34 = jsonArray3.iterator(); var34.hasNext(); ++k) {
-					JsonElement jsonElement3 = var34.next();
-
+			if ((jsonArray3 = JsonHelper.getArray(jsonObject, "uniforms", null)) != null) {
+				int k = 0;
+				for (JsonElement jsonElement3 : jsonArray3) {
 					try {
 						this.addUniform(jsonElement3);
-					} catch (Exception var23) {
-						ShaderParseException shaderParseException3 = ShaderParseException.wrap(var23);
+					}
+					catch (Exception exception3) {
+						ShaderParseException shaderParseException3 = ShaderParseException.wrap(exception3);
 						shaderParseException3.addFaultyElement("uniforms[" + k + "]");
 						throw shaderParseException3;
 					}
+					++k;
 				}
 			}
-
-			this.blendState = readBlendState(JsonHelper.getObject(jsonObject, "blend", null));
-			this.vertexShader = loadProgram(factory, Program.Type.VERTEX, string);
-			this.fragmentShader = loadProgram(factory, Program.Type.FRAGMENT, string2);
+			this.blendState = Shader.readBlendState(JsonHelper.getObject(jsonObject, "blend", null));
+			this.vertexShader = Shader.loadProgram(factory, Program.Type.VERTEX, string);
+			this.fragmentShader = Shader.loadProgram(factory, Program.Type.FRAGMENT, string2);
 			this.programId = GlProgramManager.createProgram();
 			if (this.attributeNames != null) {
-				k = 0;
-
-				for(UnmodifiableIterator<String> var35 = format.getShaderAttributes().iterator(); var35.hasNext(); ++k) {
-					String string3 = var35.next();
+				int k = 0;
+				for (String string3 : format.getAttributeNames()) {
 					GlUniform.bindAttribLocation(this.programId, k, string3);
 					this.loadedAttributeIds.add(k);
+					++k;
 				}
 			}
-
 			GlProgramManager.linkProgram(this);
 			this.loadReferences();
-		} catch (Exception var26) {
-			ShaderParseException shaderParseException4 = ShaderParseException.wrap(var26);
+		}
+		catch (Exception exception4) {
+			ShaderParseException shaderParseException4 = ShaderParseException.wrap(exception4);
 			shaderParseException4.addFaultyFile(identifier.id);
 			throw shaderParseException4;
-		} finally {
-			IOUtils.closeQuietly(resource);
 		}
-
 		this.markUniformsDirty();
 		this.modelViewMat = this.getUniform("ModelViewMat");
 		this.projectionMat = this.getUniform("ProjMat");
@@ -201,61 +189,59 @@ public class Shader implements GlShader, AutoCloseable {
 	}
 
 	private static Program loadProgram(ResourceFactory factory, Program.Type type, String name) throws IOException {
-		Program program = type.getProgramCache().get(name);
 		Program program2;
+		Program program = type.getProgramCache().get(name);
 		if (program == null) {
 			String string = CORE_DIRECTORY + name + type.getFileExtension();
-			Identifier identifier = Identifier.of(string);
-			Resource resource = factory.getResource(identifier);
-			final String string2 = FileNameUtil.getPosixFullPath(string);
-
-			try {
-				program2 = Program.createFromResource(type, name, resource.getInputStream(), resource.getResourcePackName(), new GLImportProcessor() {
+			Resource resource = factory.getResourceOrThrow(Identifier.of(string));
+			try (InputStream inputStream = resource.getInputStream()) {
+				final String string2 = FileNameUtil.getPosixFullPath(string);
+				program2 = Program.createFromResource(type, name, inputStream, resource.getResourcePackName(), new GLImportProcessor() {
 					private final Set<String> visitedImports = Sets.newHashSet();
 
+					@Override
 					public String loadImport(boolean inline, String name) {
-						String var10000 = inline ? string2 : INCLUDE_DIRECTORY;
-						name = FileNameUtil.normalizeToPosix(var10000 + name);
+						String string;
+						name = FileNameUtil.normalizeToPosix((inline ? string2 : Shader.INCLUDE_DIRECTORY) + name);
 						if (!this.visitedImports.add(name)) {
 							return null;
-						} else {
-							Identifier identifier = Identifier.of(name);
-
+						}
+						Identifier identifier = Identifier.of(name);
+						BufferedReader reader;
+						try {
+							reader = factory.openAsReader(identifier);
+						} catch (IOException e) {
+							throw new RuntimeException(e);
+						}
+						try {
+							string = IOUtils.toString(reader);
+						} catch (Throwable throwable) {
 							try {
-								Resource resource = factory.getResource(identifier);
-
-								String var5;
-								try {
-									var5 = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
-								} catch (Throwable var8) {
-									if (resource != null) {
-										try {
-											resource.close();
-										} catch (Throwable var7) {
-											var8.addSuppressed(var7);
-										}
+								if (reader != null) {
+									try {
+										((Reader) reader).close();
+									} catch (Throwable throwable2) {
+										throwable.addSuppressed(throwable2);
 									}
-
-									throw var8;
 								}
-
-								resource.close();
-
-								return var5;
-							} catch (IOException var9) {
-								LOGGER.error("Could not open GLSL import {}: {}", name, var9.getMessage());
-								return "#error " + var9.getMessage();
+								throw throwable;
+							} catch (IOException iOException) {
+								LOGGER.error("Could not open GLSL import {}: {}", name, iOException.getMessage());
+								return "#error " + iOException.getMessage();
 							}
 						}
+						try {
+							((Reader) reader).close();
+						} catch (IOException e) {
+							throw new RuntimeException(e);
+						}
+						return string;
 					}
 				});
-			} finally {
-				IOUtils.closeQuietly(resource);
 			}
 		} else {
 			program2 = program;
 		}
-
 		return program2;
 	}
 
@@ -335,7 +321,7 @@ public class Shader implements GlShader, AutoCloseable {
 
 		for(int j = 0; j < this.loadedSamplerIds.size(); ++j) {
 			if (this.samplers.get(this.samplerNames.get(j)) != null) {
-				GlStateManager._activeTexture('蓀' + j);
+				GlStateManager._activeTexture(GlConst.GL_TEXTURE0 + j);
 				GlStateManager._bindTexture(0);
 			}
 		}
@@ -360,7 +346,7 @@ public class Shader implements GlShader, AutoCloseable {
 			if (this.samplers.get(string) != null) {
 				int k = GlUniform.getUniformLocation(this.programId, string);
 				GlUniform.uniform1(k, j);
-				RenderSystem.activeTexture('蓀' + j);
+				RenderSystem.activeTexture(GlConst.GL_TEXTURE0 + j);
 				RenderSystem.enableTexture();
 				Object object = this.samplers.get(string);
 				int l = -1;

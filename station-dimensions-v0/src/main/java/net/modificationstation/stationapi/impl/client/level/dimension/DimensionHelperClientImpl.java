@@ -25,8 +25,8 @@ public class DimensionHelperClientImpl extends DimensionHelperImpl {
 
         //noinspection deprecation
         Minecraft game = (Minecraft) FabricLoader.getInstance().getGameInstance();
-        int overworldSerial = dimensions.getSerialID(OVERWORLD).orElseThrow(() -> new IllegalStateException("Couldn't find overworld dimension in the registry!"));
-        int destinationSerial = dimensions.getSerialID(destination).orElseThrow(() -> new IllegalArgumentException("Unknown dimension: " + destination + "!"));
+        int overworldSerial = dimensions.getLegacyId(OVERWORLD).orElseThrow(() -> new IllegalStateException("Couldn't find overworld dimension in the registry!"));
+        int destinationSerial = dimensions.getLegacyId(destination).orElseThrow(() -> new IllegalArgumentException("Unknown dimension: " + destination + "!"));
 
         player.dimensionId = player.dimensionId == destinationSerial ? overworldSerial : destinationSerial;
 

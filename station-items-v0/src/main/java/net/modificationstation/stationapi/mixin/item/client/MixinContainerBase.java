@@ -32,7 +32,7 @@ public class MixinContainerBase extends ScreenBase {
     private void renderTooltip(int mouseX, int mouseY, float delta, CallbackInfo ci, int containerX, int containerY, Slot slot, PlayerInventory inventory, String originalTooltip) {
         cancelTooltipRender = StationAPI.EVENT_BUS.post(
                 TooltipRenderEvent.builder()
-                        .itemInstance(slot.getItem())
+                        .itemStack(slot.getItem())
                         .container((ContainerBase) (Object) this)
                         .textManager(this.textManager)
                         .inventory(inventory)

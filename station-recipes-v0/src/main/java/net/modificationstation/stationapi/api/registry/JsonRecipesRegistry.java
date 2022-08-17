@@ -1,15 +1,18 @@
 package net.modificationstation.stationapi.api.registry;
 
-import net.modificationstation.stationapi.api.StationAPI;
+import com.mojang.serialization.Lifecycle;
 
 import java.net.URL;
 import java.util.Set;
 
-public final class JsonRecipesRegistry extends Registry<Set<URL>> {
+import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-    private JsonRecipesRegistry(Identifier identifier) {
-        super(identifier);
+public final class JsonRecipesRegistry extends SimpleRegistry<Set<URL>> {
+
+    public static final RegistryKey<Registry<Set<URL>>> KEY = RegistryKey.ofRegistry(MODID.id("json_recipes"));
+    public static final JsonRecipesRegistry INSTANCE = Registry.create(KEY, new JsonRecipesRegistry(), Lifecycle.experimental());
+
+    private JsonRecipesRegistry() {
+        super(KEY, Lifecycle.experimental(), null);
     }
-
-    public static final JsonRecipesRegistry INSTANCE = new JsonRecipesRegistry(Identifier.of(StationAPI.MODID, "json_recipes"));
 }

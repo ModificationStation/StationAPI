@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.item.json;
 
 import lombok.Data;
+import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
@@ -13,6 +14,7 @@ public class JsonItemKey {
     private int damage = 0;
 
     public ItemInstance getItemInstance() {
-        return ItemRegistry.INSTANCE.get(Identifier.of(item)).map(itemBase -> new ItemInstance(itemBase, count, damage)).orElse(null);
+        ItemBase itemBase = ItemRegistry.INSTANCE.get(Identifier.of(item));
+        return itemBase == null ? null : new ItemInstance(itemBase, count, damage);
     }
 }

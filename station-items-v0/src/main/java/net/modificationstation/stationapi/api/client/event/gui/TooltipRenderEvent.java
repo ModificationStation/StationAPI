@@ -5,10 +5,10 @@ import lombok.experimental.SuperBuilder;
 import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.render.TextRenderer;
 import net.minecraft.entity.player.PlayerInventory;
-import net.modificationstation.stationapi.api.event.item.ItemInstanceEvent;
+import net.modificationstation.stationapi.api.event.item.ItemStackEvent;
 
 @SuperBuilder
-public class TooltipRenderEvent extends ItemInstanceEvent {
+public class TooltipRenderEvent extends ItemStackEvent {
 
     @Getter
     private final boolean cancelable = true;

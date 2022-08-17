@@ -5,11 +5,11 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplatePickaxe extends net.minecraft.item.tool.Pickaxe implements ItemTemplate<TemplatePickaxe> {
+public class TemplatePickaxe extends net.minecraft.item.tool.Pickaxe implements ItemTemplate<TemplatePickaxe>, ToolTemplate {
     
     public TemplatePickaxe(Identifier identifier, ToolMaterial material) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), material);
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted(), material);
+        ItemTemplate.onConstructor(this, identifier);
     }
     
     public TemplatePickaxe(int id, ToolMaterial material) {

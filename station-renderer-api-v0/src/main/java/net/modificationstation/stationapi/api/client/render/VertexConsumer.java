@@ -13,7 +13,7 @@ import java.nio.IntBuffer;
 @Environment(value=EnvType.CLIENT)
 public interface VertexConsumer {
 
-    ByteBuffer BUFFER = class_214.method_744(VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.getVertexSize());
+    ByteBuffer BUFFER = class_214.method_744(VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.getVertexSizeByte());
 
     VertexConsumer vertex(double var1, double var3, double var5);
 
@@ -39,9 +39,9 @@ public interface VertexConsumer {
         this.next();
     }
 
-    void fixedColour(int var1, int var2, int var3, int var4);
+    void fixedColor(int var1, int var2, int var3, int var4);
 
-    void unfixColour();
+    void unfixColor();
 
     default VertexConsumer color(float red, float green, float blue, float alpha) {
         return this.color((int)(red * 255.0f), (int)(green * 255.0f), (int)(blue * 255.0f), (int)(alpha * 255.0f));

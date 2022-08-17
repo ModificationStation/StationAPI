@@ -46,15 +46,12 @@ public class BlockModels {
    public void reload() {
       this.models.clear();
 
-      for (Entry<Identifier, BlockBase> identifierBlockBaseEntry : BlockRegistry.INSTANCE) {
-         BlockBase block = identifierBlockBaseEntry.getValue();
-         if (block != null)
-            ((BlockStateHolder) block).getStateManager().getStates().forEach((blockState) -> this.models.put(blockState, this.modelManager.getModel(getModelId(blockState))));
-      }
+      for (BlockBase block : BlockRegistry.INSTANCE)
+         ((BlockStateHolder) block).getStateManager().getStates().forEach((blockState) -> this.models.put(blockState, this.modelManager.getModel(getModelId(blockState))));
    }
 
    public static ModelIdentifier getModelId(BlockState blockState) {
-      return getModelId(BlockRegistry.INSTANCE.getIdentifier(blockState.getBlock()), blockState);
+      return getModelId(BlockRegistry.INSTANCE.getId(blockState.getBlock()), blockState);
    }
 
    public static ModelIdentifier getModelId(Identifier identifier, BlockState blockState) {

@@ -1,254 +1,277 @@
+/*
+ * Decompiled with CFR 0.1.1 (FabricMC 57d88659).
+ */
 package net.modificationstation.stationapi.api.registry;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
+import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
+import net.modificationstation.stationapi.api.util.dynamic.Codecs;
+import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-/**
- * Registry class is used to map an {@link Identifier} to its object to keep track of the objects by identifiers.
- *
- * <p>For example, "minecraft:dirt" -> {@link net.minecraft.block.BlockBase#DIRT}
- *
- * <p>The registry's contract is that every object must have an identifier, but not every identifier must have an object.
- *
- * <p>Each registry has its own identifier in the {@link Registry#id} field.
- *
- * <p>Registry implements {@link Iterable}, so it can be iterated through with a for-each loop.
- * Alongside iteration, there's {@link Registry#computeIfAbsent(Identifier, Function)} method,
- * which will check if the identifier has an object mapped to it, and if it doesn't,
- * the provided function will be invoked and the returned object will be mapped to the given identifier.
- *
- * @param <T> the object's type that's stored in the registry.
- * @author mine_diver
- * @see AbstractSerialRegistry
- * @see LevelSerialRegistry
- */
-public class Registry<T> implements Iterable<Map.Entry<Identifier, T>>, Codec<T>, Keyable {
-
+public abstract class Registry<T>
+implements Keyable,
+        IndexedIterable<T> {
+    public static final Identifier ROOT_KEY = MODID.id("root");
+    @SuppressWarnings("StaticInitializerReferencesSubClass")
+    protected static final MutableRegistry<MutableRegistry<?>> ROOT = new SimpleRegistry<>(RegistryKey.ofRegistry(MODID.id("root")), Lifecycle.experimental(), null);
+    @SuppressWarnings("StaticInitializerReferencesSubClass")
+    public static final Registry<? extends Registry<?>> REGISTRIES = ROOT;
     /**
-     * Registry of registries.
-     *
-     * <p>Contains all registries mapped to their identifiers and contains itself recursively.
-     *
-     * <p>Used to access/iterate through all registries by their identifiers.
+     * The key representing the type of elements held by this registry. It is also the
+     * key of this registry within the root registry.
      */
-    @NotNull
-    public static final Registry<Registry<?>> REGISTRIES = new Registry<>(Identifier.of(MODID, "registries"), true);
-
-    /**
-     * Registry's identifier.
-     *
-     * <p>For example, "minecraft:blocks".
-     */
-    @NotNull
-    public final Identifier id;
-
-    /**
-     * {@link BiMap} with identifiers mapped to registry's objects.
-     *
-     * <p>A bimap provides just the right functionality for registries.
-     * Both keys and values (identifiers and registry's objects) have to be unique,
-     * meaning none of the identifiers can be mapped to multiple objects
-     * and none of the objects can be mapped to multiple identifiers.
-     * It also allows for fast and easy inverse lookup without having a second {@link Map} with inverse values.
-     */
-    @NotNull
-    protected final BiMap<Identifier, T> values = HashBiMap.create();
-
+    private final RegistryKey<? extends Registry<T>> registryKey;
     private final Lifecycle lifecycle;
 
-    private final ObjectList<T> rawIdToEntry = new ObjectArrayList<>(256);
-    private final Object2IntMap<T> entryToRawId = new Object2IntOpenCustomHashMap<>(Util.identityHashStrategy());
-    private int nextId;
-    private final Map<T, Lifecycle> entryToLifecycle = new IdentityHashMap<>();
-
-    /**
-     * Default registry constructor.
-     * @param identifier registry's identifier.
-     */
-    public Registry(final @NotNull Identifier identifier) {
-        this(identifier, false);
-    }
-
-    /**
-     * Internal registry constructor used for the registry of registries to avoid {@link NullPointerException}
-     * when referencing {@link Registry#REGISTRIES} before it getting its object.
-     * @param identifier registry's identifier.
-     * @param isRegistryRegistry whether or not the current registry is the registry of registries.
-     *                           If it is, it registers itself in itself, otherwise registries itself in {@link Registry#REGISTRIES}.
-     */
-    private Registry(final @NotNull Identifier identifier, final boolean isRegistryRegistry) {
-        this.id = Objects.requireNonNull(identifier);
-        if (isRegistryRegistry)
-            //noinspection unchecked
-            register(id, (T) this);
-        else
-            REGISTRIES.register(id, this);
-        this.lifecycle = Lifecycle.experimental();
-    }
-
-    /**
-     * The basic register method that adds the given object mapped to the given identifier to the registry.
-     * @param identifier the identifier to assign to the object.
-     * @param value the object to assign to the identifier.
-     */
-    public void register(final @NotNull Identifier identifier, final @NotNull T value) {
-        register(nextId, identifier, value, Lifecycle.stable());
-    }
-
-    private void register(int rawId, final @NotNull Identifier identifier, final @NotNull T value, Lifecycle lifecycle) {
-        Objects.requireNonNull(value);
-        rawIdToEntry.size(Math.max(this.rawIdToEntry.size(), rawId + 1));
-        this.rawIdToEntry.set(rawId, value);
-        this.entryToRawId.put(value, rawId);
-        values.put(Objects.requireNonNull(identifier), value);
-        entryToLifecycle.put(value, lifecycle);
-        if (nextId <= rawId) {
-            nextId = rawId + 1;
-        }
-    }
-
-    /**
-     * Unregisters the value with the given identifier.
-     * @param identifier the identifier of the value that should get unregistered.
-     */
-    public void unregister(final @NotNull Identifier identifier) {
-        values.remove(identifier);
-    }
-
-    /**
-     * Returns the object associated to this identifier.
-     * <p>Note, since not all identifiers are supposed to have an object assigned to them,
-     * an {@link Optional} containing the object is returned instead.
-     * If the given identifier doesn't have an object assigned to it, the optional will be empty.
-     * @param identifier the identifier of the requested object.
-     * @return an {@link Optional} containing the object associated to the given identifier,
-     * or an empty optional if there's no object associated to this identifier.
-     */
-    public @NotNull Optional<T> get(final @NotNull Identifier identifier) {
-        return Optional.ofNullable(values.get(Objects.requireNonNull(identifier)));
-    }
-
-    /**
-     * Returns the identifier associated to this object.
-     * <p>Since every object is supposed to have an identifier, an {@link Optional} isn't required here.
-     * @param value the object associated to the requested identifier.
-     * @return the identifier of the given object.
-     */
-    public @NotNull Identifier getIdentifier(final T value) {
-        return values.inverse().get(value);
-    }
-
-    @ApiStatus.Internal
-    public T getByRawId(int rawId) {
-        return rawIdToEntry.get(rawId);
-    }
-
-    @ApiStatus.Internal
-    public int getRawId(T value) {
-        return entryToRawId.getInt(value);
-    }
-
-    protected Lifecycle getEntryLifecycle(T value) {
-        return entryToLifecycle.get(value);
-    }
-
-    /**
-     * Returns an iterator over a set of {@link Map.Entry} containing identifiers as keys and objects assigned to them as values.
-     * @return an iterator over a set of {@link Map.Entry} containing identifiers as keys and objects assigned to them as values.
-     */
-    @Override
-    public @NotNull Iterator<Map.Entry<Identifier, T>> iterator() {
-        return new HashSet<>(values.entrySet()).iterator();
-    }
-
-    /**
-     * Simplified version of {@link Registry#forEach(Consumer)} with action being a {@link BiConsumer} of
-     * {@link Identifier} and registry's object instead of a {@link Consumer} of {@link Map.Entry} of those.
-     * @param action the action to be performed for each element.
-     */
-    public void forEach(final @NotNull BiConsumer<Identifier, T> action) {
-        Objects.requireNonNull(action);
-        for (Map.Entry<Identifier, T> identifierTEntry : this) {
-            final Identifier k;
-            final T v;
-            try {
-                k = identifierTEntry.getKey();
-                v = identifierTEntry.getValue();
-            } catch (IllegalStateException ise) {
-                // this usually means the entry is no longer in the map.
-                throw new ConcurrentModificationException(ise);
+    public static <T extends Registry<?>> void validate(Registry<T> registries) {
+        registries.forEach((registry) -> {
+            if (registry.getIds().isEmpty()) {
+                Identifier var10000 = registries.getId(registry);
+                Util.error("Registry '" + var10000 + "' was empty after loading");
             }
-            action.accept(k, v);
+
+            if (registry instanceof DefaultedRegistry<?> defaultedRegistry) {
+                Identifier identifier = defaultedRegistry.getDefaultId();
+                Validate.notNull(registry.get(identifier), "Missing default of DefaultedMappedRegistry: " + identifier);
+            }
+
+        });
+    }
+
+    public static <T> Registry<T> create(RegistryKey<? extends Registry<T>> key, DefaultEntryGetter<T> defaultEntryGetter) {
+        return Registry.create(key, Lifecycle.experimental(), defaultEntryGetter);
+    }
+
+    public static <T> DefaultedRegistry<T> create(RegistryKey<? extends Registry<T>> key, String defaultId, DefaultEntryGetter<T> defaultEntryGetter) {
+        return Registry.create(key, defaultId, Lifecycle.experimental(), defaultEntryGetter);
+    }
+
+    public static <T> DefaultedRegistry<T> create(RegistryKey<? extends Registry<T>> key, String defaultId, Function<T, RegistryEntry.Reference<T>> valueToEntryFunction, DefaultEntryGetter<T> defaultEntryGetter) {
+        return Registry.create(key, defaultId, Lifecycle.experimental(), valueToEntryFunction, defaultEntryGetter);
+    }
+
+    public static <T> Registry<T> create(RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle, DefaultEntryGetter<T> defaultEntryGetter) {
+        return Registry.create(key, new SimpleRegistry<>(key, lifecycle, null), defaultEntryGetter, lifecycle);
+    }
+
+    public static <T> Registry<T> create(RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle, Function<T, RegistryEntry.Reference<T>> valueToEntryFunction, DefaultEntryGetter<T> defaultEntryGetter) {
+        return Registry.create(key, new SimpleRegistry<>(key, lifecycle, valueToEntryFunction), defaultEntryGetter, lifecycle);
+    }
+
+    public static <T> DefaultedRegistry<T> create(RegistryKey<? extends Registry<T>> key, String defaultId, Lifecycle lifecycle, DefaultEntryGetter<T> defaultEntryGetter) {
+        return Registry.create(key, new DefaultedRegistry<>(defaultId, key, lifecycle, null), defaultEntryGetter, lifecycle);
+    }
+
+    public static <T> DefaultedRegistry<T> create(RegistryKey<? extends Registry<T>> key, String defaultId, Lifecycle lifecycle, Function<T, RegistryEntry.Reference<T>> valueToEntryFunction, DefaultEntryGetter<T> defaultEntryGetter) {
+        return Registry.create(key, new DefaultedRegistry<>(defaultId, key, lifecycle, valueToEntryFunction), defaultEntryGetter, lifecycle);
+    }
+
+    private static <T, R extends MutableRegistry<T>> R create(RegistryKey<? extends Registry<T>> key, R registry, DefaultEntryGetter<T> defaultEntryGetter, Lifecycle lifecycle) {
+        Identifier identifier = key.getValue();
+        if (defaultEntryGetter.run(registry) == null) {
+            LOGGER.error("Unable to bootstrap registry '{}'", identifier);
         }
+        return Registry.create(key, registry, lifecycle);
+    }
+
+    public static <T, R extends MutableRegistry<T>> R create(RegistryKey<? extends Registry<T>> key, R registry, Lifecycle lifecycle) {
+        //noinspection unchecked
+        ((MutableRegistry<R>) ROOT).add((RegistryKey<R>) key, registry, lifecycle);
+        return registry;
+    }
+
+    protected Registry(RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle) {
+        this.registryKey = key;
+        this.lifecycle = lifecycle;
+    }
+
+    public static void freezeRegistries() {
+        for (Registry<?> registry : REGISTRIES) {
+            registry.freeze();
+        }
+    }
+
+    public RegistryKey<? extends Registry<T>> getKey() {
+        return this.registryKey;
+    }
+
+    public Lifecycle method_39198() {
+        return this.lifecycle;
+    }
+
+    public String toString() {
+        return "Registry[" + this.registryKey + " (" + this.lifecycle + ")]";
+    }
+
+    public Codec<T> getCodec() {
+        Codec<T> codec = Identifier.CODEC.flatXmap(id -> Optional.ofNullable(this.get(id)).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown registry key in " + this.registryKey + ": " + id)), value -> this.getKey(value).map(RegistryKey::getValue).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown registry element in " + this.registryKey + ":" + value)));
+        Codec<T> codec2 = Codecs.rawIdChecked(value -> this.getKey(value).isPresent() ? this.getRawId(value) : -1, this::get, -1);
+        return Codecs.withLifecycle(Codecs.orCompressed(codec, codec2), this::getEntryLifecycle, value -> this.lifecycle);
+    }
+
+    public Codec<RegistryEntry<T>> createEntryCodec() {
+        Codec<RegistryEntry<T>> codec = Identifier.CODEC.flatXmap(id -> this.getEntry(RegistryKey.of(this.registryKey, id)).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown registry key in " + this.registryKey + ": " + id)), entry -> entry.getKey().map(RegistryKey::getValue).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown registry element in " + this.registryKey + ":" + entry)));
+        return Codecs.withLifecycle(codec, entry -> this.getEntryLifecycle(entry.value()), entry -> this.lifecycle);
+    }
+
+    public <U> Stream<U> keys(DynamicOps<U> ops) {
+        return this.getIds().stream().map(id -> ops.createString(id.toString()));
+    }
+
+    @Nullable
+    public abstract Identifier getId(T var1);
+
+    public abstract Optional<RegistryKey<T>> getKey(T var1);
+
+    @Override
+    public abstract int getRawId(@Nullable T var1);
+
+    @Nullable
+    public abstract T get(@Nullable RegistryKey<T> var1);
+
+    @Nullable
+    public abstract T get(@Nullable Identifier var1);
+
+    /**
+     * Gets the lifecycle of a registry entry.
+     */
+    public abstract Lifecycle getEntryLifecycle(T var1);
+
+    public abstract Lifecycle getLifecycle();
+
+    public Optional<T> getOrEmpty(@Nullable Identifier id) {
+        return Optional.ofNullable(this.get(id));
+    }
+
+    public Optional<T> getOrEmpty(@Nullable RegistryKey<T> key) {
+        return Optional.ofNullable(this.get(key));
     }
 
     /**
-     * If the specified identifier is not already associated with an object,
-     * attempts to compute its object using the given mapping function and adds it into this registry.
-     * @param identifier identifier with which the specified object is to be associated.
-     * @param function the function to compute an object.
-     * @return the current (existing or computed) object associated with the specified identifier.
+     * Gets an entry from the registry.
+     * 
+     * @throws IllegalStateException if the entry was not present in the registry
      */
-    public @NotNull T computeIfAbsent(final @NotNull Identifier identifier, final @NotNull Function<@NotNull Identifier, @NotNull T> function) {
-        Objects.requireNonNull(identifier);
-        Objects.requireNonNull(function);
-        return get(identifier).orElseGet(() -> {
-            final T value = function.apply(identifier);
-            register(identifier, value);
-            return value;
-        });
-    }
-
-    public Stream<Map.Entry<Identifier, T>> stream() {
-        return StreamSupport.stream(spliterator(), false);
-    }
-
-    public Stream<Map.Entry<Identifier, T>> parallelStream() {
-        return StreamSupport.stream(spliterator(), true);
-    }
-
-    @Override
-    public <U> DataResult<Pair<T, U>> decode(DynamicOps<U> dynamicOps, U object) {
-        return dynamicOps.compressMaps() ? dynamicOps.getNumberValue(object).flatMap((number) -> {
-            T value = this.getByRawId(number.intValue());
-            return value == null ? DataResult.error("Unknown registry id: " + number) : DataResult.success(value, this.getEntryLifecycle(value));
-        }).map((objectx) -> Pair.of(objectx, dynamicOps.empty())) : Identifier.CODEC.decode(dynamicOps, object).flatMap((pair) -> {
-            Optional<T> valueOptional = this.get(pair.getFirst());
-            return valueOptional.map(t -> DataResult.success(Pair.of(t, pair.getSecond()), this.getEntryLifecycle(t))).orElseGet(() -> DataResult.error("Unknown registry key: " + pair.getFirst()));
-        });
-    }
-
-    @Override
-    public <U> DataResult<U> encode(T object, DynamicOps<U> dynamicOps, U object2) {
-        Identifier identifier = this.getIdentifier(object);
-        //noinspection ConstantConditions
-        if (identifier == null) {
-            return DataResult.error("Unknown registry element " + object);
-        } else {
-            return dynamicOps.compressMaps() ? dynamicOps.mergeToPrimitive(object2, dynamicOps.createInt(this.getRawId(object))).setLifecycle(this.lifecycle) : dynamicOps.mergeToPrimitive(object2, dynamicOps.createString(identifier.toString())).setLifecycle(this.lifecycle);
+    public T getOrThrow(RegistryKey<T> key) {
+        T object = this.get(key);
+        if (object == null) {
+            throw new IllegalStateException("Missing key in " + this.registryKey + ": " + key);
         }
+        return object;
     }
 
-    @Override
-    public <U> Stream<U> keys(DynamicOps<U> dynamicOps) {
-        return values.keySet().stream().map((identifier) -> dynamicOps.createString(identifier.toString()));
+    public abstract Set<Identifier> getIds();
+
+    public abstract Set<Map.Entry<RegistryKey<T>, T>> getEntrySet();
+
+    public abstract Set<RegistryKey<T>> getKeys();
+
+    public abstract Optional<RegistryEntry<T>> getRandom(Random var1);
+
+    public Stream<T> stream() {
+        return StreamSupport.stream(this.spliterator(), false);
+    }
+
+    public abstract boolean containsId(Identifier var1);
+
+    public abstract boolean contains(RegistryKey<T> var1);
+
+    public static <T> T register(Registry<? super T> registry, String id, T entry) {
+        return Registry.register(registry, Identifier.of(id), entry);
+    }
+
+    public static <V, T extends V> T register(Registry<V> registry, Identifier id, T entry) {
+        return Registry.register(registry, RegistryKey.of(registry.registryKey, id), entry);
+    }
+
+    public static <V, T extends V> T register(Registry<V> registry, RegistryKey<V> key, T entry) {
+        ((MutableRegistry<V>) registry).add(key, entry, Lifecycle.stable());
+        return entry;
+    }
+
+    public static <V, T extends V> T register(Registry<V> registry, int rawId, String id, T entry) {
+        ((MutableRegistry<V>) registry).set(rawId, RegistryKey.of(registry.registryKey, Identifier.of(id)), entry, Lifecycle.stable());
+        return entry;
+    }
+
+    public abstract Registry<T> freeze();
+
+    public abstract RegistryEntry<T> getOrCreateEntry(RegistryKey<T> var1);
+
+    public abstract DataResult<RegistryEntry<T>> getOrCreateEntryDataResult(RegistryKey<T> var1);
+
+    public abstract RegistryEntry.Reference<T> createEntry(T var1);
+
+    public abstract Optional<RegistryEntry<T>> getEntry(int var1);
+
+    public abstract Optional<RegistryEntry<T>> getEntry(RegistryKey<T> var1);
+
+    public RegistryEntry<T> entryOf(RegistryKey<T> key) {
+        return this.getEntry(key).orElseThrow(() -> new IllegalStateException("Missing key in " + this.registryKey + ": " + key));
+    }
+
+    public abstract Stream<RegistryEntry.Reference<T>> streamEntries();
+
+    public abstract Optional<RegistryEntryList.Named<T>> getEntryList(TagKey<T> var1);
+
+    public Iterable<RegistryEntry<T>> iterateEntries(TagKey<T> tag) {
+        return DataFixUtils.orElse(this.getEntryList(tag), List.of());
+    }
+
+    public abstract RegistryEntryList.Named<T> getOrCreateEntryList(TagKey<T> var1);
+
+    public abstract Stream<Pair<TagKey<T>, RegistryEntryList.Named<T>>> streamTagsAndEntries();
+
+    public abstract Stream<TagKey<T>> streamTags();
+
+    public abstract boolean containsTag(TagKey<T> var1);
+
+    public abstract void clearTags();
+
+    public abstract void populateTags(Map<TagKey<T>, List<RegistryEntry<T>>> var1);
+
+    public IndexedIterable<RegistryEntry<T>> getIndexedEntries() {
+        return new IndexedIterable<>() {
+
+            @Override
+            public int getRawId(RegistryEntry<T> registryEntry) {
+                return Registry.this.getRawId(registryEntry.value());
+            }
+
+            @Override
+            @Nullable
+            public RegistryEntry<T> get(int i) {
+                return Registry.this.getEntry(i).orElse(null);
+            }
+
+            @Override
+            public int size() {
+                return Registry.this.size();
+            }
+
+            @Override
+            public Iterator<RegistryEntry<T>> iterator() {
+                return Registry.this.streamEntries().map(entry -> (RegistryEntry<T>) entry).iterator();
+            }
+        };
+    }
+
+    @FunctionalInterface
+    public interface DefaultEntryGetter<T> {
+        T run(Registry<T> var1);
     }
 }
+

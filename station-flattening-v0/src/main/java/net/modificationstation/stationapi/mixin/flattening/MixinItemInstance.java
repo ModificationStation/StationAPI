@@ -1,7 +1,14 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.event.item.IsItemSuitableForStateEvent;
+import net.modificationstation.stationapi.api.event.item.ItemMiningSpeedMultiplierOnStateEvent;
+import net.modificationstation.stationapi.api.item.ItemStackStrengthWithBlockState;
+import net.modificationstation.stationapi.api.item.ItemStrengthWithBlockState;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,9 +23,12 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Mixin(ItemInstance.class)
-public class MixinItemInstance {
+public abstract class MixinItemInstance implements ItemStackStrengthWithBlockState {
 
     @Shadow public int itemId;
+
+    @Shadow public abstract ItemBase getType();
+
     @Unique
     private static final String STATION_ID = of(MODID, "id").toString();
 
@@ -31,7 +41,7 @@ public class MixinItemInstance {
             )
     )
     private void saveIdentifier(CompoundTag instance, String item, short i) {
-        instance.put(STATION_ID, ItemRegistry.INSTANCE.getIdentifier(itemId).orElseThrow().toString());
+        instance.put(STATION_ID, ItemRegistry.INSTANCE.getIdByLegacyId(itemId).orElseThrow().toString());
     }
 
     @Inject(
@@ -46,6 +56,28 @@ public class MixinItemInstance {
     private void loadIdentifier(CompoundTag par1, CallbackInfo ci) {
         String id = par1.getString(STATION_ID);
         if (!id.isEmpty())
-            itemId = ItemRegistry.INSTANCE.getSerialID(of(id)).orElseThrow();
+            itemId = ItemRegistry.INSTANCE.getLegacyId(of(id)).orElseThrow();
+    }
+
+    @Override
+    public boolean isSuitableFor(BlockState state) {
+        return StationAPI.EVENT_BUS.post(
+                IsItemSuitableForStateEvent.builder()
+                        .itemStack(ItemInstance.class.cast(this))
+                        .state(state)
+                        .suitable(((ItemStrengthWithBlockState) getType()).isSuitableFor(ItemInstance.class.cast(this), state))
+                        .build()
+        ).suitable;
+    }
+
+    @Override
+    public float getMiningSpeedMultiplier(BlockState state) {
+        return StationAPI.EVENT_BUS.post(
+                ItemMiningSpeedMultiplierOnStateEvent.builder()
+                        .itemStack(ItemInstance.class.cast(this))
+                        .state(state)
+                        .miningSpeedMultiplier(((ItemStrengthWithBlockState) getType()).getMiningSpeedMultiplier(ItemInstance.class.cast(this), state))
+                        .build()
+        ).miningSpeedMultiplier;
     }
 }

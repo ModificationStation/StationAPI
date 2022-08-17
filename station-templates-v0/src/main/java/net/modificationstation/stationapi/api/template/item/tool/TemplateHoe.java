@@ -5,11 +5,11 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateHoe extends net.minecraft.item.tool.Hoe implements ItemTemplate<TemplateHoe> {
+public class TemplateHoe extends net.minecraft.item.tool.Hoe implements ItemTemplate<TemplateHoe>, ToolTemplate {
 
     public TemplateHoe(Identifier identifier, ToolMaterial arg) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), arg);
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted(), arg);
+        ItemTemplate.onConstructor(this, identifier);
     }
 
     public TemplateHoe(int i, ToolMaterial arg) {

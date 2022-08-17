@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.impl.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.item.ItemBase;
-import net.modificationstation.stationapi.api.block.BlockToolLogic;
-import net.modificationstation.stationapi.api.event.item.IsItemEffectiveOnBlockEvent;
-import net.modificationstation.stationapi.api.event.item.ItemStrengthOnBlockEvent;
+import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.event.item.IsItemSuitableForStateEvent;
+import net.modificationstation.stationapi.api.event.item.ItemMiningSpeedMultiplierOnStateEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.item.tool.ToolLevel;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -14,10 +14,11 @@ import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.ModID;
-import net.modificationstation.stationapi.api.tags.TagRegistry;
+import net.modificationstation.stationapi.api.template.item.tool.ToolMaterialTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class ToolEffectivenessImplV1 {
@@ -26,36 +27,41 @@ public class ToolEffectivenessImplV1 {
 
     @EventListener
     private static void getItems(ItemRegistryEvent event) {
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.shears));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.woodAxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.woodPickaxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.woodShovel));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.woodSword));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.stoneAxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.stonePickaxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.stoneShovel));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.stoneSword));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.ironAxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.ironPickaxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.ironShovel));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.ironSword));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.diamondAxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.diamondPickaxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.diamondShovel));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.diamondSword));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.goldAxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.goldPickaxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.goldShovel));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getIdentifier(ItemBase.goldSword));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.shears));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.woodAxe));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.woodPickaxe));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.woodShovel));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.woodSword));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.stoneAxe));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.stonePickaxe));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.stoneShovel));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.stoneSword));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.ironAxe));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.ironPickaxe));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.ironShovel));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.ironSword));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.diamondAxe));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.diamondPickaxe));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.diamondShovel));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.diamondSword));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.goldAxe));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.goldPickaxe));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.goldShovel));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.goldSword));
     }
 
-    @EventListener(priority = ListenerPriority.HIGH)
-    private static void isEffective(IsItemEffectiveOnBlockEvent event) {
-        event.effective = event.effective || (event.itemInstance.getType() instanceof ToolLevel toolLevel && ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> predicates.stream().anyMatch(tagEntry -> tagEntry.predicate.test(event.itemInstance) && identifierIntegerBiTuple.two() <= toolLevel.getMaterial(event.itemInstance).getMiningLevel())).orElse(false)));
+    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    private static void isEffective(IsItemSuitableForStateEvent event) {
+        event.suitable = event.suitable || isSuitable(event.itemStack, event.state);
     }
 
-    @EventListener(priority = ListenerPriority.HIGH)
-    private static void getStrength(ItemStrengthOnBlockEvent event) {
-        if (!(VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getIdentifier(event.itemInstance.getType())) && BlockRegistry.INSTANCE.getIdentifier(event.block).modID == ModID.MINECRAFT) && event.itemInstance.getType() instanceof ToolLevel toolLevel && ((BlockToolLogic) event.block).getToolTagEffectiveness().stream().anyMatch(identifierIntegerBiTuple -> TagRegistry.INSTANCE.get(identifierIntegerBiTuple.one()).map(predicates -> predicates.stream().anyMatch(tagEntry -> tagEntry.predicate.test(event.itemInstance))).orElse(false))) event.strength = toolLevel.getMaterial(event.itemInstance).getMiningSpeed();
+    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    private static void getStrength(ItemMiningSpeedMultiplierOnStateEvent event) {
+        if (!(VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getId(event.itemStack.getType())) && Objects.requireNonNull(BlockRegistry.INSTANCE.getId(event.state.getBlock())).modID == ModID.MINECRAFT) && isSuitable(event.itemStack, event.state)) event.miningSpeedMultiplier = ((ToolLevel) event.itemStack.getType()).getMaterial(event.itemStack).getMiningSpeed();
+    }
+
+    private static boolean isSuitable(ItemInstance item, BlockState state) {
+        //noinspection ConstantConditions
+        return item.getType() instanceof ToolLevel toolLevel && state.isIn(toolLevel.getEffectiveBlocks(item)) && ToolMaterialTemplate.class.cast(toolLevel.getMaterial(item)).matches(state);
     }
 }

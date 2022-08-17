@@ -9,6 +9,7 @@ import net.minecraft.entity.player.ServerPlayer;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
+import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.server.event.network.PlayerAttemptLoginEvent;
 import net.modificationstation.stationapi.impl.network.ModdedPacketHandlerSetter;
 
@@ -18,7 +19,6 @@ import java.util.stream.Collectors;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
 import static net.modificationstation.stationapi.impl.network.VanillaChecker.CLIENT_REQUIRED_MODS;
 import static net.modificationstation.stationapi.impl.network.VanillaChecker.MASK;
 
@@ -37,7 +37,7 @@ public class ServerVanillaChecker {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerMessages(MessageListenerRegistryEvent event) {
-        event.registry.register(of(MODID, "modlist"), (player, message) -> {
+        Registry.register(event.registry, MODID.id("modlist"), (player, message) -> {
             if (!CLIENT_REQUIRED_MODS.isEmpty()) {
                 LOGGER.info("Received a list of mods from player \"" + player.name + "\", verifying...");
                 ServerPlayer serverPlayer = (ServerPlayer) player;

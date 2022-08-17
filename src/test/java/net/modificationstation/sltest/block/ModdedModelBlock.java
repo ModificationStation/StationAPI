@@ -34,7 +34,6 @@ public class ModdedModelBlock extends TemplateBlockBase {
 
     @Override
     public void appendProperties(StateManager.Builder<BlockBase, BlockState> builder) {
-        super.appendProperties(builder);
         builder.add(HORIZONTAL_FACING);
     }
 }

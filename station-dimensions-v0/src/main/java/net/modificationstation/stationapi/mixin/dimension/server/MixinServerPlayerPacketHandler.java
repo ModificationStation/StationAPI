@@ -20,6 +20,6 @@ public class MixinServerPlayerPacketHandler {
             constant = @Constant(intValue = 0)
     )
     private int modifyRespawnDimension(int original) {
-        return serverPlayer.level.dimension.canPlayerSleep() ? serverPlayer.dimensionId : DimensionRegistry.INSTANCE.getSerialID(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Overworld not found!"));
+        return serverPlayer.level.dimension.canPlayerSleep() ? serverPlayer.dimensionId : DimensionRegistry.INSTANCE.getLegacyId(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Overworld not found!"));
     }
 }

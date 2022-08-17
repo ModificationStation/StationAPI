@@ -9,8 +9,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplatePressurePlate extends net.minecraft.block.PressurePlate implements BlockTemplate<TemplatePressurePlate> {
 
     public TemplatePressurePlate(Identifier identifier, int j, PressurePlateTrigger arg, Material arg1) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), j, arg, arg1);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), j, arg, arg1);
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplatePressurePlate(int i, int j, PressurePlateTrigger arg, Material arg1) {

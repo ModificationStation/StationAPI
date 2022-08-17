@@ -1,20 +1,23 @@
 package net.modificationstation.stationapi.api.client.registry;
 
+import com.mojang.serialization.Lifecycle;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.client.model.item.ItemModelPredicateProvider;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.registry.RegistryKey;
+import net.modificationstation.stationapi.api.registry.SimpleRegistry;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-public final class ItemModelPredicateProviderRegistry extends Registry<ItemModelPredicateProvider> {
+public final class ItemModelPredicateProviderRegistry extends SimpleRegistry<ItemModelPredicateProvider> {
 
-    public static final ItemModelPredicateProviderRegistry INSTANCE = new ItemModelPredicateProviderRegistry();
+    public static final RegistryKey<Registry<ItemModelPredicateProvider>> KEY = RegistryKey.ofRegistry(MODID.id("item_model_predicate_providers"));
+    public static final ItemModelPredicateProviderRegistry INSTANCE = Registry.create(KEY, new ItemModelPredicateProviderRegistry(), Lifecycle.experimental());
 
     private static final Identifier DAMAGED_ID = Identifier.of("damaged");
     private static final Identifier DAMAGE_ID = Identifier.of("damage");
@@ -25,7 +28,7 @@ public final class ItemModelPredicateProviderRegistry extends Registry<ItemModel
     private final Map<ItemBase, Map<Identifier, ItemModelPredicateProvider>> ITEM_SPECIFIC = new IdentityHashMap<>();
 
     private ItemModelPredicateProviderRegistry() {
-        super(Identifier.of(MODID, "item_model_predicate_providers"));
+        super(KEY, Lifecycle.experimental(), null);
     }
 
     public ItemModelPredicateProvider get(ItemBase item, Identifier identifier) {
@@ -36,18 +39,14 @@ public final class ItemModelPredicateProviderRegistry extends Registry<ItemModel
             if (identifier == DAMAGED_ID)
                 return DAMAGED_PROVIDER;
         }
-        if (item.usesMeta()) {
-            if (identifier == META_ID)
-                return META_PROVIDER;
-        }
+        if (item.usesMeta()) if (identifier == META_ID)
+            return META_PROVIDER;
 
-        Optional<ItemModelPredicateProvider> modelPredicateProvider = get(identifier);
-        if (modelPredicateProvider.isPresent())
-            return modelPredicateProvider.get();
-        else {
+        ItemModelPredicateProvider modelPredicateProvider = get(identifier);
+        if (modelPredicateProvider == null) {
             Map<Identifier, ItemModelPredicateProvider> map = ITEM_SPECIFIC.get(item);
             return map == null ? null : map.get(identifier);
-        }
+        } else return modelPredicateProvider;
     }
 
     public void register(ItemBase item, Identifier id, ItemModelPredicateProvider provider) {

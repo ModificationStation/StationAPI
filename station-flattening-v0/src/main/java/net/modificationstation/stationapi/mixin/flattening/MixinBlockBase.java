@@ -4,8 +4,11 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
+import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
+import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.*;
+import net.modificationstation.stationapi.api.entity.player.PlayerStrengthWithBlockState;
 import net.modificationstation.stationapi.api.level.BlockStateView;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.impl.block.BlockDropListImpl;
@@ -20,7 +23,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(BlockBase.class)
-public abstract class MixinBlockBase implements BlockStateHolder, DropWithBlockState, DropListProvider, AfterBreakWithBlockState {
+public abstract class MixinBlockBase implements
+        BlockStateHolder,
+        DropWithBlockState,
+        DropListProvider,
+        AfterBreakWithBlockState,
+        HardnessWithBlockState
+{
 
     @Shadow public abstract void beforeDestroyedByExplosion(Level arg, int i, int j, int k, int l, float f);
 
@@ -30,6 +39,10 @@ public abstract class MixinBlockBase implements BlockStateHolder, DropWithBlockS
 
     @Shadow public abstract void drop(Level arg, int i, int j, int k, int l);
 
+    @Shadow public abstract float getHardness();
+
+    @Shadow public abstract float getHardness(PlayerBase arg);
+
     @Inject(
             method = "<init>(ILnet/minecraft/block/material/Material;)V",
             at = @At("RETURN")
@@ -37,25 +50,25 @@ public abstract class MixinBlockBase implements BlockStateHolder, DropWithBlockS
     private void onInit(int material, Material par2, CallbackInfo ci) {
         StateManager.Builder<BlockBase, BlockState> builder = new StateManager.Builder<>(BlockBase.class.cast(this));
         appendProperties(builder);
-        stateManager = builder.build(blockBase -> ((BlockStateHolder) blockBase).getDefaultState(), BlockState::new);
-        setDefaultState(stateManager.getDefaultState());
+        stationapi_stateManager = builder.build(blockBase -> ((BlockStateHolder) blockBase).getDefaultState(), BlockState::new);
+        setDefaultState(stationapi_stateManager.getDefaultState());
     }
 
     @Unique
-    private StateManager<BlockBase, BlockState> stateManager;
+    private StateManager<BlockBase, BlockState> stationapi_stateManager;
     @Unique
-    private BlockState defaultState;
+    private BlockState stationapi_defaultState;
 
     @Override
     @Unique
     public StateManager<BlockBase, BlockState> getStateManager() {
-        return stateManager;
+        return stationapi_stateManager;
     }
 
     @Override
     @Unique
     public final BlockState getDefaultState() {
-        return defaultState;
+        return stationapi_defaultState;
     }
 
     @Override
@@ -65,7 +78,7 @@ public abstract class MixinBlockBase implements BlockStateHolder, DropWithBlockS
     @Override
     @Unique
     public void setDefaultState(BlockState defaultState) {
-        this.defaultState = defaultState;
+        this.stationapi_defaultState = defaultState;
     }
 
     @Inject(
@@ -89,13 +102,17 @@ public abstract class MixinBlockBase implements BlockStateHolder, DropWithBlockS
     }
 
     @Unique
-    private BlockState stationapi$curBlockState;
+    private boolean stationapi_afterBreak_argsPresent;
+    @Unique
+    private BlockState stationapi_afterBreak_state;
 
     @Override
     public void afterBreak(Level level, PlayerBase player, int x, int y, int z, BlockState state, int meta) {
-        stationapi$curBlockState = state;
+        stationapi_afterBreak_state = state;
+        stationapi_afterBreak_argsPresent = true;
         afterBreak(level, player, x, y, z, meta);
-        stationapi$curBlockState = null;
+        stationapi_afterBreak_argsPresent = false;
+        stationapi_afterBreak_state = null;
     }
 
     @Redirect(
@@ -106,7 +123,20 @@ public abstract class MixinBlockBase implements BlockStateHolder, DropWithBlockS
             )
     )
     private void redirectDropToDropWithBlockState(BlockBase block, Level level, int x, int y, int z, int meta) {
-        if (stationapi$curBlockState == null) drop(level, x, y, z, meta);
-        else drop(level, x, y, z, stationapi$curBlockState, meta);
+        if (stationapi_afterBreak_argsPresent) drop(level, x, y, z, meta);
+        else drop(level, x, y, z, stationapi_afterBreak_state, meta);
+    }
+
+    @Override
+    public float getHardness(BlockState state, BlockView blockView, TilePos pos) {
+        return getHardness();
+    }
+
+    @Override
+    public float calcBlockBreakingDelta(BlockState state, PlayerBase player, BlockView world, TilePos pos) {
+        float hardness = getHardness(state, world, pos);
+        if (hardness < 0.0f) return 0.0f;
+        if (!((PlayerStrengthWithBlockState) player).canHarvest(state)) return 1.0f / hardness / 100.0f;
+        return ((PlayerStrengthWithBlockState) player).getBlockBreakingSpeed(state) / hardness / 30.0f;
     }
 }

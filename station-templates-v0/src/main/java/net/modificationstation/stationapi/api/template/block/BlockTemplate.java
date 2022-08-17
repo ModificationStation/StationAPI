@@ -4,31 +4,43 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.minecraft.block.BlockBase;
+import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
+import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
+import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.*;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.item.ItemConvertible;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.util.Util;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.util.List;
 
 @EnvironmentInterface(value = EnvType.CLIENT, itf = CustomAtlasProvider.class)
-public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider, BlockToolLogic, BlockStateHolder, ItemConvertible, BlockItemToggle<T>, DropWithBlockState, DropListProvider {
+public interface BlockTemplate<T extends BlockBase> extends
+        CustomAtlasProvider,
+        BlockStateHolder,
+        ItemConvertible,
+        BlockItemToggle<T>,
+        DropWithBlockState,
+        DropListProvider,
+        HardnessWithBlockState
+{
 
     @Override
-    default T mineableBy(Identifier toolTag, int level) {
+    default float getHardness(BlockState state, BlockView blockView, TilePos pos) {
         return Util.assertImpl();
     }
 
     @Override
-    default List<BiTuple<Identifier, Integer>> getToolTagEffectiveness() {
+    default float calcBlockBreakingDelta(BlockState state, PlayerBase player, BlockView world, TilePos pos) {
         return Util.assertImpl();
     }
 
@@ -86,5 +98,9 @@ public interface BlockTemplate<T extends BlockBase> extends CustomAtlasProvider,
     @Override
     default void dropWithChance(Level arg, int i, int j, int k, BlockState state, int l, float f) {
         Util.assertImpl();
+    }
+
+    static void onConstructor(BlockBase block, Identifier id) {
+        Registry.register(BlockRegistry.INSTANCE, id, block);
     }
 }

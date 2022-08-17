@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateRedstoneTorch extends net.minecraft.block.RedstoneTorch implements BlockTemplate<TemplateRedstoneTorch> {
     
     public TemplateRedstoneTorch(Identifier identifier, int j, boolean flag) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), j, flag);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), j, flag);
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplateRedstoneTorch(int i, int j, boolean flag) {

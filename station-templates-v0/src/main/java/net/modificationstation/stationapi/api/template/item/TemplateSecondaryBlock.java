@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 public class TemplateSecondaryBlock extends net.minecraft.item.SecondaryBlock implements ItemTemplate<TemplateSecondaryBlock> {
 
     public TemplateSecondaryBlock(Identifier identifier, BlockBase tile) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), tile);
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted(), tile);
+        ItemTemplate.onConstructor(this, identifier);
     }
 
     public TemplateSecondaryBlock(int id, BlockBase tile) {

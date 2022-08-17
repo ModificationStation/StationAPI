@@ -34,6 +34,6 @@ public class MixinMinecraft {
             )
     )
     private void switchDimension(Minecraft minecraft) {
-        DimensionHelper.switchDimension(player, DimensionRegistry.INSTANCE.getIdentifier(player.dimensionId).orElseThrow(() -> new IllegalArgumentException("Unknown dimension: " + player.dimensionId + "!")), 1, null);
+        DimensionHelper.switchDimension(player, DimensionRegistry.INSTANCE.getIdByLegacyId(player.dimensionId).orElseThrow(() -> new IllegalArgumentException("Unknown dimension: " + player.dimensionId + "!")), 1, null);
     }
 }

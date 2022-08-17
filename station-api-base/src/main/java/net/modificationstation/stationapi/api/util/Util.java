@@ -35,37 +35,50 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 public class Util {
 
+    private static final int MAX_PARALLELISM = 255;
+    private static final String MAX_BG_THREADS_PROPERTY = "max.bg.threads";
     private static final AtomicInteger NEXT_WORKER_ID = new AtomicInteger(1);
     private static final ExecutorService MAIN_WORKER_EXECUTOR = createWorker("Main");
     public static LongSupplier nanoTimeSupplier = System::nanoTime;
 
     private static ExecutorService createWorker(String name) {
-        int i = MathHelper.clamp(Runtime.getRuntime().availableProcessors() - 1, 1, 7);
-        ExecutorService executorService2;
-        if (i <= 0) {
-            executorService2 = MoreExecutors.newDirectExecutorService();
-        } else {
-            executorService2 = new ForkJoinPool(i, (forkJoinPool) -> {
-                ForkJoinWorkerThread forkJoinWorkerThread = new ForkJoinWorkerThread(forkJoinPool) {
-                    protected void onTermination(Throwable throwable) {
-                        if (throwable != null) {
-                            LOGGER.warn("{} died", this.getName(), throwable);
-                        } else {
-                            LOGGER.debug("{} shutdown", this.getName());
-                        }
+        int i = MathHelper.clamp(Runtime.getRuntime().availableProcessors() - 1, 1, Util.getMaxBackgroundThreads());
+        return i <= 0 ? MoreExecutors.newDirectExecutorService() : new ForkJoinPool(i, forkJoinPool -> {
+            ForkJoinWorkerThread forkJoinWorkerThread = new ForkJoinWorkerThread(forkJoinPool){
 
-                        super.onTermination(throwable);
+                @Override
+                protected void onTermination(Throwable throwable) {
+                    if (throwable != null) {
+                        LOGGER.warn("{} died", this.getName(), throwable);
+                    } else {
+                        LOGGER.debug("{} shutdown", this.getName());
                     }
-                };
-                forkJoinWorkerThread.setName("Worker-" + name + "-" + NEXT_WORKER_ID.getAndIncrement());
-                return forkJoinWorkerThread;
-            }, Util::method_18347, true);
-        }
-
-        return executorService2;
+                    super.onTermination(throwable);
+                }
+            };
+            forkJoinWorkerThread.setName("Worker-" + name + "-" + NEXT_WORKER_ID.getAndIncrement());
+            return forkJoinWorkerThread;
+        }, Util::uncaughtExceptionHandler, true);
     }
 
-    private static void method_18347(Thread thread, Throwable throwable) {
+    private static int getMaxBackgroundThreads() {
+        String string = System.getProperty(MAX_BG_THREADS_PROPERTY);
+        if (string != null) {
+            try {
+                int i = Integer.parseInt(string);
+                if (i >= 1 && i <= MAX_PARALLELISM) {
+                    return i;
+                }
+                LOGGER.error("Wrong {} property value '{}'. Should be an integer value between 1 and {}.", MAX_BG_THREADS_PROPERTY, string, MAX_PARALLELISM);
+            }
+            catch (NumberFormatException numberFormatException) {
+                LOGGER.error("Could not parse {} property value '{}'. Should be an integer value between 1 and {}.", MAX_BG_THREADS_PROPERTY, string, MAX_PARALLELISM);
+            }
+        }
+        return 255;
+    }
+
+    private static void uncaughtExceptionHandler(Thread thread, Throwable throwable) {
         throwOrPause(throwable);
         if (throwable instanceof CompletionException) {
             throwable = throwable.getCause();
@@ -77,6 +90,10 @@ public class Util {
         }
 
         LOGGER.error(String.format("Caught exception in thread %s", thread), throwable);
+    }
+
+    public static void error(String message) {
+        LOGGER.error(message);
     }
 
     public static <T extends Throwable> T throwOrPause(T t) {
@@ -220,6 +237,10 @@ public class Util {
     public static <T, U, R> BiFunction<T, U, R> memoize(final BiFunction<T, U, R> biFunction) {
         final Map<Pair<T, U>, R> cache = new HashMap<>();
         return (object, object2) -> cache.computeIfAbsent(Pair.of(object, object2), pair -> biFunction.apply(pair.getFirst(), pair.getSecond()));
+    }
+
+    public static Consumer<String> addPrefix(String prefix, Consumer<String> consumer) {
+        return string -> consumer.accept(prefix + string);
     }
 
     public static DataResult<int[]> toArray(IntStream stream, int length) {

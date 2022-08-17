@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateRedstoneRepeater extends net.minecraft.block.RedstoneRepeater implements BlockTemplate<TemplateRedstoneRepeater> {
     
     public TemplateRedstoneRepeater(Identifier identifier, boolean flag) {
-        this(BlockRegistry.INSTANCE.getNextSerialID(), flag);
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId(), flag);
+        BlockTemplate.onConstructor(this, identifier);
     }
     
     public TemplateRedstoneRepeater(int i, boolean flag) {

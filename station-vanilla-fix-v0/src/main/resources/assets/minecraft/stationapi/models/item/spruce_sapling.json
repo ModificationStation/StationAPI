@@ -1,5 +1,5 @@
 {
-  "parent": "item/sapling",
+  "parent": "item/generated",
   "textures": {
     "layer0": "block/spruce_sapling"
   }

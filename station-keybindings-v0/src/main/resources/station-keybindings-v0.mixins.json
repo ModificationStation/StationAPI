@@ -8,8 +8,7 @@
   "client": [
     "client.MixinGameOptions",
     "client.MixinMinecraft",
-    "client.MixinScreenBase",
-    "client.OptionAccessor"
+    "client.MixinScreenBase"
   ],
   "injectors": {
     "defaultRequire": 1

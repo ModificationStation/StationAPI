@@ -26,7 +26,7 @@ public class MixinMcRegionDimensionFile extends DimensionFile {
     @Overwrite
     public ChunkIO getChunkIO(Dimension dimension) {
         File var2 = this.getParentFolder();
-        if (!DimensionRegistry.INSTANCE.getIdentifier(dimension.id).map(VanillaDimensions.OVERWORLD::equals).orElse(true)) {
+        if (!DimensionRegistry.INSTANCE.getIdByLegacyId(dimension.id).map(VanillaDimensions.OVERWORLD::equals).orElse(true)) {
             File var3 = new File(var2, "DIM" + dimension.id);
             //noinspection ResultOfMethodCallIgnored
             var3.mkdirs();

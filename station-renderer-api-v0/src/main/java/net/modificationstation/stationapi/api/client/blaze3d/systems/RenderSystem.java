@@ -7,8 +7,12 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Tessellator;
+import net.modificationstation.stationapi.api.client.blaze3d.platform.GlConst;
 import net.modificationstation.stationapi.api.client.blaze3d.platform.GlStateManager;
-import net.modificationstation.stationapi.api.client.render.*;
+import net.modificationstation.stationapi.api.client.render.FogMode;
+import net.modificationstation.stationapi.api.client.render.FogShape;
+import net.modificationstation.stationapi.api.client.render.Shader;
+import net.modificationstation.stationapi.api.client.render.VertexFormat;
 import net.modificationstation.stationapi.api.client.texture.AbstractTexture;
 import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -36,7 +40,7 @@ public class RenderSystem {
     @Nullable
     private static Thread gameThread;
     @Nullable
-    private static Thread renderThread;
+    public static Thread renderThread;
     private static int MAX_SUPPORTED_TEXTURE_SIZE;
     private static boolean isInInit;
     private static double lastDrawTime;
@@ -893,19 +897,19 @@ public class RenderSystem {
         return textureMatrix;
     }
 
-    public static IndexBuffer getSequentialBuffer(VertexFormat.DrawMode drawMode, int i) {
-        assertOnRenderThread();
-        IndexBuffer indexBuffer = drawMode == VertexFormat.DrawMode.QUADS ? sharedSequentialQuad : (drawMode == VertexFormat.DrawMode.LINES ? sharedSequentialLines : sharedSequential);
-        indexBuffer.grow(i);
-        return indexBuffer;
+    public static IndexBuffer getSequentialBuffer(VertexFormat.DrawMode drawMode) {
+        RenderSystem.assertOnRenderThread();
+        return switch (drawMode) {
+            case QUADS -> sharedSequentialQuad;
+            case LINES -> sharedSequentialLines;
+            default -> sharedSequential;
+        };
     }
 
     public static void setShaderGameTime(long l, float f) {
         float g = ((float)(l % 24000L) + f) / 24000.0f;
         if (!isOnRenderThread()) {
-            recordRenderCall(() -> {
-                shaderGameTime = g;
-            });
+            recordRenderCall(() -> shaderGameTime = g);
         } else {
             shaderGameTime = g;
         }
@@ -964,64 +968,66 @@ public class RenderSystem {
         private final int increment;
         private final IndexMapper indexMapper;
         private int id;
-        private VertexFormat.IntType elementFormat = VertexFormat.IntType.BYTE;
+        private VertexFormat.IndexType indexType = VertexFormat.IndexType.BYTE;
         private int size;
 
-        IndexBuffer(int i, int j, IndexMapper indexMapper) {
-            this.sizeMultiplier = i;
-            this.increment = j;
+        IndexBuffer(int sizeMultiplier, int increment, IndexMapper indexMapper) {
+            this.sizeMultiplier = sizeMultiplier;
+            this.increment = increment;
             this.indexMapper = indexMapper;
         }
 
-        void grow(int newSize) {
-            if (newSize <= this.size) {
-                return;
-            }
-            newSize = MathHelper.roundUpToMultiple(newSize * 2, this.increment);
-            LOGGER.debug("Growing IndexBuffer: Old limit {}, new limit {}.", this.size, newSize);
+        public boolean isSizeLessThanOrEqual(int size) {
+            return size <= this.size;
+        }
+
+        public void bindAndGrow(int newSize) {
             if (this.id == 0) {
                 this.id = GlStateManager._glGenBuffers();
             }
-            VertexFormat.IntType intType = VertexFormat.IntType.getSmallestTypeFor(newSize);
-            int i = MathHelper.roundUpToMultiple(newSize * intType.size, 4);
-            GlStateManager._glBindBuffer(34963, this.id);
-            GlStateManager._glBufferData(34963, i, 35048);
-            ByteBuffer byteBuffer = GlStateManager.mapBuffer(34963, 35001);
+            GlStateManager._glBindBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, this.id);
+            this.grow(newSize);
+        }
+
+        private void grow(int newSize) {
+            if (this.isSizeLessThanOrEqual(newSize)) {
+                return;
+            }
+            newSize = MathHelper.roundUpToMultiple(newSize * 2, this.increment);
+            LOGGER.debug("Growing IndexBuffer: Old limit {}, new limit {}.", (Object)this.size, (Object)newSize);
+            VertexFormat.IndexType indexType = VertexFormat.IndexType.smallestFor(newSize);
+            int i = MathHelper.roundUpToMultiple(newSize * indexType.size, 4);
+            GlStateManager._glBufferData(GlConst.GL_ELEMENT_ARRAY_BUFFER, i, GlConst.GL_DYNAMIC_DRAW);
+            ByteBuffer byteBuffer = GlStateManager.mapBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER, GlConst.GL_WRITE_ONLY);
             if (byteBuffer == null) {
                 throw new RuntimeException("Failed to map GL buffer");
             }
-            this.elementFormat = intType;
+            this.indexType = indexType;
             IntConsumer intConsumer = this.getIndexConsumer(byteBuffer);
             for (int j = 0; j < newSize; j += this.increment) {
                 this.indexMapper.accept(intConsumer, j * this.sizeMultiplier / this.increment);
             }
-            GlStateManager._glUnmapBuffer(34963);
-            GlStateManager._glBindBuffer(34963, 0);
+            GlStateManager._glUnmapBuffer(GlConst.GL_ELEMENT_ARRAY_BUFFER);
             this.size = newSize;
-            BufferRenderer.unbindElementBuffer();
         }
 
         private IntConsumer getIndexConsumer(ByteBuffer indicesBuffer) {
-            switch (this.elementFormat) {
+            switch (this.indexType) {
                 case BYTE -> {
-                    return i -> indicesBuffer.put((byte) i);
+                    return index -> indicesBuffer.put((byte) index);
                 }
                 case SHORT -> {
-                    return i -> indicesBuffer.putShort((short) i);
+                    return index -> indicesBuffer.putShort((short) index);
                 }
             }
             return indicesBuffer::putInt;
         }
 
-        public int getId() {
-            return this.id;
+        public VertexFormat.IndexType getIndexType() {
+            return this.indexType;
         }
 
-        public VertexFormat.IntType getElementFormat() {
-            return this.elementFormat;
-        }
-
-        @Environment(value=EnvType.CLIENT)
+        @Environment(EnvType.CLIENT)
         interface IndexMapper {
             void accept(IntConsumer var1, int var2);
         }

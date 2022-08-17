@@ -124,9 +124,9 @@ allprojects {
         modLocalRuntime("com.github.calmilamsy:glass-config-api:${project.gcapi_version}") {
             transitive false
         }
-        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:5.0.5") {
-            transitive false
-        }
+//        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:5.0.5") {
+//            transitive false
+//        }
     }
 
     loom {

@@ -1,7 +1,9 @@
 package net.modificationstation.stationapi.api.registry;
 
+import com.mojang.serialization.Lifecycle;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
+import net.modificationstation.stationapi.api.registry.legacy.AbstractArrayBackedLegacyRegistry;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.mixin.block.BlockBaseAccessor;
 import net.modificationstation.stationapi.mixin.block.FireAccessor;
@@ -10,40 +12,31 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-public final class BlockRegistry extends AbstractSerialRegistry<BlockBase> {
+public final class BlockRegistry extends AbstractArrayBackedLegacyRegistry<BlockBase> {
 
-    public static final BlockRegistry INSTANCE = new BlockRegistry();
+    public static final RegistryKey<Registry<BlockBase>> KEY = RegistryKey.ofRegistry(MODID.id("blocks"));
+    public static final BlockRegistry INSTANCE = Registry.create(KEY, new BlockRegistry(), Lifecycle.experimental());
 
     private BlockRegistry() {
-        super(Identifier.of(MODID, "blocks"));
+        super(KEY);
     }
 
     @Override
-    public int getSize() {
-        return BlockBase.BY_ID.length;
+    protected BlockBase[] getBackingArray() {
+        return BlockBase.BY_ID;
     }
 
     @Override
-    public int getSerialIDShift() {
+    public int getLegacyIdShift() {
         return 1;
     }
 
     @Override
-    public int getSerialID(@NotNull BlockBase value) {
+    public int getLegacyId(@NotNull BlockBase value) {
         return Objects.requireNonNull(value).id;
-    }
-
-    @Override
-    public @NotNull Optional<BlockBase> get(int serialID) {
-        try {
-            return Optional.ofNullable(BlockBase.BY_ID[serialID]);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return Optional.empty();
-        }
     }
 
     @Override

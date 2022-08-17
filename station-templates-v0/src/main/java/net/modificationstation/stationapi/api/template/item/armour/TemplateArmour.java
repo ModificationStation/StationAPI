@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 public class TemplateArmour extends net.minecraft.item.armour.Armour implements ItemTemplate<TemplateArmour> {
 
     public TemplateArmour(Identifier identifier, int j, int k, int slot) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), j, k, slot);
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted(), j, k, slot);
+        ItemTemplate.onConstructor(this, identifier);
     }
 
     public TemplateArmour(int id, int j, int k, int slot) {

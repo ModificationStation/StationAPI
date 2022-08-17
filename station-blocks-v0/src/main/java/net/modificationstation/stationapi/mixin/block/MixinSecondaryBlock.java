@@ -29,7 +29,7 @@ public class MixinSecondaryBlock {
                 .level(level)
                 .player(player)
                 .x(x).y(y).z(z)
-                .block(BlockRegistry.INSTANCE.get(id).orElseThrow())
+                .block(BlockRegistry.INSTANCE.getByLegacyId(id).orElseThrow())
                 .blockItem(blockItem)
                 .placeFunction(() -> level.setTile(x, y, z, id))
                 .build()).placeFunction.getAsBoolean();

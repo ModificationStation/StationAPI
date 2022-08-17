@@ -7,7 +7,8 @@ import net.minecraft.recipe.*;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.tags.TagRegistry;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.impl.recipe.tag.ShapedTagRecipeAccessor;
 import net.modificationstation.stationapi.impl.recipe.tag.TagConversionStorage;
 import org.spongepowered.asm.mixin.*;
@@ -60,7 +61,7 @@ public class MixinRecipeRegistry {
     @SuppressWarnings("OverwriteModifiers")
     @Overwrite
     public void addShapelessRecipe(ItemInstance output, Object... objects) {
-        ArrayList<Object> var3 = new ArrayList<>();
+        List<Object> var3 = new ArrayList<>();
 
         for (Object var7 : objects) {
             if (var7 instanceof ItemInstance item) {
@@ -70,10 +71,11 @@ public class MixinRecipeRegistry {
             } else if (var7 instanceof BlockBase block) {
                 var3.add(new ItemInstance(block));
             } else if (var7 instanceof Identifier id) {
-                if (TagRegistry.INSTANCE.get(id).isEmpty()) {
-                    throw new RuntimeException("Identifier ingredient \"" + id + "\" has no entry in the tag registry!");
-                }
-                var3.add(id);
+                TagKey<ItemBase> tag = TagKey.of(ItemRegistry.INSTANCE.getKey(), id);
+//                if (!ItemRegistry.INSTANCE.containsTag(tag)) {
+//                    throw new RuntimeException("Identifier ingredient \"" + id + "\" has no entry in the tag registry!");
+//                }
+                var3.add(tag);
             } else {
                 throw new RuntimeException("Invalid shapeless recipe ingredient of type " + var7.getClass().getName() + "!");
             }
@@ -84,7 +86,7 @@ public class MixinRecipeRegistry {
 
     @Inject(method = "addShapedRecipe", at = @At(value = "HEAD"))
     private void hijackShapedRecipes(ItemInstance output, Object[] objects, CallbackInfo ci) {
-        TagConversionStorage.tagify(objects);
+//        TagConversionStorage.tagify(objects);
         capturedRecipe = objects;
     }
 
@@ -117,10 +119,11 @@ public class MixinRecipeRegistry {
                     var14[var16] = inst.copy();
                 }
                 else if (item instanceof Identifier id) {
-                    if (TagRegistry.INSTANCE.get(id).isEmpty()) {
-                        throw new RuntimeException("Identifier ingredient \"" + id + "\" has no entry in the tag registry!");
-                    }
-                    var14[var16] = id;
+                    TagKey<ItemBase> tag = TagKey.of(ItemRegistry.INSTANCE.getKey(), id);
+//                    if (!ItemRegistry.INSTANCE.containsTag(tag)) {
+//                        throw new RuntimeException("Identifier ingredient \"" + id + "\" has no entry in the tag registry!");
+//                    }
+                    var14[var16] = tag;
                 }
             } else {
                 var14[var16] = null;

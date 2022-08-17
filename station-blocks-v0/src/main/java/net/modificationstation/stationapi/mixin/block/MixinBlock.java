@@ -40,7 +40,7 @@ public class MixinBlock {
                         .level(level)
                         .player(player)
                         .x(x).y(y).z(z)
-                        .block(BlockRegistry.INSTANCE.get(id).orElseThrow())
+                        .block(BlockRegistry.INSTANCE.getByLegacyId(id).orElseThrow())
                         .meta(meta)
                         .blockItem(blockItem)
                         .placeFunction(() -> level.placeBlockWithMetaData(x, y, z, id, meta))

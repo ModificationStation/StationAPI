@@ -11,9 +11,9 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
-import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.JsonRecipeParserRegistry;
 import net.modificationstation.stationapi.api.registry.JsonRecipesRegistry;
+import net.modificationstation.stationapi.api.registry.Registry;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,20 +21,26 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
+
+import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public class JsonRecipeParserInit {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerJsonRecipeParsers(JsonRecipeParserRegistryEvent event) {
-        event.registry.register(Identifier.of("crafting_shaped"), JsonRecipeParserInit::parseCraftingShaped);
-        event.registry.register(Identifier.of("crafting_shapeless"), JsonRecipeParserInit::parseCraftingShapeless);
-        event.registry.register(Identifier.of("smelting"), JsonRecipeParserInit::parseSmelting);
+        Registry.register(event.registry, of("crafting_shaped"), JsonRecipeParserInit::parseCraftingShaped);
+        Registry.register(event.registry, of("crafting_shapeless"), JsonRecipeParserInit::parseCraftingShapeless);
+        Registry.register(event.registry, of("smelting"), JsonRecipeParserInit::parseSmelting);
     }
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void parseAndRegisterRecipe(RecipeRegisterEvent event) {
-        JsonRecipeParserRegistry.INSTANCE.get(event.recipeId).ifPresent(recipeParser -> JsonRecipesRegistry.INSTANCE.get(event.recipeId).ifPresent(recipes -> recipes.forEach(recipeParser)));
+        Consumer<URL> jsonRecipeParser = JsonRecipeParserRegistry.INSTANCE.get(event.recipeId);
+        Set<URL> jsonRecipes = JsonRecipesRegistry.INSTANCE.get(event.recipeId);
+        if (jsonRecipeParser != null && jsonRecipes != null)
+            jsonRecipes.forEach(jsonRecipeParser);
     }
 
     private static void parseCraftingShaped(URL recipe) {

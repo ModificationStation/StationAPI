@@ -7,5 +7,6 @@ moduleDependencies(project,
         'station-items-v0',
         'station-registry-api-v0',
         'station-lifecycle-events-v0',
-        'station-flattening-v0'
+        'station-flattening-v0',
+        'station-resource-loader-v0'
 )

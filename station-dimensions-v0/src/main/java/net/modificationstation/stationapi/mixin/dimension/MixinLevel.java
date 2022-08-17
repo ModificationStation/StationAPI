@@ -23,7 +23,7 @@ public class MixinLevel {
             )
     )
     private int modIf(LevelProperties levelProperties) {
-        return DimensionRegistry.INSTANCE.get(levelProperties.getDimensionId()).map(dimensionSupplier -> -1).orElse(0);
+        return DimensionRegistry.INSTANCE.getByLegacyId(levelProperties.getDimensionId()).map(dimensionSupplier -> -1).orElse(0);
     }
 
     @ModifyConstant(

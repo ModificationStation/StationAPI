@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 public class TemplateLockedChest extends net.minecraft.block.LockedChest implements BlockTemplate<TemplateLockedChest> {
 
     public TemplateLockedChest(Identifier identifier) {
-        this(BlockRegistry.INSTANCE.getNextSerialID());
-        BlockRegistry.INSTANCE.register(identifier, this);
+        this(BlockRegistry.INSTANCE.getNextLegacyId());
+        BlockTemplate.onConstructor(this, identifier);
     }
 
     public TemplateLockedChest(int i) {

@@ -6,11 +6,11 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateToolBase extends net.minecraft.item.tool.ToolBase implements ItemTemplate<TemplateToolBase> {
+public class TemplateToolBase extends net.minecraft.item.tool.ToolBase implements ItemTemplate<TemplateToolBase>, ToolTemplate {
     
     public TemplateToolBase(Identifier identifier, int j, ToolMaterial arg, BlockBase[] effectiveBlocks) {
-        this(ItemRegistry.INSTANCE.getNextSerialIDShifted(), j, arg, effectiveBlocks);
-        ItemRegistry.INSTANCE.register(identifier, this);
+        this(ItemRegistry.INSTANCE.getNextLegacyIdShifted(), j, arg, effectiveBlocks);
+        ItemTemplate.onConstructor(this, identifier);
     }
     
     public TemplateToolBase(int id, int j, ToolMaterial arg, BlockBase[] effectiveBlocks) {

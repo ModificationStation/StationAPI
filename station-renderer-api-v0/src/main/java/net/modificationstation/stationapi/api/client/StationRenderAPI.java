@@ -11,22 +11,22 @@ import net.modificationstation.stationapi.api.client.render.model.BakedModelMana
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StationRenderAPI {
 
-    private static final BlockColors BLOCK_COLOURS = BlockColors.create();
+    private static final BlockColors BLOCK_COLORS = BlockColors.create();
 
-    private static final ItemColors ITEM_COLOURS = ItemColors.create(BLOCK_COLOURS);
+    private static final ItemColors ITEM_COLORS = ItemColors.create(BLOCK_COLORS);
 
     @SuppressWarnings("deprecation")
-    private static final BakedModelManager BAKED_MODEL_MANAGER = new BakedModelManager(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, BLOCK_COLOURS, 0);
+    private static final BakedModelManager BAKED_MODEL_MANAGER = new BakedModelManager(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, BLOCK_COLORS, 0);
 
-    public static BlockColors getBlockColours() {
-        return BLOCK_COLOURS;
+    public static BlockColors getBlockColors() {
+        return BLOCK_COLORS;
     }
 
     public static BakedModelManager getBakedModelManager() {
         return BAKED_MODEL_MANAGER;
     }
 
-    public static ItemColors getItemColours() {
-        return ITEM_COLOURS;
+    public static ItemColors getItemColors() {
+        return ITEM_COLORS;
     }
 }
