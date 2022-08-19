@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.mixin.vanillafix.block.wool;
 
 import net.minecraft.block.BlockBase;
+import net.minecraft.item.ItemInstance;
 import net.minecraft.item.tool.Shears;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.vanillafix.block.Blocks;
@@ -18,14 +19,13 @@ public class MixinShears {
             method = "getStrengthOnBlock(Lnet/minecraft/item/ItemInstance;Lnet/minecraft/block/BlockBase;)F",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/block/BlockBase;id:I",
-                    ordinal = 3
+                    target = "Lnet/minecraft/block/BlockBase;WOOL:Lnet/minecraft/block/BlockBase;",
+                    opcode = Opcodes.GETSTATIC
             )
     )
-    private int normalizeWoolBlockID(BlockBase instance) {
-        return switch (Objects.requireNonNull(BlockRegistry.INSTANCE.getId(instance)).toString()) {
-            case
-                    "minecraft:orange_wool",
+    private BlockBase redirectField(ItemInstance arg, BlockBase arg2) {
+        return switch (Objects.requireNonNull(BlockRegistry.INSTANCE.getId(arg2)).toString()) {
+            case "minecraft:orange_wool",
                     "minecraft:magenta_wool",
                     "minecraft:light_blue_wool",
                     "minecraft:yellow_wool",
@@ -40,20 +40,8 @@ public class MixinShears {
                     "minecraft:green_wool",
                     "minecraft:red_wool",
                     "minecraft:black_wool"
-                -> Blocks.WHITE_WOOL.id;
-            default -> instance.id;
+                    -> arg2;
+            default -> Blocks.WHITE_WOOL;
         };
-    }
-
-    @Redirect(
-            method = "getStrengthOnBlock(Lnet/minecraft/item/ItemInstance;Lnet/minecraft/block/BlockBase;)F",
-            at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/block/BlockBase;WOOL:Lnet/minecraft/block/BlockBase;",
-                    opcode = Opcodes.GETSTATIC
-            )
-    )
-    private BlockBase redirectWoolField() {
-        return Blocks.WHITE_WOOL;
     }
 }

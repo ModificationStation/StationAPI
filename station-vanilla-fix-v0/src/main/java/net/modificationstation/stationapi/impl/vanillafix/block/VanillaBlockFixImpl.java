@@ -4,15 +4,18 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.block.BlockItemToggle;
+import net.modificationstation.stationapi.api.event.block.FireBurnableRegisterEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
+import net.modificationstation.stationapi.api.vanillafix.block.FixedLeaves;
 import net.modificationstation.stationapi.api.vanillafix.block.FixedSapling;
 import net.modificationstation.stationapi.api.vanillafix.block.sapling.BirchSaplingGenerator;
 import net.modificationstation.stationapi.api.vanillafix.block.sapling.OakSaplingGenerator;
 import net.modificationstation.stationapi.api.vanillafix.block.sapling.SpruceSaplingGenerator;
+import net.modificationstation.stationapi.api.vanillafix.item.Items;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -53,7 +56,13 @@ public final class VanillaBlockFixImpl {
         r.accept("iron_ore", BlockBase.IRON_ORE);
         r.accept("coal_ore", BlockBase.COAL_ORE);
         r.accept("log", BlockBase.LOG);
-        r.accept("leaves", BlockBase.LEAVES);
+
+        // LEAVES MODIFIED BY STATIONAPI TO EXPAND METADATA VARIATIONS INTO SEPARATE BLOCKS
+        OAK_LEAVES = new FixedLeaves(of("oak_leaves"), () -> Items.OAK_SAPLING).setHardness(0.2F).setLightOpacity(1).setSounds(GRASS_SOUNDS).setTranslationKey("leaves").disableStat().disableNotifyOnMetaDataChange();
+        SPRUCE_LEAVES = new FixedLeaves(of("spruce_leaves"), () -> Items.SPRUCE_SAPLING).setHardness(0.2F).setLightOpacity(1).setSounds(GRASS_SOUNDS).setTranslationKey("leaves").disableStat().disableNotifyOnMetaDataChange();
+        BIRCH_LEAVES = new FixedLeaves(of("birch_leaves"), () -> Items.BIRCH_SAPLING).setHardness(0.2F).setLightOpacity(1).setSounds(GRASS_SOUNDS).setTranslationKey("leaves").disableStat().disableNotifyOnMetaDataChange();
+        // LEAVES END
+
         r.accept("sponge", BlockBase.SPONGE);
         r.accept("glass", BlockBase.GLASS);
         r.accept("lapis_ore", BlockBase.LAPIS_LAZULI_ORE);
@@ -182,5 +191,29 @@ public final class VanillaBlockFixImpl {
         c.accept(BlockBase.CAKE); // item name collision
         c.accept(BlockBase.REDSTONE_REPEATER); // item name collision
         c.accept(BlockBase.REDSTONE_REPEATER_LIT); // not supposed to have an item form
+    }
+
+    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    private static void registerFireBurnables(FireBurnableRegisterEvent event) {
+        event.addBurnable(OAK_LEAVES.id, 30, 60);
+        event.addBurnable(SPRUCE_LEAVES.id, 30, 60);
+        event.addBurnable(BIRCH_LEAVES.id, 30, 60);
+
+        event.addBurnable(WHITE_WOOL.id, 30, 60);
+        event.addBurnable(ORANGE_WOOL.id, 30, 60);
+        event.addBurnable(MAGENTA_WOOL.id, 30, 60);
+        event.addBurnable(LIGHT_BLUE_WOOL.id, 30, 60);
+        event.addBurnable(YELLOW_WOOL.id, 30, 60);
+        event.addBurnable(LIME_WOOL.id, 30, 60);
+        event.addBurnable(PINK_WOOL.id, 30, 60);
+        event.addBurnable(GRAY_WOOL.id, 30, 60);
+        event.addBurnable(LIGHT_GRAY_WOOL.id, 30, 60);
+        event.addBurnable(CYAN_WOOL.id, 30, 60);
+        event.addBurnable(PURPLE_WOOL.id, 30, 60);
+        event.addBurnable(BLUE_WOOL.id, 30, 60);
+        event.addBurnable(BROWN_WOOL.id, 30, 60);
+        event.addBurnable(GREEN_WOOL.id, 30, 60);
+        event.addBurnable(RED_WOOL.id, 30, 60);
+        event.addBurnable(BLACK_WOOL.id, 30, 60);
     }
 }

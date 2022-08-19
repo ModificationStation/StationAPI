@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.vanillafix.item;
+package net.modificationstation.stationapi.impl.vanillafix.recipe;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;

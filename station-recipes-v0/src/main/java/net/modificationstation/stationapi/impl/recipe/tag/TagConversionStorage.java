@@ -2,12 +2,9 @@ package net.modificationstation.stationapi.impl.recipe.tag;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.item.SecondaryBlock;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.mixin.recipe.SecondaryBlockAccessor;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
-package net.modificationstation.stationapi.mixin.vanillafix.block.wool;
+package net.modificationstation.stationapi.mixin.vanillafix.block.leaves;
 
-import net.minecraft.block.BlockBase;
 import net.minecraft.block.Fire;
+import net.minecraft.block.Leaves;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -15,12 +15,11 @@ public abstract class MixinFire {
             method = "init()V",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/block/BlockBase;id:I",
-                    opcode = GETFIELD,
-                    ordinal = 6
+                    target = "Lnet/minecraft/block/Leaves;id:I",
+                    opcode = GETFIELD
             )
     )
-    private int replace(BlockBase instance) {
+    private int replace(Leaves instance) {
         return -1;
     }
 
@@ -29,7 +28,7 @@ public abstract class MixinFire {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Fire;addBurnable(III)V",
-                    ordinal = 8
+                    ordinal = 4
             )
     )
     private void register(Fire instance, int j, int k, int i) {}

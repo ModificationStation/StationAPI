@@ -29,7 +29,13 @@ public final class Items {
             IRON_ORE,
             COAL_ORE,
             LOG,
-            LEAVES,
+
+    // LEAVES MODIFIED BY STATIONAPI TO EXPAND METADATA VARIATIONS INTO SEPARATE BLOCKS
+            OAK_LEAVES,
+            SPRUCE_LEAVES,
+            BIRCH_LEAVES,
+    // SAPLING END
+
             SPONGE,
             GLASS,
             LAPIS_ORE,

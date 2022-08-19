@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.client.colour.item;
+package net.modificationstation.stationapi.impl.client.vanillafix.color.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
@@ -11,9 +11,10 @@ import net.modificationstation.stationapi.api.client.event.colour.item.ItemColor
 import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
+import net.modificationstation.stationapi.api.vanillafix.block.Blocks;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
-public class VanillaItemColourProviders {
+public final class VanillaItemColorProviders {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerItemColors(ItemColorsRegisterEvent event) {
@@ -22,6 +23,12 @@ public class VanillaItemColourProviders {
         itemColors.register((stack, tintIndex) -> {
             BlockState blockState = ((BlockStateHolder) BlockBase.BY_ID[stack.itemId]).getDefaultState();
             return blockColors.getColor(blockState, null, null, tintIndex);
-        }, (ItemConvertible) BlockBase.GRASS, (ItemConvertible) BlockBase.TALLGRASS, (ItemConvertible) BlockBase.LEAVES);
+        },
+                (ItemConvertible) BlockBase.GRASS,
+                (ItemConvertible) BlockBase.TALLGRASS,
+                (ItemConvertible) Blocks.OAK_LEAVES,
+                (ItemConvertible) Blocks.SPRUCE_LEAVES,
+                (ItemConvertible) Blocks.BIRCH_SAPLING
+        );
     }
 }

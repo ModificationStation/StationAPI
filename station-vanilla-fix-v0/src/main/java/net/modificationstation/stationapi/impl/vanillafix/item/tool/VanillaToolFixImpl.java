@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.vanillafix.item;
+package net.modificationstation.stationapi.impl.vanillafix.item.tool;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.item.tool.ToolMaterial;

@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.client.colour.block;
+package net.modificationstation.stationapi.impl.client.vanillafix.color.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
@@ -9,9 +9,10 @@ import net.modificationstation.stationapi.api.client.colour.world.BiomeColors;
 import net.modificationstation.stationapi.api.client.event.colour.block.BlockColorsRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
+import net.modificationstation.stationapi.api.vanillafix.block.Blocks;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
-public class VanillaBlockColorProviders {
+public final class VanillaBlockColorProviders {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void registerBlockColors(BlockColorsRegisterEvent event) {
@@ -19,15 +20,17 @@ public class VanillaBlockColorProviders {
                 (state, world, pos, tintIndex) -> world == null || pos == null ? GrassColour.get(0.5, 1.0) : BiomeColors.getGrassColor(world, pos),
                 BlockBase.GRASS, BlockBase.TALLGRASS
         );
-        event.blockColors.registerColorProvider((state, world, pos, tintIndex) -> {
-                    if (world == null || pos == null)
-                        return FoliageColour.method_1083();
-                    else {
-                        int meta = world.getTileMeta(pos.x, pos.y, pos.z);
-                        return (meta & 1) == 1 ? FoliageColour.method_1079() : (meta & 2) == 2 ? FoliageColour.method_1082() : BiomeColors.getFoliageColor(world, pos);
-                    }
-                },
-                BlockBase.LEAVES
+        event.blockColors.registerColorProvider(
+                (state, world, pos, tintIndex) -> world == null || pos == null ? FoliageColour.method_1083() : BiomeColors.getFoliageColor(world, pos),
+                Blocks.OAK_LEAVES
+        );
+        event.blockColors.registerColorProvider(
+                (state, world, pos, tintIndex) -> world == null || pos == null ? FoliageColour.method_1083() : FoliageColour.method_1079(),
+                Blocks.SPRUCE_LEAVES
+        );
+        event.blockColors.registerColorProvider((state, world, pos, tintIndex) ->
+                world == null || pos == null ? FoliageColour.method_1083() : FoliageColour.method_1082(),
+                Blocks.BIRCH_LEAVES
         );
         event.blockColors.registerColorProvider(
                 (state, world, pos, tintIndex) -> world == null || pos == null ? -1 : BiomeColors.getWaterColor(world, pos),

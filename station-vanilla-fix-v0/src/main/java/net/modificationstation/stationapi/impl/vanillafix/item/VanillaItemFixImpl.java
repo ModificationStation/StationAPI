@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.vanillafix.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.event.registry.AfterBlockAndItemRegisterEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
@@ -12,6 +13,7 @@ import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.vanillafix.block.Blocks;
 
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import static net.minecraft.item.ItemBase.*;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
@@ -137,25 +139,30 @@ public final class VanillaItemFixImpl {
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
     public static void registerBlockItems(AfterBlockAndItemRegisterEvent event) {
-        OAK_SAPLING = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.OAK_SAPLING));
-        SPRUCE_SAPLING = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.SPRUCE_SAPLING));
-        BIRCH_SAPLING = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.BIRCH_SAPLING));
+        Function<BlockBase, ItemBase> byBlock = block -> ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(block));
+        OAK_SAPLING = byBlock.apply(Blocks.OAK_SAPLING);
+        SPRUCE_SAPLING = byBlock.apply(Blocks.SPRUCE_SAPLING);
+        BIRCH_SAPLING = byBlock.apply(Blocks.BIRCH_SAPLING);
 
-        BLACK_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.BLACK_WOOL));
-        RED_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.RED_WOOL));
-        GREEN_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.GREEN_WOOL));
-        BROWN_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.BROWN_WOOL));
-        BLUE_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.BLUE_WOOL));
-        PURPLE_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.PURPLE_WOOL));
-        CYAN_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.CYAN_WOOL));
-        LIGHT_GRAY_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.LIGHT_GRAY_WOOL));
-        GRAY_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.GRAY_WOOL));
-        PINK_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.PINK_WOOL));
-        LIME_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.LIME_WOOL));
-        YELLOW_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.YELLOW_WOOL));
-        LIGHT_BLUE_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.LIGHT_BLUE_WOOL));
-        MAGENTA_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.MAGENTA_WOOL));
-        ORANGE_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.ORANGE_WOOL));
-        WHITE_WOOL = ItemRegistry.INSTANCE.get(BlockRegistry.INSTANCE.getId(Blocks.WHITE_WOOL));
+        OAK_LEAVES = byBlock.apply(Blocks.OAK_LEAVES);
+        SPRUCE_LEAVES = byBlock.apply(Blocks.SPRUCE_LEAVES);
+        BIRCH_LEAVES = byBlock.apply(Blocks.BIRCH_LEAVES);
+
+        BLACK_WOOL = byBlock.apply(Blocks.BLACK_WOOL);
+        RED_WOOL = byBlock.apply(Blocks.RED_WOOL);
+        GREEN_WOOL = byBlock.apply(Blocks.GREEN_WOOL);
+        BROWN_WOOL = byBlock.apply(Blocks.BROWN_WOOL);
+        BLUE_WOOL = byBlock.apply(Blocks.BLUE_WOOL);
+        PURPLE_WOOL = byBlock.apply(Blocks.PURPLE_WOOL);
+        CYAN_WOOL = byBlock.apply(Blocks.CYAN_WOOL);
+        LIGHT_GRAY_WOOL = byBlock.apply(Blocks.LIGHT_GRAY_WOOL);
+        GRAY_WOOL = byBlock.apply(Blocks.GRAY_WOOL);
+        PINK_WOOL = byBlock.apply(Blocks.PINK_WOOL);
+        LIME_WOOL = byBlock.apply(Blocks.LIME_WOOL);
+        YELLOW_WOOL = byBlock.apply(Blocks.YELLOW_WOOL);
+        LIGHT_BLUE_WOOL = byBlock.apply(Blocks.LIGHT_BLUE_WOOL);
+        MAGENTA_WOOL = byBlock.apply(Blocks.MAGENTA_WOOL);
+        ORANGE_WOOL = byBlock.apply(Blocks.ORANGE_WOOL);
+        WHITE_WOOL = byBlock.apply(Blocks.WHITE_WOOL);
     }
 }
