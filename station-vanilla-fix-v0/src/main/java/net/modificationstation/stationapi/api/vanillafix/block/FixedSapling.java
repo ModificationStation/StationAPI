@@ -7,6 +7,7 @@ import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.item.Fuel;
 import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.state.property.IntProperty;
@@ -38,7 +39,7 @@ public class FixedSapling extends TemplatePlant implements Fuel {
     }
 
     public void generate(Level level, TilePos pos, BlockState state, Random random) {
-        BlockStateView view = (BlockStateView) level;
+        StationFlatteningLevel view = (StationFlatteningLevel) level;
         if (state.get(STAGE) == 0) view.setBlockStateWithNotify(pos, state.cycle(STAGE));
         else generator.generate(level, level.getCache(), pos, state, random);
     }

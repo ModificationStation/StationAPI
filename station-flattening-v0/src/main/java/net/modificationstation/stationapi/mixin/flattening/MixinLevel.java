@@ -6,8 +6,7 @@ import net.minecraft.level.chunk.Chunk;
 import net.minecraft.level.dimension.Dimension;
 import net.minecraft.util.maths.Vec2i;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.level.BlockStateView;
-import net.modificationstation.stationapi.impl.level.HeightLimitView;
+import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
 import net.modificationstation.stationapi.impl.level.StationDimension;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Iterator;
 
 @Mixin(Level.class)
-public abstract class MixinLevel implements BlockStateView, HeightLimitView {
+public abstract class MixinLevel implements StationFlatteningLevel {
     @Shadow public abstract Chunk getChunk(int x, int z);
 
     @Shadow @Final public Dimension dimension;
@@ -29,12 +28,12 @@ public abstract class MixinLevel implements BlockStateView, HeightLimitView {
 
     @Override
     public BlockState getBlockState(int x, int y, int z) {
-        return ((BlockStateView) getChunk(x, z)).getBlockState(x & 15, y, z & 15);
+        return getChunk(x, z).getBlockState(x & 15, y, z & 15);
     }
 
     @Override
     public BlockState setBlockState(int x, int y, int z, BlockState blockState) {
-        return ((BlockStateView) getChunk(x, z)).setBlockState(x & 15, y, z & 15, blockState);
+        return getChunk(x, z).setBlockState(x & 15, y, z & 15, blockState);
     }
 
     @Override
@@ -89,7 +88,7 @@ public abstract class MixinLevel implements BlockStateView, HeightLimitView {
             )
     )
     private int modifyId(int original) {
-        BlockBase block = ((BlockStateView) stationapi$capturedChunk).getBlockState(stationapi$capturedX, stationapi$capturedY, stationapi$capturedZ).getBlock();
+        BlockBase block = stationapi$capturedChunk.getBlockState(stationapi$capturedX, stationapi$capturedY, stationapi$capturedZ).getBlock();
         return block == null ? 0 : block.id;
     }
     

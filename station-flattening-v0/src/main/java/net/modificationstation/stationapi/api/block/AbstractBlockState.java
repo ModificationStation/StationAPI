@@ -155,11 +155,11 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 //      }
 
     public float getHardness(BlockView world, TilePos pos) {
-        return ((HardnessWithBlockState) getBlock()).getHardness(asBlockState(), world, pos);
+        return getBlock().getHardness(asBlockState(), world, pos);
     }
 
     public float calcBlockBreakingDelta(PlayerBase player, BlockView world, TilePos pos) {
-        return ((HardnessWithBlockState) getBlock()).calcBlockBreakingDelta(asBlockState(), player, world, pos);
+        return getBlock().calcBlockBreakingDelta(asBlockState(), player, world, pos);
     }
 
 //      public int getStrongRedstonePower(BlockView world, BlockPos pos, Direction direction) {

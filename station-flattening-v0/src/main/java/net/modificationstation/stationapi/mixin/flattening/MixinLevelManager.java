@@ -9,7 +9,6 @@ import net.minecraft.util.io.CompoundTag;
 import net.minecraft.util.io.ListTag;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
-import net.modificationstation.stationapi.impl.level.HeightLimitView;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSectionsAccessor;
 import net.modificationstation.stationapi.impl.level.chunk.PalettedContainer;
@@ -75,9 +74,8 @@ public class MixinLevelManager {
     private static void saveStationData(Chunk chunk, Level level, CompoundTag tag, CallbackInfo ci) {
         ChunkSection[] sections = ((ChunkSectionsAccessor) chunk).getSections();
         ListTag listTag = new ListTag();
-        HeightLimitView heightLimitView = (HeightLimitView) level;
-        for (int sectionY = heightLimitView.getBottomSectionCoord(); sectionY < heightLimitView.getTopSectionCoord() + 2; ++sectionY) {
-            int index = heightLimitView.sectionCoordToIndex(sectionY);
+        for (int sectionY = level.getBottomSectionCoord(); sectionY < level.getTopSectionCoord() + 2; ++sectionY) {
+            int index = level.sectionCoordToIndex(sectionY);
             if (index < 0 || index >= sections.length) continue;
             ChunkSection section = sections[index];
             if (section != ChunkSection.EMPTY_SECTION) {
@@ -134,7 +132,7 @@ public class MixinLevelManager {
             for (int i = 0; i < listTag.size(); i++) {
                 CompoundTag sectionTag = (CompoundTag) listTag.get(i);
                 int sectionY = sectionTag.getByte(HEIGHT_KEY);
-                int index = ((HeightLimitView) level).sectionCoordToIndex(sectionY);
+                int index = level.sectionCoordToIndex(sectionY);
                 if (index < 0 || index >= sections.length) continue;
                 PalettedContainer<BlockState> blockStates = sectionTag.containsKey("block_states") ? CODEC.parse(NbtOps.INSTANCE, sectionTag.getCompoundTag("block_states")).promotePartial(errorMessage -> logRecoverableError(var2, var3, sectionY, errorMessage)).getOrThrow(false, LOGGER::error) : new PalettedContainer<>(States.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
                 ChunkSection chunkSection = new ChunkSection(sectionY, blockStates);

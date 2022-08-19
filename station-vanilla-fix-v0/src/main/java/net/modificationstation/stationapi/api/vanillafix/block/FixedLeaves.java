@@ -10,6 +10,7 @@ import net.minecraft.level.Level;
 import net.minecraft.stat.Stats;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.state.property.Properties;
@@ -42,7 +43,7 @@ public class FixedLeaves extends FixedLeavesBase {
         if (level.method_155(x - n2, y - n2, z - n2, x + n2, y + n2, z + n2))
             for (int i2 = -n; i2 <= n; ++i2) for (int i3 = -n; i3 <= n; ++i3) for (int i4 = -n; i4 <= n; ++i4)
                 if (BlockBase.BY_ID[level.getTileId(x + i2, y + i3, z + i4)] instanceof FixedLeaves)
-                    ((BlockStateView) level).setBlockState(x + i2, y + i3, z + i4, ((BlockStateView) level).getBlockState(x + i2, y + i3, z + i4).with(Properties.PERSISTENT, false));
+                    ((StationFlatteningLevel) level).setBlockState(x + i2, y + i3, z + i4, ((BlockStateView) level).getBlockState(x + i2, y + i3, z + i4).with(Properties.PERSISTENT, false));
     }
 
     @Override
@@ -82,7 +83,7 @@ public class FixedLeaves extends FixedLeavesBase {
                     }
             }
             if (DISTANCE_MAP[mapLengthHalved * mapPlaneSize + mapLengthHalved * mapLength + mapLengthHalved] >= 0) {
-                ((BlockStateView) arg).setBlockState(x, y, z, state.with(Properties.PERSISTENT, true));
+                ((StationFlatteningLevel) arg).setBlockState(x, y, z, state.with(Properties.PERSISTENT, true));
             } else {
                 this.dropAndRemove(arg, x, y, z);
             }

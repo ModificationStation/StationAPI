@@ -7,10 +7,10 @@ import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
-import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.api.level.HeightLimitView;
+import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
-import net.modificationstation.stationapi.impl.level.HeightLimitView;
 
 public class BlockStateItem extends TemplateItemBase {
 
@@ -48,7 +48,7 @@ public class BlockStateItem extends TemplateItemBase {
                     .x(x).y(y).z(z)
                     .block(block)
                     .blockItem(itemInstance)
-                    .placeFunction(() -> ((BlockStateView) level).setBlockStateWithNotify(x, y, z, blockState) != null)
+                    .placeFunction(() -> ((StationFlatteningLevel) level).setBlockStateWithNotify(x, y, z, blockState) != null)
                     .build()).placeFunction.getAsBoolean()
             ) {
                 block.onBlockPlaced(level, x, y, z, direction.getId());

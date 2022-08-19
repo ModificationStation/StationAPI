@@ -9,7 +9,7 @@ import net.minecraft.level.structure.Structure;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
-import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -25,7 +25,7 @@ public abstract class SaplingGenerator {
             return false;
         }
 
-        BlockStateView view = (BlockStateView) world;
+        StationFlatteningLevel view = (StationFlatteningLevel) world;
         view.setBlockStateWithNotify(pos, States.AIR.get());
         if (structure.generate(world, random, pos.x, pos.y, pos.z)) {
             return true;

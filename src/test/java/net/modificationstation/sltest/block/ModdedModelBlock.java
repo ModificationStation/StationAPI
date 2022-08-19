@@ -6,7 +6,7 @@ import net.minecraft.entity.Living;
 import net.minecraft.level.Level;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
@@ -29,7 +29,7 @@ public class ModdedModelBlock extends TemplateBlockBase {
 
     @Override
     public void afterPlaced(Level level, int x, int y, int z, Living living) {
-        ((BlockStateView) level).setBlockState(x, y, z, getDefaultState().with(HORIZONTAL_FACING, DIRECTIONS[MathHelper.floor((double)(living.yaw * 4.0F / 360.0F) + 0.5D) & 3]));
+        ((StationFlatteningLevel) level).setBlockState(x, y, z, getDefaultState().with(HORIZONTAL_FACING, DIRECTIONS[MathHelper.floor((double)(living.yaw * 4.0F / 360.0F) + 0.5D) & 3]));
     }
 
     @Override

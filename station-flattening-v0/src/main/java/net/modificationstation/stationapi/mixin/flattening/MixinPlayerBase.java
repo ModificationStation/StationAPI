@@ -6,12 +6,12 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.entity.player.PlayerStrengthWithBlockState;
+import net.modificationstation.stationapi.api.entity.player.StationFlatteningPlayerBase;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(PlayerBase.class)
-public abstract class MixinPlayerBase extends Living implements PlayerStrengthWithBlockState {
+public abstract class MixinPlayerBase extends Living implements StationFlatteningPlayerBase {
 
     @Shadow public PlayerInventory inventory;
 
@@ -21,12 +21,12 @@ public abstract class MixinPlayerBase extends Living implements PlayerStrengthWi
 
     @Override
     public boolean canHarvest(BlockState state) {
-        return ((PlayerStrengthWithBlockState) inventory).canHarvest(state);
+        return inventory.canHarvest(state);
     }
 
     @Override
     public float getBlockBreakingSpeed(BlockState state) {
-        float f = ((PlayerStrengthWithBlockState) inventory).getBlockBreakingSpeed(state);
+        float f = inventory.getBlockBreakingSpeed(state);
         if (isInFluid(Material.WATER)) f /= 5.0f;
         if (!onGround) f /= 5.0f;
         return f;

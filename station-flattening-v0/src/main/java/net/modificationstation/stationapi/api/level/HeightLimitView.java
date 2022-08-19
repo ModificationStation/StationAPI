@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.level;
+package net.modificationstation.stationapi.api.level;
 
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.impl.util.math.ChunkSectionPos;

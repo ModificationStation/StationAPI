@@ -7,7 +7,7 @@ import net.minecraft.level.source.NetherLevelSource;
 import net.minecraft.util.noise.PerlinOctaveNoise;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.impl.level.HeightLimitView;
+import net.modificationstation.stationapi.api.level.HeightLimitView;
 import net.modificationstation.stationapi.impl.level.StationDimension;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSectionsAccessor;

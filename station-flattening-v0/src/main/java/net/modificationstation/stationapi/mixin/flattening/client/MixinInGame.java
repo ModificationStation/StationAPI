@@ -11,7 +11,6 @@ import net.minecraft.tileentity.TileEntityBase;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.hit.HitType;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.level.BlockStateView;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,7 +38,7 @@ public abstract class MixinInGame extends DrawableHelper {
 		HitResult hit = minecraft.hitResult;
 		int offset = 22;
 		if (hit != null && hit.type == HitType.field_789) {
-			BlockState state = ((BlockStateView) minecraft.level).getBlockState(hit.x, hit.y, hit.z);
+			BlockState state = minecraft.level.getBlockState(hit.x, hit.y, hit.z);
 			
 			String text = "Block: " + state.getBlock().getTranslatedName();
 			drawTextWithShadow(var8, text, var6 - var8.getTextWidth(text) - 2, offset += 10, 16777215);

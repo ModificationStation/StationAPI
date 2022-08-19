@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.level.Level;
 import net.minecraft.level.structure.Deadbush;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
 import net.modificationstation.stationapi.api.vanillafix.block.FixedLeaves;
 
 import java.util.Random;
@@ -29,7 +29,7 @@ public class FixedDeadbush extends Deadbush {
             int n2;
             int n3;
             if (!arg.isAir(n4, n3 = j + random.nextInt(4) - random.nextInt(4), n2 = k + random.nextInt(8) - random.nextInt(8)) || !state.getBlock().canGrow(arg, n4, n3, n2)) continue;
-            ((BlockStateView) arg).setBlockState(n4, n3, n2, state);
+            ((StationFlatteningLevel) arg).setBlockState(n4, n3, n2, state);
         }
         return true;
     }

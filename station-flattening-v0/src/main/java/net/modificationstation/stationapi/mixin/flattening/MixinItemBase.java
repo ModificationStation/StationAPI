@@ -4,12 +4,12 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.item.ItemStrengthWithBlockState;
+import net.modificationstation.stationapi.api.item.StationFlatteningItemBase;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ItemBase.class)
-public abstract class MixinItemBase implements ItemStrengthWithBlockState {
+public abstract class MixinItemBase implements StationFlatteningItemBase {
 
     @Shadow public abstract boolean isEffectiveOn(BlockBase arg);
 

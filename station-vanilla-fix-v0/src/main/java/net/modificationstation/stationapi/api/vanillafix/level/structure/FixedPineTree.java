@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.level.Level;
 import net.minecraft.level.structure.PineTree;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
 import net.modificationstation.stationapi.api.vanillafix.block.Blocks;
 import net.modificationstation.stationapi.api.vanillafix.block.FixedLeaves;
 
@@ -56,7 +56,7 @@ public class FixedPineTree extends PineTree {
                 for (int i2 = k - n4; i2 <= k + n4; ++i2) {
                     int n10 = i2 - k;
                     if (Math.abs(n) == n4 && Math.abs(n10) == n4 && n4 > 0 || BlockBase.FULL_OPAQUE[arg.getTileId(n2, n3, i2)]) continue;
-                    ((BlockStateView) arg).setBlockState(n2, n3, i2, ((BlockStateHolder) Blocks.SPRUCE_LEAVES).getDefaultState());
+                    ((StationFlatteningLevel) arg).setBlockState(n2, n3, i2, ((BlockStateHolder) Blocks.SPRUCE_LEAVES).getDefaultState());
                 }
             }
             if (n4 >= 1 && n3 == j + n7 + 1) {

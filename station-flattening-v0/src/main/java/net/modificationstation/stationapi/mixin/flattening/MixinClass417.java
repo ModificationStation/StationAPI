@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.class_417;
 import net.minecraft.level.Level;
-import net.modificationstation.stationapi.impl.level.HeightLimitView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,8 +17,8 @@ public class MixinClass417 {
 	
 	@Inject(method = "method_1402(Lnet/minecraft/level/Level;)V", at = @At("HEAD"))
 	private void method_1869(Level level, CallbackInfo info) {
-		maxBlock = (short) ((HeightLimitView) level).getTopY();
-		minBlock = (short) ((HeightLimitView) level).getBottomY();
+		maxBlock = (short) level.getTopY();
+		minBlock = (short) level.getBottomY();
 	}
 
 	@SuppressWarnings("MixinAnnotationTarget")

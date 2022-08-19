@@ -7,9 +7,8 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
 import net.minecraft.util.maths.TilePos;
-import net.modificationstation.stationapi.api.block.*;
-import net.modificationstation.stationapi.api.entity.player.PlayerStrengthWithBlockState;
-import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.StationFlatteningBlockBase;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.impl.block.BlockDropListImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,13 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(BlockBase.class)
-public abstract class MixinBlockBase implements
-        BlockStateHolder,
-        DropWithBlockState,
-        DropListProvider,
-        AfterBreakWithBlockState,
-        HardnessWithBlockState
-{
+public abstract class MixinBlockBase implements StationFlatteningBlockBase {
 
     @Shadow public abstract void beforeDestroyedByExplosion(Level arg, int i, int j, int k, int l, float f);
 
@@ -41,8 +34,6 @@ public abstract class MixinBlockBase implements
 
     @Shadow public abstract float getHardness();
 
-    @Shadow public abstract float getHardness(PlayerBase arg);
-
     @Inject(
             method = "<init>(ILnet/minecraft/block/material/Material;)V",
             at = @At("RETURN")
@@ -50,7 +41,7 @@ public abstract class MixinBlockBase implements
     private void onInit(int material, Material par2, CallbackInfo ci) {
         StateManager.Builder<BlockBase, BlockState> builder = new StateManager.Builder<>(BlockBase.class.cast(this));
         appendProperties(builder);
-        stationapi_stateManager = builder.build(blockBase -> ((BlockStateHolder) blockBase).getDefaultState(), BlockState::new);
+        stationapi_stateManager = builder.build(BlockBase::getDefaultState, BlockState::new);
         setDefaultState(stationapi_stateManager.getDefaultState());
     }
 
@@ -87,7 +78,7 @@ public abstract class MixinBlockBase implements
             cancellable = true
     )
     private void dropWithAChanceInject(Level level, int x, int y, int z, int meta, float chance, CallbackInfo ci) {
-        if (BlockDropListImpl.drop(level, x, y, z, ((BlockStateView) level).getBlockState(x, y, z), meta, chance, this::drop, this)) ci.cancel();
+        if (BlockDropListImpl.drop(level, x, y, z, level.getBlockState(x, y, z), meta, chance, this::drop, this)) ci.cancel();
     }
 
     @Override
@@ -136,7 +127,7 @@ public abstract class MixinBlockBase implements
     public float calcBlockBreakingDelta(BlockState state, PlayerBase player, BlockView world, TilePos pos) {
         float hardness = getHardness(state, world, pos);
         if (hardness < 0.0f) return 0.0f;
-        if (!((PlayerStrengthWithBlockState) player).canHarvest(state)) return 1.0f / hardness / 100.0f;
-        return ((PlayerStrengthWithBlockState) player).getBlockBreakingSpeed(state) / hardness / 30.0f;
+        if (!player.canHarvest(state)) return 1.0f / hardness / 100.0f;
+        return player.getBlockBreakingSpeed(state) / hardness / 30.0f;
     }
 }

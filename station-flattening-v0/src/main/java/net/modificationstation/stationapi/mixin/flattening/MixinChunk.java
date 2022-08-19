@@ -11,13 +11,11 @@ import net.minecraft.level.chunk.Chunk;
 import net.minecraft.util.maths.Box;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.level.BlockSetEvent;
 import net.modificationstation.stationapi.api.event.level.MetaSetEvent;
-import net.modificationstation.stationapi.api.level.BlockStateView;
-import net.modificationstation.stationapi.impl.level.HeightLimitView;
+import net.modificationstation.stationapi.api.level.chunk.StationFlatteningChunk;
 import net.modificationstation.stationapi.impl.level.StationDimension;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSectionsAccessor;
@@ -35,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Mixin(Chunk.class)
-public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateView, StationHeigtmapProvider {
+public abstract class MixinChunk implements ChunkSectionsAccessor, StationFlatteningChunk, StationHeigtmapProvider {
     @Shadow public static boolean field_953;
     @Shadow public Level level;
     @Shadow @Final public int x;
@@ -80,8 +78,8 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     private void onChunkCreation(Level level, int x, int z, CallbackInfo info) {
         StationDimension dimension = (StationDimension) level.dimension;
         sections = new ChunkSection[dimension.getSectionCount()];
-        firstBlock = (short) (((HeightLimitView) level).getBottomY());
-        lastBlock = (short) (((HeightLimitView) level).getTopY() - 1);
+        firstBlock = (short) level.getBottomY();
+        lastBlock = (short) (level.getTopY() - 1);
         //noinspection unchecked
         entities = new List[dimension.getSectionCount()];
         for(short i = 0; i < entities.length; i++) {
@@ -93,8 +91,8 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
     private void onChunkCreation(Level level, byte[] tiles, int x, int z, CallbackInfo info) {
         StationDimension dimension = (StationDimension) level.dimension;
         sections = new ChunkSection[dimension.getSectionCount()];
-        firstBlock = (short) (((HeightLimitView) level).getBottomY());
-        lastBlock = (short) (((HeightLimitView) level).getTopY() - 1);
+        firstBlock = (short) level.getBottomY();
+        lastBlock = (short) (level.getTopY() - 1);
         //noinspection unchecked
         entities = new List[dimension.getSectionCount()];
         for(short i = 0; i < entities.length; i++) {
@@ -102,13 +100,13 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         }
         for(int i = 0; i < tiles.length; i++) {
             int id = Byte.toUnsignedInt(tiles[i]);
-            if (id <= 0 || id >= BlockBase.BY_ID.length) continue;
+            if (id == 0 || id >= BlockBase.BY_ID.length) continue;
             int by = i & 127;
             if (by > lastBlock) continue;
             int bx = (i >> 11) & 15;
             int bz = (i >> 7) & 15;
             ChunkSection section = Objects.requireNonNull(getOrCreateSection(by, false));
-            BlockStateHolder holder = (BlockStateHolder) BlockBase.BY_ID[id];
+            BlockBase holder = BlockBase.BY_ID[id];
             section.setBlockState(bx, by & 15, bz, holder.getDefaultState());
         }
     }
@@ -223,7 +221,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
                 int x = (i >> 11) & 15;
                 int z = (i >> 7) & 15;
                 ChunkSection section = Objects.requireNonNull(getOrCreateSection(y, false));
-                BlockStateHolder holder = (BlockStateHolder) BlockBase.BY_ID[id];
+                BlockBase holder = BlockBase.BY_ID[id];
                 section.setBlockState(x, y & 15, z, holder.getDefaultState());
                 tiles[i] = 0;
             }
@@ -236,7 +234,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         while (maxYH >= 0 && sections[maxYH] == null) {
             maxYH--;
         }
-        maxYH = (short) ((((HeightLimitView) level).sectionIndexToCoord(maxYH) << 4) + 16);
+        maxYH = (short) ((level.sectionIndexToCoord(maxYH) << 4) + 16);
         
         for (short i = 0; i < 256; i++) {
             byte x = (byte) (i & 15);
@@ -383,7 +381,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
      */
     @Overwrite
     public boolean setTileWithMetadata(int x, int y, int z, int blockId, int meta) {
-        BlockState state = ((BlockStateHolder) BlockBase.BY_ID[blockId]).getDefaultState();
+        BlockState state = BlockBase.BY_ID[blockId].getDefaultState();
         int levelX = this.x << 4 | x;
         int levelZ = this.z << 4 | z;
         BlockSetEvent event =
@@ -442,7 +440,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
      */
     @Overwrite
     public boolean method_860(int x, int y, int z, int blockId) {
-        return setBlockState(x, y, z, ((BlockStateHolder) BlockBase.BY_ID[blockId]).getDefaultState()) != null;
+        return setBlockState(x, y, z, BlockBase.BY_ID[blockId].getDefaultState()) != null;
     }
     
     @Inject(method = "method_875", at = @At("HEAD"), cancellable = true)
@@ -536,7 +534,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             )
     )
     private double modifyEntityY(EntityBase instance) {
-        return instance.y - ((HeightLimitView) level).getBottomY();
+        return instance.y - level.getBottomY();
     }
 
     @Redirect(
@@ -551,7 +549,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             )
     )
     private double modifyMinY(Box instance) {
-        return instance.minY - ((HeightLimitView) level).getBottomY();
+        return instance.minY - level.getBottomY();
     }
 
     @Redirect(
@@ -566,7 +564,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
             )
     )
     private double modifyMaxY(Box instance) {
-        return instance.maxY - ((HeightLimitView) level).getBottomY();
+        return instance.maxY - level.getBottomY();
     }
 
     @Redirect(
@@ -583,7 +581,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
-        return sections[((HeightLimitView) level).sectionCoordToIndex(y >> 4)];
+        return sections[level.sectionCoordToIndex(y >> 4)];
     }
     
     @Unique
@@ -591,10 +589,10 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, BlockStateVie
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
-        int index = ((HeightLimitView) level).sectionCoordToIndex(y >> 4);
+        int index = level.sectionCoordToIndex(y >> 4);
         ChunkSection section = sections[index];
         if (section == null) {
-            section = new ChunkSection(((HeightLimitView) level).sectionIndexToCoord(index));
+            section = new ChunkSection(level.sectionIndexToCoord(index));
             if (fillSkyLight) {
                 for (short i = 0; i < 4096; i++) {
                     section.setLight(LightType.field_2757, i, 15);

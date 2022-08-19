@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.state.property.Property;
 
 public class BlockState extends AbstractBlockState {
-   public static final Codec<BlockState> CODEC = createCodec(BlockRegistry.INSTANCE.getCodec(), blockBase -> ((BlockStateHolder) blockBase).getDefaultState()).stable();
+   public static final Codec<BlockState> CODEC = createCodec(BlockRegistry.INSTANCE.getCodec(), BlockBase::getDefaultState).stable();
 
    public BlockState(BlockBase block, ImmutableMap<Property<?>, Comparable<?>> immutableMap, MapCodec<BlockState> mapCodec) {
       super(block, immutableMap, mapCodec);

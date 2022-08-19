@@ -17,7 +17,7 @@ public final class States {
 
     private static final Lazy<BlockBase> AIR_BLOCK = new Lazy<>(() -> new Air(0));
 
-    public static final Lazy<BlockState> AIR = new Lazy<>(() -> ((BlockStateHolder) AIR_BLOCK.get()).getDefaultState());
+    public static final Lazy<BlockState> AIR = new Lazy<>(() -> AIR_BLOCK.get().getDefaultState());
 
     public static final IdList<BlockState> STATE_IDS = new IdList<>();
 
@@ -28,6 +28,6 @@ public final class States {
 
     @EventListener(numPriority = Integer.MIN_VALUE / 2 + Integer.MIN_VALUE / 4)
     private static void registerStates(BlockRegistryEvent event) {
-        BlockRegistry.INSTANCE.forEach(blockBase -> ((BlockStateHolder) blockBase).getStateManager().getStates().forEach(STATE_IDS::add));
+        BlockRegistry.INSTANCE.forEach(blockBase -> blockBase.getStateManager().getStates().forEach(STATE_IDS::add));
     }
 }

@@ -7,8 +7,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.IsItemSuitableForStateEvent;
 import net.modificationstation.stationapi.api.event.item.ItemMiningSpeedMultiplierOnStateEvent;
-import net.modificationstation.stationapi.api.item.ItemStackStrengthWithBlockState;
-import net.modificationstation.stationapi.api.item.ItemStrengthWithBlockState;
+import net.modificationstation.stationapi.api.item.StationFlatteningItemStack;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +22,7 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Mixin(ItemInstance.class)
-public abstract class MixinItemInstance implements ItemStackStrengthWithBlockState {
+public abstract class MixinItemInstance implements StationFlatteningItemStack {
 
     @Shadow public int itemId;
 
@@ -65,7 +64,7 @@ public abstract class MixinItemInstance implements ItemStackStrengthWithBlockSta
                 IsItemSuitableForStateEvent.builder()
                         .itemStack(ItemInstance.class.cast(this))
                         .state(state)
-                        .suitable(((ItemStrengthWithBlockState) getType()).isSuitableFor(ItemInstance.class.cast(this), state))
+                        .suitable(getType().isSuitableFor(ItemInstance.class.cast(this), state))
                         .build()
         ).suitable;
     }
@@ -76,7 +75,7 @@ public abstract class MixinItemInstance implements ItemStackStrengthWithBlockSta
                 ItemMiningSpeedMultiplierOnStateEvent.builder()
                         .itemStack(ItemInstance.class.cast(this))
                         .state(state)
-                        .miningSpeedMultiplier(((ItemStrengthWithBlockState) getType()).getMiningSpeedMultiplier(ItemInstance.class.cast(this), state))
+                        .miningSpeedMultiplier(getType().getMiningSpeedMultiplier(ItemInstance.class.cast(this), state))
                         .build()
         ).miningSpeedMultiplier;
     }
