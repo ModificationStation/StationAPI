@@ -1,0 +1,15 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "white_wool"
+    },
+    {
+      "item": "dye",
+      "damage": 2
+    }
+  ],
+  "result": {
+    "item": "green_wool"
+  }
+}

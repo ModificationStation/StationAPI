@@ -28,7 +28,12 @@ public final class Items {
             GOLD_ORE,
             IRON_ORE,
             COAL_ORE,
-            LOG,
+
+    // LOG MODIFIED BY STATIONAPI TO EXPAND METADATA VARIATIONS INTO SEPARATE BLOCKS
+            OAK_LOG,
+            SPRUCE_LOG,
+            BIRCH_LOG,
+    // LOG END
 
     // LEAVES MODIFIED BY STATIONAPI TO EXPAND METADATA VARIATIONS INTO SEPARATE BLOCKS
             OAK_LEAVES,

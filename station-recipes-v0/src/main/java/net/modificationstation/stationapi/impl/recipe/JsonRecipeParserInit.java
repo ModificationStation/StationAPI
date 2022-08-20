@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
@@ -59,7 +60,7 @@ public class JsonRecipeParserInit {
             keys[i] = pattern[i];
         for (Map.Entry<String, JsonElement> key : rawKeys) {
             keys[i] = key.getKey().charAt(0);
-            keys[i + 1] = new Gson().fromJson(key.getValue(), JsonItemKey.class).getItemInstance();
+            keys[i + 1] = new Gson().fromJson(key.getValue(), JsonItemKey.class).get().map(Function.identity(), Function.identity());
             i += 2;
         }
         CraftingRegistry.addShapedRecipe(json.getResult().getItemInstance(), keys);
@@ -75,7 +76,7 @@ public class JsonRecipeParserInit {
         JsonItemKey[] ingredients = json.getIngredients();
         Object[] iteminstances = new Object[json.getIngredients().length];
         for (int i = 0; i < ingredients.length; i++)
-            iteminstances[i] = ingredients[i].getItemInstance();
+            iteminstances[i] = ingredients[i].get().map(Function.identity(), Function.identity());
         CraftingRegistry.addShapelessRecipe(json.getResult().getItemInstance(), iteminstances);
     }
 
@@ -86,6 +87,6 @@ public class JsonRecipeParserInit {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        SmeltingRegistry.addSmeltingRecipe(json.getIngredient().getItemInstance(), json.getResult().getItemInstance());
+        json.getIngredient().get().ifLeft(item -> SmeltingRegistry.addSmeltingRecipe(item, json.getResult().getItemInstance())).ifRight(tag -> SmeltingRegistry.addSmeltingRecipe(tag, json.getResult().getItemInstance()));
     }
 }

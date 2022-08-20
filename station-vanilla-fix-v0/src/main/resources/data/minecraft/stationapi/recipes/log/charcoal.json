@@ -1,0 +1,10 @@
+{
+  "type": "smelting",
+  "ingredient": {
+    "tag": "logs_that_burn"
+  },
+  "result": {
+    "item": "coal",
+    "damage": 1
+  }
+}

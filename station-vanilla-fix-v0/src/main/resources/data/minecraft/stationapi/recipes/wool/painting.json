@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "key": {
+    "#": {
+      "item": "stick"
+    },
+    "X": {
+      "tag": "wool"
+    }
+  },
+  "pattern": [
+    "###",
+    "#X#",
+    "###"
+  ],
+  "result": {
+    "item": "painting"
+  }
+}

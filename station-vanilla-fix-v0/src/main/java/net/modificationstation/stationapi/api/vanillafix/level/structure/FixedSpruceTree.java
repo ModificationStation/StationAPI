@@ -77,7 +77,7 @@ public class FixedSpruceTree extends SpruceTree {
         for (n2 = 0; n2 < n8 - n3; ++n2) {
             n = arg.getTileId(i, j + n2, k);
             if (n != 0 && !(BlockBase.BY_ID[n] instanceof FixedLeaves)) continue;
-            arg.setTileWithMetadata(i, j + n2, k, BlockBase.LOG.id, 1);
+            ((StationFlatteningLevel) arg).setBlockState(i, j + n2, k, ((BlockStateHolder) Blocks.SPRUCE_LOG).getDefaultState());
         }
         return true;
     }

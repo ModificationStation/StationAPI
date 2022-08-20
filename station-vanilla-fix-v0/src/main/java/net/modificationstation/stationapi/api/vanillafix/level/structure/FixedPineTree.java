@@ -27,7 +27,6 @@ public class FixedPineTree extends PineTree {
             return false;
         }
         for (n5 = j; n5 <= j + 1 + n6 && bl; ++n5) {
-            n4 = 1;
             n4 = n5 - j < n7 ? 0 : n9;
             for (n3 = i - n4; n3 <= i + n4 && bl; ++n3) {
                 for (n2 = k - n4; n2 <= k + n4 && bl; ++n2) {
@@ -69,7 +68,7 @@ public class FixedPineTree extends PineTree {
         for (n3 = 0; n3 < n6 - 1; ++n3) {
             n2 = arg.getTileId(i, j + n3, k);
             if (n2 != 0 && !(BlockBase.BY_ID[n2] instanceof FixedLeaves)) continue;
-            arg.setTileWithMetadata(i, j + n3, k, BlockBase.LOG.id, 1);
+            ((StationFlatteningLevel) arg).setBlockState(i, j + n3, k, ((BlockStateHolder) Blocks.SPRUCE_LOG).getDefaultState());
         }
         return true;
     }

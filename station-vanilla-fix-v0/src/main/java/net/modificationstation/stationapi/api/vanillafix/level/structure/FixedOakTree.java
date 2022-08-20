@@ -66,7 +66,7 @@ public class FixedOakTree extends OakTree {
         for (n4 = 0; n4 < n6; ++n4) {
             n3 = arg.getTileId(i, j + n4, k);
             if (n3 != 0 && !(BlockBase.BY_ID[n3] instanceof FixedLeaves)) continue;
-            arg.setTileInChunk(i, j + n4, k, BlockBase.LOG.id);
+            ((StationFlatteningLevel) arg).setBlockState(i, j + n4, k, ((BlockStateHolder) Blocks.OAK_LOG).getDefaultState());
         }
         return true;
     }

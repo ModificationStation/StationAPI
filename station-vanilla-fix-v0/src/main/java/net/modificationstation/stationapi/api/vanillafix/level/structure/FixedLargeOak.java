@@ -168,17 +168,17 @@ public class FixedLargeOak extends LargeOak {
         int n4 = this.field_648[2];
         int[] nArray = new int[]{n, n2, n4};
         int[] nArray2 = new int[]{n, n3, n4};
-        this.method_617(nArray, nArray2, BlockBase.LOG.id);
+        this.method_617(nArray, nArray2, Blocks.OAK_LOG.id);
         if (this.field_656 == 2) {
             nArray[0] = nArray[0] + 1;
             nArray2[0] = nArray2[0] + 1;
-            this.method_617(nArray, nArray2, BlockBase.LOG.id);
+            this.method_617(nArray, nArray2, Blocks.OAK_LOG.id);
             nArray[2] = nArray[2] + 1;
             nArray2[2] = nArray2[2] + 1;
-            this.method_617(nArray, nArray2, BlockBase.LOG.id);
+            this.method_617(nArray, nArray2, Blocks.OAK_LOG.id);
             nArray[0] = nArray[0] + -1;
             nArray2[0] = nArray2[0] + -1;
-            this.method_617(nArray, nArray2, BlockBase.LOG.id);
+            this.method_617(nArray, nArray2, Blocks.OAK_LOG.id);
         }
     }
 
@@ -191,7 +191,7 @@ public class FixedLargeOak extends LargeOak {
             nArray[1] = nArray2[3];
             int n2 = nArray[1] - this.field_648[1];
             if (!this.method_621(n2)) continue;
-            this.method_617(nArray, nArray3, BlockBase.LOG.id);
+            this.method_617(nArray, nArray3, Blocks.OAK_LOG.id);
         }
     }
 

@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.vanillafix.block;
 
-import com.google.common.base.Suppliers;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerBase;
@@ -14,6 +13,7 @@ import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.state.property.Properties;
+import net.modificationstation.stationapi.api.vanillafix.tag.BlockTags;
 
 import java.util.List;
 import java.util.Random;
@@ -28,12 +28,12 @@ public class FixedLeaves extends FixedLeavesBase {
         super(identifier, Material.LEAVES);
         setDefaultState(getDefaultState().with(Properties.PERSISTENT, true));
         setTicksRandomly(true);
-        drop = Suppliers.memoize(() -> List.of(new ItemInstance(saplingSupplier.get())));
+        drop = () -> List.of(new ItemInstance(saplingSupplier.get()));
     }
 
     @Override
     public void appendProperties(StateManager.Builder<BlockBase, BlockState> builder) {
-        builder.add(Properties.DISTANCE_1_7, Properties.PERSISTENT);
+        builder.add(Properties.PERSISTENT);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class FixedLeaves extends FixedLeavesBase {
                 int yOff;
                 for (xOff = -scanRadius; xOff <= scanRadius; ++xOff) for (yOff = -scanRadius; yOff <= scanRadius; ++yOff) for (zOff = -scanRadius; zOff <= scanRadius; ++zOff) {
                     n8 = arg.getTileId(x + xOff, y + yOff, z + zOff);
-                    DISTANCE_MAP[(xOff + mapLengthHalved) * mapPlaneSize + (yOff + mapLengthHalved) * mapLength + (zOff + mapLengthHalved)] = n8 == BlockBase.LOG.id ? 0 : (BlockBase.BY_ID[n8] instanceof FixedLeaves ? -2 : -1);
+                    DISTANCE_MAP[(xOff + mapLengthHalved) * mapPlaneSize + (yOff + mapLengthHalved) * mapLength + (zOff + mapLengthHalved)] = ((StationFlatteningLevel) arg).getBlockState(x + xOff, y + yOff, z + zOff).isIn(BlockTags.LOGS) ? 0 : (BlockBase.BY_ID[n8] instanceof FixedLeaves ? -2 : -1);
                 }
                 for (xOff = 1; xOff <= 4; ++xOff)
                     for (yOff = -scanRadius; yOff <= scanRadius; ++yOff) for (zOff = -scanRadius; zOff <= scanRadius; ++zOff) for (n8 = -scanRadius; n8 <= scanRadius; ++n8) {

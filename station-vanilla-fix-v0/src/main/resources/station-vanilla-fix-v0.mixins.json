@@ -12,6 +12,13 @@
     "block.leaves.MixinRainforest",
     "block.leaves.MixinShears",
     "block.leaves.MixinTaiga",
+    "block.log.MixinAchievements",
+    "block.log.MixinBlockBase",
+    "block.log.MixinFire",
+    "block.log.MixinHatchet",
+    "block.log.MixinItem",
+    "block.log.MixinRecipeRegistry",
+    "block.log.MixinSmeltingRecipeRegistry",
     "block.sapling.MixinBlockBase",
     "block.sapling.MixinTileEntityFurnace",
     "block.wool.MixinBlockBase",
@@ -26,6 +33,7 @@
   "client": [
     "block.leaves.client.MixinSession",
     "block.leaves.client.MixinWorldRenderer",
+    "block.log.client.MixinSession",
     "block.sapling.client.MixinSession",
     "block.wool.client.MixinSession"
   ],

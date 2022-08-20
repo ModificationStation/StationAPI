@@ -11,6 +11,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 import net.modificationstation.stationapi.api.vanillafix.block.FixedLeaves;
+import net.modificationstation.stationapi.api.vanillafix.block.FixedLog;
 import net.modificationstation.stationapi.api.vanillafix.block.FixedSapling;
 import net.modificationstation.stationapi.api.vanillafix.block.sapling.BirchSaplingGenerator;
 import net.modificationstation.stationapi.api.vanillafix.block.sapling.OakSaplingGenerator;
@@ -20,8 +21,7 @@ import net.modificationstation.stationapi.api.vanillafix.item.Items;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import static net.minecraft.block.BlockBase.GRASS_SOUNDS;
-import static net.minecraft.block.BlockBase.WOOL_SOUNDS;
+import static net.minecraft.block.BlockBase.*;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 import static net.modificationstation.stationapi.api.vanillafix.block.Blocks.*;
@@ -37,7 +37,7 @@ public final class VanillaBlockFixImpl {
         r.accept("grass_block", BlockBase.GRASS);
         r.accept("dirt", BlockBase.DIRT);
         r.accept("cobblestone", BlockBase.COBBLESTONE);
-        r.accept("planks", BlockBase.WOOD);
+        r.accept("oak_planks", BlockBase.WOOD);
 
         // SAPLING MODIFIED BY STATIONAPI TO EXPAND METADATA VARIATIONS INTO SEPARATE BLOCKS
         OAK_SAPLING = new FixedSapling(of("oak_sapling"), new OakSaplingGenerator()).setHardness(0).setSounds(GRASS_SOUNDS).setTranslationKey("sapling").disableNotifyOnMetaDataChange();
@@ -55,7 +55,12 @@ public final class VanillaBlockFixImpl {
         r.accept("gold_ore", BlockBase.GOLD_ORE);
         r.accept("iron_ore", BlockBase.IRON_ORE);
         r.accept("coal_ore", BlockBase.COAL_ORE);
-        r.accept("log", BlockBase.LOG);
+
+        // LOG MODIFIED BY STATIONAPI TO EXPAND METADATA VARIATIONS INTO SEPARATE BLOCKS
+        OAK_LOG = new FixedLog(of("oak_log")).setHardness(2.0f).setSounds(WOOD_SOUNDS).setTranslationKey("log").disableNotifyOnMetaDataChange();
+        SPRUCE_LOG = new FixedLog(of("spruce_log")).setHardness(2.0f).setSounds(WOOD_SOUNDS).setTranslationKey("log").disableNotifyOnMetaDataChange();
+        BIRCH_LOG = new FixedLog(of("birch_log")).setHardness(2.0f).setSounds(WOOD_SOUNDS).setTranslationKey("log").disableNotifyOnMetaDataChange();
+        // LOG END
 
         // LEAVES MODIFIED BY STATIONAPI TO EXPAND METADATA VARIATIONS INTO SEPARATE BLOCKS
         OAK_LEAVES = new FixedLeaves(of("oak_leaves"), () -> Items.OAK_SAPLING).setHardness(0.2F).setLightOpacity(1).setSounds(GRASS_SOUNDS).setTranslationKey("leaves").disableStat().disableNotifyOnMetaDataChange();

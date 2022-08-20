@@ -11,6 +11,8 @@ import net.modificationstation.stationapi.api.util.API;
 import net.modificationstation.stationapi.impl.recipe.SmeltingRegistryImpl;
 import net.modificationstation.stationapi.mixin.recipe.SmeltingRecipeRegistryAccessor;
 
+import java.util.Map;
+
 public final class SmeltingRegistry {
 
     @API
@@ -24,12 +26,19 @@ public final class SmeltingRegistry {
     }
 
     @API
+    public static void addSmeltingRecipe(TagKey<ItemBase> input, ItemInstance output) {
+        ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().put(input, output);
+    }
+
+    @API
     public static ItemInstance getResultFor(ItemInstance input) {
-        RegistryEntry<ItemBase> entry = ItemRegistry.INSTANCE.getEntry(ItemRegistry.INSTANCE.getKey(input.getType()).orElseThrow()).orElseThrow();
-        for (Object o : ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().keySet())
+        RegistryEntry<ItemBase> itemEntry = ItemRegistry.INSTANCE.getEntry(ItemRegistry.INSTANCE.getKey(input.getType()).orElseThrow()).orElseThrow();
+        for (Map.Entry<Object, ItemInstance> entry : ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().entrySet()) {
+            Object o = entry.getKey();
             //noinspection unchecked
-            if (o instanceof ItemInstance item && input.isDamageAndIDIdentical(item) || o instanceof TagKey<?> tag && entry.isIn((TagKey<ItemBase>) tag))
-                return ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().get(o);
+            if (o instanceof ItemInstance item && input.isDamageAndIDIdentical(item) || o instanceof TagKey<?> tag && itemEntry.isIn((TagKey<ItemBase>) tag))
+                return entry.getValue();
+        }
         return SmeltingRecipeRegistry.getInstance().getResult(input.getType().id);
     }
 

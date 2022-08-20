@@ -3,7 +3,8 @@ package net.modificationstation.stationapi.mixin.vanillafix.block.wool;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.DyeRecipes;
-import net.modificationstation.stationapi.api.vanillafix.item.Items;
+import net.minecraft.recipe.RecipeRegistry;
+import net.modificationstation.stationapi.api.vanillafix.block.Blocks;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,23 +17,21 @@ public class MixinDyeRecipes {
             method = "register(Lnet/minecraft/recipe/RecipeRegistry;)V",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/block/BlockBase;id:I",
-                    opcode = Opcodes.GETFIELD
+                    target = "Lnet/minecraft/block/BlockBase;WOOL:Lnet/minecraft/block/BlockBase;",
+                    opcode = Opcodes.GETSTATIC
             )
     )
-    private int redirectWoolItemId(BlockBase instance) {
-        return Items.WHITE_WOOL.id;
+    private BlockBase redirectWoolItemId() {
+        return Blocks.WHITE_WOOL;
     }
 
-    @SuppressWarnings({"InvalidMemberReference", "UnresolvedMixinReference", "MixinAnnotationTarget", "InvalidInjectorMethodSignature"})
     @Redirect(
             method = "register(Lnet/minecraft/recipe/RecipeRegistry;)V",
             at = @At(
-                    value = "NEW",
-                    target = "(Lnet/minecraft/block/BlockBase;II)Lnet/minecraft/item/ItemInstance;"
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/recipe/RecipeRegistry;addShapelessRecipe(Lnet/minecraft/item/ItemInstance;[Ljava/lang/Object;)V",
+                    ordinal = 0
             )
     )
-    private ItemInstance redirectCraftingResult(BlockBase block, int count, int meta) {
-        return new ItemInstance(Items.woolMetaToBlock(meta), count);
-    }
+    private void redirectCraftingResult(RecipeRegistry instance, ItemInstance item, Object[] objects) {}
 }

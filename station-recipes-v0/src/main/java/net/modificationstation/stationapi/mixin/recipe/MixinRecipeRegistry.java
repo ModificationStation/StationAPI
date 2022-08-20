@@ -6,8 +6,6 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.*;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.impl.recipe.tag.ShapedTagRecipeAccessor;
 import net.modificationstation.stationapi.impl.recipe.tag.TagConversionStorage;
@@ -70,12 +68,13 @@ public class MixinRecipeRegistry {
                 var3.add(new ItemInstance(item));
             } else if (var7 instanceof BlockBase block) {
                 var3.add(new ItemInstance(block));
-            } else if (var7 instanceof Identifier id) {
-                TagKey<ItemBase> tag = TagKey.of(ItemRegistry.INSTANCE.getKey(), id);
+            } else if (var7 instanceof TagKey<?> tag) {
+                //noinspection unchecked
+                TagKey<ItemBase> itemTag = (TagKey<ItemBase>) tag;
 //                if (!ItemRegistry.INSTANCE.containsTag(tag)) {
 //                    throw new RuntimeException("Identifier ingredient \"" + id + "\" has no entry in the tag registry!");
 //                }
-                var3.add(tag);
+                var3.add(itemTag);
             } else {
                 throw new RuntimeException("Invalid shapeless recipe ingredient of type " + var7.getClass().getName() + "!");
             }
@@ -98,8 +97,10 @@ public class MixinRecipeRegistry {
 
     @Redirect(method = "addShapedRecipe", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
     private Object hijackShapedRecipes2(Map<Object, Object> hashMap, Object key, Object value) {
-        if (capturedRecipe[capturedItemIndex + 1] instanceof Identifier id) {
-            return hashMap.put(key, id);
+        if (capturedRecipe[capturedItemIndex + 1] instanceof TagKey<?> tag) {
+            //noinspection unchecked
+            TagKey<ItemBase> itemTag = (TagKey<ItemBase>) tag;
+            return hashMap.put(key, itemTag);
         }
         else {
             return hashMap.put(key, value);
@@ -118,12 +119,13 @@ public class MixinRecipeRegistry {
                 if (item instanceof ItemInstance inst) {
                     var14[var16] = inst.copy();
                 }
-                else if (item instanceof Identifier id) {
-                    TagKey<ItemBase> tag = TagKey.of(ItemRegistry.INSTANCE.getKey(), id);
+                else if (item instanceof TagKey<?> tag) {
+                    //noinspection unchecked
+                    TagKey<ItemBase> itemTag = (TagKey<ItemBase>) tag;
 //                    if (!ItemRegistry.INSTANCE.containsTag(tag)) {
 //                        throw new RuntimeException("Identifier ingredient \"" + id + "\" has no entry in the tag registry!");
 //                    }
-                    var14[var16] = tag;
+                    var14[var16] = itemTag;
                 }
             } else {
                 var14[var16] = null;

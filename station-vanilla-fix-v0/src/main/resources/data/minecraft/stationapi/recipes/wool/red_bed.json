@@ -1,0 +1,18 @@
+{
+  "type": "crafting_shaped",
+  "key": {
+    "#": {
+      "tag": "wool"
+    },
+    "X": {
+      "tag": "planks"
+    }
+  },
+  "pattern": [
+    "###",
+    "XXX"
+  ],
+  "result": {
+    "item": "red_bed"
+  }
+}

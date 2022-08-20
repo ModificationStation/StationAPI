@@ -144,6 +144,10 @@ public final class VanillaItemFixImpl {
         SPRUCE_SAPLING = byBlock.apply(Blocks.SPRUCE_SAPLING);
         BIRCH_SAPLING = byBlock.apply(Blocks.BIRCH_SAPLING);
 
+        OAK_LOG = byBlock.apply(Blocks.OAK_LOG);
+        SPRUCE_LOG = byBlock.apply(Blocks.SPRUCE_LOG);
+        BIRCH_LOG = byBlock.apply(Blocks.BIRCH_LOG);
+
         OAK_LEAVES = byBlock.apply(Blocks.OAK_LEAVES);
         SPRUCE_LEAVES = byBlock.apply(Blocks.SPRUCE_LEAVES);
         BIRCH_LEAVES = byBlock.apply(Blocks.BIRCH_LEAVES);

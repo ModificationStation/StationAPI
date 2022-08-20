@@ -66,7 +66,7 @@ public class FixedBirchTree extends BirchTree {
         for (n4 = 0; n4 < n6; ++n4) {
             n3 = arg.getTileId(i, j + n4, k);
             if (n3 != 0 && !(BlockBase.BY_ID[n3] instanceof FixedLeaves)) continue;
-            arg.setTileWithMetadata(i, j + n4, k, BlockBase.LOG.id, 2);
+            ((StationFlatteningLevel) arg).setBlockState(i, j + n4, k, ((BlockStateHolder) Blocks.BIRCH_LOG).getDefaultState());
         }
         return true;
     }
