@@ -1,3 +1,9 @@
 {
-  "parent": "block/spruce_leaves"
+  "parent": "block/spruce_leaves",
+  "overrides": [
+    {
+      "predicate": {"fast_leaves": 1},
+      "model": "block/fast_spruce_leaves"
+    }
+  ]
 }

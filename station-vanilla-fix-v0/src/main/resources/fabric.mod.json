@@ -26,7 +26,8 @@
       "net.modificationstation.stationapi.impl.vanillafix.item.tool.VanillaToolFixImpl",
       "net.modificationstation.stationapi.impl.vanillafix.recipe.VanillaFuelItemFixImpl",
       "net.modificationstation.stationapi.impl.client.vanillafix.color.block.VanillaBlockColorProviders",
-      "net.modificationstation.stationapi.impl.client.vanillafix.color.item.VanillaItemColorProviders"
+      "net.modificationstation.stationapi.impl.client.vanillafix.color.item.VanillaItemColorProviders",
+      "net.modificationstation.stationapi.impl.client.vanillafix.render.model.VanillaModelFixImpl"
     ]
   },
   "mixins": [

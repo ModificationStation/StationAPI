@@ -25,11 +25,11 @@ public final class VanillaBlockColorProviders {
                 Blocks.OAK_LEAVES
         );
         event.blockColors.registerColorProvider(
-                (state, world, pos, tintIndex) -> world == null || pos == null ? FoliageColour.method_1083() : FoliageColour.method_1079(),
+                (state, world, pos, tintIndex) -> FoliageColour.method_1079(),
                 Blocks.SPRUCE_LEAVES
         );
-        event.blockColors.registerColorProvider((state, world, pos, tintIndex) ->
-                world == null || pos == null ? FoliageColour.method_1083() : FoliageColour.method_1082(),
+        event.blockColors.registerColorProvider(
+                (state, world, pos, tintIndex) -> FoliageColour.method_1082(),
                 Blocks.BIRCH_LEAVES
         );
         event.blockColors.registerColorProvider(

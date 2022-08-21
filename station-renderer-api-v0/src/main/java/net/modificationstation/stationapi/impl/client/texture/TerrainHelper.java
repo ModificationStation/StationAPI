@@ -70,7 +70,7 @@ final class TerrainHelper implements SpritesheetHelper {
         f.accept("diamond_ore", 50);
         f.accept("redstone_ore", 51);
         f.accept("oak_leaves", 52);
-        f.accept("oak_leaves_fast", 53);
+        f.accept("fast_oak_leaves", 53);
         f.accept("dead_bush", 55);
         f.accept("fern", 56);
         f.accept("double_chest_back_left", 57);
@@ -139,7 +139,7 @@ final class TerrainHelper implements SpritesheetHelper {
         f.accept("pink_wool", 130);
         f.accept("repeater", 131);
         f.accept("spruce_leaves", 132);
-        f.accept("spruce_leaves_fast", 133);
+        f.accept("fast_spruce_leaves", 133);
         f.accept("bed_top_left", 134);
         f.accept("bed_top_right", 135);
         f.accept("lapis_block", 144);

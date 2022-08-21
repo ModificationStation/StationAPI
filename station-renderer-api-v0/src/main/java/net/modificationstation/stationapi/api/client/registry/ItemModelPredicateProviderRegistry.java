@@ -2,6 +2,8 @@ package net.modificationstation.stationapi.api.client.registry;
 
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.item.ItemBase;
+import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.client.event.render.model.ItemModelPredicateProviderRegistryEvent;
 import net.modificationstation.stationapi.api.client.model.item.ItemModelPredicateProvider;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
@@ -51,5 +53,9 @@ public final class ItemModelPredicateProviderRegistry extends SimpleRegistry<Ite
 
     public void register(ItemBase item, Identifier id, ItemModelPredicateProvider provider) {
         ITEM_SPECIFIC.computeIfAbsent(item, itemx -> new IdentityHashMap<>()).put(id, provider);
+    }
+
+    static {
+        StationAPI.EVENT_BUS.post(new ItemModelPredicateProviderRegistryEvent());
     }
 }

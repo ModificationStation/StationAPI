@@ -2,6 +2,8 @@ package net.modificationstation.stationapi.api.client.registry;
 
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.block.BlockBase;
+import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.client.event.render.model.BlockModelPredicateProviderRegistryEvent;
 import net.modificationstation.stationapi.api.client.model.block.BlockModelPredicateProvider;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
@@ -40,5 +42,9 @@ public final class BlockModelPredicateProviderRegistry extends SimpleRegistry<Bl
 
     public void register(BlockBase block, Identifier id, BlockModelPredicateProvider provider) {
         BLOCK_SPECIFIC.computeIfAbsent(block, blockx -> new IdentityHashMap<>()).put(id, provider);
+    }
+
+    static {
+        StationAPI.EVENT_BUS.post(new BlockModelPredicateProviderRegistryEvent());
     }
 }

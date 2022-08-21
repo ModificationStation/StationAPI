@@ -45,7 +45,7 @@ public class MixinShears {
         return (switch (Objects.requireNonNull(BlockRegistry.INSTANCE.getId(arg2)).toString()) {
             case "minecraft:spruce_leaves",
                     "minecraft:birch_leaves"
-                    -> instance;
+                    -> arg2;
             default -> Blocks.OAK_LEAVES;
         }).id;
     }

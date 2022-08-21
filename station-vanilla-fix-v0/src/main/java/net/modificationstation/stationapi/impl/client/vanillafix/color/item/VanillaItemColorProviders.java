@@ -28,7 +28,7 @@ public final class VanillaItemColorProviders {
                 (ItemConvertible) BlockBase.TALLGRASS,
                 (ItemConvertible) Blocks.OAK_LEAVES,
                 (ItemConvertible) Blocks.SPRUCE_LEAVES,
-                (ItemConvertible) Blocks.BIRCH_SAPLING
+                (ItemConvertible) Blocks.BIRCH_LEAVES
         );
     }
 }
