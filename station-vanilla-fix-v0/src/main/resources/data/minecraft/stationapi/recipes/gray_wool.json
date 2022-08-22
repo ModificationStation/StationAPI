@@ -5,8 +5,7 @@
       "item": "white_wool"
     },
     {
-      "item": "dye",
-      "damage": 8
+      "item": "gray_dye"
     }
   ],
   "result": {

@@ -2,13 +2,11 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "white_wool"
-    },
-    {
-      "item": "ink_sac"
+      "item": "bone"
     }
   ],
   "result": {
-    "item": "black_wool"
+    "item": "bone_meal",
+    "count": 3
   }
 }

@@ -2,13 +2,11 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "white_wool"
-    },
-    {
-      "item": "ink_sac"
+      "item": "rose"
     }
   ],
   "result": {
-    "item": "black_wool"
+    "item": "red_dye",
+    "count": 2
   }
 }

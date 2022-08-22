@@ -2,13 +2,17 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "white_wool"
+      "item": "ink_sac"
+    },
+    {
+      "item": "bone_meal"
     },
     {
       "item": "bone_meal"
     }
   ],
   "result": {
-    "item": "white_wool"
+    "item": "light_gray_dye",
+    "count": 3
   }
 }

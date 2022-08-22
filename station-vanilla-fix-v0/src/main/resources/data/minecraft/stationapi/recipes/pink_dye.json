@@ -2,13 +2,14 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "white_wool"
+      "item": "red_dye"
     },
     {
-      "item": "green_dye"
+      "item": "bone_meal"
     }
   ],
   "result": {
-    "item": "green_wool"
+    "item": "pink_dye",
+    "count": 2
   }
 }

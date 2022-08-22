@@ -2,13 +2,14 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "white_wool"
+      "item": "lapis_lazuli"
     },
     {
       "item": "green_dye"
     }
   ],
   "result": {
-    "item": "green_wool"
+    "item": "cyan_dye",
+    "count": 2
   }
 }

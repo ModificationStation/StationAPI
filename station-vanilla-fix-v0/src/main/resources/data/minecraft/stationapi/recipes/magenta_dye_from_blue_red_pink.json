@@ -2,13 +2,17 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "white_wool"
+      "item": "lapis_lazuli"
     },
     {
       "item": "red_dye"
+    },
+    {
+      "item": "pink_dye"
     }
   ],
   "result": {
-    "item": "red_wool"
+    "item": "magenta_dye",
+    "count": 3
   }
 }

@@ -31,7 +31,7 @@ public class RecipeListener {
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get()), new ItemInstance(BlockBase.PISTON));
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(BlockBase.OBSIDIAN), new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get()));
                 CraftingRegistry.addShapelessRecipe(new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 1), new ItemInstance(BlockBase.OBSIDIAN));
-                CraftingRegistry.addShapelessRecipe(new ItemInstance(ItemBase.dyePowder, 1, 5), new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 1));
+//                CraftingRegistry.addShapelessRecipe(new ItemInstance(ItemBase.dyePowder, 1, 5), new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 1));
             }
             case CRAFTING_SHAPED -> CraftingRegistry.addShapedRecipe(new ItemInstance(ItemListener.testPickaxe), "X X", " Y ", " Y ", 'X', Blocks.TEST_ANIMATED_BLOCK.get(), 'Y', BlockBase.OBSIDIAN);
             case SMELTING -> {

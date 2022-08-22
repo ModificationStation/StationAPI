@@ -232,7 +232,26 @@ public final class Items {
             GLOWSTONE_DUST,
             FISH,
             COOKED_FISH,
-            DYE,
+
+    // DYE MODIFIED BY STATIONAPI TO EXPAND METADATA VARIATIONS INTO SEPARATE ITEMS
+            INK_SAC,
+            RED_DYE,
+            GREEN_DYE,
+            COCOA_BEANS,
+            LAPIS_LAZULI,
+            PURPLE_DYE,
+            CYAN_DYE,
+            LIGHT_GRAY_DYE,
+            GRAY_DYE,
+            PINK_DYE,
+            LIME_DYE,
+            YELLOW_DYE,
+            LIGHT_BLUE_DYE,
+            MAGENTA_DYE,
+            ORANGE_DYE,
+            BONE_MEAL,
+    // DYE END
+
             BONE,
             SUGAR,
             CAKE,

@@ -2,13 +2,13 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "white_wool"
+      "item": "ink_sac"
     },
     {
-      "item": "green_dye"
+      "item": "bone_meal"
     }
   ],
   "result": {
-    "item": "green_wool"
+    "item": "gray_dye"
   }
 }

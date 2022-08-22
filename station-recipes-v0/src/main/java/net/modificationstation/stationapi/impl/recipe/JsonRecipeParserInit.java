@@ -77,7 +77,11 @@ public class JsonRecipeParserInit {
         Object[] iteminstances = new Object[json.getIngredients().length];
         for (int i = 0; i < ingredients.length; i++)
             iteminstances[i] = ingredients[i].get().map(Function.identity(), Function.identity());
-        CraftingRegistry.addShapelessRecipe(json.getResult().getItemInstance(), iteminstances);
+        try {
+            CraftingRegistry.addShapelessRecipe(json.getResult().getItemInstance(), iteminstances);
+        } catch (NullPointerException e) {
+            throw new RuntimeException("Recipe: " + recipe, e);
+        }
     }
 
     private static void parseSmelting(URL recipe) {

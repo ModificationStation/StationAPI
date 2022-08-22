@@ -12,6 +12,9 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
 import net.modificationstation.stationapi.api.vanillafix.block.Blocks;
+import net.modificationstation.stationapi.api.vanillafix.item.FixedBoneMeal;
+import net.modificationstation.stationapi.api.vanillafix.item.FixedDye;
+import net.modificationstation.stationapi.api.vanillafix.util.DyeColor;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -128,7 +131,26 @@ public final class VanillaItemFixImpl {
         r.accept("glowstone_dust", glowstoneDust);
         r.accept("cod", rawFish);
         r.accept("cooked_cod", cookedFish);
-        r.accept("dye", dyePowder);
+
+        // DYE MODIFIED BY STATIONAPI TO EXPAND METADATA VARIATIONS INTO SEPARATE ITEMS
+        INK_SAC = new FixedDye(of("ink_sac"), DyeColor.BLACK).setTranslationKey("dyePowder.black");
+        RED_DYE = new FixedDye(of("red_dye"), DyeColor.RED).setTranslationKey("dyePowder.red");
+        GREEN_DYE = new FixedDye(of("green_dye"), DyeColor.GREEN).setTranslationKey("dyePowder.green");
+        COCOA_BEANS = new FixedDye(of("cocoa_beans"), DyeColor.BROWN).setTranslationKey("dyePowder.brown");
+        LAPIS_LAZULI = new FixedDye(of("lapis_lazuli"), DyeColor.BLUE).setTranslationKey("dyePowder.blue");
+        PURPLE_DYE = new FixedDye(of("purple_dye"), DyeColor.PURPLE).setTranslationKey("dyePowder.purple");
+        CYAN_DYE = new FixedDye(of("cyan_dye"), DyeColor.CYAN).setTranslationKey("dyePowder.cyan");
+        LIGHT_GRAY_DYE = new FixedDye(of("light_gray_dye"), DyeColor.LIGHT_GRAY).setTranslationKey("dyePowder.silver");
+        GRAY_DYE = new FixedDye(of("gray_dye"), DyeColor.GRAY).setTranslationKey("dyePowder.gray");
+        PINK_DYE = new FixedDye(of("pink_dye"), DyeColor.PINK).setTranslationKey("dyePowder.pink");
+        LIME_DYE = new FixedDye(of("lime_dye"), DyeColor.LIME).setTranslationKey("dyePowder.lime");
+        YELLOW_DYE = new FixedDye(of("yellow_dye"), DyeColor.YELLOW).setTranslationKey("dyePowder.yellow");
+        LIGHT_BLUE_DYE = new FixedDye(of("light_blue_dye"), DyeColor.LIGHT_BLUE).setTranslationKey("dyePowder.lightBlue");
+        MAGENTA_DYE = new FixedDye(of("magenta_dye"), DyeColor.MAGENTA).setTranslationKey("dyePowder.magenta");
+        ORANGE_DYE = new FixedDye(of("orange_dye"), DyeColor.ORANGE).setTranslationKey("dyePowder.orange");
+        BONE_MEAL = new FixedBoneMeal(of("bone_meal"), DyeColor.WHITE).setTranslationKey("dyePowder.white");
+        // DYE END
+
         r.accept("bone", bone);
         r.accept("sugar", sugar);
         r.accept("cake", cake);

@@ -2,13 +2,11 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "white_wool"
-    },
-    {
-      "item": "ink_sac"
+      "item": "dandelion"
     }
   ],
   "result": {
-    "item": "black_wool"
+    "item": "yellow_dye",
+    "count": 2
   }
 }

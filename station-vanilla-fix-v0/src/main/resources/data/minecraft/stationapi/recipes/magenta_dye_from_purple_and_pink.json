@@ -2,13 +2,14 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "white_wool"
+      "item": "purple_dye"
     },
     {
-      "item": "green_dye"
+      "item": "pink_dye"
     }
   ],
   "result": {
-    "item": "green_wool"
+    "item": "magenta_dye",
+    "count": 2
   }
 }

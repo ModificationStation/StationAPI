@@ -22,7 +22,6 @@
     "block.sapling.MixinBlockBase",
     "block.sapling.MixinTileEntityFurnace",
     "block.wool.MixinBlockBase",
-    "block.wool.MixinDyeRecipes",
     "block.wool.MixinFire",
     "block.wool.MixinRecipeRegistry",
     "block.wool.MixinShears",
@@ -31,7 +30,14 @@
     "item.coal.MixinMinecart",
     "item.coal.MixinRecipeRegistry",
     "item.coal.MixinSmeltingRecipeRegistry",
-    "item.coal.MixinTileEntityFurnace"
+    "item.coal.MixinTileEntityFurnace",
+    "item.dye.MixinDungeon",
+    "item.dye.MixinItemBase",
+    "item.dye.MixinMaterialBlockRecipes",
+    "item.dye.MixinRecipeRegistry",
+    "item.dye.MixinSmeltingRecipeRegistry",
+    "item.dye.MixinSquid",
+    "item.dye.MixinStewAndCookieRecipes"
   ],
   "server": [
   ],
