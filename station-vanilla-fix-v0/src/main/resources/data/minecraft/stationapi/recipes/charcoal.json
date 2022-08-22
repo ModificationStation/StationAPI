@@ -4,7 +4,6 @@
     "tag": "logs_that_burn"
   },
   "result": {
-    "item": "coal",
-    "damage": 1
+    "item": "charcoal"
   }
 }

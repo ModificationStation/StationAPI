@@ -15,6 +15,7 @@ public final class VanillaFuelItemFixImpl {
         if (RecipeRegisterEvent.Vanilla.SMELTING.type() == event.recipeId) {
             SmeltingRegistry.addFuelTag(ItemTags.SAPLINGS.id(), 100);
             SmeltingRegistry.addFuelTag(ItemTags.LOGS.id(), 300);
+            SmeltingRegistry.addFuelTag(ItemTags.COALS.id(), 1600);
         }
     }
 }

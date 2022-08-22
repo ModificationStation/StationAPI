@@ -27,7 +27,11 @@
     "block.wool.MixinRecipeRegistry",
     "block.wool.MixinShears",
     "block.wool.MixinSheep",
-    "item.coal.MixinItemBase"
+    "item.coal.MixinItemBase",
+    "item.coal.MixinMinecart",
+    "item.coal.MixinRecipeRegistry",
+    "item.coal.MixinSmeltingRecipeRegistry",
+    "item.coal.MixinTileEntityFurnace"
   ],
   "server": [
   ],

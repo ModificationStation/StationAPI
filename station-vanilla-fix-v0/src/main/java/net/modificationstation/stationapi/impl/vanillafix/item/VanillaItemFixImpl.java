@@ -35,11 +35,10 @@ public final class VanillaItemFixImpl {
         r.accept("apple", apple);
         r.accept("bow", bow);
         r.accept("arrow", arrow);
-        r.accept("coal", coal);
 
         // COAL MODIFIED BY STATIONAPI TO EXPAND METADATA VARIATIONS INTO SEPARATE ITEMS
-//        COAL = new TemplateItemBase(of("coal")).setTranslationKey("coal");
-//        CHARCOAL = new TemplateItemBase(of("charcoal")).setTranslationKey("charcoal");
+        COAL = new TemplateItemBase(of("coal")).setTranslationKey("coal");
+        CHARCOAL = new TemplateItemBase(of("charcoal")).setTranslationKey("charcoal");
         // COAL END
 
         r.accept("diamond", diamond);

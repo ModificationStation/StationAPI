@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "key": {
+    "#": {
+      "item": "stick"
+    },
+    "X": {
+      "tag": "coals"
+    }
+  },
+  "pattern": [
+    "X",
+    "#"
+  ],
+  "result": {
+    "count": 4,
+    "item": "torch"
+  }
+}
