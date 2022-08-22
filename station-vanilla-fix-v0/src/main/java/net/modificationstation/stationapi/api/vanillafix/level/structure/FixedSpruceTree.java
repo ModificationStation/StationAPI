@@ -60,7 +60,6 @@ public class FixedSpruceTree extends SpruceTree {
                 for (int i2 = k - n6; i2 <= k + n6; ++i2) {
                     int n13 = i2 - k;
                     if (Math.abs(n12) == n6 && Math.abs(n13) == n6 && n6 > 0 || BlockBase.FULL_OPAQUE[arg.getTileId(n, n2, i2)]) continue;
-                    arg.setTileWithMetadata(n, n2, i2, BlockBase.LEAVES.id, 1);
                     ((StationFlatteningWorld) arg).setBlockState(n, n2, i2, ((BlockStateHolder) Blocks.SPRUCE_LEAVES).getDefaultState());
                 }
             }
