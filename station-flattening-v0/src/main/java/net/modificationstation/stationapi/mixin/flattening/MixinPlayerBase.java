@@ -6,12 +6,12 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.entity.player.StationFlatteningPlayerBase;
+import net.modificationstation.stationapi.api.entity.player.StationFlatteningPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(PlayerBase.class)
-public abstract class MixinPlayerBase extends Living implements StationFlatteningPlayerBase {
+public abstract class MixinPlayerBase extends Living implements StationFlatteningPlayerEntity {
 
     @Shadow public PlayerInventory inventory;
 

@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.level.HeightLimitView;
-import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
+import net.modificationstation.stationapi.api.level.StationFlatteningWorld;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
@@ -48,7 +48,7 @@ public class BlockStateItem extends TemplateItemBase {
                     .x(x).y(y).z(z)
                     .block(block)
                     .blockItem(itemInstance)
-                    .placeFunction(() -> ((StationFlatteningLevel) level).setBlockStateWithNotify(x, y, z, blockState) != null)
+                    .placeFunction(() -> ((StationFlatteningWorld) level).setBlockStateWithNotify(x, y, z, blockState) != null)
                     .build()).placeFunction.getAsBoolean()
             ) {
                 block.onBlockPlaced(level, x, y, z, direction.getId());

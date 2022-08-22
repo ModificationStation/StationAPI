@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.level.Level;
 import net.minecraft.level.structure.SpruceTree;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
+import net.modificationstation.stationapi.api.level.StationFlatteningWorld;
 import net.modificationstation.stationapi.api.vanillafix.block.Blocks;
 import net.modificationstation.stationapi.api.vanillafix.block.FixedLeaves;
 
@@ -61,7 +61,7 @@ public class FixedSpruceTree extends SpruceTree {
                     int n13 = i2 - k;
                     if (Math.abs(n12) == n6 && Math.abs(n13) == n6 && n6 > 0 || BlockBase.FULL_OPAQUE[arg.getTileId(n, n2, i2)]) continue;
                     arg.setTileWithMetadata(n, n2, i2, BlockBase.LEAVES.id, 1);
-                    ((StationFlatteningLevel) arg).setBlockState(n, n2, i2, ((BlockStateHolder) Blocks.SPRUCE_LEAVES).getDefaultState());
+                    ((StationFlatteningWorld) arg).setBlockState(n, n2, i2, ((BlockStateHolder) Blocks.SPRUCE_LEAVES).getDefaultState());
                 }
             }
             if (n6 >= n5) {
@@ -77,7 +77,7 @@ public class FixedSpruceTree extends SpruceTree {
         for (n2 = 0; n2 < n8 - n3; ++n2) {
             n = arg.getTileId(i, j + n2, k);
             if (n != 0 && !(BlockBase.BY_ID[n] instanceof FixedLeaves)) continue;
-            ((StationFlatteningLevel) arg).setBlockState(i, j + n2, k, ((BlockStateHolder) Blocks.SPRUCE_LOG).getDefaultState());
+            ((StationFlatteningWorld) arg).setBlockState(i, j + n2, k, ((BlockStateHolder) Blocks.SPRUCE_LOG).getDefaultState());
         }
         return true;
     }

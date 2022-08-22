@@ -26,7 +26,8 @@
     "block.wool.MixinFire",
     "block.wool.MixinRecipeRegistry",
     "block.wool.MixinShears",
-    "block.wool.MixinSheep"
+    "block.wool.MixinSheep",
+    "item.coal.MixinItemBase"
   ],
   "server": [
   ],

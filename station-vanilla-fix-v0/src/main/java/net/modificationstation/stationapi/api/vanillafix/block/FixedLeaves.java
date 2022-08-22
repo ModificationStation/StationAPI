@@ -9,7 +9,7 @@ import net.minecraft.level.Level;
 import net.minecraft.stat.Stats;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.level.BlockStateView;
-import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
+import net.modificationstation.stationapi.api.level.StationFlatteningWorld;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.state.property.Properties;
@@ -43,7 +43,7 @@ public class FixedLeaves extends FixedLeavesBase {
         if (level.method_155(x - n2, y - n2, z - n2, x + n2, y + n2, z + n2))
             for (int i2 = -n; i2 <= n; ++i2) for (int i3 = -n; i3 <= n; ++i3) for (int i4 = -n; i4 <= n; ++i4)
                 if (BlockBase.BY_ID[level.getTileId(x + i2, y + i3, z + i4)] instanceof FixedLeaves)
-                    ((StationFlatteningLevel) level).setBlockState(x + i2, y + i3, z + i4, ((BlockStateView) level).getBlockState(x + i2, y + i3, z + i4).with(Properties.PERSISTENT, false));
+                    ((StationFlatteningWorld) level).setBlockState(x + i2, y + i3, z + i4, ((BlockStateView) level).getBlockState(x + i2, y + i3, z + i4).with(Properties.PERSISTENT, false));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class FixedLeaves extends FixedLeavesBase {
                 int yOff;
                 for (xOff = -scanRadius; xOff <= scanRadius; ++xOff) for (yOff = -scanRadius; yOff <= scanRadius; ++yOff) for (zOff = -scanRadius; zOff <= scanRadius; ++zOff) {
                     n8 = arg.getTileId(x + xOff, y + yOff, z + zOff);
-                    DISTANCE_MAP[(xOff + mapLengthHalved) * mapPlaneSize + (yOff + mapLengthHalved) * mapLength + (zOff + mapLengthHalved)] = ((StationFlatteningLevel) arg).getBlockState(x + xOff, y + yOff, z + zOff).isIn(BlockTags.LOGS) ? 0 : (BlockBase.BY_ID[n8] instanceof FixedLeaves ? -2 : -1);
+                    DISTANCE_MAP[(xOff + mapLengthHalved) * mapPlaneSize + (yOff + mapLengthHalved) * mapLength + (zOff + mapLengthHalved)] = ((StationFlatteningWorld) arg).getBlockState(x + xOff, y + yOff, z + zOff).isIn(BlockTags.LOGS) ? 0 : (BlockBase.BY_ID[n8] instanceof FixedLeaves ? -2 : -1);
                 }
                 for (xOff = 1; xOff <= 4; ++xOff)
                     for (yOff = -scanRadius; yOff <= scanRadius; ++yOff) for (zOff = -scanRadius; zOff <= scanRadius; ++zOff) for (n8 = -scanRadius; n8 <= scanRadius; ++n8) {
@@ -83,7 +83,7 @@ public class FixedLeaves extends FixedLeavesBase {
                     }
             }
             if (DISTANCE_MAP[mapLengthHalved * mapPlaneSize + mapLengthHalved * mapLength + mapLengthHalved] >= 0) {
-                ((StationFlatteningLevel) arg).setBlockState(x, y, z, state.with(Properties.PERSISTENT, true));
+                ((StationFlatteningWorld) arg).setBlockState(x, y, z, state.with(Properties.PERSISTENT, true));
             } else {
                 this.dropAndRemove(arg, x, y, z);
             }

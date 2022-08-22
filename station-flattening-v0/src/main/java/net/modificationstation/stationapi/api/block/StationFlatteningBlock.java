@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.api.util.Util;
 
 import java.util.List;
 
-public interface StationFlatteningBlockBase extends
+public interface StationFlatteningBlock extends
         BlockStateHolder,
         DropWithBlockState,
         DropListProvider,

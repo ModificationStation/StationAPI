@@ -4,7 +4,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
+import net.modificationstation.stationapi.api.level.StationFlatteningWorld;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.state.property.Properties;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
@@ -28,9 +28,9 @@ public class FixedLog extends TemplateBlockBase {
         int safeRadius = radius + 1;
         if (level.method_155(x - safeRadius, y - safeRadius, z - safeRadius, x + safeRadius, y + safeRadius, z + safeRadius))
             for (int xOff = -radius; xOff <= radius; ++xOff) for (int yOff = -radius; yOff <= radius; ++yOff) for (int zOff = -radius; zOff <= radius; ++zOff) {
-                BlockState state = ((StationFlatteningLevel) level).getBlockState(x + xOff, y + yOff, z + zOff);
+                BlockState state = ((StationFlatteningWorld) level).getBlockState(x + xOff, y + yOff, z + zOff);
                 if (!(state.getBlock() instanceof FixedLeaves) || !state.get(Properties.PERSISTENT)) continue;
-                ((StationFlatteningLevel) level).setBlockState(x + xOff, y + yOff, z + zOff, state.with(Properties.PERSISTENT, false));
+                ((StationFlatteningWorld) level).setBlockState(x + xOff, y + yOff, z + zOff, state.with(Properties.PERSISTENT, false));
             }
     }
 }

@@ -21,7 +21,7 @@ public final class BlockRegistry extends AbstractArrayBackedLegacyRegistry<Block
     public static final BlockRegistry INSTANCE = Registry.create(KEY, new BlockRegistry(), Lifecycle.experimental());
 
     private BlockRegistry() {
-        super(KEY);
+        super(KEY, BlockBase::getRegistryEntry);
     }
 
     @Override

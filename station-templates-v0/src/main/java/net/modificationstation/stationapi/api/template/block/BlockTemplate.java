@@ -6,10 +6,10 @@ import net.fabricmc.api.EnvironmentInterface;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.block.BlockItemToggle;
-import net.modificationstation.stationapi.api.block.StationFlatteningBlockBase;
+import net.modificationstation.stationapi.api.block.StationFlatteningBlock;
+import net.modificationstation.stationapi.api.block.StationItemsBlock;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
-import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
@@ -19,9 +19,9 @@ import net.modificationstation.stationapi.api.util.Util;
 @EnvironmentInterface(value = EnvType.CLIENT, itf = CustomAtlasProvider.class)
 public interface BlockTemplate<T extends BlockBase> extends
         CustomAtlasProvider,
-        ItemConvertible,
+        StationItemsBlock,
         BlockItemToggle<T>,
-        StationFlatteningBlockBase
+        StationFlatteningBlock
 {
 
     default T setTranslationKey(ModID modID, String translationKey) {

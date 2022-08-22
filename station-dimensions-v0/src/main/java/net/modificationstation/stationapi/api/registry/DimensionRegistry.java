@@ -67,7 +67,7 @@ public final class DimensionRegistry extends AbstractInt2ObjectMapBackedLegacyRe
     private boolean registering;
 
     private DimensionRegistry() {
-        super(KEY);
+        super(KEY, null);
     }
 
     @Override

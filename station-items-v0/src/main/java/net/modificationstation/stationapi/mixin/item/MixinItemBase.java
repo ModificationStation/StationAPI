@@ -4,9 +4,10 @@ import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.item.ItemEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
-import net.modificationstation.stationapi.api.item.ItemConvertible;
+import net.modificationstation.stationapi.api.item.StationItem;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.registry.serial.LegacyIDHolder;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,9 +16,11 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemBase.class)
-public class MixinItemBase implements LegacyIDHolder, ItemConvertible {
+public class MixinItemBase implements StationItem {
 
     @Shadow @Final public int id;
+
+    private final RegistryEntry.Reference<ItemBase> stationapi_registryEntry = ItemRegistry.INSTANCE.createEntry(ItemBase.class.cast(this));
 
     @Inject(
             method = "<clinit>",
@@ -39,7 +42,7 @@ public class MixinItemBase implements LegacyIDHolder, ItemConvertible {
     private String getName(String name) {
         return StationAPI.EVENT_BUS.post(
                 ItemEvent.TranslationKeyChanged.builder()
-                        .item((ItemBase) (Object) this)
+                        .item(ItemBase.class.cast(this))
                         .currentTranslationKey(name)
                         .build()
         ).currentTranslationKey;
@@ -62,6 +65,12 @@ public class MixinItemBase implements LegacyIDHolder, ItemConvertible {
     @Override
     @Unique
     public ItemBase asItem() {
-        return (ItemBase) (Object) this;
+        return ItemBase.class.cast(this);
+    }
+
+    @Override
+    @Unique
+    public RegistryEntry.Reference<ItemBase> getRegistryEntry() {
+        return stationapi_registryEntry;
     }
 }

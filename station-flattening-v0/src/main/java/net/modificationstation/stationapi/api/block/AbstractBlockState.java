@@ -10,7 +10,6 @@ import net.minecraft.block.material.MaterialColour;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
-import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.RegistryEntryList;
 import net.modificationstation.stationapi.api.state.State;
 import net.modificationstation.stationapi.api.state.property.Property;
@@ -345,7 +344,7 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 //      }
 
     public boolean isIn(TagKey<BlockBase> tag) {
-        return BlockRegistry.INSTANCE.getEntry(BlockRegistry.INSTANCE.getKey(getBlock()).orElseThrow()).orElseThrow().isIn(tag);
+        return ((StationBlock) getBlock()).getRegistryEntry().isIn(tag);
     }
 
     public boolean isIn(TagKey<BlockBase> tag, Predicate<AbstractBlockState> predicate) {
@@ -353,11 +352,11 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
     }
 
     public boolean isIn(RegistryEntryList<BlockBase> blocks) {
-        return blocks.contains(BlockRegistry.INSTANCE.getEntry(BlockRegistry.INSTANCE.getKey(getBlock()).orElseThrow()).orElseThrow());
+        return blocks.contains(((StationBlock) getBlock()).getRegistryEntry());
     }
 
     public Stream<TagKey<BlockBase>> streamTags() {
-        return BlockRegistry.INSTANCE.getEntry(BlockRegistry.INSTANCE.getKey(getBlock()).orElseThrow()).orElseThrow().streamTags();
+        return ((StationBlock) getBlock()).getRegistryEntry().streamTags();
     }
 
 //      public boolean isOf(BlockBase block) {

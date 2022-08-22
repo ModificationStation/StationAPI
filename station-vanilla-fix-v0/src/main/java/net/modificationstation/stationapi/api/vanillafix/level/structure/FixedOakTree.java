@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.level.Level;
 import net.minecraft.level.structure.OakTree;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
+import net.modificationstation.stationapi.api.level.StationFlatteningWorld;
 import net.modificationstation.stationapi.api.vanillafix.block.Blocks;
 import net.modificationstation.stationapi.api.vanillafix.block.FixedLeaves;
 
@@ -59,14 +59,14 @@ public class FixedOakTree extends OakTree {
                 for (int i2 = k - n2; i2 <= k + n2; ++i2) {
                     int n8 = i2 - k;
                     if (Math.abs(n7) == n2 && Math.abs(n8) == n2 && (random.nextInt(2) == 0 || n3 == 0) || BlockBase.FULL_OPAQUE[arg.getTileId(n, n4, i2)]) continue;
-                    ((StationFlatteningLevel) arg).setBlockState(n, n4, i2, ((BlockStateHolder) Blocks.OAK_LEAVES).getDefaultState());
+                    ((StationFlatteningWorld) arg).setBlockState(n, n4, i2, ((BlockStateHolder) Blocks.OAK_LEAVES).getDefaultState());
                 }
             }
         }
         for (n4 = 0; n4 < n6; ++n4) {
             n3 = arg.getTileId(i, j + n4, k);
             if (n3 != 0 && !(BlockBase.BY_ID[n3] instanceof FixedLeaves)) continue;
-            ((StationFlatteningLevel) arg).setBlockState(i, j + n4, k, ((BlockStateHolder) Blocks.OAK_LOG).getDefaultState());
+            ((StationFlatteningWorld) arg).setBlockState(i, j + n4, k, ((BlockStateHolder) Blocks.OAK_LOG).getDefaultState());
         }
         return true;
     }

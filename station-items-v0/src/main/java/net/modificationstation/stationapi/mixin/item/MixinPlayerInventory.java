@@ -2,9 +2,6 @@ package net.modificationstation.stationapi.mixin.item;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.item.nbt.HasItemEntity;
-import net.modificationstation.stationapi.api.item.nbt.ItemEntity;
-import net.modificationstation.stationapi.api.item.nbt.StationNBT;
 import net.modificationstation.stationapi.api.nbt.NBTHelper;
 import net.modificationstation.stationapi.impl.item.nbt.StationNBTSetter;
 import org.objectweb.asm.Opcodes;
@@ -23,13 +20,6 @@ public class MixinPlayerInventory {
     @Shadow
     public ItemInstance[] main;
 
-    @Deprecated
-    @Inject(method = "mergeStacks(Lnet/minecraft/item/ItemInstance;)I", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemInstance;<init>(III)V", shift = At.Shift.BY, by = 2), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onCopyItemInstance(ItemInstance arg, CallbackInfoReturnable<Integer> cir, int var2, int var3, int var4) {
-        ItemEntity itemEntity = HasItemEntity.cast(arg).getItemEntity();
-        HasItemEntity.cast(main[var4]).setItemEntity(itemEntity == null ? null : itemEntity.copy());
-    }
-
     @Inject(
             method = "mergeStacks(Lnet/minecraft/item/ItemInstance;)I",
             at = @At(
@@ -41,7 +31,7 @@ public class MixinPlayerInventory {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void newItemInstance(ItemInstance par1, CallbackInfoReturnable<Integer> cir, int var2, int var3, int var4) {
-        StationNBTSetter.cast(main[var4]).setStationNBT(StationNBT.cast(par1).getStationNBT());
+        StationNBTSetter.cast(main[var4]).setStationNBT(par1.getStationNBT());
     }
 
     @Redirect(
@@ -54,7 +44,7 @@ public class MixinPlayerInventory {
             )
     )
     private int captureItemInstance(ItemInstance instance, ItemInstance instance2) {
-        if (NBTHelper.equals(StationNBT.cast(instance).getStationNBT(), StationNBT.cast(instance2).getStationNBT()))
+        if (NBTHelper.equals(instance.getStationNBT(), instance2.getStationNBT()))
             return instance.count;
         else {
             notchGodDamnit = true;

@@ -4,6 +4,7 @@ import net.minecraft.inventory.Crafting;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.ShapedRecipe;
+import net.modificationstation.stationapi.api.item.StationItemStack;
 import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.RegistryEntryList;
@@ -64,7 +65,7 @@ public class MixinShapedRecipe implements ShapedTagRecipeAccessor, StationRecipe
                         }
                     }
                     else //noinspection unchecked
-                        if (!ItemRegistry.INSTANCE.getEntry(ItemRegistry.INSTANCE.getKey(var10.getType()).orElseThrow()).orElseThrow().isIn((TagKey<ItemBase>) var9)) {
+                        if (!StationItemStack.class.cast(var10).isIn((TagKey<ItemBase>) var9)) {
                         return false;
                     }
                 }

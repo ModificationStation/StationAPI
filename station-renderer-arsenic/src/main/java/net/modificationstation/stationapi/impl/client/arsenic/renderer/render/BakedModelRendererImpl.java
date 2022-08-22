@@ -487,7 +487,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
             CrashReportSection crashReportSection = crashReport.addElement("Item being rendered");
             crashReportSection.add("Item Type", () -> String.valueOf(itemStack.getType()));
             crashReportSection.add("Item Damage", () -> String.valueOf(itemStack.getDamage()));
-            crashReportSection.add("Item NBT", () -> String.valueOf(StationNBT.cast(itemStack).getStationNBT()));
+            crashReportSection.add("Item NBT", () -> String.valueOf(StationNBT.class.cast(itemStack).getStationNBT()));
             throw new CrashException(crashReport);
         }
 //        this.zOffset = bakedModel.hasDepth() ? this.zOffset - 50.0f - (float)depth : this.zOffset - 50.0f;

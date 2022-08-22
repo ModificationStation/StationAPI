@@ -34,6 +34,11 @@
   },
 
   "custom": {
-    "modmenu:api": true
+    "modmenu:api": true,
+    "loom:injected_interfaces": {
+      "net/minecraft/class_17": [
+        "net/modificationstation/stationapi/api/block/StationBlock"
+      ]
+    }
   }
 }

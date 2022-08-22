@@ -21,7 +21,7 @@ public class NBTItem extends TemplateItemBase {
 
     @Override
     public boolean useOnTile(ItemInstance item, PlayerBase player, Level level, int x, int y, int z, int facing) {
-        CompoundTag nbt = StationNBT.cast(item).getStationNBT();
+        CompoundTag nbt = StationNBT.class.cast(item).getStationNBT();
         if (!nbt.containsKey(of(MODID, "rand_num").toString()))
             nbt.put(of(MODID, "rand_num").toString(), new Random().nextInt(3));
         player.sendMessage("Woah: " + nbt.getInt(of(MODID, "rand_num").toString()));

@@ -139,7 +139,12 @@ public final class Items {
             APPLE,
             BOW,
             ARROW,
+
+    // COAL MODIFIED BY STATIONAPI TO EXPAND METADATA VARIATIONS INTO SEPARATE ITEMS
             COAL,
+            CHARCOAL,
+    // COAL END
+
             DIAMOND,
             IRON_INGOT,
             GOLD_INGOT,

@@ -6,7 +6,6 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.item.nbt.StationNBT;
 import net.modificationstation.stationapi.api.nbt.NBTHelper;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +30,7 @@ public class MixinContainerBase {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void captureSecondItemInstance(int clickType, int flag, boolean player, PlayerBase par4, CallbackInfoReturnable<ItemInstance> cir, ItemInstance var5, PlayerInventory var6, Slot var12, ItemInstance var13, ItemInstance var14) {
-        otherStationNBT = StationNBT.cast(var14).getStationNBT();
+        otherStationNBT = var14.getStationNBT();
     }
 
     @Unique
@@ -47,7 +46,7 @@ public class MixinContainerBase {
             )
     )
     private int continueStatement(ItemInstance instance) {
-        if (NBTHelper.equals(StationNBT.cast(instance).getStationNBT(), otherStationNBT))
+        if (NBTHelper.equals(instance.getStationNBT(), otherStationNBT))
             return instance.itemId;
         else {
             notchGodDamnit = true;
@@ -86,7 +85,7 @@ public class MixinContainerBase {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void captureFirstItemInstance(int clickType, int flag, boolean player, PlayerBase par4, CallbackInfoReturnable<ItemInstance> cir, ItemInstance var5, PlayerInventory var6, Slot var12, ItemInstance var13) {
-        thisStationNBT = StationNBT.cast(var13).getStationNBT();
+        thisStationNBT = var13.getStationNBT();
     }
 
     @Unique
@@ -101,7 +100,7 @@ public class MixinContainerBase {
             )
     )
     private int cancelStatement(ItemInstance instance) {
-        return NBTHelper.equals(thisStationNBT, StationNBT.cast(instance).getStationNBT()) ? instance.itemId : 0;
+        return NBTHelper.equals(thisStationNBT, instance.getStationNBT()) ? instance.itemId : 0;
     }
 
     @Redirect(
@@ -114,7 +113,7 @@ public class MixinContainerBase {
             )
     )
     private int checkStatement(ItemInstance instance, ItemInstance arg, int i, int j, boolean flag) {
-        if (NBTHelper.equals(StationNBT.cast(instance).getStationNBT(), StationNBT.cast(arg).getStationNBT()))
+        if (NBTHelper.equals(instance.getStationNBT(), arg.getStationNBT()))
             return instance.itemId;
         else
             return arg.itemId - 1;

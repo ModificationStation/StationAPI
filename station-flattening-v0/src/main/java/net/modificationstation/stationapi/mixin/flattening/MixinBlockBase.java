@@ -8,7 +8,7 @@ import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.StationFlatteningBlockBase;
+import net.modificationstation.stationapi.api.block.StationFlatteningBlock;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.impl.block.BlockDropListImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(BlockBase.class)
-public abstract class MixinBlockBase implements StationFlatteningBlockBase {
+public abstract class MixinBlockBase implements StationFlatteningBlock {
 
     @Shadow public abstract void beforeDestroyedByExplosion(Level arg, int i, int j, int k, int l, float f);
 

@@ -37,6 +37,17 @@
   },
 
   "custom": {
-    "modmenu:api": true
+    "modmenu:api": true,
+    "loom:injected_interfaces": {
+      "net/minecraft/class_124": [
+        "net/modificationstation/stationapi/api/item/StationItem"
+      ],
+      "net/minecraft/class_31": [
+        "net/modificationstation/stationapi/api/item/StationItemStack"
+      ],
+      "net/minecraft/class_17": [
+        "net/modificationstation/stationapi/api/block/StationItemsBlock"
+      ]
+    }
   }
 }

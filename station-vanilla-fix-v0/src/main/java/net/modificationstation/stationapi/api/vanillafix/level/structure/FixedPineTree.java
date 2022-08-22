@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.level.Level;
 import net.minecraft.level.structure.PineTree;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
+import net.modificationstation.stationapi.api.level.StationFlatteningWorld;
 import net.modificationstation.stationapi.api.vanillafix.block.Blocks;
 import net.modificationstation.stationapi.api.vanillafix.block.FixedLeaves;
 
@@ -55,7 +55,7 @@ public class FixedPineTree extends PineTree {
                 for (int i2 = k - n4; i2 <= k + n4; ++i2) {
                     int n10 = i2 - k;
                     if (Math.abs(n) == n4 && Math.abs(n10) == n4 && n4 > 0 || BlockBase.FULL_OPAQUE[arg.getTileId(n2, n3, i2)]) continue;
-                    ((StationFlatteningLevel) arg).setBlockState(n2, n3, i2, ((BlockStateHolder) Blocks.SPRUCE_LEAVES).getDefaultState());
+                    ((StationFlatteningWorld) arg).setBlockState(n2, n3, i2, ((BlockStateHolder) Blocks.SPRUCE_LEAVES).getDefaultState());
                 }
             }
             if (n4 >= 1 && n3 == j + n7 + 1) {
@@ -68,7 +68,7 @@ public class FixedPineTree extends PineTree {
         for (n3 = 0; n3 < n6 - 1; ++n3) {
             n2 = arg.getTileId(i, j + n3, k);
             if (n2 != 0 && !(BlockBase.BY_ID[n2] instanceof FixedLeaves)) continue;
-            ((StationFlatteningLevel) arg).setBlockState(i, j + n3, k, ((BlockStateHolder) Blocks.SPRUCE_LOG).getDefaultState());
+            ((StationFlatteningWorld) arg).setBlockState(i, j + n3, k, ((BlockStateHolder) Blocks.SPRUCE_LOG).getDefaultState());
         }
         return true;
     }

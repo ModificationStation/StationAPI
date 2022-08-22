@@ -4,6 +4,7 @@ import net.minecraft.inventory.Crafting;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.ShapelessRecipe;
+import net.modificationstation.stationapi.api.item.StationItemStack;
 import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.RegistryEntryList;
@@ -43,7 +44,7 @@ public class MixinShapelessRecipe implements StationRecipe {
 
                     for (Object var8 : var2) {
                         //noinspection unchecked
-                        if (var8 instanceof TagKey<?> tag && ItemRegistry.INSTANCE.getEntry(ItemRegistry.INSTANCE.getKey(var5.getType()).orElseThrow()).orElseThrow().isIn((TagKey<ItemBase>) tag)) {
+                        if (var8 instanceof TagKey<?> tag && StationItemStack.class.cast(var5).isIn((TagKey<ItemBase>) tag)) {
                             var6 = true;
                             var2.remove(tag);
                             break;

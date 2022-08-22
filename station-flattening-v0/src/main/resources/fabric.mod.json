@@ -37,16 +37,16 @@
     "modmenu:api": true,
     "loom:injected_interfaces": {
       "net/minecraft/class_18": [
-        "net/modificationstation/stationapi/api/level/StationFlatteningLevel"
+        "net/modificationstation/stationapi/api/level/StationFlatteningWorld"
       ],
       "net/minecraft/class_43": [
         "net/modificationstation/stationapi/api/level/chunk/StationFlatteningChunk"
       ],
       "net/minecraft/class_17": [
-        "net/modificationstation/stationapi/api/block/StationFlatteningBlockBase"
+        "net/modificationstation/stationapi/api/block/StationFlatteningBlock"
       ],
       "net/minecraft/class_54": [
-        "net/modificationstation/stationapi/api/entity/player/StationFlatteningPlayerBase"
+        "net/modificationstation/stationapi/api/entity/player/StationFlatteningPlayerEntity"
       ],
       "net/minecraft/class_136": [
         "net/modificationstation/stationapi/api/entity/player/StationFlatteningPlayerInventory"
@@ -55,7 +55,7 @@
         "net/modificationstation/stationapi/api/item/StationFlatteningItemStack"
       ],
       "net/minecraft/class_124": [
-        "net/modificationstation/stationapi/api/item/StationFlatteningItemBase"
+        "net/modificationstation/stationapi/api/item/StationFlatteningItem"
       ],
       "net/minecraft/class_42": [
         "net/modificationstation/stationapi/api/level/StationFlatteningWorldPopulationRegion"

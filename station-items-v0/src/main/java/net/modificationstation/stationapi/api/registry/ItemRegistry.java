@@ -16,7 +16,7 @@ public final class ItemRegistry extends AbstractArrayBackedLegacyRegistry<ItemBa
     public static final ItemRegistry INSTANCE = Registry.create(KEY, new ItemRegistry(), Lifecycle.experimental());
 
     private ItemRegistry() {
-        super(KEY, true);
+        super(KEY, true, ItemBase::getRegistryEntry);
     }
 
     @Override

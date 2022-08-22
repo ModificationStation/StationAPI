@@ -6,7 +6,7 @@ import net.minecraft.level.chunk.Chunk;
 import net.minecraft.level.dimension.Dimension;
 import net.minecraft.util.maths.Vec2i;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.level.StationFlatteningLevel;
+import net.modificationstation.stationapi.api.level.StationFlatteningWorld;
 import net.modificationstation.stationapi.impl.level.StationDimension;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Iterator;
 
 @Mixin(Level.class)
-public abstract class MixinLevel implements StationFlatteningLevel {
+public abstract class MixinLevel implements StationFlatteningWorld {
     @Shadow public abstract Chunk getChunk(int x, int z);
 
     @Shadow @Final public Dimension dimension;

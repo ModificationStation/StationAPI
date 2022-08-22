@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.mixin.block;
 
 import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.block.StationBlock;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.registry.serial.LegacyIDHolder;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,11 +17,12 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockBase.class)
-public abstract class MixinBlockBase implements LegacyIDHolder {
+public abstract class MixinBlockBase implements StationBlock {
 
     @Shadow @Final public int id;
 
-    @Shadow protected abstract void drop(Level arg, int i, int j, int k, ItemInstance arg2);
+    @Unique
+    private final RegistryEntry.Reference<BlockBase> stationapi_registryEntry = BlockRegistry.INSTANCE.createEntry(BlockBase.class.cast(this));
 
     @ModifyVariable(
             method = "setTranslationKey(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;",
@@ -31,7 +32,7 @@ public abstract class MixinBlockBase implements LegacyIDHolder {
     private String getTranslationKey(String name) {
         return StationAPI.EVENT_BUS.post(
                 BlockEvent.TranslationKeyChanged.builder()
-                        .block((BlockBase) (Object) this)
+                        .block(BlockBase.class.cast(this))
                         .currentTranslationKey(name)
                         .build()
         ).currentTranslationKey;
@@ -93,5 +94,11 @@ public abstract class MixinBlockBase implements LegacyIDHolder {
                         .build()
                 ).isCanceled()
         ) ci.cancel();
+    }
+
+    @Override
+    @Unique
+    public RegistryEntry.Reference<BlockBase> getRegistryEntry() {
+        return stationapi_registryEntry;
     }
 }

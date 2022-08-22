@@ -9,11 +9,9 @@ import net.minecraft.level.Level;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.item.ItemStackEvent;
-import net.modificationstation.stationapi.api.item.nbt.HasItemEntity;
-import net.modificationstation.stationapi.api.item.nbt.ItemEntity;
-import net.modificationstation.stationapi.api.item.nbt.ItemWithEntity;
-import net.modificationstation.stationapi.api.item.nbt.StationNBT;
+import net.modificationstation.stationapi.api.item.StationItemStack;
 import net.modificationstation.stationapi.api.nbt.NBTHelper;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.impl.item.nbt.StationNBTSetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,72 +24,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
-@SuppressWarnings("deprecation")
 @Mixin(ItemInstance.class)
-public class MixinItemInstance implements HasItemEntity, StationNBTSetter, StationNBT {
+public abstract class MixinItemInstance implements StationItemStack, StationNBTSetter {
 
     @Shadow
     public int itemId;
 
-    @Deprecated
-    @Unique
-    private ItemEntity itemEntity;
-
-    @Deprecated
-    @Inject(method = "<init>(III)V", at = @At("RETURN"))
-    private void onFreshInstance(int id, int count, int damage, CallbackInfo ci) {
-        ItemBase itemBase = ItemBase.byId[id];
-        if (itemBase instanceof ItemWithEntity itemWithEntity)
-            itemEntity = itemWithEntity.getItemEntityFactory().get();
-    }
-
-    @Deprecated
-    @Inject(method = "fromTag(Lnet/minecraft/util/io/CompoundTag;)V", at = @At("RETURN"))
-    private void fromTag(CompoundTag tag, CallbackInfo ci) {
-        ItemBase itemBase = ItemBase.byId[itemId];
-        if (itemBase instanceof ItemWithEntity itemWithEntity)
-            itemEntity = itemWithEntity.getItemEntityNBTFactory().apply(tag);
-    }
-
-    @Deprecated
-    @Inject(method = "toTag(Lnet/minecraft/util/io/CompoundTag;)Lnet/minecraft/util/io/CompoundTag;", at = @At("RETURN"))
-    private void toTag(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
-        ItemBase itemBase = ItemBase.byId[itemId];
-        if (itemBase instanceof ItemWithEntity)
-            itemEntity.writeToNBT(tag);
-    }
-
-    @Deprecated
-    @Inject(method = "split(I)Lnet/minecraft/item/ItemInstance;", at = @At("RETURN"))
-    private void onSplit(int countToTake, CallbackInfoReturnable<ItemInstance> cir) {
-        if (itemEntity != null)
-            HasItemEntity.cast(cir.getReturnValue()).setItemEntity(itemEntity.split(countToTake));
-    }
-
-    @Deprecated
-    @Inject(method = "copy()Lnet/minecraft/item/ItemInstance;", at = @At("RETURN"))
-    private void onCopy(CallbackInfoReturnable<ItemInstance> cir) {
-        if (itemEntity != null)
-            HasItemEntity.cast(cir.getReturnValue()).setItemEntity(itemEntity.copy());
-    }
-
-    @Deprecated
-    @Override
-    public ItemEntity getItemEntity() {
-        return itemEntity;
-    }
-
-    @Deprecated
-    @Override
-    public void setItemEntity(ItemEntity itemEntity) {
-        this.itemEntity = itemEntity;
-    }
+    @Shadow public abstract ItemBase getType();
 
     @Inject(method = "onCrafted(Lnet/minecraft/level/Level;Lnet/minecraft/entity/player/PlayerBase;)V", at = @At("RETURN"))
     private void onCreation(Level arg, PlayerBase arg1, CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(
                 ItemStackEvent.Crafted.builder()
-                        .itemStack((ItemInstance) (Object) this)
+                        .itemStack(ItemInstance.class.cast(this))
                         .level(arg)
                         .player(arg1)
                         .build()
@@ -143,7 +88,7 @@ public class MixinItemInstance implements HasItemEntity, StationNBTSetter, Stati
             cancellable = true
     )
     private void isStackIdentical(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
-        if (!NBTHelper.equals(stationNBT, StationNBT.cast(par1).getStationNBT()))
+        if (!NBTHelper.equals(stationNBT, par1.getStationNBT()))
             cir.setReturnValue(false);
     }
 
@@ -153,7 +98,7 @@ public class MixinItemInstance implements HasItemEntity, StationNBTSetter, Stati
             cancellable = true
     )
     private void isDamageAndIDIdentical(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
-        if (!NBTHelper.equals(stationNBT, StationNBT.cast(par1).getStationNBT()))
+        if (!NBTHelper.equals(stationNBT, par1.getStationNBT()))
             cir.setReturnValue(false);
     }
 
@@ -172,7 +117,12 @@ public class MixinItemInstance implements HasItemEntity, StationNBTSetter, Stati
             cancellable = true
     )
     private void isStackIdentical2(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
-        if (!NBTHelper.equals(stationNBT, StationNBT.cast(par1).getStationNBT()))
+        if (!NBTHelper.equals(stationNBT, par1.getStationNBT()))
             cir.setReturnValue(false);
+    }
+
+    @Override
+    public RegistryEntry.Reference<ItemBase> getRegistryEntry() {
+        return getType().getRegistryEntry();
     }
 }

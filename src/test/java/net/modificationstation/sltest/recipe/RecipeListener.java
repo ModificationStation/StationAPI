@@ -38,7 +38,7 @@ public class RecipeListener {
                 SmeltingRegistry.addSmeltingRecipe(new ItemInstance(BlockBase.OBSIDIAN), new ItemInstance(BlockBase.COAL_ORE, 2));
                 SmeltingRegistry.addSmeltingRecipe(new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 0), new ItemInstance(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 1));
                 ItemInstance itemInstance = new ItemInstance(ItemListener.testNBTItem);
-                StationNBT.cast(itemInstance).getStationNBT().put(of(MODID, "rand_num").toString(), 10);
+                StationNBT.class.cast(itemInstance).getStationNBT().put(of(MODID, "rand_num").toString(), 10);
                 SmeltingRegistry.addSmeltingRecipe(ItemListener.testItem.id, itemInstance);
             }
         }

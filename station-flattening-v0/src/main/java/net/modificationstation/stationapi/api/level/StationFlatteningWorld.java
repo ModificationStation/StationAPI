@@ -4,7 +4,7 @@ import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.Util;
 
-public interface StationFlatteningLevel extends BlockStateView, HeightLimitView {
+public interface StationFlatteningWorld extends BlockStateView, HeightLimitView {
 
     @Override
     default BlockState getBlockState(int x, int y, int z) {

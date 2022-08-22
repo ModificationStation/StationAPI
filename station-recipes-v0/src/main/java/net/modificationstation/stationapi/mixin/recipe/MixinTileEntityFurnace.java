@@ -1,14 +1,12 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.modificationstation.stationapi.api.item.Fuel;
+import net.modificationstation.stationapi.api.item.StationItemStack;
 import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.impl.recipe.SmeltingRegistryImpl;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,8 +33,7 @@ public class MixinTileEntityFurnace {
             if (arg.getType() instanceof Fuel fuel)
                 cir.setReturnValue(fuel.getFuelTime(arg));
             else {
-                RegistryEntry<ItemBase> entry = ItemRegistry.INSTANCE.getEntry(ItemRegistry.INSTANCE.getKey(arg.getType()).orElseThrow()).orElseThrow();
-                int[] fuelTimes = SmeltingRegistryImpl.TAG_FUEL_TIME.reference2IntEntrySet().stream().filter(e -> entry.isIn(e.getKey())).mapToInt(Reference2IntMap.Entry::getIntValue).toArray();
+                int[] fuelTimes = SmeltingRegistryImpl.TAG_FUEL_TIME.reference2IntEntrySet().stream().filter(e -> StationItemStack.class.cast(arg).isIn(e.getKey())).mapToInt(Reference2IntMap.Entry::getIntValue).toArray();
                 if (fuelTimes.length > 0)
                     cir.setReturnValue(fuelTimes[0]);
             }
