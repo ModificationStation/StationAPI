@@ -33,6 +33,11 @@
   },
 
   "custom": {
-    "modmenu:api": true
+    "modmenu:api": true,
+    "loom:injected_interfaces": {
+      "net/minecraft/class_428": [
+        "net/modificationstation/stationapi/api/item/tool/StationToolMaterial"
+      ]
+    }
   }
 }

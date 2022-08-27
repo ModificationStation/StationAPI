@@ -14,7 +14,6 @@ import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.ModID;
-import net.modificationstation.stationapi.api.template.item.tool.ToolMaterialTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,6 @@ public class ToolEffectivenessImplV1 {
     }
 
     private static boolean isSuitable(ItemInstance item, BlockState state) {
-        //noinspection ConstantConditions
-        return item.getType() instanceof ToolLevel toolLevel && state.isIn(toolLevel.getEffectiveBlocks(item)) && ToolMaterialTemplate.class.cast(toolLevel.getMaterial(item)).matches(state);
+        return item.getType() instanceof ToolLevel toolLevel && state.isIn(toolLevel.getEffectiveBlocks(item)) && toolLevel.getMaterial(item).matches(state);
     }
 }

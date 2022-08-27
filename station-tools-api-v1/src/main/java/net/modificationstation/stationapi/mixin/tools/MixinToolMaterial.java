@@ -5,10 +5,10 @@ import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSets;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.tool.ToolMaterial;
+import net.modificationstation.stationapi.api.item.tool.StationToolMaterial;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tag.TagKey;
-import net.modificationstation.stationapi.api.template.item.tool.ToolMaterialTemplate;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,14 +18,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collections;
 
 @Mixin(ToolMaterial.class)
-public class MixinToolMaterial<T extends ToolMaterial & ToolMaterialTemplate<T>> implements ToolMaterialTemplate<T> {
+public class MixinToolMaterial implements StationToolMaterial {
 
     @Unique
     private TagKey<BlockBase> stationapi_requiredBlockTag;
     @Unique
-    private ReferenceSet<T> stationapi_parentMaterials;
+    private ReferenceSet<ToolMaterial> stationapi_parentMaterials;
     @Unique
-    private ReferenceSet<T> stationapi_parentMaterialsView;
+    private ReferenceSet<ToolMaterial> stationapi_parentMaterialsView;
 
     @Inject(
             method = "<init>(Ljava/lang/String;IIIFI)V",
@@ -38,25 +38,22 @@ public class MixinToolMaterial<T extends ToolMaterial & ToolMaterialTemplate<T>>
 
     @Override
     @Unique
-    public T inheritsFrom(ToolMaterial... toolMaterials) {
-        //noinspection unchecked,RedundantClassCall
-        Collections.addAll(stationapi_parentMaterials, (T[]) Object[].class.cast(toolMaterials));
-        //noinspection unchecked,ConstantConditions
-        return (T) (Object) this;
+    public ToolMaterial inheritsFrom(ToolMaterial... toolMaterials) {
+        Collections.addAll(stationapi_parentMaterials, toolMaterials);
+        return ToolMaterial.class.cast(this);
     }
 
     @Override
     @Unique
-    public T requiredBlockTag(Identifier tag) {
+    public ToolMaterial requiredBlockTag(Identifier tag) {
         ALL_TOOL_MATERIAL_TAGS.remove(stationapi_requiredBlockTag);
         ALL_TOOL_MATERIAL_TAGS.add(stationapi_requiredBlockTag = TagKey.of(BlockRegistry.INSTANCE.getKey(), tag));
-        //noinspection unchecked,ConstantConditions
-        return (T) (Object) this;
+        return ToolMaterial.class.cast(this);
     }
 
     @Override
     @Unique
-    public ReferenceSet<T> getParentMaterials() {
+    public ReferenceSet<ToolMaterial> getParentMaterials() {
         return stationapi_parentMaterialsView;
     }
 
