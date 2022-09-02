@@ -5,7 +5,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.Minecraft;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.event.level.LevelPropertiesEvent;
 import net.modificationstation.stationapi.api.event.resource.ResourceReloaderRegisterEvent;
 import net.modificationstation.stationapi.api.event.resource.ResourcesReloadEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -30,11 +29,6 @@ public final class Resources extends ReentrantThreadExecutor<Runnable> {
 
     public Resources() {
         super("Resources");
-    }
-
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
-    private static void onLevelLoad(LevelPropertiesEvent.LoadOnLevelInit event) {
-        StationAPI.EVENT_BUS.post(ResourcesReloadEvent.builder().build());
     }
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
