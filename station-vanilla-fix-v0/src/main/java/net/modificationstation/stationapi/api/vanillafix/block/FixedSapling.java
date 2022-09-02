@@ -1,11 +1,9 @@
 package net.modificationstation.stationapi.api.vanillafix.block;
 
 import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.item.Fuel;
 import net.modificationstation.stationapi.api.level.BlockStateView;
 import net.modificationstation.stationapi.api.level.StationFlatteningWorld;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -17,7 +15,7 @@ import net.modificationstation.stationapi.api.vanillafix.block.sapling.SaplingGe
 
 import java.util.Random;
 
-public class FixedSapling extends TemplatePlant implements Fuel {
+public class FixedSapling extends TemplatePlant {
 
     public static final IntProperty STAGE = Properties.STAGE;
 
@@ -47,11 +45,5 @@ public class FixedSapling extends TemplatePlant implements Fuel {
     @Override
     public void appendProperties(StateManager.Builder<BlockBase, BlockState> builder) {
         builder.add(STAGE);
-    }
-
-    // TODO: replace with fuel tags
-    @Override
-    public int getFuelTime(ItemInstance itemInstance) {
-        return 100;
     }
 }

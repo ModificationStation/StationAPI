@@ -1,6 +1,6 @@
 plugins {
     id "maven-publish"
-    id 'babric-loom' version '0.12.9'
+    id 'babric-loom' version '1.0.1'
 }
 
 def getSubprojectVersion(project, ver) {

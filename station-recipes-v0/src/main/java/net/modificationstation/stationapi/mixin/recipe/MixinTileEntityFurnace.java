@@ -1,13 +1,10 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.modificationstation.stationapi.api.item.Fuel;
-import net.modificationstation.stationapi.api.item.StationItemStack;
+import net.modificationstation.stationapi.api.recipe.FuelRegistry;
 import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
-import net.modificationstation.stationapi.impl.recipe.SmeltingRegistryImpl;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,44 +19,81 @@ public class MixinTileEntityFurnace {
     @Shadow
     private ItemInstance[] inventory;
 
-    @Redirect(method = {"canAcceptRecipeOutput()Z", "craftRecipe()V"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/SmeltingRecipeRegistry;getResult(I)Lnet/minecraft/item/ItemInstance;"))
+    @Redirect(
+            method = {
+                    "canAcceptRecipeOutput()Z",
+                    "craftRecipe()V"
+            },
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/recipe/SmeltingRecipeRegistry;getResult(I)Lnet/minecraft/item/ItemInstance;"
+            )
+    )
     private ItemInstance getResult(SmeltingRecipeRegistry smeltingRecipeRegistry, int i) {
         return SmeltingRegistry.getResultFor(inventory[0]);
     }
 
-    @Inject(method = "getFuelTime(Lnet/minecraft/item/ItemInstance;)I", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(
+            method = "getFuelTime(Lnet/minecraft/item/ItemInstance;)I",
+            at = @At("HEAD"),
+            cancellable = true
+    )
     private void getCustomBurnTime(ItemInstance arg, CallbackInfoReturnable<Integer> cir) {
-        if (arg != null) {
-            if (arg.getType() instanceof Fuel fuel)
-                cir.setReturnValue(fuel.getFuelTime(arg));
-            else {
-                int[] fuelTimes = SmeltingRegistryImpl.TAG_FUEL_TIME.reference2IntEntrySet().stream().filter(e -> StationItemStack.class.cast(arg).isIn(e.getKey())).mapToInt(Reference2IntMap.Entry::getIntValue).toArray();
-                if (fuelTimes.length > 0)
-                    cir.setReturnValue(fuelTimes[0]);
-            }
-        }
+        cir.setReturnValue(FuelRegistry.getFuelTime(arg));
     }
 
-    @Inject(method = "craftRecipe()V", at = @At(value = "FIELD", target = "Lnet/minecraft/item/ItemInstance;count:I", opcode = Opcodes.GETFIELD, ordinal = 0, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(
+            method = "craftRecipe()V",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/item/ItemInstance;count:I",
+                    opcode = Opcodes.GETFIELD,
+                    ordinal = 0,
+                    shift = At.Shift.AFTER
+            ),
+            locals = LocalCapture.CAPTURE_FAILHARD
+    )
     private void captureLocals(CallbackInfo ci, ItemInstance var1) {
         capturedItemInstance = var1;
     }
 
     private ItemInstance capturedItemInstance;
 
-    @ModifyConstant(method = "craftRecipe()V", constant = @Constant(intValue = 1, ordinal = 0))
+    @ModifyConstant(
+            method = "craftRecipe()V",
+            constant = @Constant(
+                    intValue = 1,
+                    ordinal = 0
+            )
+    )
     private int modifyStackIncrement(int constant) {
         return capturedItemInstance.count;
     }
 
-    @Inject(method = "canAcceptRecipeOutput()Z", at = @At(value = "FIELD", target = "Lnet/minecraft/item/ItemInstance;count:I", opcode = Opcodes.GETFIELD, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(
+            method = "canAcceptRecipeOutput()Z",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/item/ItemInstance;count:I",
+                    opcode = Opcodes.GETFIELD,
+                    shift = At.Shift.BEFORE
+            ),
+            locals = LocalCapture.CAPTURE_FAILHARD
+    )
     private void captureLocals2(CallbackInfoReturnable<Boolean> cir, ItemInstance var1) {
         capturedItemInstance2ElectricBoogaloo = var1;
     }
 
     private ItemInstance capturedItemInstance2ElectricBoogaloo;
 
-    @Redirect(method = "canAcceptRecipeOutput()Z", at = @At(value = "FIELD", target = "Lnet/minecraft/item/ItemInstance;count:I", opcode = Opcodes.GETFIELD))
+    @Redirect(
+            method = "canAcceptRecipeOutput()Z",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/item/ItemInstance;count:I",
+                    opcode = Opcodes.GETFIELD
+            )
+    )
     private int fixOverstack(ItemInstance itemInstance) {
         return itemInstance.count + capturedItemInstance2ElectricBoogaloo.count - 1;
     }

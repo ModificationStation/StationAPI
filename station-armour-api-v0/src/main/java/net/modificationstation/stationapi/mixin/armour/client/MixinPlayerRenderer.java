@@ -22,6 +22,7 @@ public class MixinPlayerRenderer extends LivingEntityRenderer {
         super(arg, f);
     }
 
+    // TODO: refactor. this seems a bit off in some places
     @Inject(method = "method_344(Lnet/minecraft/entity/player/PlayerBase;IF)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/PlayerRenderer;bindTexture(Ljava/lang/String;)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onArmorTexture(PlayerBase arg, int i, float f, CallbackInfoReturnable<Boolean> cir, ItemInstance var4, ItemBase var5, Armour var6) {
         if (var6 instanceof ArmourTextureProvider armourTextureProvider) {

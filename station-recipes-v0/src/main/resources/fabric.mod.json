@@ -22,8 +22,8 @@
     "stationapi:event_bus": [
       "net.modificationstation.stationapi.impl.recipe.json.JsonRecipeParserRegisterImpl",
       "net.modificationstation.stationapi.impl.recipe.JsonRecipeParserInit",
-      "net.modificationstation.stationapi.impl.recipe.SmeltingRegistryImpl",
-      "net.modificationstation.stationapi.impl.recipe.JsonRecipesLoader"
+      "net.modificationstation.stationapi.impl.recipe.JsonRecipesLoader",
+      "net.modificationstation.stationapi.api.recipe.FuelRegistry"
     ]
   },
   "mixins": [
