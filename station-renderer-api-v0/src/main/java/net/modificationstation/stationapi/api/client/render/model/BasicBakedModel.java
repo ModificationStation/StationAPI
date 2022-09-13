@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.client.render.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.block.BlockState;
@@ -121,7 +122,7 @@ public class BasicBakedModel implements BakedModel {
             if (this.particleTexture == null) {
                 throw new RuntimeException("Missing particle!");
             } else {
-                return new BasicBakedModel(this.quads.build(), this.faceQuads.entrySet().stream().collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> e.getValue().build())), this.usesAo, this.isSideLit, this.hasDepth, this.particleTexture, this.transformation, this.itemPropertyOverrides);
+                return new BasicBakedModel(this.quads.build(), this.faceQuads.entrySet().stream().collect(Maps.toImmutableEnumMap(Map.Entry::getKey, e -> e.getValue().build())), this.usesAo, this.isSideLit, this.hasDepth, this.particleTexture, this.transformation, this.itemPropertyOverrides);
             }
         }
     }

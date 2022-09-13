@@ -133,7 +133,7 @@ public abstract class MixinLevel implements StationFlatteningWorld {
     @ModifyConstant(method = {
             "isTileLoaded",
             "method_155",
-            "method_164",
+//            "method_164",
             "method_248",
             "method_162"
     }, constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_ZERO))

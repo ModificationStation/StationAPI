@@ -27,8 +27,7 @@ import java.util.Collection;
 @Mixin(InGame.class)
 public abstract class MixinInGame extends DrawableHelper {
 	@Shadow private Minecraft minecraft;
-	
-	@Unique
+
 	@Inject(
 		method = "renderHud(FZII)V",
 		at = @At(value = "INVOKE", target = "Ljava/lang/Runtime;maxMemory()J", shift = Shift.BEFORE),
