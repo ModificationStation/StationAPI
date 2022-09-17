@@ -363,6 +363,11 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     @Override
     public void renderItem(ItemInstance stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, BakedModel model) {
         if (stack == null || stack.itemId == 0 || stack.count < 1) return;
+        if (model.isSideLit()) {
+            RenderHelper.enableLighting();
+        } else {
+            RenderHelper.disableLighting();
+        }
         if (model.isVanillaAdapter()) {
             matrices.push();
             model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
@@ -421,17 +426,12 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         matrices.translate(8.0, 8.0, 0.0);
         matrices.scale(1.0f, -1.0f, 1.0f);
         matrices.scale(16.0f, 16.0f, 16.0f);
-        boolean bl = !model.isSideLit();
-        if (bl) {
-            RenderHelper.disableLighting();
-        }
+
         Tessellator.INSTANCE.start();
         this.renderItem(stack, ModelTransformation.Mode.GUI, false, matrices, StationTessellator.get(Tessellator.INSTANCE), -1/*LightmapTextureManager.MAX_LIGHT_COORDINATE*/, -1/*OverlayTexture.DEFAULT_UV*/, model);
         Tessellator.INSTANCE.draw();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        if (bl) {
-            RenderHelper.enableLighting();
-        }
+
         matrices.pop();
     }
 

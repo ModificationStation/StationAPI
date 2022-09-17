@@ -37,7 +37,7 @@ public interface StationTessellator extends VertexConsumer {
         Vec3i vec3i = quad.getFace().vector;
         normal.set(vec3i.x, vec3i.y, vec3i.z);
         Matrix4f matrix4f = matrixEntry.getPositionMatrix();
-        normal.transform(matrixEntry.getNormalMatrix());
+//        normal.transform(matrixEntry.getNormalMatrix());
         int j = js.length / 8;
         ByteBuffer byteBuffer = buffer;
         for (int k = 0; k < j; ++k) {
