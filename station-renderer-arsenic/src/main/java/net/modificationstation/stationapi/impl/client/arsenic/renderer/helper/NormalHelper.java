@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.helper;
 
-import net.minecraft.util.maths.Vec3i;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadView;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.api.util.math.Vec3f;
+import net.modificationstation.stationapi.api.util.math.Vec3i;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -57,8 +57,8 @@ public abstract class NormalHelper {
 		final Direction nominalFace = q.nominalFace();
 
 		if (GeometryHelper.isQuadParallelToFace(nominalFace, q)) {
-			Vec3i vec = nominalFace.vector;
-			saveTo.set(vec.x, vec.y, vec.z);
+			Vec3i vec = nominalFace.getVector();
+			saveTo.set(vec.getX(), vec.getY(), vec.getZ());
 			return;
 		}
 

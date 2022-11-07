@@ -184,7 +184,7 @@ public final class LightingCalculatorImpl {
                 v10dx = v10x - v10x0,
                 v10dy = v10y - v10y0,
                 v10dz = v10z - v10z0;
-        switch (face.axis) {
+        switch (face.getAxis()) {
             case X -> {
                 v00dy = v00dy < .5 ? v00dy + .5 : v00dy - .5;
                 v00dz = v00dz < .5 ? v00dz + .5 : v00dz - .5;
@@ -194,7 +194,7 @@ public final class LightingCalculatorImpl {
                 v11dz = v11dz < .5 ? v11dz + .5 : v11dz - .5;
                 v10dy = v10dy < .5 ? v10dy + .5 : v10dy - .5;
                 v10dz = v10dz < .5 ? v10dz + .5 : v10dz - .5;
-                switch (face.direction) {
+                switch (face.getDirection()) {
                     case POSITIVE -> {
                         light[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
@@ -274,7 +274,7 @@ public final class LightingCalculatorImpl {
                 v11dz = v11dz < .5 ? v11dz + .5 : v11dz - .5;
                 v10dx = v10dx < .5 ? v10dx + .5 : v10dx - .5;
                 v10dz = v10dz < .5 ? v10dz + .5 : v10dz - .5;
-                switch (face.direction) {
+                switch (face.getDirection()) {
                     case POSITIVE -> {
                         light[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
@@ -354,7 +354,7 @@ public final class LightingCalculatorImpl {
                 v11dy = v11dy < .5 ? v11dy + .5 : v11dy - .5;
                 v10dx = v10dx < .5 ? v10dx + .5 : v10dx - .5;
                 v10dy = v10dy < .5 ? v10dy + .5 : v10dy - .5;
-                switch (face.direction) {
+                switch (face.getDirection()) {
                     case POSITIVE -> {
                         light[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
@@ -439,12 +439,12 @@ public final class LightingCalculatorImpl {
         double mY = (v00y + v01y + v11y + v10y) / 4;
         double mZ = (v00z + v01z + v11z + v10z) / 4;
         this.light[0] = this.light[1] = this.light[2] = this.light[3] =
-                switch (face.axis) {
+                switch (face.getAxis()) {
                     case X -> Math.abs(mX - x);
                     case Y -> Math.abs(mY - y);
                     case Z -> Math.abs(mZ - z);
                 } < QuadEmitter.CULL_FACE_EPSILON ?
-                        light(floor(mX) + face.vector.x, floor(mY) + face.vector.y, floor(mZ) + face.vector.z) :
+                        light(floor(mX) + face.getOffsetX(), floor(mY) + face.getOffsetY(), floor(mZ) + face.getOffsetZ()) :
                         light(floor(mX), floor(mY), floor(mZ));
     }
 

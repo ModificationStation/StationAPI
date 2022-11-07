@@ -127,7 +127,7 @@ public class ModelElement {
             map.put(direction, context.deserialize(stringJsonElementEntry.getValue(), ModelElementFace.class));
          }
 
-         map.entrySet().stream().filter(e -> e.getKey().axis == Direction.Axis.Y).map(Entry::getValue).forEach(modelElementFace -> modelElementFace.textureData.rotation = (modelElementFace.textureData.rotation + 90) % 360);
+         map.entrySet().stream().filter(e -> e.getKey().getAxis() == Direction.Axis.Y).map(Entry::getValue).forEach(modelElementFace -> modelElementFace.textureData.rotation = (modelElementFace.textureData.rotation + 90) % 360);
 
          return map;
       }

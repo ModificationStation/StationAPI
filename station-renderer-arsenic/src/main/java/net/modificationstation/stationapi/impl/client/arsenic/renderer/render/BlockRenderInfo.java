@@ -84,6 +84,6 @@ public class BlockRenderInfo {
 
 	boolean shouldDrawQuad(MutableQuadViewImpl quad) {
 		Direction cull = quad.cullFace();
-		return cull == null || blockState.getBlock().isSideRendered(blockView, blockPos.x + cull.vector.x, blockPos.y + cull.vector.y, blockPos.z + cull.vector.z, cull.ordinal());
+		return cull == null || blockState.getBlock().isSideRendered(blockView, blockPos.x + cull.getOffsetX(), blockPos.y + cull.getOffsetY(), blockPos.z + cull.getOffsetZ(), cull.ordinal());
 	}
 }

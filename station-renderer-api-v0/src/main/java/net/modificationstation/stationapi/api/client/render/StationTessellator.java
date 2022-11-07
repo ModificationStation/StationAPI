@@ -2,12 +2,8 @@ package net.modificationstation.stationapi.api.client.render;
 
 import net.minecraft.class_214;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.util.maths.Vec3i;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
-import net.modificationstation.stationapi.api.util.math.Matrix4f;
-import net.modificationstation.stationapi.api.util.math.MatrixStack;
-import net.modificationstation.stationapi.api.util.math.Vec3f;
-import net.modificationstation.stationapi.api.util.math.Vector4f;
+import net.modificationstation.stationapi.api.util.math.*;
 import net.modificationstation.stationapi.impl.client.render.StationTessellatorImpl;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -34,8 +30,8 @@ public interface StationTessellator extends VertexConsumer {
     @Override
     default void quad(MatrixStack.Entry matrixEntry, BakedQuad quad, float[] brightnesses, float red, float green, float blue, int[] lights, int overlay, boolean useQuadColorData) {
         int[] js = quad.getVertexData();
-        Vec3i vec3i = quad.getFace().vector;
-        normal.set(vec3i.x, vec3i.y, vec3i.z);
+        Vec3i vec3i = quad.getFace().getVector();
+        normal.set(vec3i.getX(), vec3i.getY(), vec3i.getZ());
         Matrix4f matrix4f = matrixEntry.getPositionMatrix();
         normal.transform(matrixEntry.getNormalMatrix());
         int j = js.length / 8;

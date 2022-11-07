@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.api.client.render;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.class_214;
-import net.minecraft.util.maths.Vec3i;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.util.math.*;
 
@@ -65,8 +64,7 @@ public interface VertexConsumer {
 
     default void quad(MatrixStack.Entry matrixEntry, BakedQuad quad, float[] brightnesses, float red, float green, float blue, int[] lights, int overlay, boolean useQuadColorData) {
         int[] js = quad.getVertexData();
-        Vec3i vec3i = quad.getFace().vector;
-        Vec3f vec3f = new Vec3f(vec3i.x, vec3i.y, vec3i.z);
+        Vec3f vec3f = quad.getFace().getUnitVector();
         Matrix4f matrix4f = matrixEntry.getPositionMatrix();
         vec3f.transform(matrixEntry.getNormalMatrix());
         int j = js.length / 8;

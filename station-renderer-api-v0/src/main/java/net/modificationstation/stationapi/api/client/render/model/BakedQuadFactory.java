@@ -187,8 +187,7 @@ public class BakedQuadFactory {
       Direction[] var9 = Direction.values();
 
       for (Direction direction2 : var9) {
-         Vec3i vec3i = direction2.vector;
-         Vec3f vector3f7 = new Vec3f((float) vec3i.x, (float) vec3i.y, (float) vec3i.z);
+         Vec3f vector3f7 = direction2.getUnitVector();
          float g = vector3f6.dot(vector3f7);
          if (g >= 0.0F && g > f) {
             f = g;

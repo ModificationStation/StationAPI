@@ -131,8 +131,8 @@ public enum DirectionTransformation implements StringIdentifiable {
          Direction[] var2 = Direction.values();
 
          for (Direction direction2 : var2) {
-            Direction.Axis axis = direction2.axis;
-            Direction.AxisDirection axisDirection = direction2.direction;
+            Direction.Axis axis = direction2.getAxis();
+            Direction.AxisDirection axisDirection = direction2.getDirection();
             Direction.Axis axis2 = Direction.Axis.values()[this.axisTransformation.map(axis.ordinal())];
             Direction.AxisDirection axisDirection2 = this.shouldFlipDirection(axis2) ? axisDirection.getOpposite() : axisDirection;
             Direction direction3 = Direction.from(axis2, axisDirection2);

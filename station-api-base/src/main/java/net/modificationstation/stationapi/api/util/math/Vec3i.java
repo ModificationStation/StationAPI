@@ -286,7 +286,7 @@ implements Comparable<Vec3i> {
         if (distance == 0) {
             return this;
         }
-        return new Vec3i(this.getX() + direction.vector.x * distance, this.getY() + direction.vector.y * distance, this.getZ() + direction.vector.z * distance);
+        return new Vec3i(this.getX() + direction.getOffsetX() * distance, this.getY() + direction.getOffsetY() * distance, this.getZ() + direction.getOffsetZ() * distance);
     }
 
     /**

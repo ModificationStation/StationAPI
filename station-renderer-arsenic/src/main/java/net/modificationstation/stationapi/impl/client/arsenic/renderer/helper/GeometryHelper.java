@@ -66,7 +66,7 @@ public abstract class GeometryHelper {
 			return false;
 		}
 
-		int i = face.axis.ordinal();
+		int i = face.getAxis().ordinal();
 		final float val = quad.posByIndex(0, i);
 		return approximatelyEquals(val, quad.posByIndex(1, i)) && approximatelyEquals(val, quad.posByIndex(2, i)) && approximatelyEquals(val, quad.posByIndex(3, i));
 	}
@@ -81,8 +81,8 @@ public abstract class GeometryHelper {
 	public static boolean isParallelQuadOnFace(Direction lightFace, QuadView quad) {
 		if (lightFace == null) return false;
 
-		final float x = quad.posByIndex(0, lightFace.axis.ordinal());
-		return lightFace.direction == Direction.AxisDirection.POSITIVE ? x >= EPS_MAX : x <= EPS_MIN;
+		final float x = quad.posByIndex(0, lightFace.getAxis().ordinal());
+		return lightFace.getDirection() == Direction.AxisDirection.POSITIVE ? x >= EPS_MAX : x <= EPS_MIN;
 	}
 
 	/**
