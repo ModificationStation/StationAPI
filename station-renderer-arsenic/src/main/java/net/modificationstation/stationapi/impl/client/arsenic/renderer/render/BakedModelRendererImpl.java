@@ -33,7 +33,7 @@ import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.item.nbt.StationNBT;
-import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.api.world.BlockStateView;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.util.Util;
@@ -122,7 +122,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                     Direction face = DIRECTIONS[quadSet];
                     random.setSeed(seed);
                     qs = model.getQuads(state, face, random);
-                    if (!qs.isEmpty() && (face == null || block.isSideRendered(world, pos.x + face.vector.x, pos.y + face.vector.y, pos.z + face.vector.z, quadSet))) {
+                    if (!qs.isEmpty() && (face == null || block.isSideRendered(world, pos.x + face.getOffsetX(), pos.y + face.getOffsetY(), pos.z + face.getOffsetZ(), quadSet))) {
                         rendered = true;
                         for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
                             q = qs.get(j);

@@ -98,13 +98,13 @@ implements TextureTickListener {
             j = Math.min(j, Math.min(info2.getWidth(), info2.getHeight()));
             int l = Math.min(Integer.lowestOneBit(info2.getWidth()), Integer.lowestOneBit(info2.getHeight()));
             if (l < k) {
-                LOGGER.warn("Texture {} with size {}x{} limits mip level from {} to {}", info2.getId(), info2.getWidth(), info2.getHeight(), MathHelper.log2(k), MathHelper.log2(l));
+                LOGGER.warn("Texture {} with size {}x{} limits mip level from {} to {}", info2.getId(), info2.getWidth(), info2.getHeight(), MathHelper.floorLog2(k), MathHelper.floorLog2(l));
                 k = l;
             }
             textureStitcher.add(info2);
         }
         int m = Math.min(j, k);
-        int n = MathHelper.log2(m);
+        int n = MathHelper.floorLog2(m);
         if (n < mipmapLevel) {
             LOGGER.warn("{}: dropping miplevel from {} to {}, because of minimum power of two: {}", this.id, mipmapLevel, n, m);
             p = n;

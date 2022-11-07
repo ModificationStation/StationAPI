@@ -7,8 +7,8 @@ import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
-import net.modificationstation.stationapi.api.level.HeightLimitView;
-import net.modificationstation.stationapi.api.level.StationFlatteningWorld;
+import net.modificationstation.stationapi.api.world.HeightLimitView;
+import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
@@ -34,9 +34,9 @@ public class BlockStateItem extends TemplateItemBase {
             z = clickZ;
         } else {
             direction = Direction.values()[side];
-            x = clickX + direction.vector.x;
-            y = clickY + direction.vector.y;
-            z = clickZ + direction.vector.z;
+            x = clickX + direction.getOffsetX();
+            y = clickY + direction.getOffsetY();
+            z = clickZ + direction.getOffsetZ();
         }
         if (itemInstance.count == 0) return false;
         if (y == ((HeightLimitView) level).getTopY() - 1 && blockState.getMaterial().isSolid()) return false;

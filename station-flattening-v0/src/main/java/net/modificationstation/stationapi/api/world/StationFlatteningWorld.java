@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.level;
+package net.modificationstation.stationapi.api.world;
 
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;

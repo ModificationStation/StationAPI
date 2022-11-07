@@ -13,7 +13,7 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.level.dimension.DimensionHelperImpl;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.level.dimension.VanillaDimensions.OVERWORLD;
+import static net.modificationstation.stationapi.api.world.dimension.VanillaDimensions.OVERWORLD;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public class DimensionHelperClientImpl extends DimensionHelperImpl {

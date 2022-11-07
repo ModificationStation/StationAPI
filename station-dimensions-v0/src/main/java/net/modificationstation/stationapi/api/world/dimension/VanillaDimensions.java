@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.level.dimension;
+package net.modificationstation.stationapi.api.world.dimension;
 
 import net.modificationstation.stationapi.api.registry.Identifier;
 

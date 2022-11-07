@@ -15,7 +15,7 @@ import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.level.BlockSetEvent;
 import net.modificationstation.stationapi.api.event.level.MetaSetEvent;
-import net.modificationstation.stationapi.api.level.chunk.StationFlatteningChunk;
+import net.modificationstation.stationapi.api.world.chunk.StationFlatteningChunk;
 import net.modificationstation.stationapi.impl.level.StationDimension;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSectionsAccessor;

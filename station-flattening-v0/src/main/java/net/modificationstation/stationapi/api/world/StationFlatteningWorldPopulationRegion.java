@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.level;
+package net.modificationstation.stationapi.api.world;
 
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.Util;

@@ -1,22 +1,20 @@
 package net.modificationstation.stationapi.api.util.math;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterators;
 import com.google.gson.annotations.SerializedName;
-import com.mojang.serialization.Codec;
-import lombok.Getter;
+import com.mojang.serialization.DataResult;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import lombok.RequiredArgsConstructor;
-import net.minecraft.util.maths.Vec3i;
+import net.minecraft.entity.EntityBase;
 import net.modificationstation.stationapi.api.util.StringIdentifiable;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static net.modificationstation.stationapi.api.util.math.Direction.Axis.*;
@@ -25,36 +23,88 @@ import static net.modificationstation.stationapi.api.util.math.Direction.Axis.*;
 public enum Direction implements StringIdentifiable {
 
     @SerializedName("down")
-    DOWN("down", AxisDirection.NEGATIVE, Y, new Vec3i(0, -1, 0)),
+    DOWN(0, 1, -1, "down", AxisDirection.NEGATIVE, Y, new Vec3i(0, -1, 0)),
     @SerializedName("up")
-    UP("up", AxisDirection.POSITIVE, Y, new Vec3i(0, 1, 0)),
+    UP(1, 0, -1, "up", AxisDirection.POSITIVE, Y, new Vec3i(0, 1, 0)),
     @SerializedName("east")
-    EAST("east", AxisDirection.NEGATIVE, Z, new Vec3i(0, 0, -1)),
+    EAST(2, 3, 2, "east", AxisDirection.NEGATIVE, Z, new Vec3i(0, 0, -1)),
     @SerializedName("west")
-    WEST("west", AxisDirection.POSITIVE, Z, new Vec3i(0, 0, 1)),
+    WEST(3, 2, 0, "west", AxisDirection.POSITIVE, Z, new Vec3i(0, 0, 1)),
     @SerializedName("north")
-    NORTH("north", AxisDirection.NEGATIVE, X, new Vec3i(-1, 0, 0)),
+    NORTH(4, 5, 1, "north", AxisDirection.NEGATIVE, X, new Vec3i(-1, 0, 0)),
     @SerializedName("south")
-    SOUTH("south", AxisDirection.POSITIVE, X, new Vec3i(1, 0, 0));
+    SOUTH(5, 4, 3, "south", AxisDirection.POSITIVE, X, new Vec3i(1, 0, 0));
 
-    private static final Direction[] ALL = values();
-    private static final ImmutableMap<String, Direction> NAME_LOOKUP = Util.createLookupBy(direction -> direction.name, ALL);
+    public static final Codec<Direction> CODEC;
+    public static final com.mojang.serialization.Codec<Direction> VERTICAL_CODEC;
+    private final int id;
+    private final int idOpposite;
+    private final int idHorizontal;
+    private final String name;
+    private final Axis axis;
+    private final AxisDirection direction;
+    private final Vec3i vector;
+    private final int offsetX, offsetY, offsetZ;
+    private static final Direction[] ALL;
+    private static final Direction[] VALUES;
+    private static final Direction[] HORIZONTAL;
+    private static final Long2ObjectMap<Direction> VECTOR_TO_DIRECTION;
 
-    static {
-        DOWN.opposite = UP;
-        UP.opposite = DOWN;
-        EAST.opposite = WEST;
-        WEST.opposite = EAST;
-        NORTH.opposite = SOUTH;
-        SOUTH.opposite = NORTH;
+    Direction(int id, int idOpposite, int idHorizontal, String name, AxisDirection direction, Axis axis, Vec3i vector) {
+        this.id = id;
+        this.idHorizontal = idHorizontal;
+        this.idOpposite = idOpposite;
+        this.name = name;
+        this.axis = axis;
+        this.direction = direction;
+        this.vector = vector;
+        offsetX = vector.getX();
+        offsetY = vector.getY();
+        offsetZ = vector.getZ();
     }
 
-    private final String name;
-    public final AxisDirection direction;
-    public final Axis axis;
-    public final Vec3i vector;
-    @Getter
-    private Direction opposite;
+    public static Direction[] getEntityFacingOrder(EntityBase entity) {
+        final float f = entity.pitch * ((float)Math.PI / 180);
+        final float g = -entity.yaw * ((float)Math.PI / 180);
+        final float h = net.minecraft.util.maths.MathHelper.sin(f);
+        final float i = net.minecraft.util.maths.MathHelper.cos(f);
+        final float j = net.minecraft.util.maths.MathHelper.sin(g);
+        final float k = net.minecraft.util.maths.MathHelper.cos(g);
+        final boolean bl = j > 0.0f;
+        final boolean bl2 = h < 0.0f;
+        final boolean bl3 = k > 0.0f;
+        final float l = bl ? j : -j;
+        final float m = bl2 ? -h : h;
+        final float n = bl3 ? k : -k;
+        final float o = l * i;
+        final float p = n * i;
+        final Direction direction = bl ? EAST : WEST;
+        final Direction direction2 = bl2 ? UP : DOWN;
+        final Direction direction3 = bl3 ? SOUTH : NORTH;
+        return l > n ? m > o ? Direction.listClosest(direction2, direction, direction3) : p > m ? Direction.listClosest(direction, direction3, direction2) : Direction.listClosest(direction, direction2, direction3) : m > p ? Direction.listClosest(direction2, direction3, direction) : o > m ? Direction.listClosest(direction3, direction, direction2) : Direction.listClosest(direction3, direction2, direction);
+    }
+
+    /**
+     * Helper function that returns the 3 directions given, followed by the 3 opposite given in opposite order.
+     */
+    private static Direction[] listClosest(Direction first, Direction second, Direction third) {
+        return new Direction[]{first, second, third, third.getOpposite(), second.getOpposite(), first.getOpposite()};
+    }
+
+    public static Direction transform(Matrix4f matrix, Direction direction) {
+        Vec3i vec3i = direction.getVector();
+        Vector4f vector4f = new Vector4f(vec3i.getX(), vec3i.getY(), vec3i.getZ(), 0.0f);
+        vector4f.transform(matrix);
+        return Direction.getFacing(vector4f.getX(), vector4f.getY(), vector4f.getZ());
+    }
+
+    public static Collection<Direction> shuffle(Random random) {
+        return Util.copyShuffled(Direction.values(), random);
+    }
+
+    public static Stream<Direction> stream() {
+        return Stream.of(ALL);
+    }
 
     public Quaternion getRotationQuaternion() {
         Quaternion quaternion = Vec3f.POSITIVE_X.getDegreesQuaternion(90.0f);
@@ -78,85 +128,335 @@ public enum Direction implements StringIdentifiable {
     }
 
     public int getId() {
-        return this.ordinal();
+        return id;
+    }
+
+    public int getHorizontal() {
+        return idHorizontal;
+    }
+
+    public AxisDirection getDirection() {
+        return direction;
+    }
+
+    public static Direction getLookDirectionForAxis(EntityBase entity, Axis axis) {
+        return switch (axis) {
+            case X -> NORTH.pointsTo(entity.yaw) ? NORTH : SOUTH;
+            case Z -> EAST.pointsTo(entity.yaw) ? EAST : WEST;
+            case Y -> entity.pitch < 0.0f ? UP : DOWN;
+        };
+    }
+
+    public Direction getOpposite() {
+        return ALL[idOpposite];
+    }
+
+    public Direction rotateClockwise(Axis axis) {
+        return switch (axis) {
+            case X -> this == NORTH || this == SOUTH ? this : rotateXClockwise();
+            case Y -> this == UP || this == DOWN ? this : rotateYClockwise();
+            case Z -> this == EAST || this == WEST ? this : rotateZClockwise();
+        };
+    }
+
+    public Direction rotateCounterclockwise(Axis axis) {
+        return switch (axis) {
+            case X -> this == NORTH || this == SOUTH ? this : rotateXCounterclockwise();
+            case Y -> this == UP || this == DOWN ? this : rotateYCounterclockwise();
+            case Z -> this == EAST || this == WEST ? this : rotateZCounterclockwise();
+        };
+    }
+
+    public Direction rotateYClockwise() {
+        return switch (this) {
+            case NORTH -> EAST;
+            case EAST -> SOUTH;
+            case SOUTH -> WEST;
+            case WEST -> NORTH;
+            default -> throw new IllegalStateException("Unable to get Y-rotated facing of " + this);
+        };
+    }
+
+    private Direction rotateXClockwise() {
+        return switch (this) {
+            case UP -> EAST;
+            case EAST -> DOWN;
+            case DOWN -> WEST;
+            case WEST -> UP;
+            default -> throw new IllegalStateException("Unable to get X-rotated facing of " + this);
+        };
+    }
+
+    private Direction rotateXCounterclockwise() {
+        return switch (this) {
+            case UP -> WEST;
+            case WEST -> DOWN;
+            case DOWN -> EAST;
+            case EAST -> UP;
+            default -> throw new IllegalStateException("Unable to get X-rotated facing of " + this);
+        };
+    }
+
+    private Direction rotateZClockwise() {
+        return switch (this) {
+            case UP -> NORTH;
+            case NORTH -> DOWN;
+            case DOWN -> SOUTH;
+            case SOUTH -> UP;
+            default -> throw new IllegalStateException("Unable to get Z-rotated facing of " + this);
+        };
+    }
+
+    private Direction rotateZCounterclockwise() {
+        return switch (this) {
+            case UP -> SOUTH;
+            case SOUTH -> DOWN;
+            case DOWN -> NORTH;
+            case NORTH -> UP;
+            default -> throw new IllegalStateException("Unable to get Z-rotated facing of " + this);
+        };
+    }
+
+    public Direction rotateYCounterclockwise() {
+        return switch (this) {
+            case NORTH -> WEST;
+            case EAST -> NORTH;
+            case SOUTH -> EAST;
+            case WEST -> SOUTH;
+            default -> throw new IllegalStateException("Unable to get CCW facing of " + this);
+        };
+    }
+
+    public int getOffsetX() {
+        return offsetX;
+    }
+
+    public int getOffsetY() {
+        return offsetY;
+    }
+
+    public int getOffsetZ() {
+        return offsetZ;
+    }
+
+    public Vec3f getUnitVector() {
+        return new Vec3f(getOffsetX(), getOffsetY(), getOffsetZ());
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Axis getAxis() {
+        return axis;
+    }
+
+    @Nullable
+    public static Direction byName(@Nullable String name) {
+        return CODEC.byId(name);
+    }
+
+    public static Direction byId(int id) {
+        return VALUES[Math.abs(id % VALUES.length)];
+    }
+
+    public static Direction fromHorizontal(int value) {
+        return HORIZONTAL[Math.abs(value % HORIZONTAL.length)];
+    }
+
+    @Nullable
+    public static Direction fromVector(BlockPos pos) {
+        return VECTOR_TO_DIRECTION.get(pos.asLong());
+    }
+
+    @Nullable
+    public static Direction fromVector(int x, int y, int z) {
+        return VECTOR_TO_DIRECTION.get(BlockPos.asLong(x, y, z));
+    }
+
+    public static Direction fromRotation(double rotation) {
+        return Direction.fromHorizontal(net.minecraft.util.maths.MathHelper.floor(rotation / 90.0 + 0.5) & 3);
     }
 
     public static Direction from(Axis axis, AxisDirection direction) {
         return switch (axis) {
-            case X -> direction == AxisDirection.NEGATIVE ? NORTH : SOUTH;
-            case Y -> direction == AxisDirection.NEGATIVE ? DOWN : UP;
-            case Z -> direction == AxisDirection.NEGATIVE ? EAST : WEST;
+            case X -> direction == AxisDirection.POSITIVE ? SOUTH : NORTH;
+            case Y -> direction == AxisDirection.POSITIVE ? UP : DOWN;
+            case Z -> direction == AxisDirection.POSITIVE ? WEST : EAST;
         };
+    }
+
+    public float asRotation() {
+        return (idHorizontal & 3) * 90;
+    }
+
+    public static Direction random(Random random) {
+        return ALL[random.nextInt(ALL.length)];
+    }
+
+    public static Direction getFacing(double x, double y, double z) {
+        return Direction.getFacing((float)x, (float)y, (float)z);
     }
 
     public static Direction getFacing(float x, float y, float z) {
         Direction direction = NORTH;
         float f = Float.MIN_VALUE;
-
         for (Direction direction2 : ALL) {
-            float g = x * (float) direction2.vector.x + y * (float) direction2.vector.y + z * (float) direction2.vector.z;
-            if (g > f) {
-                f = g;
-                direction = direction2;
-            }
+            float g = x * (float)direction2.vector.getX() + y * (float)direction2.vector.getY() + z * (float)direction2.vector.getZ();
+            if (!(g > f)) continue;
+            f = g;
+            direction = direction2;
         }
-
         return direction;
     }
 
-    public static Direction transform(Matrix4f matrix, Direction direction) {
-        Vec3i vec3i = direction.vector;
-        Vector4f vector4f = new Vector4f((float)vec3i.x, (float)vec3i.y, (float)vec3i.z, 0.0F);
-        vector4f.transform(matrix);
-        return getFacing(vector4f.getX(), vector4f.getY(), vector4f.getZ());
-    }
-
-    @Override
     public String toString() {
         return name;
     }
 
     @Override
     public String asString() {
-        return toString();
+        return name;
     }
 
-    public static Direction byName(String name) {
-        return NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
+    private static DataResult<Direction> validateVertical(Direction direction) {
+        return direction.getAxis().isVertical() ? DataResult.success(direction) : DataResult.error("Expected a vertical direction");
     }
 
-    public enum Type implements Iterable<Direction>, Predicate<Direction> {
-        HORIZONTAL(new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}, new Direction.Axis[]{Direction.Axis.X, Direction.Axis.Z}),
-        VERTICAL(new Direction[]{Direction.UP, Direction.DOWN}, new Direction.Axis[]{Direction.Axis.Y});
+    public static Direction get(AxisDirection direction, Axis axis) {
+        for (Direction direction2 : ALL) {
+            if (direction2.getDirection() != direction || direction2.getAxis() != axis) continue;
+            return direction2;
+        }
+        throw new IllegalArgumentException("No such direction: " + direction + " " + axis);
+    }
 
-        private final Direction[] facingArray;
-        private final Direction.Axis[] axisArray;
+    public Vec3i getVector() {
+        return vector;
+    }
 
-        Type(Direction[] facingArray, Direction.Axis[] axisArray) {
-            this.facingArray = facingArray;
-            this.axisArray = axisArray;
+    /**
+     * {@return whether the given yaw points to the direction}
+     *
+     * @implNote This returns whether the yaw can make an acute angle with the direction.
+     *
+     * <p>This always returns {@code false} for vertical directions.
+     */
+    public boolean pointsTo(float yaw) {
+        float f = yaw * ((float)Math.PI / 180);
+        float g = -net.minecraft.util.maths.MathHelper.sin(f);
+        float h = net.minecraft.util.maths.MathHelper.cos(f);
+        return (float)vector.getX() * g + (float)vector.getZ() * h > 0.0f;
+    }
+
+    static {
+        CODEC = StringIdentifiable.createCodec(Direction::values);
+        VERTICAL_CODEC = CODEC.flatXmap(Direction::validateVertical, Direction::validateVertical);
+        ALL = Direction.values();
+        VALUES = Arrays.stream(ALL).sorted(Comparator.comparingInt(direction -> direction.id)).toArray(Direction[]::new);
+        HORIZONTAL = Arrays.stream(ALL).filter(direction -> direction.getAxis().isHorizontal()).sorted(Comparator.comparingInt(direction -> direction.idHorizontal)).toArray(Direction[]::new);
+        VECTOR_TO_DIRECTION = Arrays.stream(ALL).collect(Collectors.toMap(direction -> new BlockPos(direction.getVector()).asLong(), direction -> direction, (direction1, direction2) -> {
+            throw new IllegalArgumentException("Duplicate keys");
+        }, Long2ObjectOpenHashMap::new));
+    }
+
+    public enum Axis implements StringIdentifiable,
+            Predicate<Direction>
+    {
+        X("x"){
+
+            @Override
+            public int choose(int x, int y, int z) {
+                return x;
+            }
+
+            @Override
+            public double choose(double x, double y, double z) {
+                return x;
+            }
+        },
+        Y("y"){
+
+            @Override
+            public int choose(int x, int y, int z) {
+                return y;
+            }
+
+            @Override
+            public double choose(double x, double y, double z) {
+                return y;
+            }
+        },
+        Z("z"){
+
+            @Override
+            public int choose(int x, int y, int z) {
+                return z;
+            }
+
+            @Override
+            public double choose(double x, double y, double z) {
+                return z;
+            }
+        };
+
+        public static final Axis[] VALUES;
+        public static final StringIdentifiable.Codec<Axis> CODEC;
+        private final String name;
+
+        Axis(String name) {
+            this.name = name;
         }
 
-        public Direction random(Random random) {
-            return (Direction)Util.getRandom((Object[])this.facingArray, random);
+        @Nullable
+        public static Axis fromName(String name) {
+            return CODEC.byId(name);
         }
 
-        public Direction.Axis randomAxis(Random random) {
-            return (Direction.Axis)Util.getRandom((Object[])this.axisArray, random);
+        public String getName() {
+            return name;
+        }
+
+        public boolean isVertical() {
+            return this == Y;
+        }
+
+        public boolean isHorizontal() {
+            return this == X || this == Z;
+        }
+
+        public String toString() {
+            return name;
+        }
+
+        public static Axis pickRandomAxis(Random random) {
+            return Util.getRandom(VALUES, random);
         }
 
         @Override
         public boolean test(@Nullable Direction direction) {
-            return direction != null && direction.axis.getType() == this;
+            return direction != null && direction.getAxis() == this;
+        }
+
+        public Type getType() {
+            return switch (this) {
+                case X, Z -> Type.HORIZONTAL;
+                case Y -> Type.VERTICAL;
+            };
         }
 
         @Override
-        public @NotNull Iterator<Direction> iterator() {
-            return Iterators.forArray(this.facingArray);
+        public String asString() {
+            return name;
         }
 
-        public Stream<Direction> stream() {
-            return Arrays.stream(this.facingArray);
+        public abstract int choose(int var1, int var2, int var3);
+
+        public abstract double choose(double var1, double var3, double var5);
+
+        static {
+            VALUES = Axis.values();
+            CODEC = StringIdentifiable.createCodec(Axis::values);
         }
     }
 
@@ -173,98 +473,60 @@ public enum Direction implements StringIdentifiable {
         }
 
         public int offset() {
-            return this.offset;
+            return offset;
+        }
+
+        public String getDescription() {
+            return description;
         }
 
         public String toString() {
-            return this.description;
+            return description;
         }
 
-        public Direction.AxisDirection getOpposite() {
+        public AxisDirection getOpposite() {
             return this == POSITIVE ? NEGATIVE : POSITIVE;
         }
     }
 
-    @RequiredArgsConstructor
-    public enum Axis implements StringIdentifiable {
+    public enum Type implements Iterable<Direction>,
+            Predicate<Direction>
+    {
+        HORIZONTAL(new Direction[]{NORTH, EAST, SOUTH, WEST}, new Axis[]{Axis.X, Axis.Z}),
+        VERTICAL(new Direction[]{UP, DOWN}, new Axis[]{Axis.Y});
 
-        X("x") {
+        private final Direction[] facingArray;
+        private final Axis[] axisArray;
 
-            @Override
-            public int choose(int x, int y, int z) {
-                return x;
-            }
-
-            @Override
-            public double choose(double x, double y, double z) {
-                return x;
-            }
-
-            @Override
-            public Type getType() {
-                return Type.HORIZONTAL;
-            }
-        },
-        Y("y") {
-
-            @Override
-            public int choose(int x, int y, int z) {
-                return y;
-            }
-
-            @Override
-            public double choose(double x, double y, double z) {
-                return y;
-            }
-
-            @Override
-            public Type getType() {
-                return Type.VERTICAL;
-            }
-        },
-        Z("z") {
-
-            @Override
-            public int choose(int x, int y, int z) {
-                return z;
-            }
-
-            @Override
-            public double choose(double x, double y, double z) {
-                return z;
-            }
-
-            @Override
-            public Type getType() {
-                return Type.HORIZONTAL;
-            }
-        };
-
-        public static final Codec<Axis> CODEC = StringIdentifiable.createCodec(Direction.Axis::values, Direction.Axis::fromName);
-
-        private static final ImmutableMap<String, Axis> NAME_LOOKUP = Util.createLookupBy(axis -> axis.name, Axis.values());
-
-        private final String name;
-
-        @Nullable
-        public static Direction.Axis fromName(String name) {
-            return NAME_LOOKUP.get(name.toLowerCase(Locale.ROOT));
+        Type(Direction[] facingArray, Axis[] axisArray) {
+            this.facingArray = facingArray;
+            this.axisArray = axisArray;
         }
 
-        public abstract int choose(int x, int y, int z);
+        public Direction random(Random random) {
+            return Util.getRandom(facingArray, random);
+        }
 
-        public abstract double choose(double var1, double var3, double var5);
-
-        public abstract Direction.Type getType();
-
-        @Override
-        public String toString() {
-            return name;
+        public Axis randomAxis(Random random) {
+            return Util.getRandom(axisArray, random);
         }
 
         @Override
-        public String asString() {
-            return name;
+        public boolean test(@Nullable Direction direction) {
+            return direction != null && direction.getAxis().getType() == this;
+        }
+
+        @Override
+        public @NotNull Iterator<Direction> iterator() {
+            return Iterators.forArray(facingArray);
+        }
+
+        public Stream<Direction> stream() {
+            return Arrays.stream(facingArray);
+        }
+
+        public List<Direction> getShuffled(Random random) {
+            return Util.copyShuffled(facingArray, random);
         }
     }
 }

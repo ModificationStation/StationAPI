@@ -4,7 +4,7 @@ import net.minecraft.level.LevelManager;
 import net.minecraft.level.chunk.ChunkIO;
 import net.minecraft.level.dimension.Dimension;
 import net.minecraft.level.dimension.DimensionFile;
-import net.modificationstation.stationapi.api.level.dimension.VanillaDimensions;
+import net.modificationstation.stationapi.api.world.dimension.VanillaDimensions;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;

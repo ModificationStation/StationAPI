@@ -4,7 +4,7 @@ import net.minecraft.block.Portal;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.entity.HasTeleportationManager;
-import net.modificationstation.stationapi.api.level.dimension.TeleportationManager;
+import net.modificationstation.stationapi.api.world.dimension.TeleportationManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -9,7 +9,7 @@ import net.minecraft.level.structure.Structure;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
-import net.modificationstation.stationapi.api.level.StationFlatteningWorld;
+import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;

@@ -5,7 +5,7 @@ import net.minecraft.entity.player.AbstractClientPlayer;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.entity.HasTeleportationManager;
-import net.modificationstation.stationapi.api.level.dimension.VanillaDimensions;
+import net.modificationstation.stationapi.api.world.dimension.VanillaDimensions;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -6,6 +6,8 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceMaps;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
@@ -237,6 +239,40 @@ public class Util {
     public static <T, U, R> BiFunction<T, U, R> memoize(final BiFunction<T, U, R> biFunction) {
         final Map<Pair<T, U>, R> cache = new HashMap<>();
         return (object, object2) -> cache.computeIfAbsent(Pair.of(object, object2), pair -> biFunction.apply(pair.getFirst(), pair.getSecond()));
+    }
+
+    public static <T> List<T> copyShuffled(Stream<T> stream, Random random) {
+        ObjectArrayList<T> objectArrayList = stream.collect(ObjectArrayList.toList());
+        Util.shuffle(objectArrayList, random);
+        return objectArrayList;
+    }
+
+    public static IntArrayList shuffle(IntStream stream, Random random) {
+        IntArrayList intArrayList = IntArrayList.wrap(stream.toArray());
+        for (int j = intArrayList.size(); j > 1; --j) {
+            int k = random.nextInt(j);
+            intArrayList.set(j - 1, intArrayList.set(k, intArrayList.getInt(j - 1)));
+        }
+        return intArrayList;
+    }
+
+    public static <T> List<T> copyShuffled(T[] array, Random random) {
+        ObjectArrayList<T> objectArrayList = new ObjectArrayList<>(array);
+        Util.shuffle(objectArrayList, random);
+        return objectArrayList;
+    }
+
+    public static <T> List<T> copyShuffled(ObjectArrayList<T> list, Random random) {
+        ObjectArrayList<T> objectArrayList = new ObjectArrayList<>(list);
+        Util.shuffle(objectArrayList, random);
+        return objectArrayList;
+    }
+
+    public static <T> void shuffle(ObjectArrayList<T> list, Random random) {
+        for (int j = list.size(); j > 1; --j) {
+            int k = random.nextInt(j);
+            list.set(j - 1, list.set(k, list.get(j - 1)));
+        }
     }
 
     public static Consumer<String> addPrefix(String prefix, Consumer<String> consumer) {

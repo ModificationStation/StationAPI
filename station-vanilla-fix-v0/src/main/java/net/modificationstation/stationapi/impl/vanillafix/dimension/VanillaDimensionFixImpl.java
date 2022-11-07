@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-import static net.modificationstation.stationapi.api.level.dimension.VanillaDimensions.*;
+import static net.modificationstation.stationapi.api.world.dimension.VanillaDimensions.*;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public final class VanillaDimensionFixImpl {

@@ -58,11 +58,6 @@ public class MathHelper {
         return i + 1;
     }
 
-    public static int ceilLog2(int value) {
-        value = MathHelper.isPowerOfTwo(value) ? value : MathHelper.smallestEncompassingPowerOfTwo(value);
-        return MULTIPLY_DE_BRUIJN_BIT_POSITION[(int)((long)value * 125613361L >> 27) & 0x1F];
-    }
-
     public static float clamp(float value, float min, float max) {
         return Floats.constrainToRange(value, min, max);
     }
@@ -97,13 +92,31 @@ public class MathHelper {
         return i != 0 && (i & i - 1) == 0;
     }
 
-    public static int log2DeBruijn(int i) {
-        i = MathHelper.isPowerOfTwo(i) ? i : MathHelper.smallestEncompassingPowerOfTwo(i);
-        return MULTIPLY_DE_BRUIJN_BIT_POSITION[(int)((long)i * 125613361L >> 27) & 0x1F];
+    /**
+     * {@return ceil(log<sub>2</sub>({@code value}))}
+     *
+     * <p>The vanilla implementation uses the de Bruijn sequence.
+     *
+     * @see Integer#numberOfLeadingZeros(int)
+     *
+     * @param value the input value
+     */
+    public static int ceilLog2(int value) {
+        value = MathHelper.isPowerOfTwo(value) ? value : MathHelper.smallestEncompassingPowerOfTwo(value);
+        return MULTIPLY_DE_BRUIJN_BIT_POSITION[(int)((long)value * 125613361L >> 27) & 0x1F];
     }
 
-    public static int log2(int i) {
-        return log2DeBruijn(i) - (isPowerOfTwo(i) ? 0 : 1);
+    /**
+     * {@return floor(log<sub>2</sub>({@code value}))}
+     *
+     * <p>The vanilla implementation uses the de Bruijn sequence.
+     *
+     * @see Integer#numberOfLeadingZeros(int)
+     *
+     * @param value the input value
+     */
+    public static int floorLog2(int value) {
+        return ceilLog2(value) - (isPowerOfTwo(value) ? 0 : 1);
     }
 
     public static int idealHash(int i) {

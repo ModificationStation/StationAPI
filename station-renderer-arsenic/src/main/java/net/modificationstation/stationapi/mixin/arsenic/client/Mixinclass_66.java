@@ -17,7 +17,7 @@ import net.modificationstation.stationapi.api.client.gl.VertexBuffer;
 import net.modificationstation.stationapi.api.client.render.*;
 import net.modificationstation.stationapi.api.client.render.chunk.BlockBufferBuilderStorage;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelRenderer;
-import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.api.world.BlockStateView;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ChunkBuilderVBO;
 import net.modificationstation.stationapi.mixin.arsenic.TilePosAccessor;

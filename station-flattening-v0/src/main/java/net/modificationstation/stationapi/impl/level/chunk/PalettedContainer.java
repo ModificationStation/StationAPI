@@ -5,7 +5,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
-import net.modificationstation.stationapi.api.level.chunk.CompactingPackedIntegerArray;
+import net.modificationstation.stationapi.api.world.chunk.CompactingPackedIntegerArray;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.collection.EmptyPaletteStorage;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;

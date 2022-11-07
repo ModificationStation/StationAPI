@@ -6,7 +6,7 @@ import net.minecraft.level.chunk.Chunk;
 import net.minecraft.level.dimension.Dimension;
 import net.minecraft.util.maths.Vec2i;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.level.StationFlatteningWorld;
+import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 import net.modificationstation.stationapi.impl.level.StationDimension;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

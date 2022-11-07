@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
-import net.modificationstation.stationapi.api.level.BlockStateView;
+import net.modificationstation.stationapi.api.world.BlockStateView;
 import net.modificationstation.stationapi.mixin.arsenic.client.DiggingAccessor;
 import net.modificationstation.stationapi.mixin.arsenic.client.ParticleBaseAccessor;
 

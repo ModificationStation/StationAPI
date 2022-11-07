@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.entity;
 
-import net.modificationstation.stationapi.api.level.dimension.TeleportationManager;
+import net.modificationstation.stationapi.api.world.dimension.TeleportationManager;
 
 public interface HasTeleportationManager {
 

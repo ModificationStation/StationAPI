@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.AbstractClientPlayer;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.DimensionRegistryEvent;
-import net.modificationstation.stationapi.api.level.dimension.DimensionHelper;
+import net.modificationstation.stationapi.api.world.dimension.DimensionHelper;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

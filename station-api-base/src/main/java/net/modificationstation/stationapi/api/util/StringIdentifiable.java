@@ -1,20 +1,25 @@
 package net.modificationstation.stationapi.api.util;
 
-import com.mojang.serialization.Codec;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Keyable;
+import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
+import it.unimi.dsi.fastutil.objects.Object2ReferenceMaps;
+import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
+import net.modificationstation.stationapi.api.util.dynamic.Codecs;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.IntFunction;
 import java.util.function.Supplier;
-import java.util.function.ToIntFunction;
-import java.util.stream.IntStream;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public interface StringIdentifiable {
+
+   int MAPIFY_THRESHOLD = 16;
+
    String asString();
 
    /**
@@ -22,47 +27,56 @@ public interface StringIdentifiable {
     * using its ordinals (when compressed) or using its {@link #asString()} method
     * and a given decode function.
     */
-   static <E extends Enum<E> & StringIdentifiable> Codec<E> createCodec(Supplier<E[]> enumValues, Function<? super String, ? extends E> fromString) {
+   static <E extends Enum<E> & StringIdentifiable> Codec<E> createCodec(Supplier<E[]> enumValues) {
       E[] enums = enumValues.get();
-      return createCodec(Enum::ordinal, (ordinal) -> enums[ordinal], fromString);
+      if (enums.length > MAPIFY_THRESHOLD) {
+         //noinspection Convert2MethodRef
+         Object2ReferenceMap<String, E> map = Object2ReferenceMaps.unmodifiable(Arrays.stream(enums).collect(Collectors.toMap(StringIdentifiable::asString, Function.identity(), (o, o2) -> { throw new IllegalStateException(String.format("Duplicate key %s", o)); }, () -> new Object2ReferenceOpenHashMap<>())));
+         return new Codec<>(enums, id -> id == null ? null : map.get(id));
+      }
+      return new Codec<>(enums, id -> {
+         for (E enum_ : enums) {
+            if (!enum_.asString().equals(id)) continue;
+            return enum_;
+         }
+         return null;
+      });
    }
 
-   /**
-    * Creates a codec that serializes a class implementing this interface using either
-    * the given toInt and fromInt mapping functions (when compressed output is
-    * requested), or its {@link #asString()} method and a given fromString function.
-    */
-   static <E extends StringIdentifiable> Codec<E> createCodec(final ToIntFunction<E> compressedEncoder, final IntFunction<E> compressedDecoder, final Function<? super String, ? extends E> decoder) {
-      return new Codec<E>() {
-         public <T> DataResult<T> encode(E stringIdentifiable, DynamicOps<T> dynamicOps, T object) {
-            return dynamicOps.compressMaps() ? dynamicOps.mergeToPrimitive(object, dynamicOps.createInt(compressedEncoder.applyAsInt(stringIdentifiable))) : dynamicOps.mergeToPrimitive(object, dynamicOps.createString(stringIdentifiable.asString()));
-         }
+   static Keyable toKeyable(final StringIdentifiable[] values) {
+      return new Keyable(){
 
-         public <T> DataResult<com.mojang.datafixers.util.Pair<E, T>> decode(DynamicOps<T> dynamicOps, T object) {
-            return dynamicOps.compressMaps() ? dynamicOps.getNumberValue(object).flatMap((number) -> Optional.ofNullable(compressedDecoder.apply(number.intValue())).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown element id: " + number))).map((stringIdentifiable) -> com.mojang.datafixers.util.Pair.of(stringIdentifiable, dynamicOps.empty())) : dynamicOps.getStringValue(object).flatMap((string) -> Optional.ofNullable(decoder.apply(string)).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown element name: " + string))).map((stringIdentifiable) -> com.mojang.datafixers.util.Pair.of(stringIdentifiable, dynamicOps.empty()));
-         }
-
-         public String toString() {
-            return "StringRepresentable[" + compressedEncoder + "]";
+         @Override
+         public <T> Stream<T> keys(DynamicOps<T> ops) {
+            return Arrays.stream(values).map(StringIdentifiable::asString).map(ops::createString);
          }
       };
    }
 
-   static Keyable method_28142(final StringIdentifiable[] stringIdentifiables) {
-      return new Keyable() {
-         public <T> Stream<T> keys(DynamicOps<T> dynamicOps) {
-            if (dynamicOps.compressMaps()) {
-               IntStream var2 = IntStream.range(0, stringIdentifiables.length);
-               //noinspection ResultOfMethodCallIgnored
-               dynamicOps.getClass();
-               return var2.mapToObj(dynamicOps::createInt);
-            } else {
-               Stream<String> var10000 = Arrays.stream(stringIdentifiables).map(StringIdentifiable::asString);
-               //noinspection ResultOfMethodCallIgnored
-               dynamicOps.getClass();
-               return var10000.map(dynamicOps::createString);
-            }
-         }
-      };
+   class Codec<E extends Enum<E>>
+           implements com.mojang.serialization.Codec<E> {
+      private final com.mojang.serialization.Codec<E> base;
+      private final Function<String, E> idToIdentifiable;
+
+      public Codec(E[] values, Function<String, E> idToIdentifiable) {
+         this.base = Codecs.orCompressed(Codecs.idChecked(identifiable -> ((StringIdentifiable) identifiable).asString(), idToIdentifiable), Codecs.rawIdChecked(Enum::ordinal, ordinal -> ordinal >= 0 && ordinal < values.length ? values[ordinal] : null, -1));
+         this.idToIdentifiable = idToIdentifiable;
+      }
+
+      @Override
+      public <T> DataResult<Pair<E, T>> decode(DynamicOps<T> ops, T input) {
+         return this.base.decode(ops, input);
+      }
+
+      @Override
+      public <T> DataResult<T> encode(E enum_, DynamicOps<T> dynamicOps, T object) {
+         return this.base.encode(enum_, dynamicOps, object);
+      }
+
+      @Nullable
+      public E byId(@Nullable String id) {
+         return this.idToIdentifiable.apply(id);
+      }
    }
 }
+

@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.level.chunk;
+package net.modificationstation.stationapi.api.world.chunk;
 
 import net.modificationstation.stationapi.impl.level.chunk.Palette;
 
