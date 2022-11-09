@@ -6,11 +6,11 @@ import net.minecraft.entity.Living;
 import net.minecraft.level.Level;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 
 import static net.modificationstation.stationapi.api.state.property.Properties.HORIZONTAL_FACING;
 

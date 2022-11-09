@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.api.client.render.model;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.maths.Vec3i;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelElementFace;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelElementTexture;
 import net.modificationstation.stationapi.api.client.texture.Sprite;

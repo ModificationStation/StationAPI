@@ -33,7 +33,6 @@ import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.item.nbt.StationNBT;
-import net.modificationstation.stationapi.api.world.BlockStateView;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.util.Util;
@@ -44,6 +43,7 @@ import net.modificationstation.stationapi.api.util.exception.CrashReportSectionB
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.api.util.math.Vector4f;
+import net.modificationstation.stationapi.api.world.BlockStateView;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc.LightingCalculatorImpl;
 import net.modificationstation.stationapi.mixin.arsenic.TilePosAccessor;
 import net.modificationstation.stationapi.mixin.arsenic.client.BlockRendererAccessor;

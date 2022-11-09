@@ -2,18 +2,18 @@ package net.modificationstation.stationapi.api.util.math;
 
 import com.google.common.collect.AbstractIterator;
 import com.mojang.serialization.Codec;
+import net.minecraft.util.maths.Box;
+import net.modificationstation.stationapi.api.util.BlockRotation;
+import net.modificationstation.stationapi.api.util.Util;
+import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.Unmodifiable;
+
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-
-import net.minecraft.util.maths.Box;
-import net.modificationstation.stationapi.api.util.BlockRotation;
-import net.modificationstation.stationapi.api.util.Util;
-import org.apache.commons.lang3.Validate;
-import org.jetbrains.annotations.Unmodifiable;
 
 import static net.minecraft.util.maths.MathHelper.floor;
 

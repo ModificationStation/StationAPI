@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.mixin.dimension.server;
 
 import net.minecraft.entity.player.ServerPlayer;
 import net.minecraft.server.network.ServerPlayerPacketHandler;
-import net.modificationstation.stationapi.api.world.dimension.VanillaDimensions;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
+import net.modificationstation.stationapi.api.world.dimension.VanillaDimensions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Constant;

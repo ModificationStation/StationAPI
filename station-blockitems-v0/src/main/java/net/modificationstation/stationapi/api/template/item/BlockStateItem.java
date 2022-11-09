@@ -7,10 +7,10 @@ import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
-import net.modificationstation.stationapi.api.world.HeightLimitView;
-import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.api.world.HeightLimitView;
+import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 
 public class BlockStateItem extends TemplateItemBase {
 

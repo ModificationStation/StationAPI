@@ -1,12 +1,13 @@
 package net.modificationstation.stationapi.impl.util.math;
 
+import net.minecraft.util.maths.TilePos;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import net.minecraft.util.maths.TilePos;
-import org.jetbrains.annotations.Nullable;
 
 public class ChunkPos {
 

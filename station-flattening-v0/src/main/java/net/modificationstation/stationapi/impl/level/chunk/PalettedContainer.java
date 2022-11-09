@@ -5,13 +5,13 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
-import net.modificationstation.stationapi.api.world.chunk.CompactingPackedIntegerArray;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.collection.EmptyPaletteStorage;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 import net.modificationstation.stationapi.api.util.collection.PackedIntegerArray;
 import net.modificationstation.stationapi.api.util.collection.PaletteStorage;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
+import net.modificationstation.stationapi.api.world.chunk.CompactingPackedIntegerArray;
 import net.modificationstation.stationapi.impl.util.dynamic.Codecs;
 import org.jetbrains.annotations.Nullable;
 

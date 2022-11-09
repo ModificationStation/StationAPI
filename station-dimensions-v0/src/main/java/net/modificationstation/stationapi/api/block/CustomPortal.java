@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.block;
 
 import net.minecraft.class_467;
 import net.minecraft.entity.player.PlayerBase;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.world.dimension.DimensionHelper;
 import net.modificationstation.stationapi.api.world.dimension.TeleportationManager;
-import net.modificationstation.stationapi.api.registry.Identifier;
 
 public interface CustomPortal extends TeleportationManager {
 

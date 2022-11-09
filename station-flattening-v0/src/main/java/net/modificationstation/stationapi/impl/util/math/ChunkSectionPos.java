@@ -4,13 +4,6 @@
 package net.modificationstation.stationapi.impl.util.math;
 
 import it.unimi.dsi.fastutil.longs.LongConsumer;
-
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
 import net.minecraft.level.chunk.Chunk;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.util.math.BlockPos;
@@ -18,6 +11,12 @@ import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Position;
 import net.modificationstation.stationapi.api.util.math.Vec3i;
 import net.modificationstation.stationapi.impl.util.CuboidBlockIterator;
+
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class ChunkSectionPos
         extends Vec3i {

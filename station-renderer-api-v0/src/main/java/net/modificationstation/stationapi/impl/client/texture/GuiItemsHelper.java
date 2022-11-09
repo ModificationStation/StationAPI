@@ -61,7 +61,7 @@ final class GuiItemsHelper implements SpritesheetHelper {
         f.accept("oak_sign", 42);
         f.accept("oak_door", 43);
         f.accept("iron_door", 44);
-        f.accept("bed", 45);
+        f.accept("red_bed", 45);
         f.accept("leather_boots", 48);
         f.accept("chainmail_boots", 49);
         f.accept("iron_boots", 50);

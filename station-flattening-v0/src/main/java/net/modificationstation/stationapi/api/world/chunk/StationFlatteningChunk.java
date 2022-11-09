@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.world.chunk;
 
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.world.BlockStateView;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.world.BlockStateView;
 
 public interface StationFlatteningChunk extends BlockStateView {
 
