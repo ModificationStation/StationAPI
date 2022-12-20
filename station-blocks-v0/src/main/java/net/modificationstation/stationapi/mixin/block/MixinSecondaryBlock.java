@@ -26,7 +26,7 @@ public class MixinSecondaryBlock {
             ItemInstance blockItem, PlayerBase player, Level argLevel, int argX, int argY, int argZ, int side
     ) {
         return StationAPI.EVENT_BUS.post(BlockEvent.BeforePlacedByItem.builder()
-                .level(level)
+                .world(level)
                 .player(player)
                 .x(x).y(y).z(z)
                 .block(BlockRegistry.INSTANCE.getByLegacyId(id).orElseThrow())

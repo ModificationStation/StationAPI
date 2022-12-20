@@ -1,11 +1,12 @@
 package net.modificationstation.stationapi.api.template.block;
 
+import net.minecraft.block.BlockBase;
 import net.minecraft.block.BlockSounds;
 import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateBlockBase extends net.minecraft.block.BlockBase implements BlockTemplate<TemplateBlockBase> {
+public class TemplateBlockBase extends BlockBase implements BlockTemplate<TemplateBlockBase> {
 
     public TemplateBlockBase(Identifier identifier, Material material) {
         this(BlockRegistry.INSTANCE.getNextLegacyId(), material);

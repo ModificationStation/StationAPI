@@ -10,6 +10,7 @@ import net.minecraft.block.material.MaterialColour;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
+import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.registry.RegistryEntryList;
 import net.modificationstation.stationapi.api.state.State;
 import net.modificationstation.stationapi.api.state.property.Property;
@@ -321,11 +322,11 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 //      public boolean canPathfindThrough(BlockView world, BlockPos pos, NavigationType type) {
 //         return this.getBlock().canPathfindThrough(this.asBlockState(), world, pos, type);
 //      }
-//
-//      public boolean canReplace(ItemPlacementContext context) {
-//         return this.getBlock().canReplace(this.asBlockState(), context);
-//      }
-//
+
+      public boolean canReplace(ItemPlacementContext context) {
+         return this.getBlock().canReplace(this.asBlockState(), context);
+      }
+
 //      public boolean canBucketPlace(Fluid fluid) {
 //         return this.getBlock().canBucketPlace(this.asBlockState(), fluid);
 //      }
@@ -359,10 +360,10 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
         return ((StationBlock) getBlock()).getRegistryEntry().streamTags();
     }
 
-//      public boolean isOf(BlockBase block) {
-//         return this.getBlock().is(block);
-//      }
-//
+    public boolean isOf(BlockBase block) {
+        return this.getBlock() == block;
+    }
+
 //      public FluidState getFluidState() {
 //         return this.getBlock().getFluidState(this.asBlockState());
 //      }

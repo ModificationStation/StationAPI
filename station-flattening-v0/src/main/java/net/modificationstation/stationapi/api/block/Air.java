@@ -7,12 +7,13 @@ import net.minecraft.level.Level;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.maths.Box;
 import net.minecraft.util.maths.Vec3f;
+import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 
 import java.util.Random;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
-final class Air extends BlockBase implements ReplaceableBlock {
+final class Air extends BlockBase {
 
     Air(int id) {
         super(id, Material.AIR);
@@ -65,7 +66,7 @@ final class Air extends BlockBase implements ReplaceableBlock {
     }
 
     @Override
-    public boolean canBeReplaced(Level level, int x, int y, int z, BlockBase replacedBy, int replacedByMeta) {
+    public boolean canReplace(BlockState state, ItemPlacementContext context) {
         return true;
     }
 }

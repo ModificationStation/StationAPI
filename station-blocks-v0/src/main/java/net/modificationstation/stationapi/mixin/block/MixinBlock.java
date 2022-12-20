@@ -7,6 +7,7 @@ import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -37,9 +38,10 @@ public class MixinBlock {
     ) {
         return StationAPI.EVENT_BUS.post(
                 BlockEvent.BeforePlacedByItem.builder()
-                        .level(level)
+                        .world(level)
                         .player(player)
                         .x(x).y(y).z(z)
+                        .side(Direction.byId(side))
                         .block(BlockRegistry.INSTANCE.getByLegacyId(id).orElseThrow())
                         .meta(meta)
                         .blockItem(blockItem)

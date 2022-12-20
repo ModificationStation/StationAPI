@@ -8,7 +8,9 @@ import net.minecraft.entity.EntityBase;
 import net.minecraft.level.Level;
 import net.minecraft.level.LightType;
 import net.minecraft.level.chunk.Chunk;
+import net.minecraft.tileentity.TileEntityBase;
 import net.minecraft.util.maths.Box;
+import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
@@ -30,6 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Mixin(Chunk.class)
@@ -46,6 +49,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, StationFlatte
     @Shadow public int field_961;
     @Shadow public List<EntityBase>[] entities;
 
+    @Shadow public Map<TilePos, TileEntityBase> field_964;
     @Unique
     @Getter
     private ChunkSection[] sections;
@@ -428,7 +432,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, StationFlatte
         this.level.method_166(LightType.field_2758, levelX, y, levelZ, levelX, y, levelZ);
         this.method_887(x, z);
         section.setMeta(x, y & 15, z, meta);
-        state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ);
+        state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ, oldState);
 
         this.field_967 = true;
         return true;
@@ -518,7 +522,7 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, StationFlatte
         this.level.method_166(LightType.field_2758, levelX, y, levelZ, levelX, y, levelZ);
         this.method_887(x, z);
         if (!this.level.isServerSide) {
-            state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ);
+            state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ, oldState);
         }
 
         this.field_967 = true;
@@ -575,6 +579,25 @@ public abstract class MixinChunk implements ChunkSectionsAccessor, StationFlatte
             )
     )
     private void stopRemoval(byte[] bs) {}
+
+    /**
+     * @author mine_diver
+     * @reason a proper redirect mixin doesn't work here with other mappings, same in DimensionFile
+     */
+    @Overwrite
+    public void placeTileEntity(int i, int j, int k, TileEntityBase arg) {
+        TilePos tilePos = new TilePos(i, j, k);
+        arg.level = this.level;
+        arg.x = this.x * 16 + i;
+        arg.y = j;
+        arg.z = this.z * 16 + k;
+        if (this.getTileId(i, j, k) == 0 || !BlockBase.HAS_TILE_ENTITY[this.getTileId(i, j, k)]) {
+            System.out.println("Attempted to place a tile entity where there was no entity tile!");
+            return;
+        }
+        arg.validate();
+        this.field_964.put(tilePos, arg);
+    }
     
     @Unique
     private ChunkSection getSection(int y) {

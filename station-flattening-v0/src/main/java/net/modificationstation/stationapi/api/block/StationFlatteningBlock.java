@@ -6,6 +6,7 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
 import net.minecraft.util.maths.TilePos;
+import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.util.Util;
 
@@ -16,7 +17,8 @@ public interface StationFlatteningBlock extends
         DropWithBlockState,
         DropListProvider,
         AfterBreakWithBlockState,
-        HardnessWithBlockState
+        HardnessWithBlockState,
+        ReplaceableBlock
 {
 
     @Override
@@ -62,5 +64,18 @@ public interface StationFlatteningBlock extends
     @Override
     default float calcBlockBreakingDelta(BlockState state, PlayerBase player, BlockView world, TilePos pos) {
         return Util.assertImpl();
+    }
+
+    default BlockState getPlacementState(ItemPlacementContext context) {
+        return getDefaultState();
+    }
+
+    @Override
+    default boolean canReplace(BlockState state, ItemPlacementContext context) {
+        return Util.assertImpl();
+    }
+
+    default void onBlockPlaced(Level world, int x, int y, int z, BlockState replacedState) {
+        Util.assertImpl();
     }
 }

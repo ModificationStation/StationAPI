@@ -10,6 +10,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
+import net.modificationstation.stationapi.api.vanillafix.block.FixedDispenser;
 import net.modificationstation.stationapi.api.vanillafix.block.FixedLeaves;
 import net.modificationstation.stationapi.api.vanillafix.block.FixedLog;
 import net.modificationstation.stationapi.api.vanillafix.block.FixedSapling;
@@ -24,6 +25,7 @@ import java.util.function.Consumer;
 import static net.minecraft.block.BlockBase.*;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.vanillafix.block.Blocks.DISPENSER;
 import static net.modificationstation.stationapi.api.vanillafix.block.Blocks.*;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
@@ -72,7 +74,11 @@ public final class VanillaBlockFixImpl {
         r.accept("glass", BlockBase.GLASS);
         r.accept("lapis_ore", BlockBase.LAPIS_LAZULI_ORE);
         r.accept("lapis_block", BlockBase.LAPIS_LAZULI_BLOCK);
-        r.accept("dispenser", BlockBase.DISPENSER);
+
+        // DISPENSER MODIFIED BY STATIONAPI TO USE BLOCKSTATES INSTEAD OF METADATA FOR FACING PROPERTY
+        DISPENSER = new FixedDispenser(of("dispenser")).setHardness(3.5F).setSounds(PISTON_SOUNDS).setTranslationKey("dispenser").disableNotifyOnMetaDataChange();
+        // DISPENSER END
+
         r.accept("sandstone", BlockBase.SANDSTONE);
         r.accept("note_block", BlockBase.NOTEBLOCK);
         r.accept("red_bed", BlockBase.BED);

@@ -43,7 +43,7 @@ public class BlockStateItem extends TemplateItemBase {
         BlockBase block = blockState.getBlock();
         if (level.canPlaceTile(block.id, x, y, z, false, direction.getId())) {
             if (StationAPI.EVENT_BUS.post(BlockEvent.BeforePlacedByItem.builder()
-                    .level(level)
+                    .world(level)
                     .player(player)
                     .x(x).y(y).z(z)
                     .block(block)

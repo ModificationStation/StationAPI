@@ -79,4 +79,9 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
                         .build()
         ).miningSpeedMultiplier;
     }
+
+    @Override
+    public boolean isOf(ItemBase item) {
+        return this.getType() == item;
+    }
 }

@@ -9,8 +9,11 @@ import net.minecraft.level.Level;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.StationFlatteningBlock;
+import net.modificationstation.stationapi.api.item.ItemConvertible;
+import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.impl.block.BlockDropListImpl;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(BlockBase.class)
-public abstract class MixinBlockBase implements StationFlatteningBlock {
+public abstract class MixinBlockBase implements StationFlatteningBlock, ItemConvertible {
 
     @Shadow public abstract void beforeDestroyedByExplosion(Level arg, int i, int j, int k, int l, float f);
 
@@ -33,6 +36,10 @@ public abstract class MixinBlockBase implements StationFlatteningBlock {
     @Shadow public abstract void drop(Level arg, int i, int j, int k, int l);
 
     @Shadow public abstract float getHardness();
+
+    @Shadow @Final public Material material;
+
+    @Shadow public abstract void onBlockPlaced(Level arg, int i, int j, int k);
 
     @Inject(
             method = "<init>(ILnet/minecraft/block/material/Material;)V",
@@ -129,5 +136,15 @@ public abstract class MixinBlockBase implements StationFlatteningBlock {
         if (hardness < 0.0f) return 0.0f;
         if (!player.canHarvest(state)) return 1.0f / hardness / 100.0f;
         return player.getBlockBreakingSpeed(state) / hardness / 30.0f;
+    }
+
+    @Override
+    public boolean canReplace(BlockState state, ItemPlacementContext context) {
+        return material.isReplaceable() && (context.getStack() == null || !context.getStack().isOf(asItem()));
+    }
+
+    @Override
+    public void onBlockPlaced(Level world, int x, int y, int z, BlockState replacedState) {
+        onBlockPlaced(world, x, y, z);
     }
 }
