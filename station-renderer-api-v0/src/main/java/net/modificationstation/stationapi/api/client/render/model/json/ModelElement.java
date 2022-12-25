@@ -44,7 +44,9 @@ public class ModelElement {
    private float[] getRotatedMatrix(Direction direction) {
       return switch (direction) {
          case DOWN -> new float[]{this.from.getX(), 16.0F - this.to.getZ(), this.to.getX(), 16.0F - this.from.getZ()};
-         case UP -> new float[]{this.from.getX(), this.from.getZ(), this.to.getX(), this.to.getZ()};
+//         Below is the original rotation for upward faces from modern Minecraft. Was changed because modern has different cardinal points.
+//         case UP -> new float[]{this.from.getX(), this.from.getZ(), this.to.getX(), this.to.getZ()};
+         case UP -> new float[]{this.to.getX(), this.from.getZ(), this.from.getX(), this.to.getZ()};
          case NORTH -> new float[]{16.0F - this.to.getX(), 16.0F - this.to.getY(), 16.0F - this.from.getX(), 16.0F - this.from.getY()};
          case SOUTH -> new float[]{this.from.getX(), 16.0F - this.to.getY(), this.to.getX(), 16.0F - this.from.getY()};
          case WEST -> new float[]{this.from.getZ(), 16.0F - this.to.getY(), this.to.getZ(), 16.0F - this.from.getY()};

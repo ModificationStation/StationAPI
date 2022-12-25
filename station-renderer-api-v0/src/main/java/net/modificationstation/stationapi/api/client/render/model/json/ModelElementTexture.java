@@ -50,7 +50,7 @@ public class ModelElementTexture {
          throw new NullPointerException("uvs");
       } else {
          int i = this.getRotatedUVIndex(rotation);
-         return this.uvs[i != 0 && i != 1 ? 2 : 0];
+         return this.uvs[i == 0 || i == 1 ? 0 : 2];
       }
    }
 
@@ -59,7 +59,7 @@ public class ModelElementTexture {
          throw new NullPointerException("uvs");
       } else {
          int i = this.getRotatedUVIndex(rotation);
-         return this.uvs[i != 0 && i != 3 ? 3 : 1];
+         return this.uvs[i == 0 || i == 3 ? 1 : 3];
       }
    }
 
