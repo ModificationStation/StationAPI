@@ -4,22 +4,8 @@
   "package": "net.modificationstation.stationapi.mixin.render",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinBlock",
-    "MixinBlockBase",
-    "MixinItemBase"
   ],
   "client": [
-    "client.BlockRendererAccessor",
-    "client.MinecraftAccessor",
-    "client.MixinInGame",
-    "client.MixinTessellator",
-    "client.MixinTextureManager",
-    "client.MixinWorldRenderer",
-    "client.RenderListAccessor",
-    "client.TessellatorAccessor",
-    "client.TextureManagerAccessor",
-    "client.WaterColourAccessor",
-    "client.WorldRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
