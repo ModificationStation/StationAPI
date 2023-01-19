@@ -6,6 +6,7 @@ import net.minecraft.item.Block;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.maths.Box;
 import net.minecraft.util.maths.Vec3f;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.block.IsBlockReplaceableEvent;
@@ -38,11 +39,12 @@ public class MixinBlock {
 			)
 	)
 	private boolean canReplace(
-			Level argWorld, int blockID, int argX, int argY, int argZ, boolean checkCanSpawnEntity, int argSide,
+			Level argWorld, int blockID, int argX, int argY, int argZ, boolean checkCollision, int argSide,
 			ItemInstance itemStack, PlayerBase player, Level world, int x, int y, int z, int side
 	) {
 		Direction direction = Direction.byId(side);
-		return StationAPI.EVENT_BUS.post(
+		Box box = BlockBase.BY_ID[blockID].getCollisionShape(world, x, y, z);
+		return (box == null || world.canSpawnEntity(box)) && StationAPI.EVENT_BUS.post(
 				IsBlockReplaceableEvent.builder()
 						.context(new ItemPlacementContext(
 										player,

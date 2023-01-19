@@ -121,8 +121,8 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, ItemConv
             )
     )
     private void redirectDropToDropWithBlockState(BlockBase block, Level level, int x, int y, int z, int meta) {
-        if (stationapi_afterBreak_argsPresent) drop(level, x, y, z, meta);
-        else drop(level, x, y, z, stationapi_afterBreak_state, meta);
+        if (stationapi_afterBreak_argsPresent) drop(level, x, y, z, stationapi_afterBreak_state, meta);
+        else drop(level, x, y, z, meta);
     }
 
     @Override
