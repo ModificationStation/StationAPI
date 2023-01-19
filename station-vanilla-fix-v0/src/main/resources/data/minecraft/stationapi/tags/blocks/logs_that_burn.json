@@ -1,7 +1,5 @@
 {
   "values": [
-    "#oak_logs",
-    "#birch_logs",
-    "#spruce_logs"
+    "log"
   ]
 }

@@ -1,6 +1,0 @@
-{
-  "parent": "block/template_torch_wall_e",
-  "textures": {
-    "torch": "block/torch"
-  }
-}

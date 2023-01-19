@@ -25,10 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.nio.file.StandardOpenOption;
 import java.util.Base64;
-import java.util.EnumSet;
-import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public final class NativeImage

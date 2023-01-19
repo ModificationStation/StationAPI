@@ -1,9 +1,0 @@
-{
-  "parent": "block/oak_leaves",
-  "overrides": [
-    {
-      "predicate": {"fast_leaves": 1},
-      "model": "block/fast_oak_leaves"
-    }
-  ]
-}

@@ -1,6 +1,0 @@
-{
-  "parent": "item/grass",
-  "textures": {
-    "layer0": "block/dead_bush"
-  }
-}

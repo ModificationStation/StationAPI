@@ -1,8 +1,6 @@
 {
   "values": [
-    "smooth_stone_slab",
-    "sandstone_slab",
-    "cobblestone_slab",
-    "petrified_oak_slab"
+    "slab",
+    "double_slab"
   ]
 }
