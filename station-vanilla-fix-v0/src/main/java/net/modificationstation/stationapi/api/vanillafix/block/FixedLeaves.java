@@ -38,12 +38,16 @@ public class FixedLeaves extends FixedLeavesBase {
 
     @Override
     public void onBlockRemoved(Level level, int x, int y, int z) {
-        int n = 1;
-        int n2 = n + 1;
-        if (level.method_155(x - n2, y - n2, z - n2, x + n2, y + n2, z + n2))
-            for (int i2 = -n; i2 <= n; ++i2) for (int i3 = -n; i3 <= n; ++i3) for (int i4 = -n; i4 <= n; ++i4)
-                if (BlockBase.BY_ID[level.getTileId(x + i2, y + i3, z + i4)] instanceof FixedLeaves)
-                    ((StationFlatteningWorld) level).setBlockState(x + i2, y + i3, z + i4, ((BlockStateView) level).getBlockState(x + i2, y + i3, z + i4).with(Properties.PERSISTENT, false));
+        if (!((StationFlatteningWorld) level).getBlockState(x, y, z).isOf(this)) {
+            int n = 1;
+            int n2 = n + 1;
+            if (level.method_155(x - n2, y - n2, z - n2, x + n2, y + n2, z + n2))
+                for (int i2 = -n; i2 <= n; ++i2)
+                    for (int i3 = -n; i3 <= n; ++i3)
+                        for (int i4 = -n; i4 <= n; ++i4)
+                            if (BlockBase.BY_ID[level.getTileId(x + i2, y + i3, z + i4)] instanceof FixedLeaves)
+                                ((StationFlatteningWorld) level).setBlockState(x + i2, y + i3, z + i4, ((BlockStateView) level).getBlockState(x + i2, y + i3, z + i4).with(Properties.PERSISTENT, false));
+        }
     }
 
     @Override
