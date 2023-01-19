@@ -239,4 +239,13 @@ public class MixinLevelManager {
     private static byte[] stopLoadingBlockLight(CompoundTag instance, String s) {
         return null;
     }
+
+    @Redirect(
+            method = "method_1479",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/level/chunk/Chunk;generateHeightmap()V"
+            )
+    )
+    private static void stopGeneratingHeightmap(Chunk instance) {}
 }
