@@ -4,9 +4,14 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.maths.Box;
+import net.minecraft.util.maths.Vec3f;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
+import net.modificationstation.stationapi.api.event.block.IsBlockReplaceableEvent;
+import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.world.HeightLimitView;
@@ -22,13 +27,14 @@ public class BlockStateItem extends TemplateItemBase {
     }
 
     @Override
-    public boolean useOnTile(ItemInstance itemInstance, PlayerBase player, Level level, int clickX, int clickY, int clickZ, int side) {
+    public boolean useOnTile(ItemInstance itemStack, PlayerBase player, Level world, int clickX, int clickY, int clickZ, int side) {
         final Direction direction;
         final int x;
         final int y;
         final int z;
-        if (level.getTileId(clickX, clickY, clickZ) == BlockBase.SNOW.id) {
+        if (world.getTileId(clickX, clickY, clickZ) == BlockBase.SNOW.id) {
             direction = Direction.DOWN;
+            side = 0;
             x = clickX;
             y = clickY;
             z = clickZ;
@@ -38,23 +44,32 @@ public class BlockStateItem extends TemplateItemBase {
             y = clickY + direction.getOffsetY();
             z = clickZ + direction.getOffsetZ();
         }
-        if (itemInstance.count == 0) return false;
-        if (y == ((HeightLimitView) level).getTopY() - 1 && blockState.getMaterial().isSolid()) return false;
+        if (itemStack.count == 0) return false;
+        if (y == ((HeightLimitView) world).getTopY() - 1 && blockState.getMaterial().isSolid()) return false;
         BlockBase block = blockState.getBlock();
-        if (level.canPlaceTile(block.id, x, y, z, false, direction.getId())) {
+
+        Box box = block.getCollisionShape(world, x, y, z);
+        if (
+                (box == null || world.canSpawnEntity(box)) && StationAPI.EVENT_BUS.post(
+                        IsBlockReplaceableEvent.builder()
+                                .context(new ItemPlacementContext(player, itemStack, new HitResult(clickX, clickY, clickZ, side, Vec3f.from(x, y, z))))
+                                .build()
+                ).context.canPlace() && block.canPlaceAt(world, x, y, z, side)
+        ) {
             if (StationAPI.EVENT_BUS.post(BlockEvent.BeforePlacedByItem.builder()
-                    .world(level)
+                    .world(world)
                     .player(player)
                     .x(x).y(y).z(z)
+                    .side(direction)
                     .block(block)
-                    .blockItem(itemInstance)
-                    .placeFunction(() -> ((StationFlatteningWorld) level).setBlockStateWithNotify(x, y, z, blockState) != null)
+                    .blockItem(itemStack)
+                    .placeFunction(() -> ((StationFlatteningWorld) world).setBlockStateWithNotify(x, y, z, blockState) != null)
                     .build()).placeFunction.getAsBoolean()
             ) {
-                block.onBlockPlaced(level, x, y, z, direction.getId());
-                block.afterPlaced(level, x, y, z, player);
-                level.playSound((float)x + 0.5f, (float)y + 0.5f, (float)z + 0.5f, block.sounds.getWalkSound(), (block.sounds.getVolume() + 1.0f) / 2.0f, block.sounds.getPitch() * 0.8f);
-                --itemInstance.count;
+                block.onBlockPlaced(world, x, y, z, direction.getId());
+                block.afterPlaced(world, x, y, z, player);
+                world.playSound((float)x + 0.5f, (float)y + 0.5f, (float)z + 0.5f, block.sounds.getWalkSound(), (block.sounds.getVolume() + 1.0f) / 2.0f, block.sounds.getPitch() * 0.8f);
+                --itemStack.count;
             }
             return true;
         }
