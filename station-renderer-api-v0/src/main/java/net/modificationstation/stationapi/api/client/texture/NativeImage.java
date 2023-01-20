@@ -175,7 +175,7 @@ implements AutoCloseable {
         return this.format;
     }
 
-    public int getColour(int x, int y) {
+    public int getColor(int x, int y) {
         if (this.format != NativeImage.Format.ABGR) {
             throw new IllegalArgumentException(String.format("getPixelRGBA only works on RGBA images; have %s", this.format));
         } else if (x <= this.width && y <= this.height) {
@@ -187,7 +187,7 @@ implements AutoCloseable {
         }
     }
 
-    public void setColour(int x, int y, int color) {
+    public void setColor(int x, int y, int color) {
         if (this.format != NativeImage.Format.ABGR) {
             throw new IllegalArgumentException(String.format("getPixelRGBA only works on RGBA images; have %s", this.format));
         } else if (x <= this.width && y <= this.height) {
@@ -219,7 +219,7 @@ implements AutoCloseable {
         int[] is = new int[this.getWidth() * this.getHeight()];
         for (int i = 0; i < this.getHeight(); ++i) {
             for (int j = 0; j < this.getWidth(); ++j) {
-                int k = this.getColour(j, i);
+                int k = this.getColor(j, i);
                 int l = NativeImage.getAlpha(k);
                 int m = NativeImage.getBlue(k);
                 int n = NativeImage.getGreen(k);
@@ -268,7 +268,7 @@ implements AutoCloseable {
         if (removeAlpha && this.format.hasAlphaChannel()) {
             for(int i = 0; i < this.getHeight(); ++i) {
                 for(int j = 0; j < this.getWidth(); ++j) {
-                    this.setColour(j, i, this.getColour(j, i) | (255 << this.format.getAlphaChannelOffset()));
+                    this.setColor(j, i, this.getColor(j, i) | (255 << this.format.getAlphaChannelOffset()));
                 }
             }
         }
@@ -300,7 +300,7 @@ implements AutoCloseable {
     public void fillRect(int x, int y, int width, int height, int color) {
         for (int i = y; i < y + height; ++i) {
             for (int j = x; j < x + width; ++j) {
-                this.setColour(j, i, color);
+                this.setColor(j, i, color);
             }
         }
     }
@@ -310,8 +310,8 @@ implements AutoCloseable {
             for (int j = 0; j < width; ++j) {
                 int k = flipX ? width - 1 - j : j;
                 int l = flipY ? height - 1 - i : i;
-                int m = this.getColour(x + j, y + i);
-                this.setColour(x + translateX + k, y + translateY + l, m);
+                int m = this.getColor(x + j, y + i);
+                this.setColor(x + translateX + k, y + translateY + l, m);
             }
         }
     }
