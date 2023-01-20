@@ -1,0 +1,203 @@
+package net.modificationstation.stationapi.impl.client.texture;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import net.modificationstation.stationapi.api.client.texture.SpritesheetHelper;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Util;
+import uk.co.benjiweber.expressions.tuple.BiTuple;
+import uk.co.benjiweber.expressions.tuple.Tuple;
+
+import java.util.function.ObjIntConsumer;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+final class TerrainHelper implements SpritesheetHelper {
+
+    static final TerrainHelper INSTANCE = new TerrainHelper();
+
+    private static final Int2ObjectMap<Identifier> GENERATED_IDS = Util.make(new Int2ObjectOpenHashMap<>(), map -> {
+        ObjIntConsumer<String> f = (id, index) -> map.put(index, Identifier.of("block/" + id));
+        f.accept("grass_block_top", 0);
+        f.accept("stone", 1);
+        f.accept("dirt", 2);
+        f.accept("grass_block_side", 3);
+        f.accept("oak_planks", 4);
+        f.accept("smooth_stone_slab_side", 5);
+        f.accept("smooth_stone", 6);
+        f.accept("bricks", 7);
+        f.accept("tnt_side", 8);
+        f.accept("tnt_top", 9);
+        f.accept("tnt_bottom", 10);
+        f.accept("cobweb", 11);
+        f.accept("rose", 12);
+        f.accept("dandelion", 13);
+        f.accept("nether_portal", 14);
+        f.accept("oak_sapling", 15);
+        f.accept("cobblestone", 16);
+        f.accept("bedrock", 17);
+        f.accept("sand", 18);
+        f.accept("gravel", 19);
+        f.accept("oak_log", 20);
+        f.accept("oak_log_top", 21);
+        f.accept("iron_block", 22);
+        f.accept("gold_block", 23);
+        f.accept("diamond_block", 24);
+        f.accept("chest_top", 25);
+        f.accept("chest_side", 26);
+        f.accept("chest_front", 27);
+        f.accept("red_mushroom", 28);
+        f.accept("brown_mushroom", 29);
+        f.accept("fire_e_w", 31);
+        f.accept("gold_ore", 32);
+        f.accept("iron_ore", 33);
+        f.accept("coal_ore", 34);
+        f.accept("bookshelf", 35);
+        f.accept("mossy_cobblestone", 36);
+        f.accept("obsidian", 37);
+        f.accept("grass_block_side_overlay", 38);
+        f.accept("grass", 39);
+        f.accept("double_chest_front_left", 41);
+        f.accept("double_chest_front_right", 42);
+        f.accept("crafting_table_top", 43);
+        f.accept("furnace_front", 44);
+        f.accept("furnace_side", 45);
+        f.accept("dispenser_front", 46);
+        f.accept("fire_n_s", 47);
+        f.accept("sponge", 48);
+        f.accept("glass", 49);
+        f.accept("diamond_ore", 50);
+        f.accept("redstone_ore", 51);
+        f.accept("oak_leaves", 52);
+        f.accept("fast_oak_leaves", 53);
+        f.accept("dead_bush", 55);
+        f.accept("fern", 56);
+        f.accept("double_chest_back_left", 57);
+        f.accept("double_chest_back_right", 58);
+        f.accept("crafting_table_side", 59);
+        f.accept("crafting_table_front", 60);
+        f.accept("furnace_front_on", 61);
+        f.accept("furnace_top", 62);
+        f.accept("spruce_sapling", 63);
+        f.accept("white_wool", 64);
+        f.accept("spawner", 65);
+        f.accept("snow", 66);
+        f.accept("ice", 67);
+        f.accept("grass_block_snow", 68);
+        f.accept("cactus_top", 69);
+        f.accept("cactus_side", 70);
+        f.accept("cactus_bottom", 71);
+        f.accept("clay", 72);
+        f.accept("sugar_cane", 73);
+        f.accept("note_block", 74);
+        f.accept("jukebox_top", 75);
+        f.accept("birch_sapling", 79);
+        f.accept("torch", 80);
+        f.accept("oak_door_top", 81);
+        f.accept("iron_door_top", 82);
+        f.accept("ladder", 83);
+        f.accept("oak_trapdoor", 84);
+        f.accept("farmland_moist", 86);
+        f.accept("farmland", 87);
+        f.accept("wheat_stage0", 88);
+        f.accept("wheat_stage1", 89);
+        f.accept("wheat_stage2", 90);
+        f.accept("wheat_stage3", 91);
+        f.accept("wheat_stage4", 92);
+        f.accept("wheat_stage5", 93);
+        f.accept("wheat_stage6", 94);
+        f.accept("wheat_stage7", 95);
+        f.accept("lever", 96);
+        f.accept("oak_door_bottom", 97);
+        f.accept("iron_door_bottom", 98);
+        f.accept("redstone_torch", 99);
+        f.accept("pumpkin_top", 102);
+        f.accept("netherrack", 103);
+        f.accept("soul_sand", 104);
+        f.accept("glowstone", 105);
+        f.accept("piston_top_sticky", 106);
+        f.accept("piston_top", 107);
+        f.accept("piston_side", 108);
+        f.accept("piston_bottom", 109);
+        f.accept("piston_inner", 110);
+        f.accept("rail_corner", 112);
+        f.accept("black_wool", 113);
+        f.accept("gray_wool", 114);
+        f.accept("redstone_torch_off", 115);
+        f.accept("spruce_log", 116);
+        f.accept("birch_log", 117);
+        f.accept("pumpkin_side", 118);
+        f.accept("carved_pumpkin", 119);
+        f.accept("jack_o_lantern", 120);
+        f.accept("cake_top", 121);
+        f.accept("cake_side", 122);
+        f.accept("cake_inner", 123);
+        f.accept("cake_bottom", 124);
+        f.accept("rail", 128);
+        f.accept("red_wool", 129);
+        f.accept("pink_wool", 130);
+        f.accept("repeater", 131);
+        f.accept("spruce_leaves", 132);
+        f.accept("fast_spruce_leaves", 133);
+        f.accept("red_bed_top_left", 134);
+        f.accept("red_bed_top_right", 135);
+        f.accept("lapis_block", 144);
+        f.accept("green_wool", 145);
+        f.accept("lime_wool", 146);
+        f.accept("repeater_on", 147);
+        f.accept("red_bed_front", 149);
+        f.accept("red_bed_side_left", 150);
+        f.accept("red_bed_side_right", 151);
+        f.accept("red_bed_back", 152);
+        f.accept("lapis_ore", 160);
+        f.accept("brown_wool", 161);
+        f.accept("yellow_wool", 162);
+        f.accept("powered_rail", 163);
+        f.accept("redstone_dust_cross", 164);
+        f.accept("redstone_dust_line0", 165);
+        f.accept("sandstone_top", 176);
+        f.accept("blue_wool", 177);
+        f.accept("light_blue_wool", 178);
+        f.accept("powered_rail_on", 179);
+        f.accept("sandstone", 192);
+        f.accept("purple_wool", 193);
+        f.accept("magenta_wool", 194);
+        f.accept("detector_rail", 195);
+        f.accept("water_still", 205);
+        f.accept("water_flow", 206);
+        f.accept("sandstone_bottom", 208);
+        f.accept("cyan_wool", 209);
+        f.accept("orange_wool", 210);
+        f.accept("light_gray_wool", 225);
+        f.accept("lava_still", 237);
+        f.accept("lava_flow", 238);
+        f.accept("destroy_stage_0", 240);
+        f.accept("destroy_stage_1", 241);
+        f.accept("destroy_stage_2", 242);
+        f.accept("destroy_stage_3", 243);
+        f.accept("destroy_stage_4", 244);
+        f.accept("destroy_stage_5", 245);
+        f.accept("destroy_stage_6", 246);
+        f.accept("destroy_stage_7", 247);
+        f.accept("destroy_stage_8", 248);
+        f.accept("destroy_stage_9", 249);
+    });
+
+    private static final Int2ObjectMap<BiTuple<Integer, Integer>> RESOLUTION_MULTIPLIERS = Util.make(new Int2ObjectOpenHashMap<>(), map -> {
+        map.defaultReturnValue(DEFAULT_RESOLUTION_MULTIPLIER);
+        ObjIntConsumer<BiTuple<Integer, Integer>> f = (resMul, index) -> map.put(index, resMul);
+        f.accept(Tuple.tuple(2, 2), 206);
+        f.accept(Tuple.tuple(2, 2), 238);
+    });
+
+    @Override
+    public Identifier generateIdentifier(int textureIndex) {
+        return GENERATED_IDS.get(textureIndex);
+    }
+
+    @Override
+    public BiTuple<Integer, Integer> getResolutionMultiplier(int textureIndex) {
+        return RESOLUTION_MULTIPLIERS.get(textureIndex);
+    }
+}

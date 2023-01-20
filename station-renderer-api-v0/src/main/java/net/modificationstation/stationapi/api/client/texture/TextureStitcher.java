@@ -14,6 +14,7 @@ import java.util.function.Consumer;
 @Environment(EnvType.CLIENT)
 public class TextureStitcher {
     private static final Comparator<Holder> COMPARATOR = Comparator.<Holder, Integer>comparing((holder) -> -holder.height).thenComparing((holder) -> -holder.width).thenComparing((holder) -> holder.sprite.getId());
+    private final int mipLevel;
     private final Set<Holder> holders = Sets.newHashSetWithExpectedSize(256);
     private final List<Slot> slots = Lists.newArrayListWithCapacity(256);
     private int width;
@@ -21,7 +22,8 @@ public class TextureStitcher {
     private final int maxWidth;
     private final int maxHeight;
 
-    public TextureStitcher(int maxWidth, int maxHeight) {
+    public TextureStitcher(int maxWidth, int maxHeight, int mipLevel) {
+        this.mipLevel = mipLevel;
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
     }
@@ -35,7 +37,7 @@ public class TextureStitcher {
     }
 
     public void add(Info info) {
-        Holder holder = new Holder(info);
+        Holder holder = new Holder(info, this.mipLevel);
         this.holders.add(holder);
     }
 
@@ -68,6 +70,10 @@ public class TextureStitcher {
             });
         }
 
+    }
+
+    private static int applyMipLevel(int size, int mipLevel) {
+        return (size >> mipLevel) + ((size & (1 << mipLevel) - 1) == 0 ? 0 : 1) << mipLevel;
     }
 
     private boolean fit(Holder holder) {
@@ -225,10 +231,10 @@ public class TextureStitcher {
         public final int width;
         public final int height;
 
-        public Holder(Info sprite) {
+        public Holder(Info sprite, int mipLevel) {
             this.sprite = sprite;
-            this.width = sprite.getWidth();
-            this.height = sprite.getHeight();
+            this.width = TextureStitcher.applyMipLevel(sprite.getWidth(), mipLevel);
+            this.height = TextureStitcher.applyMipLevel(sprite.getHeight(), mipLevel);
         }
 
         public String toString() {

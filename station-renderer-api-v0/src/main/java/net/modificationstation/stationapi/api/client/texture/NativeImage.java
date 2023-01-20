@@ -42,35 +42,39 @@ implements AutoCloseable {
         map.put(BufferedImage.TYPE_INT_RGB, 1);
     }));
 
+    private static final Set<StandardOpenOption> WRITE_TO_FILE_OPEN_OPTIONS = EnumSet.of(StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     private final Format format;
     private final int width;
     private final int height;
+    private final boolean isStbImage;
     private ByteBuffer buffer;
     private final long sizeBytes;
 
-    public NativeImage(int width, int height) {
-        this(Format.ABGR, width, height);
+    public NativeImage(int width, int height, boolean useStb) {
+        this(Format.ABGR, width, height, useStb);
     }
 
-    public NativeImage(Format format, int width, int height) {
+    public NativeImage(Format format, int width, int height, boolean useStb) {
         this.format = format;
         this.width = width;
         this.height = height;
         this.sizeBytes = (long) width * (long) height * (long) format.getChannelCount();
+        this.isStbImage = false;
         buffer = ByteBuffer.allocateDirect((int) sizeBytes);
     }
 
-    private NativeImage(Format format, int width, int height, ByteBuffer buffer) {
+    private NativeImage(Format format, int width, int height, boolean useStb, ByteBuffer buffer) {
         this.format = format;
         this.width = width;
         this.height = height;
+        this.isStbImage = useStb;
         this.buffer = buffer;
         this.sizeBytes = (long) width * (long) height * (long) format.getChannelCount();
     }
 
     @Override
     public String toString() {
-        return "NativeImage[" + this.format + " " + this.width + "x" + this.height + "@" + MemoryUtil.getAddress(buffer) + "]";
+        return "NativeImage[" + this.format + " " + this.width + "x" + this.height + "@" + MemoryUtil.getAddress(buffer) + (this.isStbImage ? "S" : "N") + "]";
     }
 
     public static NativeImage read(InputStream inputStream) throws IOException {
@@ -81,8 +85,9 @@ implements AutoCloseable {
         try {
             BufferedImage image = ImageIO.read(inputStream);
             format = format == null ? Format.ALL[BUFFERED_TO_NATIVE.get(image.getType())] : format;
-            return new NativeImage(format, image.getWidth(), image.getHeight(), read(format, image));
-        } finally {
+            return new NativeImage(format, image.getWidth(), image.getHeight(), true, read(format, image));
+        }
+        finally {
             IOUtils.closeQuietly(inputStream);
         }
     }
@@ -98,7 +103,7 @@ implements AutoCloseable {
         BufferedImage image = ImageIO.read(imageStream);
         imageStream.close();
         format = format == null ? Format.ALL[BUFFERED_TO_NATIVE.get(image.getType())] : format;
-        return new NativeImage(format, image.getWidth(), image.getHeight(), read(format, image));
+        return new NativeImage(format, image.getWidth(), image.getHeight(), true, read(format, image));
     }
 
     private static ByteBuffer read(@NotNull Format format, BufferedImage image) {
@@ -442,12 +447,18 @@ implements AutoCloseable {
         }
 
         private static Format getFormat(int glFormat) {
-            return switch (glFormat) {
-                case 1 -> LUMINANCE;
-                case 2 -> LUMINANCE_ALPHA;
-                case 3 -> BGR;
-                default -> ABGR;
-            };
+            switch (glFormat) {
+                case 1 -> {
+                    return LUMINANCE;
+                }
+                case 2 -> {
+                    return LUMINANCE_ALPHA;
+                }
+                case 3 -> {
+                    return BGR;
+                }
+            }
+            return ABGR;
         }
     }
 
