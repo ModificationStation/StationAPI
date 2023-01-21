@@ -17,6 +17,7 @@ import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.render.StationTessellator;
 import net.modificationstation.stationapi.api.client.render.VertexConsumer;
+import net.modificationstation.stationapi.api.client.render.model.VanillaBakedModel;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
@@ -38,13 +39,13 @@ public final class ArsenicOverlayRenderer {
 
     public void renderItem3D(Living entity, ItemInstance item) {
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
+        atlas.bindTexture();
         GL11.glPushMatrix();
         if (item.itemId < BlockBase.BY_ID.length && BlockRenderer.method_42(BlockBase.BY_ID[item.itemId].getRenderType()))
             access.stationapi$getField_2405().method_48(BlockBase.BY_ID[item.itemId], item.getDamage(), entity.getBrightnessAtEyes(1.0F));
         else {
             Tessellator var3 = Tessellator.INSTANCE;
             int var4 = entity.method_917(item);
-            atlas.bindTexture();
             Sprite texture = atlas.getSprite(((CustomAtlasProvider) item.getType()).getAtlas().getTexture(var4).getId());
             float var5 = texture.getMinU() + (texture.getMaxU() - texture.getMinU()) * 0.000625F;
             float var6 = texture.getMaxU();
@@ -223,6 +224,29 @@ public final class ArsenicOverlayRenderer {
                 var45.draw();
                 MapStorage var47 = ItemBase.map.method_1730(var5, access.stationapi$getField_2401().level);
                 access.stationapi$getField_2406().method_1046(access.stationapi$getField_2401().player, access.stationapi$getField_2401().textureManager, var47);
+                GL11.glPopMatrix();
+            } else if (RendererHolder.RENDERER.getItemModels().getModel(var5) instanceof VanillaBakedModel) {
+                GL11.glPushMatrix();
+                float f12 = 0.8f;
+                float f4 = var3.method_930(f);
+                float f3 = MathHelper.sin(f4 * (float)Math.PI);
+                float f2 = MathHelper.sin(MathHelper.sqrt(f4) * (float)Math.PI);
+                GL11.glTranslatef(-f2 * 0.4f, MathHelper.sin(MathHelper.sqrt(f4) * (float)Math.PI * 2.0f) * 0.2f, -f3 * 0.2f);
+                GL11.glTranslatef(0.7f * f12, -0.65f * f12 - (1.0f - var2) * 0.6f, -0.9f * f12);
+                GL11.glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
+                GL11.glEnable(32826);
+                f4 = var3.method_930(f);
+                f3 = MathHelper.sin(f4 * f4 * (float)Math.PI);
+                f2 = MathHelper.sin(MathHelper.sqrt(f4) * (float)Math.PI);
+                GL11.glRotatef(-f3 * 20.0f, 0.0f, 1.0f, 0.0f);
+                GL11.glRotatef(-f2 * 20.0f, 0.0f, 0.0f, 1.0f);
+                GL11.glRotatef(-f2 * 80.0f, 1.0f, 0.0f, 0.0f);
+                f4 = 0.4f;
+                GL11.glScalef(f4, f4, f4);
+                if (var5.getType().shouldSpinWhenRendering()) {
+                    GL11.glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
+                }
+                this.renderItem3D(var3, var5);
                 GL11.glPopMatrix();
             } else {
                 matrices.push();
