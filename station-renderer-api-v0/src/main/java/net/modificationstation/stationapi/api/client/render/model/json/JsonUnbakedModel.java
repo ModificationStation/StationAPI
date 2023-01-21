@@ -328,7 +328,7 @@ public final class JsonUnbakedModel implements UnbakedModel {
         }
 
         private Map<String, Either<SpriteIdentifier, String>> deserializeTextures(JsonObject object) {
-            Identifier identifier = Atlases.getTerrain().id;
+            Identifier identifier = Atlases.GAME_ATLAS_TEXTURE;
             Map<String, Either<SpriteIdentifier, String>> map = Maps.newHashMap();
             if (object.has("textures")) {
                 JsonObject jsonObject = JsonHelper.getObject(object, "textures");

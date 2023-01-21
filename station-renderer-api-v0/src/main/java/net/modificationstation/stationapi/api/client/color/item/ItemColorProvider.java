@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.client.colour.item;
+package net.modificationstation.stationapi.api.client.color.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

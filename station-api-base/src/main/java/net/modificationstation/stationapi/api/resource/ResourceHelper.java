@@ -47,6 +47,9 @@ public class ResourceHelper {
 
     @API
     public Identifier toId(String path, String subPath, String extension) {
+        // TODO: look into improving this "/" thing
+        if (!path.startsWith("/"))
+            path = "/" + path;
         if (!contains(path))
             throw new IllegalArgumentException("The path \"" + path + "\" doesn't start with the current ResourceManager's root path \"" + rootPath + "\"!");
         if (!path.endsWith("." + extension))

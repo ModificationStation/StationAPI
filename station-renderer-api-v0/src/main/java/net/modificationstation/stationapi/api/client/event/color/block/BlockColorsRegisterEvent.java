@@ -1,8 +1,8 @@
-package net.modificationstation.stationapi.api.client.event.colour.block;
+package net.modificationstation.stationapi.api.client.event.color.block;
 
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
-import net.modificationstation.stationapi.api.client.colour.block.BlockColors;
+import net.modificationstation.stationapi.api.client.color.block.BlockColors;
 
 @SuperBuilder
 public class BlockColorsRegisterEvent extends Event {

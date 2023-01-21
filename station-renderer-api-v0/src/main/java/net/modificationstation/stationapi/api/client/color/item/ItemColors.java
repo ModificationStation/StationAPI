@@ -1,11 +1,11 @@
-package net.modificationstation.stationapi.api.client.colour.item;
+package net.modificationstation.stationapi.api.client.color.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.client.colour.block.BlockColors;
-import net.modificationstation.stationapi.api.client.event.colour.item.ItemColorsRegisterEvent;
+import net.modificationstation.stationapi.api.client.color.block.BlockColors;
+import net.modificationstation.stationapi.api.client.event.color.item.ItemColorsRegisterEvent;
 import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.util.collection.IdList;

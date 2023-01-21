@@ -4,7 +4,7 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.block.BlockFreezer;
 import net.modificationstation.sltest.item.ItemListener;
-import net.modificationstation.stationapi.api.client.event.resource.ClientResourcesReloadEvent;
+import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbakedModel;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
@@ -17,7 +17,7 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 public class TextureListener {
 
     @EventListener
-    public void registerTextures(ClientResourcesReloadEvent event) {
+    public void registerTextures(TextureRegisterEvent event) {
 
         ExpandableAtlas terrain = Atlases.getTerrain();
 

@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
-import net.modificationstation.stationapi.api.client.colour.block.BlockColors;
-import net.modificationstation.stationapi.api.client.colour.item.ItemColors;
+import net.modificationstation.stationapi.api.client.color.block.BlockColors;
+import net.modificationstation.stationapi.api.client.color.item.ItemColors;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelManager;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

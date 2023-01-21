@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.client.colour.world;
+package net.modificationstation.stationapi.api.client.color.world;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.block.FoliageColour;

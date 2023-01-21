@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.client.colour.item.ItemColors;
+import net.modificationstation.stationapi.api.client.color.item.ItemColors;
 import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.material.BlendMode;
 import net.modificationstation.stationapi.api.client.render.mesh.Mesh;

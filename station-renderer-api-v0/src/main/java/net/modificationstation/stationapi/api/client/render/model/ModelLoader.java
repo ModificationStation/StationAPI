@@ -15,8 +15,9 @@ import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.client.colour.block.BlockColors;
+import net.modificationstation.stationapi.api.client.color.block.BlockColors;
 import net.modificationstation.stationapi.api.client.event.render.model.LoadUnbakedModelEvent;
+import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.render.RenderLayer;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
 import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbakedModel;
@@ -116,6 +117,7 @@ public class ModelLoader {
         profiler.swap("textures");
         Set<Pair<String, String>> set = new LinkedHashSet<>();
         Set<SpriteIdentifier> set2 = this.modelsToBake.values().stream().flatMap((unbakedModel) -> unbakedModel.getTextureDependencies(this::getOrLoadModel, set).stream()).collect(Collectors.toSet());
+        StationAPI.EVENT_BUS.post(TextureRegisterEvent.builder().build());
         set2.addAll(TERRAIN.idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
         set2.addAll(GUI_ITEMS.idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
         set.stream().filter((pair) -> !pair.getSecond().equals(MISSING_STRING)).forEach((pair) -> LOGGER.warn("Unable to resolve texture reference: {} in {}", pair.getFirst(), pair.getSecond()));
@@ -241,6 +243,8 @@ public class ModelLoader {
                 } catch (ModelLoader.ModelLoaderException var9) {
                     LOGGER.warn(var9.getMessage());
                     this.unbakedModels.put(processedId, unbakedModel);
+                } catch (NullPointerException e) {
+                    unbakedModels.put(processedId, BLOCK_ENTITY_MARKER);
                 } catch (Exception var10) {
                     LOGGER.warn("Unable to load model: '{}' referenced from: {}: {}", processedId, id, var10);
                     this.unbakedModels.put(processedId, unbakedModel);
@@ -275,7 +279,8 @@ public class ModelLoader {
             immutableList.forEach(state -> map.put(BlockModels.getModelId(identifier, state), state));
             Map<BlockState, Pair<UnbakedModel, Supplier<ModelDefinition>>> map2 = new HashMap<>();
             Identifier identifier2 = Identifier.of(modelIdentifier.id.modID, "blockstates/" + modelIdentifier.id.id + ".json");
-            UnbakedModel unbakedModel = this.unbakedModels.get(MISSING.asIdentifier());
+//            UnbakedModel unbakedModel = this.unbakedModels.get(MISSING.asIdentifier());
+            UnbakedModel unbakedModel = BLOCK_ENTITY_MARKER;
             ModelDefinition modelDefinition2 = new ModelDefinition(ImmutableList.of(unbakedModel), ImmutableList.of());
             Pair<UnbakedModel, Supplier<ModelDefinition>> pair = Pair.of(unbakedModel, () -> modelDefinition2);
             try {
@@ -344,7 +349,8 @@ public class ModelLoader {
                 map.forEach((id1, blockState) -> {
                     Pair<UnbakedModel, Supplier<ModelDefinition>> pair2 = map2.get(blockState);
                     if (pair2 == null) {
-                        LOGGER.warn("Exception loading blockstate definition: '{}' missing model for variant: '{}'", identifier2, id1);
+                        // Vanilla blocks don't have JSON models, and we don't want to enforce them
+//                        LOGGER.warn("Exception loading blockstate definition: '{}' missing model for variant: '{}'", identifier2, id1);
                         pair2 = pair;
                     }
                     this.putModel(id1.asIdentifier(), pair2.getFirst());

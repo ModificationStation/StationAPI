@@ -145,7 +145,7 @@ implements TextureTickListener {
                     return;
                 }
                 Resource resource = optional.get();
-                try (InputStream inputStream = resource.getInputStream();){
+                try (InputStream inputStream = resource.getInputStream()){
                     image = ImageIO.read(inputStream);
                 }
                 catch (IOException iOException) {

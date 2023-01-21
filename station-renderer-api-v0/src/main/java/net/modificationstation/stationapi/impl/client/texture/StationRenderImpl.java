@@ -15,7 +15,6 @@ import net.modificationstation.stationapi.api.client.gl.Program;
 import net.modificationstation.stationapi.api.client.render.Shader;
 import net.modificationstation.stationapi.api.client.render.VertexFormats;
 import net.modificationstation.stationapi.api.client.render.item.ItemModels;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -34,11 +33,13 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
@@ -169,11 +170,11 @@ public class StationRenderImpl {
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
     private static void registerReloaders(ClientResourceReloaderRegisterEvent event) {
-        FakeResourceManager.registerProvider(path -> {
+        Function<ExpandableAtlas, Function<String, InputStream>> providerFactory = expandableAtlas -> path -> {
             try {
                 Identifier identifier = ResourceHelper.ASSETS.toId(path, StationAPI.MODID + "/textures", "png");
-                if (TERRAIN.slicedSpritesheetView.containsKey(identifier)) {
-                    BufferedImage image = TERRAIN.slicedSpritesheetView.get(identifier);
+                if (expandableAtlas.slicedSpritesheetView.containsKey(identifier)) {
+                    BufferedImage image = expandableAtlas.slicedSpritesheetView.get(identifier);
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                     try {
                         ImageIO.write(image, "png", outputStream);
@@ -184,23 +185,9 @@ public class StationRenderImpl {
                 }
             } catch (IllegalArgumentException ignored) {}
             return null;
-        });
-        FakeResourceManager.registerProvider(path -> {
-            try {
-                Identifier identifier = ResourceHelper.ASSETS.toId(path, StationAPI.MODID + "/textures", "png");
-                if (GUI_ITEMS.slicedSpritesheetView.containsKey(identifier)) {
-                    BufferedImage image = GUI_ITEMS.slicedSpritesheetView.get(identifier);
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    try {
-                        ImageIO.write(image, "png", outputStream);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return new ByteArrayInputStream(outputStream.toByteArray());
-                }
-            } catch (IllegalArgumentException ignored) {}
-            return null;
-        });
+        };
+        FakeResourceManager.registerProvider(providerFactory.apply(TERRAIN));
+        FakeResourceManager.registerProvider(providerFactory.apply(GUI_ITEMS));
         event.resourceManager.registerReloader((SynchronousResourceReloader) StationRenderImpl::loadShaders);
         event.resourceManager.registerReloader(StationRenderAPI.getBakedModelManager());
         event.resourceManager.registerReloader((SynchronousResourceReloader) manager -> ItemModels.reloadModelsAll());
@@ -208,7 +195,7 @@ public class StationRenderImpl {
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 + Integer.MAX_VALUE / 8)
     private static void init(ClientResourcesReloadEvent event) {
-        TERRAIN = new ExpandableAtlas(Atlases.GAME_ATLAS_TEXTURE);
+        TERRAIN = new ExpandableAtlas(of("textures/atlas/terrain.png"));
         GUI_ITEMS = new ExpandableAtlas(of("textures/atlas/gui/items.png"));
         TERRAIN.addSpritesheet("/terrain.png", 16, TerrainHelper.INSTANCE);
         GUI_ITEMS.addSpritesheet("/gui/items.png", 16, GuiItemsHelper.INSTANCE);

@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.client.colour.block;
+package net.modificationstation.stationapi.api.client.color.block;
 
 import com.google.common.collect.ImmutableSet;
 import net.fabricmc.api.EnvType;
@@ -9,7 +9,7 @@ import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.client.event.colour.block.BlockColorsRegisterEvent;
+import net.modificationstation.stationapi.api.client.event.color.block.BlockColorsRegisterEvent;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.util.collection.IdList;
