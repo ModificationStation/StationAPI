@@ -73,6 +73,7 @@ public class ModelLoader {
     private static final Splitter KEY_VALUE_SPLITTER;
     public static final JsonUnbakedModel GENERATION_MARKER;
     public static final JsonUnbakedModel BLOCK_ENTITY_MARKER;
+    public static final JsonUnbakedModel VANILLA_MARKER;
     private static final ItemModelGenerator ITEM_MODEL_GENERATOR;
     private static final Map<Identifier, StateManager<BlockBase, BlockState>> STATIC_DEFINITIONS;
     private final ResourceManager resourceManager;
@@ -243,8 +244,8 @@ public class ModelLoader {
                 } catch (ModelLoader.ModelLoaderException var9) {
                     LOGGER.warn(var9.getMessage());
                     this.unbakedModels.put(processedId, unbakedModel);
-                } catch (NullPointerException e) {
-                    unbakedModels.put(processedId, BLOCK_ENTITY_MARKER);
+                } catch (NullPointerException | FileNotFoundException e) {
+                    unbakedModels.put(processedId, VANILLA_MARKER);
                 } catch (Exception var10) {
                     LOGGER.warn("Unable to load model: '{}' referenced from: {}: {}", processedId, id, var10);
                     this.unbakedModels.put(processedId, unbakedModel);
@@ -280,7 +281,7 @@ public class ModelLoader {
             Map<BlockState, Pair<UnbakedModel, Supplier<ModelDefinition>>> map2 = new HashMap<>();
             Identifier identifier2 = Identifier.of(modelIdentifier.id.modID, "blockstates/" + modelIdentifier.id.id + ".json");
 //            UnbakedModel unbakedModel = this.unbakedModels.get(MISSING.asIdentifier());
-            UnbakedModel unbakedModel = BLOCK_ENTITY_MARKER;
+            UnbakedModel unbakedModel = VANILLA_MARKER;
             ModelDefinition modelDefinition2 = new ModelDefinition(ImmutableList.of(unbakedModel), ImmutableList.of());
             Pair<UnbakedModel, Supplier<ModelDefinition>> pair = Pair.of(unbakedModel, () -> modelDefinition2);
             try {
@@ -475,6 +476,7 @@ public class ModelLoader {
         KEY_VALUE_SPLITTER = Splitter.on('=').limit(2);
         GENERATION_MARKER = Util.make(JsonUnbakedModel.deserialize("{\"gui_light\": \"front\"}"), (jsonUnbakedModel) -> jsonUnbakedModel.id = "generation marker");
         BLOCK_ENTITY_MARKER = Util.make(JsonUnbakedModel.deserialize("{\"gui_light\": \"side\"}"), (jsonUnbakedModel) -> jsonUnbakedModel.id = "block entity marker");
+        VANILLA_MARKER = Util.make(JsonUnbakedModel.deserialize("{}"), (jsonUnbakedModel) -> jsonUnbakedModel.id = "vanilla marker");
         ITEM_MODEL_GENERATOR = new ItemModelGenerator();
         STATIC_DEFINITIONS = ImmutableMap.of();
     }

@@ -15,6 +15,7 @@ import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.item.ItemWithRenderer;
 import net.modificationstation.stationapi.api.client.render.StationTessellator;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
+import net.modificationstation.stationapi.api.client.render.model.VanillaBakedModel;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
@@ -143,16 +144,17 @@ public final class ArsenicItemRenderer {
         GL11.glDisable(32826);
     }
 
-    public void renderItemOnGui(TextRenderer textRenderer, TextureManager textureManager, ItemInstance itemInstance, int x, int y, CallbackInfo ci) {
-        if (itemInstance != null) {
-            ItemBase itemBase = itemInstance.getType();
+    public void renderItemOnGui(TextRenderer textRenderer, TextureManager textureManager, ItemInstance itemStack, int x, int y, CallbackInfo ci) {
+        if (itemStack != null) {
+            ItemBase itemBase = itemStack.getType();
             if (itemBase instanceof ItemWithRenderer renderer) {
-                renderer.renderItemOnGui(itemRenderer, textRenderer, textureManager, itemInstance, x, y);
-            } else {
+                renderer.renderItemOnGui(itemRenderer, textRenderer, textureManager, itemStack, x, y);
+                ci.cancel();
+            } else if (!(RendererHolder.RENDERER.getItemModels().getModel(itemStack) instanceof VanillaBakedModel)) { // TODO: implement a better check
                 StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).bindTexture();
-                RendererHolder.RENDERER.renderInGuiWithOverrides(itemInstance, x, y);
+                RendererHolder.RENDERER.renderInGuiWithOverrides(itemStack, x, y);
+                ci.cancel();
             }
-            ci.cancel();
         }
     }
 

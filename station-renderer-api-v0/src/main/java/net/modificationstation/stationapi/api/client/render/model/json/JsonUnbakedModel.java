@@ -164,6 +164,8 @@ public final class JsonUnbakedModel implements UnbakedModel {
         Sprite sprite = textureGetter.apply(this.resolveSprite("particle"));
         if (this.getRootModel() == ModelLoader.BLOCK_ENTITY_MARKER) {
             return new BuiltinBakedModel(this.getTransformations(), this.compileOverrides(loader, parent), sprite, this.getGuiLight().isSide());
+        } else if (getRootModel() == ModelLoader.VANILLA_MARKER) {
+            return new VanillaBakedModel();
         } else {
             BasicBakedModel.Builder builder = (new BasicBakedModel.Builder(this, this.compileOverrides(loader, parent), hasDepth)).setParticle(sprite);
 

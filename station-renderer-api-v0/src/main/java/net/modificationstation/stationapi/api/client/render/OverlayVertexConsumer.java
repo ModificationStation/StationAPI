@@ -14,7 +14,6 @@ public class OverlayVertexConsumer extends FixedColorVertexConsumer {
     private float z;
     private int u1;
     private int v1;
-    private int light;
     private float normalX;
     private float normalY;
     private float normalZ;
@@ -34,7 +33,6 @@ public class OverlayVertexConsumer extends FixedColorVertexConsumer {
         this.z = 0.0F;
         this.u1 = 0;
         this.v1 = 10;
-        this.light = 15728880;
         this.normalX = 0.0F;
         this.normalY = 1.0F;
         this.normalZ = 0.0F;
@@ -53,7 +51,6 @@ public class OverlayVertexConsumer extends FixedColorVertexConsumer {
         float f = -vector4f.getX();
         float g = -vector4f.getY();
         this.vertexConsumer.vertex(this.x, this.y, this.z).texture(f, g).color(1.0F, 1.0F, 1.0F, 1.0F).overlay(this.u1, this.v1).normal(this.normalX, this.normalY, this.normalZ).next();
-//        this.vertexConsumer.vertex(this.x, this.y, this.z).color(1.0F, 1.0F, 1.0F, 1.0F).texture(f, g).overlay(this.u1, this.v1).light(this.light).normal(this.normalX, this.normalY, this.normalZ).next();
         this.init();
     }
 
@@ -84,7 +81,6 @@ public class OverlayVertexConsumer extends FixedColorVertexConsumer {
 
     @Override
     public VertexConsumer light(int u, int v) {
-        this.light = u | v << 16;
         return this;
     }
 
