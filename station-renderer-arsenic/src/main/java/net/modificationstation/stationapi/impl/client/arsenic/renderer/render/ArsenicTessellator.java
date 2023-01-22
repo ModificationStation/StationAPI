@@ -56,6 +56,6 @@ public final class ArsenicTessellator {
         a.stationapi$setBufferPosition(a.stationapi$getBufferPosition() + 8);
         a.stationapi$setVertexCount(a.stationapi$getVertexCount() + 1);
         if (a.stationapi$getVertexCount() % 4 == 0)
-            StationTessellator.get(tessellator).ensureBufferCapacity(48);
+            ((StationTessellator) tessellator).ensureBufferCapacity(48);
     }
 }

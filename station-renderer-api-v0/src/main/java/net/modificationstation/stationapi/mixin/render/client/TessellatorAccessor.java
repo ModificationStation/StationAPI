@@ -18,6 +18,9 @@ public interface TessellatorAccessor {
     void setHasTexture(boolean hasTexture);
 
     @Accessor
+    void setHasNormals(boolean hasNormals);
+
+    @Accessor
     double getXOffset();
 
     @Accessor

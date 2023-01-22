@@ -34,7 +34,7 @@ public class ItemRenderContext extends AbstractRenderContext {
     /** used to accept a method reference from the ItemRenderer. */
     @FunctionalInterface
     public interface VanillaQuadHandler {
-        void accept(BakedModel model, ItemInstance stack, int color, int overlay, MatrixStack matrixStack, VertexConsumer buffer);
+        void accept(BakedModel model, ItemInstance stack);
     }
 
     private final ItemColors colorMap;
@@ -66,9 +66,7 @@ public class ItemRenderContext extends AbstractRenderContext {
         fallbackConsumer = this::fallbackConsumer;
     }
 
-    public void renderModel(ItemInstance itemStack, ModelTransformation.Mode transformMode, boolean invert, MatrixStack matrixStack, VertexConsumer vertexConsumer, int lightmap, int overlay, BakedModel model, VanillaQuadHandler vanillaHandler) {
-        this.lightmap = lightmap;
-        this.overlay = overlay;
+    public void renderModel(ItemInstance itemStack, ModelTransformation.Mode transformMode, boolean invert, BakedModel model, VanillaQuadHandler vanillaHandler) {
         this.itemStack = itemStack;
 //        this.vertexConsumerProvider = vertexConsumerProvider;
         this.matrixStack = matrixStack;
@@ -76,10 +74,10 @@ public class ItemRenderContext extends AbstractRenderContext {
         this.vanillaHandler = vanillaHandler;
         quadBlendMode = BlendMode.DEFAULT;
 //        modelVertexConsumer = selectVertexConsumer(RenderLayers.getItemLayer(itemStack, transformMode != ModelTransformation.Mode.GROUND));
-        modelVertexConsumer = vertexConsumer;
+//        modelVertexConsumer = vertexConsumer;
 
         matrixStack.push();
-        model.getTransformation().getTransformation(transformMode).apply(invert, matrixStack);
+        model.getTransformation().getTransformation(transformMode).apply(invert);
         matrixStack.translate(-0.5D, -0.5D, -0.5D);
         matrix = matrixStack.peek().getPositionMatrix();
         normalMatrix = matrixStack.peek().getNormalMatrix();
@@ -181,7 +179,7 @@ public class ItemRenderContext extends AbstractRenderContext {
             }
         } else {
             for (int i = 0; i <= ModelHelper.NULL_FACE_ID; i++) {
-                vanillaHandler.accept(model, itemStack, lightmap, overlay, matrixStack, modelVertexConsumer);
+                vanillaHandler.accept(model, itemStack);
             }
         }
     }

@@ -15,8 +15,6 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.storage.MapStorage;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
-import net.modificationstation.stationapi.api.client.render.StationTessellator;
-import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.model.VanillaBakedModel;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -267,7 +265,7 @@ public final class ArsenicOverlayRenderer {
                 SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
                 atlas.bindTexture();
                 Tessellator.INSTANCE.start();
-                this.renderItem(var3, var5, ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND, false, matrices, StationTessellator.get(Tessellator.INSTANCE), -1);
+                this.renderItem(var3, var5, ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND, false);
                 Tessellator.INSTANCE.draw();
                 matrices.pop();
             }
@@ -315,8 +313,8 @@ public final class ArsenicOverlayRenderer {
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float)i * -45.0f));
     }
 
-    public void renderItem(Living entity, ItemInstance item, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumer vertexConsumer, int light) {
+    public void renderItem(Living entity, ItemInstance item, ModelTransformation.Mode renderMode, boolean leftHanded) {
         if (item == null || item.itemId == 0 || item.count < 1) return;
-        RendererHolder.RENDERER.renderItem(entity, item, renderMode, leftHanded, matrices, vertexConsumer, entity.level, light, -1/*OverlayTexture.DEFAULT_UV*/, entity.entityId + renderMode.ordinal());
+//        RendererHolder.RENDERER.renderItem(entity, item, renderMode, leftHanded, matrices, vertexConsumer, entity.level, light, -1/*OverlayTexture.DEFAULT_UV*/, entity.entityId + renderMode.ordinal());
     }
 }

@@ -13,7 +13,6 @@ import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.item.ItemWithRenderer;
-import net.modificationstation.stationapi.api.client.render.StationTessellator;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.VanillaBakedModel;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
@@ -133,7 +132,7 @@ public final class ArsenicItemRenderer {
                             matrices.translate(0, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F * 0.5F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F);
                         }
                     }
-                    RendererHolder.RENDERER.renderItem(var10, ModelTransformation.Mode.GROUND, false, matrices, StationTessellator.get(Tessellator.INSTANCE), -1, -1, model);
+                    RendererHolder.RENDERER.renderItem(var10, ModelTransformation.Mode.GROUND, false, model);
                     matrices.pop();
                 }
                 Tessellator.INSTANCE.draw();

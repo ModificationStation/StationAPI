@@ -5,9 +5,6 @@ import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.Tessellator;
-import net.modificationstation.stationapi.api.client.render.StationTessellator;
-import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.resource.metadata.AnimationResourceMetadata;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.exception.CrashException;
@@ -245,10 +242,10 @@ implements AutoCloseable {
         return images[0];
     }
 
-    public VertexConsumer getTextureSpecificVertexConsumer(VertexConsumer consumer) {
-        return StationTessellator.get(Tessellator.INSTANCE);
+//    public VertexConsumer getTextureSpecificVertexConsumer(VertexConsumer consumer) {
+//        return StationTessellator.get(Tessellator.INSTANCE);
 //        return new SpriteTexturedVertexConsumer(consumer, this);
-    }
+//    }
 
     @SuppressWarnings("ClassCanBeRecord")
     @Environment(value=EnvType.CLIENT)

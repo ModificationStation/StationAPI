@@ -4,9 +4,8 @@ import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.JsonHelper;
-import net.modificationstation.stationapi.api.util.math.MatrixStack;
-import net.modificationstation.stationapi.api.util.math.Quaternion;
 import net.modificationstation.stationapi.api.util.math.Vec3f;
+import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Type;
 
@@ -23,7 +22,7 @@ public class Transformation {
       this.scale = scale.copy();
    }
 
-   public void apply(boolean leftHanded, MatrixStack matrices) {
+   public void apply(boolean leftHanded) {
       if (this != IDENTITY) {
          float f = this.rotation.getX();
          float g = this.rotation.getY();
@@ -34,9 +33,12 @@ public class Transformation {
          }
 
          int i = leftHanded ? -1 : 1;
-         matrices.translate((float)i * this.translation.getX(), this.translation.getY(), this.translation.getZ());
-         matrices.multiply(new Quaternion(f, g, h, true));
-         matrices.scale(this.scale.getX(), this.scale.getY(), this.scale.getZ());
+//         matrices.multiply(new Quaternion(f, g, h, true));
+         GL11.glTranslatef((float)i * this.translation.getX(), this.translation.getY(), this.translation.getZ());
+         GL11.glRotatef(f, 1, 0, 0);
+         GL11.glRotatef(g, 0, 1, 0);
+         GL11.glRotatef(h, 0, 0, 1);
+         GL11.glScalef(this.scale.getX(), this.scale.getY(), this.scale.getZ());
       }
    }
 

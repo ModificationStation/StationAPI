@@ -16,7 +16,6 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldRenderer;
-import net.modificationstation.stationapi.api.client.render.StationTessellator;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
@@ -24,7 +23,6 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
-import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.api.world.BlockStateView;
 import net.modificationstation.stationapi.mixin.arsenic.client.BlockRendererAccessor;
 import org.lwjgl.opengl.GL11;
@@ -37,7 +35,6 @@ public final class ArsenicBlockRenderer {
 
     private final BlockRenderer blockRenderer;
     private final BlockRendererAccessor blockRendererAccessor;
-    private final MatrixStack matrices = new MatrixStack();
     private final Random random = new Random();
 
     public ArsenicBlockRenderer(BlockRenderer blockRenderer) {
@@ -54,7 +51,7 @@ public final class ArsenicBlockRenderer {
         BlockState state = ((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z);
         BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state);
         if (!model.isBuiltin()) {
-            cir.setReturnValue(RendererHolder.RENDERER.renderBlock(state, new TilePos(x, y, z), blockRendererAccessor.getBlockView(), matrices, StationTessellator.get(Tessellator.INSTANCE), true, random));
+            cir.setReturnValue(RendererHolder.RENDERER.renderBlock(state, new TilePos(x, y, z), blockRendererAccessor.getBlockView(), true, random));
         } else //noinspection deprecation
             if (block instanceof BlockWithWorldRenderer renderer) {
                 block.updateBoundingBox(blockRendererAccessor.getBlockView(), x, y, z);
