@@ -68,11 +68,11 @@ public final class AffineTransformation {
    private void init() {
       if (!this.initialized) {
          BiTuple<Matrix3f, Vec3f> pair = getLinearTransformationAndTranslationFromAffine(this.matrix);
-         Triple<Quaternion, Vec3f, Quaternion> triple = ((Matrix3f)pair.one()).decomposeLinearTransformation();
-         this.translation = (Vec3f)pair.two();
-         this.rotation2 = (Quaternion)triple.getLeft();
-         this.scale = (Vec3f)triple.getMiddle();
-         this.rotation1 = (Quaternion)triple.getRight();
+         Triple<Quaternion, Vec3f, Quaternion> triple = pair.one().decomposeLinearTransformation();
+         this.translation = pair.two();
+         this.rotation2 = triple.getLeft();
+         this.scale = triple.getMiddle();
+         this.rotation1 = triple.getRight();
          this.initialized = true;
       }
 
