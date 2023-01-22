@@ -3,7 +3,7 @@
     "facing=north": {
       "model": "sltest:block/farlandsBlock"
     },
-    "facing=west": {
+    "facing=east": {
       "model": "sltest:block/farlandsBlock",
       "y": 90
     },
@@ -11,7 +11,7 @@
       "model": "sltest:block/farlandsBlock",
       "y": 180
     },
-    "facing=east": {
+    "facing=west": {
       "model": "sltest:block/farlandsBlock",
       "y": 270
     }
