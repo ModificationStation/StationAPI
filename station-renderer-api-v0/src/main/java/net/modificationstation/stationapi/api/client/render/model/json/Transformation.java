@@ -22,19 +22,13 @@ public class Transformation {
       this.scale = scale.copy();
    }
 
-   public void apply(boolean leftHanded) {
+   public void apply() {
       if (this != IDENTITY) {
          float f = this.rotation.getX();
          float g = this.rotation.getY();
          float h = this.rotation.getZ();
-         if (leftHanded) {
-            g = -g;
-            h = -h;
-         }
 
-         int i = leftHanded ? -1 : 1;
-//         matrices.multiply(new Quaternion(f, g, h, true));
-         GL11.glTranslatef((float)i * this.translation.getX(), this.translation.getY(), this.translation.getZ());
+         GL11.glTranslatef(this.translation.getX(), this.translation.getY(), this.translation.getZ());
          GL11.glRotatef(f, 1, 0, 0);
          GL11.glRotatef(g, 0, 1, 0);
          GL11.glRotatef(h, 0, 0, 1);

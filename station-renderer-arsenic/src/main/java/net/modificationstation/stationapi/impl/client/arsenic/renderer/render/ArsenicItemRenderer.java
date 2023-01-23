@@ -20,9 +20,6 @@ import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
-import net.modificationstation.stationapi.api.util.math.MatrixStack;
-import net.modificationstation.stationapi.api.util.math.Quaternion;
-import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.mixin.arsenic.client.EntityRendererAccessor;
 import net.modificationstation.stationapi.mixin.arsenic.client.ItemRendererAccessor;
 import org.lwjgl.opengl.GL11;
@@ -33,7 +30,6 @@ public final class ArsenicItemRenderer {
     private final ItemRenderer itemRenderer;
     private final ItemRendererAccessor itemRendererAccessor;
     private final EntityRendererAccessor entityRendererAccessor;
-    private final MatrixStack matrices = new MatrixStack();
 
     public ArsenicItemRenderer(ItemRenderer itemRenderer) {
         this.itemRenderer = itemRenderer;
@@ -118,25 +114,25 @@ public final class ArsenicItemRenderer {
                 }
                 GL11.glPopMatrix();
             } else if (!model.isBuiltin()) {
-                matrices.push();
+                GL11.glPushMatrix();
                 atlas.bindTexture();
-                matrices.translate(x, y + var11, z);
-                matrices.multiply(new Quaternion(Vec3f.POSITIVE_Y, var12, true));
-                Tessellator.INSTANCE.start();
+                GL11.glTranslated(x, y + var11, z);
+                GL11.glRotatef(var12, 0, 1, 0);
                 for (int var29 = 0; var29 < renderedAmount; ++var29) {
-                    matrices.push();
+                    GL11.glPushMatrix();
                     if (var29 > 0) {
                         if (model.hasDepth()) {
-                            matrices.translate((itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F * 0.15F);
+                            GL11.glTranslatef((itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F * 0.15F);
                         } else {
-                            matrices.translate(0, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F * 0.5F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F);
+                            GL11.glTranslatef(0, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F * 0.5F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F);
                         }
                     }
-                    RendererHolder.RENDERER.renderItem(var10, ModelTransformation.Mode.GROUND, false, model);
-                    matrices.pop();
+                    Tessellator.INSTANCE.start();
+                    RendererHolder.RENDERER.renderItem(var10, ModelTransformation.Mode.GROUND, item.getBrightnessAtEyes(delta), model);
+                    Tessellator.INSTANCE.draw();
+                    GL11.glPopMatrix();
                 }
-                Tessellator.INSTANCE.draw();
-                matrices.pop();
+                GL11.glPopMatrix();
             }
         }
 

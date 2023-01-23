@@ -34,7 +34,7 @@ public class ItemRenderContext extends AbstractRenderContext {
     /** used to accept a method reference from the ItemRenderer. */
     @FunctionalInterface
     public interface VanillaQuadHandler {
-        void accept(BakedModel model, ItemInstance stack);
+        void accept(BakedModel model, ItemInstance stack, float brightness);
     }
 
     private final ItemColors colorMap;
@@ -49,6 +49,7 @@ public class ItemRenderContext extends AbstractRenderContext {
     private BlendMode quadBlendMode;
     private VertexConsumer quadVertexConsumer;
     private ModelTransformation.Mode transformMode;
+    private float brightness;
     private int lightmap;
     private int overlay;
     private ItemInstance itemStack;
@@ -66,10 +67,10 @@ public class ItemRenderContext extends AbstractRenderContext {
         fallbackConsumer = this::fallbackConsumer;
     }
 
-    public void renderModel(ItemInstance itemStack, ModelTransformation.Mode transformMode, boolean invert, BakedModel model, VanillaQuadHandler vanillaHandler) {
+    public void renderModel(ItemInstance itemStack, ModelTransformation.Mode transformMode, BakedModel model, VanillaQuadHandler vanillaHandler) {
         this.itemStack = itemStack;
 //        this.vertexConsumerProvider = vertexConsumerProvider;
-        this.matrixStack = matrixStack;
+//        this.matrixStack = matrixStack;
         this.transformMode = transformMode;
         this.vanillaHandler = vanillaHandler;
         quadBlendMode = BlendMode.DEFAULT;
@@ -77,7 +78,7 @@ public class ItemRenderContext extends AbstractRenderContext {
 //        modelVertexConsumer = vertexConsumer;
 
         matrixStack.push();
-        model.getTransformation().getTransformation(transformMode).apply(invert);
+        model.getTransformation().getTransformation(transformMode).apply();
         matrixStack.translate(-0.5D, -0.5D, -0.5D);
         matrix = matrixStack.peek().getPositionMatrix();
         normalMatrix = matrixStack.peek().getNormalMatrix();
@@ -179,7 +180,7 @@ public class ItemRenderContext extends AbstractRenderContext {
             }
         } else {
             for (int i = 0; i <= ModelHelper.NULL_FACE_ID; i++) {
-                vanillaHandler.accept(model, itemStack);
+                vanillaHandler.accept(model, itemStack, brightness);
             }
         }
     }

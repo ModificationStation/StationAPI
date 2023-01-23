@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.client.render.model;
 
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.entity.Living;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.BlockView;
@@ -25,15 +24,11 @@ public interface BakedModelRenderer {
 
     ItemModels getItemModels();
 
-    void renderItem(ItemInstance stack, ModelTransformation.Mode renderMode, boolean leftHanded, BakedModel model);
+    void renderItem(ItemInstance stack, ModelTransformation.Mode renderMode, float brightness, BakedModel model);
 
     BakedModel getModel(ItemInstance stack, @Nullable Level world, @Nullable Living entity, int seed);
 
-    void renderItem(ItemInstance stack, ModelTransformation.Mode transformationType, int light, int overlay, MatrixStack matrices, Tessellator tessellator, int seed);
-
-    void renderItem(@Nullable Living entity, ItemInstance item, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, Tessellator tessellator, @Nullable Level world, int light, int overlay, int seed);
-
-    void renderGuiItemIcon(ItemInstance stack, int x, int y);
+    void renderItem(@Nullable Living entity, ItemInstance item, ModelTransformation.Mode renderMode, @Nullable Level world, float brightness, int overlay, int seed);
 
     void renderInGuiWithOverrides(ItemInstance stack, int x, int y);
 }

@@ -25,7 +25,7 @@ public class BakedQuad {
       return this.vertexData;
    }
 
-   public boolean hasColour() {
+   public boolean hasColor() {
       return this.colorIndex != -1;
    }
 
