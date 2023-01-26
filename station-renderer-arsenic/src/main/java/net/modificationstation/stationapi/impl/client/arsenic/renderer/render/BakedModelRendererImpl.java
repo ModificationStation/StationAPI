@@ -37,7 +37,6 @@ import net.modificationstation.stationapi.api.util.exception.CrashReportSectionB
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc.LightingCalculatorImpl;
-import net.modificationstation.stationapi.mixin.arsenic.TilePosAccessor;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
@@ -57,17 +56,15 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
     private final T tessellator = (T) Tessellator.INSTANCE;
     private final LightingCalculatorImpl light = new LightingCalculatorImpl(3);
     private final Random random = new Random();
-    private final TilePos pos = new TilePos(0, 0, 0);
-    private final TilePosAccessor posAccessor = (TilePosAccessor) pos;
     private final ItemModels itemModels = Util.make(new ItemModels(StationRenderAPI.getBakedModelManager()), models -> {
         for (Identifier id : ItemRegistry.INSTANCE.getIds())
             models.putModel(ItemRegistry.INSTANCE.get(id), ModelIdentifier.of(id, "inventory"));
         models.reloadModels();
     });
-    private final BlockColors blockColours = StationRenderAPI.getBlockColors();
-    private final ItemColors itemColours = StationRenderAPI.getItemColors();
+    private final BlockColors blockColors = StationRenderAPI.getBlockColors();
+    private final ItemColors itemColors = StationRenderAPI.getItemColors();
     private final ThreadLocal<BlockRenderContext> BLOCK_CONTEXTS = ThreadLocal.withInitial(BlockRenderContext::new);
-    private final ThreadLocal<ItemRenderContext> ITEM_CONTEXTS = ThreadLocal.withInitial(() -> new ItemRenderContext(itemColours));
+    private final ThreadLocal<ItemRenderContext> ITEM_CONTEXTS = ThreadLocal.withInitial(() -> new ItemRenderContext(itemColors));
 
     @Override
     public boolean renderBlock(BlockState state, TilePos pos, BlockView world, boolean cull, Random random) {
@@ -151,7 +148,7 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
 
     private void renderQuad(BlockView world, BlockState state, TilePos pos, BakedQuad quad, float[] brightness, int overlay) {
         if (quad.hasColor()) {
-            int i = blockColours.getColor(state, world, pos, quad.getColorIndex());
+            int i = blockColors.getColor(state, world, pos, quad.getColorIndex());
             float
                     r = redI2F(i),
                     g = greenI2F(i),
@@ -197,7 +194,7 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
         if (stack == null || stack.itemId == 0 || stack.count < 1) return;
         if (model.isVanillaAdapter()) {
             model.getTransformation().getTransformation(renderMode).apply();
-            if (renderMode == ModelTransformation.Mode.GUI)
+            if (model.isSideLit() && renderMode == ModelTransformation.Mode.GUI) // kind of a dirty way to do this, should probably look into replacing
                 GL11.glRotatef(90, 0, 1, 0);
             GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
             if (!model.isBuiltin())
@@ -210,7 +207,7 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
     private void renderBakedItemQuads(List<BakedQuad> quads, ItemInstance stack, float brightness) {
         boolean bl = stack != null && stack.itemId != 0 && stack.count > 0;
         for (BakedQuad bakedQuad : quads) {
-            int i = bl && bakedQuad.hasColor() ? this.itemColours.getColor(stack, bakedQuad.getColorIndex()) : -1;
+            int i = bl && bakedQuad.hasColor() ? this.itemColors.getColor(stack, bakedQuad.getColorIndex()) : -1;
             i = colorF2I(redI2F(i) * brightness, greenI2F(i) * brightness, blueI2F(i) * brightness);
             Direction face = bakedQuad.getFace();
             tessellator.quad(bakedQuad.getVertexData(), 0, 0, 0, i, i, i, i, face.getOffsetX(), face.getOffsetY(), face.getOffsetZ());

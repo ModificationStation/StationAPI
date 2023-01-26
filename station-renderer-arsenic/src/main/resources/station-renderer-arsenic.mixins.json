@@ -22,6 +22,7 @@
     "client.MixinGameRenderer",
     "client.MixinItemRenderer",
     "client.MixinMinecraft",
+    "client.MixinPlayerRenderer",
     "client.MixinTessellator",
     "client.MixinTextureManager",
     "client.MixinWorldRenderer",

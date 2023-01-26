@@ -134,17 +134,18 @@ public final class ArsenicOverlayRenderer {
                 GL11.glDisable(32826);
             }
         } else {
-//            GL11.glPopMatrix();
-//            GL11.glPopMatrix();
-//            GL11.glPushMatrix();
-//            GL11.glPushMatrix();
-//            double var12 = 8D / 3D;
-//            GL11.glTranslatef(0, -2.5F, 0);
-//            GL11.glRotatef(-75, 1, 0, 0);
-//            GL11.glRotatef(-45, 0, 1, 0);
-//            GL11.glScaled(var12, var12, var12);
+            GL11.glTranslated(0, 3D / 16, -5D / 16);
+            GL11.glRotatef(20, 1, 0, 0);
+            GL11.glRotatef(45, 0, 1, 0);
+            GL11.glScalef(1, -1, 1);
+
+            // funny little workaround to undo default third person transformation
+            GL11.glRotatef(-45, 0, 1, 0);
+            GL11.glRotatef(-75, 1, 0, 0);
+            GL11.glTranslated(0, -2.5 / 16, 0);
+
             Tessellator.INSTANCE.start();
-            renderItem(entity, item, ModelTransformation.Mode.NONE); // TODO: somehow revert Minecraft's static item transformation so json can be applied instead
+            renderItem(entity, item, ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND);
             Tessellator.INSTANCE.draw();
         }
 
