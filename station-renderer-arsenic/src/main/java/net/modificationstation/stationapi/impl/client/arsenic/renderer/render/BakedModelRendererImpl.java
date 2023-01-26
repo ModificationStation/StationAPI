@@ -6,7 +6,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.level.ClientLevel;
-import net.minecraft.client.render.RenderHelper;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.entity.Living;
 import net.minecraft.item.ItemInstance;
@@ -198,6 +197,8 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
         if (stack == null || stack.itemId == 0 || stack.count < 1) return;
         if (model.isVanillaAdapter()) {
             model.getTransformation().getTransformation(renderMode).apply();
+            if (renderMode == ModelTransformation.Mode.GUI)
+                GL11.glRotatef(90, 0, 1, 0);
             GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
             if (!model.isBuiltin())
                 this.renderBakedItemModel(model, stack, brightness);
@@ -242,14 +243,14 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
         GL11.glScalef(16, 16, 16);
         boolean bl = !model.isSideLit();
         if (bl) {
-            RenderHelper.disableLighting();
+            GL11.glDisable(2896);
         }
         tessellator.start();
         this.renderItem(stack, ModelTransformation.Mode.GUI, 1, model);
         tessellator.draw();
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         if (bl) {
-            RenderHelper.enableLighting();
+            GL11.glEnable(2896);
         }
         GL11.glPopMatrix();
     }
