@@ -31,7 +31,7 @@ public class MipmapHelper {
                 int m = nativeImage2.getHeight();
                 for (int n = 0; n < l; ++n) {
                     for (int o = 0; o < m; ++o) {
-                        nativeImage2.setColour(n, o, MipmapHelper.blend(nativeImage.getColour(n * 2, o * 2), nativeImage.getColour(n * 2 + 1, o * 2), nativeImage.getColour(n * 2, o * 2 + 1), nativeImage.getColour(n * 2 + 1, o * 2 + 1), bl));
+                        nativeImage2.setColor(n, o, MipmapHelper.blend(nativeImage.getColour(n * 2, o * 2), nativeImage.getColour(n * 2 + 1, o * 2), nativeImage.getColour(n * 2, o * 2 + 1), nativeImage.getColour(n * 2 + 1, o * 2 + 1), bl));
                     }
                 }
                 nativeImages[k] = nativeImage2;

@@ -50,14 +50,14 @@ public class BlockRenderContext extends AbstractRenderContext {
         return bufferBuilder;
     }
 
-    public boolean render(BlockView blockView, BakedModel model, BlockState state, TilePos pos, Random random, long seed, int overlay) {
+    public boolean render(BlockView blockView, BakedModel model, BlockState state, TilePos pos, Random random, long seed) {
 //        this.bufferBuilder = buffer;
 //        this.matrix = matrixStack.peek().getPositionMatrix();
 //        this.normalMatrix = matrixStack.peek().getNormalMatrix();
         this.random = random;
         this.seed = seed;
 
-        this.overlay = overlay;
+//        this.overlay = overlay;
         this.didOutput = false;
         aoCalc.initialize(state.getBlock(), blockView, pos.x, pos.y, pos.z, Minecraft.isSmoothLightingEnabled() && model.useAmbientOcclusion());
         blockInfo.setBlockView(blockView);

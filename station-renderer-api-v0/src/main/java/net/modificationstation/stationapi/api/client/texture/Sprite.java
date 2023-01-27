@@ -382,7 +382,7 @@ implements AutoCloseable {
                             int r = this.lerp(d, p >> 16 & 0xFF, q >> 16 & 0xFF);
                             int s = this.lerp(d, p >> 8 & 0xFF, q >> 8 & 0xFF);
                             int t = this.lerp(d, p & 0xFF, q & 0xFF);
-                            this.images[k].setColour(o, n, p & 0xFF000000 | r << 16 | s << 8 | t);
+                            this.images[k].setColor(o, n, p & 0xFF000000 | r << 16 | s << 8 | t);
                         }
                     }
                 }

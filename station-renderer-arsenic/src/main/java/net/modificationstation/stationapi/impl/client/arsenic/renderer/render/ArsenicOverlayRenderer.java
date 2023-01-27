@@ -15,7 +15,6 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.storage.MapStorage;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
-import net.modificationstation.stationapi.api.client.render.OverlayTexture;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.VanillaBakedModel;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
@@ -330,6 +329,6 @@ public final class ArsenicOverlayRenderer {
 
     public void renderItem(Living entity, ItemInstance item, ModelTransformation.Mode renderMode) {
         if (item == null || item.itemId == 0 || item.count < 1) return;
-        RendererHolder.RENDERER.renderItem(entity, item, renderMode, entity.level, entity.getBrightnessAtEyes(1), OverlayTexture.DEFAULT_UV, entity.entityId + renderMode.ordinal());
+        RendererHolder.RENDERER.renderItem(entity, item, renderMode, entity.level, entity.getBrightnessAtEyes(1), entity.entityId + renderMode.ordinal());
     }
 }

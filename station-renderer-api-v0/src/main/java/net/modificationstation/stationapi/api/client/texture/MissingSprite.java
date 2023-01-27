@@ -23,7 +23,7 @@ public final class MissingSprite extends Sprite {
 
       for (int k = 0; k < 16; ++k) {
          for (int l = 0; l < 16; ++l) {
-            nativeImage.setColour(l, k, k == 0 || l == 0 ? i : j);
+            nativeImage.setColor(l, k, k == 0 || l == 0 ? i : j);
          }
       }
 

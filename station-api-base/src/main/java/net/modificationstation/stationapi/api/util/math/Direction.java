@@ -117,11 +117,11 @@ public enum Direction implements StringIdentifiable {
             }
             case WEST -> quaternion;
             case NORTH -> {
-                quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(90.0f));
+                quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(-90.0f));
                 yield quaternion;
             }
             case SOUTH -> {
-                quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(-90.0f));
+                quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(90.0f));
                 yield quaternion;
             }
         };

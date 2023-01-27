@@ -16,15 +16,11 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
 import net.modificationstation.stationapi.api.client.color.item.ItemColors;
-import net.modificationstation.stationapi.api.client.render.OverlayTexture;
 import net.modificationstation.stationapi.api.client.render.StationTessellator;
-import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.item.ItemModels;
-import net.modificationstation.stationapi.api.client.render.model.BakedModel;
-import net.modificationstation.stationapi.api.client.render.model.BakedModelRenderer;
-import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
-import net.modificationstation.stationapi.api.client.render.model.ModelIdentifier;
+import net.modificationstation.stationapi.api.client.render.model.*;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
+import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.item.nbt.StationNBT;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -35,7 +31,6 @@ import net.modificationstation.stationapi.api.util.exception.CrashReport;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSectionBlockState;
 import net.modificationstation.stationapi.api.util.math.Direction;
-import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc.LightingCalculatorImpl;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
@@ -65,6 +60,7 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
     private final ItemColors itemColors = StationRenderAPI.getItemColors();
     private final ThreadLocal<BlockRenderContext> BLOCK_CONTEXTS = ThreadLocal.withInitial(BlockRenderContext::new);
     private final ThreadLocal<ItemRenderContext> ITEM_CONTEXTS = ThreadLocal.withInitial(() -> new ItemRenderContext(itemColors));
+    private boolean damage;
 
     @Override
     public boolean renderBlock(BlockState state, TilePos pos, BlockView world, boolean cull, Random random) {
@@ -73,7 +69,7 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
 //            if (blockRenderType != BlockRenderType.MODEL) {
 //                return false;
 //            }
-            return render(world, StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state), state, pos, cull, random, state.getRenderingSeed(pos), OverlayTexture.DEFAULT_UV);
+            return render(world, StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state), state, pos, cull, random, state.getRenderingSeed(pos));
         }
         catch (Throwable throwable) {
             CrashReport crashReport = CrashReport.create(throwable, "Tesselating block in world");
@@ -84,11 +80,11 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
     }
 
     @Override
-    public boolean render(BlockView world, BakedModel model, BlockState state, TilePos pos, boolean cull, Random random, long seed, int overlay) {
+    public boolean render(BlockView world, BakedModel model, BlockState state, TilePos pos, boolean cull, Random random, long seed) {
         boolean rendered = false;
         model = Objects.requireNonNull(model.getOverrides().apply(model, state, world, pos, (int) seed));
         if (!model.isVanillaAdapter()) {
-            rendered = BLOCK_CONTEXTS.get().render(world, model, state, pos, random, seed, -1);
+            rendered = BLOCK_CONTEXTS.get().render(world, model, state, pos, random, seed);
         } else {
             BlockBase block = state.getBlock();
             light.initialize(
@@ -108,7 +104,7 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
                     for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
                         q = qs.get(j);
                         light.calculateForQuad(q);
-                        renderQuad(world, state, pos, q, qlight, OverlayTexture.DEFAULT_UV);
+                        renderQuad(world, state, pos, q, qlight);
                     }
                 }
             }
@@ -137,41 +133,43 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
     }
 
     @Override
-    public void renderDamage(BlockState state, TilePos pos, BlockView world, MatrixStack matrices, VertexConsumer vertexConsumer) {
+    public void renderDamage(BlockState state, TilePos pos, BlockView world, float progress) {
 //        if (state.getRenderType() != BlockRenderType.MODEL) {
 //            return;
 //        }
         BakedModel bakedModel = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state);
         long l = state.getRenderingSeed(pos);
-        render(world, bakedModel, state, pos, true, this.random, l, OverlayTexture.DEFAULT_UV);
+        damage = true;
+        //noinspection deprecation
+        StationTextureManager.get(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager).getTexture(ModelLoader.BLOCK_DESTRUCTION_STAGE_TEXTURES.get((int) (progress * 10))).bindTexture();
+        render(world, bakedModel, state, pos, true, this.random, l);
+        damage = false;
     }
 
-    private void renderQuad(BlockView world, BlockState state, TilePos pos, BakedQuad quad, float[] brightness, int overlay) {
+    private void renderQuad(BlockView world, BlockState state, TilePos pos, BakedQuad quad, float[] brightness) {
         if (quad.hasColor()) {
             int i = blockColors.getColor(state, world, pos, quad.getColorIndex());
             float
                     r = redI2F(i),
                     g = greenI2F(i),
                     b = blueI2F(i);
-            tessellator.quad(quad.getVertexData(), pos.x, pos.y, pos.z,
+            tessellator.quad(quad, pos.x, pos.y, pos.z,
                     colorF2I(r * brightness[0], g * brightness[0], b * brightness[0]),
                     colorF2I(r * brightness[1], g * brightness[1], b * brightness[1]),
                     colorF2I(r * brightness[2], g * brightness[2], b * brightness[2]),
                     colorF2I(r * brightness[3], g * brightness[3], b * brightness[3]),
-                    0, 0, 0
+                    0, 0, 0,
+                    damage
             );
         } else
-            tessellator.quad(quad.getVertexData(), pos.x, pos.y, pos.z,
+            tessellator.quad(quad, pos.x, pos.y, pos.z,
                     colorF2I(brightness[0], brightness[0], brightness[0]),
                     colorF2I(brightness[1], brightness[1], brightness[1]),
                     colorF2I(brightness[2], brightness[2], brightness[2]),
                     colorF2I(brightness[3], brightness[3], brightness[3]),
-                    0, 0, 0
+                    0, 0, 0,
+                    damage
             );
-    }
-
-    private void vertex(VertexConsumer vertexConsumer, double x, double y, double z, float red, float green, float blue, float u, float v) {
-        vertexConsumer.vertex(x, y, z).texture(u, v).color(red, green, blue, 1.0f).normal(0.0f, 1.0f, 0.0f).next();
     }
 
     @Override
@@ -210,7 +208,7 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
             int i = bl && bakedQuad.hasColor() ? this.itemColors.getColor(stack, bakedQuad.getColorIndex()) : -1;
             i = colorF2I(redI2F(i) * brightness, greenI2F(i) * brightness, blueI2F(i) * brightness);
             Direction face = bakedQuad.getFace();
-            tessellator.quad(bakedQuad.getVertexData(), 0, 0, 0, i, i, i, i, face.getOffsetX(), face.getOffsetY(), face.getOffsetZ());
+            tessellator.quad(bakedQuad, 0, 0, 0, i, i, i, i, face.getOffsetX(), face.getOffsetY(), face.getOffsetZ(), false);
         }
     }
 
@@ -223,7 +221,7 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
     }
 
     @Override
-    public void renderItem(@Nullable Living entity, ItemInstance item, ModelTransformation.Mode renderMode, @Nullable Level world, float brightness, int overlay, int seed) {
+    public void renderItem(@Nullable Living entity, ItemInstance item, ModelTransformation.Mode renderMode, @Nullable Level world, float brightness, int seed) {
         if (item == null || item.itemId == 0 || item.count < 1) return;
         BakedModel bakedModel = this.getModel(item, world, entity, seed);
         this.renderItem(item, renderMode, brightness, bakedModel);

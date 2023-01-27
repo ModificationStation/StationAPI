@@ -56,7 +56,7 @@ public class LightmapTextureManager {
 
         for(int i = 0; i < 16; ++i) {
             for(int j = 0; j < 16; ++j) {
-                this.image.setColour(j, i, 0x58443930);
+                this.image.setColor(j, i, 0x58443930);
             }
         }
 

@@ -12,6 +12,9 @@ import java.nio.IntBuffer;
 public interface TessellatorAccessor {
 
     @Accessor
+    boolean getDisableColour();
+
+    @Accessor
     void setHasColour(boolean hasColour);
 
     @Accessor
