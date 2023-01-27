@@ -9,8 +9,8 @@ import java.nio.ByteOrder;
  * Renderers are not required to use these helpers, but they were
  * designed to be usable without the default renderer.
  */
-public abstract class ColourHelper {
-	private ColourHelper() { }
+public abstract class ColorHelper {
+	private ColorHelper() { }
 
 	private static final Int2IntFunction colorSwapper = ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN ? color -> ((color & 0xFF00FF00) | ((color & 0x00FF0000) >> 16) | ((color & 0xFF) << 16)) : color -> color;
 

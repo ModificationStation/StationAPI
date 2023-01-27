@@ -16,7 +16,7 @@ import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.ArsenicRenderer;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.RenderMaterialImpl;
-import net.modificationstation.stationapi.impl.client.arsenic.renderer.helper.ColourHelper;
+import net.modificationstation.stationapi.impl.client.arsenic.renderer.helper.ColorHelper;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.EncodingFormat;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MeshImpl;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MutableQuadViewImpl;
@@ -153,8 +153,8 @@ public class ItemRenderContext extends AbstractRenderContext {
 
         for (int i = 0; i < 4; i++) {
             int c = quad.spriteColor(i, 0);
-            c = ColourHelper.multiplyColour(quadColor, c);
-            quad.spriteColor(i, 0, ColourHelper.swapRedBlueIfNeeded(c));
+            c = ColorHelper.multiplyColour(quadColor, c);
+            quad.spriteColor(i, 0, ColorHelper.swapRedBlueIfNeeded(c));
 //            quad.lightmap(i, ColourHelper.maxBrightness(quad.lightmap(i), lightmap));
         }
 

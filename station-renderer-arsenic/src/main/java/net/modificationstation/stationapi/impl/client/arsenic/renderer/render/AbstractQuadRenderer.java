@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.util.math.Matrix3f;
 import net.modificationstation.stationapi.api.util.math.Matrix4f;
 import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc.LightingCalculatorImpl;
-import net.modificationstation.stationapi.impl.client.arsenic.renderer.helper.ColourHelper;
+import net.modificationstation.stationapi.impl.client.arsenic.renderer.helper.ColorHelper;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MutableQuadViewImpl;
 
 import java.util.function.Supplier;
@@ -38,13 +38,13 @@ public abstract class AbstractQuadRenderer {
     private void colorizeQuad(MutableQuadViewImpl q, int blockColourIndex) {
         if (blockColourIndex == -1) {
             for (int i = 0; i < 4; i++) {
-                q.spriteColor(i, 0, ColourHelper.swapRedBlueIfNeeded(q.spriteColor(i, 0)));
+                q.spriteColor(i, 0, ColorHelper.swapRedBlueIfNeeded(q.spriteColor(i, 0)));
             }
         } else {
             final int blockColour = blockInfo.blockColour(blockColourIndex);
 
             for (int i = 0; i < 4; i++) {
-                q.spriteColor(i, 0, ColourHelper.swapRedBlueIfNeeded(ColourHelper.multiplyColour(blockColour, q.spriteColor(i, 0))));
+                q.spriteColor(i, 0, ColorHelper.swapRedBlueIfNeeded(ColorHelper.multiplyColour(blockColour, q.spriteColor(i, 0))));
             }
         }
     }
@@ -90,7 +90,7 @@ public abstract class AbstractQuadRenderer {
         colorizeQuad(q, blockColorIndex);
 
         for (int i = 0; i < 4; i++) {
-            q.spriteColor(i, 0, ColourHelper.multiplyRGB(q.spriteColor(i, 0), aoCalc.light[i]));
+            q.spriteColor(i, 0, ColorHelper.multiplyRGB(q.spriteColor(i, 0), aoCalc.light[i]));
 //            q.spriteColor(i, 0, ColourHelper.multiplyRGB(q.spriteColour(i, 0), aoCalc.ao[i]));
 //            q.lightmap(i, ColourHelper.maxBrightness(q.lightmap(i), aoCalc.light[i]));
         }
@@ -118,7 +118,7 @@ public abstract class AbstractQuadRenderer {
 //        final int brightness = flatBrightness(quad, blockInfo.blockState, blockInfo.blockPos);
 
         for (int i = 0; i < 4; i++) {
-            quad.spriteColor(i, 0, ColourHelper.multiplyRGB(quad.spriteColor(i, 0), aoCalc.light[i]));
+            quad.spriteColor(i, 0, ColorHelper.multiplyRGB(quad.spriteColor(i, 0), aoCalc.light[i]));
 //            quad.lightmap(i, ColourHelper.maxBrightness(quad.lightmap(i), brightness));
         }
 
@@ -140,7 +140,7 @@ public abstract class AbstractQuadRenderer {
     private void shadeFlatQuad(MutableQuadViewImpl quad) {
         float shade = aoCalc.shadeMultiplier(quad.lightFace());
         for (int i = 0; i < 4; i++) {
-            quad.spriteColor(i, 0, ColourHelper.multiplyRGB(quad.spriteColor(i, 0), shade));
+            quad.spriteColor(i, 0, ColorHelper.multiplyRGB(quad.spriteColor(i, 0), shade));
         }
     }
 }
