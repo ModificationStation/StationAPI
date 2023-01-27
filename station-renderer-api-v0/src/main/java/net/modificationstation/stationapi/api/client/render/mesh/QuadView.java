@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.client.render.mesh;
 
-import net.modificationstation.stationapi.api.client.render.VertexFormats;
 import net.modificationstation.stationapi.api.client.render.material.RenderMaterial;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -18,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface QuadView {
 	/** Count of integers in a conventional (un-modded) block or item vertex. */
-	int VANILLA_VERTEX_STRIDE = VertexFormats.POSITION_TEXTURE_COLOR_NORMAL.getVertexSizeInteger();
+	int VANILLA_VERTEX_STRIDE = 8;
 
 	/** Count of integers in a conventional (un-modded) block or item quad. */
 	int VANILLA_QUAD_STRIDE = VANILLA_VERTEX_STRIDE * 4;
@@ -170,11 +169,6 @@ public interface QuadView {
 	 * Will return {@link Float#NaN} if normal not present.
 	 */
 	float normalZ(int vertexIndex);
-
-	/**
-	 * Minimum block brightness. Zero if not set.
-	 */
-	int lightmap(int vertexIndex);
 
 	/**
 	 * Retrieve vertex color.

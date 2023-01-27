@@ -211,7 +211,7 @@ implements AutoCloseable {
             i += this.animation.getFrameX(frame) * this.width;
             j += this.animation.getFrameY(frame) * this.height;
         }
-        return (this.images[0].getColour(i, j) >> 24 & 0xFF) == 0;
+        return (this.images[0].getColor(i, j) >> 24 & 0xFF) == 0;
     }
 
     public void upload() {
@@ -391,7 +391,7 @@ implements AutoCloseable {
         }
 
         private int getPixelColor(Animation animation, int frameIndex, int layer, int x, int y) {
-            return Sprite.this.images[layer].getColour(x + (animation.getFrameX(frameIndex) * Sprite.this.width >> layer), y + (animation.getFrameY(frameIndex) * Sprite.this.height >> layer));
+            return Sprite.this.images[layer].getColor(x + (animation.getFrameX(frameIndex) * Sprite.this.width >> layer), y + (animation.getFrameY(frameIndex) * Sprite.this.height >> layer));
         }
 
         private int lerp(double delta, int to, int from) {

@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.client.blaze3d.systems.RenderSystem;
 import net.modificationstation.stationapi.api.client.resource.metadata.AnimationResourceMetadata;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
@@ -47,7 +46,7 @@ implements TextureTickListener {
 
     public SpriteAtlasTexture(Identifier identifier) {
         this.id = identifier;
-        this.maxTextureSize = RenderSystem.maxSupportedTextureSize();
+        this.maxTextureSize = TextureUtil.maxSupportedTextureSize();
     }
 
     @Override

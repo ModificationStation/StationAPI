@@ -6,7 +6,6 @@ import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.render.RenderContext;
-import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;

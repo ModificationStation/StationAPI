@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.Tessellator;
 import net.modificationstation.stationapi.api.client.render.RenderContext;
-import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.mesh.Mesh;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.ArsenicRenderer;
@@ -20,7 +20,7 @@ import java.util.function.Supplier;
  * "editor" quad held in the instance, where all transformations are applied before buffering.
  */
 public abstract class AbstractMeshConsumer extends AbstractQuadRenderer implements Consumer<Mesh> {
-	protected AbstractMeshConsumer(BlockRenderInfo blockInfo, Supplier<VertexConsumer> bufferFunc, LightingCalculatorImpl aoCalc, RenderContext.QuadTransform transform) {
+	protected AbstractMeshConsumer(BlockRenderInfo blockInfo, Supplier<Tessellator> bufferFunc, LightingCalculatorImpl aoCalc, RenderContext.QuadTransform transform) {
 		super(blockInfo, bufferFunc, aoCalc, transform);
 	}
 

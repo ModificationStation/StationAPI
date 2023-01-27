@@ -1,8 +1,6 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh;
 
 import com.google.common.base.Preconditions;
-import net.modificationstation.stationapi.api.client.render.VertexFormat;
-import net.modificationstation.stationapi.api.client.render.VertexFormats;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadView;
 import net.modificationstation.stationapi.api.client.render.model.ModelHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
@@ -29,7 +27,6 @@ public abstract class EncodingFormat {
 	static final int VERTEX_COLOR;
 	static final int VERTEX_U;
 	static final int VERTEX_V;
-	static final int VERTEX_LIGHTMAP;
 	static final int VERTEX_NORMAL;
 	public static final int VERTEX_STRIDE;
 
@@ -38,21 +35,21 @@ public abstract class EncodingFormat {
 	public static final int TOTAL_STRIDE;
 
 	static {
-		final VertexFormat format = VertexFormats.POSITION_TEXTURE_COLOR_NORMAL;
 		VERTEX_X = HEADER_STRIDE;
 		VERTEX_Y = HEADER_STRIDE + 1;
 		VERTEX_Z = HEADER_STRIDE + 2;
-		VERTEX_COLOR = HEADER_STRIDE + 3;
 		VERTEX_U = HEADER_STRIDE + 4;
 		VERTEX_V = VERTEX_U + 1;
-		VERTEX_LIGHTMAP = HEADER_STRIDE + 6;
+		VERTEX_COLOR = HEADER_STRIDE + 6;
 		VERTEX_NORMAL = HEADER_STRIDE + 7;
-		VERTEX_STRIDE = format.getVertexSizeInteger();
+		VERTEX_STRIDE = 8;
 		QUAD_STRIDE = VERTEX_STRIDE * 4;
 		QUAD_STRIDE_BYTES = QUAD_STRIDE * 4;
 		TOTAL_STRIDE = HEADER_STRIDE + QUAD_STRIDE;
 
+		//noinspection ConstantValue
 		Preconditions.checkState(VERTEX_STRIDE == QuadView.VANILLA_VERTEX_STRIDE, "Indigo vertex stride (%s) mismatched with rendering API (%s)", VERTEX_STRIDE, QuadView.VANILLA_VERTEX_STRIDE);
+		//noinspection ConstantValue
 		Preconditions.checkState(QUAD_STRIDE == QuadView.VANILLA_QUAD_STRIDE, "Indigo quad stride (%s) mismatched with rendering API (%s)", QUAD_STRIDE, QuadView.VANILLA_QUAD_STRIDE);
 	}
 

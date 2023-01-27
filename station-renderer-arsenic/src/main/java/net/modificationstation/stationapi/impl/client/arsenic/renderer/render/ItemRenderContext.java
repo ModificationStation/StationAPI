@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.client.color.item.ItemColors;
-import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.material.BlendMode;
 import net.modificationstation.stationapi.api.client.render.mesh.Mesh;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
@@ -45,9 +45,9 @@ public class ItemRenderContext extends AbstractRenderContext {
     private MatrixStack matrixStack;
     private Matrix4f matrix;
 //    private VertexConsumer vertexConsumerProvider;
-    private VertexConsumer modelVertexConsumer;
+    private Tessellator modelVertexConsumer;
     private BlendMode quadBlendMode;
-    private VertexConsumer quadVertexConsumer;
+    private Tessellator quadVertexConsumer;
     private ModelTransformation.Mode transformMode;
     private float brightness;
     private int lightmap;
@@ -154,14 +154,14 @@ public class ItemRenderContext extends AbstractRenderContext {
         for (int i = 0; i < 4; i++) {
             int c = quad.spriteColour(i, 0);
             c = ColourHelper.multiplyColour(quadColor, c);
-            quad.spriteColour(i, 0, ColourHelper.swapRedBlueIfNeeded(c));
-            quad.lightmap(i, ColourHelper.maxBrightness(quad.lightmap(i), lightmap));
+            quad.spriteColor(i, 0, ColourHelper.swapRedBlueIfNeeded(c));
+//            quad.lightmap(i, ColourHelper.maxBrightness(quad.lightmap(i), lightmap));
         }
 
         AbstractQuadRenderer.bufferQuad(quadVertexConsumer(mat.blendMode(0)), quad, matrix, overlay, normalMatrix, normalVec);
     }
 
-    private VertexConsumer quadVertexConsumer(BlendMode blendMode) {
+    private Tessellator quadVertexConsumer(BlendMode blendMode) {
         return quadVertexConsumer = modelVertexConsumer;
     }
 

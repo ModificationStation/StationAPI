@@ -1,8 +1,6 @@
 package net.modificationstation.stationapi.api.client.texture;
 
 import net.minecraft.class_214;
-import net.modificationstation.stationapi.api.client.blaze3d.platform.GlStateManager;
-import net.modificationstation.stationapi.api.client.blaze3d.systems.RenderSystem;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
@@ -15,19 +13,20 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 
+import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
+
 public class TextureUtil {
 
     public static final int MIN_MIPMAP_LEVEL = 0;
     private static final int DEFAULT_IMAGE_BUFFER_SIZE = 8192;
+    private static int MAX_SUPPORTED_TEXTURE_SIZE = -1;
 
     public static int generateTextureId() {
-        RenderSystem.assertOnRenderThreadOrInit();
-        return GlStateManager._genTexture();
+        return GL11.glGenTextures();
     }
 
     public static void releaseTextureId(int id) {
-        RenderSystem.assertOnRenderThreadOrInit();
-        GlStateManager._deleteTexture(id);
+        GL11.glDeleteTextures(id);
     }
 
     public static void prepareImage(int id, int width, int height) {
@@ -43,22 +42,20 @@ public class TextureUtil {
     }
 
     public static void prepareImage(NativeImage.InternalFormat internalFormat, int id, int maxLevel, int width, int height) {
-        RenderSystem.assertOnRenderThreadOrInit();
         TextureUtil.bind(id);
         if (maxLevel >= 0) {
-            GlStateManager._texParameter(3553, 33085, maxLevel);
-            GlStateManager._texParameter(3553, 33082, 0);
-            GlStateManager._texParameter(3553, 33083, maxLevel);
-            GlStateManager._texParameter(3553, 34049, 0.0f);
+            GL11.glTexParameteri(3553, 33085, maxLevel);
+            GL11.glTexParameteri(3553, 33082, 0);
+            GL11.glTexParameteri(3553, 33083, maxLevel);
+            GL11.glTexParameterf(3553, 34049, 0.0f);
         }
         for (int i = 0; i <= maxLevel; ++i) {
-            GlStateManager._texImage2D(3553, i, internalFormat.getValue(), width >> i, height >> i, 0, 6408, 5121, null);
+            GL11.glTexImage2D(3553, i, internalFormat.getValue(), width >> i, height >> i, 0, 6408, 5121, (IntBuffer) null);
         }
     }
 
     private static void bind(int id) {
-        RenderSystem.assertOnRenderThreadOrInit();
-        GlStateManager._bindTexture(id);
+        GL11.glBindTexture(3553, id);
     }
 
     public static ByteBuffer readResource(InputStream inputStream) throws IOException {
@@ -82,7 +79,6 @@ public class TextureUtil {
 
     @Nullable
     public static String readResourceAsString(InputStream inputStream) {
-        RenderSystem.assertOnRenderThread();
         ByteBuffer byteBuffer;
         try {
             byteBuffer = TextureUtil.readResource(inputStream);
@@ -118,7 +114,6 @@ public class TextureUtil {
 //    }
 
     public static void initTexture(IntBuffer imageData, int width, int height) {
-        RenderSystem.assertOnRenderThread();
         GL11.glPixelStorei(3312, 0);
         GL11.glPixelStorei(3313, 0);
         GL11.glPixelStorei(3314, 0);
@@ -128,5 +123,21 @@ public class TextureUtil {
         GL11.glTexImage2D(3553, 0, 6408, width, height, 0, 32993, 33639, imageData);
         GL11.glTexParameteri(3553, 10240, 9728);
         GL11.glTexParameteri(3553, 10241, 9729);
+    }
+
+    public static int maxSupportedTextureSize() {
+        if (MAX_SUPPORTED_TEXTURE_SIZE == -1) {
+            int i = GL11.glGetInteger(3379);
+            for (int j = Math.max(32768, i); j >= 1024; j >>= 1) {
+                GL11.glTexImage2D(32868, 0, 6408, j, j, 0, 6408, 5121, (IntBuffer) null);
+                int k = GL11.glGetTexLevelParameteri(32868, 0, 4096);
+                if (k == 0) continue;
+                MAX_SUPPORTED_TEXTURE_SIZE = j;
+                return j;
+            }
+            MAX_SUPPORTED_TEXTURE_SIZE = Math.max(i, 1024);
+            LOGGER.info("Failed to determine maximum texture size by probing, trying GL_MAX_TEXTURE_SIZE = {}", MAX_SUPPORTED_TEXTURE_SIZE);
+        }
+        return MAX_SUPPORTED_TEXTURE_SIZE;
     }
 }

@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.client.render.mesh;
 
 import net.modificationstation.stationapi.api.client.render.Renderer;
-import net.modificationstation.stationapi.api.client.render.material.MaterialFinder;
 import net.modificationstation.stationapi.api.client.render.material.RenderMaterial;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -123,7 +122,7 @@ public interface MutableQuadView extends QuadView {
 	 * Value functions identically to {@link BakedQuad#getColorIndex()} and is
 	 * used by renderer / model builder in same way. Default value is -1.
 	 */
-	MutableQuadView colourIndex(int colourIndex);
+	MutableQuadView colorIndex(int colourIndex);
 
 	/**
 	 * Enables bulk vertex data transfer using the standard Minecraft vertex formats.
@@ -175,41 +174,18 @@ public interface MutableQuadView extends QuadView {
 	}
 
 	/**
-	 * Accept vanilla lightmap values.  Input values will override lightmap values
-	 * computed from world state if input values are higher. Exposed for completeness
-	 * but some rendering implementations with non-standard lighting model may not honor it.
-	 *
-	 * <p>For emissive rendering, it is better to use {@link MaterialFinder#emissive(int, boolean)}.
-	 */
-	MutableQuadView lightmap(int vertexIndex, int lightmap);
-
-	/**
-	 * Convenience: set lightmap for all vertices at once.
-	 *
-	 * <p>For emissive rendering, it is better to use {@link MaterialFinder#emissive(int, boolean)}.
-	 * See {@link #lightmap(int, int)}.
-	 */
-	default MutableQuadView lightmap(int b0, int b1, int b2, int b3) {
-		lightmap(0, b0);
-		lightmap(1, b1);
-		lightmap(2, b2);
-		lightmap(3, b3);
-		return this;
-	}
-
-	/**
 	 * Set sprite color. Behavior for {@code spriteIndex > 0} is currently undefined.
 	 */
-	MutableQuadView spriteColour(int vertexIndex, int spriteIndex, int color);
+	MutableQuadView spriteColor(int vertexIndex, int spriteIndex, int color);
 
 	/**
 	 * Convenience: set sprite color for all vertices at once. Behavior for {@code spriteIndex > 0} is currently undefined.
 	 */
-	default MutableQuadView spriteColour(int spriteIndex, int c0, int c1, int c2, int c3) {
-		spriteColour(0, spriteIndex, c0);
-		spriteColour(1, spriteIndex, c1);
-		spriteColour(2, spriteIndex, c2);
-		spriteColour(3, spriteIndex, c3);
+	default MutableQuadView spriteColor(int spriteIndex, int c0, int c1, int c2, int c3) {
+		spriteColor(0, spriteIndex, c0);
+		spriteColor(1, spriteIndex, c1);
+		spriteColor(2, spriteIndex, c2);
+		spriteColor(3, spriteIndex, c3);
 		return this;
 	}
 

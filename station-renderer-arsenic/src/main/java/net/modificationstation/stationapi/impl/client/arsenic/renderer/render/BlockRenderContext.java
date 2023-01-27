@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.mesh.Mesh;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
@@ -21,7 +21,7 @@ public class BlockRenderContext extends AbstractRenderContext {
     private final BlockRenderInfo blockInfo = new BlockRenderInfo();
     private final LightingCalculatorImpl aoCalc = new LightingCalculatorImpl(3);
     private final MeshConsumer meshConsumer = new MeshConsumer(blockInfo, this::outputBuffer, aoCalc, this::transform);
-    private VertexConsumer bufferBuilder;
+    private Tessellator bufferBuilder;
     private boolean didOutput;
     private Random random;
     private long seed;
@@ -45,13 +45,13 @@ public class BlockRenderContext extends AbstractRenderContext {
         return meshConsumer.getEmitter();
     }
 
-    private VertexConsumer outputBuffer() {
+    private Tessellator outputBuffer() {
         didOutput = true;
         return bufferBuilder;
     }
 
     public boolean render(BlockView blockView, BakedModel model, BlockState state, TilePos pos, Random random, long seed) {
-//        this.bufferBuilder = buffer;
+        this.bufferBuilder = Tessellator.INSTANCE;
 //        this.matrix = matrixStack.peek().getPositionMatrix();
 //        this.normalMatrix = matrixStack.peek().getNormalMatrix();
         this.random = random;
@@ -75,7 +75,7 @@ public class BlockRenderContext extends AbstractRenderContext {
 
     private class MeshConsumer extends AbstractMeshConsumer {
 
-        MeshConsumer(BlockRenderInfo blockInfo, Supplier<VertexConsumer> bufferFunc, LightingCalculatorImpl aoCalc, QuadTransform transform) {
+        MeshConsumer(BlockRenderInfo blockInfo, Supplier<Tessellator> bufferFunc, LightingCalculatorImpl aoCalc, QuadTransform transform) {
             super(blockInfo, bufferFunc, aoCalc, transform);
         }
 

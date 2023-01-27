@@ -30,7 +30,7 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 		nominalFace = null;
 		normalFlags(0);
 		tag(0);
-		colourIndex(-1);
+		colorIndex(-1);
 		cullFace(null);
 		material(ArsenicRenderer.MATERIAL_STANDARD);
 	}
@@ -59,7 +59,7 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 	}
 
 	@Override
-	public final MutableQuadViewImpl colourIndex(int colourIndex) {
+	public final MutableQuadViewImpl colorIndex(int colourIndex) {
 		data[baseIndex + HEADER_COLOR_INDEX] = colourIndex;
 		return this;
 	}
@@ -75,7 +75,7 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 		System.arraycopy(quad.getVertexData(), 0, data, baseIndex + HEADER_STRIDE, QUAD_STRIDE);
 		data[baseIndex + HEADER_BITS] = EncodingFormat.cullFace(0, cullFace);
 		nominalFace(quad.getFace());
-		colourIndex(quad.getColorIndex());
+		colorIndex(quad.getColorIndex());
 		material(material);
 		tag(0);
 		shade(quad.hasShade());
@@ -124,13 +124,7 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
 	}
 
 	@Override
-	public MutableQuadViewImpl lightmap(int vertexIndex, int lightmap) {
-		data[baseIndex + vertexIndex * VERTEX_STRIDE + VERTEX_LIGHTMAP] = lightmap;
-		return this;
-	}
-
-	@Override
-	public MutableQuadViewImpl spriteColour(int vertexIndex, int spriteIndex, int color) {
+	public MutableQuadViewImpl spriteColor(int vertexIndex, int spriteIndex, int color) {
 		Preconditions.checkArgument(spriteIndex == 0, "Unsupported sprite index: %s", spriteIndex);
 
 		data[baseIndex + vertexIndex * VERTEX_STRIDE + VERTEX_COLOR] = color;

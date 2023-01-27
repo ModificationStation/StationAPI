@@ -30,7 +30,7 @@ public interface QuadEmitter extends MutableQuadView {
 	QuadEmitter nominalFace(Direction face);
 
 	@Override
-	QuadEmitter colourIndex(int colourIndex);
+	QuadEmitter colorIndex(int colourIndex);
 
 	@Override
 	QuadEmitter tag(int tag);
@@ -51,20 +51,11 @@ public interface QuadEmitter extends MutableQuadView {
 	}
 
 	@Override
-	QuadEmitter lightmap(int vertexIndex, int lightmap);
+	QuadEmitter spriteColor(int vertexIndex, int spriteIndex, int color);
 
 	@Override
-	default QuadEmitter lightmap(int b0, int b1, int b2, int b3) {
-		MutableQuadView.super.lightmap(b0, b1, b2, b3);
-		return this;
-	}
-
-	@Override
-	QuadEmitter spriteColour(int vertexIndex, int spriteIndex, int color);
-
-	@Override
-	default QuadEmitter spriteColour(int spriteIndex, int c0, int c1, int c2, int c3) {
-		MutableQuadView.super.spriteColour(spriteIndex, c0, c1, c2, c3);
+	default QuadEmitter spriteColor(int spriteIndex, int c0, int c1, int c2, int c3) {
+		MutableQuadView.super.spriteColor(spriteIndex, c0, c1, c2, c3);
 		return this;
 	}
 

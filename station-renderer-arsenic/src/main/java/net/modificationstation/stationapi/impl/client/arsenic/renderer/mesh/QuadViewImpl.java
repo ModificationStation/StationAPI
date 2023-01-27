@@ -209,11 +209,6 @@ public class QuadViewImpl implements QuadView {
 	}
 
 	@Override
-	public int lightmap(int vertexIndex) {
-		return data[baseIndex + vertexIndex * VERTEX_STRIDE + VERTEX_LIGHTMAP];
-	}
-
-	@Override
 	public int spriteColour(int vertexIndex, int spriteIndex) {
 		Preconditions.checkArgument(spriteIndex == 0, "Unsupported sprite index: %s", spriteIndex);
 
