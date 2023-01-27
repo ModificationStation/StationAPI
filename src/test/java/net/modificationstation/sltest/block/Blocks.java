@@ -3,6 +3,7 @@ package net.modificationstation.sltest.block;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
+import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.block.BlockTemplate;
@@ -46,6 +47,7 @@ public enum Blocks {
         private static void registerBlocks(BlockRegistryEvent event) {
 //            BlockBase.ALLOWS_GRASS_UNDER[BlockBase.STILL_WATER.id] = BlockBase.ALLOWS_GRASS_UNDER[BlockBase.FLOWING_WATER.id] = true;
             Arrays.stream(values()).forEach(blocks -> blocks.register.run());
+            ((BlockBaseAccessor) BlockBase.BEDROCK).invokeSetHardness(2);
 //            int blocksAmount = 100000;
 //            BLOCKS = new TemplateBlockBase[blocksAmount];
 //            Random random = new Random(42);

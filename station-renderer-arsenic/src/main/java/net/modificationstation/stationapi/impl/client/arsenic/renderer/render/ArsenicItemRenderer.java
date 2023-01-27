@@ -116,7 +116,7 @@ public final class ArsenicItemRenderer {
             } else if (!model.isBuiltin()) {
                 GL11.glPushMatrix();
                 atlas.bindTexture();
-                GL11.glTranslated(x, y + var11, z);
+                GL11.glTranslated(x, y + var11 - 3 / 16D, z);
                 GL11.glRotatef(var12, 0, 1, 0);
                 for (int var29 = 0; var29 < renderedAmount; ++var29) {
                     GL11.glPushMatrix();
