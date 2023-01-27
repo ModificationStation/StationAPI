@@ -16,7 +16,7 @@ public final class StationRenderAPI {
     private static final ItemColors ITEM_COLORS = ItemColors.create(BLOCK_COLORS);
 
     @SuppressWarnings("deprecation")
-    private static final BakedModelManager BAKED_MODEL_MANAGER = new BakedModelManager(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, BLOCK_COLORS, 0);
+    private static final BakedModelManager BAKED_MODEL_MANAGER = new BakedModelManager(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager, BLOCK_COLORS);
 
     public static BlockColors getBlockColors() {
         return BLOCK_COLORS;

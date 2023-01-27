@@ -88,7 +88,7 @@ public class ModelLoader {
     private int nextStateId = 1;
     private final Object2IntMap<BlockState> stateLookup = Util.make(new Object2IntOpenHashMap<>(), (object2IntOpenHashMap) -> object2IntOpenHashMap.defaultReturnValue(-1));
 
-    public ModelLoader(ResourceManager resourceManager, BlockColors blockColours, Profiler profiler, int i) {
+    public ModelLoader(ResourceManager resourceManager, BlockColors blockColours, Profiler profiler) {
         this.resourceManager = resourceManager;
         this.blockColours = blockColours;
         profiler.push("missing_model");
@@ -126,7 +126,7 @@ public class ModelLoader {
 
         for (Entry<Identifier, List<SpriteIdentifier>> identifierListEntry : map.entrySet()) {
             SpriteAtlasTexture spriteAtlasTexture = new SpriteAtlasTexture(identifierListEntry.getKey());
-            SpriteAtlasTexture.Data data = spriteAtlasTexture.stitch(resourceManager, identifierListEntry.getValue().stream().map(spriteIdentifier -> spriteIdentifier.texture), profiler, i);
+            SpriteAtlasTexture.Data data = spriteAtlasTexture.stitch(resourceManager, identifierListEntry.getValue().stream().map(spriteIdentifier -> spriteIdentifier.texture), profiler);
             this.spriteAtlasData.put(identifierListEntry.getKey(), Pair.of(spriteAtlasTexture, data));
         }
 

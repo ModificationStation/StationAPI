@@ -173,7 +173,7 @@ public interface QuadView {
 	/**
 	 * Retrieve vertex color.
 	 */
-	int spriteColour(int vertexIndex, int spriteIndex);
+	int spriteColor(int vertexIndex, int spriteIndex);
 
 	/**
 	 * Retrieve horizontal sprite atlas coordinates.

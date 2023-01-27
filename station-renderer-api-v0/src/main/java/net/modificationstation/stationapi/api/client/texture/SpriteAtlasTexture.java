@@ -12,7 +12,6 @@ import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.exception.CrashException;
 import net.modificationstation.stationapi.api.util.exception.CrashReport;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
-import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
 import net.modificationstation.stationapi.impl.client.render.SpriteFinderImpl;
 import org.jetbrains.annotations.ApiStatus;
@@ -55,8 +54,8 @@ implements TextureTickListener {
     public void upload(Data data) {
         this.spritesToLoad.clear();
         this.spritesToLoad.addAll(data.spriteIds);
-        LOGGER.info("Created: {}x{}x{} {}-atlas", data.width, data.height, data.maxLevel, this.id);
-        TextureUtil.prepareImage(this.getGlId(), data.maxLevel, data.width, data.height);
+        LOGGER.info("Created: {}x{} {}-atlas", data.width, data.height, this.id);
+        TextureUtil.prepareImage(this.getGlId(), 0, data.width, data.height);
         this.clear();
         for (Sprite sprite : data.sprites) {
             this.sprites.put(sprite.getId(), sprite);
@@ -80,8 +79,7 @@ implements TextureTickListener {
         return spriteFinder == null ? spriteFinder = new SpriteFinderImpl(sprites, this) : spriteFinder;
     }
 
-    public Data stitch(ResourceManager resourceManager, Stream<Identifier> idStream, Profiler profiler, int mipmapLevel) {
-        int p;
+    public Data stitch(ResourceManager resourceManager, Stream<Identifier> idStream, Profiler profiler) {
         profiler.push("preparing");
         Set<Identifier> set = idStream.peek(identifier -> {
             if (identifier == null) {
@@ -89,27 +87,10 @@ implements TextureTickListener {
             }
         }).collect(Collectors.toSet());
         int i = this.maxTextureSize;
-        TextureStitcher textureStitcher = new TextureStitcher(i, i, mipmapLevel);
-        int j = Integer.MAX_VALUE;
-        int k = 1 << mipmapLevel;
+        TextureStitcher textureStitcher = new TextureStitcher(i, i);
         profiler.swap("extracting_frames");
-        for (Sprite.Info info2 : this.loadSprites(resourceManager, set)) {
-            j = Math.min(j, Math.min(info2.getWidth(), info2.getHeight()));
-            int l = Math.min(Integer.lowestOneBit(info2.getWidth()), Integer.lowestOneBit(info2.getHeight()));
-            if (l < k) {
-                LOGGER.warn("Texture {} with size {}x{} limits mip level from {} to {}", info2.getId(), info2.getWidth(), info2.getHeight(), MathHelper.floorLog2(k), MathHelper.floorLog2(l));
-                k = l;
-            }
+        for (Sprite.Info info2 : this.loadSprites(resourceManager, set))
             textureStitcher.add(info2);
-        }
-        int m = Math.min(j, k);
-        int n = MathHelper.floorLog2(m);
-        if (n < mipmapLevel) {
-            LOGGER.warn("{}: dropping miplevel from {} to {}, because of minimum power of two: {}", this.id, mipmapLevel, n, m);
-            p = n;
-        } else {
-            p = mipmapLevel;
-        }
         profiler.swap("register");
         textureStitcher.add(MissingSprite.getMissingInfo());
         profiler.swap("stitching");
@@ -124,9 +105,9 @@ implements TextureTickListener {
             throw new CrashException(crashReport);
         }
         profiler.swap("loading");
-        List<Sprite> list = this.loadSprites(resourceManager, textureStitcher, p);
+        List<Sprite> list = this.loadSprites(resourceManager, textureStitcher);
         profiler.pop();
-        return new Data(set, textureStitcher.getWidth(), textureStitcher.getHeight(), p, list);
+        return new Data(set, textureStitcher.getWidth(), textureStitcher.getHeight(), list);
     }
 
     private Collection<Sprite.Info> loadSprites(ResourceManager resourceManager, Set<Identifier> ids) {
@@ -167,16 +148,16 @@ implements TextureTickListener {
         return queue;
     }
 
-    private List<Sprite> loadSprites(ResourceManager resourceManager, TextureStitcher textureStitcher, int maxLevel) {
+    private List<Sprite> loadSprites(ResourceManager resourceManager, TextureStitcher textureStitcher) {
         ConcurrentLinkedQueue<Sprite> concurrentLinkedQueue = new ConcurrentLinkedQueue<>();
         List<CompletableFuture<Void>> list = new ArrayList<>();
         textureStitcher.getStitchedSprites((arg_0, arg_1, arg_2, arg_3, arg_4) -> {
             if (arg_0 == MissingSprite.getMissingInfo()) {
-                MissingSprite missingSprite = MissingSprite.getMissingSprite(this, maxLevel, arg_1, arg_2, arg_3, arg_4);
+                MissingSprite missingSprite = MissingSprite.getMissingSprite(this, arg_1, arg_2, arg_3, arg_4);
                 concurrentLinkedQueue.add(missingSprite);
             } else {
                 list.add(CompletableFuture.runAsync(() -> {
-                    Sprite sprite = this.loadSprite(resourceManager, arg_0, arg_1, arg_2, maxLevel, arg_3, arg_4);
+                    Sprite sprite = this.loadSprite(resourceManager, arg_0, arg_1, arg_2, arg_3, arg_4);
                     if (sprite != null) {
                         concurrentLinkedQueue.add(sprite);
                     }
@@ -188,10 +169,10 @@ implements TextureTickListener {
     }
 
     @Nullable
-    private Sprite loadSprite(ResourceManager container, Sprite.Info info, int atlasWidth, int atlasHeight, int maxLevel, int x, int y) {
+    private Sprite loadSprite(ResourceManager container, Sprite.Info info, int atlasWidth, int atlasHeight, int x, int y) {
         Identifier identifier = this.getTexturePath(info.getId());
         try (InputStream inputStream = container.open(identifier)){
-            return new Sprite(this, info, maxLevel, atlasWidth, atlasHeight, x, y, NativeImage.read(inputStream));
+            return new Sprite(this, info, atlasWidth, atlasHeight, x, y, NativeImage.read(inputStream));
         } catch (RuntimeException runtimeException) {
             LOGGER.error("Unable to parse metadata from {}", identifier, runtimeException);
             return null;
@@ -236,7 +217,7 @@ implements TextureTickListener {
     }
 
     public void applyTextureFilter(Data data) {
-        this.setFilter(false, data.maxLevel > 0);
+        this.setFilter(false, false);
     }
 
     @Environment(EnvType.CLIENT)
@@ -244,14 +225,12 @@ implements TextureTickListener {
         final Set<Identifier> spriteIds;
         final int width;
         final int height;
-        final int maxLevel;
         final List<Sprite> sprites;
 
-        public Data(Set<Identifier> spriteIds, int width, int height, int maxLevel, List<Sprite> sprites) {
+        public Data(Set<Identifier> spriteIds, int width, int height, List<Sprite> sprites) {
             this.spriteIds = spriteIds;
             this.width = width;
             this.height = height;
-            this.maxLevel = maxLevel;
             this.sprites = sprites;
         }
 

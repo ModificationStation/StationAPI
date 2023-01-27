@@ -152,7 +152,7 @@ public class ItemRenderContext extends AbstractRenderContext {
         final int lightmap = mat.emissive(0) ? AbstractQuadRenderer.FULL_BRIGHTNESS : this.lightmap;
 
         for (int i = 0; i < 4; i++) {
-            int c = quad.spriteColour(i, 0);
+            int c = quad.spriteColor(i, 0);
             c = ColourHelper.multiplyColour(quadColor, c);
             quad.spriteColor(i, 0, ColourHelper.swapRedBlueIfNeeded(c));
 //            quad.lightmap(i, ColourHelper.maxBrightness(quad.lightmap(i), lightmap));
