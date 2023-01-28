@@ -20,6 +20,7 @@ import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
+import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.mixin.arsenic.client.EntityRendererAccessor;
 import net.modificationstation.stationapi.mixin.arsenic.client.ItemRendererAccessor;
 import org.lwjgl.opengl.GL11;
@@ -116,21 +117,30 @@ public final class ArsenicItemRenderer {
             } else if (!model.isBuiltin()) {
                 GL11.glPushMatrix();
                 atlas.bindTexture();
-                GL11.glTranslated(x, y + var11 - 3 / 16D, z);
+                GL11.glTranslated(x, y, z);
+                Vec3f scale = model.getTransformation().ground.scale;
+                double o = scale.getX();
+                double p = scale.getY();
+                double q = scale.getZ();
+                GL11.glTranslated(0.0, var11 + 0.25 * p - 2 / 16D, 0.0);
                 GL11.glRotatef(var12, 0, 1, 0);
+                boolean depth = model.hasDepth();
+                if (!depth) {
+                    double r = -0.0 * (renderedAmount - 1) * 0.5 * o;
+                    double s = -0.0 * (renderedAmount - 1) * 0.5 * p;
+                    double t = -0.09375 * (renderedAmount - 1) * 0.5 * q;
+                    GL11.glTranslated(r, s, t);
+                }
                 for (int var29 = 0; var29 < renderedAmount; ++var29) {
                     GL11.glPushMatrix();
-                    if (var29 > 0) {
-                        if (model.hasDepth()) {
-                            GL11.glTranslatef((itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F * 0.15F);
-                        } else {
-                            GL11.glTranslatef(0, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F * 0.5F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F);
-                        }
-                    }
+                    if (var29 > 0 && depth)
+                        GL11.glTranslatef((itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F * 0.15F);
                     Tessellator.INSTANCE.start();
                     RendererHolder.RENDERER.renderItem(var10, ModelTransformation.Mode.GROUND, item.getBrightnessAtEyes(delta), model);
                     Tessellator.INSTANCE.draw();
                     GL11.glPopMatrix();
+                    if (!depth)
+                        GL11.glTranslated(0, 0, 0.09375 * q);
                 }
                 GL11.glPopMatrix();
             }
