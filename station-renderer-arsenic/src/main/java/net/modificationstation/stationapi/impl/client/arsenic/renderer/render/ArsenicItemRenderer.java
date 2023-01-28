@@ -119,9 +119,9 @@ public final class ArsenicItemRenderer {
                 atlas.bindTexture();
                 GL11.glTranslated(x, y, z);
                 Vec3f scale = model.getTransformation().ground.scale;
-                double o = scale.getX();
-                double p = scale.getY();
-                double q = scale.getZ();
+                float o = scale.getX();
+                float p = scale.getY();
+                float q = scale.getZ();
                 GL11.glTranslated(0.0, var11 + 0.25 * p - 2 / 16D, 0.0);
                 GL11.glRotatef(var12, 0, 1, 0);
                 boolean depth = model.hasDepth();

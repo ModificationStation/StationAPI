@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BlockBaseAccessor",
+    "ChunkAccessor",
     "CompoundTagAccessor",
     "ListTagAccessor",
     "MixinAbstractTag",
@@ -19,18 +20,19 @@
     "MixinItemBase",
     "MixinItemInstance",
     "MixinLevel",
-    "MixinLevelChunkLoader",
-    "MixinLevelManager",
     "MixinLevelMonsterSpawner",
     "MixinLevelProperties",
+    "MixinNetherLevelSource",
     "MixinOverworldLevelSource",
     "MixinPlayerBase",
     "MixinPlayerInventory",
+    "MixinSkylandsLevelSource",
     "MixinWorldPopulationRegion"
   ],
   "client": [
     "client.MixinClientLevel",
     "client.MixinInGame",
+    "client.MixinMinecraft",
     "client.MixinMultiPlayerClientInteractionManager",
     "client.MixinSinglePlayerClientInteractionManager",
     "client.MixinWorldRenderer"

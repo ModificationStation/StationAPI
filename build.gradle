@@ -121,7 +121,7 @@ allprojects {
         }
 
         implementation "blue.endless:jankson:1.2.1"
-        modLocalRuntime("com.github.calmilamsy:glass-config-api:${project.gcapi_version}") {
+        modLocalRuntime("net.glasslauncher.mods:GlassConfigAPI:${project.gcapi_version}") {
             transitive false
         }
         modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:5.0.10") {
