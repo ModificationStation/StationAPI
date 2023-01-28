@@ -49,11 +49,4 @@ public class MixinWorldPopulationRegion implements StationFlatteningWorldPopulat
     private int changeMinHeightGE(int value) {
         return level.getBottomY();
     }
-
-    @ModifyConstant(method = {
-            "method_142"
-    }, constant = @Constant(intValue = 0, ordinal = 5))
-    private int changeMinHeight(int value) {
-        return level.getBottomY();
-    }
 }
