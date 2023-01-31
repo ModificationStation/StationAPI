@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.nbt;
+package net.modificationstation.stationapi.api.nbt;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
@@ -14,12 +14,9 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapLike;
 import com.mojang.serialization.RecordBuilder;
 import net.minecraft.util.io.*;
-import net.modificationstation.stationapi.api.nbt.NBTHelper;
 import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.api.util.io.IntArrayTag;
-import net.modificationstation.stationapi.api.util.io.LongArrayTag;
-import net.modificationstation.stationapi.mixin.flattening.CompoundTagAccessor;
-import net.modificationstation.stationapi.mixin.flattening.ListTagAccessor;
+import net.modificationstation.stationapi.mixin.nbt.CompoundTagAccessor;
+import net.modificationstation.stationapi.mixin.nbt.ListTagAccessor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,8 +43,7 @@ import java.util.stream.Stream;
  * 
  * @see NbtOps#INSTANCE
  */
-public class NbtOps
-implements DynamicOps<AbstractTag> {
+public class NbtOps implements DynamicOps<AbstractTag> {
     /**
      * An singleton of the NBT dynamic ops.
      * 
@@ -82,8 +78,8 @@ implements DynamicOps<AbstractTag> {
             case 8 -> dynamicOps.createString(((StringTag) nbtElement).data);
             case 9 -> this.convertList(dynamicOps, nbtElement);
             case 10 -> this.convertMap(dynamicOps, nbtElement);
-            case 11 -> dynamicOps.createIntList(Arrays.stream(((IntArrayTag) nbtElement).data));
-            case 12 -> dynamicOps.createLongList(Arrays.stream(((LongArrayTag) nbtElement).data));
+            case 11 -> dynamicOps.createIntList(Arrays.stream(((NbtIntArray) nbtElement).data));
+            case 12 -> dynamicOps.createLongList(Arrays.stream(((NbtLongArray) nbtElement).data));
             default -> throw new IllegalStateException("Unknown tag type: " + nbtElement);
         };
     }
@@ -219,9 +215,9 @@ implements DynamicOps<AbstractTag> {
     }
 
     private static ListTag createList(byte knownType, byte valueType) {
-        if (NbtOps.isTypeEqual(knownType, valueType, (byte) 4)) return new ListArrayTag<>(new LongArrayTag(new long[0]), array -> Predicates.compose(Predicates.alwaysTrue(), tag -> array.data = ArrayUtils.insert(array.data.length, array.data, tag.data)), array -> i -> new LongTag(array.data[i]), array -> () -> array.data.length, (byte) 4);
+        if (NbtOps.isTypeEqual(knownType, valueType, (byte) 4)) return new ListArrayTag<>(new NbtLongArray(new long[0]), array -> Predicates.compose(Predicates.alwaysTrue(), tag -> array.data = ArrayUtils.insert(array.data.length, array.data, tag.data)), array -> i -> new LongTag(array.data[i]), array -> () -> array.data.length, (byte) 4);
         if (NbtOps.isTypeEqual(knownType, valueType, (byte) 1)) return new ListArrayTag<>(new ByteArrayTag(new byte[0]), array -> Predicates.compose(Predicates.alwaysTrue(), tag -> array.data = ArrayUtils.insert(array.data.length, array.data, tag.data)), array -> i -> new ByteTag(array.data[i]), array -> () -> array.data.length, (byte) 1);
-        if (NbtOps.isTypeEqual(knownType, valueType, (byte) 3)) return new ListArrayTag<>(new IntArrayTag(new int[0]), array -> Predicates.compose(Predicates.alwaysTrue(), tag -> array.data = ArrayUtils.insert(array.data.length, array.data, tag.data)), array -> i -> new IntTag(array.data[i]), array -> () -> array.data.length, (byte) 3);
+        if (NbtOps.isTypeEqual(knownType, valueType, (byte) 3)) return new ListArrayTag<>(new NbtIntArray(new int[0]), array -> Predicates.compose(Predicates.alwaysTrue(), tag -> array.data = ArrayUtils.insert(array.data.length, array.data, tag.data)), array -> i -> new IntTag(array.data[i]), array -> () -> array.data.length, (byte) 3);
         return new ListTag();
     }
 
@@ -267,7 +263,7 @@ implements DynamicOps<AbstractTag> {
             return DataResult.error("mergeToMap called with not a map: " + nbtElement, nbtElement);
         if (!(nbtElement2 instanceof StringTag stringTag))
             return DataResult.error("key is not a string: " + nbtElement2, nbtElement);
-        CompoundTag nbtCompound = nbtElement instanceof CompoundTag nbtCompound2 ? NBTHelper.copy(nbtCompound2) : new CompoundTag();
+        CompoundTag nbtCompound = nbtElement instanceof CompoundTag nbtCompound2 ? NbtHelper.copy(nbtCompound2) : new CompoundTag();
         nbtCompound.put(stringTag.data, nbtElement3);
         return DataResult.success(nbtCompound);
     }
@@ -276,7 +272,7 @@ implements DynamicOps<AbstractTag> {
     public DataResult<AbstractTag> mergeToMap(AbstractTag nbtElement, MapLike<AbstractTag> mapLike) {
         if (!(nbtElement instanceof CompoundTag) && !(nbtElement instanceof EndTag))
             return DataResult.error("mergeToMap called with not a map: " + nbtElement, nbtElement);
-        CompoundTag nbtCompound = nbtElement instanceof CompoundTag nbtCompound2 ? NBTHelper.copy(nbtCompound2) : new CompoundTag();
+        CompoundTag nbtCompound = nbtElement instanceof CompoundTag nbtCompound2 ? NbtHelper.copy(nbtCompound2) : new CompoundTag();
         List<AbstractTag> invalidKeys = new ArrayList<>();
         mapLike.entries().forEach(pair -> {
             AbstractTag key = pair.getFirst();
@@ -360,26 +356,26 @@ implements DynamicOps<AbstractTag> {
 
     @Override
     public DataResult<IntStream> getIntStream(AbstractTag nbtElement) {
-        if (nbtElement instanceof IntArrayTag nbtIntArray)
+        if (nbtElement instanceof NbtIntArray nbtIntArray)
             return DataResult.success(Arrays.stream(nbtIntArray.data));
         return DynamicOps.super.getIntStream(nbtElement);
     }
 
     @Override
     public AbstractTag createIntList(IntStream intStream) {
-        return new IntArrayTag(intStream.toArray());
+        return new NbtIntArray(intStream.toArray());
     }
 
     @Override
     public DataResult<LongStream> getLongStream(AbstractTag nbtElement) {
-        if (nbtElement instanceof LongArrayTag nbtLongArray)
+        if (nbtElement instanceof NbtLongArray nbtLongArray)
             return DataResult.success(Arrays.stream(nbtLongArray.data));
         return DynamicOps.super.getLongStream(nbtElement);
     }
 
     @Override
     public AbstractTag createLongList(LongStream longStream) {
-        return new LongArrayTag(longStream.toArray());
+        return new NbtLongArray(longStream.toArray());
     }
 
     @Override
@@ -393,11 +389,11 @@ implements DynamicOps<AbstractTag> {
         }
         if (nbtElement instanceof IntTag nbtInt) {
             ArrayList<Integer> list = Lists.newArrayList(Iterators.transform(peekingIterator, nbt -> nbtInt.data));
-            return new IntArrayTag(Ints.toArray(list));
+            return new NbtIntArray(Ints.toArray(list));
         }
         if (nbtElement instanceof LongTag nbtLong) {
             ArrayList<Long> list = Lists.newArrayList(Iterators.transform(peekingIterator, nbt -> nbtLong.data));
-            return new LongArrayTag(Longs.toArray(list));
+            return new NbtLongArray(Longs.toArray(list));
         }
         ListTag list = new ListTag();
         while (peekingIterator.hasNext()) {

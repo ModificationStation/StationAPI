@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.util.io;
+package net.modificationstation.stationapi.api.nbt;
 
 import net.minecraft.util.io.AbstractTag;
 
@@ -6,13 +6,13 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class LongArrayTag extends AbstractTag {
+public class NbtLongArray extends AbstractTag {
 
     public long[] data;
 
-    public LongArrayTag() {}
+    public NbtLongArray() {}
 
-    public LongArrayTag(long[] value) {
+    public NbtLongArray(long[] value) {
         this.data = value;
     }
 

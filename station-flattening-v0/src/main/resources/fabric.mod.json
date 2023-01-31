@@ -24,7 +24,6 @@
       "net.modificationstation.stationapi.impl.block.PlacementStateImpl"
     ]
   },
-  "accessWidener" : "station-flattening-v0.accesswidener",
   "mixins": [
     "station-flattening-v0.mixins.json"
   ],

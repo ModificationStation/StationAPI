@@ -6,7 +6,7 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.nbt.NBTHelper;
+import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -46,7 +46,7 @@ public class MixinContainerBase {
             )
     )
     private int continueStatement(ItemInstance instance) {
-        if (NBTHelper.equals(instance.getStationNBT(), otherStationNBT))
+        if (NbtHelper.equals(instance.getStationNBT(), otherStationNBT))
             return instance.itemId;
         else {
             notchGodDamnit = true;
@@ -100,7 +100,7 @@ public class MixinContainerBase {
             )
     )
     private int cancelStatement(ItemInstance instance) {
-        return NBTHelper.equals(thisStationNBT, instance.getStationNBT()) ? instance.itemId : 0;
+        return NbtHelper.equals(thisStationNBT, instance.getStationNBT()) ? instance.itemId : 0;
     }
 
     @Redirect(
@@ -113,7 +113,7 @@ public class MixinContainerBase {
             )
     )
     private int checkStatement(ItemInstance instance, ItemInstance arg, int i, int j, boolean flag) {
-        if (NBTHelper.equals(instance.getStationNBT(), arg.getStationNBT()))
+        if (NbtHelper.equals(instance.getStationNBT(), arg.getStationNBT()))
             return instance.itemId;
         else
             return arg.itemId - 1;

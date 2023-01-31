@@ -15,12 +15,9 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.impl.level.StationFlatteningWorldManager.SECTIONS;
 
 public class StationFlatteningWorldChunkLoader implements ChunkIO {
-
-    private static final String SECTIONS_TAG = of(MODID, "sections").toString();
 
     protected final File dimFolder;
 
@@ -38,7 +35,7 @@ public class StationFlatteningWorldChunkLoader implements ChunkIO {
             System.out.println("Chunk file at " + i + "," + j + " is missing level data, skipping");
             return null;
         }
-        if (!compoundTag.getCompoundTag("Level").containsKey(SECTIONS_TAG)) {
+        if (!compoundTag.getCompoundTag("Level").containsKey(SECTIONS)) {
             System.out.println("Chunk file at " + i + "," + j + " is missing section data, skipping");
             return null;
         }

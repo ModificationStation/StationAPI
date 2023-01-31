@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.nbt",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "CompoundTagAccessor",
+    "ListTagAccessor",
+    "MixinAbstractTag",
+    "MixinCompoundTag"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

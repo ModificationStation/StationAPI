@@ -1,6 +1,9 @@
 package net.modificationstation.stationapi.api.nbt;
 
+import com.mojang.datafixers.DSL;
 import net.minecraft.util.io.AbstractTag;
+import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.datafixer.DataFixers;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,7 +11,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.util.Arrays;
 
-public class NBTHelper {
+public class NbtHelper {
 
     public static boolean equals(AbstractTag tag1, AbstractTag tag2) {
         ByteArrayOutputStream data1 = new ByteArrayOutputStream();
@@ -23,5 +26,15 @@ public class NBTHelper {
         AbstractTag.writeTag(tag, new DataOutputStream(byteArrayOutputStream));
         //noinspection unchecked
         return (T) AbstractTag.readTag(new DataInputStream(new ByteArrayInputStream(byteArrayOutputStream.toByteArray())));
+    }
+
+    /**
+     * Uses the data fixer to update an NBT compound object.
+     *
+     * @param fixType the fix type
+     * @param compound the NBT compound object to fix
+     */
+    public static CompoundTag update(DSL.TypeReference fixType, CompoundTag compound) {
+        return (CompoundTag) DataFixers.update(fixType, NbtOps.INSTANCE, compound);
     }
 }

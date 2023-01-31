@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "station-datafixer-v0",
+  "version": "${version}",
+
+  "name": "Station Datafixer (v0)",
+  "description": "Allows mods to fix their older data.",
+  "authors": [
+    "Modification Station"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/repo/mod/stationapi",
+    "sources": "https://github.com/ModificationStation/StationAPI",
+    "issues": "https://github.com/ModificationStation/StationAPI/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/station-datafixer-v0/icon.png",
+
+  "environment": "*",
+
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  },
+
+  "custom": {
+    "modmenu:api": true
+  }
+}

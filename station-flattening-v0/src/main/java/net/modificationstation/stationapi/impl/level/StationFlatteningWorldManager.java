@@ -11,10 +11,10 @@ import net.minecraft.util.io.CompoundTag;
 import net.minecraft.util.io.ListTag;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
+import net.modificationstation.stationapi.api.nbt.NbtOps;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.PalettedContainer;
 import net.modificationstation.stationapi.impl.level.chunk.StationFlatteningChunk;
-import net.modificationstation.stationapi.impl.nbt.NbtOps;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
@@ -23,7 +23,7 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 public class StationFlatteningWorldManager {
 
     private static final Codec<PalettedContainer<BlockState>> CODEC = PalettedContainer.createCodec(States.STATE_IDS, BlockState.CODEC, PalettedContainer.PaletteProvider.BLOCK_STATE, States.AIR.get());
-    private static final String SECTIONS_TAG = of(MODID, "sections").toString();
+    public static final String SECTIONS = of(MODID, "sections").toString();
     private static final String METADATA_KEY = "data";
     private static final String SKY_LIGHT_KEY = "sky_light";
     private static final String BLOCK_LIGHT_KEY = "block_light";
@@ -51,7 +51,7 @@ public class StationFlatteningWorldManager {
                 sectionTags.add(sectionTag);
             }
         }
-        chunkTag.put(SECTIONS_TAG, sectionTags);
+        chunkTag.put(SECTIONS, sectionTags);
         chunkTag.put(HEIGHTMAP_KEY, chunk.getStoredHeightmap());
         chunkTag.put("TerrainPopulated", chunk.decorated);
         chunk.field_969 = false;
@@ -79,8 +79,8 @@ public class StationFlatteningWorldManager {
         int zPos = chunkTag.getInt("zPos");
         StationFlatteningChunk chunk = new StationFlatteningChunk(world, xPos, zPos);
         ChunkSection[] sections = chunk.sections;
-        if (chunkTag.containsKey(SECTIONS_TAG)) {
-            ListTag sectionTags = chunkTag.getListTag(SECTIONS_TAG);
+        if (chunkTag.containsKey(SECTIONS)) {
+            ListTag sectionTags = chunkTag.getListTag(SECTIONS);
             for (int i = 0; i < sectionTags.size(); i++) {
                 CompoundTag sectionTag = (CompoundTag) sectionTags.get(i);
                 int sectionY = sectionTag.getByte(HEIGHT_KEY);

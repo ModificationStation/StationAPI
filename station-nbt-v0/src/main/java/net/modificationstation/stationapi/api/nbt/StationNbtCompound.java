@@ -1,6 +1,6 @@
-package net.modificationstation.stationapi.impl.nbt;
+package net.modificationstation.stationapi.api.nbt;
 
-public interface StationCompoundTag {
+public interface StationNbtCompound {
 
     void put(String key, int[] item);
 

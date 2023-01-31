@@ -9,9 +9,7 @@ moduleDependencies(project,
         'station-dimensions-v0',
         'station-items-v0',
 		'station-lifecycle-events-v0',
-		'station-level-events-v0'
+		'station-level-events-v0',
+		'station-datafixer-v0',
+		'station-nbt-v0'
 )
-
-loom {
-	accessWidenerPath = file("src/main/resources/station-flattening-v0.accesswidener")
-}

@@ -40,6 +40,7 @@ public class Util {
     private static final int MAX_PARALLELISM = 255;
     private static final String MAX_BG_THREADS_PROPERTY = "max.bg.threads";
     private static final AtomicInteger NEXT_WORKER_ID = new AtomicInteger(1);
+    private static final ExecutorService BOOTSTRAP_EXECUTOR = Util.createWorker("Bootstrap");
     private static final ExecutorService MAIN_WORKER_EXECUTOR = createWorker("Main");
     public static LongSupplier nanoTimeSupplier = System::nanoTime;
 
@@ -159,6 +160,10 @@ public class Util {
             });
         });
         return CompletableFuture.allOf(completableFutures).applyToEither(completableFuture, (void_) -> list);
+    }
+
+    public static ExecutorService getBootstrapExecutor() {
+        return BOOTSTRAP_EXECUTOR;
     }
 
     public static Executor getMainWorkerExecutor() {

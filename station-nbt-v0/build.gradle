@@ -1,0 +1,11 @@
+archivesBaseName = "station-nbt-v0"
+version = getSubprojectVersion(project, "1.0.0")
+
+moduleDependencies(project,
+        'station-api-base',
+        'station-datafixer-v0'
+)
+
+loom {
+    accessWidenerPath = file("src/main/resources/station-nbt-v0.accesswidener")
+}

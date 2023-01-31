@@ -1,8 +1,8 @@
-package net.modificationstation.stationapi.mixin.flattening;
+package net.modificationstation.stationapi.mixin.nbt;
 
 import net.minecraft.util.io.AbstractTag;
-import net.modificationstation.stationapi.api.util.io.IntArrayTag;
-import net.modificationstation.stationapi.api.util.io.LongArrayTag;
+import net.modificationstation.stationapi.api.nbt.NbtIntArray;
+import net.modificationstation.stationapi.api.nbt.NbtLongArray;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -23,8 +23,8 @@ public class MixinAbstractTag {
     )
     private static void getCustomTag(byte id, CallbackInfoReturnable<AbstractTag> cir) {
         switch (id) {
-            case 11 -> cir.setReturnValue(new IntArrayTag());
-            case 12 -> cir.setReturnValue(new LongArrayTag());
+            case 11 -> cir.setReturnValue(new NbtIntArray());
+            case 12 -> cir.setReturnValue(new NbtLongArray());
         }
     }
 

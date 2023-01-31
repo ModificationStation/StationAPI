@@ -49,4 +49,6 @@ include 'station-flattening-v0'
 include 'station-renderer-arsenic'
 include 'station-vanilla-fix-v0'
 include 'station-resource-loader-v0'
+include 'station-datafixer-v0'
+include 'station-nbt-v0'
 

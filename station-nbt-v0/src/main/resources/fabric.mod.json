@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "station-nbt-v0",
+  "version": "${version}",
+
+  "name": "Station NBT (v0)",
+  "description": "Expands and makes it easier to use in-game NBT.",
+  "authors": [
+    "Modification Station"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/repo/mod/stationapi",
+    "sources": "https://github.com/ModificationStation/StationAPI",
+    "issues": "https://github.com/ModificationStation/StationAPI/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/station-nbt-v0/icon.png",
+
+  "environment": "*",
+  "accessWidener" : "station-nbt-v0.accesswidener",
+  "mixins": [
+    "station-nbt-v0.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  },
+
+  "custom": {
+    "modmenu:api": true
+  }
+}
