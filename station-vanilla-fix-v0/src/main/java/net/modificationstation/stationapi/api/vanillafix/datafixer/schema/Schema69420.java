@@ -3,10 +3,13 @@ package net.modificationstation.stationapi.api.vanillafix.datafixer.schema;
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.templates.TypeTemplate;
+import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.datafixer.TypeReferences;
+import net.modificationstation.stationapi.api.nbt.NbtOps;
 import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.api.vanillafix.datafixer.TypeReferences;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -16,108 +19,47 @@ import static net.modificationstation.stationapi.impl.vanillafix.datafixer.Vanil
 
 public class Schema69420 extends Schema {
 
-    public static final Int2ObjectMap<String> BLOCK_RENAMES = Util.make(new Int2ObjectOpenHashMap<>(), m -> {
-        m.defaultReturnValue("minecraft:air");
-        m.put(1, "minecraft:stone");
-        m.put(2, "minecraft:grass_block");
-        m.put(3, "minecraft:dirt");
-        m.put(4, "minecraft:cobblestone");
-        m.put(5, "minecraft:oak_planks");
-        m.put(6, "minecraft:sapling");
-        m.put(7, "minecraft:bedrock");
-        m.put(8, "minecraft:flowing_water");
-        m.put(9, "minecraft:water");
-        m.put(10, "minecraft:flowing_lava");
-        m.put(11, "minecraft:lava");
-        m.put(12, "minecraft:sand");
-        m.put(13, "minecraft:gravel");
-        m.put(14, "minecraft:gold_ore");
-        m.put(15, "minecraft:iron_ore");
-        m.put(16, "minecraft:coal_ore");
-        m.put(17, "minecraft:log");
-        m.put(18, "minecraft:leaves");
-        m.put(19, "minecraft:sponge");
-        m.put(20, "minecraft:glass");
-        m.put(21, "minecraft:lapis_ore");
-        m.put(22, "minecraft:lapis_block");
-        m.put(23, "minecraft:dispenser");
-        m.put(24, "minecraft:sandstone");
-        m.put(25, "minecraft:note_block");
-        m.put(26, "minecraft:red_bed");
-        m.put(27, "minecraft:powered_rail");
-        m.put(28, "minecraft:detector_rail");
-        m.put(29, "minecraft:sticky_piston");
-        m.put(30, "minecraft:cobweb");
-        m.put(31, "minecraft:grass");
-        m.put(32, "minecraft:dead_bush");
-        m.put(33, "minecraft:piston");
-        m.put(34, "minecraft:piston_head");
-        m.put(35, "minecraft:wool");
-        m.put(36, "minecraft:moving_piston");
-        m.put(37, "minecraft:dandelion");
-        m.put(38, "minecraft:rose");
-        m.put(39, "minecraft:brown_mushroom");
-        m.put(40, "minecraft:red_mushroom");
-        m.put(41, "minecraft:gold_block");
-        m.put(42, "minecraft:iron_block");
-        m.put(43, "minecraft:double_slab");
-        m.put(44, "minecraft:slab");
-        m.put(45, "minecraft:bricks");
-        m.put(46, "minecraft:tnt");
-        m.put(47, "minecraft:bookshelf");
-        m.put(48, "minecraft:mossy_cobblestone");
-        m.put(49, "minecraft:obsidian");
-        m.put(50, "minecraft:torch");
-        m.put(51, "minecraft:fire");
-        m.put(52, "minecraft:spawner");
-        m.put(53, "minecraft:oak_stairs");
-        m.put(54, "minecraft:chest");
-        m.put(55, "minecraft:redstone_wire");
-        m.put(56, "minecraft:diamond_ore");
-        m.put(57, "minecraft:diamond_block");
-        m.put(58, "minecraft:crafting_table");
-        m.put(59, "minecraft:wheat");
-        m.put(60, "minecraft:farmland");
-        m.put(61, "minecraft:furnace");
-        m.put(62, "minecraft:furnace_lit");
-        m.put(63, "minecraft:oak_sign");
-        m.put(64, "minecraft:oak_door");
-        m.put(65, "minecraft:ladder");
-        m.put(66, "minecraft:rail");
-        m.put(67, "minecraft:cobblestone_stairs");
-        m.put(68, "minecraft:oak_wall_sign");
-        m.put(69, "minecraft:lever");
-        m.put(70, "minecraft:oak_pressure_plate");
-        m.put(71, "minecraft:iron_door");
-        m.put(72, "minecraft:stone_pressure_plate");
-        m.put(73, "minecraft:redstone_ore");
-        m.put(74, "minecraft:redstone_ore_lit");
-        m.put(75, "minecraft:redstone_torch");
-        m.put(76, "minecraft:redstone_torch_lit");
-        m.put(77, "minecraft:stone_button");
-        m.put(78, "minecraft:snow");
-        m.put(79, "minecraft:ice");
-        m.put(80, "minecraft:snow_block");
-        m.put(81, "minecraft:cactus");
-        m.put(82, "minecraft:clay");
-        m.put(83, "minecraft:sugar_cane");
-        m.put(84, "minecraft:jukebox");
-        m.put(85, "minecraft:oak_fence");
-        m.put(86, "minecraft:carved_pumpkin");
-        m.put(87, "minecraft:netherrack");
-        m.put(88, "minecraft:soul_sand");
-        m.put(89, "minecraft:glowstone");
-        m.put(90, "minecraft:nether_portal");
-        m.put(91, "minecraft:jack_o_lantern");
-        m.put(92, "minecraft:cake");
-        m.put(93, "minecraft:repeater");
-        m.put(94, "minecraft:repeater_lit");
-        m.put(95, "minecraft:locked_chest");
-        m.put(96, "minecraft:oak_trapdoor");
-    });
+    private static final Dynamic<?>[] OLD_STATE_TO_DYNAMIC = new Dynamic[256];
+
+    public static void putState(int oldId, String id, CompoundTag properties) {
+        putState(oldId, Util.make(new CompoundTag(), tag -> {
+            tag.put("Name", id);
+            tag.put("Properties", properties);
+        }));
+    }
+
+    public static void putState(int oldId, String id) {
+        putState(oldId, Util.make(new CompoundTag(), tag -> tag.put("Name", id)));
+    }
+
+    public static void putState(int oldId, CompoundTag tag) {
+        ITEM_RENAMES.put(oldId, tag.getString("Name"));
+        Dynamic<?> dynamic = parseState(tag);
+        OLD_STATE_TO_DYNAMIC[oldId] = dynamic;
+    }
+
+    public static String lookupStateBlock(int stateId) {
+        if (stateId < 0 || stateId >= OLD_STATE_TO_DYNAMIC.length) {
+            return "minecraft:air";
+        }
+        Dynamic<?> dynamic = OLD_STATE_TO_DYNAMIC[stateId];
+        return dynamic == null ? "minecraft:air" : dynamic.get("Name").asString("");
+    }
+
+    public static Dynamic<?> parseState(CompoundTag tag) {
+        return new Dynamic<>(NbtOps.INSTANCE, tag);
+    }
+
+    public static Dynamic<?> lookupState(int stateId) {
+        Dynamic<?> dynamic = null;
+        if (stateId >= 0 && stateId < OLD_STATE_TO_DYNAMIC.length) {
+            dynamic = OLD_STATE_TO_DYNAMIC[stateId];
+        }
+        return dynamic == null ? OLD_STATE_TO_DYNAMIC[0] : dynamic;
+    }
+
     public static final Int2ObjectMap<String> ITEM_RENAMES = Util.make(new Int2ObjectOpenHashMap<>(), m -> {
-        m.defaultReturnValue(BLOCK_RENAMES.defaultReturnValue());
-        m.putAll(BLOCK_RENAMES);
+        m.defaultReturnValue("minecraft:air");
         m.put(256, "minecraft:iron_shovel");
         m.put(257, "minecraft:iron_pickaxe");
         m.put(258, "minecraft:iron_axe");
@@ -225,6 +167,106 @@ public class Schema69420 extends Schema {
         m.put(2256, "minecraft:music_disc_13");
         m.put(2257, "minecraft:music_disc_cat");
     });
+
+    static {
+        putState(0, "minecraft:air");
+        putState(1, "minecraft:stone");
+        putState(2, "minecraft:grass_block");
+        putState(3, "minecraft:dirt");
+        putState(4, "minecraft:cobblestone");
+        putState(5, "minecraft:oak_planks");
+        putState(6, "minecraft:sapling");
+        putState(7, "minecraft:bedrock");
+        putState(8, "minecraft:flowing_water");
+        putState(9, "minecraft:water");
+        putState(10, "minecraft:flowing_lava");
+        putState(11, "minecraft:lava");
+        putState(12, "minecraft:sand");
+        putState(13, "minecraft:gravel");
+        putState(14, "minecraft:gold_ore");
+        putState(15, "minecraft:iron_ore");
+        putState(16, "minecraft:coal_ore");
+        putState(17, "minecraft:log");
+        putState(18, "minecraft:leaves");
+        putState(19, "minecraft:sponge");
+        putState(20, "minecraft:glass");
+        putState(21, "minecraft:lapis_ore");
+        putState(22, "minecraft:lapis_block");
+        putState(23, "minecraft:dispenser");
+        putState(24, "minecraft:sandstone");
+        putState(25, "minecraft:note_block");
+        putState(26, "minecraft:red_bed");
+        putState(27, "minecraft:powered_rail");
+        putState(28, "minecraft:detector_rail");
+        putState(29, "minecraft:sticky_piston");
+        putState(30, "minecraft:cobweb");
+        putState(31, "minecraft:grass");
+        putState(32, "minecraft:dead_bush");
+        putState(33, "minecraft:piston");
+        putState(34, "minecraft:piston_head");
+        putState(35, "minecraft:wool");
+        putState(36, "minecraft:moving_piston");
+        putState(37, "minecraft:dandelion");
+        putState(38, "minecraft:rose");
+        putState(39, "minecraft:brown_mushroom");
+        putState(40, "minecraft:red_mushroom");
+        putState(41, "minecraft:gold_block");
+        putState(42, "minecraft:iron_block");
+        putState(43, "minecraft:double_slab");
+        putState(44, "minecraft:slab");
+        putState(45, "minecraft:bricks");
+        putState(46, "minecraft:tnt");
+        putState(47, "minecraft:bookshelf");
+        putState(48, "minecraft:mossy_cobblestone");
+        putState(49, "minecraft:obsidian");
+        putState(50, "minecraft:torch");
+        putState(51, "minecraft:fire");
+        putState(52, "minecraft:spawner");
+        putState(53, "minecraft:oak_stairs");
+        putState(54, "minecraft:chest");
+        putState(55, "minecraft:redstone_wire");
+        putState(56, "minecraft:diamond_ore");
+        putState(57, "minecraft:diamond_block");
+        putState(58, "minecraft:crafting_table");
+        putState(59, "minecraft:wheat");
+        putState(60, "minecraft:farmland");
+        putState(61, "minecraft:furnace");
+        putState(62, "minecraft:furnace_lit");
+        putState(63, "minecraft:oak_sign");
+        putState(64, "minecraft:oak_door");
+        putState(65, "minecraft:ladder");
+        putState(66, "minecraft:rail");
+        putState(67, "minecraft:cobblestone_stairs");
+        putState(68, "minecraft:oak_wall_sign");
+        putState(69, "minecraft:lever");
+        putState(70, "minecraft:oak_pressure_plate");
+        putState(71, "minecraft:iron_door");
+        putState(72, "minecraft:stone_pressure_plate");
+        putState(73, "minecraft:redstone_ore");
+        putState(74, "minecraft:redstone_ore_lit");
+        putState(75, "minecraft:redstone_torch");
+        putState(76, "minecraft:redstone_torch_lit");
+        putState(77, "minecraft:stone_button");
+        putState(78, "minecraft:snow");
+        putState(79, "minecraft:ice");
+        putState(80, "minecraft:snow_block");
+        putState(81, "minecraft:cactus");
+        putState(82, "minecraft:clay");
+        putState(83, "minecraft:sugar_cane");
+        putState(84, "minecraft:jukebox");
+        putState(85, "minecraft:oak_fence");
+        putState(86, "minecraft:carved_pumpkin");
+        putState(87, "minecraft:netherrack");
+        putState(88, "minecraft:soul_sand");
+        putState(89, "minecraft:glowstone");
+        putState(90, "minecraft:nether_portal");
+        putState(91, "minecraft:jack_o_lantern");
+        putState(92, "minecraft:cake");
+        putState(93, "minecraft:repeater");
+        putState(94, "minecraft:repeater_lit");
+        putState(95, "minecraft:locked_chest");
+        putState(96, "minecraft:oak_trapdoor");
+    }
 
     public Schema69420(int versionKey, Schema parent) {
         super(versionKey, parent);

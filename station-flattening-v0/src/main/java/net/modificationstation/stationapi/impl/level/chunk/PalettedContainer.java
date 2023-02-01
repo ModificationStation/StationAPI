@@ -317,8 +317,8 @@ public class PalettedContainer<T>
 
             @Override
             public <A> PalettedContainer.DataProvider<A> createDataProvider(IndexedIterable<A> idList, int bits) {
-                //noinspection unchecked
                 if (bits >= 0 && bits < BLOCKSTATE_DATA_PROVIDERS.length)
+                    //noinspection unchecked
                     return (DataProvider<A>) BLOCKSTATE_DATA_PROVIDERS[bits];
                 return new PalettedContainer.DataProvider<>(ID_LIST, MathHelper.ceilLog2(idList.size()));
             }

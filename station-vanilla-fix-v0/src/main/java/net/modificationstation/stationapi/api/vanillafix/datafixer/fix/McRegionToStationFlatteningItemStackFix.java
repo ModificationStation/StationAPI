@@ -5,7 +5,7 @@ import com.mojang.datafixers.TypeRewriteRule;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
-import net.modificationstation.stationapi.api.vanillafix.datafixer.TypeReferences;
+import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
 
@@ -20,10 +20,10 @@ public abstract class McRegionToStationFlatteningItemStackFix extends DataFix {
 
     @Override
     public TypeRewriteRule makeRule() {
-        return this.writeFixAndRead(
+        return writeFixAndRead(
                 name,
-                this.getInputSchema().getType(TypeReferences.ITEM_STACK),
-                this.getOutputSchema().getType(TypeReferences.ITEM_STACK),
+                getInputSchema().getType(TypeReferences.ITEM_STACK),
+                getOutputSchema().getType(TypeReferences.ITEM_STACK),
                 dynamic ->
                         dynamic.get("id").result().<Dynamic<?>>map(
                                 value -> dynamic

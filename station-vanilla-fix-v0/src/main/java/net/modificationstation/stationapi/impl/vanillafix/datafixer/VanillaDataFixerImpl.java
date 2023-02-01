@@ -8,6 +8,7 @@ import net.modificationstation.stationapi.api.event.datafixer.DataFixerRegisterE
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.vanillafix.datafixer.fix.McRegionToStationFlatteningChunkFix;
 import net.modificationstation.stationapi.api.vanillafix.datafixer.fix.McRegionToStationFlatteningItemStackFix;
 import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.Schema19132;
 import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.Schema69420;
@@ -25,22 +26,20 @@ public final class VanillaDataFixerImpl {
         DataFixerBuilder builder = new DataFixerBuilder(currentVersion);
         Schema schema19132 = builder.addSchema(19132, Schema19132::new);
         Schema schema69420 = builder.addSchema(69420, Schema69420::new);
+        builder.addFixer(new McRegionToStationFlatteningChunkFix(schema69420));
         builder.addFixer(McRegionToStationFlatteningItemStackFix.create(schema69420, "Vanilla itemstack fix", Schema69420.ITEM_RENAMES));
         DataFixers.registerFixer(MODID, builder.buildOptimized(Util.getBootstrapExecutor()), currentVersion);
-//        File level = new File(Minecraft.getGameDirectory(), "saves/No Sortme Module - Copy");
-//        File levelDat = new File(level, "level.dat");
-//        CompoundTag levelTag;
+//        File regions = new File(Minecraft.getGameDirectory(), "saves/No Sortme Module Copy/region");
+//        File region = new File(regions, "r.0.0.mcr");
+//        RegionFile regionFile = new RegionFile(region);
+//        CompoundTag chunkTag;
+//        chunkTag = NBTIO.readTag(regionFile.getChunkDataInputStream(0, 0));
+////        CompoundTag playerTag = chunkTag.getCompoundTag("Data").getCompoundTag("Player");
+//        CompoundTag newTag = (CompoundTag) DataFixers.update(TypeReferences.CHUNK, NbtOps.INSTANCE, chunkTag);
+////        chunkTag.getCompoundTag("Data").put("Player", newTag);
+//        File levelNew = new File(regions, "new_chunk.dat");
 //        try {
-//            levelTag = NBTIO.readGzipped(new FileInputStream(levelDat));
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//        CompoundTag playerTag = levelTag.getCompoundTag("Data").getCompoundTag("Player");
-//        CompoundTag newTag = (CompoundTag) DataFixers.update(TypeReferences.PLAYER, NbtOps.INSTANCE, playerTag);
-//        levelTag.getCompoundTag("Data").put("Player", newTag);
-//        File levelNew = new File(level, "level_new.dat");
-//        try {
-//            NBTIO.writeGzipped(levelTag, new FileOutputStream(levelNew));
+//            NBTIO.writeGzipped(newTag, new FileOutputStream(levelNew));
 //        } catch (FileNotFoundException e) {
 //            throw new RuntimeException(e);
 //        }

@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.vanillafix.datafixer;
+package net.modificationstation.stationapi.api.datafixer;
 
 import com.mojang.datafixers.DSL;
 import lombok.AccessLevel;

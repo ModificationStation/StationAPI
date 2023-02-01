@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.vanillafix.datafixer.schema;
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.templates.TypeTemplate;
-import net.modificationstation.stationapi.api.vanillafix.datafixer.TypeReferences;
+import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 
 import java.util.Collections;
 import java.util.Map;
