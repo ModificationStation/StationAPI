@@ -40,6 +40,6 @@ public class MixinLevelProperties {
             )
     )
     private CompoundTag addDataVersions(CompoundTag playerTag) {
-        return (CompoundTag) DataFixers.addDataVersions(NbtOps.INSTANCE, playerTag);
+        return NbtHelper.addDataVersions(playerTag);
     }
 }

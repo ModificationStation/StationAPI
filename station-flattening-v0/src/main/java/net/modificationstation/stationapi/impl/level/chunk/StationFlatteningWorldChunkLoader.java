@@ -8,6 +8,8 @@ import net.minecraft.level.storage.RegionLoader;
 import net.minecraft.util.io.AbstractTag;
 import net.minecraft.util.io.CompoundTag;
 import net.minecraft.util.io.NBTIO;
+import net.modificationstation.stationapi.api.datafixer.TypeReferences;
+import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.impl.level.StationFlatteningWorldManager;
 
 import java.io.DataInputStream;
@@ -35,7 +37,7 @@ public class StationFlatteningWorldChunkLoader implements ChunkIO {
             System.out.println("Chunk file at " + i + "," + j + " is missing level data, skipping");
             return null;
         }
-//        compoundTag = (CompoundTag) DataFixers.update(TypeReferences.CHUNK, NbtOps.INSTANCE, compoundTag);
+        compoundTag = NbtHelper.update(TypeReferences.CHUNK, compoundTag);
         if (!compoundTag.getCompoundTag("Level").containsKey(SECTIONS)) {
             System.out.println("Chunk file at " + i + "," + j + " is missing section data, skipping");
             return null;
@@ -60,7 +62,7 @@ public class StationFlatteningWorldChunkLoader implements ChunkIO {
         CompoundTag compoundTag2 = new CompoundTag();
         compoundTag.put("Level", (AbstractTag) compoundTag2);
         StationFlatteningWorldManager.saveChunk(chunk, world, compoundTag2);
-//        compoundTag = (CompoundTag) DataFixers.addDataVersions(NbtOps.INSTANCE, compoundTag);
+        compoundTag = NbtHelper.addDataVersions(compoundTag);
         NBTIO.writeTag(compoundTag, dataOutputStream);
         try {
             dataOutputStream.close();

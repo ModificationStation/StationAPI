@@ -1,6 +1,8 @@
 package net.modificationstation.stationapi.api.nbt;
 
 import com.mojang.datafixers.DSL;
+import com.mojang.datafixers.DataFix;
+import com.mojang.serialization.Dynamic;
 import net.minecraft.util.io.AbstractTag;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
@@ -35,6 +37,14 @@ public class NbtHelper {
      * @param compound the NBT compound object to fix
      */
     public static CompoundTag update(DSL.TypeReference fixType, CompoundTag compound) {
-        return (CompoundTag) DataFixers.update(fixType, NbtOps.INSTANCE, compound);
+        return (CompoundTag) DataFixers.update(fixType, new Dynamic<>(NbtOps.INSTANCE, compound)).getValue();
+    }
+
+    public static CompoundTag addDataVersions(CompoundTag compound) {
+        return (CompoundTag) DataFixers.addDataVersions(new Dynamic<>(NbtOps.INSTANCE, compound)).getValue();
+    }
+
+    public static boolean requiresUpdating(CompoundTag compound) {
+        return DataFixers.requiresUpdating(new Dynamic<>(NbtOps.INSTANCE, compound));
     }
 }

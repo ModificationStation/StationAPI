@@ -31,25 +31,25 @@ public final class DataFixers {
         DATA_FIXERS.put(mod, new DataFixerEntry(fixer, currentVersion));
     }
 
-    public static <T> T update(DSL.TypeReference type, DynamicOps<T> ops, T input) {
+    public static <T> Dynamic<T> update(DSL.TypeReference type, Dynamic<T> dynamic) {
         init();
-        T dataVersions = ops.get(input, DATA_VERSIONS).result().orElseGet(() -> ops.createMap(Collections.emptyMap()));
-        T ret = input;
+        Dynamic<T> dataVersions = dynamic.get(DATA_VERSIONS).result().orElseGet(() -> dynamic.createMap(Collections.emptyMap()));
+        Dynamic<T> ret = dynamic;
         for (Reference2ReferenceMap.Entry<ModID, DataFixerEntry> fixerEntry : DATA_FIXERS.reference2ReferenceEntrySet())
-            ret = fixerEntry.getValue().fixer.update(type, new Dynamic<>(ops, ret), ops.get(dataVersions, fixerEntry.getKey().toString()).result().map(version -> ops.getNumberValue(version).getOrThrow(false, LOGGER::error)).orElse(0).intValue(), fixerEntry.getValue().currentVersion).getValue();
+            ret = fixerEntry.getValue().fixer.update(type, ret, dataVersions.get(fixerEntry.getKey().toString()).asInt(0), fixerEntry.getValue().currentVersion);
         return ret;
     }
 
-    public static <T> T addDataVersions(DynamicOps<T> ops, T input) {
+    public static <T> Dynamic<T> addDataVersions(Dynamic<T> dynamic) {
         init();
-        return ops.set(input, DATA_VERSIONS, ops.createMap(DATA_FIXERS.reference2ReferenceEntrySet().stream().collect(Collectors.toMap(t -> ops.createString(t.getKey().toString()), t -> ops.createInt(t.getValue().currentVersion)))));
+        return dynamic.set(DATA_VERSIONS, dynamic.createMap(DATA_FIXERS.reference2ReferenceEntrySet().stream().collect(Collectors.toMap(t -> dynamic.createString(t.getKey().toString()), t -> dynamic.createInt(t.getValue().currentVersion)))));
     }
 
-    public static <T> boolean requiresUpdating(DynamicOps<T> ops, T input) {
+    public static <T> boolean requiresUpdating(Dynamic<T> dynamic) {
         init();
-        T dataVersions = ops.get(input, DATA_VERSIONS).result().orElseGet(() -> ops.createMap(Collections.emptyMap()));
+        Dynamic<T> dataVersions = dynamic.get(DATA_VERSIONS).result().orElseGet(() -> dynamic.createMap(Collections.emptyMap()));
         for (Reference2ReferenceMap.Entry<ModID, DataFixerEntry> fixerEntry : DATA_FIXERS.reference2ReferenceEntrySet())
-            if (ops.get(dataVersions, fixerEntry.getKey().toString()).result().map(version -> ops.getNumberValue(version).getOrThrow(false, LOGGER::error)).orElse(0).intValue() < fixerEntry.getValue().currentVersion)
+            if (dataVersions.get(fixerEntry.getKey().toString()).asInt(0) < fixerEntry.getValue().currentVersion)
                 return true;
         return false;
     }

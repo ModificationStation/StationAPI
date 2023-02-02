@@ -11,9 +11,8 @@ import net.minecraft.util.ProgressListener;
 import net.minecraft.util.io.CompoundTag;
 import net.minecraft.util.io.NBTIO;
 import net.minecraft.util.maths.MathHelper;
-import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
-import net.modificationstation.stationapi.api.nbt.NbtOps;
+import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.impl.level.dimension.StationFlatteningDimensionFile;
 
 import java.io.*;
@@ -44,7 +43,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
             LevelProperties data;
             if (!worldPath.isDirectory() || (data = this.getLevelData(worldFolder = worldPath.getName())) == null) continue;
             CompoundTag worldTag = getWorldTag(worldFolder);
-            boolean requiresUpdating = data.getVersion() != 19132 || DataFixers.requiresUpdating(NbtOps.INSTANCE, worldTag);
+            boolean requiresUpdating = data.getVersion() != 19132 || NbtHelper.requiresUpdating(worldTag);
             String worldName = data.getName();
             if (worldName == null || MathHelper.isStringEmpty(worldName)) worldName = worldFolder;
             worlds.add(new LevelMetadata(worldFolder, worldName, data.getLastPlayed(), data.getSizeOnDisk(), requiresUpdating));
@@ -76,7 +75,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
 
     @Override
     public boolean isOld(String string) {
-        return super.isOld(string) || DataFixers.requiresUpdating(NbtOps.INSTANCE, getWorldTag(string));
+        return super.isOld(string) || NbtHelper.requiresUpdating(getWorldTag(string));
     }
 
     @Override
@@ -96,7 +95,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
         System.out.println("Total conversion count is (in regions) " + n);
         convertChunks(regions, n, progress);
         CompoundTag newWorldTag = new CompoundTag();
-        newWorldTag.put("Data", DataFixers.addDataVersions(NbtOps.INSTANCE, getWorldTag(worldFolder)));
+        newWorldTag.put("Data", NbtHelper.addDataVersions(getWorldTag(worldFolder)));
         try {
             File file = new File(worldFile, "level.dat_new");
             File file2 = new File(worldFile, "level.dat_old");
@@ -141,7 +140,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    CompoundTag updatedChunkTag = (CompoundTag) DataFixers.addDataVersions(NbtOps.INSTANCE, DataFixers.update(TypeReferences.CHUNK, NbtOps.INSTANCE, chunkTag));
+                    CompoundTag updatedChunkTag = NbtHelper.addDataVersions(NbtHelper.update(TypeReferences.CHUNK, chunkTag));
                     try (DataOutputStream outStream = region.getChunkDataOutputStream(x, z)) {
                         NBTIO.writeTag(updatedChunkTag, outStream);
                     } catch (IOException e) {
