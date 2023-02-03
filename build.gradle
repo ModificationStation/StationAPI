@@ -1,12 +1,16 @@
+import net.fabricmc.loom.util.GroovyXmlUtil
+
 plugins {
     id "maven-publish"
-    id 'babric-loom' version '1.0.1'
+    id 'babric-loom' version '1.1.5'
 }
 
-def getSubprojectVersion(project, ver) {
+@SuppressWarnings('unused') // Shut up, it IS used.
+static def getSubprojectVersion(project, ver) {
     return "${project.mod_version}-$ver"
 }
 
+@SuppressWarnings('unused')
 def moduleDependencies(Project project, String... projectNames) {
     project.with {
         def modules = projectNames.collect { dependencies.project(path: ":$it", configuration: 'dev') }
@@ -29,7 +33,7 @@ def moduleDependencies(Project project, String... projectNames) {
 }
 
 void addDependency(XmlProvider xml, String scope, Object... dependencies) {
-    def dependenciesNode = net.fabricmc.loom.util.GroovyXmlUtil.getOrCreateNode(xml.asNode(), "dependencies")
+    def dependenciesNode = GroovyXmlUtil.getOrCreateNode(xml.asNode(), "dependencies")
 
     dependencies.each {dependency ->
         dependenciesNode.appendNode('dependency').with {
@@ -203,6 +207,7 @@ allprojects {
 
                 pom {
                     withXml {
+                        //noinspection GroovyImplicitNullArgumentCall Not an implicit null, you fuck
                         def depsNode = asNode().appendNode("dependencies")
                         // Jank solution to an annoying issue
                         ArrayList<String[]> deps = new ArrayList<>()
@@ -311,10 +316,12 @@ loom {
     runs {
         register("runTestmodClient") {
             source("test")
+            //noinspection GroovyImplicitNullArgumentCall
             client()
         }
         register("runTestmodServer") {
             source("test")
+            //noinspection GroovyImplicitNullArgumentCall
             server()
         }
     }
