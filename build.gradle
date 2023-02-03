@@ -207,6 +207,7 @@ allprojects {
 
                 pom {
                     withXml {
+                        //noinspection GroovyImplicitNullArgumentCall Not an implicit null, you fuck
                         def depsNode = asNode().appendNode("dependencies")
                         // Jank solution to an annoying issue
                         ArrayList<String[]> deps = new ArrayList<>()
