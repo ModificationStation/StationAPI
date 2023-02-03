@@ -315,11 +315,13 @@ loom {
     runs {
         register("runTestmodClient") {
             source("test")
-            client(null)
+            //noinspection GroovyImplicitNullArgumentCall
+            client()
         }
         register("runTestmodServer") {
             source("test")
-            server(null)
+            //noinspection GroovyImplicitNullArgumentCall
+            server()
         }
     }
 }
