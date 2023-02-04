@@ -9,6 +9,7 @@ import net.modificationstation.stationapi.api.item.tool.ToolMaterialFactory;
 import net.modificationstation.stationapi.api.template.item.BlockStateItem;
 import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
 import net.modificationstation.stationapi.api.template.item.tool.TemplatePickaxe;
+import net.modificationstation.stationapi.api.template.item.tool.TemplateShears;
 
 import static net.modificationstation.sltest.SLTest.MODID;
 
@@ -26,6 +27,7 @@ public class ItemListener {
         variationBlockIdle = new BlockStateItem(MODID.id("variation_block_idle"), Blocks.VARIATION_BLOCK.get().getDefaultState()).setTranslationKey(MODID, "variationBlockIdle");
         variationBlockPassive = new BlockStateItem(MODID.id("variation_block_passive"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.PASSIVE)).setTranslationKey(MODID, "variationBlockPassive");
         variationBlockActive = new BlockStateItem(MODID.id("variation_block_active"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.ACTIVE)).setTranslationKey(MODID, "variationBlockActive");
+        testShears = new TestShears(MODID.id("test_shears")).setTranslationKey(MODID, "test_shears");
     }
 
     public static TemplateItemBase testItem;
@@ -38,4 +40,5 @@ public class ItemListener {
     public static TemplateItemBase variationBlockIdle;
     public static TemplateItemBase variationBlockPassive;
     public static TemplateItemBase variationBlockActive;
+    public static TemplateShears testShears;
 }
