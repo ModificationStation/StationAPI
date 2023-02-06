@@ -75,7 +75,10 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
 
     @Override
     public boolean isOld(String string) {
-        return super.isOld(string) || NbtHelper.requiresUpdating(getWorldTag(string));
+        if (super.isOld(string))
+            return true;
+        CompoundTag worldTag = getWorldTag(string);
+        return worldTag != null && NbtHelper.requiresUpdating(worldTag);
     }
 
     @Override
