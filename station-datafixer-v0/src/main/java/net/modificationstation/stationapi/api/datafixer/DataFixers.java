@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.api.datafixer;
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.serialization.Dynamic;
-import com.mojang.serialization.DynamicOps;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import lombok.AccessLevel;
@@ -15,7 +14,6 @@ import net.modificationstation.stationapi.api.registry.ModID;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

@@ -2,10 +2,8 @@ package net.modificationstation.stationapi.mixin.vanillafix;
 
 import net.minecraft.level.LevelProperties;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
-import net.modificationstation.stationapi.api.nbt.NbtOps;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

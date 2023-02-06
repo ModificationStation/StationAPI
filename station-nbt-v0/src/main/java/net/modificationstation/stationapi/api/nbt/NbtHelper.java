@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.nbt;
 
 import com.mojang.datafixers.DSL;
-import com.mojang.datafixers.DataFix;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.util.io.AbstractTag;
 import net.minecraft.util.io.CompoundTag;
