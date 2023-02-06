@@ -229,25 +229,19 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
 
     protected void renderGuiItemModel(ItemInstance stack, int x, int y, BakedModel model) {
         StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).setFilter(false, false);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glPushMatrix();
-        GL11.glTranslatef(x, y, 100);
+        GL11.glTranslated(x, y, 14.5 /* approximate. should probably be replaced later with a value properly calculated against vanilla's transformations */);
         GL11.glTranslatef(8, 8, 0);
         GL11.glScalef(1, -1, 1);
         GL11.glScalef(16, 16, 16);
         boolean bl = !model.isSideLit();
-        if (bl) {
-            GL11.glDisable(2896);
-        }
+        if (bl) GL11.glDisable(GL11.GL_LIGHTING);
         tessellator.start();
         this.renderItem(stack, ModelTransformation.Mode.GUI, 1, model);
         tessellator.draw();
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        if (bl) {
-            GL11.glEnable(2896);
-        }
+        if (bl) GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
+        GL11.glEnable(GL11.GL_CULL_FACE);
     }
 
     /**
