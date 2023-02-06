@@ -25,9 +25,11 @@ public final class PlacementStateImpl {
                 )
         ));
         if (placementState != event.block.getDefaultState()) event.placeFunction = () -> {
-            boolean ret = event.world.setBlockStateWithNotify(event.x, event.y, event.z, placementState) != null;
-            event.world.setTileMeta(event.x, event.y, event.z, event.meta);
-            return ret;
+            if (event.world.setBlockStateWithNotify(event.x, event.y, event.z, placementState) != null) {
+                event.world.setTileMeta(event.x, event.y, event.z, event.meta);
+                return true;
+            } else
+                return false;
         };
     }
 }
