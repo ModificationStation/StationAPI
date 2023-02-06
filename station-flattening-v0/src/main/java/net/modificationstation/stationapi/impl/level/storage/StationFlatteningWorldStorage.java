@@ -16,12 +16,10 @@ import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.impl.level.dimension.StationFlatteningDimensionFile;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 public class StationFlatteningWorldStorage extends McRegionLevelStorage {
 
@@ -92,13 +90,18 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
         File worldFile = new File(this.path, worldFolder);
         System.out.println("Scanning folders...");
         scanDimensionDir(worldFile, regions);
-        for (File dim : Objects.requireNonNull(worldFile.listFiles((dir, name) -> new File(dir, name).isDirectory() && name.startsWith("DIM"))))
-            scanDimensionDir(dim, regions);
+        File[] dims = worldFile.listFiles((dir, name) -> new File(dir, name).isDirectory() && name.startsWith("DIM"));
+        if (dims != null)
+            for (File dim : dims)
+                scanDimensionDir(dim, regions);
         int n = regions.size();
         System.out.println("Total conversion count is (in regions) " + n);
         convertChunks(regions, n, progress);
         CompoundTag newWorldTag = new CompoundTag();
-        newWorldTag.put("Data", NbtHelper.addDataVersions(getWorldTag(worldFolder)));
+        CompoundTag newWorldDataTag = NbtHelper.addDataVersions(getWorldTag(worldFolder));
+        System.out.println("Converting player inventory...");
+        newWorldDataTag.put("Player", NbtHelper.addDataVersions(NbtHelper.update(TypeReferences.PLAYER, newWorldDataTag.getCompoundTag("Player"))));
+        newWorldTag.put("Data", newWorldDataTag);
         try {
             File file = new File(worldFile, "level.dat_new");
             File file2 = new File(worldFile, "level.dat_old");
@@ -122,11 +125,9 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
 
     private void scanDimensionDir(File dimensionFolder, List<RegionFile> regions) {
         File regionFolder = new File(dimensionFolder, "region");
-        try (Stream<Path> walk = Files.walk(regionFolder.toPath())) {
-            walk.map(Path::toFile).filter(file -> file.isFile() && file.getName().endsWith(".mcr")).map(RegionFile::new).forEach(regions::add);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        File[] regionFiles = regionFolder.listFiles((dir, name) -> new File(dir, name).isFile() && name.endsWith(".mcr"));
+        if (regionFiles != null)
+            Arrays.stream(regionFiles).map(RegionFile::new).forEach(regions::add);
     }
 
     private void convertChunks(List<RegionFile> regions, int n, ProgressListener progress) {
