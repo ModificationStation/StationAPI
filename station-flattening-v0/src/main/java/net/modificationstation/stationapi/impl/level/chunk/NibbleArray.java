@@ -32,8 +32,6 @@ public class NibbleArray {
 	
 	public void copyArray(byte[] array) {
 		if (array.length != data.length) return;
-		for (int i = 0; i < data.length; i++) {
-			data[i] = array[i];
-		}
+		System.arraycopy(array, 0, data, 0, data.length);
 	}
 }
