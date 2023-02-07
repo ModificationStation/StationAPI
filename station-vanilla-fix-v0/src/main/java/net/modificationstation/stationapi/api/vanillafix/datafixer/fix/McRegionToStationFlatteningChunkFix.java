@@ -44,7 +44,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
     private <T> Dynamic<T> fixChunk(Dynamic<T> dynamic) {
         Optional<Dynamic<T>> optional = dynamic.get("Level").result();
         if (optional.isPresent() && optional.get().get("Blocks").asByteBufferOpt().result().isPresent()) {
-            return dynamic.set("Level", new Level(optional.get()).transform());
+            return dynamic.set("Level", new Level<>(optional.get()).transform());
         }
         return dynamic;
     }
@@ -58,8 +58,6 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
 
     static final class Level<T> {
         private final Dynamic<T> level;
-        private final int x;
-        private final int z;
         private final class_257 block_light;
         private final ByteBuffer blocks;
         private final class_257 data;
@@ -68,8 +66,6 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
 
         public Level(Dynamic<T> dynamic) {
             level = dynamic;
-            x = dynamic.get("xPos").asInt(0) << 4;
-            z = dynamic.get("zPos").asInt(0) << 4;
             block_light = new class_257(DataFixUtils.toArray(dynamic.get("BlockLight").asByteBuffer()));
             blocks = dynamic.get("Blocks").asByteBuffer();
             data = new class_257(DataFixUtils.toArray(dynamic.get("Data").asByteBuffer()));
@@ -77,11 +73,12 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
             sky_light = new class_257(DataFixUtils.toArray(dynamic.get("SkyLight").asByteBuffer()));
         }
 
-        public Dynamic<?> transform() {
+        public Dynamic<T> transform() {
             Dynamic<T> self = this.level;
 
             // create sections with blocks
-            Section[] sections = new Section[8];
+            //noinspection unchecked
+            Section<T>[] sections = new Section[8];
             for (int i = 0; i < 32768; i++) {
                 int worldY = i & 0b1111111;
                 int sectionY = worldY >> 4;
@@ -92,15 +89,15 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
                 int data = this.data.method_1703(x, worldY, z);
                 if (block > 0 || data > 0) {
                     if (sections[sectionY] == null)
-                        sections[sectionY] = new Section(self.createMap(Map.of(self.createString("y"), self.createByte((byte) sectionY))));
-                    Section section = sections[sectionY];
+                        sections[sectionY] = new Section<>(self.createMap(Map.of(self.createString("y"), self.createByte((byte) sectionY))));
+                    Section<T> section = sections[sectionY];
                     section.setBlock(x, y, z, Schema69420.lookupState(block));
                     section.setData(x, y, z, data);
                 }
             }
 
             // add lighting in created sections
-            for (Section section : sections) {
+            for (Section<T> section : sections) {
                 if (section != null) {
                     int sectionY = section.y;
                     int sectionWorldY = sectionY << 4;
@@ -145,11 +142,11 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
         }
     }
 
-    static class Section {
+    static class Section<T> {
 
         private final Int2ObjectBiMap<Dynamic<?>> paletteMap = Int2ObjectBiMap.create(32);
         private final ReferenceList<Dynamic<?>> paletteData = new ReferenceArrayList<>();
-        private final Dynamic<?> section;
+        private final Dynamic<T> section;
         private final int y;
         private final ReferenceSet<Dynamic<?>> seenStates = new ReferenceOpenHashSet<>();
         private final ChunkNibbleArray block_light = new ChunkNibbleArray(4096);
@@ -157,7 +154,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
         private final ChunkNibbleArray data = new ChunkNibbleArray(4096);
         private final ChunkNibbleArray sky_light = new ChunkNibbleArray(4096);
 
-        public Section(Dynamic<?> section) {
+        public Section(Dynamic<T> section) {
             this.section = section;
             y = section.get("y").asInt(0);
             seenStates.add(AIR);
@@ -182,9 +179,9 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
             this.block_light.setValue(x << 8 | y << 4 | z, blockLight);
         }
 
-        public Dynamic<?> transform() {
-            Dynamic<?> self = this.section;
-            Dynamic<?> palette = self.createList(paletteData.stream());
+        public Dynamic<T> transform() {
+            Dynamic<T> self = this.section;
+            Dynamic<T> palette = self.createList(paletteData.stream());
             PackedIntegerArray array = new PackedIntegerArray(Math.max(4, MathHelper.ceilLog2(paletteData.size())), states.length);
             for (int i = 0; i < states.length; i++) array.set(i, states[i]);
             Dynamic<?> data = self.createLongList(Arrays.stream(array.getData()));
