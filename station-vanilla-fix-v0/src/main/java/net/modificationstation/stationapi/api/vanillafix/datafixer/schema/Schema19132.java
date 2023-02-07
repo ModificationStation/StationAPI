@@ -5,7 +5,7 @@ import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.templates.TypeTemplate;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -15,14 +15,25 @@ public class Schema19132 extends Schema {
         super(versionKey, parent);
     }
 
+    public static void targetItems(Schema schema, Map<String, Supplier<TypeTemplate>> map, String id) {
+        schema.register(map, id, () -> DSL.optionalFields("Items", DSL.list(TypeReferences.ITEM_STACK.in(schema))));
+    }
+
     @Override
     public Map<String, Supplier<TypeTemplate>> registerEntities(Schema schema) {
-        return Collections.emptyMap();
+        Map<String, Supplier<TypeTemplate>> map = new HashMap<>();
+        schema.register(map, "Item", (String name) -> DSL.optionalFields("Item", TypeReferences.ITEM_STACK.in(schema)));
+        targetItems(schema, map, "Minecart");
+        return map;
     }
 
     @Override
     public Map<String, Supplier<TypeTemplate>> registerBlockEntities(Schema schema) {
-        return Collections.emptyMap();
+        Map<String, Supplier<TypeTemplate>> map = new HashMap<>();
+        targetItems(schema, map, "Chest");
+        targetItems(schema, map, "Trap");
+        targetItems(schema, map, "Furnace");
+        return map;
     }
 
     @Override
