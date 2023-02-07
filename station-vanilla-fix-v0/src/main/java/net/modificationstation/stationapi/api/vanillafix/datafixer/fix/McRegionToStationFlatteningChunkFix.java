@@ -79,26 +79,46 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
 
         public Dynamic<?> transform() {
             Dynamic<T> self = this.level;
+
+            // create sections with blocks
             Section[] sections = new Section[8];
             for (int i = 0; i < 32768; i++) {
+                int worldY = i & 0b1111111;
+                int sectionY = worldY >> 4;
+                int y = (worldY & 0b1111);
+                int z = i >> 7 & 0b1111;
+                int x = i >> 11;
                 int block = Byte.toUnsignedInt(blocks.get(i));
-                if (block > 0) {
-                    int worldY = i & 0b1111111;
-                    int sectionY = worldY >> 4;
+                int data = this.data.method_1703(x, worldY, z);
+                if (block > 0 || data > 0) {
                     if (sections[sectionY] == null)
                         sections[sectionY] = new Section(self.createMap(Map.of(self.createString("y"), self.createByte((byte) sectionY))));
-                    int y = (worldY & 0b1111);
-                    int z = i >> 7 & 0b1111;
-                    int x = i >> 11;
                     Section section = sections[sectionY];
-                    section.setSkyLight(x, y, z, sky_light.method_1703(x, worldY, z));
                     section.setBlock(x, y, z, Schema69420.lookupState(block));
-                    section.setData(x, y, z, data.method_1703(x, worldY, z));
-                    section.setBlockLight(x, y, z, block_light.method_1703(x, worldY, z));
+                    section.setData(x, y, z, data);
                 }
             }
+
+            // add lighting in created sections
+            for (Section section : sections) {
+                if (section != null) {
+                    int sectionY = section.y;
+                    int sectionWorldY = sectionY << 4;
+                    for (int i = 0; i < 4096; i++) {
+                        int x = i >> 8;
+                        int y = i >> 4 & 0b1111;
+                        int z = i & 0b1111;
+                        int worldY = sectionWorldY | y;
+                        section.setSkyLight(x, y, z, sky_light.method_1703(x, worldY, z));
+                        section.setBlockLight(x, y, z, block_light.method_1703(x, worldY, z));
+                    }
+                }
+            }
+
+            // expand height map
             byte[] height_map = new byte[512];
             for (int i = 0; i < height_map.length >> 1; i++) height_map[i << 1] = this.height_map.get(i);
+
             return self
                     .set(SECTIONS, self.createList(Arrays.stream(sections).filter(Objects::nonNull).map(Section::transform)))
                     .set("height_map", self.createByteList(ByteBuffer.wrap(height_map)))
