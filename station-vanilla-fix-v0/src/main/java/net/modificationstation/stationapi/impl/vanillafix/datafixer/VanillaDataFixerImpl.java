@@ -26,22 +26,8 @@ public final class VanillaDataFixerImpl {
         DataFixerBuilder builder = new DataFixerBuilder(CURRENT_VERSION);
         Schema schema19132 = builder.addSchema(19132, Schema19132::new);
         Schema schema69420 = builder.addSchema(69420, Schema69420::new);
-        builder.addFixer(new McRegionToStationFlatteningChunkFix(schema69420));
-        builder.addFixer(McRegionToStationFlatteningItemStackFix.create(schema69420, "Vanilla itemstack fix", Schema69420.ITEM_RENAMES));
+        builder.addFixer(McRegionToStationFlatteningChunkFix.create(schema69420, "Vanilla chunk fix", Schema69420::lookupState));
+        builder.addFixer(McRegionToStationFlatteningItemStackFix.create(schema69420, "Vanilla itemstack fix", Schema69420::lookupItem));
         DataFixers.registerFixer(MODID, builder.buildOptimized(Util.getBootstrapExecutor()), CURRENT_VERSION);
-//        File regions = new File(Minecraft.getGameDirectory(), "saves/No Sortme Module Copy/region");
-//        File region = new File(regions, "r.0.0.mcr");
-//        RegionFile regionFile = new RegionFile(region);
-//        CompoundTag chunkTag;
-//        chunkTag = NBTIO.readTag(regionFile.getChunkDataInputStream(0, 0));
-////        CompoundTag playerTag = chunkTag.getCompoundTag("Data").getCompoundTag("Player");
-//        CompoundTag newTag = (CompoundTag) DataFixers.update(TypeReferences.CHUNK, NbtOps.INSTANCE, chunkTag);
-////        chunkTag.getCompoundTag("Data").put("Player", newTag);
-//        File levelNew = new File(regions, "new_chunk.dat");
-//        try {
-//            NBTIO.writeGzipped(newTag, new FileOutputStream(levelNew));
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 }

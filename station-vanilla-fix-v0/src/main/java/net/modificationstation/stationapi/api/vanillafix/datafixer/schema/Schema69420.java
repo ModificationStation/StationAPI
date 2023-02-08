@@ -4,8 +4,7 @@ import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.templates.TypeTemplate;
 import com.mojang.serialization.Dynamic;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
@@ -19,7 +18,10 @@ import static net.modificationstation.stationapi.impl.vanillafix.datafixer.Vanil
 
 public class Schema69420 extends Schema {
 
-    private static final Dynamic<?>[] OLD_STATE_TO_DYNAMIC = new Dynamic[256];
+    private static final Dynamic<?>[] OLD_ID_TO_BLOCKSTATE = new Dynamic[256];
+    private static final Object2IntOpenHashMap<String> BLOCK_TO_OLD_ID = Util.make(new Object2IntOpenHashMap<>(256), map -> map.defaultReturnValue(0));
+    private static final String[] OLD_ID_TO_ITEM = new String[32000];
+    private static final Object2IntOpenHashMap<String> ITEM_TO_OLD_ID = Util.make(new Object2IntOpenHashMap<>(512), map -> map.defaultReturnValue(0));
 
     public static void putState(int oldId, String id, CompoundTag properties) {
         putState(oldId, Util.make(new CompoundTag(), tag -> {
@@ -33,140 +35,48 @@ public class Schema69420 extends Schema {
     }
 
     public static void putState(int oldId, CompoundTag tag) {
-        ITEM_RENAMES.put(oldId, tag.getString("Name"));
-        Dynamic<?> dynamic = parseState(tag);
-        OLD_STATE_TO_DYNAMIC[oldId] = dynamic;
-    }
-
-    public static String lookupStateBlock(int stateId) {
-        if (stateId < 0 || stateId >= OLD_STATE_TO_DYNAMIC.length) {
-            return "minecraft:air";
-        }
-        Dynamic<?> dynamic = OLD_STATE_TO_DYNAMIC[stateId];
-        return dynamic == null ? "minecraft:air" : dynamic.get("Name").asString("");
-    }
-
-    public static Dynamic<?> parseState(CompoundTag tag) {
-        return new Dynamic<>(NbtOps.INSTANCE, tag);
+        String id = tag.getString("Name");
+        BLOCK_TO_OLD_ID.put(id, oldId);
+        Dynamic<?> dynamic = new Dynamic<>(NbtOps.INSTANCE, tag);
+        OLD_ID_TO_BLOCKSTATE[oldId] = dynamic;
+        putItem(oldId, id);
     }
 
     public static Dynamic<?> lookupState(int stateId) {
         Dynamic<?> dynamic = null;
-        if (stateId >= 0 && stateId < OLD_STATE_TO_DYNAMIC.length) {
-            dynamic = OLD_STATE_TO_DYNAMIC[stateId];
+        if (stateId >= 0 && stateId < OLD_ID_TO_BLOCKSTATE.length) {
+            dynamic = OLD_ID_TO_BLOCKSTATE[stateId];
         }
-        return dynamic == null ? OLD_STATE_TO_DYNAMIC[0] : dynamic;
+        return dynamic == null ? OLD_ID_TO_BLOCKSTATE[0] : dynamic;
     }
 
-    public static final Int2ObjectMap<String> ITEM_RENAMES = Util.make(new Int2ObjectOpenHashMap<>(), m -> {
-        m.defaultReturnValue("minecraft:air");
-        m.put(256, "minecraft:iron_shovel");
-        m.put(257, "minecraft:iron_pickaxe");
-        m.put(258, "minecraft:iron_axe");
-        m.put(259, "minecraft:flint_and_steel");
-        m.put(260, "minecraft:apple");
-        m.put(261, "minecraft:bow");
-        m.put(262, "minecraft:arrow");
-        m.put(263, "minecraft:coal");
-        m.put(264, "minecraft:diamond");
-        m.put(265, "minecraft:iron_ingot");
-        m.put(266, "minecraft:gold_ingot");
-        m.put(267, "minecraft:iron_sword");
-        m.put(268, "minecraft:wooden_sword");
-        m.put(269, "minecraft:wooden_shovel");
-        m.put(270, "minecraft:wooden_pickaxe");
-        m.put(271, "minecraft:wooden_axe");
-        m.put(272, "minecraft:stone_sword");
-        m.put(273, "minecraft:stone_shovel");
-        m.put(274, "minecraft:stone_pickaxe");
-        m.put(275, "minecraft:stone_axe");
-        m.put(276, "minecraft:diamond_sword");
-        m.put(277, "minecraft:diamond_shovel");
-        m.put(278, "minecraft:diamond_pickaxe");
-        m.put(279, "minecraft:diamond_axe");
-        m.put(280, "minecraft:stick");
-        m.put(281, "minecraft:bowl");
-        m.put(282, "minecraft:mushroom_stew");
-        m.put(283, "minecraft:golden_sword");
-        m.put(284, "minecraft:golden_shovel");
-        m.put(285, "minecraft:golden_pickaxe");
-        m.put(286, "minecraft:golden_axe");
-        m.put(287, "minecraft:string");
-        m.put(288, "minecraft:feather");
-        m.put(289, "minecraft:gunpowder");
-        m.put(290, "minecraft:wooden_hoe");
-        m.put(291, "minecraft:stone_hoe");
-        m.put(292, "minecraft:iron_hoe");
-        m.put(293, "minecraft:diamond_hoe");
-        m.put(294, "minecraft:golden_hoe");
-        m.put(295, "minecraft:wheat_seeds");
-        m.put(296, "minecraft:wheat");
-        m.put(297, "minecraft:bread");
-        m.put(298, "minecraft:leather_helmet");
-        m.put(299, "minecraft:leather_chestplate");
-        m.put(300, "minecraft:leather_leggings");
-        m.put(301, "minecraft:leather_boots");
-        m.put(302, "minecraft:chainmail_helmet");
-        m.put(303, "minecraft:chainmail_chestplate");
-        m.put(304, "minecraft:chainmail_leggings");
-        m.put(305, "minecraft:chainmail_boots");
-        m.put(306, "minecraft:iron_helmet");
-        m.put(307, "minecraft:iron_chestplate");
-        m.put(308, "minecraft:iron_leggings");
-        m.put(309, "minecraft:iron_boots");
-        m.put(310, "minecraft:diamond_helmet");
-        m.put(311, "minecraft:diamond_chestplate");
-        m.put(312, "minecraft:diamond_leggings");
-        m.put(313, "minecraft:diamond_boots");
-        m.put(314, "minecraft:golden_helmet");
-        m.put(315, "minecraft:golden_chestplate");
-        m.put(316, "minecraft:golden_leggings");
-        m.put(317, "minecraft:golden_boots");
-        m.put(318, "minecraft:flint");
-        m.put(319, "minecraft:porkchop");
-        m.put(320, "minecraft:cooked_porkchop");
-        m.put(321, "minecraft:painting");
-        m.put(322, "minecraft:golden_apple");
-        m.put(323, "minecraft:oak_sign");
-        m.put(324, "minecraft:oak_door");
-        m.put(325, "minecraft:bucket");
-        m.put(326, "minecraft:water_bucket");
-        m.put(327, "minecraft:lava_bucket");
-        m.put(328, "minecraft:minecart");
-        m.put(329, "minecraft:saddle");
-        m.put(330, "minecraft:iron_door");
-        m.put(331, "minecraft:redstone");
-        m.put(332, "minecraft:snowball");
-        m.put(333, "minecraft:oak_boat");
-        m.put(334, "minecraft:leather");
-        m.put(335, "minecraft:milk_bucket");
-        m.put(336, "minecraft:brick");
-        m.put(337, "minecraft:clay_ball");
-        m.put(338, "minecraft:sugar_cane");
-        m.put(339, "minecraft:paper");
-        m.put(340, "minecraft:book");
-        m.put(341, "minecraft:slime_ball");
-        m.put(342, "minecraft:chest_minecart");
-        m.put(343, "minecraft:furnace_minecart");
-        m.put(344, "minecraft:egg");
-        m.put(345, "minecraft:compass");
-        m.put(346, "minecraft:fishing_rod");
-        m.put(347, "minecraft:clock");
-        m.put(348, "minecraft:glowstone_dust");
-        m.put(349, "minecraft:cod");
-        m.put(350, "minecraft:cooked_cod");
-        m.put(351, "minecraft:dye");
-        m.put(352, "minecraft:bone");
-        m.put(353, "minecraft:sugar");
-        m.put(354, "minecraft:cake");
-        m.put(355, "minecraft:red_bed");
-        m.put(356, "minecraft:repeater");
-        m.put(357, "minecraft:cookie");
-        m.put(358, "minecraft:map");
-        m.put(359, "minecraft:shears");
-        m.put(2256, "minecraft:music_disc_13");
-        m.put(2257, "minecraft:music_disc_cat");
-    });
+    public static String lookupBlockId(int id) {
+        if (id < 0 || id >= OLD_ID_TO_BLOCKSTATE.length) {
+            return "minecraft:air";
+        }
+        Dynamic<?> dynamic = OLD_ID_TO_BLOCKSTATE[id];
+        return dynamic == null ? "minecraft:air" : dynamic.get("Name").asString("");
+    }
+
+    public static <T> int lookupOldBlockId(Dynamic<T> dynamic) {
+        return BLOCK_TO_OLD_ID.getInt(dynamic.get("Name").asString(""));
+    }
+
+    public static void putItem(int oldId, String id) {
+        OLD_ID_TO_ITEM[oldId] = id;
+        ITEM_TO_OLD_ID.put(id, oldId);
+    }
+
+    public static String lookupItem(int oldId) {
+        if (oldId < 0 || oldId >= OLD_ID_TO_ITEM.length)
+            return "minecraft:air";
+        String item = OLD_ID_TO_ITEM[oldId];
+        return item == null ? "minecraft:air" : item;
+    }
+
+    public static int lookupOldItemId(String id) {
+        return ITEM_TO_OLD_ID.getInt(id);
+    }
 
     static {
         putState(0, "minecraft:air");
@@ -266,6 +176,112 @@ public class Schema69420 extends Schema {
         putState(94, "minecraft:repeater_lit");
         putState(95, "minecraft:locked_chest");
         putState(96, "minecraft:oak_trapdoor");
+        putItem(256, "minecraft:iron_shovel");
+        putItem(257, "minecraft:iron_pickaxe");
+        putItem(258, "minecraft:iron_axe");
+        putItem(259, "minecraft:flint_and_steel");
+        putItem(260, "minecraft:apple");
+        putItem(261, "minecraft:bow");
+        putItem(262, "minecraft:arrow");
+        putItem(263, "minecraft:coal");
+        putItem(264, "minecraft:diamond");
+        putItem(265, "minecraft:iron_ingot");
+        putItem(266, "minecraft:gold_ingot");
+        putItem(267, "minecraft:iron_sword");
+        putItem(268, "minecraft:wooden_sword");
+        putItem(269, "minecraft:wooden_shovel");
+        putItem(270, "minecraft:wooden_pickaxe");
+        putItem(271, "minecraft:wooden_axe");
+        putItem(272, "minecraft:stone_sword");
+        putItem(273, "minecraft:stone_shovel");
+        putItem(274, "minecraft:stone_pickaxe");
+        putItem(275, "minecraft:stone_axe");
+        putItem(276, "minecraft:diamond_sword");
+        putItem(277, "minecraft:diamond_shovel");
+        putItem(278, "minecraft:diamond_pickaxe");
+        putItem(279, "minecraft:diamond_axe");
+        putItem(280, "minecraft:stick");
+        putItem(281, "minecraft:bowl");
+        putItem(282, "minecraft:mushroom_stew");
+        putItem(283, "minecraft:golden_sword");
+        putItem(284, "minecraft:golden_shovel");
+        putItem(285, "minecraft:golden_pickaxe");
+        putItem(286, "minecraft:golden_axe");
+        putItem(287, "minecraft:string");
+        putItem(288, "minecraft:feather");
+        putItem(289, "minecraft:gunpowder");
+        putItem(290, "minecraft:wooden_hoe");
+        putItem(291, "minecraft:stone_hoe");
+        putItem(292, "minecraft:iron_hoe");
+        putItem(293, "minecraft:diamond_hoe");
+        putItem(294, "minecraft:golden_hoe");
+        putItem(295, "minecraft:wheat_seeds");
+        putItem(296, "minecraft:wheat");
+        putItem(297, "minecraft:bread");
+        putItem(298, "minecraft:leather_helmet");
+        putItem(299, "minecraft:leather_chestplate");
+        putItem(300, "minecraft:leather_leggings");
+        putItem(301, "minecraft:leather_boots");
+        putItem(302, "minecraft:chainmail_helmet");
+        putItem(303, "minecraft:chainmail_chestplate");
+        putItem(304, "minecraft:chainmail_leggings");
+        putItem(305, "minecraft:chainmail_boots");
+        putItem(306, "minecraft:iron_helmet");
+        putItem(307, "minecraft:iron_chestplate");
+        putItem(308, "minecraft:iron_leggings");
+        putItem(309, "minecraft:iron_boots");
+        putItem(310, "minecraft:diamond_helmet");
+        putItem(311, "minecraft:diamond_chestplate");
+        putItem(312, "minecraft:diamond_leggings");
+        putItem(313, "minecraft:diamond_boots");
+        putItem(314, "minecraft:golden_helmet");
+        putItem(315, "minecraft:golden_chestplate");
+        putItem(316, "minecraft:golden_leggings");
+        putItem(317, "minecraft:golden_boots");
+        putItem(318, "minecraft:flint");
+        putItem(319, "minecraft:porkchop");
+        putItem(320, "minecraft:cooked_porkchop");
+        putItem(321, "minecraft:painting");
+        putItem(322, "minecraft:golden_apple");
+        putItem(323, "minecraft:oak_sign");
+        putItem(324, "minecraft:oak_door");
+        putItem(325, "minecraft:bucket");
+        putItem(326, "minecraft:water_bucket");
+        putItem(327, "minecraft:lava_bucket");
+        putItem(328, "minecraft:minecart");
+        putItem(329, "minecraft:saddle");
+        putItem(330, "minecraft:iron_door");
+        putItem(331, "minecraft:redstone");
+        putItem(332, "minecraft:snowball");
+        putItem(333, "minecraft:oak_boat");
+        putItem(334, "minecraft:leather");
+        putItem(335, "minecraft:milk_bucket");
+        putItem(336, "minecraft:brick");
+        putItem(337, "minecraft:clay_ball");
+        putItem(338, "minecraft:sugar_cane");
+        putItem(339, "minecraft:paper");
+        putItem(340, "minecraft:book");
+        putItem(341, "minecraft:slime_ball");
+        putItem(342, "minecraft:chest_minecart");
+        putItem(343, "minecraft:furnace_minecart");
+        putItem(344, "minecraft:egg");
+        putItem(345, "minecraft:compass");
+        putItem(346, "minecraft:fishing_rod");
+        putItem(347, "minecraft:clock");
+        putItem(348, "minecraft:glowstone_dust");
+        putItem(349, "minecraft:cod");
+        putItem(350, "minecraft:cooked_cod");
+        putItem(351, "minecraft:dye");
+        putItem(352, "minecraft:bone");
+        putItem(353, "minecraft:sugar");
+        putItem(354, "minecraft:cake");
+        putItem(355, "minecraft:red_bed");
+        putItem(356, "minecraft:repeater");
+        putItem(357, "minecraft:cookie");
+        putItem(358, "minecraft:map");
+        putItem(359, "minecraft:shears");
+        putItem(2256, "minecraft:music_disc_13");
+        putItem(2257, "minecraft:music_disc_cat");
     }
 
     public Schema69420(int versionKey, Schema parent) {
