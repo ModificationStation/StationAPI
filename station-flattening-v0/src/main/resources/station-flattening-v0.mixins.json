@@ -23,7 +23,8 @@
     "MixinPlayerBase",
     "MixinPlayerInventory",
     "MixinSkylandsLevelSource",
-    "MixinWorldPopulationRegion"
+    "MixinWorldPopulationRegion",
+    "RegionFileAccessor"
   ],
   "client": [
     "client.MixinClientLevel",

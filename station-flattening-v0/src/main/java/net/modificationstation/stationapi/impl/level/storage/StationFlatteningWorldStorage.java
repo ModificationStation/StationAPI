@@ -1,5 +1,8 @@
 package net.modificationstation.stationapi.impl.level.storage;
 
+import it.unimi.dsi.fastutil.ints.IntIterator;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.level.LevelProperties;
@@ -14,6 +17,7 @@ import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.impl.level.dimension.StationFlatteningDimensionFile;
+import net.modificationstation.stationapi.mixin.flattening.RegionFileAccessor;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -94,9 +98,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
         if (dims != null)
             for (File dim : dims)
                 scanDimensionDir(dim, regions);
-        int n = regions.size();
-        System.out.println("Total conversion count is (in regions) " + n);
-        convertChunks(regions, n, progress);
+        convertChunks(regions, progress);
         CompoundTag newWorldTag = new CompoundTag();
         CompoundTag newWorldDataTag = NbtHelper.addDataVersions(getWorldTag(worldFolder));
         System.out.println("Converting player inventory...");
@@ -130,12 +132,28 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
             Arrays.stream(regionFiles).map(RegionFile::new).forEach(regions::add);
     }
 
-    private void convertChunks(List<RegionFile> regions, int n, ProgressListener progress) {
-        for (int i = 0; i < n; i++) {
+    private void convertChunks(List<RegionFile> regions, ProgressListener progress) {
+        List<IntSet> existingChunks = new ArrayList<>();
+        int totalChunks = 0;
+        for (RegionFile region : regions) {
+            int[] offsets = ((RegionFileAccessor) region).getOffsets();
+            IntSet chunks = new IntOpenHashSet(offsets.length);
+            for (int i = 0; i < offsets.length; i++)
+                if (offsets[i] != 0)
+                    chunks.add(i);
+            existingChunks.add(chunks);
+            totalChunks += chunks.size();
+        }
+        System.out.println("Total conversion count is " + totalChunks);
+        int updatedChunks = 0;
+        for (int i = 0; i < regions.size(); i++) {
             RegionFile region = regions.get(i);
-            for (int chunk = 0; chunk < 1024; chunk++) {
-                int x = chunk & 0b11111;
-                int z = chunk >> 5;
+            IntSet chunks = existingChunks.get(i);
+            IntIterator it = chunks.iterator();
+            while (it.hasNext()) {
+                int index = it.nextInt();
+                int x = index & 0b11111;
+                int z = index >> 5;
                 DataInputStream stream = region.getChunkDataInputStream(x, z);
                 if (stream != null) {
                     CompoundTag chunkTag = NBTIO.readTag(stream);
@@ -151,8 +169,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
                         throw new RuntimeException(e);
                     }
                 }
-                int p = (i * 1024 + chunk) / (n * 10);
-                progress.progressStagePercentage(p);
+                progress.progressStagePercentage(++updatedChunks * 100 / totalChunks);
             }
         }
     }
