@@ -16,14 +16,13 @@ import net.minecraft.util.io.NBTIO;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
+import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.impl.level.dimension.StationFlatteningDimensionFile;
 import net.modificationstation.stationapi.mixin.flattening.RegionFileAccessor;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class StationFlatteningWorldStorage extends McRegionLevelStorage {
 
@@ -85,13 +84,19 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
 
     @Override
     public boolean convertLevel(String worldFolder, ProgressListener progress) {
+        System.out.println("Creating a backup of world \"" + worldFolder + "\"...");
+        File worldFile = new File(path, worldFolder);
+        try {
+            Util.pack(worldFile.toPath(), new File(path, worldFolder + "-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".zip").toPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         if (super.isOld(worldFolder)) {
             System.out.println("Converting to \"" + super.getLevelFormat() + "\" first...");
             super.convertLevel(worldFolder, progress);
         }
         progress.progressStagePercentage(0);
         List<RegionFile> regions = new ArrayList<>();
-        File worldFile = new File(this.path, worldFolder);
         System.out.println("Scanning folders...");
         scanDimensionDir(worldFile, regions);
         File[] dims = worldFile.listFiles((dir, name) -> new File(dir, name).isDirectory() && name.startsWith("DIM"));

@@ -23,6 +23,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.*;
@@ -32,6 +34,8 @@ import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
@@ -316,6 +320,29 @@ public class Util {
             return Optional.empty();
         }
         return Optional.of(Util.getRandom(list, random));
+    }
+
+    public static void pack(Path sourceDirPath, Path zipFilePath) throws IOException {
+        Path p = Files.createFile(zipFilePath);
+        try (ZipOutputStream zs = new ZipOutputStream(Files.newOutputStream(p))) {
+            try (Stream<Path> walk = Files.walk(sourceDirPath)) {
+                Path parentPath = sourceDirPath.getParent();
+                walk.forEach(path -> {
+                    boolean isDir = Files.isDirectory(path);
+                    String entryPath = parentPath.relativize(path).toString();
+                    if (isDir)
+                        entryPath += "/";
+                    try {
+                        zs.putNextEntry(new ZipEntry(entryPath));
+                        if (!isDir)
+                            Files.copy(path, zs);
+                        zs.closeEntry();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+        }
     }
 
     public enum OperatingSystem {
