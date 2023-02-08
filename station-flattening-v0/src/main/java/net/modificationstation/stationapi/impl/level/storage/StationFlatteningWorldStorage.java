@@ -24,6 +24,8 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
+
 public class StationFlatteningWorldStorage extends McRegionLevelStorage {
 
     public StationFlatteningWorldStorage(File file) {
@@ -84,7 +86,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
 
     @Override
     public boolean convertLevel(String worldFolder, ProgressListener progress) {
-        System.out.println("Creating a backup of world \"" + worldFolder + "\"...");
+        LOGGER.info("Creating a backup of world \"" + worldFolder + "\"...");
         File worldFile = new File(path, worldFolder);
         try {
             Util.pack(worldFile.toPath(), new File(path, worldFolder + "-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".zip").toPath());
@@ -92,12 +94,12 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
             throw new RuntimeException(e);
         }
         if (super.isOld(worldFolder)) {
-            System.out.println("Converting to \"" + super.getLevelFormat() + "\" first...");
+            LOGGER.info("Converting to \"" + super.getLevelFormat() + "\" first...");
             super.convertLevel(worldFolder, progress);
         }
         progress.progressStagePercentage(0);
         List<RegionFile> regions = new ArrayList<>();
-        System.out.println("Scanning folders...");
+        LOGGER.info("Scanning folders...");
         scanDimensionDir(worldFile, regions);
         File[] dims = worldFile.listFiles((dir, name) -> new File(dir, name).isDirectory() && name.startsWith("DIM"));
         if (dims != null)
@@ -106,7 +108,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
         convertChunks(regions, progress);
         CompoundTag newWorldTag = new CompoundTag();
         CompoundTag newWorldDataTag = NbtHelper.addDataVersions(getWorldTag(worldFolder));
-        System.out.println("Converting player inventory...");
+        LOGGER.info("Converting player inventory...");
         newWorldDataTag.put("Player", NbtHelper.addDataVersions(NbtHelper.update(TypeReferences.PLAYER, newWorldDataTag.getCompoundTag("Player"))));
         newWorldTag.put("Data", newWorldDataTag);
         try {
@@ -149,7 +151,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
             existingChunks.add(chunks);
             totalChunks += chunks.size();
         }
-        System.out.println("Total conversion count is " + totalChunks);
+        LOGGER.info("Total conversion count is " + totalChunks);
         int updatedChunks = 0;
         for (int i = 0; i < regions.size(); i++) {
             RegionFile region = regions.get(i);
