@@ -9,6 +9,7 @@
   "server": [
   ],
   "client": [
+    "client.MixinMinecraft"
   ],
   "injectors": {
     "defaultRequire": 1

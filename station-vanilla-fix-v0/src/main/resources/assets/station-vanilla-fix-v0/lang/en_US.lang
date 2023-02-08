@@ -1,0 +1,3 @@
+stationapi\:worldConversion.warning=!!! WARNING !!!
+stationapi\:worldConversion.explanation=Vanilla worlds must be converted to a custom format in order to be used with StationAPI.\nThis process is lossless and reversible, but just in case anything goes wrong, please create a backup.\nOnce a world is converted, it can no longer be used in vanilla Minecraft and must be converted back.\nThere's no guarantee that a world previously used with another modding platform will convert properly.
+stationapi\:worldConversion.convert=I understand, convert it!

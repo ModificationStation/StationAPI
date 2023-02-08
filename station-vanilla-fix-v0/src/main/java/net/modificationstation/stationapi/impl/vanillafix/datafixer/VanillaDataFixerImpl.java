@@ -19,16 +19,16 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 public final class VanillaDataFixerImpl {
 
     public static final String STATION_ID = MODID.id("id").toString();
-    public static int currentVersion = 69420;
+    public static final int CURRENT_VERSION = 69420;
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
     private static void registerFixer(DataFixerRegisterEvent event) {
-        DataFixerBuilder builder = new DataFixerBuilder(currentVersion);
+        DataFixerBuilder builder = new DataFixerBuilder(CURRENT_VERSION);
         Schema schema19132 = builder.addSchema(19132, Schema19132::new);
         Schema schema69420 = builder.addSchema(69420, Schema69420::new);
         builder.addFixer(new McRegionToStationFlatteningChunkFix(schema69420));
         builder.addFixer(McRegionToStationFlatteningItemStackFix.create(schema69420, "Vanilla itemstack fix", Schema69420.ITEM_RENAMES));
-        DataFixers.registerFixer(MODID, builder.buildOptimized(Util.getBootstrapExecutor()), currentVersion);
+        DataFixers.registerFixer(MODID, builder.buildOptimized(Util.getBootstrapExecutor()), CURRENT_VERSION);
 //        File regions = new File(Minecraft.getGameDirectory(), "saves/No Sortme Module Copy/region");
 //        File region = new File(regions, "r.0.0.mcr");
 //        RegionFile regionFile = new RegionFile(region);

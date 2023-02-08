@@ -31,11 +31,15 @@ public final class DataFixers {
 
     public static <T> Dynamic<T> update(DSL.TypeReference type, Dynamic<T> dynamic) {
         init();
-        Dynamic<T> dataVersions = dynamic.get(DATA_VERSIONS).result().orElseGet(() -> dynamic.createMap(Collections.emptyMap()));
+        Dynamic<T> dataVersions = getDataVersions(dynamic);
         Dynamic<T> ret = dynamic;
         for (Reference2ReferenceMap.Entry<ModID, DataFixerEntry> fixerEntry : DATA_FIXERS.reference2ReferenceEntrySet())
             ret = fixerEntry.getValue().fixer.update(type, ret, dataVersions.get(fixerEntry.getKey().toString()).asInt(0), fixerEntry.getValue().currentVersion);
         return ret;
+    }
+
+    public static <T> Dynamic<T> getDataVersions(Dynamic<T> dynamic) {
+        return dynamic.get(DATA_VERSIONS).result().orElseGet(() -> dynamic.createMap(Collections.emptyMap()));
     }
 
     public static <T> Dynamic<T> addDataVersions(Dynamic<T> dynamic) {
@@ -45,7 +49,7 @@ public final class DataFixers {
 
     public static <T> boolean requiresUpdating(Dynamic<T> dynamic) {
         init();
-        Dynamic<T> dataVersions = dynamic.get(DATA_VERSIONS).result().orElseGet(() -> dynamic.createMap(Collections.emptyMap()));
+        Dynamic<T> dataVersions = getDataVersions(dynamic);
         for (Reference2ReferenceMap.Entry<ModID, DataFixerEntry> fixerEntry : DATA_FIXERS.reference2ReferenceEntrySet())
             if (dataVersions.get(fixerEntry.getKey().toString()).asInt(0) < fixerEntry.getValue().currentVersion)
                 return true;

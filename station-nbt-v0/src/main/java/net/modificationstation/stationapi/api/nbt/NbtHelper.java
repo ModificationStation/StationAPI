@@ -39,6 +39,10 @@ public class NbtHelper {
         return (CompoundTag) DataFixers.update(fixType, new Dynamic<>(NbtOps.INSTANCE, compound)).getValue();
     }
 
+    public static CompoundTag getDataVersions(CompoundTag compound) {
+        return (CompoundTag) DataFixers.getDataVersions(new Dynamic<>(NbtOps.INSTANCE, compound)).getValue();
+    }
+
     public static CompoundTag addDataVersions(CompoundTag compound) {
         return (CompoundTag) DataFixers.addDataVersions(new Dynamic<>(NbtOps.INSTANCE, compound)).getValue();
     }
