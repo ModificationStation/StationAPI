@@ -9,10 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class Schema19132 extends Schema {
+public class SchemaMcRegion extends Schema {
 
-    public Schema19132(int versionKey, Schema parent) {
+    private final boolean hasParent;
+
+    public SchemaMcRegion(int versionKey, Schema parent) {
         super(versionKey, parent);
+        hasParent = this.parent != null;
     }
 
     public static void targetItems(Schema schema, Map<String, Supplier<TypeTemplate>> map, String id) {
@@ -21,15 +24,15 @@ public class Schema19132 extends Schema {
 
     @Override
     public Map<String, Supplier<TypeTemplate>> registerEntities(Schema schema) {
-        Map<String, Supplier<TypeTemplate>> map = new HashMap<>();
-        schema.register(map, "Item", (String name) -> DSL.optionalFields("Item", TypeReferences.ITEM_STACK.in(schema)));
+        Map<String, Supplier<TypeTemplate>> map = hasParent ? super.registerEntities(schema) : new HashMap<>();
+        schema.register(map, "Item", name -> DSL.optionalFields("Item", TypeReferences.ITEM_STACK.in(schema)));
         targetItems(schema, map, "Minecart");
         return map;
     }
 
     @Override
     public Map<String, Supplier<TypeTemplate>> registerBlockEntities(Schema schema) {
-        Map<String, Supplier<TypeTemplate>> map = new HashMap<>();
+        Map<String, Supplier<TypeTemplate>> map = hasParent ? super.registerEntities(schema) : new HashMap<>();
         targetItems(schema, map, "Chest");
         targetItems(schema, map, "Trap");
         targetItems(schema, map, "Furnace");
@@ -38,6 +41,7 @@ public class Schema19132 extends Schema {
 
     @Override
     public void registerTypes(Schema schema, Map<String, Supplier<TypeTemplate>> entityTypes, Map<String, Supplier<TypeTemplate>> blockEntityTypes) {
+        if (hasParent) super.registerTypes(schema, entityTypes, blockEntityTypes);
         schema.registerType(
                 false,
                 TypeReferences.PLAYER,

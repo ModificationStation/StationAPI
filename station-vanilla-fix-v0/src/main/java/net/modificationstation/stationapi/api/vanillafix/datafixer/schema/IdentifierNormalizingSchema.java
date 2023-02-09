@@ -9,8 +9,7 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class IdentifierNormalizingSchema
-extends Schema {
+public class IdentifierNormalizingSchema extends Schema {
     public static final PrimitiveCodec<String> CODEC = new PrimitiveCodec<>() {
 
         @Override

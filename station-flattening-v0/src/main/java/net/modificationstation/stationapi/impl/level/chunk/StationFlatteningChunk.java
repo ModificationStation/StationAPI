@@ -103,7 +103,7 @@ public class StationFlatteningChunk extends Chunk implements net.modificationsta
     @Override
     public int method_864(LightType type, int x, int y, int z) {
         ChunkSection section = getSection(y);
-        return section == null ? type == LightType.field_2757 ? 15 : 0 : section.getLight(type, x, y & 15, z);
+        return section == null ? type.field_2759 : section.getLight(type, x, y & 15, z);
     }
 
     private ChunkSection getOrCreateSection(int y, boolean fillSkyLight) {
