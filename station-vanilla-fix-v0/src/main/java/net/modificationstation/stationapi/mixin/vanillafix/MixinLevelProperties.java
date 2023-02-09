@@ -7,26 +7,25 @@ import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LevelProperties.class)
 public class MixinLevelProperties {
-
     @Shadow private CompoundTag playerData;
 
-    @Redirect(
-            method = "<init>(Lnet/minecraft/util/io/CompoundTag;)V",
-            at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/level/LevelProperties;playerData:Lnet/minecraft/util/io/CompoundTag;",
-                    opcode = Opcodes.PUTFIELD
-            )
-    )
-    private void updatePlayer(LevelProperties instance, CompoundTag playerTag) {
-        playerData = NbtHelper.update(TypeReferences.PLAYER, playerTag);
-    }
+    /**
+     * Since Minecraft reads the entire level.dat of all worlds whenever it shows the world selection menu,
+     * datafixers are getting built, introducing a severe lagspike at first click of "Singleplayer" button.
+     * So in order to only update player data when it's actually accessed and not do it multiple times,
+     * this boolean was added.
+     */
+    @Unique
+    private boolean stationapi$playerDataUnchecked;
 
     @ModifyVariable(
             method = "getFirstEntityDataFromList(Ljava/util/List;)Lnet/minecraft/util/io/CompoundTag;",
@@ -39,5 +38,52 @@ public class MixinLevelProperties {
     )
     private CompoundTag addDataVersions(CompoundTag playerTag) {
         return NbtHelper.addDataVersions(playerTag);
+    }
+
+    @Unique
+    private void stationapi$assertPlayerDataVersion() {
+        if (stationapi$playerDataUnchecked) {
+            stationapi$playerDataUnchecked = false;
+            playerData = NbtHelper.update(TypeReferences.PLAYER, playerData);
+        }
+    }
+
+    @Inject(
+            method = "getPlayerTag()Lnet/minecraft/util/io/CompoundTag;",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/level/LevelProperties;playerData:Lnet/minecraft/util/io/CompoundTag;",
+                    opcode = Opcodes.GETFIELD,
+                    shift = At.Shift.BEFORE
+            )
+    )
+    private void assert1(CallbackInfoReturnable<CompoundTag> cir) {
+        stationapi$assertPlayerDataVersion();
+    }
+
+    @Inject(
+            method = "getPlayerData()Lnet/minecraft/util/io/CompoundTag;",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/level/LevelProperties;playerData:Lnet/minecraft/util/io/CompoundTag;",
+                    opcode = Opcodes.GETFIELD,
+                    shift = At.Shift.BEFORE
+            )
+    )
+    private void assert2(CallbackInfoReturnable<CompoundTag> cir) {
+        stationapi$assertPlayerDataVersion();
+    }
+
+    @Inject(
+            method = "setPlayerData(Lnet/minecraft/util/io/CompoundTag;)V",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/level/LevelProperties;playerData:Lnet/minecraft/util/io/CompoundTag;",
+                    opcode = Opcodes.PUTFIELD,
+                    shift = At.Shift.AFTER
+            )
+    )
+    private void assertTrue(CompoundTag par1, CallbackInfo ci) {
+        stationapi$playerDataUnchecked = false;
     }
 }
