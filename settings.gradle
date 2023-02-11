@@ -51,4 +51,5 @@ include 'station-vanilla-fix-v0'
 include 'station-resource-loader-v0'
 include 'station-datafixer-v0'
 include 'station-nbt-v0'
+include 'station-gui-api-v0'
 

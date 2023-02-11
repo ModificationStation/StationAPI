@@ -1,18 +1,17 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.modificationstation.stationapi.mixin.vanillafix",
+  "package": "net.modificationstation.stationapi.mixin.gui",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinLevelProperties"
-  ],
-  "server": [
   ],
   "client": [
-    "client.MixinMinecraft",
+    "client.MixinSelectWorld",
     "client.ScreenBaseAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "server": [
+  ]
 }

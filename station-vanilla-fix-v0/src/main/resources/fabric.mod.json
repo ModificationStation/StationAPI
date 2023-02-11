@@ -26,7 +26,8 @@
       "net.modificationstation.stationapi.impl.vanillafix.item.tool.VanillaToolFixImpl",
       "net.modificationstation.stationapi.impl.vanillafix.recipe.VanillaFuelItemFixImpl",
       "net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl",
-      "net.modificationstation.stationapi.impl.vanillafix.VanillaFixImpl"
+      "net.modificationstation.stationapi.impl.vanillafix.VanillaFixImpl",
+      "net.modificationstation.stationapi.impl.vanillafix.client.gui.screen.EditWorldScreenImpl"
     ]
   },
   "mixins": [

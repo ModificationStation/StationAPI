@@ -7,6 +7,7 @@ import net.minecraft.client.gui.widgets.Button;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.maths.MathHelper;
+import net.modificationstation.stationapi.api.client.gui.screen.StationScreen;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.impl.level.storage.StationFlatteningWorldStorage;
 import org.lwjgl.opengl.GL11;
@@ -16,7 +17,7 @@ import java.awt.*;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 @RequiredArgsConstructor
-public class WarningScreen extends ScreenBase {
+public class WarningScreen extends StationScreen {
 
     public static boolean shouldWarn(Minecraft minecraft, String worldFolder) {
         return !NbtHelper.getDataVersions(((StationFlatteningWorldStorage) minecraft.getLevelStorage()).getWorldTag(worldFolder)).containsKey(MODID.toString());
@@ -26,29 +27,24 @@ public class WarningScreen extends ScreenBase {
     private static final String WARNING_KEY = ROOT_KEY + "." + MODID.id("warning");
     private static final String EXPLANATION_KEY = ROOT_KEY + "." + MODID.id("explanation");
     private static final String CONVERT_KEY = ROOT_KEY + "." + MODID.id("convert");
-    private static final int CONVERT_ID = MODID.id("convert").hashCode();
-    private static final int CANCEL_ID = MODID.id("cancel").hashCode();
 
     private final ScreenBase parent;
     private final Runnable conversion;
 
     @Override
     public void init() {
-        buttons.clear();
-        //noinspection unchecked
-        buttons.add(new Button(CONVERT_ID, width / 2 - 100, height - height / 10 - 44, I18n.translate(CONVERT_KEY)));
-        //noinspection unchecked
-        buttons.add(new Button(CANCEL_ID, width / 2 - 100, height - height / 10 - 20, I18n.translate("gui.cancel")));
-    }
-
-    @Override
-    protected void buttonClicked(Button arg) {
-        if (arg.id == CONVERT_ID) {
-            conversion.run();
-            minecraft.openScreen(null);
-        } else if (arg.id == CANCEL_ID) {
-            minecraft.openScreen(parent);
-        }
+        super.init();
+        btns.attach(
+                id -> new Button(id, width / 2 - 100, height - height / 10 - 44, I18n.translate(CONVERT_KEY)),
+                button -> {
+                    conversion.run();
+                    minecraft.openScreen(null);
+                }
+        );
+        btns.attach(
+                id -> new Button(id, width / 2 - 100, height - height / 10 - 20, I18n.translate("gui.cancel")),
+                button -> minecraft.openScreen(parent)
+        );
     }
 
     private void renderDirtBackground(long time) {

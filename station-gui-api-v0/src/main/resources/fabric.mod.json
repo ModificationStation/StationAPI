@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "station-gui-api-v0",
+  "version": "${version}",
+
+  "name": "Station GUI API (v0)",
+  "description": "Provides systems that allow more interoperability between modded and vanilla GUIs.",
+  "authors": [
+    "Modification Station"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/repo/mod/stationapi",
+    "sources": "https://github.com/ModificationStation/StationAPI",
+    "issues": "https://github.com/ModificationStation/StationAPI/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/station-gui-api-v0/icon.png",
+
+  "environment": "client",
+  "entrypoints": {
+    "stationapi:event_bus_client": [
+      "net.modificationstation.stationapi.impl.client.gui.GuiImpl",
+      "net.modificationstation.stationapi.impl.client.gui.screen.EditWorldScreenImpl"
+    ]
+  },
+  "mixins": [
+    "station-gui-api-v0.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  },
+
+  "custom": {
+    "modmenu:api": true
+  }
+}
