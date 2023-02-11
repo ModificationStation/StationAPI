@@ -1,15 +1,13 @@
 package net.modificationstation.stationapi.impl.vanillafix.client.gui.screen;
 
 import lombok.RequiredArgsConstructor;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.gui.widgets.Button;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.client.gui.screen.StationScreen;
-import net.modificationstation.stationapi.api.nbt.NbtHelper;
-import net.modificationstation.stationapi.impl.level.storage.StationFlatteningWorldStorage;
+import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetAttachedContext;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -19,27 +17,28 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 @RequiredArgsConstructor
 public class WarningScreen extends StationScreen {
 
-    public static boolean shouldWarn(Minecraft minecraft, String worldFolder) {
-        return !NbtHelper.getDataVersions(((StationFlatteningWorldStorage) minecraft.getLevelStorage()).getWorldTag(worldFolder)).containsKey(MODID.toString());
-    }
-
-    private static final String ROOT_KEY = MODID.id("worldConversion").toString();
-    private static final String WARNING_KEY = ROOT_KEY + "." + MODID.id("warning");
-    private static final String EXPLANATION_KEY = ROOT_KEY + "." + MODID.id("explanation");
-    private static final String CONVERT_KEY = ROOT_KEY + "." + MODID.id("convert");
+    public static final String
+            ROOT_KEY = MODID.id("warning").toString(),
+            WARNING_KEY = ROOT_KEY + "." + MODID.id("warning");
 
     private final ScreenBase parent;
-    private final Runnable conversion;
+    private final Runnable action;
+    private final String
+            explanationKey,
+            confirmKey;
+    private ButtonWidgetAttachedContext confirmButton;
+    private final long createdTimestamp = System.currentTimeMillis();
 
     @Override
     public void init() {
         super.init();
-        btns.attach(
-                id -> new Button(id, width / 2 - 100, height - height / 10 - 44, I18n.translate(CONVERT_KEY)),
-                button -> {
-                    conversion.run();
-                    minecraft.openScreen(null);
-                }
+        confirmButton = btns.attach(
+                id -> {
+                    Button button = new Button(id, width / 2 - 100, height - height / 10 - 44, I18n.translate(confirmKey));
+                    button.active = false;
+                    return button;
+                },
+                button -> action.run()
         );
         btns.attach(
                 id -> new Button(id, width / 2 - 100, height - height / 10 - 20, I18n.translate("gui.cancel")),
@@ -78,7 +77,7 @@ public class WarningScreen extends StationScreen {
         GL11.glScaled(warningScale, warningScale, 1);
         drawTextWithShadow(textManager, warning, 0, 0, Color.YELLOW.hashCode());
         GL11.glPopMatrix();
-        String[] info = I18n.translate(EXPLANATION_KEY).split("\\n");
+        String[] info = I18n.translate(explanationKey).split("\\n");
         int curHeight = height / 3;
         for (String line : info) {
             int lineWidth = textManager.getTextWidth(line);
@@ -109,6 +108,13 @@ public class WarningScreen extends StationScreen {
                 curHeight += 10;
             }
         }
+        long confirmationTimeout = time - createdTimestamp;
+        if (confirmationTimeout > 25000) {
+            if (!confirmButton.button().active) {
+                confirmButton.button().active = true;
+                confirmButton.button().text = I18n.translate(confirmKey);
+            }
+        } else confirmButton.button().text = I18n.translate(confirmKey) + " (" + (25000 - confirmationTimeout) / 1000 + "s)";
         super.render(i, j, f);
     }
 }

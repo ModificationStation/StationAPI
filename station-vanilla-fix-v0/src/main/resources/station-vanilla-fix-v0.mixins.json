@@ -9,8 +9,10 @@
   "server": [
   ],
   "client": [
-    "client.MixinMinecraft",
-    "client.ScreenBaseAccessor"
+    "client.MixinSelectWorld",
+    "client.MixinWorldList",
+    "client.ScreenBaseAccessor",
+    "client.SelectWorldAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -7,6 +7,8 @@ import net.modificationstation.stationapi.api.client.event.gui.screen.EditWorldS
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetDetachedContext;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
+import net.modificationstation.stationapi.api.nbt.NbtHelper;
+import net.modificationstation.stationapi.impl.level.storage.StationFlatteningWorldStorage;
 import net.modificationstation.stationapi.mixin.vanillafix.client.ScreenBaseAccessor;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
@@ -21,8 +23,12 @@ public final class EditWorldScreenImpl {
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 - Integer.MAX_VALUE / 8)
     private static void registerConversionButton(EditWorldScreenEvent.ScrollableButtonContextRegister event) {
         event.contexts.add(screen -> new ButtonWidgetDetachedContext(
-                id -> new Button(id, 0, 0, I18n.translate(CONVERT_TO_MCREGION_KEY)),
-                button -> ((ScreenBaseAccessor) screen).getMinecraft().openScreen(new WarningScreen(screen, () -> {}))
+                id -> {
+                    Button button = new Button(id, 0, 0, I18n.translate(CONVERT_TO_MCREGION_KEY));
+                    button.active = NbtHelper.getDataVersions(((StationFlatteningWorldStorage) ((ScreenBaseAccessor) screen).getMinecraft().getLevelStorage()).getWorldTag(screen.worldData.getFileName())).containsKey(MODID.toString());
+                    return button;
+                },
+                button -> ((ScreenBaseAccessor) screen).getMinecraft().openScreen(new WarningScreen(screen, () -> {}, WorldConversionWarning.TO_MCREGION_EXPLANATION_KEY, WorldConversionWarning.CONVERT_KEY))
         ));
     }
 }

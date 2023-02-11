@@ -1,4 +1,5 @@
-stationapi\:worldConversion.warning=!!! WARNING !!!
-stationapi\:worldConversion.explanation=Vanilla worlds must be converted to a custom format in order to be used with StationAPI.\nThis process is lossless and reversible, but just in case anything goes wrong, please create a backup.\nOnce a world is converted, it can no longer be used in vanilla Minecraft and must be converted back.\nThere's no guarantee that a world previously used with another modding platform will convert properly.
+stationapi\:warning.warning=!!! WARNING !!!
+stationapi\:worldConversion.fromMcRegionExplanation=Vanilla worlds must be converted to a custom format in order to be used with StationAPI.\nThis process is lossless and reversible, but just in case anything goes wrong, please create a backup.\nOnce a world is converted, it can no longer be used in vanilla Minecraft and must be converted back.\nThere's no guarantee that a world previously used with another modding platform will convert properly.
+stationapi\:worldConversion.toMcRegionExplanation=Converting a StationAPI world to vanilla can be lossy.\nUnless a mod added its own McRegion conversion schemas and data fixers, all of its data will be lost or will make the world unplayable (blocks, items, custom world format, etc).\nIf none of the content or world format altering mods were used with this world, the conversion will most likely have no issues.\nStill, please create a backup before proceeding.
 stationapi\:worldConversion.convert=I understand, convert it!
 selectWorld.convertToMcRegion=Convert to McRegion
