@@ -24,14 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class StationFlatteningChunkImpl extends Chunk {
+public class FlattenedChunk extends Chunk {
 
     public final ChunkSection[] sections;
     public final short firstBlock;
     public final short lastBlock;
     private final short[] stationHeightmap = new short[256];
 
-    public StationFlatteningChunkImpl(Level world, int xPos, int zPos) {
+    public FlattenedChunk(Level world, int xPos, int zPos) {
         super(world, xPos, zPos);
         StationDimension dimension = (StationDimension) level.dimension;
         sections = new ChunkSection[dimension.getSectionCount()];

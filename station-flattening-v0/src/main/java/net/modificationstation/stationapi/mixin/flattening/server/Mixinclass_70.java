@@ -8,7 +8,7 @@ import net.minecraft.packet.play.BlockChange0x35S2CPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.impl.packet.StationFlatteningBlockChangeS2CPacket;
+import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -112,6 +112,6 @@ public class Mixinclass_70 {
             )
     )
     private BlockChange0x35S2CPacket flatten(int x, int y, int z, Level world) {
-        return new StationFlatteningBlockChangeS2CPacket(x, y, z, world);
+        return new FlattenedBlockChangeS2CPacket(x, y, z, world);
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.packet.play.MapChunk0x33S2CPacket;
 import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
-import net.modificationstation.stationapi.impl.level.chunk.StationFlatteningChunkImpl;
+import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -23,7 +23,7 @@ import java.util.zip.Inflater;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-public class StationFlatteningChunkDataS2CPacket extends MapChunk0x33S2CPacket implements IdentifiablePacket {
+public class FlattenedChunkDataS2CPacket extends MapChunk0x33S2CPacket implements IdentifiablePacket {
 
     public static final Identifier PACKET_ID = MODID.id("flattening/chunk_data");
 
@@ -32,13 +32,13 @@ public class StationFlatteningChunkDataS2CPacket extends MapChunk0x33S2CPacket i
     public byte[] sectionsData;
 
     @ApiStatus.Internal
-    public StationFlatteningChunkDataS2CPacket() {}
+    public FlattenedChunkDataS2CPacket() {}
 
     @Environment(EnvType.SERVER)
-    public StationFlatteningChunkDataS2CPacket(Level world, int chunkX, int chunkZ) {
+    public FlattenedChunkDataS2CPacket(Level world, int chunkX, int chunkZ) {
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
-        StationFlatteningChunkImpl chunk = (StationFlatteningChunkImpl) world.getChunkFromCache(chunkX, chunkZ);
+        FlattenedChunk chunk = (FlattenedChunk) world.getChunkFromCache(chunkX, chunkZ);
         ChunkSection[] sections = chunk.sections;
         byte[] sectionsData = new byte[getSectionsPacketSize(chunk)];
         ByteBuffer buf = ByteBuffer.wrap(sectionsData);
@@ -56,7 +56,7 @@ public class StationFlatteningChunkDataS2CPacket extends MapChunk0x33S2CPacket i
         }
     }
 
-    private static int getSectionsPacketSize(StationFlatteningChunkImpl chunk) {
+    private static int getSectionsPacketSize(FlattenedChunk chunk) {
         int i = 0;
         for (ChunkSection chunkSection : chunk.sections)
             i += Objects.requireNonNullElse(chunkSection, ChunkSection.EMPTY).getPacketSize();
@@ -101,8 +101,8 @@ public class StationFlatteningChunkDataS2CPacket extends MapChunk0x33S2CPacket i
     }
 
     @Override
-    public void apply(PacketHandler arg) {
-        ((StationFlatteningPacketHandler) arg).onMapChunk(this);
+    public void apply(PacketHandler handler) {
+        ((StationFlatteningPacketHandler) handler).onMapChunk(this);
     }
 
     @Override

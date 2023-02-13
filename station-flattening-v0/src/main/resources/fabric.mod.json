@@ -29,7 +29,7 @@
       "net.modificationstation.stationapi.impl.packet.StationFlatteningNetworkingImpl"
     ],
     "client": [
-      "net.modificationstation.stationapi.impl.client.network.StationFlatteningClientNetworkingImpl"
+      "net.modificationstation.stationapi.impl.client.network.FlattenedClientNetworkingInit"
     ]
   },
   "mixins": [

@@ -19,7 +19,7 @@ import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.impl.level.dimension.StationFlatteningDimensionFile;
+import net.modificationstation.stationapi.impl.level.dimension.FlattenedDimensionFile;
 import net.modificationstation.stationapi.mixin.flattening.RegionFileAccessor;
 
 import java.io.*;
@@ -29,9 +29,9 @@ import java.util.function.BiFunction;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
-public class StationFlatteningWorldStorage extends McRegionLevelStorage {
+public class FlattenedWorldStorage extends McRegionLevelStorage {
 
-    public StationFlatteningWorldStorage(File file) {
+    public FlattenedWorldStorage(File file) {
         super(file);
     }
 
@@ -81,7 +81,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
 
     @Override
     public DimensionData createDimensionFile(String string, boolean bl) {
-        return new StationFlatteningDimensionFile(this.path, string, bl);
+        return new FlattenedDimensionFile(this.path, string, bl);
     }
 
     @Override

@@ -6,11 +6,9 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 
 import java.util.Arrays;
-import java.util.Random;
 import java.util.function.Function;
 
 import static net.modificationstation.sltest.SLTest.MODID;
@@ -42,13 +40,13 @@ public enum Blocks {
         private static void registerBlocks(BlockRegistryEvent event) {
 //            BlockBase.ALLOWS_GRASS_UNDER[BlockBase.STILL_WATER.id] = BlockBase.ALLOWS_GRASS_UNDER[BlockBase.FLOWING_WATER.id] = true;
             ((BlockBaseAccessor) BlockBase.BEDROCK).invokeSetHardness(2);
-            int blocksAmount = 100000;
+//            int blocksAmount = 100000;
 //            BLOCKS = new TemplateBlockBase[blocksAmount];
-            Random random = new Random(42);
-            for (int i = 0; i < blocksAmount; i++) {
-                BlockBase block = new ColouredBlock(Material.DIRT, random.nextInt()).setHardness(0.8F).setSounds(BlockBase.GLASS_SOUNDS).setTranslationKey(MODID, "testBlock" + i);
-                Registry.register(event.registry, of(MODID, "test_block_" + i), block);
-            }
+//            Random random = new Random(42);
+//            for (int i = 0; i < blocksAmount; i++) {
+//                BlockBase block = new ColouredBlock(Material.DIRT, random.nextInt()).setHardness(0.8F).setSounds(BlockBase.GLASS_SOUNDS).setTranslationKey(MODID, "testBlock" + i);
+//                Registry.register(event.registry, of(MODID, "test_block_" + i), block);
+//            }
             Arrays.stream(values()).forEach(blocks -> blocks.register.run());
         }
 

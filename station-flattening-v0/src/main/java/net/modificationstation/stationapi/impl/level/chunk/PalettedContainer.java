@@ -139,20 +139,18 @@ public class PalettedContainer<T>
      * @param buf the packet byte buffer
      */
     public void readPacket(ByteBuffer buf) {
-//        this.lock();
-//        try {
         byte i = buf.get();
         Data<T> data = this.getCompatibleData(this.data, i);
         data.palette.readPacket(buf);
-        long[] storageData = data.storage.getData();
-        for (int j = 0; j < storageData.length; j++)
-            storageData[j] = buf.getLong();
-//            buf.asLongBuffer().get(data.storage.getData());
+        buf.position(
+                buf.position() +
+                        buf
+                                .slice()
+                                .asLongBuffer()
+                                .get(data.storage.getData())
+                                .position() * Long.BYTES
+        );
         this.data = data;
-//        }
-//        finally {
-//            this.unlock();
-//        }
     }
 
     /**
@@ -161,13 +159,7 @@ public class PalettedContainer<T>
      * @param buf the packet byte buffer
      */
     public void writePacket(ByteBuffer buf) {
-//        this.lock();
-//        try {
-            this.data.writePacket(buf);
-//        }
-//        finally {
-//            this.unlock();
-//        }
+        this.data.writePacket(buf);
     }
 
     private static <T> DataResult<PalettedContainer<T>> read(IndexedIterable<T> idList, PaletteProvider provider, Serialized<T> serialized) {
@@ -365,10 +357,14 @@ public class PalettedContainer<T>
         public void writePacket(ByteBuffer buf) {
             buf.put((byte) this.storage.getElementBits());
             this.palette.writePacket(buf);
-            long[] storageData = storage.getData();
-            for (int i = 0; i < storageData.length; i++)
-                buf.putLong(storageData[i]);
-//            buf.asLongBuffer().put(this.storage.getData());
+            buf.position(
+                    buf.position() +
+                            buf
+                                    .slice()
+                                    .asLongBuffer()
+                                    .put(storage.getData())
+                                    .position() * Long.BYTES
+            );
         }
     }
 

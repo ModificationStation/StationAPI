@@ -4,7 +4,7 @@ import net.minecraft.level.Level;
 import net.minecraft.level.chunk.Chunk;
 import net.minecraft.level.chunk.MultiplayerChunkCache;
 import net.minecraft.util.maths.Vec2i;
-import net.modificationstation.stationapi.impl.level.chunk.StationFlatteningChunkImpl;
+import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,7 +25,7 @@ public class MixinMultiplayerChunkCache {
     @Overwrite
     public Chunk loadChunk(int i, int j) {
         Vec2i vec2i = new Vec2i(i, j);
-        StationFlatteningChunkImpl chunk = new StationFlatteningChunkImpl(this.level, i, j);
+        FlattenedChunk chunk = new FlattenedChunk(this.level, i, j);
         this.multiplayerChunkCache.put(vec2i, chunk);
         chunk.field_955 = true;
         return chunk;

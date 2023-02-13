@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.level.storage.LevelMetadata;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
-import net.modificationstation.stationapi.impl.level.storage.StationFlatteningWorldStorage;
+import net.modificationstation.stationapi.impl.level.storage.FlattenedWorldStorage;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
@@ -20,7 +20,7 @@ public final class WorldConversionWarning {
             CONVERT_KEY = ROOT_KEY + "." + MODID.id("convert");
 
     public static void warnIfMcRegion(Minecraft minecraft, ScreenBase parentScreen, LevelMetadata worldData, Runnable loadWorld) {
-        if (NbtHelper.getDataVersions(((StationFlatteningWorldStorage) minecraft.getLevelStorage()).getWorldTag(worldData.getFileName())).containsKey(MODID.toString()))
+        if (NbtHelper.getDataVersions(((FlattenedWorldStorage) minecraft.getLevelStorage()).getWorldTag(worldData.getFileName())).containsKey(MODID.toString()))
             loadWorld.run();
         else minecraft.openScreen(new WarningScreen(parentScreen, loadWorld, FROM_MCREGION_EXPLANATION_KEY, CONVERT_KEY));
     }

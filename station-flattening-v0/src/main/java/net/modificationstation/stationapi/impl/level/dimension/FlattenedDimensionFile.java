@@ -5,13 +5,13 @@ import net.minecraft.level.dimension.Dimension;
 import net.minecraft.level.dimension.McRegionDimensionFile;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 import net.modificationstation.stationapi.api.world.dimension.VanillaDimensions;
-import net.modificationstation.stationapi.impl.level.chunk.StationFlatteningWorldChunkLoader;
+import net.modificationstation.stationapi.impl.level.chunk.FlattenedWorldChunkLoader;
 
 import java.io.File;
 
-public class StationFlatteningDimensionFile extends McRegionDimensionFile {
+public class FlattenedDimensionFile extends McRegionDimensionFile {
 
-    public StationFlatteningDimensionFile(File file, String string, boolean bl) {
+    public FlattenedDimensionFile(File file, String string, boolean bl) {
         super(file, string, bl);
     }
 
@@ -22,9 +22,9 @@ public class StationFlatteningDimensionFile extends McRegionDimensionFile {
             File dimFolder = new File(worldFolder, "DIM" + dimension.id);
             //noinspection ResultOfMethodCallIgnored
             dimFolder.mkdirs();
-            return new StationFlatteningWorldChunkLoader(dimFolder);
+            return new FlattenedWorldChunkLoader(dimFolder);
         } else {
-            return new StationFlatteningWorldChunkLoader(worldFolder);
+            return new FlattenedWorldChunkLoader(worldFolder);
         }
     }
 }

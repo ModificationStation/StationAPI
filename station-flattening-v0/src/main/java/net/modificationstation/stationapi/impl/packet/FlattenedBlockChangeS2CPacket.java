@@ -17,24 +17,22 @@ import java.io.IOException;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-public class StationFlatteningBlockChangeS2CPacket extends BlockChange0x35S2CPacket implements IdentifiablePacket {
+public class FlattenedBlockChangeS2CPacket extends BlockChange0x35S2CPacket implements IdentifiablePacket {
 
     public static final Identifier PACKET_ID = MODID.id("flattening/block_change");
 
-    public int x, y, z,
-            rawId,
-            meta;
+    public int stateId;
 
     @ApiStatus.Internal
-    public StationFlatteningBlockChangeS2CPacket() {}
+    public FlattenedBlockChangeS2CPacket() {}
 
     @Environment(EnvType.SERVER)
-    public StationFlatteningBlockChangeS2CPacket(int x, int y, int z, Level world) {
+    public FlattenedBlockChangeS2CPacket(int x, int y, int z, Level world) {
         this.x = x;
         this.y = y;
         this.z = z;
-        rawId = BlockBase.STATE_IDS.getRawId(world.getBlockState(x, y, z));
-        meta = (byte) world.getTileMeta(x, y, z);
+        stateId = BlockBase.STATE_IDS.getRawId(world.getBlockState(x, y, z));
+        metadata = (byte) world.getTileMeta(x, y, z);
     }
 
     @Override
@@ -43,8 +41,8 @@ public class StationFlatteningBlockChangeS2CPacket extends BlockChange0x35S2CPac
             x = in.readInt();
             y = in.readShort();
             z = in.readInt();
-            rawId = in.readInt();
-            meta = in.read();
+            stateId = in.readInt();
+            metadata = in.read();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -56,16 +54,16 @@ public class StationFlatteningBlockChangeS2CPacket extends BlockChange0x35S2CPac
             out.writeInt(x);
             out.writeShort(y);
             out.writeInt(z);
-            out.writeInt(rawId);
-            out.write(meta);
+            out.writeInt(stateId);
+            out.write(metadata);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void apply(PacketHandler arg) {
-        ((StationFlatteningPacketHandler) arg).onBlockChange(this);
+    public void apply(PacketHandler handler) {
+        ((StationFlatteningPacketHandler) handler).onBlockChange(this);
     }
 
     @Override

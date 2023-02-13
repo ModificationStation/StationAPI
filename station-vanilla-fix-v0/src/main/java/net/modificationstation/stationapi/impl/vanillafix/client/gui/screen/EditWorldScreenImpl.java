@@ -15,7 +15,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
-import net.modificationstation.stationapi.impl.level.storage.StationFlatteningWorldStorage;
+import net.modificationstation.stationapi.impl.level.storage.FlattenedWorldStorage;
 import net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl;
 import net.modificationstation.stationapi.mixin.vanillafix.client.ScreenBaseAccessor;
 
@@ -34,13 +34,13 @@ public final class EditWorldScreenImpl {
         event.contexts.add(screen -> new ButtonWidgetDetachedContext(
                 id -> {
                     Button button = new Button(id, 0, 0, I18n.translate(CONVERT_TO_MCREGION_KEY));
-                    button.active = NbtHelper.getDataVersions(((StationFlatteningWorldStorage) ((ScreenBaseAccessor) screen).getMinecraft().getLevelStorage()).getWorldTag(screen.worldData.getFileName())).containsKey(MODID.toString());
+                    button.active = NbtHelper.getDataVersions(((FlattenedWorldStorage) ((ScreenBaseAccessor) screen).getMinecraft().getLevelStorage()).getWorldTag(screen.worldData.getFileName())).containsKey(MODID.toString());
                     return button;
                 },
                 button -> ((ScreenBaseAccessor) screen).getMinecraft().openScreen(new WarningScreen(screen, () -> {
                     Minecraft mc = ((ScreenBaseAccessor) screen).getMinecraft();
                     mc.openScreen(null);
-                    StationFlatteningWorldStorage worldStorage = (StationFlatteningWorldStorage) mc.getLevelStorage();
+                    FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.getLevelStorage();
                     mc.progressListener.notifyWithGameRunning("Converting World to " + worldStorage.getPreviousWorldFormat());
                     mc.progressListener.method_1796("This may take a while :)");
                     worldStorage.convertLevel(screen.worldData.getFileName(), (type, compound) -> (CompoundTag) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(MODID.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.progressListener);

@@ -139,16 +139,16 @@ public class ChunkSection {
         nonEmptyBlockCount = buf.getShort();
         blockStateContainer.readPacket(buf);
         buf.get(metadataArray.data);
-        buf.get(skyLightArray.data);
         buf.get(blockLightArray.data);
+        buf.get(skyLightArray.data);
     }
 
     public void toPacket(ByteBuffer buf) {
         buf.putShort(nonEmptyBlockCount);
         blockStateContainer.writePacket(buf);
         buf.put(metadataArray.data);
-        buf.put(skyLightArray.data);
         buf.put(blockLightArray.data);
+        buf.put(skyLightArray.data);
     }
 
    public int getPacketSize() {

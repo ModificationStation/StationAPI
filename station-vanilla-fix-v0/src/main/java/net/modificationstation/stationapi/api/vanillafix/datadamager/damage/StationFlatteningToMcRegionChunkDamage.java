@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static net.modificationstation.stationapi.impl.level.StationFlatteningWorldManager.SECTIONS;
+import static net.modificationstation.stationapi.impl.level.FlattenedWorldManager.SECTIONS;
 
 public class StationFlatteningToMcRegionChunkDamage extends DataFix {
 

@@ -10,20 +10,20 @@ import net.minecraft.util.io.CompoundTag;
 import net.minecraft.util.io.NBTIO;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
-import net.modificationstation.stationapi.impl.level.StationFlatteningWorldManager;
+import net.modificationstation.stationapi.impl.level.FlattenedWorldManager;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-import static net.modificationstation.stationapi.impl.level.StationFlatteningWorldManager.SECTIONS;
+import static net.modificationstation.stationapi.impl.level.FlattenedWorldManager.SECTIONS;
 
-public class StationFlatteningWorldChunkLoader implements ChunkIO {
+public class FlattenedWorldChunkLoader implements ChunkIO {
 
     protected final File dimFolder;
 
-    public StationFlatteningWorldChunkLoader(File dimFolder) {
+    public FlattenedWorldChunkLoader(File dimFolder) {
         this.dimFolder = dimFolder;
     }
 
@@ -42,12 +42,12 @@ public class StationFlatteningWorldChunkLoader implements ChunkIO {
             System.out.println("Chunk file at " + i + "," + j + " is missing section data, skipping");
             return null;
         }
-        Chunk chunk = StationFlatteningWorldManager.loadChunk(arg, compoundTag.getCompoundTag("Level"));
+        Chunk chunk = FlattenedWorldManager.loadChunk(arg, compoundTag.getCompoundTag("Level"));
         if (!chunk.isSameXAndZ(i, j)) {
             System.out.println("Chunk file at " + i + "," + j + " is in the wrong location; relocating. (Expected " + i + ", " + j + ", got " + chunk.x + ", " + chunk.z + ")");
             compoundTag.put("xPos", i);
             compoundTag.put("zPos", j);
-            chunk = StationFlatteningWorldManager.loadChunk(arg, compoundTag.getCompoundTag("Level"));
+            chunk = FlattenedWorldManager.loadChunk(arg, compoundTag.getCompoundTag("Level"));
         }
         chunk.method_890();
         return chunk;
@@ -55,13 +55,13 @@ public class StationFlatteningWorldChunkLoader implements ChunkIO {
 
     @Override
     public void saveChunk(Level world, Chunk oldChunk) {
-        if (!(oldChunk instanceof StationFlatteningChunkImpl chunk)) throw new IllegalStateException(getClass().getSimpleName() + " can't save chunk of type \"" + oldChunk.getClass().getName() + "\"!");
+        if (!(oldChunk instanceof FlattenedChunk chunk)) throw new IllegalStateException(getClass().getSimpleName() + " can't save chunk of type \"" + oldChunk.getClass().getName() + "\"!");
         world.checkSessionLock();
         DataOutputStream dataOutputStream = RegionLoader.method_1216(dimFolder, chunk.x, chunk.z);
         CompoundTag compoundTag = new CompoundTag();
         CompoundTag compoundTag2 = new CompoundTag();
         compoundTag.put("Level", (AbstractTag) compoundTag2);
-        StationFlatteningWorldManager.saveChunk(chunk, world, compoundTag2);
+        FlattenedWorldManager.saveChunk(chunk, world, compoundTag2);
         compoundTag = NbtHelper.addDataVersions(compoundTag);
         NBTIO.writeTag(compoundTag, dataOutputStream);
         try {
