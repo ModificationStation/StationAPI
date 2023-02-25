@@ -18,7 +18,7 @@ public final class Identifier implements Comparable<Identifier> {
         try {
             return DataResult.success(of(s));
         } catch (IllegalArgumentException var2) {
-            return DataResult.error("Not a valid identifier: " + s + " " + var2.getMessage());
+            return DataResult.error(() -> "Not a valid identifier: " + s + " " + var2.getMessage());
         }
     }, Identifier::toString).stable();
 
@@ -75,7 +75,7 @@ public final class Identifier implements Comparable<Identifier> {
         try {
             return DataResult.success(of(id));
         } catch (IllegalArgumentException e) {
-            return DataResult.error("Not a valid identifier: " + id + " " + e.getMessage());
+            return DataResult.error(() -> "Not a valid identifier: " + id + " " + e.getMessage());
         }
     }
 

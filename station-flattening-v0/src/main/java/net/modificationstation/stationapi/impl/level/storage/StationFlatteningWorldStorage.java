@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.impl.level.storage;
 
+import com.mojang.datafixers.DSL;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
@@ -10,6 +11,7 @@ import net.minecraft.level.dimension.DimensionData;
 import net.minecraft.level.storage.LevelMetadata;
 import net.minecraft.level.storage.McRegionLevelStorage;
 import net.minecraft.level.storage.RegionFile;
+import net.minecraft.level.storage.RegionLoader;
 import net.minecraft.util.ProgressListener;
 import net.minecraft.util.io.CompoundTag;
 import net.minecraft.util.io.NBTIO;
@@ -23,6 +25,7 @@ import net.modificationstation.stationapi.mixin.flattening.RegionFileAccessor;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.BiFunction;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
@@ -36,6 +39,11 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
     @Override
     public String getLevelFormat() {
         return "Modded " + super.getLevelFormat();
+    }
+
+    @Environment(value=EnvType.CLIENT)
+    public String getPreviousWorldFormat() {
+        return super.getLevelFormat();
     }
 
     @Environment(value=EnvType.CLIENT)
@@ -86,6 +94,11 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
 
     @Override
     public boolean convertLevel(String worldFolder, ProgressListener progress) {
+        return convertLevel(worldFolder, (type, compound) -> NbtHelper.addDataVersions(NbtHelper.update(type, compound)), progress);
+    }
+
+    public boolean convertLevel(String worldFolder, BiFunction<DSL.TypeReference, CompoundTag, CompoundTag> convertFunction, ProgressListener progress) {
+        RegionLoader.clearCache();
         LOGGER.info("Creating a backup of world \"" + worldFolder + "\"...");
         File worldFile = new File(path, worldFolder);
         try {
@@ -105,11 +118,11 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
         if (dims != null)
             for (File dim : dims)
                 scanDimensionDir(dim, regions);
-        convertChunks(regions, progress);
+        convertChunks(regions, convertFunction, progress);
         CompoundTag newWorldTag = new CompoundTag();
-        CompoundTag newWorldDataTag = NbtHelper.addDataVersions(getWorldTag(worldFolder));
+        CompoundTag newWorldDataTag = convertFunction.apply(TypeReferences.LEVEL, getWorldTag(worldFolder));
         LOGGER.info("Converting player inventory...");
-        newWorldDataTag.put("Player", NbtHelper.addDataVersions(NbtHelper.update(TypeReferences.PLAYER, newWorldDataTag.getCompoundTag("Player"))));
+        newWorldDataTag.put("Player", convertFunction.apply(TypeReferences.PLAYER, newWorldDataTag.getCompoundTag("Player")));
         newWorldTag.put("Data", newWorldDataTag);
         try {
             File file = new File(worldFile, "level.dat_new");
@@ -139,7 +152,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
             Arrays.stream(regionFiles).map(RegionFile::new).forEach(regions::add);
     }
 
-    private void convertChunks(List<RegionFile> regions, ProgressListener progress) {
+    private void convertChunks(List<RegionFile> regions, BiFunction<DSL.TypeReference, CompoundTag, CompoundTag> convertFunction, ProgressListener progress) {
         List<IntSet> existingChunks = new ArrayList<>();
         int totalChunks = 0;
         for (RegionFile region : regions) {
@@ -169,7 +182,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    CompoundTag updatedChunkTag = NbtHelper.addDataVersions(NbtHelper.update(TypeReferences.CHUNK, chunkTag));
+                    CompoundTag updatedChunkTag = convertFunction.apply(TypeReferences.CHUNK, chunkTag);
                     try (DataOutputStream outStream = region.getChunkDataOutputStream(x, z)) {
                         NBTIO.writeTag(updatedChunkTag, outStream);
                     } catch (IOException e) {
@@ -178,6 +191,7 @@ public class StationFlatteningWorldStorage extends McRegionLevelStorage {
                 }
                 progress.progressStagePercentage(++updatedChunks * 100 / totalChunks);
             }
+            region.close();
         }
     }
 }

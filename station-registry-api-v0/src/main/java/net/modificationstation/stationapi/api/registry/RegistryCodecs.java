@@ -49,7 +49,7 @@ public class RegistryCodecs {
             public <T> DataResult<Pair<Registry<E>, T>> decode(DynamicOps<T> ops, T input) {
                 DataResult<Pair<MutableRegistry<E>, T>> dataResult = decoder.decode(ops, input);
                 if (ops instanceof RegistryOps<T> registryOps) {
-                    return registryOps.getLoaderAccess().map(loaderAccess -> this.load(dataResult, registryOps, loaderAccess.loader())).orElseGet(() -> DataResult.error("Can't load registry with this ops"));
+                    return registryOps.getLoaderAccess().map(loaderAccess -> this.load(dataResult, registryOps, loaderAccess.loader())).orElseGet(() -> DataResult.error(() -> "Can't load registry with this ops"));
                 }
                 return dataResult.map(pair -> pair.mapFirst(registry -> registry));
             }

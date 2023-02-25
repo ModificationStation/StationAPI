@@ -58,9 +58,9 @@ extends ForwardingDynamicOps<T> {
         return Codecs.createContextRetrievalCodec((ops) -> {
             if (ops instanceof RegistryOps<?> registryOps) {
                 //noinspection unchecked
-                return (DataResult<Registry<E>>) registryOps.getRegistry(registryRef).map((registry) -> DataResult.success(registry, registry.getLifecycle())).orElseGet(() -> DataResult.error("Unknown registry: " + registryRef));
+                return (DataResult<Registry<E>>) registryOps.getRegistry(registryRef).map((registry) -> DataResult.success(registry, registry.getLifecycle())).orElseGet(() -> DataResult.error(() -> "Unknown registry: " + registryRef));
             } else {
-                return DataResult.error("Not a registry ops");
+                return DataResult.error(() -> "Not a registry ops");
             }
         });
     }

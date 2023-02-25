@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.vanillafix.client.gui.screen;
 
 import lombok.RequiredArgsConstructor;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.gui.widgets.Button;
 import net.minecraft.client.render.Tessellator;
@@ -20,6 +21,8 @@ public class WarningScreen extends StationScreen {
     public static final String
             ROOT_KEY = MODID.id("warning").toString(),
             WARNING_KEY = ROOT_KEY + "." + MODID.id("warning");
+
+    private static final int CONFIRMATION_TIMEOUT = FabricLoader.getInstance().isDevelopmentEnvironment() ? 3000 : 25000;
 
     private final ScreenBase parent;
     private final Runnable action;
@@ -109,12 +112,12 @@ public class WarningScreen extends StationScreen {
             }
         }
         long confirmationTimeout = time - createdTimestamp;
-        if (confirmationTimeout > 25000) {
+        if (confirmationTimeout > CONFIRMATION_TIMEOUT) {
             if (!confirmButton.button().active) {
                 confirmButton.button().active = true;
                 confirmButton.button().text = I18n.translate(confirmKey);
             }
-        } else confirmButton.button().text = I18n.translate(confirmKey) + " (" + (25000 - confirmationTimeout) / 1000 + "s)";
+        } else confirmButton.button().text = I18n.translate(confirmKey) + " (" + (CONFIRMATION_TIMEOUT - confirmationTimeout) / 1000 + "s)";
         super.render(i, j, f);
     }
 }

@@ -10,11 +10,9 @@ import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
 import net.modificationstation.stationapi.api.util.Util;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static net.modificationstation.stationapi.api.vanillafix.datafixer.schema.SchemaMcRegion.targetItems;
 import static net.modificationstation.stationapi.impl.level.StationFlatteningWorldManager.SECTIONS;
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
 
@@ -286,41 +284,13 @@ public class SchemaStationFlattening extends Schema {
         putItem(2257, "minecraft:music_disc_cat");
     }
 
-    private final boolean hasParent;
-
     public SchemaStationFlattening(int versionKey, Schema parent) {
         super(versionKey, parent);
-        hasParent = this.parent != null;
-    }
-
-    @Override
-    public Map<String, Supplier<TypeTemplate>> registerEntities(Schema schema) {
-        Map<String, Supplier<TypeTemplate>> map = hasParent ? super.registerEntities(schema) : new HashMap<>();
-        schema.register(map, "Item", name -> DSL.optionalFields("Item", TypeReferences.ITEM_STACK.in(schema)));
-        targetItems(schema, map, "Minecart");
-        return map;
-    }
-
-    @Override
-    public Map<String, Supplier<TypeTemplate>> registerBlockEntities(Schema schema) {
-        Map<String, Supplier<TypeTemplate>> map = hasParent ? super.registerEntities(schema) : new HashMap<>();
-        targetItems(schema, map, "Chest");
-        targetItems(schema, map, "Trap");
-        targetItems(schema, map, "Furnace");
-        return map;
     }
 
     @Override
     public void registerTypes(Schema schema, Map<String, Supplier<TypeTemplate>> entityTypes, Map<String, Supplier<TypeTemplate>> blockEntityTypes) {
-        if (hasParent) super.registerTypes(schema, entityTypes, blockEntityTypes);
-        schema.registerType(
-                false,
-                TypeReferences.PLAYER,
-                () -> DSL.optionalFields(
-                        "Inventory",
-                        DSL.list(TypeReferences.ITEM_STACK.in(schema))
-                )
-        );
+        super.registerTypes(schema, entityTypes, blockEntityTypes);
         schema.registerType(
                 false,
                 TypeReferences.CHUNK,
@@ -332,26 +302,8 @@ public class SchemaStationFlattening extends Schema {
                                 "TileEntities",
                                 DSL.list(TypeReferences.BLOCK_ENTITY.in(schema)),
                                 SECTIONS,
-                                DSL.list(DSL.optionalFields("palette", DSL.list(TypeReferences.BLOCK_STATE.in(schema))))
+                                DSL.list(DSL.optionalFields("block_states", DSL.optionalFields("palette", DSL.list(TypeReferences.BLOCK_STATE.in(schema)))))
                         )
-                )
-        );
-        schema.registerType(
-                true,
-                TypeReferences.ENTITY,
-                () -> DSL.taggedChoiceLazy(
-                        "id",
-                        DSL.string(),
-                        entityTypes
-                )
-        );
-        schema.registerType(
-                true,
-                TypeReferences.BLOCK_ENTITY,
-                () -> DSL.taggedChoiceLazy(
-                        "id",
-                        DSL.string(),
-                        blockEntityTypes
                 )
         );
         schema.registerType(

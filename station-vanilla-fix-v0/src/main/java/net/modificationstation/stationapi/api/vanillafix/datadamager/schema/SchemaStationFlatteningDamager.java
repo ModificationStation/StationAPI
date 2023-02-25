@@ -1,17 +1,21 @@
-package net.modificationstation.stationapi.api.vanillafix.datafixer.schema;
+package net.modificationstation.stationapi.api.vanillafix.datadamager.schema;
 
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.templates.TypeTemplate;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
+import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.IdentifierNormalizingSchema;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class SchemaMcRegion extends Schema {
+import static net.modificationstation.stationapi.impl.level.StationFlatteningWorldManager.SECTIONS;
+import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
 
-    public SchemaMcRegion(int versionKey, Schema parent) {
+public class SchemaStationFlatteningDamager extends Schema {
+
+    public SchemaStationFlatteningDamager(int versionKey, Schema parent) {
         super(versionKey, parent);
     }
 
@@ -60,7 +64,9 @@ public class SchemaMcRegion extends Schema {
                                 "Entities",
                                 DSL.list(TypeReferences.ENTITY.in(schema)),
                                 "TileEntities",
-                                DSL.list(TypeReferences.BLOCK_ENTITY.in(schema))
+                                DSL.list(TypeReferences.BLOCK_ENTITY.in(schema)),
+                                SECTIONS,
+                                DSL.list(DSL.optionalFields("block_states", DSL.optionalFields("palette", DSL.list(TypeReferences.BLOCK_STATE.in(schema)))))
                         )
                 )
         );
@@ -86,9 +92,19 @@ public class SchemaMcRegion extends Schema {
                 true,
                 TypeReferences.ITEM_STACK,
                 () -> DSL.fields(
-                        "id",
-                        DSL.constType(DSL.shortType())
+                        STATION_ID,
+                        TypeReferences.ITEM_NAME.in(schema)
                 )
+        );
+        schema.registerType(
+                false,
+                TypeReferences.ITEM_NAME,
+                () -> DSL.constType(IdentifierNormalizingSchema.getIdentifierType())
+        );
+        schema.registerType(
+                false,
+                TypeReferences.BLOCK_STATE,
+                DSL::remainder
         );
     }
 }

@@ -93,7 +93,7 @@ public class NbtOps implements DynamicOps<AbstractTag> {
             case 4 -> DataResult.success(((LongTag) nbtElement).data);
             case 5 -> DataResult.success(((FloatTag) nbtElement).data);
             case 6 -> DataResult.success(((DoubleTag) nbtElement).data);
-            default -> DataResult.error("Not a number");
+            default -> DataResult.error(() -> "Not a number");
         };
     }
 
@@ -139,7 +139,7 @@ public class NbtOps implements DynamicOps<AbstractTag> {
 
     @Override
     public DataResult<String> getStringValue(AbstractTag nbtElement) {
-        return nbtElement instanceof StringTag stringTag ? DataResult.success(stringTag.data) : DataResult.error("Not a string");
+        return nbtElement instanceof StringTag stringTag ? DataResult.success(stringTag.data) : DataResult.error(() -> "Not a string");
     }
 
     @Override
@@ -242,7 +242,7 @@ public class NbtOps implements DynamicOps<AbstractTag> {
     @Override
     public DataResult<AbstractTag> mergeToList(AbstractTag nbtElement, AbstractTag nbtElement2) {
         if (!(nbtElement instanceof ListTag) && !(nbtElement instanceof EndTag))
-            return DataResult.error("mergeToList called with not a list: " + nbtElement, nbtElement);
+            return DataResult.error(() -> "mergeToList called with not a list: " + nbtElement, nbtElement);
         ListTag abstractNbtList = NbtOps.createList(nbtElement instanceof ListTag ? ((ListTagAccessor)nbtElement).stationapi$getListTypeId() : (byte)0, nbtElement2.getId());
         NbtOps.addAll(abstractNbtList, nbtElement, nbtElement2);
         return DataResult.success(abstractNbtList);
@@ -251,7 +251,7 @@ public class NbtOps implements DynamicOps<AbstractTag> {
     @Override
     public DataResult<AbstractTag> mergeToList(AbstractTag nbtElement, List<AbstractTag> list) {
         if (!(nbtElement instanceof ListTag) && !(nbtElement instanceof EndTag))
-            return DataResult.error("mergeToList called with not a list: " + nbtElement, nbtElement);
+            return DataResult.error(() -> "mergeToList called with not a list: " + nbtElement, nbtElement);
         ListTag abstractNbtList = NbtOps.createList(nbtElement instanceof ListTag ? ((ListTagAccessor)nbtElement).stationapi$getListTypeId() : (byte)0, list.stream().findFirst().map(AbstractTag::getId).orElse((byte)0));
         NbtOps.addAll(abstractNbtList, nbtElement, list);
         return DataResult.success(abstractNbtList);
@@ -260,9 +260,9 @@ public class NbtOps implements DynamicOps<AbstractTag> {
     @Override
     public DataResult<AbstractTag> mergeToMap(AbstractTag nbtElement, AbstractTag nbtElement2, AbstractTag nbtElement3) {
         if (!(nbtElement instanceof CompoundTag) && !(nbtElement instanceof EndTag))
-            return DataResult.error("mergeToMap called with not a map: " + nbtElement, nbtElement);
+            return DataResult.error(() -> "mergeToMap called with not a map: " + nbtElement, nbtElement);
         if (!(nbtElement2 instanceof StringTag stringTag))
-            return DataResult.error("key is not a string: " + nbtElement2, nbtElement);
+            return DataResult.error(() -> "key is not a string: " + nbtElement2, nbtElement);
         CompoundTag nbtCompound = nbtElement instanceof CompoundTag nbtCompound2 ? NbtHelper.copy(nbtCompound2) : new CompoundTag();
         nbtCompound.put(stringTag.data, nbtElement3);
         return DataResult.success(nbtCompound);
@@ -271,7 +271,7 @@ public class NbtOps implements DynamicOps<AbstractTag> {
     @Override
     public DataResult<AbstractTag> mergeToMap(AbstractTag nbtElement, MapLike<AbstractTag> mapLike) {
         if (!(nbtElement instanceof CompoundTag) && !(nbtElement instanceof EndTag))
-            return DataResult.error("mergeToMap called with not a map: " + nbtElement, nbtElement);
+            return DataResult.error(() -> "mergeToMap called with not a map: " + nbtElement, nbtElement);
         CompoundTag nbtCompound = nbtElement instanceof CompoundTag nbtCompound2 ? NbtHelper.copy(nbtCompound2) : new CompoundTag();
         List<AbstractTag> invalidKeys = new ArrayList<>();
         mapLike.entries().forEach(pair -> {
@@ -281,24 +281,24 @@ public class NbtOps implements DynamicOps<AbstractTag> {
             else
                 invalidKeys.add(key);
         });
-        return invalidKeys.isEmpty() ? DataResult.success(nbtCompound) : DataResult.error("some keys are not strings: " + invalidKeys, nbtCompound);
+        return invalidKeys.isEmpty() ? DataResult.success(nbtCompound) : DataResult.error(() -> "some keys are not strings: " + invalidKeys, nbtCompound);
     }
 
     @Override
     public DataResult<Stream<Pair<AbstractTag, AbstractTag>>> getMapValues(AbstractTag nbtElement) {
-        if (!(nbtElement instanceof CompoundTag nbtCompound)) return DataResult.error("Not a map: " + nbtElement);
+        if (!(nbtElement instanceof CompoundTag nbtCompound)) return DataResult.error(() -> "Not a map: " + nbtElement);
         return DataResult.success(((CompoundTagAccessor) nbtCompound).stationapi$getData().entrySet().stream().map(entry -> Pair.of(createString(entry.getKey()), entry.getValue())));
     }
 
     @Override
     public DataResult<Consumer<BiConsumer<AbstractTag, AbstractTag>>> getMapEntries(AbstractTag nbtElement) {
-        if (!(nbtElement instanceof CompoundTag nbtCompound)) return DataResult.error("Not a map: " + nbtElement);
+        if (!(nbtElement instanceof CompoundTag nbtCompound)) return DataResult.error(() -> "Not a map: " + nbtElement);
         return DataResult.success(entryConsumer -> ((CompoundTagAccessor) nbtCompound).stationapi$getData().forEach((key, value) -> entryConsumer.accept(this.createString(key), value)));
     }
 
     @Override
     public DataResult<MapLike<AbstractTag>> getMap(AbstractTag nbtElement) {
-        if (!(nbtElement instanceof CompoundTag nbtCompound)) return DataResult.error("Not a map: " + nbtElement);
+        if (!(nbtElement instanceof CompoundTag nbtCompound)) return DataResult.error(() -> "Not a map: " + nbtElement);
         return DataResult.success(new MapLike<>() {
 
             @Override
@@ -331,7 +331,7 @@ public class NbtOps implements DynamicOps<AbstractTag> {
 
     @Override
     public DataResult<Stream<AbstractTag>> getStream(AbstractTag nbtElement) {
-        return nbtElement instanceof ListTag listTag ? DataResult.success(IntStream.range(0, listTag.size()).mapToObj(listTag::get)) : DataResult.error("Not a list");
+        return nbtElement instanceof ListTag listTag ? DataResult.success(IntStream.range(0, listTag.size()).mapToObj(listTag::get)) : DataResult.error(() -> "Not a list");
     }
 
     @Override
@@ -339,7 +339,7 @@ public class NbtOps implements DynamicOps<AbstractTag> {
         if (nbtElement instanceof ListTag abstractNbtList) {
             return DataResult.success(IntStream.range(0, abstractNbtList.size()).mapToObj(abstractNbtList::get)::forEach);
         }
-        return DataResult.error("Not a list: " + nbtElement);
+        return DataResult.error(() -> "Not a list: " + nbtElement);
     }
 
     @Override
@@ -448,7 +448,7 @@ public class NbtOps implements DynamicOps<AbstractTag> {
                 ((CompoundTagAccessor) nbtCompound).stationapi$getData().forEach(nbtCompound2::put);
                 return DataResult.success(nbtCompound2);
             }
-            return DataResult.error("mergeToMap called with not a map: " + nbtElement, nbtElement);
+            return DataResult.error(() -> "mergeToMap called with not a map: " + nbtElement, nbtElement);
         }
     }
 }

@@ -25,11 +25,11 @@ public final class RegistryFixedCodec<E> implements Codec<RegistryEntry<E>> {
         Optional<? extends Registry<E>> optional;
         if (dynamicOps instanceof RegistryOps<T> rOps && (optional = rOps.getRegistry(this.registry)).isPresent()) {
             if (!registryEntry.matchesRegistry(optional.get())) {
-                return DataResult.error("Element " + registryEntry + " is not valid in current registry set");
+                return DataResult.error(() -> "Element " + registryEntry + " is not valid in current registry set");
             }
-            return registryEntry.getKeyOrValue().map(registryKey -> Identifier.CODEC.encode(registryKey.getValue(), dynamicOps, object), value -> DataResult.error("Elements from registry " + this.registry + " can't be serialized to a value"));
+            return registryEntry.getKeyOrValue().map(registryKey -> Identifier.CODEC.encode(registryKey.getValue(), dynamicOps, object), value -> DataResult.error(() -> "Elements from registry " + this.registry + " can't be serialized to a value"));
         }
-        return DataResult.error("Can't access registry " + this.registry);
+        return DataResult.error(() -> "Can't access registry " + this.registry);
     }
 
     @Override
@@ -42,7 +42,7 @@ public final class RegistryFixedCodec<E> implements Codec<RegistryEntry<E>> {
                 return dataResult.map((entry) -> Pair.of(entry, pair.getSecond())).setLifecycle(Lifecycle.stable());
             });
         }
-        return DataResult.error("Can't access registry " + this.registry);
+        return DataResult.error(() -> "Can't access registry " + this.registry);
     }
 
     public String toString() {

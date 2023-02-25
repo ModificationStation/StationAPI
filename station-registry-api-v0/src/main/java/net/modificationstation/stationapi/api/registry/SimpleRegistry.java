@@ -188,10 +188,10 @@ public class SimpleRegistry<T> extends MutableRegistry<T> {
         RegistryEntry.Reference<T> reference = this.keyToEntry.get(key);
         if (reference == null) {
             if (this.valueToEntryFunction != null) {
-                return DataResult.error("This registry can't create new holders without value (requested key: " + key + ")");
+                return DataResult.error(() -> "This registry can't create new holders without value (requested key: " + key + ")");
             }
             if (this.frozen) {
-                return DataResult.error("Registry is already frozen (requested key: " + key + ")");
+                return DataResult.error(() -> "Registry is already frozen (requested key: " + key + ")");
             }
             reference = RegistryEntry.Reference.standAlone(this, key);
             this.keyToEntry.put(key, reference);

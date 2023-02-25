@@ -45,7 +45,7 @@ public final class RegistryElementCodec<E> implements Codec<RegistryEntry<E>> {
         Optional<? extends Registry<E>> optional;
         if (dynamicOps instanceof RegistryOps<T> rOps && (optional = rOps.getRegistry(this.registryRef)).isPresent()) {
             if (!registryEntry.matchesRegistry(optional.get())) {
-                return DataResult.error("Element " + registryEntry + " is not valid in current registry set");
+                return DataResult.error(() -> "Element " + registryEntry + " is not valid in current registry set");
             }
             return registryEntry.getKeyOrValue().map(key -> Identifier.CODEC.encode(key.getValue(), dynamicOps, object), value -> this.elementCodec.encode(value, dynamicOps, object));
         }
@@ -57,13 +57,13 @@ public final class RegistryElementCodec<E> implements Codec<RegistryEntry<E>> {
         if (ops instanceof RegistryOps<T> registryOps) {
             Optional<? extends Registry<E>> optional = registryOps.getRegistry(this.registryRef);
             if (optional.isEmpty()) {
-                return DataResult.error("Registry does not exist: " + this.registryRef);
+                return DataResult.error(() -> "Registry does not exist: " + this.registryRef);
             }
             Registry<E> registry = optional.get();
             DataResult<Pair<Identifier, T>> dataResult = Identifier.CODEC.decode(ops, input);
             if (dataResult.result().isEmpty()) {
                 if (!this.allowInlineDefinitions) {
-                    return DataResult.error("Inline definitions not allowed here");
+                    return DataResult.error(() -> "Inline definitions not allowed here");
                 }
                 return this.elementCodec.decode(ops, input).map(pair -> pair.mapFirst(RegistryEntry::of));
             }

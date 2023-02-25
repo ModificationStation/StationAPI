@@ -37,7 +37,7 @@ implements Comparable<Vec3i> {
             if (Math.abs(vec.getX()) < maxAbsValue && Math.abs(vec.getY()) < maxAbsValue && Math.abs(vec.getZ()) < maxAbsValue) {
                 return DataResult.success(vec);
             }
-            return DataResult.error("Position out of range, expected at most " + maxAbsValue + ": " + vec);
+            return DataResult.error(() -> "Position out of range, expected at most " + maxAbsValue + ": " + vec);
         };
     }
 

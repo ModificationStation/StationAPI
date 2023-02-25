@@ -1,11 +1,16 @@
 package net.modificationstation.stationapi.api.vanillafix.datafixer.fix;
 
+import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFix;
+import com.mojang.datafixers.OpticFinder;
 import com.mojang.datafixers.TypeRewriteRule;
 import com.mojang.datafixers.schemas.Schema;
+import com.mojang.datafixers.types.Type;
 import com.mojang.serialization.Dynamic;
-import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
+
+import java.util.Optional;
+import java.util.function.IntFunction;
 
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
 
@@ -20,27 +25,39 @@ public abstract class McRegionToStationFlatteningItemStackFix extends DataFix {
 
     @Override
     public TypeRewriteRule makeRule() {
-        return writeFixAndRead(
+        OpticFinder<Short> idFinder = DSL.fieldFinder("id", DSL.shortType());
+        Type<?> newType = getOutputSchema().getType(TypeReferences.ITEM_STACK);
+        return fixTypeEverywhereTyped(
                 name,
                 getInputSchema().getType(TypeReferences.ITEM_STACK),
-                getOutputSchema().getType(TypeReferences.ITEM_STACK),
-                dynamic ->
-                        dynamic.get("id").result().<Dynamic<?>>map(
-                                value -> dynamic
-                                        .remove("id")
-                                        .set(STATION_ID, dynamic.createString(rename(value.asInt(0))))
-                        ).orElse(dynamic)
+                typed -> {
+                    Optional<Short> id = typed.getOptional(idFinder);
+                    if (id.isEmpty()) return typed;
+                    Dynamic<?> dynamic = typed.get(DSL.remainderFinder());
+                    return typed.set(DSL.remainderFinder(), dynamic.set(STATION_ID, dynamic.createString(remap(id.get()))).remove("id"));
+                }
         );
+//        return writeFixAndRead(
+//                name,
+//                getInputSchema().getType(TypeReferences.ITEM_STACK),
+//                getOutputSchema().getType(TypeReferences.ITEM_STACK),
+//                dynamic ->
+//                        dynamic.get("id").result().<Dynamic<?>>map(
+//                                value -> dynamic
+//                                        .remove("id")
+//                                        .set(STATION_ID, dynamic.createString(remap(value.asInt(0))))
+//                        ).orElse(dynamic)
+//        );
     }
 
-    protected abstract String rename(int id);
+    protected abstract String remap(int id);
 
-    public static DataFix create(Schema outputSchema, String name, final Int2ObjectFunction<String> rename) {
+    public static DataFix create(Schema outputSchema, String name, final IntFunction<String> remap) {
         return new McRegionToStationFlatteningItemStackFix(outputSchema, name){
 
             @Override
-            protected String rename(int id) {
-                return rename.get(id);
+            protected String remap(int id) {
+                return remap.apply(id);
             }
         };
     }

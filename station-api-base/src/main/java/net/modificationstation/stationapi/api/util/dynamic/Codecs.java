@@ -34,7 +34,7 @@ public class Codecs {
             return DataResult.success(Pattern.compile(pattern));
         }
         catch (PatternSyntaxException patternSyntaxException) {
-            return DataResult.error("Invalid regex pattern '" + pattern + "': " + patternSyntaxException.getMessage());
+            return DataResult.error(() -> "Invalid regex pattern '" + pattern + "': " + patternSyntaxException.getMessage());
         }
     }, Pattern::pattern);
     public static final Codec<Instant> INSTANT = Codecs.instant(DateTimeFormatter.ISO_INSTANT);
@@ -43,7 +43,7 @@ public class Codecs {
             return DataResult.success(Base64.getDecoder().decode(encoded));
         }
         catch (IllegalArgumentException illegalArgumentException) {
-            return DataResult.error("Malformed base64 string");
+            return DataResult.error(() -> "Malformed base64 string");
         }
     }, data -> Base64.getEncoder().encodeToString(data));
     public static final Codec<TagEntryId> TAG_ENTRY_ID = Codec.STRING.comapFlatMap(tagEntry -> tagEntry.startsWith("#") ? Identifier.validate(tagEntry.substring(1)).map(id -> new TagEntryId(id, true)) : Identifier.validate(tagEntry).map(id -> new TagEntryId(id, false)), TagEntryId::asString);
@@ -94,7 +94,7 @@ public class Codecs {
                 if (result.resultOrPartial(mutableObject::setValue).isPresent()) {
                     return result;
                 }
-                return DataResult.error("(" + mutableObject.getValue() + " -> using default)", Pair.of(object, input));
+                return DataResult.error(() -> "(" + mutableObject.getValue() + " -> using default)", Pair.of(object, input));
             }
 
             @Override
@@ -109,14 +109,14 @@ public class Codecs {
     }
 
     public static <E> Codec<E> rawIdChecked(ToIntFunction<E> elementToRawId, IntFunction<E> rawIdToElement, int errorRawId) {
-        return Codec.INT.flatXmap(rawId -> Optional.ofNullable(rawIdToElement.apply(rawId)).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown element id: " + rawId)), element -> {
+        return Codec.INT.flatXmap(rawId -> Optional.ofNullable(rawIdToElement.apply(rawId)).map(DataResult::success).orElseGet(() -> DataResult.error(() -> "Unknown element id: " + rawId)), element -> {
             int j = elementToRawId.applyAsInt(element);
-            return j == errorRawId ? DataResult.error("Element with unknown id: " + element) : DataResult.success(j);
+            return j == errorRawId ? DataResult.error(() -> "Element with unknown id: " + element) : DataResult.success(j);
         });
     }
 
     public static <E> Codec<E> idChecked(Function<E, String> elementToId, Function<String, E> idToElement) {
-        return Codec.STRING.flatXmap(id -> Optional.ofNullable(idToElement.apply(id)).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown element name:" + id)), element -> Optional.ofNullable(elementToId.apply(element)).map(DataResult::success).orElseGet(() -> DataResult.error("Element with unknown name: " + element)));
+        return Codec.STRING.flatXmap(id -> Optional.ofNullable(idToElement.apply(id)).map(DataResult::success).orElseGet(() -> DataResult.error(() -> "Unknown element name:" + id)), element -> Optional.ofNullable(elementToId.apply(element)).map(DataResult::success).orElseGet(() -> DataResult.error(() -> "Element with unknown name: " + element)));
     }
 
     public static <E> Codec<E> orCompressed(final Codec<E> uncompressedCodec, final Codec<E> compressedCodec) {
@@ -168,7 +168,7 @@ public class Codecs {
             if (value.compareTo(min) >= 0 && value.compareTo(max) <= 0) {
                 return DataResult.success(value);
             }
-            return DataResult.error((String)messageFactory.apply(value));
+            return DataResult.error(() -> messageFactory.apply(value));
         };
     }
 
@@ -182,7 +182,7 @@ public class Codecs {
             if (value.compareTo(min) > 0 && value.compareTo(max) <= 0) {
                 return DataResult.success(value);
             }
-            return DataResult.error((String)messageFactory.apply(value));
+            return DataResult.error(() -> messageFactory.apply(value));
         };
     }
 
@@ -194,7 +194,7 @@ public class Codecs {
     public static <T> Function<List<T>, DataResult<List<T>>> createNonEmptyListChecker() {
         return list -> {
             if (list.isEmpty()) {
-                return DataResult.error("List must have contents");
+                return DataResult.error(() -> "List must have contents");
             }
             return DataResult.success(list);
         };
@@ -242,7 +242,7 @@ public class Codecs {
                     E object2 = iterator.next();
                     T object3 = typeGetter.apply(object2);
                     if (object3 == object) continue;
-                    return DataResult.error("Mixed type list: element " + object2 + " had type " + object3 + ", but list is of type " + object);
+                    return DataResult.error(() -> "Mixed type list: element " + object2 + " had type " + object3 + ", but list is of type " + object);
                 }
             }
             return DataResult.success(collection, Lifecycle.stable());
@@ -257,7 +257,7 @@ public class Codecs {
                 try {
                     return codec.decode(ops, input);
                 } catch (Exception exception) {
-                    return DataResult.error("Cauch exception decoding " + input + ": " + exception.getMessage());
+                    return DataResult.error(() -> "Cauch exception decoding " + input + ": " + exception.getMessage());
                 }
             }
         });
@@ -269,7 +269,7 @@ public class Codecs {
                 return DataResult.success(Instant.from(formatter.parse(dateTimeString)));
             }
             catch (Exception exception) {
-                return DataResult.error(exception.getMessage());
+                return DataResult.error(exception::getMessage);
             }
         }, formatter::format);
     }
@@ -295,7 +295,7 @@ public class Codecs {
             Optional<Pair<com.mojang.datafixers.util.Either<F, S>, T>> optional = dataResult.result();
             Optional<Pair<com.mojang.datafixers.util.Either<F, S>, T>> optional2 = dataResult2.result();
             if (optional.isPresent() && optional2.isPresent()) {
-                return DataResult.error("Both alternatives read successfully, can not pick the correct one; first: " + optional.get() + " second: " + optional2.get(), optional.get());
+                return DataResult.error(() -> "Both alternatives read successfully, can not pick the correct one; first: " + optional.get() + " second: " + optional2.get(), optional.get());
             }
             return optional.isPresent() ? dataResult : dataResult2;
         }

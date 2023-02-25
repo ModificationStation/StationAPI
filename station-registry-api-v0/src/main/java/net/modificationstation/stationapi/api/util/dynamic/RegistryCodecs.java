@@ -11,7 +11,7 @@ public class RegistryCodecs {
     public static <T> Function<RegistryEntryList<T>, DataResult<RegistryEntryList<T>>> createNonEmptyEntryListChecker() {
         return entries -> {
             if (entries.getStorage().right().filter(List::isEmpty).isPresent()) {
-                return DataResult.error("List must have contents");
+                return DataResult.error(() -> "List must have contents");
             }
             return DataResult.success(entries);
         };

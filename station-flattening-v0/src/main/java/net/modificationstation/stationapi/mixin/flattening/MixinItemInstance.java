@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
@@ -54,8 +55,9 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
     )
     private void loadIdentifier(CompoundTag par1, CallbackInfo ci) {
         String id = par1.getString(STATION_ID);
-        if (!id.isEmpty())
-            itemId = ItemRegistry.INSTANCE.getLegacyId(of(id)).orElseThrow();
+        if (id.isEmpty())
+            LOGGER.warn("Attempted to load an item stack without Station Flattening ID! StationAPI will ignore this and accept the vanilla ID (" + itemId + "), but this should have been handled by DFU beforehand");
+        else itemId = ItemRegistry.INSTANCE.getLegacyId(of(id)).orElseThrow();
     }
 
     @Override

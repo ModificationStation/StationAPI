@@ -67,7 +67,7 @@ public class RegistryEntryListCodec<E> implements Codec<RegistryEntryList<E>> {
         Optional<? extends Registry<E>> optional;
         if (dynamicOps instanceof RegistryOps<T> rOps && (optional = rOps.getRegistry(this.registry)).isPresent()) {
             if (!registryEntryList.isOf(optional.get())) {
-                return DataResult.error("HolderSet " + registryEntryList + " is not valid in current registry set");
+                return DataResult.error(() -> "HolderSet " + registryEntryList + " is not valid in current registry set");
             }
             return this.entryListStorageCodec.encode(registryEntryList.getStorage().mapRight(List::copyOf), dynamicOps, object);
         }
@@ -82,7 +82,7 @@ public class RegistryEntryListCodec<E> implements Codec<RegistryEntryList<E>> {
                     list.add(direct);
                     continue;
                 }
-                return DataResult.error("Can't decode element " + registryEntry + " without registry");
+                return DataResult.error(() -> "Can't decode element " + registryEntry + " without registry");
             }
             return DataResult.success(new Pair<>(RegistryEntryList.of(list), pair.getSecond()));
         });

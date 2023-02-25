@@ -18,7 +18,7 @@ public abstract class Property<T extends Comparable<T>> {
    private final Codec<Property.Value<T>> valueCodec;
 
    protected Property(String name, Class<T> type) {
-      this.codec = Codec.STRING.comapFlatMap((value) -> this.parse(value).map(DataResult::success).orElseGet(() -> DataResult.error("Unable to read property: " + this + " with value: " + value)), this::name);
+      this.codec = Codec.STRING.comapFlatMap((value) -> this.parse(value).map(DataResult::success).orElseGet(() -> DataResult.error(() -> "Unable to read property: " + this + " with value: " + value)), this::name);
       this.valueCodec = this.codec.xmap(this::createValue, Property.Value::getValue);
       this.type = type;
       this.name = name;

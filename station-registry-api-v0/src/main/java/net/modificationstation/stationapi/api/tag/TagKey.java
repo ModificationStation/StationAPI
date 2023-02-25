@@ -21,7 +21,7 @@ public record TagKey<T>(RegistryKey<? extends Registry<T>> registry, Identifier 
     }
 
     public static <T> Codec<TagKey<T>> codec(RegistryKey<? extends Registry<T>> registry) {
-        return Codec.STRING.comapFlatMap(string -> string.startsWith("#") ? Identifier.validate(string.substring(1)).map(id -> TagKey.of(registry, id)) : DataResult.error("Not a tag id"), string -> "#" + string.id);
+        return Codec.STRING.comapFlatMap(string -> string.startsWith("#") ? Identifier.validate(string.substring(1)).map(id -> TagKey.of(registry, id)) : DataResult.error(() -> "Not a tag id"), string -> "#" + string.id);
     }
 
     public static <T> TagKey<T> of(RegistryKey<? extends Registry<T>> registry, Identifier id) {

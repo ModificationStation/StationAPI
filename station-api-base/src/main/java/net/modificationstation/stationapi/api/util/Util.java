@@ -293,9 +293,9 @@ public class Util {
         if (is.length != length) {
             String string = "Input is not a list of " + length + " ints";
             if (is.length >= length) {
-                return DataResult.error(string, Arrays.copyOf(is, length));
+                return DataResult.error(() -> string, Arrays.copyOf(is, length));
             }
-            return DataResult.error(string);
+            return DataResult.error(() -> string);
         }
         return DataResult.success(is);
     }
@@ -304,9 +304,9 @@ public class Util {
         if (list.size() != length) {
             String string = "Input is not a list of " + length + " elements";
             if (list.size() >= length) {
-                return DataResult.error(string, list.subList(0, length));
+                return DataResult.error(() -> string, list.subList(0, length));
             }
-            return DataResult.error(string);
+            return DataResult.error(() -> string);
         }
         return DataResult.success(list);
     }

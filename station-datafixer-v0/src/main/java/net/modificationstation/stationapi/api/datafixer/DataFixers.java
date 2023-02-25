@@ -24,7 +24,7 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DataFixers {
 
-    private static final String DATA_VERSIONS = MODID.id("data_versions").toString();
+    public static final String DATA_VERSIONS = MODID.id("data_versions").toString();
 
     private record DataFixerEntry(Supplier<DataFixer> fixer, int currentVersion) {}
     private static final Reference2ReferenceMap<ModID, DataFixerEntry> DATA_FIXERS = new Reference2ReferenceOpenHashMap<>();

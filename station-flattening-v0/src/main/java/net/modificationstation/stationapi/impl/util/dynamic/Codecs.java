@@ -20,7 +20,7 @@ public class Codecs {
                 if (optional.isPresent()) {
                     return result;
                 }
-                return DataResult.error("(" + mutableObject.getValue() + " -> using default)", Pair.of(object, input));
+                return DataResult.error(() -> "(" + mutableObject.getValue() + " -> using default)", Pair.of(object, input));
             }
 
             @Override

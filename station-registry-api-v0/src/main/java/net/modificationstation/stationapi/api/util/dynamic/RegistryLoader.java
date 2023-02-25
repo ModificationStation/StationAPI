@@ -44,7 +44,7 @@ public class RegistryLoader {
         RegistryEntry<E> registryEntry = registry.getOrCreateEntry(entryKey);
         valueHolder.values.put(entryKey, DataResult.success(registryEntry));
         if (parseable.isEmpty()) {
-            dataResult2 = registry.contains(entryKey) ? DataResult.success(registryEntry, Lifecycle.stable()) : DataResult.error("Missing referenced custom/removed registry entry for registry " + registryRef + " named " + entryKey.getValue());
+            dataResult2 = registry.contains(entryKey) ? DataResult.success(registryEntry, Lifecycle.stable()) : DataResult.error(() -> "Missing referenced custom/removed registry entry for registry " + registryRef + " named " + entryKey.getValue());
         } else {
             DataResult<EntryLoader.Entry<E>> dataResult3 = parseable.get().parseElement(ops, codec);
             Optional<EntryLoader.Entry<E>> optional = dataResult3.result();

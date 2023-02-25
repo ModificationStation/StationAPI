@@ -117,13 +117,13 @@ implements Keyable,
     }
 
     public Codec<T> getCodec() {
-        Codec<T> codec = Identifier.CODEC.flatXmap(id -> Optional.ofNullable(this.get(id)).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown registry key in " + this.registryKey + ": " + id)), value -> this.getKey(value).map(RegistryKey::getValue).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown registry element in " + this.registryKey + ":" + value)));
+        Codec<T> codec = Identifier.CODEC.flatXmap(id -> Optional.ofNullable(this.get(id)).map(DataResult::success).orElseGet(() -> DataResult.error(() -> "Unknown registry key in " + this.registryKey + ": " + id)), value -> this.getKey(value).map(RegistryKey::getValue).map(DataResult::success).orElseGet(() -> DataResult.error(() -> "Unknown registry element in " + this.registryKey + ":" + value)));
         Codec<T> codec2 = Codecs.rawIdChecked(value -> this.getKey(value).isPresent() ? this.getRawId(value) : -1, this::get, -1);
         return Codecs.withLifecycle(Codecs.orCompressed(codec, codec2), this::getEntryLifecycle, value -> this.lifecycle);
     }
 
     public Codec<RegistryEntry<T>> createEntryCodec() {
-        Codec<RegistryEntry<T>> codec = Identifier.CODEC.flatXmap(id -> this.getEntry(RegistryKey.of(this.registryKey, id)).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown registry key in " + this.registryKey + ": " + id)), entry -> entry.getKey().map(RegistryKey::getValue).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown registry element in " + this.registryKey + ":" + entry)));
+        Codec<RegistryEntry<T>> codec = Identifier.CODEC.flatXmap(id -> this.getEntry(RegistryKey.of(this.registryKey, id)).map(DataResult::success).orElseGet(() -> DataResult.error(() -> "Unknown registry key in " + this.registryKey + ": " + id)), entry -> entry.getKey().map(RegistryKey::getValue).map(DataResult::success).orElseGet(() -> DataResult.error(() -> "Unknown registry element in " + this.registryKey + ":" + entry)));
         return Codecs.withLifecycle(codec, entry -> this.getEntryLifecycle(entry.value()), entry -> this.lifecycle);
     }
 

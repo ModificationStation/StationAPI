@@ -6,7 +6,6 @@ import com.mojang.datafixers.TypeRewriteRule;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.Type;
 import com.mojang.serialization.Dynamic;
-import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import it.unimi.dsi.fastutil.objects.ReferenceList;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
@@ -22,6 +21,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.IntFunction;
 
 import static net.modificationstation.stationapi.impl.level.StationFlatteningWorldManager.SECTIONS;
 
@@ -92,7 +92,7 @@ public abstract class McRegionToStationFlatteningChunkFix<BL> extends DataFix {
                     if (sections[sectionY] == null)
                         sections[sectionY] = new Section<>(self.createMap(Map.of(self.createString("y"), self.createByte((byte) sectionY))));
                     Section<T> section = sections[sectionY];
-                    section.setBlock(x, y, z, rename(block));
+                    section.setBlock(x, y, z, remap(block));
                     section.setData(x, y, z, data);
                 }
             }
@@ -158,7 +158,7 @@ public abstract class McRegionToStationFlatteningChunkFix<BL> extends DataFix {
         public Section(Dynamic<T> section) {
             this.section = section;
             y = section.get("y").asInt(0);
-            Dynamic<BL> air = rename(0);
+            Dynamic<BL> air = remap(0);
             seenStates.add(air);
             paletteData.add(air);
             paletteMap.add(air);
@@ -200,14 +200,14 @@ public abstract class McRegionToStationFlatteningChunkFix<BL> extends DataFix {
         }
     }
 
-    protected abstract Dynamic<BL> rename(int id);
+    protected abstract Dynamic<BL> remap(int id);
 
-    public static <T> DataFix create(Schema outputSchema, String name, final Int2ObjectFunction<Dynamic<T>> rename) {
+    public static <T> DataFix create(Schema outputSchema, String name, final IntFunction<Dynamic<T>> rename) {
         return new McRegionToStationFlatteningChunkFix<T>(outputSchema, name){
 
             @Override
-            protected Dynamic<T> rename(int id) {
-                return rename.get(id);
+            protected Dynamic<T> remap(int id) {
+                return rename.apply(id);
             }
         };
     }

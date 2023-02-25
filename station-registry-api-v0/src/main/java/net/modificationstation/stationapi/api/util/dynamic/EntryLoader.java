@@ -68,7 +68,7 @@ public interface EntryLoader {
 
                             return var6;
                         } catch (JsonIOException | JsonSyntaxException | IOException var10) {
-                            return DataResult.error("Failed to parse " + id + " file: " + var10.getMessage());
+                            return DataResult.error(() -> "Failed to parse " + id + " file: " + var10.getMessage());
                         }
                     });
                 });
@@ -103,7 +103,7 @@ public interface EntryLoader {
 
                         return var6;
                     } catch (JsonIOException | JsonSyntaxException | IOException var10) {
-                        return DataResult.error("Failed to parse " + identifier + " file: " + var10.getMessage());
+                        return DataResult.error(() -> "Failed to parse " + identifier + " file: " + var10.getMessage());
                     }
                 });
             }
@@ -150,7 +150,7 @@ public interface EntryLoader {
         public <E> Optional<Parseable<E>> createParseable(RegistryKey<E> key) {
             Element element = this.values.get(key);
             if (element == null) {
-                DataResult<Entry<E>> dataResult = DataResult.error("Unknown element: " + key);
+                DataResult<Entry<E>> dataResult = DataResult.error(() -> "Unknown element: " + key);
                 return Optional.of((jsonOps, decoder) -> dataResult);
             }
             return Optional.of(element::parse);

@@ -119,7 +119,7 @@ public interface DynamicRegistryManager {
 
     private static <E> DataResult<? extends Codec<E>> getNetworkEntryCodec(RegistryKey<? extends Registry<E>> registryKey) {
         //noinspection unchecked
-        return Optional.ofNullable(INFOS.get(registryKey)).map(info -> (Codec<E>) info.networkEntryCodec()).map(DataResult::success).orElseGet(() -> DataResult.error("Unknown or not serializable registry: " + registryKey));
+        return Optional.ofNullable(INFOS.get(registryKey)).map(info -> (Codec<E>) info.networkEntryCodec()).map(DataResult::success).orElseGet(() -> DataResult.error(() -> "Unknown or not serializable registry: " + registryKey));
     }
 
     private static Map<RegistryKey<? extends Registry<?>>, ? extends MutableRegistry<?>> createMutableRegistries() {
