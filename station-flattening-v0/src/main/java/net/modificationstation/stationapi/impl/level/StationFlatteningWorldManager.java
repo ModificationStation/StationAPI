@@ -41,7 +41,7 @@ public class StationFlatteningWorldManager {
             int index = world.sectionCoordToIndex(sectionY);
             if (index < 0 || index >= sections.length) continue;
             ChunkSection section = sections[index];
-            if (section != ChunkSection.EMPTY_SECTION) {
+            if (!ChunkSection.isEmpty(section)) {
                 CompoundTag sectionTag = new CompoundTag();
                 sectionTag.put(HEIGHT_KEY, (byte)sectionY);
                 sectionTag.put("block_states", CODEC.encodeStart(NbtOps.INSTANCE, section.getBlockStateContainer()).getOrThrow(false, LOGGER::error));
