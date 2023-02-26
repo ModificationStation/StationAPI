@@ -13,9 +13,9 @@ import java.util.function.Supplier;
 import static net.modificationstation.stationapi.impl.level.StationFlatteningWorldManager.SECTIONS;
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
 
-public class SchemaStationFlatteningDamager extends Schema {
+public class StationFlatteningDamagerSchemaB1_7_3 extends Schema {
 
-    public SchemaStationFlatteningDamager(int versionKey, Schema parent) {
+    public StationFlatteningDamagerSchemaB1_7_3(int versionKey, Schema parent) {
         super(versionKey, parent);
     }
 
@@ -28,6 +28,28 @@ public class SchemaStationFlatteningDamager extends Schema {
         Map<String, Supplier<TypeTemplate>> map = new HashMap<>();
         schema.register(map, "Item", name -> DSL.optionalFields("Item", TypeReferences.ITEM_STACK.in(schema)));
         targetItems(schema, map, "Minecart");
+        registerSimple(map, "Arrow");
+        registerSimple(map, "Snowball");
+        registerSimple(map, "Painting");
+        registerSimple(map, "Mob");
+        registerSimple(map, "Monster");
+        registerSimple(map, "Creeper");
+        registerSimple(map, "Skeleton");
+        registerSimple(map, "Spider");
+        registerSimple(map, "Giant");
+        registerSimple(map, "Zombie");
+        registerSimple(map, "Slime");
+        registerSimple(map, "Ghast");
+        registerSimple(map, "PigZombie");
+        registerSimple(map, "Pig");
+        registerSimple(map, "Sheep");
+        registerSimple(map, "Cow");
+        registerSimple(map, "Chicken");
+        registerSimple(map, "Squid");
+        registerSimple(map, "Wolf");
+        registerSimple(map, "PrimedTnt");
+        registerSimple(map, "FallingSand");
+        registerSimple(map, "Boat");
         return map;
     }
 
@@ -37,6 +59,11 @@ public class SchemaStationFlatteningDamager extends Schema {
         targetItems(schema, map, "Chest");
         targetItems(schema, map, "Trap");
         targetItems(schema, map, "Furnace");
+        schema.registerSimple(map, "RecordPlayer");
+        schema.registerSimple(map, "Sign");
+        schema.registerSimple(map, "MobSpawner");
+        schema.registerSimple(map, "Music");
+        schema.registerSimple(map, "Piston");
         return map;
     }
 

@@ -11,6 +11,7 @@ import net.minecraft.level.LightType;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.util.collection.PackedIntegerArray;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
+import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema;
 import net.modificationstation.stationapi.impl.level.chunk.NibbleArray;
 
 import java.nio.ByteBuffer;
@@ -19,11 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.ToIntFunction;
 
 import static net.modificationstation.stationapi.impl.level.StationFlatteningWorldManager.SECTIONS;
 
-public abstract class StationFlatteningToMcRegionChunkDamage<BL> extends DataFix {
+public class StationFlatteningToMcRegionChunkDamage extends DataFix {
 
     private final static int CHUNK_SIZE = 16 * 128 * 16;
     private final static byte[] DEFAULT_BLOCK_LIGHT = new byte[CHUNK_SIZE >> 1];
@@ -40,10 +40,10 @@ public abstract class StationFlatteningToMcRegionChunkDamage<BL> extends DataFix
         this.name = name;
     }
 
-    private <T> Dynamic<T> damageChunk(Dynamic<T> dynamic) {
-        Optional<Dynamic<T>> optional = dynamic.get("Level").result();
+    private Dynamic<?> damageChunk(Dynamic<?> dynamic) {
+        Optional<? extends Dynamic<?>> optional = dynamic.get("Level").result();
         if (optional.isPresent() && optional.get().get(SECTIONS).asListOpt(Function.identity()).result().isPresent()) {
-            return dynamic.set("Level", new Level<>(optional.get()).transform());
+            return dynamic.set("Level", new Level(optional.get()).transform());
         }
         return dynamic;
     }
@@ -55,25 +55,25 @@ public abstract class StationFlatteningToMcRegionChunkDamage<BL> extends DataFix
         return this.writeFixAndRead(name, type, type2, this::damageChunk);
     }
 
-    final class Level<T> {
-        private final Dynamic<T> level;
-        private final List<Section<T>> sections;
+    static final class Level {
+        private final Dynamic<?> level;
+        private final List<Section> sections;
         private final ByteBuffer height_map;
 
-        public Level(Dynamic<T> dynamic) {
+        public Level(Dynamic<?> dynamic) {
             level = dynamic;
-            sections = dynamic.get(SECTIONS).asList(dynamic1 -> new Section<>(dynamic1));
+            sections = dynamic.get(SECTIONS).asList(Section::new);
             height_map = dynamic.get("height_map").asByteBuffer();
         }
 
-        public Dynamic<T> transform() {
-            Dynamic<T> self = this.level;
+        public Dynamic<?> transform() {
+            Dynamic<?> self = this.level;
 
             class_257 blockLight = new class_257(Arrays.copyOf(DEFAULT_BLOCK_LIGHT, CHUNK_SIZE >> 1));
             byte[] blocks = new byte[CHUNK_SIZE];
             class_257 data = new class_257(CHUNK_SIZE);
             class_257 skyLight = new class_257(Arrays.copyOf(DEFAULT_SKY_LIGHT, CHUNK_SIZE >> 1));
-            for (Section<T> section : sections) {
+            for (Section section : sections) {
                 int yOff = section.y << 4;
                 for (int i = 0; i < 4096; i++) {
                     int x = i >> 8;
@@ -81,7 +81,7 @@ public abstract class StationFlatteningToMcRegionChunkDamage<BL> extends DataFix
                     int z = i & 0b1111;
                     int worldY = yOff + y;
                     blockLight.method_1704(x, worldY, z, section.block_light.getValue(i));
-                    blocks[x << 11 | z << 7 | worldY] = (byte) remap(section.palette.get(section.statesData.get((y << 4 | z) << 4 | x)));
+                    blocks[x << 11 | z << 7 | worldY] = (byte) StationFlatteningItemStackSchema.lookupOldBlockId(section.palette.get(section.statesData.get((y << 4 | z) << 4 | x)));
                     data.method_1704(x, worldY, z, section.data.getValue(i));
                     skyLight.method_1704(x, worldY, z, section.sky_light.getValue(i));
                 }
@@ -101,22 +101,21 @@ public abstract class StationFlatteningToMcRegionChunkDamage<BL> extends DataFix
         }
     }
 
-    final class Section<T> {
+    static final class Section {
 
-        private final Dynamic<T> section;
+        private final Dynamic<?> section;
         private final int y;
         private final NibbleArray block_light = new NibbleArray(4096);
-        private final List<Dynamic<BL>> palette;
+        private final List<? extends Dynamic<?>> palette;
         private final PackedIntegerArray statesData;
         private final NibbleArray data = new NibbleArray(4096);
         private final NibbleArray sky_light = new NibbleArray(4096);
 
-        public Section(Dynamic<T> section) {
+        public Section(Dynamic<?> section) {
             this.section = section;
             y = section.get("y").asInt(0);
             block_light.copyArray(DataFixUtils.toArray(section.get("block_light").asByteBuffer()));
-            //noinspection unchecked
-            Map<String, Dynamic<BL>> blockStates = section.get("block_states").asMap(dynamic -> dynamic.asString(""), dynamic -> (Dynamic<BL>) dynamic);
+            Map<String, ? extends Dynamic<?>> blockStates = section.get("block_states").asMap(dynamic -> dynamic.asString(""), Function.identity());
             palette = blockStates.get("palette").asList(Function.identity());
             long[] states = blockStates.get("data").asLongStream().toArray();
             int elementBits = Math.max(4, MathHelper.ceilLog2(palette.size()));
@@ -125,17 +124,5 @@ public abstract class StationFlatteningToMcRegionChunkDamage<BL> extends DataFix
             data.copyArray(DataFixUtils.toArray(section.get("data").asByteBuffer()));
             sky_light.copyArray(DataFixUtils.toArray(section.get("sky_light").asByteBuffer()));
         }
-    }
-
-    protected abstract int remap(Dynamic<BL> state);
-
-    public static <T> DataFix create(Schema outputSchema, String name, final ToIntFunction<Dynamic<T>> rename) {
-        return new StationFlatteningToMcRegionChunkDamage<T>(outputSchema, name){
-
-            @Override
-            protected int remap(Dynamic<T> state) {
-                return rename.applyAsInt(state);
-            }
-        };
     }
 }

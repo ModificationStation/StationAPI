@@ -13,8 +13,9 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.vanillafix.datadamager.damage.StationFlatteningToMcRegionChunkDamage;
 import net.modificationstation.stationapi.api.vanillafix.datadamager.damage.StationFlatteningToMcRegionItemStackDamage;
-import net.modificationstation.stationapi.api.vanillafix.datadamager.schema.SchemaMcRegionDamager;
-import net.modificationstation.stationapi.api.vanillafix.datadamager.schema.SchemaStationFlatteningDamager;
+import net.modificationstation.stationapi.api.vanillafix.datadamager.schema.McRegionChunkDamagerSchema;
+import net.modificationstation.stationapi.api.vanillafix.datadamager.schema.McRegionItemStackDamagerSchema;
+import net.modificationstation.stationapi.api.vanillafix.datadamager.schema.StationFlatteningDamagerSchemaB1_7_3;
 import net.modificationstation.stationapi.api.vanillafix.datafixer.fix.McRegionToStationFlatteningChunkFix;
 import net.modificationstation.stationapi.api.vanillafix.datafixer.fix.McRegionToStationFlatteningItemStackFix;
 import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.McRegionSchemaB1_7_3;
@@ -35,15 +36,16 @@ public final class VanillaDataFixerImpl {
     public static final int VANILLA_VERSION = HIGHEST_VERSION - 19132;
     public static final Supplier<DataFixer> DATA_DAMAGER = Suppliers.memoize(() -> {
         final DataFixerBuilder builder = new DataFixerBuilder(VANILLA_VERSION);
-        Schema schema69420 = builder.addSchema(HIGHEST_VERSION - 69420, SchemaStationFlatteningDamager::new);
-        Schema schema19132 = builder.addSchema(VANILLA_VERSION, SchemaMcRegionDamager::new);
-        builder.addFixer(StationFlatteningToMcRegionChunkDamage.create(schema19132, "Station chunk damage", StationFlatteningItemStackSchema::lookupOldBlockId));
-        builder.addFixer(StationFlatteningToMcRegionItemStackDamage.create(schema19132, "Station itemstack damage", StationFlatteningItemStackSchema::lookupOldItemId));
+        Schema schema69421 = builder.addSchema(HIGHEST_VERSION - 69421, StationFlatteningDamagerSchemaB1_7_3::new);
+        Schema schema69420 = builder.addSchema(HIGHEST_VERSION - 69420, McRegionChunkDamagerSchema::new);
+        builder.addFixer(new StationFlatteningToMcRegionChunkDamage(schema69420, "StationFlatteningToMcRegionChunkDamage"));
+        Schema schema19132 = builder.addSchema(VANILLA_VERSION, McRegionItemStackDamagerSchema::new);
+        builder.addFixer(new StationFlatteningToMcRegionItemStackDamage(schema19132, "StationFlatteningToMcRegionItemStackDamage"));
         return builder.buildOptimized(Set.of(TypeReferences.LEVEL), Util.getBootstrapExecutor());
     });
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
-    private static <T> void registerFixer(DataFixerRegisterEvent event) {
+    private static void registerFixer(DataFixerRegisterEvent event) {
         DataFixers.registerFixer(MODID, executor -> {
             DataFixerBuilder builder = new DataFixerBuilder(CURRENT_VERSION);
             Schema schema19132 = builder.addSchema(19132, McRegionSchemaB1_7_3::new);

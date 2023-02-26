@@ -5,12 +5,11 @@ import com.mojang.datafixers.TypeRewriteRule;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.serialization.Dynamic;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
-
-import java.util.function.ToIntFunction;
+import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema;
 
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
 
-public abstract class StationFlatteningToMcRegionItemStackDamage extends DataFix {
+public class StationFlatteningToMcRegionItemStackDamage extends DataFix {
 
     private final String name;
 
@@ -29,20 +28,8 @@ public abstract class StationFlatteningToMcRegionItemStackDamage extends DataFix
                         dynamic.get(STATION_ID).result().<Dynamic<?>>map(
                                 value -> dynamic
                                         .remove(STATION_ID)
-                                        .set("id", dynamic.createShort((short) remap(value.asString(""))))
+                                        .set("id", dynamic.createShort((short) StationFlatteningItemStackSchema.lookupOldItemId(value.asString(""))))
                         ).orElse(dynamic)
         );
-    }
-
-    protected abstract int remap(String id);
-
-    public static DataFix create(Schema outputSchema, String name, final ToIntFunction<String> rename) {
-        return new StationFlatteningToMcRegionItemStackDamage(outputSchema, name){
-
-            @Override
-            protected int remap(String id) {
-                return rename.applyAsInt(id);
-            }
-        };
     }
 }
