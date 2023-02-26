@@ -13,10 +13,9 @@ import net.modificationstation.stationapi.api.util.Util;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static net.modificationstation.stationapi.impl.level.StationFlatteningWorldManager.SECTIONS;
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
 
-public class SchemaStationFlattening extends Schema {
+public class StationFlatteningItemStackSchema extends Schema {
 
     private static final Dynamic<?>[] OLD_ID_TO_BLOCKSTATE = new Dynamic[256];
     private static final Object2IntOpenHashMap<String> BLOCK_TO_OLD_ID = Util.make(new Object2IntOpenHashMap<>(256), map -> map.defaultReturnValue(0));
@@ -284,28 +283,13 @@ public class SchemaStationFlattening extends Schema {
         putItem(2257, "minecraft:music_disc_cat");
     }
 
-    public SchemaStationFlattening(int versionKey, Schema parent) {
+    public StationFlatteningItemStackSchema(int versionKey, Schema parent) {
         super(versionKey, parent);
     }
 
     @Override
     public void registerTypes(Schema schema, Map<String, Supplier<TypeTemplate>> entityTypes, Map<String, Supplier<TypeTemplate>> blockEntityTypes) {
         super.registerTypes(schema, entityTypes, blockEntityTypes);
-        schema.registerType(
-                false,
-                TypeReferences.CHUNK,
-                () -> DSL.fields(
-                        "Level",
-                        DSL.optionalFields(
-                                "Entities",
-                                DSL.list(TypeReferences.ENTITY.in(schema)),
-                                "TileEntities",
-                                DSL.list(TypeReferences.BLOCK_ENTITY.in(schema)),
-                                SECTIONS,
-                                DSL.list(DSL.optionalFields("block_states", DSL.optionalFields("palette", DSL.list(TypeReferences.BLOCK_STATE.in(schema)))))
-                        )
-                )
-        );
         schema.registerType(
                 true,
                 TypeReferences.ITEM_STACK,
@@ -318,11 +302,6 @@ public class SchemaStationFlattening extends Schema {
                 false,
                 TypeReferences.ITEM_NAME,
                 () -> DSL.constType(IdentifierNormalizingSchema.getIdentifierType())
-        );
-        schema.registerType(
-                false,
-                TypeReferences.BLOCK_STATE,
-                DSL::remainder
         );
     }
 }

@@ -5,8 +5,8 @@ import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.event.datafixer.DataFixerRegisterEvent;
 import net.modificationstation.stationapi.api.util.Util;
 
-import static net.modificationstation.stationapi.api.vanillafix.datafixer.schema.SchemaStationFlattening.putItem;
-import static net.modificationstation.stationapi.api.vanillafix.datafixer.schema.SchemaStationFlattening.putState;
+import static net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema.putItem;
+import static net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema.putState;
 
 public class DataFixerListener {
 

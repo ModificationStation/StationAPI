@@ -17,8 +17,9 @@ import net.modificationstation.stationapi.api.vanillafix.datadamager.schema.Sche
 import net.modificationstation.stationapi.api.vanillafix.datadamager.schema.SchemaStationFlatteningDamager;
 import net.modificationstation.stationapi.api.vanillafix.datafixer.fix.McRegionToStationFlatteningChunkFix;
 import net.modificationstation.stationapi.api.vanillafix.datafixer.fix.McRegionToStationFlatteningItemStackFix;
-import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.SchemaMcRegion;
-import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.SchemaStationFlattening;
+import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.McRegionSchemaB1_7_3;
+import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningChunkSchema;
+import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -29,27 +30,28 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 public final class VanillaDataFixerImpl {
 
     public static final String STATION_ID = MODID.id("id").toString();
-    public static final int CURRENT_VERSION = 69420;
+    public static final int CURRENT_VERSION = 69421;
     public static final int HIGHEST_VERSION = Integer.MAX_VALUE / 10;
     public static final int VANILLA_VERSION = HIGHEST_VERSION - 19132;
     public static final Supplier<DataFixer> DATA_DAMAGER = Suppliers.memoize(() -> {
         final DataFixerBuilder builder = new DataFixerBuilder(VANILLA_VERSION);
         Schema schema69420 = builder.addSchema(HIGHEST_VERSION - 69420, SchemaStationFlatteningDamager::new);
         Schema schema19132 = builder.addSchema(VANILLA_VERSION, SchemaMcRegionDamager::new);
-        builder.addFixer(StationFlatteningToMcRegionChunkDamage.create(schema19132, "Station chunk damage", SchemaStationFlattening::lookupOldBlockId));
-        builder.addFixer(StationFlatteningToMcRegionItemStackDamage.create(schema19132, "Station itemstack damage", SchemaStationFlattening::lookupOldItemId));
-        return builder.buildOptimized(Set.of(TypeReferences.CHUNK, TypeReferences.ITEM_STACK), Util.getBootstrapExecutor());
+        builder.addFixer(StationFlatteningToMcRegionChunkDamage.create(schema19132, "Station chunk damage", StationFlatteningItemStackSchema::lookupOldBlockId));
+        builder.addFixer(StationFlatteningToMcRegionItemStackDamage.create(schema19132, "Station itemstack damage", StationFlatteningItemStackSchema::lookupOldItemId));
+        return builder.buildOptimized(Set.of(TypeReferences.LEVEL), Util.getBootstrapExecutor());
     });
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
-    private static void registerFixer(DataFixerRegisterEvent event) {
+    private static <T> void registerFixer(DataFixerRegisterEvent event) {
         DataFixers.registerFixer(MODID, executor -> {
             DataFixerBuilder builder = new DataFixerBuilder(CURRENT_VERSION);
-            Schema schema19132 = builder.addSchema(19132, SchemaMcRegion::new);
-            Schema schema69420 = builder.addSchema(69420, SchemaStationFlattening::new);
-            builder.addFixer(McRegionToStationFlatteningChunkFix.create(schema69420, "Vanilla chunk fix", SchemaStationFlattening::lookupState));
-            builder.addFixer(McRegionToStationFlatteningItemStackFix.create(schema69420, "Vanilla itemstack fix", SchemaStationFlattening::lookupItem));
-            return builder.buildOptimized(Set.of(TypeReferences.CHUNK, TypeReferences.ITEM_STACK), executor);
+            Schema schema19132 = builder.addSchema(19132, McRegionSchemaB1_7_3::new);
+            Schema schema69420 = builder.addSchema(69420, StationFlatteningItemStackSchema::new);
+            builder.addFixer(new McRegionToStationFlatteningItemStackFix(schema69420, "McRegionToStationFlatteningItemStackFix"));
+            Schema schema69421 = builder.addSchema(69421, StationFlatteningChunkSchema::new);
+            builder.addFixer(new McRegionToStationFlatteningChunkFix(schema69421, "McRegionToStationFlatteningChunkFix"));
+            return builder.buildOptimized(Set.of(TypeReferences.LEVEL), executor);
         }, CURRENT_VERSION);
     }
 }

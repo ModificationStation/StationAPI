@@ -27,4 +27,22 @@ public class NBTItem extends TemplateItemBase {
         player.sendMessage("Woah: " + nbt.getInt(of(MODID, "rand_num").toString()));
         return true;
     }
+
+    @Override
+    public ItemInstance use(ItemInstance arg, Level arg2, PlayerBase arg3) {
+//        CompoundTag chunkTag = new CompoundTag();
+//        CompoundTag levelTag = new CompoundTag();
+//        ListTag entities = new ListTag();
+//        CompoundTag itemEntity = new CompoundTag();
+//        itemEntity.put("id", "Item");
+//        CompoundTag itemEntityStack = new CompoundTag();
+//        itemEntityStack.put("id", (short) 1);
+//        itemEntity.put("Item", itemEntityStack);
+//        entities.add(itemEntity);
+//        levelTag.put("Entities", entities);
+//        chunkTag.put("Level", levelTag);
+//        CompoundTag newChunk = NbtHelper.update(TypeReferences.CHUNK, chunkTag);
+//        System.out.println(((CompoundTag) newChunk.getCompoundTag("Level").getListTag("Entities").get(0)).getCompoundTag("Item").getString(STATION_ID));
+        return super.use(arg, arg2, arg3);
+    }
 }

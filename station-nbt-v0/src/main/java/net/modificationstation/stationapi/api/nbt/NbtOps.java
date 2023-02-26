@@ -76,8 +76,8 @@ public class NbtOps implements DynamicOps<AbstractTag> {
             case 6 -> dynamicOps.createDouble(((DoubleTag) nbtElement).data);
             case 7 -> dynamicOps.createByteList(ByteBuffer.wrap(((ByteArrayTag) nbtElement).data));
             case 8 -> dynamicOps.createString(((StringTag) nbtElement).data);
-            case 9 -> this.convertList(dynamicOps, nbtElement);
-            case 10 -> this.convertMap(dynamicOps, nbtElement);
+            case 9 -> convertList(dynamicOps, nbtElement);
+            case 10 -> convertMap(dynamicOps, nbtElement);
             case 11 -> dynamicOps.createIntList(Arrays.stream(((NbtIntArray) nbtElement).data));
             case 12 -> dynamicOps.createLongList(Arrays.stream(((NbtLongArray) nbtElement).data));
             default -> throw new IllegalStateException("Unknown tag type: " + nbtElement);
