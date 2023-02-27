@@ -13,6 +13,7 @@
     "MixinClass467",
     "MixinDimension",
     "MixinEntityBase",
+    "MixinFallingBlock",
     "MixinItemBase",
     "MixinItemInstance",
     "MixinLevel",

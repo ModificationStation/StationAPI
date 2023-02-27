@@ -62,8 +62,12 @@ public class ItemUsageContext {
         return this.world;
     }
 
-    public Direction getPlayerFacing() {
+    public Direction getHorizontalPlayerFacing() {
         return this.player == null ? Direction.NORTH : Direction.fromRotation(player.yaw);
+    }
+
+    public boolean shouldCancelInteraction() {
+        return this.player != null && this.player.method_1373();
     }
 
     public float getPlayerYaw() {

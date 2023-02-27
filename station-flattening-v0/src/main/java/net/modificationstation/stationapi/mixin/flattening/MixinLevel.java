@@ -6,6 +6,7 @@ import net.minecraft.level.chunk.Chunk;
 import net.minecraft.level.dimension.Dimension;
 import net.minecraft.util.maths.Vec2i;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 import net.modificationstation.stationapi.impl.level.StationDimension;
 import org.spongepowered.asm.mixin.Final;
@@ -183,5 +184,17 @@ public abstract class MixinLevel implements StationFlatteningWorld {
     @Override
     public int getBottomY() {
         return ((StationDimension) this.dimension).getActualBottomY();
+    }
+
+    @ModifyVariable(
+            method = "canPlaceTile(IIIIZI)Z",
+            index = 8,
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 6
+            )
+    )
+    private BlockBase accountForAirBlock(BlockBase value) {
+        return value == States.AIR.get().getBlock() ? null : value;
     }
 }
