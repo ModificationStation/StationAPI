@@ -42,8 +42,8 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
         return i;
     }
 
-    private <T> Dynamic<T> fixChunk(Dynamic<T> dynamic) {
-        Optional<Dynamic<T>> optional = dynamic.get("Level").result();
+    private Dynamic<?> fixChunk(Dynamic<?> dynamic) {
+        Optional<? extends Dynamic<?>> optional = dynamic.get("Level").result();
         if (optional.isPresent() && optional.get().get("Blocks").asByteBufferOpt().result().isPresent()) {
             return dynamic.set("Level", new Level(optional.get()).transform());
         }
@@ -91,7 +91,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
                     if (sections[sectionY] == null)
                         sections[sectionY] = new Section(self.createMap(Map.of(self.createString("y"), self.createByte((byte) sectionY))));
                     Section section = sections[sectionY];
-                    section.setBlock(x, y, z, StationFlatteningItemStackSchema.lookupState(block).convert(self.getOps()));
+                    section.setBlock(x, y, z, StationFlatteningItemStackSchema.lookupState(block)); // do not convert just yet. we need same references for faster key comparison
                     section.setData(x, y, z, data);
                 }
             }
@@ -157,7 +157,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
         public Section(Dynamic<?> section) {
             this.section = section;
             y = section.get("y").asInt(0);
-            Dynamic<?> air = StationFlatteningItemStackSchema.lookupState(0).convert(section.getOps());
+            Dynamic<?> air = StationFlatteningItemStackSchema.lookupState(0); // same applies
             seenStates.add(air);
             paletteData.add(air);
             paletteMap.add(air);
@@ -182,7 +182,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
 
         public Dynamic<?> transform() {
             Dynamic<?> self = this.section;
-            Dynamic<?> palette = self.createList(paletteData.stream());
+            Dynamic<?> palette = self.createList(paletteData.stream().map(dynamic -> dynamic.convert(self.getOps()))); // instead, convert when used
             PackedIntegerArray array = new PackedIntegerArray(Math.max(4, MathHelper.ceilLog2(paletteData.size())), states.length);
             for (int i = 0; i < states.length; i++) array.set(i, states[i]);
             Dynamic<?> data = self.createLongList(Arrays.stream(array.getData()));
