@@ -9,6 +9,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.math.*;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 @Environment(EnvType.CLIENT)
 public class BakedQuadFactory {
    private static final float MIN_SCALE = 1.0F / (float)Math.cos(0.39269909262657166D) - 1.0F;
@@ -124,7 +126,7 @@ public class BakedQuadFactory {
       if (rotation != null) {
          Vec3f vector3f7;
          Vec3f vector3f8;
-         switch (rotation.axis) {
+         switch (rotation.axis()) {
             case X -> {
                vector3f7 = new Vec3f(1.0F, 0.0F, 0.0F);
                vector3f8 = new Vec3f(0.0F, 1.0F, 1.0F);
@@ -140,9 +142,9 @@ public class BakedQuadFactory {
             default -> throw new IllegalArgumentException("There are only 3 axes");
          }
 
-         Quaternion quaternion = new Quaternion(vector3f7, rotation.angle, true);
-         if (rotation.rescale) {
-            if (Math.abs(rotation.angle) == 22.5F) {
+         Quaternion quaternion = new Quaternion(vector3f7, rotation.angle(), true);
+         if (rotation.rescale()) {
+            if (Math.abs(rotation.angle()) == 22.5F) {
                vector3f8.scale(MIN_SCALE);
             } else {
                vector3f8.scale(MAX_SCALE);
@@ -153,7 +155,7 @@ public class BakedQuadFactory {
             vector3f8.set(1.0F, 1.0F, 1.0F);
          }
 
-         this.transformVertex(vector, rotation.origin.copy(), new Matrix4f(quaternion), vector3f8);
+         this.transformVertex(vector, rotation.origin().copy(), new Matrix4f(quaternion), vector3f8);
       }
    }
 
@@ -194,11 +196,7 @@ public class BakedQuadFactory {
          }
       }
 
-      if (direction == null) {
-         return Direction.UP;
-      } else {
-         return direction;
-      }
+      return Objects.requireNonNullElse(direction, Direction.UP);
    }
 
    private void encodeDirection(int[] rotationMatrix, Direction direction) {

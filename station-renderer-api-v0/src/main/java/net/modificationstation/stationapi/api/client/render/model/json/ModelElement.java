@@ -82,9 +82,16 @@ public class ModelElement {
          if (object.has("rotation")) {
             JsonObject jsonObject = JsonHelper.getObject(object, "rotation");
             Vec3f vec3f = this.deserializeVec3f(jsonObject, "origin");
+            vec3f.set(vec3f.getX(), vec3f.getY(), 16 - vec3f.getZ()); // modern has z inverted
             vec3f.scale(0.0625F);
             Direction.Axis axis = this.deserializeAxis(jsonObject);
             float f = this.deserializeRotationAngle(jsonObject);
+            switch (axis) { // modern has x and z swapped
+               case X -> axis = Direction.Axis.Z;
+               case Z -> axis = Direction.Axis.X;
+            }
+            if (axis == Direction.Axis.Z) // modern has z inverted
+               f = -f;
             boolean bl = JsonHelper.getBoolean(jsonObject, "rescale", false);
             modelRotation = new ModelRotation(vec3f, axis, f, bl);
          }

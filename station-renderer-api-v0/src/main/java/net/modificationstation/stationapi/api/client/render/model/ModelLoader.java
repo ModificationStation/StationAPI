@@ -152,7 +152,7 @@ public class ModelLoader {
             BakedModel bakedModel = null;
 
             try {
-                bakedModel = this.bake(identifier, ModelBakeRotation.X0_Y0);
+                bakedModel = this.bake(identifier, ModelBakeRotation.Y0_Z0);
             } catch (Exception var4) {
                 LOGGER.warn("Unable to bake model: '{}': {}", identifier, var4);
             }
