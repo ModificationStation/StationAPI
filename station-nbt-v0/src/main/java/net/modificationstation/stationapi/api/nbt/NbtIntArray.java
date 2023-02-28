@@ -5,6 +5,7 @@ import net.minecraft.util.io.AbstractTag;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class NbtIntArray extends AbstractTag {
 
@@ -42,5 +43,15 @@ public class NbtIntArray extends AbstractTag {
     @Override
     public byte getId() {
         return 11;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this == obj || (obj instanceof NbtIntArray tag && Arrays.equals(data, tag.data));
+    }
+
+    @Override
+    public NbtIntArray copy() {
+        return new NbtIntArray(Arrays.copyOf(data, data.length));
     }
 }

@@ -29,6 +29,44 @@
   },
 
   "custom": {
-    "modmenu:api": true
+    "modmenu:api": true,
+    "loom:injected_interfaces": {
+      "net/minecraft/class_360": [
+        "net/modificationstation/stationapi/api/nbt/StationNbtByte"
+      ],
+      "net/minecraft/class_165": [
+        "net/modificationstation/stationapi/api/nbt/StationNbtByteArray"
+      ],
+      "net/minecraft/class_8": [
+        "net/modificationstation/stationapi/api/nbt/StationNbtCompound"
+      ],
+      "net/minecraft/class_419": [
+        "net/modificationstation/stationapi/api/nbt/StationNbtDouble"
+      ],
+      "net/minecraft/class_187": [
+        "net/modificationstation/stationapi/api/nbt/StationNbtElement"
+      ],
+      "net/minecraft/class_253": [
+        "net/modificationstation/stationapi/api/nbt/StationNbtEnd"
+      ],
+      "net/minecraft/class_358": [
+        "net/modificationstation/stationapi/api/nbt/StationNbtFloat"
+      ],
+      "net/minecraft/class_347": [
+        "net/modificationstation/stationapi/api/nbt/StationNbtInt"
+      ],
+      "net/minecraft/class_202": [
+        "net/modificationstation/stationapi/api/nbt/StationNbtList"
+      ],
+      "net/minecraft/class_273": [
+        "net/modificationstation/stationapi/api/nbt/StationNbtLong"
+      ],
+      "net/minecraft/class_462": [
+        "net/modificationstation/stationapi/api/nbt/StationNbtShort"
+      ],
+      "net/minecraft/class_522": [
+        "net/modificationstation/stationapi/api/nbt/StationNbtString"
+      ]
+    }
   }
 }

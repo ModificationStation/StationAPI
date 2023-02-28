@@ -1,12 +1,28 @@
 package net.modificationstation.stationapi.api.nbt;
 
-public interface StationNbtCompound {
+import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.util.Util;
 
-    void put(String key, int[] item);
+public interface StationNbtCompound extends StationNbtElement {
 
-    int[] getIntArray(String key);
+    default void put(String key, int[] item) {
+        Util.assertImpl();
+    }
 
-    void put(String key, long[] item);
+    default int[] getIntArray(String key) {
+        return Util.assertImpl();
+    }
 
-    long[] getLongArray(String key);
+    default void put(String key, long[] item) {
+        Util.assertImpl();
+    }
+
+    default long[] getLongArray(String key) {
+        return Util.assertImpl();
+    }
+
+    @Override
+    default CompoundTag copy() {
+        return Util.assertImpl();
+    }
 }

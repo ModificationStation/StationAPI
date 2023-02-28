@@ -11,5 +11,5 @@ import java.util.Map;
 public interface CompoundTagAccessor {
 
     @Accessor("data")
-    Map<String, ? extends AbstractTag> stationapi$getData();
+    Map<String, AbstractTag> stationapi$getData();
 }

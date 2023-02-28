@@ -263,7 +263,7 @@ public class NbtOps implements DynamicOps<AbstractTag> {
             return DataResult.error(() -> "mergeToMap called with not a map: " + nbtElement, nbtElement);
         if (!(nbtElement2 instanceof StringTag stringTag))
             return DataResult.error(() -> "key is not a string: " + nbtElement2, nbtElement);
-        CompoundTag nbtCompound = nbtElement instanceof CompoundTag nbtCompound2 ? NbtHelper.copy(nbtCompound2) : new CompoundTag();
+        CompoundTag nbtCompound = nbtElement instanceof CompoundTag nbtCompound2 ? nbtCompound2.copy() : new CompoundTag();
         nbtCompound.put(stringTag.data, nbtElement3);
         return DataResult.success(nbtCompound);
     }
@@ -272,7 +272,7 @@ public class NbtOps implements DynamicOps<AbstractTag> {
     public DataResult<AbstractTag> mergeToMap(AbstractTag nbtElement, MapLike<AbstractTag> mapLike) {
         if (!(nbtElement instanceof CompoundTag) && !(nbtElement instanceof EndTag))
             return DataResult.error(() -> "mergeToMap called with not a map: " + nbtElement, nbtElement);
-        CompoundTag nbtCompound = nbtElement instanceof CompoundTag nbtCompound2 ? NbtHelper.copy(nbtCompound2) : new CompoundTag();
+        CompoundTag nbtCompound = nbtElement instanceof CompoundTag nbtCompound2 ? nbtCompound2.copy() : new CompoundTag();
         List<AbstractTag> invalidKeys = new ArrayList<>();
         mapLike.entries().forEach(pair -> {
             AbstractTag key = pair.getFirst();

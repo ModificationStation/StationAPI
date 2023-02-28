@@ -18,4 +18,7 @@ public interface ListTagAccessor {
 
     @Accessor("listTypeId")
     void stationapi$setListTypeId(byte listTypeId);
+
+    @Accessor("data")
+    List<AbstractTag> stationapi$getData();
 }

@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.mixin.item;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.impl.item.nbt.StationNBTSetter;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +12,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import java.util.Objects;
 
 @Mixin(PlayerInventory.class)
 public class MixinPlayerInventory {
@@ -44,7 +45,7 @@ public class MixinPlayerInventory {
             )
     )
     private int captureItemInstance(ItemInstance instance, ItemInstance instance2) {
-        if (NbtHelper.equals(instance.getStationNBT(), instance2.getStationNBT()))
+        if (Objects.equals(instance.getStationNBT(), instance2.getStationNBT()))
             return instance.count;
         else {
             notchGodDamnit = true;

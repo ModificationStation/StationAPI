@@ -7,7 +7,17 @@
     "CompoundTagAccessor",
     "ListTagAccessor",
     "MixinAbstractTag",
-    "MixinCompoundTag"
+    "MixinByteArrayTag",
+    "MixinByteTag",
+    "MixinCompoundTag",
+    "MixinDoubleTag",
+    "MixinEndTag",
+    "MixinFloatTag",
+    "MixinIntTag",
+    "MixinListTag",
+    "MixinLongTag",
+    "MixinShortTag",
+    "MixinStringTag"
   ],
   "injectors": {
     "defaultRequire": 1

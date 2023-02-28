@@ -10,7 +10,7 @@ import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.item.ItemStackEvent;
 import net.modificationstation.stationapi.api.item.StationItemStack;
-import net.modificationstation.stationapi.api.nbt.NbtHelper;
+import net.modificationstation.stationapi.api.nbt.StationNbtCompound;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.impl.item.nbt.StationNBTSetter;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Objects;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
@@ -53,7 +55,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
     )
     private void setSplitStackNbt(int par1, CallbackInfoReturnable<ItemInstance> cir) {
         if (!stationNBT.values().isEmpty())
-            StationNBTSetter.cast(cir.getReturnValue()).setStationNBT(NbtHelper.copy(stationNBT));
+            StationNBTSetter.cast(cir.getReturnValue()).setStationNBT(((StationNbtCompound) stationNBT).copy());
     }
 
     @Inject(
@@ -79,7 +81,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
     )
     private void copy(CallbackInfoReturnable<ItemInstance> cir) {
         if (!stationNBT.values().isEmpty())
-            StationNBTSetter.cast(cir.getReturnValue()).setStationNBT(NbtHelper.copy(stationNBT));
+            StationNBTSetter.cast(cir.getReturnValue()).setStationNBT(((StationNbtCompound) stationNBT).copy());
     }
 
     @Inject(
@@ -88,7 +90,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
             cancellable = true
     )
     private void isStackIdentical(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
-        if (!NbtHelper.equals(stationNBT, par1.getStationNBT()))
+        if (!Objects.equals(stationNBT, par1.getStationNBT()))
             cir.setReturnValue(false);
     }
 
@@ -98,7 +100,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
             cancellable = true
     )
     private void isDamageAndIDIdentical(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
-        if (!NbtHelper.equals(stationNBT, par1.getStationNBT()))
+        if (!Objects.equals(stationNBT, par1.getStationNBT()))
             cir.setReturnValue(false);
     }
 
@@ -117,7 +119,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
             cancellable = true
     )
     private void isStackIdentical2(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
-        if (!NbtHelper.equals(stationNBT, par1.getStationNBT()))
+        if (!Objects.equals(stationNBT, par1.getStationNBT()))
             cir.setReturnValue(false);
     }
 

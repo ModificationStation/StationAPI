@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.mixin.nbt;
 import net.minecraft.util.io.AbstractTag;
 import net.modificationstation.stationapi.api.nbt.NbtIntArray;
 import net.modificationstation.stationapi.api.nbt.NbtLongArray;
+import net.modificationstation.stationapi.api.nbt.StationNbtElement;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -11,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractTag.class)
-public class MixinAbstractTag {
+public abstract class MixinAbstractTag implements StationNbtElement {
 
     @Inject(
             method = "getTagFromId(B)Lnet/minecraft/util/io/AbstractTag;",

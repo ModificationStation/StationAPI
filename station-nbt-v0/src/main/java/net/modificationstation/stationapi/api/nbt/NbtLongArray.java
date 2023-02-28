@@ -5,6 +5,7 @@ import net.minecraft.util.io.AbstractTag;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class NbtLongArray extends AbstractTag {
 
@@ -45,7 +46,17 @@ public class NbtLongArray extends AbstractTag {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        return this == obj || (obj instanceof NbtLongArray tag && Arrays.equals(data, tag.data));
+    }
+
+    @Override
     public String toString() {
         return "[" + this.data.length + " longs]";
+    }
+
+    @Override
+    public NbtLongArray copy() {
+        return new NbtLongArray(Arrays.copyOf(data, data.length));
     }
 }
