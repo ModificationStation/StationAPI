@@ -12,7 +12,7 @@ public abstract class ItemEvent extends Event {
     @SuperBuilder
     public static class TranslationKeyChanged extends ItemEvent {
 
-        public String currentTranslationKey;
+        public String translationKeyOverride;
 
         @Override
         protected int getEventID() {

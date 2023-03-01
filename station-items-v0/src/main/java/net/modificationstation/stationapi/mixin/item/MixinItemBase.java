@@ -43,9 +43,9 @@ public class MixinItemBase implements StationItem {
         return StationAPI.EVENT_BUS.post(
                 ItemEvent.TranslationKeyChanged.builder()
                         .item(ItemBase.class.cast(this))
-                        .currentTranslationKey(name)
+                        .translationKeyOverride(name)
                         .build()
-        ).currentTranslationKey;
+        ).translationKeyOverride;
     }
 
     @Override

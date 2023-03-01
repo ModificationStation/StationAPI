@@ -1,15 +1,26 @@
 package net.modificationstation.stationapi.impl.vanillafix.block;
 
+import com.google.common.base.Suppliers;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
+import net.minecraft.item.Block;
+import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.block.BlockItemToggle;
+import net.modificationstation.stationapi.api.event.registry.BlockItemRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.util.Util;
 
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static net.minecraft.block.BlockBase.*;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
@@ -17,6 +28,17 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public final class VanillaBlockFixImpl {
+
+    public static final Supplier<ReferenceSet<BlockBase>> COLLISION_BLOCKS = Suppliers.memoize(() -> Util.make(new ReferenceOpenHashSet<>(), s -> {
+        s.add(BED);
+        s.add(CROPS);
+        s.add(STANDING_SIGN);
+        s.add(WOOD_DOOR);
+        s.add(IRON_DOOR);
+        s.add(SUGAR_CANES);
+        s.add(CAKE);
+        s.add(REDSTONE_REPEATER);
+    }));
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
     private static void registerBlocks(BlockRegistryEvent event) {
@@ -123,31 +145,24 @@ public final class VanillaBlockFixImpl {
     }
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 - Integer.MAX_VALUE / 8)
-    private static void registerBlocksAsBlockOnly(BlockRegistryEvent event) {
-        Consumer<BlockBase> c = block -> ((BlockItemToggle<?>) block).disableBlockItem();
+    private static void disableAutomaticBlockItemRegistration(BlockRegistryEvent event) {
+        Consumer<BlockBase> c = block -> ((BlockItemToggle<?>) block).disableAutomaticBlockItemRegistration();
         c.accept(BY_ID[0]); // not supposed to have an item form
-        c.accept(FLOWING_WATER); // not supposed to have an item form
-        c.accept(STILL_WATER); // not supposed to have an item form
-        c.accept(FLOWING_LAVA); // not supposed to have an item form
-        c.accept(STILL_LAVA); // not supposed to have an item form
-        c.accept(BED); // item name collision
-        c.accept(PISTON_HEAD); // not supposed to have an item form
-        c.accept(MOVING_PISTON); // not supposed to have an item form
-        c.accept(DOUBLE_STONE_SLAB); // not supposed to have an item form
-        c.accept(FIRE); // not supposed to have an item form
-        c.accept(REDSTONE_DUST); // not supposed to have an item form
-        c.accept(CROPS); // item name collision
-        c.accept(FURNACE_LIT); // not supposed to have an item form
-        c.accept(STANDING_SIGN); // item name collision
-        c.accept(WOOD_DOOR); // item name collision
-        c.accept(WALL_SIGN); // not supposed to have an item form
-        c.accept(IRON_DOOR); // item name collision
-        c.accept(REDSTONE_ORE_LIT); // not supposed to have an item form
-        c.accept(REDSTONE_TORCH); // not supposed to have an item form
-        c.accept(SUGAR_CANES); // item name collision
-        c.accept(PORTAL); // not supposed to have an item form
-        c.accept(CAKE); // item name collision
-        c.accept(REDSTONE_REPEATER); // item name collision
-        c.accept(REDSTONE_REPEATER_LIT); // not supposed to have an item form
+        COLLISION_BLOCKS.get().forEach(c); // item name collision
+    }
+
+    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    private static void registerBlockItems(BlockItemRegistryEvent event) {
+        Consumer<BlockBase> c = block -> Registry.register(ItemRegistry.INSTANCE, BlockRegistry.INSTANCE.getId(block), ItemBase.byId[block.id]);
+
+        c.accept(BlockBase.WOOL);
+        c.accept(BlockBase.LOG);
+        c.accept(BlockBase.STONE_SLAB);
+        c.accept(BlockBase.SAPLING);
+        c.accept(BlockBase.LEAVES);
+        c.accept(BlockBase.PISTON);
+        c.accept(BlockBase.STICKY_PISTON);
+
+        COLLISION_BLOCKS.get().forEach(block -> Registry.register(ItemRegistry.INSTANCE, Objects.requireNonNull(BlockRegistry.INSTANCE.getId(block)).append("_unobtainable"), new Block(block.id - BlockRegistry.INSTANCE.getSize())));
     }
 }

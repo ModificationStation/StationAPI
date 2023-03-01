@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 
 public interface BlockItemToggle<T extends BlockBase> {
 
-    T disableBlockItem();
+    T disableAutomaticBlockItemRegistration();
 
-    boolean isBlockItemDisabled();
+    boolean isAutomaticBlockItemRegistrationDisabled();
 }

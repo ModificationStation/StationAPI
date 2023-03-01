@@ -41,12 +41,12 @@ public interface BlockTemplate<T extends BlockBase> extends
     }
 
     @Override
-    default T disableBlockItem() {
+    default T disableAutomaticBlockItemRegistration() {
         return Util.assertImpl();
     }
 
     @Override
-    default boolean isBlockItemDisabled() {
+    default boolean isAutomaticBlockItemRegistrationDisabled() {
         return Util.assertImpl();
     }
 
