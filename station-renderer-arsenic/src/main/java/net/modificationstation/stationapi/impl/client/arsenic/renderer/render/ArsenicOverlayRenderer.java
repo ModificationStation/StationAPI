@@ -45,10 +45,10 @@ public final class ArsenicOverlayRenderer {
                 Tessellator var3 = Tessellator.INSTANCE;
                 int var4 = entity.method_917(item);
                 Sprite texture = atlas.getSprite(((CustomAtlasProvider) item.getType()).getAtlas().getTexture(var4).getId());
-                float var5 = texture.getMinU() + (texture.getMaxU() - texture.getMinU()) * 0.000625F;
-                float var6 = texture.getMaxU();
-                float var7 = texture.getMinV() + (texture.getMaxV() - texture.getMinV()) * 0.000625F;
-                float var8 = texture.getMaxV();
+                float var5 = texture.getMinU();
+                float var6 = texture.getMinU() + (texture.getMaxU() - texture.getMinU()) * 0.999375F;
+                float var7 = texture.getMinV();
+                float var8 = texture.getMinV() + (texture.getMaxV() - texture.getMinV()) * 0.999375F;
                 float var9 = 1.0F;
                 float var10 = 0.0F;
                 float var11 = 0.3F;
@@ -77,9 +77,16 @@ public final class ArsenicOverlayRenderer {
                 var3.start();
                 var3.setNormal(-1.0F, 0.0F, 0.0F);
 
-                for (int var14 = 0; var14 < texture.getHeight(); ++var14) {
-                    float var15 = (float) var14 / texture.getHeight();
-                    float var16 = var6 + (var5 - var6) * var15 - 1F / (texture.getHeight() * texture.getHeight() * 2);
+                int atlasWidth = (int) (texture.getWidth() / (texture.getMaxU() - texture.getMinU()));
+                int atlasHeight = (int) (texture.getHeight() / (texture.getMaxV() - texture.getMinV()));
+                int width = texture.getWidth();
+                int height = texture.getHeight();
+                float du = 1F / (atlasWidth * 2);
+                float dv = 1F / (atlasHeight * 2);
+
+                for (int var14 = 0; var14 < width; ++var14) {
+                    float var15 = (float) var14 / width;
+                    float var16 = var6 + (var5 - var6) * var15 - du;
                     float var17 = var9 * var15;
                     var3.vertex(var17, 0.0D, 0.0F - var13, var16, var8);
                     var3.vertex(var17, 0.0D, 0.0D, var16, var8);
@@ -91,10 +98,10 @@ public final class ArsenicOverlayRenderer {
                 var3.start();
                 var3.setNormal(1.0F, 0.0F, 0.0F);
 
-                for (int var18 = 0; var18 < texture.getHeight(); ++var18) {
-                    float var21 = (float) var18 / texture.getHeight();
-                    float var24 = var6 + (var5 - var6) * var21 - 1F / (texture.getHeight() * texture.getHeight() * 2);
-                    float var27 = var9 * var21 + 1F / texture.getHeight();
+                for (int var18 = 0; var18 < width; ++var18) {
+                    float var21 = (float) var18 / width;
+                    float var24 = var6 + (var5 - var6) * var21 - du;
+                    float var27 = var9 * var21 + 1F / width;
                     var3.vertex(var27, 1.0D, 0.0F - var13, var24, var7);
                     var3.vertex(var27, 1.0D, 0.0D, var24, var7);
                     var3.vertex(var27, 0.0D, 0.0D, var24, var8);
@@ -105,10 +112,10 @@ public final class ArsenicOverlayRenderer {
                 var3.start();
                 var3.setNormal(0.0F, 1.0F, 0.0F);
 
-                for (int var19 = 0; var19 < texture.getWidth(); ++var19) {
-                    float var22 = (float) var19 / texture.getWidth();
-                    float var25 = var8 + (var7 - var8) * var22 - 1F / (texture.getWidth() * texture.getWidth() * 2);
-                    float var28 = var9 * var22 + 1F / texture.getWidth();
+                for (int var19 = 0; var19 < height; ++var19) {
+                    float var22 = (float) var19 / height;
+                    float var25 = var8 + (var7 - var8) * var22 - dv;
+                    float var28 = var9 * var22 + 1F / height;
                     var3.vertex(0.0D, var28, 0.0D, var6, var25);
                     var3.vertex(var9, var28, 0.0D, var5, var25);
                     var3.vertex(var9, var28, 0.0F - var13, var5, var25);
@@ -119,9 +126,9 @@ public final class ArsenicOverlayRenderer {
                 var3.start();
                 var3.setNormal(0.0F, -1.0F, 0.0F);
 
-                for (int var20 = 0; var20 < texture.getWidth(); ++var20) {
-                    float var23 = (float) var20 / texture.getWidth();
-                    float var26 = var8 + (var7 - var8) * var23 - 1F / (texture.getWidth() * texture.getWidth() * 2);
+                for (int var20 = 0; var20 < height; ++var20) {
+                    float var23 = (float) var20 / height;
+                    float var26 = var8 + (var7 - var8) * var23 - dv;
                     float var29 = var9 * var23;
                     var3.vertex(var9, var29, 0.0D, var5, var26);
                     var3.vertex(0.0D, var29, 0.0D, var6, var26);
