@@ -6,8 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
-import net.modificationstation.stationapi.api.client.event.resource.ClientResourceReloaderRegisterEvent;
-import net.modificationstation.stationapi.api.client.event.resource.ClientResourcesReloadEvent;
+import net.modificationstation.stationapi.api.client.event.resource.AssetsReloadEvent;
+import net.modificationstation.stationapi.api.client.event.resource.AssetsResourceReloaderRegisterEvent;
 import net.modificationstation.stationapi.api.client.render.item.ItemModels;
 import net.modificationstation.stationapi.api.client.texture.TextureUtil;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
@@ -15,19 +15,23 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
-import net.modificationstation.stationapi.api.resource.FakeResourceManager;
+import net.modificationstation.stationapi.api.resource.FakeResources;
+import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceHelper;
 import net.modificationstation.stationapi.api.resource.SynchronousResourceReloader;
+import net.modificationstation.stationapi.api.resource.metadata.ResourceMetadata;
 import net.modificationstation.stationapi.api.util.Null;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
@@ -42,36 +46,50 @@ public class StationRenderImpl {
 
     private static final boolean DEBUG_EXPORT_ATLASES = Boolean.parseBoolean(System.getProperty(StationAPI.MODID + ".debug.export_atlases", "false"));
 
-    public static ExpandableAtlas
+    public static ExpandableAtlas getTerrain() {
+        return TERRAIN;
+    }
+
+    public static ExpandableAtlas getGuiItems() {
+        return GUI_ITEMS;
+    }
+
+    private static ExpandableAtlas
             TERRAIN,
             GUI_ITEMS;
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
-    private static void registerReloaders(ClientResourceReloaderRegisterEvent event) {
-        Function<ExpandableAtlas, Function<String, InputStream>> providerFactory = expandableAtlas -> path -> {
-            try {
-                Identifier identifier = ResourceHelper.ASSETS.toId(path, StationAPI.MODID + "/textures", "png");
-                if (expandableAtlas.slicedSpritesheetView.containsKey(identifier)) {
-                    BufferedImage image = expandableAtlas.slicedSpritesheetView.get(identifier);
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    try {
-                        ImageIO.write(image, "png", outputStream);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return new ByteArrayInputStream(outputStream.toByteArray());
-                }
-            } catch (IllegalArgumentException ignored) {}
-            return null;
-        };
-        FakeResourceManager.registerProvider(providerFactory.apply(TERRAIN));
-        FakeResourceManager.registerProvider(providerFactory.apply(GUI_ITEMS));
+    private static void registerReloaders(AssetsResourceReloaderRegisterEvent event) {
+        FakeResources.registerProvider(createSpritesheetProvider(() -> TERRAIN));
+        FakeResources.registerProvider(createSpritesheetProvider(() -> GUI_ITEMS));
         event.resourceManager.registerReloader(StationRenderAPI.getBakedModelManager());
         event.resourceManager.registerReloader((SynchronousResourceReloader) manager -> ItemModels.reloadModelsAll());
     }
 
+    @NotNull
+    private static Function<String, Optional<Resource>> createSpritesheetProvider(Supplier<ExpandableAtlas> expandableAtlas) {
+        return path -> {
+            try {
+                Identifier id = ResourceHelper.ASSETS.toId(path, StationAPI.MODID + "/textures", "png");
+                if (expandableAtlas.get().slicedSpritesheetView.containsKey(id)) {
+                    BufferedImage image = expandableAtlas.get().slicedSpritesheetView.get(id);
+                    return Optional.of(new Resource(() -> {
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                        try {
+                            ImageIO.write(image, "png", outputStream);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        return new ByteArrayInputStream(outputStream.toByteArray());
+                    }, ResourceMetadata.NONE_SUPPLIER));
+                }
+            } catch (IllegalArgumentException ignored) {}
+            return Optional.empty();
+        };
+    }
+
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 + Integer.MAX_VALUE / 8)
-    private static void init(ClientResourcesReloadEvent event) {
+    private static void init(AssetsReloadEvent event) {
         TERRAIN = new ExpandableAtlas(of("textures/atlas/terrain.png"));
         GUI_ITEMS = new ExpandableAtlas(of("textures/atlas/gui/items.png"));
         TERRAIN.addSpritesheet("/terrain.png", 16, TerrainHelper.INSTANCE);
@@ -80,7 +98,7 @@ public class StationRenderImpl {
     }
 
     @EventListener(numPriority = Integer.MIN_VALUE / 2 + Integer.MIN_VALUE / 4 - Integer.MAX_VALUE / 8)
-    private static void stitchExpandableAtlasesPostInit(ClientResourcesReloadEvent event) {
+    private static void stitchExpandableAtlasesPostInit(AssetsReloadEvent event) {
         //noinspection deprecation
         Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
         TexturePack texturePack = minecraft.texturePackManager.texturePack;

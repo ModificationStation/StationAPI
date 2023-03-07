@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.client.render;
 
 import net.minecraft.client.texture.TextureManager;
-import net.modificationstation.stationapi.api.client.resource.ClientResources;
+import net.modificationstation.stationapi.api.client.resource.ReloadableAssetsManager;
 import net.modificationstation.stationapi.api.client.texture.*;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.exception.CrashException;
@@ -59,7 +59,7 @@ public final class StationTextureManagerImpl implements StationTextureManager {
 
     private AbstractTexture loadSafely(Identifier identifier, AbstractTexture abstractTexture) {
         try {
-            abstractTexture.load(ClientResources.getResourceManager());
+            abstractTexture.load(ReloadableAssetsManager.INSTANCE);
             return abstractTexture;
         } catch (IOException var6) {
             if (identifier != MISSING_IDENTIFIER) {

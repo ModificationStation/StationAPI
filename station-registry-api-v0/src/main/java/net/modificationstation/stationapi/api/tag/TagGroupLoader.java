@@ -62,8 +62,8 @@ public class TagGroupLoader<T> {
                             list.clear();
                         }
 
-                        String string2 = resource.getResourcePackName();
-                        tagFile.entries().forEach((tagEntry) -> list.add(new TrackedEntry(tagEntry, string2)));
+//                        String string2 = resource.getResourcePackName();
+                        tagFile.entries().forEach((tagEntry) -> list.add(new TrackedEntry(tagEntry/*, string2*/)));
                     } catch (Throwable var16) {
                         if (reader != null) {
                             try {
@@ -78,7 +78,7 @@ public class TagGroupLoader<T> {
 
                     reader.close();
                 } catch (Exception var17) {
-                    LOGGER.error("Couldn't read tag list {} from {} in data pack {}", new Object[]{identifier2, identifier, resource.getResourcePackName(), var17});
+                    LOGGER.error("Couldn't read tag list {} from {}"/* in data pack {}"*/, new Object[]{identifier2, identifier/*, resource.getResourcePackName()*/, var17});
                 }
             }
         }
@@ -149,18 +149,11 @@ public class TagGroupLoader<T> {
         return this.buildGroup(this.loadTags(manager));
     }
 
-    public record TrackedEntry(TagEntry entry, String source) {
+    public record TrackedEntry(TagEntry entry/*, String source*/) {
 
+        @Override
         public String toString() {
-            return this.entry + " (from " + this.source + ")";
-        }
-
-        public TagEntry entry() {
-            return this.entry;
-        }
-
-        public String source() {
-            return this.source;
+            return this.entry.toString()/* + " (from " + this.source + ")"*/;
         }
     }
 }

@@ -3,23 +3,15 @@ package net.modificationstation.stationapi.api.recipe;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntMaps;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
-import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.event.resource.ResourceReloaderRegisterEvent;
 import net.modificationstation.stationapi.api.item.StationItemStack;
-import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
-import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
-import net.modificationstation.stationapi.api.resource.ResourceManager;
-import net.modificationstation.stationapi.api.resource.SynchronousResourceReloader;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.API;
-import org.jetbrains.annotations.ApiStatus;
 
-@Entrypoint(eventBus = @EventBusPolicy(registerStatic = false))
-public class FuelRegistry implements SynchronousResourceReloader {
+public class FuelRegistry {
 
     private static final Reference2IntMap<TagKey<ItemBase>> TAG_FUEL_TIME = new Reference2IntOpenHashMap<>();
     private static final Reference2IntMap<ItemBase> ITEM_FUEL_TIME = new Reference2IntOpenHashMap<>();
@@ -54,16 +46,5 @@ public class FuelRegistry implements SynchronousResourceReloader {
             viewInvalidated = false;
         }
         return FUELS_VIEW;
-    }
-
-    @Override
-    @ApiStatus.Internal
-    public void reload(ResourceManager manager) {
-        viewInvalidated = true;
-    }
-
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
-    private void registerResourceReloader(ResourceReloaderRegisterEvent event) {
-        event.resourceManager.registerReloader(this);
     }
 }

@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.api.resource;
 
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -48,12 +47,7 @@ public interface ResourceReloader {
      * @param synchronizer the synchronizer
      * @param manager the resource manager
      */
-    CompletableFuture<Void> reload(
-            Synchronizer synchronizer,
-            ResourceManager manager,
-            Profiler prepareProfiler, Profiler applyProfiler,
-            Executor prepareExecutor, Executor applyExecutor
-    );
+    CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor);
 
     /**
      * Returns a user-friendly name for logging.

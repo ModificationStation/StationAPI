@@ -24,7 +24,7 @@ public final class TagReloaderImpl {
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
     private static void registerTagLoader(ResourceReloaderRegisterEvent event) {
-        event.resourceManager.registerReloader(registryTagManager = new TagManagerLoader(dynamicRegistryManager = DynamicRegistryManager.createAndLoad()));
+//        event.resourceManager.registerReloader(registryTagManager = new TagManagerLoader(dynamicRegistryManager = DynamicRegistryManager.createAndLoad()));
     }
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 - Integer.MAX_VALUE / 8)

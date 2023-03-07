@@ -5,18 +5,17 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 /**
  * Provides resource loading capabilities to Minecraft.
  */
 public interface ResourceManager extends ResourceFactory {
-    /**
-     * Gets a set of all namespaces offered by the resource packs loaded by this manager.
-     */
-    Set<String> getAllNamespaces();
+
+//    /**
+//     * Gets a set of all namespaces offered by the resource packs loaded by this manager.
+//     */
+//    Set<String> getAllNamespaces();
 
     /**
      * Gets all of the available resources to the corresponding resource identifier.
@@ -48,19 +47,19 @@ public interface ResourceManager extends ResourceFactory {
 
     Map<Identifier, List<Resource>> findAllResources(String startingPath, Predicate<Identifier> allowedPathPredicate);
 
-    /**
-     * Gets a stream of loaded resource packs in increasing order of priority.
-     */
-    Stream<ResourcePack> streamResourcePacks();
+//    /**
+//     * Gets a stream of loaded resource packs in increasing order of priority.
+//     */
+//    Stream<ResourcePack> streamResourcePacks();
 
     enum Empty implements ResourceManager {
         INSTANCE;
 
 
-        @Override
-        public Set<String> getAllNamespaces() {
-            return Set.of();
-        }
+//        @Override
+//        public Set<String> getAllNamespaces() {
+//            return Set.of();
+//        }
 
         @Override
         public Optional<Resource> getResource(Identifier identifier) {
@@ -82,10 +81,10 @@ public interface ResourceManager extends ResourceFactory {
             return Map.of();
         }
 
-        @Override
-        public Stream<ResourcePack> streamResourcePacks() {
-            return Stream.of(new ResourcePack[0]);
-        }
+//        @Override
+//        public Stream<ResourcePack> streamResourcePacks() {
+//            return Stream.of(new ResourcePack[0]);
+//        }
     }
 }
 

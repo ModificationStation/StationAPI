@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.*;
+import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 @Environment(EnvType.CLIENT)
 public class ModelLoader {
@@ -117,8 +117,8 @@ public class ModelLoader {
         Set<Pair<String, String>> set = new LinkedHashSet<>();
         Set<SpriteIdentifier> set2 = this.modelsToBake.values().stream().flatMap((unbakedModel) -> unbakedModel.getTextureDependencies(this::getOrLoadModel, set).stream()).collect(Collectors.toSet());
         StationAPI.EVENT_BUS.post(TextureRegisterEvent.builder().build());
-        set2.addAll(TERRAIN.idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
-        set2.addAll(GUI_ITEMS.idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
+        set2.addAll(Atlases.getTerrain().idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
+        set2.addAll(Atlases.getGuiItems().idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
         set.stream().filter((pair) -> !pair.getSecond().equals(MISSING_STRING)).forEach((pair) -> LOGGER.warn("Unable to resolve texture reference: {} in {}", pair.getFirst(), pair.getSecond()));
         Map<Identifier, List<SpriteIdentifier>> map = set2.stream().collect(Collectors.groupingBy(spriteIdentifier -> spriteIdentifier.atlas));
         profiler.swap("stitching");
@@ -292,7 +292,7 @@ public class ModelLoader {
                         throw new RuntimeException(e);
                     }
                     try {
-                        pair1 = Pair.of(resource.getResourcePackName(), ModelVariantMap.deserialize(this.variantMapDeserializationContext, reader));
+                        pair1 = Pair.of("Default", ModelVariantMap.deserialize(this.variantMapDeserializationContext, reader));
                     } catch (Throwable throwable) {
                         try {
                             if (reader != null) {
@@ -304,7 +304,7 @@ public class ModelLoader {
                             }
                             throw throwable;
                         } catch (Exception exception) {
-                            throw new ModelLoaderException(String.format("Exception loading blockstate definition: '%s' in texturepack: '%s': %s", identifier2, resource.getResourcePackName(), exception.getMessage()));
+                            throw new ModelLoaderException(String.format("Exception loading blockstate definition: '%s' in texturepack: '%s': %s", identifier2, "Default", exception.getMessage()));
                         }
                     }
                     try {

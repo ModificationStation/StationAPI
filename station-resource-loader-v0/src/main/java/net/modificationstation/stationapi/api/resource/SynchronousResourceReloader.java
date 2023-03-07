@@ -16,8 +16,7 @@ import java.util.concurrent.Executor;
  * stage instead by moving resource manager access to the prepare stage.
  * That can speed up resource reloaders significantly.
  */
-public interface SynchronousResourceReloader
-extends ResourceReloader {
+public interface SynchronousResourceReloader extends ResourceReloader {
     @Override
     default CompletableFuture<Void> reload(ResourceReloader.Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
         return synchronizer.whenPrepared(Unit.INSTANCE).thenRunAsync(() -> {

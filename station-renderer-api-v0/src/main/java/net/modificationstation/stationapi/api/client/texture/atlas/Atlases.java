@@ -10,11 +10,11 @@ public final class Atlases {
     public static final Identifier GAME_ATLAS_TEXTURE = of("textures/atlas/game.png");
 
     public static ExpandableAtlas getTerrain() {
-        return StationRenderImpl.TERRAIN;
+        return StationRenderImpl.getTerrain();
     }
 
     public static ExpandableAtlas getGuiItems() {
-        return StationRenderImpl.GUI_ITEMS;
+        return StationRenderImpl.getGuiItems();
     }
 
     /* !==========================! */

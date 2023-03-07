@@ -2,12 +2,12 @@ package net.modificationstation.stationapi.api.event.resource;
 
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
-import net.modificationstation.stationapi.api.resource.ReloadableResourceManager;
+import net.modificationstation.stationapi.api.resource.DataManager;
 
 @SuperBuilder
 public class ResourceReloaderRegisterEvent extends Event {
 
-    public final ReloadableResourceManager resourceManager;
+    public final DataManager resourceManager;
 
     @Override
     protected int getEventID() {

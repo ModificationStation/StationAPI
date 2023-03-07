@@ -83,29 +83,4 @@ public class ResourceHelper {
         else
             return Collections.emptySet();
     }
-
-    @Deprecated
-    public static String parsePath(Identifier identifier, String path, String extension) {
-        return ASSETS.toPath(identifier, path, extension);
-    }
-
-    @Deprecated
-    public static Set<URL> findResources(String path) {
-        return ASSETS.find(path, Filters.ALL);
-    }
-
-    @Deprecated
-    public static Set<URL> findResources(String path, Predicate<String> filter) {
-        return ASSETS.find(path, filter);
-    }
-
-    @Deprecated
-    public static Set<URL> findResources(ModID modID, String path) {
-        return ASSETS.find(modID, path, Filters.ALL);
-    }
-
-    @Deprecated
-    public static Set<URL> findResources(ModID modID, String path, Predicate<String> filter) {
-        return ASSETS.find(modID, path, filter);
-    }
 }

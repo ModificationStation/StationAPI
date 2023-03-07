@@ -17,34 +17,43 @@ import java.nio.charset.StandardCharsets;
  * <p>The resource must be closed before disposal to avoid resource leaks.
  * 
  * @see ResourceFactory#getResource(Identifier)
- * @see ResourceHelper#getAllResources(Identifier)
+ * @see ResourceManager#getAllResources(Identifier)
  */
 public class Resource {
-    private final String resourcePackName;
+
+//    private final ResourcePack pack;
     private final InputSupplier<InputStream> inputSupplier;
     private final InputSupplier<ResourceMetadata> metadataSupplier;
     @Nullable
     private ResourceMetadata metadata;
 
-    public Resource(String resourcePackName, InputSupplier<InputStream> inputSupplier, InputSupplier<ResourceMetadata> metadataSupplier) {
-        this.resourcePackName = resourcePackName;
+    public Resource(/*ResourcePack pack, */InputSupplier<InputStream> inputSupplier, InputSupplier<ResourceMetadata> metadataSupplier) {
+//        this.pack = pack;
         this.inputSupplier = inputSupplier;
         this.metadataSupplier = metadataSupplier;
     }
 
-    public Resource(String resourcePackName, InputSupplier<InputStream> inputSupplier) {
-        this.resourcePackName = resourcePackName;
+    public Resource(/*ResourcePack pack, */InputSupplier<InputStream> inputSupplier) {
+//        this.pack = pack;
         this.inputSupplier = inputSupplier;
-        this.metadataSupplier = () -> ResourceMetadata.NONE;
+        this.metadataSupplier = ResourceMetadata.NONE_SUPPLIER;
         this.metadata = ResourceMetadata.NONE;
     }
 
-    /**
-     * Returns the user-friendly name of the pack this resource is from.
-     */
-    public String getResourcePackName() {
-        return this.resourcePackName;
-    }
+//    public ResourcePack getPack() {
+//        return this.pack;
+//    }
+//
+//    /**
+//     * Returns the user-friendly name of the pack this resource is from.
+//     */
+//    public String getResourcePackName() {
+//        return this.pack.getName();
+//    }
+//
+//    public boolean isAlwaysStable() {
+//        return this.pack.isAlwaysStable();
+//    }
 
     /**
      * Returns the input stream of this resource.
@@ -70,11 +79,6 @@ public class Resource {
             this.metadata = this.metadataSupplier.get();
         }
         return this.metadata;
-    }
-
-    @FunctionalInterface
-    public interface InputSupplier<T> {
-        T get() throws IOException;
     }
 }
 

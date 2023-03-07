@@ -20,10 +20,9 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.api.resource.Resources"
     ],
     "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.api.client.resource.ClientResources"
+      "net.modificationstation.stationapi.impl.client.resource.AssetsReloaderImpl"
     ]
   },
   "mixins": [

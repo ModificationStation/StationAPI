@@ -5,7 +5,7 @@ import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.client.event.resource.ClientResourcesReloadEvent;
+import net.modificationstation.stationapi.api.client.event.resource.AssetsReloadEvent;
 import net.modificationstation.stationapi.api.client.event.resource.TexturePackLoadedEvent;
 import net.modificationstation.stationapi.api.client.render.RendererAccess;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
@@ -46,7 +46,7 @@ public class Arsenic {
         }
     }
 
-    private static void registerTextures(ClientResourcesReloadEvent event) {
+    private static void registerTextures(AssetsReloadEvent event) {
         ExpandableAtlas terrain = Atlases.getTerrain();
         ExpandableAtlas guiItems = Atlases.getGuiItems();
         terrain.addTextureBinder(terrain.getTexture(BlockBase.FLOWING_WATER.texture), ArsenicStillWater::new);

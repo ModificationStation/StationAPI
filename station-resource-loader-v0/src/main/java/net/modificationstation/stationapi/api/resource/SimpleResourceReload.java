@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.api.resource;
 
-import com.google.common.collect.Sets;
 import net.modificationstation.stationapi.api.util.Unit;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.profiler.DummyProfiler;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -17,8 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 
  * @param <S> the result type for each reloader in the reload
  */
-public class SimpleResourceReload<S>
-implements ResourceReload {
+public class SimpleResourceReload<S> implements ResourceReload {
     /**
      * The weight of either prepare or apply stages' progress in the total progress
      * calculation. Has value {@value}.
@@ -53,40 +52,40 @@ implements ResourceReload {
         this.reloaderCount = reloaders.size();
         this.toPrepareCount.incrementAndGet();
         initialStage.thenRun(this.preparedCount::incrementAndGet);
-        ArrayList<CompletableFuture<S>> list = new ArrayList<>();
-        CompletableFuture<Unit> completableFuture = initialStage;
-        this.waitingReloaders = Sets.newHashSet(reloaders);
+        List<CompletableFuture<S>> stages = new ArrayList<>();
+        CompletableFuture<?> currentStage = initialStage;
+        this.waitingReloaders = new HashSet<>(reloaders);
         for (final ResourceReloader resourceReloader : reloaders) {
-            final CompletableFuture<Unit> completableFuture2 = completableFuture;
-            CompletableFuture<S> completableFuture3 = factory.create(new ResourceReloader.Synchronizer() {
+            final CompletableFuture<?> finalCurrentStage = currentStage;
+            CompletableFuture<S> newStage = factory.create(new ResourceReloader.Synchronizer(){
+
+                @Override
                 public <T> CompletableFuture<T> whenPrepared(T preparedObject) {
                     applyExecutor.execute(() -> {
                         SimpleResourceReload.this.waitingReloaders.remove(resourceReloader);
                         if (SimpleResourceReload.this.waitingReloaders.isEmpty()) {
                             SimpleResourceReload.this.prepareStageFuture.complete(Unit.INSTANCE);
                         }
-
                     });
-                    return SimpleResourceReload.this.prepareStageFuture.thenCombine(completableFuture2, (unit, object2) -> preparedObject);
+                    return SimpleResourceReload.this.prepareStageFuture.thenCombine(finalCurrentStage, (unit, object2) -> preparedObject);
                 }
-            }, manager, resourceReloader, (preparation) -> {
+            }, manager, resourceReloader, preparation -> {
                 this.toPrepareCount.incrementAndGet();
                 prepareExecutor.execute(() -> {
                     preparation.run();
                     this.preparedCount.incrementAndGet();
                 });
-            }, (application) -> {
+            }, application -> {
                 ++this.toApplyCount;
                 applyExecutor.execute(() -> {
                     application.run();
                     ++this.appliedCount;
                 });
             });
-            list.add(completableFuture3);
-            //noinspection unchecked
-            completableFuture = (CompletableFuture<Unit>) completableFuture3;
+            stages.add(newStage);
+            currentStage = newStage;
         }
-        this.applyStageFuture = Util.combine(list);
+        this.applyStageFuture = Util.combine(stages);
     }
 
     @Override
@@ -97,17 +96,14 @@ implements ResourceReload {
     @Override
     public float getProgress() {
         int i = this.reloaderCount - this.waitingReloaders.size();
-        float f = this.preparedCount.get() * FIRST_PREPARE_APPLY_WEIGHT + this.appliedCount * SECOND_PREPARE_APPLY_WEIGHT + i * RELOADER_WEIGHT;
-        float g = this.toPrepareCount.get() * FIRST_PREPARE_APPLY_WEIGHT + this.toApplyCount * SECOND_PREPARE_APPLY_WEIGHT + this.reloaderCount * RELOADER_WEIGHT;
+        float f = this.preparedCount.get() * FIRST_PREPARE_APPLY_WEIGHT + this.appliedCount * FIRST_PREPARE_APPLY_WEIGHT + i * RELOADER_WEIGHT;
+        float g = this.toPrepareCount.get() * SECOND_PREPARE_APPLY_WEIGHT + this.toApplyCount * SECOND_PREPARE_APPLY_WEIGHT + this.reloaderCount * RELOADER_WEIGHT;
         return f / g;
     }
 
     /**
      * Starts a resource reload with the content from the {@code manager} supplied
      * to the {@code reloaders}.
-     * 
-     * @apiNote In vanilla, this is respectively called by {@link ReloadableResourceManagerImpl}
-     * on the client and {@link net.minecraft.server.DataPackContents} on the server.
      * 
      * @param reloaders the reloaders performing the reload
      * @param manager the resource manager, providing resources to the reloaders
@@ -117,10 +113,7 @@ implements ResourceReload {
      * @param initialStage the initial stage, must be completed before the reloaders can prepare resources
      */
     public static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage, boolean profiled) {
-        if (profiled) {
-            return new ProfiledResourceReload(manager, reloaders, prepareExecutor, applyExecutor, initialStage);
-        }
-        return SimpleResourceReload.create(manager, reloaders, prepareExecutor, applyExecutor, initialStage);
+        return profiled ? new ProfiledResourceReload(manager, reloaders, prepareExecutor, applyExecutor, initialStage) : SimpleResourceReload.create(manager, reloaders, prepareExecutor, applyExecutor, initialStage);
     }
 
     protected interface Factory<S> {

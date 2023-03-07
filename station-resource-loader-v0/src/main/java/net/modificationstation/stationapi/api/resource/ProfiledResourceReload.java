@@ -48,17 +48,17 @@ extends SimpleResourceReload<ProfiledResourceReload.Summary> {
 
     private List<Summary> finish(List<Summary> summaries) {
         this.reloadTimer.stop();
-        int i = 0;
+        long l = 0L;
         LOGGER.info("Resource reload finished after {} ms", this.reloadTimer.elapsed(TimeUnit.MILLISECONDS));
         for (Summary summary : summaries) {
-            int j = (int)((double)summary.prepareTimeMs.get() / 1000000.0);
-            int k = (int)((double)summary.applyTimeMs.get() / 1000000.0);
-            int l = j + k;
+            long m = TimeUnit.NANOSECONDS.toMillis(summary.prepareTimeMs.get());
+            long n = TimeUnit.NANOSECONDS.toMillis(summary.applyTimeMs.get());
+            long o = m + n;
             String string = summary.name;
-            LOGGER.info("{} took approximately {} ms ({} ms preparing, {} ms applying)", string, l, j, k);
-            i += k;
+            LOGGER.info("{} took approximately {} ms ({} ms preparing, {} ms applying)", string, o, m, n);
+            l += n;
         }
-        LOGGER.info("Total blocking time: {} ms", i);
+        LOGGER.info("Total blocking time: {} ms", l);
         return summaries;
     }
 

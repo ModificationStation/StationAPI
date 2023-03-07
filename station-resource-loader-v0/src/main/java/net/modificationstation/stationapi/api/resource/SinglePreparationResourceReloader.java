@@ -13,9 +13,10 @@ import java.util.concurrent.Executor;
  * @param <T> the intermediate object type
  */
 public abstract class SinglePreparationResourceReloader<T> implements ResourceReloader {
+
     @Override
     public final CompletableFuture<Void> reload(ResourceReloader.Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
-        return CompletableFuture.supplyAsync(() -> this.prepare(manager, prepareProfiler), prepareExecutor).thenCompose(synchronizer::whenPrepared).thenAcceptAsync(object -> this.apply(object, manager, applyProfiler), applyExecutor);
+        return CompletableFuture.supplyAsync(() -> this.prepare(manager, prepareProfiler), prepareExecutor).thenCompose(synchronizer::whenPrepared).thenAcceptAsync(prepared -> this.apply(prepared, manager, applyProfiler), applyExecutor);
     }
 
     /**
