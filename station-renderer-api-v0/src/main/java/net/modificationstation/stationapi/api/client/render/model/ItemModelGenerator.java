@@ -141,7 +141,7 @@ public class ItemModelGenerator {
 
     private static ModelElement createHorizontalOutlineElement(Direction direction, int layer, String key, int start, int end, int y, int height, float animationFrameDelta, float xFactor, float yFactor) {
         Map<Direction, ModelElementFace> faces = new EnumMap<>(Direction.class);
-        faces.put(direction, new ModelElementFace(null, layer, key, createUnlerpedTexture(new float[] { (direction == Direction.UP ? (end + 1) : start) / xFactor, y / yFactor, (direction == Direction.UP ? start : (end + 1)) / xFactor, (y + 1) / yFactor }, 0, animationFrameDelta)));
+        faces.put(direction, new ModelElementFace(null, layer, key, createUnlerpedTexture(new float[] { start / xFactor, y / yFactor, (end + 1) / xFactor, (y + 1) / yFactor }, 0, animationFrameDelta)));
         return new ModelElement(new Vec3f(start / xFactor, (height - (y + 1)) / yFactor, 7.5F), new Vec3f((end + 1) / xFactor, (height - y) / yFactor, 8.5F), faces, null, true);
     }
 
