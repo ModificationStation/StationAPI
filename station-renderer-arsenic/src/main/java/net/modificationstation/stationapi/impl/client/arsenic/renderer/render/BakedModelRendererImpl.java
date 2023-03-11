@@ -35,6 +35,7 @@ import net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc.Li
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
+import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -125,7 +126,10 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
     }
 
     private int colorF2I(float r, float g, float b) {
-        return (255 << 24) | (colorChannelF2I(r) << 16) | (colorChannelF2I(g) << 8) | colorChannelF2I(b);
+        final int ri = colorChannelF2I(r), gi = colorChannelF2I(g), bi = colorChannelF2I(b);
+        return ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN ?
+                (0xFF << 24) | (bi << 16) | (gi << 8) | ri :
+                (ri << 24) | (gi << 16) | (bi << 8) | 0xFF;
     }
 
     private int colorChannelF2I(float colorChannel) {
