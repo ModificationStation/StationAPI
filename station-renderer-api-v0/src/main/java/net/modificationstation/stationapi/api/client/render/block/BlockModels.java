@@ -2,9 +2,7 @@ package net.modificationstation.stationapi.api.client.render.block;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelManager;
 import net.modificationstation.stationapi.api.client.render.model.ModelIdentifier;
@@ -19,7 +17,7 @@ import java.util.Map.Entry;
 
 @Environment(EnvType.CLIENT)
 public class BlockModels {
-   private final Map<BlockState, BakedModel> models = new IdentityHashMap<>();
+   private Map<BlockState, BakedModel> models = new IdentityHashMap<>();
    private final BakedModelManager modelManager;
 
    public BlockModels(BakedModelManager bakedModelManager) {
@@ -43,11 +41,8 @@ public class BlockModels {
       return this.modelManager;
    }
 
-   public void reload() {
-      this.models.clear();
-
-      for (BlockBase block : BlockRegistry.INSTANCE)
-         ((BlockStateHolder) block).getStateManager().getStates().forEach((blockState) -> this.models.put(blockState, this.modelManager.getModel(getModelId(blockState))));
+   public void setModels(Map<BlockState, BakedModel> models) {
+      this.models = models;
    }
 
    public static ModelIdentifier getModelId(BlockState blockState) {

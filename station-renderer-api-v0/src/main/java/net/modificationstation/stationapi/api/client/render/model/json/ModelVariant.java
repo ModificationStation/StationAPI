@@ -34,7 +34,7 @@ public class ModelVariant implements ModelBakeSettings {
       return this.rotation;
    }
 
-   public boolean uvlock() {
+   public boolean isUvLocked() {
       return this.uvLock;
    }
 

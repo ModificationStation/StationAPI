@@ -5,6 +5,7 @@ import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.SpriteContents;
 import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
 import net.modificationstation.stationapi.api.client.texture.TextureTickListener;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
@@ -44,12 +45,13 @@ public final class ArsenicTextureManager {
             textureManagerAccessor.getCurrentImageBuffer().position(0).limit(var2.grid.length);
 
             if (var2 instanceof StaticReferenceProvider provider) {
-                Sprite staticReference = provider.getStaticReference().getSprite();
-                int scaledWidth = staticReference.getWidth() / var2.textureSize;
-                int scaledHeight = staticReference.getHeight() / var2.textureSize;
+                final Sprite staticReference = provider.getStaticReference().getSprite();
+                final SpriteContents contents = staticReference.getContents();
+                int scaledWidth = contents.getWidth() / var2.textureSize;
+                int scaledHeight = contents.getHeight() / var2.textureSize;
                 for (int var3 = 0; var3 < var2.textureSize; ++var3)
                     for (int var4 = 0; var4 < var2.textureSize; ++var4)
-                        GL11.glTexSubImage2D(3553, 0, ((int) (staticReference.getMinU() * staticReference.getWidth() / (staticReference.getMaxU() - staticReference.getMinU()))) + var3 * scaledWidth, ((int) (staticReference.getMinV() * staticReference.getHeight() / (staticReference.getMaxV() - staticReference.getMinV()))) + var4 * scaledHeight, scaledWidth, scaledHeight, 6408, 5121, textureManagerAccessor.getCurrentImageBuffer());
+                        GL11.glTexSubImage2D(3553, 0, ((int) (staticReference.getMinU() * contents.getWidth() / (staticReference.getMaxU() - staticReference.getMinU()))) + var3 * scaledWidth, ((int) (staticReference.getMinV() * contents.getHeight() / (staticReference.getMaxV() - staticReference.getMinV()))) + var4 * scaledHeight, scaledWidth, scaledHeight, 6408, 5121, textureManagerAccessor.getCurrentImageBuffer());
             } else {
                 for (int var3 = 0; var3 < var2.textureSize; ++var3)
                     for (int var4 = 0; var4 < var2.textureSize; ++var4)

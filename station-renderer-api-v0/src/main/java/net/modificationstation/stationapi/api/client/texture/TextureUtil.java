@@ -12,6 +12,7 @@ import java.nio.IntBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.file.Path;
 
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
@@ -95,23 +96,22 @@ public class TextureUtil {
         }
     }
 
-//    public static void writeAsPNG(String string, int i, int j, int k, int l) {
-//        RenderSystem.assertOnRenderThread();
-//        TextureUtil.bind(i);
-//        for (int m = 0; m <= j; ++m) {
-//            String string2 = string + "_" + m + ".png";
-//            int n = k >> m;
-//            int o = l >> m;
-//            try (NativeImage nativeImage = new NativeImage(n, o, false);){
-//                nativeImage.loadFromTextureImage(m, false);
-//                nativeImage.writeTo(string2);
-//                LOGGER.debug("Exported png to: {}", (Object)new File(string2).getAbsolutePath());
-//            }
-//            catch (IOException iOException) {
-//                LOGGER.debug("Unable to write: ", iOException);
-//            }
-//        }
-//    }
+    public static void writeAsPNG(Path directory, String prefix, int textureId, int scales, int width, int height) {
+        TextureUtil.bind(textureId);
+        for (int i = 0; i <= scales; ++i) {
+            int j = width >> i;
+            int k = height >> i;
+            try (NativeImage nativeImage = new NativeImage(j, k, false);){
+                nativeImage.loadFromTextureImage(i, false);
+                Path path = directory.resolve(prefix + "_" + i + ".png");
+                nativeImage.writeTo(path);
+                LOGGER.debug("Exported png to: {}", path.toAbsolutePath());
+                continue;
+            } catch (IOException iOException) {
+                LOGGER.debug("Unable to write: ", iOException);
+            }
+        }
+    }
 
     public static void initTexture(IntBuffer imageData, int width, int height) {
         GL11.glPixelStorei(3312, 0);

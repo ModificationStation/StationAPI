@@ -119,6 +119,10 @@ public class MathHelper {
         return ceilLog2(value) - (isPowerOfTwo(value) ? 0 : 1);
     }
 
+    public static boolean isMultipleOf(int a, int b) {
+        return a % b == 0;
+    }
+
     public static int idealHash(int i) {
         i ^= i >>> 16;
         i *= -2048144789;

@@ -19,6 +19,7 @@ import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldR
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
+import net.modificationstation.stationapi.api.client.texture.SpriteContents;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
@@ -909,12 +910,8 @@ public final class ArsenicBlockRenderer {
 
     public void renderTorchTilted(BlockBase block, double renderX, double renderY, double renderZ, double width, double length) {
         Atlas atlas = ((CustomAtlasProvider) block).getAtlas();
-        Sprite texture;
-        if (blockRendererAccessor.getTextureOverride() >= 0) {
-            texture = atlas.getTexture(blockRendererAccessor.getTextureOverride()).getSprite();
-        } else {
-            texture = atlas.getTexture(block.getTextureForSide(0)).getSprite();
-        }
+        final Sprite texture = (blockRendererAccessor.getTextureOverride() >= 0 ? atlas.getTexture(blockRendererAccessor.getTextureOverride()) : atlas.getTexture(block.getTextureForSide(0))).getSprite();
+        final SpriteContents contents = texture.getContents();
         Tessellator t = prepareTessellator(atlas);
 
         float var16 = texture.getMinU();
@@ -922,12 +919,12 @@ public final class ArsenicBlockRenderer {
         float var18 = texture.getMinV();
         float var19 = texture.getMaxV();
         float
-                atlasWidth = texture.getWidth() / (texture.getMaxU() - texture.getMinU()),
-                atlasHeight = texture.getHeight() / (texture.getMaxV() - texture.getMinV());
-        float var20 = var16 + texture.getWidth() * 0.4375F / atlasWidth;
-        float var22 = var18 + texture.getHeight() * 0.375F / atlasHeight;
-        float var24 = var16 + texture.getWidth() * 0.5625F / atlasWidth;
-        float var26 = var18 + texture.getHeight() * 0.5F / atlasHeight;
+                atlasWidth = contents.getWidth() / (texture.getMaxU() - texture.getMinU()),
+                atlasHeight = contents.getHeight() / (texture.getMaxV() - texture.getMinV());
+        float var20 = var16 + contents.getWidth() * 0.4375F / atlasWidth;
+        float var22 = var18 + contents.getHeight() * 0.375F / atlasHeight;
+        float var24 = var16 + contents.getWidth() * 0.5625F / atlasWidth;
+        float var26 = var18 + contents.getHeight() * 0.5F / atlasHeight;
         renderX += 0.5D;
         renderZ += 0.5D;
         double var28 = renderX - 0.5D;
@@ -1051,7 +1048,7 @@ public final class ArsenicBlockRenderer {
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         Tessellator t = Tessellator.INSTANCE;
 
-        int var6 = (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) && Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().getAnimation() != null ? StationRenderAPI.getBlockColors().getColor(((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z), blockRendererAccessor.getBlockView(), new TilePos(x, y, z), -1) : block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
+        int var6 = (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) && Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().getContents().getAnimation() != null ? StationRenderAPI.getBlockColors().getColor(((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z), blockRendererAccessor.getBlockView(), new TilePos(x, y, z), -1) : block.getColourMultiplier(blockRendererAccessor.getBlockView(), x, y, z);
         float var7 = (float)((var6 >> 16) & 255) / 255.0F;
         float var8 = (float)((var6 >> 8) & 255) / 255.0F;
         float var9 = (float)(var6 & 255) / 255.0F;
@@ -1088,24 +1085,25 @@ public final class ArsenicBlockRenderer {
                     var28 = atlas.getSprite(Atlases.getTerrain().getTexture(block.getTextureForSide(2, var23)).getId());
                     notchCode = 2;
                 }
-                double atlasWidth = var28.getWidth() / (var28.getMaxU() - var28.getMinU());
-                double atlasHeight = var28.getHeight() / (var28.getMaxV() - var28.getMinV());
+                final SpriteContents contents = var28.getContents();
+                double atlasWidth = contents.getWidth() / (var28.getMaxU() - var28.getMinU());
+                double atlasHeight = contents.getHeight() / (var28.getMaxV() - var28.getMinV());
                 double texX = var28.getMinU() * atlasWidth;
                 double texY = var28.getMinV() * atlasHeight;
 
-                double var32 = (texX + var28.getWidth() / notchCode / 2D) / atlasWidth;
-                double var34 = (texY + var28.getHeight() / notchCode / 2D) / atlasHeight;
+                double var32 = (texX + contents.getWidth() / notchCode / 2D) / atlasWidth;
+                double var34 = (texY + contents.getHeight() / notchCode / 2D) / atlasHeight;
                 if (var29 < -999.0F) {
                     var29 = 0.0F;
                 } else {
-                    var32 = (texX + var28.getWidth() / notchCode) / atlasWidth;
-                    var34 = (texY + var28.getHeight() / notchCode) / atlasHeight;
+                    var32 = (texX + contents.getWidth() / notchCode) / atlasWidth;
+                    var34 = (texY + contents.getHeight() / notchCode) / atlasHeight;
                 }
 
-                double us = MathHelper.sin(var29) * (var28.getWidth() / notchCode / 2D) / atlasWidth;
-                double uc = MathHelper.cos(var29) * (var28.getWidth() / notchCode / 2D) / atlasWidth;
-                double vs = MathHelper.sin(var29) * (var28.getHeight() / notchCode / 2D) / atlasHeight;
-                double vc = MathHelper.cos(var29) * (var28.getHeight() / notchCode / 2D) / atlasHeight;
+                double us = MathHelper.sin(var29) * (contents.getWidth() / notchCode / 2D) / atlasWidth;
+                double uc = MathHelper.cos(var29) * (contents.getWidth() / notchCode / 2D) / atlasWidth;
+                double vs = MathHelper.sin(var29) * (contents.getHeight() / notchCode / 2D) / atlasHeight;
+                double vc = MathHelper.cos(var29) * (contents.getHeight() / notchCode / 2D) / atlasHeight;
                 float var38 = block.getBrightness(blockRendererAccessor.getBlockView(), x, y, z);
                 t.colour(var15 * var38 * var7, var15 * var38 * var8, var15 * var38 * var9);
                 t.vertex(x, y + var24, z, var32 - uc - us, var34 - vc + vs);
@@ -1209,15 +1207,16 @@ public final class ArsenicBlockRenderer {
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
-        Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
+        final Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
+        final SpriteContents contents = texture.getContents();
         Tessellator t = Tessellator.INSTANCE;
         double
-                atlasWidth = texture.getWidth() / (texture.getMaxU() - texture.getMinU()),
-                atlasHeight = texture.getHeight() / (texture.getMaxV() - texture.getMinV()),
+                atlasWidth = contents.getWidth() / (texture.getMaxU() - texture.getMinU()),
+                atlasHeight = contents.getHeight() / (texture.getMaxV() - texture.getMinV()),
                 texX = texture.getMinU() * atlasWidth,
                 texY = texture.getMinV() * atlasHeight,
-                textureWidth = texture.getWidth(),
-                textureHeight = texture.getHeight(),
+                textureWidth = contents.getWidth(),
+                textureHeight = contents.getHeight(),
                 startU1 = (texX + block.minX * textureWidth) / atlasWidth,
                 endU1 = (texX + block.maxX * textureWidth) / atlasWidth,
                 startV1 = (texY + block.minZ * textureHeight) / atlasHeight,
@@ -1306,15 +1305,16 @@ public final class ArsenicBlockRenderer {
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
-        Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
+        final Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
+        final SpriteContents contents = texture.getContents();
         Tessellator t = Tessellator.INSTANCE;
         double
-                atlasWidth = texture.getWidth() / (texture.getMaxU() - texture.getMinU()),
-                atlasHeight = texture.getHeight() / (texture.getMaxV() - texture.getMinV()),
+                atlasWidth = contents.getWidth() / (texture.getMaxU() - texture.getMinU()),
+                atlasHeight = contents.getHeight() / (texture.getMaxV() - texture.getMinV()),
                 texX = texture.getMinU() * atlasWidth,
                 texY = texture.getMinV() * atlasHeight,
-                textureWidth = texture.getWidth(),
-                textureHeight = texture.getHeight(),
+                textureWidth = contents.getWidth(),
+                textureHeight = contents.getHeight(),
                 startU1 = (texX + block.minX * textureWidth) / atlasWidth,
                 endU1 = (texX + block.maxX * textureWidth) / atlasWidth,
                 startV1 = (texY + block.minZ * textureHeight) / atlasHeight,
@@ -1403,15 +1403,16 @@ public final class ArsenicBlockRenderer {
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
-        Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
+        final Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
+        final SpriteContents contents = texture.getContents();
         Tessellator t = Tessellator.INSTANCE;
         double
-                atlasWidth = texture.getWidth() / (texture.getMaxU() - texture.getMinU()),
-                atlasHeight = texture.getHeight() / (texture.getMaxV() - texture.getMinV()),
+                atlasWidth = contents.getWidth() / (texture.getMaxU() - texture.getMinU()),
+                atlasHeight = contents.getHeight() / (texture.getMaxV() - texture.getMinV()),
                 texX = texture.getMinU() * atlasWidth,
                 texY = texture.getMinV() * atlasHeight,
-                textureWidth = texture.getWidth(),
-                textureHeight = texture.getHeight(),
+                textureWidth = contents.getWidth(),
+                textureHeight = contents.getHeight(),
                 startU1 = (texX + block.minX * textureWidth) / atlasWidth,
                 endU1 = (texX + block.maxX * textureWidth) / atlasWidth,
                 startV1 = (texY + textureHeight - block.maxY * textureHeight) / atlasHeight,
@@ -1505,15 +1506,16 @@ public final class ArsenicBlockRenderer {
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
-        Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
+        final Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
+        final SpriteContents contents = texture.getContents();
         Tessellator t = Tessellator.INSTANCE;
         double
-                atlasWidth = texture.getWidth() / (texture.getMaxU() - texture.getMinU()),
-                atlasHeight = texture.getHeight() / (texture.getMaxV() - texture.getMinV()),
+                atlasWidth = contents.getWidth() / (texture.getMaxU() - texture.getMinU()),
+                atlasHeight = contents.getHeight() / (texture.getMaxV() - texture.getMinV()),
                 texX = texture.getMinU() * atlasWidth,
                 texY = texture.getMinV() * atlasHeight,
-                textureWidth = texture.getWidth(),
-                textureHeight = texture.getHeight(),
+                textureWidth = contents.getWidth(),
+                textureHeight = contents.getHeight(),
                 startU1 = (texX + block.minX * textureWidth) / atlasWidth,
                 endU1 = (texX + block.maxX * textureWidth) / atlasWidth,
                 startV1 = (texY + textureHeight - block.maxY * textureHeight) / atlasHeight,
@@ -1607,15 +1609,16 @@ public final class ArsenicBlockRenderer {
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
-        Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
+        final Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
+        final SpriteContents contents = texture.getContents();
         Tessellator t = Tessellator.INSTANCE;
         double
-                atlasWidth = texture.getWidth() / (texture.getMaxU() - texture.getMinU()),
-                atlasHeight = texture.getHeight() / (texture.getMaxV() - texture.getMinV()),
+                atlasWidth = contents.getWidth() / (texture.getMaxU() - texture.getMinU()),
+                atlasHeight = contents.getHeight() / (texture.getMaxV() - texture.getMinV()),
                 texX = texture.getMinU() * atlasWidth,
                 texY = texture.getMinV() * atlasHeight,
-                textureWidth = texture.getWidth(),
-                textureHeight = texture.getHeight(),
+                textureWidth = contents.getWidth(),
+                textureHeight = contents.getHeight(),
                 startU1 = (texX + block.minZ * textureWidth) / atlasWidth,
                 endU1 = (texX + block.maxZ * textureWidth) / atlasWidth,
                 startV1 = (texY + textureHeight - block.maxY * textureHeight) / atlasHeight,
@@ -1709,15 +1712,16 @@ public final class ArsenicBlockRenderer {
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (blockRendererAccessor.getTextureOverride() >= 0)
             textureIndex = blockRendererAccessor.getTextureOverride();
-        Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
+        final Sprite texture = atlas.getSprite(Atlases.getTerrain().getTexture(textureIndex).getId());
+        final SpriteContents contents = texture.getContents();
         Tessellator t = Tessellator.INSTANCE;
         double
-                atlasWidth = texture.getWidth() / (texture.getMaxU() - texture.getMinU()),
-                atlasHeight = texture.getHeight() / (texture.getMaxV() - texture.getMinV()),
+                atlasWidth = contents.getWidth() / (texture.getMaxU() - texture.getMinU()),
+                atlasHeight = contents.getHeight() / (texture.getMaxV() - texture.getMinV()),
                 texX = texture.getMinU() * atlasWidth,
                 texY = texture.getMinV() * atlasHeight,
-                textureWidth = texture.getWidth(),
-                textureHeight = texture.getHeight(),
+                textureWidth = contents.getWidth(),
+                textureHeight = contents.getHeight(),
                 startU1 = (texX + block.minZ * textureWidth) / atlasWidth,
                 endU1 = (texX + block.maxZ * textureWidth) / atlasWidth,
                 startV1 = (texY + textureHeight - block.maxY * textureHeight) / atlasHeight,

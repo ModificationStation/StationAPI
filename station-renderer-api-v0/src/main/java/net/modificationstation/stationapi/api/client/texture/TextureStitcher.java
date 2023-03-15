@@ -5,17 +5,17 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.client.texture.Sprite.Info;
+import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
-public class TextureStitcher {
-    private static final Comparator<Holder> COMPARATOR = Comparator.<Holder, Integer>comparing((holder) -> -holder.height).thenComparing((holder) -> -holder.width).thenComparing((holder) -> holder.sprite.getId());
-    private final Set<Holder> holders = Sets.newHashSetWithExpectedSize(256);
-    private final List<Slot> slots = Lists.newArrayListWithCapacity(256);
+public class TextureStitcher<T extends TextureStitcher.Stitchable> {
+    private static final Comparator<Holder<?>> COMPARATOR = Comparator.<Holder<?>, Integer>comparing((holder) -> -holder.height).thenComparing((holder) -> -holder.width).thenComparing((holder) -> holder.sprite.getId());
+    private final Set<Holder<T>> holders = Sets.newHashSetWithExpectedSize(256);
+    private final List<Slot<T>> slots = Lists.newArrayListWithCapacity(256);
     private int width;
     private int height;
     private final int maxWidth;
@@ -27,110 +27,98 @@ public class TextureStitcher {
     }
 
     public int getWidth() {
-        return this.width;
+        return width;
     }
 
     public int getHeight() {
-        return this.height;
+        return height;
     }
 
-    public void add(Info info) {
-        Holder holder = new Holder(info);
-        this.holders.add(holder);
+    public void add(T info) {
+        Holder<T> holder = new Holder<>(info);
+        holders.add(holder);
     }
 
     public void stitch() {
-        List<Holder> list = new ArrayList<>(this.holders);
+        List<Holder<T>> list = new ArrayList<>(holders);
         list.sort(COMPARATOR);
-        Iterator<Holder> var2 = list.iterator();
+        Iterator<Holder<T>> var2 = list.iterator();
 
-        Holder holder;
+        Holder<T> holder;
         do {
             if (!var2.hasNext()) {
-                this.width = MathHelper.smallestEncompassingPowerOfTwo(this.width);
-                this.height = MathHelper.smallestEncompassingPowerOfTwo(this.height);
+                width = MathHelper.smallestEncompassingPowerOfTwo(width);
+                height = MathHelper.smallestEncompassingPowerOfTwo(height);
                 return;
             }
 
             holder = var2.next();
-        } while(this.fit(holder));
+        } while(fit(holder));
 
         throw new TextureStitcherCannotFitException(holder.sprite, list.stream().map((holderx) -> holderx.sprite).collect(ImmutableList.toImmutableList()));
     }
 
-    public void getStitchedSprites(SpriteConsumer spriteConsumer) {
-
-        for (Slot slot : this.slots) {
-            slot.addAllFilledSlots((slotx) -> {
-                Holder holder = slotx.getTexture();
-                Info info = holder.sprite;
-                spriteConsumer.load(info, this.width, this.height, slotx.getX(), slotx.getY());
-            });
-        }
-
+    public void getStitchedSprites(SpriteConsumer<T> consumer) {
+        for (Slot<T> slot : this.slots) slot.addAllFilledSlots(consumer);
     }
 
-    private boolean fit(Holder holder) {
-        Iterator<Slot> var2 = this.slots.iterator();
-
-        Slot slot;
-        do {
-            if (!var2.hasNext()) {
-                return this.growAndFit(holder);
-            }
-
-            slot = var2.next();
-        } while(!slot.fit(holder));
-
-        return true;
+    private boolean fit(Holder<T> holder) {
+        for (Slot<T> slot : this.slots) if (slot.fit(holder)) return true;
+        return this.growAndFit(holder);
     }
 
-    private boolean growAndFit(Holder holder) {
-        int i = MathHelper.smallestEncompassingPowerOfTwo(this.width);
-        int j = MathHelper.smallestEncompassingPowerOfTwo(this.height);
-        int k = MathHelper.smallestEncompassingPowerOfTwo(this.width + holder.width);
-        int l = MathHelper.smallestEncompassingPowerOfTwo(this.height + holder.height);
-        boolean bl = k <= this.maxWidth;
-        boolean bl2 = l <= this.maxHeight;
-        if (!bl && !bl2) {
-            return false;
-        } else {
+    private boolean growAndFit(Holder<T> holder) {
+        int i = MathHelper.smallestEncompassingPowerOfTwo(width);
+        int j = MathHelper.smallestEncompassingPowerOfTwo(height);
+        int k = MathHelper.smallestEncompassingPowerOfTwo(width + holder.width);
+        int l = MathHelper.smallestEncompassingPowerOfTwo(height + holder.height);
+        boolean bl = k <= maxWidth;
+        boolean bl2 = l <= maxHeight;
+        if (!bl && !bl2) return false;
+        else {
             boolean bl3 = bl && i != k;
             boolean bl4 = bl2 && j != l;
             boolean bl6;
-            if (bl3 ^ bl4) {
-                bl6 = bl3;
-            } else {
-                bl6 = bl && i <= j;
-            }
+            if (bl3 ^ bl4) bl6 = bl3;
+            else bl6 = bl && i <= j;
 
-            Slot slot;
+            Slot<T> slot;
             if (bl6) {
-                if (this.height == 0) {
-                    this.height = holder.height;
-                }
+                if (height == 0) height = holder.height;
 
-                slot = new Slot(this.width, 0, holder.width, this.height);
-                this.width += holder.width;
+                slot = new Slot<>(width, 0, holder.width, height);
+                width += holder.width;
             } else {
-                slot = new Slot(0, this.height, this.width, holder.height);
-                this.height += holder.height;
+                slot = new Slot<>(0, height, width, holder.height);
+                height += holder.height;
             }
 
             slot.fit(holder);
-            this.slots.add(slot);
+            slots.add(slot);
             return true;
         }
     }
 
-    @Environment(EnvType.CLIENT)
-    public static class Slot {
-        private final int x;
-        private final int y;
-        private final int width;
-        private final int height;
-        private List<Slot> subSlots;
-        private Holder texture;
+    record Holder<T extends Stitchable>(T sprite, int width, int height) {
+        public Holder(T sprite) {
+            this(sprite, sprite.getWidth(), sprite.getHeight());
+        }
+    }
+
+    public interface Stitchable {
+        int getWidth();
+
+        int getHeight();
+
+        Identifier getId();
+    }
+
+    public static class Slot<T extends Stitchable> {
+        private final int x, y, width, height;
+        @Nullable
+        private List<Slot<T>> subSlots;
+        @Nullable
+        private Holder<T> texture;
 
         public Slot(int x, int y, int width, int height) {
             this.x = x;
@@ -139,105 +127,58 @@ public class TextureStitcher {
             this.height = height;
         }
 
-        public Holder getTexture() {
-            return this.texture;
-        }
-
         public int getX() {
-            return this.x;
+            return x;
         }
 
         public int getY() {
-            return this.y;
+            return y;
         }
 
-        public boolean fit(Holder holder) {
-            if (this.texture != null) {
-                return false;
-            } else {
-                int i = holder.width;
-                int j = holder.height;
-                if (i <= this.width && j <= this.height) {
-                    if (i == this.width && j == this.height) {
-                        this.texture = holder;
+        public boolean fit(Holder<T> holder) {
+            if (texture != null) return false;
+            int i = holder.width;
+            int j = holder.height;
+            if (i > width || j > height) return false;
+            if (i == width && j == height) {
+                texture = holder;
+                return true;
+            }
+            if (subSlots == null) {
+                subSlots = new ArrayList<>(1);
+                subSlots.add(new Slot<>(x, y, i, j));
+                int k = width - i;
+                int l = height - j;
+                if (l > 0 && k > 0) {
+                    int m = Math.max(height, k);
+                    if (m >= Math.max(width, l)) {
+                        subSlots.add(new Slot<>(x, y + j, i, l));
+                        subSlots.add(new Slot<>(x + i, y, k, height));
                     } else {
-                        if (this.subSlots == null) {
-                            this.subSlots = Lists.newArrayListWithCapacity(1);
-                            this.subSlots.add(new Slot(this.x, this.y, i, j));
-                            int k = this.width - i;
-                            int l = this.height - j;
-                            if (l > 0 && k > 0) {
-                                int m = Math.max(this.height, k);
-                                int n = Math.max(this.width, l);
-                                if (m >= n) {
-                                    this.subSlots.add(new Slot(this.x, this.y + j, i, l));
-                                    this.subSlots.add(new Slot(this.x + i, this.y, k, this.height));
-                                } else {
-                                    this.subSlots.add(new Slot(this.x + i, this.y, k, j));
-                                    this.subSlots.add(new Slot(this.x, this.y + j, this.width, l));
-                                }
-                            } else if (k == 0) {
-                                this.subSlots.add(new Slot(this.x, this.y + j, i, l));
-                            } else if (l == 0) {
-                                this.subSlots.add(new Slot(this.x + i, this.y, k, j));
-                            }
-                        }
-
-                        Iterator<Slot> var8 = this.subSlots.iterator();
-
-                        Slot slot;
-                        do {
-                            if (!var8.hasNext()) {
-                                return false;
-                            }
-
-                            slot = var8.next();
-                        } while(!slot.fit(holder));
-
+                        subSlots.add(new Slot<>(x + i, y, k, j));
+                        subSlots.add(new Slot<>(x, y + j, width, l));
                     }
-                    return true;
-                } else {
-                    return false;
-                }
+                } else if (k == 0) subSlots.add(new Slot<>(x, y + j, i, l));
+                else if (l == 0) subSlots.add(new Slot<>(x + i, y, k, j));
             }
+            for (Slot<T> slot : subSlots) {
+                if (!slot.fit(holder)) continue;
+                return true;
+            }
+            return false;
         }
 
-        public void addAllFilledSlots(Consumer<Slot> consumer) {
-            if (this.texture != null) {
-                consumer.accept(this);
-            } else if (this.subSlots != null) {
-
-                for (Slot slot : this.subSlots) {
-                    slot.addAllFilledSlots(consumer);
-                }
-            }
-
+        public void addAllFilledSlots(SpriteConsumer<T> consumer) {
+            if (texture != null) consumer.load(texture.sprite, getX(), getY());
+            else if (subSlots != null) for (Slot<T> slot : subSlots) slot.addAllFilledSlots(consumer);
         }
 
         public String toString() {
-            return "Slot{originX=" + this.x + ", originY=" + this.y + ", width=" + this.width + ", height=" + this.height + ", texture=" + this.texture + ", subSlots=" + this.subSlots + '}';
+            return "Slot{originX=" + x + ", originY=" + y + ", width=" + width + ", height=" + height + ", texture=" + texture + ", subSlots=" + subSlots + "}";
         }
     }
 
-    @Environment(EnvType.CLIENT)
-    static class Holder {
-        public final Info sprite;
-        public final int width;
-        public final int height;
-
-        public Holder(Info sprite) {
-            this.sprite = sprite;
-            this.width = sprite.getWidth();
-            this.height = sprite.getHeight();
-        }
-
-        public String toString() {
-            return "Holder{width=" + this.width + ", height=" + this.height + '}';
-        }
-    }
-
-    @Environment(EnvType.CLIENT)
-    public interface SpriteConsumer {
-        void load(Info info, int width, int height, int x, int y);
+    public interface SpriteConsumer<T extends Stitchable> {
+        void load(T sprite, int x, int y);
     }
 }

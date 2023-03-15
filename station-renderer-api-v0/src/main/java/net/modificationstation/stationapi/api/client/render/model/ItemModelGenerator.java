@@ -9,6 +9,7 @@ import net.modificationstation.stationapi.api.client.render.model.json.ModelElem
 import net.modificationstation.stationapi.api.client.render.model.json.ModelElementFace;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelElementTexture;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
+import net.modificationstation.stationapi.api.client.texture.SpriteContents;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Vec3f;
@@ -26,9 +27,7 @@ public class ItemModelGenerator {
 
         for(int i = 0; i < LAYERS.size(); ++i) {
             String string = LAYERS.get(i);
-            if (!blockModel.textureExists(string)) {
-                break;
-            }
+            if (!blockModel.textureExists(string)) break;
 
             SpriteIdentifier spriteIdentifier = blockModel.resolveSprite(string);
             map.put(string, Either.left(spriteIdentifier));
@@ -43,14 +42,15 @@ public class ItemModelGenerator {
     }
 
     private List<ModelElement> addLayerElements(int layer, String key, Sprite sprite) {
+        final SpriteContents contents = sprite.getContents();
         List<ModelElement> elements = new ArrayList<>();
 
-        int width = sprite.getWidth();
-        int height = sprite.getHeight();
+        int width = contents.getWidth();
+        int height = contents.getHeight();
         float xFactor = width / 16.0F;
         float yFactor = height / 16.0F;
         float animationFrameDelta = sprite.getAnimationFrameDelta();
-        int[] frames = sprite.getDistinctFrameCount().toArray();
+        int[] frames = contents.getDistinctFrameCount().toArray();
 
         Map<Direction, ModelElementFace> map = new EnumMap<>(Direction.class);
         map.put(Direction.WEST, new ModelElementFace(null, layer, key, createUnlerpedTexture(new float[] { 0.0F, 0.0F, 16.0F, 16.0F }, 0, animationFrameDelta)));
@@ -63,18 +63,14 @@ public class ItemModelGenerator {
         int last2 = -1;
 
         for (int y = 0; y < height; ++y) {
-            for (int x = 0; x < width; ++x) {
-                if (!isPixelAlwaysTransparent(sprite, frames, x, y)) {
-                    if (doesPixelHaveEdge(sprite, frames, x, y, Side.DOWN)) {
-                        if (first1 == -1) {
-                            first1 = x;
-                        }
+            for (int x = 0; x < width; ++x)
+                if (!isPixelAlwaysTransparent(contents, frames, x, y)) {
+                    if (doesPixelHaveEdge(contents, frames, x, y, Side.DOWN)) {
+                        if (first1 == -1) first1 = x;
                         last1 = x;
                     }
-                    if (doesPixelHaveEdge(sprite, frames, x, y, Side.UP)) {
-                        if (first2 == -1) {
-                            first2 = x;
-                        }
+                    if (doesPixelHaveEdge(contents, frames, x, y, Side.UP)) {
+                        if (first2 == -1) first2 = x;
                         last2 = x;
                     }
                 } else {
@@ -87,7 +83,6 @@ public class ItemModelGenerator {
                         first2 = -1;
                     }
                 }
-            }
 
             if (first1 != -1) {
                 elements.add(createHorizontalOutlineElement(Direction.DOWN, layer, key, first1, last1, y, height, animationFrameDelta, xFactor, yFactor));
@@ -100,18 +95,14 @@ public class ItemModelGenerator {
         }
 
         for (int x = 0; x < width; ++x) {
-            for (int y = 0; y < height; ++y) {
-                if (!isPixelAlwaysTransparent(sprite, frames, x, y)) {
-                    if (doesPixelHaveEdge(sprite, frames, x, y, Side.RIGHT)) {
-                        if (first1 == -1) {
-                            first1 = y;
-                        }
+            for (int y = 0; y < height; ++y)
+                if (!isPixelAlwaysTransparent(contents, frames, x, y)) {
+                    if (doesPixelHaveEdge(contents, frames, x, y, Side.RIGHT)) {
+                        if (first1 == -1) first1 = y;
                         last1 = y;
                     }
-                    if (doesPixelHaveEdge(sprite, frames, x, y, Side.LEFT)) {
-                        if (first2 == -1) {
-                            first2 = y;
-                        }
+                    if (doesPixelHaveEdge(contents, frames, x, y, Side.LEFT)) {
+                        if (first2 == -1) first2 = y;
                         last2 = y;
                     }
                 } else {
@@ -124,7 +115,6 @@ public class ItemModelGenerator {
                         first2 = -1;
                     }
                 }
-            }
 
             if (first1 != -1) {
                 elements.add(createVerticalOutlineElement(Direction.SOUTH, layer, key, first1, last1, x, height, animationFrameDelta, xFactor, yFactor));
@@ -169,35 +159,26 @@ public class ItemModelGenerator {
         return uvs;
     }
 
-    private static boolean isPixelOutsideSprite(Sprite sprite, int x, int y) {
+    private static boolean isPixelOutsideSprite(SpriteContents sprite, int x, int y) {
         return x < 0 || y < 0 || x >= sprite.getWidth() || y >= sprite.getHeight();
     }
 
-    private static boolean isPixelTransparent(Sprite sprite, int frame, int x, int y) {
+    private static boolean isPixelTransparent(SpriteContents sprite, int frame, int x, int y) {
         return isPixelOutsideSprite(sprite, x, y) || sprite.isPixelTransparent(frame, x, y);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private static boolean isPixelAlwaysTransparent(Sprite sprite, int[] frames, int x, int y) {
-        for (int frame : frames) {
-            if (!isPixelTransparent(sprite, frame, x, y)) {
-                return false;
-            }
-        }
+    private static boolean isPixelAlwaysTransparent(SpriteContents sprite, int[] frames, int x, int y) {
+        for (int frame : frames) if (!isPixelTransparent(sprite, frame, x, y)) return false;
         return true;
     }
 
-    public static boolean doesPixelHaveEdge(Sprite sprite, int[] frames, int x, int y, Side direction) {
+    public static boolean doesPixelHaveEdge(SpriteContents sprite, int[] frames, int x, int y, Side direction) {
         int x1 = x + direction.getOffsetX();
         int y1 = y + direction.getOffsetY();
-        if (isPixelOutsideSprite(sprite, x1, y1)) {
-            return true;
-        }
-        for (int frame : frames) {
-            if (!isPixelTransparent(sprite, frame, x, y) && isPixelTransparent(sprite, frame, x1, y1)) {
-                return true;
-            }
-        }
+        if (isPixelOutsideSprite(sprite, x1, y1)) return true;
+        for (int frame : frames)
+            if (!isPixelTransparent(sprite, frame, x, y) && isPixelTransparent(sprite, frame, x1, y1)) return true;
         return false;
     }
 

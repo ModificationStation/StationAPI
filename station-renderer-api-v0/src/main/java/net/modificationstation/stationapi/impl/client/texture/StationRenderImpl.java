@@ -8,6 +8,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.event.resource.AssetsReloadEvent;
 import net.modificationstation.stationapi.api.client.event.resource.AssetsResourceReloaderRegisterEvent;
+import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.render.item.ItemModels;
 import net.modificationstation.stationapi.api.client.texture.TextureUtil;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
@@ -94,6 +95,7 @@ public class StationRenderImpl {
         GUI_ITEMS = new ExpandableAtlas(of("textures/atlas/gui/items.png"));
         TERRAIN.addSpritesheet("/terrain.png", 16, TerrainHelper.INSTANCE);
         GUI_ITEMS.addSpritesheet("/gui/items.png", 16, GuiItemsHelper.INSTANCE);
+        StationAPI.EVENT_BUS.post(TextureRegisterEvent.builder().build());
         TextureUtil.maxSupportedTextureSize();
     }
 

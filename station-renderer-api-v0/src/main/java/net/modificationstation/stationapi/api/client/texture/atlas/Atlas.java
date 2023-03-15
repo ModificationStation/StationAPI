@@ -117,7 +117,7 @@ public abstract class Atlas {
     }
 
     public void registerTextureBinders(TextureManager textureManager, TexturePack texturePack) {
-        textureBinders.stream().filter(textureBinder -> !(textureBinder instanceof StaticReferenceProvider provider && provider.getStaticReference().getSprite().getAnimation() != null)).forEach(arg -> {
+        textureBinders.stream().filter(textureBinder -> !(textureBinder instanceof StaticReferenceProvider provider && provider.getStaticReference().getSprite().getContents().getAnimation() != null)).forEach(arg -> {
             if (arg instanceof TexturePackDependent dependent)
                 dependent.reloadFromTexturePack(texturePack);
             textureManager.addTextureBinder(arg);
@@ -140,21 +140,19 @@ public abstract class Atlas {
         }
 
         public int getX() {
-            net.modificationstation.stationapi.api.client.texture.Sprite sprite = getSprite();
-            return (int) (sprite.getMinU() * sprite.getWidth() / (sprite.getMaxU() - sprite.getMinU()));
+            return getSprite().getX();
         }
 
         public int getY() {
-            net.modificationstation.stationapi.api.client.texture.Sprite sprite = getSprite();
-            return (int) (sprite.getMinV() * sprite.getHeight() / (sprite.getMaxV() - sprite.getMinV()));
+            return getSprite().getY();
         }
 
         public int getWidth() {
-            return getSprite().getWidth();
+            return getSprite().getContents().getWidth();
         }
 
         public int getHeight() {
-            return getSprite().getHeight();
+            return getSprite().getContents().getHeight();
         }
 
         public double getStartU() {

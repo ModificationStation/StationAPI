@@ -8,11 +8,13 @@ import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class SpriteIdentifier {
 
+   public static final Comparator<SpriteIdentifier> COMPARATOR = Comparator.<SpriteIdentifier, Identifier>comparing(id -> id.atlas).thenComparing(id -> id.texture);
    @NotNull
    private static final Cache<String, SpriteIdentifier> CACHE = Caffeine.newBuilder().softValues().build();
 

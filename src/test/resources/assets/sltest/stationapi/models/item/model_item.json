@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "sltest:oak_log",
-		"1": "sltest:stone",
-		"particle": "sltest:oak_log"
+		"0": "sltest:items/oak_log",
+		"1": "sltest:items/stone",
+		"particle": "sltest:items/oak_log"
 	},
 	"elements": [
 		{

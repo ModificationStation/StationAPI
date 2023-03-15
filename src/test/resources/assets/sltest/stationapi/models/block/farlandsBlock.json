@@ -2,10 +2,10 @@
 	"parent": "block/block",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "sltest:farlandsBottom",
-		"1": "sltest:farlandsSide",
-		"2": "sltest:farlandsTop",
-		"particle": "sltest:farlandsBottom"
+		"0": "sltest:blocks/farlandsBottom",
+		"1": "sltest:blocks/farlandsSide",
+		"2": "sltest:blocks/farlandsTop",
+		"particle": "sltest:blocks/farlandsBottom"
 	},
 	"elements": [
 		{

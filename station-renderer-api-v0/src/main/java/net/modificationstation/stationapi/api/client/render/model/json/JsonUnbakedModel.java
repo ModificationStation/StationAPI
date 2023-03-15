@@ -3,10 +3,10 @@ package net.modificationstation.stationapi.api.client.render.model.json;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.gson.*;
 import com.mojang.datafixers.util.Either;
-import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.client.render.model.*;
@@ -74,112 +74,74 @@ public final class JsonUnbakedModel implements UnbakedModel {
     }
 
     public JsonUnbakedModel.GuiLight getGuiLight() {
-        if (this.guiLight != null) {
-            return this.guiLight;
-        } else {
-            return this.parent != null ? this.parent.getGuiLight() : GuiLight.SIDE;
-        }
+        if (this.guiLight != null) return this.guiLight;
+        else return this.parent != null ? this.parent.getGuiLight() : GuiLight.SIDE;
     }
 
     public List<ModelOverride> getOverrides() {
         return this.overrides;
     }
 
-    private ModelOverrideList compileOverrides(ModelLoader modelLoader, JsonUnbakedModel parent) {
-        return this.overrides.isEmpty() ? ModelOverrideList.EMPTY : new ModelOverrideList(modelLoader, parent, modelLoader::getOrLoadModel, this.overrides);
+    private ModelOverrideList compileOverrides(Baker baker, JsonUnbakedModel parent) {
+        return this.overrides.isEmpty() ? ModelOverrideList.EMPTY : new ModelOverrideList(baker, parent, baker::getOrLoadModel, this.overrides);
     }
 
     public Collection<Identifier> getModelDependencies() {
-        Set<Identifier> set = Sets.newIdentityHashSet();
-
-        for (ModelOverride modelOverride : this.overrides) {
-            set.add(modelOverride.getModelId());
-        }
-
-        if (this.parentId != null) {
-            set.add(this.parentId);
-        }
-
+        ReferenceSet<Identifier> set = new ReferenceOpenHashSet<>();
+        for (ModelOverride modelOverride : this.overrides) set.add(modelOverride.getModelId());
+        if (this.parentId != null) set.add(this.parentId);
         return set;
     }
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        Set<UnbakedModel> set = Sets.newLinkedHashSet();
-
-        for(JsonUnbakedModel JsonModel = this; JsonModel.parentId != null && JsonModel.parent == null; JsonModel = JsonModel.parent) {
-            set.add(JsonModel);
-            UnbakedModel unbakedModel = unbakedModelGetter.apply(JsonModel.parentId);
-            if (unbakedModel == null) {
-                LOGGER.warn("No parent '{}' while loading model '{}'", this.parentId, JsonModel);
-            }
-
+    @Override
+    public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
+        LinkedHashSet<JsonUnbakedModel> set = new LinkedHashSet<>();
+        JsonUnbakedModel jsonUnbakedModel = this;
+        while (jsonUnbakedModel.parentId != null && jsonUnbakedModel.parent == null) {
+            set.add(jsonUnbakedModel);
+            UnbakedModel unbakedModel = modelLoader.apply(jsonUnbakedModel.parentId);
+            if (unbakedModel == null)
+                LOGGER.warn("No parent '{}' while loading model '{}'", this.parentId, jsonUnbakedModel);
             if (set.contains(unbakedModel)) {
-                LOGGER.warn("Found 'parent' loop while loading model '{}' in chain: {} -> {}", JsonModel, set.stream().map(Object::toString).collect(Collectors.joining(" -> ")), this.parentId);
+                LOGGER.warn("Found 'parent' loop while loading model '{}' in chain: {} -> {}", jsonUnbakedModel, set.stream().map(Object::toString).collect(Collectors.joining(" -> ")), this.parentId);
                 unbakedModel = null;
             }
-
             if (unbakedModel == null) {
-                JsonModel.parentId = ModelLoader.MISSING.asIdentifier();
-                unbakedModel = unbakedModelGetter.apply(JsonModel.parentId);
+                jsonUnbakedModel.parentId = ModelLoader.MISSING_ID.asIdentifier();
+                unbakedModel = modelLoader.apply(jsonUnbakedModel.parentId);
             }
-
-            if (!(unbakedModel instanceof JsonUnbakedModel jsonModel)) {
+            if (!(unbakedModel instanceof JsonUnbakedModel))
                 throw new IllegalStateException("BlockModel parent has to be a block model.");
-            }
-
-            JsonModel.parent = jsonModel;
+            jsonUnbakedModel.parent = (JsonUnbakedModel)unbakedModel;
+            jsonUnbakedModel = jsonUnbakedModel.parent;
         }
-
-        Set<SpriteIdentifier> set2 = Sets.newHashSet(this.resolveSprite("particle"));
-
-        for (ModelElement modelElement : this.getElements()) {
-            SpriteIdentifier spriteIdentifier;
-            for (ModelElementFace modelElementFace : modelElement.faces.values()) {
-                spriteIdentifier = this.resolveSprite(modelElementFace.textureId);
-                if (spriteIdentifier.texture == MissingSprite.getMissingSpriteId()) {
-                    unresolvedTextureReferences.add(Pair.of(modelElementFace.textureId, this.id));
-                }
-                set2.add(spriteIdentifier);
-            }
-        }
-
-        this.overrides.forEach((modelOverride) -> {
-            UnbakedModel unbakedModel = unbakedModelGetter.apply(modelOverride.getModelId());
-            if (!Objects.equals(unbakedModel, this)) {
-                set2.addAll(unbakedModel.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences));
-            }
+        this.overrides.forEach(override -> {
+            UnbakedModel unbakedModel = modelLoader.apply(override.getModelId());
+            if (Objects.equals(unbakedModel, this)) return;
+            unbakedModel.setParents(modelLoader);
         });
-        if (this.getRootModel() == ModelLoader.GENERATION_MARKER) {
-            ItemModelGenerator.LAYERS.forEach((string) -> set2.add(this.resolveSprite(string)));
-        }
-
-        return set2;
     }
 
-    public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        return this.bake(loader, this, textureGetter, rotationContainer, modelId, true);
+    public BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+        return this.bake(baker, this, textureGetter, rotationContainer, modelId, true);
     }
 
-    public BakedModel bake(ModelLoader loader, JsonUnbakedModel parent, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings settings, Identifier id, boolean hasDepth) {
+    public BakedModel bake(Baker baker, JsonUnbakedModel parent, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings settings, Identifier id, boolean hasDepth) {
         Sprite sprite = textureGetter.apply(this.resolveSprite("particle"));
-        if (this.getRootModel() == ModelLoader.BLOCK_ENTITY_MARKER) {
-            return new BuiltinBakedModel(this.getTransformations(), this.compileOverrides(loader, parent), sprite, this.getGuiLight().isSide());
-        } else if (getRootModel() == ModelLoader.VANILLA_MARKER) {
-            return new VanillaBakedModel();
-        } else {
-            BasicBakedModel.Builder builder = (new BasicBakedModel.Builder(this, this.compileOverrides(loader, parent), hasDepth)).setParticle(sprite);
-
-            for (ModelElement modelElement : this.getElements()) {
+        if (this.getRootModel() == ModelLoader.BLOCK_ENTITY_MARKER)
+            return new BuiltinBakedModel(this.getTransformations(), this.compileOverrides(baker, parent), sprite, this.getGuiLight().isSide());
+        else if (getRootModel() == ModelLoader.VANILLA_MARKER) return new VanillaBakedModel();
+        else {
+            BasicBakedModel.Builder builder = new BasicBakedModel.Builder(this, this.compileOverrides(baker, parent), hasDepth).setParticle(sprite);
+            for (ModelElement modelElement : this.getElements())
                 for (Direction direction : modelElement.faces.keySet()) {
                     ModelElementFace modelElementFace = modelElement.faces.get(direction);
                     Sprite sprite2 = textureGetter.apply(this.resolveSprite(modelElementFace.textureId));
-                    if (modelElementFace.cullFace == null) {
+                    if (modelElementFace.cullFace == null)
                         builder.addQuad(createQuad(modelElement, modelElementFace, sprite2, direction, settings, id));
-                    } else {
+                    else
                         builder.addQuad(Direction.transform(settings.getRotation().getMatrix(), modelElementFace.cullFace), createQuad(modelElement, modelElementFace, sprite2, direction, settings, id));
-                    }
                 }
-            }
 
             return builder.build();
         }
@@ -194,18 +156,14 @@ public final class JsonUnbakedModel implements UnbakedModel {
     }
 
     public SpriteIdentifier resolveSprite(String spriteName) {
-        if (isTextureReference(spriteName)) {
-            spriteName = spriteName.substring(1);
-        }
+        if (isTextureReference(spriteName)) spriteName = spriteName.substring(1);
 
         List<String> list = new ArrayList<>();
 
         while(true) {
             Either<SpriteIdentifier, String> either = this.resolveTexture(spriteName);
             Optional<SpriteIdentifier> optional = either.left();
-            if (optional.isPresent()) {
-                return optional.get();
-            }
+            if (optional.isPresent()) return optional.get();
 
             spriteName = either.right().orElseThrow(NullPointerException::new);
             if (list.contains(spriteName)) {
@@ -220,9 +178,7 @@ public final class JsonUnbakedModel implements UnbakedModel {
     private Either<SpriteIdentifier, String> resolveTexture(String name) {
         for(JsonUnbakedModel JsonModel = this; JsonModel != null; JsonModel = JsonModel.parent) {
             Either<SpriteIdentifier, String> either = JsonModel.textureMap.get(name);
-            if (either != null) {
-                return either;
-            }
+            if (either != null) return either;
         }
 
         return Either.left(SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, MissingSprite.getMissingSpriteId()));
@@ -278,11 +234,7 @@ public final class JsonUnbakedModel implements UnbakedModel {
         public static JsonUnbakedModel.GuiLight deserialize(String value) {
             JsonUnbakedModel.GuiLight[] var1 = values();
 
-            for (JsonUnbakedModel.GuiLight guiLight : var1) {
-                if (guiLight.name.equals(value)) {
-                    return guiLight;
-                }
-            }
+            for (JsonUnbakedModel.GuiLight guiLight : var1) if (guiLight.name.equals(value)) return guiLight;
 
             throw new IllegalArgumentException("Invalid gui light: " + value);
         }
@@ -308,9 +260,8 @@ public final class JsonUnbakedModel implements UnbakedModel {
 
             List<ModelOverride> list2 = this.deserializeOverrides(jsonDeserializationContext, jsonObject);
             JsonUnbakedModel.GuiLight guiLight = null;
-            if (jsonObject.has("gui_light")) {
-                guiLight = JsonUnbakedModel.GuiLight.deserialize(JsonHelper.getString(jsonObject, "gui_light"));
-            }
+            if (jsonObject.has("gui_light"))
+                guiLight = GuiLight.deserialize(JsonHelper.getString(jsonObject, "gui_light"));
 
             Identifier identifier = string.isEmpty() ? null : Identifier.of(string);
             return new JsonUnbakedModel(identifier, list, map, bl, guiLight, modelTransformation, list2);
@@ -321,9 +272,8 @@ public final class JsonUnbakedModel implements UnbakedModel {
             if (object.has("overrides")) {
                 JsonArray jsonArray = JsonHelper.getArray(object, "overrides");
 
-                for (JsonElement jsonElement : jsonArray) {
+                for (JsonElement jsonElement : jsonArray)
                     list.add(context.deserialize(jsonElement, ModelOverride.class));
-                }
             }
 
             return list;
@@ -335,24 +285,19 @@ public final class JsonUnbakedModel implements UnbakedModel {
             if (object.has("textures")) {
                 JsonObject jsonObject = JsonHelper.getObject(object, "textures");
 
-                for (Map.Entry<String, JsonElement> stringJsonElementEntry : jsonObject.entrySet()) {
+                for (Map.Entry<String, JsonElement> stringJsonElementEntry : jsonObject.entrySet())
                     map.put(stringJsonElementEntry.getKey(), resolveReference(identifier, stringJsonElementEntry.getValue().getAsString()));
-                }
             }
 
             return map;
         }
 
         private static Either<SpriteIdentifier, String> resolveReference(Identifier id, String name) {
-            if (JsonUnbakedModel.isTextureReference(name)) {
-                return Either.right(name.substring(1));
-            } else {
+            if (JsonUnbakedModel.isTextureReference(name)) return Either.right(name.substring(1));
+            else {
                 Identifier identifier = Identifier.tryParse(name);
-                if (identifier == null) {
-                    throw new JsonParseException(name + " is not valid resource location");
-                } else {
-                    return Either.left(SpriteIdentifier.of(id, identifier));
-                }
+                if (identifier == null) throw new JsonParseException(name + " is not valid resource location");
+                else return Either.left(SpriteIdentifier.of(id, identifier));
             }
         }
 
@@ -366,12 +311,8 @@ public final class JsonUnbakedModel implements UnbakedModel {
 
         protected List<ModelElement> deserializeElements(JsonDeserializationContext context, JsonObject json) {
             List<ModelElement> list = Lists.newArrayList();
-            if (json.has("elements")) {
-
-                for (JsonElement jsonElement : JsonHelper.getArray(json, "elements")) {
-                    list.add(context.deserialize(jsonElement, ModelElement.class));
-                }
-            }
+            if (json.has("elements")) for (JsonElement jsonElement : JsonHelper.getArray(json, "elements"))
+                list.add(context.deserialize(jsonElement, ModelElement.class));
 
             return list;
         }

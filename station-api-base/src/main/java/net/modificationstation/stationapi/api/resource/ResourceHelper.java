@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static net.modificationstation.stationapi.api.registry.ModID.MINECRAFT;
+
 public class ResourceHelper {
 
     @API
@@ -42,7 +44,7 @@ public class ResourceHelper {
 
     @API
     public String toPath(Identifier identifier) {
-        return rootPath + "/" + identifier.modID + "/" + identifier.id;
+        return identifier.modID == MINECRAFT && identifier.id.startsWith("/") ? identifier.id : rootPath + "/" + identifier.modID + "/" + identifier.id;
     }
 
     @API

@@ -1,0 +1,2032 @@
+{
+  "sources": [
+    {
+      "type": "unstitch",
+      "resource": "/terrain.png",
+      "regions": [
+        {
+          "sprite": "block/grass_block_top",
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/stone",
+          "x": 1,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/dirt",
+          "x": 2,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/grass_block_side",
+          "x": 3,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/oak_planks",
+          "x": 4,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/smooth_stone_slab_side",
+          "x": 5,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/smooth_stone",
+          "x": 6,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/bricks",
+          "x": 7,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/tnt_side",
+          "x": 8,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/tnt_top",
+          "x": 9,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/tnt_bottom",
+          "x": 10,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/cobweb",
+          "x": 11,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/rose",
+          "x": 12,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/dandelion",
+          "x": 13,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/nether_portal",
+          "x": 14,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/oak_sapling",
+          "x": 15,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/cobblestone",
+          "x": 0,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/bedrock",
+          "x": 1,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/sand",
+          "x": 2,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/gravel",
+          "x": 3,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/oak_log",
+          "x": 4,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/oak_log_top",
+          "x": 5,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/iron_block",
+          "x": 6,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/gold_block",
+          "x": 7,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/diamond_block",
+          "x": 8,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/chest_top",
+          "x": 9,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/chest_side",
+          "x": 10,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/chest_front",
+          "x": 11,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/red_mushroom",
+          "x": 12,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/brown_mushroom",
+          "x": 13,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/fire_e_w",
+          "x": 15,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/gold_ore",
+          "x": 0,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/iron_ore",
+          "x": 1,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/coal_ore",
+          "x": 2,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/bookshelf",
+          "x": 3,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/mossy_cobblestone",
+          "x": 4,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/obsidian",
+          "x": 5,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/grass_block_side_overlay",
+          "x": 6,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/grass",
+          "x": 7,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/double_chest_front_left",
+          "x": 9,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/double_chest_front_right",
+          "x": 10,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/crafting_table_top",
+          "x": 11,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/furnace_front",
+          "x": 12,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/furnace_side",
+          "x": 13,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/dispenser_front",
+          "x": 14,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/fire_n_s",
+          "x": 15,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/sponge",
+          "x": 0,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/glass",
+          "x": 1,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/diamond_ore",
+          "x": 2,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/redstone_ore",
+          "x": 3,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/oak_leaves",
+          "x": 4,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/fast_oak_leaves",
+          "x": 5,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/dead_bush",
+          "x": 7,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/fern",
+          "x": 8,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/double_chest_back_left",
+          "x": 9,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/double_chest_back_right",
+          "x": 10,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/crafting_table_side",
+          "x": 11,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/crafting_table_front",
+          "x": 12,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/furnace_front_on",
+          "x": 13,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/furnace_top",
+          "x": 14,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/spruce_sapling",
+          "x": 15,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/white_wool",
+          "x": 0,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/spawner",
+          "x": 1,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/snow",
+          "x": 2,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/ice",
+          "x": 3,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/grass_block_snow",
+          "x": 4,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/cactus_top",
+          "x": 5,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/cactus_side",
+          "x": 6,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/cactus_bottom",
+          "x": 7,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/clay",
+          "x": 8,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/sugar_cane",
+          "x": 9,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/note_block",
+          "x": 10,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/jukebox_top",
+          "x": 11,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/birch_sapling",
+          "x": 15,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/torch",
+          "x": 0,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/oak_door_top",
+          "x": 1,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/iron_door_top",
+          "x": 2,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/ladder",
+          "x": 3,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/oak_trapdoor",
+          "x": 4,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/farmland_moist",
+          "x": 6,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/farmland",
+          "x": 7,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/wheat_stage0",
+          "x": 8,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/wheat_stage1",
+          "x": 9,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/wheat_stage2",
+          "x": 10,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/wheat_stage3",
+          "x": 11,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/wheat_stage4",
+          "x": 12,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/wheat_stage5",
+          "x": 13,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/wheat_stage6",
+          "x": 14,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/wheat_stage7",
+          "x": 15,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/lever",
+          "x": 0,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/oak_door_bottom",
+          "x": 1,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/iron_door_bottom",
+          "x": 2,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/redstone_torch",
+          "x": 3,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/pumpkin_top",
+          "x": 6,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/netherrack",
+          "x": 7,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/soul_sand",
+          "x": 8,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/glowstone",
+          "x": 9,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/piston_top_sticky",
+          "x": 10,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/piston_top",
+          "x": 11,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/piston_side",
+          "x": 12,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/piston_bottom",
+          "x": 13,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/piston_inner",
+          "x": 14,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/rail_corner",
+          "x": 0,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/black_wool",
+          "x": 1,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/gray_wool",
+          "x": 2,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/redstone_torch_off",
+          "x": 3,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/spruce_log",
+          "x": 4,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/birch_log",
+          "x": 5,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/pumpkin_side",
+          "x": 6,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/carved_pumpkin",
+          "x": 7,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/jack_o_lantern",
+          "x": 8,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/cake_top",
+          "x": 9,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/cake_side",
+          "x": 10,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/cake_inner",
+          "x": 11,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/cake_bottom",
+          "x": 12,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/rail",
+          "x": 0,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/red_wool",
+          "x": 1,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/pink_wool",
+          "x": 2,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/repeater",
+          "x": 3,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/spruce_leaves",
+          "x": 4,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/fast_spruce_leaves",
+          "x": 5,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/red_bed_top_left",
+          "x": 6,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/red_bed_top_right",
+          "x": 7,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/lapis_block",
+          "x": 0,
+          "y": 9,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/green_wool",
+          "x": 1,
+          "y": 9,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/lime_wool",
+          "x": 2,
+          "y": 9,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/repeater_on",
+          "x": 3,
+          "y": 9,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/red_bed_front",
+          "x": 5,
+          "y": 9,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/red_bed_side_left",
+          "x": 6,
+          "y": 9,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/red_bed_side_right",
+          "x": 7,
+          "y": 9,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/red_bed_back",
+          "x": 8,
+          "y": 9,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/lapis_ore",
+          "x": 0,
+          "y": 10,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/brown_wool",
+          "x": 1,
+          "y": 10,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/yellow_wool",
+          "x": 2,
+          "y": 10,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/powered_rail",
+          "x": 3,
+          "y": 10,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/redstone_dust_cross",
+          "x": 4,
+          "y": 10,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/redstone_dust_line0",
+          "x": 5,
+          "y": 10,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/sandstone_top",
+          "x": 0,
+          "y": 11,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/blue_wool",
+          "x": 1,
+          "y": 11,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/light_blue_wool",
+          "x": 2,
+          "y": 11,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/powered_rail_on",
+          "x": 3,
+          "y": 11,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/sandstone",
+          "x": 0,
+          "y": 12,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/purple_wool",
+          "x": 1,
+          "y": 12,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/magenta_wool",
+          "x": 2,
+          "y": 12,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/detector_rail",
+          "x": 3,
+          "y": 12,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/water_still",
+          "x": 13,
+          "y": 12,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/water_flow",
+          "x": 14,
+          "y": 12,
+          "width": 2,
+          "height": 2
+        },
+        {
+          "sprite": "block/sandstone_bottom",
+          "x": 0,
+          "y": 13,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/cyan_wool",
+          "x": 1,
+          "y": 13,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/orange_wool",
+          "x": 2,
+          "y": 13,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/light_gray_wool",
+          "x": 1,
+          "y": 14,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/lava_still",
+          "x": 13,
+          "y": 14,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/lava_flow",
+          "x": 14,
+          "y": 14,
+          "width": 2,
+          "height": 2
+        },
+        {
+          "sprite": "block/destroy_stage_0",
+          "x": 0,
+          "y": 15,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/destroy_stage_1",
+          "x": 1,
+          "y": 15,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/destroy_stage_2",
+          "x": 2,
+          "y": 15,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/destroy_stage_3",
+          "x": 3,
+          "y": 15,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/destroy_stage_4",
+          "x": 4,
+          "y": 15,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/destroy_stage_5",
+          "x": 5,
+          "y": 15,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/destroy_stage_6",
+          "x": 6,
+          "y": 15,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/destroy_stage_7",
+          "x": 7,
+          "y": 15,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/destroy_stage_8",
+          "x": 8,
+          "y": 15,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "block/destroy_stage_9",
+          "x": 9,
+          "y": 15,
+          "width": 1,
+          "height": 1
+        }
+      ],
+      "divisor_x": 16,
+      "divisor_y": 16
+    },
+    {
+      "type": "unstitch",
+      "resource": "/gui/items.png",
+      "regions": [
+        {
+          "sprite": "item/leather_helmet",
+          "x": 0,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/chainmail_helmet",
+          "x": 1,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/iron_helmet",
+          "x": 2,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/diamond_helmet",
+          "x": 3,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/golden_helmet",
+          "x": 4,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/flint_and_steel",
+          "x": 5,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/flint",
+          "x": 6,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/coal",
+          "x": 7,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/string",
+          "x": 8,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/wheat_seeds",
+          "x": 9,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/apple",
+          "x": 10,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/golden_apple",
+          "x": 11,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/egg",
+          "x": 12,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/sugar",
+          "x": 13,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/snowball",
+          "x": 14,
+          "y": 0,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/leather_chestplate",
+          "x": 0,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/chainmail_chestplate",
+          "x": 1,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/iron_chestplate",
+          "x": 2,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/diamond_chestplate",
+          "x": 3,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/golden_chestplate",
+          "x": 4,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/bow",
+          "x": 5,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/brick",
+          "x": 6,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/iron_ingot",
+          "x": 7,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/feather",
+          "x": 8,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/wheat",
+          "x": 9,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/painting",
+          "x": 10,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/sugar_cane",
+          "x": 11,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/bone",
+          "x": 12,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/cake",
+          "x": 13,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/slime_ball",
+          "x": 14,
+          "y": 1,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/leather_leggings",
+          "x": 0,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/chainmail_leggings",
+          "x": 1,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/iron_leggings",
+          "x": 2,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/diamond_leggings",
+          "x": 3,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/golden_leggings",
+          "x": 4,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/arrow",
+          "x": 5,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/quiver",
+          "x": 6,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/gold_ingot",
+          "x": 7,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/gunpowder",
+          "x": 8,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/bread",
+          "x": 9,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/oak_sign",
+          "x": 10,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/oak_door",
+          "x": 11,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/iron_door",
+          "x": 12,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/red_bed",
+          "x": 13,
+          "y": 2,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/leather_boots",
+          "x": 0,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/chainmail_boots",
+          "x": 1,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/iron_boots",
+          "x": 2,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/diamond_boots",
+          "x": 3,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/golden_boots",
+          "x": 4,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/stick",
+          "x": 5,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/compass",
+          "x": 6,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/diamond",
+          "x": 7,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/redstone",
+          "x": 8,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/clay_ball",
+          "x": 9,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/paper",
+          "x": 10,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/book",
+          "x": 11,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/filled_map",
+          "x": 12,
+          "y": 3,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/wooden_sword",
+          "x": 0,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/stone_sword",
+          "x": 1,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/iron_sword",
+          "x": 2,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/diamond_sword",
+          "x": 3,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/golden_sword",
+          "x": 4,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/fishing_rod",
+          "x": 5,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/clock",
+          "x": 6,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/bowl",
+          "x": 7,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/mushroom_stew",
+          "x": 8,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/glowstone_dust",
+          "x": 9,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/bucket",
+          "x": 10,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/water_bucket",
+          "x": 11,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/lava_bucket",
+          "x": 12,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/milk_bucket",
+          "x": 13,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/ink_sac",
+          "x": 14,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/gray_dye",
+          "x": 15,
+          "y": 4,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/wooden_shovel",
+          "x": 0,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/stone_shovel",
+          "x": 1,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/iron_shovel",
+          "x": 2,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/diamond_shovel",
+          "x": 3,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/golden_shovel",
+          "x": 4,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/fishing_rod_cast",
+          "x": 5,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/repeater",
+          "x": 6,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/porkchop",
+          "x": 7,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/cooked_porkchop",
+          "x": 8,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/cod",
+          "x": 9,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/cooked_cod",
+          "x": 10,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/cookie",
+          "x": 12,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/shears",
+          "x": 13,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/red_dye",
+          "x": 14,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/pink_dye",
+          "x": 15,
+          "y": 5,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/wooden_pickaxe",
+          "x": 0,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/stone_pickaxe",
+          "x": 1,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/iron_pickaxe",
+          "x": 2,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/diamond_pickaxe",
+          "x": 3,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/golden_pickaxe",
+          "x": 4,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/leather",
+          "x": 7,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/saddle",
+          "x": 8,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/green_dye",
+          "x": 14,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/lime_dye",
+          "x": 15,
+          "y": 6,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/wooden_axe",
+          "x": 0,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/stone_axe",
+          "x": 1,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/iron_axe",
+          "x": 2,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/diamond_axe",
+          "x": 3,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/golden_axe",
+          "x": 4,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/cocoa_beans",
+          "x": 14,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/yellow_dye",
+          "x": 15,
+          "y": 7,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/wooden_hoe",
+          "x": 0,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/stone_hoe",
+          "x": 1,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/iron_hoe",
+          "x": 2,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/diamond_hoe",
+          "x": 3,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/golden_hoe",
+          "x": 4,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/minecart",
+          "x": 7,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/oak_boat",
+          "x": 8,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/lapis_lazuli",
+          "x": 14,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/light_blue_dye",
+          "x": 15,
+          "y": 8,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/chest_minecart",
+          "x": 7,
+          "y": 9,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/purple_dye",
+          "x": 14,
+          "y": 9,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/magenta_dye",
+          "x": 15,
+          "y": 9,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/furnace_minecart",
+          "x": 7,
+          "y": 10,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/cyan_dye",
+          "x": 14,
+          "y": 10,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/orange_dye",
+          "x": 15,
+          "y": 10,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/light_gray_dye",
+          "x": 14,
+          "y": 11,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/bone_meal",
+          "x": 15,
+          "y": 11,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/music_disc_13",
+          "x": 0,
+          "y": 15,
+          "width": 1,
+          "height": 1
+        },
+        {
+          "sprite": "item/music_disc_cat",
+          "x": 1,
+          "y": 15,
+          "width": 1,
+          "height": 1
+        }
+      ],
+      "divisor_x": 16,
+      "divisor_y": 16
+    },
+    {
+      "type": "directory",
+      "source": "block",
+      "prefix": "block/"
+    },
+    {
+      "type": "directory",
+      "source": "item",
+      "prefix": "item/"
+    }
+  ]
+}

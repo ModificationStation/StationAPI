@@ -20,6 +20,7 @@ import net.modificationstation.stationapi.api.client.render.model.VanillaBakedMo
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
+import net.modificationstation.stationapi.api.client.texture.SpriteContents;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.mixin.arsenic.client.class_556Accessor;
@@ -77,10 +78,11 @@ public final class ArsenicOverlayRenderer {
                 var3.start();
                 var3.setNormal(-1.0F, 0.0F, 0.0F);
 
-                int atlasWidth = (int) (texture.getWidth() / (texture.getMaxU() - texture.getMinU()));
-                int atlasHeight = (int) (texture.getHeight() / (texture.getMaxV() - texture.getMinV()));
-                int width = texture.getWidth();
-                int height = texture.getHeight();
+                final SpriteContents contents = texture.getContents();
+                int atlasWidth = (int) (contents.getWidth() / (texture.getMaxU() - texture.getMinU()));
+                int atlasHeight = (int) (contents.getHeight() / (texture.getMaxV() - texture.getMinV()));
+                int width = contents.getWidth();
+                int height = contents.getHeight();
                 float du = 1F / (atlasWidth * 2);
                 float dv = 1F / (atlasHeight * 2);
 

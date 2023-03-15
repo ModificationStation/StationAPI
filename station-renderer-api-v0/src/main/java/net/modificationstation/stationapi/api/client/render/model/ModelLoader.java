@@ -5,45 +5,47 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
+import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
+import net.modificationstation.stationapi.api.block.StationFlatteningBlock;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
 import net.modificationstation.stationapi.api.client.event.render.model.LoadUnbakedModelEvent;
-import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
 import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbakedModel;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelVariantMap;
 import net.modificationstation.stationapi.api.client.render.model.json.MultipartModelComponent;
 import net.modificationstation.stationapi.api.client.render.model.json.MultipartUnbakedModel;
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
-import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
+import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
-import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.resource.ResourceFinder;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.math.AffineTransformation;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -58,12 +60,13 @@ public class ModelLoader {
     public static final List<Identifier> BLOCK_DESTRUCTION_STAGES = IntStream.range(0, 10).mapToObj(stage -> Identifier.of("block/destroy_stage_" + stage)).collect(Collectors.toList());
     public static final List<Identifier> BLOCK_DESTRUCTION_STAGE_TEXTURES = BLOCK_DESTRUCTION_STAGES.stream().map(id -> Identifier.of(MODID + "/textures/" + id.id + ".png")).collect(Collectors.toList());
     private static final Set<SpriteIdentifier> DEFAULT_TEXTURES = Util.make(new HashSet<>(), hashSet -> {
-        for (Identifier identifier : BLOCK_DESTRUCTION_STAGES) {
+        for (Identifier identifier : BLOCK_DESTRUCTION_STAGES)
             hashSet.add(SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier));
-        }
     });
-    public static final ModelIdentifier MISSING;
+    public static final ModelIdentifier MISSING_ID;
     private static final String MISSING_STRING;
+    public static final ResourceFinder BLOCK_STATES_FINDER = ResourceFinder.json(MODID + "/blockstates");
+    public static final ResourceFinder MODELS_FINDER = ResourceFinder.json(MODID + "/models");
     @VisibleForTesting
     public static final String MISSING_DEFINITION;
     private static final Map<String, String> BUILTIN_MODEL_DEFINITIONS;
@@ -74,97 +77,134 @@ public class ModelLoader {
     public static final JsonUnbakedModel VANILLA_MARKER;
     private static final ItemModelGenerator ITEM_MODEL_GENERATOR;
     private static final Map<Identifier, StateManager<BlockBase, BlockState>> STATIC_DEFINITIONS;
-    private final ResourceManager resourceManager;
+//    private final ResourceManager resourceManager;
     @Nullable
     private SpriteAtlasManager spriteAtlasManager;
-    private final BlockColors blockColours;
+    private final BlockColors blockColors;
+    private final Map<Identifier, JsonUnbakedModel> jsonUnbakedModels;
+    private final Map<Identifier, List<SourceTrackedData>> blockStates;
     private final Set<Identifier> modelsToLoad = Sets.newIdentityHashSet();
     private final ModelVariantMap.DeserializationContext variantMapDeserializationContext = new ModelVariantMap.DeserializationContext();
     private final Map<Identifier, UnbakedModel> unbakedModels = new IdentityHashMap<>();
-    private final Map<Triple<Identifier, AffineTransformation, Boolean>, BakedModel> bakedModelCache = new HashMap<>();
+    private final Map<BakedModelCacheKey, BakedModel> bakedModelCache = new HashMap<>();
     private final Map<Identifier, UnbakedModel> modelsToBake = new IdentityHashMap<>();
     private final Map<Identifier, BakedModel> bakedModels = new IdentityHashMap<>();
-    private final Map<Identifier, Pair<SpriteAtlasTexture, SpriteAtlasTexture.Data>> spriteAtlasData;
+//    private final Map<Identifier, Pair<SpriteAtlasTexture, SpriteAtlasTexture.Data>> spriteAtlasData;
     private int nextStateId = 1;
     private final Object2IntMap<BlockState> stateLookup = Util.make(new Object2IntOpenHashMap<>(), (object2IntOpenHashMap) -> object2IntOpenHashMap.defaultReturnValue(-1));
 
-    public ModelLoader(ResourceManager resourceManager, BlockColors blockColours, Profiler profiler) {
-        this.resourceManager = resourceManager;
-        this.blockColours = blockColours;
+//    public ModelLoader(ResourceManager resourceManager, BlockColors blockColors, Profiler profiler) {
+//        this.resourceManager = resourceManager;
+//        this.blockColors = blockColors;
+//        profiler.push("missing_model");
+//
+//        try {
+//            this.unbakedModels.put(MISSING_ID.asIdentifier(), this.loadModelFromResource(MISSING_ID.asIdentifier()));
+//            this.addModel(MISSING_ID.asIdentifier());
+//        } catch (IOException var12) {
+//            LOGGER.error("Error loading missing model, should never happen :(", var12);
+//            throw new RuntimeException(var12);
+//        }
+//
+//        profiler.swap("static_definitions");
+//        STATIC_DEFINITIONS.forEach((identifierx, stateManager) -> stateManager.getStates().forEach((blockState) -> this.addModel(BlockModels.getModelId(identifierx, blockState).asIdentifier())));
+//        profiler.swap("blocks");
+//
+//        for (BlockBase block : BlockRegistry.INSTANCE)
+//            ((BlockStateHolder) block).getStateManager().getStates().forEach((blockState) -> this.addModel(BlockModels.getModelId(blockState).asIdentifier()));
+//
+//        profiler.swap("items");
+//
+//        for (Identifier identifier : ItemRegistry.INSTANCE.getIds())
+//            this.addModel(ModelIdentifier.of(identifier, "inventory").asIdentifier());
+//
+//        profiler.swap("textures");
+//        Set<Pair<String, String>> set = new LinkedHashSet<>();
+//        Set<SpriteIdentifier> set2 = this.modelsToBake.values().stream().flatMap((unbakedModel) -> unbakedModel.getTextureDependencies(this::getOrLoadModel, set).stream()).collect(Collectors.toSet());
+//        StationAPI.EVENT_BUS.post(TextureRegisterEvent.builder().build());
+//        set2.addAll(Atlases.getTerrain().idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
+//        set2.addAll(Atlases.getGuiItems().idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
+//        set.stream().filter((pair) -> !pair.getSecond().equals(MISSING_STRING)).forEach((pair) -> LOGGER.warn("Unable to resolve texture reference: {} in {}", pair.getFirst(), pair.getSecond()));
+//        Map<Identifier, List<SpriteIdentifier>> map = set2.stream().collect(Collectors.groupingBy(spriteIdentifier -> spriteIdentifier.atlas));
+//        profiler.swap("stitching");
+//        this.spriteAtlasData = new IdentityHashMap<>();
+//
+//        for (Entry<Identifier, List<SpriteIdentifier>> identifierListEntry : map.entrySet()) {
+//            SpriteAtlasTexture spriteAtlasTexture = new SpriteAtlasTexture(identifierListEntry.getKey());
+//            SpriteAtlasTexture.Data data = spriteAtlasTexture.stitch(resourceManager, identifierListEntry.getValue().stream().map(spriteIdentifier -> spriteIdentifier.texture), profiler);
+//            this.spriteAtlasData.put(identifierListEntry.getKey(), Pair.of(spriteAtlasTexture, data));
+//        }
+//
+//        profiler.pop();
+//    }
+
+    public ModelLoader(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<SourceTrackedData>> blockStates) {
+        this.blockColors = blockColors;
+        this.jsonUnbakedModels = jsonUnbakedModels;
+        this.blockStates = blockStates;
         profiler.push("missing_model");
-
         try {
-            this.unbakedModels.put(MISSING.asIdentifier(), this.loadModelFromResource(MISSING.asIdentifier()));
-            this.addModel(MISSING.asIdentifier());
-        } catch (IOException var12) {
-            LOGGER.error("Error loading missing model, should never happen :(", var12);
-            throw new RuntimeException(var12);
+            this.unbakedModels.put(MISSING_ID.asIdentifier(), this.loadModelFromJson(MISSING_ID.asIdentifier()));
+            this.addModel(MISSING_ID.asIdentifier());
+        } catch (IOException iOException) {
+            LOGGER.error("Error loading missing model, should never happen :(", iOException);
+            throw new RuntimeException(iOException);
         }
-
         profiler.swap("static_definitions");
-        STATIC_DEFINITIONS.forEach((identifierx, stateManager) -> stateManager.getStates().forEach((blockState) -> this.addModel(BlockModels.getModelId(identifierx, blockState).asIdentifier())));
+        STATIC_DEFINITIONS.forEach((id, stateManager) -> stateManager.getStates().forEach(state -> this.addModel(BlockModels.getModelId(id, state).asIdentifier())));
         profiler.swap("blocks");
-
         for (BlockBase block : BlockRegistry.INSTANCE)
-            ((BlockStateHolder) block).getStateManager().getStates().forEach((blockState) -> this.addModel(BlockModels.getModelId(blockState).asIdentifier()));
-
+            ((StationFlatteningBlock) block).getStateManager().getStates().forEach(state -> this.addModel(BlockModels.getModelId(state).asIdentifier()));
         profiler.swap("items");
-
         for (Identifier identifier : ItemRegistry.INSTANCE.getIds())
             this.addModel(ModelIdentifier.of(identifier, "inventory").asIdentifier());
-
-        profiler.swap("textures");
-        Set<Pair<String, String>> set = new LinkedHashSet<>();
-        Set<SpriteIdentifier> set2 = this.modelsToBake.values().stream().flatMap((unbakedModel) -> unbakedModel.getTextureDependencies(this::getOrLoadModel, set).stream()).collect(Collectors.toSet());
-        StationAPI.EVENT_BUS.post(TextureRegisterEvent.builder().build());
-        set2.addAll(Atlases.getTerrain().idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
-        set2.addAll(Atlases.getGuiItems().idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
-        set.stream().filter((pair) -> !pair.getSecond().equals(MISSING_STRING)).forEach((pair) -> LOGGER.warn("Unable to resolve texture reference: {} in {}", pair.getFirst(), pair.getSecond()));
-        Map<Identifier, List<SpriteIdentifier>> map = set2.stream().collect(Collectors.groupingBy(spriteIdentifier -> spriteIdentifier.atlas));
-        profiler.swap("stitching");
-        this.spriteAtlasData = new IdentityHashMap<>();
-
-        for (Entry<Identifier, List<SpriteIdentifier>> identifierListEntry : map.entrySet()) {
-            SpriteAtlasTexture spriteAtlasTexture = new SpriteAtlasTexture(identifierListEntry.getKey());
-            SpriteAtlasTexture.Data data = spriteAtlasTexture.stitch(resourceManager, identifierListEntry.getValue().stream().map(spriteIdentifier -> spriteIdentifier.texture), profiler);
-            this.spriteAtlasData.put(identifierListEntry.getKey(), Pair.of(spriteAtlasTexture, data));
-        }
-
+        profiler.swap("special");
+        this.modelsToBake.values().forEach(model -> model.setParents(this::getOrLoadModel));
         profiler.pop();
     }
 
-    public SpriteAtlasManager upload(TextureManager textureManager, Profiler profiler) {
-        profiler.push("atlas");
-
-        for (Pair<SpriteAtlasTexture, SpriteAtlasTexture.Data> spriteAtlasTextureDataPair : this.spriteAtlasData.values()) {
-            SpriteAtlasTexture spriteAtlasTexture = spriteAtlasTextureDataPair.getFirst();
-            SpriteAtlasTexture.Data data = spriteAtlasTextureDataPair.getSecond();
-            spriteAtlasTexture.upload(data);
-            StationTextureManager tm = StationTextureManager.get(textureManager);
-            tm.registerTexture(spriteAtlasTexture.getId(), spriteAtlasTexture);
-            tm.bindTexture(spriteAtlasTexture.getId());
-            spriteAtlasTexture.applyTextureFilter(data);
-        }
-
-        this.spriteAtlasManager = new SpriteAtlasManager(this.spriteAtlasData.values().stream().map(Pair::getFirst).collect(Collectors.toList()));
-        profiler.swap("baking");
-        this.modelsToBake.keySet().forEach((identifier) -> {
+    public void bake(BiFunction<Identifier, SpriteIdentifier, Sprite> spriteLoader) {
+        this.modelsToBake.keySet().forEach(modelId -> {
             BakedModel bakedModel = null;
-
             try {
-                bakedModel = this.bake(identifier, ModelBakeRotation.Y0_Z0);
-            } catch (Exception var4) {
-                LOGGER.warn("Unable to bake model: '{}': {}", identifier, var4);
+                bakedModel = new BakerImpl(spriteLoader, modelId).bake(modelId, ModelBakeRotation.Y0_Z0);
+            } catch (Exception exception) {
+                LOGGER.warn("Unable to bake model: '{}': {}", modelId, exception);
             }
-
-            if (bakedModel != null) {
-                this.bakedModels.put(identifier, bakedModel);
-            }
-
+            if (bakedModel != null) this.bakedModels.put(modelId, bakedModel);
         });
-        profiler.pop();
-        return this.spriteAtlasManager;
     }
+
+//    public SpriteAtlasManager upload(TextureManager textureManager, Profiler profiler) {
+//        profiler.push("atlas");
+//
+//        for (Pair<SpriteAtlasTexture, SpriteAtlasTexture.Data> spriteAtlasTextureDataPair : this.spriteAtlasData.values()) {
+//            SpriteAtlasTexture spriteAtlasTexture = spriteAtlasTextureDataPair.getFirst();
+//            SpriteAtlasTexture.Data data = spriteAtlasTextureDataPair.getSecond();
+//            spriteAtlasTexture.upload(data);
+//            StationTextureManager tm = StationTextureManager.get(textureManager);
+//            tm.registerTexture(spriteAtlasTexture.getId(), spriteAtlasTexture);
+//            tm.bindTexture(spriteAtlasTexture.getId());
+//            spriteAtlasTexture.applyTextureFilter(data);
+//        }
+//
+//        this.spriteAtlasManager = new SpriteAtlasManager(this.spriteAtlasData.values().stream().map(Pair::getFirst).collect(Collectors.toList()));
+//        profiler.swap("baking");
+//        this.modelsToBake.keySet().forEach((identifier) -> {
+//            BakedModel bakedModel = null;
+//
+//            try {
+//                bakedModel = this.bake(identifier, ModelBakeRotation.Y0_Z0);
+//            } catch (Exception var4) {
+//                LOGGER.warn("Unable to bake model: '{}': {}", identifier, var4);
+//            }
+//
+//            if (bakedModel != null) this.bakedModels.put(identifier, bakedModel);
+//
+//        });
+//        profiler.pop();
+//        return this.spriteAtlasManager;
+//    }
 
     private static Predicate<BlockState> stateKeyToPredicate(StateManager<BlockBase, BlockState> stateFactory, String key) {
         Map<Property<?>, Comparable<?>> map = new HashMap<>();
@@ -181,9 +221,7 @@ public class ModelLoader {
 
                             Entry<Property<?>, Comparable<?>> entry;
                             do {
-                                if (!var4.hasNext()) {
-                                    return true;
-                                }
+                                if (!var4.hasNext()) return true;
 
                                 entry = var4.next();
                             } while (Objects.equals(blockState.get(entry.getKey()), entry.getValue()));
@@ -202,14 +240,11 @@ public class ModelLoader {
             if (property != null && iterator.hasNext()) {
                 String string3 = iterator.next();
                 Comparable<?> comparable = getPropertyValue(property, string3);
-                if (comparable == null) {
+                if (comparable == null)
                     throw new RuntimeException("Unknown value: '" + string3 + "' for blockstate property: '" + string2 + "' " + property.getValues());
-                }
 
                 map.put(property, comparable);
-            } else if (!string2.isEmpty()) {
-                throw new RuntimeException("Unknown blockstate property: '" + string2 + "'");
-            }
+            } else if (!string2.isEmpty()) throw new RuntimeException("Unknown blockstate property: '" + string2 + "'");
         }
     }
 
@@ -219,26 +254,21 @@ public class ModelLoader {
     }
 
     public UnbakedModel getOrLoadModel(Identifier id) {
-        if (this.unbakedModels.containsKey(id)) {
-            return this.unbakedModels.get(id);
-        } else if (this.modelsToLoad.contains(id)) {
+        if (this.unbakedModels.containsKey(id)) return this.unbakedModels.get(id);
+        else if (this.modelsToLoad.contains(id))
             throw new IllegalStateException("Circular reference while loading " + id);
-        } else {
+        else {
             this.modelsToLoad.add(id);
-            UnbakedModel unbakedModel = this.unbakedModels.get(MISSING.asIdentifier());
+            UnbakedModel unbakedModel = this.unbakedModels.get(MISSING_ID.asIdentifier());
 
             while(!this.modelsToLoad.isEmpty()) {
                 Identifier identifier = this.modelsToLoad.iterator().next();
                 Identifier processedId = identifier;
                 int atId = processedId.id.indexOf('@');
-                if (atId > -1) {
-                    processedId = Identifier.of(processedId.modID, processedId.id.substring(atId + 1));
-                }
+                if (atId > -1) processedId = Identifier.of(processedId.modID, processedId.id.substring(atId + 1));
 
                 try {
-                    if (!this.unbakedModels.containsKey(processedId)) {
-                        this.loadModel(identifier);
-                    }
+                    if (!this.unbakedModels.containsKey(processedId)) this.loadModel(identifier);
                 } catch (ModelLoader.ModelLoaderException var9) {
                     LOGGER.warn(var9.getMessage());
                     this.unbakedModels.put(processedId, unbakedModel);
@@ -269,50 +299,24 @@ public class ModelLoader {
             this.putModel(modelIdentifier.asIdentifier(), unbakedModel);
             this.unbakedModels.put(identifier, unbakedModel);
         } else {
-            Identifier identifier = Identifier.of(modelIdentifier.id.modID, modelIdentifier.id.id);
-            StateManager<BlockBase, BlockState> stateManager = /*Optional.ofNullable(STATIC_DEFINITIONS.get(identifier)).orElseGet(() -> */((BlockStateHolder) Objects.requireNonNull(BlockRegistry.INSTANCE.get(identifier))).getStateManager()/*)*/;
-            this.variantMapDeserializationContext.setStateFactory(stateManager);
-            ImmutableList<Property<?>> list = ImmutableList.copyOf(this.blockColours.getProperties(stateManager.getOwner()));
+            StateManager<BlockBase, BlockState> stateManager = /*Optional.ofNullable(STATIC_DEFINITIONS.get(identifier)).orElseGet(() -> */((BlockStateHolder) Objects.requireNonNull(BlockRegistry.INSTANCE.get(modelIdentifier.id))).getStateManager()/*)*/;
+            variantMapDeserializationContext.setStateFactory(stateManager);
+            ImmutableList<Property<?>> list = ImmutableList.copyOf(this.blockColors.getProperties(stateManager.getOwner()));
             ImmutableList<BlockState> immutableList = stateManager.getStates();
             Map<ModelIdentifier, BlockState> map = new IdentityHashMap<>();
-            immutableList.forEach(state -> map.put(BlockModels.getModelId(identifier, state), state));
+            immutableList.forEach(state -> map.put(BlockModels.getModelId(modelIdentifier.id, state), state));
             Map<BlockState, Pair<UnbakedModel, Supplier<ModelDefinition>>> map2 = new HashMap<>();
-            Identifier identifier2 = Identifier.of(modelIdentifier.id.modID, "blockstates/" + modelIdentifier.id.id + ".json");
-//            UnbakedModel unbakedModel = this.unbakedModels.get(MISSING.asIdentifier());
+            Identifier identifier2 = BLOCK_STATES_FINDER.toResourcePath(modelIdentifier.id);
             UnbakedModel unbakedModel = VANILLA_MARKER;
             ModelDefinition modelDefinition2 = new ModelDefinition(ImmutableList.of(unbakedModel), ImmutableList.of());
             Pair<UnbakedModel, Supplier<ModelDefinition>> pair = Pair.of(unbakedModel, () -> modelDefinition2);
             try {
-                List<Pair<String, ModelVariantMap>> list2 = this.resourceManager.getAllResources(identifier2.prepend(MODID + "/")).stream().map(resource -> {
-                    Pair<String, ModelVariantMap> pair1;
-                    BufferedReader reader;
+                List<Pair<String, ModelVariantMap>> list2 = this.blockStates.getOrDefault(identifier2, List.of()).stream().map((blockState) -> {
                     try {
-                        reader = resource.getReader();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                        return Pair.of(blockState.source, ModelVariantMap.fromJson(variantMapDeserializationContext, blockState.data));
+                    } catch (Exception var4) {
+                        throw new ModelLoaderException(String.format(Locale.ROOT, "Exception loading blockstate definition: '%s' in texturepack: '%s': %s", identifier2, blockState.source, var4.getMessage()));
                     }
-                    try {
-                        pair1 = Pair.of("Default", ModelVariantMap.deserialize(this.variantMapDeserializationContext, reader));
-                    } catch (Throwable throwable) {
-                        try {
-                            if (reader != null) {
-                                try {
-                                    reader.close();
-                                } catch (Throwable throwable2) {
-                                    throwable.addSuppressed(throwable2);
-                                }
-                            }
-                            throw throwable;
-                        } catch (Exception exception) {
-                            throw new ModelLoaderException(String.format("Exception loading blockstate definition: '%s' in texturepack: '%s': %s", identifier2, "Default", exception.getMessage()));
-                        }
-                    }
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return pair1;
                 }).toList();
                 for (Pair<String, ModelVariantMap> pair2 : list2) {
                     MultipartUnbakedModel multipartUnbakedModel;
@@ -321,9 +325,7 @@ public class ModelLoader {
                     if (modelVariantMap.hasMultipartModel()) {
                         multipartUnbakedModel = modelVariantMap.getMultipartModel();
                         immutableList.forEach(blockState -> map4.put(blockState, Pair.of(multipartUnbakedModel, () -> ModelDefinition.create(blockState, multipartUnbakedModel, list))));
-                    } else {
-                        multipartUnbakedModel = null;
-                    }
+                    } else multipartUnbakedModel = null;
                     modelVariantMap.getVariantMap().forEach((string, weightedUnbakedModel) -> {
                         try {
                             immutableList.stream().filter(ModelLoader.stateKeyToPredicate(stateManager, string)).forEach(blockState -> {
@@ -344,14 +346,12 @@ public class ModelLoader {
             } catch (Exception exception) {
                 throw new ModelLoaderException(String.format("Exception loading blockstate definition: '%s': %s", identifier2, exception));
             } finally {
-                HashMap<ModelDefinition, Set<BlockState>> map6 = new HashMap<>();
+                Map<ModelDefinition, Set<BlockState>> map6 = new HashMap<>();
                 map.forEach((id1, blockState) -> {
                     Pair<UnbakedModel, Supplier<ModelDefinition>> pair2 = map2.get(blockState);
-                    if (pair2 == null) {
-                        // Vanilla blocks don't have JSON models, and we don't want to enforce them
-//                        LOGGER.warn("Exception loading blockstate definition: '{}' missing model for variant: '{}'", identifier2, id1);
-                        pair2 = pair;
-                    }
+                    // Vanilla blocks don't have JSON models, and we don't want to enforce them
+                    // LOGGER.warn("Exception loading blockstate definition: '{}' missing model for variant: '{}'", identifier2, id1);
+                    if (pair2 == null) pair2 = pair;
                     this.putModel(id1.asIdentifier(), pair2.getFirst());
                     try {
                         ModelDefinition modelDefinition3 = pair2.getSecond().get();
@@ -368,9 +368,7 @@ public class ModelLoader {
 //                        iterator.remove();
 //                        this.stateLookup.put(blockState, 0);
 //                    }
-                    if (set.size() > 1) {
-                        this.addStates(set);
-                    }
+                    if (set.size() > 1) this.addStates(set);
                 });
             }
         }
@@ -392,27 +390,6 @@ public class ModelLoader {
         states.forEach((blockState) -> this.stateLookup.put(blockState, i));
     }
 
-    @Nullable
-    public BakedModel bake(Identifier identifier, ModelBakeSettings settings) {
-        Triple<Identifier, AffineTransformation, Boolean> triple = Triple.of(identifier, settings.getRotation(), settings.uvlock());
-        if (this.bakedModelCache.containsKey(triple)) {
-            return this.bakedModelCache.get(triple);
-        } else if (this.spriteAtlasManager == null) {
-            throw new IllegalStateException("bake called too early");
-        } else {
-            UnbakedModel unbakedModel = this.getOrLoadModel(identifier);
-            if (unbakedModel instanceof JsonUnbakedModel jsonUnbakedModel) {
-                if (jsonUnbakedModel.getRootModel() == GENERATION_MARKER) {
-                    return ITEM_MODEL_GENERATOR.create(this.spriteAtlasManager::getSprite, jsonUnbakedModel).bake(this, jsonUnbakedModel, this.spriteAtlasManager::getSprite, settings, identifier, false);
-                }
-            }
-
-            BakedModel bakedModel = unbakedModel.bake(this, this.spriteAtlasManager::getSprite, settings, identifier);
-            this.bakedModelCache.put(triple, bakedModel);
-            return bakedModel;
-        }
-    }
-
     private UnbakedModel loadModelFromResource(Identifier id) throws IOException {
         return StationAPI.EVENT_BUS.post(
                 LoadUnbakedModelEvent.builder()
@@ -423,38 +400,29 @@ public class ModelLoader {
     }
 
     private JsonUnbakedModel loadModelFromJson(Identifier id) throws IOException {
-        Reader reader;
-
-        JsonUnbakedModel jsonUnbakedModel;
         ModelIdentifier modelIdentifier = ModelIdentifier.of(id.toString());
-        String string = modelIdentifier.id.id;
-        if (!"builtin/generated".equals(string)) {
-            if ("builtin/entity".equals(string)) {
-                jsonUnbakedModel = BLOCK_ENTITY_MARKER;
-                return jsonUnbakedModel;
-            }
-
-            if (string.startsWith("builtin/")) {
-                String string2 = string.substring("builtin/".length());
-                String string3 = BUILTIN_MODEL_DEFINITIONS.get(string2);
-                if (string3 == null) {
-                    throw new FileNotFoundException(id.toString());
+        String path = modelIdentifier.id.id;
+        return switch (path) {
+            case "builtin/generated" -> GENERATION_MARKER;
+            case "builtin/entity" -> BLOCK_ENTITY_MARKER;
+            default -> {
+                if (path.startsWith("builtin/")) {
+                    String string2 = path.substring("builtin/".length());
+                    String string3 = BUILTIN_MODEL_DEFINITIONS.get(string2);
+                    if (string3 == null) throw new FileNotFoundException(id.toString());
+                    Reader reader = new StringReader(string3);
+                    JsonUnbakedModel jsonUnbakedModel = JsonUnbakedModel.deserialize(reader);
+                    jsonUnbakedModel.id = id.toString();
+                    yield jsonUnbakedModel;
+                } else {
+                    Identifier identifier = MODELS_FINDER.toResourcePath(modelIdentifier.id);
+                    JsonUnbakedModel jsonUnbakedModel2 = this.jsonUnbakedModels.get(identifier);
+                    if (jsonUnbakedModel2 == null) throw new FileNotFoundException(identifier.toString());
+                    jsonUnbakedModel2.id = id.toString();
+                    yield jsonUnbakedModel2;
                 }
-
-                reader = new StringReader(string3);
-            } else {
-                reader = this.resourceManager.openAsReader(modelIdentifier.id.prepend(MODID + "/models/").append(".json"));
             }
-
-            jsonUnbakedModel = JsonUnbakedModel.deserialize(reader);
-            jsonUnbakedModel.id = id.toString();
-            IOUtils.closeQuietly(reader);
-            return jsonUnbakedModel;
-        }
-
-        jsonUnbakedModel = GENERATION_MARKER;
-
-        return jsonUnbakedModel;
+        };
     }
 
     public Map<Identifier, BakedModel> getBakedModelMap() {
@@ -466,8 +434,8 @@ public class ModelLoader {
     }
 
     static {
-        MISSING = ModelIdentifier.of("builtin/missing", "missing");
-        MISSING_STRING = MISSING.toString();
+        MISSING_ID = ModelIdentifier.of("builtin/missing", "missing");
+        MISSING_STRING = MISSING_ID.toString();
         MISSING_DEFINITION = ("{    'textures': {       'particle': '" + MissingSprite.getMissingSpriteId().id + "',       'missingno': '" + MissingSprite.getMissingSpriteId().id + "'    },    'elements': [         {  'from': [ 0, 0, 0 ],            'to': [ 16, 16, 16 ],            'faces': {                'down':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'down',  'texture': '#missingno' },                'up':    { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'up',    'texture': '#missingno' },                'north': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'north', 'texture': '#missingno' },                'south': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'south', 'texture': '#missingno' },                'west':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'west',  'texture': '#missingno' },                'east':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'east',  'texture': '#missingno' }            }        }    ]}").replace('\'', '"');
         BUILTIN_MODEL_DEFINITIONS = new HashMap<>(ImmutableMap.of("missing", MISSING_DEFINITION));
         COMMA_SPLITTER = Splitter.on(',');
@@ -490,13 +458,10 @@ public class ModelLoader {
         }
 
         public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            } else if (!(o instanceof ModelDefinition modelDefinition)) {
-                return false;
-            } else {
+            if (this == o) return true;
+            else if (!(o instanceof ModelDefinition modelDefinition)) return false;
+            else
                 return Objects.equals(this.components, modelDefinition.components) && Objects.equals(this.values, modelDefinition.values);
-            }
         }
 
         public int hashCode() {
@@ -519,6 +484,36 @@ public class ModelLoader {
             return properties.stream().map(state::get).collect(ImmutableList.toImmutableList());
         }
     }
+
+    public record SourceTrackedData(String source, JsonElement data) {}
+
+    class BakerImpl implements Baker {
+        private final Function<SpriteIdentifier, Sprite> textureGetter;
+
+        BakerImpl(BiFunction<Identifier, SpriteIdentifier, Sprite> spriteLoader, Identifier modelId) {
+            textureGetter = spriteId -> spriteLoader.apply(modelId, spriteId);
+        }
+
+        @Override
+        public UnbakedModel getOrLoadModel(Identifier id) {
+            return ModelLoader.this.getOrLoadModel(id);
+        }
+
+        @Override
+        public BakedModel bake(Identifier id, ModelBakeSettings settings) {
+            BakedModelCacheKey bakedModelCacheKey = new BakedModelCacheKey(id, settings.getRotation(), settings.isUvLocked());
+            BakedModel bakedModel = ModelLoader.this.bakedModelCache.get(bakedModelCacheKey);
+            if (bakedModel != null) return bakedModel;
+            UnbakedModel unbakedModel = this.getOrLoadModel(id);
+            if (unbakedModel instanceof JsonUnbakedModel jsonUnbakedModel && jsonUnbakedModel.getRootModel() == GENERATION_MARKER)
+                return ITEM_MODEL_GENERATOR.create(this.textureGetter, jsonUnbakedModel).bake(this, jsonUnbakedModel, this.textureGetter, settings, id, false);
+            BakedModel bakedModel2 = unbakedModel.bake(this, this.textureGetter, settings, id);
+            ModelLoader.this.bakedModelCache.put(bakedModelCacheKey, bakedModel2);
+            return bakedModel2;
+        }
+    }
+
+    record BakedModelCacheKey(Identifier id, AffineTransformation transformation, boolean isUvLocked) {}
 
     @Environment(EnvType.CLIENT)
     static class ModelLoaderException extends RuntimeException {

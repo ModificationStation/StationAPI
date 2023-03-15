@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -116,19 +115,22 @@ public final class ReloadableAssetsManager implements ResourceManager {
         return topResources;
     }
 
-    private static void findResources(ResourceType type, Path root, String prefix, BiConsumer<Identifier, InputSupplier<InputStream>> consumer) {
+    private static void findResources(ResourceType type, Path root, String prefix, ResourcePack.ResultConsumer consumer) {
         Path resType = root.resolve(type.getDirectory());
-        try (Stream<Path> namespaces = Files.find(resType, 0, (path, basicFileAttributes) -> basicFileAttributes.isDirectory())) {
-            namespaces.forEach(namespace -> {
-                try (Stream<Path> resources = Files.find(namespace.resolve(prefix), Integer.MAX_VALUE, (path, basicFileAttributes) -> basicFileAttributes.isRegularFile())) {
-                    resources.forEach(resource -> consumer.accept(ModID.of(SEPARATOR_JOINER.join(resType.relativize(namespace))).id(SEPARATOR_JOINER.join(namespace.relativize(resource))), InputSupplier.create(resource)));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        if (Files.exists(resType))
+            try (Stream<Path> namespaces = Files.find(resType, 1, (path, basicFileAttributes) -> basicFileAttributes.isDirectory() && !resType.equals(path))) {
+                namespaces.forEach(namespace -> {
+                    Path searchPath = namespace.resolve(prefix);
+                    if (Files.exists(searchPath))
+                        try (Stream<Path> resources = Files.find(searchPath, Integer.MAX_VALUE, (path, basicFileAttributes) -> basicFileAttributes.isRegularFile())) {
+                            resources.forEach(resource -> consumer.accept(ModID.of(SEPARATOR_JOINER.join(resType.relativize(namespace))).id(SEPARATOR_JOINER.join(namespace.relativize(resource))), InputSupplier.create(resource)));
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                });
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
     }
 
     private static boolean isMcmeta(Identifier id) {

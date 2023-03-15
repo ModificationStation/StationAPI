@@ -32,7 +32,7 @@ public class ArsenicClock extends StationTextureBinder {
                 textureHeight = staticReference.getHeight(),
                 square = textureWidth * textureHeight;
         dialTexture = new int[square];
-        clockTexture = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(staticReference.getId()).getBaseFrame().makePixelArray();
+        clockTexture = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(staticReference.getId()).getContents().getBaseFrame().makePixelArray();
         BufferedImage var2 = TextureHelper.getTexture("/misc/dial.png");
         var2.getRGB(0, 0, textureWidth, textureHeight, this.dialTexture, 0, textureWidth);
         grid = new byte[square * 4];
@@ -79,36 +79,36 @@ public class ArsenicClock extends StationTextureBinder {
         double var7 = Math.cos(this.currentRotation);
 
         for(int var9 = 0; var9 < square; ++var9) {
-            int var10 = this.clockTexture[var9] >> 24 & 255;
-            int var11 = this.clockTexture[var9] >> 16 & 255;
-            int var12 = this.clockTexture[var9] >> 8 & 255;
-            int var13 = this.clockTexture[var9] & 255;
-            if (var11 == var13 && var12 == 0 && var13 > 0) {
+            int r = this.clockTexture[var9] & 255;
+            int g = this.clockTexture[var9] >> 8 & 255;
+            int b = this.clockTexture[var9] >> 16 & 255;
+            int a = this.clockTexture[var9] >> 24 & 255;
+            if (r == b && g == 0 && b > 0) {
                 double var14 = -((double)(var9 % textureWidth) / (textureWidth - 1) - 0.5D);
                 double var16 = (double)(var9 / textureHeight) / (textureHeight - 1) - 0.5D;
-                int var18 = var11;
+                int var18 = r;
                 int var19 = (int)((var14 * var7 + var16 * var5 + 0.5D) * textureWidth);
                 int var20 = (int)((var16 * var7 - var14 * var5 + 0.5D) * textureHeight);
                 int var21 = (var19 & (textureWidth - 1)) + (var20 & (textureHeight - 1)) * textureWidth;
-                var10 = this.dialTexture[var21] >> 24 & 255;
-                var11 = (this.dialTexture[var21] >> 16 & 255) * var11 / 255;
-                var12 = (this.dialTexture[var21] >> 8 & 255) * var18 / 255;
-                var13 = (this.dialTexture[var21] & 255) * var18 / 255;
+                r = (this.dialTexture[var21] >> 16 & 255) * r / 255;
+                g = (this.dialTexture[var21] >> 8 & 255) * var18 / 255;
+                b = (this.dialTexture[var21] & 255) * var18 / 255;
+                a = this.dialTexture[var21] >> 24 & 255;
             }
 
             if (this.render3d) {
-                int var23 = (var11 * 30 + var12 * 59 + var13 * 11) / 100;
-                int var15 = (var11 * 30 + var12 * 70) / 100;
-                int var24 = (var11 * 30 + var13 * 70) / 100;
-                var11 = var23;
-                var12 = var15;
-                var13 = var24;
+                int var23 = (r * 30 + g * 59 + b * 11) / 100;
+                int var15 = (r * 30 + g * 70) / 100;
+                int var24 = (r * 30 + b * 70) / 100;
+                r = var23;
+                g = var15;
+                b = var24;
             }
 
-            this.grid[var9 * 4] = (byte)var11;
-            this.grid[var9 * 4 + 1] = (byte)var12;
-            this.grid[var9 * 4 + 2] = (byte)var13;
-            this.grid[var9 * 4 + 3] = (byte)var10;
+            this.grid[var9 * 4] = (byte)r;
+            this.grid[var9 * 4 + 1] = (byte)g;
+            this.grid[var9 * 4 + 2] = (byte)b;
+            this.grid[var9 * 4 + 3] = (byte)a;
         }
     }
 }

@@ -25,10 +25,16 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.channels.WritableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Base64;
 import java.util.EnumSet;
+import java.util.Locale;
 import java.util.Set;
+import java.util.function.IntUnaryOperator;
 
 @Environment(EnvType.CLIENT)
 public final class NativeImage
@@ -51,7 +57,7 @@ implements AutoCloseable {
     private final long sizeBytes;
 
     public NativeImage(int width, int height, boolean useStb) {
-        this(Format.ABGR, width, height, useStb);
+        this(Format.RGBA, width, height, useStb);
     }
 
     public NativeImage(Format format, int width, int height, boolean useStb) {
@@ -60,7 +66,8 @@ implements AutoCloseable {
         this.height = height;
         this.sizeBytes = (long) width * (long) height * (long) format.getChannelCount();
         this.isStbImage = false;
-        buffer = ByteBuffer.allocateDirect((int) sizeBytes);
+        buffer = class_214.method_744((int) sizeBytes);
+
     }
 
     private NativeImage(Format format, int width, int height, boolean useStb, ByteBuffer buffer) {
@@ -78,7 +85,7 @@ implements AutoCloseable {
     }
 
     public static NativeImage read(InputStream inputStream) throws IOException {
-        return NativeImage.read(Format.ABGR, inputStream);
+        return NativeImage.read(Format.RGBA, inputStream);
     }
 
     public static NativeImage read(@Nullable Format format, InputStream inputStream) throws IOException {
@@ -93,7 +100,7 @@ implements AutoCloseable {
     }
 
     public static NativeImage read(ByteBuffer byteBuffer) throws IOException {
-        return NativeImage.read(Format.ABGR, byteBuffer);
+        return NativeImage.read(Format.RGBA, byteBuffer);
     }
 
     public static NativeImage read(@Nullable Format format, ByteBuffer byteBuffer) throws IOException {
@@ -159,9 +166,7 @@ implements AutoCloseable {
     }
 
     private void checkAllocated() {
-        if (buffer == null) {
-            throw new IllegalStateException("Image is not allocated.");
-        }
+        if (buffer == null) throw new IllegalStateException("Image is not allocated.");
     }
 
     @Override
@@ -184,57 +189,54 @@ implements AutoCloseable {
     }
 
     public int getColor(int x, int y) {
-        if (this.format != NativeImage.Format.ABGR) {
+        if (this.format != Format.RGBA)
             throw new IllegalArgumentException(String.format("getPixelRGBA only works on RGBA images; have %s", this.format));
-        } else if (x <= this.width && y <= this.height) {
+        else if (x <= this.width && y <= this.height) {
             this.checkAllocated();
             int l = (x + y * this.width) * 4;
             return buffer.getInt(l);
-        } else {
+        } else
             throw new IllegalArgumentException(String.format("(%s, %s) outside of image bounds (%s, %s)", x, y, this.width, this.height));
-        }
     }
 
     public void setColor(int x, int y, int color) {
-        if (this.format != NativeImage.Format.ABGR) {
+        if (this.format != Format.RGBA)
             throw new IllegalArgumentException(String.format("getPixelRGBA only works on RGBA images; have %s", this.format));
-        } else if (x <= this.width && y <= this.height) {
+        else if (x <= this.width && y <= this.height) {
             this.checkAllocated();
             int l = (x + y * this.width) * 4;
-            // I really don't know why but putting an integer into buffer requires inverting the byte order, otherwise it dies
-            buffer.putInt(l, getAbgrColor(getRed(color), getGreen(color), getBlue(color), getAlpha(color)));
-        } else {
+            buffer.putInt(l, color);
+        } else
             throw new IllegalArgumentException(String.format("(%s, %s) outside of image bounds (%s, %s)", x, y, this.width, this.height));
-        }
+    }
+
+    public NativeImage apply(IntUnaryOperator operator) {
+        if (this.format != Format.RGBA)
+            throw new IllegalArgumentException(String.format(Locale.ROOT, "function application only works on RGBA images; have %s", this.format));
+        this.checkAllocated();
+        NativeImage nativeImage = new NativeImage(this.width, this.height, false);
+        for (int j = 0; j < width * height; ++j) nativeImage.buffer.putInt(j, operator.applyAsInt(buffer.getInt(j)));
+        return nativeImage;
     }
 
     public byte getPixelOpacity(int x, int y) {
-        if (!this.format.hasOpacityChannel()) {
+        if (!this.format.hasOpacityChannel())
             throw new IllegalArgumentException(String.format("no luminance or alpha in %s", this.format));
-        } else if (x <= this.width && y <= this.height) {
+        else if (x <= this.width && y <= this.height) {
             int i = (x + y * this.width) * this.format.getChannelCount() + this.format.getOpacityOffset() / 8;
             return buffer.get(i);
-        } else {
+        } else
             throw new IllegalArgumentException(String.format("(%s, %s) outside of image bounds (%s, %s)", x, y, this.width, this.height));
-        }
     }
 
     public int[] makePixelArray() {
-        if (this.format != Format.ABGR) {
+        if (this.format != Format.RGBA)
             throw new UnsupportedOperationException("can only call makePixelArray for RGBA images.");
-        }
         this.checkAllocated();
         int[] is = new int[this.getWidth() * this.getHeight()];
-        for (int i = 0; i < this.getHeight(); ++i) {
-            for (int j = 0; j < this.getWidth(); ++j) {
-                int k = this.getColor(j, i);
-                int l = NativeImage.getAlpha(k);
-                int m = NativeImage.getBlue(k);
-                int n = NativeImage.getGreen(k);
-                int o = NativeImage.getRed(k);
-                is[j + i * this.getWidth()] = l << 24 | o << 16 | n << 8 | m;
-            }
-        }
+        for (int i = 0; i < this.getHeight(); ++i)
+            for (int j = 0; j < this.getWidth(); ++j)
+                is[j + i * this.getWidth()] = this.getColor(j, i);
         return is;
     }
 
@@ -254,44 +256,47 @@ implements AutoCloseable {
         this.checkAllocated();
         setTextureFilter(blur, mipmap);
         setTextureClamp(clamp);
-        if (width == this.getWidth()) {
-            GL11.glPixelStorei(3314, 0);
-        } else {
-            GL11.glPixelStorei(3314, this.getWidth());
-        }
+        if (width == this.getWidth()) GL11.glPixelStorei(3314, 0);
+        else GL11.glPixelStorei(3314, this.getWidth());
 
         GL11.glPixelStorei(3316, unpackSkipPixels);
         GL11.glPixelStorei(3315, unpackSkipRows);
         this.format.setUnpackAlignment();
         GL11.glTexSubImage2D(3553, level, xOffset, yOffset, width, height, this.format.getPixelDataFormat(), 5121, buffer);
-        if (close) {
-            this.close();
-        }
+        if (close) this.close();
     }
 
     public void loadFromTextureImage(int level, boolean removeAlpha) {
         this.checkAllocated();
         this.format.setPackAlignment();
         GL11.glGetTexImage(3553, level, this.format.getPixelDataFormat(), 5121, buffer);
-        if (removeAlpha && this.format.hasAlphaChannel()) {
-            for(int i = 0; i < this.getHeight(); ++i) {
-                for(int j = 0; j < this.getWidth(); ++j) {
-                    this.setColor(j, i, this.getColor(j, i) | (255 << this.format.getAlphaChannelOffset()));
-                }
-            }
+        if (removeAlpha && this.format.hasAlphaChannel()) for (int i = 0; i < this.getHeight(); ++i)
+            for (int j = 0; j < this.getWidth(); ++j)
+                this.setColor(j, i, this.getColor(j, i) | (255 << this.format.getAlphaChannelOffset()));
+    }
+
+    public void writeTo(Path path) throws IOException {
+        if (!this.format.isWriteable())
+            throw new UnsupportedOperationException("Don't know how to write format " + this.format);
+        this.checkAllocated();
+        try (SeekableByteChannel writableByteChannel = Files.newByteChannel(path, WRITE_TO_FILE_OPEN_OPTIONS)){
+            if (!this.write(writableByteChannel))
+                throw new IOException("Could not write image to the PNG file \"" + path.toAbsolutePath() + "\"");
         }
     }
 
+    private boolean write(WritableByteChannel channel) throws IOException {
+        channel.write(buffer);
+        return true;
+    }
+
     public void copyFrom(NativeImage image) {
-        if (image.getFormat() != this.format) {
-            throw new UnsupportedOperationException("Image formats don't match.");
-        }
+        if (image.getFormat() != this.format) throw new UnsupportedOperationException("Image formats don't match.");
         int i = this.format.getChannelCount();
         this.checkAllocated();
         image.checkAllocated();
-        if (this.width == image.width) {
-            buffer.put(image.buffer);
-        } else {
+        if (this.width == image.width) buffer.put(image.buffer);
+        else {
             int j = Math.min(this.getWidth(), image.getWidth());
             int k = Math.min(this.getHeight(), image.getHeight());
             byte[] tmp = new byte[j];
@@ -306,22 +311,21 @@ implements AutoCloseable {
     }
 
     public void fillRect(int x, int y, int width, int height, int color) {
-        for (int i = y; i < y + height; ++i) {
-            for (int j = x; j < x + width; ++j) {
-                this.setColor(j, i, color);
-            }
-        }
+        for (int i = y; i < y + height; ++i) for (int j = x; j < x + width; ++j) this.setColor(j, i, color);
     }
 
     public void copyRect(int x, int y, int translateX, int translateY, int width, int height, boolean flipX, boolean flipY) {
-        for (int i = 0; i < height; ++i) {
+        this.copyRect(this, x, y, x + translateX, y + translateY, width, height, flipX, flipY);
+    }
+
+    public void copyRect(NativeImage image, int x, int y, int destX, int destY, int width, int height, boolean flipX, boolean flipY) {
+        for (int i = 0; i < height; ++i)
             for (int j = 0; j < width; ++j) {
                 int k = flipX ? width - 1 - j : j;
                 int l = flipY ? height - 1 - i : i;
                 int m = this.getColor(x + j, y + i);
-                this.setColor(x + translateX + k, y + translateY + l, m);
+                image.setColor(destX + k, destY + l, m);
             }
-        }
     }
 
     public void mirrorVertically() {
@@ -351,32 +355,32 @@ implements AutoCloseable {
         return NativeImage.read(byteBuffer);
     }
 
-    public static int getAlpha(int color) {
-        return color >> 24 & 0xFF;
-    }
-
-    public static int getRed(int color) {
-        return color & 0xFF;
-    }
-
-    public static int getGreen(int color) {
-        return color >> 8 & 0xFF;
-    }
-
-    public static int getBlue(int color) {
-        return color >> 16 & 0xFF;
-    }
-
-    public static int getAbgrColor(int alpha, int blue, int green, int red) {
-        return (alpha & 0xFF) << 24 | (blue & 0xFF) << 16 | (green & 0xFF) << 8 | (red & 0xFF);
-    }
+//    public static int getAlpha(int color) {
+//        return color >> 24 & 0xFF;
+//    }
+//
+//    public static int getRed(int color) {
+//        return color & 0xFF;
+//    }
+//
+//    public static int getGreen(int color) {
+//        return color >> 8 & 0xFF;
+//    }
+//
+//    public static int getBlue(int color) {
+//        return color >> 16 & 0xFF;
+//    }
+//
+//    public static int getAbgrColor(int alpha, int blue, int green, int red) {
+//        return (alpha & 0xFF) << 24 | (blue & 0xFF) << 16 | (green & 0xFF) << 8 | (red & 0xFF);
+//    }
 
     @Environment(value=EnvType.CLIENT)
     public enum Format {
-        ABGR(4, 6408, true, true, true, false, true, 0, 8, 16, 255, 24, true),
-        BGR(3, 6407, true, true, true, false, false, 0, 8, 16, 255, 255, true),
-        LUMINANCE_ALPHA(2, 6410, false, false, false, true, true, 255, 255, 255, 0, 8, true),
-        LUMINANCE(1, 6409, false, false, false, true, false, 0, 0, 0, 0, 255, true);
+        RGBA(4, GL11.GL_RGBA, true, true, true, false, true, 0, 8, 16, 255, 24, true),
+        BGR(3, GL11.GL_RGB, true, true, true, false, false, 0, 8, 16, 255, 255, true),
+        LUMINANCE_ALPHA(2, GL11.GL_LUMINANCE_ALPHA, false, false, false, true, true, 255, 255, 255, 0, 8, true),
+        LUMINANCE(1, GL11.GL_LUMINANCE, false, false, false, true, false, 0, 0, 0, 0, 255, true);
 
         private static final Format[] ALL = values();
 
@@ -458,7 +462,7 @@ implements AutoCloseable {
                     return BGR;
                 }
             }
-            return ABGR;
+            return RGBA;
         }
     }
 

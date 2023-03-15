@@ -10,7 +10,7 @@ public interface ModelBakeSettings {
       return AffineTransformation.identity();
    }
 
-   default boolean uvlock() {
+   default boolean isUvLocked() {
       return false;
    }
 }

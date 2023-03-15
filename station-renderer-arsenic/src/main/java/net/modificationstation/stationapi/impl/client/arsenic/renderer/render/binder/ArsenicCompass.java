@@ -26,7 +26,7 @@ public class ArsenicCompass extends StationTextureBinder {
                 textureWidth = staticReference.getWidth(),
                 textureHeight = staticReference.getHeight(),
                 square = textureWidth * textureHeight;
-        compassTexture = staticReference.getSprite().getBaseFrame().makePixelArray();
+        compassTexture = staticReference.getSprite().getContents().getBaseFrame().makePixelArray();
         grid = new byte[square * 4];
     }
 
@@ -37,23 +37,23 @@ public class ArsenicCompass extends StationTextureBinder {
                 textureWidth = staticReference.getWidth(),
                 textureHeight = staticReference.getHeight();
         for(int var1 = 0; var1 < textureWidth * textureHeight; ++var1) {
-            int var2 = (this.compassTexture[var1] >> 24) & 255;
-            int var3 = (this.compassTexture[var1] >> 16) & 255;
-            int var4 = (this.compassTexture[var1] >> 8) & 255;
-            int var5 = this.compassTexture[var1] & 255;
+            int r = this.compassTexture[var1] & 255;
+            int g = this.compassTexture[var1] >> 8 & 255;
+            int b = this.compassTexture[var1] >> 16 & 255;
+            int a = this.compassTexture[var1] >> 24 & 255;
             if (this.render3d) {
-                int var6 = (var3 * 30 + var4 * 59 + var5 * 11) / 100;
-                int var7 = (var3 * 30 + var4 * 70) / 100;
-                int var8 = (var3 * 30 + var5 * 70) / 100;
-                var3 = var6;
-                var4 = var7;
-                var5 = var8;
+                int var6 = (r * 30 + g * 59 + b * 11) / 100;
+                int var7 = (r * 30 + g * 70) / 100;
+                int var8 = (r * 30 + b * 70) / 100;
+                r = var6;
+                g = var7;
+                b = var8;
             }
 
-            this.grid[var1 * 4] = (byte)var3;
-            this.grid[var1 * 4 + 1] = (byte)var4;
-            this.grid[var1 * 4 + 2] = (byte)var5;
-            this.grid[var1 * 4 + 3] = (byte)var2;
+            this.grid[var1 * 4] = (byte)r;
+            this.grid[var1 * 4 + 1] = (byte)g;
+            this.grid[var1 * 4 + 2] = (byte)b;
+            this.grid[var1 * 4 + 3] = (byte)a;
         }
 
         double var20 = 0.0D;

@@ -1,64 +1,52 @@
 package net.modificationstation.stationapi.api.client.texture;
 
-import com.google.common.collect.Lists;
-import com.mojang.datafixers.util.Pair;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.client.resource.metadata.AnimationResourceMetadata;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
-import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.exception.CrashException;
 import net.modificationstation.stationapi.api.util.exception.CrashReport;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
-import net.modificationstation.stationapi.api.util.profiler.Profiler;
 import net.modificationstation.stationapi.impl.client.render.SpriteFinderImpl;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
-@Environment(EnvType.CLIENT)
-public class SpriteAtlasTexture
-extends AbstractTexture
-implements TextureTickListener {
-
-    private final List<TextureTickListener> animatedSprites = new ArrayList<>();
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private final Set<Identifier> spritesToLoad = new HashSet<>();
-    private final Map<Identifier, Sprite> sprites = new IdentityHashMap<>();
+public class SpriteAtlasTexture extends AbstractTexture implements DynamicTexture, TextureTickListener {
+    private List<SpriteContents> spritesToLoad = List.of();
+    private List<Sprite.TickableAnimation> animatedSprites = List.of();
+    private Map<Identifier, Sprite> sprites = Map.of();
     private final Identifier id;
     private final int maxTextureSize;
-    private SpriteFinderImpl spriteFinder;
+    private int width;
+    private int height;
+    private SpriteFinderImpl spriteFinder = null;
 
-    public SpriteAtlasTexture(Identifier identifier) {
-        this.id = identifier;
+    public SpriteAtlasTexture(Identifier id) {
+        this.id = id;
         this.maxTextureSize = TextureUtil.maxSupportedTextureSize();
     }
 
     @Override
     public void load(ResourceManager manager) {}
 
-    public void upload(Data data) {
-        this.spritesToLoad.clear();
-        this.spritesToLoad.addAll(data.spriteIds);
-        LOGGER.info("Created: {}x{} {}-atlas", data.width, data.height, this.id);
-        TextureUtil.prepareImage(this.getGlId(), 0, data.width, data.height);
+    public void upload(SpriteLoader.StitchResult stitchResult) {
+        LOGGER.info("Created: {}x{} {}-atlas", stitchResult.width(), stitchResult.height(), this.id);
+        TextureUtil.prepareImage(this.getGlId(), stitchResult.width(), stitchResult.height());
+        this.width = stitchResult.width();
+        this.height = stitchResult.height();
         this.clear();
-        for (Sprite sprite : data.sprites) {
-            this.sprites.put(sprite.getId(), sprite);
+        this.sprites = Map.copyOf(stitchResult.regions());
+        ArrayList<SpriteContents> list = new ArrayList<>();
+        ArrayList<Sprite.TickableAnimation> list2 = new ArrayList<>();
+        for (Sprite sprite : stitchResult.regions().values()) {
+            list.add(sprite.getContents());
             try {
                 sprite.upload();
             } catch (Throwable throwable) {
@@ -68,180 +56,81 @@ implements TextureTickListener {
                 crashReportSection.add("Sprite", sprite);
                 throw new CrashException(crashReport);
             }
-            TextureTickListener textureTickListener = sprite.getAnimation();
-            if (textureTickListener == null) continue;
-            this.animatedSprites.add(textureTickListener);
+            Sprite.TickableAnimation tickableAnimation = sprite.createAnimation();
+            if (tickableAnimation == null) continue;
+            list2.add(tickableAnimation);
         }
+        this.spritesToLoad = List.copyOf(list);
+        this.animatedSprites = List.copyOf(list2);
         spriteFinder = null;
     }
 
-    public SpriteFinderImpl spriteFinder() {
-        return spriteFinder == null ? spriteFinder = new SpriteFinderImpl(sprites, this) : spriteFinder;
+    @Override
+    public void save(Identifier id, Path path) {
+        String string = id.toString().replace('/', '_').replace(':', '_');
+        TextureUtil.writeAsPNG(path, string, this.getGlId(), 0, this.width, this.height);
+        SpriteAtlasTexture.dumpAtlasInfos(path, string, this.sprites);
     }
 
-    public Data stitch(ResourceManager resourceManager, Stream<Identifier> idStream, Profiler profiler) {
-        profiler.push("preparing");
-        Set<Identifier> set = idStream.peek(identifier -> {
-            if (identifier == null) {
-                throw new IllegalArgumentException("Location cannot be null!");
+    private static void dumpAtlasInfos(Path path, String id, Map<Identifier, Sprite> sprites) {
+        Path path2 = path.resolve(id + ".txt");
+        try (BufferedWriter writer = Files.newBufferedWriter(path2)){
+            for (Map.Entry<Identifier, Sprite> entry : sprites.entrySet().stream().sorted(Map.Entry.comparingByKey()).toList()) {
+                Sprite sprite = entry.getValue();
+                writer.write(String.format(Locale.ROOT, "%s\tx=%d\ty=%d\tw=%d\th=%d%n", entry.getKey(), sprite.getX(), sprite.getY(), sprite.getContents().getWidth(), sprite.getContents().getHeight()));
             }
-        }).collect(Collectors.toSet());
-        int i = this.maxTextureSize;
-        TextureStitcher textureStitcher = new TextureStitcher(i, i);
-        profiler.swap("extracting_frames");
-        for (Sprite.Info info2 : this.loadSprites(resourceManager, set))
-            textureStitcher.add(info2);
-        profiler.swap("register");
-        textureStitcher.add(MissingSprite.getMissingInfo());
-        profiler.swap("stitching");
-        try {
-            textureStitcher.stitch();
-        }
-        catch (TextureStitcherCannotFitException textureStitcherCannotFitException) {
-            CrashReport crashReport = CrashReport.create(textureStitcherCannotFitException, "Stitching");
-            CrashReportSection crashReportSection = crashReport.addElement("Stitcher");
-            crashReportSection.add("Sprites", textureStitcherCannotFitException.getSprites().stream().map(info -> String.format("%s[%dx%d]", info.getId(), info.getWidth(), info.getHeight())).collect(Collectors.joining(",")));
-            crashReportSection.add("Max Texture Size", i);
-            throw new CrashException(crashReport);
-        }
-        profiler.swap("loading");
-        List<Sprite> list = this.loadSprites(resourceManager, textureStitcher);
-        profiler.pop();
-        return new Data(set, textureStitcher.getWidth(), textureStitcher.getHeight(), list);
-    }
-
-    private Collection<Sprite.Info> loadSprites(ResourceManager resourceManager, Set<Identifier> ids) {
-        ArrayList<CompletableFuture<Void>> list = Lists.newArrayList();
-        ConcurrentLinkedQueue<Sprite.Info> queue = new ConcurrentLinkedQueue<Sprite.Info>();
-        for (Identifier identifier : ids) {
-            if (MissingSprite.getMissingSpriteId().equals(identifier)) continue;
-            list.add(CompletableFuture.runAsync(() -> {
-                AnimationResourceMetadata animationResourceMetadata;
-                BufferedImage image;
-                Identifier identifier2 = this.getTexturePath(identifier);
-                Optional<Resource> optional = resourceManager.getResource(identifier2);
-                if (optional.isEmpty()) {
-                    LOGGER.error("Using missing texture, file {} not found", identifier2);
-                    return;
-                }
-                Resource resource = optional.get();
-                try (InputStream inputStream = resource.getInputStream()){
-                    image = ImageIO.read(inputStream);
-                }
-                catch (IOException iOException) {
-                    LOGGER.error("Using missing texture, unable to load {} : {}", identifier2, iOException);
-                    return;
-                }
-                try {
-                    animationResourceMetadata = resource.getMetadata().decode(AnimationResourceMetadata.READER).orElse(AnimationResourceMetadata.EMPTY);
-                }
-                catch (Exception exception) {
-                    LOGGER.error("Unable to parse metadata from {} : {}", identifier2, exception);
-                    return;
-                }
-                Pair<Integer, Integer> pair = animationResourceMetadata.ensureImageSize(image.getWidth(), image.getHeight());
-                Sprite.Info info = new Sprite.Info(identifier, pair.getFirst(), pair.getSecond(), animationResourceMetadata);
-                queue.add(info);
-            }, Util.getMainWorkerExecutor()));
-        }
-        CompletableFuture.allOf(list.toArray(new CompletableFuture[0])).join();
-        return queue;
-    }
-
-    private List<Sprite> loadSprites(ResourceManager resourceManager, TextureStitcher textureStitcher) {
-        ConcurrentLinkedQueue<Sprite> concurrentLinkedQueue = new ConcurrentLinkedQueue<>();
-        List<CompletableFuture<Void>> list = new ArrayList<>();
-        textureStitcher.getStitchedSprites((arg_0, arg_1, arg_2, arg_3, arg_4) -> {
-            if (arg_0 == MissingSprite.getMissingInfo()) {
-                MissingSprite missingSprite = MissingSprite.getMissingSprite(this, arg_1, arg_2, arg_3, arg_4);
-                concurrentLinkedQueue.add(missingSprite);
-            } else {
-                list.add(CompletableFuture.runAsync(() -> {
-                    Sprite sprite = this.loadSprite(resourceManager, arg_0, arg_1, arg_2, arg_3, arg_4);
-                    if (sprite != null) {
-                        concurrentLinkedQueue.add(sprite);
-                    }
-                }, Util.getMainWorkerExecutor()));
-            }
-        });
-        CompletableFuture.allOf(list.toArray(new CompletableFuture[0])).join();
-        return Lists.newArrayList(concurrentLinkedQueue);
-    }
-
-    @Nullable
-    private Sprite loadSprite(ResourceManager container, Sprite.Info info, int atlasWidth, int atlasHeight, int x, int y) {
-        Identifier identifier = this.getTexturePath(info.getId());
-        try (InputStream inputStream = container.open(identifier)){
-            return new Sprite(this, info, atlasWidth, atlasHeight, x, y, NativeImage.read(inputStream));
-        } catch (RuntimeException runtimeException) {
-            LOGGER.error("Unable to parse metadata from {}", identifier, runtimeException);
-            return null;
         } catch (IOException iOException) {
-            LOGGER.error("Using missing texture, unable to load {}", identifier, iOException);
-            return null;
+            LOGGER.warn("Failed to write file {}", path2, iOException);
         }
-    }
-
-    private Identifier getTexturePath(Identifier identifier) {
-        return identifier.prepend(MODID + "/textures/").append(".png");
-    }
-
-    public void tickAnimatedSprites() {
-        this.bindTexture();
-        animatedSprites.forEach(TextureTickListener::tick);
     }
 
     @Override
     public void tick() {
-        this.tickAnimatedSprites();
+        this.bindTexture();
+        for (Sprite.TickableAnimation tickableAnimation : this.animatedSprites) tickableAnimation.tick();
     }
 
     public Sprite getSprite(Identifier id) {
         Sprite sprite = this.sprites.get(id);
-        if (sprite == null) {
-            return this.sprites.get(MissingSprite.getMissingSpriteId());
-        }
+        if (sprite == null) return this.sprites.get(MissingSprite.getMissingSpriteId());
         return sprite;
     }
 
     public void clear() {
-        for (Sprite sprite : this.sprites.values()) {
-            sprite.close();
-        }
-        this.sprites.clear();
-        this.animatedSprites.clear();
+        this.spritesToLoad.forEach(SpriteContents::close);
+        this.animatedSprites.forEach(Sprite.TickableAnimation::close);
+        this.spritesToLoad = List.of();
+        this.animatedSprites = List.of();
+        this.sprites = Map.of();
     }
 
     public Identifier getId() {
         return this.id;
     }
 
-    public void applyTextureFilter(Data data) {
+    public int getMaxTextureSize() {
+        return this.maxTextureSize;
+    }
+
+    int getWidth() {
+        return this.width;
+    }
+
+    int getHeight() {
+        return this.height;
+    }
+
+    public void applyTextureFilter(SpriteLoader.StitchResult data) {
         this.setFilter(false, false);
     }
 
-    @Environment(EnvType.CLIENT)
-    public static class Data {
-        final Set<Identifier> spriteIds;
-        final int width;
-        final int height;
-        final List<Sprite> sprites;
-
-        public Data(Set<Identifier> spriteIds, int width, int height, List<Sprite> sprites) {
-            this.spriteIds = spriteIds;
-            this.width = width;
-            this.height = height;
-            this.sprites = sprites;
+    public SpriteFinderImpl spriteFinder() {
+        SpriteFinderImpl result = spriteFinder;
+        if (result == null) {
+            result = new SpriteFinderImpl(sprites, this);
+            spriteFinder = result;
         }
-
-        @ApiStatus.Internal
-        public int getWidth() {
-            return width;
-        }
-
-        @ApiStatus.Internal
-        public int getHeight() {
-            return height;
-        }
+        return result;
     }
 }
+

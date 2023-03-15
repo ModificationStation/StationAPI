@@ -32,7 +32,12 @@ public final class AssetsReloaderImpl {
     private static void reloadResourceManager(AssetsReloadEvent event) {
         //noinspection deprecation
         ResourceReload resourceReload = ReloadableAssetsManager.INSTANCE.reload(Util.getMainWorkerExecutor(), TASKS::add, COMPLETED_UNIT_FUTURE, ((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack);
+        long timestamp = 0;
         while (!resourceReload.isComplete()) {
+            if (System.currentTimeMillis() - timestamp > 1000) {
+                timestamp = System.currentTimeMillis();
+                System.out.println(resourceReload.getProgress() * 100 + "%");
+            }
             Runnable task = TASKS.poll();
             if (task != null)
                 task.run();

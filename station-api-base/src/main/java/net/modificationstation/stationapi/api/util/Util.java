@@ -147,6 +147,17 @@ public class Util {
         return (Hash.Strategy<K>) IdentityHashStrategy.INSTANCE;
     }
 
+    public static <V> CompletableFuture<List<V>> combineSafe(List<? extends CompletableFuture<V>> futures) {
+        if (futures.isEmpty()) {
+            return CompletableFuture.completedFuture(List.of());
+        } else if (futures.size() == 1) {
+            return futures.get(0).thenApply(List::of);
+        } else {
+            CompletableFuture<Void> completableFuture = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+            return completableFuture.thenApply((void_) -> futures.stream().map(CompletableFuture::join).toList());
+        }
+    }
+
     public static <V> CompletableFuture<List<V>> combine(List<? extends CompletableFuture<? extends V>> futures) {
         List<V> list = Lists.newArrayListWithCapacity(futures.size());
         CompletableFuture<?>[] completableFutures = new CompletableFuture[futures.size()];
