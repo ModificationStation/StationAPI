@@ -9,43 +9,45 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.modificationstation.stationapi.api.util.exception.MissingModException;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+import java.util.function.Function;
 
-public final class ModID implements Comparable<ModID> {
+public final class ModID implements Comparable<@NotNull ModID> {
 
     private static final boolean CHECK_MISSING_MODS = false;
 
     @NotNull
     private static final Cache<@NotNull String, @NotNull ModID> CACHE = Caffeine.newBuilder().softValues().build();
+    @NotNull
+    private static final Function<@NotNull String, @NotNull ModID> NAMESPACE_FACTORY = ModID::new;
 
     @NotNull
     public static final ModID MINECRAFT = of("minecraft");
 
     @NotNull
-    private final String modid;
+    private final String namespace;
     private final int hashCode;
 
-    public static @NotNull ModID of(@NotNull ModContainer modContainer) {
+    public static @NotNull ModID of(@NotNull final ModContainer modContainer) {
         return of(modContainer.getMetadata());
     }
 
-    public static @NotNull ModID of(@NotNull ModMetadata modMetadata) {
+    public static @NotNull ModID of(@NotNull final ModMetadata modMetadata) {
         return of(modMetadata.getId());
     }
 
-    public static @NotNull ModID of(@NotNull String modid) {
-        return Objects.requireNonNull(CACHE.get(modid, ModID::new));
+    public static @NotNull ModID of(@NotNull final String namespace) {
+        return CACHE.get(namespace, NAMESPACE_FACTORY);
     }
 
-    private ModID(@NotNull String modid) {
-        if (CHECK_MISSING_MODS && !FabricLoader.getInstance().isModLoaded(modid))
-            throw new MissingModException(modid);
-        this.modid = modid;
+    private ModID(@NotNull final String namespace) {
+        if (CHECK_MISSING_MODS && !FabricLoader.getInstance().isModLoaded(namespace))
+            throw new MissingModException(namespace);
+        this.namespace = namespace;
         hashCode = toString().hashCode();
     }
 
     public @NotNull ModContainer getContainer() {
-        return FabricLoader.getInstance().getModContainer(modid).orElseThrow(() -> new MissingModException(modid));
+        return FabricLoader.getInstance().getModContainer(namespace).orElseThrow(() -> new MissingModException(namespace));
     }
 
     public @NotNull ModMetadata getMetadata() {
@@ -60,20 +62,24 @@ public final class ModID implements Comparable<ModID> {
         return getMetadata().getVersion();
     }
 
-    public @NotNull Identifier id(String id) {
+    public @NotNull Identifier id(@NotNull final String id) {
         return Identifier.of(this, id);
     }
 
     @Override
-    public boolean equals(@NotNull Object other) {
-        return this == other
-                || (other instanceof ModID && modid.equals(((ModID) other).modid))
-                || (other instanceof String && toString().equals(other));
+    public boolean equals(@NotNull final Object other) {
+        if (this == other) return true;
+        if (other instanceof @NotNull final ModID otherNamespace) {
+            if (namespace.equals(otherNamespace.namespace))
+                throw new IllegalStateException(String.format("Encountered a duplicate instance of Namespace %s!", namespace));
+            return false;
+        }
+        return namespace.equals(other);
     }
 
     @Override
     public @NotNull String toString() {
-        return modid;
+        return namespace;
     }
 
     @Override
@@ -82,7 +88,7 @@ public final class ModID implements Comparable<ModID> {
     }
 
     @Override
-    public int compareTo(@NotNull ModID o) {
-        return modid.compareTo(o.modid);
+    public int compareTo(@NotNull final ModID o) {
+        return namespace.compareTo(o.namespace);
     }
 }

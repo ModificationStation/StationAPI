@@ -7,17 +7,17 @@ import com.mojang.serialization.DataResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import java.util.function.Function;
 
 import static net.modificationstation.stationapi.api.registry.ModID.MINECRAFT;
 
-public final class Identifier implements Comparable<Identifier> {
+public final class Identifier implements Comparable<@NotNull Identifier> {
 
     @NotNull
-    public static final Codec<Identifier> CODEC = Codec.STRING.comapFlatMap(s -> {
+    public static final Codec<@NotNull Identifier> CODEC = Codec.STRING.comapFlatMap(s -> {
         try {
             return DataResult.success(of(s));
-        } catch (IllegalArgumentException var2) {
+        } catch (final IllegalArgumentException var2) {
             return DataResult.error(() -> "Not a valid identifier: " + s + " " + var2.getMessage());
         }
     }, Identifier::toString).stable();
@@ -25,8 +25,11 @@ public final class Identifier implements Comparable<Identifier> {
     @NotNull
     public static final String SEPARATOR = ":";
 
+    private record IdentifierCacheKey(@NotNull ModID namespace, @NotNull String id) {}
     @NotNull
-    private static final Cache<String, Identifier> CACHE = Caffeine.newBuilder().softValues().build();
+    private static final Cache<@NotNull IdentifierCacheKey, @NotNull Identifier> CACHE = Caffeine.newBuilder().softValues().build();
+    @NotNull
+    private static final Function<@NotNull IdentifierCacheKey, @NotNull Identifier> IDENTIFIER_FACTORY = key -> new Identifier(key.namespace, key.id);
 
     @NotNull
     public final ModID modID;
@@ -35,73 +38,77 @@ public final class Identifier implements Comparable<Identifier> {
     public final String id;
 
     @NotNull
-    private final String stringCache;
+    private final String toString;
     private final int hashCode;
 
-    private Identifier(@NotNull ModID modID, @NotNull String id) {
+    private Identifier(@NotNull final ModID modID, @NotNull final String id) {
         this.modID = modID;
         this.id = id;
-        stringCache = modID + SEPARATOR + id;
-        hashCode = toString().hashCode();
+        toString = modID + SEPARATOR + id;
+        hashCode = toString.hashCode();
     }
 
-    public static @NotNull Identifier of(@NotNull String identifier) {
-        if (!identifier.contains(SEPARATOR))
-            identifier = MINECRAFT + SEPARATOR + identifier;
-        return Objects.requireNonNull(CACHE.get(identifier, sId -> {
-            String[] strings = new String[2];
-            int i = sId.indexOf(SEPARATOR);
-            strings[0] = sId.substring(0, i);
-            strings[1] = sId.substring(i + 1);
-            if (strings[1].startsWith("/"))
-                throw new IllegalArgumentException("Invalid identifier string! " + sId);
-            return new Identifier(ModID.of(strings[0].trim()), strings[1].trim());
-        }));
+    public static @NotNull Identifier of(@NotNull final String identifier) {
+        final int i = identifier.indexOf(SEPARATOR);
+        final String namespace;
+        final String path;
+        if (i < 0) {
+            namespace = MINECRAFT.toString();
+            path = identifier;
+        } else {
+            namespace = identifier.substring(0, i);
+            path = identifier.substring(i + 1);
+        }
+        return of(ModID.of(namespace), path);
     }
 
-    public static @NotNull Identifier of(@NotNull ModID modID, @NotNull String id) {
-        return Objects.requireNonNull(CACHE.get(modID + SEPARATOR + id, sId -> new Identifier(modID, id)));
+    public static @NotNull Identifier of(@NotNull final ModID modID, @NotNull final String id) {
+        return CACHE.get(new IdentifierCacheKey(modID, id), IDENTIFIER_FACTORY);
     }
 
-    public static @Nullable Identifier tryParse(String string) {
+    public static @Nullable Identifier tryParse(@NotNull final String string) {
         try {
             return of(string);
-        } catch (IllegalArgumentException e) {
+        } catch (@NotNull final IllegalArgumentException e) {
             return null;
         }
     }
 
-    public static DataResult<Identifier> validate(String id) {
+    public static @NotNull DataResult<@NotNull Identifier> validate(@NotNull final String id) {
         try {
             return DataResult.success(of(id));
-        } catch (IllegalArgumentException e) {
+        } catch (@NotNull final IllegalArgumentException e) {
             return DataResult.error(() -> "Not a valid identifier: " + id + " " + e.getMessage());
         }
     }
 
-    public @NotNull Identifier prepend(@NotNull String prefix) {
+    public @NotNull Identifier prepend(@NotNull final String prefix) {
         return of(modID, prefix + id);
     }
 
-    public @NotNull Identifier append(@NotNull String suffix) {
+    public @NotNull Identifier append(@NotNull final String suffix) {
         return of(modID, id + suffix);
     }
 
     @Override
-    public int compareTo(@NotNull Identifier o) {
-        return toString().compareTo(o.toString());
+    public int compareTo(@NotNull final Identifier o) {
+        return toString.compareTo(o.toString);
     }
 
     @Override
     public @NotNull String toString() {
-        return stringCache;
+        return toString;
     }
 
     @Override
-    public boolean equals(@NotNull Object other) {
-        return this == other
-                || (other instanceof Identifier && toString().equals(other.toString()))
-                || (other instanceof String && toString().equals(other));
+    public boolean equals(@NotNull final Object other) {
+        if (this == other) return true;
+        if (other instanceof @NotNull final Identifier otherId) {
+            if (toString.equals(otherId.toString))
+                throw new IllegalStateException(String.format("Encountered a duplicate instance of Identifier %s!", toString));
+            return false;
+        }
+        return toString.equals(other);
     }
 
     @Override
