@@ -1,8 +1,6 @@
 package net.modificationstation.stationapi.mixin.resourceloader.client;
 
 import net.minecraft.client.resource.TexturePack;
-import net.modificationstation.stationapi.api.resource.FakeResources;
-import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.impl.resource.ModResources;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,17 +24,5 @@ public class MixinTexturePack {
     )
     private void modResources(String path, CallbackInfoReturnable<InputStream> cir) {
         ModResources.getTopPath(path).map(Exceptions.unchecked(Files::newInputStream)).ifPresent(cir::setReturnValue);
-    }
-
-    /**
-     * Lowest priority
-     */
-    @Inject(
-            method = "getResourceAsStream(Ljava/lang/String;)Ljava/io/InputStream;",
-            at = @At("RETURN"),
-            cancellable = true
-    )
-    private void fakeResources(String path, CallbackInfoReturnable<InputStream> cir) {
-        FakeResources.get(path).map(Exceptions.unchecked(Resource::getInputStream)).ifPresent(cir::setReturnValue);
     }
 }

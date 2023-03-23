@@ -10,29 +10,21 @@ import net.modificationstation.stationapi.api.client.event.resource.AssetsReload
 import net.modificationstation.stationapi.api.client.event.resource.AssetsResourceReloaderRegisterEvent;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.render.item.ItemModels;
+import net.modificationstation.stationapi.api.client.render.model.ModelLoader;
+import net.modificationstation.stationapi.api.client.texture.NativeImageBackedTexture;
+import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
+import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
 import net.modificationstation.stationapi.api.client.texture.TextureUtil;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
-import net.modificationstation.stationapi.api.resource.FakeResources;
-import net.modificationstation.stationapi.api.resource.Resource;
-import net.modificationstation.stationapi.api.resource.ResourceHelper;
 import net.modificationstation.stationapi.api.resource.SynchronousResourceReloader;
-import net.modificationstation.stationapi.api.resource.metadata.ResourceMetadata;
 import net.modificationstation.stationapi.api.util.Null;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.Objects;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
@@ -61,32 +53,15 @@ public class StationRenderImpl {
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
     private static void registerReloaders(AssetsResourceReloaderRegisterEvent event) {
-        FakeResources.registerProvider(createSpritesheetProvider(() -> TERRAIN));
-        FakeResources.registerProvider(createSpritesheetProvider(() -> GUI_ITEMS));
         event.resourceManager.registerReloader(StationRenderAPI.getBakedModelManager());
         event.resourceManager.registerReloader((SynchronousResourceReloader) manager -> ItemModels.reloadModelsAll());
-    }
-
-    @NotNull
-    private static Function<String, Optional<Resource>> createSpritesheetProvider(Supplier<ExpandableAtlas> expandableAtlas) {
-        return path -> {
-            try {
-                Identifier id = ResourceHelper.ASSETS.toId(path, StationAPI.MODID + "/textures", "png");
-                if (expandableAtlas.get().slicedSpritesheetView.containsKey(id)) {
-                    BufferedImage image = expandableAtlas.get().slicedSpritesheetView.get(id);
-                    return Optional.of(new Resource(() -> {
-                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                        try {
-                            ImageIO.write(image, "png", outputStream);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        return new ByteArrayInputStream(outputStream.toByteArray());
-                    }, ResourceMetadata.NONE_SUPPLIER));
-                }
-            } catch (IllegalArgumentException ignored) {}
-            return Optional.empty();
-        };
+        event.resourceManager.registerReloader((SynchronousResourceReloader) manager -> {
+            //noinspection deprecation
+            StationTextureManager textureManager = StationTextureManager.get(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager);
+            SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
+            for (int i = 0, size = ModelLoader.BLOCK_DESTRUCTION_STAGE_TEXTURES.size(); i < size; i++)
+                textureManager.registerTexture(ModelLoader.BLOCK_DESTRUCTION_STAGE_TEXTURES.get(i), new NativeImageBackedTexture(Objects.requireNonNull(atlas.getSprite(ModelLoader.BLOCK_DESTRUCTION_STAGES.get(i))).getContents().getBaseFrame()));
+        });
     }
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 + Integer.MAX_VALUE / 8)
