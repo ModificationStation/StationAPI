@@ -1,11 +1,14 @@
 package net.modificationstation.stationapi.api.resource;
 
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ModID;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class DataManager implements ResourceManager {
 
@@ -35,6 +38,11 @@ public class DataManager implements ResourceManager {
     }
 
     @Override
+    public Set<ModID> getAllNamespaces() {
+        return null;
+    }
+
+    @Override
     public List<Resource> getAllResources(Identifier id) {
         return null;
     }
@@ -46,6 +54,11 @@ public class DataManager implements ResourceManager {
 
     @Override
     public Map<Identifier, List<Resource>> findAllResources(String startingPath, Predicate<Identifier> allowedPathPredicate) {
+        return null;
+    }
+
+    @Override
+    public Stream<ResourcePack> streamResourcePacks() {
         return null;
     }
 }

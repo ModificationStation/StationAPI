@@ -3,6 +3,8 @@ package net.modificationstation.stationapi.api.resource;
 import net.modificationstation.stationapi.api.util.Unit;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.profiler.DummyProfiler;
+import net.modificationstation.stationapi.impl.resource.LifecycledResourceManager;
+import net.modificationstation.stationapi.impl.resource.loader.ResourceManagerHelperImpl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -113,6 +115,12 @@ public class SimpleResourceReload<S> implements ResourceReload {
      * @param initialStage the initial stage, must be completed before the reloaders can prepare resources
      */
     public static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage, boolean profiled) {
+        ResourceManagerHelperImpl.sort(
+                manager instanceof LifecycledResourceManager lifecycled ?
+                        lifecycled.getResourceType() :
+                        null,
+                reloaders
+        );
         return profiled ? new ProfiledResourceReload(manager, reloaders, prepareExecutor, applyExecutor, initialStage) : SimpleResourceReload.create(manager, reloaders, prepareExecutor, applyExecutor, initialStage);
     }
 

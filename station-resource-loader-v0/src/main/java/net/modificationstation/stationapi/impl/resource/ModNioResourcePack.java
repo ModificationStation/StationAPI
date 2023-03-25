@@ -5,6 +5,7 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.resource.InputSupplier;
+import net.modificationstation.stationapi.api.resource.ResourcePackActivationType;
 import net.modificationstation.stationapi.api.resource.ResourceType;
 import net.modificationstation.stationapi.api.resource.metadata.ResourceMetadataReader;
 import net.modificationstation.stationapi.api.util.PathUtil;
@@ -29,10 +30,10 @@ public class ModNioResourcePack implements ModResourcePack {
 	private final List<Path> basePaths;
 	private final ResourceType type;
 	private final AutoCloseable closer;
-//	private final ResourcePackActivationType activationType;
-	private final Map<ResourceType, Set<String>> namespaces;
+	private final ResourcePackActivationType activationType;
+	private final Map<ResourceType, Set<ModID>> namespaces;
 
-	public static ModNioResourcePack create(Identifier id, String name, ModContainer mod, String subPath, ResourceType type) {
+	public static ModNioResourcePack create(Identifier id, String name, ModContainer mod, String subPath, ResourceType type, ResourcePackActivationType activationType) {
 		List<Path> rootPaths = mod.getRootPaths();
 		List<Path> paths;
 
@@ -52,27 +53,28 @@ public class ModNioResourcePack implements ModResourcePack {
 
 		if (paths.isEmpty()) return null;
 
-		ModNioResourcePack ret = new ModNioResourcePack(id, name, mod.getMetadata(), paths, type, null);
+		//noinspection resource
+		ModNioResourcePack ret = new ModNioResourcePack(id, name, mod.getMetadata(), paths, type, null, activationType);
 
 		return ret.getNamespaces(type).isEmpty() ? null : ret;
 	}
 
-	private ModNioResourcePack(Identifier id, String name, ModMetadata modInfo, List<Path> paths, ResourceType type, AutoCloseable closer) {
+	private ModNioResourcePack(Identifier id, String name, ModMetadata modInfo, List<Path> paths, ResourceType type, AutoCloseable closer, ResourcePackActivationType activationType) {
 		this.id = id;
 		this.name = name;
 		this.modInfo = modInfo;
 		this.basePaths = paths;
 		this.type = type;
 		this.closer = closer;
-//		this.activationType = activationType;
+		this.activationType = activationType;
 		this.namespaces = readNamespaces(paths, modInfo.getId());
 	}
 
-	static Map<ResourceType, Set<String>> readNamespaces(List<Path> paths, String modId) {
-		Map<ResourceType, Set<String>> ret = new EnumMap<>(ResourceType.class);
+	static Map<ResourceType, Set<ModID>> readNamespaces(List<Path> paths, String modId) {
+		Map<ResourceType, Set<ModID>> ret = new EnumMap<>(ResourceType.class);
 
 		for (ResourceType type : ResourceType.values()) {
-			Set<String> namespaces = null;
+			Set<ModID> namespaces = null;
 
 			for (Path path : paths) {
 				Path dir = path.resolve(type.getDirectory());
@@ -95,7 +97,7 @@ public class ModNioResourcePack implements ModResourcePack {
 
 						if (namespaces == null) namespaces = new HashSet<>();
 
-						namespaces.add(s);
+						namespaces.add(ModID.of(s));
 					}
 				} catch (IOException e) {
 					LOGGER.warn("getNamespaces in mod " + modId + " failed!", e);
@@ -138,7 +140,7 @@ public class ModNioResourcePack implements ModResourcePack {
 		int nsEnd = filename.indexOf('/', prefixLen);
 		if (nsEnd < 0) return false;
 
-		return !namespaces.get(type).contains(filename.substring(prefixLen, nsEnd));
+		return !namespaces.get(type).contains(ModID.of(filename.substring(prefixLen, nsEnd)));
 	}
 
 	private InputSupplier<InputStream> openFile(String filename) {
@@ -167,11 +169,11 @@ public class ModNioResourcePack implements ModResourcePack {
 	}
 
 	@Override
-	public void findResources(ResourceType type, String namespace, String path, ResultConsumer visitor) {
+	public void findResources(ResourceType type, ModID namespace, String path, ResultConsumer visitor) {
 		if (!namespaces.getOrDefault(type, Collections.emptySet()).contains(namespace)) return;
 		for (Path basePath : basePaths) {
 			String separator = basePath.getFileSystem().getSeparator();
-			Path nsPath = basePath.resolve(type.getDirectory()).resolve(namespace);
+			Path nsPath = basePath.resolve(type.getDirectory()).resolve(namespace.toString());
 			Path searchPath = nsPath.resolve(path.replace("/", separator)).normalize();
 			if (!exists(searchPath)) continue;
 			try {
@@ -179,7 +181,7 @@ public class ModNioResourcePack implements ModResourcePack {
 					@Override
 					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
 						String filename = nsPath.relativize(file).toString().replace(separator, "/");
-						Identifier identifier = ModID.of(namespace).id(filename);
+						Identifier identifier = namespace.id(filename);
 						visitor.accept(identifier, InputSupplier.create(file));
 						return FileVisitResult.CONTINUE;
 					}
@@ -191,7 +193,7 @@ public class ModNioResourcePack implements ModResourcePack {
 	}
 
 	@Override
-	public Set<String> getNamespaces(ResourceType type) {
+	public Set<ModID> getNamespaces(ResourceType type) {
 		return namespaces.getOrDefault(type, Collections.emptySet());
 	}
 
@@ -214,6 +216,10 @@ public class ModNioResourcePack implements ModResourcePack {
 	@Override
 	public ModMetadata getFabricModMetadata() {
 		return modInfo;
+	}
+
+	public ResourcePackActivationType getActivationType() {
+		return this.activationType;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.tag;
 
 import net.modificationstation.stationapi.api.registry.*;
+import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloadListener;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.resource.ResourceReloader;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
@@ -13,9 +14,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.registry.ModID.MINECRAFT;
 
-public class TagManagerLoader
-        implements ResourceReloader {
+public class TagManagerLoader implements IdentifiableResourceReloadListener {
+
+    public static final Identifier TAGS = MINECRAFT.id("tags");
+
     private final DynamicRegistryManager registryManager;
     private List<RegistryTags<?>> registryTags = List.of();
 
@@ -46,6 +50,11 @@ public class TagManagerLoader
         Registry<T> registry = requirement.value();
         TagGroupLoader<RegistryEntry<T>> tagGroupLoader = new TagGroupLoader<>(identifier -> registry.getEntry(RegistryKey.of(registryKey, identifier)), TagManagerLoader.getPath(registryKey));
         return CompletableFuture.supplyAsync(() -> new RegistryTags<>(registryKey, tagGroupLoader.load(resourceManager)), prepareExecutor);
+    }
+
+    @Override
+    public Identifier getFabricId() {
+        return TAGS;
     }
 
     public record RegistryTags<T>(RegistryKey<? extends Registry<T>> key, Map<Identifier, Collection<RegistryEntry<T>>> tags) { }

@@ -10,7 +10,9 @@ import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 
-import java.util.*;
+import java.util.BitSet;
+import java.util.Optional;
+import java.util.Random;
 import java.util.function.Function;
 
 public class StationShapelessRecipe implements Recipe, StationRecipe {
