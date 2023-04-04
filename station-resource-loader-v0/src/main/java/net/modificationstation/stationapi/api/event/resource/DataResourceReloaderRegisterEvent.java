@@ -5,7 +5,7 @@ import net.mine_diver.unsafeevents.Event;
 import net.modificationstation.stationapi.api.resource.DataManager;
 
 @SuperBuilder
-public class ResourceReloaderRegisterEvent extends Event {
+public class DataResourceReloaderRegisterEvent extends Event {
 
     public final DataManager resourceManager;
 

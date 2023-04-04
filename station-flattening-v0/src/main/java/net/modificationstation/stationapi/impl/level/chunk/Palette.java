@@ -26,7 +26,7 @@ public interface Palette<T> {
     *
     * @param object the object to look up
     */
-   int index(T var1);
+   int index(T object);
 
    /**
     * {@return {@code true} if any entry in this palette passes the {@code
@@ -41,7 +41,7 @@ public interface Palette<T> {
     *
     * @param id the ID to look up
     */
-   T get(int var1);
+   T get(int id);
 
 //   /**
 //    * Initializes this palette from the {@code buf}. Clears the preexisting

@@ -4,7 +4,7 @@ import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 
 @SuperBuilder
-public class ResourcesReloadEvent extends Event {
+public class DataReloadEvent extends Event {
 
     @Override
     protected int getEventID() {

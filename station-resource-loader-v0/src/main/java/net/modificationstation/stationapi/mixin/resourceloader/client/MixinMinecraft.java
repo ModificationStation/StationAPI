@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.level.Level;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.resource.AssetsReloadEvent;
+import net.modificationstation.stationapi.api.event.resource.DataReloadEvent;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,7 +36,7 @@ public class MixinMinecraft {
             )
     )
     private void worldInit(Level string, String arg2, PlayerBase par3, CallbackInfo ci) {
-//        if (this.level != null)
-//            StationAPI.EVENT_BUS.post(ResourcesReloadEvent.builder().build());
+        if (this.level != null)
+            StationAPI.EVENT_BUS.post(DataReloadEvent.builder().build());
     }
 }

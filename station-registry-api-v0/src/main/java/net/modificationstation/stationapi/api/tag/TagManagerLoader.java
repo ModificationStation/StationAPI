@@ -14,11 +14,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.ModID.MINECRAFT;
 
 public class TagManagerLoader implements IdentifiableResourceReloadListener {
 
-    public static final Identifier TAGS = MINECRAFT.id("tags");
+    public static final Identifier TAGS = MODID.id("tags");
 
     private final DynamicRegistryManager registryManager;
     private List<RegistryTags<?>> registryTags = List.of();

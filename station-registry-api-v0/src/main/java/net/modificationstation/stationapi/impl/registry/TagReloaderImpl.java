@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.registry;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.modificationstation.stationapi.api.event.resource.ResourceReloaderRegisterEvent;
-import net.modificationstation.stationapi.api.event.resource.ResourcesReloadEvent;
+import net.modificationstation.stationapi.api.event.resource.DataReloadEvent;
+import net.modificationstation.stationapi.api.event.resource.DataResourceReloaderRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.DynamicRegistryManager;
@@ -23,12 +23,12 @@ public final class TagReloaderImpl {
     private static TagManagerLoader registryTagManager;
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
-    private static void registerTagLoader(ResourceReloaderRegisterEvent event) {
-//        event.resourceManager.registerReloader(registryTagManager = new TagManagerLoader(dynamicRegistryManager = DynamicRegistryManager.createAndLoad()));
+    private static void registerTagLoader(DataResourceReloaderRegisterEvent event) {
+        event.resourceManager.registerReloader(registryTagManager = new TagManagerLoader(dynamicRegistryManager = DynamicRegistryManager.createAndLoad()));
     }
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 - Integer.MAX_VALUE / 8)
-    private static void refreshTagLoader(ResourcesReloadEvent event) {
+    private static void refreshTagLoader(DataReloadEvent event) {
         registryTagManager.getRegistryTags().forEach(tags -> repopulateTags(dynamicRegistryManager, tags));
     }
 

@@ -20,6 +20,7 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
+      "net.modificationstation.stationapi.impl.resource.DataReloaderImpl"
     ],
     "stationapi:event_bus_client": [
       "net.modificationstation.stationapi.impl.client.resource.AssetsReloaderImpl"
