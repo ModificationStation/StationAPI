@@ -112,14 +112,6 @@ public class SpriteAtlasTexture extends AbstractTexture implements DynamicTextur
         return this.maxTextureSize;
     }
 
-    int getWidth() {
-        return this.width;
-    }
-
-    int getHeight() {
-        return this.height;
-    }
-
     public void applyTextureFilter(SpriteLoader.StitchResult data) {
         this.setFilter(false, false);
     }

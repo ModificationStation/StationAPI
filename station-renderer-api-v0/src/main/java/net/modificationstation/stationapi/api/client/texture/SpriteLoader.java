@@ -25,18 +25,14 @@ import static net.modificationstation.stationapi.impl.client.texture.StationRend
 public class SpriteLoader {
     private final Identifier id;
     private final int maxTextureSize;
-    private final int width;
-    private final int height;
 
-    public SpriteLoader(Identifier id, int maxTextureSize, int width, int height) {
+    public SpriteLoader(Identifier id, int maxTextureSize) {
         this.id = id;
         this.maxTextureSize = maxTextureSize;
-        this.width = width;
-        this.height = height;
     }
 
     public static SpriteLoader fromAtlas(SpriteAtlasTexture atlasTexture) {
-        return new SpriteLoader(atlasTexture.getId(), atlasTexture.getMaxTextureSize(), atlasTexture.getWidth(), atlasTexture.getHeight());
+        return new SpriteLoader(atlasTexture.getId(), atlasTexture.getMaxTextureSize());
     }
 
     public StitchResult stitch(List<SpriteContents> sprites, Executor executor) {
@@ -54,11 +50,11 @@ public class SpriteLoader {
             crashReportSection.add("Max Texture Size", i);
             throw new CrashException(crashReport);
         }
-        int o = Math.max(textureStitcher.getWidth(), this.width);
-        int p = Math.max(textureStitcher.getHeight(), this.height);
-        Map<Identifier, Sprite> map = this.collectStitchedSprites(textureStitcher, o, p);
+        int width = textureStitcher.getWidth();
+        int height = textureStitcher.getHeight();
+        Map<Identifier, Sprite> map = this.collectStitchedSprites(textureStitcher, width, height);
         Sprite sprite2 = map.get(MissingSprite.getMissingSpriteId());
-        return new StitchResult(o, p, sprite2, map, CompletableFuture.completedFuture(null));
+        return new StitchResult(width, height, sprite2, map, CompletableFuture.completedFuture(null));
     }
 
     public static CompletableFuture<List<SpriteContents>> loadAll(List<Supplier<SpriteContents>> sources, Executor executor) {
@@ -80,7 +76,7 @@ public class SpriteLoader {
             LOGGER.error("Unable to parse metadata from {}", id, exception);
             return null;
         }
-        try (InputStream inputStream = resource.getInputStream();){
+        try (InputStream inputStream = resource.getInputStream()){
             nativeImage = NativeImage.read(inputStream);
         } catch (IOException iOException) {
             LOGGER.error("Using missing texture, unable to load {}", id, iOException);
