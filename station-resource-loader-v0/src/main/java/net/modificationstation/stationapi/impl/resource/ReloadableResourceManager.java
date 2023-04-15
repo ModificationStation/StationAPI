@@ -29,14 +29,14 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
  * with an empty one, and the reloadable manager itself is still accessible to
  * users, as opposed to the lifecycled resource manager.
  */
-public class ReloadableResourceManagerImpl implements ResourceManager, AutoCloseable {
+public class ReloadableResourceManager implements ResourceManager, AutoCloseable {
     private LifecycledResourceManager activeManager;
     private final List<ResourceReloader> reloaders = Lists.newArrayList();
     private final ResourceType type;
 
-    public ReloadableResourceManagerImpl(ResourceType type) {
+    public ReloadableResourceManager(ResourceType type) {
         this.type = type;
-        this.activeManager = new LifecycledResourceManagerImpl(type, List.of());
+        activeManager = new LifecycledResourceManagerImpl(type, List.of());
     }
 
     @Override
@@ -58,9 +58,22 @@ public class ReloadableResourceManagerImpl implements ResourceManager, AutoClose
      */
     public ResourceReload reload(Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage, List<ResourcePack> packs) {
         LOGGER.info("Reloading ResourceManager: {}", () -> packs.stream().map(ResourcePack::getName).collect(Collectors.joining(", ")));
-        this.activeManager.close();
-        this.activeManager = new LifecycledResourceManagerImpl(this.type, packs);
-        return SimpleResourceReload.start(this.activeManager, this.reloaders, prepareExecutor, applyExecutor, initialStage, LOGGER.isDebugEnabled());
+        activeManager.close();
+        activeManager = new LifecycledResourceManagerImpl(type, packs);
+        return SimpleResourceReload.start(activeManager, reloaders, prepareExecutor, applyExecutor, initialStage);
+    }
+
+    public ResourceReload reload(
+            Executor prepareExecutor,
+            Executor applyExecutor,
+            CompletableFuture<Unit> initialStage,
+            ResourceReloaderProfilers.Factory profilersFactory,
+            List<ResourcePack> packs
+    ) {
+        LOGGER.info("Reloading ResourceManager: {}", () -> packs.stream().map(ResourcePack::getName).collect(Collectors.joining(", ")));
+        activeManager.close();
+        activeManager = new LifecycledResourceManagerImpl(type, packs);
+        return SimpleResourceReload.start(activeManager, reloaders, prepareExecutor, applyExecutor, profilersFactory, initialStage);
     }
 
     @Override
@@ -91,6 +104,11 @@ public class ReloadableResourceManagerImpl implements ResourceManager, AutoClose
     @Override
     public Stream<ResourcePack> streamResourcePacks() {
         return this.activeManager.streamResourcePacks();
+    }
+
+    @Override
+    public Optional<ResourceType> getResourceType() {
+        return Optional.of(type);
     }
 }
 

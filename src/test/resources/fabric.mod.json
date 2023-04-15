@@ -40,6 +40,10 @@
       "net.modificationstation.sltest.render.entity.EntityRendererListener"
     ],
     "main": [
+      "net.modificationstation.sltest.MainTest"
+    ],
+    "preLaunch": [
+      "net.modificationstation.sltest.PreLaunchTest"
     ]
   },
 

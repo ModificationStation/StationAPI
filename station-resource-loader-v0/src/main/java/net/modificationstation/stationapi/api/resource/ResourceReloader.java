@@ -1,7 +1,9 @@
 package net.modificationstation.stationapi.api.resource;
 
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
+import net.modificationstation.stationapi.impl.resource.ReloadableResourceManager;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
@@ -37,7 +39,7 @@ public interface ResourceReloader {
      * In the end, returns the result of {@code thenAcceptAsync}.
      * 
      * @return a future for the reload
-     * @see ReloadableResourceManagerImpl#reload(Executor, Executor,
+     * @see ReloadableResourceManager#reload(Executor, Executor,
      * CompletableFuture, List)
      * 
      * @param prepareProfiler the profiler for prepare stage

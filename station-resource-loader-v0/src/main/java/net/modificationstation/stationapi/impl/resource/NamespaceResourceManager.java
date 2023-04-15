@@ -71,7 +71,7 @@ public class NamespaceResourceManager implements ResourceManager {
     }
 
     private static Resource createResource(ResourcePack pack, Identifier id, InputSupplier<InputStream> supplier, InputSupplier<ResourceMetadata> metadataSupplier) {
-        return new Resource(wrapForDebug(id, pack, supplier), metadataSupplier);
+        return new Resource(pack, wrapForDebug(id, pack, supplier), metadataSupplier);
     }
 
     private static InputSupplier<InputStream> wrapForDebug(Identifier id, ResourcePack pack, InputSupplier<InputStream> supplier) {
@@ -100,7 +100,7 @@ public class NamespaceResourceManager implements ResourceManager {
                         return inputSupplier1 != null ? loadMetadata(inputSupplier1) : ResourceMetadata.NONE;
                     });
 
-                    list.add(new Resource(inputSupplier, inputSupplier2));
+                    list.add(new Resource(resourcePack, inputSupplier, inputSupplier2));
                 }
             }
 
@@ -262,6 +262,11 @@ public class NamespaceResourceManager implements ResourceManager {
 
     public Stream<ResourcePack> streamResourcePacks() {
         return this.packList.stream().map((pack) -> pack.underlying).filter(Objects::nonNull);
+    }
+
+    @Override
+    public Optional<ResourceType> getResourceType() {
+        return Optional.of(type);
     }
 
     record FilterablePack(String name, @Nullable ResourcePack underlying, @Nullable Predicate<Identifier> filter) {

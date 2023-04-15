@@ -16,14 +16,14 @@ public interface IdentifiableResourceReloadListener extends ResourceReloader {
 	/**
 	 * @return The unique identifier of this listener.
 	 */
-	Identifier getFabricId();
+	Identifier getId();
 
 	/**
 	 * @return The identifiers of listeners this listener expects to have been
 	 * executed before itself. Please keep in mind that this only takes effect
 	 * during the application stage!
 	 */
-	default Collection<Identifier> getFabricDependencies() {
+	default Collection<Identifier> getDependencies() {
 		return Collections.emptyList();
 	}
 }

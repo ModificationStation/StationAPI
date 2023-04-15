@@ -6,7 +6,7 @@ import com.mojang.serialization.JsonOps;
 
 public interface ResourceMetadataSerializer<T> extends ResourceMetadataReader<T> {
 
-    JsonObject toJson(T var1);
+    JsonObject toJson(T t);
 
     static <T> ResourceMetadataSerializer<T> fromCodec(final String key, final Codec<T> codec) {
         return new ResourceMetadataSerializer<>() {

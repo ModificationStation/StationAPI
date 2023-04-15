@@ -7,7 +7,9 @@ import java.util.List;
 
 public class ResourceFilter {
 
-    private static final Codec<ResourceFilter> CODEC = RecordCodecBuilder.create(instance -> instance.group((Codec.list(BlockEntry.CODEC).fieldOf("block")).forGetter(filter -> filter.blocks)).apply(instance, ResourceFilter::new));
+    private static final Codec<ResourceFilter> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.list(BlockEntry.CODEC).fieldOf("block").forGetter(filter -> filter.blocks)
+    ).apply(instance, ResourceFilter::new));
     public static final ResourceMetadataSerializer<ResourceFilter> SERIALIZER = ResourceMetadataSerializer.fromCodec("filter", CODEC);
     /**
      * The list of block rules, named {@code block} in the JSON format.

@@ -30,13 +30,13 @@ public interface ResourceMetadata {
 
                 @Override
                 public <T> Optional<T> decode(ResourceMetadataReader<T> reader) {
-                    String string = reader.getKey();
-                    return jsonObject.has(string) ? Optional.of(reader.fromJson(JsonHelper.getObject(jsonObject, string))) : Optional.empty();
+                    String key = reader.getKey();
+                    return jsonObject.has(key) ? Optional.of(reader.fromJson(JsonHelper.getObject(jsonObject, key))) : Optional.empty();
                 }
             };
         }
     }
 
-    <T> Optional<T> decode(ResourceMetadataReader<T> var1);
+    <T> Optional<T> decode(ResourceMetadataReader<T> reader);
 }
 

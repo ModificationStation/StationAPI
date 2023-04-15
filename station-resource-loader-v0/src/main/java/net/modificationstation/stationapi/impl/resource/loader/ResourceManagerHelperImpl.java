@@ -92,8 +92,6 @@ public class ResourceManagerHelperImpl implements ResourceManagerHelper {
 	}
 
 	public static List<ResourceReloader> sort(ResourceType type, List<ResourceReloader> listeners) {
-		if (type == null) return listeners;
-
 		ResourceManagerHelperImpl instance = get(type);
 
 		if (instance != null) {
@@ -119,7 +117,7 @@ public class ResourceManagerHelperImpl implements ResourceManagerHelper {
 
 		for (ResourceReloader listener : listeners)
 			if (listener instanceof IdentifiableResourceReloadListener)
-				resolvedIds.add(((IdentifiableResourceReloadListener) listener).getFabricId());
+				resolvedIds.add(((IdentifiableResourceReloadListener) listener).getId());
 
 		int lastSize = -1;
 
@@ -131,8 +129,8 @@ public class ResourceManagerHelperImpl implements ResourceManagerHelper {
 			while (it.hasNext()) {
 				IdentifiableResourceReloadListener listener = it.next();
 
-				if (resolvedIds.containsAll(listener.getFabricDependencies())) {
-					resolvedIds.add(listener.getFabricId());
+				if (resolvedIds.containsAll(listener.getDependencies())) {
+					resolvedIds.add(listener.getId());
 					listeners.add(listener);
 					it.remove();
 				}
@@ -140,17 +138,17 @@ public class ResourceManagerHelperImpl implements ResourceManagerHelper {
 		}
 
 		for (IdentifiableResourceReloadListener listener : listenersToAdd)
-			LOGGER.warn("Could not resolve dependencies for listener: " + listener.getFabricId() + "!");
+			LOGGER.warn("Could not resolve dependencies for listener: " + listener.getId() + "!");
 	}
 
 	@Override
 	public void registerReloadListener(IdentifiableResourceReloadListener listener) {
-		if (!addedListenerIds.add(listener.getFabricId())) {
-			LOGGER.warn("Tried to register resource reload listener " + listener.getFabricId() + " twice!");
+		if (!addedListenerIds.add(listener.getId())) {
+			LOGGER.warn("Tried to register resource reload listener " + listener.getId() + " twice!");
 			return;
 		}
 
 		if (!addedListeners.add(listener))
-			throw new RuntimeException("Listener with previously unknown ID " + listener.getFabricId() + " already in listener set!");
+			throw new RuntimeException("Listener with previously unknown ID " + listener.getId() + " already in listener set!");
 	}
 }

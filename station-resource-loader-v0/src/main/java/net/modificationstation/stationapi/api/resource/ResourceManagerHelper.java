@@ -10,16 +10,6 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @ApiStatus.NonExtendable
 public interface ResourceManagerHelper {
-	/**
-	 * Add a resource reload listener for a given registry.
-	 *
-	 * @param listener The resource reload listener.
-	 * @deprecated Use {@link ResourceManagerHelper#registerReloadListener(IdentifiableResourceReloadListener)}
-	 */
-	@Deprecated
-	default void addReloadListener(IdentifiableResourceReloadListener listener) {
-		registerReloadListener(listener);
-	}
 
 	/**
 	 * Register a resource reload listener for a given resource manager type.

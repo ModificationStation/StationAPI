@@ -6,5 +6,5 @@ public interface ResourceMetadataReader<T> {
 
     String getKey();
 
-    T fromJson(JsonObject var1);
+    T fromJson(JsonObject object);
 }

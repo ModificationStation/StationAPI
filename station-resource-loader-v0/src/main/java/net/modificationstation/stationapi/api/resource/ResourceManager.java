@@ -55,6 +55,8 @@ public interface ResourceManager extends ResourceFactory {
      */
     Stream<ResourcePack> streamResourcePacks();
 
+    Optional<ResourceType> getResourceType();
+
     enum Empty implements ResourceManager {
         INSTANCE;
 
@@ -86,7 +88,12 @@ public interface ResourceManager extends ResourceFactory {
 
         @Override
         public Stream<ResourcePack> streamResourcePacks() {
-            return Stream.of(new ResourcePack[0]);
+            return Stream.empty();
+        }
+
+        @Override
+        public Optional<ResourceType> getResourceType() {
+            return Optional.empty();
         }
     }
 }

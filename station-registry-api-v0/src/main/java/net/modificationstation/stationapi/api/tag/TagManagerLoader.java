@@ -52,7 +52,7 @@ public class TagManagerLoader implements IdentifiableResourceReloadListener {
     }
 
     @Override
-    public Identifier getFabricId() {
+    public Identifier getId() {
         return TAGS;
     }
 

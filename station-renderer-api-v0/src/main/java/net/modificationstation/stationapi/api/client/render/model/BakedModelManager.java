@@ -1,9 +1,11 @@
 package net.modificationstation.stationapi.api.client.render.model;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ObjectArrays;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
+import lombok.val;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -23,6 +25,7 @@ import net.modificationstation.stationapi.api.client.texture.StationTextureManag
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloadListener;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.resource.ResourceReloader;
@@ -36,13 +39,16 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.ModID.MINECRAFT;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 @Environment(EnvType.CLIENT)
-public class BakedModelManager implements ResourceReloader, AutoCloseable {
+public class BakedModelManager implements IdentifiableResourceReloadListener, AutoCloseable {
+
+    public static final Identifier MODELS = MODID.id("models");
+
     private Map<Identifier, BakedModel> models;
     @SuppressWarnings("deprecation")
     private final SpriteAtlasManager atlasManager = new SpriteAtlasManager(Util.make(new Reference2ReferenceOpenHashMap<>(), m -> m.put(Atlases.GAME_ATLAS_TEXTURE, MINECRAFT.id("game"))), StationTextureManager.get(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager));
@@ -70,32 +76,6 @@ public class BakedModelManager implements ResourceReloader, AutoCloseable {
         return this.blockModelCache;
     }
 
-//    @Override
-//    public ModelLoader prepare(ResourceManager resourceManager, Profiler profiler) {
-//        profiler.startTick();
-//        ModelLoader modelLoader = new ModelLoader(resourceManager, this.colourMap, profiler);
-//        profiler.endTick();
-//        return modelLoader;
-//    }
-//
-//    @Override
-//    public void apply(ModelLoader modelLoader, ResourceManager resourceManager, Profiler profiler) {
-//        profiler.startTick();
-//        profiler.push("upload");
-//        if (this.atlasManager != null) {
-//            this.atlasManager.close();
-//        }
-//
-//        this.atlasManager = modelLoader.upload(this.textureManager, profiler);
-//        this.models = modelLoader.getBakedModelMap();
-//        this.stateLookup = modelLoader.getStateLookup();
-//        this.missingModel = this.models.get(ModelLoader.MISSING.asIdentifier());
-//        profiler.swap("cache");
-//        this.blockModelCache.reload();
-//        profiler.pop();
-//        profiler.endTick();
-//    }
-
     public SpriteAtlasTexture getAtlas(Identifier identifier) {
         return Objects.requireNonNull(this.atlasManager).getAtlas(identifier);
     }
@@ -105,17 +85,31 @@ public class BakedModelManager implements ResourceReloader, AutoCloseable {
     }
 
     @Override
-    public final CompletableFuture<Void> reload(ResourceReloader.Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
+    public final CompletableFuture<Void> reload(
+            ResourceReloader.Synchronizer synchronizer,
+            ResourceManager manager,
+            Profiler prepareProfiler,
+            Profiler applyProfiler,
+            Executor prepareExecutor,
+            Executor applyExecutor
+    ) {
         prepareProfiler.startTick();
-        CompletableFuture<Map<Identifier, JsonUnbakedModel>> modelsReload = BakedModelManager.reloadModels(manager, prepareExecutor);
-        CompletableFuture<Map<Identifier, List<ModelLoader.SourceTrackedData>>> blockStatesReload = BakedModelManager.reloadBlockStates(manager, prepareExecutor);
-        CompletableFuture<ModelLoader> completableFuture3 = modelsReload.thenCombineAsync(blockStatesReload, (jsonUnbakedModels, blockStates) -> new ModelLoader(this.colorMap, prepareProfiler, jsonUnbakedModels, blockStates), prepareExecutor);
-        Map<Identifier, CompletableFuture<SpriteAtlasManager.AtlasPreparation>> map = this.atlasManager.reload(manager, prepareExecutor);
-        return CompletableFuture.allOf(Stream.concat(map.values().stream(), Stream.of(completableFuture3)).toArray(CompletableFuture[]::new))
-                .thenApplyAsync(arg_0 -> this.bake(prepareProfiler, map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().join())), completableFuture3.join()), prepareExecutor)
+        val modelLoader = BakedModelManager.reloadModels(manager, prepareExecutor).thenCombineAsync(
+                BakedModelManager.reloadBlockStates(manager, prepareExecutor),
+                (jsonUnbakedModels, blockStates) -> new ModelLoader(colorMap, prepareProfiler, jsonUnbakedModels, blockStates),
+                prepareExecutor
+        );
+        val atlases = atlasManager.reload(manager, prepareExecutor);
+        return CompletableFuture
+                .allOf(ObjectArrays.concat(atlases.values().toArray(CompletableFuture[]::new), modelLoader))
+                .thenApplyAsync(void_ -> bake(
+                        prepareProfiler,
+                        atlases.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().join())),
+                        modelLoader.join()
+                ), prepareExecutor)
                 .thenCompose(result -> result.readyForUpload.thenApply(void_ -> result))
                 .thenCompose(synchronizer::whenPrepared)
-                .thenAcceptAsync(result -> this.upload(result, applyProfiler), applyExecutor);
+                .thenAcceptAsync(result -> upload(result, applyProfiler), applyExecutor);
     }
 
     private static CompletableFuture<Map<Identifier, JsonUnbakedModel>> reloadModels(ResourceManager resourceManager, Executor executor) {
@@ -196,4 +190,9 @@ public class BakedModelManager implements ResourceReloader, AutoCloseable {
     }
 
     record BakingResult(ModelLoader modelLoader, BakedModel missingModel, Map<BlockState, BakedModel> modelCache, Map<Identifier, SpriteAtlasManager.AtlasPreparation> atlasPreparations, CompletableFuture<Void> readyForUpload) {}
+
+    @Override
+    public Identifier getId() {
+        return MODELS;
+    }
 }

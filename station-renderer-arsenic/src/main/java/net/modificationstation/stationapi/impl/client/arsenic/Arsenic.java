@@ -5,8 +5,8 @@ import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.client.event.resource.AssetsReloadEvent;
 import net.modificationstation.stationapi.api.client.event.resource.TexturePackLoadedEvent;
+import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
 import net.modificationstation.stationapi.api.client.render.RendererAccess;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
@@ -20,6 +20,8 @@ import net.modificationstation.stationapi.mixin.render.client.TextureManagerAcce
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +48,7 @@ public class Arsenic {
         }
     }
 
-    private static void registerTextures(AssetsReloadEvent event) {
+    private static void registerTextures(TextureRegisterEvent event) {
         ExpandableAtlas terrain = Atlases.getTerrain();
         ExpandableAtlas guiItems = Atlases.getGuiItems();
         terrain.addTextureBinder(terrain.getTexture(BlockBase.FLOWING_WATER.texture), ArsenicStillWater::new);
@@ -62,7 +64,13 @@ public class Arsenic {
 
     private static void beforeTexturePackApplied(TexturePackLoadedEvent.Before event) {
         Map<String, Integer> textureMap = ((TextureManagerAccessor) event.textureManager).getTextures();
-        new HashMap<>(textureMap).keySet().stream().filter(s -> event.newTexturePack.getResourceAsStream(s) == null).forEach(s -> GL11.glDeleteTextures(textureMap.remove(s)));
+        new HashMap<>(textureMap).keySet().stream().filter(s -> {
+            try (InputStream textureStream = event.newTexturePack.getResourceAsStream(s)) {
+                return textureStream == null;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).forEach(s -> GL11.glDeleteTextures(textureMap.remove(s)));
         ((TextureManagerAccessor) event.textureManager).getTextureBinders().clear();
     }
 }

@@ -88,7 +88,7 @@ public abstract class GroupResourcePack implements ResourcePack {
 					return rawMetadataSupplier != null ? NamespaceResourceManager.loadMetadata(rawMetadataSupplier) : ResourceMetadata.NONE;
 				};
 
-				resources.add(new Resource(supplier, metadataSupplier));
+				resources.add(new Resource(pack, supplier, metadataSupplier));
 			}
 		}
 	}

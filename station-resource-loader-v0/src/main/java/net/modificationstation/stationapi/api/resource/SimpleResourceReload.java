@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.api.resource;
 import net.modificationstation.stationapi.api.util.Unit;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.profiler.DummyProfiler;
-import net.modificationstation.stationapi.impl.resource.LifecycledResourceManager;
 import net.modificationstation.stationapi.impl.resource.loader.ResourceManagerHelperImpl;
 
 import java.util.ArrayList;
@@ -111,21 +110,48 @@ public class SimpleResourceReload<S> implements ResourceReload {
      * @param manager the resource manager, providing resources to the reloaders
      * @param applyExecutor the executor for the apply stage, synchronous with the game engine
      * @param prepareExecutor the executor for the prepare stage, often asynchronous
-     * @param profiled whether to profile this reload and log the statistics
      * @param initialStage the initial stage, must be completed before the reloaders can prepare resources
      */
-    public static ResourceReload start(ResourceManager manager, List<ResourceReloader> reloaders, Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage, boolean profiled) {
-        ResourceManagerHelperImpl.sort(
-                manager instanceof LifecycledResourceManager lifecycled ?
-                        lifecycled.getResourceType() :
-                        null,
-                reloaders
+    public static ResourceReload start(
+            ResourceManager manager,
+            final List<ResourceReloader> reloaders,
+            Executor prepareExecutor,
+            Executor applyExecutor,
+            CompletableFuture<Unit> initialStage
+    ) {
+        return SimpleResourceReload.create(
+                manager,
+                manager.getResourceType()
+                        .map(type -> ResourceManagerHelperImpl.sort(type, reloaders))
+                        .orElse(reloaders),
+                prepareExecutor,
+                applyExecutor,
+                initialStage
         );
-        return profiled ? new ProfiledResourceReload(manager, reloaders, prepareExecutor, applyExecutor, initialStage) : SimpleResourceReload.create(manager, reloaders, prepareExecutor, applyExecutor, initialStage);
+    }
+
+    public static ResourceReload start(
+            ResourceManager manager,
+            final List<ResourceReloader> reloaders,
+            Executor prepareExecutor,
+            Executor applyExecutor,
+            ResourceReloaderProfilers.Factory profilersFactory,
+            CompletableFuture<Unit> initialStage
+    ) {
+        return new ProfiledResourceReload(
+                manager,
+                manager.getResourceType()
+                        .map(type -> ResourceManagerHelperImpl.sort(type, reloaders))
+                        .orElse(reloaders),
+                prepareExecutor,
+                applyExecutor,
+                profilersFactory,
+                initialStage
+        );
     }
 
     protected interface Factory<S> {
-        CompletableFuture<S> create(ResourceReloader.Synchronizer var1, ResourceManager var2, ResourceReloader var3, Executor var4, Executor var5);
+        CompletableFuture<S> create(ResourceReloader.Synchronizer synchronizer, ResourceManager manager, ResourceReloader reloader, Executor prepareExecutor, Executor applyExecutor);
     }
 }
 

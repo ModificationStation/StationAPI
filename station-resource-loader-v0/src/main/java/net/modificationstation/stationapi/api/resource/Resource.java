@@ -21,39 +21,39 @@ import java.nio.charset.StandardCharsets;
  */
 public class Resource {
 
-//    private final ResourcePack pack;
+    private final ResourcePack pack;
     private final InputSupplier<InputStream> inputSupplier;
     private final InputSupplier<ResourceMetadata> metadataSupplier;
     @Nullable
     private ResourceMetadata metadata;
 
-    public Resource(/*ResourcePack pack, */InputSupplier<InputStream> inputSupplier, InputSupplier<ResourceMetadata> metadataSupplier) {
-//        this.pack = pack;
+    public Resource(ResourcePack pack, InputSupplier<InputStream> inputSupplier, InputSupplier<ResourceMetadata> metadataSupplier) {
+        this.pack = pack;
         this.inputSupplier = inputSupplier;
         this.metadataSupplier = metadataSupplier;
     }
 
-    public Resource(/*ResourcePack pack, */InputSupplier<InputStream> inputSupplier) {
-//        this.pack = pack;
+    public Resource(ResourcePack pack, InputSupplier<InputStream> inputSupplier) {
+        this.pack = pack;
         this.inputSupplier = inputSupplier;
         this.metadataSupplier = ResourceMetadata.NONE_SUPPLIER;
         this.metadata = ResourceMetadata.NONE;
     }
 
-//    public ResourcePack getPack() {
-//        return this.pack;
-//    }
-//
-//    /**
-//     * Returns the user-friendly name of the pack this resource is from.
-//     */
-//    public String getResourcePackName() {
-//        return this.pack.getName();
-//    }
-//
-//    public boolean isAlwaysStable() {
-//        return this.pack.isAlwaysStable();
-//    }
+    public ResourcePack getPack() {
+        return this.pack;
+    }
+
+    /**
+     * Returns the user-friendly name of the pack this resource is from.
+     */
+    public String getResourcePackName() {
+        return this.pack.getName();
+    }
+
+    public boolean isAlwaysStable() {
+        return this.pack.isAlwaysStable();
+    }
 
     /**
      * Returns the input stream of this resource.

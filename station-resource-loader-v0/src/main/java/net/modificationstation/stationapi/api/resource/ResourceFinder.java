@@ -28,10 +28,10 @@ public class ResourceFinder {
     }
 
     public Map<Identifier, Resource> findResources(ResourceManager resourceManager) {
-        return resourceManager.findResources(this.directoryName, (path) -> path.id.endsWith(this.fileExtension));
+        return resourceManager.findResources(this.directoryName, path -> path.id.endsWith(this.fileExtension));
     }
 
     public Map<Identifier, List<Resource>> findAllResources(ResourceManager resourceManager) {
-        return resourceManager.findAllResources(this.directoryName, (path) -> path.id.endsWith(this.fileExtension));
+        return resourceManager.findAllResources(this.directoryName, path -> path.id.endsWith(this.fileExtension));
     }
 }

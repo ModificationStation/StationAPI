@@ -6,9 +6,11 @@
   "mixins": [
   ],
   "client": [
+    "client.MinecraftAccessor",
     "client.MixinMinecraft",
     "client.MixinTexturePack",
-    "client.MixinZippedTexturePack"
+    "client.MixinZippedTexturePack",
+    "client.ZippedTexturePackAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

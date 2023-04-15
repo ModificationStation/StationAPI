@@ -12,7 +12,6 @@ import net.modificationstation.stationapi.api.client.texture.TexturePackDependen
 import net.modificationstation.stationapi.api.client.texture.binder.StaticReferenceProvider;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.resource.ResourceHelper;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import uk.co.benjiweber.expressions.function.ObjIntFunction;
@@ -23,8 +22,6 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.function.IntFunction;
-
-import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 public abstract class Atlas {
 
@@ -86,14 +83,6 @@ public abstract class Atlas {
         return (T) this;
     }
 
-    public final int getAtlasTextureID() {
-        return StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getGlId();
-    }
-
-    public final void bindAtlas() {
-        StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).bindTexture();
-    }
-
     public final Sprite getTexture(Identifier identifier) {
         return of(identifier).idToTex.get(identifier);
     }
@@ -117,7 +106,7 @@ public abstract class Atlas {
     }
 
     public void registerTextureBinders(TextureManager textureManager, TexturePack texturePack) {
-        textureBinders.stream().filter(textureBinder -> !(textureBinder instanceof StaticReferenceProvider provider && provider.getStaticReference().getSprite().getContents().getAnimation() != null)).forEach(arg -> {
+        textureBinders.stream().filter(textureBinder -> !(textureBinder instanceof StaticReferenceProvider provider) || provider.getStaticReference().getSprite().getContents().getAnimation() == null).forEach(arg -> {
             if (arg instanceof TexturePackDependent dependent)
                 dependent.reloadFromTexturePack(texturePack);
             textureManager.addTextureBinder(arg);
@@ -174,41 +163,5 @@ public abstract class Atlas {
         public net.modificationstation.stationapi.api.client.texture.Sprite getSprite() {
             return StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(id);
         }
-
-        /* !==========================! */
-        /* !--- DEPRECATED SECTION ---! */
-        /* !==========================! */
-
-        @Deprecated
-        protected Sprite(int index, int x, int y, int width, int height) {
-            this(Identifier.of(Atlas.this.id.modID, String.valueOf(index)), index);
-        }
-    }
-
-    /* !==========================! */
-    /* !--- DEPRECATED SECTION ---! */
-    /* !==========================! */
-
-    @Deprecated
-    private static Identifier calcId(String spritesheet) {
-        LOGGER.warn("Using a deprecated atlas initializer on spritesheet \"" + spritesheet + "\"! Attempting to calculate the identifier...");
-        if (ResourceHelper.ASSETS.contains(spritesheet))
-            try {
-                return ResourceHelper.ASSETS.toId(spritesheet, "", "png");
-            } catch (IllegalArgumentException e) {
-                LOGGER.warn("Atlas spritesheet path doesn't seem to follow /assets/modid/ format.", e);
-            }
-        LOGGER.warn("Modid calculation failed, generating an identifier under \"minecraft\" modid and the full spritesheet path as the id.");
-        return Identifier.of(spritesheet.substring(1));
-    }
-
-    @Deprecated
-    public Atlas(final String spritesheet, final int size, final boolean fixedSize) {
-        this(calcId(spritesheet), spritesheet, size, fixedSize);
-    }
-
-    @Deprecated
-    public Atlas(final String spritesheet, final int size, final boolean fixedSize, final Atlas parent) {
-        this(calcId(spritesheet), spritesheet, size, fixedSize, parent);
     }
 }

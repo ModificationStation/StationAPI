@@ -33,9 +33,7 @@ public interface ResourceReload {
      */
     default void throwException() {
         CompletableFuture<?> completableFuture = this.whenComplete();
-        if (completableFuture.isCompletedExceptionally()) {
-            completableFuture.join();
-        }
+        if (completableFuture.isCompletedExceptionally()) completableFuture.join();
     }
 }
 

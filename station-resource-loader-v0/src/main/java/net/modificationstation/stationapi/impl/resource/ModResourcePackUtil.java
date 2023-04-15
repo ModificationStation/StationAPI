@@ -99,7 +99,7 @@ public final class ModResourcePackUtil {
 			case "pack.mcmeta" -> {
 				String description = Objects.requireNonNullElse(info.getName(), "");
 				String metadata = serializeMetadata(type == ResourceType.CLIENT_RESOURCES ? 13 : 12, description);
-				yield  IOUtils.toInputStream(metadata, Charsets.UTF_8);
+				yield IOUtils.toInputStream(metadata, Charsets.UTF_8);
 			}
 			default -> null;
 		};

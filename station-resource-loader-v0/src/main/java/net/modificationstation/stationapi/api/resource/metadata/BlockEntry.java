@@ -10,7 +10,10 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 public class BlockEntry {
-    public static final Codec<BlockEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(Codecs.REGULAR_EXPRESSION.optionalFieldOf("namespace").forGetter(entry -> entry.namespace), Codecs.REGULAR_EXPRESSION.optionalFieldOf("path").forGetter(entry -> entry.path)).apply(instance, BlockEntry::new));
+    public static final Codec<BlockEntry> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codecs.REGULAR_EXPRESSION.optionalFieldOf("namespace").forGetter(entry -> entry.namespace),
+            Codecs.REGULAR_EXPRESSION.optionalFieldOf("path").forGetter(entry -> entry.path)
+    ).apply(instance, BlockEntry::new));
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private final Optional<Pattern> namespace;
     private final Predicate<String> namespacePredicate;

@@ -26,12 +26,12 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
  */
 public class LifecycledResourceManagerImpl implements LifecycledResourceManager {
     private final Map<ModID, NamespaceResourceManager> subManagers;
-    private final ResourceType resourceType;
+    private final ResourceType type;
     private final List<ResourcePack> packs;
 
     public LifecycledResourceManagerImpl(ResourceType type, List<ResourcePack> packs) {
         this.packs = List.copyOf(packs);
-        resourceType = type;
+        this.type = type;
         Map<ModID, NamespaceResourceManager> map = new HashMap<>();
         List<ModID> list = packs.stream().flatMap(pack -> pack.getNamespaces(type).stream()).distinct().toList();
         for (ResourcePack resourcePack : packs) {
@@ -131,8 +131,8 @@ public class LifecycledResourceManagerImpl implements LifecycledResourceManager 
     }
 
     @Override
-    public ResourceType getResourceType() {
-        return resourceType;
+    public Optional<ResourceType> getResourceType() {
+        return Optional.of(type);
     }
 
     @Override

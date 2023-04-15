@@ -132,7 +132,7 @@ public class ResourcePackProfile {
 
     @FunctionalInterface
     public interface PackFactory {
-        ResourcePack open(String var1);
+        ResourcePack open(String name);
     }
 
     public record Metadata(String description, int format) {

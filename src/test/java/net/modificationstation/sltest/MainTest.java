@@ -1,6 +1,12 @@
 package net.modificationstation.sltest;
 
-public class MainTest {
+import net.fabricmc.api.ModInitializer;
+
+public class MainTest implements ModInitializer {
+    @Override
+    public void onInitialize() {
+//        new Exception().printStackTrace();
+    }
 
 //    @EventListener
 //    public void onInitialize(TagRegisterEvent event) {

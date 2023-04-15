@@ -62,9 +62,7 @@ public class ModResourcePackCreator implements ResourcePackProvider {
 					true, factory -> new FabricModResourcePack(this.type, packs), type, ResourcePackProfile.InsertionPosition.TOP,
 					RESOURCE_PACK_SOURCE);
 
-			if (resourcePackProfile != null) {
-				consumer.accept(resourcePackProfile);
-			}
+			if (resourcePackProfile != null) consumer.accept(resourcePackProfile);
 		}
 
 		// Register all built-in resource packs provided by mods.

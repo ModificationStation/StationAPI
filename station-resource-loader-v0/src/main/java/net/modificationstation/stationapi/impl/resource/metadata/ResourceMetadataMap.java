@@ -14,7 +14,7 @@ public class ResourceMetadataMap {
 
     public <T> T get(ResourceMetadataReader<T> reader) {
         //noinspection unchecked
-        return (T)this.values.get(reader);
+        return (T) this.values.get(reader);
     }
 
     public static ResourceMetadataMap of() {
