@@ -49,7 +49,7 @@ public class ZipResourcePack extends AbstractFileResourcePack {
     }
 
     private static String toPath(ResourceType type, Identifier id) {
-        return id.modID == ModID.MINECRAFT && id.id.startsWith("/") ? id.id : String.format(Locale.ROOT, "%s/%s/%s", type.getDirectory(), id.modID, id.id);
+        return String.format(Locale.ROOT, "%s/%s/%s", type.getDirectory(), id.modID, id.id);
     }
 
     @Override

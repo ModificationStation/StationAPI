@@ -50,7 +50,7 @@ public class DefaultResourcePack implements ResourcePack {
 
     @Override
     public @Nullable InputSupplier<InputStream> open(ResourceType type, Identifier id) {
-        return id.id.startsWith("/") ? openRoot(id.id.substring(1).split("/")) : PathUtil.split(id.id).get().map(segments -> {
+        return PathUtil.split(id.id).get().map(segments -> {
             String string = id.modID.toString();
             if (NAMESPACE_PATHS.containsKey(type)) for (Path path : NAMESPACE_PATHS.get(type)) {
                 Path path2 = PathUtil.getPath(path.resolve(string), segments);

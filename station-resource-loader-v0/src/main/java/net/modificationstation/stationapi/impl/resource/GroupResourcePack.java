@@ -8,6 +8,7 @@ import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourcePack;
 import net.modificationstation.stationapi.api.resource.ResourceType;
 import net.modificationstation.stationapi.api.resource.metadata.ResourceMetadata;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -33,18 +34,28 @@ public abstract class GroupResourcePack implements ResourcePack {
 	}
 
 	@Override
+	public @Nullable InputSupplier<InputStream> openRoot(String... segments) {
+		List<ModResourcePack> packs = this.namespacedPacks.get(ModID.MINECRAFT);
+
+		if (packs != null) for (int i = packs.size() - 1; i >= 0; i--) {
+			ResourcePack pack = packs.get(i);
+			InputSupplier<InputStream> supplier = pack.openRoot(segments);
+
+			if (supplier != null) return supplier;
+		}
+
+		return null;
+	}
+
+	@Override
 	public InputSupplier<InputStream> open(ResourceType type, Identifier id) {
 		List<ModResourcePack> packs = this.namespacedPacks.get(id.modID);
 
-		if (packs != null) {
-			for (int i = packs.size() - 1; i >= 0; i--) {
-				ResourcePack pack = packs.get(i);
-				InputSupplier<InputStream> supplier = pack.open(type, id);
+		if (packs != null) for (int i = packs.size() - 1; i >= 0; i--) {
+			ResourcePack pack = packs.get(i);
+			InputSupplier<InputStream> supplier = pack.open(type, id);
 
-				if (supplier != null) {
-					return supplier;
-				}
-			}
+			if (supplier != null) return supplier;
 		}
 
 		return null;
@@ -54,9 +65,7 @@ public abstract class GroupResourcePack implements ResourcePack {
 	public void findResources(ResourceType type, ModID namespace, String prefix, ResultConsumer consumer) {
 		List<ModResourcePack> packs = this.namespacedPacks.get(namespace);
 
-		if (packs == null) {
-			return;
-		}
+		if (packs == null) return;
 
 		for (int i = packs.size() - 1; i >= 0; i--) {
 			ResourcePack pack = packs.get(i);
@@ -73,9 +82,7 @@ public abstract class GroupResourcePack implements ResourcePack {
 	public void appendResources(ResourceType type, Identifier id, List<Resource> resources) {
 		List<ModResourcePack> packs = this.namespacedPacks.get(id.modID);
 
-		if (packs == null) {
-			return;
-		}
+		if (packs == null) return;
 
 		Identifier metadataId = NamespaceResourceManager.getMetadataPath(id);
 

@@ -31,7 +31,7 @@ public class ZippedTexturePackResourcePack extends AbstractFileResourcePack {
     }
 
     private static String toPath(ResourceType type, Identifier id) {
-        return id.modID == ModID.MINECRAFT && id.id.startsWith("/") ? id.id.substring(1) : String.format(Locale.ROOT, "%s/%s/%s", type.getDirectory(), id.modID, id.id);
+        return String.format(Locale.ROOT, "%s/%s/%s", type.getDirectory(), id.modID, id.id);
     }
 
     @Override

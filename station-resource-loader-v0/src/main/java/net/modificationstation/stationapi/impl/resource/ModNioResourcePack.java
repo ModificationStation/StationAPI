@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.impl.resource;
 
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
+import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -74,7 +76,8 @@ public class ModNioResourcePack implements ModResourcePack {
 		Map<ResourceType, Set<ModID>> ret = new EnumMap<>(ResourceType.class);
 
 		for (ResourceType type : ResourceType.values()) {
-			Set<ModID> namespaces = null;
+			ReferenceSet<ModID> namespaces = new ReferenceOpenHashSet<>();
+			namespaces.add(ModID.MINECRAFT);
 
 			for (Path path : paths) {
 				Path dir = path.resolve(type.getDirectory());
@@ -95,8 +98,6 @@ public class ModNioResourcePack implements ModResourcePack {
 							continue;
 						}
 
-						if (namespaces == null) namespaces = new HashSet<>();
-
 						namespaces.add(ModID.of(s));
 					}
 				} catch (IOException e) {
@@ -104,7 +105,7 @@ public class ModNioResourcePack implements ModResourcePack {
 				}
 			}
 
-			ret.put(type, namespaces != null ? namespaces : Collections.emptySet());
+			ret.put(type, namespaces);
 		}
 
 		return ret;

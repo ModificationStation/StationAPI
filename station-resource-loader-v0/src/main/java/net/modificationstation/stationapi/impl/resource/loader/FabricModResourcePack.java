@@ -42,7 +42,7 @@ public class FabricModResourcePack extends GroupResourcePack {
 					.flatMap(container -> container.getMetadata().getIconPath(512).flatMap(container::findPath))
 					.<InputSupplier<InputStream>>map(path -> () -> Files.newInputStream(path))
 					.orElse(null);
-			default -> null;
+			default -> super.openRoot(pathSegments);
 		};
 	}
 
