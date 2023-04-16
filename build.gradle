@@ -2,7 +2,7 @@ import net.fabricmc.loom.util.GroovyXmlUtil
 
 plugins {
     id "maven-publish"
-    id 'babric-loom' version '1.1.5'
+    id 'babric-loom' version '1.1.7'
 }
 
 @SuppressWarnings('unused') // Shut up, it IS used.

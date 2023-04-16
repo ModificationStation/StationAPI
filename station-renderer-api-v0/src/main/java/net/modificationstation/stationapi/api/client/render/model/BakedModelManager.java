@@ -13,8 +13,6 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.StationBlock;
-import net.modificationstation.stationapi.api.block.StationFlatteningBlock;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
 import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbakedModel;
@@ -164,8 +162,8 @@ public class BakedModelManager implements IdentifiableResourceReloadListener, Au
         BakedModel bakedModel = map.get(ModelLoader.MISSING_ID.asIdentifier());
         Map<BlockState, BakedModel> map2 = new IdentityHashMap<>();
         for (BlockBase block : BlockRegistry.INSTANCE)
-            ((StationFlatteningBlock) block).getStateManager().getStates().forEach(state -> {
-                Identifier identifier = ((StationBlock) state.getBlock()).getRegistryEntry().registryKey().getValue();
+            block.getStateManager().getStates().forEach(state -> {
+                Identifier identifier = state.getBlock().getRegistryEntry().registryKey().getValue();
                 BakedModel bakedModel2 = map.getOrDefault(BlockModels.getModelId(identifier, state).asIdentifier(), bakedModel);
                 map2.put(state, bakedModel2);
             });

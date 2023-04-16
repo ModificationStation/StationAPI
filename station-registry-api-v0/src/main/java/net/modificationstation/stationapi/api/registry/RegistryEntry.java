@@ -35,7 +35,7 @@ public interface RegistryEntry<T> {
     boolean matchesRegistry(Registry<T> var1);
 
     static <T> RegistryEntry<T> of(T value) {
-        return new Direct<T>(value);
+        return new Direct<>(value);
     }
 
     static <T> RegistryEntry<T> upcast(RegistryEntry<? extends T> entry) {

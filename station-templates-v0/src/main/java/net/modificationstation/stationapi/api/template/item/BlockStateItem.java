@@ -14,8 +14,6 @@ import net.modificationstation.stationapi.api.event.block.IsBlockReplaceableEven
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
-import net.modificationstation.stationapi.api.world.HeightLimitView;
-import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 
 public class BlockStateItem extends TemplateItemBase {
 
@@ -45,7 +43,7 @@ public class BlockStateItem extends TemplateItemBase {
             z = clickZ + direction.getOffsetZ();
         }
         if (itemStack.count == 0) return false;
-        if (y == ((HeightLimitView) world).getTopY() - 1 && blockState.getMaterial().isSolid()) return false;
+        if (y == world.getTopY() - 1 && blockState.getMaterial().isSolid()) return false;
         BlockBase block = blockState.getBlock();
 
         Box box = block.getCollisionShape(world, x, y, z);
@@ -63,7 +61,7 @@ public class BlockStateItem extends TemplateItemBase {
                     .side(direction)
                     .block(block)
                     .blockItem(itemStack)
-                    .placeFunction(() -> ((StationFlatteningWorld) world).setBlockStateWithNotify(x, y, z, blockState) != null)
+                    .placeFunction(() -> world.setBlockStateWithNotify(x, y, z, blockState) != null)
                     .build()).placeFunction.getAsBoolean()
             ) {
                 block.onBlockPlaced(world, x, y, z, direction.getId());

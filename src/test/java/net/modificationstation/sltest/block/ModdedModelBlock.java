@@ -10,7 +10,6 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 import net.modificationstation.stationapi.api.util.math.Direction;
-import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 
 import static net.modificationstation.stationapi.api.state.property.Properties.HORIZONTAL_FACING;
 
@@ -29,7 +28,7 @@ public class ModdedModelBlock extends TemplateBlockBase {
 
     @Override
     public void afterPlaced(Level level, int x, int y, int z, Living living) {
-        ((StationFlatteningWorld) level).setBlockState(x, y, z, getDefaultState().with(HORIZONTAL_FACING, DIRECTIONS[MathHelper.floor((double)(living.yaw * 4.0F / 360.0F) + 0.5D) & 3]));
+        level.setBlockState(x, y, z, getDefaultState().with(HORIZONTAL_FACING, DIRECTIONS[MathHelper.floor((double)(living.yaw * 4.0F / 360.0F) + 0.5D) & 3]));
     }
 
     @Override

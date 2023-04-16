@@ -345,7 +345,7 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
 //      }
 
     public boolean isIn(TagKey<BlockBase> tag) {
-        return ((StationBlock) getBlock()).getRegistryEntry().isIn(tag);
+        return getBlock().getRegistryEntry().isIn(tag);
     }
 
     public boolean isIn(TagKey<BlockBase> tag, Predicate<AbstractBlockState> predicate) {
@@ -353,11 +353,11 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
     }
 
     public boolean isIn(RegistryEntryList<BlockBase> blocks) {
-        return blocks.contains(((StationBlock) getBlock()).getRegistryEntry());
+        return blocks.contains(getBlock().getRegistryEntry());
     }
 
     public Stream<TagKey<BlockBase>> streamTags() {
-        return ((StationBlock) getBlock()).getRegistryEntry().streamTags();
+        return getBlock().getRegistryEntry().streamTags();
     }
 
     public boolean isOf(BlockBase block) {

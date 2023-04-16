@@ -12,7 +12,6 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.render.RendererAccess;
 import net.modificationstation.stationapi.api.client.render.model.VanillaBakedModel;
-import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,7 +33,7 @@ public abstract class MixinWorldRenderer {
             )
     )
     private void renderDamage(BlockRenderer instance, BlockBase block, int j, int k, int l, int texture, PlayerBase arg, HitResult arg2, int i, ItemInstance arg3, float f) {
-        BlockState state = ((StationFlatteningWorld) level).getBlockState(j, k, l);
+        BlockState state = level.getBlockState(j, k, l);
         if (StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state) instanceof VanillaBakedModel)
             instance.renderWithTexture(block, j, k, l, texture);
         else

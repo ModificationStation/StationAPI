@@ -15,7 +15,6 @@ import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
-import net.modificationstation.stationapi.api.block.StationFlatteningBlock;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
 import net.modificationstation.stationapi.api.client.event.render.model.LoadUnbakedModelEvent;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
@@ -154,7 +153,7 @@ public class ModelLoader {
         STATIC_DEFINITIONS.forEach((id, stateManager) -> stateManager.getStates().forEach(state -> this.addModel(BlockModels.getModelId(id, state).asIdentifier())));
         profiler.swap("blocks");
         for (BlockBase block : BlockRegistry.INSTANCE)
-            ((StationFlatteningBlock) block).getStateManager().getStates().forEach(state -> this.addModel(BlockModels.getModelId(state).asIdentifier()));
+            block.getStateManager().getStates().forEach(state -> this.addModel(BlockModels.getModelId(state).asIdentifier()));
         profiler.swap("items");
         for (Identifier identifier : ItemRegistry.INSTANCE.getIds())
             this.addModel(ModelIdentifier.of(identifier, "inventory").asIdentifier());
