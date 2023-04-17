@@ -20,13 +20,15 @@ public class MixinMinecraft {
         StationAPI.EVENT_BUS.post(GameTickEvent.End.builder().build());
     }
 
+    @SuppressWarnings("DefaultAnnotationParam")
     @Inject(
             method = "run()V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/Minecraft;printOpenGLError(Ljava/lang/String;)V",
                     ordinal = 0,
-                    shift = At.Shift.AFTER
+                    shift = At.Shift.AFTER,
+                    remap = true
             ),
             remap = false
     )
@@ -34,12 +36,14 @@ public class MixinMinecraft {
         TickScheduler.CLIENT_RENDER_START.tick();
     }
 
+    @SuppressWarnings("DefaultAnnotationParam")
     @Inject(
             method = "run()V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/Minecraft;printOpenGLError(Ljava/lang/String;)V",
-                    ordinal = 1
+                    ordinal = 1,
+                    remap = true
             ),
             remap = false
     )
