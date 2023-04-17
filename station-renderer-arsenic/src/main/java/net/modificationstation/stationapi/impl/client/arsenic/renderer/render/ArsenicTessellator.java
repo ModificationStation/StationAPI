@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import net.minecraft.client.render.Tessellator;
-import net.modificationstation.stationapi.api.client.render.StationTessellator;
 import net.modificationstation.stationapi.mixin.arsenic.client.TessellatorAccessor;
 
 public final class ArsenicTessellator {
@@ -16,6 +15,6 @@ public final class ArsenicTessellator {
 
     public void afterVertex() {
         if (a.stationapi$getVertexCount() % 4 == 0)
-            ((StationTessellator) tessellator).ensureBufferCapacity(48);
+            tessellator.ensureBufferCapacity(48);
     }
 }

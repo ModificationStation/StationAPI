@@ -5,7 +5,6 @@ import it.unimi.dsi.fastutil.objects.Reference2IntMaps;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
-import net.modificationstation.stationapi.api.item.StationItemStack;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -22,7 +21,7 @@ public class FuelRegistry {
 
     @API
     public static int getFuelTime(ItemInstance itemInstance) {
-        return itemInstance == null ? 0 : StationItemStack.class.cast(itemInstance).getRegistryEntry().streamTags().mapToInt(TAG_FUEL_TIME::getInt).filter(value -> value > 0).findFirst().orElseGet(() -> ITEM_FUEL_TIME.getInt(itemInstance.getType()));
+        return itemInstance == null ? 0 : itemInstance.getRegistryEntry().streamTags().mapToInt(TAG_FUEL_TIME::getInt).filter(value -> value > 0).findFirst().orElseGet(() -> ITEM_FUEL_TIME.getInt(itemInstance.getType()));
     }
 
     @API

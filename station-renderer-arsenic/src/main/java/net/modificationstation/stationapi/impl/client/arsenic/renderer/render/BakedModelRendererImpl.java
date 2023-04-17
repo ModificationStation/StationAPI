@@ -16,13 +16,11 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
 import net.modificationstation.stationapi.api.client.color.item.ItemColors;
-import net.modificationstation.stationapi.api.client.render.StationTessellator;
 import net.modificationstation.stationapi.api.client.render.item.ItemModels;
 import net.modificationstation.stationapi.api.client.render.model.*;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
-import net.modificationstation.stationapi.api.item.nbt.StationNBT;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.util.Util;
@@ -41,15 +39,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> implements BakedModelRenderer {
+public class BakedModelRendererImpl implements BakedModelRenderer {
 
     private static final Direction[] DIRECTIONS = Util.make(() -> {
         Direction[] originalValues = Direction.values();
         return Arrays.copyOf(originalValues, originalValues.length + 1);
     });
 
-    @SuppressWarnings("unchecked")
-    private final T tessellator = (T) Tessellator.INSTANCE;
+    private final Tessellator tessellator = Tessellator.INSTANCE;
     private final LightingCalculatorImpl light = new LightingCalculatorImpl(3);
     private final Random random = new Random();
     private final ItemModels itemModels = Util.make(new ItemModels(StationRenderAPI.getBakedModelManager()), models -> {
@@ -269,7 +266,7 @@ public class BakedModelRendererImpl<T extends Tessellator & StationTessellator> 
             CrashReportSection crashReportSection = crashReport.addElement("Item being rendered");
             crashReportSection.add("Item Type", () -> String.valueOf(stack.getType()));
             crashReportSection.add("Item Damage", () -> String.valueOf(stack.getDamage()));
-            crashReportSection.add("Item NBT", () -> String.valueOf(StationNBT.class.cast(stack).getStationNBT()));
+            crashReportSection.add("Item NBT", () -> String.valueOf(stack.getStationNBT()));
             throw new CrashException(crashReport);
         }
     }

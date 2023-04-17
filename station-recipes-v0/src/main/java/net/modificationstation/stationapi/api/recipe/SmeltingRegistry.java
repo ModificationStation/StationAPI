@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.api.recipe;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
-import net.modificationstation.stationapi.api.item.StationItemStack;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.API;
 import net.modificationstation.stationapi.mixin.recipe.SmeltingRecipeRegistryAccessor;
@@ -32,7 +31,7 @@ public final class SmeltingRegistry {
         for (Map.Entry<Object, ItemInstance> entry : ((SmeltingRecipeRegistryAccessor) SmeltingRecipeRegistry.getInstance()).getRecipes().entrySet()) {
             Object o = entry.getKey();
             //noinspection unchecked,ConstantConditions
-            if (o instanceof ItemInstance item && input.isDamageAndIDIdentical(item) || o instanceof TagKey<?> tag && StationItemStack.class.cast(input).isIn((TagKey<ItemBase>) tag))
+            if (o instanceof ItemInstance item && input.isDamageAndIDIdentical(item) || o instanceof TagKey<?> tag && input.isIn((TagKey<ItemBase>) tag))
                 return entry.getValue();
         }
         return SmeltingRecipeRegistry.getInstance().getResult(input.getType().id);

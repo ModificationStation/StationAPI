@@ -5,7 +5,6 @@ import net.minecraft.inventory.Crafting;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.Recipe;
-import net.modificationstation.stationapi.api.item.StationItemStack;
 import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -43,7 +42,7 @@ public class StationShapelessRecipe implements Recipe, StationRecipe {
                     Optional<TagKey<ItemBase>> tagOpt = ingredient.left();
                     boolean equals = false;
                     if (tagOpt.isPresent()) {
-                        equals = StationItemStack.class.cast(itemToTest).isIn(tagOpt.get());
+                        equals = itemToTest.isIn(tagOpt.get());
                     } else {
                         Optional<ItemInstance> itemOpt = ingredient.right();
                         if (itemOpt.isPresent()) {

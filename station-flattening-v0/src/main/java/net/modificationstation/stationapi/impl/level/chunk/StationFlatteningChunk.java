@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class StationFlatteningChunk extends Chunk implements net.modificationstation.stationapi.api.world.chunk.StationFlatteningChunk {
+public class StationFlatteningChunk extends Chunk {
 
     public final ChunkSection[] sections;
     public final short firstBlock;

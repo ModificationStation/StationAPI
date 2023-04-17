@@ -10,7 +10,6 @@ import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.item.ItemStackEvent;
 import net.modificationstation.stationapi.api.item.StationItemStack;
-import net.modificationstation.stationapi.api.nbt.StationNbtCompound;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.impl.item.nbt.StationNBTSetter;
 import org.spongepowered.asm.mixin.Mixin;
@@ -55,7 +54,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
     )
     private void setSplitStackNbt(int par1, CallbackInfoReturnable<ItemInstance> cir) {
         if (!stationNBT.values().isEmpty())
-            StationNBTSetter.cast(cir.getReturnValue()).setStationNBT(((StationNbtCompound) stationNBT).copy());
+            StationNBTSetter.cast(cir.getReturnValue()).setStationNBT(stationNBT.copy());
     }
 
     @Inject(
@@ -81,7 +80,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
     )
     private void copy(CallbackInfoReturnable<ItemInstance> cir) {
         if (!stationNBT.values().isEmpty())
-            StationNBTSetter.cast(cir.getReturnValue()).setStationNBT(((StationNbtCompound) stationNBT).copy());
+            StationNBTSetter.cast(cir.getReturnValue()).setStationNBT(stationNBT.copy());
     }
 
     @Inject(
