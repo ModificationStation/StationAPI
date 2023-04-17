@@ -5,9 +5,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.item.ItemEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.item.StationItem;
-import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.registry.RegistryEntry;
+import net.modificationstation.stationapi.api.registry.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,9 +14,11 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemBase.class)
-public class MixinItemBase implements StationItem {
+public abstract class MixinItemBase implements StationItem {
 
     @Shadow @Final public int id;
+
+    @Shadow public abstract ItemBase setTranslationKey(String string);
 
     private final RegistryEntry.Reference<ItemBase> stationapi_registryEntry = ItemRegistry.INSTANCE.createEntry(ItemBase.class.cast(this));
 
@@ -72,5 +72,15 @@ public class MixinItemBase implements StationItem {
     @Unique
     public RegistryEntry.Reference<ItemBase> getRegistryEntry() {
         return stationapi_registryEntry;
+    }
+
+    @Override
+    public ItemBase setTranslationKey(ModID modID, String translationKey) {
+        return setTranslationKey(Identifier.of(modID, translationKey).toString());
+    }
+
+    @Override
+    public ItemBase setTranslationKey(Identifier translationKey) {
+        return setTranslationKey(translationKey.toString());
     }
 }

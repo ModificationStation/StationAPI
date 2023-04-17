@@ -63,3 +63,14 @@ transitive-accessible	method	net/minecraft/block/Torch	<init>	(II)V
 transitive-accessible	method	net/minecraft/block/TranslucentBlock	<init>	(IILnet/minecraft/block/material/Material;Z)V
 transitive-accessible	method	net/minecraft/block/Trapdoor	<init>	(ILnet/minecraft/block/material/Material;)V
 transitive-accessible	method	net/minecraft/block/Workbench	<init>	(I)V
+
+# Items
+transitive-accessible	method	net/minecraft/item/ItemBase	<init>	(I)V
+transitive-accessible	method	net/minecraft/item/ItemBase	setHasSubItems	(Z)Lnet/minecraft/item/ItemBase;
+transitive-accessible	method	net/minecraft/item/ItemBase	setDurability	(I)Lnet/minecraft/item/ItemBase;
+transitive-accessible	method	net/minecraft/item/tool/Hatchet	<init>	(ILnet/minecraft/item/tool/ToolMaterial;)V
+transitive-accessible	method	net/minecraft/item/tool/Pickaxe	<init>	(ILnet/minecraft/item/tool/ToolMaterial;)V
+transitive-accessible	method	net/minecraft/item/tool/ToolBase	<init>	(IILnet/minecraft/item/tool/ToolMaterial;[Lnet/minecraft/block/BlockBase;)V
+transitive-accessible	method	net/minecraft/item/Map	<init>	(I)V
+transitive-accessible	method	net/minecraft/item/MapBase	<init>	(I)V
+transitive-accessible	method	net/minecraft/item/Record	<init>	(ILjava/lang/String;)V

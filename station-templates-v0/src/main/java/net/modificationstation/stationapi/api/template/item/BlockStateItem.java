@@ -24,6 +24,11 @@ public class BlockStateItem extends TemplateItemBase {
         this.blockState = blockState;
     }
 
+    public BlockStateItem(int id, BlockState blockState) {
+        super(id);
+        this.blockState = blockState;
+    }
+
     @Override
     public boolean useOnTile(ItemInstance itemStack, PlayerBase player, Level world, int clickX, int clickY, int clickZ, int side) {
         final Direction direction;

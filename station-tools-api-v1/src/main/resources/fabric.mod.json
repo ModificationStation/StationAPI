@@ -36,8 +36,20 @@
   "custom": {
     "modmenu:api": true,
     "loom:injected_interfaces": {
+      "net/minecraft/class_126": [
+        "net/modificationstation/stationapi/api/item/tool/StationShearsItem"
+      ],
+      "net/minecraft/class_249": [
+        "net/modificationstation/stationapi/api/item/tool/StationHoeItem"
+      ],
+      "net/minecraft/class_352": [
+        "net/modificationstation/stationapi/api/item/tool/StationSwordItem"
+      ],
       "net/minecraft/class_428": [
         "net/modificationstation/stationapi/api/item/tool/StationToolMaterial"
+      ],
+      "net/minecraft/class_632": [
+        "net/modificationstation/stationapi/api/item/tool/StationToolItem"
       ]
     }
   }

@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.tool.Sword;
 import net.minecraft.item.tool.ToolMaterial;
-import net.modificationstation.stationapi.api.item.tool.ToolLevel;
+import net.modificationstation.stationapi.api.item.tool.StationSwordItem;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Sword.class)
-public class MixinSword implements ToolLevel {
+public class MixinSword implements StationSwordItem {
 
     @Unique
     private ToolMaterial stationapi_toolMaterial;

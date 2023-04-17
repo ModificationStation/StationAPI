@@ -40,6 +40,9 @@
       ],
       "net/minecraft/class_67": [
         "net/modificationstation/stationapi/api/client/render/StationTessellator"
+      ],
+      "net/minecraft/class_124": [
+        "net/modificationstation/stationapi/api/client/item/StationRendererItem"
       ]
     }
   }

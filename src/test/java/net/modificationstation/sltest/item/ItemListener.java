@@ -1,15 +1,13 @@
 package net.modificationstation.sltest.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.minecraft.item.ItemBase;
 import net.minecraft.item.tool.ToolMaterial;
 import net.modificationstation.sltest.block.Blocks;
 import net.modificationstation.sltest.block.VariationBlock;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.item.tool.ToolMaterialFactory;
 import net.modificationstation.stationapi.api.template.item.BlockStateItem;
-import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
-import net.modificationstation.stationapi.api.template.item.tool.TemplatePickaxe;
-import net.modificationstation.stationapi.api.template.item.tool.TemplateShears;
 
 import static net.modificationstation.sltest.SLTest.MODID;
 
@@ -22,23 +20,23 @@ public class ItemListener {
         testPickaxe = new ModdedPickaxe(MODID.id("test_pickaxe"), testMaterial).setTranslationKey(MODID, "testPickaxe"); //8476
         testNBTItem = new NBTItem(MODID.id("nbt_item")).setTranslationKey(MODID, "nbt_item"); //8477
         testModelItem = new ModelItem(MODID.id("model_item")).setMaxStackSize(1).setTranslationKey(MODID, "idkSomething");
-        ironOre = new TemplateItemBase(MODID.id("ironOre")).setTranslationKey(MODID, "ironOre");
-        generatedItem = new TemplateItemBase(MODID.id("generated_item")).setTranslationKey(MODID, "generatedItem");
+        ironOre = event.registry.register(MODID.id("ironOre"), ItemBase::new).setTranslationKey(MODID.id("ironOre"));
+        generatedItem = event.registry.register(MODID.id("generated_item"), ItemBase::new).setTranslationKey(MODID.id("generatedItem"));
         variationBlockIdle = new BlockStateItem(MODID.id("variation_block_idle"), Blocks.VARIATION_BLOCK.get().getDefaultState()).setTranslationKey(MODID, "variationBlockIdle");
         variationBlockPassive = new BlockStateItem(MODID.id("variation_block_passive"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.PASSIVE)).setTranslationKey(MODID, "variationBlockPassive");
         variationBlockActive = new BlockStateItem(MODID.id("variation_block_active"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.ACTIVE)).setTranslationKey(MODID, "variationBlockActive");
         testShears = new TestShears(MODID.id("test_shears")).setTranslationKey(MODID, "test_shears");
     }
 
-    public static TemplateItemBase testItem;
+    public static ItemBase testItem;
     public static ToolMaterial testMaterial;
-    public static TemplatePickaxe testPickaxe;
-    public static TemplateItemBase testNBTItem;
-    public static TemplateItemBase testModelItem;
-    public static TemplateItemBase ironOre;
-    public static TemplateItemBase generatedItem;
-    public static TemplateItemBase variationBlockIdle;
-    public static TemplateItemBase variationBlockPassive;
-    public static TemplateItemBase variationBlockActive;
-    public static TemplateShears testShears;
+    public static ItemBase testPickaxe;
+    public static ItemBase testNBTItem;
+    public static ItemBase testModelItem;
+    public static ItemBase ironOre;
+    public static ItemBase generatedItem;
+    public static ItemBase variationBlockIdle;
+    public static ItemBase variationBlockPassive;
+    public static ItemBase variationBlockActive;
+    public static ItemBase testShears;
 }

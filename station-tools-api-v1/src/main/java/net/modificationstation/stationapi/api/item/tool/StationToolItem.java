@@ -1,13 +1,12 @@
-package net.modificationstation.stationapi.api.template.item.tool;
+package net.modificationstation.stationapi.api.item.tool;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.tool.ToolMaterial;
-import net.modificationstation.stationapi.api.item.tool.ToolLevel;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
 
-public interface ToolTemplate extends ToolLevel {
+public interface StationToolItem extends ToolLevel {
 
     @Override
     default void setEffectiveBlocks(TagKey<BlockBase> effectiveBlocks) {
