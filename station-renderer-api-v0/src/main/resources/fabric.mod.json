@@ -35,6 +35,9 @@
   "custom": {
     "modmenu:api": true,
     "loom:injected_interfaces": {
+      "net/minecraft/class_17": [
+        "net/modificationstation/stationapi/api/client/block/StationRendererBlock"
+      ],
       "net/minecraft/class_67": [
         "net/modificationstation/stationapi/api/client/render/StationTessellator"
       ]

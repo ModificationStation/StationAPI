@@ -7,7 +7,7 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.Block;
 import net.minecraft.item.ItemBase;
-import net.modificationstation.stationapi.api.block.BlockItemToggle;
+import net.modificationstation.stationapi.api.block.StationBlockItemsBlock;
 import net.modificationstation.stationapi.api.event.registry.BlockItemRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -146,7 +146,7 @@ public final class VanillaBlockFixImpl {
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 - Integer.MAX_VALUE / 8)
     private static void disableAutomaticBlockItemRegistration(BlockRegistryEvent event) {
-        Consumer<BlockBase> c = block -> ((BlockItemToggle<?>) block).disableAutomaticBlockItemRegistration();
+        Consumer<BlockBase> c = StationBlockItemsBlock::disableAutomaticBlockItemRegistration;
         c.accept(BY_ID[0]); // not supposed to have an item form
         COLLISION_BLOCKS.get().forEach(c); // item name collision
     }

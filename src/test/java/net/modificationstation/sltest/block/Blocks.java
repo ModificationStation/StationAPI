@@ -6,7 +6,6 @@ import net.minecraft.block.material.Material;
 import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.template.block.BlockTemplate;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 
 import java.util.Arrays;
@@ -27,18 +26,12 @@ public enum Blocks {
     private final Runnable register;
     private BlockBase block;
 
-    <T extends BlockBase & BlockTemplate<T>> Blocks(String id, String translationKey, Function<Identifier, T> factory) {
+    Blocks(String id, String translationKey, Function<Identifier, BlockBase> factory) {
         this.register = () -> block = factory.apply(of(MODID, id)).setTranslationKey(MODID, translationKey);
     }
 
-    public <T extends BlockBase & BlockTemplate<? super T>> T get() {
-        //noinspection unchecked
-        return (T) block;
-    }
-
-    public <T extends BlockBase & BlockTemplate<? super T>> T get(@SuppressWarnings("unused") Class<T> type) {
-        //noinspection unchecked
-        return (T) block;
+    public BlockBase get() {
+        return block;
     }
 
     public static class Init {

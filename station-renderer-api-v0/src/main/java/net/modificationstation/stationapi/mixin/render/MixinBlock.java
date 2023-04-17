@@ -14,6 +14,6 @@ public class MixinBlock implements CustomAtlasProvider {
 
     @Override
     public Atlas getAtlas() {
-        return ((CustomAtlasProvider) BlockBase.BY_ID[blockId]).getAtlas();
+        return BlockBase.BY_ID[blockId].getAtlas();
     }
 }

@@ -10,7 +10,6 @@ import net.modificationstation.stationapi.api.client.model.block.BlockWorldModel
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
-import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.world.BlockStateView;
 import net.modificationstation.stationapi.mixin.arsenic.client.DiggingAccessor;
 import net.modificationstation.stationapi.mixin.arsenic.client.ParticleBaseAccessor;
@@ -25,7 +24,7 @@ public class ArsenicDiggingParticle {
     public ArsenicDiggingParticle(Digging digging) {
         this.digging = digging;
         particleBaseAccessor = (ParticleBaseAccessor) digging;
-        texture = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(((CustomAtlasProvider) ((DiggingAccessor) digging).getField_2383()).getAtlas().getTexture(particleBaseAccessor.getField_2635()).getId());
+        texture = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(((DiggingAccessor) digging).getField_2383().getAtlas().getTexture(particleBaseAccessor.getField_2635()).getId());
     }
 
     public void checkBlockCoords(int x, int y, int z) {

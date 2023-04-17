@@ -1,0 +1,22 @@
+accessWidener	v2	named
+
+# --- Methods ---
+
+# NBT
+transitive-accessible	method	net/minecraft/util/io/AbstractTag	write	(Ljava/io/DataOutput;)V
+transitive-accessible	method	net/minecraft/util/io/AbstractTag	read	(Ljava/io/DataInput;)V
+transitive-accessible	method	net/minecraft/util/io/ListTag	write	(Ljava/io/DataOutput;)V
+transitive-accessible	method	net/minecraft/util/io/ListTag	read	(Ljava/io/DataInput;)V
+
+# Blocks
+transitive-accessible	method	net/minecraft/block/BlockBase	<init>	(ILnet/minecraft/block/material/Material;)V
+transitive-accessible	method	net/minecraft/block/BlockBase	disableNotifyOnMetaDataChange	()Lnet/minecraft/block/BlockBase;
+transitive-accessible	method	net/minecraft/block/BlockBase	<init>	(IILnet/minecraft/block/material/Material;)V
+transitive-accessible	method	net/minecraft/block/BlockBase	setSounds	(Lnet/minecraft/block/BlockSounds;)Lnet/minecraft/block/BlockBase;
+transitive-accessible	method	net/minecraft/block/BlockBase	setLightOpacity	(I)Lnet/minecraft/block/BlockBase;
+transitive-accessible	method	net/minecraft/block/BlockBase	setLightEmittance	(F)Lnet/minecraft/block/BlockBase;
+transitive-accessible	method	net/minecraft/block/BlockBase	setBlastResistance	(F)Lnet/minecraft/block/BlockBase;
+transitive-accessible	method	net/minecraft/block/BlockBase	setHardness	(F)Lnet/minecraft/block/BlockBase;
+transitive-accessible	method	net/minecraft/block/BlockBase	setUnbreakable	()Lnet/minecraft/block/BlockBase;
+transitive-accessible	method	net/minecraft/block/BlockBase	setTicksRandomly	(Z)Lnet/minecraft/block/BlockBase;
+transitive-accessible	method	net/minecraft/block/BlockBase	disableStat	()Lnet/minecraft/block/BlockBase;

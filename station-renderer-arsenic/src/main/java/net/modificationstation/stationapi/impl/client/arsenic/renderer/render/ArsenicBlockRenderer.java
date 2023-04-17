@@ -22,7 +22,6 @@ import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.SpriteContents;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
-import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.world.BlockStateView;
 import net.modificationstation.stationapi.mixin.arsenic.client.BlockRendererAccessor;
@@ -195,7 +194,7 @@ public final class ArsenicBlockRenderer {
         int var5 = blockRendererAccessor.getBlockView().getTileMeta(x, y, z);
         int var6 = var5 & 7;
         boolean var7 = (var5 & 8) > 0;
-        Atlas atlas = ((CustomAtlasProvider) block).getAtlas();
+        Atlas atlas = block.getAtlas();
         Tessellator var8 = prepareTessellator(atlas);
         boolean var9 = blockRendererAccessor.getTextureOverride() >= 0;
         if (!var9) {
@@ -362,7 +361,7 @@ public final class ArsenicBlockRenderer {
     }
 
     public boolean renderFire(BlockBase block, int x, int y, int z) {
-        Atlas atlas = ((CustomAtlasProvider) block).getAtlas();
+        Atlas atlas = block.getAtlas();
         Tessellator var5 = prepareTessellator(atlas);
         int var6 = block.getTextureForSide(0);
         if (blockRendererAccessor.getTextureOverride() >= 0) {
@@ -909,7 +908,7 @@ public final class ArsenicBlockRenderer {
     }
 
     public void renderTorchTilted(BlockBase block, double renderX, double renderY, double renderZ, double width, double length) {
-        Atlas atlas = ((CustomAtlasProvider) block).getAtlas();
+        Atlas atlas = block.getAtlas();
         final Sprite texture = (blockRendererAccessor.getTextureOverride() >= 0 ? atlas.getTexture(blockRendererAccessor.getTextureOverride()) : atlas.getTexture(block.getTextureForSide(0))).getSprite();
         final SpriteContents contents = texture.getContents();
         Tessellator t = prepareTessellator(atlas);

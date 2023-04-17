@@ -7,6 +7,8 @@ import net.modificationstation.stationapi.api.block.StationBlock;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -20,6 +22,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinBlockBase implements StationBlock {
 
     @Shadow @Final public int id;
+
+    @Shadow public abstract BlockBase setTranslationKey(String string);
 
     @Unique
     private final RegistryEntry.Reference<BlockBase> stationapi_registryEntry = BlockRegistry.INSTANCE.createEntry(BlockBase.class.cast(this));
@@ -100,5 +104,15 @@ public abstract class MixinBlockBase implements StationBlock {
     @Unique
     public RegistryEntry.Reference<BlockBase> getRegistryEntry() {
         return stationapi_registryEntry;
+    }
+
+    @Override
+    public BlockBase setTranslationKey(ModID modID, String translationKey) {
+        return setTranslationKey(Identifier.of(modID, translationKey).toString());
+    }
+
+    @Override
+    public BlockBase setTranslationKey(Identifier translationKey) {
+        return setTranslationKey(translationKey.toString());
     }
 }

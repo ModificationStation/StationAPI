@@ -4,7 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.Block;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.block.BlockItemToggle;
+import net.modificationstation.stationapi.api.block.StationBlockItemsBlock;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockItemRegistryEvent;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockBase.class)
-public class MixinBlockBase implements BlockItemToggle<BlockBase> {
+public class MixinBlockBase implements StationBlockItemsBlock {
 
     @Shadow
     @Final

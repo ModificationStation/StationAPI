@@ -24,7 +24,7 @@ public class TextureListener {
         TEST_BLOCK.get().texture = terrain.addTexture(of(MODID, "blocks/testBlock")).index;
         TEST_ANIMATED_BLOCK.get().texture = terrain.addTexture(of(MODID, "blocks/testAnimatedBlock")).index;
         FREEZER.get().texture = terrain.addTexture(of(MODID, "blocks/FreezerTop")).index;
-        FREEZER.get(BlockFreezer.class).sideTexture = terrain.addTexture(of(MODID, "blocks/FreezerSide")).index;
+        ((BlockFreezer) FREEZER.get()).sideTexture = terrain.addTexture(of(MODID, "blocks/FreezerSide")).index;
 
         altarTextures[Direction.DOWN.ordinal()] = terrain.addTexture(of(MODID, "blocks/altar_bottom")).index;
         altarTextures[Direction.UP.ordinal()] = terrain.addTexture(of(MODID, "blocks/altar_top")).index;
