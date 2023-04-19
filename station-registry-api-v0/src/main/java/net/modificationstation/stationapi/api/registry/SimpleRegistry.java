@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Lifecycle;
 import it.unimi.dsi.fastutil.objects.*;
+import lombok.Getter;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
 import org.apache.commons.lang3.Validate;
@@ -36,6 +37,7 @@ public class SimpleRegistry<T> extends MutableRegistry<T> {
     private Reference2ReferenceMap<T, RegistryEntry.Reference<T>> unfrozenValueToEntry;
     @Nullable
     private List<RegistryEntry.Reference<T>> cachedEntries;
+    @Getter
     private int nextId;
 
     public SimpleRegistry(RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle, @Nullable Function<T, RegistryEntry.Reference<T>> valueToEntryFunction) {

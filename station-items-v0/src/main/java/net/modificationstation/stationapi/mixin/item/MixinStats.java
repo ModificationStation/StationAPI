@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.item;
 
+import net.minecraft.item.ItemBase;
 import net.minecraft.stat.Stats;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.AfterBlockAndItemRegisterEvent;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -19,7 +19,7 @@ public class MixinStats {
             constant = @Constant(intValue = 32000)
     )
     private static int getItemsSize(int constant) {
-        return ItemRegistry.INSTANCE.getSize();
+        return ItemBase.byId.length;
     }
 
     @SuppressWarnings({"InvalidMemberReference", "UnresolvedMixinReference", "MixinAnnotationTarget"})

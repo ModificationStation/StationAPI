@@ -63,7 +63,7 @@ public class MixinBlockBase implements StationBlockItemsBlock {
                         .currentFactory(Block::new)
                         .build()
         );
-        return event.isCanceled() ? BlockFormOnlyHandler.EMPTY_BLOCK_ITEM.get() : Registry.register(ItemRegistry.INSTANCE, BlockRegistry.INSTANCE.getId(block), event.currentFactory.apply(blockID));
+        return event.isCanceled() ? BlockFormOnlyHandler.EMPTY_BLOCK_ITEM.get() : Registry.register(ItemRegistry.INSTANCE, block.id, BlockRegistry.INSTANCE.getId(block), event.currentFactory.apply(blockID));
     }
 
     @Inject(

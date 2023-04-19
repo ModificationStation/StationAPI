@@ -74,7 +74,7 @@ public abstract class MixinBlockBase implements StationBlock {
             )
     )
     private static int getBlocksSize(int constant) {
-        return BlockRegistry.INSTANCE.getSize();
+        return BlockBase.BY_ID.length;
     }
 
     @Inject(

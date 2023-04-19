@@ -7,7 +7,11 @@ import net.modificationstation.stationapi.api.registry.Registry;
 
 public interface BlockTemplate {
 
+    static int getNextId() {
+        return BlockRegistry.INSTANCE.getNextId();
+    }
+
     static void onConstructor(BlockBase block, Identifier id) {
-        Registry.register(BlockRegistry.INSTANCE, id, block);
+        Registry.register(BlockRegistry.INSTANCE, block.id, id, block);
     }
 }

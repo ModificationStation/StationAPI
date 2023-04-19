@@ -6,6 +6,7 @@ package net.modificationstation.stationapi.api.registry;
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
+import it.unimi.dsi.fastutil.ints.Int2ReferenceFunction;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
@@ -134,6 +135,10 @@ implements Keyable,
     @Nullable
     public abstract Identifier getId(T var1);
 
+    public Optional<Identifier> getId(int rawId) {
+        return getEntry(rawId).flatMap(RegistryEntry::getKey).map(RegistryKey::getValue);
+    }
+
     public abstract Optional<RegistryKey<T>> getKey(T var1);
 
     @Override
@@ -189,8 +194,8 @@ implements Keyable,
 
     public abstract boolean contains(RegistryKey<T> var1);
 
-    public static <T> T register(Registry<? super T> registry, String id, T entry) {
-        return Registry.register(registry, Identifier.of(id), entry);
+    public static <V, T extends V> T register(Registry<V> registry, Int2ReferenceFunction<T> initializer, Identifier id) {
+        return Registry.register(registry, id, initializer.apply(((MutableRegistry<V>) registry).getNextId()));
     }
 
     public static <V, T extends V> T register(Registry<V> registry, Identifier id, T entry) {
@@ -202,8 +207,8 @@ implements Keyable,
         return entry;
     }
 
-    public static <V, T extends V> T register(Registry<V> registry, int rawId, String id, T entry) {
-        ((MutableRegistry<V>) registry).set(rawId, RegistryKey.of(registry.registryKey, Identifier.of(id)), entry, Lifecycle.stable());
+    public static <V, T extends V> T register(Registry<V> registry, int rawId, Identifier id, T entry) {
+        ((MutableRegistry<V>) registry).set(rawId, RegistryKey.of(registry.registryKey, id), entry, Lifecycle.stable());
         return entry;
     }
 

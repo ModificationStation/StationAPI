@@ -25,5 +25,7 @@ public abstract class MutableRegistry<T> extends Registry<T> {
     public abstract RegistryEntry<T> replace(@SuppressWarnings("OptionalUsedAsFieldOrParameterType") OptionalInt var1, RegistryKey<T> var2, T var3, Lifecycle var4);
 
     public abstract boolean isEmpty();
+
+    public abstract int getNextId();
 }
 

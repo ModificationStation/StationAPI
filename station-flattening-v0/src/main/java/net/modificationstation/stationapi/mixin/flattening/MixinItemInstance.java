@@ -18,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Objects;
+
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
@@ -41,7 +43,7 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
             )
     )
     private void saveIdentifier(CompoundTag instance, String item, short i) {
-        instance.put(STATION_ID, ItemRegistry.INSTANCE.getIdByLegacyId(itemId).orElseThrow().toString());
+        instance.put(STATION_ID, ItemRegistry.INSTANCE.getId(itemId).orElseThrow().toString());
     }
 
     @Inject(
@@ -57,7 +59,7 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
         String id = par1.getString(STATION_ID);
         if (id.isEmpty())
             LOGGER.warn("Attempted to load an item stack without Station Flattening ID! StationAPI will ignore this and accept the vanilla ID (" + itemId + "), but this should have been handled by DFU beforehand");
-        else itemId = ItemRegistry.INSTANCE.getLegacyId(of(id)).orElseThrow();
+        else itemId = Objects.requireNonNull(ItemRegistry.INSTANCE.get(of(id))).id;
     }
 
     @Override

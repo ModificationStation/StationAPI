@@ -1,11 +1,15 @@
 package net.modificationstation.stationapi.mixin.item;
 
+import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.item.ItemEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.item.StationItem;
-import net.modificationstation.stationapi.api.registry.*;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -59,7 +63,7 @@ public abstract class MixinItemBase implements StationItem {
             constant = @Constant(intValue = 256)
     )
     private int getBlocksSize(int constant) {
-        return BlockRegistry.INSTANCE.getSize();
+        return BlockBase.BY_ID.length;
     }
 
     @Override

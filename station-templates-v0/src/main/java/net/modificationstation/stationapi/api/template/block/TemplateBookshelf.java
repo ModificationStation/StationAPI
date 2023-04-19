@@ -1,13 +1,12 @@
 package net.modificationstation.stationapi.api.template.block;
 
 import net.minecraft.block.Bookshelf;
-import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
 public class TemplateBookshelf extends Bookshelf implements BlockTemplate {
 
     public TemplateBookshelf(Identifier identifier, int texture) {
-        this(BlockRegistry.INSTANCE.getNextLegacyId(), texture);
+        this(BlockTemplate.getNextId(), texture);
         BlockTemplate.onConstructor(this, identifier);
     }
 

@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.block;
 
+import net.minecraft.block.BlockBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.Block;
 import net.minecraft.item.ItemInstance;
@@ -22,7 +23,7 @@ public class MixinBlock {
             constant = @Constant(intValue = 256)
     )
     private int getBlocksSize(int constant) {
-        return BlockRegistry.INSTANCE.getSize();
+        return BlockBase.BY_ID.length;
     }
 
     @Redirect(
@@ -42,7 +43,7 @@ public class MixinBlock {
                         .player(player)
                         .x(x).y(y).z(z)
                         .side(Direction.byId(side))
-                        .block(BlockRegistry.INSTANCE.getByLegacyId(id).orElseThrow())
+                        .block(BlockRegistry.INSTANCE.get(id))
                         .meta(meta)
                         .blockItem(blockItem)
                         .placeFunction(() -> level.placeBlockWithMetaData(x, y, z, id, meta))
