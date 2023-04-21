@@ -9,6 +9,7 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 
 import java.util.Arrays;
+import java.util.Random;
 import java.util.function.Function;
 
 import static net.modificationstation.sltest.SLTest.MODID;
@@ -41,13 +42,13 @@ public enum Blocks {
 //            BlockBase.ALLOWS_GRASS_UNDER[BlockBase.STILL_WATER.id] = BlockBase.ALLOWS_GRASS_UNDER[BlockBase.FLOWING_WATER.id] = true;
             Arrays.stream(values()).forEach(blocks -> blocks.register.run());
             ((BlockBaseAccessor) BlockBase.BEDROCK).invokeSetHardness(2);
-//            int blocksAmount = 100000;
-//            BLOCKS = new TemplateBlockBase[blocksAmount];
-//            Random random = new Random(42);
-//            for (int i = 0; i < blocksAmount; i++)
-//                BLOCKS[i] = new ColouredBlock(of(MODID, "test_block_" + i), Material.DIRT, random.nextInt()).setHardness(0.8F).setSounds(BlockBase.GLASS_SOUNDS).setTranslationKey(MODID, "testBlock" + i);
+            int blocksAmount = 100000;
+            BLOCKS = new TemplateBlockBase[blocksAmount];
+            Random random = new Random(42);
+            for (int i = 0; i < blocksAmount; i++)
+                BLOCKS[i] = new ColouredBlock(of(MODID, "test_block_" + i), Material.DIRT, random.nextInt()).setHardness(0.8F).setSounds(BlockBase.GLASS_SOUNDS).setTranslationKey(MODID, "testBlock" + i);
         }
 
-        public static TemplateBlockBase[] BLOCKS;
+        public static BlockBase[] BLOCKS;
     }
 }

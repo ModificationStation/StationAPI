@@ -35,10 +35,12 @@ public class StationAPI implements PreLaunchEntrypoint {
      * StationAPI's ModID.
      */
     @Entrypoint.ModID
-    public static final ModID MODID = Null.get();
+    public static final ModID MODID = ModID.of("stationapi");
 
     @Entrypoint.Logger("Station|API")
     public static final Logger LOGGER = Null.get();
+
+    public static final Identifier INTERNAL_PHASE = MODID.id("internal_phase");
 
     public static final EventBus EVENT_BUS = new EventBus();
 
