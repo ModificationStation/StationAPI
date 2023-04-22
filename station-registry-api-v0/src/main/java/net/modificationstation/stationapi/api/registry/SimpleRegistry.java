@@ -25,6 +25,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -344,7 +345,7 @@ public class SimpleRegistry<T> extends MutableRegistry<T> implements RemappableR
         if (!list.isEmpty())
             throw new IllegalStateException("Unbound values in registry " + this.getKey() + ": " + list);
         if (this.unfrozenValueToEntry != null) {
-            List<RegistryEntry.Reference<T>> list2 = this.unfrozenValueToEntry.values().stream().filter(entry -> !entry.hasKeyAndValue()).toList();
+            List<RegistryEntry.Reference<T>> list2 = this.unfrozenValueToEntry.values().stream().filter(Predicate.not(RegistryEntry.Reference::hasKeyAndValue)).toList();
             if (!list2.isEmpty())
                 throw new IllegalStateException("Some intrusive holders were not added to registry: " + list2);
             this.unfrozenValueToEntry = null;

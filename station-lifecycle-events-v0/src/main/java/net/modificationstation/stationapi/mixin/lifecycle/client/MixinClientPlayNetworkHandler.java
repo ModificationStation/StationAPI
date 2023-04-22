@@ -52,7 +52,7 @@ public abstract class MixinClientPlayNetworkHandler {
         StationAPI.EVENT_BUS.post(
                 MultiplayerLogoutEvent.builder()
                         .packet(new Disconnect0xFFPacket(reason))
-                        .stacktrace((String[]) stacktrace)
+                        .stacktrace(stacktrace instanceof String[] strings ? strings : new String[0])
                         .dropped(true)
                         .build()
         );
