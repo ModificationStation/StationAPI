@@ -4,10 +4,11 @@ import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
-import net.modificationstation.stationapi.api.registry.serial.LegacyIDHolder;
+import net.modificationstation.stationapi.api.registry.RemappableRawIdHolder;
 import net.modificationstation.stationapi.api.util.Util;
+import org.jetbrains.annotations.ApiStatus;
 
-public interface StationItem extends LegacyIDHolder, ItemConvertible {
+public interface StationItem extends RemappableRawIdHolder, ItemConvertible {
 
     @Override
     default ItemBase asItem() {
@@ -15,8 +16,9 @@ public interface StationItem extends LegacyIDHolder, ItemConvertible {
     }
 
     @Override
-    default int getLegacyID() {
-        return Util.assertImpl();
+    @ApiStatus.Internal
+    default void setRawId(int rawId) {
+        Util.assertImpl();
     }
 
     default RegistryEntry.Reference<ItemBase> getRegistryEntry() {

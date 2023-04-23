@@ -11,16 +11,14 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import org.objectweb.asm.Opcodes;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockBase.class)
 public abstract class MixinBlockBase implements StationBlock {
 
+    @Mutable
     @Shadow @Final public int id;
 
     @Shadow public abstract BlockBase setTranslationKey(String string);
@@ -57,8 +55,8 @@ public abstract class MixinBlockBase implements StationBlock {
 
     @Override
     @Unique
-    public int getLegacyID() {
-        return id;
+    public final void setRawId(int rawId) {
+        id = rawId;
     }
 
     @ModifyConstant(

@@ -4,14 +4,16 @@ import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
-import net.modificationstation.stationapi.api.registry.serial.LegacyIDHolder;
+import net.modificationstation.stationapi.api.registry.RemappableRawIdHolder;
 import net.modificationstation.stationapi.api.util.Util;
+import org.jetbrains.annotations.ApiStatus;
 
-public interface StationBlock extends LegacyIDHolder {
+public interface StationBlock extends RemappableRawIdHolder {
 
     @Override
-    default int getLegacyID() {
-        return Util.assertImpl();
+    @ApiStatus.Internal
+    default void setRawId(int rawId) {
+        Util.assertImpl();
     }
 
     default RegistryEntry.Reference<BlockBase> getRegistryEntry() {

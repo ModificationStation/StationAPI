@@ -16,10 +16,7 @@ import net.modificationstation.stationapi.api.block.StationFlatteningBlock;
 import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.registry.*;
-import net.modificationstation.stationapi.api.registry.sync.trackers.BooleanArrayTracker;
-import net.modificationstation.stationapi.api.registry.sync.trackers.IntArrayTracker;
-import net.modificationstation.stationapi.api.registry.sync.trackers.ObjectArrayTracker;
-import net.modificationstation.stationapi.api.registry.sync.trackers.StateIdTracker;
+import net.modificationstation.stationapi.api.registry.sync.trackers.*;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.impl.block.BlockDropListImpl;
 import org.spongepowered.asm.mixin.*;
@@ -187,7 +184,7 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, ItemConv
     private static void setupRegistry(CallbackInfo ci) {
         BlockRegistry registry = BlockRegistry.INSTANCE;
         StateIdTracker.register(registry, States.STATE_IDS, block -> block.getStateManager().getStates());
-        ObjectArrayTracker.register(registry, () -> BY_ID, array -> {
+        RemappableEntryArrayTracker.register(registry, () -> BY_ID, array -> {
             int oldSize = BY_ID.length;
             int newSize = array.length;
 
