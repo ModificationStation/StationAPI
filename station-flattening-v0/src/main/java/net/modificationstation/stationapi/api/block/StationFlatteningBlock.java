@@ -2,17 +2,24 @@ package net.modificationstation.stationapi.api.block;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.entity.player.PlayerBase;
+import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
 import net.minecraft.util.maths.TilePos;
+import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
+import net.modificationstation.stationapi.api.registry.RemappableRawIdHolder;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.util.Util;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 
 public interface StationFlatteningBlock extends
+        RemappableRawIdHolder,
+        ItemConvertible,
         BlockStateHolder,
         DropWithBlockState,
         DropListProvider,
@@ -20,6 +27,21 @@ public interface StationFlatteningBlock extends
         HardnessWithBlockState,
         ReplaceableBlock
 {
+
+    @Override
+    @ApiStatus.Internal
+    default void setRawId(int rawId) {
+        Util.assertImpl();
+    }
+
+    default RegistryEntry.Reference<BlockBase> getRegistryEntry() {
+        return Util.assertImpl();
+    }
+
+    @Override
+    default ItemBase asItem() {
+        return Util.assertImpl();
+    }
 
     @Override
     default StateManager<BlockBase, BlockState> getStateManager() {

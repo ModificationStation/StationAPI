@@ -22,7 +22,8 @@
     "stationapi:event_bus": [
       "net.modificationstation.stationapi.api.block.States",
       "net.modificationstation.stationapi.impl.block.PlacementStateImpl",
-      "net.modificationstation.stationapi.impl.level.LevelDataVersionImpl"
+      "net.modificationstation.stationapi.impl.level.LevelDataVersionImpl",
+      "net.modificationstation.stationapi.impl.block.BlockInteractionImpl"
     ]
   },
   "mixins": [

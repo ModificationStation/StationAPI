@@ -18,11 +18,6 @@
   "icon": "assets/station-blocks-v0/icon.png",
 
   "environment": "*",
-  "entrypoints": {
-    "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.block.BlockInteractionImpl"
-    ]
-  },
   "mixins": [
     "station-blocks-v0.mixins.json"
   ],

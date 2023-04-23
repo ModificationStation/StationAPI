@@ -9,6 +9,7 @@ import net.modificationstation.stationapi.api.event.item.IsItemSuitableForStateE
 import net.modificationstation.stationapi.api.event.item.ItemMiningSpeedMultiplierOnStateEvent;
 import net.modificationstation.stationapi.api.item.StationFlatteningItemStack;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -60,6 +61,11 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
         if (id.isEmpty())
             LOGGER.warn("Attempted to load an item stack without Station Flattening ID! StationAPI will ignore this and accept the vanilla ID (" + itemId + "), but this should have been handled by DFU beforehand");
         else itemId = Objects.requireNonNull(ItemRegistry.INSTANCE.get(of(id))).id;
+    }
+
+    @Override
+    public RegistryEntry.Reference<ItemBase> getRegistryEntry() {
+        return getType().getRegistryEntry();
     }
 
     @Override

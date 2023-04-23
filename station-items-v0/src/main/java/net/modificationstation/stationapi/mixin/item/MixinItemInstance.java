@@ -10,7 +10,6 @@ import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.item.ItemStackEvent;
 import net.modificationstation.stationapi.api.item.StationItemStack;
-import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.impl.item.nbt.StationNBTSetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -120,10 +119,5 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
     private void isStackIdentical2(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
         if (!Objects.equals(stationNBT, par1.getStationNBT()))
             cir.setReturnValue(false);
-    }
-
-    @Override
-    public RegistryEntry.Reference<ItemBase> getRegistryEntry() {
-        return getType().getRegistryEntry();
     }
 }

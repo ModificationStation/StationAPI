@@ -10,25 +10,26 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.BlockView;
 import net.minecraft.level.Level;
 import net.minecraft.util.maths.TilePos;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.block.StationFlatteningBlock;
-import net.modificationstation.stationapi.api.item.ItemConvertible;
+import net.modificationstation.stationapi.api.event.block.BlockEvent;
+import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.registry.*;
 import net.modificationstation.stationapi.api.registry.sync.trackers.*;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.impl.block.BlockDropListImpl;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
 @Mixin(BlockBase.class)
-public abstract class MixinBlockBase implements StationFlatteningBlock, ItemConvertible {
+public abstract class MixinBlockBase implements StationFlatteningBlock {
 
     @Shadow public abstract void beforeDestroyedByExplosion(Level arg, int i, int j, int k, int l, float f);
 
@@ -46,8 +47,6 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, ItemConv
 
     @Mutable
     @Shadow @Final public static BlockBase[] BY_ID;
-
-    @Shadow protected abstract BlockBase setTicksRandomly(boolean bl);
 
     @Mutable
     @Shadow @Final public static boolean[] TICKS_RANDOMLY;
@@ -69,6 +68,58 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, ItemConv
 
     @Mutable
     @Shadow @Final public static boolean[] NO_NOTIFY_ON_META_CHANGE;
+
+    @Mutable
+    @Shadow @Final public int id;
+
+    @Unique
+    private final RegistryEntry.Reference<BlockBase> stationapi_registryEntry = BlockRegistry.INSTANCE.createEntry(BlockBase.class.cast(this));
+
+    @Override
+    @Unique
+    public RegistryEntry.Reference<BlockBase> getRegistryEntry() {
+        return stationapi_registryEntry;
+    }
+
+    @Override
+    @Unique
+    public final void setRawId(int rawId) {
+        id = rawId;
+    }
+
+    @Inject(
+            method = "<clinit>",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/block/BlockBase;TRAPDOOR:Lnet/minecraft/block/BlockBase;",
+                    opcode = Opcodes.PUTSTATIC,
+                    shift = At.Shift.AFTER
+            )
+    )
+    private static void afterBlockRegister(CallbackInfo ci) {
+        StationAPI.EVENT_BUS.post(new BlockRegistryEvent());
+    }
+
+    @ModifyConstant(
+            method = "<clinit>",
+            constant = @Constant(intValue = 256),
+            slice = @Slice(
+                    from = @At(
+                            value = "FIELD",
+                            target = "Lnet/minecraft/block/BlockBase;TRAPDOOR:Lnet/minecraft/block/BlockBase;",
+                            opcode = Opcodes.PUTSTATIC,
+                            shift = At.Shift.AFTER
+                    )
+            )
+    )
+    private static int getBlocksSize(int constant) {
+        return BlockBase.BY_ID.length;
+    }
+
+    @Override
+    public ItemBase asItem() {
+        return ItemBase.byId[id];
+    }
 
     @Inject(
             method = "<init>(ILnet/minecraft/block/material/Material;)V",
@@ -120,6 +171,29 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, ItemConv
     @Override
     public void dropWithChance(Level level, int x, int y, int z, BlockState state, int meta, float chance) {
         if (!BlockDropListImpl.drop(level, x, y, z, state, meta, chance, this::drop, this)) beforeDestroyedByExplosion(level, x, y, z, meta, chance);
+    }
+
+    @Inject(
+            method = "beforeDestroyedByExplosion(Lnet/minecraft/level/Level;IIIIF)V",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/level/Level;rand:Ljava/util/Random;",
+                    opcode = Opcodes.GETFIELD,
+                    ordinal = 0,
+                    shift = At.Shift.BEFORE
+            ),
+            cancellable = true
+    )
+    private void beforeDrop(Level level, int x, int y, int z, int meta, float chance, CallbackInfo ci) {
+        if (
+                StationAPI.EVENT_BUS.post(BlockEvent.BeforeDrop.builder()
+                        .level(level)
+                        .x(x).y(y).z(z)
+                        .chance(chance)
+                        .block(BlockBase.class.cast(this))
+                        .build()
+                ).isCanceled()
+        ) ci.cancel();
     }
 
     @Override
@@ -175,6 +249,20 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, ItemConv
     @Override
     public void onBlockPlaced(Level world, int x, int y, int z, BlockState replacedState) {
         onBlockPlaced(world, x, y, z);
+    }
+
+    @ModifyVariable(
+            method = "setTranslationKey(Ljava/lang/String;)Lnet/minecraft/block/BlockBase;",
+            at = @At("HEAD"),
+            argsOnly = true
+    )
+    private String getTranslationKey(String name) {
+        return StationAPI.EVENT_BUS.post(
+                BlockEvent.TranslationKeyChanged.builder()
+                        .block(BlockBase.class.cast(this))
+                        .currentTranslationKey(name)
+                        .build()
+        ).currentTranslationKey;
     }
 
     @Inject(

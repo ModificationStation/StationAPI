@@ -71,9 +71,9 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
         return this.opaque;
     }
 
-      public boolean canReplace(ItemPlacementContext context) {
-         return this.getBlock().canReplace(this.asBlockState(), context);
-      }
+    public boolean canReplace(ItemPlacementContext context) {
+        return this.getBlock().canReplace(this.asBlockState(), context);
+    }
 
     public boolean isIn(TagKey<BlockBase> tag) {
         return getBlock().getRegistryEntry().isIn(tag);
