@@ -18,7 +18,11 @@ public final class States {
 
     public static final Lazy<BlockState> AIR = new Lazy<>(() -> AIR_BLOCK.get().getDefaultState());
 
-    public static final IdList<BlockState> STATE_IDS = new IdList<>();
+    /**
+     * @deprecated Use {@link BlockBase#STATE_IDS} instead
+     */
+    @Deprecated
+    public static final IdList<BlockState> STATE_IDS = BlockBase.STATE_IDS;
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
     private static void registerBlocks(BlockRegistryEvent event) {

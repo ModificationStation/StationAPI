@@ -10,15 +10,21 @@ import net.minecraft.util.maths.Box;
 import net.minecraft.util.maths.Vec3f;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.block.IsBlockReplaceableEvent;
+import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapCallback;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
+import net.modificationstation.stationapi.api.item.StationFlatteningBlockItem;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Block.class)
-public class MixinBlock {
+public class MixinBlock implements StationFlatteningBlockItem {
+	@Shadow private int blockId;
 	@Unique private short maxHeight;
 	
 	@Inject(method = "useOnTile", at = @At("HEAD"))
@@ -58,5 +64,21 @@ public class MixinBlock {
 						))
 						.build()
 		).context.canPlace() && BlockBase.BY_ID[blockID].canPlaceAt(world, x, y, z, side);
+	}
+
+	@Inject(
+			method = "<init>",
+			at = @At("RETURN")
+	)
+	private void registerCallback(int par1, CallbackInfo ci) {
+		RegistryIdRemapCallback.event(BlockRegistry.INSTANCE).register(
+				StationAPI.INTERNAL_PHASE,
+				state -> blockId = state.getRawIdChangeMap().getOrDefault(blockId, blockId)
+		);
+	}
+
+	@Override
+	public BlockBase getBlock() {
+		return BlockBase.BY_ID[blockId];
 	}
 }

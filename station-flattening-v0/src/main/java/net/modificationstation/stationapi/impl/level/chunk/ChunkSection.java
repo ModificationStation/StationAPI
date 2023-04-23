@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.impl.level.chunk;
 
+import net.minecraft.block.BlockBase;
 import net.minecraft.level.LightType;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
@@ -28,7 +29,7 @@ public class ChunkSection {
 
     public ChunkSection(int chunkPos) {
         this.yOffset = (short) ChunkSection.blockCoordFromChunkCoord(chunkPos);
-        this.blockStateContainer = new PalettedContainer<>(States.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
+        this.blockStateContainer = new PalettedContainer<>(BlockBase.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
     }
 
     public static int blockCoordFromChunkCoord(int chunkPos) {

@@ -27,7 +27,5 @@ public interface RemappableRegistry {
 
 	void remap(String name, Reference2IntMap<Identifier> remoteIndexedEntries, RemapMode mode) throws RemapException;
 
-	void saveState();
-
 	void unmap(String name) throws RemapException;
 }

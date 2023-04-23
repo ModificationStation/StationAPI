@@ -24,6 +24,7 @@
     "MixinOverworldLevelSource",
     "MixinPlayerBase",
     "MixinPlayerInventory",
+    "MixinSecondaryBlock",
     "MixinSkylandsLevelSource",
     "MixinWorldPopulationRegion",
     "RegionFileAccessor"

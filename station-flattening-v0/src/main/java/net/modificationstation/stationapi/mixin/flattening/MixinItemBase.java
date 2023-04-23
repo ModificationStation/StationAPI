@@ -11,6 +11,7 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.api.registry.sync.trackers.ObjectArrayTracker;
 import net.modificationstation.stationapi.api.registry.sync.trackers.RemappableEntryArrayTracker;
+import net.modificationstation.stationapi.api.registry.sync.trackers.vanilla.BlockItemTracker;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
@@ -87,6 +88,7 @@ public abstract class MixinItemBase implements StationFlatteningItem {
     private static void setupRegistry(CallbackInfo ci) {
         ItemRegistry registry = ItemRegistry.INSTANCE;
         RemappableEntryArrayTracker.register(registry, () -> byId, array -> byId = array);
+        BlockItemTracker.register(registry);
     }
 
     @Inject(

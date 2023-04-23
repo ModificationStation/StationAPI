@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.level;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.block.BlockBase;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.EntityRegistry;
 import net.minecraft.level.Level;
@@ -22,7 +23,7 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public class StationFlatteningWorldManager {
 
-    private static final Codec<PalettedContainer<BlockState>> CODEC = PalettedContainer.createCodec(States.STATE_IDS, BlockState.CODEC, PalettedContainer.PaletteProvider.BLOCK_STATE, States.AIR.get());
+    private static final Codec<PalettedContainer<BlockState>> CODEC = PalettedContainer.createCodec(BlockBase.STATE_IDS, BlockState.CODEC, PalettedContainer.PaletteProvider.BLOCK_STATE, States.AIR.get());
     public static final String SECTIONS = of(MODID, "sections").toString();
     private static final String METADATA_KEY = "data";
     private static final String SKY_LIGHT_KEY = "sky_light";
@@ -86,7 +87,7 @@ public class StationFlatteningWorldManager {
                 int sectionY = sectionTag.getByte(HEIGHT_KEY);
                 int index = world.sectionCoordToIndex(sectionY);
                 if (index < 0 || index >= sections.length) continue;
-                PalettedContainer<BlockState> blockStates = sectionTag.containsKey("block_states") ? CODEC.parse(NbtOps.INSTANCE, sectionTag.getCompoundTag("block_states")).promotePartial(errorMessage -> logRecoverableError(xPos, zPos, sectionY, errorMessage)).getOrThrow(false, LOGGER::error) : new PalettedContainer<>(States.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
+                PalettedContainer<BlockState> blockStates = sectionTag.containsKey("block_states") ? CODEC.parse(NbtOps.INSTANCE, sectionTag.getCompoundTag("block_states")).promotePartial(errorMessage -> logRecoverableError(xPos, zPos, sectionY, errorMessage)).getOrThrow(false, LOGGER::error) : new PalettedContainer<>(BlockBase.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
                 ChunkSection chunkSection = new ChunkSection(sectionY, blockStates);
                 chunkSection.getMetadataArray().copyArray(sectionTag.getByteArray(METADATA_KEY));
                 chunkSection.getLightArray(LightType.field_2757).copyArray(sectionTag.getByteArray(SKY_LIGHT_KEY));

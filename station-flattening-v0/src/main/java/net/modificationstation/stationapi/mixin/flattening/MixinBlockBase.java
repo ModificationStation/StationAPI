@@ -271,38 +271,8 @@ public abstract class MixinBlockBase implements StationFlatteningBlock {
     )
     private static void setupRegistry(CallbackInfo ci) {
         BlockRegistry registry = BlockRegistry.INSTANCE;
-        StateIdTracker.register(registry, States.STATE_IDS, block -> block.getStateManager().getStates());
-        RemappableEntryArrayTracker.register(registry, () -> BY_ID, array -> {
-            int oldSize = BY_ID.length;
-            int newSize = array.length;
-
-            BY_ID = array;
-
-            // remapping items to keep the "shared" IDs space
-            ItemBase[] oldItems = ItemBase.byId.clone();
-            Reference2IntMap<Identifier> itemRemap = new Reference2IntOpenHashMap<>();
-
-            // adding all block items as is
-            ItemRegistry items = ItemRegistry.INSTANCE;
-            for (int i = 0; i < oldSize; i++) {
-                ItemBase item = oldItems[i];
-                if (item != null)
-                    itemRemap.put(items.getId(item), i);
-            }
-
-            // shifting the rest of item IDs by the new block IDs size
-            for (int i = oldSize; i < oldItems.length; i++) {
-                ItemBase item = oldItems[i];
-                if (item != null) itemRemap.put(items.getId(item), i - oldSize + newSize);
-            }
-
-            try {
-                items.remap("block ID space expansion", itemRemap, RemappableRegistry.RemapMode.EXACT);
-            } catch (RemapException e) {
-                throw new RuntimeException(e);
-            }
-            items.saveState(); // this remap only happens while new entries are being registered, so it should be treated as vanilla
-        });
+        StateIdTracker.register(registry, STATE_IDS, block -> block.getStateManager().getStates());
+        RemappableEntryArrayTracker.register(registry, () -> BY_ID, array -> BY_ID = array);
         BooleanArrayTracker.register(registry, () -> TICKS_RANDOMLY, array -> TICKS_RANDOMLY = array);
         BooleanArrayTracker.register(registry, () -> FULL_OPAQUE, array -> FULL_OPAQUE = array);
         BooleanArrayTracker.register(registry, () -> HAS_TILE_ENTITY, array -> HAS_TILE_ENTITY = array);

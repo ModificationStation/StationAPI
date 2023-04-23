@@ -440,7 +440,11 @@ public class SimpleRegistry<T> extends MutableRegistry<T> implements RemappableR
         // The reason we preserve the first one is because it contains the
         // vanilla order of IDs before mods, which is crucial for vanilla server
         // compatibility.
-        if (prevIndexedEntries == null) saveState();
+        if (prevIndexedEntries == null) {
+            prevIndexedEntries = new Reference2IntOpenHashMap<>();
+            prevEntries = HashBiMap.create(idToEntry);
+            for (T o : this) prevIndexedEntries.put(getId(o), getRawId(o));
+        }
         Int2ReferenceMap<Identifier> oldIdMap = new Int2ReferenceOpenHashMap<>();
         for (T o : this) oldIdMap.put(getRawId(o), getId(o));
 
@@ -514,13 +518,6 @@ public class SimpleRegistry<T> extends MutableRegistry<T> implements RemappableR
             if (nextId <= id) nextId = id + 1;
         }
         remapEvent.invoker().onRemap(new RemapStateImpl<>(this, oldIdMap, idMap));
-    }
-
-    @Override
-    public void saveState() {
-        prevIndexedEntries = new Reference2IntOpenHashMap<>();
-        prevEntries = HashBiMap.create(idToEntry);
-        for (T o : this) prevIndexedEntries.put(getId(o), getRawId(o));
     }
 
     @Override

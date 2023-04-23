@@ -13,6 +13,7 @@ import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.api.registry.RemappableRawIdHolder;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.util.collection.IdList;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public interface StationFlatteningBlock extends
         HardnessWithBlockState,
         ReplaceableBlock
 {
+
+    IdList<BlockState> STATE_IDS = new IdList();
 
     @Override
     @ApiStatus.Internal
