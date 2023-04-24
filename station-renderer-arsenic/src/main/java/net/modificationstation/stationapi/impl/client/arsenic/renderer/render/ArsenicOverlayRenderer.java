@@ -23,6 +23,7 @@ import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.SpriteContents;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
+import net.modificationstation.stationapi.api.item.BlockItemForm;
 import net.modificationstation.stationapi.mixin.arsenic.client.class_556Accessor;
 import org.lwjgl.opengl.GL11;
 
@@ -40,8 +41,9 @@ public final class ArsenicOverlayRenderer {
         GL11.glPushMatrix();
         BakedModel model = RendererHolder.RENDERER.getModel(item, entity.level, entity, entity.entityId);
         if (model instanceof VanillaBakedModel) {
-            if (item.itemId < BlockBase.BY_ID.length && BlockRenderer.method_42(BlockBase.BY_ID[item.itemId].getRenderType()))
-                access.stationapi$getField_2405().method_48(BlockBase.BY_ID[item.itemId], item.getDamage(), entity.getBrightnessAtEyes(1.0F));
+            BlockBase block;
+            if (item.getType() instanceof BlockItemForm blockItemForm && BlockRenderer.method_42((block = blockItemForm.getBlock()).getRenderType()))
+                access.stationapi$getField_2405().method_48(block, item.getDamage(), entity.getBrightnessAtEyes(1.0F));
             else {
                 Tessellator var3 = Tessellator.INSTANCE;
                 int var4 = entity.method_917(item);

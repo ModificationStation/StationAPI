@@ -128,7 +128,7 @@ allprojects {
         modLocalRuntime("net.glasslauncher.mods:GlassConfigAPI:${project.gcapi_version}") {
             transitive false
         }
-        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:5.0.10") {
+        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:5.0.12") {
             transitive false
         }
     }

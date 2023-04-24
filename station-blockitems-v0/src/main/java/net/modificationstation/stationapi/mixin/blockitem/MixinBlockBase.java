@@ -7,6 +7,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.StationBlockItemsBlock;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockItemRegistryEvent;
+import net.modificationstation.stationapi.api.item.BlockItemForm;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
@@ -56,14 +57,25 @@ public class MixinBlockBase implements StationBlockItemsBlock {
             )
     )
     private static Block getBlockItem(int blockID) {
-        BlockBase block = BY_ID[blockID + BY_ID.length];
+        BlockBase block = BY_ID[blockID + ItemRegistry.ID_SHIFT];
         BlockItemFactoryEvent event = StationAPI.EVENT_BUS.post(
                 BlockItemFactoryEvent.builder()
                         .block(block)
                         .currentFactory(Block::new)
                         .build()
         );
-        return event.isCanceled() ? BlockFormOnlyHandler.EMPTY_BLOCK_ITEM.get() : Registry.register(ItemRegistry.INSTANCE, block.id, BlockRegistry.INSTANCE.getId(block), event.currentFactory.apply(blockID));
+        return event.isCanceled() ?
+                BlockFormOnlyHandler.EMPTY_BLOCK_ITEM.get() :
+                Registry.register(
+                        ItemRegistry.INSTANCE,
+                        BlockRegistry.INSTANCE.getId(block),
+                        blockID < 0 ?
+                                event.currentFactory.apply(blockID) :
+                                BlockItemForm.of(
+                                        () -> event.currentFactory.apply(ItemRegistry.AUTO_ID),
+                                        block
+                                )
+                );
     }
 
     @Inject(

@@ -34,6 +34,7 @@
     "client.MixinInGame",
     "client.MixinMinecraft",
     "client.MixinMultiPlayerClientInteractionManager",
+    "client.MixinPlayerRenderer",
     "client.MixinSinglePlayerClientInteractionManager",
     "client.MixinWorldRenderer"
   ],

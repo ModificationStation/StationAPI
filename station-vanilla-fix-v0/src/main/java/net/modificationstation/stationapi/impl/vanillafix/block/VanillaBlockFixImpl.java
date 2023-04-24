@@ -166,6 +166,6 @@ public final class VanillaBlockFixImpl {
         c.accept(BlockBase.PISTON);
         c.accept(BlockBase.STICKY_PISTON);
 
-        COLLISION_BLOCKS.get().forEach(block -> Registry.register(ItemRegistry.INSTANCE, Objects.requireNonNull(BlockRegistry.INSTANCE.getId(block)).append("_unobtainable"), new Block(block.id - BY_ID.length)));
+        COLLISION_BLOCKS.get().forEach(block -> Registry.register(ItemRegistry.INSTANCE, Objects.requireNonNull(BlockRegistry.INSTANCE.getId(block)).append("_unobtainable"), new Block(ItemRegistry.SHIFTED_ID.get(block.id))));
     }
 }

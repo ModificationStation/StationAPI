@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.mixin.flattening;
 import net.minecraft.block.BlockBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.Block;
+import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.util.hit.HitResult;
@@ -23,10 +24,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Block.class)
-public class MixinBlock implements StationFlatteningBlockItem {
+public class MixinBlock extends ItemBase implements StationFlatteningBlockItem {
 	@Shadow private int blockId;
 	@Unique private short maxHeight;
-	
+
+	protected MixinBlock(int i) {
+		super(i);
+	}
+
 	@Inject(method = "useOnTile", at = @At("HEAD"))
 	private void storeLevel(ItemInstance item, PlayerBase player, Level level, int x, int y, int z, int facing, CallbackInfoReturnable<Boolean> info) {
 		maxHeight = (short) (level.getTopY() - 1);
@@ -80,5 +85,34 @@ public class MixinBlock implements StationFlatteningBlockItem {
 	@Override
 	public BlockBase getBlock() {
 		return BlockBase.BY_ID[blockId];
+	}
+
+	@Override
+	public void setBlock(BlockBase block) {
+		blockId = block.id;
+		setTexturePosition(block.getTextureForSide(2));
+	}
+
+	@Redirect(
+			method = "<init>",
+			at = @At(
+					value = "FIELD",
+					target = "Lnet/minecraft/block/BlockBase;BY_ID:[Lnet/minecraft/block/BlockBase;",
+					args = "array=get"
+			)
+	)
+	private BlockBase failsafeBlock(BlockBase[] array, int index) {
+		return index < 0 ? null : array[index];
+	}
+
+	@Redirect(
+			method = "<init>",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/block/BlockBase;getTextureForSide(I)I"
+			)
+	)
+	private int failsafeTexture(BlockBase instance, int i) {
+		return instance == null ? 0 : instance.getTextureForSide(i);
 	}
 }

@@ -4,6 +4,8 @@ import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceFunction;
+import net.minecraft.block.BlockBase;
+import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
@@ -27,7 +29,7 @@ import java.util.stream.StreamSupport;
  * <p>A <strong>registry</strong> is an object that holds the mapping between three things:
  * the string ID, the numeric ID, and the registered value. There are many registries
  * for different types of registerable objects, and a registry's type parameter indicates
- * the accepted type. For example, you register your {@link net.minecraft.block.BlockBase} to {@code
+ * the accepted type. For example, you register your {@link BlockBase} to {@code
  * Registry<Block>}. It's important to note that registries themselves are registered
  * in a "registry of registries", {@link Registries#ROOT}.
  * 
@@ -126,7 +128,7 @@ import java.util.stream.StreamSupport;
  * </ul>
  * 
  * <p>When a class whose instances are registered as intrusive holders, such as
- * {@link net.minecraft.block.BlockBase} or {@link net.minecraft.item.ItemBase}, are instantiated
+ * {@link BlockBase} or {@link ItemBase}, are instantiated
  * without registering, the game crashes with "Some intrusive holders were not added to
  * registry" error message. <strong>This includes conditional registration</strong>.
  * For example, the code below can cause a crash:
@@ -148,6 +150,9 @@ import java.util.stream.StreamSupport;
  * }</pre>
  */
 public interface Registry<T> extends Keyable, IndexedIterable<T> {
+
+    int AUTO_ID = -1;
+
     /**
      * {@return the registry key that identifies this registry}
      */
@@ -345,6 +350,19 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
     Registry<T> freeze();
 
     RegistryEntry.Reference<T> createEntry(T var1);
+
+    /**
+     * Similar to {@link #createEntry(Object)}, except
+     * it also reserves a raw ID for the entry.
+     *
+     * <p>This is helpful in cases such as {@link BlockBase},
+     * where raw ID is already required in the constructor.
+     *
+     * @param rawId the raw ID to reserve (or -1 to use next ID)
+     * @param value the value
+     * @return reference containing the reserved raw ID
+     */
+    RegistryEntry.Reference<T> createReservedEntry(int rawId, T value);
 
     /**
      * {@return the reference registry entry for the value assigned {@code rawId}, or an

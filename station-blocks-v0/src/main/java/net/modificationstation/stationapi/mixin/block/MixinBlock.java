@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.mixin.block;
 
-import net.minecraft.block.BlockBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.Block;
 import net.minecraft.item.ItemInstance;
@@ -11,20 +10,10 @@ import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Block.class)
 public class MixinBlock {
-
-    @ModifyConstant(
-            method = "<init>(I)V",
-            constant = @Constant(intValue = 256)
-    )
-    private int getBlocksSize(int constant) {
-        return BlockBase.BY_ID.length;
-    }
 
     @Redirect(
             method = "useOnTile(Lnet/minecraft/item/ItemInstance;Lnet/minecraft/entity/player/PlayerBase;Lnet/minecraft/level/Level;IIII)Z",

@@ -15,6 +15,9 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedCallback;
 import net.modificationstation.stationapi.api.event.registry.RegistryEntryRemovedCallback;
 import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapCallback;
+import net.modificationstation.stationapi.api.registry.RegistryEntry.Reference;
+import net.modificationstation.stationapi.api.registry.RegistryEntryList.Named;
+import net.modificationstation.stationapi.api.registry.RegistryWrapper.Impl;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.impl.registry.sync.RemapStateImpl;
@@ -22,6 +25,7 @@ import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,24 +33,24 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry, ListenableRegistry<T> {
     final RegistryKey<? extends Registry<T>> key;
-    private final ObjectList<RegistryEntry.Reference<T>> rawIdToEntry;
-    private final Object2IntMap<T> entryToRawId;
-    private final Map<Identifier, RegistryEntry.Reference<T>> idToEntry;
-    private final Map<RegistryKey<T>, RegistryEntry.Reference<T>> keyToEntry;
-    private final Map<T, RegistryEntry.Reference<T>> valueToEntry;
-    private final Map<T, Lifecycle> entryToLifecycle;
+    private final ReferenceList<Reference<T>> rawIdToEntry = new ReferenceArrayList<>(256);
+    private final Reference2IntMap<T> entryToRawId = Util.make(new Reference2IntOpenHashMap<>(), map -> map.defaultReturnValue(-1));
+    private final Reference2ReferenceMap<Identifier, Reference<T>> idToEntry = new Reference2ReferenceOpenHashMap<>();
+    private final Reference2ReferenceMap<RegistryKey<T>, Reference<T>> keyToEntry = new Reference2ReferenceOpenHashMap<>();
+    private final Reference2ReferenceMap<T, Reference<T>> valueToEntry = new Reference2ReferenceOpenHashMap<>();
+    private final Reference2ReferenceMap<T, Lifecycle> entryToLifecycle = new Reference2ReferenceOpenHashMap<>();
     private Lifecycle lifecycle;
-    private volatile Map<TagKey<T>, RegistryEntryList.Named<T>> tagToEntryList;
+    private volatile Reference2ReferenceMap<TagKey<T>, Named<T>> tagToEntryList = new Reference2ReferenceOpenHashMap<>();
     private boolean frozen;
     @Nullable
-    private Map<T, RegistryEntry.Reference<T>> intrusiveValueToEntry;
+    private Reference2ReferenceMap<T, Reference<T>> intrusiveValueToEntry;
     @Nullable
-    private List<RegistryEntry.Reference<T>> cachedEntries;
+    private List<Reference<T>> cachedEntries;
     @Getter
     private int nextId;
-    private final RegistryWrapper.Impl<T> wrapper;
+    private final Impl<T> wrapper;
     private Reference2IntMap<Identifier> prevIndexedEntries;
-    private BiMap<Identifier, RegistryEntry.Reference<T>> prevEntries;
+    private BiMap<Identifier, Reference<T>> prevEntries;
 
     @Getter
     private final Event<RegistryEntryAddedCallback<T>> addObjectEvent = EventFactory.createWithPhases(RegistryEntryAddedCallback.class,
@@ -77,14 +81,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     public SimpleRegistry(RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle, boolean intrusive) {
-        this.rawIdToEntry = new ObjectArrayList<>(256);
-        this.entryToRawId = Util.make(new Object2IntOpenCustomHashMap<>(Util.identityHashStrategy()), map -> map.defaultReturnValue(-1));
-        this.idToEntry = new HashMap<>();
-        this.keyToEntry = new HashMap<>();
-        this.valueToEntry = new IdentityHashMap<>();
-        this.entryToLifecycle = new IdentityHashMap<>();
-        this.tagToEntryList = new IdentityHashMap<>();
-        this.wrapper = new RegistryWrapper.Impl<>() {
+        this.wrapper = new Impl<>() {
             @Override
             public RegistryKey<? extends Registry<? extends T>> getRegistryKey() {
                 return SimpleRegistry.this.key;
@@ -96,28 +93,28 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
             }
 
             @Override
-            public Optional<RegistryEntry.Reference<T>> getOptional(RegistryKey<T> key) {
+            public Optional<Reference<T>> getOptional(RegistryKey<T> key) {
                 return SimpleRegistry.this.getEntry(key);
             }
 
             @Override
-            public Stream<RegistryEntry.Reference<T>> streamEntries() {
+            public Stream<Reference<T>> streamEntries() {
                 return SimpleRegistry.this.streamEntries();
             }
 
             @Override
-            public Optional<RegistryEntryList.Named<T>> getOptional(TagKey<T> tag) {
+            public Optional<Named<T>> getOptional(TagKey<T> tag) {
                 return SimpleRegistry.this.getEntryList(tag);
             }
 
             @Override
-            public Stream<RegistryEntryList.Named<T>> streamTags() {
+            public Stream<Named<T>> streamTags() {
                 return SimpleRegistry.this.streamTagsAndEntries().map(Pair::getSecond);
             }
         };
         this.key = key;
         this.lifecycle = lifecycle;
-        if (intrusive) this.intrusiveValueToEntry = new IdentityHashMap<>();
+        if (intrusive) this.intrusiveValueToEntry = new Reference2ReferenceOpenHashMap<>();
     }
 
     @Override
@@ -130,7 +127,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         return "Registry[" + this.key + " (" + this.lifecycle + ")]";
     }
 
-    private List<RegistryEntry.Reference<T>> getEntries() {
+    private List<Reference<T>> getEntries() {
         if (this.cachedEntries == null)
             this.cachedEntries = this.rawIdToEntry.stream().filter(Objects::nonNull).toList();
 
@@ -146,22 +143,14 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public RegistryEntry.Reference<T> set(int rawId, RegistryKey<T> registryKey, T value, Lifecycle lifecycle) {
-        int indexedEntriesId = entryToRawId.getInt(value);
-        if (indexedEntriesId >= 0)
-            throw new RuntimeException("Attempted to register object " + value + " twice! (at raw IDs " + indexedEntriesId + " and " + rawId + " )");
-        boolean isObjectNew;
-        if (!idToEntry.containsKey(registryKey.getValue())) isObjectNew = true;
-        else {
-            RegistryEntry.Reference<T> oldObject = idToEntry.get(registryKey.getValue());
-            if (oldObject != null && oldObject.value() != null && oldObject.value() != value) {
-                int oldId = entryToRawId.getInt(oldObject.value());
-                if (oldId != rawId)
-                    throw new RuntimeException("Attempted to register ID " + registryKey + " at different raw IDs (" + oldId + ", " + rawId + ")! If you're trying to override an item, use .set(), not .register()!");
-                removeObjectEvent.invoker().onEntryRemoved(oldId, registryKey.getValue(), oldObject.value());
-                isObjectNew = true;
-            } else isObjectNew = false;
-        }
+    public Reference<T> set(int rawId, RegistryKey<T> registryKey, T value, Lifecycle lifecycle) {
+        // since raw ID is explicitly specified here,
+        // we need to make sure one isn't
+        // already reserved for this entry
+        return set(rawId, registryKey, value, lifecycle, true);
+    }
+
+    private Reference<T> set(int rawId, RegistryKey<T> registryKey, T value, Lifecycle lifecycle, boolean checkReservation) {
         this.assertNotFrozen(registryKey);
         Validate.notNull(registryKey);
         Validate.notNull(value);
@@ -171,14 +160,39 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         if (this.valueToEntry.containsKey(value))
             Util.throwOrPause(new IllegalStateException("Adding duplicate value '" + value + "' to registry"));
 
-        RegistryEntry.Reference<T> reference;
+        Reference<T> reference;
         if (this.intrusiveValueToEntry != null) {
             reference = this.intrusiveValueToEntry.remove(value);
             if (reference == null)
                 throw new AssertionError("Missing intrusive holder for " + registryKey + ":" + value);
 
             reference.setRegistryKey(registryKey);
-        } else reference = this.keyToEntry.computeIfAbsent(registryKey, key -> RegistryEntry.Reference.standAlone(this.getEntryOwner(), key));
+            if (reference.hasRawId()) {
+                int reservedRawId = reference.reservedRawId();
+                if (checkReservation && reservedRawId != rawId)
+                    throw new RuntimeException("Attempted to register a reserved entry with raw ID " + reservedRawId + " under a different raw ID " + rawId + "!");
+                rawId = reservedRawId;
+            }
+        } else //noinspection unchecked
+            reference = this.keyToEntry.computeIfAbsent(registryKey, key -> Reference.standAlone(this.getEntryOwner(), (RegistryKey<T>) key));
+
+        // figuring out if the object is new
+        // or if it's overwriting another object
+        int indexedEntriesId = entryToRawId.getInt(value);
+        if (indexedEntriesId >= 0)
+            throw new RuntimeException("Attempted to register object " + value + " twice! (at raw IDs " + indexedEntriesId + " and " + rawId + " )");
+        boolean isObjectNew;
+        if (!idToEntry.containsKey(registryKey.getValue())) isObjectNew = true;
+        else {
+            Reference<T> oldObject = idToEntry.get(registryKey.getValue());
+            if (oldObject != null && oldObject.value() != null && oldObject.value() != value) {
+                int oldId = entryToRawId.getInt(oldObject.value());
+                if (oldId != rawId)
+                    throw new RuntimeException("Attempted to register ID " + registryKey + " at different raw IDs (" + oldId + ", " + rawId + ")! If you're trying to override an item, use .set(), not .register()!");
+                removeObjectEvent.invoker().onEntryRemoved(oldId, registryKey.getValue(), oldObject.value());
+                isObjectNew = true;
+            } else isObjectNew = false;
+        }
 
         this.keyToEntry.put(registryKey, reference);
         this.idToEntry.put(registryKey.getValue(), reference);
@@ -203,20 +217,23 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public RegistryEntry.Reference<T> add(RegistryKey<T> registryKey, T value, Lifecycle lifecycle) {
-        return this.set(this.nextId, registryKey, value, lifecycle);
+    public Reference<T> add(RegistryKey<T> registryKey, T value, Lifecycle lifecycle) {
+        // raw ID isn't specified here,
+        // so we can safely use nextId
+        // or reserved ID if it exists
+        return set(nextId, registryKey, value, lifecycle, false);
     }
 
     @Override
     @Nullable
     public Identifier getId(T value) {
-        RegistryEntry.Reference<T> reference = this.valueToEntry.get(value);
+        Reference<T> reference = this.valueToEntry.get(value);
         return reference != null ? reference.registryKey().getValue() : null;
     }
 
     @Override
     public Optional<RegistryKey<T>> getKey(T entry) {
-        return Optional.ofNullable(this.valueToEntry.get(entry)).map(RegistryEntry.Reference::registryKey);
+        return Optional.ofNullable(this.valueToEntry.get(entry)).map(Reference::registryKey);
     }
 
     @Override
@@ -237,28 +254,30 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public Optional<RegistryEntry.Reference<T>> getEntry(int rawId) {
+    public Optional<Reference<T>> getEntry(int rawId) {
         return rawId >= 0 && rawId < this.rawIdToEntry.size() ? Optional.ofNullable(this.rawIdToEntry.get(rawId)) : Optional.empty();
     }
 
     @Override
-    public Optional<RegistryEntry.Reference<T>> getEntry(RegistryKey<T> key) {
+    public Optional<Reference<T>> getEntry(RegistryKey<T> key) {
         return Optional.ofNullable(this.keyToEntry.get(key));
     }
 
     @Override
     public RegistryEntry<T> getEntry(T value) {
-        RegistryEntry.Reference<T> reference = this.valueToEntry.get(value);
+        Reference<T> reference = this.valueToEntry.get(value);
         return reference != null ? reference : RegistryEntry.of(value);
     }
 
-    RegistryEntry.Reference<T> getOrCreateEntry(RegistryKey<T> key) {
+    Reference<T> getOrCreateEntry(RegistryKey<T> key) {
         return this.keyToEntry.computeIfAbsent(key, key2 -> {
             if (this.intrusiveValueToEntry != null)
                 throw new IllegalStateException("This registry can't create new holders without value");
             else {
-                this.assertNotFrozen(key2);
-                return RegistryEntry.Reference.standAlone(this.getEntryOwner(), key2);
+                //noinspection unchecked
+                this.assertNotFrozen((RegistryKey<T>) key2);
+                //noinspection unchecked
+                return Reference.standAlone(this.getEntryOwner(), (RegistryKey<T>) key2);
             }
         });
     }
@@ -286,12 +305,12 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     @Override
     @Nullable
     public T get(@Nullable Identifier id) {
-        RegistryEntry.Reference<T> reference = this.idToEntry.get(id);
+        Reference<T> reference = this.idToEntry.get(id);
         return getValue(reference);
     }
 
     @Nullable
-    private static <T> T getValue(@Nullable RegistryEntry.Reference<T> entry) {
+    private static <T> T getValue(@Nullable Reference<T> entry) {
         return entry != null ? entry.value() : null;
     }
 
@@ -306,26 +325,26 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public Set<Map.Entry<RegistryKey<T>, T>> getEntrySet() {
+    public Set<Entry<RegistryKey<T>, T>> getEntrySet() {
         return Collections.unmodifiableSet(Maps.transformValues(this.keyToEntry, RegistryEntry::value).entrySet());
     }
 
     @Override
-    public Stream<RegistryEntry.Reference<T>> streamEntries() {
+    public Stream<Reference<T>> streamEntries() {
         return this.getEntries().stream();
     }
 
     @Override
-    public Stream<Pair<TagKey<T>, RegistryEntryList.Named<T>>> streamTagsAndEntries() {
+    public Stream<Pair<TagKey<T>, Named<T>>> streamTagsAndEntries() {
         return this.tagToEntryList.entrySet().stream().map(entry -> Pair.of(entry.getKey(), entry.getValue()));
     }
 
     @Override
-    public RegistryEntryList.Named<T> getOrCreateEntryList(TagKey<T> tag) {
-        RegistryEntryList.Named<T> named = this.tagToEntryList.get(tag);
+    public Named<T> getOrCreateEntryList(TagKey<T> tag) {
+        Named<T> named = this.tagToEntryList.get(tag);
         if (named == null) {
             named = this.createNamedEntryList(tag);
-            Map<TagKey<T>, RegistryEntryList.Named<T>> map = new IdentityHashMap<>(this.tagToEntryList);
+            Reference2ReferenceMap<TagKey<T>, Named<T>> map = new Reference2ReferenceOpenHashMap<>(this.tagToEntryList);
             map.put(tag, named);
             this.tagToEntryList = map;
         }
@@ -333,8 +352,8 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         return named;
     }
 
-    private RegistryEntryList.Named<T> createNamedEntryList(TagKey<T> tag) {
-        return new RegistryEntryList.Named<>(getEntryOwner(), tag);
+    private Named<T> createNamedEntryList(TagKey<T> tag) {
+        return new Named<>(getEntryOwner(), tag);
     }
 
     @Override
@@ -348,7 +367,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public Optional<RegistryEntry.Reference<T>> getRandom(Random random) {
+    public Optional<Reference<T>> getRandom(Random random) {
         return Util.getRandomOrEmpty(this.getEntries(), random);
     }
 
@@ -384,32 +403,45 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         }
     }
 
-    @Override
-    public RegistryEntry.Reference<T> createEntry(T value) {
+    private void assertIntrusive() {
         if (intrusiveValueToEntry == null)
             throw new IllegalStateException("This registry can't create intrusive holders");
-        else {
-            this.assertNotFrozen();
-            return intrusiveValueToEntry.computeIfAbsent(value, valuex -> RegistryEntry.Reference.intrusive(this.getReadOnlyWrapper(), valuex));
-        }
     }
 
     @Override
-    public Optional<RegistryEntryList.Named<T>> getEntryList(TagKey<T> tag) {
-        return Optional.ofNullable(this.tagToEntryList.get(tag));
+    public Reference<T> createEntry(T value) {
+        assertIntrusive();
+        assertNotFrozen();
+        //noinspection unchecked,deprecation,DataFlowIssue
+        return intrusiveValueToEntry.computeIfAbsent(value, valuex -> Reference.intrusive(getReadOnlyWrapper(), (T) valuex));
+    }
+
+    @Override
+    public Reference<T> createReservedEntry(int rawId, T value) {
+        assertIntrusive();
+        assertNotFrozen();
+        final int newRawId = rawId < 0 ? nextId : rawId;
+        if (this.nextId <= newRawId) this.nextId = newRawId + 1;
+        //noinspection unchecked,DataFlowIssue
+        return intrusiveValueToEntry.computeIfAbsent(value, valuex -> Reference.intrusive(getReadOnlyWrapper(), newRawId, (T) valuex));
+    }
+
+    @Override
+    public Optional<Named<T>> getEntryList(TagKey<T> tag) {
+        return Optional.ofNullable(tagToEntryList.get(tag));
     }
 
     @Override
     public void populateTags(Map<TagKey<T>, List<RegistryEntry<T>>> tagEntries) {
-        Map<RegistryEntry.Reference<T>, List<TagKey<T>>> map = new IdentityHashMap<>();
-        this.keyToEntry.values().forEach(entry -> map.put(entry, new ArrayList<>()));
+        Map<Reference<T>, List<TagKey<T>>> map = new IdentityHashMap<>();
+        keyToEntry.values().forEach(entry -> map.put(entry, new ArrayList<>()));
         tagEntries.forEach((tag, entries) -> {
 
             for (RegistryEntry<T> entry : entries) {
-                if (!entry.ownerEquals(this.getReadOnlyWrapper()))
+                if (!entry.ownerEquals(getReadOnlyWrapper()))
                     throw new IllegalStateException("Can't create named set " + tag + " containing value " + entry + " from outside registry " + this);
 
-                if (!(entry instanceof RegistryEntry.Reference<T> reference))
+                if (!(entry instanceof Reference<T> reference))
                     throw new IllegalStateException("Found direct holder " + entry + " value in tag " + tag);
 
                 map.get(reference).add(tag);
@@ -420,9 +452,9 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         if (!set.isEmpty())
             LOGGER.warn("Not all defined tags for registry {} are present in data pack: {}", this.getKey(), set.stream().map(tag -> tag.id().toString()).sorted().collect(Collectors.joining(", ")));
 
-        Map<TagKey<T>, RegistryEntryList.Named<T>> map2 = new IdentityHashMap<>(this.tagToEntryList);
+        Reference2ReferenceMap<TagKey<T>, Named<T>> map2 = new Reference2ReferenceOpenHashMap<>(this.tagToEntryList);
         tagEntries.forEach((tag, entries) -> map2.computeIfAbsent(tag, this::createNamedEntryList).copyOf(entries));
-        map.forEach(RegistryEntry.Reference::setTags);
+        map.forEach(Reference::setTags);
         this.tagToEntryList = map2;
     }
 
@@ -437,22 +469,22 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         this.assertNotFrozen();
         return new RegistryEntryLookup<>() {
             @Override
-            public Optional<RegistryEntry.Reference<T>> getOptional(RegistryKey<T> key) {
+            public Optional<Reference<T>> getOptional(RegistryKey<T> key) {
                 return Optional.of(this.getOrThrow(key));
             }
 
             @Override
-            public RegistryEntry.Reference<T> getOrThrow(RegistryKey<T> key) {
+            public Reference<T> getOrThrow(RegistryKey<T> key) {
                 return SimpleRegistry.this.getOrCreateEntry(key);
             }
 
             @Override
-            public Optional<RegistryEntryList.Named<T>> getOptional(TagKey<T> tag) {
+            public Optional<Named<T>> getOptional(TagKey<T> tag) {
                 return Optional.of(this.getOrThrow(tag));
             }
 
             @Override
-            public RegistryEntryList.Named<T> getOrThrow(TagKey<T> tag) {
+            public Named<T> getOrThrow(TagKey<T> tag) {
                 return SimpleRegistry.this.getOrCreateEntryList(tag);
             }
         };
@@ -464,7 +496,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public RegistryWrapper.Impl<T> getReadOnlyWrapper() {
+    public Impl<T> getReadOnlyWrapper() {
         return this.wrapper;
     }
 
@@ -550,7 +582,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         }
         Int2IntMap idMap = new Int2IntOpenHashMap();
         for (int i = 0; i < rawIdToEntry.size(); i++) {
-            RegistryEntry.Reference<T> reference = rawIdToEntry.get(i);
+            Reference<T> reference = rawIdToEntry.get(i);
 
             // Unused id, skip
             if (reference == null) continue;
@@ -568,7 +600,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         orderedRemoteEntries.sort(Comparator.comparingInt(remoteIndexedEntries::getInt));
         for (Identifier identifier : orderedRemoteEntries) {
             int id = remoteIndexedEntries.getInt(identifier);
-            RegistryEntry.Reference<T> object = idToEntry.get(identifier);
+            Reference<T> object = idToEntry.get(identifier);
 
             // Warn if an object is missing from the local registry.
             // This should only happen in AUTHORITATIVE mode, and as such we
@@ -603,7 +635,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
             idToEntry.clear();
             keyToEntry.clear();
             idToEntry.putAll(prevEntries);
-            for (Map.Entry<Identifier, RegistryEntry.Reference<T>> entry : prevEntries.entrySet()) {
+            for (Entry<Identifier, Reference<T>> entry : prevEntries.entrySet()) {
                 RegistryKey<T> entryKey = RegistryKey.of(getKey(), entry.getKey());
                 keyToEntry.put(entryKey, entry.getValue());
             }

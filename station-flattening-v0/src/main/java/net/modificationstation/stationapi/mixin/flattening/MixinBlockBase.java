@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerBase;
@@ -12,12 +10,13 @@ import net.minecraft.level.Level;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.block.StationFlatteningBlock;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
-import net.modificationstation.stationapi.api.registry.*;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.api.registry.sync.trackers.*;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.impl.block.BlockDropListImpl;
@@ -73,7 +72,7 @@ public abstract class MixinBlockBase implements StationFlatteningBlock {
     @Shadow @Final public int id;
 
     @Unique
-    private final RegistryEntry.Reference<BlockBase> stationapi_registryEntry = BlockRegistry.INSTANCE.createEntry(BlockBase.class.cast(this));
+    private RegistryEntry.Reference<BlockBase> stationapi_registryEntry;
 
     @Override
     @Unique
@@ -102,23 +101,21 @@ public abstract class MixinBlockBase implements StationFlatteningBlock {
 
     @ModifyConstant(
             method = "<clinit>",
-            constant = @Constant(intValue = 256),
-            slice = @Slice(
-                    from = @At(
-                            value = "FIELD",
-                            target = "Lnet/minecraft/block/BlockBase;TRAPDOOR:Lnet/minecraft/block/BlockBase;",
-                            opcode = Opcodes.PUTSTATIC,
-                            shift = At.Shift.AFTER
-                    )
+            constant = @Constant(
+                    intValue = 256,
+                    ordinal = 15
             )
     )
     private static int getBlocksSize(int constant) {
         return BlockBase.BY_ID.length;
     }
 
+    private ItemBase cachedBlockItem;
+
     @Override
     public ItemBase asItem() {
-        return ItemBase.byId[id];
+        //noinspection SuspiciousMethodCalls
+        return cachedBlockItem == null ? (cachedBlockItem = ItemBase.BLOCK_ITEMS.get(this)) : cachedBlockItem;
     }
 
     @Inject(
@@ -282,15 +279,20 @@ public abstract class MixinBlockBase implements StationFlatteningBlock {
         BooleanArrayTracker.register(registry, () -> NO_NOTIFY_ON_META_CHANGE, array -> NO_NOTIFY_ON_META_CHANGE = array);
     }
 
-    @Inject(
+    @ModifyVariable(
             method = "<init>(ILnet/minecraft/block/material/Material;)V",
+            index = 1,
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/Object;<init>()V",
-                    shift = At.Shift.AFTER
-            )
+                    shift = At.Shift.AFTER,
+                    remap = false
+            ),
+            argsOnly = true
     )
-    private void ensureCapacity(int rawId, Material material, CallbackInfo ci) {
+    private int ensureCapacity(int rawId) {
+        //noinspection DataFlowIssue
+        rawId = (stationapi_registryEntry = BlockRegistry.INSTANCE.createReservedEntry(rawId, (BlockBase) (Object) this)).reservedRawId();
         // unfortunately, these arrays are accessed
         // too early for the trackers to resize them,
         // so we have to do it manually here
@@ -299,5 +301,18 @@ public abstract class MixinBlockBase implements StationFlatteningBlock {
         if (IntArrayTracker.shouldGrow(LIGHT_OPACITY, rawId)) LIGHT_OPACITY = IntArrayTracker.grow(LIGHT_OPACITY, rawId);
         if (BooleanArrayTracker.shouldGrow(ALLOWS_GRASS_UNDER, rawId)) ALLOWS_GRASS_UNDER = BooleanArrayTracker.grow(ALLOWS_GRASS_UNDER, rawId);
         if (BooleanArrayTracker.shouldGrow(HAS_TILE_ENTITY, rawId)) HAS_TILE_ENTITY = BooleanArrayTracker.grow(HAS_TILE_ENTITY, rawId);
+        return rawId;
+    }
+
+    @Redirect(
+            method = "<clinit>",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/item/ItemBase;byId:[Lnet/minecraft/item/ItemBase;",
+                    args = "array=get"
+            )
+    )
+    private static ItemBase onlyUnderShift(ItemBase[] array, int index) {
+        return index < ItemRegistry.ID_SHIFT ? array[index] : null;
     }
 }

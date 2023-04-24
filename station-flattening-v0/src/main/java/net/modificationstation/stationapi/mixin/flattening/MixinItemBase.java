@@ -14,9 +14,8 @@ import net.modificationstation.stationapi.api.registry.sync.trackers.RemappableE
 import net.modificationstation.stationapi.api.registry.sync.trackers.vanilla.BlockItemTracker;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemBase.class)
@@ -31,7 +30,7 @@ public abstract class MixinItemBase implements StationFlatteningItem {
     @Mutable
     @Shadow @Final public int id;
 
-    private final RegistryEntry.Reference<ItemBase> stationapi_registryEntry = ItemRegistry.INSTANCE.createEntry(ItemBase.class.cast(this));
+    private RegistryEntry.Reference<ItemBase> stationapi_registryEntry;
 
     @Override
     @Unique
@@ -49,14 +48,6 @@ public abstract class MixinItemBase implements StationFlatteningItem {
     @Unique
     public ItemBase asItem() {
         return ItemBase.class.cast(this);
-    }
-
-    @ModifyConstant(
-            method = "<init>(I)V",
-            constant = @Constant(intValue = 256)
-    )
-    private int getBlocksSize(int constant) {
-        return BlockBase.BY_ID.length;
     }
 
     @Inject(
@@ -91,19 +82,24 @@ public abstract class MixinItemBase implements StationFlatteningItem {
         BlockItemTracker.register(registry);
     }
 
-    @Inject(
+    @ModifyVariable(
             method = "<init>",
+            index = 1,
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/Object;<init>()V",
-                    shift = At.Shift.AFTER
-            )
+                    shift = At.Shift.AFTER,
+                    remap = false
+            ),
+            argsOnly = true
     )
-    private void ensureCapacity(int rawId, CallbackInfo ci) {
+    private int ensureCapacity(int rawId) {
+        //noinspection DataFlowIssue
+        rawId = (stationapi_registryEntry = ItemRegistry.INSTANCE.createReservedEntry(rawId + ItemRegistry.ID_SHIFT, (ItemBase) (Object) this)).reservedRawId();
         // unfortunately, this array is accessed
         // too early for the tracker to resize it,
         // so we have to do it manually here
-        rawId += BlockBase.BY_ID.length;
         if (ObjectArrayTracker.shouldGrow(byId, rawId)) byId = ObjectArrayTracker.grow(byId, rawId);
+        return ItemRegistry.SHIFTED_ID.get(rawId);
     }
 }

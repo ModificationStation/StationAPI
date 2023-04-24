@@ -20,6 +20,7 @@ import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
+import net.modificationstation.stationapi.api.item.BlockItemForm;
 import net.modificationstation.stationapi.api.util.math.Vec3f;
 import net.modificationstation.stationapi.mixin.arsenic.client.EntityRendererAccessor;
 import net.modificationstation.stationapi.mixin.arsenic.client.ItemRendererAccessor;
@@ -52,11 +53,12 @@ public final class ArsenicItemRenderer {
             if (model instanceof VanillaBakedModel) {
                 GL11.glPushMatrix();
                 GL11.glTranslatef((float)x, (float)y + var11, (float)z);
-                if (var10.itemId < BlockBase.BY_ID.length && BlockRenderer.method_42(BlockBase.BY_ID[var10.itemId].getRenderType())) {
+                BlockBase block;
+                if (var10.getType() instanceof BlockItemForm blockItemForm && BlockRenderer.method_42((block = blockItemForm.getBlock()).getRenderType())) {
                     GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
                     atlas.bindTexture();
                     float var28 = 0.25F;
-                    if (!BlockBase.BY_ID[var10.itemId].isFullCube() && var10.itemId != BlockBase.STONE_SLAB.id && BlockBase.BY_ID[var10.itemId].getRenderType() != 16) {
+                    if (!block.isFullCube() && block.id != BlockBase.STONE_SLAB.id && block.getRenderType() != 16) {
                         var28 = 0.5F;
                     }
 
@@ -71,7 +73,7 @@ public final class ArsenicItemRenderer {
                             GL11.glTranslatef(var30, var31, var32);
                         }
 
-                        itemRendererAccessor.getField_1708().method_48(BlockBase.BY_ID[var10.itemId], var10.getDamage(), item.getBrightnessAtEyes(delta));
+                        itemRendererAccessor.getField_1708().method_48(block, var10.getDamage(), item.getBrightnessAtEyes(delta));
                         GL11.glPopMatrix();
                     }
                 } else {
@@ -170,9 +172,9 @@ public final class ArsenicItemRenderer {
             return;
         }
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
-        if (id < BlockBase.BY_ID.length && BlockRenderer.method_42(BlockBase.BY_ID[id].getRenderType())) {
+        BlockBase block;
+        if (item instanceof BlockItemForm blockItemForm && BlockRenderer.method_42((block = blockItemForm.getBlock()).getRenderType())) {
             atlas.bindTexture();
-            BlockBase var14 = BlockBase.BY_ID[id];
             GL11.glPushMatrix();
             GL11.glTranslatef((float)(x - 2), (float)(y + 3), -3.0F);
             GL11.glScalef(10.0F, 10.0F, 10.0F);
@@ -190,7 +192,7 @@ public final class ArsenicItemRenderer {
 
             GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
             itemRendererAccessor.getField_1708().itemColourEnabled = itemRenderer.field_1707;
-            itemRendererAccessor.getField_1708().method_48(var14, damage, 1.0F);
+            itemRendererAccessor.getField_1708().method_48(block, damage, 1.0F);
             itemRendererAccessor.getField_1708().itemColourEnabled = true;
             GL11.glPopMatrix();
         } else if (texture >= 0) {
