@@ -5,8 +5,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.Lifecycle;
-import net.modificationstation.stationapi.api.util.dynamic.RegistryLoader;
-import net.modificationstation.stationapi.api.util.dynamic.RegistryOps;
 
 import java.util.Optional;
 
@@ -42,11 +40,10 @@ public final class RegistryElementCodec<E> implements Codec<RegistryEntry<E>> {
 
     @Override
     public <T> DataResult<T> encode(RegistryEntry<E> registryEntry, DynamicOps<T> dynamicOps, T object) {
-        Optional<? extends Registry<E>> optional;
-        if (dynamicOps instanceof RegistryOps<T> rOps && (optional = rOps.getRegistry(this.registryRef)).isPresent()) {
-            if (!registryEntry.matchesRegistry(optional.get())) {
+        Optional<RegistryEntryOwner<E>> optional;
+        if (dynamicOps instanceof RegistryOps<?> registryOps && (optional = registryOps.getOwner(this.registryRef)).isPresent()) {
+            if (!registryEntry.ownerEquals(optional.get()))
                 return DataResult.error(() -> "Element " + registryEntry + " is not valid in current registry set");
-            }
             return registryEntry.getKeyOrValue().map(key -> Identifier.CODEC.encode(key.getValue(), dynamicOps, object), value -> this.elementCodec.encode(value, dynamicOps, object));
         }
         return this.elementCodec.encode(registryEntry.value(), dynamicOps, object);
@@ -54,31 +51,26 @@ public final class RegistryElementCodec<E> implements Codec<RegistryEntry<E>> {
 
     @Override
     public <T> DataResult<Pair<RegistryEntry<E>, T>> decode(DynamicOps<T> ops, T input) {
-        if (ops instanceof RegistryOps<T> registryOps) {
-            Optional<? extends Registry<E>> optional = registryOps.getRegistry(this.registryRef);
-            if (optional.isEmpty()) {
-                return DataResult.error(() -> "Registry does not exist: " + this.registryRef);
-            }
-            Registry<E> registry = optional.get();
+        if (ops instanceof RegistryOps<?> registryOps) {
+            Optional<RegistryEntryLookup<E>> optional = registryOps.getEntryLookup(this.registryRef);
+            if (optional.isEmpty()) return DataResult.error(() -> "Registry does not exist: " + this.registryRef);
+            RegistryEntryLookup<E> registryEntryLookup = optional.get();
             DataResult<Pair<Identifier, T>> dataResult = Identifier.CODEC.decode(ops, input);
-            if (dataResult.result().isEmpty()) {
-                if (!this.allowInlineDefinitions) {
-                    return DataResult.error(() -> "Inline definitions not allowed here");
-                }
-                return this.elementCodec.decode(ops, input).map(pair -> pair.mapFirst(RegistryEntry::of));
-            }
-            Pair<Identifier, T> pair2 = dataResult.result().get();
-            RegistryKey<E> registryKey = RegistryKey.of(this.registryRef, pair2.getFirst());
-            Optional<RegistryLoader.LoaderAccess> optional2 = registryOps.getLoaderAccess();
-            if (optional2.isPresent()) {
-                return optional2.get().load(this.registryRef, this.elementCodec, registryKey, registryOps.getEntryOps()).map(entry -> Pair.of(entry, pair2.getSecond()));
-            }
-            DataResult<RegistryEntry<E>> dataResult2 = registry.getOrCreateEntryDataResult(registryKey);
-            return dataResult2.map(entry -> Pair.of(entry, pair2.getSecond())).setLifecycle(Lifecycle.stable());
+            if (dataResult.result().isEmpty())
+                return !this.allowInlineDefinitions ? DataResult.error(() -> "Inline definitions not allowed here") : this.elementCodec.decode(ops, input).map(pairx -> pairx.mapFirst(RegistryEntry::of));
+            Pair<Identifier, T> pair = dataResult.result().get();
+            RegistryKey<E> registryKey = RegistryKey.of(this.registryRef, pair.getFirst());
+            return registryEntryLookup
+                    .getOptional(registryKey)
+                    .<DataResult<RegistryEntry<E>>>map(DataResult::success)
+                    .orElseGet(() -> DataResult.error(() -> "Failed to get element " + registryKey))
+                    .map(reference -> Pair.of(reference, pair.getSecond()))
+                    .setLifecycle(Lifecycle.stable());
         }
-        return this.elementCodec.decode(ops, input).map(pair -> pair.mapFirst(RegistryEntry::of));
+        return this.elementCodec.decode(ops, input).map(pairx -> pairx.mapFirst(RegistryEntry::of));
     }
 
+    @Override
     public String toString() {
         return "RegistryFileCodec[" + this.registryRef + " " + this.elementCodec + "]";
     }

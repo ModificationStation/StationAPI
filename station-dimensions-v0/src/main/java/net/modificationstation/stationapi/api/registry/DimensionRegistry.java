@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.serialization.Lifecycle;
 import it.unimi.dsi.fastutil.ints.*;
+import net.minecraft.level.dimension.Overworld;
 import net.modificationstation.stationapi.api.registry.legacy.AbstractInt2ObjectMapBackedLegacyRegistry;
 import net.modificationstation.stationapi.api.registry.legacy.LevelLegacyRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -41,8 +42,9 @@ public final class DimensionRegistry extends AbstractInt2ObjectMapBackedLegacyRe
         return a < b ? -1 : 1;
     };
 
-    public static final RegistryKey<Registry<DimensionContainer<?>>> KEY = RegistryKey.ofRegistry(MODID.id("dimensions"));
-    public static final DimensionRegistry INSTANCE = Registry.create(KEY, new DimensionRegistry(), Lifecycle.experimental());
+    private static final DimensionContainer<Overworld> OVERWORLD = new DimensionContainer<>(Overworld::new);
+    public static final RegistryKey<DimensionRegistry> KEY = RegistryKey.ofRegistry(MODID.id("dimensions"));
+    public static final DimensionRegistry INSTANCE = Registries.create(KEY, new DimensionRegistry(), registry -> OVERWORLD, Lifecycle.experimental());
 
     /**
      * {@link DimensionRegistry#serialView} backend.
@@ -67,7 +69,7 @@ public final class DimensionRegistry extends AbstractInt2ObjectMapBackedLegacyRe
     private boolean registering;
 
     private DimensionRegistry() {
-        super(KEY, null);
+        super(KEY, false);
     }
 
     @Override

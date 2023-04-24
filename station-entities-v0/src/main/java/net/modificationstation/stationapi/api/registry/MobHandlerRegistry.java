@@ -10,10 +10,11 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 public final class MobHandlerRegistry extends SimpleRegistry<Function<Level, Living>> {
 
-    public static final RegistryKey<Registry<Function<Level, Living>>> KEY = RegistryKey.ofRegistry(MODID.id("mob_handlers"));
-    public static final MobHandlerRegistry INSTANCE = Registry.create(KEY, new MobHandlerRegistry(), Lifecycle.experimental());
+    private static final Function<Level, Living> EMPTY = level -> null;
+    public static final RegistryKey<MobHandlerRegistry> KEY = RegistryKey.ofRegistry(MODID.id("mob_handlers"));
+    public static final MobHandlerRegistry INSTANCE = Registries.create(KEY, new MobHandlerRegistry(), registry -> EMPTY, Lifecycle.experimental());
 
     private MobHandlerRegistry() {
-        super(KEY, Lifecycle.experimental(), null);
+        super(KEY, Lifecycle.experimental(), false);
     }
 }

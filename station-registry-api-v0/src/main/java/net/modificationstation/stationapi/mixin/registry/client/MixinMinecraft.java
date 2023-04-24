@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.registry.client;
 
 import net.minecraft.client.Minecraft;
-import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.registry.Registries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,6 +16,6 @@ public class MixinMinecraft {
             remap = false
     )
     private void freeze(CallbackInfo ci) {
-        Registry.freezeRegistries();
+        Registries.bootstrap();
     }
 }

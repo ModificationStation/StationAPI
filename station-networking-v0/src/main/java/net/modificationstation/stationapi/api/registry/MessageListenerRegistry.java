@@ -17,10 +17,11 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
  */
 public final class MessageListenerRegistry extends SimpleRegistry<BiConsumer<PlayerBase, Message>> {
 
-    public static final RegistryKey<Registry<BiConsumer<PlayerBase, Message>>> KEY = RegistryKey.ofRegistry(MODID.id("message_listeners"));
-    public static final MessageListenerRegistry INSTANCE = Registry.create(KEY, new MessageListenerRegistry(), Lifecycle.experimental());
+    private static final BiConsumer<PlayerBase, Message> EMPTY = (player, message) -> {};
+    public static final RegistryKey<MessageListenerRegistry> KEY = RegistryKey.ofRegistry(MODID.id("message_listeners"));
+    public static final MessageListenerRegistry INSTANCE = Registries.create(KEY, new MessageListenerRegistry(), registry -> EMPTY, Lifecycle.experimental());
 
     private MessageListenerRegistry() {
-        super(KEY, Lifecycle.experimental(), null);
+        super(KEY, Lifecycle.experimental(), false);
     }
 }

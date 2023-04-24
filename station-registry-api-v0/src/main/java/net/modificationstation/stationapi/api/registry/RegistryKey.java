@@ -1,26 +1,24 @@
 package net.modificationstation.stationapi.api.registry;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mojang.serialization.Codec;
 
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * Represents a key for a value in a registry in a context where a
  * root registry is available.
  * 
  * @param <T> the type of the value
- * @see Registry#REGISTRIES
+ * @see Registries#ROOT
  */
+@SuppressWarnings("unused")
 public class RegistryKey<T> {
-
     /**
      * A cache of all registry keys ever created.
      */
-    private static final Map<String, RegistryKey<?>> INSTANCES = Collections.synchronizedMap(new IdentityHashMap<>());
+    private static final Cache<RegistryIdPair, RegistryKey<?>> CACHE = Caffeine.newBuilder().softValues().build();
     /**
      * The identifier of the registry in the root registry.
      */
@@ -62,14 +60,13 @@ public class RegistryKey<T> {
      * 
      * @param registry the identifier of the registry
      */
-    public static <T> RegistryKey<Registry<T>> ofRegistry(Identifier registry) {
-        return RegistryKey.of(Registry.ROOT_KEY, registry);
+    public static <T, R extends Registry<T>> RegistryKey<R> ofRegistry(Identifier registry) {
+        return RegistryKey.of(Registries.ROOT_KEY, registry);
     }
 
     private static <T> RegistryKey<T> of(Identifier registry, Identifier value) {
-        String string = (registry + ":" + value).intern();
         //noinspection unchecked
-        return (RegistryKey<T>) INSTANCES.computeIfAbsent(string, id -> new RegistryKey<T>(registry, value));
+        return (RegistryKey<T>) CACHE.get(new RegistryIdPair(registry, value), pair -> new RegistryKey<>(pair.registry, pair.id));
     }
 
     private RegistryKey(Identifier registry, Identifier value) {
@@ -110,14 +107,6 @@ public class RegistryKey<T> {
         return this.registry;
     }
 
-    /**
-     * Creates a function that converts an identifier to a registry key for the
-     * registry that {@code registry} refers to in the root registry.
-     * 
-     * @param registry the reference to the value-holding registry in the root registry
-     */
-    public static <T> Function<Identifier, RegistryKey<T>> createKeyFactory(RegistryKey<? extends Registry<T>> registry) {
-        return id -> RegistryKey.of(registry, id);
-    }
+    record RegistryIdPair(Identifier registry, Identifier id) {}
 }
 

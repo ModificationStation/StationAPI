@@ -163,6 +163,10 @@ public class Codecs {
         });
     }
 
+    public static <T> Codec<T> validate(Codec<T> codec, Function<T, DataResult<T>> validator) {
+        return codec.flatXmap(validator, validator);
+    }
+
     private static <N extends Number & Comparable<N>> Function<N, DataResult<N>> createIntRangeChecker(N min, N max, Function<N, String> messageFactory) {
         return value -> {
             if (value.compareTo(min) >= 0 && value.compareTo(max) <= 0) {

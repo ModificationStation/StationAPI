@@ -7,12 +7,10 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
-import net.modificationstation.stationapi.api.util.dynamic.RegistryOps;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 public class RegistryEntryListCodec<E> implements Codec<RegistryEntryList<E>> {
     private final RegistryKey<? extends Registry<E>> registry;
@@ -25,11 +23,8 @@ public class RegistryEntryListCodec<E> implements Codec<RegistryEntryList<E>> {
      * instead of serializing as one entry if the length is {@code 0}
      */
     private static <E> Codec<List<RegistryEntry<E>>> createDirectEntryListCodec(Codec<RegistryEntry<E>> entryCodec, boolean alwaysSerializeAsList) {
-        Function<List<RegistryEntry<E>>, DataResult<List<RegistryEntry<E>>>> function = Codecs.createEqualTypeChecker(RegistryEntry::getType);
-        Codec<List<RegistryEntry<E>>> codec = entryCodec.listOf().flatXmap(function, function);
-        if (alwaysSerializeAsList) {
-            return codec;
-        }
+        Codec<List<RegistryEntry<E>>> codec = Codecs.validate(entryCodec.listOf(), Codecs.createEqualTypeChecker(RegistryEntry::getType));
+        if (alwaysSerializeAsList) return codec;
         return Codec.either(codec, entryCodec).xmap(either -> either.map(entries -> entries, List::of), entries -> entries.size() == 1 ? Either.right(entries.get(0)) : Either.left(entries));
     }
 
@@ -54,21 +49,20 @@ public class RegistryEntryListCodec<E> implements Codec<RegistryEntryList<E>> {
 
     @Override
     public <T> DataResult<Pair<RegistryEntryList<E>, T>> decode(DynamicOps<T> ops, T input) {
-        Optional<? extends Registry<E>> optional;
-        if (ops instanceof RegistryOps<T> rOps && (optional = rOps.getRegistry(this.registry)).isPresent()) {
-            Registry<E> registry = optional.get();
-            return this.entryListStorageCodec.decode(ops, input).map(pair -> pair.mapFirst(either -> either.map(registry::getOrCreateEntryList, RegistryEntryList::of)));
+        Optional<RegistryEntryLookup<E>> optional;
+        if (ops instanceof RegistryOps<?> registryOps && (optional = registryOps.getEntryLookup(this.registry)).isPresent()) {
+            RegistryEntryLookup<E> registryEntryLookup = optional.get();
+            return this.entryListStorageCodec.decode(ops, input).map(pair -> pair.mapFirst(either -> either.map(registryEntryLookup::getOrThrow, RegistryEntryList::of)));
         }
         return this.decodeDirect(ops, input);
     }
 
     @Override
     public <T> DataResult<T> encode(RegistryEntryList<E> registryEntryList, DynamicOps<T> dynamicOps, T object) {
-        Optional<? extends Registry<E>> optional;
-        if (dynamicOps instanceof RegistryOps<T> rOps && (optional = rOps.getRegistry(this.registry)).isPresent()) {
-            if (!registryEntryList.isOf(optional.get())) {
+        Optional<RegistryEntryOwner<E>> optional;
+        if (dynamicOps instanceof RegistryOps<?> registryOps && (optional = registryOps.getOwner(this.registry)).isPresent()) {
+            if (!registryEntryList.ownerEquals(optional.get()))
                 return DataResult.error(() -> "HolderSet " + registryEntryList + " is not valid in current registry set");
-            }
             return this.entryListStorageCodec.encode(registryEntryList.getStorage().mapRight(List::copyOf), dynamicOps, object);
         }
         return this.encodeDirect(registryEntryList, dynamicOps, object);
@@ -76,7 +70,7 @@ public class RegistryEntryListCodec<E> implements Codec<RegistryEntryList<E>> {
 
     private <T> DataResult<Pair<RegistryEntryList<E>, T>> decodeDirect(DynamicOps<T> ops, T input) {
         return this.entryCodec.listOf().decode(ops, input).flatMap(pair -> {
-            List<RegistryEntry.Direct<E>> list = new ArrayList<>();
+            ArrayList<RegistryEntry.Direct<E>> list = new ArrayList<>();
             for (RegistryEntry<E> registryEntry : pair.getFirst()) {
                 if (registryEntry instanceof RegistryEntry.Direct<E> direct) {
                     list.add(direct);

@@ -5,10 +5,7 @@ import net.modificationstation.stationapi.api.event.resource.DataReloadEvent;
 import net.modificationstation.stationapi.api.event.resource.DataResourceReloaderRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.DynamicRegistryManager;
-import net.modificationstation.stationapi.api.registry.Registry;
-import net.modificationstation.stationapi.api.registry.RegistryEntry;
-import net.modificationstation.stationapi.api.registry.RegistryKey;
+import net.modificationstation.stationapi.api.registry.*;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.tag.TagManagerLoader;
 
@@ -24,7 +21,7 @@ public final class TagReloaderImpl {
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
     private static void registerTagLoader(DataResourceReloaderRegisterEvent event) {
-        event.resourceManager.registerReloader(registryTagManager = new TagManagerLoader(dynamicRegistryManager = DynamicRegistryManager.createAndLoad()));
+        event.resourceManager.registerReloader(registryTagManager = new TagManagerLoader(dynamicRegistryManager = ServerDynamicRegistryType.createCombinedDynamicRegistries().getPrecedingRegistryManagers(ServerDynamicRegistryType.RELOADABLE)));
     }
 
     @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 - Integer.MAX_VALUE / 8)

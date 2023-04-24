@@ -3,89 +3,107 @@ package net.modificationstation.stationapi.api.registry;
 import com.mojang.datafixers.util.Either;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public interface RegistryEntryList<T>
-extends Iterable<RegistryEntry<T>> {
-
+/**
+ * A registry entry list is an immutable list of registry entries. This, is either a direct
+ * reference to each item, or a reference to a tag. A <strong>tag</strong> is a way
+ * to dynamically define a list of registered values. Anything registered in a registry
+ * can be tagged, and each registry holds a list of tags it recognizes.
+ * 
+ * <p>This can be iterated directly (i.e. {@code for (RegistryEntry<T> entry : entries)}.
+ * Note that this does not implement {@link java.util.Collection}.
+ * 
+ * @see Registry
+ * @see RegistryEntry
+ */
+public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
+    /**
+     * {@return a stream of registry entries in this list}
+     */
     Stream<RegistryEntry<T>> stream();
 
+    /**
+     * {@return the number of entries in this list}
+     */
     int size();
 
+    /**
+     * {@return the object that identifies this registry entry list}
+     * 
+     * <p>This is the tag key for a reference list, and the backing list for a direct list.
+     */
     Either<TagKey<T>, List<RegistryEntry<T>>> getStorage();
 
+    /**
+     * {@return a random entry of the list, or an empty optional if this list is empty}
+     */
     Optional<RegistryEntry<T>> getRandom(Random var1);
 
+    /**
+     * {@return the registry entry at {@code index}}
+     * 
+     * @throws IndexOutOfBoundsException if the index is out of bounds
+     */
     RegistryEntry<T> get(int var1);
 
+    /**
+     * {@return whether {@code entry} is in this list}
+     */
     boolean contains(RegistryEntry<T> var1);
 
-    boolean isOf(Registry<T> var1);
+    boolean ownerEquals(RegistryEntryOwner<T> var1);
 
+    Optional<TagKey<T>> getTagKey();
+
+    @Deprecated
+    @VisibleForTesting
+    static <T> Named<T> of(RegistryEntryOwner<T> owner, TagKey<T> tagKey) {
+        return new Named<>(owner, tagKey);
+    }
+
+    /**
+     * {@return a new direct list of {@code entries}}
+     */
     @SafeVarargs
     static <T> Direct<T> of(RegistryEntry<T> ... entries) {
         return new Direct<>(List.of(entries));
     }
 
+    /**
+     * {@return a new direct list of {@code entries}}
+     */
     static <T> Direct<T> of(List<? extends RegistryEntry<T>> entries) {
         return new Direct<>(List.copyOf(entries));
     }
 
+    /**
+     * {@return a new direct list of {@code values} converted to a registry entry with {@code mapper}}
+     */
     @SafeVarargs
     static <E, T> Direct<T> of(Function<E, RegistryEntry<T>> mapper, E ... values) {
         return RegistryEntryList.of(Stream.of(values).map(mapper).toList());
     }
 
+    /**
+     * {@return a new direct list of {@code values} converted to a registry entry with {@code mapper}}
+     */
     static <E, T> Direct<T> of(Function<E, RegistryEntry<T>> mapper, List<E> values) {
         return RegistryEntryList.of(values.stream().map(mapper).toList());
     }
 
-    class Direct<T>
-    extends ListBacked<T> {
-        private final List<RegistryEntry<T>> entries;
-        @Nullable
-        private Set<RegistryEntry<T>> entrySet;
-
-        Direct(List<RegistryEntry<T>> entries) {
-            this.entries = entries;
-        }
-
-        @Override
-        protected List<RegistryEntry<T>> getEntries() {
-            return this.entries;
-        }
-
-        @Override
-        public Either<TagKey<T>, List<RegistryEntry<T>>> getStorage() {
-            return Either.right(this.entries);
-        }
-
-        @Override
-        public boolean contains(RegistryEntry<T> entry) {
-            if (this.entrySet == null) {
-                this.entrySet = Set.copyOf(this.entries);
-            }
-            return this.entrySet.contains(entry);
-        }
-
-        public String toString() {
-            return "DirectSet[" + this.entries + "]";
-        }
-    }
-
-    class Named<T>
-    extends ListBacked<T> {
-        private final Registry<T> registry;
+    class Named<T> extends ListBacked<T> {
+        private final RegistryEntryOwner<T> owner;
         private final TagKey<T> tag;
         private List<RegistryEntry<T>> entries = List.of();
 
-        Named(Registry<T> registry, TagKey<T> tag) {
-            this.registry = registry;
+        Named(RegistryEntryOwner<T> owner, TagKey<T> tag) {
+            this.owner = owner;
             this.tag = tag;
         }
 
@@ -108,6 +126,11 @@ extends Iterable<RegistryEntry<T>> {
         }
 
         @Override
+        public Optional<TagKey<T>> getTagKey() {
+            return Optional.of(this.tag);
+        }
+
+        @Override
         public boolean contains(RegistryEntry<T> entry) {
             return entry.isIn(this.tag);
         }
@@ -117,13 +140,47 @@ extends Iterable<RegistryEntry<T>> {
         }
 
         @Override
-        public boolean isOf(Registry<T> registry) {
-            return this.registry == registry;
+        public boolean ownerEquals(RegistryEntryOwner<T> owner) {
+            return this.owner.ownerEquals(owner);
         }
     }
 
-    abstract class ListBacked<T>
-    implements RegistryEntryList<T> {
+    class Direct<T> extends ListBacked<T> {
+        private final List<RegistryEntry<T>> entries;
+        @Nullable
+        private Set<RegistryEntry<T>> entrySet;
+
+        Direct(List<RegistryEntry<T>> entries) {
+            this.entries = entries;
+        }
+
+        @Override
+        protected List<RegistryEntry<T>> getEntries() {
+            return this.entries;
+        }
+
+        @Override
+        public Either<TagKey<T>, List<RegistryEntry<T>>> getStorage() {
+            return Either.right(this.entries);
+        }
+
+        @Override
+        public Optional<TagKey<T>> getTagKey() {
+            return Optional.empty();
+        }
+
+        @Override
+        public boolean contains(RegistryEntry<T> entry) {
+            if (this.entrySet == null) this.entrySet = Set.copyOf(this.entries);
+            return this.entrySet.contains(entry);
+        }
+
+        public String toString() {
+            return "DirectSet[" + this.entries + "]";
+        }
+    }
+
+    abstract class ListBacked<T> implements RegistryEntryList<T> {
         protected abstract List<RegistryEntry<T>> getEntries();
 
         @Override
@@ -137,7 +194,6 @@ extends Iterable<RegistryEntry<T>> {
         }
 
         @Override
-        @NotNull
         public Iterator<RegistryEntry<T>> iterator() {
             return this.getEntries().iterator();
         }
@@ -158,7 +214,7 @@ extends Iterable<RegistryEntry<T>> {
         }
 
         @Override
-        public boolean isOf(Registry<T> registry) {
+        public boolean ownerEquals(RegistryEntryOwner<T> owner) {
             return true;
         }
     }

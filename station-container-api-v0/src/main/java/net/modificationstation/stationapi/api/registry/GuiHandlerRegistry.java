@@ -15,11 +15,12 @@ import java.util.function.Supplier;
 
 public final class GuiHandlerRegistry extends SimpleRegistry<BiTuple<TriFunction<PlayerBase, InventoryBase, Message, ScreenBase>, Supplier<InventoryBase>>> {
 
-    public static final RegistryKey<Registry<BiTuple<TriFunction<PlayerBase, InventoryBase, Message, ScreenBase>, Supplier<InventoryBase>>>> KEY = RegistryKey.ofRegistry(Identifier.of(StationAPI.MODID, "gui_handlers"));
-    public static final GuiHandlerRegistry INSTANCE = Registry.create(KEY, new GuiHandlerRegistry(), Lifecycle.experimental());
+    private static final BiTuple<TriFunction<PlayerBase, InventoryBase, Message, ScreenBase>, Supplier<InventoryBase>> EMPTY = Tuple.tuple((playerBase, inventoryBase, message) -> null, () -> null);
+    public static final RegistryKey<GuiHandlerRegistry> KEY = RegistryKey.ofRegistry(Identifier.of(StationAPI.MODID, "gui_handlers"));
+    public static final GuiHandlerRegistry INSTANCE = Registries.create(KEY, new GuiHandlerRegistry(), registry -> EMPTY, Lifecycle.experimental());
 
     private GuiHandlerRegistry() {
-        super(KEY, Lifecycle.experimental(), null);
+        super(KEY, Lifecycle.experimental(), false);
     }
 
     public void registerValueNoMessage(Identifier identifier, BiTuple<BiFunction<PlayerBase, InventoryBase, ScreenBase>, Supplier<InventoryBase>> value) {

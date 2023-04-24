@@ -6,10 +6,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.*;
-import net.modificationstation.stationapi.api.registry.DynamicRegistryManager;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.Registry;
-import net.modificationstation.stationapi.api.registry.RegistryKey;
+import net.modificationstation.stationapi.api.registry.*;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 
 import java.io.IOException;
@@ -170,11 +167,11 @@ public interface EntryLoader {
 
     record Entry<E>(E value, OptionalInt fixedId) {
         public static <E> Entry<E> of(E value) {
-            return new Entry<E>(value, OptionalInt.empty());
+            return new Entry<>(value, OptionalInt.empty());
         }
 
         public static <E> Entry<E> of(E value, int id) {
-            return new Entry<E>(value, OptionalInt.of(id));
+            return new Entry<>(value, OptionalInt.of(id));
         }
     }
 }

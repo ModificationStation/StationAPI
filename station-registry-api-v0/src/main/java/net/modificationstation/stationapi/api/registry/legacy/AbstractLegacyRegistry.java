@@ -1,7 +1,10 @@
 package net.modificationstation.stationapi.api.registry.legacy;
 
 import com.mojang.serialization.Lifecycle;
-import net.modificationstation.stationapi.api.registry.*;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.registry.RegistryKey;
+import net.modificationstation.stationapi.api.registry.SimpleRegistry;
 import net.modificationstation.stationapi.api.registry.serial.LegacyIDHolder;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +13,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.function.Function;
 import java.util.function.IntFunction;
 
 /**
@@ -45,11 +47,10 @@ public abstract class AbstractLegacyRegistry<T> extends SimpleRegistry<T> {
      * Default registry constructor.
      *
      * @param key                  registry's key.
-     * @param valueToEntryFunction function that returns a registry entry corresponding to
-     *                             the registry value.
+     * @param intrusive            whether the registry is intrusive
      */
-    public AbstractLegacyRegistry(@NotNull RegistryKey<? extends Registry<T>> key, Function<T, RegistryEntry.Reference<T>> valueToEntryFunction) {
-        this(key, false, valueToEntryFunction);
+    public AbstractLegacyRegistry(@NotNull RegistryKey<? extends Registry<T>> key, boolean intrusive) {
+        this(key, false, intrusive);
     }
 
     /**
@@ -60,11 +61,10 @@ public abstract class AbstractLegacyRegistry<T> extends SimpleRegistry<T> {
      * @param key                     registry's key.
      * @param shiftLegacyIDOnRegister whether the next free serial ID should be shifted
      *                                to 0->size-shift range during object initialization.
-     * @param valueToEntryFunction    function that returns a registry entry corresponding to
-     *                                the registry value.
+     * @param intrusive               whether the registry is intrusive
      */
-    public AbstractLegacyRegistry(@NotNull RegistryKey<? extends Registry<T>> key, boolean shiftLegacyIDOnRegister, Function<T, RegistryEntry.Reference<T>> valueToEntryFunction) {
-        super(key, Lifecycle.experimental(), valueToEntryFunction);
+    public AbstractLegacyRegistry(@NotNull RegistryKey<? extends Registry<T>> key, boolean shiftLegacyIDOnRegister, boolean intrusive) {
+        super(key, Lifecycle.experimental(), intrusive);
         this.shiftLegacyIDOnRegister = shiftLegacyIDOnRegister;
     }
 

@@ -14,10 +14,11 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
  */
 public final class JsonRecipeParserRegistry extends SimpleRegistry<Consumer<URL>> {
 
-    public static final RegistryKey<Registry<Consumer<URL>>> KEY = RegistryKey.ofRegistry(MODID.id("json_recipe_parsers"));
-    public static final JsonRecipeParserRegistry INSTANCE = Registry.create(KEY, new JsonRecipeParserRegistry(), Lifecycle.experimental());
+    private static final Consumer<URL> EMPTY = url -> {};
+    public static final RegistryKey<JsonRecipeParserRegistry> KEY = RegistryKey.ofRegistry(MODID.id("json_recipe_parsers"));
+    public static final JsonRecipeParserRegistry INSTANCE = Registries.create(KEY, new JsonRecipeParserRegistry(), registry -> EMPTY, Lifecycle.experimental());
 
     private JsonRecipeParserRegistry() {
-        super(KEY, Lifecycle.experimental(), null);
+        super(KEY, Lifecycle.experimental(), false);
     }
 }

@@ -36,18 +36,17 @@ public class TagManagerLoader implements IdentifiableResourceReloadListener {
 
     @Override
     public CompletableFuture<Void> reload(ResourceReloader.Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
-        List<? extends CompletableFuture<? extends RegistryTags<?>>> list = this.registryManager.streamAllRegistries().map((entry) -> this.buildRequiredGroup(manager, prepareExecutor, entry)).toList();
+        List<? extends CompletableFuture<? extends RegistryTags<?>>> list = this.registryManager.streamAllRegistries().map(entry -> this.buildRequiredGroup(manager, prepareExecutor, entry)).toList();
         CompletableFuture<Void> var10000 = CompletableFuture.allOf(list.toArray(CompletableFuture[]::new));
         Objects.requireNonNull(synchronizer);
         //noinspection unchecked
-        return var10000.thenCompose(synchronizer::whenPrepared).thenAcceptAsync((void_) -> this.registryTags = (List<RegistryTags<?>>) list.stream().map(CompletableFuture::join).toList(), applyExecutor);
+        return var10000.thenCompose(synchronizer::whenPrepared).thenAcceptAsync(void_ -> this.registryTags = (List<RegistryTags<?>>) list.stream().map(CompletableFuture::join).toList(), applyExecutor);
     }
 
     private <T> CompletableFuture<RegistryTags<T>> buildRequiredGroup(ResourceManager resourceManager, Executor prepareExecutor, DynamicRegistryManager.Entry<T> requirement) {
-        //noinspection unchecked
-        RegistryKey<Registry<T>> registryKey = (RegistryKey<Registry<T>>) requirement.key();
+        RegistryKey<? extends Registry<T>> registryKey = requirement.key();
         Registry<T> registry = requirement.value();
-        TagGroupLoader<RegistryEntry<T>> tagGroupLoader = new TagGroupLoader<>(identifier -> registry.getEntry(RegistryKey.of(registryKey, identifier)), TagManagerLoader.getPath(registryKey));
+        TagGroupLoader<RegistryEntry<T>> tagGroupLoader = new TagGroupLoader<>(id -> registry.getEntry(RegistryKey.of(registryKey, id)), getPath(registryKey));
         return CompletableFuture.supplyAsync(() -> new RegistryTags<>(registryKey, tagGroupLoader.load(resourceManager)), prepareExecutor);
     }
 

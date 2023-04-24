@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.render.model.ItemModelPredicateProviderRegistryEvent;
 import net.modificationstation.stationapi.api.client.model.item.ItemModelPredicateProvider;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.registry.Registries;
 import net.modificationstation.stationapi.api.registry.RegistryKey;
 import net.modificationstation.stationapi.api.registry.SimpleRegistry;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
@@ -18,8 +18,9 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 public final class ItemModelPredicateProviderRegistry extends SimpleRegistry<ItemModelPredicateProvider> {
 
-    public static final RegistryKey<Registry<ItemModelPredicateProvider>> KEY = RegistryKey.ofRegistry(MODID.id("item_model_predicate_providers"));
-    public static final ItemModelPredicateProviderRegistry INSTANCE = Registry.create(KEY, new ItemModelPredicateProviderRegistry(), Lifecycle.experimental());
+    private static final ItemModelPredicateProvider EMPTY = (stack, world, entity, seed) -> 0;
+    public static final RegistryKey<ItemModelPredicateProviderRegistry> KEY = RegistryKey.ofRegistry(MODID.id("item_model_predicate_providers"));
+    public static final ItemModelPredicateProviderRegistry INSTANCE = Registries.create(KEY, new ItemModelPredicateProviderRegistry(), registry -> EMPTY, Lifecycle.experimental());
 
     private static final Identifier DAMAGED_ID = Identifier.of("damaged");
     private static final Identifier DAMAGE_ID = Identifier.of("damage");
@@ -30,7 +31,7 @@ public final class ItemModelPredicateProviderRegistry extends SimpleRegistry<Ite
     private final Map<ItemBase, Map<Identifier, ItemModelPredicateProvider>> ITEM_SPECIFIC = new IdentityHashMap<>();
 
     private ItemModelPredicateProviderRegistry() {
-        super(KEY, Lifecycle.experimental(), null);
+        super(KEY, Lifecycle.experimental(), false);
     }
 
     public ItemModelPredicateProvider get(ItemBase item, Identifier identifier) {

@@ -10,10 +10,10 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 public final class ItemRegistry extends SimpleRegistry<ItemBase> {
 
     public static final RegistryKey<Registry<ItemBase>> KEY = RegistryKey.ofRegistry(MODID.id("items"));
-    public static final ItemRegistry INSTANCE = Registry.create(KEY, new ItemRegistry(), Lifecycle.experimental());
+    public static final ItemRegistry INSTANCE = Registries.create(KEY, new ItemRegistry(), registry -> ItemBase.byId[BlockBase.BY_ID.length], Lifecycle.experimental());
     public static final Int2IntFunction SHIFTED_ID = id -> id - BlockBase.BY_ID.length;
 
     private ItemRegistry() {
-        super(KEY, Lifecycle.experimental(), ItemBase::getRegistryEntry);
+        super(KEY, Lifecycle.experimental(), true);
     }
 }

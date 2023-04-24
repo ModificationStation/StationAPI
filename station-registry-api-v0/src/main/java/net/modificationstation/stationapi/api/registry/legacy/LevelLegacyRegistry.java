@@ -4,6 +4,7 @@ import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.legacy.PostRegistryRemapEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.Registries;
 import net.modificationstation.stationapi.api.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,8 +68,8 @@ public interface LevelLegacyRegistry<T> {
      * @param tag the tag to save all registries to.
      */
     static void saveAll(CompoundTag tag) {
-        Registry.REGISTRIES.getIds().forEach(registryId -> {
-            Registry<?> registry = Registry.REGISTRIES.get(registryId);
+        Registries.REGISTRIES.getIds().forEach(registryId -> {
+            Registry<?> registry = Registries.REGISTRIES.get(registryId);
             if (registry instanceof LevelLegacyRegistry<?> llRegistry) {
                 CompoundTag registryTag = new CompoundTag();
                 llRegistry.save(registryTag);
@@ -83,8 +84,8 @@ public interface LevelLegacyRegistry<T> {
      * @param tag the tag to load all registries from.
      */
     static void loadAll(CompoundTag tag) {
-        Registry.REGISTRIES.getIds().forEach(registryId -> {
-            Registry<?> registry = Registry.REGISTRIES.get(registryId);
+        Registries.REGISTRIES.getIds().forEach(registryId -> {
+            Registry<?> registry = Registries.REGISTRIES.get(registryId);
             String id = registryId.toString();
             if (registry instanceof LevelLegacyRegistry<?> llRegistry && tag.containsKey(id)) {
                 LOGGER.info("Remapping \"" + id + "\" registry...");
