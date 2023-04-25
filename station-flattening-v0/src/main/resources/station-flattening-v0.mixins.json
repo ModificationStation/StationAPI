@@ -8,6 +8,7 @@
     "ChunkAccessor",
     "MixinBlock",
     "MixinBlockBase",
+    "MixinBlockWithEntity",
     "MixinChunk",
     "MixinClass417",
     "MixinClass467",

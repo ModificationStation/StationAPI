@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.registry.Registry;
 public interface ItemTemplate {
 
     static int getNextId() {
-        return ItemRegistry.SHIFTED_ID.get(ItemRegistry.INSTANCE.getNextId());
+        return ItemRegistry.AUTO_ID;
     }
 
     static void onConstructor(ItemBase item, Identifier id) {

@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.registry.Registry;
 public interface BlockTemplate {
 
     static int getNextId() {
-        return BlockRegistry.INSTANCE.getNextId();
+        return BlockRegistry.AUTO_ID;
     }
 
     static void onConstructor(BlockBase block, Identifier id) {

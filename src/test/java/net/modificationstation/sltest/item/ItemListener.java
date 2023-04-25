@@ -22,8 +22,8 @@ public class ItemListener {
         testPickaxe = new ModdedPickaxe(MODID.id("test_pickaxe"), testMaterial).setTranslationKey(MODID, "testPickaxe"); //8476
         testNBTItem = new NBTItem(MODID.id("nbt_item")).setTranslationKey(MODID, "nbt_item"); //8477
         testModelItem = new ModelItem(MODID.id("model_item")).setMaxStackSize(1).setTranslationKey(MODID, "idkSomething");
-        ironOre = Registry.register(event.registry, ItemRegistry.SHIFTED_ID.andThenReference(ItemBase::new), MODID.id("ironOre")).setTranslationKey(MODID.id("ironOre"));
-        generatedItem = Registry.register(event.registry, ItemRegistry.SHIFTED_ID.andThenReference(ItemBase::new), MODID.id("generated_item")).setTranslationKey(MODID.id("generatedItem"));
+        ironOre = Registry.register(event.registry, MODID.id("ironOre"), new ItemBase(ItemRegistry.AUTO_ID)).setTranslationKey(MODID.id("ironOre"));
+        generatedItem = Registry.register(event.registry, MODID.id("generated_item"), new ItemBase(ItemRegistry.AUTO_ID)).setTranslationKey(MODID.id("generatedItem"));
         variationBlockIdle = new BlockStateItem(MODID.id("variation_block_idle"), Blocks.VARIATION_BLOCK.get().getDefaultState()).setTranslationKey(MODID, "variationBlockIdle");
         variationBlockPassive = new BlockStateItem(MODID.id("variation_block_passive"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.PASSIVE)).setTranslationKey(MODID, "variationBlockPassive");
         variationBlockActive = new BlockStateItem(MODID.id("variation_block_active"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.ACTIVE)).setTranslationKey(MODID, "variationBlockActive");

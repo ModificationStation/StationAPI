@@ -297,10 +297,13 @@ public abstract class MixinBlockBase implements StationFlatteningBlock {
         // too early for the trackers to resize them,
         // so we have to do it manually here
         if (ObjectArrayTracker.shouldGrow(BY_ID, rawId)) BY_ID = ObjectArrayTracker.grow(BY_ID, rawId);
+        if (BooleanArrayTracker.shouldGrow(TICKS_RANDOMLY, rawId)) TICKS_RANDOMLY = BooleanArrayTracker.grow(TICKS_RANDOMLY, rawId);
         if (BooleanArrayTracker.shouldGrow(FULL_OPAQUE, rawId)) FULL_OPAQUE = BooleanArrayTracker.grow(FULL_OPAQUE, rawId);
+        if (BooleanArrayTracker.shouldGrow(HAS_TILE_ENTITY, rawId)) HAS_TILE_ENTITY = BooleanArrayTracker.grow(HAS_TILE_ENTITY, rawId);
         if (IntArrayTracker.shouldGrow(LIGHT_OPACITY, rawId)) LIGHT_OPACITY = IntArrayTracker.grow(LIGHT_OPACITY, rawId);
         if (BooleanArrayTracker.shouldGrow(ALLOWS_GRASS_UNDER, rawId)) ALLOWS_GRASS_UNDER = BooleanArrayTracker.grow(ALLOWS_GRASS_UNDER, rawId);
-        if (BooleanArrayTracker.shouldGrow(HAS_TILE_ENTITY, rawId)) HAS_TILE_ENTITY = BooleanArrayTracker.grow(HAS_TILE_ENTITY, rawId);
+        if (IntArrayTracker.shouldGrow(EMITTANCE, rawId)) EMITTANCE = IntArrayTracker.grow(EMITTANCE, rawId);
+        if (BooleanArrayTracker.shouldGrow(NO_NOTIFY_ON_META_CHANGE, rawId)) NO_NOTIFY_ON_META_CHANGE = BooleanArrayTracker.grow(NO_NOTIFY_ON_META_CHANGE, rawId);
         return rawId;
     }
 

@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.api.registry;
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
-import it.unimi.dsi.fastutil.ints.Int2ReferenceFunction;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -310,10 +309,6 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
      * {@return whether {@code key} is registered in this registry}
      */
     boolean contains(RegistryKey<T> var1);
-
-    static <V, T extends V> T register(Registry<V> registry, Int2ReferenceFunction<T> initializer, Identifier id) {
-        return Registry.register(registry, id, initializer.apply(((MutableRegistry<V>) registry).getNextId()));
-    }
 
     /**
      * Registers {@code entry} to {@code registry} under {@code id}.
