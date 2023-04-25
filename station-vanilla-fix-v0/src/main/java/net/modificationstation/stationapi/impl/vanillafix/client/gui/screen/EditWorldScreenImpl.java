@@ -1,6 +1,8 @@
 package net.modificationstation.stationapi.impl.vanillafix.client.gui.screen;
 
 import com.mojang.serialization.Dynamic;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widgets.Button;
@@ -19,6 +21,7 @@ import net.modificationstation.stationapi.mixin.vanillafix.client.ScreenBaseAcce
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
+@Environment(EnvType.CLIENT)
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public final class EditWorldScreenImpl {
 

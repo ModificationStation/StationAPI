@@ -11,24 +11,27 @@ import net.modificationstation.stationapi.api.util.Util;
 
 import java.util.function.Function;
 
-@Environment(EnvType.CLIENT)
 @EnvironmentInterface(value = EnvType.CLIENT, itf = CustomAtlasProvider.class)
 public interface StationRendererItem extends CustomAtlasProvider {
 
     @Override
+    @Environment(EnvType.CLIENT)
     default Atlas getAtlas() {
         return Util.assertImpl();
     }
 
+    @Environment(EnvType.CLIENT)
     default Atlas.Sprite setTexture(Identifier textureIdentifier) {
         return Util.assertImpl();
     }
 
     @Deprecated
+    @Environment(EnvType.CLIENT)
     default Atlas.Sprite setTexture(String texturePath) {
         return Util.assertImpl();
     }
 
+    @Environment(EnvType.CLIENT)
     default <E extends StationTextureBinder> E setTextureBinder(Identifier staticReference, Function<Atlas.Sprite, E> initializer) {
         return Util.assertImpl();
     }

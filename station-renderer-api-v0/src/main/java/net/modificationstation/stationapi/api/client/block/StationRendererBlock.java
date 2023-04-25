@@ -7,7 +7,6 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.util.Util;
 
-@Environment(EnvType.CLIENT)
 @EnvironmentInterface(value = EnvType.CLIENT, itf = CustomAtlasProvider.class)
 public interface StationRendererBlock extends CustomAtlasProvider {
 
