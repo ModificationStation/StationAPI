@@ -46,7 +46,6 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     private Reference2ReferenceMap<T, Reference<T>> intrusiveValueToEntry;
     @Nullable
     private List<Reference<T>> cachedEntries;
-    @Getter
     private int nextId;
     private final Impl<T> wrapper;
     private Reference2IntMap<Identifier> prevIndexedEntries;
