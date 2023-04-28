@@ -40,7 +40,7 @@ public interface PaletteStorage {
     /**
      * {@return the size of, or the number of elements in, this storage}
      */
-    int size();
+    int getSize();
 
     /**
      * {@return the number of bits each element in this storage uses}

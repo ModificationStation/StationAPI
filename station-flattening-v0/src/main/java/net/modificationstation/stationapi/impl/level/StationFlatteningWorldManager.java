@@ -15,7 +15,7 @@ import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.PalettedContainer;
-import net.modificationstation.stationapi.impl.level.chunk.StationFlatteningChunk;
+import net.modificationstation.stationapi.impl.level.chunk.StationFlatteningChunkImpl;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
@@ -31,7 +31,7 @@ public class StationFlatteningWorldManager {
     private static final String HEIGHTMAP_KEY = "height_map";
     private static final String HEIGHT_KEY = "y";
 
-    public static void saveChunk(StationFlatteningChunk chunk, Level world, CompoundTag chunkTag) {
+    public static void saveChunk(StationFlatteningChunkImpl chunk, Level world, CompoundTag chunkTag) {
         world.checkSessionLock();
         chunkTag.put("xPos", chunk.x);
         chunkTag.put("zPos", chunk.z);
@@ -78,7 +78,7 @@ public class StationFlatteningWorldManager {
     public static Chunk loadChunk(Level world, CompoundTag chunkTag) {
         int xPos = chunkTag.getInt("xPos");
         int zPos = chunkTag.getInt("zPos");
-        StationFlatteningChunk chunk = new StationFlatteningChunk(world, xPos, zPos);
+        StationFlatteningChunkImpl chunk = new StationFlatteningChunkImpl(world, xPos, zPos);
         ChunkSection[] sections = chunk.sections;
         if (chunkTag.containsKey(SECTIONS)) {
             ListTag sectionTags = chunkTag.getListTag(SECTIONS);

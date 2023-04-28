@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.impl.level.chunk;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 import org.apache.commons.lang3.Validate;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -10,8 +11,7 @@ import java.util.function.Predicate;
  * A palette that stores the possible entries in an array and maps them
  * to their indices in the array.
  */
-public class ArrayPalette<T>
-implements Palette<T> {
+public class ArrayPalette<T> implements Palette<T> {
     private final IndexedIterable<T> idList;
     private final T[] array;
     private final PaletteResizeListener<T> listener;
@@ -74,30 +74,26 @@ implements Palette<T> {
         throw new EntryMissingException(id);
     }
 
-//    @Override
-//    public void readPacket(PacketByteBuf buf) {
-//        this.size = buf.readVarInt();
-//        for (int i = 0; i < this.size; ++i) {
-//            this.array[i] = this.idList.getOrThrow(buf.readVarInt());
-//        }
-//    }
-//
-//    @Override
-//    public void writePacket(PacketByteBuf buf) {
-//        buf.writeVarInt(this.size);
-//        for (int i = 0; i < this.size; ++i) {
-//            buf.writeVarInt(this.idList.getRawId(this.array[i]));
-//        }
-//    }
-//
-//    @Override
-//    public int getPacketSize() {
-//        int i = PacketByteBuf.getVarIntLength(this.getSize());
-//        for (int j = 0; j < this.getSize(); ++j) {
-//            i += PacketByteBuf.getVarIntLength(this.idList.getRawId(this.array[j]));
-//        }
-//        return i;
-//    }
+    @Override
+    public void readPacket(ByteBuffer buf) {
+        this.size = buf.getInt();
+        for (int i = 0; i < this.size; ++i) {
+            this.array[i] = this.idList.getOrThrow(buf.getInt());
+        }
+    }
+
+    @Override
+    public void writePacket(ByteBuffer buf) {
+        buf.putInt(this.size);
+        for (int i = 0; i < this.size; ++i) {
+            buf.putInt(this.idList.getRawId(this.array[i]));
+        }
+    }
+
+    @Override
+    public int getPacketSize() {
+        return 4 + getSize() * 4;
+    }
 
     @Override
     public int getSize() {

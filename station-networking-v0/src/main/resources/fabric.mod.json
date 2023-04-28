@@ -20,7 +20,10 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.packet.MessagePacketInit"
+      "net.modificationstation.stationapi.impl.packet.StationNetworkingInit"
+    ],
+    "main": [
+      "net.modificationstation.stationapi.impl.packet.StationNetworkingImpl"
     ]
   },
   "mixins": [

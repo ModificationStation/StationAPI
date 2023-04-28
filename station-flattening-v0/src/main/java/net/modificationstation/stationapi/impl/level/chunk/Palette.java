@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.level.chunk;
 
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -43,25 +44,25 @@ public interface Palette<T> {
     */
    T get(int id);
 
-//   /**
-//    * Initializes this palette from the {@code buf}. Clears the preexisting
-//    * data in this palette.
-//    *
-//    * @param buf the packet byte buffer
-//    */
-//   public void readPacket(PacketByteBuf var1);
-//
-//   /**
-//    * Writes this palette to the {@code buf}.
-//    *
-//    * @param buf the packet byte buffer
-//    */
-//   public void writePacket(PacketByteBuf var1);
-//
-//   /**
-//    * {@return the serialized size of this palette in a byte buf, in bytes}
-//    */
-//   public int getPacketSize();
+   /**
+    * Initializes this palette from the {@code buf}. Clears the preexisting
+    * data in this palette.
+    *
+    * @param buf the packet byte buffer
+    */
+   void readPacket(ByteBuffer buf);
+
+   /**
+    * Writes this palette to the {@code buf}.
+    *
+    * @param buf the packet byte buffer
+    */
+   void writePacket(ByteBuffer buf);
+
+   /**
+    * {@return the serialized size of this palette in a byte buf, in bytes}
+    */
+   int getPacketSize();
 
    /**
     * {@return the size of the palette}

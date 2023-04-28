@@ -34,6 +34,7 @@
     "client.MixinClientLevel",
     "client.MixinInGame",
     "client.MixinMinecraft",
+    "client.MixinMultiplayerChunkCache",
     "client.MixinMultiPlayerClientInteractionManager",
     "client.MixinPlayerRenderer",
     "client.MixinSinglePlayerClientInteractionManager",
@@ -43,6 +44,10 @@
     "defaultRequire": 1
   },
   "server": [
-    "server.Mixinclass_70"
+    "server.Mixinclass_514",
+    "server.Mixinclass_70",
+    "server.MixinMinecraftServer",
+    "server.MixinServerPlayer",
+    "server.ServerPlayerViewAccessor"
   ]
 }

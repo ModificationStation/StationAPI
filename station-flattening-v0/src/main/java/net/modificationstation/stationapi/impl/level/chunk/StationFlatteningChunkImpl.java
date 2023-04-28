@@ -24,14 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class StationFlatteningChunk extends Chunk {
+public class StationFlatteningChunkImpl extends Chunk {
 
     public final ChunkSection[] sections;
     public final short firstBlock;
     public final short lastBlock;
     private final short[] stationHeightmap = new short[256];
 
-    public StationFlatteningChunk(Level world, int xPos, int zPos) {
+    public StationFlatteningChunkImpl(Level world, int xPos, int zPos) {
         super(world, xPos, zPos);
         StationDimension dimension = (StationDimension) level.dimension;
         sections = new ChunkSection[dimension.getSectionCount()];
@@ -106,7 +106,7 @@ public class StationFlatteningChunk extends Chunk {
         return section == null ? type.field_2759 : section.getLight(type, x, y & 15, z);
     }
 
-    private ChunkSection getOrCreateSection(int y, boolean fillSkyLight) {
+    public ChunkSection getOrCreateSection(int y, boolean fillSkyLight) {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
@@ -402,7 +402,11 @@ public class StationFlatteningChunk extends Chunk {
     @Override
     public BlockState getBlockState(int x, int y, int z) {
         ChunkSection section = getSection(y);
-        return section == null ? States.AIR.get() : section.getBlockState(x, y & 15, z);
+        if (section == null) return States.AIR.get();
+        BlockState blockState = section.getBlockState(x, y & 15, z);
+        if (blockState == null)
+            throw new RuntimeException();
+        return blockState;
     }
 
     @Override

@@ -122,7 +122,7 @@ implements PaletteStorage, CompactingPackedIntegerArray {
     }
 
     @Override
-    public int size() {
+    public int getSize() {
         return this.size;
     }
 

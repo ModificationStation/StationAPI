@@ -11,3 +11,7 @@ moduleDependencies(project,
 		'station-datafixer-v0',
 		'station-nbt-v0'
 )
+
+loom {
+	accessWidenerPath = file("src/main/resources/station-flattening-v0.accesswidener")
+}

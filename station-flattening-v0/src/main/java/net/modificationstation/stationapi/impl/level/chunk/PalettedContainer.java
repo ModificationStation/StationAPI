@@ -15,6 +15,7 @@ import net.modificationstation.stationapi.api.world.chunk.CompactingPackedIntege
 import net.modificationstation.stationapi.impl.util.dynamic.Codecs;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -131,40 +132,43 @@ public class PalettedContainer<T>
         intSet.forEach(id -> consumer.accept(palette.get(id)));
     }
 
-//    /**
-//     * Reads data from the packet byte buffer into this container. Previous data
-//     * in this container is discarded.
-//     *
-//     * @param buf the packet byte buffer
-//     */
-//    public void readPacket(PacketByteBuf buf) {
+    /**
+     * Reads data from the packet byte buffer into this container. Previous data
+     * in this container is discarded.
+     *
+     * @param buf the packet byte buffer
+     */
+    public void readPacket(ByteBuffer buf) {
 //        this.lock();
 //        try {
-//            byte i = buf.readByte();
-//            Data<T> data = this.getCompatibleData(this.data, i);
-//            data.palette.readPacket(buf);
-//            buf.readLongArray(data.storage.getData());
-//            this.data = data;
+        byte i = buf.get();
+        Data<T> data = this.getCompatibleData(this.data, i);
+        data.palette.readPacket(buf);
+        long[] storageData = data.storage.getData();
+        for (int j = 0; j < storageData.length; j++)
+            storageData[j] = buf.getLong();
+//            buf.asLongBuffer().get(data.storage.getData());
+        this.data = data;
 //        }
 //        finally {
 //            this.unlock();
 //        }
-//    }
+    }
 
-//    /**
-//     * Writes this container to the packet byte buffer.
-//     *
-//     * @param buf the packet byte buffer
-//     */
-//    public void writePacket(PacketByteBuf buf) {
+    /**
+     * Writes this container to the packet byte buffer.
+     *
+     * @param buf the packet byte buffer
+     */
+    public void writePacket(ByteBuffer buf) {
 //        this.lock();
 //        try {
-//            this.data.writePacket(buf);
+            this.data.writePacket(buf);
 //        }
 //        finally {
 //            this.unlock();
 //        }
-//    }
+    }
 
     private static <T> DataResult<PalettedContainer<T>> read(IndexedIterable<T> idList, PaletteProvider provider, Serialized<T> serialized) {
         PaletteStorage paletteStorage;
@@ -250,9 +254,9 @@ public class PalettedContainer<T>
         }
     }
 
-//    public int getPacketSize() {
-//        return this.data.getPacketSize();
-//    }
+    public int getPacketSize() {
+        return this.data.getPacketSize();
+    }
 
     /**
      * {@return {@code true} if any object in this container's palette matches
@@ -348,21 +352,24 @@ public class PalettedContainer<T>
 
     public record Data<T>(DataProvider<T> configuration, PaletteStorage storage, Palette<T> palette) {
         public void importFrom(Palette<T> palette, PaletteStorage storage) {
-            for (int i = 0; i < storage.size(); ++i) {
+            for (int i = 0; i < storage.getSize(); ++i) {
                 T object = palette.get(storage.get(i));
                 this.storage.set(i, this.palette.index(object));
             }
         }
 
-//        public int getPacketSize() {
-//            return 1 + this.palette.getPacketSize() + PacketByteBuf.getVarIntLength(this.storage.getSize()) + this.storage.getData().length * 8;
-//        }
-//
-//        public void writePacket(PacketByteBuf buf) {
-//            buf.writeByte(this.storage.getElementBits());
-//            this.palette.writePacket(buf);
-//            buf.writeLongArray(this.storage.getData());
-//        }
+        public int getPacketSize() {
+            return 1 + this.palette.getPacketSize() + 4 + this.storage.getData().length * 8;
+        }
+
+        public void writePacket(ByteBuffer buf) {
+            buf.put((byte) this.storage.getElementBits());
+            this.palette.writePacket(buf);
+            long[] storageData = storage.getData();
+            for (int i = 0; i < storageData.length; i++)
+                buf.putLong(storageData[i]);
+//            buf.asLongBuffer().put(this.storage.getData());
+        }
     }
 
     public record DataProvider<T>(Palette.Factory factory, int bits) {

@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.impl.level.chunk;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 import net.modificationstation.stationapi.api.util.collection.Int2ObjectBiMap;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -10,8 +11,7 @@ import java.util.function.Predicate;
 /**
  * A palette backed by a bidirectional hash table.
  */
-public class BiMapPalette<T>
-implements Palette<T> {
+public class BiMapPalette<T> implements Palette<T> {
     private final IndexedIterable<T> idList;
     private final Int2ObjectBiMap<T> map;
     private final PaletteResizeListener<T> listener;
@@ -64,32 +64,28 @@ implements Palette<T> {
         return object;
     }
 
-//    @Override
-//    public void readPacket(PacketByteBuf buf) {
-//        this.map.clear();
-//        int i = buf.readVarInt();
-//        for (int j = 0; j < i; ++j) {
-//            this.map.add(this.idList.getOrThrow(buf.readVarInt()));
-//        }
-//    }
-//
-//    @Override
-//    public void writePacket(PacketByteBuf buf) {
-//        int i = this.getSize();
-//        buf.writeVarInt(i);
-//        for (int j = 0; j < i; ++j) {
-//            buf.writeVarInt(this.idList.getRawId(this.map.get(j)));
-//        }
-//    }
-//
-//    @Override
-//    public int getPacketSize() {
-//        int i = PacketByteBuf.getVarIntLength(this.getSize());
-//        for (int j = 0; j < this.getSize(); ++j) {
-//            i += PacketByteBuf.getVarIntLength(this.idList.getRawId(this.map.get(j)));
-//        }
-//        return i;
-//    }
+    @Override
+    public void readPacket(ByteBuffer buf) {
+        this.map.clear();
+        int i = buf.getInt();
+        for (int j = 0; j < i; ++j) {
+            this.map.add(this.idList.getOrThrow(buf.getInt()));
+        }
+    }
+
+    @Override
+    public void writePacket(ByteBuffer buf) {
+        int i = this.getSize();
+        buf.putInt(i);
+        for (int j = 0; j < i; ++j) {
+            buf.putInt(this.idList.getRawId(this.map.get(j)));
+        }
+    }
+
+    @Override
+    public int getPacketSize() {
+        return 4 + getSize() * 4;
+    }
 
     public List<T> getElements() {
         List<T> arrayList = new ArrayList<>();

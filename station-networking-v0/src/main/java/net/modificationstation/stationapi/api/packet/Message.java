@@ -14,6 +14,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.function.BiConsumer;
 
+import static net.modificationstation.stationapi.api.StationAPI.MODID;
+
 /**
  * Universal packet class that can hold any kind of data,
  * be received on both server and client, and be used locally on either server or client.
@@ -37,7 +39,9 @@ import java.util.function.BiConsumer;
  *
  * @author mine_diver
  */
-public class Message extends AbstractPacket {
+public class Message extends AbstractPacket implements IdentifiablePacket {
+
+    public static final Identifier PACKET_ID = MODID.id("message");
 
     /**
      * Message's identifier.
@@ -469,5 +473,10 @@ public class Message extends AbstractPacket {
                 (doubles == null ? 0 : size(doubles)) +
                 (strings == null ? 0 : size(strings)) +
                 (objects == null ? 0 : size(objects));
+    }
+
+    @Override
+    public Identifier getId() {
+        return PACKET_ID;
     }
 }

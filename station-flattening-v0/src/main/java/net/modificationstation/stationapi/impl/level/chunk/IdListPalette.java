@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.level.chunk;
 
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -9,8 +10,7 @@ import java.util.function.Predicate;
  * A palette that directly stores the raw ID of entries to the palette
  * container storage.
  */
-public class IdListPalette<T>
-implements Palette<T> {
+public class IdListPalette<T> implements Palette<T> {
     private final IndexedIterable<T> idList;
 
     public IdListPalette(IndexedIterable<T> idList) {
@@ -41,18 +41,18 @@ implements Palette<T> {
         return object;
     }
 
-//    @Override
-//    public void readPacket(PacketByteBuf buf) {
-//    }
-//
-//    @Override
-//    public void writePacket(PacketByteBuf buf) {
-//    }
-//
-//    @Override
-//    public int getPacketSize() {
-//        return PacketByteBuf.getVarIntLength(0);
-//    }
+    @Override
+    public void readPacket(ByteBuffer buf) {
+    }
+
+    @Override
+    public void writePacket(ByteBuffer buf) {
+    }
+
+    @Override
+    public int getPacketSize() {
+        return 0;
+    }
 
     @Override
     public int getSize() {

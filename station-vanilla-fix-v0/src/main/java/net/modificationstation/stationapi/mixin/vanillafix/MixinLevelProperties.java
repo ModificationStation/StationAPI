@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.vanillafix;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.level.LevelProperties;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
@@ -61,6 +63,7 @@ public class MixinLevelProperties {
         stationapi$assertPlayerDataVersion();
     }
 
+    @Environment(EnvType.CLIENT)
     @Inject(
             method = "getPlayerData()Lnet/minecraft/util/io/CompoundTag;",
             at = @At(
@@ -74,6 +77,7 @@ public class MixinLevelProperties {
         stationapi$assertPlayerDataVersion();
     }
 
+    @Environment(EnvType.CLIENT)
     @Inject(
             method = "setPlayerData(Lnet/minecraft/util/io/CompoundTag;)V",
             at = @At(

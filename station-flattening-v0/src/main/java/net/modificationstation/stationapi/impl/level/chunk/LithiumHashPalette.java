@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -123,37 +124,31 @@ public class LithiumHashPalette<T> implements Palette<T> {
         return null;
     }
 
-//    @Override
-//    public void readPacket(PacketByteBuf buf) {
-//        this.clear();
-//
-//        int entryCount = buf.readVarInt();
-//
-//        for (int i = 0; i < entryCount; ++i) {
-//            this.addEntry(this.idList.get(buf.readVarInt()));
-//        }
-//    }
-//
-//    @Override
-//    public void writePacket(PacketByteBuf buf) {
-//        int size = this.size;
-//        buf.writeVarInt(size);
-//
-//        for (int i = 0; i < size; ++i) {
-//            buf.writeVarInt(this.idList.getRawId(this.get(i)));
-//        }
-//    }
-//
-//    @Override
-//    public int getPacketSize() {
-//        int size = PacketByteBuf.getVarIntLength(this.size);
-//
-//        for (int i = 0; i < this.size; ++i) {
-//            size += PacketByteBuf.getVarIntLength(this.idList.getRawId(this.get(i)));
-//        }
-//
-//        return size;
-//    }
+    @Override
+    public void readPacket(ByteBuffer buf) {
+        this.clear();
+
+        int entryCount = buf.getInt();
+
+        for (int i = 0; i < entryCount; ++i) {
+            this.addEntry(this.idList.get(buf.getInt()));
+        }
+    }
+
+    @Override
+    public void writePacket(ByteBuffer buf) {
+        int size = this.size;
+        buf.putInt(size);
+
+        for (int i = 0; i < size; ++i) {
+            buf.putInt(this.idList.getRawId(this.get(i)));
+        }
+    }
+
+    @Override
+    public int getPacketSize() {
+        return 4 + size * 4;
+    }
 
     @Override
     public int getSize() {

@@ -4,6 +4,7 @@ import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -11,8 +12,7 @@ import java.util.function.Predicate;
  * A palette that only holds a unique entry. Useful for void chunks or a
  * single biome.
  */
-public class SingularPalette<T>
-implements Palette<T> {
+public class SingularPalette<T> implements Palette<T> {
     private final IndexedIterable<T> idList;
     @Nullable
     private T entry;
@@ -61,26 +61,26 @@ implements Palette<T> {
         return this.entry;
     }
 
-//    @Override
-//    public void readPacket(PacketByteBuf buf) {
-//        this.entry = this.idList.getOrThrow(buf.readVarInt());
-//    }
-//
-//    @Override
-//    public void writePacket(PacketByteBuf buf) {
-//        if (this.entry == null) {
-//            throw new IllegalStateException("Use of an uninitialized palette");
-//        }
-//        buf.writeVarInt(this.idList.getRawId(this.entry));
-//    }
-//
-//    @Override
-//    public int getPacketSize() {
-//        if (this.entry == null) {
-//            throw new IllegalStateException("Use of an uninitialized palette");
-//        }
-//        return PacketByteBuf.getVarIntLength(this.idList.getRawId(this.entry));
-//    }
+    @Override
+    public void readPacket(ByteBuffer buf) {
+        this.entry = this.idList.getOrThrow(buf.getInt());
+    }
+
+    @Override
+    public void writePacket(ByteBuffer buf) {
+        if (this.entry == null) {
+            throw new IllegalStateException("Use of an uninitialized palette");
+        }
+        buf.putInt(this.idList.getRawId(this.entry));
+    }
+
+    @Override
+    public int getPacketSize() {
+        if (this.entry == null) {
+            throw new IllegalStateException("Use of an uninitialized palette");
+        }
+        return 4;
+    }
 
     @Override
     public int getSize() {

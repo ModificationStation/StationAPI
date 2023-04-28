@@ -35,8 +35,8 @@ public class PacketRegisterEvent extends Event {
      * @param packetId the packet ID that you want to use for the packet.
      *                 The ID is written as a byte, meaning it can be any number in the 0-255 (inclusive) range,
      *                 except for already taken packet IDs.
-     * @param receivableOnClient whether or not this packet is supposed to be received on the client side.
-     * @param receivableOnServer whether or not this packet is supposed to be received on the server side.
+     * @param receivableOnClient whether this packet is supposed to be received on the client side.
+     * @param receivableOnServer whether this packet is supposed to be received on the server side.
      * @param packetClass the packet's class that extends {@link AbstractPacket} or a sub class of it.
      */
     public final void register(int packetId, boolean receivableOnClient, boolean receivableOnServer, Class<? extends AbstractPacket> packetClass) {

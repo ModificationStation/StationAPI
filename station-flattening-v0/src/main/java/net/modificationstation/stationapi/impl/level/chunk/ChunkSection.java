@@ -1,17 +1,19 @@
 package net.modificationstation.stationapi.impl.level.chunk;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.LightType;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.ByteBuffer;
 import java.util.function.Predicate;
 
 public class ChunkSection {
 
-    @Nullable
-    public static final ChunkSection EMPTY_SECTION = null;
+    public static final ChunkSection EMPTY = new ChunkSection(0);
     private final short yOffset;
     private short nonEmptyBlockCount;
     private short randomTickableBlockCount;
@@ -79,7 +81,7 @@ public class ChunkSection {
     }
 
     public static boolean isEmpty(@Nullable ChunkSection section) {
-        return section == EMPTY_SECTION || section.isEmpty();
+        return section == null || section.isEmpty();
     }
 
     public boolean hasRandomTicks() {
@@ -129,20 +131,20 @@ public class ChunkSection {
         return metadataArray;
     }
 
-//    @Environment(EnvType.CLIENT)
-//    public void fromPacket(Message packetByteBuf) {
-//        this.nonEmptyBlockCount = packetByteBuf.shorts[0];
-//        this.blockStateContainer.fromPacket(packetByteBuf);
-//    }
-//
-//    public void toPacket(Message packetByteBuf) {
-//        packetByteBuf.shorts = new short[] { this.nonEmptyBlockCount };
-//        this.blockStateContainer.toPacket(packetByteBuf);
-//    }
-//
-//   public int getPacketSize() {
-//      return 2 + this.container.getPacketSize();
-//   }
+    @Environment(EnvType.CLIENT)
+    public void readDataPacket(ByteBuffer buf) {
+        this.nonEmptyBlockCount = buf.getShort();
+        this.blockStateContainer.readPacket(buf);
+    }
+
+    public void toPacket(ByteBuffer buf) {
+        buf.putShort(nonEmptyBlockCount);
+        this.blockStateContainer.writePacket(buf);
+    }
+
+   public int getPacketSize() {
+      return 2 + this.blockStateContainer.getPacketSize();
+   }
 
     public boolean hasAny(Predicate<BlockState> predicate) {
         return this.blockStateContainer.hasAny(predicate);

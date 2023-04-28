@@ -132,6 +132,17 @@ public class ChunkSectionPos
     }
 
     /**
+     * Returns the local position of the given block position relative to
+     * its respective chunk section, packed into a short.
+     */
+    public static short packLocal(int x, int y, int z) {
+        int i = ChunkSectionPos.getLocalCoord(x);
+        int j = ChunkSectionPos.getLocalCoord(y);
+        int k = ChunkSectionPos.getLocalCoord(z);
+        return (short)(i << 8 | k << 4 | j);
+    }
+
+    /**
      * Gets the local x-coordinate from the given packed local position.
      * @see #packLocal
      */

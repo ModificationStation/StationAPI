@@ -24,11 +24,18 @@
       "net.modificationstation.stationapi.impl.block.PlacementStateImpl",
       "net.modificationstation.stationapi.impl.level.LevelDataVersionImpl",
       "net.modificationstation.stationapi.impl.block.BlockInteractionImpl"
+    ],
+    "main": [
+      "net.modificationstation.stationapi.impl.packet.StationFlatteningNetworkingImpl"
+    ],
+    "client": [
+      "net.modificationstation.stationapi.impl.client.network.StationFlatteningClientNetworkingImpl"
     ]
   },
   "mixins": [
     "station-flattening-v0.mixins.json"
   ],
+  "accessWidener" : "station-flattening-v0.accesswidener",
 
   "depends": {
     "fabricloader": "*",

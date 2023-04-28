@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.mixin.flattening;
 import net.minecraft.level.Level;
 import net.minecraft.level.chunk.Chunk;
 import net.minecraft.level.source.SkylandsLevelSource;
-import net.modificationstation.stationapi.impl.level.chunk.StationFlatteningChunk;
+import net.modificationstation.stationapi.impl.level.chunk.StationFlatteningChunkImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,7 +23,7 @@ public class MixinSkylandsLevelSource {
             )
     )
     private Chunk redirectChunk(Level world, byte[] tiles, int xPos, int zPos) {
-        return new StationFlatteningChunk(world, xPos, zPos);
+        return new StationFlatteningChunkImpl(world, xPos, zPos);
     }
 
     @Inject(
@@ -35,6 +35,6 @@ public class MixinSkylandsLevelSource {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void populateChunk(int j, int par2, CallbackInfoReturnable<Chunk> cir, byte[] tiles, Chunk chunk) {
-        if (chunk instanceof StationFlatteningChunk stationChunk) stationChunk.fromLegacy(tiles);
+        if (chunk instanceof StationFlatteningChunkImpl stationChunk) stationChunk.fromLegacy(tiles);
     }
 }

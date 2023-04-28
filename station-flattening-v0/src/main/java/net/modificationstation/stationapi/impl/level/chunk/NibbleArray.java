@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.level.chunk;
 import net.minecraft.util.io.ByteArrayTag;
 
 public class NibbleArray {
-	private final byte[] data;
+	public final byte[] data;
 	
 	public NibbleArray(int capacity) {
 		data = new byte[capacity >> 1];

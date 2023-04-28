@@ -55,7 +55,7 @@ public class StationFlatteningWorldChunkLoader implements ChunkIO {
 
     @Override
     public void saveChunk(Level world, Chunk oldChunk) {
-        if (!(oldChunk instanceof StationFlatteningChunk chunk)) throw new IllegalStateException(getClass().getSimpleName() + " can't save chunk of type \"" + oldChunk.getClass().getName() + "\"!");
+        if (!(oldChunk instanceof StationFlatteningChunkImpl chunk)) throw new IllegalStateException(getClass().getSimpleName() + " can't save chunk of type \"" + oldChunk.getClass().getName() + "\"!");
         world.checkSessionLock();
         DataOutputStream dataOutputStream = RegionLoader.method_1216(dimFolder, chunk.x, chunk.z);
         CompoundTag compoundTag = new CompoundTag();
