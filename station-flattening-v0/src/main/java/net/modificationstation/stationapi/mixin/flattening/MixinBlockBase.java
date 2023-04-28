@@ -283,10 +283,10 @@ public abstract class MixinBlockBase implements StationFlatteningBlock {
             method = "<init>(ILnet/minecraft/block/material/Material;)V",
             index = 1,
             at = @At(
-                    value = "INVOKE",
-                    target = "Ljava/lang/Object;<init>()V",
-                    shift = At.Shift.AFTER,
-                    remap = false
+                    value = "CONSTANT",
+                    args = "intValue=1",
+                    ordinal = 0,
+                    shift = At.Shift.BEFORE
             ),
             argsOnly = true
     )

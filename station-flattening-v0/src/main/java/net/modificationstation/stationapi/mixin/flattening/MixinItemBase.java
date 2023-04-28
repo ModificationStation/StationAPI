@@ -86,10 +86,10 @@ public abstract class MixinItemBase implements StationFlatteningItem {
             method = "<init>",
             index = 1,
             at = @At(
-                    value = "INVOKE",
-                    target = "Ljava/lang/Object;<init>()V",
-                    shift = At.Shift.AFTER,
-                    remap = false
+                    value = "CONSTANT",
+                    args = "intValue=64",
+                    shift = At.Shift.BY,
+                    by = -2
             ),
             argsOnly = true
     )
