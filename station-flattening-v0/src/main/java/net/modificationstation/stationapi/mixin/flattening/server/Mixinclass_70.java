@@ -4,9 +4,11 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.class_70;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.level.Level;
+import net.minecraft.packet.play.BlockChange0x35S2CPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.impl.packet.StationFlatteningBlockChangeS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -99,5 +101,17 @@ public class Mixinclass_70 {
     )
     private void clearCache(int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         stationapi_method_1834_state = null;
+    }
+
+    @SuppressWarnings({"InvalidMemberReference", "UnresolvedMixinReference", "MixinAnnotationTarget", "InvalidInjectorMethodSignature"})
+    @Redirect(
+            method = "method_1834",
+            at = @At(
+                    value = "NEW",
+                    target = "(IIILnet/minecraft/level/Level;)Lnet/minecraft/packet/play/BlockChange0x35S2CPacket;"
+            )
+    )
+    private BlockChange0x35S2CPacket flatten(int x, int y, int z, Level world) {
+        return new StationFlatteningBlockChangeS2CPacket(x, y, z, world);
     }
 }

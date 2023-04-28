@@ -48,6 +48,7 @@
     "server.Mixinclass_70",
     "server.MixinMinecraftServer",
     "server.MixinServerPlayer",
+    "server.MixinServerPlayerPacketHandler",
     "server.ServerPlayerViewAccessor"
   ]
 }

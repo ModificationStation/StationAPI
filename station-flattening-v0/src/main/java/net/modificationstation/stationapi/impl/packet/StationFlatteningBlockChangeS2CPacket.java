@@ -41,7 +41,7 @@ public class StationFlatteningBlockChangeS2CPacket extends BlockChange0x35S2CPac
     public void read(DataInputStream in) {
         try {
             x = in.readInt();
-            y = in.readInt();
+            y = in.readShort();
             z = in.readInt();
             rawId = in.readInt();
             meta = in.read();
@@ -54,7 +54,7 @@ public class StationFlatteningBlockChangeS2CPacket extends BlockChange0x35S2CPac
     public void write(DataOutputStream out) {
         try {
             out.writeInt(x);
-            out.writeInt(y);
+            out.writeShort(y);
             out.writeInt(z);
             out.writeInt(rawId);
             out.write(meta);
@@ -70,7 +70,7 @@ public class StationFlatteningBlockChangeS2CPacket extends BlockChange0x35S2CPac
 
     @Override
     public int length() {
-        return 17;
+        return 15;
     }
 
     @Override

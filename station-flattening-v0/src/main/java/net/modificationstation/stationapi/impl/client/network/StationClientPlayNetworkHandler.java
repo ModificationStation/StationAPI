@@ -4,6 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.level.ClientLevel;
+import net.minecraft.level.chunk.Chunk;
 import net.modificationstation.stationapi.impl.level.chunk.StationFlatteningChunkImpl;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import net.modificationstation.stationapi.impl.packet.StationFlatteningBlockChangeS2CPacket;
@@ -34,11 +35,13 @@ public class StationClientPlayNetworkHandler extends StationFlatteningPacketHand
         int fromX = packet.chunkX << 4;
         int fromZ = packet.chunkZ << 4;
         world.method_1498(fromX, world.getBottomY(), fromZ, fromX + 15, world.getTopY() - 1, fromZ + 15);
-        if (world.getChunkFromCache(packet.chunkX, packet.chunkZ) instanceof StationFlatteningChunkImpl chunk) {
+        Chunk chunk = world.getChunkFromCache(packet.chunkX, packet.chunkZ);
+        if (chunk instanceof StationFlatteningChunkImpl flatteningChunk) {
             ByteBuffer buf = ByteBuffer.wrap(packet.sectionsData);
             for (int i = 0; i < world.countVerticalSections(); i++)
-                chunk.getOrCreateSection(world.sectionIndexToCoord(i) << 4, true).readDataPacket(buf);
+                flatteningChunk.getOrCreateSection(world.sectionIndexToCoord(i) << 4, true).readDataPacket(buf);
         }
+        chunk.method_892();
         world.method_202(fromX, world.getBottomY(), fromZ, fromX + 16, world.getTopY(), fromZ + 16);
     }
 }
