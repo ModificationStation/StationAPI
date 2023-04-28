@@ -19,7 +19,7 @@ public class MixinClientConnection {
                     target = "Lnet/minecraft/packet/AbstractPacket;apply(Lnet/minecraft/network/PacketHandler;)V"
             )
     )
-    private void customHandler(AbstractPacket instance, PacketHandler packetHandler) {
+    private void ifIdentifiable(AbstractPacket instance, PacketHandler packetHandler) {
         instance.apply(
                 instance instanceof IdentifiablePacket identifiablePacket ?
                         IdentifiablePacketImpl.HANDLERS.getOrDefault(identifiablePacket.getId(), packetHandler) :

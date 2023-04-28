@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.registry;
 
-import com.mojang.serialization.Lifecycle;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.entity.player.PlayerBase;
 import net.modificationstation.stationapi.api.packet.Message;
 
@@ -15,13 +16,10 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
  *
  * @author mine_diver
  */
-public final class MessageListenerRegistry extends SimpleRegistry<BiConsumer<PlayerBase, Message>> {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class MessageListenerRegistry {
 
     private static final BiConsumer<PlayerBase, Message> EMPTY = (player, message) -> {};
-    public static final RegistryKey<MessageListenerRegistry> KEY = RegistryKey.ofRegistry(MODID.id("message_listeners"));
-    public static final MessageListenerRegistry INSTANCE = Registries.create(KEY, new MessageListenerRegistry(), registry -> EMPTY, Lifecycle.experimental());
-
-    private MessageListenerRegistry() {
-        super(KEY, Lifecycle.experimental(), false);
-    }
+    public static final RegistryKey<Registry<BiConsumer<PlayerBase, Message>>> KEY = RegistryKey.ofRegistry(MODID.id("message_listeners"));
+    public static final Registry<BiConsumer<PlayerBase, Message>> INSTANCE = Registries.create(KEY, registry -> EMPTY);
 }

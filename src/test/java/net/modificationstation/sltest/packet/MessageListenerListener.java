@@ -9,14 +9,15 @@ import net.modificationstation.sltest.item.ModdedItem;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
+
+import java.util.function.BiConsumer;
 
 public class MessageListenerListener {
 
     @EventListener
     public void registerMessageListeners(MessageListenerRegistryEvent event) {
-        MessageListenerRegistry registry = event.registry;
+        Registry<BiConsumer<PlayerBase, Message>> registry = event.registry;
         Registry.register(registry, Identifier.of(SLTest.MODID, "give_me_diamonds"), this::handleGiveMeDiamonds);
         Registry.register(registry, Identifier.of(SLTest.MODID, "send_an_object"), this::handleSendCoords);
     }

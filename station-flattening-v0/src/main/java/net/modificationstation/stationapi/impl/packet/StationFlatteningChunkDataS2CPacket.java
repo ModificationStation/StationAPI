@@ -42,8 +42,8 @@ public class StationFlatteningChunkDataS2CPacket extends MapChunk0x33S2CPacket i
         ChunkSection[] sections = chunk.sections;
         byte[] sectionsData = new byte[getSectionsPacketSize(chunk)];
         ByteBuffer buf = ByteBuffer.wrap(sectionsData);
-        for (int i = 0; i < sections.length; i++) {
-            Objects.requireNonNullElse(sections[i], ChunkSection.EMPTY).toPacket(buf);
+        for (ChunkSection section : sections) {
+            Objects.requireNonNullElse(section, ChunkSection.EMPTY).toPacket(buf);
         }
         Deflater deflater = new Deflater(Deflater.DEFAULT_COMPRESSION);
         try {

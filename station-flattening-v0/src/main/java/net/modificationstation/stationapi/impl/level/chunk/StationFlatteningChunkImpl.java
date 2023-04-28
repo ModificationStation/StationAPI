@@ -115,9 +115,7 @@ public class StationFlatteningChunkImpl extends Chunk {
         if (section == null) {
             section = new ChunkSection(level.sectionIndexToCoord(index));
             if (fillSkyLight) {
-                for (short i = 0; i < 4096; i++) {
-                    section.setLight(LightType.field_2757, i, 15);
-                }
+                section.initSkyLight();
             }
             sections[index] = section;
         }

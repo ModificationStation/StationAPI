@@ -6,14 +6,17 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.level.LightType;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
+import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 public class ChunkSection {
 
-    public static final ChunkSection EMPTY = new ChunkSection(0);
+    private static final byte[] INITIAL_SKY_LIGHT = Util.make(new byte[2048], array -> Arrays.fill(array, (byte) (LightType.field_2757.field_2759 << 4 | LightType.field_2757.field_2759)));
+    public static final ChunkSection EMPTY = Util.make(new ChunkSection(0), ChunkSection::initSkyLight);
     private final short yOffset;
     private short nonEmptyBlockCount;
     private short randomTickableBlockCount;
@@ -133,17 +136,23 @@ public class ChunkSection {
 
     @Environment(EnvType.CLIENT)
     public void readDataPacket(ByteBuffer buf) {
-        this.nonEmptyBlockCount = buf.getShort();
-        this.blockStateContainer.readPacket(buf);
+        nonEmptyBlockCount = buf.getShort();
+        blockStateContainer.readPacket(buf);
+        buf.get(metadataArray.data);
+        buf.get(skyLightArray.data);
+        buf.get(blockLightArray.data);
     }
 
     public void toPacket(ByteBuffer buf) {
         buf.putShort(nonEmptyBlockCount);
-        this.blockStateContainer.writePacket(buf);
+        blockStateContainer.writePacket(buf);
+        buf.put(metadataArray.data);
+        buf.put(skyLightArray.data);
+        buf.put(blockLightArray.data);
     }
 
    public int getPacketSize() {
-      return 2 + this.blockStateContainer.getPacketSize();
+      return 2 + this.blockStateContainer.getPacketSize() + metadataArray.data.length + skyLightArray.data.length + blockLightArray.data.length;
    }
 
     public boolean hasAny(Predicate<BlockState> predicate) {
@@ -188,5 +197,9 @@ public class ChunkSection {
 
     public NibbleArray getLightArray(LightType type) {
         return type == LightType.field_2758 ? blockLightArray : skyLightArray;
+    }
+
+    public void initSkyLight() {
+        skyLightArray.copyArray(INITIAL_SKY_LIGHT);
     }
 }
