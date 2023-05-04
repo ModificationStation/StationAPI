@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.client.texture;
 
+import lombok.Getter;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.util.exception.CrashException;
@@ -24,7 +25,9 @@ public class SpriteAtlasTexture extends AbstractTexture implements DynamicTextur
     private Map<Identifier, Sprite> sprites = Map.of();
     private final Identifier id;
     private final int maxTextureSize;
+    @Getter
     private int width;
+    @Getter
     private int height;
     private SpriteFinderImpl spriteFinder = null;
 
