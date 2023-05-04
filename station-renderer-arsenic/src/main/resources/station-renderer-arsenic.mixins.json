@@ -37,7 +37,9 @@
     "client.block.RailsRendererMixin",
     "client.block.RedstoneRendererMixin",
     "client.block.RepeaterRendererMixin",
-    "client.block.TorchRendererMixin"
+    "client.block.TorchRendererMixin",
+    "client.overlay.BlockOverlayMixin",
+    "client.overlay.FireOverlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1,

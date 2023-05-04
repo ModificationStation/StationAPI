@@ -64,6 +64,18 @@ public final class ArsenicBlockRenderer {
         return extractMultiplier(constant) * sprite.getContents().getHeight();
     }
 
+    private static float extractTexCoordMultiplier(float constant) {
+        return constant * ATLAS_SIZE / TEX_SIZE;
+    }
+
+    public static float adjustU(float constant, Sprite sprite) {
+        return extractTexCoordMultiplier(constant) * sprite.getContents().getWidth() / StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getWidth();
+    }
+
+    public static float adjustV(float constant, Sprite sprite) {
+        return extractTexCoordMultiplier(constant) * sprite.getContents().getHeight() / StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getHeight();
+    }
+
     private static int extractMultiplier(int constant) {
         return constant / TEX_SIZE;
     }
