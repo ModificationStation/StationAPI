@@ -29,7 +29,8 @@
       "net.modificationstation.stationapi.impl.vanillafix.VanillaFixImpl"
     ],
     "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.vanillafix.client.gui.screen.EditWorldScreenImpl"
+      "net.modificationstation.stationapi.impl.vanillafix.client.gui.screen.EditWorldScreenImpl",
+      "net.modificationstation.stationapi.impl.vanillafix.client.color.block.VanillaBlockColorProviders"
     ]
   },
   "mixins": [

@@ -14,7 +14,6 @@
     "client.DiggingAccessor",
     "client.EntityRendererAccessor",
     "client.ItemRendererAccessor",
-    "client.MixinBlockRenderer",
     "client.Mixinclass_556",
     "client.MixinDigging",
     "client.MixinItemRenderer",
@@ -25,9 +24,26 @@
     "client.MixinWorldRenderer",
     "client.ParticleBaseAccessor",
     "client.RenderListAccessor",
-    "client.TessellatorAccessor"
+    "client.TessellatorAccessor",
+    "client.block.BedRendererMixin",
+    "client.block.BlockRendererMixin",
+    "client.block.ColumnRendererMixin",
+    "client.block.CrossedRendererMixin",
+    "client.block.FireRendererMixin",
+    "client.block.FluidRendererMixin",
+    "client.block.LadderRendererMixin",
+    "client.block.LeverRendererMixin",
+    "client.block.PistonHeadRendererMixin",
+    "client.block.RailsRendererMixin",
+    "client.block.RedstoneRendererMixin",
+    "client.block.RepeaterRendererMixin",
+    "client.block.TorchRendererMixin",
+    "client.gui.AchievementsMixin",
+    "client.overlay.BlockOverlayMixin",
+    "client.overlay.FireOverlayMixin"
   ],
   "injectors": {
-    "defaultRequire": 1
+    "defaultRequire": 1,
+    "maxShiftBy": 3
   }
 }
