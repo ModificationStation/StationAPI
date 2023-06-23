@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.client.gui;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.item.ItemBase;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.TooltipRenderEvent;
 import net.modificationstation.stationapi.api.client.gui.CustomTooltipProvider;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -13,9 +13,10 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class CustomTooltipRendererImpl {
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void renderCustomTooltips(TooltipRenderEvent event) {
         ItemBase item = event.itemStack.getType();
         if (!event.isCanceled() && item instanceof CustomTooltipProvider provider) {

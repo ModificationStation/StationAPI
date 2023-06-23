@@ -9,12 +9,4 @@ import net.mine_diver.unsafeevents.Event;
  * @author mine_diver
  */
 @SuperBuilder
-public class PostInitEvent extends Event {
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
-}
+public class PostInitEvent extends Event {}

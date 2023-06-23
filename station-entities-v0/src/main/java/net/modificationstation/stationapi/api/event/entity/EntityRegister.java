@@ -9,7 +9,6 @@ import java.util.function.BiConsumer;
 
 @SuperBuilder
 public class EntityRegister extends Event {
-
     public final TriConsumer<Class<? extends EntityBase>, String, Integer> register;
     public final BiConsumer<Class<? extends EntityBase>, String> registerNoID;
 
@@ -20,11 +19,4 @@ public class EntityRegister extends Event {
     public final void register(Class<? extends EntityBase> entityClass, String entityIdentifier) {
         registerNoID.accept(entityClass, entityIdentifier);
     }
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
 }

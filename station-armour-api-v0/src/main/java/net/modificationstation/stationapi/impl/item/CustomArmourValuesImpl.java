@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.impl.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.entity.player.PlayerBaseSuper;
 import net.modificationstation.stationapi.api.entity.player.PlayerHandler;
 import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
@@ -13,9 +13,10 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class CustomArmourValuesImpl {
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void calcArmourDamageReduce(PlayerEvent.HandlerRegister event) {
         event.playerHandlers.add(new ArmourHandler(event.player));
     }

@@ -9,13 +9,5 @@ import java.util.Map;
 
 @SuperBuilder
 public class EntityRendererRegisterEvent extends Event {
-
     public final Map<Class<? extends EntityBase>, EntityRenderer> renderers;
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
 }

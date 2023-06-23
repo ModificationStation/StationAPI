@@ -8,13 +8,11 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceMap;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.*;
-import lombok.Getter;
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
-import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedCallback;
-import net.modificationstation.stationapi.api.event.registry.RegistryEntryRemovedCallback;
-import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapCallback;
+import net.mine_diver.unsafeevents.EventBus;
+import net.mine_diver.unsafeevents.MutableEventBus;
+import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedEvent;
+import net.modificationstation.stationapi.api.event.registry.RegistryEntryRemovedEvent;
+import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEvent;
 import net.modificationstation.stationapi.api.registry.RegistryEntry.Reference;
 import net.modificationstation.stationapi.api.registry.RegistryEntryList.Named;
 import net.modificationstation.stationapi.api.registry.RegistryWrapper.Impl;
@@ -29,9 +27,10 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Objects.requireNonNullElseGet;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
-public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry, ListenableRegistry<T> {
+public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry, ListenableRegistry {
     final RegistryKey<? extends Registry<T>> key;
     private final ReferenceList<Reference<T>> rawIdToEntry = new ReferenceArrayList<>(256);
     private final Reference2IntMap<T> entryToRawId = Util.make(new Reference2IntOpenHashMap<>(), map -> map.defaultReturnValue(-1));
@@ -51,29 +50,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     private Reference2IntMap<Identifier> prevIndexedEntries;
     private BiMap<Identifier, Reference<T>> prevEntries;
 
-    @Getter
-    private final Event<RegistryEntryAddedCallback<T>> addObjectEvent = EventFactory.createWithPhases(RegistryEntryAddedCallback.class,
-            callbacks -> (rawId, id, object) -> {
-                for (RegistryEntryAddedCallback<T> callback : callbacks) callback.onEntryAdded(rawId, id, object);
-            },
-            StationAPI.INTERNAL_PHASE, Event.DEFAULT_PHASE
-    );
-
-    @Getter
-    private final Event<RegistryEntryRemovedCallback<T>> removeObjectEvent = EventFactory.createWithPhases(RegistryEntryRemovedCallback.class,
-            callbacks -> (rawId, id, object) -> {
-                for (RegistryEntryRemovedCallback<T> callback : callbacks) callback.onEntryRemoved(rawId, id, object);
-            },
-            StationAPI.INTERNAL_PHASE, Event.DEFAULT_PHASE
-    );
-
-    @Getter
-    private final Event<RegistryIdRemapCallback<T>> remapEvent = EventFactory.createWithPhases(RegistryIdRemapCallback.class,
-            callbacks -> a -> {
-                for (RegistryIdRemapCallback<T> callback : callbacks) callback.onRemap(a);
-            },
-            StationAPI.INTERNAL_PHASE, Event.DEFAULT_PHASE
-    );
+    private @Nullable MutableEventBus eventBus;
 
     public SimpleRegistry(RegistryKey<? extends Registry<T>> key, Lifecycle lifecycle) {
         this(key, lifecycle, false);
@@ -114,6 +91,11 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         this.key = key;
         this.lifecycle = lifecycle;
         if (intrusive) this.intrusiveValueToEntry = new Reference2ReferenceOpenHashMap<>();
+    }
+
+    @Override
+    public MutableEventBus getEventBus() {
+        return requireNonNullElseGet(eventBus, () -> eventBus = new EventBus());
     }
 
     @Override
@@ -188,7 +170,12 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
                 int oldId = entryToRawId.getInt(oldObject.value());
                 if (oldId != rawId)
                     throw new RuntimeException("Attempted to register ID " + registryKey + " at different raw IDs (" + oldId + ", " + rawId + ")! If you're trying to override an item, use .set(), not .register()!");
-                removeObjectEvent.invoker().onEntryRemoved(oldId, registryKey.getValue(), oldObject.value());
+                if (eventBus != null)
+                    eventBus.post(RegistryEntryRemovedEvent.builder()
+                            .rawId(oldId)
+                            .id(registryKey.getValue())
+                            .object(oldObject.value())
+                            .build());
                 isObjectNew = true;
             } else isObjectNew = false;
         }
@@ -209,8 +196,12 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         // but it's easier when you can interact with unfrozen registries
         reference.setValue(value);
 
-        if (isObjectNew)
-            addObjectEvent.invoker().onEntryAdded(rawId, registryKey.getValue(), value);
+        if (isObjectNew && eventBus != null)
+            eventBus.post(RegistryEntryAddedEvent.builder()
+                    .rawId(rawId)
+                    .id(registryKey.getValue())
+                    .object(value)
+                    .build());
 
         return reference;
     }
@@ -617,7 +608,10 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
             entryToRawId.put(object.value(), id);
             if (nextId <= id) nextId = id + 1;
         }
-        remapEvent.invoker().onRemap(new RemapStateImpl<>(this, oldIdMap, idMap));
+        if (eventBus != null)
+            eventBus.post(RegistryIdRemapEvent.<T>builder()
+                    .state(new RemapStateImpl<>(this, oldIdMap, idMap))
+                    .build());
     }
 
     @Override
@@ -639,8 +633,13 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
                 keyToEntry.put(entryKey, entry.getValue());
             }
             remap(name, prevIndexedEntries, RemapMode.AUTHORITATIVE);
-            for (Identifier id : addedIds)
-                addObjectEvent.invoker().onEntryAdded(entryToRawId.getInt(idToEntry.get(id)), id, get(id));
+            if (eventBus != null)
+                for (Identifier id : addedIds)
+                    eventBus.post(RegistryEntryAddedEvent.builder()
+                            .rawId(entryToRawId.getInt(idToEntry.get(id)))
+                            .id(id)
+                            .object(get(id))
+                            .build());
             prevIndexedEntries = null;
             prevEntries = null;
         }

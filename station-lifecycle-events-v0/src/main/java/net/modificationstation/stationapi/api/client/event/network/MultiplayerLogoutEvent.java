@@ -8,15 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 @SuperBuilder
 public class MultiplayerLogoutEvent extends Event {
-
     @NotNull public final Disconnect0xFFPacket packet;
     @Nullable public final String[] stacktrace;
     public final boolean dropped;
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
 }

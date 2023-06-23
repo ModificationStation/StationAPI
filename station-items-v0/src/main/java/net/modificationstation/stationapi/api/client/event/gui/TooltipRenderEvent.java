@@ -1,18 +1,18 @@
 package net.modificationstation.stationapi.api.client.event.gui;
 
-import lombok.Getter;
 import lombok.experimental.SuperBuilder;
+import net.mine_diver.unsafeevents.event.Cancelable;
+import net.mine_diver.unsafeevents.event.EventPhases;
 import net.minecraft.client.gui.screen.container.ContainerBase;
 import net.minecraft.client.render.TextRenderer;
 import net.minecraft.entity.player.PlayerInventory;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.item.ItemStackEvent;
 
+@Cancelable
 @SuperBuilder
+@EventPhases(StationAPI.INTERNAL_PHASE)
 public class TooltipRenderEvent extends ItemStackEvent {
-
-    @Getter
-    private final boolean cancelable = true;
-
     public final ContainerBase container;
     public final TextRenderer textManager;
     public final PlayerInventory inventory;
@@ -23,11 +23,4 @@ public class TooltipRenderEvent extends ItemStackEvent {
             mouseY;
     public final float delta;
     public final String originalTooltip;
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
 }

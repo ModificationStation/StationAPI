@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.client.arsenic;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -26,12 +26,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class Arsenic {
 
     @Entrypoint.Logger("Arsenic")
     public static final Logger LOGGER = Null.get();
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void init(InitEvent event) {
         if (ArsenicMixinConfigPlugin.shouldApplyArsenic()) {
             LOGGER.info("Registering Arsenic renderer!");
@@ -41,8 +42,12 @@ public class Arsenic {
             }
 
             RendererAccess.INSTANCE.registerRenderer(ArsenicRenderer.INSTANCE);
-            StationAPI.EVENT_BUS.register(Arsenic::registerTextures);
-            StationAPI.EVENT_BUS.register(Arsenic::beforeTexturePackApplied);
+            StationAPI.EVENT_BUS.register(Listener.<TextureRegisterEvent>simple()
+                    .listener(Arsenic::registerTextures)
+                    .build());
+            StationAPI.EVENT_BUS.register(Listener.<TexturePackLoadedEvent.Before>simple()
+                    .listener(Arsenic::beforeTexturePackApplied)
+                    .build());
         } else {
             LOGGER.info("Different rendering plugin detected; not applying Arsenic.");
         }

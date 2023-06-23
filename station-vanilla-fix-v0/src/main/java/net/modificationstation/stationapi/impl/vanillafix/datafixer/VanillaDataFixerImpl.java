@@ -5,6 +5,7 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.DataFixerBuilder;
 import com.mojang.datafixers.schemas.Schema;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.event.datafixer.DataFixerRegisterEvent;
@@ -28,6 +29,7 @@ import java.util.function.Supplier;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaDataFixerImpl {
 
     public static final String STATION_ID = MODID.id("id").toString();
@@ -44,7 +46,7 @@ public final class VanillaDataFixerImpl {
         return builder.buildOptimized(Set.of(TypeReferences.LEVEL), Util.getBootstrapExecutor());
     });
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void registerFixer(DataFixerRegisterEvent event) {
         DataFixers.registerFixer(MODID, executor -> {
             DataFixerBuilder builder = new DataFixerBuilder(CURRENT_VERSION);

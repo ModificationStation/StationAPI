@@ -36,6 +36,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class AssetsReloaderImpl {
 
     private static final ResourcePackManager RESOURCE_PACK_MANAGER = new ResourcePackManager(
@@ -45,14 +46,14 @@ public final class AssetsReloaderImpl {
     );
     private static final CompletableFuture<Unit> COMPLETED_UNIT_FUTURE = CompletableFuture.completedFuture(Unit.INSTANCE);
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void reload(TexturePackLoadedEvent.After event) {
         StationAPI.EVENT_BUS.post(AssetsReloadEvent.builder().build());
     }
 
     private static boolean firstLoad = true;
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void reloadResourceManager(final AssetsReloadEvent event) throws LWJGLException {
         RESOURCE_PACK_MANAGER.scanPacks();
         //noinspection deprecation

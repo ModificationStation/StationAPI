@@ -1,12 +1,7 @@
 package net.modificationstation.stationapi.api.registry;
 
-import net.fabricmc.fabric.api.event.Event;
-import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedCallback;
-import net.modificationstation.stationapi.api.event.registry.RegistryEntryRemovedCallback;
-import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapCallback;
+import net.mine_diver.unsafeevents.MutableEventBus;
 
-public interface ListenableRegistry<T> {
-	Event<RegistryEntryAddedCallback<T>> getAddObjectEvent();
-	Event<RegistryEntryRemovedCallback<T>> getRemoveObjectEvent();
-	Event<RegistryIdRemapCallback<T>> getRemapEvent();
+public interface ListenableRegistry {
+	MutableEventBus getEventBus();
 }

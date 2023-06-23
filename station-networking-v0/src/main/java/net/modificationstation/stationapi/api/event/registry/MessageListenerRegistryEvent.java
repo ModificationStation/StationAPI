@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.api.event.registry;
 
+import net.mine_diver.unsafeevents.event.EventPhases;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
 
 /**
@@ -7,16 +9,9 @@ import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
  *
  * @author mine_diver
  */
+@EventPhases(StationAPI.INTERNAL_PHASE)
 public class MessageListenerRegistryEvent extends RegistryEvent<MessageListenerRegistry> {
-
     public MessageListenerRegistryEvent() {
         super(MessageListenerRegistry.INSTANCE);
     }
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
 }

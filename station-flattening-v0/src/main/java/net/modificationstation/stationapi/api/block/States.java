@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -12,6 +13,7 @@ import net.modificationstation.stationapi.api.util.collection.IdList;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class States {
 
     private static final Lazy<BlockBase> AIR_BLOCK = new Lazy<>(() -> new Air(0));
@@ -24,7 +26,7 @@ public final class States {
     @Deprecated
     public static final IdList<BlockState> STATE_IDS = BlockBase.STATE_IDS;
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void registerBlocks(BlockRegistryEvent event) {
         Registry.register(event.registry, of("air"), AIR_BLOCK.get());
     }

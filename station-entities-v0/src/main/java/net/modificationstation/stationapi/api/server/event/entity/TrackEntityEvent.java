@@ -2,9 +2,11 @@ package net.modificationstation.stationapi.api.server.event.entity;
 
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
+import net.mine_diver.unsafeevents.event.EventPhases;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.network.EntityHashSet;
 import net.minecraft.server.network.ServerEntityTracker;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.server.entity.CustomTracking;
 import net.modificationstation.stationapi.api.server.entity.HasTrackingParameters;
 import net.modificationstation.stationapi.api.server.entity.TrackingParametersProvider;
@@ -18,8 +20,8 @@ import net.modificationstation.stationapi.api.util.API;
  * @see HasTrackingParameters
  */
 @SuperBuilder
+@EventPhases(StationAPI.INTERNAL_PHASE)
 public class TrackEntityEvent extends Event {
-
     /**
      * The dimension's tracker instance. Can be used to (un)track entities.
      */
@@ -74,11 +76,4 @@ public class TrackEntityEvent extends Event {
     public void track(int trackingDistance, int updatePeriod, boolean sendVelocity) {
         entityTracker.trackEntity(entityToTrack, trackingDistance, updatePeriod, sendVelocity);
     }
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
 }

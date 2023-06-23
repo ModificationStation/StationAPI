@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.impl.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.Block;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.*;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -26,13 +26,14 @@ import java.util.function.IntFunction;
  * @see HasMetaNamedBlockItem
  */
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class HasCustomBlockItemFactoryImpl {
 
     /**
      * Processes {@link HasCustomBlockItemFactory} annotation if present via {@link BlockItemFactoryEvent} hook.
      * @param event blockitemfactory callback.
      */
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void getBlockItemFactory(BlockItemFactoryEvent event) {
         if (event.block instanceof CustomBlockItemFactoryProvider provider)
             event.currentFactory = provider.getBlockItemFactory();

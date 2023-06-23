@@ -8,20 +8,11 @@ import net.minecraft.level.Level;
 
 @SuperBuilder
 public abstract class ItemStackEvent extends Event {
-
     public final ItemInstance itemStack;
 
     @SuperBuilder
     public static class Crafted extends ItemStackEvent {
-
         public final Level level;
         public final PlayerBase player;
-
-        @Override
-        protected int getEventID() {
-            return ID;
-        }
-
-        public static final int ID = NEXT_ID.incrementAndGet();
     }
 }

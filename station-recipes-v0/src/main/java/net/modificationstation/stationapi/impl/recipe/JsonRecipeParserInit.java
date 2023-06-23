@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.recipe;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.event.registry.JsonRecipeParserRegistryEvent;
 import net.modificationstation.stationapi.api.item.json.JsonItemKey;
@@ -27,16 +27,17 @@ import java.util.function.Function;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class JsonRecipeParserInit {
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void registerJsonRecipeParsers(JsonRecipeParserRegistryEvent event) {
         Registry.register(event.registry, of("crafting_shaped"), JsonRecipeParserInit::parseCraftingShaped);
         Registry.register(event.registry, of("crafting_shapeless"), JsonRecipeParserInit::parseCraftingShapeless);
         Registry.register(event.registry, of("smelting"), JsonRecipeParserInit::parseSmelting);
     }
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void parseAndRegisterRecipe(RecipeRegisterEvent event) {
         Consumer<URL> jsonRecipeParser = JsonRecipeParserRegistry.INSTANCE.get(event.recipeId);
         Set<URL> jsonRecipes = JsonRecipesRegistry.INSTANCE.get(event.recipeId);

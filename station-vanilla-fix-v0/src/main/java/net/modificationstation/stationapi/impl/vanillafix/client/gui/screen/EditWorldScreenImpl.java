@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widgets.Button;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.screen.EditWorldScreenEvent;
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetDetachedContext;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
@@ -19,17 +20,19 @@ import net.modificationstation.stationapi.impl.level.storage.StationFlatteningWo
 import net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl;
 import net.modificationstation.stationapi.mixin.vanillafix.client.ScreenBaseAccessor;
 
+import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 @Environment(EnvType.CLIENT)
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class EditWorldScreenImpl {
 
     private static final String
             ROOT_KEY = "selectWorld",
             CONVERT_TO_MCREGION_KEY = ROOT_KEY + "." + MODID.id("convertToMcRegion");
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 - Integer.MAX_VALUE / 8)
+    @EventListener(priority = LOW)
     private static void registerConversionButton(EditWorldScreenEvent.ScrollableButtonContextRegister event) {
         event.contexts.add(screen -> new ButtonWidgetDetachedContext(
                 id -> {

@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.client.network;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.network.ServerLoginSuccessEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -19,9 +19,10 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class ClientVanillaChecker {
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void handleServerLogin(ServerLoginSuccessEvent event) {
         if (Arrays.asList(event.loginRequestPacket.username.split(";")).contains(MODID.toString())) {
             ((ModdedPacketHandlerSetter) event.networkHandler).setModded();
