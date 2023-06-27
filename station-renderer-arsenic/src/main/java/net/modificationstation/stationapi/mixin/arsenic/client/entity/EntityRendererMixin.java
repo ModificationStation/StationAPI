@@ -249,5 +249,6 @@ public class EntityRendererMixin {
     private void stationapi_fire_releaseCaptured(EntityBase d, double e, double f, double g, float par5, CallbackInfo ci) {
         stationapi_fire_atlas = null;
         stationapi_fire_texture1 = null;
+        stationapi_fire_texture2 = null;
     }
 }
