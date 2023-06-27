@@ -38,6 +38,7 @@
     "client.block.RedstoneRendererMixin",
     "client.block.RepeaterRendererMixin",
     "client.block.TorchRendererMixin",
+    "client.entity.EntityRendererMixin",
     "client.gui.AchievementsMixin",
     "client.overlay.BlockOverlayMixin",
     "client.overlay.FireOverlayMixin"
