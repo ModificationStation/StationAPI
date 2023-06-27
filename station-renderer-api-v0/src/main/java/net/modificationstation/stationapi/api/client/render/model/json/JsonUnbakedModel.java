@@ -17,6 +17,7 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.JsonHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Reader;
@@ -46,6 +47,7 @@ public final class JsonUnbakedModel implements UnbakedModel {
     private JsonUnbakedModel parent;
     @Nullable
     private Identifier parentId;
+    private List<Sprite> onGroundSprites;
 
     public static JsonUnbakedModel deserialize(Reader input) {
         return JsonHelper.deserialize(GSON, input, JsonUnbakedModel.class);
@@ -55,7 +57,15 @@ public final class JsonUnbakedModel implements UnbakedModel {
         return deserialize(new StringReader(json));
     }
 
-    public JsonUnbakedModel(@Nullable Identifier parentId, List<ModelElement> elements, Map<String, Either<SpriteIdentifier, String>> textureMap, boolean ambientOcclusion, @Nullable JsonUnbakedModel.GuiLight guiLight, ModelTransformation transformations, List<ModelOverride> overrides) {
+    public JsonUnbakedModel(
+            @Nullable Identifier parentId,
+            List<ModelElement> elements,
+            Map<String, Either<SpriteIdentifier, String>> textureMap,
+            boolean ambientOcclusion,
+            @Nullable JsonUnbakedModel.GuiLight guiLight,
+            ModelTransformation transformations,
+            List<ModelOverride> overrides
+    ) {
         this.elements = elements;
         this.ambientOcclusion = ambientOcclusion;
         this.guiLight = guiLight;
@@ -63,6 +73,11 @@ public final class JsonUnbakedModel implements UnbakedModel {
         this.parentId = parentId;
         this.transformations = transformations;
         this.overrides = overrides;
+    }
+
+    @ApiStatus.Experimental
+    public void setOnGroundSprites(List<Sprite> onGroundSprites) {
+        this.onGroundSprites = onGroundSprites;
     }
 
     public List<ModelElement> getElements() {
@@ -122,6 +137,7 @@ public final class JsonUnbakedModel implements UnbakedModel {
         });
     }
 
+    @Override
     public BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
         return this.bake(baker, this, textureGetter, rotationContainer, modelId, true);
     }
@@ -142,6 +158,8 @@ public final class JsonUnbakedModel implements UnbakedModel {
                     else
                         builder.addQuad(Direction.transform(settings.getRotation().getMatrix(), modelElementFace.cullFace), createQuad(modelElement, modelElementFace, sprite2, direction, settings, id));
                 }
+            if (onGroundSprites != null)
+                builder.setOnGroundSprites(onGroundSprites);
 
             return builder.build();
         }

@@ -10,6 +10,7 @@ import net.modificationstation.stationapi.api.client.render.model.json.ModelOver
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Random;
 import java.util.function.Supplier;
@@ -73,5 +74,11 @@ public abstract class ForwardingBakedModel implements BakedModel {
 	@Override
 	public ModelOverrideList getOverrides() {
 		return wrapped.getOverrides();
+	}
+
+	@Override
+	@ApiStatus.Experimental
+	public ImmutableList<Sprite> getOnGroundSprites() {
+		return wrapped.getOnGroundSprites();
 	}
 }
