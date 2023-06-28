@@ -10,8 +10,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ServerPlayer.class)
 public class MixinServerPlayer {
-
-    @SuppressWarnings({"InvalidMemberReference", "UnresolvedMixinReference", "MixinAnnotationTarget", "InvalidInjectorMethodSignature"})
     @Redirect(
             method = "tick(Z)V",
             at = @At(
