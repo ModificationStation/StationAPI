@@ -10,10 +10,6 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class StationNetworkingInit {
-    /**
-     * @deprecated brittle static initialization listener
-     */
-    @Deprecated
     @EventListener
     private static void registerPackets(PacketRegisterEvent event) {
         StationAPI.EVENT_BUS.post(new MessageListenerRegistryEvent());

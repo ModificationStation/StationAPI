@@ -6,7 +6,6 @@ import net.mine_diver.unsafeevents.event.EventPhases;
 import net.minecraft.packet.AbstractPacket;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.packet.Message;
-import net.modificationstation.stationapi.api.packet.PacketHelper;
 import uk.co.benjiweber.expressions.function.QuadConsumer;
 
 /**
@@ -16,11 +15,8 @@ import uk.co.benjiweber.expressions.function.QuadConsumer;
  * but discouraged for use in mods except for the case
  * that {@link Message} doesn't provide needed functionality.
  *
- * @deprecated Use {@link PacketHelper#register(int, boolean, boolean, Class)} with {@code main} entrypoint instead
- *
  * @author mine_diver
  */
-@Deprecated
 @SuperBuilder
 @EventPhases(StationAPI.INTERNAL_PHASE)
 public class PacketRegisterEvent extends Event {

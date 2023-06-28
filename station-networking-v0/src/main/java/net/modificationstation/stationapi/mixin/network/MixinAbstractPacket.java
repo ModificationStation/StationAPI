@@ -40,10 +40,6 @@ public abstract class MixinAbstractPacket {
         return Null.get();
     }
 
-    /**
-     * @deprecated brittle static initialization listener
-     */
-    @Deprecated
     @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/packet/AbstractPacket;register(IZZLjava/lang/Class;)V", ordinal = 56, shift = At.Shift.AFTER))
     private static void afterVanillaPackets(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(PacketRegisterEvent.builder().register(MixinAbstractPacket::register).build());
