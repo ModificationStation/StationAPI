@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.impl.recipe;
 
 import com.google.gson.Gson;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.mod.PreInitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -23,9 +23,10 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class JsonRecipesLoader {
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void loadJsonRecipes(PreInitEvent event) {
         LOGGER.info("Searching for JSON recipes...");
         String recipePath = MODID + "/recipes";

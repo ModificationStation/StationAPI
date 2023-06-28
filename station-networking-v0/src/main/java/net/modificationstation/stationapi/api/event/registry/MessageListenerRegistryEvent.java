@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.api.event.registry;
 
+import net.mine_diver.unsafeevents.event.EventPhases;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.minecraft.entity.player.PlayerBase;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -16,16 +18,9 @@ import java.util.function.BiConsumer;
  * @author mine_diver
  */
 @Deprecated
+@EventPhases(StationAPI.INTERNAL_PHASE)
 public class MessageListenerRegistryEvent extends RegistryEvent<Registry<BiConsumer<PlayerBase, Message>>> {
-
     public MessageListenerRegistryEvent() {
         super(MessageListenerRegistry.INSTANCE);
     }
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
 }

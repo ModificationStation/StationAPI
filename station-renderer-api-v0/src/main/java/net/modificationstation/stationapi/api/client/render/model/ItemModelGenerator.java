@@ -24,6 +24,7 @@ public class ItemModelGenerator {
     public JsonUnbakedModel create(Function<SpriteIdentifier, Sprite> textureGetter, JsonUnbakedModel blockModel) {
         Map<String, Either<SpriteIdentifier, String>> map = new HashMap<>();
         List<ModelElement> list = new ArrayList<>();
+        List<Sprite> sprites = new ArrayList<>();
 
         for(int i = 0; i < LAYERS.size(); ++i) {
             String string = LAYERS.get(i);
@@ -32,12 +33,14 @@ public class ItemModelGenerator {
             SpriteIdentifier spriteIdentifier = blockModel.resolveSprite(string);
             map.put(string, Either.left(spriteIdentifier));
             Sprite sprite = textureGetter.apply(spriteIdentifier);
+            sprites.add(sprite);
             list.addAll(this.addLayerElements(i, string, sprite));
         }
 
         map.put("particle", blockModel.textureExists("particle") ? Either.left(blockModel.resolveSprite("particle")) : map.get("layer0"));
         JsonUnbakedModel jsonUnbakedModel = new JsonUnbakedModel(null, list, map, false, blockModel.getGuiLight(), blockModel.getTransformations(), blockModel.getOverrides());
         jsonUnbakedModel.id = blockModel.id;
+        jsonUnbakedModel.setOnGroundSprites(sprites);
         return jsonUnbakedModel;
     }
 

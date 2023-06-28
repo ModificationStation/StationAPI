@@ -3,9 +3,9 @@ package net.modificationstation.stationapi.impl.server.network;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.ServerPlayer;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -23,9 +23,10 @@ import static net.modificationstation.stationapi.impl.network.VanillaChecker.CLI
 import static net.modificationstation.stationapi.impl.network.VanillaChecker.MASK;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class ServerVanillaChecker {
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void onPlayerLogin(PlayerAttemptLoginEvent event) {
         if ((event.loginRequestPacket.worldSeed & MASK) == MASK)
             ((ModdedPacketHandlerSetter) event.serverPacketHandler).setModded();
@@ -35,7 +36,7 @@ public class ServerVanillaChecker {
         }
     }
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void registerMessages(MessageListenerRegistryEvent event) {
         Registry.register(event.registry, MODID.id("modlist"), (player, message) -> {
             if (!CLIENT_REQUIRED_MODS.isEmpty()) {

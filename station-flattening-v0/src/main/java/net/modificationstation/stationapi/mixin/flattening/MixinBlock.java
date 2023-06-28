@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.Block;
@@ -11,7 +12,7 @@ import net.minecraft.util.maths.Box;
 import net.minecraft.util.maths.Vec3f;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.block.IsBlockReplaceableEvent;
-import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapCallback;
+import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEvent;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.item.StationFlatteningBlockItem;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
@@ -76,10 +77,10 @@ public class MixinBlock extends ItemBase implements StationFlatteningBlockItem {
 			at = @At("RETURN")
 	)
 	private void registerCallback(int par1, CallbackInfo ci) {
-		RegistryIdRemapCallback.event(BlockRegistry.INSTANCE).register(
-				StationAPI.INTERNAL_PHASE,
-				state -> blockId = state.getRawIdChangeMap().getOrDefault(blockId, blockId)
-		);
+		BlockRegistry.INSTANCE.getEventBus().register(Listener.<RegistryIdRemapEvent<BlockBase>>simple()
+				.listener(event -> blockId = event.state.getRawIdChangeMap().getOrDefault(blockId, blockId))
+				.phase(StationAPI.INTERNAL_PHASE)
+				.build());
 	}
 
 	@Override

@@ -7,14 +7,6 @@ import net.modificationstation.stationapi.api.client.color.item.ItemColors;
 
 @SuperBuilder
 public class ItemColorsRegisterEvent extends Event {
-
     public final BlockColors blockColors;
     public final ItemColors itemColors;
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
 }

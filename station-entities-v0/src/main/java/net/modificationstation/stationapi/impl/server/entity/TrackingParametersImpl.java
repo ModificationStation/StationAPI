@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.impl.server.entity;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.entity.EntityBase;
 import net.minecraft.network.EntityHashSet;
 import net.minecraft.server.network.ServerEntityTracker;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.server.entity.CustomTracking;
@@ -22,6 +22,7 @@ import net.modificationstation.stationapi.api.util.TriState;
  * @see HasTrackingParameters
  */
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class TrackingParametersImpl {
 
     /**
@@ -29,7 +30,7 @@ public class TrackingParametersImpl {
      * @param event the {@link TrackEntityEvent} event.
      * @see TrackEntityEvent
      */
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void trackEntity(TrackEntityEvent event) {
         Class<? extends EntityBase> entityClass = event.entityToTrack.getClass();
         if (entityClass.isAnnotationPresent(HasTrackingParameters.class)) {

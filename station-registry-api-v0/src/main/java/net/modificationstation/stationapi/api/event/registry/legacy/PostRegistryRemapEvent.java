@@ -12,12 +12,4 @@ import net.modificationstation.stationapi.api.registry.legacy.LevelLegacyRegistr
  * @see LevelLegacyRegistry
  */
 @SuperBuilder
-public class PostRegistryRemapEvent extends Event {
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
-}
+public class PostRegistryRemapEvent extends Event {}

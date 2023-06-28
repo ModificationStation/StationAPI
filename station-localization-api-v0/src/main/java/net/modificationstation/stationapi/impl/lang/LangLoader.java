@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.impl.lang;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.mod.PreInitEvent;
 import net.modificationstation.stationapi.api.lang.I18n;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -15,9 +15,10 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class LangLoader {
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void loadLang(PreInitEvent event) {
         LOGGER.info("Searching for lang paths...");
         FabricLoader.getInstance().getAllMods().forEach(modContainer -> {

@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.impl.item;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.IsItemSuitableForStateEvent;
 import net.modificationstation.stationapi.api.event.item.ItemMiningSpeedMultiplierOnStateEvent;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class ToolEffectivenessImplV1 {
 
     public static final List<Identifier> VANILLA_TOOLS = new ArrayList<>();
@@ -49,12 +51,12 @@ public class ToolEffectivenessImplV1 {
         VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.goldSword));
     }
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void isEffective(IsItemSuitableForStateEvent event) {
         event.suitable = event.suitable || isSuitable(event.itemStack, event.state);
     }
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void getStrength(ItemMiningSpeedMultiplierOnStateEvent event) {
         if (!(VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getId(event.itemStack.getType())) && Objects.requireNonNull(BlockRegistry.INSTANCE.getId(event.state.getBlock())).modID == ModID.MINECRAFT) && isSuitable(event.itemStack, event.state)) event.miningSpeedMultiplier = ((ToolLevel) event.itemStack.getType()).getMaterial(event.itemStack).getMiningSpeed();
     }

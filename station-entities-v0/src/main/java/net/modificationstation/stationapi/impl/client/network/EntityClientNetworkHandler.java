@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.impl.client.network;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.class_270;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.level.ClientLevel;
@@ -36,9 +35,10 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class EntityClientNetworkHandler {
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void registerMessageListeners(MessageListenerRegistryEvent event) {
         Registry.register(event.registry, MODID.id("spawn_entity"), EntityClientNetworkHandler::handleEntitySpawn);
         StationAPI.EVENT_BUS.post(new EntityHandlerRegistryEvent());

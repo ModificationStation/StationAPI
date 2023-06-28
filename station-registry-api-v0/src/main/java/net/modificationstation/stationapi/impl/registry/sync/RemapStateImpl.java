@@ -3,11 +3,11 @@ package net.modificationstation.stationapi.impl.registry.sync;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceMap;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
-import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapCallback;
+import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
 
-public class RemapStateImpl<T> implements RegistryIdRemapCallback.RemapState<T> {
+public class RemapStateImpl<T> implements RegistryIdRemapEvent.RemapState<T> {
 	private final Int2IntMap rawIdChangeMap;
 	private final Int2ReferenceMap<Identifier> oldIdMap;
 	private final Int2ReferenceMap<Identifier> newIdMap;

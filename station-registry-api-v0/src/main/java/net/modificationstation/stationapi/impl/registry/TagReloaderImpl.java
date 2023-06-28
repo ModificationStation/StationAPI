@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.registry;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.resource.DataReloadEvent;
 import net.modificationstation.stationapi.api.event.resource.DataResourceReloaderRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -13,18 +14,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
+
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class TagReloaderImpl {
 
     private static DynamicRegistryManager dynamicRegistryManager;
     private static TagManagerLoader registryTagManager;
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void registerTagLoader(DataResourceReloaderRegisterEvent event) {
         event.resourceManager.registerReloader(registryTagManager = new TagManagerLoader(dynamicRegistryManager = ServerDynamicRegistryType.createCombinedDynamicRegistries().getPrecedingRegistryManagers(ServerDynamicRegistryType.RELOADABLE)));
     }
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 - Integer.MAX_VALUE / 8)
+    @EventListener(priority = LOW)
     private static void refreshTagLoader(DataReloadEvent event) {
         registryTagManager.getRegistryTags().forEach(tags -> repopulateTags(dynamicRegistryManager, tags));
     }

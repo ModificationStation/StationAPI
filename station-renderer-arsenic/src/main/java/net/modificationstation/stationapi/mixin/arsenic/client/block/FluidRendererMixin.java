@@ -5,6 +5,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
+import net.minecraft.util.maths.MathHelper;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -240,6 +241,202 @@ public class FluidRendererMixin {
     )
     private float stationapi_fluid_modTextureWidth3(float constant) {
         return adjustToWidth(constant, stationapi_fluid_texture) / stationapi_fluid_textureScale;
+    }
+
+    @Unique
+    private float
+            stationapi_fluid_us,
+            stationapi_fluid_uc,
+            stationapi_fluid_vs,
+            stationapi_fluid_vc;
+
+    @Inject(
+            method = "renderFluid",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/block/BlockBase;getBrightness(Lnet/minecraft/level/BlockView;III)F",
+                    ordinal = 0
+            ),
+            locals = LocalCapture.CAPTURE_FAILHARD
+    )
+    private void stationapi_fluid_calculateAtlasSizeIndependentUV(
+            BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
+            Tessellator var5, int var6, float var7, float var8, float var9, int var10, int var11, boolean[] var12, int var13, float var14, float var15, float var16, float var17, double var18, double var20, Material var22, int var23, float var24, float var25, float var26, float var27, int var28, float var29, int var30, int var31, double var32, double var34,
+            float var36, float var37
+    ) {
+        stationapi_fluid_us = var36;
+        stationapi_fluid_uc = var37;
+        final float multiplier = (float) stationapi_fluid_texture.getContents().getHeight() / stationapi_fluid_textureScale / 2 / StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getHeight();
+        stationapi_fluid_vs = MathHelper.sin(var29) * multiplier;
+        stationapi_fluid_vc = MathHelper.cos(var29) * multiplier;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 1
+            ),
+            index = 37
+    )
+    private float stationapi_fluid_swapToVC1(float value) {
+        return stationapi_fluid_vc;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 1
+            ),
+            index = 36
+    )
+    private float stationapi_fluid_swapToVS1(float value) {
+        return stationapi_fluid_vs;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 2
+            ),
+            index = 37
+    )
+    private float stationapi_fluid_swapToUC1(float value) {
+        return stationapi_fluid_uc;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 2
+            ),
+            index = 36
+    )
+    private float stationapi_fluid_swapToUS1(float value) {
+        return stationapi_fluid_us;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 3
+            ),
+            index = 37
+    )
+    private float stationapi_fluid_swapToVC2(float value) {
+        return stationapi_fluid_vc;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 3
+            ),
+            index = 36
+    )
+    private float stationapi_fluid_swapToVS2(float value) {
+        return stationapi_fluid_vs;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 4
+            ),
+            index = 37
+    )
+    private float stationapi_fluid_swapToUC2(float value) {
+        return stationapi_fluid_uc;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 4
+            ),
+            index = 36
+    )
+    private float stationapi_fluid_swapToUS2(float value) {
+        return stationapi_fluid_us;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 5
+            ),
+            index = 37
+    )
+    private float stationapi_fluid_swapToVC3(float value) {
+        return stationapi_fluid_vc;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 5
+            ),
+            index = 36
+    )
+    private float stationapi_fluid_swapToVS3(float value) {
+        return stationapi_fluid_vs;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 6
+            ),
+            index = 37
+    )
+    private float stationapi_fluid_swapToUC3(float value) {
+        return stationapi_fluid_uc;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 6
+            ),
+            index = 36
+    )
+    private float stationapi_fluid_swapToUS3(float value) {
+        return stationapi_fluid_us;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 7
+            ),
+            index = 37
+    )
+    private float stationapi_fluid_swapToVC4(float value) {
+        return stationapi_fluid_vc;
+    }
+
+    @ModifyVariable(
+            method = "renderFluid",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 7
+            ),
+            index = 36
+    )
+    private float stationapi_fluid_swapToVS4(float value) {
+        return stationapi_fluid_vs;
     }
 
     @Inject(

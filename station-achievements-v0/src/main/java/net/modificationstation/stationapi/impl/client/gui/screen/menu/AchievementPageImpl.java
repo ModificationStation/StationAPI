@@ -2,10 +2,10 @@ package net.modificationstation.stationapi.impl.client.gui.screen.menu;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.achievement.Achievement;
 import net.minecraft.achievement.Achievements;
 import net.minecraft.client.Minecraft;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsEvent;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
 import net.modificationstation.stationapi.api.event.achievement.AchievementRegisterEvent;
@@ -18,17 +18,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class AchievementPageImpl {
 
     @Entrypoint.ModID
     private static final ModID MODID = Null.get();
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void replaceBackgroundTexture(AchievementsEvent.BackgroundTextureRender event) {
         event.backgroundTexture = AchievementPage.getCurrentPage().getBackgroundTexture(event.random, event.column, event.row, event.randomizedRow, event.backgroundTexture);
     }
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void registerAchievements(AchievementRegisterEvent event) {
         AchievementPage page = new AchievementPage(MODID, "minecraft");
         List<Achievement> list = new ArrayList<>();
@@ -37,7 +38,7 @@ public class AchievementPageImpl {
         page.addAchievements(list.toArray(Achievement[]::new));
     }
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void renderAchievementIcon(AchievementsEvent.AchievementIconRender event) {
         if (!isVisibleAchievement(event.achievement))
             event.cancel();
@@ -55,7 +56,7 @@ public class AchievementPageImpl {
         }
     }
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void renderAchievementsLine(AchievementsEvent.LineRender event) {
         if (!(event.achievement.parent != null && isVisibleAchievement(event.achievement) && isVisibleAchievement(event.achievement.parent)))
             event.cancel();

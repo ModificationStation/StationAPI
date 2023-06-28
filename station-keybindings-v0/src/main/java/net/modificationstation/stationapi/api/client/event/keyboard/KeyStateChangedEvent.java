@@ -17,18 +17,10 @@ import org.lwjgl.input.Keyboard;
  */
 @SuperBuilder
 public class KeyStateChangedEvent extends Event {
-
     public final Environment environment;
 
     public enum Environment {
         IN_GUI,
         IN_GAME
     }
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
 }

@@ -9,21 +9,12 @@ import java.util.Random;
 
 @SuperBuilder
 public abstract class LevelGenEvent extends LevelEvent {
-
     public final LevelSource levelSource;
 
     @SuperBuilder
     public static class ChunkDecoration extends LevelGenEvent {
-
         public final Biome biome;
         public final int x, z;
         public final Random random;
-
-        @Override
-        protected int getEventID() {
-            return ID;
-        }
-
-        public static final int ID = NEXT_ID.incrementAndGet();
     }
 }

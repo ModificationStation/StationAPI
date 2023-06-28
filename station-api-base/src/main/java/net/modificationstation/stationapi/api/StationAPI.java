@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.api;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.mine_diver.unsafeevents.EventBus;
+import net.mine_diver.unsafeevents.eventbus.ManagedEventBus;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
 import net.modificationstation.stationapi.api.event.mod.PostInitEvent;
 import net.modificationstation.stationapi.api.event.mod.PreInitEvent;
@@ -15,6 +16,7 @@ import net.modificationstation.stationapi.api.util.Null;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.jetbrains.annotations.ApiStatus;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
@@ -40,9 +42,13 @@ public class StationAPI implements PreLaunchEntrypoint {
     @Entrypoint.Logger("Station|API")
     public static final Logger LOGGER = Null.get();
 
-    public static final Identifier INTERNAL_PHASE = MODID.id("internal_phase");
+    @ApiStatus.Internal
+    public static final String INTERNAL_PHASE = "stationapi:internal";
 
-    public static final EventBus EVENT_BUS = new EventBus();
+    @ApiStatus.Internal
+    private static final ManagedEventBus MANAGED_EVENT_BUS = new ManagedEventBus();
+
+    public static final EventBus EVENT_BUS = MANAGED_EVENT_BUS;
 
     /**
      * Initial setup. Configures logger, entrypoints, and calls the rest of initialization sequence. No Minecraft classes must be referenced here.
@@ -78,9 +84,14 @@ public class StationAPI implements PreLaunchEntrypoint {
      * @param entrypoint the entrypoints to iterate over and setup.
      */
     private void setupEntrypoint(Identifier entrypoint) {
+        MANAGED_EVENT_BUS.disableDispatch(
+                "During the registration of listeners, the event dispatch to StationAPI's event bus is temporarily disabled to prevent listeners from causing an illegal event dispatch. " +
+                        "This helps ensure that the event bus behaves predictably and without dispatching an event while not all listeners have been registered."
+        );
         FabricLoader.getInstance().getEntrypointContainers(entrypoint.toString(), Object.class).forEach(entrypointContainer -> {
             LOGGER.info("Setting up \"" + entrypointContainer.getProvider().getMetadata().getId() + "\" \"" + entrypoint + "\" \"" + entrypointContainer.getEntrypoint().getClass().getName() + "\" entrypoint...");
             EntrypointManager.setup(entrypointContainer);
         });
+        MANAGED_EVENT_BUS.enableDispatch();
     }
 }

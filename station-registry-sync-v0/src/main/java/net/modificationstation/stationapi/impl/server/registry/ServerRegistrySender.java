@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.impl.server.registry;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.util.io.CompoundTag;
 import net.minecraft.util.io.NBTIO;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
@@ -19,9 +19,10 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class ServerRegistrySender {
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void sendLevelRegistry(PlayerPacketHandlerSetEvent event) {
         if (((ModdedPacketHandler) event.player.packetHandler).isModded()) {
             LOGGER.info("Sending level registries to \"" + event.player.name + "\"...");

@@ -2,17 +2,12 @@ package net.modificationstation.stationapi.api.server.event.network;
 
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
+import net.mine_diver.unsafeevents.event.EventPhases;
 import net.minecraft.entity.player.ServerPlayer;
+import net.modificationstation.stationapi.api.StationAPI;
 
 @SuperBuilder
+@EventPhases(StationAPI.INTERNAL_PHASE)
 public class PlayerPacketHandlerSetEvent extends Event {
-
     public final ServerPlayer player;
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
 }

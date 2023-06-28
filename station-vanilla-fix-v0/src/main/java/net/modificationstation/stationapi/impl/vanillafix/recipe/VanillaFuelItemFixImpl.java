@@ -4,6 +4,7 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBase;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -11,9 +12,10 @@ import net.modificationstation.stationapi.api.recipe.FuelRegistry;
 import net.modificationstation.stationapi.api.vanillafix.tag.ItemTags;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaFuelItemFixImpl {
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void registerFuel(RecipeRegisterEvent event) {
         if (RecipeRegisterEvent.Vanilla.SMELTING.type() == event.recipeId) {
             for (BlockBase block : BlockBase.BY_ID)

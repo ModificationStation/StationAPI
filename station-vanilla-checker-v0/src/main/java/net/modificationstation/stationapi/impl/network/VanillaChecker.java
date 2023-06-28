@@ -5,7 +5,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.mod.PreInitEvent;
 import net.modificationstation.stationapi.api.lang.I18n;
@@ -20,6 +19,7 @@ import java.util.Set;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class VanillaChecker {
 
     @Entrypoint.ModID
@@ -32,7 +32,7 @@ public class VanillaChecker {
      */
     public static final Set<ModContainer> CLIENT_REQUIRED_MODS = new HashSet<>();
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void init(PreInitEvent event) {
         LOGGER.info("Adding vanilla checker lang folder...");
         I18n.addLangFolder(StationAPI.MODID, "/assets/" + MODID + "/lang");

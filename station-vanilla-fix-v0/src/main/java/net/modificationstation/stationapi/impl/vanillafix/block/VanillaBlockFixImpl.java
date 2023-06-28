@@ -7,6 +7,7 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.item.Block;
 import net.minecraft.item.ItemBase;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.StationBlockItemsBlock;
 import net.modificationstation.stationapi.api.event.registry.BlockItemRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
@@ -21,11 +22,13 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
 import static net.minecraft.block.BlockBase.*;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaBlockFixImpl {
 
     public static final Supplier<ReferenceSet<BlockBase>> COLLISION_BLOCKS = Suppliers.memoize(() -> Util.make(new ReferenceOpenHashSet<>(), s -> {
@@ -39,7 +42,7 @@ public final class VanillaBlockFixImpl {
         s.add(REDSTONE_REPEATER);
     }));
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void registerBlocks(BlockRegistryEvent event) {
         BlockRegistry registry = event.registry;
 
@@ -147,14 +150,14 @@ public final class VanillaBlockFixImpl {
         Registry.register(registry, block.id, of(id), block);
     }
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 - Integer.MAX_VALUE / 8)
+    @EventListener(priority = LOW)
     private static void disableAutomaticBlockItemRegistration(BlockRegistryEvent event) {
         Consumer<BlockBase> c = StationBlockItemsBlock::disableAutomaticBlockItemRegistration;
         c.accept(BY_ID[0]); // not supposed to have an item form
         COLLISION_BLOCKS.get().forEach(c); // item name collision
     }
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void registerBlockItems(BlockItemRegistryEvent event) {
         Consumer<BlockBase> c = block -> Registry.register(ItemRegistry.INSTANCE, BlockRegistry.INSTANCE.getId(block), ItemBase.byId[block.id]);
 

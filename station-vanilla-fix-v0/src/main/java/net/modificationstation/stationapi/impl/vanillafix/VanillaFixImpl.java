@@ -12,12 +12,13 @@ import net.modificationstation.stationapi.api.util.Null;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class VanillaFixImpl {
 
     @Entrypoint.ModID
     public static final ModID MODID = Null.get();
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void registerLang(InitEvent event) {
         LOGGER.info("Adding vanilla fix lang folder...");
         I18n.addLangFolder(StationAPI.MODID, "/assets/" + MODID + "/lang");

@@ -1,8 +1,10 @@
 package net.modificationstation.stationapi.api.event.block;
 
-import lombok.Getter;
 import lombok.experimental.SuperBuilder;
+import net.mine_diver.unsafeevents.event.Cancelable;
+import net.mine_diver.unsafeevents.event.EventPhases;
 import net.minecraft.item.Block;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,22 +20,13 @@ import java.util.function.IntFunction;
  * @see MetaNamedBlockItemProvider
  * @see HasMetaNamedBlockItem
  */
+@Cancelable
 @SuperBuilder
+@EventPhases(StationAPI.INTERNAL_PHASE)
 public class BlockItemFactoryEvent extends BlockEvent {
-
-    @Getter
-    private final boolean cancelable = true;
-
     /**
      * Current factory that's going to be executed to get block item instance.
      * <p>Can not return null due to limitations from mixin's side. Cancel instead.
      */
     public @NotNull IntFunction<@NotNull Block> currentFactory;
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
 }

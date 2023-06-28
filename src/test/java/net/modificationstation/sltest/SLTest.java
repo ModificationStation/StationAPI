@@ -106,12 +106,5 @@ public class SLTest {
 //    }
 
     @SuperBuilder
-    public static class TestEvent extends Event {
-
-        @Override
-        protected int getEventID() {
-            return ID;
-        }
-
-        public static final int ID = NEXT_ID.incrementAndGet();}
+    public static class TestEvent extends Event {}
 }

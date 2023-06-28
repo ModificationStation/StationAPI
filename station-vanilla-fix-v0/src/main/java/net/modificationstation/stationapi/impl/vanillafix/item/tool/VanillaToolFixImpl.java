@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.vanillafix.item.tool;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.item.tool.ToolMaterial;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -9,9 +10,10 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaToolFixImpl {
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void fixToolMaterials(ItemRegistryEvent event) {
         ToolMaterial stone = ToolMaterial.field_1689;
         ToolMaterial iron = ToolMaterial.field_1690;

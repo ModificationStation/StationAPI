@@ -2,7 +2,9 @@ package net.modificationstation.stationapi.api.event.packet;
 
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
+import net.mine_diver.unsafeevents.event.EventPhases;
 import net.minecraft.packet.AbstractPacket;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
 import uk.co.benjiweber.expressions.function.QuadConsumer;
@@ -20,8 +22,8 @@ import uk.co.benjiweber.expressions.function.QuadConsumer;
  */
 @Deprecated
 @SuperBuilder
+@EventPhases(StationAPI.INTERNAL_PHASE)
 public class PacketRegisterEvent extends Event {
-
     /**
      * Private packet registration method reference.
      *
@@ -46,11 +48,4 @@ public class PacketRegisterEvent extends Event {
     public final void register(int packetId, boolean receivableOnClient, boolean receivableOnServer, Class<? extends AbstractPacket> packetClass) {
         register.accept(packetId, receivableOnClient, receivableOnServer, packetClass);
     }
-
-    @Override
-    protected int getEventID() {
-        return ID;
-    }
-
-    public static final int ID = NEXT_ID.incrementAndGet();
 }

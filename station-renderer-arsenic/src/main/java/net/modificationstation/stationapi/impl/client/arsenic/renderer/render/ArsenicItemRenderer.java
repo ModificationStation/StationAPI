@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
+import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.TextRenderer;
@@ -51,104 +52,153 @@ public final class ArsenicItemRenderer {
         if (var10.itemId != States.AIR.get().getBlock().id) {
             BakedModel model = RendererHolder.RENDERER.getModel(var10, item.level, null, item.entityId);
             if (model instanceof VanillaBakedModel) {
-                GL11.glPushMatrix();
-                GL11.glTranslatef((float)x, (float)y + var11, (float)z);
-                BlockBase block;
-                if (var10.getType() instanceof BlockItemForm blockItemForm && BlockRenderer.method_42((block = blockItemForm.getBlock()).getRenderType())) {
-                    GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
-                    atlas.bindTexture();
-                    float var28 = 0.25F;
-                    if (!block.isFullCube() && block.id != BlockBase.STONE_SLAB.id && block.getRenderType() != 16) {
-                        var28 = 0.5F;
-                    }
-
-                    GL11.glScalef(var28, var28, var28);
-
-                    for (int var29 = 0; var29 < renderedAmount; ++var29) {
-                        GL11.glPushMatrix();
-                        if (var29 > 0) {
-                            float var30 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
-                            float var31 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
-                            float var32 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
-                            GL11.glTranslatef(var30, var31, var32);
-                        }
-
-                        itemRendererAccessor.getField_1708().method_48(block, var10.getDamage(), item.getBrightnessAtEyes(delta));
-                        GL11.glPopMatrix();
-                    }
-                } else {
-                    GL11.glScalef(0.5F, 0.5F, 0.5F);
-                    int var14 = var10.getTexturePosition();
-                    atlas.bindTexture();
-                    Sprite texture = atlas.getSprite(((CustomAtlasProvider) var10.getType()).getAtlas().getTexture(var14).getId());
-
-                    Tessellator var15 = Tessellator.INSTANCE;
-                    float var20 = 1.0F;
-                    float var21 = 0.5F;
-                    float var22 = 0.25F;
-                    if (itemRenderer.field_1707) {
-                        int var23 = ItemBase.byId[var10.itemId].getColourMultiplier(var10.getDamage());
-                        float var24 = (float) ((var23 >> 16) & 255) / 255.0F;
-                        float var25 = (float) ((var23 >> 8) & 255) / 255.0F;
-                        float var26 = (float) (var23 & 255) / 255.0F;
-                        float var27 = item.getBrightnessAtEyes(delta);
-                        GL11.glColor4f(var24 * var27, var25 * var27, var26 * var27, 1.0F);
-                    }
-
-                    for (int var33 = 0; var33 < renderedAmount; ++var33) {
-                        GL11.glPushMatrix();
-                        if (var33 > 0) {
-                            float var34 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
-                            float var35 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
-                            float var36 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
-                            GL11.glTranslatef(var34, var35, var36);
-                        }
-
-                        GL11.glRotatef(180.0F - entityRendererAccessor.getDispatcher().field_2497, 0.0F, 1.0F, 0.0F);
-                        var15.start();
-                        var15.setNormal(0.0F, 1.0F, 0.0F);
-                        var15.vertex(0.0F - var21, 0.0F - var22, 0.0D, texture.getMinU(), texture.getMaxV());
-                        var15.vertex(var20 - var21, 0.0F - var22, 0.0D, texture.getMaxU(), texture.getMaxV());
-                        var15.vertex(var20 - var21, 1.0F - var22, 0.0D, texture.getMaxU(), texture.getMinV());
-                        var15.vertex(0.0F - var21, 1.0F - var22, 0.0D, texture.getMinU(), texture.getMinV());
-                        var15.draw();
-                        GL11.glPopMatrix();
-                    }
-                }
-                GL11.glPopMatrix();
+                renderVanilla(item, (float) x, (float) y, (float) z, delta, var10, var11, var12, renderedAmount, atlas);
             } else if (!model.isBuiltin()) {
-                GL11.glPushMatrix();
-                atlas.bindTexture();
-                GL11.glTranslated(x, y, z);
-                Vec3f scale = model.getTransformation().ground.scale;
-                float o = scale.getX();
-                float p = scale.getY();
-                float q = scale.getZ();
-                GL11.glTranslated(0.0, var11 + 0.25 * p - 2 / 16D, 0.0);
-                GL11.glRotatef(var12, 0, 1, 0);
-                boolean depth = model.hasDepth();
-                if (!depth) {
-                    double r = -0.0 * (renderedAmount - 1) * 0.5 * o;
-                    double s = -0.0 * (renderedAmount - 1) * 0.5 * p;
-                    double t = -0.09375 * (renderedAmount - 1) * 0.5 * q;
-                    GL11.glTranslated(r, s, t);
-                }
-                for (int var29 = 0; var29 < renderedAmount; ++var29) {
-                    GL11.glPushMatrix();
-                    if (var29 > 0 && depth)
-                        GL11.glTranslatef((itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F * 0.15F);
-                    Tessellator.INSTANCE.start();
-                    RendererHolder.RENDERER.renderItem(var10, ModelTransformation.Mode.GROUND, item.getBrightnessAtEyes(delta), model);
-                    Tessellator.INSTANCE.draw();
-                    GL11.glPopMatrix();
-                    if (!depth)
-                        GL11.glTranslated(0, 0, 0.09375 * q);
-                }
-                GL11.glPopMatrix();
+                renderModel(item, x, y, z, delta, var10, var11, var12, renderedAmount, atlas, model);
             }
         }
 
         GL11.glDisable(32826);
+    }
+
+    private void renderVanilla(Item item, float x, float y, float z, float delta, ItemInstance var10, float var11, float var12, byte renderedAmount, SpriteAtlasTexture atlas) {
+        GL11.glPushMatrix();
+        GL11.glTranslatef(x, y + var11, z);
+        BlockBase block;
+        if (var10.getType() instanceof BlockItemForm blockItemForm && BlockRenderer.method_42((block = blockItemForm.getBlock()).getRenderType())) {
+            GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
+            atlas.bindTexture();
+            float var28 = 0.25F;
+            if (!block.isFullCube() && block.id != BlockBase.STONE_SLAB.id && block.getRenderType() != 16) {
+                var28 = 0.5F;
+            }
+
+            GL11.glScalef(var28, var28, var28);
+
+            for (int var29 = 0; var29 < renderedAmount; ++var29) {
+                GL11.glPushMatrix();
+                if (var29 > 0) {
+                    float var30 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
+                    float var31 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
+                    float var32 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
+                    GL11.glTranslatef(var30, var31, var32);
+                }
+
+                itemRendererAccessor.getField_1708().method_48(block, var10.getDamage(), item.getBrightnessAtEyes(delta));
+                GL11.glPopMatrix();
+            }
+        } else {
+            GL11.glScalef(0.5F, 0.5F, 0.5F);
+            int var14 = var10.getTexturePosition();
+            atlas.bindTexture();
+            Sprite texture = atlas.getSprite(((CustomAtlasProvider) var10.getType()).getAtlas().getTexture(var14).getId());
+
+            Tessellator var15 = Tessellator.INSTANCE;
+            float var20 = 1.0F;
+            float var21 = 0.5F;
+            float var22 = 0.25F;
+            if (itemRenderer.field_1707) {
+                int var23 = ItemBase.byId[var10.itemId].getColourMultiplier(var10.getDamage());
+                float var24 = (float) ((var23 >> 16) & 255) / 255.0F;
+                float var25 = (float) ((var23 >> 8) & 255) / 255.0F;
+                float var26 = (float) (var23 & 255) / 255.0F;
+                float var27 = item.getBrightnessAtEyes(delta);
+                GL11.glColor4f(var24 * var27, var25 * var27, var26 * var27, 1.0F);
+            }
+
+            for (int var33 = 0; var33 < renderedAmount; ++var33) {
+                GL11.glPushMatrix();
+                if (var33 > 0) {
+                    float var34 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var35 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var36 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    GL11.glTranslatef(var34, var35, var36);
+                }
+
+                GL11.glRotatef(180.0F - entityRendererAccessor.getDispatcher().field_2497, 0.0F, 1.0F, 0.0F);
+                var15.start();
+                var15.setNormal(0.0F, 1.0F, 0.0F);
+                var15.vertex(0.0F - var21, 0.0F - var22, 0.0D, texture.getMinU(), texture.getMaxV());
+                var15.vertex(var20 - var21, 0.0F - var22, 0.0D, texture.getMaxU(), texture.getMaxV());
+                var15.vertex(var20 - var21, 1.0F - var22, 0.0D, texture.getMaxU(), texture.getMinV());
+                var15.vertex(0.0F - var21, 1.0F - var22, 0.0D, texture.getMinU(), texture.getMinV());
+                var15.draw();
+                GL11.glPopMatrix();
+            }
+        }
+        GL11.glPopMatrix();
+    }
+
+    private void renderModel(Item item, double x, double y, double z, float delta, ItemInstance var10, float var11, float var12, byte renderedAmount, SpriteAtlasTexture atlas, BakedModel model) {
+        ImmutableList<Sprite> onGroundSprites = model.getOnGroundSprites();
+        GL11.glPushMatrix();
+        atlas.bindTexture();
+        if (onGroundSprites == null) {
+            GL11.glTranslated(x, y, z);
+            Vec3f scale = model.getTransformation().ground.scale;
+            float o = scale.getX();
+            float p = scale.getY();
+            float q = scale.getZ();
+            GL11.glTranslated(0.0, var11 + 0.25 * p - 2 / 16D, 0.0);
+            GL11.glRotatef(var12, 0, 1, 0);
+            boolean depth = model.hasDepth();
+            if (!depth) {
+                double r = -0.0 * (renderedAmount - 1) * 0.5 * o;
+                double s = -0.0 * (renderedAmount - 1) * 0.5 * p;
+                double t = -0.09375 * (renderedAmount - 1) * 0.5 * q;
+                GL11.glTranslated(r, s, t);
+            }
+            for (int var29 = 0; var29 < renderedAmount; ++var29) {
+                GL11.glPushMatrix();
+                if (var29 > 0 && depth)
+                    GL11.glTranslatef((itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.15F, (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F * 0.15F);
+                Tessellator.INSTANCE.start();
+                RendererHolder.RENDERER.renderItem(var10, ModelTransformation.Mode.GROUND, item.getBrightnessAtEyes(delta), model);
+                Tessellator.INSTANCE.draw();
+                GL11.glPopMatrix();
+                if (!depth)
+                    GL11.glTranslated(0, 0, 0.09375 * q);
+            }
+        } else {
+            GL11.glTranslatef((float) x, (float) (y + var11), (float) z);
+            GL11.glScalef(0.5F, 0.5F, 0.5F);
+            Tessellator var15 = Tessellator.INSTANCE;
+            float var20 = 1.0F;
+            float var21 = 0.5F;
+            float var22 = 0.25F;
+            if (itemRenderer.field_1707) {
+                int var23 = ItemBase.byId[var10.itemId].getColourMultiplier(var10.getDamage());
+                float var24 = (float) ((var23 >> 16) & 255) / 255.0F;
+                float var25 = (float) ((var23 >> 8) & 255) / 255.0F;
+                float var26 = (float) (var23 & 255) / 255.0F;
+                float var27 = item.getBrightnessAtEyes(delta);
+                GL11.glColor4f(var24 * var27, var25 * var27, var26 * var27, 1.0F);
+            }
+
+            for (int var33 = 0; var33 < renderedAmount; ++var33) {
+                GL11.glPushMatrix();
+                if (var33 > 0) {
+                    float var34 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var35 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var36 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    GL11.glTranslatef(var34, var35, var36);
+                }
+
+                GL11.glRotatef(180.0F - entityRendererAccessor.getDispatcher().field_2497, 0.0F, 1.0F, 0.0F);
+
+                for (Sprite texture : onGroundSprites) {
+                    var15.start();
+                    var15.setNormal(0.0F, 1.0F, 0.0F);
+                    var15.vertex(0.0F - var21, 0.0F - var22, 0.0D, texture.getMinU(), texture.getMaxV());
+                    var15.vertex(var20 - var21, 0.0F - var22, 0.0D, texture.getMaxU(), texture.getMaxV());
+                    var15.vertex(var20 - var21, 1.0F - var22, 0.0D, texture.getMaxU(), texture.getMinV());
+                    var15.vertex(0.0F - var21, 1.0F - var22, 0.0D, texture.getMinU(), texture.getMinV());
+                    var15.draw();
+                }
+                GL11.glPopMatrix();
+            }
+        }
+        GL11.glPopMatrix();
     }
 
     public void renderItemOnGui(TextRenderer textRenderer, TextureManager textureManager, ItemInstance itemStack, int x, int y, CallbackInfo ci) {

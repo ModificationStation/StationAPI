@@ -23,70 +23,70 @@ import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class MultipartModelComponent {
-   private final MultipartModelSelector selector;
-   private final WeightedUnbakedModel model;
+    private final MultipartModelSelector selector;
+    private final WeightedUnbakedModel model;
 
-   public MultipartModelComponent(MultipartModelSelector selector, WeightedUnbakedModel model) {
-      if (selector == null) {
-         throw new IllegalArgumentException("Missing condition for selector");
-      } else if (model == null) {
-         throw new IllegalArgumentException("Missing variant for selector");
-      } else {
-         this.selector = selector;
-         this.model = model;
-      }
-   }
+    public MultipartModelComponent(MultipartModelSelector selector, WeightedUnbakedModel model) {
+        if (selector == null) {
+            throw new IllegalArgumentException("Missing condition for selector");
+        } else if (model == null) {
+            throw new IllegalArgumentException("Missing variant for selector");
+        } else {
+            this.selector = selector;
+            this.model = model;
+        }
+    }
 
-   public WeightedUnbakedModel getModel() {
-      return this.model;
-   }
+    public WeightedUnbakedModel getModel() {
+        return this.model;
+    }
 
-   public Predicate<BlockState> getPredicate(StateManager<BlockBase, BlockState> stateFactory) {
-      return this.selector.getPredicate(stateFactory);
-   }
+    public Predicate<BlockState> getPredicate(StateManager<BlockBase, BlockState> stateFactory) {
+        return this.selector.getPredicate(stateFactory);
+    }
 
-   public boolean equals(Object o) {
-      return this == o;
-   }
+    public boolean equals(Object o) {
+        return this == o;
+    }
 
-   public int hashCode() {
-      return System.identityHashCode(this);
-   }
+    public int hashCode() {
+        return System.identityHashCode(this);
+    }
 
-   @Environment(EnvType.CLIENT)
-   public static class Deserializer implements JsonDeserializer<MultipartModelComponent> {
-      public MultipartModelComponent deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-         JsonObject jsonObject = jsonElement.getAsJsonObject();
-         return new MultipartModelComponent(this.deserializeSelectorOrDefault(jsonObject), jsonDeserializationContext.deserialize(jsonObject.get("apply"), WeightedUnbakedModel.class));
-      }
+    @Environment(EnvType.CLIENT)
+    public static class Deserializer implements JsonDeserializer<MultipartModelComponent> {
+        public MultipartModelComponent deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            return new MultipartModelComponent(this.deserializeSelectorOrDefault(jsonObject), jsonDeserializationContext.deserialize(jsonObject.get("apply"), WeightedUnbakedModel.class));
+        }
 
-      private MultipartModelSelector deserializeSelectorOrDefault(JsonObject object) {
-         return object.has("when") ? deserializeSelector(JsonHelper.getObject(object, "when")) : MultipartModelSelector.TRUE;
-      }
+        private MultipartModelSelector deserializeSelectorOrDefault(JsonObject object) {
+            return object.has("when") ? deserializeSelector(JsonHelper.getObject(object, "when")) : MultipartModelSelector.TRUE;
+        }
 
-      @VisibleForTesting
-      static MultipartModelSelector deserializeSelector(JsonObject object) {
-         Set<Entry<String, JsonElement>> set = object.entrySet();
-         if (set.isEmpty()) {
-            throw new JsonParseException("No elements found in selector");
-         } else if (set.size() == 1) {
-            List<MultipartModelSelector> list2;
-            if (object.has("OR")) {
-               list2 = Streams.stream(JsonHelper.getArray(object, "OR")).map((jsonElement) -> deserializeSelector(jsonElement.getAsJsonObject())).collect(Collectors.toList());
-               return new OrMultipartModelSelector(list2);
-            } else if (object.has("AND")) {
-               list2 = Streams.stream(JsonHelper.getArray(object, "AND")).map((jsonElement) -> deserializeSelector(jsonElement.getAsJsonObject())).collect(Collectors.toList());
-               return new AndMultipartModelSelector(list2);
+        @VisibleForTesting
+        static MultipartModelSelector deserializeSelector(JsonObject object) {
+            Set<Entry<String, JsonElement>> set = object.entrySet();
+            if (set.isEmpty()) {
+                throw new JsonParseException("No elements found in selector");
+            } else if (set.size() == 1) {
+                List<MultipartModelSelector> list2;
+                if (object.has("OR")) {
+                    list2 = Streams.stream(JsonHelper.getArray(object, "OR")).map((jsonElement) -> deserializeSelector(jsonElement.getAsJsonObject())).collect(Collectors.toList());
+                    return new OrMultipartModelSelector(list2);
+                } else if (object.has("AND")) {
+                    list2 = Streams.stream(JsonHelper.getArray(object, "AND")).map((jsonElement) -> deserializeSelector(jsonElement.getAsJsonObject())).collect(Collectors.toList());
+                    return new AndMultipartModelSelector(list2);
+                } else {
+                    return createStatePropertySelector(set.iterator().next());
+                }
             } else {
-               return createStatePropertySelector(set.iterator().next());
+                return new AndMultipartModelSelector(set.stream().map(Deserializer::createStatePropertySelector).collect(Collectors.toList()));
             }
-         } else {
-            return new AndMultipartModelSelector(set.stream().map(Deserializer::createStatePropertySelector).collect(Collectors.toList()));
-         }
-      }
+        }
 
-      private static MultipartModelSelector createStatePropertySelector(Entry<String, JsonElement> entry) {
-         return new SimpleMultipartModelSelector(entry.getKey(), entry.getValue().getAsString());
-      }
-   }
+        private static MultipartModelSelector createStatePropertySelector(Entry<String, JsonElement> entry) {
+            return new SimpleMultipartModelSelector(entry.getKey(), entry.getValue().getAsString());
+        }
+    }
 }

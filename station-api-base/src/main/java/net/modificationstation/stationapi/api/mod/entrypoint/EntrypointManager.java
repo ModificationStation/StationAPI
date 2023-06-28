@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.api.mod.entrypoint;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.mine_diver.unsafeevents.Event;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.ReflectionHelper;
@@ -44,21 +45,41 @@ public class EntrypointManager {
      * @see EntrypointManager#setup(EntrypointContainer)
      */
     public static void setup(Object o, ModContainer modContainer) {
-        if (o.getClass() == Class.class)
-            StationAPI.EVENT_BUS.register((Class<?>) o);
-        else if (o instanceof Consumer)
+        if (o instanceof Class<?> listener)
+            StationAPI.EVENT_BUS.register(
+                    Listener.staticMethods()
+                            .listener(listener)
+                            .build()
+            );
+        else if (o instanceof Consumer<?> listener)
             //noinspection unchecked
-            StationAPI.EVENT_BUS.register((Consumer<? extends Event>) o);
-        else if (o.getClass() == Method.class)
-            StationAPI.EVENT_BUS.register((Method) o);
+            StationAPI.EVENT_BUS.register(
+                    Listener.simple()
+                            .listener((Consumer<Event>) listener)
+                            .build()
+            );
+        else if (o instanceof Method listener)
+            StationAPI.EVENT_BUS.register(
+                    Listener.reflection()
+                            .method(listener)
+                            .build()
+            );
         else {
             Class<?> oCl = o.getClass();
             Entrypoint entrypoint = oCl.getAnnotation(Entrypoint.class);
             EventBusPolicy eventBus = entrypoint == null ? null : entrypoint.eventBus();
             if (eventBus == null || eventBus.registerStatic())
-                StationAPI.EVENT_BUS.register(oCl);
+                StationAPI.EVENT_BUS.register(
+                        Listener.staticMethods()
+                                .listener(oCl)
+                                .build()
+                );
             if (eventBus == null || eventBus.registerInstance())
-                StationAPI.EVENT_BUS.register(o);
+                StationAPI.EVENT_BUS.register(
+                        Listener.object()
+                                .listener(o)
+                                .build()
+                );
             try {
                 ReflectionHelper.setFieldsWithAnnotation(o, Entrypoint.Instance.class, o);
                 ReflectionHelper.setFieldsWithAnnotation(o, Entrypoint.ModID.class, modID -> modID.value().isEmpty() ? ModID.of(modContainer) : ModID.of(modID.value()));

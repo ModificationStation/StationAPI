@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.impl.client.network;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.entity.player.PlayerBase;
@@ -24,9 +23,10 @@ import java.util.function.Supplier;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class GuiClientNetworkHandler {
 
-    @EventListener(priority = ListenerPriority.HIGH)
+    @EventListener
     private static void registerMessageListeners(MessageListenerRegistryEvent event) {
         Registry.register(event.registry, MODID.id("open_gui"), GuiClientNetworkHandler::handleGui);
         StationAPI.EVENT_BUS.post(new GuiHandlerRegistryEvent());

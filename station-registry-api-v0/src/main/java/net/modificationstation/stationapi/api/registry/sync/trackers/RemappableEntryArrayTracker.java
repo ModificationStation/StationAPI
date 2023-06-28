@@ -1,10 +1,11 @@
 package net.modificationstation.stationapi.api.registry.sync.trackers;
 
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedCallback;
-import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapCallback;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedEvent;
+import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEvent;
 import net.modificationstation.stationapi.api.registry.ListenableRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.RemappableRawIdHolder;
@@ -13,18 +14,20 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class RemappableEntryArrayTracker<T extends RemappableRawIdHolder> implements RegistryIdRemapCallback<T>, RegistryEntryAddedCallback<T> {
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
+public class RemappableEntryArrayTracker<T extends RemappableRawIdHolder> {
     private final Supplier<T[]> arrayGetter;
     private final Consumer<T[]> arraySetter;
 
-    public static <T extends RemappableRawIdHolder, R extends Registry<T> & ListenableRegistry<T>> void register(
+    public static <T extends RemappableRawIdHolder, R extends Registry<T> & ListenableRegistry> void register(
             R registry,
             Supplier<T[]> arrayGetter,
             Consumer<T[]> arraySetter
     ) {
         RemappableEntryArrayTracker<T> tracker = new RemappableEntryArrayTracker<>(arrayGetter, arraySetter);
-        RegistryEntryAddedCallback.event(registry).register(StationAPI.INTERNAL_PHASE, tracker);
-        RegistryIdRemapCallback.event(registry).register(StationAPI.INTERNAL_PHASE, tracker);
+        registry.getEventBus().register(Listener.object()
+                .listener(tracker)
+                .build());
     }
 
     private RemappableEntryArrayTracker(
@@ -35,20 +38,20 @@ public class RemappableEntryArrayTracker<T extends RemappableRawIdHolder> implem
         this.arraySetter = arraySetter;
     }
 
-    @Override
-    public void onEntryAdded(int rawId, Identifier id, T object) {
+    @EventListener
+    private void onEntryAdded(RegistryEntryAddedEvent<T> event) {
         T[] array = arrayGetter.get();
-        if (ObjectArrayTracker.shouldGrow(array, rawId))
-            arraySetter.accept(ObjectArrayTracker.grow(array, rawId));
+        if (ObjectArrayTracker.shouldGrow(array, event.rawId))
+            arraySetter.accept(ObjectArrayTracker.grow(array, event.rawId));
     }
 
-    @Override
-    public void onRemap(RemapState<T> state) {
+    @EventListener
+    private void onRemap(RegistryIdRemapEvent<T> event) {
         T[] array = arrayGetter.get();
         T[] prevArray = array.clone();
         Arrays.fill(array, null);
 
-        Int2IntMap remap = state.getRawIdChangeMap();
+        Int2IntMap remap = event.state.getRawIdChangeMap();
         for (int i = 0; i < prevArray.length; i++) {
             T value = prevArray[i];
             if (value == null) continue;

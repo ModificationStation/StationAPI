@@ -38,9 +38,13 @@
     "client.block.RedstoneRendererMixin",
     "client.block.RepeaterRendererMixin",
     "client.block.TorchRendererMixin",
+    "client.entity.EntityRendererMixin",
+    "client.entity.ProjectileRendererMixin",
+    "client.entity.SnowballRendererMixin",
     "client.gui.AchievementsMixin",
     "client.overlay.BlockOverlayMixin",
-    "client.overlay.FireOverlayMixin"
+    "client.overlay.FireOverlayMixin",
+    "client.overlay.PortalOverlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1,

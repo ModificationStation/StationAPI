@@ -33,9 +33,11 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 
+import static net.mine_diver.unsafeevents.listener.ListenerPriority.HIGH;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
+@EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class StationRenderImpl {
 
     @Entrypoint.ModID
@@ -56,12 +58,12 @@ public class StationRenderImpl {
             TERRAIN,
             GUI_ITEMS;
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4 + Integer.MAX_VALUE / 8)
+    @EventListener(priority = HIGH)
     private static void ensureThread(AssetsReloadEvent event) {
         TextureUtil.maxSupportedTextureSize();
     }
 
-    @EventListener(numPriority = Integer.MAX_VALUE / 2 + Integer.MAX_VALUE / 4)
+    @EventListener
     private static void registerReloaders(AssetsResourceReloaderRegisterEvent event) {
         ResourceManagerHelper helper = ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES);
         helper.registerReloadListener(StationRenderAPI.getBakedModelManager());
