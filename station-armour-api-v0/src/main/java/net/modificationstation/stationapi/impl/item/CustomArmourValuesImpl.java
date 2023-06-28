@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.impl.item;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
+import net.minecraft.item.armour.Armour;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.entity.player.PlayerBaseSuper;
 import net.modificationstation.stationapi.api.entity.player.PlayerHandler;
@@ -35,7 +36,7 @@ public class CustomArmourValuesImpl {
                         if (armourInstance.getType() instanceof CustomArmourValue armor) {
                             double damageNegated = armor.modifyDamageDealt(player, i, initialDamage, damageAmount);
                             damageAmount -= damageNegated;
-                        } else {
+                        } else if (armourInstance.getType() instanceof Armour) {
                             damageAmount -= ArmourUtils.getVanillaArmourReduction(armourInstance);
                             armourInstance.applyDamage(initialDamage, null);
                             if (armourInstance.count <= 0) {
