@@ -50,24 +50,24 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
 
     @Override
     public void onMultiBlockChange(FlattenedMultiBlockChangeS2CPacket packet) {
-        //noinspection deprecation
-        ClientLevel world = (ClientLevel) ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
-        ChunkSectionPos sectionPos = ChunkSectionPos.from(packet.sectionPos);
-        Chunk chunk = world.getChunkFromCache(sectionPos.getSectionX(), sectionPos.getSectionZ());
-        if (chunk instanceof FlattenedChunk flatteningChunk) {
-            ChunkSection section = flatteningChunk.sections[world.sectionCoordToIndex(sectionPos.getSectionY())];
-
-        }
-        for (int i = 0; i < arg.arraySize; ++i) {
-            short s = arg.coordinateArray[i];
-            int n3 = arg.typeArray[i] & 0xFF;
-            byte by = arg.metadataArray[i];
-            int n4 = s >> 12 & 0xF;
-            int n5 = s >> 8 & 0xF;
-            int n6 = s & 0xFF;
-            chunk.setTileWithMetadata(n4, n6, n5, n3, by);
-            this.level.method_1498(n4 + n, n6, n5 + n2, n4 + n, n6, n5 + n2);
-            this.level.method_202(n4 + n, n6, n5 + n2, n4 + n, n6, n5 + n2);
-        }
+//        //noinspection deprecation
+//        ClientLevel world = (ClientLevel) ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
+//        ChunkSectionPos sectionPos = ChunkSectionPos.from(packet.sectionPos);
+//        Chunk chunk = world.getChunkFromCache(sectionPos.getSectionX(), sectionPos.getSectionZ());
+//        if (chunk instanceof FlattenedChunk flatteningChunk) {
+//            ChunkSection section = flatteningChunk.sections[world.sectionCoordToIndex(sectionPos.getSectionY())];
+//
+//        }
+//        for (int i = 0; i < arg.arraySize; ++i) {
+//            short s = arg.coordinateArray[i];
+//            int n3 = arg.typeArray[i] & 0xFF;
+//            byte by = arg.metadataArray[i];
+//            int n4 = s >> 12 & 0xF;
+//            int n5 = s >> 8 & 0xF;
+//            int n6 = s & 0xFF;
+//            chunk.setTileWithMetadata(n4, n6, n5, n3, by);
+//            this.level.method_1498(n4 + n, n6, n5 + n2, n4 + n, n6, n5 + n2);
+//            this.level.method_202(n4 + n, n6, n5 + n2, n4 + n, n6, n5 + n2);
+//        }
     }
 }

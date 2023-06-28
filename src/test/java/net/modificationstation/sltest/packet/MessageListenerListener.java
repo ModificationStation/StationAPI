@@ -28,6 +28,6 @@ public class MessageListenerListener {
     }
 
     public void handleSendCoords(PlayerBase playerBase, Message message) {
-        SLTest.LOGGER.info(String.valueOf(((ModdedItem) message.objects[0]).hmmSho));
+        SLTest.LOGGER.info(String.valueOf(((ModdedItem.TestNetworkData) message.objects[0]).getHmmSho()));
     }
 }

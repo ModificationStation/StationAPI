@@ -1,5 +1,6 @@
 package net.modificationstation.sltest.item;
 
+import lombok.Value;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
@@ -19,13 +20,18 @@ public class ModdedItem extends TemplateItemBase implements CustomReachProvider,
         super(id);
     }
 
+    @SuppressWarnings("ClassCanBeRecord") // can't test with records cuz gson is outdated
+    public static @Value class TestNetworkData { int hmmSho; }
+
     @Override
     public ItemInstance use(ItemInstance item, Level level, PlayerBase player) {
-        Message message = new Message(Identifier.of(SLTest.MODID, "send_an_object"));
-        hmmSho = new Random().nextInt();
-        SLTest.LOGGER.info(String.valueOf(hmmSho));
-        message.objects = new Object[] { this };
-        PacketHelper.sendTo(player, message);
+        if (!level.isServerSide) {
+            Message message = new Message(Identifier.of(SLTest.MODID, "send_an_object"));
+            hmmSho = new Random().nextInt();
+            SLTest.LOGGER.info(String.valueOf(hmmSho));
+            message.objects = new Object[] { new TestNetworkData(hmmSho) };
+            PacketHelper.sendTo(player, message);
+        }
         return super.use(item, level, player);
     }
 
