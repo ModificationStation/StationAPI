@@ -347,7 +347,8 @@ public class FlattenedChunk extends Chunk {
                 ).isCanceled()
         ) return false;
         section.setBlockState(x, y & 15, z, state);
-        oldBlock.onBlockRemoved(this.level, levelX, y, levelZ);
+        if (!level.isServerSide)
+            oldBlock.onBlockRemoved(this.level, levelX, y, levelZ);
         section.setMeta(x, y & 15, z, meta);
 
         if (!this.level.dimension.halvesMapping) {
