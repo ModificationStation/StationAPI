@@ -10,6 +10,7 @@ import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkDataS2CPacket;
+import net.modificationstation.stationapi.impl.packet.FlattenedChunkSectionDataS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedMultiBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.util.math.ChunkSectionPos;
 
@@ -50,24 +51,51 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
 
     @Override
     public void onMultiBlockChange(FlattenedMultiBlockChangeS2CPacket packet) {
-//        //noinspection deprecation
-//        ClientLevel world = (ClientLevel) ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
-//        ChunkSectionPos sectionPos = ChunkSectionPos.from(packet.sectionPos);
-//        Chunk chunk = world.getChunkFromCache(sectionPos.getSectionX(), sectionPos.getSectionZ());
-//        if (chunk instanceof FlattenedChunk flatteningChunk) {
-//            ChunkSection section = flatteningChunk.sections[world.sectionCoordToIndex(sectionPos.getSectionY())];
-//
-//        }
-//        for (int i = 0; i < arg.arraySize; ++i) {
-//            short s = arg.coordinateArray[i];
-//            int n3 = arg.typeArray[i] & 0xFF;
-//            byte by = arg.metadataArray[i];
-//            int n4 = s >> 12 & 0xF;
-//            int n5 = s >> 8 & 0xF;
-//            int n6 = s & 0xFF;
-//            chunk.setTileWithMetadata(n4, n6, n5, n3, by);
-//            this.level.method_1498(n4 + n, n6, n5 + n2, n4 + n, n6, n5 + n2);
-//            this.level.method_202(n4 + n, n6, n5 + n2, n4 + n, n6, n5 + n2);
-//        }
+        //noinspection deprecation
+        ClientLevel world = (ClientLevel) ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
+        Chunk chunk = world.getChunkFromCache(packet.chunkX, packet.chunkZ);
+        if (chunk instanceof FlattenedChunk flatteningChunk) {
+            ChunkSection section = flatteningChunk.getOrCreateSection(world.sectionIndexToCoord(packet.sectionIndex), true);
+            int
+                    x = packet.chunkX * 16,
+                    y = world.sectionIndexToCoord(packet.sectionIndex) * 16,
+                    z = packet.chunkZ * 16;
+            for (int i = 0; i < packet.arraySize; i++) {
+                int localX, localY, localZ;
+                {
+                    short position = (short) packet.coordinateArray[i];
+                    localX = ChunkSectionPos.unpackLocalX(position);
+                    localY = ChunkSectionPos.unpackLocalY(position);
+                    localZ = ChunkSectionPos.unpackLocalZ(position);
+                }
+                int stateId = packet.stateArray[i];
+                byte metadata = packet.metadataArray[i];
+                section.setBlockState(localX, localY, localZ, BlockBase.STATE_IDS.get(stateId));
+                section.setMeta(localX, localY, localZ, metadata);
+                int
+                        updateX = x + localX,
+                        updateY = y + localY,
+                        updateZ = z + localZ;
+                world.method_1498(updateX, updateY, updateZ, updateX, updateY, updateZ);
+                world.method_202(updateX, updateY, updateZ, updateX, updateY, updateZ);
+            }
+        }
+    }
+
+    @Override
+    public void onChunkSection(FlattenedChunkSectionDataS2CPacket packet) {
+        //noinspection deprecation
+        ClientLevel world = (ClientLevel) ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
+        int fromX = packet.chunkX << 4;
+        int fromY = world.sectionIndexToCoord(packet.sectionIndex) << 4;
+        int fromZ = packet.chunkZ << 4;
+        world.method_1498(fromX, fromY, fromZ, fromX + 15, fromY + 15, fromZ + 15);
+        Chunk chunk = world.getChunkFromCache(packet.chunkX, packet.chunkZ);
+        if (chunk instanceof FlattenedChunk flatteningChunk) {
+            ByteBuffer buf = ByteBuffer.wrap(packet.sectionData);
+            flatteningChunk.getOrCreateSection(fromY, true).readDataPacket(buf);
+        }
+        chunk.method_892();
+        world.method_202(fromX, fromY, fromZ, fromX + 16, fromY + 16, fromZ + 16);
     }
 }

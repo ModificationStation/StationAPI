@@ -44,6 +44,7 @@
     "defaultRequire": 1
   },
   "server": [
+    "server.class_514Accessor",
     "server.Mixinclass_514",
     "server.Mixinclass_70",
     "server.MixinMinecraftServer",

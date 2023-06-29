@@ -103,7 +103,6 @@ public class Mixinclass_70 {
         stationapi_method_1834_state = null;
     }
 
-    @SuppressWarnings({"InvalidMemberReference", "UnresolvedMixinReference", "MixinAnnotationTarget", "InvalidInjectorMethodSignature"})
     @Redirect(
             method = "method_1834",
             at = @At(

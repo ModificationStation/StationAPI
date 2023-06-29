@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.impl.network;
 import net.minecraft.network.PacketHandler;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkDataS2CPacket;
+import net.modificationstation.stationapi.impl.packet.FlattenedChunkSectionDataS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedMultiBlockChangeS2CPacket;
 
 public abstract class StationFlatteningPacketHandler extends PacketHandler {
@@ -16,6 +17,10 @@ public abstract class StationFlatteningPacketHandler extends PacketHandler {
     }
 
     public void onBlockChange(FlattenedBlockChangeS2CPacket packet) {
+        error(packet);
+    }
+
+    public void onChunkSection(FlattenedChunkSectionDataS2CPacket packet) {
         error(packet);
     }
 }

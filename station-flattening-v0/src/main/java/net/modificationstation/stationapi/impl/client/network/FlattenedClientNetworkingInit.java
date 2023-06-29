@@ -5,6 +5,7 @@ import net.minecraft.network.PacketHandler;
 import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkDataS2CPacket;
+import net.modificationstation.stationapi.impl.packet.FlattenedChunkSectionDataS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedMultiBlockChangeS2CPacket;
 
 public class FlattenedClientNetworkingInit implements ClientModInitializer {
@@ -18,5 +19,6 @@ public class FlattenedClientNetworkingInit implements ClientModInitializer {
         IdentifiablePacket.setHandler(FlattenedChunkDataS2CPacket.PACKET_ID, handler);
         IdentifiablePacket.setHandler(FlattenedMultiBlockChangeS2CPacket.PACKET_ID, handler);
         IdentifiablePacket.setHandler(FlattenedBlockChangeS2CPacket.PACKET_ID, handler);
+        IdentifiablePacket.setHandler(FlattenedChunkSectionDataS2CPacket.PACKET_ID, handler);
     }
 }

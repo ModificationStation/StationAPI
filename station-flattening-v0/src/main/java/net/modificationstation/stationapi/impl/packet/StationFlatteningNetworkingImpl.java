@@ -12,5 +12,6 @@ public class StationFlatteningNetworkingImpl implements ModInitializer {
         IdentifiablePacket.create(FlattenedChunkDataS2CPacket.PACKET_ID, true, false, FlattenedChunkDataS2CPacket::new);
         IdentifiablePacket.create(FlattenedMultiBlockChangeS2CPacket.PACKET_ID, true, false, FlattenedMultiBlockChangeS2CPacket::new);
         IdentifiablePacket.create(FlattenedBlockChangeS2CPacket.PACKET_ID, true, false, FlattenedBlockChangeS2CPacket::new);
+        IdentifiablePacket.create(FlattenedChunkSectionDataS2CPacket.PACKET_ID, true, false, FlattenedChunkSectionDataS2CPacket::new);
     }
 }
