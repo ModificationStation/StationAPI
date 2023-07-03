@@ -320,7 +320,7 @@ public class Message extends AbstractPacket implements IdentifiablePacket {
             }
             if (present[9]) {
                 length = in.readInt();
-                objectsInternal = new String[length];
+                objectsInternal = new String[length * 2];
                 for (int i = 0; i < length * 2; i++)
                     objectsInternal[i] = readString(in, 32767);
             }
