@@ -54,7 +54,7 @@ public final class AssetsReloaderImpl {
     private static boolean firstLoad = true;
 
     @EventListener
-    private static void reloadResourceManager(final AssetsReloadEvent event) throws LWJGLException {
+    private static void reloadResourceManager(final AssetsReloadEvent event) {
         RESOURCE_PACK_MANAGER.scanPacks();
         //noinspection deprecation
         final Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
@@ -106,18 +106,18 @@ public final class AssetsReloaderImpl {
         if (noTextRenderer)
             minecraft.textRenderer = null;
         final Timer timer = ((MinecraftAccessor) minecraft).getTickTimer();
-        GL11.glClear(GL11.GL_HINT_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glClear(16640);
+        GL11.glMatrixMode(5889);
         GL11.glLoadIdentity();
         GL11.glOrtho(0.0, screenScaler.scaledWidth, screenScaler.scaledHeight, 0.0, 1000.0, 3000.0);
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        GL11.glMatrixMode(5888);
         GL11.glLoadIdentity();
         GL11.glTranslatef(0.0f, 0.0f, -2000.0f);
         GL11.glViewport(0, 0, minecraft.actualWidth, minecraft.actualHeight);
         GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_FOG);
+        GL11.glDisable(2896);
+        GL11.glEnable(3553);
+        GL11.glDisable(2912);
         while (!done.get()) {
             while (true) if (!Mouse.next()) break;
             while (true) if (!Keyboard.next()) break;
@@ -134,10 +134,10 @@ public final class AssetsReloaderImpl {
                 if (command != null) command.run();
             }
         }
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_FOG);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glAlphaFunc(GL11.GL_GREATER, 0.1f);
+        GL11.glDisable(2896);
+        GL11.glDisable(2912);
+        GL11.glEnable(3008);
+        GL11.glAlphaFunc(516, 0.1f);
     }
 
 }
