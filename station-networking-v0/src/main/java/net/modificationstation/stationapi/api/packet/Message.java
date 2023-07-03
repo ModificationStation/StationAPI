@@ -103,6 +103,8 @@ public class Message extends AbstractPacket implements IdentifiablePacket {
      */
     public String[] strings;
 
+    private String[] objectsInternal;
+
     /**
      * Array of objects to send.
      *
@@ -318,16 +320,9 @@ public class Message extends AbstractPacket implements IdentifiablePacket {
             }
             if (present[9]) {
                 length = in.readInt();
-                objects = new Object[length];
-                Gson gson = new Gson();
-                for (int i = 0; i < length; i++)
-                    try {
-                        String objectJson = readString(in, 32767);
-                        String className = readString(in, 32767);
-                        objects[i] = className.equals("null") ? null : gson.fromJson(objectJson, Class.forName(className));
-                    } catch (ClassNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
+                objectsInternal = new String[length];
+                for (int i = 0; i < length * 2; i++)
+                    objectsInternal[i] = readString(in, 32767);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -478,5 +473,19 @@ public class Message extends AbstractPacket implements IdentifiablePacket {
     @Override
     public Identifier getId() {
         return PACKET_ID;
+    }
+
+    public Object[] deserializeObjects() {
+        objects = new Object[objectsInternal.length / 2];
+        Gson gson = new Gson();
+        for (int i = 0; i < objectsInternal.length; i+=2)
+            try {
+                String objectJson = objectsInternal[0];
+                String className = objectsInternal[1];
+                objects[i] = className.equals("null") ? null : gson.fromJson(objectJson, Class.forName(className));
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        return objects;
     }
 }
