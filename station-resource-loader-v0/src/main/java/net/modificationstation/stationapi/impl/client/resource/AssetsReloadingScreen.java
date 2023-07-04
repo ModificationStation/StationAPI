@@ -174,12 +174,6 @@ public class AssetsReloadingScreen extends ScreenBase {
     }
 
     @Override
-    public void init() {
-        super.init();
-        firstRenderTick = true;
-    }
-
-    @Override
     public void renderBackground() {
         backgroundEmitter.run();
     }

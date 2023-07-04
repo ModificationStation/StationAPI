@@ -190,7 +190,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
 
     @Override
     public void renderItem(ItemInstance stack, ModelTransformation.Mode renderMode, float brightness, BakedModel model) {
-        if (stack == null || stack.itemId == 0 || stack.count < 1) return;
+        if (stack == null || stack.itemId == 0) return;
         if (model.isVanillaAdapter()) {
             model.getTransformation().getTransformation(renderMode).apply();
             if (model.isSideLit() && renderMode == ModelTransformation.Mode.GUI) // kind of a dirty way to do this, should probably look into replacing
