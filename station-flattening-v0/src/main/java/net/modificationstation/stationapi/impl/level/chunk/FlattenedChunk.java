@@ -282,10 +282,6 @@ public class FlattenedChunk extends Chunk {
             int light = 15;
             for(h = maxHeight; maxHeight > firstBlock && light > 0;) {
                 --maxHeight;
-                ChunkSection section = getSection(maxHeight);
-                if (section != null) {
-                    section.setLight(LightType.field_2757, x, maxHeight & 15, z, light);
-                }
                 int var11 = BlockBase.LIGHT_OPACITY[this.getTileId(x, maxHeight, z)];
                 if (var11 == 0) {
                     var11 = 1;
@@ -294,6 +290,10 @@ public class FlattenedChunk extends Chunk {
                 light -= var11;
                 if (light < 0) {
                     light = 0;
+                }
+                ChunkSection section = getSection(maxHeight);
+                if (section != null) {
+                    section.setLight(LightType.field_2757, x, maxHeight & 15, z, light);
                 }
             }
 
