@@ -1,11 +1,10 @@
-package net.modificationstation.stationapi.api.vanillafix.tag;
+package net.modificationstation.stationapi.api.tag;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.item.ItemBase;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.tag.TagKey;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ItemTags {
