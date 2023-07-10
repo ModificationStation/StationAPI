@@ -76,7 +76,6 @@ public class ModelLoader {
     public static final JsonUnbakedModel VANILLA_MARKER;
     private static final ItemModelGenerator ITEM_MODEL_GENERATOR;
     private static final Map<Identifier, StateManager<BlockBase, BlockState>> STATIC_DEFINITIONS;
-//    private final ResourceManager resourceManager;
     @Nullable
     private SpriteAtlasManager spriteAtlasManager;
     private final BlockColors blockColors;
@@ -88,54 +87,8 @@ public class ModelLoader {
     private final Map<BakedModelCacheKey, BakedModel> bakedModelCache = new HashMap<>();
     private final Map<Identifier, UnbakedModel> modelsToBake = new IdentityHashMap<>();
     private final Map<Identifier, BakedModel> bakedModels = new IdentityHashMap<>();
-//    private final Map<Identifier, Pair<SpriteAtlasTexture, SpriteAtlasTexture.Data>> spriteAtlasData;
     private int nextStateId = 1;
     private final Object2IntMap<BlockState> stateLookup = Util.make(new Object2IntOpenHashMap<>(), (object2IntOpenHashMap) -> object2IntOpenHashMap.defaultReturnValue(-1));
-
-//    public ModelLoader(ResourceManager resourceManager, BlockColors blockColors, Profiler profiler) {
-//        this.resourceManager = resourceManager;
-//        this.blockColors = blockColors;
-//        profiler.push("missing_model");
-//
-//        try {
-//            this.unbakedModels.put(MISSING_ID.asIdentifier(), this.loadModelFromResource(MISSING_ID.asIdentifier()));
-//            this.addModel(MISSING_ID.asIdentifier());
-//        } catch (IOException var12) {
-//            LOGGER.error("Error loading missing model, should never happen :(", var12);
-//            throw new RuntimeException(var12);
-//        }
-//
-//        profiler.swap("static_definitions");
-//        STATIC_DEFINITIONS.forEach((identifierx, stateManager) -> stateManager.getStates().forEach((blockState) -> this.addModel(BlockModels.getModelId(identifierx, blockState).asIdentifier())));
-//        profiler.swap("blocks");
-//
-//        for (BlockBase block : BlockRegistry.INSTANCE)
-//            ((BlockStateHolder) block).getStateManager().getStates().forEach((blockState) -> this.addModel(BlockModels.getModelId(blockState).asIdentifier()));
-//
-//        profiler.swap("items");
-//
-//        for (Identifier identifier : ItemRegistry.INSTANCE.getIds())
-//            this.addModel(ModelIdentifier.of(identifier, "inventory").asIdentifier());
-//
-//        profiler.swap("textures");
-//        Set<Pair<String, String>> set = new LinkedHashSet<>();
-//        Set<SpriteIdentifier> set2 = this.modelsToBake.values().stream().flatMap((unbakedModel) -> unbakedModel.getTextureDependencies(this::getOrLoadModel, set).stream()).collect(Collectors.toSet());
-//        StationAPI.EVENT_BUS.post(TextureRegisterEvent.builder().build());
-//        set2.addAll(Atlases.getTerrain().idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
-//        set2.addAll(Atlases.getGuiItems().idToTex.keySet().stream().map(identifier -> SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier)).collect(Collectors.toSet()));
-//        set.stream().filter((pair) -> !pair.getSecond().equals(MISSING_STRING)).forEach((pair) -> LOGGER.warn("Unable to resolve texture reference: {} in {}", pair.getFirst(), pair.getSecond()));
-//        Map<Identifier, List<SpriteIdentifier>> map = set2.stream().collect(Collectors.groupingBy(spriteIdentifier -> spriteIdentifier.atlas));
-//        profiler.swap("stitching");
-//        this.spriteAtlasData = new IdentityHashMap<>();
-//
-//        for (Entry<Identifier, List<SpriteIdentifier>> identifierListEntry : map.entrySet()) {
-//            SpriteAtlasTexture spriteAtlasTexture = new SpriteAtlasTexture(identifierListEntry.getKey());
-//            SpriteAtlasTexture.Data data = spriteAtlasTexture.stitch(resourceManager, identifierListEntry.getValue().stream().map(spriteIdentifier -> spriteIdentifier.texture), profiler);
-//            this.spriteAtlasData.put(identifierListEntry.getKey(), Pair.of(spriteAtlasTexture, data));
-//        }
-//
-//        profiler.pop();
-//    }
 
     public ModelLoader(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels, Map<Identifier, List<SourceTrackedData>> blockStates) {
         this.blockColors = blockColors;
@@ -173,37 +126,6 @@ public class ModelLoader {
             if (bakedModel != null) this.bakedModels.put(modelId, bakedModel);
         });
     }
-
-//    public SpriteAtlasManager upload(TextureManager textureManager, Profiler profiler) {
-//        profiler.push("atlas");
-//
-//        for (Pair<SpriteAtlasTexture, SpriteAtlasTexture.Data> spriteAtlasTextureDataPair : this.spriteAtlasData.values()) {
-//            SpriteAtlasTexture spriteAtlasTexture = spriteAtlasTextureDataPair.getFirst();
-//            SpriteAtlasTexture.Data data = spriteAtlasTextureDataPair.getSecond();
-//            spriteAtlasTexture.upload(data);
-//            StationTextureManager tm = StationTextureManager.get(textureManager);
-//            tm.registerTexture(spriteAtlasTexture.getId(), spriteAtlasTexture);
-//            tm.bindTexture(spriteAtlasTexture.getId());
-//            spriteAtlasTexture.applyTextureFilter(data);
-//        }
-//
-//        this.spriteAtlasManager = new SpriteAtlasManager(this.spriteAtlasData.values().stream().map(Pair::getFirst).collect(Collectors.toList()));
-//        profiler.swap("baking");
-//        this.modelsToBake.keySet().forEach((identifier) -> {
-//            BakedModel bakedModel = null;
-//
-//            try {
-//                bakedModel = this.bake(identifier, ModelBakeRotation.Y0_Z0);
-//            } catch (Exception var4) {
-//                LOGGER.warn("Unable to bake model: '{}': {}", identifier, var4);
-//            }
-//
-//            if (bakedModel != null) this.bakedModels.put(identifier, bakedModel);
-//
-//        });
-//        profiler.pop();
-//        return this.spriteAtlasManager;
-//    }
 
     private static Predicate<BlockState> stateKeyToPredicate(StateManager<BlockBase, BlockState> stateFactory, String key) {
         Map<Property<?>, Comparable<?>> map = new HashMap<>();

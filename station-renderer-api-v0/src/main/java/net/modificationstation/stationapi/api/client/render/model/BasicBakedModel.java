@@ -95,7 +95,7 @@ public class BasicBakedModel implements BakedModel {
             this(unbakedModel.useAmbientOcclusion(), unbakedModel.getGuiLight().isSide(), hasDepth, unbakedModel.getTransformations(), itemPropertyOverrides);
         }
 
-        private Builder(boolean usesAo, boolean isSideLit, boolean hasDepth, ModelTransformation modelTransformation, ModelOverrideList modelOverrideList) {
+        public Builder(boolean usesAo, boolean isSideLit, boolean hasDepth, ModelTransformation modelTransformation, ModelOverrideList modelOverrideList) {
             this.quads = ImmutableList.builder();
             this.faceQuads = new EnumMap<>(Direction.class);
             Direction[] var6 = Direction.values();
