@@ -20,13 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
+
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class ToolEffectivenessImplV1 {
 
     public static final List<Identifier> VANILLA_TOOLS = new ArrayList<>();
 
-    @EventListener
+    @EventListener(priority = LOW)
     private static void getItems(ItemRegistryEvent event) {
         VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.shears));
         VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.woodAxe));

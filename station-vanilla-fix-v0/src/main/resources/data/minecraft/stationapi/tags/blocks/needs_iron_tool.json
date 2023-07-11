@@ -4,6 +4,7 @@
     "diamond_ore",
     "gold_block",
     "gold_ore",
-    "redstone_ore"
+    "redstone_ore",
+    "redstone_ore_lit"
   ]
 }
