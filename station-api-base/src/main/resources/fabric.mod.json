@@ -21,6 +21,9 @@
   "entrypoints": {
     "preLaunch": [
       "net.modificationstation.stationapi.api.StationAPI"
+    ],
+    "spasm:transformer": [
+      "net.modificationstation.stationapi.impl.transform.UnsafeEventsIntegration"
     ]
   },
   "mixins": [

@@ -73,6 +73,17 @@ allprojects {
             url = 'https://jitpack.io/'
         }
         mavenCentral()
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = "Modrinth"
+                    url = "https://api.modrinth.com/maven"
+                }
+            }
+            filter {
+                includeGroup "maven.modrinth"
+            }
+        }
     }
 
     configurations {
@@ -109,6 +120,7 @@ allprojects {
         //noinspection GradlePackageUpdate
         implementation "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
         implementation "com.mojang:datafixerupper:${project.dfu_version}"
+        implementation "maven.modrinth:spasm:${project.spasm_version}"
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
@@ -299,6 +311,7 @@ dependencies {
     //noinspection GradlePackageUpdate
     include "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
     include "com.mojang:datafixerupper:${project.dfu_version}"
+    include "maven.modrinth:spasm:${project.spasm_version}"
 }
 
 // Makes java shut up

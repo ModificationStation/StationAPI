@@ -4,9 +4,6 @@
   "package": "net.modificationstation.stationapi.mixin.arsenic",
   "compatibilityLevel": "JAVA_17",
   "plugin": "net.modificationstation.stationapi.impl.client.arsenic.ArsenicMixinConfigPlugin",
-  "mixins": [
-    "TilePosAccessor"
-  ],
   "client": [
     "client.BlockRendererAccessor",
     "client.class_556Accessor",

@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.block.BlockRenderer;
-import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
@@ -10,6 +9,7 @@ import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldR
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
+import net.modificationstation.stationapi.api.util.maths.MutableBlockPos;
 import net.modificationstation.stationapi.api.world.BlockStateView;
 import net.modificationstation.stationapi.mixin.arsenic.client.BlockRendererAccessor;
 import org.lwjgl.opengl.GL11;
@@ -91,6 +91,7 @@ public final class ArsenicBlockRenderer {
     private final BlockRenderer blockRenderer;
     private final BlockRendererAccessor blockRendererAccessor;
     private final Random random = new Random();
+    private final MutableBlockPos blockPos = new MutableBlockPos(0, 0, 0);
 
     public ArsenicBlockRenderer(BlockRenderer blockRenderer) {
         this.blockRenderer = blockRenderer;
@@ -101,7 +102,7 @@ public final class ArsenicBlockRenderer {
         BlockState state = ((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z);
         BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state);
         if (!model.isBuiltin()) {
-            cir.setReturnValue(RendererHolder.RENDERER.renderBlock(state, new TilePos(x, y, z), blockRendererAccessor.getBlockView(), true, random));
+            cir.setReturnValue(RendererHolder.RENDERER.renderBlock(state, blockPos.set(x, y, z), blockRendererAccessor.getBlockView(), true, random));
         } else //noinspection deprecation
             if (block instanceof BlockWithWorldRenderer renderer) {
                 block.updateBoundingBox(blockRendererAccessor.getBlockView(), x, y, z);

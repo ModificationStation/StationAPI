@@ -15,7 +15,9 @@
     "MixinStats",
     "StatAccessor",
     "StatEntityAccessor",
-    "StatsAccessor"
+    "StatsAccessor",
+    "TilePosAccessor",
+    "TilePosMixin"
   ],
   "injectors": {
     "defaultRequire": 1

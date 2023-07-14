@@ -10,6 +10,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "plugin": "net.modificationstation.stationapi.impl.transform.MixinConfigPluginHook"
+  }
 }

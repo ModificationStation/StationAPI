@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.arsenic;
+package net.modificationstation.stationapi.mixin.block;
 
 import net.minecraft.util.maths.TilePos;
 import org.spongepowered.asm.mixin.Mixin;
@@ -7,16 +7,15 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(TilePos.class)
 public interface TilePosAccessor {
-
     @Mutable
     @Accessor("x")
-    void stationapi$setX(int x);
+    void stationapi_setX(int x);
 
     @Mutable
     @Accessor("y")
-    void stationapi$setY(int y);
+    void stationapi_setY(int y);
 
     @Mutable
     @Accessor("z")
-    void stationapi$setZ(int z);
+    void stationapi_setZ(int z);
 }
