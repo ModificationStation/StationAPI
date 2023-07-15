@@ -24,7 +24,6 @@ public class FlattenedMultiBlockChangeS2CPacket extends MultiBlockChange0x34S2CP
     public static final Identifier PACKET_ID = MODID.id("flattening/multi_block_change");
 
     public int sectionIndex;
-    public int[] coordinateArray;
     public int[] stateArray;
 
     @ApiStatus.Internal
@@ -35,7 +34,7 @@ public class FlattenedMultiBlockChangeS2CPacket extends MultiBlockChange0x34S2CP
         this.chunkZ = chunkZ;
         this.sectionIndex = sectionIndex;
         this.arraySize = arraySize;
-        coordinateArray = new int[arraySize];
+        coordinateArray = new short[arraySize];
         stateArray = new int[arraySize];
         metadataArray = new byte[arraySize];
         ChunkSection section = Objects.requireNonNullElse(((FlattenedChunk) world.getChunkFromCache(chunkX, chunkZ)).sections[sectionIndex], ChunkSection.EMPTY);
@@ -47,7 +46,6 @@ public class FlattenedMultiBlockChangeS2CPacket extends MultiBlockChange0x34S2CP
             int localZ = ChunkSectionPos.unpackLocalZ(position);
             stateArray[i] = BlockBase.STATE_IDS.getRawId(section.getBlockState(localX, localY, localZ));
             metadataArray[i] = (byte) section.getMeta(localX, localY, localZ);
-            i++;
         }
     }
 
@@ -58,7 +56,7 @@ public class FlattenedMultiBlockChangeS2CPacket extends MultiBlockChange0x34S2CP
             chunkZ = in.readInt();
             sectionIndex = in.read();
             arraySize = in.read();
-            coordinateArray = new int[arraySize];
+            coordinateArray = new short[arraySize];
             stateArray = new int[arraySize];
             metadataArray = new byte[arraySize];
             for (int i = 0; i < arraySize; i++) coordinateArray[i] = in.readShort();
@@ -76,7 +74,7 @@ public class FlattenedMultiBlockChangeS2CPacket extends MultiBlockChange0x34S2CP
             out.writeInt(chunkZ);
             out.write(sectionIndex);
             out.write(arraySize);
-            for (int position : coordinateArray) out.writeShort(position);
+            for (short position : coordinateArray) out.writeShort(position);
             for (int stateId : stateArray) out.writeInt(stateId);
             out.write(metadataArray);
         } catch (IOException e) {

@@ -26,12 +26,6 @@ public final class PlacementStateImpl {
                         event.side.getId(), Vec3f.from(event.x, event.y, event.z)
                 )
         ));
-        if (placementState != event.block.getDefaultState()) event.placeFunction = () -> {
-            if (event.world.setBlockStateWithNotify(event.x, event.y, event.z, placementState) != null) {
-                event.world.setTileMeta(event.x, event.y, event.z, event.meta);
-                return true;
-            } else
-                return false;
-        };
+        if (placementState != event.block.getDefaultState()) event.placeFunction = () -> event.world.setBlockStateWithMetadataWithNotify(event.x, event.y, event.z, placementState, event.meta) != null;
     }
 }

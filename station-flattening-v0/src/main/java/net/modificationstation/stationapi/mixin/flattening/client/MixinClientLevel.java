@@ -73,9 +73,8 @@ public abstract class MixinClientLevel extends Level {
 			)
 	)
 	private boolean stationapi_useBlockState(Level instance, int x, int y, int z, int blockId, int metadata) {
-		boolean result = super.setBlockState(x, y, z, BlockBase.STATE_IDS.get(((ClientBlockChange) stationapi_clientBlockChange).stateId)) != null;
+		boolean result = super.setBlockStateWithMetadata(x, y, z, BlockBase.STATE_IDS.get(((ClientBlockChange) stationapi_clientBlockChange).stateId), metadata) != null;
 		stationapi_clientBlockChange = null;
-		super.setTileMeta(x, y, z, metadata);
 		return result;
 	}
 

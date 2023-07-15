@@ -316,58 +316,7 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public boolean setTileWithMetadata(int x, int y, int z, int blockId, int meta) {
-        BlockState state = BlockBase.BY_ID[blockId].getDefaultState();
-        int levelX = this.x << 4 | x;
-        int levelZ = this.z << 4 | z;
-        BlockSetEvent event =
-                BlockSetEvent.builder()
-                        .level(level).chunk(this)
-                        .x(levelX).y(y).z(levelZ)
-                        .blockState(state).blockMeta(meta)
-                        .overrideState(state).overrideMeta(meta)
-                        .build();
-        if (StationAPI.EVENT_BUS.post(event).isCanceled()) return false;
-        state = event.overrideState;
-        meta = event.overrideMeta;
-        ChunkSection section = getOrCreateSection(y, true);
-        if (section == null) return false;
-        boolean sameMeta = section.getMeta(x, y & 15, z) == meta;
-        if (state.isAir() && sameMeta) return false;
-        short var6 = getShortHeight(x, z);
-        BlockState oldState = section.getBlockState(x, y & 15, z);
-        if (oldState == state && sameMeta) return false;
-
-        BlockBase oldBlock = oldState.getBlock();
-        if (
-                StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
-                        .block(oldBlock)
-                        .level(level)
-                        .x(levelX).y(y).z(levelZ)
-                        .build()
-                ).isCanceled()
-        ) return false;
-        section.setBlockState(x, y & 15, z, state);
-        if (!level.isServerSide)
-            oldBlock.onBlockRemoved(this.level, levelX, y, levelZ);
-        section.setMeta(x, y & 15, z, meta);
-
-        if (!this.level.dimension.halvesMapping) {
-            if (BlockBase.LIGHT_OPACITY[state.getBlock().id] != 0) {
-                if (y >= var6)
-                    this.method_889(x, y + 1, z);
-            } else if (y == var6 - 1)
-                this.method_889(x, y, z);
-
-            this.level.method_166(LightType.field_2757, levelX, y, levelZ, levelX, y, levelZ);
-        }
-
-        this.level.method_166(LightType.field_2758, levelX, y, levelZ, levelX, y, levelZ);
-        ((ChunkAccessor) this).invokeMethod_887(x, z);
-        section.setMeta(x, y & 15, z, meta);
-        state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ, oldState);
-
-        this.field_967 = true;
-        return true;
+        return setBlockStateWithMetadata(x, y, z, BlockBase.BY_ID[blockId].getDefaultState(), meta) != null;
     }
 
     @Override
@@ -409,6 +358,60 @@ public class FlattenedChunk extends Chunk {
     }
 
     @Override
+    public BlockState setBlockStateWithMetadata(int x, int y, int z, BlockState state, int meta) {
+        int levelX = this.x << 4 | x;
+        int levelZ = this.z << 4 | z;
+        BlockSetEvent event =
+                BlockSetEvent.builder()
+                        .level(level).chunk(this)
+                        .x(levelX).y(y).z(levelZ)
+                        .blockState(state).blockMeta(meta)
+                        .overrideState(state).overrideMeta(meta)
+                        .build();
+        if (StationAPI.EVENT_BUS.post(event).isCanceled()) return null;
+        state = event.overrideState;
+        meta = event.overrideMeta;
+        ChunkSection section = getOrCreateSection(y, true);
+        if (section == null) return null;
+        boolean sameMeta = section.getMeta(x, y & 15, z) == meta;
+        short var6 = getShortHeight(x, z);
+        BlockState oldState = section.getBlockState(x, y & 15, z);
+        if (oldState == state && sameMeta) return null;
+
+        BlockBase oldBlock = oldState.getBlock();
+        if (
+                StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
+                        .block(oldBlock)
+                        .level(level)
+                        .x(levelX).y(y).z(levelZ)
+                        .build()
+                ).isCanceled()
+        ) return null;
+        section.setBlockState(x, y & 15, z, state);
+        if (!level.isServerSide)
+            oldBlock.onBlockRemoved(this.level, levelX, y, levelZ);
+        section.setMeta(x, y & 15, z, meta);
+
+        if (!this.level.dimension.halvesMapping) {
+            if (BlockBase.LIGHT_OPACITY[state.getBlock().id] != 0) {
+                if (y >= var6)
+                    this.method_889(x, y + 1, z);
+            } else if (y == var6 - 1)
+                this.method_889(x, y, z);
+
+            this.level.method_166(LightType.field_2757, levelX, y, levelZ, levelX, y, levelZ);
+        }
+
+        this.level.method_166(LightType.field_2758, levelX, y, levelZ, levelX, y, levelZ);
+        ((ChunkAccessor) this).invokeMethod_887(x, z);
+        section.setMeta(x, y & 15, z, meta);
+        state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ, oldState);
+
+        this.field_967 = true;
+        return oldState;
+    }
+
+    @Override
     public BlockState setBlockState(int x, int y, int z, BlockState state) {
         int levelX = this.x << 4 | x;
         int levelZ = this.z << 4 | z;
@@ -439,15 +442,12 @@ public class FlattenedChunk extends Chunk {
         section.setBlockState(x, y & 15, z, state);
         oldBlock.onBlockRemoved(this.level, levelX, y, levelZ);
         section.setMeta(x, y & 15, z, 0);
-        if (!this.level.dimension.halvesMapping) {
-            if (BlockBase.LIGHT_OPACITY[state.getBlock().id] != 0) {
-                if (y >= topY)
-                    this.method_889(x, y + 1, z);
-            } else if (y == topY - 1)
-                this.method_889(x, y, z);
-            this.level.method_166(LightType.field_2757, levelX, y, levelZ, levelX, y, levelZ);
-        }
-
+        if (BlockBase.LIGHT_OPACITY[state.getBlock().id] != 0) {
+            if (y >= topY)
+                this.method_889(x, y + 1, z);
+        } else if (y == topY - 1)
+            this.method_889(x, y, z);
+        this.level.method_166(LightType.field_2757, levelX, y, levelZ, levelX, y, levelZ);
         this.level.method_166(LightType.field_2758, levelX, y, levelZ, levelX, y, levelZ);
         ((ChunkAccessor) this).invokeMethod_887(x, z);
         if (!this.level.isServerSide) {

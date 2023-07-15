@@ -14,4 +14,8 @@ public interface StationFlatteningChunk extends BlockStateView {
     default BlockState setBlockState(int x, int y, int z, BlockState blockState) {
         return Util.assertImpl();
     }
+
+    default BlockState setBlockStateWithMetadata(int x, int y, int z, BlockState blockState, int meta) {
+        return Util.assertImpl();
+    }
 }

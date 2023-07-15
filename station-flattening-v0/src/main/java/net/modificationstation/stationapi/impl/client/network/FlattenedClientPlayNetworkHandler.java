@@ -5,7 +5,6 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.level.ClientLevel;
 import net.minecraft.level.chunk.Chunk;
-import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
@@ -45,8 +44,7 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
         //noinspection deprecation
         ClientLevel world = (ClientLevel) ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
         world.method_1498(packet.x, packet.y, packet.z, packet.x, packet.y, packet.z);
-        world.setBlockStateWithNotify(packet.x, packet.y, packet.z, BlockBase.STATE_IDS.get(packet.stateId));
-        world.setTileMeta(packet.x, packet.y, packet.z, packet.metadata);
+        world.setBlockStateWithMetadataWithNotify(packet.x, packet.y, packet.z, BlockBase.STATE_IDS.get(packet.stateId), packet.metadata);
     }
 
     @Override
@@ -55,7 +53,7 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
         ClientLevel world = (ClientLevel) ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
         Chunk chunk = world.getChunkFromCache(packet.chunkX, packet.chunkZ);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
-            ChunkSection section = flatteningChunk.getOrCreateSection(world.sectionIndexToCoord(packet.sectionIndex), true);
+            flatteningChunk.getOrCreateSection(world.sectionIndexToCoord(packet.sectionIndex), true);
             int
                     x = packet.chunkX * 16,
                     y = world.sectionIndexToCoord(packet.sectionIndex) * 16,
@@ -63,15 +61,14 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
             for (int i = 0; i < packet.arraySize; i++) {
                 int localX, localY, localZ;
                 {
-                    short position = (short) packet.coordinateArray[i];
+                    short position = packet.coordinateArray[i];
                     localX = ChunkSectionPos.unpackLocalX(position);
                     localY = ChunkSectionPos.unpackLocalY(position);
                     localZ = ChunkSectionPos.unpackLocalZ(position);
                 }
                 int stateId = packet.stateArray[i];
                 byte metadata = packet.metadataArray[i];
-                section.setBlockState(localX, localY, localZ, BlockBase.STATE_IDS.get(stateId));
-                section.setMeta(localX, localY, localZ, metadata);
+                chunk.setBlockStateWithMetadata(localX, y + localY, localZ, BlockBase.STATE_IDS.get(stateId), metadata);
                 int
                         updateX = x + localX,
                         updateY = y + localY,

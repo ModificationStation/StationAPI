@@ -47,6 +47,21 @@ public abstract class MixinLevel implements StationFlatteningWorld {
         return null;
     }
 
+    @Override
+    public BlockState setBlockStateWithMetadata(int x, int y, int z, BlockState blockState, int meta) {
+        return getChunk(x, z).setBlockStateWithMetadata(x & 0xF, y, z & 0xF, blockState, meta);
+    }
+
+    @Override
+    public BlockState setBlockStateWithMetadataWithNotify(int x, int y, int z, BlockState blockState, int meta) {
+        BlockState oldBlockState = setBlockStateWithMetadata(x, y, z, blockState, meta);
+        if (oldBlockState != null) {
+            method_235(x, y, z, blockState.getBlock().id);
+            return oldBlockState;
+        }
+        return null;
+    }
+
     @Inject(
             method = "method_248()V",
             at = @At(
