@@ -231,7 +231,7 @@ allprojects {
                         deps.add(["com.mojang", "datafixerupper", "${project.dfu_version}"] as String[])
                         deps.add(["org.apache.commons", "commons-lang3", "3.5"] as String[])
                         deps.add(["commons-io", "commons-io", "2.5"] as String[])
-                        deps.add(["maven.modrinth", "spasm", ${project.spasm_version}] as String[])
+                        deps.add(["maven.modrinth", "spasm", "${project.spasm_version}"] as String[])
                         deps.each {
                             def depNode = depsNode.appendNode("dependency")
                             depNode.appendNode("groupId", it[0])
