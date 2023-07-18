@@ -25,5 +25,6 @@ public class MixinClientLevel {
                         .dropped(false)
                         .build()
         );
+        clientPlayNetworkHandler.method_1646(arg);
     }
 }
