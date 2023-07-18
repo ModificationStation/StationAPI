@@ -1,14 +1,10 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
-import net.minecraft.class_66;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.level.Level;
-import net.minecraft.tileentity.TileEntityBase;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
-
-import java.util.List;
 
 @Mixin(WorldRenderer.class)
 public class MixinWorldRenderer {
@@ -37,19 +33,19 @@ public class MixinWorldRenderer {
 	
 	@ModifyConstant(method = "method_1537()V", constant = @Constant(intValue = 8))
 	private int changeSectionCount(int value) {
-		return level.countVerticalSections();
+		return level == null ? value : level.countVerticalSections();
 	}
 
-	@SuppressWarnings({"InvalidMemberReference", "UnresolvedMixinReference", "MixinAnnotationTarget", "InvalidInjectorMethodSignature"})
-	@Redirect(
-			method = "method_1537()V",
+	@ModifyArg(
+			method = "method_1537",
 			at = @At(
-					value = "NEW",
-					target = "(Lnet/minecraft/level/Level;Ljava/util/List;IIIII)Lnet/minecraft/class_66;"
-			)
+					value = "INVOKE",
+					target = "Lnet/minecraft/class_66;<init>(Lnet/minecraft/level/Level;Ljava/util/List;IIIII)V"
+			),
+			index = 3
 	)
-	private class_66 offsetYBlockCoord(Level arg, List<TileEntityBase> list, int i, int j, int k, int l, int m) {
-		return new class_66(arg, list, i, level.getBottomY() + j, k, l, m);
+	private int offsetYBlockCoord1(int original) {
+		return level == null ? original : level.getBottomY() + original;
 	}
 
 	@ModifyArg(
@@ -60,7 +56,7 @@ public class MixinWorldRenderer {
 			),
 			index = 1
 	)
-	private int offsetYBlockCoord(int y) {
+	private int offsetYBlockCoord2(int y) {
 		return level.getBottomY() + y;
 	}
 
