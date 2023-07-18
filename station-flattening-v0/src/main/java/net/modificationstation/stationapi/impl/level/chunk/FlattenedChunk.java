@@ -103,7 +103,11 @@ public class FlattenedChunk extends Chunk {
     @Override
     public int method_864(LightType type, int x, int y, int z) {
         ChunkSection section = getSection(y);
-        return section == null ? type.field_2759 : section.getLight(type, x, y & 15, z);
+        return section == null ?
+                type == LightType.field_2757 && level.dimension.halvesMapping ?
+                        0 :
+                        type.field_2759 :
+                section.getLight(type, x, y & 15, z);
     }
 
     public ChunkSection getOrCreateSection(int y, boolean fillSkyLight) {
@@ -114,7 +118,7 @@ public class FlattenedChunk extends Chunk {
         ChunkSection section = sections[index];
         if (section == null) {
             section = new ChunkSection(level.sectionIndexToCoord(index));
-            if (fillSkyLight) {
+            if (!level.dimension.halvesMapping && fillSkyLight) {
                 section.initSkyLight();
             }
             sections[index] = section;
