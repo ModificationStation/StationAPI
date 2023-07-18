@@ -53,7 +53,7 @@ public class UnstitchAtlasSource implements AtlasSource {
         return AtlasSourceManager.UNSTITCH;
     }
 
-    record Region(Identifier sprite, double x, double y, double width, double height) {
+    public record Region(Identifier sprite, double x, double y, double width, double height) {
         public static final Codec<Region> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Identifier.CODEC.fieldOf("sprite").forGetter(Region::sprite),
                 Codec.DOUBLE.fieldOf("x").forGetter(Region::x),
