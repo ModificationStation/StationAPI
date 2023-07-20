@@ -21,11 +21,12 @@ import java.util.Optional;
 public class MixinDimension implements StationDimension {
 	@Unique private static final String HEIGHT_KEY = "LevelHeight";
 	@Unique private static final String BOTTOM_Y_KEY = "BottomY";
-	@Unique private short sectionCount = 8;
 	@Unique private short height = 128;
 	@Unique private short bottomY = 0;
 	@Shadow public int id;
-	
+
+	@Shadow public Level level;
+
 	@Inject(method = "initDimension(Lnet/minecraft/level/Level;)V", at = @At(
 		value = "INVOKE",
 		target = "Lnet/minecraft/level/dimension/Dimension;pregenLight()V",
@@ -64,8 +65,9 @@ public class MixinDimension implements StationDimension {
 
 	@Unique
 	@Override
+	@Deprecated
 	public short getSectionCount() {
-		return sectionCount;
+		return (short) level.countVerticalSections();
 	}
 	
 	@Unique
@@ -79,7 +81,6 @@ public class MixinDimension implements StationDimension {
 		if ((height & 15) != 0) {
 			height = (short) (1 << (int) Math.ceil(Math.log(height) / Math.log(2)));
 		}
-		sectionCount = (short) (height >> 4);
 	}
 	
 	@Unique

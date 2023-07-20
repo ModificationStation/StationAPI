@@ -17,7 +17,6 @@ import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.level.BlockSetEvent;
 import net.modificationstation.stationapi.api.event.level.MetaSetEvent;
-import net.modificationstation.stationapi.impl.level.StationDimension;
 import net.modificationstation.stationapi.mixin.flattening.ChunkAccessor;
 
 import java.util.ArrayList;
@@ -33,11 +32,11 @@ public class FlattenedChunk extends Chunk {
 
     public FlattenedChunk(Level world, int xPos, int zPos) {
         super(world, xPos, zPos);
-        StationDimension dimension = (StationDimension) level.dimension;
-        sections = new ChunkSection[dimension.getSectionCount()];
+        int countSections = level.countVerticalSections();
+        sections = new ChunkSection[countSections];
         firstBlock = (short) level.getBottomY();
         lastBlock = (short) (level.getTopY() - 1);
-        entities = new List[dimension.getSectionCount()];
+        entities = new List[countSections];
         for(short i = 0; i < entities.length; i++) {
             this.entities[i] = new ArrayList<>();
         }
