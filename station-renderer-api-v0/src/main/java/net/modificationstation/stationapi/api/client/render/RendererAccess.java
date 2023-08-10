@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.client.render;
 
 import net.modificationstation.stationapi.impl.client.render.RendererAccessImpl;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Registration and access for rendering extensions.
@@ -23,7 +22,7 @@ public interface RendererAccess {
 	 * Access to the current {@link Renderer} for creating and retrieving model builders
 	 * and materials. Will return null if no render plug in is active.
 	 */
-	@Nullable
+	// @Nullable
 	Renderer getRenderer();
 
 	/**

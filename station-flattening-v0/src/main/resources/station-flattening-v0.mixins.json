@@ -28,6 +28,9 @@
     "MixinSecondaryBlock",
     "MixinSkylandsLevelSource",
     "MixinWorldPopulationRegion",
+    "MovingPistonBlockMixin",
+    "PistonBlockEntityMixin",
+    "PistonBlockMixin",
     "RegionFileAccessor"
   ],
   "client": [
