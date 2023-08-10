@@ -102,7 +102,7 @@ public final class ArsenicBlockRenderer {
         BlockState state = ((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z);
         BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state);
         if (!model.isBuiltin()) {
-            cir.setReturnValue(RendererHolder.RENDERER.renderBlock(state, blockPos.set(x, y, z), blockRendererAccessor.getBlockView(), true, random));
+            cir.setReturnValue(RendererHolder.RENDERER.renderBlock(state, blockPos.set(x, y, z), blockRendererAccessor.getBlockView(), !blockRendererAccessor.getRenderAllSides(), random));
         } else //noinspection deprecation
             if (block instanceof BlockWithWorldRenderer renderer) {
                 block.updateBoundingBox(blockRendererAccessor.getBlockView(), x, y, z);

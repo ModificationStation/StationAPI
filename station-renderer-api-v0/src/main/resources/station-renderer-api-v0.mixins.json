@@ -10,6 +10,7 @@
   ],
   "client": [
     "client.BlockRendererAccessor",
+    "client.BlockRenderManagerMixin",
     "client.MixinInGame",
     "client.MixinTessellator",
     "client.MixinTextureManager",
