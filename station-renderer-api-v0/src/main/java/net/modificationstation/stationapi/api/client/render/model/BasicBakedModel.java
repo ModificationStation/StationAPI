@@ -13,11 +13,9 @@ import net.modificationstation.stationapi.api.client.render.model.json.ModelOver
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -32,7 +30,6 @@ public class BasicBakedModel implements BakedModel {
     protected final Sprite sprite;
     protected final ModelTransformation transformation;
     protected final ModelOverrideList itemPropertyOverrides;
-    protected final ImmutableList<Sprite> onGroundSprites;
 
     @Override
     public ImmutableList<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
@@ -74,11 +71,6 @@ public class BasicBakedModel implements BakedModel {
         return this.itemPropertyOverrides;
     }
 
-    @Override
-    public ImmutableList<Sprite> getOnGroundSprites() {
-        return onGroundSprites;
-    }
-
     @Environment(EnvType.CLIENT)
     public static class Builder {
         private final ImmutableList.Builder<BakedQuad> quads;
@@ -89,7 +81,6 @@ public class BasicBakedModel implements BakedModel {
         private final boolean isSideLit;
         private final boolean hasDepth;
         private final ModelTransformation transformation;
-        private ImmutableList<Sprite> onGroundSprites;
 
         public Builder(JsonUnbakedModel unbakedModel, ModelOverrideList itemPropertyOverrides, boolean hasDepth) {
             this(unbakedModel.useAmbientOcclusion(), unbakedModel.getGuiLight().isSide(), hasDepth, unbakedModel.getTransformations(), itemPropertyOverrides);
@@ -126,12 +117,6 @@ public class BasicBakedModel implements BakedModel {
             return this;
         }
 
-        @ApiStatus.Experimental
-        public BasicBakedModel.Builder setOnGroundSprites(List<Sprite> onGroundSprites) {
-            this.onGroundSprites = ImmutableList.copyOf(onGroundSprites);
-            return this;
-        }
-
         public BakedModel build() {
             if (particleTexture == null) {
                 throw new RuntimeException("Missing particle!");
@@ -144,8 +129,7 @@ public class BasicBakedModel implements BakedModel {
                         isSideLit,
                         particleTexture,
                         transformation,
-                        itemPropertyOverrides,
-                        onGroundSprites
+                        itemPropertyOverrides
                 );
             }
         }

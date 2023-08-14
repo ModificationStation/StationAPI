@@ -179,13 +179,23 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     }
 
     private void renderBakedItemModel(BakedModel model, ItemInstance stack, float brightness) {
-        Random random = new Random();
         for (Direction direction : Direction.values()) {
             random.setSeed(42L);
-            this.renderBakedItemQuads(model.getQuads(null, direction, random), stack, brightness);
+            renderBakedItemQuads(model.getQuads(null, direction, random), stack, brightness);
         }
         random.setSeed(42L);
-        this.renderBakedItemQuads(model.getQuads(null, null, random), stack, brightness);
+        renderBakedItemQuads(model.getQuads(null, null, random), stack, brightness);
+    }
+
+    private void renderBakedItemModelFlat(BakedModel model, ItemInstance stack, float brightness) {
+        random.setSeed(42L);
+        boolean bl = stack != null && stack.itemId != 0 && stack.count > 0;
+        for (BakedQuad bakedQuad : model.getQuads(null, null, random)) {
+            if (bakedQuad.getFace() != Direction.WEST) continue;
+            int i = bl && bakedQuad.hasColor() ? this.itemColors.getColor(stack, bakedQuad.getColorIndex()) : -1;
+            i = colorF2I(redI2F(i) * brightness, greenI2F(i) * brightness, blueI2F(i) * brightness);
+            tessellator.quad(bakedQuad, 0, 0, 0, i, i, i, i, 0, 1, 0, false);
+        }
     }
 
     @Override
@@ -196,8 +206,11 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
             if (model.isSideLit() && renderMode == ModelTransformation.Mode.GUI) // kind of a dirty way to do this, should probably look into replacing
                 GL11.glRotatef(90, 0, 1, 0);
             GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-            if (!model.isBuiltin())
-                this.renderBakedItemModel(model, stack, brightness);
+            if (model.isBuiltin()) return;
+            if (!model.isSideLit() && renderMode == ModelTransformation.Mode.GROUND)
+                renderBakedItemModelFlat(model, stack, brightness);
+            else
+                renderBakedItemModel(model, stack, brightness);
         } else {
             ITEM_CONTEXTS.get().renderModel(stack, renderMode, model, this::renderBakedItemModel);
         }

@@ -11,7 +11,6 @@ import net.modificationstation.stationapi.api.client.render.model.json.ModelTran
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -42,12 +41,6 @@ public interface BakedModel {
     ModelTransformation getTransformation();
 
     ModelOverrideList getOverrides();
-
-    @Nullable
-    @ApiStatus.Experimental
-    default ImmutableList<Sprite> getOnGroundSprites() {
-        return null;
-    }
 
     /**
      * When true, signals renderer this producer is implemented through {@link BakedModel#getQuads(BlockState, Direction, Random)}.

@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
-import com.google.common.collect.ImmutableList;
+import lombok.val;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.TextRenderer;
@@ -25,6 +25,7 @@ import net.modificationstation.stationapi.api.item.BlockItemForm;
 import net.modificationstation.stationapi.mixin.arsenic.client.EntityRendererAccessor;
 import net.modificationstation.stationapi.mixin.arsenic.client.ItemRendererAccessor;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public final class ArsenicItemRenderer {
@@ -46,7 +47,7 @@ public final class ArsenicItemRenderer {
         float var12 = (((float)item.age + delta) / 20.0F + item.field_567) * (180F / (float)Math.PI);
         byte renderedAmount = (byte) (item.item.count > 20 ? 4 : item.item.count > 5 ? 3 : item.item.count > 1 ? 2 : 1);
 
-        GL11.glEnable(32826);
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         SpriteAtlasTexture atlas = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE);
         if (var10.itemId != States.AIR.get().getBlock().id) {
             BakedModel model = RendererHolder.RENDERER.getModel(var10, item.level, null, item.entityId);
@@ -57,7 +58,7 @@ public final class ArsenicItemRenderer {
             }
         }
 
-        GL11.glDisable(32826);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
     }
 
     private void renderVanilla(Item item, float x, float y, float z, float delta, ItemInstance var10, float var11, float var12, byte renderedAmount, SpriteAtlasTexture atlas) {
@@ -129,65 +130,34 @@ public final class ArsenicItemRenderer {
     }
 
     private void renderModel(Item item, double x, double y, double z, float delta, ItemInstance var10, float var11, float var12, byte renderedAmount, SpriteAtlasTexture atlas, BakedModel model) {
-        ImmutableList<Sprite> onGroundSprites = model.getOnGroundSprites();
         GL11.glPushMatrix();
         atlas.bindTexture();
         GL11.glTranslatef((float) x, (float) (y + var11), (float) z);
-        if (onGroundSprites == null) {
+
+        val sideLit = model.isSideLit();
+        Tessellator tessellator = Tessellator.INSTANCE;
+
+        if (sideLit) {
             GL11.glRotatef(var12, 0, 1, 0);
             GL11.glTranslated(0, -3.0 / 16, 0);
+        }
 
-            for (int var29 = 0; var29 < renderedAmount; ++var29) {
-                GL11.glPushMatrix();
-                if (var29 > 0)
-                    GL11.glTranslatef(
-                            (itemRendererAccessor.getRand().nextFloat() * 2 - 1) * .2F,
-                            (itemRendererAccessor.getRand().nextFloat() * 2 - 1) * .2F,
-                            (itemRendererAccessor.getRand().nextFloat() * 2 - 1) * .2F
-                    );
+        for (int var29 = 0; var29 < renderedAmount; ++var29) {
+            GL11.glPushMatrix();
+            if (var29 > 0)
+                GL11.glTranslatef(
+                        (itemRendererAccessor.getRand().nextFloat() * 2 - 1) * .2F,
+                        (itemRendererAccessor.getRand().nextFloat() * 2 - 1) * .2F,
+                        (itemRendererAccessor.getRand().nextFloat() * 2 - 1) * .2F
+                );
 
-                Tessellator.INSTANCE.start();
-                RendererHolder.RENDERER.renderItem(var10, ModelTransformation.Mode.GROUND, item.getBrightnessAtEyes(delta), model);
-                Tessellator.INSTANCE.draw();
-                GL11.glPopMatrix();
-            }
-        } else {
-            GL11.glScalef(0.5F, 0.5F, 0.5F);
-            Tessellator var15 = Tessellator.INSTANCE;
-            float var20 = 1.0F;
-            float var21 = 0.5F;
-            float var22 = 0.25F;
-            if (itemRenderer.field_1707) {
-                int var23 = ItemBase.byId[var10.itemId].getColourMultiplier(var10.getDamage());
-                float var24 = (float) ((var23 >> 16) & 255) / 255.0F;
-                float var25 = (float) ((var23 >> 8) & 255) / 255.0F;
-                float var26 = (float) (var23 & 255) / 255.0F;
-                float var27 = item.getBrightnessAtEyes(delta);
-                GL11.glColor4f(var24 * var27, var25 * var27, var26 * var27, 1.0F);
-            }
+            if (!sideLit)
+                GL11.glRotatef(180 - entityRendererAccessor.getDispatcher().field_2497, 0, 1, 0);
 
-            for (int var33 = 0; var33 < renderedAmount; ++var33) {
-                GL11.glPushMatrix();
-                if (var33 > 0) {
-                    float var34 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
-                    float var35 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
-                    float var36 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
-                    GL11.glTranslatef(var34, var35, var36);
-                }
-
-                GL11.glRotatef(180.0F - entityRendererAccessor.getDispatcher().field_2497, 0.0F, 1.0F, 0.0F);
-
-                for (Sprite texture : onGroundSprites) {
-                    var15.start();
-                    var15.setNormal(0.0F, 1.0F, 0.0F);
-                    var15.vertex(0.0F - var21, 0.0F - var22, 0.0D, texture.getMinU(), texture.getMaxV());
-                    var15.vertex(var20 - var21, 0.0F - var22, 0.0D, texture.getMaxU(), texture.getMaxV());
-                    var15.vertex(var20 - var21, 1.0F - var22, 0.0D, texture.getMaxU(), texture.getMinV());
-                    var15.vertex(0.0F - var21, 1.0F - var22, 0.0D, texture.getMinU(), texture.getMinV());
-                    var15.draw();
-                }
-                GL11.glPopMatrix();
-            }
+            tessellator.start();
+            RendererHolder.RENDERER.renderItem(var10, ModelTransformation.Mode.GROUND, item.getBrightnessAtEyes(delta), model);
+            tessellator.draw();
+            GL11.glPopMatrix();
         }
         GL11.glPopMatrix();
     }
