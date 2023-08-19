@@ -18,8 +18,8 @@ public class MixinBaseClientInteractionManager {
 		target = "Lnet/minecraft/level/Level;playLevelEvent(IIIII)V"
 	))
 	private void changeIDStorage(Args args) {
-		int data = minecraft.level.getTileId(args.get(2), args.get(3), args.get(4)) << 4;
-		data |= minecraft.level.getTileMeta(args.get(2), args.get(3), args.get(4)) & 15;
-		args.set(5, data);
+		int data = minecraft.level.getTileId(args.get(1), args.get(2), args.get(3)) << 4;
+		data |= minecraft.level.getTileMeta(args.get(1), args.get(2), args.get(3)) & 15;
+		args.set(4, data);
 	}
 }
