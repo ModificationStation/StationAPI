@@ -41,7 +41,8 @@
     "client.MixinMultiPlayerClientInteractionManager",
     "client.MixinPlayerRenderer",
     "client.MixinSinglePlayerClientInteractionManager",
-    "client.MixinWorldRenderer"
+    "client.MixinWorldRenderer",
+    "client.MixinBaseClientInteractionManager"
   ],
   "injectors": {
     "defaultRequire": 1
