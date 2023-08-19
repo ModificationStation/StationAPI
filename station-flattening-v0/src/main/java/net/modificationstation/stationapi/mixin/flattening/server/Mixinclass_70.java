@@ -121,8 +121,8 @@ public class Mixinclass_70 {
         target = "Lnet/minecraft/server/level/ServerLevel;playLevelEvent(Lnet/minecraft/entity/player/PlayerBase;IIIII)V"
     ))
     private void changeIDStorage(Args args) {
-        int data = stationapi_method_1834_state.getBlock().id << 4;
-        data |= this.field_2310.getTileMeta(args.get(2), args.get(3), args.get(4));
+        int data = this.field_2310.getTileId(args.get(2), args.get(3), args.get(4)) << 4;
+        data |= this.field_2310.getTileMeta(args.get(2), args.get(3), args.get(4)) & 15;
         args.set(5, data);
     }
 }
