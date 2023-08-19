@@ -37,17 +37,26 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
     
     @Inject(method = "<init>(Lnet/minecraft/block/BlockBase;)V", at = @At("TAIL"))
     private void onInitFromBlock(BlockBase block, CallbackInfo info) {
-        this.itemId = block.asItem().id;
+        ItemBase item = block.asItem();
+        if (item != null) {
+            this.itemId = item.id;
+        }
     }
     
     @Inject(method = "<init>(Lnet/minecraft/block/BlockBase;I)V", at = @At("TAIL"))
     private void onInitFromBlock(BlockBase block, int count, CallbackInfo info) {
-        this.itemId = block.asItem().id;
+        ItemBase item = block.asItem();
+        if (item != null) {
+            this.itemId = item.id;
+        }
     }
     
     @Inject(method = "<init>(Lnet/minecraft/block/BlockBase;II)V", at = @At("TAIL"))
     private void onInitFromBlock(BlockBase block, int count, int meta, CallbackInfo info) {
-        this.itemId = block.asItem().id;
+        ItemBase item = block.asItem();
+        if (item != null) {
+            this.itemId = item.id;
+        }
     }
 
     @Redirect(
