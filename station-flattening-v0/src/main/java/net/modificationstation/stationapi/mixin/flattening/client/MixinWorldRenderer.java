@@ -1,14 +1,22 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
+import net.minecraft.block.BlockBase;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WorldRenderer.class)
 public class MixinWorldRenderer {
 	@Shadow private Level level;
+	
+	@Shadow private Minecraft client;
+	@Unique private int blockData;
 
 	@SuppressWarnings("MixinAnnotationTarget")
 	@ModifyConstant(method = "method_1544(Lnet/minecraft/util/maths/Vec3f;Lnet/minecraft/class_68;F)V", constant = @Constant(expandZeroConditions = Constant.Condition.GREATER_THAN_OR_EQUAL_TO_ZERO))
@@ -36,9 +44,24 @@ public class MixinWorldRenderer {
 		return level == null ? value : level.countVerticalSections();
 	}
 	
-	@ModifyConstant(method = "playLevelEvent", constant = @Constant(intValue = 0xFF))
-	private int changeBlockLimit(int value) {
-		return 0xFFFFFFFF;
+	@Inject(method = "playLevelEvent", at = @At("HEAD"), cancellable = true)
+	private void changeBlockLimit(PlayerBase i, int type, int x, int y, int z, int data, CallbackInfo info) {
+		if (type != 2001) return;
+		info.cancel();
+		
+		int blockMeta = data & 15;
+		int blockID = (data >> 4) & 0x0FFFFFFF;
+		if (blockID == 0) return;
+		
+		BlockBase blockBase = BlockBase.BY_ID[blockID];
+		this.client.soundHelper.playSound(
+			blockBase.sounds.getBreakSound(),
+			x + 0.5f, y + 0.5f, z + 0.5f,
+			(blockBase.sounds.getVolume() + 1.0f) / 2.0f,
+			blockBase.sounds.getPitch() * 0.8f
+		);
+		
+		this.client.particleManager.addTileBreakParticles(x, y, z, blockID, blockMeta);
 	}
 
 	@ModifyArg(

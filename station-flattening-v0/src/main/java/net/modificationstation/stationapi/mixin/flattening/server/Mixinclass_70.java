@@ -14,8 +14,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(class_70.class)
 public class Mixinclass_70 {
@@ -112,5 +114,15 @@ public class Mixinclass_70 {
     )
     private BlockChange0x35S2CPacket flatten(int x, int y, int z, Level world) {
         return new FlattenedBlockChangeS2CPacket(x, y, z, world);
+    }
+    
+    @ModifyArgs(method = "method_1834", at = @At(
+        value = "INVOKE",
+        target = "Lnet/minecraft/server/level/ServerLevel;playLevelEvent(Lnet/minecraft/entity/player/PlayerBase;IIIII)V"
+    ))
+    private void changeIDStorage(Args args) {
+        int data = stationapi_method_1834_state.getBlock().id << 4;
+        data |= this.field_2310.getTileMeta(args.get(2), args.get(3), args.get(4));
+        args.set(5, data);
     }
 }
