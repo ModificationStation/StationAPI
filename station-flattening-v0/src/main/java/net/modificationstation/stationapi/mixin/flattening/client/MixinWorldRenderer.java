@@ -35,6 +35,11 @@ public class MixinWorldRenderer {
 	private int changeSectionCount(int value) {
 		return level == null ? value : level.countVerticalSections();
 	}
+	
+	@ModifyConstant(method = "playLevelEvent", constant = @Constant(intValue = 0xFF))
+	private int changeBlockLimit(int value) {
+		return 0xFFFFFFFF;
+	}
 
 	@ModifyArg(
 			method = "method_1537",
