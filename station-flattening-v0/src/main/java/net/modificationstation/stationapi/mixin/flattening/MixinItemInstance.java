@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.util.io.CompoundTag;
@@ -27,13 +28,36 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @Mixin(ItemInstance.class)
 public abstract class MixinItemInstance implements StationFlatteningItemStack {
-
     @Shadow public int itemId;
 
     @Shadow public abstract ItemBase getType();
 
     @Unique
     private static final String STATION_ID = of(MODID, "id").toString();
+    
+    @Inject(method = "<init>(Lnet/minecraft/block/BlockBase;)V", at = @At("TAIL"))
+    private void onInitFromBlock(BlockBase block, CallbackInfo info) {
+        ItemBase item = block.asItem();
+        if (item != null) {
+            this.itemId = item.id;
+        }
+    }
+    
+    @Inject(method = "<init>(Lnet/minecraft/block/BlockBase;I)V", at = @At("TAIL"))
+    private void onInitFromBlock(BlockBase block, int count, CallbackInfo info) {
+        ItemBase item = block.asItem();
+        if (item != null) {
+            this.itemId = item.id;
+        }
+    }
+    
+    @Inject(method = "<init>(Lnet/minecraft/block/BlockBase;II)V", at = @At("TAIL"))
+    private void onInitFromBlock(BlockBase block, int count, int meta, CallbackInfo info) {
+        ItemBase item = block.asItem();
+        if (item != null) {
+            this.itemId = item.id;
+        }
+    }
 
     @Redirect(
             method = "toTag(Lnet/minecraft/util/io/CompoundTag;)Lnet/minecraft/util/io/CompoundTag;",
