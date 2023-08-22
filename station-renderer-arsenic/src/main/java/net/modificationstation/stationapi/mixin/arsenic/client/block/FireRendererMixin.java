@@ -1,7 +1,9 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.block;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -9,21 +11,13 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderer.class)
 public class FireRendererMixin {
-
-    @Unique
-    private Sprite
-            stationapi_fire_texture1,
-            stationapi_fire_texture2;
-
     @Inject(
             method = "renderFire",
             at = @At(
@@ -33,16 +27,16 @@ public class FireRendererMixin {
                     ordinal = 1,
                     shift = At.Shift.BY,
                     by = 3
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
     private void stationapi_fire_captureTexture1(
             BlockBase block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
-            Tessellator var5, int texture
+            @Local(index = 6) int textureId,
+            @Share("texture1") LocalRef<Sprite> texture1, @Share("texture2") LocalRef<Sprite> texture2
     ) {
         Atlas atlas = block.getAtlas();
-        stationapi_fire_texture1 = atlas.getTexture(texture).getSprite();
-        stationapi_fire_texture2 = atlas.getTexture(texture + 16).getSprite();
+        texture1.set(atlas.getTexture(textureId).getSprite());
+        texture2.set(atlas.getTexture(textureId + 16).getSprite());
     }
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
@@ -54,8 +48,11 @@ public class FireRendererMixin {
                     ordinal = 0
             )
     )
-    private int stationapi_fire_modTexture1X1(int x) {
-        return stationapi_fire_texture1.getX();
+    private int stationapi_fire_modTexture1X1(
+            int x,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return texture1.get().getX();
     }
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
@@ -67,8 +64,11 @@ public class FireRendererMixin {
                     ordinal = 0
             )
     )
-    private int stationapi_fire_modTexture1Y1(int y) {
-        return stationapi_fire_texture1.getY();
+    private int stationapi_fire_modTexture1Y1(
+            int y,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return texture1.get().getY();
     }
 
     @ModifyConstant(
@@ -153,8 +153,11 @@ public class FireRendererMixin {
                     )
             }
     )
-    private float stationapi_fire_modTexture1Width(float constant) {
-        return adjustToWidth(constant, stationapi_fire_texture1);
+    private float stationapi_fire_modTexture1Width(
+            float constant,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return adjustToWidth(constant, texture1.get());
     }
 
     @ModifyConstant(
@@ -239,8 +242,11 @@ public class FireRendererMixin {
                     )
             }
     )
-    private float stationapi_fire_modTexture1Height(float constant) {
-        return adjustToHeight(constant, stationapi_fire_texture1);
+    private float stationapi_fire_modTexture1Height(
+            float constant,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return adjustToHeight(constant, texture1.get());
     }
 
     @ModifyVariable(
@@ -251,8 +257,11 @@ public class FireRendererMixin {
                     ordinal = 2
             )
     )
-    private int stationapi_fire_modTexture2X1(int value) {
-        return stationapi_fire_texture2.getX();
+    private int stationapi_fire_modTexture2X1(
+            int value,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return texture2.get().getX();
     }
 
     @ModifyConstant(
@@ -276,8 +285,11 @@ public class FireRendererMixin {
                     )
             }
     )
-    private float stationapi_fire_modTexture2Width(float constant) {
-        return adjustToWidth(constant, stationapi_fire_texture2);
+    private float stationapi_fire_modTexture2Width(
+            float constant,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return adjustToWidth(constant, texture2.get());
     }
 
     @ModifyVariable(
@@ -288,8 +300,11 @@ public class FireRendererMixin {
                     ordinal = 2
             )
     )
-    private int stationapi_fire_modTexture2Y1(int value) {
-        return stationapi_fire_texture2.getY();
+    private int stationapi_fire_modTexture2Y1(
+            int value,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return texture2.get().getY();
     }
 
     @ModifyConstant(
@@ -321,8 +336,11 @@ public class FireRendererMixin {
                     )
             }
     )
-    private float stationapi_fire_modTexture2Height(float constant) {
-        return adjustToHeight(constant, stationapi_fire_texture2);
+    private float stationapi_fire_modTexture2Height(
+            float constant,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return adjustToHeight(constant, texture2.get());
     }
 
     @ModifyConstant(
@@ -341,8 +359,11 @@ public class FireRendererMixin {
                     ordinal = 4
             )
     )
-    private int stationapi_fire_modTexture1X2(int value) {
-        return stationapi_fire_texture1.getX();
+    private int stationapi_fire_modTexture1X2(
+            int value,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return texture1.get().getX();
     }
 
     @ModifyVariable(
@@ -353,8 +374,11 @@ public class FireRendererMixin {
                     ordinal = 4
             )
     )
-    private int stationapi_fire_modTexture1Y2(int value) {
-        return stationapi_fire_texture1.getY();
+    private int stationapi_fire_modTexture1Y2(
+            int value,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return texture1.get().getY();
     }
 
     @ModifyVariable(
@@ -365,8 +389,11 @@ public class FireRendererMixin {
                     ordinal = 6
             )
     )
-    private int stationapi_fire_modTexture2X2(int value) {
-        return stationapi_fire_texture2.getX();
+    private int stationapi_fire_modTexture2X2(
+            int value,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return texture2.get().getX();
     }
 
     @ModifyVariable(
@@ -377,8 +404,11 @@ public class FireRendererMixin {
                     ordinal = 6
             )
     )
-    private int stationapi_fire_modTexture2Y2(int value) {
-        return stationapi_fire_texture2.getY();
+    private int stationapi_fire_modTexture2Y2(
+            int value,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return texture2.get().getY();
     }
 
     @ModifyVariable(
@@ -389,8 +419,11 @@ public class FireRendererMixin {
                     ordinal = 8
             )
     )
-    private int stationapi_fire_modTexture1X3(int value) {
-        return stationapi_fire_texture1.getX();
+    private int stationapi_fire_modTexture1X3(
+            int value,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return texture1.get().getX();
     }
 
     @ModifyVariable(
@@ -401,8 +434,11 @@ public class FireRendererMixin {
                     ordinal = 8
             )
     )
-    private int stationapi_fire_modTexture1Y3(int value) {
-        return stationapi_fire_texture1.getY();
+    private int stationapi_fire_modTexture1Y3(
+            int value,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return texture1.get().getY();
     }
 
     @ModifyVariable(
@@ -413,8 +449,11 @@ public class FireRendererMixin {
                     ordinal = 10
             )
     )
-    private int stationapi_fire_modTexture2X3(int value) {
-        return stationapi_fire_texture2.getX();
+    private int stationapi_fire_modTexture2X3(
+            int value,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return texture2.get().getX();
     }
 
     @ModifyVariable(
@@ -425,8 +464,11 @@ public class FireRendererMixin {
                     ordinal = 10
             )
     )
-    private int stationapi_fire_modTexture2Y3(int value) {
-        return stationapi_fire_texture2.getY();
+    private int stationapi_fire_modTexture2Y3(
+            int value,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return texture2.get().getY();
     }
 
     @ModifyVariable(
@@ -437,8 +479,11 @@ public class FireRendererMixin {
                     ordinal = 12
             )
     )
-    private int stationapi_fire_modTexture2X4(int value) {
-        return stationapi_fire_texture2.getX();
+    private int stationapi_fire_modTexture2X4(
+            int value,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return texture2.get().getX();
     }
 
     @ModifyVariable(
@@ -449,16 +494,10 @@ public class FireRendererMixin {
                     ordinal = 12
             )
     )
-    private int stationapi_fire_modTexture2Y4(int value) {
-        return stationapi_fire_texture2.getY();
-    }
-
-    @Inject(
-            method = "renderFire",
-            at = @At("RETURN")
-    )
-    private void stationapi_fire_releaseCaptured(BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
-        stationapi_fire_texture1 = null;
-        stationapi_fire_texture2 = null;
+    private int stationapi_fire_modTexture2Y4(
+            int value,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return texture2.get().getY();
     }
 }

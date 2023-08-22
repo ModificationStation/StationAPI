@@ -1,54 +1,38 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.entity;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.entity.EntityBase;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(EntityRenderer.class)
 public class EntityRendererMixin {
-    @Unique
-    private Atlas stationapi_fire_atlas;
-    @Unique
-    private Sprite
-            stationapi_fire_texture1,
-            stationapi_fire_texture2;
-
-    @Inject(
-            method = "method_2028",
-            at = @At("HEAD")
-    )
-    private void stationapi_fire_captureAtlas(EntityBase d, double e, double f, double g, float par5, CallbackInfo ci) {
-        stationapi_fire_atlas = BlockBase.FIRE.getAtlas();
-    }
-
-    @ModifyVariable(
-            method = "method_2028",
-            index = 9,
-            at = @At("STORE")
-    )
-    private int stationapi_fire_captureTexture(int value) {
-        stationapi_fire_texture1 = stationapi_fire_atlas.getTexture(value).getSprite();
-        stationapi_fire_texture2 = stationapi_fire_atlas.getTexture(value + 16).getSprite();
-        return value;
-    }
-
     @ModifyVariable(
             method = "method_2028",
             at = @At("STORE"),
             index = 10
     )
-    private int stationapi_fire_modTextureX1(int value) {
-        return stationapi_fire_texture1.getX();
+    private int stationapi_fire_modTextureX1(
+            int value,
+            @Local(index = 9) int textureId,
+            @Share("texture1") LocalRef<Sprite> texture1, @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        Atlas atlas = BlockBase.FIRE.getAtlas();
+        texture1.set(atlas.getTexture(textureId).getSprite());
+        texture2.set(atlas.getTexture(textureId + 16).getSprite());
+        return texture1.get().getX();
     }
 
     @ModifyVariable(
@@ -56,8 +40,11 @@ public class EntityRendererMixin {
             at = @At("STORE"),
             index = 11
     )
-    private int stationapi_fire_modTextureY1(int value) {
-        return stationapi_fire_texture1.getY();
+    private int stationapi_fire_modTextureY1(
+            int value,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return texture1.get().getY();
     }
 
     @ModifyConstant(
@@ -106,8 +93,11 @@ public class EntityRendererMixin {
                     )
             }
     )
-    private float stationapi_fire_modTexture1Width(float constant) {
-        return adjustToWidth(constant, stationapi_fire_texture1);
+    private float stationapi_fire_modTexture1Width(
+            float constant,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return adjustToWidth(constant, texture1.get());
     }
 
     @ModifyConstant(
@@ -156,8 +146,11 @@ public class EntityRendererMixin {
                     )
             }
     )
-    private float stationapi_fire_modTexture1Height(float constant) {
-        return adjustToHeight(constant, stationapi_fire_texture1);
+    private float stationapi_fire_modTexture1Height(
+            float constant,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return adjustToHeight(constant, texture1.get());
     }
 
     @ModifyVariable(
@@ -168,8 +161,11 @@ public class EntityRendererMixin {
             ),
             index = 10
     )
-    private int stationapi_fire_modTextureX2(int value) {
-        return stationapi_fire_texture1.getX();
+    private int stationapi_fire_modTextureX2(
+            int value,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return texture1.get().getX();
     }
 
     @ModifyVariable(
@@ -180,8 +176,11 @@ public class EntityRendererMixin {
             ),
             index = 11
     )
-    private int stationapi_fire_modTextureY2(int value) {
-        return stationapi_fire_texture1.getY();
+    private int stationapi_fire_modTextureY2(
+            int value,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return texture1.get().getY();
     }
 
     @ModifyVariable(
@@ -192,8 +191,11 @@ public class EntityRendererMixin {
             ),
             index = 10
     )
-    private int stationapi_fire_modTextureX3(int value) {
-        return stationapi_fire_texture2.getX();
+    private int stationapi_fire_modTextureX3(
+            int value,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return texture2.get().getX();
     }
 
     @ModifyConstant(
@@ -205,8 +207,11 @@ public class EntityRendererMixin {
                     )
             }
     )
-    private float stationapi_fire_modTexture2Width(float constant) {
-        return adjustToWidth(constant, stationapi_fire_texture2);
+    private float stationapi_fire_modTexture2Width(
+            float constant,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return adjustToWidth(constant, texture2.get());
     }
 
     @ModifyVariable(
@@ -217,8 +222,11 @@ public class EntityRendererMixin {
             ),
             index = 11
     )
-    private int stationapi_fire_modTextureY3(int value) {
-        return stationapi_fire_texture2.getY();
+    private int stationapi_fire_modTextureY3(
+            int value,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return texture2.get().getY();
     }
 
     @ModifyConstant(
@@ -238,17 +246,10 @@ public class EntityRendererMixin {
                     )
             }
     )
-    private float stationapi_fire_modTexture2Height(float constant) {
-        return adjustToHeight(constant, stationapi_fire_texture2);
-    }
-
-    @Inject(
-            method = "method_2028",
-            at = @At("RETURN")
-    )
-    private void stationapi_fire_releaseCaptured(EntityBase d, double e, double f, double g, float par5, CallbackInfo ci) {
-        stationapi_fire_atlas = null;
-        stationapi_fire_texture1 = null;
-        stationapi_fire_texture2 = null;
+    private float stationapi_fire_modTexture2Height(
+            float constant,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return adjustToHeight(constant, texture2.get());
     }
 }

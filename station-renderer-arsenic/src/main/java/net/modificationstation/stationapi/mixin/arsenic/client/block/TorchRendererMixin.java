@@ -1,27 +1,22 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.block;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderer.class)
 public class TorchRendererMixin {
-
-    @Unique
-    private Sprite stationapi_torch_texture;
-
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @Inject(
             method = "renderTorchTilted",
             at = @At(
@@ -31,14 +26,14 @@ public class TorchRendererMixin {
                     ordinal = 1,
                     shift = At.Shift.BY,
                     by = 3
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
     private void stationapi_torch_captureTexture(
             BlockBase block, double e, double f, double g, double h, double par6, CallbackInfo ci,
-            Tessellator var12, int texture
+            @Local(index = 13) int textureId,
+            @Share("texture") LocalRef<Sprite> texture
     ) {
-        stationapi_torch_texture = block.getAtlas().getTexture(texture).getSprite();
+        texture.set(block.getAtlas().getTexture(textureId).getSprite());
     }
 
     @ModifyVariable(
@@ -46,8 +41,11 @@ public class TorchRendererMixin {
             index = 14,
             at = @At("STORE")
     )
-    private int stationapi_torch_modTextureX(int value) {
-        return stationapi_torch_texture.getX();
+    private int stationapi_torch_modTextureX(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getX();
     }
 
     @ModifyVariable(
@@ -55,8 +53,11 @@ public class TorchRendererMixin {
             index = 15,
             at = @At("STORE")
     )
-    private int stationapi_torch_modTextureY(int value) {
-        return stationapi_torch_texture.getY();
+    private int stationapi_torch_modTextureY(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getY();
     }
 
     @ModifyConstant(
@@ -83,8 +84,11 @@ public class TorchRendererMixin {
                     ordinal = 0
             )
     )
-    private float stationapi_torch_modTextureWidth(float constant) {
-        return adjustToWidth(constant, stationapi_torch_texture);
+    private float stationapi_torch_modTextureWidth(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToWidth(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -111,8 +115,11 @@ public class TorchRendererMixin {
                     ordinal = 1
             )
     )
-    private float stationapi_torch_modTextureHeight(float constant) {
-        return adjustToHeight(constant, stationapi_torch_texture);
+    private float stationapi_torch_modTextureHeight(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToHeight(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -122,8 +129,11 @@ public class TorchRendererMixin {
                     @Constant(doubleValue = 9D / ATLAS_SIZE)
             }
     )
-    private double stationapi_torch_modTextureUOffset(double constant) {
-        return adjustU(constant, stationapi_torch_texture);
+    private double stationapi_torch_modTextureUOffset(
+            double constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustU(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -133,15 +143,10 @@ public class TorchRendererMixin {
                     @Constant(doubleValue = 8D / ATLAS_SIZE)
             }
     )
-    private double stationapi_torch_modTextureVOffset(double constant) {
-        return adjustV(constant, stationapi_torch_texture);
-    }
-
-    @Inject(
-            method = "renderTorchTilted",
-            at = @At("RETURN")
-    )
-    private void stationapi_torch_releaseCaptured(BlockBase d, double e, double f, double g, double h, double par6, CallbackInfo ci) {
-        stationapi_torch_texture = null;
+    private double stationapi_torch_modTextureVOffset(
+            double constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustV(constant, texture.get());
     }
 }

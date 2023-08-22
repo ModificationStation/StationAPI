@@ -1,5 +1,8 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.block;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
@@ -13,7 +16,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Objects;
 
@@ -24,10 +26,6 @@ public class PistonHeadRendererMixin {
 
     // PISTON ROD START
 
-    @Unique
-    private Sprite stationapi_pistonRod_texture;
-
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @Inject(
             method = {
                     "method_41",
@@ -41,14 +39,14 @@ public class PistonHeadRendererMixin {
                     ordinal = 1,
                     shift = At.Shift.BY,
                     by = 3
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
     private void stationapi_pistonRod_captureTexture(
             double e, double f, double g, double h, double i, double j, float k, double par8, CallbackInfo ci,
-            int texture
+            @Local(index = 16) int textureId,
+            @Share("texture") LocalRef<Sprite> texture
     ) {
-        stationapi_pistonRod_texture = Objects.requireNonNullElseGet(stationapi_pistonHead_atlas, Atlases::getTerrain).getTexture(texture).getSprite();
+        texture.set(Objects.requireNonNullElseGet(stationapi_pistonHead_atlas, Atlases::getTerrain).getTexture(textureId).getSprite());
     }
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
@@ -64,8 +62,11 @@ public class PistonHeadRendererMixin {
                     ordinal = 0
             )
     )
-    private int stationapi_pistonRod_modTextureX(int x) {
-        return stationapi_pistonRod_texture.getX();
+    private int stationapi_pistonRod_modTextureX(
+            int x,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getX();
     }
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
@@ -81,8 +82,11 @@ public class PistonHeadRendererMixin {
                     ordinal = 0
             )
     )
-    private int stationapi_pistonRod_modTextureY(int y) {
-        return stationapi_pistonRod_texture.getY();
+    private int stationapi_pistonRod_modTextureY(
+            int y,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getY();
     }
 
     @ModifyConstant(
@@ -128,8 +132,11 @@ public class PistonHeadRendererMixin {
             ),
             argsOnly = true
     )
-    private double stationapi_pistonRod_modTextureWidth(double value) {
-        return adjustToWidth(value, stationapi_pistonRod_texture);
+    private double stationapi_pistonRod_modTextureWidth(
+            double value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToWidth(value, texture.get());
     }
 
     @ModifyConstant(
@@ -143,8 +150,11 @@ public class PistonHeadRendererMixin {
                     ordinal = 0
             )
     )
-    private double stationapi_pistonRod_modTextureWidthOffset(double constant) {
-        return adjustToWidth(constant, stationapi_pistonRod_texture);
+    private double stationapi_pistonRod_modTextureWidthOffset(
+            double constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToWidth(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -170,8 +180,11 @@ public class PistonHeadRendererMixin {
             },
             constant = @Constant(floatValue = 4)
     )
-    private float stationapi_pistonRod_modTextureHeight(float constant) {
-        return adjustToHeight(constant, stationapi_pistonRod_texture);
+    private float stationapi_pistonRod_modTextureHeight(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToHeight(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -185,8 +198,11 @@ public class PistonHeadRendererMixin {
                     ordinal = 1
             )
     )
-    private double stationapi_pistonRod_modTextureHeightOffset(double constant) {
-        return adjustToHeight(constant, stationapi_pistonRod_texture);
+    private double stationapi_pistonRod_modTextureHeightOffset(
+            double constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToHeight(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -204,20 +220,7 @@ public class PistonHeadRendererMixin {
         return StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getHeight();
     }
 
-    @Inject(
-            method = {
-                    "method_41",
-                    "method_54",
-                    "method_60"
-            },
-            at = @At("RETURN")
-    )
-    private void stationapi_pistonRod_releaseCaptured(double e, double f, double g, double h, double i, double j, float k, double par8, CallbackInfo ci) {
-        stationapi_pistonRod_texture = null;
-    }
-
     // PISTON ROD END
-
 
 
     // PISTON HEAD START

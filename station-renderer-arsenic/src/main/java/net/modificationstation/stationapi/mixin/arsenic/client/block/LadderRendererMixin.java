@@ -1,26 +1,22 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.block;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderer.class)
 public class LadderRendererMixin {
-
-    @Unique
-    private Sprite stationapi_ladder_texture;
-
     @Inject(
             method = "renderLadder",
             at = @At(
@@ -30,14 +26,14 @@ public class LadderRendererMixin {
                     ordinal = 1,
                     shift = At.Shift.BY,
                     by = 3
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
     private void stationapi_ladder_captureTexture(
             BlockBase block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
-            Tessellator var5, int texture
+            @Local(index = 6) int textureId,
+            @Share("texture") LocalRef<Sprite> texture
     ) {
-        stationapi_ladder_texture = block.getAtlas().getTexture(texture).getSprite();
+        texture.set(block.getAtlas().getTexture(textureId).getSprite());
     }
 
     @ModifyVariable(
@@ -45,8 +41,11 @@ public class LadderRendererMixin {
             index = 8,
             at = @At("STORE")
     )
-    private int stationapi_ladder_modTextureX(int value) {
-        return stationapi_ladder_texture.getX();
+    private int stationapi_ladder_modTextureX(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getX();
     }
 
     @ModifyVariable(
@@ -54,8 +53,11 @@ public class LadderRendererMixin {
             index = 9,
             at = @At("STORE")
     )
-    private int stationapi_ladder_modTextureY(int value) {
-        return stationapi_ladder_texture.getY();
+    private int stationapi_ladder_modTextureY(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getY();
     }
 
     @ModifyConstant(
@@ -82,8 +84,11 @@ public class LadderRendererMixin {
                     ordinal = 0
             )
     )
-    private float stationapi_ladder_modTextureWidth(float constant) {
-        return adjustToWidth(constant, stationapi_ladder_texture);
+    private float stationapi_ladder_modTextureWidth(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToWidth(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -110,15 +115,10 @@ public class LadderRendererMixin {
                     ordinal = 1
             )
     )
-    private float stationapi_ladder_modTextureHeight(float constant) {
-        return adjustToHeight(constant, stationapi_ladder_texture);
-    }
-
-    @Inject(
-            method = "renderLadder",
-            at = @At("RETURN")
-    )
-    private void stationapi_ladder_releaseCaptured(BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
-        stationapi_ladder_texture = null;
+    private float stationapi_ladder_modTextureHeight(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToHeight(constant, texture.get());
     }
 }

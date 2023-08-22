@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.block;
 
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
@@ -17,10 +19,6 @@ import static net.modificationstation.stationapi.impl.client.arsenic.renderer.re
 
 @Mixin(BlockRenderer.class)
 public class BlockRendererMixin {
-
-    @Unique
-    private Sprite stationapi_block_texture;
-
     @Inject(
             method = {
                     "renderBottomFace",
@@ -39,8 +37,11 @@ public class BlockRendererMixin {
                     by = 3
             )
     )
-    private void stationapi_block_captureTexture(BlockBase block, double e, double f, double i, int texture, CallbackInfo ci) {
-        stationapi_block_texture = block.getAtlas().getTexture(texture).getSprite();
+    private void stationapi_block_captureTexture(
+            BlockBase block, double e, double f, double i, int textureId, CallbackInfo ci,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        texture.set(block.getAtlas().getTexture(textureId).getSprite());
     }
 
     @ModifyVariable(
@@ -55,8 +56,11 @@ public class BlockRendererMixin {
             index = 10,
             at = @At("STORE")
     )
-    private int stationapi_block_modTextureX(int value) {
-        return stationapi_block_texture.getX();
+    private int stationapi_block_modTextureX(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getX();
     }
 
     @ModifyVariable(
@@ -71,8 +75,11 @@ public class BlockRendererMixin {
             index = 11,
             at = @At("STORE")
     )
-    private int stationapi_block_modTextureY(int value) {
-        return stationapi_block_texture.getY();
+    private int stationapi_block_modTextureY(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getY();
     }
 
     @ModifyConstant(
@@ -119,8 +126,11 @@ public class BlockRendererMixin {
                     )
             }
     )
-    private double stationapi_block_modTextureWidth1(double constant) {
-        return stationapi_block_texture.getContents().getWidth();
+    private double stationapi_block_modTextureWidth1(
+            double constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getContents().getWidth();
     }
 
     @ModifyConstant(
@@ -191,8 +201,11 @@ public class BlockRendererMixin {
                     )
             }
     )
-    private double stationapi_block_modTextureWidthOffset(double constant) {
-        return adjustToWidth(constant, stationapi_block_texture);
+    private double stationapi_block_modTextureWidthOffset(
+            double constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToWidth(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -239,8 +252,11 @@ public class BlockRendererMixin {
                     )
             }
     )
-    private double stationapi_block_modTextureHeight1(double constant) {
-        return stationapi_block_texture.getContents().getHeight();
+    private double stationapi_block_modTextureHeight1(
+            double constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getContents().getHeight();
     }
 
     @ModifyConstant(
@@ -311,8 +327,11 @@ public class BlockRendererMixin {
                     )
             }
     )
-    private double stationapi_block_modTextureHeightOffset(double constant) {
-        return adjustToHeight(constant, stationapi_block_texture);
+    private double stationapi_block_modTextureHeightOffset(
+            double constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToHeight(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -353,8 +372,11 @@ public class BlockRendererMixin {
                     ordinal = 0
             )
     )
-    private float stationapi_block_modTextureWidth2(float constant) {
-        return adjustToWidth(constant, stationapi_block_texture);
+    private float stationapi_block_modTextureWidth2(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToWidth(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -395,8 +417,11 @@ public class BlockRendererMixin {
                     ordinal = 1
             )
     )
-    private float stationapi_block_modTextureHeight2(float constant) {
-        return adjustToHeight(constant, stationapi_block_texture);
+    private float stationapi_block_modTextureHeight2(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToHeight(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -427,8 +452,11 @@ public class BlockRendererMixin {
                     )
             }
     )
-    private int stationapi_block_modTextureHeight3(int constant) {
-        return stationapi_block_texture.getContents().getHeight();
+    private int stationapi_block_modTextureHeight3(
+            int constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getContents().getHeight();
     }
 
     @ModifyConstant(
@@ -459,23 +487,11 @@ public class BlockRendererMixin {
                     )
             }
     )
-    private int stationapi_block_modTextureWidth3(int constant) {
-        return stationapi_block_texture.getContents().getWidth();
-    }
-
-    @Inject(
-            method = {
-                    "renderBottomFace",
-                    "renderTopFace",
-                    "renderEastFace",
-                    "renderWestFace",
-                    "renderNorthFace",
-                    "renderSouthFace"
-            },
-            at = @At("RETURN")
-    )
-    private void stationapi_block_releaseCaptured(BlockBase d, double e, double f, double i, int par5, CallbackInfo ci) {
-        stationapi_block_texture = null;
+    private int stationapi_block_modTextureWidth3(
+            int constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getContents().getWidth();
     }
 
     @Unique

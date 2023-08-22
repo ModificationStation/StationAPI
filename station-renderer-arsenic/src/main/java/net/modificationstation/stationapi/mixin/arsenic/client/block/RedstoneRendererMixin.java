@@ -1,5 +1,8 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.block;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
@@ -9,22 +12,13 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderer.class)
 public class RedstoneRendererMixin {
-
-    @Unique
-    private Sprite
-            stationapi_redstone_texture1,
-            stationapi_redstone_texture2,
-            stationapi_redstone_curTexture;
-
     @Inject(
             method = "renderRedstoneDust",
             at = @At(
@@ -34,16 +28,18 @@ public class RedstoneRendererMixin {
                     ordinal = 1,
                     shift = At.Shift.BY,
                     by = 3
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
     private void stationapi_redstone_captureTexture1(
             BlockBase block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
-            Tessellator var5, int var6, int texture
+            @Local(index = 7) int textureId,
+            @Share("curTexture") LocalRef<Sprite> curTexture, @Share("texture1") LocalRef<Sprite> texture1, @Share("texture2") LocalRef<Sprite> texture2
     ) {
         Atlas atlas = block.getAtlas();
-        stationapi_redstone_texture1 = stationapi_redstone_curTexture = atlas.getTexture(texture).getSprite();
-        stationapi_redstone_texture2 = atlas.getTexture(texture + 1).getSprite();
+        Sprite texture = atlas.getTexture(textureId).getSprite();
+        curTexture.set(texture);
+        texture1.set(texture);
+        texture2.set(atlas.getTexture(textureId + 1).getSprite());
     }
 
     @ModifyVariable(
@@ -51,8 +47,11 @@ public class RedstoneRendererMixin {
             index = 13,
             at = @At("STORE")
     )
-    private int stationapi_redstone_modTexture1X(int value) {
-        return stationapi_redstone_texture1.getX();
+    private int stationapi_redstone_modTexture1X(
+            int value,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return texture1.get().getX();
     }
 
     @ModifyVariable(
@@ -60,8 +59,11 @@ public class RedstoneRendererMixin {
             index = 14,
             at = @At("STORE")
     )
-    private int stationapi_redstone_modTexture1Y(int value) {
-        return stationapi_redstone_texture1.getY();
+    private int stationapi_redstone_modTexture1Y(
+            int value,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return texture1.get().getY();
     }
 
     @ModifyConstant(
@@ -104,8 +106,11 @@ public class RedstoneRendererMixin {
                     ordinal = 0
             )
     )
-    private float stationapi_redstone_modTexture1Width(float constant) {
-        return adjustToWidth(constant, stationapi_redstone_texture1);
+    private float stationapi_redstone_modTexture1Width(
+            float constant,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return adjustToWidth(constant, texture1.get());
     }
 
     @ModifyConstant(
@@ -148,8 +153,11 @@ public class RedstoneRendererMixin {
                     ordinal = 1
             )
     )
-    private float stationapi_redstone_modTexture1Height(float constant) {
-        return adjustToHeight(constant, stationapi_redstone_texture1);
+    private float stationapi_redstone_modTexture1Height(
+            float constant,
+            @Share("texture1") LocalRef<Sprite> texture1
+    ) {
+        return adjustToHeight(constant, texture1.get());
     }
 
     @ModifyVariable(
@@ -160,9 +168,12 @@ public class RedstoneRendererMixin {
                     ordinal = 2
             )
     )
-    private int stationapi_redstone_modTexture2X1(int value) {
-        stationapi_redstone_curTexture = stationapi_redstone_texture2;
-        return stationapi_redstone_texture2.getX();
+    private int stationapi_redstone_modTexture2X1(
+            int value,
+            @Share("curTexture") LocalRef<Sprite> curTexture, @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        curTexture.set(texture2.get());
+        return texture2.get().getX();
     }
 
     @ModifyConstant(
@@ -186,8 +197,11 @@ public class RedstoneRendererMixin {
                     )
             }
     )
-    private float stationapi_redstone_modTexture2Width(float constant) {
-        return adjustToWidth(constant, stationapi_redstone_texture2);
+    private float stationapi_redstone_modTexture2Width(
+            float constant,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return adjustToWidth(constant, texture2.get());
     }
 
     @ModifyVariable(
@@ -198,8 +212,11 @@ public class RedstoneRendererMixin {
                     ordinal = 2
             )
     )
-    private int stationapi_redstone_modTexture2Y1(int value) {
-        return stationapi_redstone_texture2.getY();
+    private int stationapi_redstone_modTexture2Y1(
+            int value,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return texture2.get().getY();
     }
 
     @ModifyConstant(
@@ -215,8 +232,11 @@ public class RedstoneRendererMixin {
                     )
             }
     )
-    private float stationapi_redstone_modTexture2Height(float constant) {
-        return adjustToHeight(constant, stationapi_redstone_texture2);
+    private float stationapi_redstone_modTexture2Height(
+            float constant,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return adjustToHeight(constant, texture2.get());
     }
 
     @ModifyConstant(
@@ -232,8 +252,11 @@ public class RedstoneRendererMixin {
                     )
             }
     )
-    private double stationapi_redstone_modCurTextureUOffset(double constant) {
-        return adjustU(constant, stationapi_redstone_curTexture);
+    private double stationapi_redstone_modCurTextureUOffset(
+            double constant,
+            @Share("curTexture") LocalRef<Sprite> curTexture
+    ) {
+        return adjustU(constant, curTexture.get());
     }
 
     @ModifyConstant(
@@ -249,8 +272,11 @@ public class RedstoneRendererMixin {
                     )
             }
     )
-    private double stationapi_redstone_modCurTextureVOffset(double constant) {
-        return adjustV(constant, stationapi_redstone_curTexture);
+    private double stationapi_redstone_modCurTextureVOffset(
+            double constant,
+            @Share("curTexture") LocalRef<Sprite> curTexture
+    ) {
+        return adjustV(constant, curTexture.get());
     }
 
     @Redirect(
@@ -265,7 +291,8 @@ public class RedstoneRendererMixin {
                     target = "Lnet/minecraft/client/render/Tessellator;colour(FFF)V"
             )
     )
-    private void stationapi_redstone_removeInvisibleTextures1(Tessellator instance, float g, float h, float v) {}
+    private void stationapi_redstone_removeInvisibleTextures1(Tessellator instance, float g, float h, float v) {
+    }
 
     @Redirect(
             method = "renderRedstoneDust",
@@ -286,7 +313,8 @@ public class RedstoneRendererMixin {
                     target = "Lnet/minecraft/client/render/Tessellator;vertex(DDDDD)V"
             )
     )
-    private void stationapi_redstone_removeInvisibleTextures2(Tessellator instance, double e, double f, double g, double h, double v) {}
+    private void stationapi_redstone_removeInvisibleTextures2(Tessellator instance, double e, double f, double g, double h, double v) {
+    }
 
     @Redirect(
             method = "renderRedstoneDust",
@@ -307,7 +335,8 @@ public class RedstoneRendererMixin {
                     target = "Lnet/minecraft/client/render/Tessellator;vertex(DDDDD)V"
             )
     )
-    private void stationapi_redstone_removeInvisibleTextures3(Tessellator instance, double e, double f, double g, double h, double v) {}
+    private void stationapi_redstone_removeInvisibleTextures3(Tessellator instance, double e, double f, double g, double h, double v) {
+    }
 
     @Redirect(
             method = "renderRedstoneDust",
@@ -328,7 +357,8 @@ public class RedstoneRendererMixin {
                     target = "Lnet/minecraft/client/render/Tessellator;vertex(DDDDD)V"
             )
     )
-    private void stationapi_redstone_removeInvisibleTextures4(Tessellator instance, double e, double f, double g, double h, double v) {}
+    private void stationapi_redstone_removeInvisibleTextures4(Tessellator instance, double e, double f, double g, double h, double v) {
+    }
 
     @ModifyVariable(
             method = "renderRedstoneDust",
@@ -338,9 +368,12 @@ public class RedstoneRendererMixin {
                     ordinal = 4
             )
     )
-    private int stationapi_redstone_modTexture2X2(int value) {
-        stationapi_redstone_curTexture = stationapi_redstone_texture2;
-        return stationapi_redstone_texture2.getX();
+    private int stationapi_redstone_modTexture2X2(
+            int value,
+            @Share("curTexture") LocalRef<Sprite> curTexture, @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        curTexture.set(texture2.get());
+        return texture2.get().getX();
     }
 
     @ModifyVariable(
@@ -351,8 +384,11 @@ public class RedstoneRendererMixin {
                     ordinal = 4
             )
     )
-    private int stationapi_redstone_modTexture2Y2(int value) {
-        return stationapi_redstone_texture2.getY();
+    private int stationapi_redstone_modTexture2Y2(
+            int value,
+            @Share("texture2") LocalRef<Sprite> texture2
+    ) {
+        return texture2.get().getY();
     }
 
     @Redirect(
@@ -374,7 +410,8 @@ public class RedstoneRendererMixin {
                     target = "Lnet/minecraft/client/render/Tessellator;vertex(DDDDD)V"
             )
     )
-    private void stationapi_redstone_removeInvisibleTextures5(Tessellator instance, double e, double f, double g, double h, double v) {}
+    private void stationapi_redstone_removeInvisibleTextures5(Tessellator instance, double e, double f, double g, double h, double v) {
+    }
 
     @Redirect(
             method = "renderRedstoneDust",
@@ -395,7 +432,8 @@ public class RedstoneRendererMixin {
                     target = "Lnet/minecraft/client/render/Tessellator;vertex(DDDDD)V"
             )
     )
-    private void stationapi_redstone_removeInvisibleTextures6(Tessellator instance, double e, double f, double g, double h, double v) {}
+    private void stationapi_redstone_removeInvisibleTextures6(Tessellator instance, double e, double f, double g, double h, double v) {
+    }
 
     @Redirect(
             method = "renderRedstoneDust",
@@ -416,7 +454,8 @@ public class RedstoneRendererMixin {
                     target = "Lnet/minecraft/client/render/Tessellator;vertex(DDDDD)V"
             )
     )
-    private void stationapi_redstone_removeInvisibleTextures7(Tessellator instance, double e, double f, double g, double h, double v) {}
+    private void stationapi_redstone_removeInvisibleTextures7(Tessellator instance, double e, double f, double g, double h, double v) {
+    }
 
     @Redirect(
             method = "renderRedstoneDust",
@@ -437,15 +476,6 @@ public class RedstoneRendererMixin {
                     target = "Lnet/minecraft/client/render/Tessellator;vertex(DDDDD)V"
             )
     )
-    private void stationapi_redstone_removeInvisibleTextures8(Tessellator instance, double e, double f, double g, double h, double v) {}
-
-    @Inject(
-            method = "renderRedstoneDust",
-            at = @At("RETURN")
-    )
-    private void stationapi_redstone_releaseCaptured(BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
-        stationapi_redstone_texture1 = null;
-        stationapi_redstone_texture2 = null;
-        stationapi_redstone_curTexture = null;
+    private void stationapi_redstone_removeInvisibleTextures8(Tessellator instance, double e, double f, double g, double h, double v) {
     }
 }

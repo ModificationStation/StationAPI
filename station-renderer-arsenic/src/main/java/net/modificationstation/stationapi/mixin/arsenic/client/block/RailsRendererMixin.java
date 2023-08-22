@@ -1,26 +1,22 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.block;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.Rail;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderer.class)
 public class RailsRendererMixin {
-
-    @Unique
-    private Sprite stationapi_rails_texture;
-
     @Inject(
             method = "renderRails",
             at = @At(
@@ -30,14 +26,14 @@ public class RailsRendererMixin {
                     ordinal = 1,
                     shift = At.Shift.BY,
                     by = 3
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
     private void stationapi_rails_captureTexture(
             Rail block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
-            Tessellator var5, int var6, int texture
+            @Local(index = 7) int textureId,
+            @Share("texture") LocalRef<Sprite> texture
     ) {
-        stationapi_rails_texture = block.getAtlas().getTexture(texture).getSprite();
+        texture.set(block.getAtlas().getTexture(textureId).getSprite());
     }
 
     @ModifyVariable(
@@ -45,8 +41,11 @@ public class RailsRendererMixin {
             index = 9,
             at = @At("STORE")
     )
-    private int stationapi_rails_modTextureX(int value) {
-        return stationapi_rails_texture.getX();
+    private int stationapi_rails_modTextureX(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getX();
     }
 
     @ModifyVariable(
@@ -54,8 +53,11 @@ public class RailsRendererMixin {
             index = 10,
             at = @At("STORE")
     )
-    private int stationapi_rails_modTextureY(int value) {
-        return stationapi_rails_texture.getY();
+    private int stationapi_rails_modTextureY(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getY();
     }
 
     @ModifyConstant(
@@ -82,8 +84,11 @@ public class RailsRendererMixin {
                     ordinal = 0
             )
     )
-    private float stationapi_rails_modTextureWidth(float constant) {
-        return adjustToWidth(constant, stationapi_rails_texture);
+    private float stationapi_rails_modTextureWidth(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToWidth(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -110,15 +115,10 @@ public class RailsRendererMixin {
                     ordinal = 1
             )
     )
-    private float stationapi_rails_modTextureHeight(float constant) {
-        return adjustToHeight(constant, stationapi_rails_texture);
-    }
-
-    @Inject(
-            method = "renderRails",
-            at = @At("RETURN")
-    )
-    private void stationapi_rails_releaseCaptured(Rail i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
-        stationapi_rails_texture = null;
+    private float stationapi_rails_modTextureHeight(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToHeight(constant, texture.get());
     }
 }

@@ -1,26 +1,22 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.block;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderer.class)
 public class RepeaterRendererMixin {
-
-    @Unique
-    private Sprite stationapi_repeater_texture;
-
     @Inject(
             method = "renderRedstoneRepeater",
             at = @At(
@@ -29,14 +25,14 @@ public class RepeaterRendererMixin {
                     ordinal = 0,
                     shift = At.Shift.BY,
                     by = 2
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
     private void stationapi_repeater_captureTexture(
             BlockBase block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
-            int var5, int var6, int var7, Tessellator var8, float var9, double var10, double var12, double var14, double var16, double var18, int texture
+            @Local(index = 20) int textureId,
+            @Share("texture") LocalRef<Sprite> texture
     ) {
-        stationapi_repeater_texture = block.getAtlas().getTexture(texture).getSprite();
+        texture.set(block.getAtlas().getTexture(textureId).getSprite());
     }
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
@@ -48,8 +44,11 @@ public class RepeaterRendererMixin {
                     ordinal = 0
             )
     )
-    private int stationapi_repeater_modTextureX(int x) {
-        return stationapi_repeater_texture.getX();
+    private int stationapi_repeater_modTextureX(
+            int x,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getX();
     }
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
@@ -61,8 +60,11 @@ public class RepeaterRendererMixin {
                     ordinal = 0
             )
     )
-    private int stationapi_repeater_modTextureY(int y) {
-        return stationapi_repeater_texture.getY();
+    private int stationapi_repeater_modTextureY(
+            int y,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getY();
     }
 
     @ModifyConstant(
@@ -89,8 +91,11 @@ public class RepeaterRendererMixin {
                     ordinal = 0
             )
     )
-    private float stationapi_repeater_modTextureWidth(float constant) {
-        return adjustToWidth(constant, stationapi_repeater_texture);
+    private float stationapi_repeater_modTextureWidth(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToWidth(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -117,15 +122,10 @@ public class RepeaterRendererMixin {
                     ordinal = 1
             )
     )
-    private float stationapi_repeater_modTextureHeight(float constant) {
-        return adjustToHeight(constant, stationapi_repeater_texture);
-    }
-
-    @Inject(
-            method = "renderRedstoneRepeater",
-            at = @At("RETURN")
-    )
-    private void stationapi_repeater_releaseCaptured(BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
-        stationapi_repeater_texture = null;
+    private float stationapi_repeater_modTextureHeight(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToHeight(constant, texture.get());
     }
 }

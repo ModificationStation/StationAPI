@@ -1,7 +1,9 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.block;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -10,16 +12,11 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderer.class)
 public class ColumnRendererMixin {
-
-    private Sprite stationapi_column_texture;
-
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @Inject(
             method = "method_56",
             at = @At(
@@ -29,14 +26,14 @@ public class ColumnRendererMixin {
                     ordinal = 1,
                     shift = At.Shift.BY,
                     by = 3
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
     private void stationapi_column_captureTexture(
             BlockBase block, int d, double e, double f, double par5, CallbackInfo ci,
-            Tessellator var9, int texture
+            @Local(index = 10) int textureId,
+            @Share("texture") LocalRef<Sprite> texture
     ) {
-        stationapi_column_texture = block.getAtlas().getTexture(texture).getSprite();
+        texture.set(block.getAtlas().getTexture(textureId).getSprite());
     }
 
     @ModifyVariable(
@@ -44,8 +41,11 @@ public class ColumnRendererMixin {
             index = 11,
             at = @At("STORE")
     )
-    private int stationapi_column_modTextureX(int value) {
-        return stationapi_column_texture.getX();
+    private int stationapi_column_modTextureX(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getX();
     }
 
     @ModifyVariable(
@@ -53,8 +53,11 @@ public class ColumnRendererMixin {
             index = 12,
             at = @At("STORE")
     )
-    private int stationapi_column_modTextureY(int value) {
-        return stationapi_column_texture.getY();
+    private int stationapi_column_modTextureY(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getY();
     }
 
     @ModifyConstant(
@@ -81,8 +84,11 @@ public class ColumnRendererMixin {
                     ordinal = 0
             )
     )
-    private float stationapi_column_modTextureWidth(float constant) {
-        return adjustToWidth(constant, stationapi_column_texture);
+    private float stationapi_column_modTextureWidth(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToWidth(constant, texture.get());
     }
 
     @ModifyConstant(
@@ -109,15 +115,10 @@ public class ColumnRendererMixin {
                     ordinal = 1
             )
     )
-    private float stationapi_column_modTextureHeight(float constant) {
-        return adjustToHeight(constant, stationapi_column_texture);
-    }
-
-    @Inject(
-            method = "method_56",
-            at = @At("HEAD")
-    )
-    private void stationapi_column_releaseCaptured(BlockBase i, int d, double e, double f, double par5, CallbackInfo ci) {
-        stationapi_column_texture = null;
+    private float stationapi_column_modTextureHeight(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToHeight(constant, texture.get());
     }
 }

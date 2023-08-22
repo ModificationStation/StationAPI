@@ -121,6 +121,7 @@ allprojects {
         implementation "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
         implementation "com.mojang:datafixerupper:${project.dfu_version}"
         implementation "maven.modrinth:spasm:${project.spasm_version}"
+        implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixinextras_version}"))
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
@@ -232,6 +233,7 @@ allprojects {
                         deps.add(["org.apache.commons", "commons-lang3", "3.5"] as String[])
                         deps.add(["commons-io", "commons-io", "2.5"] as String[])
                         deps.add(["maven.modrinth", "spasm", "${project.spasm_version}"] as String[])
+                        deps.add(["com.github.llamalad7.mixinextras", "mixinextras-fabric", "${project.mixinextras_version}"] as String[])
                         deps.each {
                             def depNode = depsNode.appendNode("dependency")
                             depNode.appendNode("groupId", it[0])
@@ -313,6 +315,7 @@ dependencies {
     include "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
     include "com.mojang:datafixerupper:${project.dfu_version}"
     include "maven.modrinth:spasm:${project.spasm_version}"
+    include "com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixinextras_version}"
 }
 
 // Makes java shut up

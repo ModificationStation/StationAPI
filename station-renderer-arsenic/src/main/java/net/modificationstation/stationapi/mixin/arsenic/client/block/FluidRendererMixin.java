@@ -1,8 +1,11 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.block;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.BlockBase;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderer;
 import net.minecraft.level.BlockView;
 import net.minecraft.util.maths.MathHelper;
@@ -14,32 +17,25 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.world.BlockStateView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderer.class)
 public class FluidRendererMixin {
-
     @Shadow private BlockView blockView;
-
-    @Unique
-    private Atlas stationapi_fluid_atlas;
-    @Unique
-    private int stationapi_fluid_textureScale;
-    @Unique
-    private Sprite stationapi_fluid_texture;
 
     @Inject(
             method = "renderFluid",
             at = @At("HEAD")
     )
-    private void stationapi_fluid_init(BlockBase block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
-        stationapi_fluid_atlas = block.getAtlas();
-        stationapi_fluid_textureScale = 1;
+    private void stationapi_fluid_init(
+            BlockBase block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
+            @Share("atlas") LocalRef<Atlas> atlas, @Share("textureScale") LocalIntRef textureScale
+    ) {
+        atlas.set(block.getAtlas());
+        textureScale.set(1);
     }
 
     @ModifyVariable(
@@ -63,8 +59,11 @@ public class FluidRendererMixin {
                     shift = At.Shift.AFTER
             )
     )
-    private void stationapi_fluid_rescaleTexture(BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
-        stationapi_fluid_textureScale = 2;
+    private void stationapi_fluid_rescaleTexture(
+            BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
+            @Share("textureScale") LocalIntRef textureScale
+    ) {
+        textureScale.set(2);
     }
 
     @Inject(
@@ -75,14 +74,14 @@ public class FluidRendererMixin {
                     ordinal = 1,
                     shift = At.Shift.BY,
                     by = 3
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
     private void stationapi_fluid_captureTexture1(
             BlockBase block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
-            Tessellator var5, int var6, float var7, float var8, float var9, int var10, int var11, boolean[] var12, int var13, float var14, float var15, float var16, float var17, double var18, double var20, Material var22, int var23, float var24, float var25, float var26, float var27, int texture
+            @Local(index = 28) int textureId,
+            @Share("atlas") LocalRef<Atlas> atlas, @Share("texture") LocalRef<Sprite> texture
     ) {
-        stationapi_fluid_texture = stationapi_fluid_atlas.getTexture(texture).getSprite();
+        texture.set(atlas.get().getTexture(textureId).getSprite());
     }
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
@@ -94,8 +93,11 @@ public class FluidRendererMixin {
                     ordinal = 0
             )
     )
-    private int stationapi_fluid_modTextureX1(int value) {
-        return stationapi_fluid_texture.getX();
+    private int stationapi_fluid_modTextureX1(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getX();
     }
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
@@ -107,8 +109,11 @@ public class FluidRendererMixin {
                     ordinal = 0
             )
     )
-    private int stationapi_fluid_modTextureY1(int value) {
-        return stationapi_fluid_texture.getY();
+    private int stationapi_fluid_modTextureY1(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getY();
     }
 
     @ModifyConstant(
@@ -118,8 +123,11 @@ public class FluidRendererMixin {
                     ordinal = 0
             )
     )
-    private double stationapi_fluid_modTextureWidth1(double constant) {
-        return adjustToWidth(constant, stationapi_fluid_texture) / stationapi_fluid_textureScale;
+    private double stationapi_fluid_modTextureWidth1(
+            double constant,
+            @Share("textureScale") LocalIntRef textureScale, @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToWidth(constant, texture.get()) / textureScale.get();
     }
 
     @ModifyConstant(
@@ -146,8 +154,11 @@ public class FluidRendererMixin {
                     ordinal = 1
             )
     )
-    private double stationapi_fluid_modTextureHeight1(double constant) {
-        return adjustToHeight(constant, stationapi_fluid_texture) / stationapi_fluid_textureScale;
+    private double stationapi_fluid_modTextureHeight1(
+            double constant,
+            @Share("textureScale") LocalIntRef textureScale, @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToHeight(constant, texture.get()) / textureScale.get();
     }
 
     @ModifyConstant(
@@ -174,8 +185,11 @@ public class FluidRendererMixin {
                     ordinal = 1
             )
     )
-    private int stationapi_fluid_modTextureWidth2(int constant) {
-        return stationapi_fluid_texture.getContents().getWidth() / stationapi_fluid_textureScale;
+    private int stationapi_fluid_modTextureWidth2(
+            int constant,
+            @Share("textureScale") LocalIntRef textureScale, @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getContents().getWidth() / textureScale.get();
     }
 
     @ModifyConstant(
@@ -210,8 +224,11 @@ public class FluidRendererMixin {
                     ordinal = 2
             )
     )
-    private int stationapi_fluid_modTextureHeight2(int constant) {
-        return stationapi_fluid_texture.getContents().getHeight() / stationapi_fluid_textureScale;
+    private int stationapi_fluid_modTextureHeight2(
+            int constant,
+            @Share("textureScale") LocalIntRef textureScale, @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getContents().getHeight() / textureScale.get();
     }
 
     @ModifyConstant(
@@ -239,16 +256,12 @@ public class FluidRendererMixin {
             method = "renderFluid",
             constant = @Constant(floatValue = TEX_SIZE / 2F)
     )
-    private float stationapi_fluid_modTextureWidth3(float constant) {
-        return adjustToWidth(constant, stationapi_fluid_texture) / stationapi_fluid_textureScale;
+    private float stationapi_fluid_modTextureWidth3(
+            float constant,
+            @Share("textureScale") LocalIntRef textureScale, @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return adjustToWidth(constant, texture.get()) / textureScale.get();
     }
-
-    @Unique
-    private float
-            stationapi_fluid_us,
-            stationapi_fluid_uc,
-            stationapi_fluid_vs,
-            stationapi_fluid_vc;
 
     @Inject(
             method = "renderFluid",
@@ -256,19 +269,19 @@ public class FluidRendererMixin {
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/BlockBase;getBrightness(Lnet/minecraft/level/BlockView;III)F",
                     ordinal = 0
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
     private void stationapi_fluid_calculateAtlasSizeIndependentUV(
             BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
-            Tessellator var5, int var6, float var7, float var8, float var9, int var10, int var11, boolean[] var12, int var13, float var14, float var15, float var16, float var17, double var18, double var20, Material var22, int var23, float var24, float var25, float var26, float var27, int var28, float var29, int var30, int var31, double var32, double var34,
-            float var36, float var37
+            @Local(index = 29) float var29, @Local(index = 36) float var36, @Local(index = 37) float var37,
+            @Share("textureScale") LocalIntRef textureScale, @Share("texture") LocalRef<Sprite> texture,
+            @Share("us") LocalFloatRef us, @Share("uc") LocalFloatRef uc, @Share("vs") LocalFloatRef vs, @Share("vc") LocalFloatRef vc
     ) {
-        stationapi_fluid_us = var36;
-        stationapi_fluid_uc = var37;
-        final float multiplier = (float) stationapi_fluid_texture.getContents().getHeight() / stationapi_fluid_textureScale / 2 / StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getHeight();
-        stationapi_fluid_vs = MathHelper.sin(var29) * multiplier;
-        stationapi_fluid_vc = MathHelper.cos(var29) * multiplier;
+        us.set(var36);
+        uc.set(var37);
+        final float multiplier = (float) texture.get().getContents().getHeight() / textureScale.get() / 2 / StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getHeight();
+        vs.set(MathHelper.sin(var29) * multiplier);
+        vc.set(MathHelper.cos(var29) * multiplier);
     }
 
     @ModifyVariable(
@@ -279,8 +292,11 @@ public class FluidRendererMixin {
             ),
             index = 37
     )
-    private float stationapi_fluid_swapToVC1(float value) {
-        return stationapi_fluid_vc;
+    private float stationapi_fluid_swapToVC1(
+            float value,
+            @Share("vc") LocalFloatRef vc
+    ) {
+        return vc.get();
     }
 
     @ModifyVariable(
@@ -291,8 +307,11 @@ public class FluidRendererMixin {
             ),
             index = 36
     )
-    private float stationapi_fluid_swapToVS1(float value) {
-        return stationapi_fluid_vs;
+    private float stationapi_fluid_swapToVS1(
+            float value,
+            @Share("vs") LocalFloatRef vs
+    ) {
+        return vs.get();
     }
 
     @ModifyVariable(
@@ -303,8 +322,11 @@ public class FluidRendererMixin {
             ),
             index = 37
     )
-    private float stationapi_fluid_swapToUC1(float value) {
-        return stationapi_fluid_uc;
+    private float stationapi_fluid_swapToUC1(
+            float value,
+            @Share("uc") LocalFloatRef uc
+    ) {
+        return uc.get();
     }
 
     @ModifyVariable(
@@ -315,8 +337,11 @@ public class FluidRendererMixin {
             ),
             index = 36
     )
-    private float stationapi_fluid_swapToUS1(float value) {
-        return stationapi_fluid_us;
+    private float stationapi_fluid_swapToUS1(
+            float value,
+            @Share("us") LocalFloatRef us
+    ) {
+        return us.get();
     }
 
     @ModifyVariable(
@@ -327,8 +352,11 @@ public class FluidRendererMixin {
             ),
             index = 37
     )
-    private float stationapi_fluid_swapToVC2(float value) {
-        return stationapi_fluid_vc;
+    private float stationapi_fluid_swapToVC2(
+            float value,
+            @Share("vc") LocalFloatRef vc
+    ) {
+        return vc.get();
     }
 
     @ModifyVariable(
@@ -339,8 +367,11 @@ public class FluidRendererMixin {
             ),
             index = 36
     )
-    private float stationapi_fluid_swapToVS2(float value) {
-        return stationapi_fluid_vs;
+    private float stationapi_fluid_swapToVS2(
+            float value,
+            @Share("vs") LocalFloatRef vs
+    ) {
+        return vs.get();
     }
 
     @ModifyVariable(
@@ -351,8 +382,11 @@ public class FluidRendererMixin {
             ),
             index = 37
     )
-    private float stationapi_fluid_swapToUC2(float value) {
-        return stationapi_fluid_uc;
+    private float stationapi_fluid_swapToUC2(
+            float value,
+            @Share("uc") LocalFloatRef uc
+    ) {
+        return uc.get();
     }
 
     @ModifyVariable(
@@ -363,8 +397,11 @@ public class FluidRendererMixin {
             ),
             index = 36
     )
-    private float stationapi_fluid_swapToUS2(float value) {
-        return stationapi_fluid_us;
+    private float stationapi_fluid_swapToUS2(
+            float value,
+            @Share("us") LocalFloatRef us
+    ) {
+        return us.get();
     }
 
     @ModifyVariable(
@@ -375,8 +412,11 @@ public class FluidRendererMixin {
             ),
             index = 37
     )
-    private float stationapi_fluid_swapToVC3(float value) {
-        return stationapi_fluid_vc;
+    private float stationapi_fluid_swapToVC3(
+            float value,
+            @Share("vc") LocalFloatRef vc
+    ) {
+        return vc.get();
     }
 
     @ModifyVariable(
@@ -387,8 +427,11 @@ public class FluidRendererMixin {
             ),
             index = 36
     )
-    private float stationapi_fluid_swapToVS3(float value) {
-        return stationapi_fluid_vs;
+    private float stationapi_fluid_swapToVS3(
+            float value,
+            @Share("vs") LocalFloatRef vs
+    ) {
+        return vs.get();
     }
 
     @ModifyVariable(
@@ -399,8 +442,11 @@ public class FluidRendererMixin {
             ),
             index = 37
     )
-    private float stationapi_fluid_swapToUC3(float value) {
-        return stationapi_fluid_uc;
+    private float stationapi_fluid_swapToUC3(
+            float value,
+            @Share("uc") LocalFloatRef uc
+    ) {
+        return uc.get();
     }
 
     @ModifyVariable(
@@ -411,8 +457,11 @@ public class FluidRendererMixin {
             ),
             index = 36
     )
-    private float stationapi_fluid_swapToUS3(float value) {
-        return stationapi_fluid_us;
+    private float stationapi_fluid_swapToUS3(
+            float value,
+            @Share("us") LocalFloatRef us
+    ) {
+        return us.get();
     }
 
     @ModifyVariable(
@@ -423,8 +472,11 @@ public class FluidRendererMixin {
             ),
             index = 37
     )
-    private float stationapi_fluid_swapToVC4(float value) {
-        return stationapi_fluid_vc;
+    private float stationapi_fluid_swapToVC4(
+            float value,
+            @Share("vc") LocalFloatRef vc
+    ) {
+        return vc.get();
     }
 
     @ModifyVariable(
@@ -435,8 +487,11 @@ public class FluidRendererMixin {
             ),
             index = 36
     )
-    private float stationapi_fluid_swapToVS4(float value) {
-        return stationapi_fluid_vs;
+    private float stationapi_fluid_swapToVS4(
+            float value,
+            @Share("vs") LocalFloatRef vs
+    ) {
+        return vs.get();
     }
 
     @Inject(
@@ -447,14 +502,14 @@ public class FluidRendererMixin {
                     ordinal = 2,
                     shift = At.Shift.BY,
                     by = 2
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
     private void stationapi_fluid_captureTexture2(
             BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
-            Tessellator var5, int var6, float var7, float var8, float var9, int var10, int var11, boolean[] var12, int var13, float var14, float var15, float var16, float var17, double var18, double var20, Material var22, int var23, float var24, float var25, float var26, float var27, int var28, int var29, int var30, int var31, int texture
+            @Local(index = 32) int textureId,
+            @Share("atlas") LocalRef<Atlas> atlas, @Share("texture") LocalRef<Sprite> texture
     ) {
-        stationapi_fluid_texture = stationapi_fluid_atlas.getTexture(texture).getSprite();
+        texture.set(atlas.get().getTexture(textureId).getSprite());
     }
 
     @ModifyVariable(
@@ -462,8 +517,11 @@ public class FluidRendererMixin {
             index = 33,
             at = @At("STORE")
     )
-    private int stationapi_fluid_modTextureX2(int value) {
-        return stationapi_fluid_texture.getX();
+    private int stationapi_fluid_modTextureX2(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getX();
     }
 
     @ModifyVariable(
@@ -471,8 +529,11 @@ public class FluidRendererMixin {
             index = 34,
             at = @At("STORE")
     )
-    private int stationapi_fluid_modTextureY2(int value) {
-        return stationapi_fluid_texture.getY();
+    private int stationapi_fluid_modTextureY2(
+            int value,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getY();
     }
 
     @ModifyConstant(
@@ -482,16 +543,22 @@ public class FluidRendererMixin {
                     ordinal = 3
             )
     )
-    private int stationapi_fluid_modTextureWidth3(int constant) {
-        return stationapi_fluid_texture.getContents().getWidth() / 2;
+    private int stationapi_fluid_modTextureWidth3(
+            int constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getContents().getWidth() / 2;
     }
 
     @ModifyConstant(
             method = "renderFluid",
             constant = @Constant(floatValue = TEX_SIZE)
     )
-    private float stationapi_fluid_modTextureHeight3(float constant) {
-        return stationapi_fluid_texture.getContents().getHeight() / 2F;
+    private float stationapi_fluid_modTextureHeight3(
+            float constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getContents().getHeight() / 2F;
     }
 
     @ModifyConstant(
@@ -501,16 +568,10 @@ public class FluidRendererMixin {
                     ordinal = 4
             )
     )
-    private int stationapi_fluid_modTextureHeight4(int constant) {
-        return stationapi_fluid_texture.getContents().getHeight() / 2;
-    }
-
-    @Inject(
-            method = "renderFluid",
-            at = @At("RETURN")
-    )
-    private void stationapi_fluid_releaseCaptured(BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir) {
-        stationapi_fluid_atlas = null;
-        stationapi_fluid_texture = null;
+    private int stationapi_fluid_modTextureHeight4(
+            int constant,
+            @Share("texture") LocalRef<Sprite> texture
+    ) {
+        return texture.get().getContents().getHeight() / 2;
     }
 }
