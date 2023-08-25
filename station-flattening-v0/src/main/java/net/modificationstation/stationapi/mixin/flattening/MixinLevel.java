@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.Level;
 import net.minecraft.level.chunk.Chunk;
 import net.minecraft.level.dimension.Dimension;
-import net.minecraft.util.maths.Vec2i;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
@@ -14,10 +14,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import java.util.Iterator;
 
 @Mixin(Level.class)
 public abstract class MixinLevel implements StationFlatteningWorld {
@@ -62,26 +58,29 @@ public abstract class MixinLevel implements StationFlatteningWorld {
         return null;
     }
 
-    @Inject(
-            method = "method_248()V",
+    @ModifyVariable(
+            method = "method_248",
             at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/level/chunk/Chunk;tiles:[B",
-                    args = "array=get"
+                    value = "STORE",
+                    ordinal = 0
             ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            index = 9
     )
-    private void captureChunkXYZ(CallbackInfo ci, Iterator<Vec2i> var1, Vec2i var2, int var3, int var4, Chunk var5, int var6, int var7, int var8, int var9, int var10) {
-        stationapi$capturedChunk = var5;
-        stationapi$capturedX = var8;
-        stationapi$capturedY = var10;
-        stationapi$capturedZ = var9;
+    private int stationapi_changeCaveSoundY(int y) {
+        return y + getBottomY();
     }
 
-    @Unique
-    private Chunk stationapi$capturedChunk;
-    @Unique
-    private int stationapi$capturedX, stationapi$capturedY, stationapi$capturedZ;
+    @ModifyVariable(
+            method = "method_248",
+            at = @At(
+                    value = "STORE",
+                    ordinal = 2
+            ),
+            index = 10
+    )
+    private int stationapi_changeTickY(int y) {
+        return y + getBottomY();
+    }
 
     @Redirect(
             method = "method_248()V",
@@ -91,23 +90,26 @@ public abstract class MixinLevel implements StationFlatteningWorld {
                     args = "array=get"
             )
     )
-    private byte redirectTilesAccess(byte[] array, int index) {
+    private byte stationapi_redirectTilesAccess(byte[] array, int index) {
         return 0;
     }
 
     @ModifyVariable(
-            method = "method_248()V",
-            index = 11,
+            method = "method_248",
             at = @At(
                     value = "STORE",
                     ordinal = 1
-            )
+            ),
+            index = 11
     )
-    private int modifyId(int original) {
-        BlockBase block = stationapi$capturedChunk.getBlockState(stationapi$capturedX, stationapi$capturedY, stationapi$capturedZ).getBlock();
-        return block == null ? 0 : block.id;
+    private int stationapi_changeTickBlockId(
+            int blockId,
+            @Local(index = 5) Chunk chunk,
+            @Local(index = 8) int x, @Local(index = 10) int y, @Local(index = 9) int z
+    ) {
+        return chunk.getBlockState(x, y, z).getBlock().id;
     }
-    
+
     @ModifyConstant(method = {
         "getTileId",
         "isTileLoaded",
@@ -128,7 +130,6 @@ public abstract class MixinLevel implements StationFlatteningWorld {
         return getTopY();
     }
 
-    @SuppressWarnings("MixinAnnotationTarget")
     @ModifyConstant(method = {
             "getTileId",
             "setTileWithMetadata",
@@ -145,11 +146,9 @@ public abstract class MixinLevel implements StationFlatteningWorld {
         return getBottomY();
     }
 
-    @SuppressWarnings("MixinAnnotationTarget")
     @ModifyConstant(method = {
             "isTileLoaded",
             "method_155",
-//            "method_164",
             "method_248",
             "method_162"
     }, constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_ZERO))
@@ -157,7 +156,6 @@ public abstract class MixinLevel implements StationFlatteningWorld {
         return getBottomY();
     }
 
-    @SuppressWarnings("MixinAnnotationTarget")
     @ModifyConstant(method = {
             "method_228"
     }, constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_OR_EQUAL_TO_ZERO))
@@ -172,17 +170,21 @@ public abstract class MixinLevel implements StationFlatteningWorld {
     private int changeBottomY(int value) {
         return getBottomY();
     }
-    
-    @ModifyConstant(method = {
-        "getLightLevel",
-        "placeTile(IIIZ)I",
-        "method_164",
-        "method_228"
-    }, constant = @Constant(intValue = 127))
+
+    @ModifyConstant(
+            method = {
+                    "getLightLevel",
+                    "placeTile(IIIZ)I",
+                    "method_164",
+                    "method_228",
+                    "method_248"
+            },
+            constant = @Constant(intValue = 127)
+    )
     private int changeMaxBlockHeight(int value) {
         return getTopY() - 1;
     }
-    
+
     @ModifyConstant(method = {
         "method_162"
     }, constant = @Constant(intValue = 200))
