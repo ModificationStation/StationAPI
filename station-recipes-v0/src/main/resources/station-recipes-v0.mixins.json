@@ -6,12 +6,13 @@
   "mixins": [
     "MixinCraftingResult",
     "MixinRecipe",
-    "MixinRecipeRegistry",
     "MixinShapedRecipe",
     "MixinShapelessRecipe",
     "MixinSmeltingRecipeRegistry",
     "MixinStats",
     "MixinTileEntityFurnace",
+    "RecipeComparatorMixin",
+    "RecipeRegistryMixin",
     "SecondaryBlockAccessor",
     "SmeltingRecipeRegistryAccessor",
     "TileEntityFurnaceAccessor"

@@ -4,7 +4,11 @@
   "package": "net.modificationstation.stationapi.mixin.vanillafix",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinLevelProperties"
+    "MixinLevelProperties",
+    "recipe.CraftingManagerMixin",
+    "recipe.ToolRecipesMixin",
+    "recipe.UtilitiesAndSandstoneRecipesMixin",
+    "recipe.WeaponRecipesMixin"
   ],
   "server": [
   ],
