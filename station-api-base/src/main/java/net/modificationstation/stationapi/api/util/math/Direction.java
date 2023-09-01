@@ -21,7 +21,6 @@ import static net.modificationstation.stationapi.api.util.math.Direction.Axis.*;
 
 @RequiredArgsConstructor
 public enum Direction implements StringIdentifiable {
-
     @SerializedName("down")
     DOWN(0, 1, -1, "down", AxisDirection.NEGATIVE, Y, new Vec3i(0, -1, 0)),
     @SerializedName("up")

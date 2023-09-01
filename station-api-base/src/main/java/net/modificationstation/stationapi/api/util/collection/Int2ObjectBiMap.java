@@ -8,8 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class Int2ObjectBiMap<K>
-implements IndexedIterable<K> {
+public class Int2ObjectBiMap<K> implements IndexedIterable<K> {
     private static final int ABSENT = -1;
     private static final Object EMPTY = null;
     private static final float LOAD_FACTOR = 0.8f;

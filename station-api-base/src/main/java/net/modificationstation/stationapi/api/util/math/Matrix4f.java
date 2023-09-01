@@ -20,8 +20,7 @@ public final class Matrix4f {
     float a32;
     float a33;
 
-    public Matrix4f() {
-    }
+    public Matrix4f() {}
 
     public Matrix4f(Matrix4f source) {
         this.a00 = source.a00;

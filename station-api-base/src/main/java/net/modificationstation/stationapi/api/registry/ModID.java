@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Function;
 
 public final class ModID implements Comparable<@NotNull ModID> {
-
     private static final boolean CHECK_MISSING_MODS = false;
 
     @NotNull
@@ -22,10 +21,6 @@ public final class ModID implements Comparable<@NotNull ModID> {
 
     @NotNull
     public static final ModID MINECRAFT = of("minecraft");
-
-    @NotNull
-    private final String namespace;
-    private final int hashCode;
 
     public static @NotNull ModID of(@NotNull final ModContainer modContainer) {
         return of(modContainer.getMetadata());
@@ -38,6 +33,10 @@ public final class ModID implements Comparable<@NotNull ModID> {
     public static @NotNull ModID of(@NotNull final String namespace) {
         return CACHE.get(namespace, NAMESPACE_FACTORY);
     }
+
+    @NotNull
+    private final String namespace;
+    private final int hashCode;
 
     private ModID(@NotNull final String namespace) {
         if (CHECK_MISSING_MODS && !FabricLoader.getInstance().isModLoaded(namespace))

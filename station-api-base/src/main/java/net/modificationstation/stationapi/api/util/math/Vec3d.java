@@ -16,9 +16,7 @@ import static net.minecraft.util.maths.MathHelper.*;
  * @see Vec3i
  * @see Vec3f
  */
-public class Vec3d
-implements Position {
-
+public class Vec3d implements Position {
     /**
      * The zero vector (0, 0, 0).
      */

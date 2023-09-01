@@ -16,8 +16,11 @@ import java.util.stream.Collectors;
 
 import static net.modificationstation.stationapi.api.registry.ModID.MINECRAFT;
 
+/**
+ * @deprecated Use station-resource-loader-v0 instead.
+ */
+@Deprecated
 public class ResourceHelper {
-
     @API
     public static final ResourceHelper
             ASSETS = new ResourceHelper("/assets"),

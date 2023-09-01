@@ -7,28 +7,28 @@ import java.io.File;
 import java.util.List;
 
 public interface ProfileResult {
-   @Environment(EnvType.CLIENT)
-   List<ProfilerTiming> getTimings(String parentPath);
+    @Environment(EnvType.CLIENT)
+    List<ProfilerTiming> getTimings(String parentPath);
 
-   boolean save(File file);
+    boolean save(File file);
 
-   long getStartTime();
+    long getStartTime();
 
-   int getStartTick();
+    int getStartTick();
 
-   long getEndTime();
+    long getEndTime();
 
-   int getEndTick();
+    int getEndTick();
 
-   default long getTimeSpan() {
-      return this.getEndTime() - this.getStartTime();
-   }
+    default long getTimeSpan() {
+        return this.getEndTime() - this.getStartTime();
+    }
 
-   default int getTickSpan() {
-      return this.getEndTick() - this.getStartTick();
-   }
+    default int getTickSpan() {
+        return this.getEndTick() - this.getStartTick();
+    }
 
-   static String getHumanReadableName(String path) {
-      return path.replace('\u001e', '.');
-   }
+    static String getHumanReadableName(String path) {
+        return path.replace('\u001e', '.');
+    }
 }

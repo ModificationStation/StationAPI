@@ -10,7 +10,6 @@ import java.util.function.Supplier;
  * @author mine_diver
  */
 public class SideUtils {
-
     /**
      * Side-dependent supplier execution.
      * @param clientSupplier the supplier that should be executed on client side.

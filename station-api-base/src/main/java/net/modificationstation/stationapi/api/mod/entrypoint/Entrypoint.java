@@ -12,7 +12,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Entrypoint {
-
     /**
      * Allows entrypoint to change {@link EventListener} registration behaviour.
      * @return the {@link EventBusPolicy} to be applied to the current entrypoint.
@@ -25,7 +24,7 @@ public @interface Entrypoint {
     @Documented
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    @interface Instance { }
+    @interface Instance {}
 
     /**
      * Marks the field to be set to the specified modid instance.
@@ -36,7 +35,6 @@ public @interface Entrypoint {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     @interface ModID {
-
         /**
          * @return requested modid. Empty defaults to entrypoint's modid.
          */
@@ -52,7 +50,6 @@ public @interface Entrypoint {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
     @interface Logger {
-
         /**
          * @return logger's name. Empty defaults to "modid|Mod"
          */

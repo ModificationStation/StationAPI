@@ -9,7 +9,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileNameUtil {
-
     private static final char[] INVALID_CHARS_LEVEL_NAME = new char[] {'/', '\n', '\r', '\t', '\u0000', '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':'};
     private static final Pattern FILE_NAME_WITH_COUNT = Pattern.compile("(<name>.*) \\((<count>\\d*)\\)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     private static final int MAX_NAME_LENGTH = 255;

@@ -14,8 +14,11 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 
+/**
+ * @deprecated Use station-resource-loader-v0 instead.
+ */
+@Deprecated
 public class RecursiveReader {
-
     private final String path;
     private final Predicate<String> filter;
 

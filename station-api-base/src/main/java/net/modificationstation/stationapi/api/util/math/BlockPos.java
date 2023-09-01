@@ -27,9 +27,7 @@ import static net.minecraft.util.maths.MathHelper.floor;
  * #toImmutable()} to obtain an immutable block position.
  */
 @Unmodifiable
-public class BlockPos
-extends Vec3i {
-
+public class BlockPos extends Vec3i {
     public static final Codec<BlockPos> CODEC = Codec.INT_STREAM.comapFlatMap(stream -> Util.toArray(stream, 3).map(values -> new BlockPos(values[0], values[1], values[2])), pos -> IntStream.of(pos.getX(), pos.getY(), pos.getZ())).stable();
     /**
      * The block position which x, y, and z values are all zero.

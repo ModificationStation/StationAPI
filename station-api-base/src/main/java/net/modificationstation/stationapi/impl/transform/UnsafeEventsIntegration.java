@@ -6,7 +6,7 @@ import net.mine_diver.unsafeevents.transform.EventSubclassTransformer;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.ClassNode;
 
-public class UnsafeEventsIntegration implements ClassTransformer {
+public final class UnsafeEventsIntegration implements ClassTransformer {
     @Override
     public @NotNull TransformationResult transform(@NotNull ClassLoader classLoader, @NotNull ClassNode classNode) {
         return !"net/mine_diver/unsafeevents/transform/EventSubclassTransformer".equals(classNode.name) &&

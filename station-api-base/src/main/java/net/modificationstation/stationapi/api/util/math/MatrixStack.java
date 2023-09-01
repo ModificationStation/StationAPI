@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MatrixStack {
-
     private final List<MatrixStack.Entry> stack = Util.make(new ArrayList<>(), list -> list.add(new Entry(Util.make(new Matrix4f(), Matrix4f::loadIdentity), Util.make(new Matrix3f(), Matrix3f::loadIdentity))));
     private int n = 0;
 

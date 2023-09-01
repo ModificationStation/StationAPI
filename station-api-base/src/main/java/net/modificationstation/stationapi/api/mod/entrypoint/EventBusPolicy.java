@@ -15,14 +15,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface EventBusPolicy {
-
     /**
-     * @return whether or not should static {@link EventListener} methods be registered in the {@link net.modificationstation.stationapi.api.StationAPI#EVENT_BUS}.
+     * @return whether should static {@link EventListener} methods be registered in the {@link net.modificationstation.stationapi.api.StationAPI#EVENT_BUS}.
      */
     boolean registerStatic() default true;
 
     /**
-     * @return whether or not should non-static {@link EventListener} methods be registered in the {@link net.modificationstation.stationapi.api.StationAPI#EVENT_BUS}.
+     * @return whether should non-static {@link EventListener} methods be registered in the {@link net.modificationstation.stationapi.api.StationAPI#EVENT_BUS}.
      */
     boolean registerInstance() default true;
 }

@@ -5,7 +5,6 @@ package net.modificationstation.stationapi.api.util.math;
  */
 @SuppressWarnings("ClassCanBeRecord")
 public class Vec2f {
-
     public static final Vec2f ZERO = new Vec2f(0.0f, 0.0f);
     public static final Vec2f SOUTH_EAST_UNIT = new Vec2f(1.0f, 1.0f);
     public static final Vec2f EAST_UNIT = new Vec2f(1.0f, 0.0f);

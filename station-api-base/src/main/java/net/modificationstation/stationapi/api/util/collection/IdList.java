@@ -25,7 +25,7 @@ public class IdList<T> implements IndexedIterable<T> {
     public IdList(int initialSize) {
         list = Lists.newArrayListWithExpectedSize(initialSize);
         idMap = new Reference2IntOpenHashMap<>(initialSize);
-        idMap.defaultReturnValue(-1);
+        idMap.defaultReturnValue(ABSENT_RAW_ID);
     }
 
     public void set(T value, int id) {

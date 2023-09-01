@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum Colours {
-
     @API
     BLACK("§0"),
     @API

@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
  * @author mine_diver
  */
 public class Null {
-
     /**
      * Returns null with {@link NotNull} annotation applied in order to fool IntelliJ into thinking that it's not actually a null.
      * Useful when you want your entrypoint fields to be final but don't want IntelliJ to scream at you for using a final field that is set to null.

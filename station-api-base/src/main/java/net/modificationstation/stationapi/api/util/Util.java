@@ -40,7 +40,6 @@ import java.util.zip.ZipOutputStream;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 public class Util {
-
     private static final int MAX_PARALLELISM = 255;
     private static final String MAX_BG_THREADS_PROPERTY = "max.bg.threads";
     private static final AtomicInteger NEXT_WORKER_ID = new AtomicInteger(1);

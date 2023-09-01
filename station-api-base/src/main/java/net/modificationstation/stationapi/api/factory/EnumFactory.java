@@ -18,7 +18,6 @@ import java.util.function.Function;
 import static net.modificationstation.stationapi.api.util.UnsafeProvider.theUnsafe;
 
 public class EnumFactory {
-
     private static final Function<Constructor<?>, Object> NEW_CONSTRUCTOR_ACCESSOR;
     private static final BiFunction<Object, Object[], Object> NEW_INSTANCE;
 

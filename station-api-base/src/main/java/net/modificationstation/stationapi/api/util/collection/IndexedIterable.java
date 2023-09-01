@@ -2,8 +2,7 @@ package net.modificationstation.stationapi.api.util.collection;
 
 import org.jetbrains.annotations.Nullable;
 
-public interface IndexedIterable<T>
-extends Iterable<T> {
+public interface IndexedIterable<T> extends Iterable<T> {
     int ABSENT_RAW_ID = -1;
 
     int getRawId(T var1);

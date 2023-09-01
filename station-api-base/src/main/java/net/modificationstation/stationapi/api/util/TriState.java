@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.util;
 
 public enum TriState {
-
     @API
     TRUE(true),
     @API
@@ -32,7 +31,7 @@ public enum TriState {
     public boolean getBool() {
         Boolean b = getBoolObj();
         if (b == null)
-            throw new UnsupportedOperationException("Can't convert " + UNSET + " to boolean!");
+            throw new UnsupportedOperationException("Can't convert " + this + " to boolean!");
         return b;
     }
 

@@ -5,7 +5,6 @@ import sun.misc.Unsafe;
 import java.lang.reflect.Field;
 
 public class UnsafeProvider {
-
     @API
     public static final Unsafe theUnsafe;
 

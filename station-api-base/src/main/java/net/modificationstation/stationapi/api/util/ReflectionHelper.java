@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.function.Function;
 
 public class ReflectionHelper {
-
     private static final VarHandle modifiers;
 
     static {

@@ -5,8 +5,6 @@ import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.mine_diver.unsafeevents.EventBus;
 import net.mine_diver.unsafeevents.eventbus.ManagedEventBus;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
-import net.modificationstation.stationapi.api.event.mod.PostInitEvent;
-import net.modificationstation.stationapi.api.event.mod.PreInitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -24,9 +22,11 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
  * StationAPI main class. Used for some initialization.
  * @author mine_diver
  */
-@Entrypoint(eventBus = @EventBusPolicy(registerInstance = false, registerStatic = false))
+@Entrypoint(eventBus = @EventBusPolicy(
+        registerInstance = false,
+        registerStatic = false
+))
 public class StationAPI implements PreLaunchEntrypoint {
-
     /**
      * StationAPI's instance.
      */
@@ -71,12 +71,8 @@ public class StationAPI implements PreLaunchEntrypoint {
     private void setupMods() {
         setupEntrypoint(of(MODID, "event_bus"));
         setupEntrypoint(of(MODID, "event_bus_" + FabricLoader.getInstance().getEnvironmentType().name().toLowerCase()));
-        LOGGER.info("Invoking PreInit event...");
-        EVENT_BUS.post(PreInitEvent.builder().build());
         LOGGER.info("Invoking Init event...");
         EVENT_BUS.post(InitEvent.builder().build());
-        LOGGER.info("Invoking PostInit event...");
-        EVENT_BUS.post(PostInitEvent.builder().build());
     }
 
     /**

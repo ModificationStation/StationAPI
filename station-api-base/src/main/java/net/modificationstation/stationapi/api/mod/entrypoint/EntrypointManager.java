@@ -20,7 +20,6 @@ import java.util.function.Consumer;
  * @author mine_diver
  */
 public class EntrypointManager {
-
     /**
      * Performs the setup of entrypoint, such as:
      * - Registration of EventBus listeners.

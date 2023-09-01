@@ -24,6 +24,9 @@
     ],
     "spasm:transformer": [
       "net.modificationstation.stationapi.impl.transform.UnsafeEventsIntegration"
+    ],
+    "stationapi:event_bus": [
+      "net.modificationstation.stationapi.impl.mod.DeprecatedInitEventsImpl"
     ]
   },
   "mixins": [

@@ -20,8 +20,7 @@ public final class Matrix3f {
     float a21;
     float a22;
 
-    public Matrix3f() {
-    }
+    public Matrix3f() {}
 
     public Matrix3f(Quaternion source) {
         float f = source.getX();

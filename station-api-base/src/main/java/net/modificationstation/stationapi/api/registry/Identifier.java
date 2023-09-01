@@ -12,7 +12,6 @@ import java.util.function.Function;
 import static net.modificationstation.stationapi.api.registry.ModID.MINECRAFT;
 
 public final class Identifier implements Comparable<@NotNull Identifier> {
-
     @NotNull
     public static final Codec<@NotNull Identifier> CODEC = Codec.STRING.comapFlatMap(s -> {
         try {
@@ -30,23 +29,6 @@ public final class Identifier implements Comparable<@NotNull Identifier> {
     private static final Cache<@NotNull IdentifierCacheKey, @NotNull Identifier> CACHE = Caffeine.newBuilder().softValues().build();
     @NotNull
     private static final Function<@NotNull IdentifierCacheKey, @NotNull Identifier> IDENTIFIER_FACTORY = key -> new Identifier(key.namespace, key.id);
-
-    @NotNull
-    public final ModID modID;
-
-    @NotNull
-    public final String id;
-
-    @NotNull
-    private final String toString;
-    private final int hashCode;
-
-    private Identifier(@NotNull final ModID modID, @NotNull final String id) {
-        this.modID = modID;
-        this.id = id;
-        toString = modID + SEPARATOR + id;
-        hashCode = toString.hashCode();
-    }
 
     public static @NotNull Identifier of(@NotNull final String identifier) {
         final int i = identifier.indexOf(SEPARATOR);
@@ -80,6 +62,23 @@ public final class Identifier implements Comparable<@NotNull Identifier> {
         } catch (@NotNull final IllegalArgumentException e) {
             return DataResult.error(() -> "Not a valid identifier: " + id + " " + e.getMessage());
         }
+    }
+
+    @NotNull
+    public final ModID modID;
+
+    @NotNull
+    public final String id;
+
+    @NotNull
+    private final String toString;
+    private final int hashCode;
+
+    private Identifier(@NotNull final ModID modID, @NotNull final String id) {
+        this.modID = modID;
+        this.id = id;
+        toString = modID + SEPARATOR + id;
+        hashCode = toString.hashCode();
     }
 
     public @NotNull Identifier prepend(@NotNull final String prefix) {
