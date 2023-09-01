@@ -14,13 +14,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(Achievements.class)
-public class MixinAchievements {
-
+class MixinAchievements {
     @Shadow
     public static List<Achievement> ACHIEVEMENTS;
 
-    @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/achievement/Achievements;FLY_PIG:Lnet/minecraft/achievement/Achievement;", opcode = Opcodes.PUTSTATIC, shift = At.Shift.AFTER))
-    private static void afterAchievementRegister(CallbackInfo ci) {
+    @Inject(
+            method = "<clinit>",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/achievement/Achievements;FLY_PIG:Lnet/minecraft/achievement/Achievement;",
+                    opcode = Opcodes.PUTSTATIC,
+                    shift = At.Shift.AFTER
+            )
+    )
+    private static void stationapi_afterAchievementRegister(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(AchievementRegisterEvent.builder().achievements(ACHIEVEMENTS).build());
     }
 }

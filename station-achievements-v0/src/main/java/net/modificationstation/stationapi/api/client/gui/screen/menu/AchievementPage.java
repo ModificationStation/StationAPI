@@ -1,54 +1,39 @@
 package net.modificationstation.stationapi.api.client.gui.screen.menu;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntCollection;
+import it.unimi.dsi.fastutil.ints.IntLists;
 import net.minecraft.achievement.Achievement;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
-import net.modificationstation.stationapi.api.util.API;
 import uk.co.benjiweber.expressions.property.Named;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Instantiates and adds an achievement page to the achievement page list.
  * @author calmilamsy
  */
 public class AchievementPage implements Named<AchievementPage> {
-
     private static final List<AchievementPage> PAGES = new ArrayList<>();
     private static int currentPage = 0;
-
-    private final String pageName;
-    private final List<Integer> achievementIds = new ArrayList<>();
-
-    /**
-     * @param modID the {@link ModID} to add to the translation key.
-     * @param pageName the name of the page that is shown on the achievements screen.
-     */
-    public AchievementPage(ModID modID, String pageName) {
-        this.pageName = Identifier.of(modID, pageName).toString();
-        addPage(this);
-    }
 
     public static void addPage(AchievementPage achievementPage) {
         PAGES.add(achievementPage);
     }
 
-    @API
     public static AchievementPage nextPage() {
         currentPage += 1;
-        if (currentPage > PAGES.size() - 1) {
-            currentPage = 0;
-        }
+        if (currentPage > PAGES.size() - 1) currentPage = 0;
         return PAGES.get(currentPage);
     }
 
-    @API
     public static AchievementPage prevPage() {
         currentPage -= 1;
-        if (currentPage < 0) {
-            currentPage = PAGES.size() - 1;
-        }
+        if (currentPage < 0) currentPage = PAGES.size() - 1;
         return PAGES.get(currentPage);
     }
 
@@ -60,13 +45,20 @@ public class AchievementPage implements Named<AchievementPage> {
         return getCurrentPage().name();
     }
 
-    @API
     public static int getCurrentPageIndex() {
         return currentPage;
     }
 
     public static int getPageCount() {
         return PAGES.size();
+    }
+
+    private final Identifier id;
+    private final List<Achievement> achievements = new ArrayList<>();
+
+    public AchievementPage(Identifier id) {
+        this.id = id;
+        addPage(this);
     }
 
     /**
@@ -76,7 +68,7 @@ public class AchievementPage implements Named<AchievementPage> {
      * @see Achievement
      */
     public void addAchievements(Achievement... achievements) {
-        achievementIds.addAll(Arrays.stream(achievements).map(achievement -> achievement.ID).collect(Collectors.toList()));
+        Collections.addAll(this.achievements, achievements);
     }
 
     public int getBackgroundTexture(Random random, int column, int row, int randomizedRow, int currentTexture) {
@@ -85,11 +77,34 @@ public class AchievementPage implements Named<AchievementPage> {
 
     @Override
     public String name() {
-        return pageName;
+        return id.toString();
     }
 
-    @API
+    public List<Achievement> getAchievements() {
+        return Collections.unmodifiableList(achievements);
+    }
+
+    /**
+     * @deprecated Use {@link #AchievementPage(Identifier)} instead.
+     *
+     * @param modID the {@link ModID} to add to the translation key.
+     * @param pageName the name of the page that is shown on the achievements screen.
+     */
+    @Deprecated
+    public AchievementPage(ModID modID, String pageName) {
+        this(modID.id(pageName));
+    }
+
+    /**
+     * @deprecated Use {@link #getAchievements()} instead.
+     */
+    @Deprecated
     public List<Integer> getAchievementIds() {
-        return Collections.unmodifiableList(achievementIds);
+        return IntLists.unmodifiable(
+                achievements
+                        .stream()
+                        .mapToInt(achievement -> achievement.ID)
+                        .collect(IntArrayList::new, IntCollection::add, IntCollection::addAll)
+        );
     }
 }

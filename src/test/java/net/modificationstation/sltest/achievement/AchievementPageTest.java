@@ -2,14 +2,13 @@ package net.modificationstation.sltest.achievement;
 
 import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.registry.Identifier;
 
 import java.util.Random;
 
 public class AchievementPageTest extends AchievementPage {
-
-    public AchievementPageTest(ModID modID, String name) {
-        super(modID, name);
+    public AchievementPageTest(Identifier id) {
+        super(id);
     }
 
     @Override

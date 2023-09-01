@@ -9,20 +9,23 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsEvent;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
 import net.modificationstation.stationapi.api.event.achievement.AchievementRegisterEvent;
+import net.modificationstation.stationapi.api.event.mod.InitEvent;
+import net.modificationstation.stationapi.api.lang.I18n;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Null;
+import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class AchievementPageImpl {
-
     @Entrypoint.ModID
-    private static final ModID MODID = Null.get();
+    public static final ModID MODID = Null.get();
+    @Entrypoint.Logger
+    public static final Logger LOGGER = Null.get();
 
     @EventListener
     private static void replaceBackgroundTexture(AchievementsEvent.BackgroundTextureRender event) {
@@ -31,29 +34,18 @@ public class AchievementPageImpl {
 
     @EventListener
     private static void registerAchievements(AchievementRegisterEvent event) {
-        AchievementPage page = new AchievementPage(MODID, "minecraft");
-        List<Achievement> list = new ArrayList<>();
-        for (Object o : Achievements.ACHIEVEMENTS)
-            list.add((Achievement) o);
-        page.addAchievements(list.toArray(Achievement[]::new));
+        AchievementPage page = new AchievementPage(StationAPI.MODID.id("minecraft"));
+        //noinspection unchecked
+        page.addAchievements(((List<Achievement>) Achievements.ACHIEVEMENTS).toArray(Achievement[]::new));
     }
 
     @EventListener
     private static void renderAchievementIcon(AchievementsEvent.AchievementIconRender event) {
-        if (!isVisibleAchievement(event.achievement))
-            event.cancel();
+        if (!isVisibleAchievement(event.achievement)) event.cancel();
     }
 
     private static boolean isVisibleAchievement(Achievement achievement) {
-        if (checkHidden(achievement)) {
-            return false;
-        } else if (!AchievementPage.getCurrentPage().getAchievementIds().contains(achievement.ID)) {
-            return false;
-        } else if (achievement.parent != null && !checkHidden(achievement.parent)) {
-            return true;
-        } else {
-            return true;
-        }
+        return !checkHidden(achievement) && AchievementPage.getCurrentPage().getAchievements().contains(achievement);
     }
 
     @EventListener
@@ -64,13 +56,13 @@ public class AchievementPageImpl {
 
     private static boolean checkHidden(Achievement achievement) {
         //noinspection deprecation
-        if (((Minecraft) FabricLoader.getInstance().getGameInstance()).statFileWriter.isAchievementUnlocked(achievement)) {
-            return false;
-        }
-        if (achievement.parent == null) {
-            return false;
-        } else {
-            return checkHidden(achievement.parent);
-        }
+        return !((Minecraft) FabricLoader.getInstance().getGameInstance()).statFileWriter.isAchievementUnlocked(achievement)
+                && achievement.parent != null && checkHidden(achievement.parent);
+    }
+
+    @EventListener
+    private static void registerLang(InitEvent event) {
+        LOGGER.info("Adding lang folder...");
+        I18n.addLangFolder(StationAPI.MODID, "/assets/" + MODID + "/lang");
     }
 }
