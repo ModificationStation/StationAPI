@@ -4,7 +4,6 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.item.armour.Armour;
 
 public class ArmourUtils {
-
     /**
      * This is not perfect, but it gets very close to exact vanilla. Uses double to allow for extra precision.
      * Gets vanilla armour reduction for the given armour piece.
