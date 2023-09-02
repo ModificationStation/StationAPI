@@ -67,6 +67,7 @@ public class Transformation {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             Vec3f vector3f = this.parseVector3f(jsonObject, "rotation", DEFAULT_ROTATION);
             Vec3f vector3f2 = this.parseVector3f(jsonObject, "translation", DEFAULT_TRANSLATION);
+            vector3f2.set(vector3f2.getZ(), vector3f2.getY(), -vector3f2.getX()); // modern has x and z swapped and z inverted
             vector3f2.scale(0.0625F);
             vector3f2.clamp(-5.0F, 5.0F);
             Vec3f vector3f3 = this.parseVector3f(jsonObject, "scale", DEFAULT_SCALE);
