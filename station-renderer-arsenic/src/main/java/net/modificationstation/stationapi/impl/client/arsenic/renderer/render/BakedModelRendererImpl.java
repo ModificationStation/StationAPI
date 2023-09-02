@@ -6,6 +6,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.level.ClientLevel;
+import net.minecraft.client.render.RenderHelper;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.entity.Living;
 import net.minecraft.item.ItemInstance;
@@ -31,13 +32,14 @@ import net.modificationstation.stationapi.api.util.exception.CrashReportSectionB
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc.LightingCalculatorImpl;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class BakedModelRendererImpl implements BakedModelRenderer {
 
@@ -203,9 +205,12 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         if (stack == null || stack.itemId == 0) return;
         if (model.isVanillaAdapter()) {
             model.getTransformation().getTransformation(renderMode).apply();
-            if (model.isSideLit() && renderMode == ModelTransformation.Mode.GUI) // kind of a dirty way to do this, should probably look into replacing
-                GL11.glRotatef(90, 0, 1, 0);
-            GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+            if (model.isSideLit() && renderMode == ModelTransformation.Mode.GUI) { // kind of a dirty way to do this, should probably look into replacing
+                RenderHelper.disableLighting();
+                glRotatef(-90, 0, 1, 0);
+                RenderHelper.enableLighting();
+            }
+            glTranslatef(-0.5F, -0.5F, -0.5F);
             if (model.isBuiltin()) return;
             if (!model.isSideLit() && renderMode == ModelTransformation.Mode.GROUND)
                 renderBakedItemModelFlat(model, stack, brightness);
@@ -243,19 +248,26 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
 
     protected void renderGuiItemModel(ItemInstance stack, int x, int y, BakedModel model) {
         StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).setFilter(false, false);
-        GL11.glPushMatrix();
-        GL11.glTranslated(x, y, 14.5 /* approximate. should probably be replaced later with a value properly calculated against vanilla's transformations */);
-        GL11.glTranslatef(8, 8, 0);
-        GL11.glScalef(1, -1, 1);
-        GL11.glScalef(16, 16, 16);
-        boolean bl = !model.isSideLit();
-        if (bl) GL11.glDisable(GL11.GL_LIGHTING);
+        glPushMatrix();
+        glTranslated(x, y, 14.5 /* approximate. should probably be replaced later with a value properly calculated against vanilla's transformations */);
+        glTranslatef(8, 8, 0);
+        glScalef(1, -1, 1);
+        glScalef(16, 16, 16);
+        boolean flat = !model.isSideLit();
+        if (flat) glDisable(GL_LIGHTING);
         tessellator.start();
         this.renderItem(stack, ModelTransformation.Mode.GUI, 1, model);
         tessellator.draw();
-        if (bl) GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glPopMatrix();
-        GL11.glEnable(GL11.GL_CULL_FACE);
+        if (flat) glEnable(GL_LIGHTING);
+        glPopMatrix();
+        if (!flat) {
+            RenderHelper.disableLighting();
+            glPushMatrix();
+            glRotatef(120.0f, 1.0f, 0.0f, 0.0f);
+            RenderHelper.enableLighting();
+            glPopMatrix();
+        }
+        glEnable(GL_CULL_FACE);
     }
 
     /**

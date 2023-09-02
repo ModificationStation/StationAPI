@@ -1,0 +1,6 @@
+{
+  "parent": "block/legacy/orientable_with_bottom",
+  "textures": {
+    "bottom": "#top"
+  }
+}
