@@ -42,11 +42,12 @@ public class ModelElement {
 
     private float[] getRotatedMatrix(Direction direction) {
         return switch (direction) {
-            case DOWN, UP -> new float[] { from.getX(), from.getZ(), to.getX(), to.getZ() }; // mirroring is handled in ModelElementTexture.getU()
-            case EAST -> new float[] { 16 - to.getZ(), 16 - to.getY(), 16 - from.getZ(), 16 - from.getY() };
-            case WEST -> new float[] { from.getZ(), 16 - to.getY(), to.getZ(), 16 - from.getY() };
+            case DOWN -> new float[] { from.getX(), 16 - to.getZ(), to.getX(), 16 - from.getZ() };
+            case UP -> new float[] { from.getX(), from.getZ(), to.getX(), to.getZ() };
             case NORTH -> new float[] { 16 - to.getX(), 16 - to.getY(), 16 - from.getX(), 16 - from.getY() };
             case SOUTH -> new float[] { from.getX(), 16 - to.getY(), to.getX(), 16 - from.getY() };
+            case WEST -> new float[] { from.getZ(), 16 - to.getY(), to.getZ(), 16 - from.getY() };
+            case EAST -> new float[] { 16 - to.getZ(), 16 - to.getY(), 16 - from.getZ(), 16 - from.getY() };
         };
     }
 
@@ -59,9 +60,6 @@ public class ModelElement {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             Vec3f vec3f = this.deserializeFrom(jsonObject);
             Vec3f vec3f1 = this.deserializeTo(jsonObject);
-            float tmp = vec3f.getZ();
-            vec3f.set(vec3f.getX(), vec3f.getY(), 16 - vec3f1.getZ()); // modern has z inverted
-            vec3f1.set(vec3f1.getX(), vec3f1.getY(), 16 - tmp);
             ModelRotation modelRotation = this.deserializeRotation(jsonObject);
             Map<Direction, ModelElementFace> map = this.deserializeFacesValidating(jsonDeserializationContext, jsonObject);
             if (jsonObject.has("shade") && !JsonHelper.hasBoolean(jsonObject, "shade"))
@@ -78,16 +76,9 @@ public class ModelElement {
             if (object.has("rotation")) {
                 JsonObject jsonObject = JsonHelper.getObject(object, "rotation");
                 Vec3f vec3f = this.deserializeVec3f(jsonObject, "origin");
-                vec3f.set(vec3f.getX(), vec3f.getY(), 16 - vec3f.getZ()); // modern has z inverted
                 vec3f.scale(0.0625F);
                 Direction.Axis axis = this.deserializeAxis(jsonObject);
                 float f = this.deserializeRotationAngle(jsonObject);
-                switch (axis) { // modern has x and z swapped
-                    case X -> axis = Direction.Axis.Z;
-                    case Z -> axis = Direction.Axis.X;
-                }
-                if (axis == Direction.Axis.Z) // modern has z inverted
-                    f = -f;
                 boolean bl = JsonHelper.getBoolean(jsonObject, "rescale", false);
                 modelRotation = new ModelRotation(vec3f, axis, f, bl);
             }
@@ -124,23 +115,11 @@ public class ModelElement {
                 map.put(direction, context.deserialize(stringJsonElementEntry.getValue(), ModelElementFace.class));
             }
 
-            // modern changed cardinal directions, so the vertical axis faces have to be rotated appropriately
-            map.entrySet().stream().filter(e -> e.getKey().getAxis().isVertical() && e.getValue().textureData.uvs != null).map(e -> e.getValue().textureData).forEach(textureData -> textureData.rotation = (textureData.rotation + 270) % 360);
-            ModelElementFace texture = map.get(Direction.DOWN); // beta has the downward faces mirrored
-            if (texture != null && texture.textureData.uvs != null) {
-                texture.textureData.uvs = new float[] {
-                        texture.textureData.uvs[2],
-                        texture.textureData.uvs[1],
-                        texture.textureData.uvs[0],
-                        texture.textureData.uvs[3],
-                };
-            }
-
             return map;
         }
 
         private Direction getDirection(String name) {
-            Direction direction = Direction.byName(name);
+            Direction direction = Direction.byName(name).rotateClockwise(Direction.Axis.Y);
             if (direction == null) throw new JsonParseException("Unknown facing: " + name);
             else return direction;
         }
@@ -167,7 +146,7 @@ public class ModelElement {
                 float[] fs = new float[3];
 
                 for(int i = 0; i < fs.length; ++i)
-                    fs[i] = JsonHelper.asFloat(jsonArray.get(fs.length - i - 1), name + "[" + i + "]"); // modern has x and z swapped
+                    fs[i] = JsonHelper.asFloat(jsonArray.get(i), name + "[" + i + "]"); // modern has x and z swapped
 
                 return new Vec3f(fs[0], fs[1], fs[2]);
             }

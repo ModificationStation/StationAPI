@@ -205,14 +205,17 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         if (stack == null || stack.itemId == 0) return;
         if (model.isVanillaAdapter()) {
             model.getTransformation().getTransformation(renderMode).apply();
-            if (model.isSideLit() && renderMode == ModelTransformation.Mode.GUI) { // kind of a dirty way to do this, should probably look into replacing
+            boolean side = model.isSideLit();
+            if (side && renderMode == ModelTransformation.Mode.GUI) {
                 RenderHelper.disableLighting();
-                glRotatef(-90, 0, 1, 0);
+                glPushMatrix();
+                glRotatef(90, 0, 1, 0);
                 RenderHelper.enableLighting();
+                glPopMatrix();
             }
             glTranslatef(-0.5F, -0.5F, -0.5F);
             if (model.isBuiltin()) return;
-            if (!model.isSideLit() && renderMode == ModelTransformation.Mode.GROUND)
+            if (!side && renderMode == ModelTransformation.Mode.GROUND)
                 renderBakedItemModelFlat(model, stack, brightness);
             else
                 renderBakedItemModel(model, stack, brightness);

@@ -55,7 +55,7 @@ public final class ArsenicItemRenderer {
             if (model instanceof VanillaBakedModel) {
                 renderVanilla(item, (float) x, (float) y, (float) z, delta, var10, var11, var12, renderedAmount, atlas);
             } else if (!model.isBuiltin()) {
-                renderModel(item, x, y, z, delta, var10, var11, var12, renderedAmount, atlas, model);
+                renderModel(item, (float) x, (float) y, (float) z, delta, var10, var11, var12, renderedAmount, atlas, model);
             }
         }
 
@@ -130,18 +130,15 @@ public final class ArsenicItemRenderer {
         glPopMatrix();
     }
 
-    private void renderModel(Item item, double x, double y, double z, float delta, ItemInstance var10, float var11, float var12, byte renderedAmount, SpriteAtlasTexture atlas, BakedModel model) {
+    private void renderModel(Item item, float x, float y, float z, float delta, ItemInstance var10, float var11, float var12, byte renderedAmount, SpriteAtlasTexture atlas, BakedModel model) {
         glPushMatrix();
         atlas.bindTexture();
-        glTranslatef((float) x, (float) (y + var11), (float) z);
+        glTranslatef(x, y + var11 + 0.25F * model.getTransformation().getTransformation(ModelTransformation.Mode.GROUND).scale.getY(), z);
 
         val sideLit = model.isSideLit();
         Tessellator tessellator = Tessellator.INSTANCE;
 
-        if (sideLit) {
-            glRotatef(var12, 0, 1, 0);
-            glTranslated(0, -3.0 / 16, 0);
-        }
+        if (sideLit) glRotatef(var12, 0, 1, 0);
 
         for (int var29 = 0; var29 < renderedAmount; ++var29) {
             glPushMatrix();

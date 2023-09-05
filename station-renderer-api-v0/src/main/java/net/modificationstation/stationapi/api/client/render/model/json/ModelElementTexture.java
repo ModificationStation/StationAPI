@@ -4,7 +4,6 @@ import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.JsonHelper;
-import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
@@ -14,37 +13,9 @@ public class ModelElementTexture {
     public float[] uvs;
     public int rotation;
 
-    public ModelElementTexture(@SuppressWarnings("NullableProblems") @Nullable float[] uvs, int rotation) {
+    public ModelElementTexture(float @Nullable [] uvs, int rotation) {
         this.uvs = uvs;
         this.rotation = rotation;
-    }
-
-    public float getU(int rotation, Direction direction) {
-        if (this.uvs == null) {
-            throw new NullPointerException("uvs");
-        } else {
-            int i = this.getRotatedUVIndex(rotation);
-            return uvs[switch (direction) {
-                case DOWN, WEST -> i == 0 || i == 1 ? 0 : 2; // all cases extracted from vanilla's BlockRenderer
-                case UP -> i == 0 || i == 1 ? 2 : 0;
-                case EAST, NORTH -> i == 0 || i == 3 ? 2 : 0;
-                case SOUTH -> i == 0 || i == 3 ? 0 : 2;
-            }];
-        }
-    }
-
-    public float getV(int rotation, Direction direction) {
-        if (this.uvs == null) {
-            throw new NullPointerException("uvs");
-        } else {
-            int i = this.getRotatedUVIndex(rotation);
-            return uvs[switch (direction) {
-                case DOWN, UP -> i == 0 || i == 3 ? 3 : 1; // all cases extracted from vanilla's BlockRenderer
-                case EAST, NORTH -> i == 0 || i == 1 ? 1 : 3;
-                case WEST -> i == 0 || i == 3 ? 1 : 3;
-                case SOUTH -> i == 0 || i == 1 ? 3 : 1;
-            }];
-        }
     }
 
     public float getU(int rotation) {

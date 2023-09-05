@@ -6,7 +6,6 @@ import net.modificationstation.stationapi.api.util.Util;
 
 @Environment(EnvType.CLIENT)
 public enum CubeFace {
-    // all enums below extracted from vanilla's BlockRenderer
     DOWN(new Corner(
             DirectionIds.NORTH,
             DirectionIds.DOWN,
@@ -25,14 +24,6 @@ public enum CubeFace {
             DirectionIds.WEST
     )),
     UP(new Corner(
-            DirectionIds.SOUTH,
-            DirectionIds.UP,
-            DirectionIds.WEST
-    ), new Corner(
-            DirectionIds.SOUTH,
-            DirectionIds.UP,
-            DirectionIds.EAST
-    ), new Corner(
             DirectionIds.NORTH,
             DirectionIds.UP,
             DirectionIds.EAST
@@ -40,12 +31,16 @@ public enum CubeFace {
             DirectionIds.NORTH,
             DirectionIds.UP,
             DirectionIds.WEST
+    ), new Corner(
+            DirectionIds.SOUTH,
+            DirectionIds.UP,
+            DirectionIds.WEST
+    ), new Corner(
+            DirectionIds.SOUTH,
+            DirectionIds.UP,
+            DirectionIds.EAST
     )),
     EAST(new Corner(
-            DirectionIds.NORTH,
-            DirectionIds.UP,
-            DirectionIds.EAST
-    ), new Corner(
             DirectionIds.SOUTH,
             DirectionIds.UP,
             DirectionIds.EAST
@@ -56,6 +51,10 @@ public enum CubeFace {
     ), new Corner(
             DirectionIds.NORTH,
             DirectionIds.DOWN,
+            DirectionIds.EAST
+    ), new Corner(
+            DirectionIds.NORTH,
+            DirectionIds.UP,
             DirectionIds.EAST
     )),
     WEST(new Corner(
@@ -78,22 +77,26 @@ public enum CubeFace {
     NORTH(new Corner(
             DirectionIds.NORTH,
             DirectionIds.UP,
+            DirectionIds.EAST
+    ), new Corner(
+            DirectionIds.NORTH,
+            DirectionIds.DOWN,
+            DirectionIds.EAST
+    ), new Corner(
+            DirectionIds.NORTH,
+            DirectionIds.DOWN,
             DirectionIds.WEST
     ), new Corner(
             DirectionIds.NORTH,
             DirectionIds.UP,
-            DirectionIds.EAST
-    ), new Corner(
-            DirectionIds.NORTH,
-            DirectionIds.DOWN,
-            DirectionIds.EAST
-    ), new Corner(
-            DirectionIds.NORTH,
-            DirectionIds.DOWN,
             DirectionIds.WEST
     )),
     SOUTH(new Corner(
             DirectionIds.SOUTH,
+            DirectionIds.UP,
+            DirectionIds.WEST
+    ), new Corner(
+            DirectionIds.SOUTH,
             DirectionIds.DOWN,
             DirectionIds.WEST
     ), new Corner(
@@ -104,10 +107,6 @@ public enum CubeFace {
             DirectionIds.SOUTH,
             DirectionIds.UP,
             DirectionIds.EAST
-    ), new Corner(
-            DirectionIds.SOUTH,
-            DirectionIds.UP,
-            DirectionIds.WEST
     ));
 
     private static final CubeFace[] DIRECTION_LOOKUP = Util.make(new CubeFace[6], (cubeFaces) -> {

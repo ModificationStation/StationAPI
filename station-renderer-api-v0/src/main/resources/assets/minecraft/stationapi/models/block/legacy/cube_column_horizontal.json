@@ -4,8 +4,8 @@
         {   "from": [ 0, 0, 0 ],
             "to": [ 16, 16, 16 ],
             "faces": {
-                "down":  { "texture": "#down", "cullface": "down" },
-                "up":    { "texture": "#up", "rotation": 180, "cullface": "up" },
+                "down":  { "texture": "#down", "rotation": 90, "cullface": "down" },
+                "up":    { "texture": "#up", "rotation": 270, "cullface": "up" },
                 "north": { "texture": "#north", "cullface": "north" },
                 "south": { "texture": "#south", "cullface": "south" },
                 "west":  { "texture": "#west", "cullface": "west" },

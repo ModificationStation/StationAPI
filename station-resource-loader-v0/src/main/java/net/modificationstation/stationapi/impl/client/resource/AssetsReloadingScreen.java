@@ -16,10 +16,7 @@ import net.modificationstation.stationapi.api.util.profiler.ProfileResult;
 import net.modificationstation.stationapi.api.util.profiler.ProfilerSystem;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.*;
 
 public class AssetsReloadingScreen extends ScreenBase {
@@ -58,6 +55,7 @@ public class AssetsReloadingScreen extends ScreenBase {
     private long fadeOutStart;
     private final List<String> locations = Collections.synchronizedList(new ArrayList<>());
     private float scrollProgress;
+    private final String logo;
 
     private static class ReloaderProfiler extends ProfilerSystem {
         private final ResourceReloader reloader;
@@ -105,7 +103,12 @@ public class AssetsReloadingScreen extends ScreenBase {
                 stage0Delta = globalFadeOutComposer.apply(STAGE_0_FADE_IN_DELTA);
         backgroundEmitter = setupEmitter(backgroundDelta.andThenDouble(SIN_90_DELTA), this::renderBackground);
         stage0Emitter = setupEmitter(stage0Delta.andThenDouble(SIN_90_DELTA), this::renderProgressBar, this::renderLogo);
-    }
+        logo = "/assets/station-resource-loader-v0/textures/gui/stationapi_reload" + switch (new Random().nextInt(100)) {
+            case 0 -> "_dimando";
+            case 1 -> "_old";
+            default -> "";
+        } + ".png";
+   }
 
     private Runnable setupEmitter(final Long2DoubleFunction deltaFunc, final DoubleConsumer... renderers) {
         DoubleConsumer renderer = Arrays.stream(renderers).reduce(DoubleConsumer::andThen).orElse(delta -> {});
@@ -159,7 +162,7 @@ public class AssetsReloadingScreen extends ScreenBase {
 
     private void renderLogo(double delta) {
         double v = 10 - delta * 10;
-        minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId("/assets/station-resource-loader-v0/textures/gui/stationapi_reload.png"));
+        minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId(logo));
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         Tessellator tessellator = Tessellator.INSTANCE;

@@ -31,6 +31,7 @@ public class ModelElementFace {
         public ModelElementFace deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             Direction direction = this.deserializeCullFace(jsonObject);
+            if (direction != null) direction = direction.rotateClockwise(Direction.Axis.Y);
             int i = this.deserializeTintIndex(jsonObject);
             String string = this.deserializeTexture(jsonObject);
             ModelElementTexture modelElementTexture = jsonDeserializationContext.deserialize(jsonObject, ModelElementTexture.class);
