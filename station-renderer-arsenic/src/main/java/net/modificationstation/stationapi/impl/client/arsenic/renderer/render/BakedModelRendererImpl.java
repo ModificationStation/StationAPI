@@ -20,6 +20,7 @@ import net.modificationstation.stationapi.api.client.color.item.ItemColors;
 import net.modificationstation.stationapi.api.client.render.item.ItemModels;
 import net.modificationstation.stationapi.api.client.render.model.*;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
+import net.modificationstation.stationapi.api.client.render.model.json.Transformation;
 import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -204,14 +205,18 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     public void renderItem(ItemInstance stack, ModelTransformation.Mode renderMode, float brightness, BakedModel model) {
         if (stack == null || stack.itemId == 0) return;
         if (model.isVanillaAdapter()) {
-            model.getTransformation().getTransformation(renderMode).apply();
+            Transformation transformation = model.getTransformation().getTransformation(renderMode);
+            transformation.apply();
             boolean side = model.isSideLit();
             if (side && renderMode == ModelTransformation.Mode.GUI) {
-                RenderHelper.disableLighting();
-                glPushMatrix();
-                glRotatef(90, 0, 1, 0);
-                RenderHelper.enableLighting();
-                glPopMatrix();
+                float angle = transformation.rotation.getY() - 315;
+                if (angle != 0) {
+                    RenderHelper.disableLighting();
+                    glPushMatrix();
+                    glRotatef(angle, 0, 1, 0);
+                    RenderHelper.enableLighting();
+                    glPopMatrix();
+                }
             }
             glTranslatef(-0.5F, -0.5F, -0.5F);
             if (model.isBuiltin()) return;
