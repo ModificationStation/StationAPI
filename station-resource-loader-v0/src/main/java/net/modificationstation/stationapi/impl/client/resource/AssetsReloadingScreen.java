@@ -14,13 +14,13 @@ import net.modificationstation.stationapi.api.resource.ResourceReloaderProfilers
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.profiler.ProfileResult;
 import net.modificationstation.stationapi.api.util.profiler.ProfilerSystem;
-import org.lwjgl.opengl.GL11;
 
 import java.util.*;
 import java.util.function.*;
 
-public class AssetsReloadingScreen extends ScreenBase {
+import static org.lwjgl.opengl.GL11.*;
 
+public class AssetsReloadingScreen extends ScreenBase {
     private static final long
             MAX_FPS = 60,
             BACKGROUND_START = 0,
@@ -44,6 +44,7 @@ public class AssetsReloadingScreen extends ScreenBase {
     private final ScreenBase parent;
     private final Runnable done;
     private final Supplier<ResourceReload> reload;
+    private final Tessellator tessellator;
     private boolean firstRenderTick = true;
     private long initTimestamp;
     private long currentTime;
@@ -92,11 +93,14 @@ public class AssetsReloadingScreen extends ScreenBase {
     public AssetsReloadingScreen(
             ScreenBase parent,
             Runnable done,
-            Function<ResourceReloaderProfilers.Factory, ResourceReload> reloadFactory
+            Function<ResourceReloaderProfilers.Factory, ResourceReload> reloadFactory,
+            Tessellator tessellator
     ) {
         this.parent = parent;
         this.done = done;
         this.reload = Suppliers.memoize(() -> reloadFactory.apply(ResourceReloaderProfilers.Factory.of(ScreenProfiler::new, "Prepare", "Apply")));
+        this.tessellator = tessellator;
+
         UnaryOperator<Long2DoubleFunction> globalFadeOutComposer = when(() -> finished, GLOBAL_FADE_OUT_DELTA_FACTORY.apply(() -> fadeOutStart));
         Long2DoubleFunction
                 backgroundDelta = globalFadeOutComposer.apply(BACKGROUND_FADE_IN_DELTA),
@@ -146,26 +150,25 @@ public class AssetsReloadingScreen extends ScreenBase {
         if (scissorsHeight > 0) {
             int to = MathHelper.floor(scrollProgress);
             float scrollDelta = scrollProgress - to;
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GL11.glScissor((int) ((40 + 3) * xScale), (int) ((50 - v) * yScale), (int) ((width - (40 + 3) * 2) * xScale), scissorsHeight);
+            glEnable(GL_SCISSOR_TEST);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glScissor((int) ((40 + 3) * xScale), (int) ((50 - v) * yScale), (int) ((width - (40 + 3) * 2) * xScale), scissorsHeight);
             for (int i = 0; i < to; i++) {
                 int y = net.modificationstation.stationapi.api.util.math.MathHelper.ceil(height - 100 + (10 * i) + (scrollDelta * 10) + v * 5);
                 if (y > height - 50 + v) break;
                 drawTextWithShadow(textManager, locations.get(to - i - 1), 40 + 3, y, color);
             }
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+            glDisable(GL_BLEND);
+            glDisable(GL_SCISSOR_TEST);
         }
     }
 
     private void renderLogo(double delta) {
         double v = 10 - delta * 10;
         minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId(logo));
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        Tessellator tessellator = Tessellator.INSTANCE;
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         tessellator.start();
         tessellator.colour(0xFF, 0xFF, 0xFF, (int) (0xFF * delta));
         tessellator.vertex(width / 2D - 120, (height - 90D) / 2 - 20 - v, 0, 0, 0);
@@ -173,7 +176,7 @@ public class AssetsReloadingScreen extends ScreenBase {
         tessellator.vertex(width / 2D + 120, (height - 90D) / 2 + 20 - v, 0, 1, 1);
         tessellator.vertex(width / 2D + 120, (height - 90D) / 2 - 20 - v, 0, 1, 0);
         tessellator.draw();
-        GL11.glDisable(GL11.GL_BLEND);
+        glDisable(GL_BLEND);
     }
 
     @Override
@@ -217,5 +220,53 @@ public class AssetsReloadingScreen extends ScreenBase {
 
     private boolean canAccessReload() {
         return currentTime > RELOAD_START;
+    }
+
+    protected void drawLineHorizontal(int startX, int endX, int y, int color) {
+        if (endX < startX) {
+            int n = startX;
+            startX = endX;
+            endX = n;
+        }
+        this.fill(startX, y, endX + 1, y + 1, color);
+    }
+
+    protected void drawLineVertical(int x, int startY, int endY, int color) {
+        if (endY < startY) {
+            int n = startY;
+            startY = endY;
+            endY = n;
+        }
+        this.fill(x, startY + 1, x + 1, endY, color);
+    }
+
+    protected void fill(int startX, int startY, int endX, int endY, int color) {
+        int n;
+        if (startX < endX) {
+            n = startX;
+            startX = endX;
+            endX = n;
+        }
+        if (startY < endY) {
+            n = startY;
+            startY = endY;
+            endY = n;
+        }
+        float f = (float)(color >> 24 & 0xFF) / 255.0f;
+        float f2 = (float)(color >> 16 & 0xFF) / 255.0f;
+        float f3 = (float)(color >> 8 & 0xFF) / 255.0f;
+        float f4 = (float)(color & 0xFF) / 255.0f;
+        glEnable(GL_BLEND);
+        glDisable(GL_TEXTURE_2D);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glColor4f(f2, f3, f4, f);
+        tessellator.start();
+        tessellator.addVertex(startX, endY, 0.0);
+        tessellator.addVertex(endX, endY, 0.0);
+        tessellator.addVertex(endX, startY, 0.0);
+        tessellator.addVertex(startX, startY, 0.0);
+        tessellator.draw();
+        glEnable(GL_TEXTURE_2D);
+        glDisable(GL_BLEND);
     }
 }

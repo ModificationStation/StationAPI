@@ -10,6 +10,7 @@
     "client.MixinMinecraft",
     "client.MixinTexturePack",
     "client.MixinZippedTexturePack",
+    "client.TessellatorAccessor",
     "client.ZippedTexturePackAccessor"
   ],
   "injectors": {
