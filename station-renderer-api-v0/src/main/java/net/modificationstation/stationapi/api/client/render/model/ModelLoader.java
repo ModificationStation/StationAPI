@@ -16,6 +16,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
+import net.modificationstation.stationapi.api.client.event.render.model.PreLoadUnbakedModelEvent;
 import net.modificationstation.stationapi.api.client.event.render.model.LoadUnbakedModelEvent;
 import net.modificationstation.stationapi.api.client.render.block.BlockModels;
 import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbakedModel;
@@ -25,7 +26,6 @@ import net.modificationstation.stationapi.api.client.render.model.json.Multipart
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
@@ -58,12 +58,7 @@ public class ModelLoader {
 
     public static final List<Identifier> BLOCK_DESTRUCTION_STAGES = IntStream.range(0, 10).mapToObj(stage -> Identifier.of("block/destroy_stage_" + stage)).collect(Collectors.toList());
     public static final List<Identifier> BLOCK_DESTRUCTION_STAGE_TEXTURES = BLOCK_DESTRUCTION_STAGES.stream().map(id -> Identifier.of(MODID + "/textures/" + id.id + ".png")).collect(Collectors.toList());
-    private static final Set<SpriteIdentifier> DEFAULT_TEXTURES = Util.make(new HashSet<>(), hashSet -> {
-        for (Identifier identifier : BLOCK_DESTRUCTION_STAGES)
-            hashSet.add(SpriteIdentifier.of(Atlases.GAME_ATLAS_TEXTURE, identifier));
-    });
     public static final ModelIdentifier MISSING_ID;
-    private static final String MISSING_STRING;
     public static final ResourceFinder BLOCK_STATES_FINDER = ResourceFinder.json(MODID + "/blockstates");
     public static final ResourceFinder MODELS_FINDER = ResourceFinder.json(MODID + "/models");
     @VisibleForTesting
@@ -76,8 +71,6 @@ public class ModelLoader {
     public static final JsonUnbakedModel VANILLA_MARKER;
     private static final ItemModelGenerator ITEM_MODEL_GENERATOR;
     private static final Map<Identifier, StateManager<BlockBase, BlockState>> STATIC_DEFINITIONS;
-    @Nullable
-    private SpriteAtlasManager spriteAtlasManager;
     private final BlockColors blockColors;
     private final Map<Identifier, JsonUnbakedModel> jsonUnbakedModels;
     private final Map<Identifier, List<SourceTrackedData>> blockStates;
@@ -315,7 +308,16 @@ public class ModelLoader {
         return StationAPI.EVENT_BUS.post(
                 LoadUnbakedModelEvent.builder()
                         .identifier(id)
-                        .model(loadModelFromJson(id))
+                        .modelLoader(this)
+                        .model(
+                                StationAPI.EVENT_BUS.post(
+                                        PreLoadUnbakedModelEvent.builder()
+                                                .identifier(id)
+                                                .modelLoader(this)
+                                                .loader(this::loadModelFromJson)
+                                                .build()
+                                ).loader.apply(id)
+                        )
                         .build()
         ).model;
     }
@@ -356,7 +358,6 @@ public class ModelLoader {
 
     static {
         MISSING_ID = ModelIdentifier.of("builtin/missing", "missing");
-        MISSING_STRING = MISSING_ID.toString();
         MISSING_DEFINITION = ("{    'textures': {       'particle': '" + MissingSprite.getMissingSpriteId().id + "',       'missingno': '" + MissingSprite.getMissingSpriteId().id + "'    },    'elements': [         {  'from': [ 0, 0, 0 ],            'to': [ 16, 16, 16 ],            'faces': {                'down':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'down',  'texture': '#missingno' },                'up':    { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'up',    'texture': '#missingno' },                'north': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'north', 'texture': '#missingno' },                'south': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'south', 'texture': '#missingno' },                'west':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'west',  'texture': '#missingno' },                'east':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'east',  'texture': '#missingno' }            }        }    ]}").replace('\'', '"');
         BUILTIN_MODEL_DEFINITIONS = new HashMap<>(ImmutableMap.of("missing", MISSING_DEFINITION));
         COMMA_SPLITTER = Splitter.on(',');
