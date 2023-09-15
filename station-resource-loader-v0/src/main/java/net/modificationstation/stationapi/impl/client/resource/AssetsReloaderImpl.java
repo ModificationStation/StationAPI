@@ -50,7 +50,6 @@ public final class AssetsReloaderImpl {
     );
     private static final CompletableFuture<Unit> COMPLETED_UNIT_FUTURE = CompletableFuture.completedFuture(Unit.INSTANCE);
     public static Thread reloadScreenThread;
-    public static Drawable tmpDrawable;
     public static Tessellator reloadScreenTessellator;
 
     @EventListener
@@ -80,11 +79,8 @@ public final class AssetsReloaderImpl {
         );
         if (firstLoad) {
             firstLoad = false;
-            Drawable drawable = Display.getDrawable();
-            drawable.releaseContext();
-            tmpDrawable = new SharedDrawable(drawable);
-            tmpDrawable.makeCurrent();
-            reloadScreenThread = new Thread(() -> onStartup(minecraft, reloadScreenFactory));
+            Drawable drawable = new SharedDrawable(Display.getDrawable());
+            reloadScreenThread = new Thread(() -> onStartup(minecraft, reloadScreenFactory, drawable));
             reloadScreenThread.start();
             return;
         }
@@ -101,9 +97,9 @@ public final class AssetsReloaderImpl {
 
     private static void onStartup(
             Minecraft minecraft,
-            Function3<Function<ScreenBase, Runnable>, Executor, Tessellator, AssetsReloadingScreen> reloadScreenFactory
+            Function3<Function<ScreenBase, Runnable>, Executor, Tessellator, AssetsReloadingScreen> reloadScreenFactory,
+            Drawable drawable
     ) {
-        Drawable drawable = Display.getDrawable();
         try {
             drawable.makeCurrent();
         } catch (LWJGLException e) {
@@ -157,6 +153,7 @@ public final class AssetsReloaderImpl {
         glAlphaFunc(GL_GREATER, 0.1f);
         try {
             drawable.releaseContext();
+            drawable.destroy();
         } catch (LWJGLException e) {
             throw new RuntimeException(e);
         }

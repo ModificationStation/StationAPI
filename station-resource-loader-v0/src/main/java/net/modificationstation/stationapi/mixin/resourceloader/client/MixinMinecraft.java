@@ -11,8 +11,6 @@ import net.modificationstation.stationapi.api.client.event.resource.AssetsResour
 import net.modificationstation.stationapi.api.client.resource.ReloadableAssetsManager;
 import net.modificationstation.stationapi.api.event.resource.DataReloadEvent;
 import net.modificationstation.stationapi.impl.client.resource.AssetsReloaderImpl;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.Display;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -56,12 +54,8 @@ public class MixinMinecraft {
                     target = "Lnet/minecraft/client/Minecraft;method_2150()V"
             )
     )
-    private void stationapi_waitForReloadScreen(CallbackInfo ci) throws InterruptedException, LWJGLException {
+    private void stationapi_waitForReloadScreen(CallbackInfo ci) throws InterruptedException {
         AssetsReloaderImpl.reloadScreenThread.join();
         AssetsReloaderImpl.reloadScreenThread = null;
-        AssetsReloaderImpl.tmpDrawable.releaseContext();
-        AssetsReloaderImpl.tmpDrawable.destroy();
-        AssetsReloaderImpl.tmpDrawable = null;
-        Display.getDrawable().makeCurrent();
     }
 }
