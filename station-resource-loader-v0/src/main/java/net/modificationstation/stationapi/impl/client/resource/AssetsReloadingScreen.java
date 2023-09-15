@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import it.unimi.dsi.fastutil.longs.Long2DoubleFunction;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.TextRenderer;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.resource.ResourceReload;
 import net.modificationstation.stationapi.api.resource.ResourceReloader;
@@ -268,5 +269,9 @@ public class AssetsReloadingScreen extends ScreenBase {
         tessellator.draw();
         glEnable(GL_TEXTURE_2D);
         glDisable(GL_BLEND);
+    }
+
+    void setTextRenderer(TextRenderer textRenderer) {
+        textManager = textRenderer;
     }
 }

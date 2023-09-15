@@ -11,6 +11,7 @@
     "client.MixinTexturePack",
     "client.MixinZippedTexturePack",
     "client.TessellatorAccessor",
+    "client.TextRendererMixin",
     "client.ZippedTexturePackAccessor"
   ],
   "injectors": {

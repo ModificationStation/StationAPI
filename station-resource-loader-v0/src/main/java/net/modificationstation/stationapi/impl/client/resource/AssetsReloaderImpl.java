@@ -29,8 +29,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.Drawable;
-import org.lwjgl.opengl.Pbuffer;
-import org.lwjgl.opengl.PixelFormat;
+import org.lwjgl.opengl.SharedDrawable;
 
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
@@ -52,6 +51,7 @@ public final class AssetsReloaderImpl {
     private static final CompletableFuture<Unit> COMPLETED_UNIT_FUTURE = CompletableFuture.completedFuture(Unit.INSTANCE);
     public static Thread reloadScreenThread;
     public static Drawable tmpDrawable;
+    public static Tessellator reloadScreenTessellator;
 
     @EventListener
     private static void reload(TexturePackLoadedEvent.After event) {
@@ -82,7 +82,7 @@ public final class AssetsReloaderImpl {
             firstLoad = false;
             Drawable drawable = Display.getDrawable();
             drawable.releaseContext();
-            tmpDrawable = new Pbuffer(1, 1, new PixelFormat(), drawable);
+            tmpDrawable = new SharedDrawable(drawable);
             tmpDrawable.makeCurrent();
             reloadScreenThread = new Thread(() -> onStartup(minecraft, reloadScreenFactory));
             reloadScreenThread.start();
@@ -114,14 +114,14 @@ public final class AssetsReloaderImpl {
         final AssetsReloadingScreen reloadScreen = reloadScreenFactory.apply(
                 parent -> () -> done.set(true),
                 tasks::add,
-                TessellatorAccessor.stationapi_create(48)
+                reloadScreenTessellator = TessellatorAccessor.stationapi_create(48)
         );
         final ScreenScaler screenScaler = new ScreenScaler(minecraft.options, minecraft.actualWidth, minecraft.actualHeight);
         final int
                 width = screenScaler.getScaledWidth(),
                 height = screenScaler.getScaledHeight();
-        minecraft.textRenderer = new TextRenderer(minecraft.options, "/font/default.png", minecraft.textureManager);
         reloadScreen.init(minecraft, width, height);
+        reloadScreen.setTextRenderer(new TextRenderer(minecraft.options, "/font/default.png", minecraft.textureManager));
         final Timer timer = ((MinecraftAccessor) minecraft).getTickTimer();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glMatrixMode(GL_PROJECTION);
