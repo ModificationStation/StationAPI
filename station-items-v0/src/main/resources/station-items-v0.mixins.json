@@ -24,7 +24,8 @@
     "client.MixinContainerBase",
     "client.MixinGameRenderer",
     "client.MixinItemRenderer",
-    "client.MixinRemoteClientInteractionManager"
+    "client.MixinMultiPlayerClientInteractionManager",
+    "client.MixinSinglePlayerClientInteractionManager"
   ],
   "injectors": {
     "defaultRequire": 1
