@@ -1,15 +1,15 @@
 package net.modificationstation.stationapi.mixin.item;
 
+import net.minecraft.entity.Living;
+import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
+import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.item.ItemEvent;
 import net.modificationstation.stationapi.api.item.StationItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
@@ -43,5 +43,17 @@ public abstract class MixinItemBase implements StationItem {
     @Override
     public ItemBase setTranslationKey(Identifier translationKey) {
         return setTranslationKey(translationKey.toString());
+    }
+
+    @Override
+    @Unique
+    public boolean preHit(ItemInstance itemInstance, Living otherEntity, Living player) {
+        return true;
+    }
+
+    @Override
+    @Unique
+    public boolean preMine(ItemInstance itemInstance, int x, int y, int z, int l, Living entity) {
+        return true;
     }
 }

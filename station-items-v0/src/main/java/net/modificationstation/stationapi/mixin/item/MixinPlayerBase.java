@@ -5,6 +5,7 @@ import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
+import net.modificationstation.stationapi.api.item.StationItemStack;
 import net.modificationstation.stationapi.api.item.UseOnEntityFirst;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,5 +26,16 @@ public abstract class MixinPlayerBase extends Living {
     private void hijackInteractWith(EntityBase arg, CallbackInfo ci) {
         if (getHeldItem() != null && getHeldItem().getType() instanceof UseOnEntityFirst use && use.onUseOnEntityFirst(getHeldItem(), (PlayerBase) (Object) this, this.level, arg))
             ci.cancel();
+    }
+
+
+    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
+    public void attack_preHit(EntityBase entity, CallbackInfo ci){
+        ItemInstance itemInstance = this.getHeldItem();
+        if(itemInstance != null){
+            if(!itemInstance.preHit((Living) entity, PlayerBase.class.cast(this))){
+                ci.cancel();
+            }
+        }
     }
 }

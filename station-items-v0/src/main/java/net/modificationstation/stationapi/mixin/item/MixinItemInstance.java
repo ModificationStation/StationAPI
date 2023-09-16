@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.mixin.item;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
@@ -119,5 +120,17 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
     private void isStackIdentical2(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
         if (!Objects.equals(stationNBT, par1.getStationNBT()))
             cir.setReturnValue(false);
+    }
+
+    @Override
+    @Unique
+    public boolean preHit(Living otherEntity, PlayerBase player) {
+        return getType().preHit(ItemInstance.class.cast(this), otherEntity, player);
+    }
+
+    @Override
+    @Unique
+    public boolean preMine(int x, int y, int z, int l, Living entity) {
+        return getType().preMine(ItemInstance.class.cast(this), x, y, z, l, entity);
     }
 }
