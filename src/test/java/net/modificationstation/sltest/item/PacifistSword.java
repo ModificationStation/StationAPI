@@ -1,7 +1,7 @@
 package net.modificationstation.sltest.item;
 
+import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.EntityRegistry;
-import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.tool.ToolMaterial;
@@ -14,11 +14,11 @@ public class PacifistSword extends TemplateSword {
     }
 
     @Override
-    public boolean preHit(ItemInstance itemInstance, Living otherEntity, Living player) {
+    public boolean preHit(ItemInstance itemInstance, EntityBase otherEntity, PlayerBase player) {
         if(player.level.isServerSide){
             return false;
         }
-        ((PlayerBase)player).sendMessage("You tried to hurt this innocent " + EntityRegistry.getStringId(otherEntity));
+        player.sendMessage("You tried to hurt this innocent " + EntityRegistry.getStringId(otherEntity));
         return false;
     }
 }
