@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.mixin.item;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.entity.EntityBase;
-import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;

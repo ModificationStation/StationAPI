@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.item;
 
 import net.minecraft.entity.EntityBase;
-import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
@@ -9,8 +8,6 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Util;
-
-import javax.swing.text.html.parser.Entity;
 
 public interface StationItem {
 

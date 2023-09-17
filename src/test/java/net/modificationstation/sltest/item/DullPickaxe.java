@@ -1,6 +1,5 @@
 package net.modificationstation.sltest.item;
 
-import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.item.tool.ToolMaterial;
@@ -20,7 +19,7 @@ public class DullPickaxe extends TemplatePickaxe {
         }
         itemInstance.applyDamage(1,player);
         if(itemInstance.getDamage() >= itemInstance.getDurability()){
-            player.inventory.setInventoryItem(player.inventory.selectedHotbarSlot, (ItemInstance)null);
+            player.inventory.setInventoryItem(player.inventory.selectedHotbarSlot, null);
         }
         return false;
     }
