@@ -1,10 +1,11 @@
 package net.modificationstation.stationapi.mixin.item;
 
-import net.minecraft.entity.Living;
+import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.ItemEvent;
 import net.modificationstation.stationapi.api.item.StationItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -47,13 +48,13 @@ public abstract class MixinItemBase implements StationItem {
 
     @Override
     @Unique
-    public boolean preHit(ItemInstance itemInstance, Living otherEntity, Living player) {
+    public boolean preHit(ItemInstance itemInstance, EntityBase otherEntity, PlayerBase player) {
         return true;
     }
 
     @Override
     @Unique
-    public boolean preMine(ItemInstance itemInstance, int x, int y, int z, int l, Living entity) {
+    public boolean preMine(ItemInstance itemInstance, BlockState blockState, int x, int y, int z, int side, PlayerBase player) {
         return true;
     }
 }

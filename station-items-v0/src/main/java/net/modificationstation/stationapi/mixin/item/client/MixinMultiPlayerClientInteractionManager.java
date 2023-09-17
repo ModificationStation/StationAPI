@@ -16,10 +16,10 @@ public class MixinMultiPlayerClientInteractionManager extends BaseClientInteract
     }
 
     @Inject(method = "method_1721", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockBase;getHardness(Lnet/minecraft/entity/player/PlayerBase;)F"),cancellable = true)
-    public void method_1721_preMine(int x, int y, int z, int par4, CallbackInfo ci){
+    public void method_1721_preMine(int x, int y, int z, int side, CallbackInfo ci){
         ItemInstance itemInstance = this.minecraft.player.inventory.getHeldItem();
         if(itemInstance != null){
-            if(!itemInstance.preMine(x,y,z,par4,this.minecraft.player)){
+            if(!itemInstance.preMine(this.minecraft.player.level.getBlockState(x, y, z), x, y, z, side, this.minecraft.player)){
                 ci.cancel();
             }
         }

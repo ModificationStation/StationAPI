@@ -5,7 +5,6 @@ import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
-import net.modificationstation.stationapi.api.item.StationItemStack;
 import net.modificationstation.stationapi.api.item.UseOnEntityFirst;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,7 +32,7 @@ public abstract class MixinPlayerBase extends Living {
     public void attack_preHit(EntityBase entity, CallbackInfo ci){
         ItemInstance itemInstance = this.getHeldItem();
         if(itemInstance != null){
-            if(!itemInstance.preHit((Living) entity, PlayerBase.class.cast(this))){
+            if(!itemInstance.preHit(entity, PlayerBase.class.cast(this))){
                 ci.cancel();
             }
         }

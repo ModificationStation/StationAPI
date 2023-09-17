@@ -24,10 +24,10 @@ public class Mixinclass_70 {
     }
 
     @Inject(method = "method_1830", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;getTileId(III)I"), cancellable = true)
-    public void method_1830_preMine(int x, int y, int z, int par4, CallbackInfo ci){
+    public void method_1830_preMine(int x, int y, int z, int side, CallbackInfo ci){
         ItemInstance itemInstance = this.field_2309.inventory.getHeldItem();
         if(itemInstance != null){
-            if(!itemInstance.preMine(x,y,z,par4,this.field_2309)){
+            if(!itemInstance.preMine(this.field_2309.level.getBlockState(x,y,z), x, y, z, side, this.field_2309)){
                 ci.cancel();
             }
         }
