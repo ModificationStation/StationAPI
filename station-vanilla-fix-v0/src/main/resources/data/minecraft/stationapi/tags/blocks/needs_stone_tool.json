@@ -1,8 +1,8 @@
 {
   "values": [
-    "iron_block",
-    "iron_ore",
-    "lapis_block",
-    "lapis_ore"
+    "#storage_blocks/iron",
+    "#storage_blocks/lapis",
+    "#ores/iron",
+    "#ores/lapis"
   ]
 }
