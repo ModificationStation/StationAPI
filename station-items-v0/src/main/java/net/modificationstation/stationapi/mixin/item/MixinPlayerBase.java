@@ -26,4 +26,15 @@ public abstract class MixinPlayerBase extends Living {
         if (getHeldItem() != null && getHeldItem().getType() instanceof UseOnEntityFirst use && use.onUseOnEntityFirst(getHeldItem(), (PlayerBase) (Object) this, this.level, arg))
             ci.cancel();
     }
+
+
+    @Inject(method = "attack", at = @At("HEAD"), cancellable = true)
+    public void attack_preHit(EntityBase entity, CallbackInfo ci){
+        ItemInstance itemInstance = this.getHeldItem();
+        if(itemInstance != null){
+            if(!itemInstance.preHit(entity, PlayerBase.class.cast(this))){
+                ci.cancel();
+            }
+        }
+    }
 }

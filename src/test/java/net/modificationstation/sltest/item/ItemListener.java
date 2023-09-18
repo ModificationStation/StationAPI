@@ -28,6 +28,8 @@ public class ItemListener {
         variationBlockPassive = new BlockStateItem(MODID.id("variation_block_passive"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.PASSIVE)).setTranslationKey(MODID, "variationBlockPassive");
         variationBlockActive = new BlockStateItem(MODID.id("variation_block_active"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.ACTIVE)).setTranslationKey(MODID, "variationBlockActive");
         testShears = new TestShears(MODID.id("test_shears")).setTranslationKey(MODID, "test_shears");
+        pacifistSword = new PacifistSword(MODID.id("pacifist_sword")).setTranslationKey(MODID, "pacifist_sword");
+        dullPickaxe = new DullPickaxe(MODID.id("dull_pickaxe")).setTranslationKey(MODID, "dull_pickaxe");
     }
 
     public static ItemBase testItem;
@@ -41,4 +43,6 @@ public class ItemListener {
     public static ItemBase variationBlockPassive;
     public static ItemBase variationBlockActive;
     public static ItemBase testShears;
+    public static ItemBase pacifistSword;
+    public static ItemBase dullPickaxe;
 }

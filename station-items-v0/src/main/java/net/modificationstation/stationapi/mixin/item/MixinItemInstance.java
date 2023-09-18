@@ -2,12 +2,14 @@ package net.modificationstation.stationapi.mixin.item;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.ItemStackEvent;
 import net.modificationstation.stationapi.api.item.StationItemStack;
 import net.modificationstation.stationapi.impl.item.nbt.StationNBTSetter;
@@ -119,5 +121,17 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
     private void isStackIdentical2(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
         if (!Objects.equals(stationNBT, par1.getStationNBT()))
             cir.setReturnValue(false);
+    }
+
+    @Override
+    @Unique
+    public boolean preHit(EntityBase otherEntity, PlayerBase player) {
+        return getType().preHit(ItemInstance.class.cast(this), otherEntity, player);
+    }
+
+    @Override
+    @Unique
+    public boolean preMine(BlockState blockState, int x, int y, int z, int side, PlayerBase player) {
+        return getType().preMine(ItemInstance.class.cast(this), blockState, x, y, z, side, player);
     }
 }
