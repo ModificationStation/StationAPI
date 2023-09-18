@@ -115,9 +115,9 @@ public final class VanillaBlockFixImpl {
         register(registry, "cobblestone_stairs", COBBLESTONE_STAIRS);
         register(registry, "oak_wall_sign", WALL_SIGN);
         register(registry, "lever", LEVER);
-        register(registry, "oak_pressure_plate", WOODEN_PRESSURE_PLATE);
+        register(registry, "stone_pressure_plate", WOODEN_PRESSURE_PLATE);
         register(registry, "iron_door", IRON_DOOR);
-        register(registry, "stone_pressure_plate", STONE_PRESSURE_PLATE);
+        register(registry, "oak_pressure_plate", STONE_PRESSURE_PLATE);
         register(registry, "redstone_ore", REDSTONE_ORE);
         register(registry, "redstone_ore_lit", REDSTONE_ORE_LIT);
         register(registry, "redstone_torch", REDSTONE_TORCH);
