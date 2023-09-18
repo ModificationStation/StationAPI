@@ -2,7 +2,6 @@
   "values": [
     "#storage_blocks/diamond",
     "#storage_blocks/gold",
-    "#storage_blocks/redstone",
     "#ores/diamond",
     "#ores/gold",
     "#ores/redstone"
