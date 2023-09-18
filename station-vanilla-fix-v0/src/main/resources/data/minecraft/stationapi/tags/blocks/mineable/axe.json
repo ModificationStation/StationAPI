@@ -1,8 +1,23 @@
 {
   "values": [
-    "bookshelf",
-    "chest",
+    "#wooden_chests",
+    "#wooden_doors",
+    "#wooden_fences",
+    "#wooden_pressure_plates",
+    "#wooden_stairs",
+    "#wooden_trapdoors",
+    "#wooden_buttons",
+    "#wooden_slabs",
     "#logs",
-    "#planks"
+    "#planks",
+    "#signs",
+    "bookshelf",
+    "note_block",
+    "jukebox",
+    "crafting_table",
+    "ladder",
+    "pumpkin",
+    "carved_pumpkin",
+    "jack_o_lantern"
   ]
 }

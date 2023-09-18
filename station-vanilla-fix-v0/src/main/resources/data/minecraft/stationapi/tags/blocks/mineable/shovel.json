@@ -1,12 +1,11 @@
 {
   "values": [
-    "clay",
-    "dirt",
-    "farmland",
-    "grass_block",
-    "gravel",
-    "sand",
-    "snow_block",
-    "snow"
+    "#snow",
+    "#sand",
+    "#gravel",
+    "#grass_block",
+    "#farmland",
+    "#dirt",
+    "clay"
   ]
 }
