@@ -13,6 +13,7 @@
   "server": [
   ],
   "client": [
+    "client.MixinMinecraft",
     "client.MixinSelectWorld",
     "client.MixinWorldList",
     "client.ScreenBaseAccessor",

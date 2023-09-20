@@ -12,8 +12,11 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.datafixer.DataFixerRegisterEvent;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Util;
+import org.apache.commons.lang3.tuple.Triple;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -69,6 +72,23 @@ public final class DataFixers {
             if (dataVersions.get(fixerEntry.getKey().toString()).asInt(0) < fixerEntry.getValue().currentVersion)
                 return true;
         return false;
+    }
+
+    public static <T> List<Triple<ModID, Integer, Integer>> getUpdateList(Dynamic<T> dynamic) {
+        init();
+
+        List<Triple<ModID, Integer, Integer>> list = new ArrayList<>();
+        Dynamic<T> dataVersions = getDataVersions(dynamic);
+
+        for (Reference2ReferenceMap.Entry<ModID, DataFixerEntry> fixerEntry : DATA_FIXERS.reference2ReferenceEntrySet()) {
+            int dataVersion = dataVersions.get(fixerEntry.getKey().toString()).asInt(0);
+            int currentVersion = fixerEntry.getValue().currentVersion;
+
+            if (dataVersion < currentVersion)
+                list.add(Triple.of(fixerEntry.getKey(), dataVersion, currentVersion));
+        }
+
+        return list;
     }
 
     private static void init() {

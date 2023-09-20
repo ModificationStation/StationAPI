@@ -4,6 +4,10 @@ import com.mojang.datafixers.DSL;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
+import net.modificationstation.stationapi.api.registry.ModID;
+import org.apache.commons.lang3.tuple.Triple;
+
+import java.util.List;
 
 public class NbtHelper {
 
@@ -27,5 +31,9 @@ public class NbtHelper {
 
     public static boolean requiresUpdating(CompoundTag compound) {
         return DataFixers.requiresUpdating(new Dynamic<>(NbtOps.INSTANCE, compound));
+    }
+
+    public static List<Triple<ModID, Integer, Integer>> getUpdateList(CompoundTag compound) {
+        return DataFixers.getUpdateList(new Dynamic<>(NbtOps.INSTANCE, compound));
     }
 }
