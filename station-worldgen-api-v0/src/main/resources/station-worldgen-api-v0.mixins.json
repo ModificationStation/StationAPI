@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.modificationstation.stationapi.mixin.worldgen",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"MixinBiomeSource"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
