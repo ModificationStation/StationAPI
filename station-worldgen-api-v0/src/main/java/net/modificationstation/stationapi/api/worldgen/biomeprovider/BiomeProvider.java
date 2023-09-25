@@ -12,4 +12,6 @@ public interface BiomeProvider {
 	 * @return {@link Biome}
 	 */
 	Biome getBiome(int x, int z, float temperature, float wetness);
+	
+	default void setSeed(long seed) {}
 }

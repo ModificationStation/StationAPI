@@ -4,24 +4,17 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.biome.Forest;
 import net.modificationstation.sltest.SLTest;
-import net.modificationstation.sltest.tileentity.TileEntityFreezer;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEvent;
-import net.modificationstation.stationapi.api.event.tileentity.TileEntityRegisterEvent;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.Registry;
-import net.modificationstation.stationapi.api.worldgen.biomeprovider.BiomeProviderRegistryEvent;
+import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biomeprovider.ClimateBiomeProvider;
-import net.modificationstation.stationapi.api.worldgen.biomeprovider.MultiBiomeProvider;
-import net.modificationstation.stationapi.api.worldgen.biomeprovider.SingleBiomeProvider;
-
-import java.util.HashMap;
-import java.util.Map;
+import net.modificationstation.stationapi.impl.worldgen.BiomeProviderRegistryEvent;
 
 public class TestWorldgenListener {
 	private Biome testBiome1;
 	private Biome testBiome2;
 	private Biome testBiome3;
+	private Biome[] climateTest;
 	
 	@EventListener
 	public void registerBiomes(BiomeRegisterEvent event) {
@@ -32,19 +25,31 @@ public class TestWorldgenListener {
 		testBiome1.grassColour = 0xFFFF0000;
 		testBiome2.grassColour = 0xFFFFFF00;
 		testBiome3.grassColour = 0xFFFF00FF;
+		
+		climateTest = new Biome[8];
+		for (int i = 0; i < climateTest.length; i++) {
+			climateTest[i] = new Forest();
+			int r = i * 255 / climateTest.length;
+			climateTest[i].grassColour = 0xFF000000 | r << 16 | r << 8 | 255;
+		}
 	}
 	
 	@EventListener
 	public void registerRegions(BiomeProviderRegistryEvent event) {
 		SLTest.LOGGER.info("Register test biome regions");
-		//event.registerOverworld(StationAPI.MODID.id("simple_region_1"), new SingleBiomeProvider(testBiome1));
-		//event.registerOverworld(StationAPI.MODID.id("simple_region_2"), new SingleBiomeProvider(testBiome2));
-		//event.registerOverworld(StationAPI.MODID.id("simple_region_3"), new SingleBiomeProvider(testBiome3));
 		
-		ClimateBiomeProvider climateBiomeProvider = new ClimateBiomeProvider();
-		climateBiomeProvider.addBiome(testBiome1, 0, 0.5F, 0, 1);
-		climateBiomeProvider.addBiome(testBiome2, 0.5F, 0.75F, 0, 1);
-		climateBiomeProvider.addBiome(testBiome3, 0.75F, 1, 0, 1);
-		event.registerOverworld(StationAPI.MODID.id("climate_region"), climateBiomeProvider);
+		// Add biome directly into default region
+		BiomeAPI.addOverworldBiome(testBiome1, 0.3F, 0.7F, 0.3F, 0.7F);
+		// Fancy borders example
+		BiomeAPI.addOverworldBiome(testBiome3, 0.28F, 0.72F, 0.28F, 0.72F);
+		
+		// Simple climate provider with biomes by temperature
+		ClimateBiomeProvider provider = new ClimateBiomeProvider();
+		for (int i = 0; i < climateTest.length; i++) {
+			float t1 = (float) i / climateTest.length;
+			float t2 = (float) (i + 1) / climateTest.length;
+			provider.addBiome(climateTest[i], t1, t2, 0, 1);
+		}
+		BiomeAPI.addOverworldBiomeProvider(StationAPI.MODID.id("climate_provider"), provider);
 	}
 }

@@ -22,12 +22,17 @@ public class ClimateBiomeProvider implements BiomeProvider {
 	
 	@Override
 	public Biome getBiome(int x, int z, float temperature, float wetness) {
+		Biome biome = getBiome(temperature, wetness);
+		return biome == null ? biomes.get(0).biome : biome;
+	}
+	
+	protected Biome getBiome(float temperature, float wetness) {
 		for (BiomeInfo info : biomes) {
 			if (info.t1 > temperature || info.t2 < temperature) continue;
 			if (info.w1 > wetness || info.w2 < wetness) continue;
 			return info.biome;
 		}
-		return biomes.get(0).biome;
+		return null;
 	}
 	
 	private record BiomeInfo(
