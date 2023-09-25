@@ -8,13 +8,17 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEvent;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biomeprovider.ClimateBiomeProvider;
+import net.modificationstation.stationapi.api.worldgen.biomeprovider.VoronoiBiomeProvider;
 import net.modificationstation.stationapi.impl.worldgen.BiomeProviderRegistryEvent;
+
+import java.util.Random;
 
 public class TestWorldgenListener {
 	private Biome testBiome1;
 	private Biome testBiome2;
 	private Biome testBiome3;
 	private Biome[] climateTest;
+	private Biome[] voronoiTest;
 	
 	@EventListener
 	public void registerBiomes(BiomeRegisterEvent event) {
@@ -31,6 +35,13 @@ public class TestWorldgenListener {
 			climateTest[i] = new Forest();
 			int r = i * 255 / climateTest.length;
 			climateTest[i].grassColour = 0xFF000000 | r << 16 | r << 8 | 255;
+		}
+		
+		voronoiTest = new Biome[5];
+		Random random = new Random(15);
+		for (int i = 0; i < voronoiTest.length; i++) {
+			voronoiTest[i] = new Forest();
+			voronoiTest[i].grassColour = 0xFF000000 | random.nextInt();
 		}
 	}
 	
@@ -51,5 +62,12 @@ public class TestWorldgenListener {
 			provider.addBiome(climateTest[i], t1, t2, 0, 1);
 		}
 		BiomeAPI.addOverworldBiomeProvider(StationAPI.MODID.id("climate_provider"), provider);
+		
+		// Voronoi test
+		VoronoiBiomeProvider voronoi = new VoronoiBiomeProvider();
+		for (Biome biome : voronoiTest) {
+			voronoi.addBiome(biome);
+		}
+		BiomeAPI.addOverworldBiomeProvider(StationAPI.MODID.id("voronoi_provider"), voronoi);
 	}
 }

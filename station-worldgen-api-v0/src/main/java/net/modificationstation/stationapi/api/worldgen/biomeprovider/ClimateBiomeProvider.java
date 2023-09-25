@@ -5,6 +5,9 @@ import net.minecraft.level.biome.Biome;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Provides biomes based on temperature/wetness(humidity) climate model, similar to default Minecraft behaviour
+ */
 public class ClimateBiomeProvider implements BiomeProvider {
 	private final List<BiomeInfo> biomes = new ArrayList<>();
 	

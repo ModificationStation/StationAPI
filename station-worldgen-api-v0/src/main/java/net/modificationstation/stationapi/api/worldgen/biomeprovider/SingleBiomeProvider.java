@@ -2,6 +2,9 @@ package net.modificationstation.stationapi.api.worldgen.biomeprovider;
 
 import net.minecraft.level.biome.Biome;
 
+/**
+ * Provides one biome independently on conditions
+ */
 public class SingleBiomeProvider implements BiomeProvider {
 	private final Biome biome;
 	
