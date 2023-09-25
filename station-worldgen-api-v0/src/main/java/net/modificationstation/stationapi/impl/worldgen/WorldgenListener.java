@@ -22,5 +22,9 @@ public class WorldgenListener {
 			StationAPI.MODID.id("overworld_biome_provider"),
 			OverworldBiomeProviderImpl.getInstance()
 		);
+		BiomeAPI.addNetherBiomeProvider(
+			StationAPI.MODID.id("nether_biome_provider"),
+			NetherBiomeProviderImpl.getInstance()
+		);
 	}
 }

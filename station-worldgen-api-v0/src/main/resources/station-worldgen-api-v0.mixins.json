@@ -4,8 +4,10 @@
 	"package": "net.modificationstation.stationapi.mixin.worldgen",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
+		"SimplexOctaveNoiseMixin",
 		"MixinBiomeSource",
-		"SimplexOctaveNoiseMixin"
+		"MixinNether",
+		"MixinLevel"
 	],
 	"injectors": {
 		"defaultRequire": 1

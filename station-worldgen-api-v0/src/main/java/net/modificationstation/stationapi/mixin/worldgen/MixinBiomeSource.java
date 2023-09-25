@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.gen.BiomeSource;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
@@ -13,18 +12,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BiomeSource.class)
 public class MixinBiomeSource {
 	@Unique private int posX;
 	@Unique private int posZ;
-	
-	@Inject(method = "<init>(Lnet/minecraft/level/Level;)V", at = @At("TAIL"))
-	private void onInit(Level level, CallbackInfo info) {
-		BiomeAPI.init(level.getSeed());
-	}
 	
 	@Inject(
 		method = "getBiomes([Lnet/minecraft/level/biome/Biome;IIII)[Lnet/minecraft/level/biome/Biome;",

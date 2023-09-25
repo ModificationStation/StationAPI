@@ -4,6 +4,7 @@ import net.minecraft.level.biome.Biome;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.worldgen.biomeprovider.BiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biomeprovider.BiomeRegionsProvider;
+import net.modificationstation.stationapi.impl.worldgen.NetherBiomeProviderImpl;
 import net.modificationstation.stationapi.impl.worldgen.OverworldBiomeProviderImpl;
 
 import java.util.HashMap;
@@ -47,7 +48,13 @@ public class BiomeAPI {
 		return overworldProviders.get(id);
 	}
 	
-	// TODO Implement Nether providers
+	/**
+	 * Add biome into default Nether region
+	 * @param biome {@link Biome} to add
+	 */
+	public static void addNetherBiome(Biome biome) {
+		NetherBiomeProviderImpl.getInstance().addBiome(biome);
+	}
 	
 	/**
 	 * Add {@link BiomeProvider} into the Nether. Biome provider acts like a region of rules for biome generation
@@ -71,6 +78,10 @@ public class BiomeAPI {
 		return overworldProvider;
 	}
 	
+	public static BiomeProvider getNetherProvider() {
+		return netherProvider;
+	}
+	
 	public static void init(long seed) {
 		// Call this to force biome registry event happen before init of regions
 		//noinspection ResultOfMethodCallIgnored
@@ -85,8 +96,22 @@ public class BiomeAPI {
 				.toList();
 			
 			overworldProvider = new BiomeRegionsProvider(biomes);
+			overworldProviders = null;
+		}
+		
+		if (netherProvider == null) {
+			List<BiomeProvider> biomes = netherProviders
+				.keySet()
+				.stream()
+				.sorted()
+				.map(netherProviders::get)
+				.toList();
+			
+			netherProvider = new BiomeRegionsProvider(biomes);
+			netherProviders = null;
 		}
 		
 		overworldProvider.setSeed(seed);
+		netherProvider.setSeed(seed);
 	}
 }

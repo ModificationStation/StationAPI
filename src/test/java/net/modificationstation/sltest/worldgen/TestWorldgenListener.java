@@ -69,5 +69,10 @@ public class TestWorldgenListener {
 			voronoi.addBiome(biome);
 		}
 		BiomeAPI.addOverworldBiomeProvider(StationAPI.MODID.id("voronoi_provider"), voronoi);
+		
+		// Nether biomes test
+		BiomeAPI.addNetherBiome(testBiome1);
+		BiomeAPI.addNetherBiome(testBiome2);
+		BiomeAPI.addNetherBiome(testBiome3);
 	}
 }
