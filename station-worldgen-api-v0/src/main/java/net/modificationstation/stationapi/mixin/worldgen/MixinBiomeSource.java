@@ -18,16 +18,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BiomeSource.class)
 public class MixinBiomeSource {
-	@Unique private long seed;
 	@Unique private int posX;
 	@Unique private int posZ;
 	
 	@Inject(method = "<init>(Lnet/minecraft/level/Level;)V", at = @At("TAIL"))
 	private void onInit(Level level, CallbackInfo info) {
-		// Call this to force biome registry event happen before init of regions
-		//noinspection ResultOfMethodCallIgnored
-		Biome.getBiome(0, 0);
-		BiomeAPI.init(seed);
+		BiomeAPI.init(level.getSeed());
 	}
 	
 	@Inject(

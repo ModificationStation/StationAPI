@@ -1,9 +1,11 @@
 package net.modificationstation.sltest.mixin;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.dimension.DimensionData;
 import net.minecraft.level.gen.BiomeSource;
+import net.minecraft.util.noise.SimplexOctaveNoise;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.util.Random;
 
 @Mixin(Level.class)
 public abstract class MixinLevel {
@@ -25,6 +28,8 @@ public abstract class MixinLevel {
 		at = @At("TAIL")
 	)
 	private void onInit(DimensionData string, String l, long par3, CallbackInfo ci) {
+		if (!FabricLoader.getInstance().isDevelopmentEnvironment()) return;
+		
 		int side = 800;
 		
 		BufferedImage buffer = new BufferedImage(side, side, BufferedImage.TYPE_INT_ARGB);

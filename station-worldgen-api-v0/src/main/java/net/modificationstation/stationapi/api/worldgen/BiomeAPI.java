@@ -72,6 +72,10 @@ public class BiomeAPI {
 	}
 	
 	public static void init(long seed) {
+		// Call this to force biome registry event happen before init of regions
+		//noinspection ResultOfMethodCallIgnored
+		Biome.getBiome(0, 0);
+		
 		if (overworldProvider == null) {
 			List<BiomeProvider> biomes = overworldProviders
 				.keySet()
@@ -79,8 +83,10 @@ public class BiomeAPI {
 				.sorted()
 				.map(overworldProviders::get)
 				.toList();
+			
 			overworldProvider = new BiomeRegionsProvider(biomes);
 		}
+		
 		overworldProvider.setSeed(seed);
 	}
 }
