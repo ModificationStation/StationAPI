@@ -27,14 +27,18 @@ public class TestWorldgenListener {
 		testBiome2 = new Forest();
 		testBiome3 = new Forest();
 		testBiome1.grassColour = 0xFFFF0000;
+		testBiome1.foliageColour = 0xFFFF0000;
 		testBiome2.grassColour = 0xFFFFFF00;
+		testBiome2.foliageColour = 0xFFFFFF00;
 		testBiome3.grassColour = 0xFFFF00FF;
+		testBiome3.foliageColour = 0xFFFF00FF;
 		
 		climateTest = new Biome[8];
 		for (int i = 0; i < climateTest.length; i++) {
 			climateTest[i] = new Forest();
 			int r = i * 255 / climateTest.length;
 			climateTest[i].grassColour = 0xFF000000 | r << 16 | r << 8 | 255;
+			climateTest[i].foliageColour = climateTest[i].grassColour;
 		}
 		
 		voronoiTest = new Biome[5];
@@ -42,6 +46,7 @@ public class TestWorldgenListener {
 		for (int i = 0; i < voronoiTest.length; i++) {
 			voronoiTest[i] = new Forest();
 			voronoiTest[i].grassColour = 0xFF000000 | random.nextInt();
+			voronoiTest[i].foliageColour = voronoiTest[i].grassColour;
 		}
 	}
 	

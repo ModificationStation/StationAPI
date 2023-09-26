@@ -9,6 +9,11 @@
 		"MixinNether",
 		"MixinLevel"
 	],
+	"client": [
+		"MixinTallGrass",
+		"MixinLeaves",
+		"MixinGrass"
+	],
 	"injectors": {
 		"defaultRequire": 1
 	}
