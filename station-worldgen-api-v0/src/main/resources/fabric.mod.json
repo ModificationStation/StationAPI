@@ -15,7 +15,7 @@
 	},
 	
 	"license": "MIT",
-	"icon": "assets/station-vanilla-fix-v0/icon.png",
+	"icon": "assets/station-worldgen-api-v0/icon.png",
 	
 	"environment": "*",
 	"entrypoints": {
