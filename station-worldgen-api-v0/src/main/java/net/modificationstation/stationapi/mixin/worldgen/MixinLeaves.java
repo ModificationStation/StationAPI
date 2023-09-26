@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.worldgen;
 
 import net.minecraft.block.Leaves;
 import net.minecraft.level.BlockView;
-import net.modificationstation.stationapi.impl.worldgen.ColorInterpolator;
+import net.modificationstation.stationapi.impl.worldgen.BiomeColorsImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
@@ -17,7 +17,7 @@ public class MixinLeaves {
 		ordinal = 0, shift = Shift.BEFORE
 	), cancellable = true)
 	private void getBiomeColor(BlockView view, int x, int y, int z, CallbackInfoReturnable<Integer> info) {
-		int color = ColorInterpolator.getInstance().getColor(view.getBiomeSource(), x, z);
+		int color = BiomeColorsImpl.LEAVES_INTERPOLATOR.getColor(view.getBiomeSource(), x, z);
 		info.setReturnValue(color);
 	}
 }

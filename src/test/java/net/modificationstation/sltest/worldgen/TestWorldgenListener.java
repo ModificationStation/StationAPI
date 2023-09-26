@@ -27,18 +27,26 @@ public class TestWorldgenListener {
 		testBiome2 = new Forest();
 		testBiome3 = new Forest();
 		testBiome1.grassColour = 0xFFFF0000;
-		testBiome1.foliageColour = 0xFFFF0000;
+		testBiome1.setGrassColor(testBiome1.grassColour);
+		testBiome1.setLeavesColor(testBiome1.grassColour);
 		testBiome2.grassColour = 0xFFFFFF00;
-		testBiome2.foliageColour = 0xFFFFFF00;
+		testBiome2.setGrassColor(testBiome2.grassColour);
+		testBiome2.setLeavesColor(testBiome2.grassColour);
 		testBiome3.grassColour = 0xFFFF00FF;
-		testBiome3.foliageColour = 0xFFFF00FF;
+		testBiome3.setGrassColor(testBiome3.grassColour);
+		testBiome3.setLeavesColor(testBiome3.grassColour);
 		
 		climateTest = new Biome[8];
 		for (int i = 0; i < climateTest.length; i++) {
 			climateTest[i] = new Forest();
 			int r = i * 255 / climateTest.length;
 			climateTest[i].grassColour = 0xFF000000 | r << 16 | r << 8 | 255;
-			climateTest[i].foliageColour = climateTest[i].grassColour;
+			climateTest[i].setLeavesColor(climateTest[i].grassColour);
+			climateTest[i].setGrassColor((source, x, z) -> {
+				float d = (float) Math.sin(x + z) * 0.3F + 0.7F;
+				int col = (int) (r * d);
+				return 0xFF000000 | col << 16 | col << 8 | 255;
+			});
 		}
 		
 		voronoiTest = new Biome[5];
@@ -46,7 +54,8 @@ public class TestWorldgenListener {
 		for (int i = 0; i < voronoiTest.length; i++) {
 			voronoiTest[i] = new Forest();
 			voronoiTest[i].grassColour = 0xFF000000 | random.nextInt();
-			voronoiTest[i].foliageColour = voronoiTest[i].grassColour;
+			voronoiTest[i].setGrassColor(voronoiTest[i].grassColour);
+			voronoiTest[i].setLeavesColor(voronoiTest[i].grassColour);
 		}
 	}
 	

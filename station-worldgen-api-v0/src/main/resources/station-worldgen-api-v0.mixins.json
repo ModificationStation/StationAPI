@@ -7,6 +7,7 @@
 		"SimplexOctaveNoiseMixin",
 		"MixinBiomeSource",
 		"MixinNether",
+		"MixinBiome",
 		"MixinLevel"
 	],
 	"client": [
