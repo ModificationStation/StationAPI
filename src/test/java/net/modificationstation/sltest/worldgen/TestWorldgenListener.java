@@ -7,12 +7,15 @@ import net.minecraft.level.biome.Forest;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEvent;
+import net.modificationstation.stationapi.api.util.math.Direction.AxisDirection;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biomeprovider.ClimateBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biomeprovider.VoronoiBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.surface.StateSurfaceRule;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 import net.modificationstation.stationapi.api.worldgen.surface.condition.BlockSurfaceCondition;
+import net.modificationstation.stationapi.api.worldgen.surface.condition.DepthSurfaceCondition;
+import net.modificationstation.stationapi.api.worldgen.surface.condition.SlopeSurfaceCondition;
 import net.modificationstation.stationapi.impl.worldgen.BiomeProviderRegistryEvent;
 
 import java.util.Random;
@@ -43,9 +46,20 @@ public class TestWorldgenListener {
 		SurfaceRule filler = new StateSurfaceRule(BlockBase.BEDROCK.getDefaultState());
 		filler.addCondition(new BlockSurfaceCondition(BlockBase.STONE));
 		
+		SurfaceRule slope = new StateSurfaceRule(BlockBase.SPONGE.getDefaultState());
+		slope.addCondition(new BlockSurfaceCondition(BlockBase.STONE));
+		slope.addCondition(new DepthSurfaceCondition(3, AxisDirection.NEGATIVE));
+		slope.addCondition(new SlopeSurfaceCondition(30, true, true));
+		
+		SurfaceRule bottom = new StateSurfaceRule(BlockBase.ICE.getDefaultState());
+		bottom.addCondition(new BlockSurfaceCondition(BlockBase.STONE));
+		bottom.addCondition(new DepthSurfaceCondition(2, AxisDirection.POSITIVE));
+		
 		climateTest = new Biome[8];
 		for (int i = 0; i < climateTest.length; i++) {
 			climateTest[i] = new Forest();
+			climateTest[i].addSurfaceRule(slope);
+			climateTest[i].addSurfaceRule(bottom);
 			climateTest[i].addSurfaceRule(filler);
 			int r = i * 255 / climateTest.length;
 			climateTest[i].grassColour = 0xFF000000 | r << 16 | r << 8 | 255;
