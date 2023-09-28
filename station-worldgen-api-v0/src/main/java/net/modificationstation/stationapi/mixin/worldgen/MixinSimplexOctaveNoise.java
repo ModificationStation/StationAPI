@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Arrays;
 
 @Mixin(SimplexOctaveNoise.class)
-public class SimplexOctaveNoiseMixin {
+public class MixinSimplexOctaveNoise {
 	@Shadow private SimplexNoise[] generators;
 	@Shadow private int octaves;
 	

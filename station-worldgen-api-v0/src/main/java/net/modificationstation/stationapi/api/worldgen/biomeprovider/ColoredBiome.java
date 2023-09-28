@@ -1,10 +1,23 @@
 package net.modificationstation.stationapi.api.worldgen.biomeprovider;
 
+import net.modificationstation.stationapi.api.util.Util;
+
 public interface ColoredBiome {
-	BiomeColorProvider getGrassColor();
-	BiomeColorProvider getLeavesColor();
-	void setGrassColor(BiomeColorProvider provider);
-	void setLeavesColor(BiomeColorProvider provider);
+	default BiomeColorProvider getGrassColor() {
+		return Util.assertImpl();
+	}
+	
+	default BiomeColorProvider getLeavesColor() {
+		return Util.assertImpl();
+	}
+	
+	default void setGrassColor(BiomeColorProvider provider) {
+		Util.assertImpl();
+	}
+	
+	default void setLeavesColor(BiomeColorProvider provider) {
+		Util.assertImpl();
+	}
 	
 	default void setGrassColor(int rgb) {
 		final int color = 0xFF000000 | rgb;

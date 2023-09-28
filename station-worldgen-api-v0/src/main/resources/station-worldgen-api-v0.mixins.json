@@ -4,16 +4,18 @@
 	"package": "net.modificationstation.stationapi.mixin.worldgen",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"SimplexOctaveNoiseMixin",
-		"MixinBiomeSource",
-		"MixinNether",
 		"MixinBiome",
-		"MixinLevel"
+		"MixinBiomeSource",
+		"MixinLevel",
+		"MixinNether",
+		"MixinNetherLevelSource",
+		"MixinOverworldLevelSource",
+		"MixinSimplexOctaveNoise"
 	],
 	"client": [
-		"MixinTallGrass",
+		"MixinGrass",
 		"MixinLeaves",
-		"MixinGrass"
+		"MixinTallGrass"
 	],
 	"injectors": {
 		"defaultRequire": 1

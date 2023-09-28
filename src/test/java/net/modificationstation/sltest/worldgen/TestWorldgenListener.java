@@ -1,6 +1,7 @@
 package net.modificationstation.sltest.worldgen;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.minecraft.block.BlockBase;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.biome.Forest;
 import net.modificationstation.sltest.SLTest;
@@ -9,6 +10,9 @@ import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEve
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biomeprovider.ClimateBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biomeprovider.VoronoiBiomeProvider;
+import net.modificationstation.stationapi.api.worldgen.surface.StateSurfaceRule;
+import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
+import net.modificationstation.stationapi.api.worldgen.surface.condition.BlockSurfaceCondition;
 import net.modificationstation.stationapi.impl.worldgen.BiomeProviderRegistryEvent;
 
 import java.util.Random;
@@ -36,9 +40,13 @@ public class TestWorldgenListener {
 		testBiome3.setGrassColor(testBiome3.grassColour);
 		testBiome3.setLeavesColor(testBiome3.grassColour);
 		
+		SurfaceRule filler = new StateSurfaceRule(BlockBase.BEDROCK.getDefaultState());
+		filler.addCondition(new BlockSurfaceCondition(BlockBase.STONE));
+		
 		climateTest = new Biome[8];
 		for (int i = 0; i < climateTest.length; i++) {
 			climateTest[i] = new Forest();
+			climateTest[i].addSurfaceRule(filler);
 			int r = i * 255 / climateTest.length;
 			climateTest[i].grassColour = 0xFF000000 | r << 16 | r << 8 | 255;
 			climateTest[i].setLeavesColor(climateTest[i].grassColour);
