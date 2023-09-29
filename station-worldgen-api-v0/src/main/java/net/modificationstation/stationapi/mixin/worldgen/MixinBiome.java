@@ -18,6 +18,7 @@ import java.util.List;
 public class MixinBiome implements ColoredBiome, SurfaceBiome {
 	@Unique private BiomeColorProvider grassColor = BiomeColorsImpl.DEFAULT_GRASS_COLOR;
 	@Unique private BiomeColorProvider leavesColor = BiomeColorsImpl.DEFAULT_LEAVES_COLOR;
+	@Unique private BiomeColorProvider fogColor = BiomeColorsImpl.DEFAULT_FOG_COLOR;
 	@Unique private final List<SurfaceRule> surfaceRules = new ArrayList<>();
 	
 	@Override
@@ -31,6 +32,11 @@ public class MixinBiome implements ColoredBiome, SurfaceBiome {
 	}
 	
 	@Override
+	public BiomeColorProvider getFogColor() {
+		return fogColor;
+	}
+	
+	@Override
 	public void setGrassColor(BiomeColorProvider provider) {
 		grassColor = provider;
 	}
@@ -38,6 +44,11 @@ public class MixinBiome implements ColoredBiome, SurfaceBiome {
 	@Override
 	public void setLeavesColor(BiomeColorProvider provider) {
 		leavesColor = provider;
+	}
+	
+	@Override
+	public void setFogColor(BiomeColorProvider provider) {
+		fogColor = provider;
 	}
 	
 	@Override

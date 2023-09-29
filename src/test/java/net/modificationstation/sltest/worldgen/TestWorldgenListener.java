@@ -8,6 +8,7 @@ import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEvent;
 import net.modificationstation.stationapi.api.util.math.Direction.AxisDirection;
+import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biomeprovider.ClimateBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biomeprovider.VoronoiBiomeProvider;
@@ -62,6 +63,7 @@ public class TestWorldgenListener {
 				int col = (int) (r * d);
 				return 0xFF000000 | col << 16 | col << 8 | 255;
 			});
+			climateTest[i].setFogColor(climateTest[i].grassColour);
 		}
 		
 		voronoiTest = new Biome[5];
@@ -71,6 +73,7 @@ public class TestWorldgenListener {
 			voronoiTest[i].grassColour = 0xFF000000 | random.nextInt();
 			voronoiTest[i].setGrassColor(voronoiTest[i].grassColour);
 			voronoiTest[i].setLeavesColor(voronoiTest[i].grassColour);
+			voronoiTest[i].setFogColor(voronoiTest[i].grassColour);
 		}
 	}
 	

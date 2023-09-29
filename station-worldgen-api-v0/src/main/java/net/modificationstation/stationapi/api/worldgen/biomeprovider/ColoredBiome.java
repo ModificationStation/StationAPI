@@ -11,11 +11,19 @@ public interface ColoredBiome {
 		return Util.assertImpl();
 	}
 	
+	default BiomeColorProvider getFogColor() {
+		return Util.assertImpl();
+	}
+	
 	default void setGrassColor(BiomeColorProvider provider) {
 		Util.assertImpl();
 	}
 	
 	default void setLeavesColor(BiomeColorProvider provider) {
+		Util.assertImpl();
+	}
+	
+	default void setFogColor(BiomeColorProvider provider) {
 		Util.assertImpl();
 	}
 	
@@ -27,5 +35,10 @@ public interface ColoredBiome {
 	default void setLeavesColor(int rgb) {
 		final int color = 0xFF000000 | rgb;
 		setLeavesColor((source, x, z) -> color);
+	}
+	
+	default void setFogColor(int rgb) {
+		final int color = 0xFF000000 | rgb;
+		setFogColor((source, x, z) -> color);
 	}
 }
