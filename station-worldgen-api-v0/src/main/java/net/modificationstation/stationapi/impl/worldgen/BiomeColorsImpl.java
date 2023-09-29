@@ -4,7 +4,7 @@ import net.minecraft.client.render.block.FoliageColour;
 import net.minecraft.client.render.block.GrassColour;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.gen.BiomeSource;
-import net.modificationstation.stationapi.api.worldgen.biomeprovider.BiomeColorProvider;
+import net.modificationstation.stationapi.api.worldgen.biome.BiomeColorProvider;
 
 public class BiomeColorsImpl {
 	public static final BiomeColorProvider DEFAULT_GRASS_COLOR = (BiomeSource source, int x, int z) -> {

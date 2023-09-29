@@ -1,21 +1,29 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
+import net.minecraft.entity.EntityEntry;
 import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.worldgen.biomeprovider.BiomeColorProvider;
-import net.modificationstation.stationapi.api.worldgen.biomeprovider.ColoredBiome;
-import net.modificationstation.stationapi.api.worldgen.surface.SurfaceBiome;
+import net.modificationstation.stationapi.api.worldgen.biome.BiomeColorProvider;
+import net.modificationstation.stationapi.api.worldgen.biome.StationBiome;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 import net.modificationstation.stationapi.impl.worldgen.BiomeColorsImpl;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(Biome.class)
-public class MixinBiome implements ColoredBiome, SurfaceBiome {
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class MixinBiome implements StationBiome {
+	@Shadow private boolean precipitates;
+	@Shadow private boolean snows;
+	@Shadow protected List creatures;
+	@Shadow protected List monsters;
+	@Shadow protected List waterCreatures;
 	@Unique private BiomeColorProvider grassColor = BiomeColorsImpl.DEFAULT_GRASS_COLOR;
 	@Unique private BiomeColorProvider leavesColor = BiomeColorsImpl.DEFAULT_LEAVES_COLOR;
 	@Unique private BiomeColorProvider fogColor = BiomeColorsImpl.DEFAULT_FOG_COLOR;
@@ -69,5 +77,30 @@ public class MixinBiome implements ColoredBiome, SurfaceBiome {
 	@Override
 	public boolean noSurfaceRules() {
 		return surfaceRules.isEmpty();
+	}
+	
+	@Override
+	public void setPrecipitation(boolean precipitation) {
+		this.precipitates = precipitation;
+	}
+	
+	@Override
+	public void setSnow(boolean snow) {
+		this.snows = snow;
+	}
+	
+	@Override
+	public void addPassiveEntity(Class<? extends Entity> entityClass, int rarity) {
+		this.creatures.add(new EntityEntry(entityClass, rarity));
+	}
+	
+	@Override
+	public void addHostileEntity(Class<? extends Entity> entityClass, int rarity) {
+		this.monsters.add(new EntityEntry(entityClass, rarity));
+	}
+	
+	@Override
+	public void addWaterEntity(Class<? extends Entity> entityClass, int rarity) {
+		this.waterCreatures.add(new EntityEntry(entityClass, rarity));
 	}
 }

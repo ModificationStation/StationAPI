@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.api.worldgen;
 
 import net.minecraft.level.biome.Biome;
 import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.worldgen.biomeprovider.BiomeProvider;
-import net.modificationstation.stationapi.api.worldgen.biomeprovider.BiomeRegionsProvider;
+import net.modificationstation.stationapi.api.worldgen.biome.BiomeProvider;
+import net.modificationstation.stationapi.api.worldgen.biome.BiomeRegionsProvider;
 import net.modificationstation.stationapi.impl.worldgen.NetherBiomeProviderImpl;
 import net.modificationstation.stationapi.impl.worldgen.OverworldBiomeProviderImpl;
 

@@ -7,7 +7,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.gen.BiomeSource;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
-import net.modificationstation.stationapi.api.worldgen.biomeprovider.BiomeProvider;
+import net.modificationstation.stationapi.api.worldgen.biome.BiomeProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

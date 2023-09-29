@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.worldgen;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.gen.FixedBiomeSource;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
-import net.modificationstation.stationapi.api.worldgen.biomeprovider.BiomeProvider;
+import net.modificationstation.stationapi.api.worldgen.biome.BiomeProvider;
 
 public class NetherBiomeSourceImpl extends FixedBiomeSource {
 	private static final NetherBiomeSourceImpl INSTANCE = new NetherBiomeSourceImpl();

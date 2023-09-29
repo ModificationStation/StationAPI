@@ -6,6 +6,7 @@ import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.math.Direction.AxisDirection;
 import net.modificationstation.stationapi.api.worldgen.surface.condition.BlockSurfaceCondition;
 import net.modificationstation.stationapi.api.worldgen.surface.condition.DepthSurfaceCondition;
+import net.modificationstation.stationapi.api.worldgen.surface.condition.HeightSurfaceCondition;
 import net.modificationstation.stationapi.api.worldgen.surface.condition.SlopeSurfaceCondition;
 import net.modificationstation.stationapi.api.worldgen.surface.condition.StateSurfaceCondition;
 import net.modificationstation.stationapi.api.worldgen.surface.condition.SurfaceCondition;
@@ -122,6 +123,13 @@ public class SurfaceBuilder {
 	 */
 	public SurfaceBuilder replace(TagKey<BlockBase> filter) {
 		return condition(new TagSurfaceCondition(filter), 4);
+	}
+	
+	/**
+	 * Add range condition - surface will be applied only in specific Y range
+	 */
+	public SurfaceBuilder range(int minY, int maxY) {
+		return condition(new HeightSurfaceCondition(minY, maxY), 0);
 	}
 	
 	/**

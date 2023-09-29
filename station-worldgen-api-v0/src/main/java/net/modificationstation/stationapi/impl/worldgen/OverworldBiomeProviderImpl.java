@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
 import net.minecraft.level.biome.Biome;
-import net.modificationstation.stationapi.api.worldgen.biomeprovider.ClimateBiomeProvider;
+import net.modificationstation.stationapi.api.worldgen.biome.ClimateBiomeProvider;
 
 public class OverworldBiomeProviderImpl extends ClimateBiomeProvider {
 	private static final OverworldBiomeProviderImpl INSTANCE = new OverworldBiomeProviderImpl();

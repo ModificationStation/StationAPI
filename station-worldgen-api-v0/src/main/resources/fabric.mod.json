@@ -39,8 +39,7 @@
 		},
 		"loom:injected_interfaces": {
 			"net/minecraft/class_153": [
-				"net/modificationstation/stationapi/api/worldgen/biomeprovider/ColoredBiome",
-				"net/modificationstation/stationapi/api/worldgen/surface/SurfaceBiome"
+				"net/modificationstation/stationapi/api/worldgen/biome/StationBiome"
 			]
 		}
 	}

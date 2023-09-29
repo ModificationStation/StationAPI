@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.worldgen.biomeprovider;
+package net.modificationstation.stationapi.api.worldgen.biome;
 
 import net.minecraft.level.biome.Biome;
 

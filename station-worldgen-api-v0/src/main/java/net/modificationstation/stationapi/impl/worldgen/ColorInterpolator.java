@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.worldgen;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.gen.BiomeSource;
 import net.minecraft.util.maths.MathHelper;
-import net.modificationstation.stationapi.api.worldgen.biomeprovider.BiomeColorProvider;
+import net.modificationstation.stationapi.api.worldgen.biome.BiomeColorProvider;
 
 import java.util.function.Function;
 
