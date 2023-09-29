@@ -12,6 +12,7 @@ import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biomeprovider.ClimateBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biomeprovider.VoronoiBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.surface.StateSurfaceRule;
+import net.modificationstation.stationapi.api.worldgen.surface.SurfaceBuilder;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 import net.modificationstation.stationapi.api.worldgen.surface.condition.BlockSurfaceCondition;
 import net.modificationstation.stationapi.api.worldgen.surface.condition.DepthSurfaceCondition;
@@ -43,17 +44,9 @@ public class TestWorldgenListener {
 		testBiome3.setGrassColor(testBiome3.grassColour);
 		testBiome3.setLeavesColor(testBiome3.grassColour);
 		
-		SurfaceRule filler = new StateSurfaceRule(BlockBase.BEDROCK.getDefaultState());
-		filler.addCondition(new BlockSurfaceCondition(BlockBase.STONE));
-		
-		SurfaceRule slope = new StateSurfaceRule(BlockBase.SPONGE.getDefaultState());
-		slope.addCondition(new BlockSurfaceCondition(BlockBase.STONE));
-		slope.addCondition(new DepthSurfaceCondition(3, AxisDirection.NEGATIVE));
-		slope.addCondition(new SlopeSurfaceCondition(30, true, true));
-		
-		SurfaceRule bottom = new StateSurfaceRule(BlockBase.ICE.getDefaultState());
-		bottom.addCondition(new BlockSurfaceCondition(BlockBase.STONE));
-		bottom.addCondition(new DepthSurfaceCondition(2, AxisDirection.POSITIVE));
+		SurfaceRule filler = SurfaceBuilder.start(BlockBase.BEDROCK).replace(BlockBase.STONE).build();
+		SurfaceRule slope = SurfaceBuilder.start(BlockBase.SPONGE).replace(BlockBase.STONE).ground(3).slope(30).build();
+		SurfaceRule bottom = SurfaceBuilder.start(BlockBase.ICE).replace(BlockBase.STONE).ceiling(2).build();
 		
 		climateTest = new Biome[8];
 		for (int i = 0; i < climateTest.length; i++) {
