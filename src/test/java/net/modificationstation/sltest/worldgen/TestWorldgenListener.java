@@ -39,6 +39,7 @@ public class TestWorldgenListener {
 		climateTest = new Biome[8];
 		for (int i = 0; i < climateTest.length; i++) {
 			BiomeBuilder builder = BiomeBuilder.start("Climate " + i);
+			builder.height(100, 128);
 			builder.surfaceRule(slope);
 			builder.surfaceRule(bottom);
 			builder.surfaceRule(filler);
@@ -63,7 +64,7 @@ public class TestWorldgenListener {
 		Random random = new Random(15);
 		for (int i = 0; i < voronoiTest.length; i++) {
 			int color = 0xFF000000 | random.nextInt();
-			voronoiTest[i] = BiomeBuilder.start("Voronoi " + i).grassAndLeavesColor(color).fogColor(color).build();
+			voronoiTest[i] = BiomeBuilder.start("Voronoi " + i).grassAndLeavesColor(color).fogColor(color).height(55, 60).build();
 			voronoiTest[i].grassColour = color;
 		}
 	}

@@ -23,10 +23,10 @@ import java.util.Random;
 public abstract class MixinLevel {
 	@Shadow public abstract BiomeSource getBiomeSource();
 	
-	@Inject(
+	/*@Inject(
 		method = "<init>(Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;J)V",
 		at = @At("TAIL")
-	)
+	)*/
 	private void onInit(DimensionData string, String l, long par3, CallbackInfo ci) {
 		if (!FabricLoader.getInstance().isDevelopmentEnvironment()) return;
 		

@@ -28,6 +28,8 @@ public class MixinBiome implements StationBiome {
 	@Unique private BiomeColorProvider leavesColor = BiomeColorsImpl.DEFAULT_LEAVES_COLOR;
 	@Unique private BiomeColorProvider fogColor = BiomeColorsImpl.DEFAULT_FOG_COLOR;
 	@Unique private final List<SurfaceRule> surfaceRules = new ArrayList<>();
+	@Unique private int minHeight = 40;
+	@Unique private int maxHeight = 128;
 	
 	@Override
 	public BiomeColorProvider getGrassColor() {
@@ -102,5 +104,25 @@ public class MixinBiome implements StationBiome {
 	@Override
 	public void addWaterEntity(Class<? extends Entity> entityClass, int rarity) {
 		this.waterCreatures.add(new EntityEntry(entityClass, rarity));
+	}
+	
+	@Override
+	public int getMinHeight() {
+		return minHeight;
+	}
+	
+	@Override
+	public void setMinHeight(int height) {
+		minHeight = height;
+	}
+	
+	@Override
+	public int getMaxHeight() {
+		return maxHeight;
+	}
+	
+	@Override
+	public void setMaxHeight(int height) {
+		maxHeight = height;
 	}
 }

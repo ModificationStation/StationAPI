@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.worldgen.biome.BiomeColorProvider;
 
 import java.util.function.Function;
 
-public class ColorInterpolator {
+public class BiomeColorInterpolator {
 	private final Function<Biome, BiomeColorProvider> provider;
 	private final int[] colors = new int[4];
 	private final int bitShift;
@@ -17,7 +17,7 @@ public class ColorInterpolator {
 	private int lastX;
 	private int lastZ;
 	
-	public ColorInterpolator(Function<Biome, BiomeColorProvider> provider, int side) {
+	public BiomeColorInterpolator(Function<Biome, BiomeColorProvider> provider, int side) {
 		this.side = side;
 		this.bitShift = MathHelper.floor(Math.log(side) / Math.log(2));
 		this.provider = provider;

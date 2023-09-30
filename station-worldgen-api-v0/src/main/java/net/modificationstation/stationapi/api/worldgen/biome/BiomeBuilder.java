@@ -22,6 +22,8 @@ public class BiomeBuilder {
 	private boolean precipitation;
 	private boolean snow;
 	private String name;
+	private int minHeight;
+	private int maxHeight;
 	
 	private BiomeBuilder() {}
 	
@@ -32,6 +34,8 @@ public class BiomeBuilder {
 		INSTANCE.name = name;
 		INSTANCE.precipitation = true;
 		INSTANCE.snow = false;
+		INSTANCE.minHeight = 40;
+		INSTANCE.maxHeight = 128;
 		
 		INSTANCE.grassColor = BiomeColorsImpl.DEFAULT_GRASS_COLOR;
 		INSTANCE.leavesColor = BiomeColorsImpl.DEFAULT_LEAVES_COLOR;
@@ -160,6 +164,15 @@ public class BiomeBuilder {
 		return fogColor((source, x, z) -> color);
 	}
 	
+	/**
+	 * Set height range for the biome
+	 */
+	public BiomeBuilder height(int minHeight, int maxHeight) {
+		this.minHeight = minHeight;
+		this.maxHeight = maxHeight;
+		return this;
+	}
+	
 	public Biome build() {
 		Biome biome = new TemplateBiome(name);
 		
@@ -170,6 +183,8 @@ public class BiomeBuilder {
 		biome.setGrassColor(grassColor);
 		biome.setLeavesColor(leavesColor);
 		biome.setFogColor(fogColor);
+		biome.setMinHeight(minHeight);
+		biome.setMaxHeight(maxHeight);
 		
 		hostileEntities.forEach(biome::addHostileEntity);
 		passiveEntities.forEach(biome::addPassiveEntity);

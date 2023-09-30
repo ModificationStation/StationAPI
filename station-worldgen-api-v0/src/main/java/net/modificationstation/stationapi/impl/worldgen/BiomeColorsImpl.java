@@ -23,7 +23,7 @@ public class BiomeColorsImpl {
 	
 	public static final BiomeColorProvider DEFAULT_FOG_COLOR = (BiomeSource source, int x, int z) -> 0xFFC3DAFF;
 	
-	public static final ColorInterpolator GRASS_INTERPOLATOR = new ColorInterpolator(Biome::getGrassColor, 8);
-	public static final ColorInterpolator LEAVES_INTERPOLATOR = new ColorInterpolator(Biome::getLeavesColor, 8);
-	public static final ColorInterpolator FOG_INTERPOLATOR = new ColorInterpolator(Biome::getFogColor, 16);
+	public static final BiomeColorInterpolator GRASS_INTERPOLATOR = new BiomeColorInterpolator(Biome::getGrassColor, 8);
+	public static final BiomeColorInterpolator LEAVES_INTERPOLATOR = new BiomeColorInterpolator(Biome::getLeavesColor, 8);
+	public static final BiomeColorInterpolator FOG_INTERPOLATOR = new BiomeColorInterpolator(Biome::getFogColor, 16);
 }

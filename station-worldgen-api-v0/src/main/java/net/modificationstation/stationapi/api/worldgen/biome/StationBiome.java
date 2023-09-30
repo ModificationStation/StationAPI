@@ -78,4 +78,20 @@ public interface StationBiome {
 	default void addWaterEntity(Class<? extends Entity> entityClass, int rarity) {
 		Util.assertImpl();
 	}
+	
+	default int getMinHeight() {
+		return Util.assertImpl();
+	}
+	
+	default void setMinHeight(int height) {
+		Util.assertImpl();
+	}
+	
+	default int getMaxHeight() {
+		return Util.assertImpl();
+	}
+	
+	default void setMaxHeight(int height) {
+		Util.assertImpl();
+	}
 }
