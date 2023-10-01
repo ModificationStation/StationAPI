@@ -1,27 +1,25 @@
-package net.modificationstation.stationapi.impl.client.resource;
+package net.modificationstation.stationapi.api.client.resource;
 
-import com.google.common.base.Suppliers;
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Longs;
+import cyclops.control.Option;
 import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import it.unimi.dsi.fastutil.longs.Long2DoubleFunction;
+import lombok.val;
 import net.minecraft.client.gui.screen.ScreenBase;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.TextRenderer;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.resource.ResourceReload;
-import net.modificationstation.stationapi.api.resource.ResourceReloader;
-import net.modificationstation.stationapi.api.resource.ResourceReloaderProfilers;
-import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.api.util.profiler.ProfileResult;
-import net.modificationstation.stationapi.api.util.profiler.ProfilerSystem;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.concurrent.CompletionException;
 import java.util.function.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class AssetsReloadingScreen extends ScreenBase {
+class ReloadScreen extends ScreenBase {
     private static final long
             MAX_FPS = 60,
             BACKGROUND_START = 0,
@@ -29,7 +27,8 @@ public class AssetsReloadingScreen extends ScreenBase {
             STAGE_0_START = BACKGROUND_START + BACKGROUND_FADE_IN,
             STAGE_0_FADE_IN = 2000,
             GLOBAL_FADE_OUT = 1000,
-            RELOAD_START = STAGE_0_START + STAGE_0_FADE_IN;
+            RELOAD_START = STAGE_0_START + STAGE_0_FADE_IN,
+            EXCEPTION_FADE_IN = 500;
     private static final Double2DoubleFunction
             SIN_90_DELTA = delta -> MathHelper.sin((float) (delta * Math.PI / 2));
     private static final Long2DoubleFunction
@@ -37,6 +36,8 @@ public class AssetsReloadingScreen extends ScreenBase {
             STAGE_0_FADE_IN_DELTA = time -> (double) Longs.constrainToRange(time - STAGE_0_START, 0, STAGE_0_FADE_IN) / STAGE_0_FADE_IN;
     private static final Function<LongSupplier, Long2DoubleFunction>
             GLOBAL_FADE_OUT_DELTA_FACTORY = fadeOutStartGetter -> time -> 1 - (double) Longs.constrainToRange(time - fadeOutStartGetter.getAsLong(), 0, GLOBAL_FADE_OUT) / GLOBAL_FADE_OUT;
+    private static final Function<LongSupplier, Long2DoubleFunction>
+            BACKGROUND_EXCEPTION_FADE_IN_FACTORY = fadeInStartGetter -> time -> 1;
 
     private static UnaryOperator<Long2DoubleFunction> when(BooleanSupplier condition, Long2DoubleFunction ifTrue) {
         return ifFalse -> value -> (condition.getAsBoolean() ? ifTrue : ifFalse).applyAsDouble(value);
@@ -44,7 +45,6 @@ public class AssetsReloadingScreen extends ScreenBase {
 
     private final ScreenBase parent;
     private final Runnable done;
-    private final Supplier<ResourceReload> reload;
     private final Tessellator tessellator;
     private boolean firstRenderTick = true;
     private long initTimestamp;
@@ -55,51 +55,19 @@ public class AssetsReloadingScreen extends ScreenBase {
             stage0Emitter;
     private boolean finished;
     private long fadeOutStart;
-    private final List<String> locations = Collections.synchronizedList(new ArrayList<>());
     private float scrollProgress;
     private final String logo;
+    private boolean exceptionThrown;
+    private long exceptionStart;
 
-    private static class ReloaderProfiler extends ProfilerSystem {
-        private final ResourceReloader reloader;
-        private ReloaderProfiler(
-                ResourceReloader reloader,
-                LongSupplier timeGetter,
-                IntSupplier tickGetter,
-                boolean checkTimeout
-        ) {
-            super(timeGetter, tickGetter, checkTimeout);
-            this.reloader = reloader;
-        }
-
-        @Override
-        protected String getRoot() {
-            return reloader.getName();
-        }
-    }
-
-    private class ScreenProfiler extends ReloaderProfiler {
-        private final String stage;
-        private ScreenProfiler(ResourceReloader reloader, String stage) {
-            super(reloader, Util.nanoTimeSupplier, () -> 0, false);
-            this.stage = stage;
-        }
-
-        @Override
-        public void push(String location) {
-            super.push(location);
-            locations.add(stage + ": " + ProfileResult.getHumanReadableName(getFullPath()));
-        }
-    }
-
-    public AssetsReloadingScreen(
+    ReloadScreen(
             ScreenBase parent,
             Runnable done,
-            Function<ResourceReloaderProfilers.Factory, ResourceReload> reloadFactory,
             Tessellator tessellator
     ) {
+        ReloadScreenManager.reloadScreen = this;
         this.parent = parent;
         this.done = done;
-        this.reload = Suppliers.memoize(() -> reloadFactory.apply(ResourceReloaderProfilers.Factory.of(ScreenProfiler::new, "Prepare", "Apply")));
         this.tessellator = tessellator;
 
         UnaryOperator<Long2DoubleFunction> globalFadeOutComposer = when(() -> finished, GLOBAL_FADE_OUT_DELTA_FACTORY.apply(() -> fadeOutStart));
@@ -128,9 +96,9 @@ public class AssetsReloadingScreen extends ScreenBase {
         fill(0, 0, width, height,
                 this.parent == null ?
                         0xFF << 24 |
-                                (int) (delta * 0x35) << 16 |
-                                (int) (delta * 0x86) << 8 |
-                                (int) (delta * 0xE7) :
+                                (int) (finished ? 0xFF - delta * (0xFF - 0x35) : delta * 0x35) << 16 |
+                                (int) (finished ? 0xFF - delta * (0xFF - 0x86) : delta * 0x86) << 8 |
+                                (int) (finished ? 0xFF - delta * (0xFF - 0xE7) : delta * 0xE7) :
                         (int) (delta * 0xFF) << 24 | 0x3586E7
         );
     }
@@ -156,9 +124,9 @@ public class AssetsReloadingScreen extends ScreenBase {
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glScissor((int) ((40 + 3) * xScale), (int) ((50 - v) * yScale), (int) ((width - (40 + 3) * 2) * xScale), scissorsHeight);
             for (int i = 0; i < to; i++) {
-                int y = net.modificationstation.stationapi.api.util.math.MathHelper.ceil(height - 100 + (10 * i) + (scrollDelta * 10) + v * 5);
+                int y = net.modificationstation.stationapi.api.util.math.MathHelper.ceil(height - 98 + (10 * i) + (scrollDelta * 10) + v * 5);
                 if (y > height - 50 + v) break;
-                drawTextWithShadow(textManager, locations.get(to - i - 1), 40 + 3, y, color);
+                drawTextWithShadow(textManager, ReloadScreenManager.LOCATIONS.get(to - i - 1), 40 + 3, y, color);
             }
             glDisable(GL_BLEND);
             glDisable(GL_SCISSOR_TEST);
@@ -194,17 +162,23 @@ public class AssetsReloadingScreen extends ScreenBase {
             initTimestamp = System.currentTimeMillis();
         }
         currentTime = System.currentTimeMillis() - initTimestamp;
-        final boolean partial = currentTime - lastRender < (1000 / MAX_FPS);
+        val partial = currentTime - lastRender < (1000 / MAX_FPS);
         if (partial) currentTime = lastRender;
         else lastRender = currentTime;
-        int locationsSize = locations.size();
-        if (!finished && !(scrollProgress + .1 < locationsSize) && !(progress + .1 < 1) && reloadComplete()) {
-            reload.get().throwException();
-            finished = true;
-            fadeOutStart = currentTime;
+        val locationsSize = ReloadScreenManager.LOCATIONS.size();
+        if (!finished && !(scrollProgress + .1 < locationsSize) && !(progress + .1 < 1) && ReloadScreenManager.isReloadComplete()) {
+            try {
+                ReloadScreenManager.getCurrentReload().peek(ResourceReload::throwException);
+                finished = true;
+                fadeOutStart = currentTime;
+            } catch (CompletionException e) {
+                exceptionThrown = true;
+                exceptionStart = currentTime;
+            }
         }
         if (!partial) {
-            progress = Floats.constrainToRange(progress * .95F + (canAccessReload() ? reload.get().getProgress() : 0) * .05F, 0, 1);
+            Option<ResourceReload> reload;
+            progress = Floats.constrainToRange(progress * .95F + (isReloadStarted() && (reload = ReloadScreenManager.getCurrentReload()).isPresent() ? reload.orElse(null/*safe*/).getProgress() : 0) * .05F, 0, 1);
             scrollProgress = Floats.constrainToRange(scrollProgress * .95F + locationsSize * .05F, 0, locationsSize);
         }
         if ((finished ? currentTime <= fadeOutStart + GLOBAL_FADE_OUT : currentTime < BACKGROUND_START + BACKGROUND_FADE_IN) && parent != null)
@@ -212,35 +186,37 @@ public class AssetsReloadingScreen extends ScreenBase {
         renderBackground();
         super.render(mouseX, mouseY, delta);
         stage0Emitter.run();
-        if (finished && currentTime - fadeOutStart > GLOBAL_FADE_OUT) done.run();
+        if (finished && currentTime - fadeOutStart > GLOBAL_FADE_OUT) {
+            ReloadScreenManager.onFinish();
+            done.run();
+        }
     }
 
-    private boolean reloadComplete() {
-        return canAccessReload() && reload.get().isComplete();
-    }
-
-    private boolean canAccessReload() {
+    boolean isReloadStarted() {
         return currentTime > RELOAD_START;
     }
 
+    @Override
     protected void drawLineHorizontal(int startX, int endX, int y, int color) {
         if (endX < startX) {
-            int n = startX;
+            val n = startX;
             startX = endX;
             endX = n;
         }
-        this.fill(startX, y, endX + 1, y + 1, color);
+        fill(startX, y, endX + 1, y + 1, color);
     }
 
+    @Override
     protected void drawLineVertical(int x, int startY, int endY, int color) {
         if (endY < startY) {
-            int n = startY;
+            val n = startY;
             startY = endY;
             endY = n;
         }
-        this.fill(x, startY + 1, x + 1, endY, color);
+        fill(x, startY + 1, x + 1, endY, color);
     }
 
+    @Override
     protected void fill(int startX, int startY, int endX, int endY, int color) {
         int n;
         if (startX < endX) {
@@ -253,14 +229,14 @@ public class AssetsReloadingScreen extends ScreenBase {
             startY = endY;
             endY = n;
         }
-        float f = (float)(color >> 24 & 0xFF) / 255.0f;
-        float f2 = (float)(color >> 16 & 0xFF) / 255.0f;
-        float f3 = (float)(color >> 8 & 0xFF) / 255.0f;
-        float f4 = (float)(color & 0xFF) / 255.0f;
+        val a = (float)(color >> 24 & 0xFF) / 255.0f;
+        val r = (float)(color >> 16 & 0xFF) / 255.0f;
+        val g = (float)(color >> 8 & 0xFF) / 255.0f;
+        val b = (float)(color & 0xFF) / 255.0f;
         glEnable(GL_BLEND);
         glDisable(GL_TEXTURE_2D);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glColor4f(f2, f3, f4, f);
+        glColor4f(r, g, b, a);
         tessellator.start();
         tessellator.addVertex(startX, endY, 0.0);
         tessellator.addVertex(endX, endY, 0.0);

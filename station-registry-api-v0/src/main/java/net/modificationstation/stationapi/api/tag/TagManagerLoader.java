@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.tag;
 
+import lombok.val;
 import net.modificationstation.stationapi.api.registry.*;
 import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloadListener;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
@@ -12,11 +13,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 public class TagManagerLoader implements IdentifiableResourceReloadListener {
-
     public static final Identifier TAGS = MODID.id("tags");
 
     private final DynamicRegistryManager registryManager;
@@ -35,12 +36,34 @@ public class TagManagerLoader implements IdentifiableResourceReloadListener {
     }
 
     @Override
-    public CompletableFuture<Void> reload(ResourceReloader.Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
-        List<? extends CompletableFuture<? extends RegistryTags<?>>> list = this.registryManager.streamAllRegistries().map(entry -> this.buildRequiredGroup(manager, prepareExecutor, entry)).toList();
-        CompletableFuture<Void> var10000 = CompletableFuture.allOf(list.toArray(CompletableFuture[]::new));
-        Objects.requireNonNull(synchronizer);
+    public CompletableFuture<Void> reload(
+            ResourceReloader.Synchronizer synchronizer,
+            ResourceManager manager,
+            Profiler prepareProfiler,
+            Profiler applyProfiler,
+            Executor prepareExecutor,
+            Executor applyExecutor
+    ) {
+        prepareProfiler.startTick();
+        val list = this.registryManager.streamAllRegistries().map(entry -> this.buildRequiredGroup(manager, prepareExecutor, entry)).toList();
         //noinspection unchecked
-        return var10000.thenCompose(synchronizer::whenPrepared).thenAcceptAsync(void_ -> this.registryTags = (List<RegistryTags<?>>) list.stream().map(CompletableFuture::join).toList(), applyExecutor);
+        return CompletableFuture.allOf(list.toArray(CompletableFuture[]::new))
+                .thenRunAsync(prepareProfiler::endTick, prepareExecutor)
+                .thenCompose(Objects.requireNonNull(synchronizer)::whenPrepared)
+                .thenRunAsync(applyProfiler::startTick, applyExecutor)
+                .thenAcceptAsync(void_ -> this.registryTags = (List<RegistryTags<?>>) (List<? extends RegistryTags<?>>) list.stream().map(CompletableFuture::join).toList(), applyExecutor)
+                .thenRunAsync(() -> {
+                    applyProfiler.push("populate");
+                    registryTags.forEach(tags -> repopulateTags(registryManager, tags));
+                    applyProfiler.pop();
+                }, applyExecutor)
+                .thenRunAsync(applyProfiler::endTick, applyExecutor);
+    }
+
+    private static <T> void repopulateTags(DynamicRegistryManager dynamicRegistryManager, TagManagerLoader.RegistryTags<T> tags) {
+        RegistryKey<? extends Registry<T>> registryKey = tags.key();
+        Map<TagKey<T>, List<RegistryEntry<T>>> map = tags.tags().entrySet().stream().collect(Collectors.toUnmodifiableMap(entry -> TagKey.of(registryKey, entry.getKey()), entry -> List.copyOf(entry.getValue())));
+        dynamicRegistryManager.get(registryKey).populateTags(map);
     }
 
     private <T> CompletableFuture<RegistryTags<T>> buildRequiredGroup(ResourceManager resourceManager, Executor prepareExecutor, DynamicRegistryManager.Entry<T> requirement) {
