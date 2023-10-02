@@ -42,6 +42,7 @@ public abstract class MixinBlockBase implements StationBlock {
     /**
      * Not Recommended to use
      */
+    @Unique
     public BlockBase setMiningLevel(int miningLevel) {
         this.miningLevel = miningLevel;
         return BlockBase.class.cast(this);
