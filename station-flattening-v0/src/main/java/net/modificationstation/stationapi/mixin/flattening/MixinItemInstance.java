@@ -4,10 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.minecraft.item.ItemBase;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.util.io.CompoundTag;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.event.item.IsItemSuitableForStateEvent;
-import net.modificationstation.stationapi.api.event.item.ItemMiningSpeedMultiplierOnStateEvent;
 import net.modificationstation.stationapi.api.item.StationFlatteningItemStack;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
@@ -94,24 +91,12 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
 
     @Override
     public boolean isSuitableFor(BlockState state) {
-        return StationAPI.EVENT_BUS.post(
-                IsItemSuitableForStateEvent.builder()
-                        .itemStack(ItemInstance.class.cast(this))
-                        .state(state)
-                        .suitable(getType().isSuitableFor(ItemInstance.class.cast(this), state))
-                        .build()
-        ).suitable;
+        return getType().isSuitableFor(ItemInstance.class.cast(this), state);
     }
 
     @Override
     public float getMiningSpeedMultiplier(BlockState state) {
-        return StationAPI.EVENT_BUS.post(
-                ItemMiningSpeedMultiplierOnStateEvent.builder()
-                        .itemStack(ItemInstance.class.cast(this))
-                        .state(state)
-                        .miningSpeedMultiplier(getType().getMiningSpeedMultiplier(ItemInstance.class.cast(this), state))
-                        .build()
-        ).miningSpeedMultiplier;
+        return getType().getMiningSpeedMultiplier(ItemInstance.class.cast(this), state);
     }
 
     @Override

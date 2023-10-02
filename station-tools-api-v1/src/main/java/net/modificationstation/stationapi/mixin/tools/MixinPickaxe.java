@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Pickaxe.class)
 public class MixinPickaxe extends ToolBase {
 
+    // TODO : Bring this constructor to 21st century
     protected MixinPickaxe(int i, int j, ToolMaterial arg, BlockBase[] args) {
         super(i, j, arg, args);
     }

@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Shovel.class)
 public class MixinShovel extends ToolBase {
 
+    // TODO : Bring this constructor to 21st century
     protected MixinShovel(int i, int j, ToolMaterial arg, BlockBase[] args) {
         super(i, j, arg, args);
     }

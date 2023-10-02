@@ -17,6 +17,8 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaItemFixImpl {
 
+    // TODO : Unfix vanilla mining levels for vanilla tools/in vanilla environment
+
     @EventListener
     private static void registerItems(ItemRegistryEvent event) {
         ItemRegistry registry = event.registry;

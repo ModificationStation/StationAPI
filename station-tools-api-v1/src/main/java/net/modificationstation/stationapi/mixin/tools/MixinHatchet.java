@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Hatchet.class)
 public class MixinHatchet extends ToolBase {
 
+    // TODO : Bring this constructor to 21st century
     protected MixinHatchet(int i, int j, ToolMaterial arg, BlockBase[] args) {
         super(i, j, arg, args);
     }
