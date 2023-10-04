@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Minecraft;
 import net.minecraft.level.storage.LevelStorage;
 import net.minecraft.util.io.CompoundTag;
+import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.impl.level.storage.FlattenedWorldStorage;
@@ -15,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
@@ -28,10 +30,10 @@ public class MixinMinecraft {
     private String changeProgressListenerTitle(String string, @Local(ordinal = 0) String worldName) {
         CompoundTag worldTag = ((FlattenedWorldStorage)this.levelStorage).getWorldTag(worldName);
 
-        List<Triple<ModID, Integer, Integer>> updateList = NbtHelper.getUpdateList(worldTag);
+        Set<DataFixers.UpdateData> updateList = NbtHelper.getUpdateList(worldTag);
 
-        for (Triple<ModID, Integer, Integer> triple : updateList) {
-            if (triple.getLeft().equals(MODID) && triple.getRight().equals(CURRENT_VERSION)) {
+        for (DataFixers.UpdateData updateData : updateList) {
+            if (updateData.modID().equals(MODID) && updateData.currentVersion() == CURRENT_VERSION) {
                 return string;
             }
         }
@@ -43,16 +45,16 @@ public class MixinMinecraft {
     private String changeProgressListenerDesc(String string, @Local(ordinal = 0) String worldName) {
         CompoundTag worldTag = ((FlattenedWorldStorage)this.levelStorage).getWorldTag(worldName);
 
-        List<Triple<ModID, Integer, Integer>> updateList = NbtHelper.getUpdateList(worldTag);
+        Set<DataFixers.UpdateData> updateList = NbtHelper.getUpdateList(worldTag);
 
         List<ModID> list = new ArrayList<>();
 
-        for (Triple<ModID, Integer, Integer> triple : updateList) {
-            if (triple.getLeft().equals(MODID) && triple.getRight().equals(CURRENT_VERSION)) {
+        for (DataFixers.UpdateData updateData : updateList) {
+            if (updateData.modID().equals(MODID) && updateData.currentVersion() == CURRENT_VERSION) {
                 return string;
             }
 
-            list.add(triple.getLeft());
+            list.add(updateData.modID());
         }
 
         return list.stream().map(ModID::toString).collect(Collectors.joining(", "));
