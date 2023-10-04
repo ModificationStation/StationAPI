@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.worldgen;
 
-import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.level.biome.Biome;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeProvider;
@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class BiomeAPI {
-	private static Map<Identifier, BiomeProvider> overworldProviders = new Reference2ObjectArrayMap<>(16);
-	private static Map<Identifier, BiomeProvider> netherProviders = new Reference2ObjectArrayMap<>(16);
+	private static Map<Identifier, BiomeProvider> overworldProviders = new Reference2ObjectOpenHashMap<>(16);
+	private static Map<Identifier, BiomeProvider> netherProviders = new Reference2ObjectOpenHashMap<>(16);
 	
 	private static BiomeRegionsProvider overworldProvider;
 	private static BiomeRegionsProvider netherProvider;
