@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BiomeBuilder {
-	private static final BiomeBuilder INSTANCE = new BiomeBuilder();
+	private static final ThreadLocal<BiomeBuilder> INSTANCES = new ThreadLocal<>();
 	private final Map<Class<? extends Entity>, Integer> hostileEntities = new Reference2IntOpenHashMap<>(32);
 	private final Map<Class<? extends Entity>, Integer> passiveEntities = new Reference2IntOpenHashMap<>(32);
 	private final Map<Class<? extends Entity>, Integer> waterEntities = new Reference2IntOpenHashMap<>(32);
@@ -31,22 +31,29 @@ public class BiomeBuilder {
 	 * Start biome building process with specified biome name
 	 */
 	public static BiomeBuilder start(String name) {
-		INSTANCE.name = name;
-		INSTANCE.precipitation = true;
-		INSTANCE.snow = false;
-		INSTANCE.minHeight = 40;
-		INSTANCE.maxHeight = 128;
+		BiomeBuilder instance = INSTANCES.get();
 		
-		INSTANCE.grassColor = BiomeColorsImpl.DEFAULT_GRASS_COLOR;
-		INSTANCE.leavesColor = BiomeColorsImpl.DEFAULT_LEAVES_COLOR;
-		INSTANCE.fogColor = BiomeColorsImpl.DEFAULT_FOG_COLOR;
+		if (instance == null) {
+			instance = new BiomeBuilder();
+			INSTANCES.set(instance);
+		}
 		
-		INSTANCE.hostileEntities.clear();
-		INSTANCE.passiveEntities.clear();
-		INSTANCE.waterEntities.clear();
-		INSTANCE.rules.clear();
+		instance.name = name;
+		instance.precipitation = true;
+		instance.snow = false;
+		instance.minHeight = 40;
+		instance.maxHeight = 128;
 		
-		return INSTANCE;
+		instance.grassColor = BiomeColorsImpl.DEFAULT_GRASS_COLOR;
+		instance.leavesColor = BiomeColorsImpl.DEFAULT_LEAVES_COLOR;
+		instance.fogColor = BiomeColorsImpl.DEFAULT_FOG_COLOR;
+		
+		instance.hostileEntities.clear();
+		instance.passiveEntities.clear();
+		instance.waterEntities.clear();
+		instance.rules.clear();
+		
+		return instance;
 	}
 	
 	/**
