@@ -3,7 +3,6 @@ package net.modificationstation.sltest.worldgen;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.biome.Biome;
-import net.minecraft.level.biome.Forest;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEvent;
@@ -13,7 +12,7 @@ import net.modificationstation.stationapi.api.worldgen.biome.ClimateBiomeProvide
 import net.modificationstation.stationapi.api.worldgen.biome.VoronoiBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceBuilder;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
-import net.modificationstation.stationapi.impl.worldgen.BiomeProviderRegistryEvent;
+import net.modificationstation.stationapi.impl.worldgen.BiomeProviderRegisterEvent;
 
 import java.util.Random;
 
@@ -70,7 +69,7 @@ public class TestWorldgenListener {
 	}
 	
 	@EventListener
-	public void registerRegions(BiomeProviderRegistryEvent event) {
+	public void registerRegions(BiomeProviderRegisterEvent event) {
 		SLTest.LOGGER.info("Register test biome regions");
 		
 		// Add biome directly into default region

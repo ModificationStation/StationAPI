@@ -34,9 +34,6 @@
 	
 	"custom": {
 		"modmenu:api": true,
-		"station-resource-loader-v0:assets_priority": {
-			"lowerThan": "*"
-		},
 		"loom:injected_interfaces": {
 			"net/minecraft/class_153": [
 				"net/modificationstation/stationapi/api/worldgen/biome/StationBiome"
