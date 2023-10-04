@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SurfaceBuilder {
-	private static final SurfaceBuilder INSTANCE = new SurfaceBuilder();
+	private static final ThreadLocal<SurfaceBuilder> INSTANCES = new ThreadLocal<>();
 	private final List<ConditionInfo> conditions = new ArrayList<>();
 	private SurfaceRule rule;
 	
@@ -26,8 +26,15 @@ public class SurfaceBuilder {
 	 * Start surface building with any starting rule
 	 */
 	public static SurfaceBuilder start(SurfaceRule rule) {
-		INSTANCE.rule = rule;
-		return INSTANCE;
+		SurfaceBuilder instance = INSTANCES.get();
+		
+		if (instance == null) {
+			instance = new SurfaceBuilder();
+			INSTANCES.set(instance);
+		}
+		
+		instance.rule = rule;
+		return instance;
 	}
 	
 	/**
