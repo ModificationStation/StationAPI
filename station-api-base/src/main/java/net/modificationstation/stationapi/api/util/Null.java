@@ -13,7 +13,7 @@ public class Null {
      * @param <V> is used to avoid casting.
      * @return null.
      */
-    // @NotNull
+    @NotNull
     public static <V> V get() {
         //noinspection ConstantConditions
         return null;
