@@ -12,7 +12,7 @@ import net.modificationstation.stationapi.api.worldgen.biome.ClimateBiomeProvide
 import net.modificationstation.stationapi.api.worldgen.biome.VoronoiBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceBuilder;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
-import net.modificationstation.stationapi.impl.worldgen.BiomeProviderRegisterEvent;
+import net.modificationstation.stationapi.api.worldgen.biome.BiomeProviderRegisterEvent;
 
 import java.util.Random;
 

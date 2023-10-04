@@ -5,6 +5,7 @@ import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEvent;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
+import net.modificationstation.stationapi.api.worldgen.biome.BiomeProviderRegisterEvent;
 
 public class WorldgenListener {
 	private boolean initiated = false;

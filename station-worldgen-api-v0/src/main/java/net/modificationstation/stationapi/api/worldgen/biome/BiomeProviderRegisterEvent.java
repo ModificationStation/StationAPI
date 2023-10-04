@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.worldgen;
+package net.modificationstation.stationapi.api.worldgen.biome;
 
 import net.mine_diver.unsafeevents.Event;
 
