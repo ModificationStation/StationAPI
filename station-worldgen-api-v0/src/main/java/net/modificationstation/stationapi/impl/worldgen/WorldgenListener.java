@@ -8,16 +8,16 @@ import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeProviderRegisterEvent;
 
 public class WorldgenListener {
-	private boolean initiated = false;
+	private boolean initiated;
 	
 	@EventListener(priority = ListenerPriority.LOWEST)
 	public void afterInit(BiomeRegisterEvent event) {
 		if (initiated) return;
 		StationAPI.EVENT_BUS.post(new BiomeProviderRegisterEvent());
-		initiated = false;
+		initiated = true;
 	}
 	
-	@EventListener(priority = ListenerPriority.HIGHEST)
+	@EventListener
 	public void registerBiomes(BiomeProviderRegisterEvent event) {
 		BiomeAPI.addOverworldBiomeProvider(
 			StationAPI.MODID.id("overworld_biome_provider"),
