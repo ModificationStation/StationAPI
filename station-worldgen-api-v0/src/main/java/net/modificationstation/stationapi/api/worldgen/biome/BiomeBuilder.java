@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
-import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.level.biome.Biome;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 import net.modificationstation.stationapi.impl.worldgen.BiomeColorsImpl;
@@ -12,9 +12,9 @@ import java.util.Map;
 
 public class BiomeBuilder {
 	private static final BiomeBuilder INSTANCE = new BiomeBuilder();
-	private final Map<Class<? extends Entity>, Integer> hostileEntities = new Reference2ObjectArrayMap<>(32);
-	private final Map<Class<? extends Entity>, Integer> passiveEntities = new Reference2ObjectArrayMap<>(32);
-	private final Map<Class<? extends Entity>, Integer> waterEntities = new Reference2ObjectArrayMap<>(32);
+	private final Map<Class<? extends Entity>, Integer> hostileEntities = new Reference2IntOpenHashMap<>(32);
+	private final Map<Class<? extends Entity>, Integer> passiveEntities = new Reference2IntOpenHashMap<>(32);
+	private final Map<Class<? extends Entity>, Integer> waterEntities = new Reference2IntOpenHashMap<>(32);
 	private final List<SurfaceRule> rules = new ArrayList<>();
 	private BiomeColorProvider grassColor;
 	private BiomeColorProvider leavesColor;
