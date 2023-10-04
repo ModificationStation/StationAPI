@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BiomeBuilder {
-	private static final ThreadLocal<BiomeBuilder> INSTANCES = new ThreadLocal<>();
+	private static final ThreadLocal<BiomeBuilder> INSTANCES = ThreadLocal.withInitial(BiomeBuilder::new);
 	private final Map<Class<? extends Entity>, Integer> hostileEntities = new Reference2IntOpenHashMap<>(32);
 	private final Map<Class<? extends Entity>, Integer> passiveEntities = new Reference2IntOpenHashMap<>(32);
 	private final Map<Class<? extends Entity>, Integer> waterEntities = new Reference2IntOpenHashMap<>(32);
@@ -32,11 +32,6 @@ public class BiomeBuilder {
 	 */
 	public static BiomeBuilder start(String name) {
 		BiomeBuilder instance = INSTANCES.get();
-		
-		if (instance == null) {
-			instance = new BiomeBuilder();
-			INSTANCES.set(instance);
-		}
 		
 		instance.name = name;
 		instance.precipitation = true;

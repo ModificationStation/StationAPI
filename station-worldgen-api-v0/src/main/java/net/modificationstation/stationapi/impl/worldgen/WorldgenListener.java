@@ -5,7 +5,7 @@ import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEvent;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
-import net.modificationstation.stationapi.api.worldgen.biome.BiomeProviderRegisterEvent;
+import net.modificationstation.stationapi.api.event.BiomeProviderRegisterEvent;
 
 public class WorldgenListener {
 	private boolean initiated;
@@ -17,7 +17,7 @@ public class WorldgenListener {
 		initiated = true;
 	}
 	
-	@EventListener
+	@EventListener(phase = StationAPI.INTERNAL_PHASE)
 	public void registerBiomes(BiomeProviderRegisterEvent event) {
 		BiomeAPI.addOverworldBiomeProvider(
 			StationAPI.MODID.id("overworld_biome_provider"),
