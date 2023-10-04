@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 public class BiomeAPI {
-	private static Map<Identifier, BiomeProvider> overworldProviders = new Reference2ObjectArrayMap<>();
-	private static Map<Identifier, BiomeProvider> netherProviders = new Reference2ObjectArrayMap<>();
+	private static Map<Identifier, BiomeProvider> overworldProviders = new Reference2ObjectArrayMap<>(16);
+	private static Map<Identifier, BiomeProvider> netherProviders = new Reference2ObjectArrayMap<>(16);
 	
 	private static BiomeRegionsProvider overworldProvider;
 	private static BiomeRegionsProvider netherProvider;
