@@ -123,10 +123,10 @@ class ReloadScreen extends ScreenBase {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glScissor((int) ((40 + 3) * xScale), (int) ((50 - v) * yScale), (int) ((width - (40 + 3) * 2) * xScale), scissorsHeight);
-            for (int i = 0; i < to; i++) {
+            for (int i = 0; i < to + 1; i++) {
                 int y = net.modificationstation.stationapi.api.util.math.MathHelper.ceil(height - 98 + (10 * i) + (scrollDelta * 10) + v * 5);
                 if (y > height - 50 + v) break;
-                drawTextWithShadow(textManager, ReloadScreenManager.LOCATIONS.get(to - i - 1), 40 + 3, y, color);
+                drawTextWithShadow(textManager, ReloadScreenManager.LOCATIONS.get(to - i), 40 + 3, y, color);
             }
             glDisable(GL_BLEND);
             glDisable(GL_SCISSOR_TEST);
