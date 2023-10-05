@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.event;
+package net.modificationstation.stationapi.api.event.worldgen.biome;
 
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;

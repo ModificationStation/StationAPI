@@ -8,13 +8,12 @@ import net.modificationstation.stationapi.impl.worldgen.BiomeColorsImpl;
 import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class BiomeBuilder {
 	private static final ThreadLocal<BiomeBuilder> INSTANCES = ThreadLocal.withInitial(BiomeBuilder::new);
-	private final Map<Class<? extends Entity>, Integer> hostileEntities = new Reference2IntOpenHashMap<>(32);
-	private final Map<Class<? extends Entity>, Integer> passiveEntities = new Reference2IntOpenHashMap<>(32);
-	private final Map<Class<? extends Entity>, Integer> waterEntities = new Reference2IntOpenHashMap<>(32);
+	private final Reference2IntOpenHashMap<Class<? extends Entity>> hostileEntities = new Reference2IntOpenHashMap<>(32);
+	private final Reference2IntOpenHashMap<Class<? extends Entity>> passiveEntities = new Reference2IntOpenHashMap<>(32);
+	private final Reference2IntOpenHashMap<Class<? extends Entity>> waterEntities = new Reference2IntOpenHashMap<>(32);
 	private final List<SurfaceRule> rules = new ArrayList<>();
 	private BiomeColorProvider grassColor;
 	private BiomeColorProvider leavesColor;
