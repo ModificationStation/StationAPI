@@ -319,6 +319,7 @@ dependencies {
     include "maven.modrinth:spasm:${project.spasm_version}"
     include "com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixinextras_version}"
     include "com.oath.cyclops:cyclops:${project.cyclops_version}"
+    include "org.reactivestreams:reactive-streams:${project.reactivestreams_version}"
 }
 
 // Makes java shut up
