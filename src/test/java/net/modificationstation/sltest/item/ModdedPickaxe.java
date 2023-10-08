@@ -1,11 +1,14 @@
 package net.modificationstation.sltest.item;
 
+import net.minecraft.block.BlockBase;
 import net.minecraft.entity.EntityRegistry;
 import net.minecraft.entity.Living;
 import net.minecraft.entity.player.PlayerBase;
 import net.minecraft.item.ItemInstance;
+import net.minecraft.item.tool.ToolBase;
 import net.minecraft.item.tool.ToolMaterial;
 import net.minecraft.level.Level;
+import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.item.tool.TemplatePickaxe;
 import net.modificationstation.stationapi.api.util.math.Direction;

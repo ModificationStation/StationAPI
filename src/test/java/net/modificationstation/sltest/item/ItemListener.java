@@ -18,7 +18,7 @@ public class ItemListener {
     @EventListener
     public void registerItems(ItemRegistryEvent event) {
         testItem = new ModdedItem(MODID.id("test_item")).setTranslationKey(MODID, "testItem"); //8475
-        testMaterial = ToolMaterialFactory.create("testMaterial", 3, Integer.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE - 2);
+        testMaterial = ToolMaterialFactory.create("testMaterial", 4, Integer.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE - 2);
         testPickaxe = new ModdedPickaxe(MODID.id("test_pickaxe"), testMaterial).setTranslationKey(MODID, "testPickaxe"); //8476
         testNBTItem = new NBTItem(MODID.id("nbt_item")).setTranslationKey(MODID, "nbt_item"); //8477
         testModelItem = new ModelItem(MODID.id("model_item")).setMaxStackSize(1).setTranslationKey(MODID, "idkSomething");

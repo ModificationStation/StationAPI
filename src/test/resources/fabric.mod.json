@@ -30,7 +30,8 @@
       "net.modificationstation.sltest.entity.EntityListener",
       "net.modificationstation.sltest.tileentity.TileEntityListener",
       "net.modificationstation.sltest.item.tool.ToolListener",
-      "net.modificationstation.sltest.datafixer.DataFixerListener"
+      "net.modificationstation.sltest.datafixer.DataFixerListener",
+      "net.modificationstation.sltest.block.MiningLevelListener"
     ],
     "stationapi:event_bus_client": [
       "net.modificationstation.sltest.gui.GuiListener",

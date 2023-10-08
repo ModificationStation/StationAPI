@@ -3,6 +3,7 @@ package net.modificationstation.sltest.block;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
+import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -21,7 +22,8 @@ public enum Blocks {
     CUSTOM_MODEL_BLOCK("farlands_block", "farlands_block", id -> new ModdedModelBlock(id, Material.DIRT).setHardness(1)),
     FREEZER("freezer", "freezer", id -> new BlockFreezer(id).setHardness(2.5F).setSounds(TemplateBlockBase.STONE_SOUNDS)),
     ALTAR("altar", "altar", id -> new BlockAltar(id, Material.STONE).setHardness(3)),
-    VARIATION_BLOCK("variation_block", "variationBlock", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSounds(BlockBase.STONE_SOUNDS).disableAutomaticBlockItemRegistration());
+    VARIATION_BLOCK("variation_block", "variationBlock", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSounds(BlockBase.STONE_SOUNDS).disableAutomaticBlockItemRegistration()),
+    MINING_LEVEL_OBSIDIAN_BLOCK("mining_level_obsidian_block","mining_level_obsidian_block", id -> new TemplateBlockBase(id, Material.STONE).setHardness(1F).setMiningLevel("obsidian"));
 
     private final Runnable register;
     private BlockBase block;
