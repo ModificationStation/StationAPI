@@ -8,24 +8,24 @@ import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeProvider
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 
 public class WorldgenListener {
-	private boolean initiated;
-	
-	@EventListener(priority = ListenerPriority.LOWEST)
-	public void afterInit(BiomeRegisterEvent event) {
-		if (initiated) return;
-		StationAPI.EVENT_BUS.post(new BiomeProviderRegisterEvent());
-		initiated = true;
-	}
-	
-	@EventListener(phase = StationAPI.INTERNAL_PHASE)
-	public void registerBiomes(BiomeProviderRegisterEvent event) {
-		BiomeAPI.addOverworldBiomeProvider(
-			StationAPI.MODID.id("overworld_biome_provider"),
-			OverworldBiomeProviderImpl.getInstance()
-		);
-		BiomeAPI.addNetherBiomeProvider(
-			StationAPI.MODID.id("nether_biome_provider"),
-			NetherBiomeProviderImpl.getInstance()
-		);
-	}
+    private boolean initiated;
+
+    @EventListener(priority = ListenerPriority.LOWEST)
+    public void afterInit(BiomeRegisterEvent event) {
+        if (initiated) return;
+        StationAPI.EVENT_BUS.post(new BiomeProviderRegisterEvent());
+        initiated = true;
+    }
+
+    @EventListener(phase = StationAPI.INTERNAL_PHASE)
+    public void registerBiomes(BiomeProviderRegisterEvent event) {
+        BiomeAPI.addOverworldBiomeProvider(
+                StationAPI.MODID.id("overworld_biome_provider"),
+                OverworldBiomeProviderImpl.getInstance()
+        );
+        BiomeAPI.addNetherBiomeProvider(
+                StationAPI.MODID.id("nether_biome_provider"),
+                NetherBiomeProviderImpl.getInstance()
+        );
+    }
 }

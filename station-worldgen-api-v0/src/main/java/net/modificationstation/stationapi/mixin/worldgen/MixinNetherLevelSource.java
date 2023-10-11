@@ -12,10 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(NetherLevelSource.class)
 public class MixinNetherLevelSource {
-	@Shadow private Level level;
-	
-	@Inject(method = "decorate", at = @At("HEAD"))
-	private void makeSurface(LevelSource source, int cx, int cz, CallbackInfo info) {
-		WorldDecoratorImpl.decorate(this.level, cx, cz);
-	}
+    @Shadow private Level level;
+
+    @Inject(
+            method = "decorate",
+            at = @At("HEAD")
+    )
+    private void makeSurface(LevelSource source, int cx, int cz, CallbackInfo info) {
+        WorldDecoratorImpl.decorate(this.level, cx, cz);
+    }
 }

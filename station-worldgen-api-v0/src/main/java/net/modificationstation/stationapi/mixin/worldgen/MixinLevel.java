@@ -12,15 +12,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Level.class)
 public class MixinLevel {
-	@Inject(
-		method = "<init>(Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/level/dimension/Dimension;)V",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/level/dimension/Dimension;initDimension(Lnet/minecraft/level/Level;)V",
-			shift = Shift.BEFORE
-		)
-	)
-	private void onInit(DimensionData data, String name, long seed, Dimension dimension, CallbackInfo info) {
-		BiomeAPI.init(seed);
-	}
+    @Inject(
+            method = "<init>(Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/level/dimension/Dimension;)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/level/dimension/Dimension;initDimension(Lnet/minecraft/level/Level;)V",
+                    shift = Shift.BEFORE
+            )
+    )
+    private void onInit(DimensionData data, String name, long seed, Dimension dimension, CallbackInfo info) {
+        BiomeAPI.init(seed);
+    }
 }

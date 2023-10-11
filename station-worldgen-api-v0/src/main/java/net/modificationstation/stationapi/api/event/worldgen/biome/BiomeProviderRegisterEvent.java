@@ -8,5 +8,5 @@ import net.modificationstation.stationapi.api.StationAPI;
 @SuperBuilder
 @EventPhases(StationAPI.INTERNAL_PHASE)
 public class BiomeProviderRegisterEvent extends Event {
-	public BiomeProviderRegisterEvent() {}
+    public BiomeProviderRegisterEvent() {}
 }

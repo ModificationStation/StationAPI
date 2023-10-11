@@ -6,14 +6,14 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.tag.TagKey;
 
 public class TagSurfaceCondition implements SurfaceCondition {
-	private final TagKey<BlockBase> tag;
-	
-	public TagSurfaceCondition(TagKey<BlockBase> tag) {
-		this.tag = tag;
-	}
-	
-	@Override
-	public boolean canApply(Level level, int x, int y, int z, BlockState state) {
-		return state.isIn(tag);
-	}
+    private final TagKey<BlockBase> tag;
+
+    public TagSurfaceCondition(TagKey<BlockBase> tag) {
+        this.tag = tag;
+    }
+
+    @Override
+    public boolean canApply(Level level, int x, int y, int z, BlockState state) {
+        return state.isIn(tag);
+    }
 }

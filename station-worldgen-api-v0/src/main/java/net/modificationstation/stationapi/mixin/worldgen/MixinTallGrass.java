@@ -10,11 +10,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TallGrass.class)
 public class MixinTallGrass {
-	@Inject(method = "getColourMultiplier", at = @At("HEAD"), cancellable = true)
-	private void getBiomeColor(BlockView view, int x, int y, int z, CallbackInfoReturnable<Integer> info) {
-		if (view.getTileMeta(x, y, z) != 0) {
-			int color = BiomeColorsImpl.GRASS_INTERPOLATOR.getColor(view.getBiomeSource(), x, z);
-			info.setReturnValue(color);
-		}
-	}
+    @Inject(
+            method = "getColourMultiplier",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void getBiomeColor(BlockView view, int x, int y, int z, CallbackInfoReturnable<Integer> info) {
+        if (view.getTileMeta(x, y, z) != 0) {
+            int color = BiomeColorsImpl.GRASS_INTERPOLATOR.getColor(view.getBiomeSource(), x, z);
+            info.setReturnValue(color);
+        }
+    }
 }

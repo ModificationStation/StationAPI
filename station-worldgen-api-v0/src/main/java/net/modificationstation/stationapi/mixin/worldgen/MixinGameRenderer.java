@@ -13,32 +13,38 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameRenderer.class)
 public class MixinGameRenderer {
-	@Shadow private Minecraft minecraft;
-	@Shadow float field_2346;
-	@Shadow float field_2347;
-	@Shadow float field_2348;
-	
-	@Inject(method = "method_1842(IF)V", at = @At("HEAD"))
-	private void changeFogColor(int i, float delta, CallbackInfo info) {
-		FogRendererImpl.setupFog(minecraft, delta);
-		field_2346 = FogRendererImpl.getR();
-		field_2347 = FogRendererImpl.getG();
-		field_2348 = FogRendererImpl.getB();
-	}
-	
-	@Inject(method = "method_1852(F)V", at = @At(
-		value = "INVOKE",
-		target = "Lorg/lwjgl/opengl/GL11;glClearColor(FFFF)V",
-		remap = false,
-		shift = Shift.AFTER
-	))
-	private void clearWithFogColor(float delta, CallbackInfo info) {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		GL11.glClearColor(
-			FogRendererImpl.getR(),
-			FogRendererImpl.getG(),
-			FogRendererImpl.getB(),
-			1F
-		);
-	}
+    @Shadow private Minecraft minecraft;
+    @Shadow float field_2346;
+    @Shadow float field_2347;
+    @Shadow float field_2348;
+
+    @Inject(
+            method = "method_1842(IF)V",
+            at = @At("HEAD")
+    )
+    private void changeFogColor(int i, float delta, CallbackInfo info) {
+        FogRendererImpl.setupFog(minecraft, delta);
+        field_2346 = FogRendererImpl.getR();
+        field_2347 = FogRendererImpl.getG();
+        field_2348 = FogRendererImpl.getB();
+    }
+
+    @Inject(
+            method = "method_1852(F)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lorg/lwjgl/opengl/GL11;glClearColor(FFFF)V",
+                    remap = false,
+                    shift = Shift.AFTER
+            )
+    )
+    private void clearWithFogColor(float delta, CallbackInfo info) {
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+        GL11.glClearColor(
+                FogRendererImpl.getR(),
+                FogRendererImpl.getG(),
+                FogRendererImpl.getB(),
+                1F
+        );
+    }
 }
