@@ -11,10 +11,15 @@ import net.modificationstation.stationapi.api.registry.Identifier;
  * This event is fired when its suitable to register mining levels,
  * you can use the methods in the event or directly call MiningLevels class
  */
+@SuppressWarnings("unused")
 @EventPhases(StationAPI.INTERNAL_PHASE)
 @SuperBuilder
 public class MiningLevelRegisterEvent extends Event {
     public boolean addMiningLevel(Identifier identifier, int miningLevel){
         return MiningLevels.addMiningLevel(identifier, miningLevel);
+    }
+
+    public boolean insertMiningLevelAfter(Identifier identifier, Identifier after){
+        return MiningLevels.insertMiningLevelAfter(identifier, after);
     }
 }

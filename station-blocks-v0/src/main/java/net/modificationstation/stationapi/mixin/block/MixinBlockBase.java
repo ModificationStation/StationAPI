@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@SuppressWarnings("AddedMixinMembersNamePattern")
 @Mixin(BlockBase.class)
 public abstract class MixinBlockBase implements StationBlock {
 
@@ -61,5 +62,6 @@ public abstract class MixinBlockBase implements StationBlock {
     @Inject(method = "<clinit>",at = @At("HEAD"))
     private static void registerMiningLevels(CallbackInfo ci){
         StationAPI.EVENT_BUS.post(MiningLevelRegisterEvent.builder().build());
+        MiningLevels.printMiningLevels();
     }
 }

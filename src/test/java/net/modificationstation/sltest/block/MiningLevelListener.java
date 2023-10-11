@@ -8,6 +8,12 @@ import net.modificationstation.stationapi.api.event.block.MiningLevelRegisterEve
 public class MiningLevelListener {
     @EventListener
     public void registerMiningLevels(MiningLevelRegisterEvent event){
-        MiningLevels.addMiningLevel(SLTest.MODID.id("obsidian"), 4);
+        event.insertMiningLevelAfter(SLTest.MODID.id("bronze"), MiningLevels.STONE);
+        event.insertMiningLevelAfter(SLTest.MODID.id("cobalt"), MiningLevels.DIAMOND);
+        event.insertMiningLevelAfter(SLTest.MODID.id("obsidian"), MiningLevels.DIAMOND);
+        event.addMiningLevel(SLTest.MODID.id("ultra"), 9000);
+        event.insertMiningLevelAfter(SLTest.MODID.id("ultraplus"), SLTest.MODID.id("ultra"));
+        MiningLevels.addMiningLevelBefore(SLTest.MODID.id("negative_wood"), MiningLevels.WOOD);
+        MiningLevels.insertMiningLevelBefore(SLTest.MODID.id("pre-wood"), MiningLevels.WOOD);
     }
 }
