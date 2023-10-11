@@ -14,6 +14,7 @@ import net.modificationstation.stationapi.api.resource.ResourceReloader;
 import net.modificationstation.stationapi.api.tick.TickScheduler;
 import net.modificationstation.stationapi.api.util.profiler.ProfileResult;
 import net.modificationstation.stationapi.impl.client.resource.ReloadScreenApplicationExecutor;
+import net.modificationstation.stationapi.impl.client.resource.ReloadScreenManagerImpl;
 import net.modificationstation.stationapi.impl.client.resource.ReloadScreenTessellatorHolder;
 import net.modificationstation.stationapi.mixin.resourceloader.client.MinecraftAccessor;
 import net.modificationstation.stationapi.mixin.resourceloader.client.TessellatorAccessor;
@@ -54,12 +55,14 @@ public class ReloadScreenManager {
     }
 
     public static void openEarly() throws LWJGLException {
+        ReloadScreenManagerImpl.isMinecraftDone = false;
         applicationExecutor = ReloadScreenApplicationExecutor.INSTANCE;
-        //noinspection deprecation
-        val minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
         currentReload = some(new CompositeResourceReload());
-        val drawable = new SharedDrawable(Display.getDrawable());
-        thread = some(new Thread(() -> onStartup(minecraft, drawable)));
+        //noinspection deprecation
+        thread = some(new Thread(expression(ReloadScreenManager::onStartup).partiallyApply(
+                (Minecraft) FabricLoader.getInstance().getGameInstance(),
+                new SharedDrawable(Display.getDrawable())
+        )::get));
         thread.peek(Thread::start);
     }
 

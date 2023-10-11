@@ -3,6 +3,8 @@ package net.modificationstation.stationapi.api.client.resource;
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Longs;
 import cyclops.control.Option;
+import cyclops.function.Effect;
+import cyclops.function.FluentFunctions;
 import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import it.unimi.dsi.fastutil.longs.Long2DoubleFunction;
 import lombok.val;
@@ -11,12 +13,18 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.TextRenderer;
 import net.minecraft.util.maths.MathHelper;
 import net.modificationstation.stationapi.api.resource.ResourceReload;
+import net.modificationstation.stationapi.api.util.math.ColorHelper;
+import net.modificationstation.stationapi.impl.client.resource.ReloadScreenManagerImpl;
 
-import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.CompletionException;
 import java.util.function.*;
 
+import static cyclops.function.FluentFunctions.expression;
+import static java.util.Map.of;
+import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
+import static net.modificationstation.stationapi.api.util.math.MathHelper.ceil;
+import static net.modificationstation.stationapi.api.util.math.MathHelper.lerp;
 import static org.lwjgl.opengl.GL11.*;
 
 class ReloadScreen extends ScreenBase {
@@ -28,16 +36,35 @@ class ReloadScreen extends ScreenBase {
             STAGE_0_FADE_IN = 2000,
             GLOBAL_FADE_OUT = 1000,
             RELOAD_START = STAGE_0_START + STAGE_0_FADE_IN,
-            EXCEPTION_FADE_IN = 500;
+            EXCEPTION_TRANSFORM = 500;
+    private static final int
+            BACKGROUND_COLOR_DEFAULT_RED = 0x35,
+            BACKGROUND_COLOR_DEFAULT_GREEN = 0x86,
+            BACKGROUND_COLOR_DEFAULT_BLUE = 0xE7,
+            BACKGROUND_COLOR_EXCEPTION_RED = 0xFF,
+            BACKGROUND_COLOR_EXCEPTION_GREEN = 0x29,
+            BACKGROUND_COLOR_EXCEPTION_BLUE = 0x29;
+
+    private static final Object
+            BACKGROUND_DEFAULT_DELTA_KEY = new Object(),
+            BACKGROUND_EXCEPTION_DELTA_KEY = new Object(),
+            STAGE_0_DEFAULT_DELTA_KEY = new Object(),
+            STAGE_0_EXCEPTION_DELTA_KEY = new Object();
+
     private static final Double2DoubleFunction
-            SIN_90_DELTA = delta -> MathHelper.sin((float) (delta * Math.PI / 2));
+            SIN_90_DELTA = delta -> MathHelper.sin((float) (delta * Math.PI / 2)),
+            COS_90_DELTA = delta -> MathHelper.cos((float) (delta * Math.PI / 2)),
+            INVERSE_DELTA = delta -> 1 - delta;
     private static final Long2DoubleFunction
             BACKGROUND_FADE_IN_DELTA = time -> (double) Longs.constrainToRange(time - BACKGROUND_START, 0, BACKGROUND_FADE_IN) / BACKGROUND_FADE_IN,
             STAGE_0_FADE_IN_DELTA = time -> (double) Longs.constrainToRange(time - STAGE_0_START, 0, STAGE_0_FADE_IN) / STAGE_0_FADE_IN;
     private static final Function<LongSupplier, Long2DoubleFunction>
-            GLOBAL_FADE_OUT_DELTA_FACTORY = fadeOutStartGetter -> time -> 1 - (double) Longs.constrainToRange(time - fadeOutStartGetter.getAsLong(), 0, GLOBAL_FADE_OUT) / GLOBAL_FADE_OUT;
-    private static final Function<LongSupplier, Long2DoubleFunction>
-            BACKGROUND_EXCEPTION_FADE_IN_FACTORY = fadeInStartGetter -> time -> 1;
+            GLOBAL_FADE_OUT_DELTA_FACTORY = fadeOutStartGetter -> INVERSE_DELTA.composeLong(time -> (double) Longs.constrainToRange(time - fadeOutStartGetter.getAsLong(), 0, GLOBAL_FADE_OUT) / GLOBAL_FADE_OUT),
+            BACKGROUND_EXCEPTION_FADE_IN_FACTORY = fadeInStartGetter -> time -> (double) Longs.constrainToRange(time - fadeInStartGetter.getAsLong(), 0, EXCEPTION_TRANSFORM) / EXCEPTION_TRANSFORM,
+            STAGE_0_EXCEPTION_TRANSFORM_FACTORY = transformStartGetter -> time -> (double) Longs.constrainToRange(time - transformStartGetter.getAsLong(), 0, EXCEPTION_TRANSFORM) / EXCEPTION_TRANSFORM;
+
+    private static final String
+            LOGO_TEMPLATE = "/assets/station-resource-loader-v0/textures/gui/stationapi_reload%s.png";
 
     private static UnaryOperator<Long2DoubleFunction> when(BooleanSupplier condition, Long2DoubleFunction ifTrue) {
         return ifFalse -> value -> (condition.getAsBoolean() ? ifTrue : ifFalse).applyAsDouble(value);
@@ -50,7 +77,7 @@ class ReloadScreen extends ScreenBase {
     private long initTimestamp;
     private long currentTime;
     private float progress;
-    private final Runnable
+    private final Effect
             backgroundEmitter,
             stage0Emitter;
     private boolean finished;
@@ -59,6 +86,7 @@ class ReloadScreen extends ScreenBase {
     private final String logo;
     private boolean exceptionThrown;
     private long exceptionStart;
+    private Exception exception;
 
     ReloadScreen(
             ScreenBase parent,
@@ -70,71 +98,150 @@ class ReloadScreen extends ScreenBase {
         this.done = done;
         this.tessellator = tessellator;
 
-        UnaryOperator<Long2DoubleFunction> globalFadeOutComposer = when(() -> finished, GLOBAL_FADE_OUT_DELTA_FACTORY.apply(() -> fadeOutStart));
-        Long2DoubleFunction
-                backgroundDelta = globalFadeOutComposer.apply(BACKGROUND_FADE_IN_DELTA),
-                stage0Delta = globalFadeOutComposer.apply(STAGE_0_FADE_IN_DELTA);
-        backgroundEmitter = setupEmitter(backgroundDelta.andThenDouble(SIN_90_DELTA), this::renderBackground);
-        stage0Emitter = setupEmitter(stage0Delta.andThenDouble(SIN_90_DELTA), this::renderProgressBar, this::renderLogo);
-        logo = "/assets/station-resource-loader-v0/textures/gui/stationapi_reload" + switch (new Random().nextInt(100)) {
-            case 0 -> "_dimando";
-            case 1 -> "_old";
-            default -> "";
-        } + ".png";
-   }
-
-    private Runnable setupEmitter(final Long2DoubleFunction deltaFunc, final DoubleConsumer... renderers) {
-        DoubleConsumer renderer = Arrays.stream(renderers).reduce(DoubleConsumer::andThen).orElse(delta -> {});
-        return () -> {
-            double delta = deltaFunc.applyAsDouble(currentTime);
-            if (delta > 0)
-                renderer.accept(delta);
-        };
-    }
-
-    private void renderBackground(double delta) {
-        fill(0, 0, width, height,
-                this.parent == null ?
-                        0xFF << 24 |
-                                (int) (finished ? 0xFF - delta * (0xFF - 0x35) : delta * 0x35) << 16 |
-                                (int) (finished ? 0xFF - delta * (0xFF - 0x86) : delta * 0x86) << 8 |
-                                (int) (finished ? 0xFF - delta * (0xFF - 0xE7) : delta * 0xE7) :
-                        (int) (delta * 0xFF) << 24 | 0x3586E7
+        logo = LOGO_TEMPLATE.formatted(
+                switch (new Random().nextInt(100)) {
+                    case 0 -> "_dimando";
+                    case 1 -> "_old";
+                    default -> "";
+                }
         );
+
+        val globalFadeOutComposer = when(() -> finished, GLOBAL_FADE_OUT_DELTA_FACTORY.apply(() -> fadeOutStart));
+        val deltaMap = of(
+                BACKGROUND_DEFAULT_DELTA_KEY, globalFadeOutComposer.apply(BACKGROUND_FADE_IN_DELTA).andThenDouble(SIN_90_DELTA),
+                BACKGROUND_EXCEPTION_DELTA_KEY, BACKGROUND_EXCEPTION_FADE_IN_FACTORY.apply(() -> exceptionStart).andThenDouble(COS_90_DELTA).andThenDouble(INVERSE_DELTA),
+                STAGE_0_DEFAULT_DELTA_KEY, globalFadeOutComposer.apply(STAGE_0_FADE_IN_DELTA).andThenDouble(SIN_90_DELTA),
+                STAGE_0_EXCEPTION_DELTA_KEY, STAGE_0_EXCEPTION_TRANSFORM_FACTORY.apply(() -> exceptionStart).andThenDouble(COS_90_DELTA)
+        );
+
+        ToDoubleFunction<Object> deltaFunc = key -> deltaMap.get(key).applyAsDouble(currentTime);
+
+        backgroundEmitter = FluentFunctions
+                .<ToDoubleFunction<Object>>expression(this::renderBackground)
+                .partiallyApply(deltaFunc)::get;
+
+        stage0Emitter =
+                expression(this::renderProgressBar)
+                .before(this::renderLogo)
+                .partiallyApply(deltaFunc)::get;
     }
 
-    private void renderProgressBar(double delta) {
-        int color = (int) (delta * 0xFF) << 24 | 0xFFFFFF;
-        float v = (float) (10 - delta * 10);
+    private void renderBackground(ToDoubleFunction<Object> deltaFunc) {
+        val delta = deltaFunc.applyAsDouble(BACKGROUND_DEFAULT_DELTA_KEY);
+        final int color;
+        if (exceptionThrown) {
+            val exceptionDelta = deltaFunc.applyAsDouble(BACKGROUND_EXCEPTION_DELTA_KEY);
+            color = ColorHelper.Argb.getArgb(
+                    0xFF,
+                    lerp(exceptionDelta, BACKGROUND_COLOR_DEFAULT_RED, BACKGROUND_COLOR_EXCEPTION_RED),
+                    lerp(exceptionDelta, BACKGROUND_COLOR_DEFAULT_GREEN, BACKGROUND_COLOR_EXCEPTION_GREEN),
+                    lerp(exceptionDelta, BACKGROUND_COLOR_DEFAULT_BLUE, BACKGROUND_COLOR_EXCEPTION_BLUE)
+            );
+        } else color = parent == null ?
+                finished ?
+                        ColorHelper.Argb.getArgb(
+                                0xFF,
+                                lerp(delta, 0xFF, BACKGROUND_COLOR_DEFAULT_RED),
+                                lerp(delta, 0xFF, BACKGROUND_COLOR_DEFAULT_GREEN),
+                                lerp(delta, 0xFF, BACKGROUND_COLOR_DEFAULT_BLUE)
+                        ) :
+                        ColorHelper.Argb.getArgb(
+                                0xFF,
+                                (int) (delta * BACKGROUND_COLOR_DEFAULT_RED),
+                                (int) (delta * BACKGROUND_COLOR_DEFAULT_GREEN),
+                                (int) (delta * BACKGROUND_COLOR_DEFAULT_BLUE)
+                        ) :
+                ColorHelper.Argb.getArgb(
+                        (int) (delta * 0xFF),
+                        BACKGROUND_COLOR_DEFAULT_RED,
+                        BACKGROUND_COLOR_DEFAULT_GREEN,
+                        BACKGROUND_COLOR_DEFAULT_BLUE
+                );
+        fill(0, 0, width, height, color);
+    }
+
+    private void renderProgressBar(ToDoubleFunction<Object> deltaFunc) {
+        val delta = deltaFunc.applyAsDouble(STAGE_0_DEFAULT_DELTA_KEY);
+        if (delta == 0) return;
+        val color = (int) (delta * 0xFF) << 24 | 0xFFFFFF;
+        val v = (float) (10 - delta * 10);
+        val ev = exceptionThrown ? (float) (10 - deltaFunc.applyAsDouble(STAGE_0_EXCEPTION_DELTA_KEY) * 10) * 3 - 1 : 0;
         drawLineHorizontal(40, width - 40 - 1, (int) (height - 90 + v * 5), color);
+        if (exceptionThrown) drawLineHorizontal(40, width - 40 - 1, (int) (height - 90 + v * 5 + ev), color);
         drawLineHorizontal(40, width - 40 - 1, (int) (height - 50 + v), color);
         drawLineHorizontal(40, width - 40 - 1, (int) (height - 40 - 1 + v), color);
         drawLineVertical(40, (int) (height - 40 + v), (int) (height - 90 + v * 5), color);
         drawLineVertical(width - 40 - 1, (int) (height - 40 + v), (int) (height - 90 + v * 5), color);
-        fill(40 + 3, (int) (height - 50 + 3 + v), net.modificationstation.stationapi.api.util.math.MathHelper.ceil((width - (40 + 3) * 2) * progress + 40 + 3), (int) (height - 40 - 3 + v), color);
-        float
-                xScale = (float) minecraft.actualWidth / width,
-                yScale = (float) minecraft.actualHeight / height;
-        int scissorsHeight = (int) ((40 - 1 - v * 4) * yScale);
-        if (scissorsHeight > 0) {
-            int to = MathHelper.floor(scrollProgress);
-            float scrollDelta = scrollProgress - to;
+        fill(40 + 3, (int) (height - 50 + 3 + v), ceil((width - (40 + 3) * 2) * progress + 40 + 3), (int) (height - 40 - 3 + v), color);
+        val xScale = (float) minecraft.actualWidth / width;
+        val yScale = (float) minecraft.actualHeight / height;
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        val locationsScissorsHeight = (int) ((40 - 1 - v * 4 + ev) * yScale);
+        if (locationsScissorsHeight > 0) {
+            val to = ceil(scrollProgress);
+            val scrollDelta = scrollProgress - to;
             glEnable(GL_SCISSOR_TEST);
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glScissor((int) ((40 + 3) * xScale), (int) ((50 - v) * yScale), (int) ((width - (40 + 3) * 2) * xScale), scissorsHeight);
-            for (int i = 0; i < to + 1; i++) {
-                int y = net.modificationstation.stationapi.api.util.math.MathHelper.ceil(height - 98 + (10 * i) + (scrollDelta * 10) + v * 5);
+            glScissor((int) ((40 + 3) * xScale), (int) ((50 - v) * yScale), (int) ((width - (40 + 3) * 2) * xScale), locationsScissorsHeight);
+            for (int i = 0; i < to; i++) {
+                val y = ceil(height - 88 + (10 * i) + (scrollDelta * 10) + v * 5 + ev);
                 if (y > height - 50 + v) break;
-                drawTextWithShadow(textManager, ReloadScreenManager.LOCATIONS.get(to - i), 40 + 3, y, color);
+                drawTextWithShadow(textManager, ReloadScreenManager.LOCATIONS.get(to - i - 1), 40 + 3, y, color);
             }
-            glDisable(GL_BLEND);
             glDisable(GL_SCISSOR_TEST);
         }
+        val exceptionScissorsHeight = (int) ((-1 - v * 4 + ev) * yScale);
+        if (exceptionThrown && exceptionScissorsHeight > 0) {
+            glEnable(GL_SCISSOR_TEST);
+            glScissor((int) ((40 + 3) * xScale), (int) ((91 - v - ev) * yScale), (int) ((width - (40 + 3) * 2) * xScale), exceptionScissorsHeight);
+            val line = exception.getMessage();
+            var curHeight = height - 88;
+            val lineWidth = textManager.getTextWidth(line);
+            if (lineWidth > width - (40 + 3) * 2) {
+                var begin = 0;
+                var lastSpace = -1;
+                for (int cur = 0, lineLength = line.length(); cur < lineLength; cur++) {
+                    val isSpace = line.charAt(cur) == ' ';
+                    val isEnd = cur + 1 == lineLength;
+                    if (isSpace || isEnd) {
+                        val newLine = isEnd ? line.substring(begin) : line.substring(begin, cur);
+                        val newLineWidth = textManager.getTextWidth(newLine);
+                        if (newLineWidth > width - (40 + 3) * 2) {
+                            drawTextWithShadow(textManager, line.substring(begin, lastSpace), 40 + 3, curHeight, color);
+                            curHeight += 10;
+                            begin = lastSpace + 1;
+                        }
+                        if (isSpace)
+                            lastSpace = cur;
+                        if (isEnd) {
+                            drawTextWithShadow(textManager, line.substring(begin), 40 + 3, curHeight, color);
+                            curHeight += 10;
+                        }
+                    }
+                }
+            } else drawTextWithShadow(textManager, line, 40 + 3, curHeight, color);
+            glDisable(GL_SCISSOR_TEST);
+        }
+        drawTextWithShadow(textManager, "Minecraft: " + (
+                ReloadScreenManagerImpl.isMinecraftDone ?
+                        "Done" :
+                        "Working..."
+        ), 40 + 3, (int) (height - 100 + v * 5), color);
+        val stationStatus = "StationAPI: " + (
+                isReloadStarted() ?
+                        ReloadScreenManager.isReloadComplete() ?
+                                "Done" :
+                                "Working..." :
+                        "Idle"
+        );
+        drawTextWithShadow(textManager, stationStatus, width - 40 - 3 - textManager.getTextWidth(stationStatus), (int) (height - 100 + v * 5), color);
+        glDisable(GL_BLEND);
     }
 
-    private void renderLogo(double delta) {
-        double v = 10 - delta * 10;
+    private void renderLogo(ToDoubleFunction<Object> deltaFunc) {
+        val delta = deltaFunc.applyAsDouble(STAGE_0_DEFAULT_DELTA_KEY);
+        if (delta == 0) return;
+        val v = 10 - delta * 10;
         minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId(logo));
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -166,7 +273,7 @@ class ReloadScreen extends ScreenBase {
         if (partial) currentTime = lastRender;
         else lastRender = currentTime;
         val locationsSize = ReloadScreenManager.LOCATIONS.size();
-        if (!finished && !(scrollProgress + .1 < locationsSize) && !(progress + .1 < 1) && ReloadScreenManager.isReloadComplete()) {
+        if (!exceptionThrown && !finished && !(scrollProgress + .1 < locationsSize) && !(progress + .1 < 1) && ReloadScreenManager.isReloadComplete()) {
             try {
                 ReloadScreenManager.getCurrentReload().peek(ResourceReload::throwException);
                 finished = true;
@@ -174,6 +281,8 @@ class ReloadScreen extends ScreenBase {
             } catch (CompletionException e) {
                 exceptionThrown = true;
                 exceptionStart = currentTime;
+                exception = e;
+                LOGGER.error("An exception occurred during resource loading", e);
             }
         }
         if (!partial) {

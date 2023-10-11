@@ -15,6 +15,7 @@ import net.modificationstation.stationapi.api.event.resource.DataReloadEvent;
 import net.modificationstation.stationapi.api.event.resource.DataResourceReloaderRegisterEvent;
 import net.modificationstation.stationapi.api.resource.DataManager;
 import net.modificationstation.stationapi.impl.client.resource.ReloadScreenApplicationExecutor;
+import net.modificationstation.stationapi.impl.client.resource.ReloadScreenManagerImpl;
 import org.lwjgl.LWJGLException;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -110,6 +111,7 @@ public class MixinMinecraft {
             )
     )
     private void stationapi_applyReloadsAndWait(CallbackInfo ci) {
+        ReloadScreenManagerImpl.isMinecraftDone = true;
         while (!ReloadScreenManager.isReloadComplete()) {
             val command = ReloadScreenApplicationExecutor.INSTANCE.poll();
             if (command != null) command.run();
