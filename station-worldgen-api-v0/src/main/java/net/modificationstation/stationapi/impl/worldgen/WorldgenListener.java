@@ -13,7 +13,7 @@ public class WorldgenListener {
     @EventListener(priority = ListenerPriority.LOWEST)
     public void afterInit(BiomeRegisterEvent event) {
         if (initiated) return;
-        StationAPI.EVENT_BUS.post(new BiomeProviderRegisterEvent());
+        StationAPI.EVENT_BUS.post(BiomeProviderRegisterEvent.builder().build());
         initiated = true;
     }
 
