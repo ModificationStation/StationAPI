@@ -5,8 +5,8 @@ import net.minecraft.item.ItemInstance;
 import net.minecraft.level.Level;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.maths.MathHelper;
+import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.States;
-import net.modificationstation.stationapi.api.util.math.BlockPos;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
@@ -33,8 +33,8 @@ public class ItemUsageContext {
         return this.hit;
     }
 
-    public BlockPos getBlockPos() {
-        return new BlockPos(hit.x, hit.y, hit.z);
+    public TilePos getBlockPos() {
+        return new TilePos(hit.x, hit.y, hit.z);
     }
 
     public Direction getSide() {

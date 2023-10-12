@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Ints;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
@@ -13,7 +14,6 @@ import it.unimi.dsi.fastutil.objects.Reference2ReferenceMaps;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.modificationstation.stationapi.api.util.exception.CrashException;
-import net.modificationstation.stationapi.api.util.math.MathHelper;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -48,7 +48,7 @@ public class Util {
     public static LongSupplier nanoTimeSupplier = System::nanoTime;
 
     private static ExecutorService createWorker(String name) {
-        int i = MathHelper.clamp(Runtime.getRuntime().availableProcessors() - 1, 1, Util.getMaxBackgroundThreads());
+        int i = Ints.constrainToRange(Runtime.getRuntime().availableProcessors() - 1, 1, Util.getMaxBackgroundThreads());
         return i <= 0 ? MoreExecutors.newDirectExecutorService() : new ForkJoinPool(i, forkJoinPool -> {
             ForkJoinWorkerThread forkJoinWorkerThread = new ForkJoinWorkerThread(forkJoinPool){
 

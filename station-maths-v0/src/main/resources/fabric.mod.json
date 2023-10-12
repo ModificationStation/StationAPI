@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "station-blocks-v0",
+  "id": "station-maths-v0",
   "version": "${version}",
 
-  "name": "Station Blocks (v0)",
-  "description": "Essential systems for modded blocks.",
+  "name": "Station Maths (v0)",
+  "description": "Some math utilities.",
   "authors": [
     "Modification Station"
   ],
@@ -15,11 +15,11 @@
   },
 
   "license": "MIT",
-  "icon": "assets/station-blocks-v0/icon.png",
+  "icon": "assets/station-maths-v0/icon.png",
 
   "environment": "*",
   "mixins": [
-    "station-blocks-v0.mixins.json"
+    "station-maths-v0.mixins.json"
   ],
 
   "depends": {
@@ -30,8 +30,8 @@
   "custom": {
     "modmenu:api": true,
     "loom:injected_interfaces": {
-      "net/minecraft/class_17": [
-        "net/modificationstation/stationapi/api/block/StationBlock"
+      "net/minecraft/class_339": [
+        "net/modificationstation/stationapi/api/util/math/StationBlockPos"
       ]
     }
   }

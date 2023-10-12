@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.entity.EntityBase;
+import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.util.StringIdentifiable;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.NotNull;
@@ -264,13 +265,13 @@ public enum Direction implements StringIdentifiable {
     }
 
     @Nullable
-    public static Direction fromVector(BlockPos pos) {
+    public static Direction fromVector(TilePos pos) {
         return VECTOR_TO_DIRECTION.get(pos.asLong());
     }
 
     @Nullable
     public static Direction fromVector(int x, int y, int z) {
-        return VECTOR_TO_DIRECTION.get(BlockPos.asLong(x, y, z));
+        return VECTOR_TO_DIRECTION.get(StationBlockPos.asLong(x, y, z));
     }
 
     public static Direction fromRotation(double rotation) {
@@ -354,7 +355,7 @@ public enum Direction implements StringIdentifiable {
         ALL = Direction.values();
         VALUES = Arrays.stream(ALL).sorted(Comparator.comparingInt(direction -> direction.id)).toArray(Direction[]::new);
         HORIZONTAL = Arrays.stream(ALL).filter(direction -> direction.getAxis().isHorizontal()).sorted(Comparator.comparingInt(direction -> direction.idHorizontal)).toArray(Direction[]::new);
-        VECTOR_TO_DIRECTION = Arrays.stream(ALL).collect(Collectors.toMap(direction -> new BlockPos(direction.getVector()).asLong(), direction -> direction, (direction1, direction2) -> {
+        VECTOR_TO_DIRECTION = Arrays.stream(ALL).collect(Collectors.toMap(direction -> StationBlockPos.create(direction.getVector()).asLong(), direction -> direction, (direction1, direction2) -> {
             throw new IllegalArgumentException("Duplicate keys");
         }, Long2ObjectOpenHashMap::new));
     }

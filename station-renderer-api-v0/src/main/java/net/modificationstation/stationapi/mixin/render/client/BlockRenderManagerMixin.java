@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.render.RendererAccess;
 import net.modificationstation.stationapi.api.client.render.block.StationRendererBlockRenderManager;
 import net.modificationstation.stationapi.api.client.render.model.VanillaBakedModel;
-import net.modificationstation.stationapi.api.util.maths.MutableBlockPos;
+import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
