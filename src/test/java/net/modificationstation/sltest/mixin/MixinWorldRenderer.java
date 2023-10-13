@@ -26,7 +26,7 @@ public class MixinWorldRenderer {
 
     @Shadow private Minecraft client;
 
-    @Inject(method = "renderSky(F)V", at = @At("HEAD"), cancellable = true)
+    //@Inject(method = "renderSky(F)V", at = @At("HEAD"), cancellable = true)
     private void endSky(float f, CallbackInfo ci) {
         GL11.glDisable(GL11.GL_FOG);
         GL11.glDisable(GL11.GL_ALPHA_TEST);

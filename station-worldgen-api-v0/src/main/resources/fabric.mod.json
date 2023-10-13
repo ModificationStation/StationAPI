@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "station-worldgen-api-v0",
+  "version": "${version}",
+
+  "name": "Station Worldgen API (v0)",
+  "description": "Provides a system for world and biome generation",
+  "authors": [
+    "Modification Station"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/repo/mod/stationapi",
+    "sources": "https://github.com/ModificationStation/StationAPI",
+    "issues": "https://github.com/ModificationStation/StationAPI/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/station-worldgen-api-v0/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "stationapi:event_bus": [
+      "net.modificationstation.stationapi.impl.worldgen.WorldgenListener"
+    ]
+  },
+  "mixins": [
+    "station-worldgen-api-v0.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  },
+
+  "custom": {
+    "modmenu:api": true,
+    "loom:injected_interfaces": {
+      "net/minecraft/class_153": [
+        "net/modificationstation/stationapi/api/worldgen/biome/StationBiome"
+      ]
+    }
+  }
+}
