@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.worldgen.surface.condition;
 import net.minecraft.level.Level;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.util.maths.MutableBlockPos;
+import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
 
 import java.util.function.Function;
 
