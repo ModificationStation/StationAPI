@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldR
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
-import net.modificationstation.stationapi.api.util.maths.MutableBlockPos;
+import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
 import net.modificationstation.stationapi.api.world.BlockStateView;
 import net.modificationstation.stationapi.mixin.arsenic.client.BlockRendererAccessor;
 import org.lwjgl.opengl.GL11;

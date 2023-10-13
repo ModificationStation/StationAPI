@@ -1,0 +1,6 @@
+archivesBaseName = "station-maths-v0"
+version = getSubprojectVersion(project, "1.0.0")
+
+moduleDependencies(project,
+        'station-api-base'
+)

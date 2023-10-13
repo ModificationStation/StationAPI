@@ -32,9 +32,6 @@
     "loom:injected_interfaces": {
       "net/minecraft/class_17": [
         "net/modificationstation/stationapi/api/block/StationBlock"
-      ],
-      "net/minecraft/class_339": [
-        "net/modificationstation/stationapi/api/util/maths/StationBlockPos"
       ]
     }
   }

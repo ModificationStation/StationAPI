@@ -117,10 +117,10 @@ public class StationFlatteningToMcRegionChunkDamage extends DataFix {
             block_light.copyArray(DataFixUtils.toArray(section.get("block_light").asByteBuffer()));
             Map<String, ? extends Dynamic<?>> blockStates = section.get("block_states").asMap(dynamic -> dynamic.asString(""), Function.identity());
             palette = blockStates.get("palette").asList(Function.identity());
-            long[] states = blockStates.get("data").asLongStream().toArray();
+            long[] states = blockStates.containsKey("data") ? blockStates.get("data").asLongStream().toArray() : null;
             int elementBits = Math.max(4, MathHelper.ceilLog2(palette.size()));
             int elementsPerLong = 64 / elementBits;
-            statesData = new PackedIntegerArray(elementBits, states.length * elementsPerLong, states);
+            statesData = new PackedIntegerArray(elementBits, states == null ? 4096 : states.length * elementsPerLong, states);
             data.copyArray(DataFixUtils.toArray(section.get("data").asByteBuffer()));
             sky_light.copyArray(DataFixUtils.toArray(section.get("sky_light").asByteBuffer()));
         }

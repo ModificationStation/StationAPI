@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.maths",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "TilePosAccessor",
+    "TilePosMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

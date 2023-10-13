@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.util.collection;
 
 import java.util.Iterator;
 
+@Deprecated(forRemoval = true)
 public class LinkedList<T> implements Iterable<LinkedList.Node<T>> {
     private Node<T> first;
     private Node<T> last;

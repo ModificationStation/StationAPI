@@ -5,6 +5,8 @@ import com.mojang.serialization.Dynamic;
 import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
 
+import java.util.Set;
+
 public class NbtHelper {
 
     /**
@@ -27,5 +29,9 @@ public class NbtHelper {
 
     public static boolean requiresUpdating(CompoundTag compound) {
         return DataFixers.requiresUpdating(new Dynamic<>(NbtOps.INSTANCE, compound));
+    }
+
+    public static Set<DataFixers.UpdateData> getUpdateList(CompoundTag compound) {
+        return DataFixers.getUpdateList(new Dynamic<>(NbtOps.INSTANCE, compound));
     }
 }

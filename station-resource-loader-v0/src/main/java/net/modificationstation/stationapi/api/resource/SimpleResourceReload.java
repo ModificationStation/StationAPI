@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.resource;
 
+import cyclops.function.Consumer3;
 import net.modificationstation.stationapi.api.util.Unit;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.profiler.DummyProfiler;
@@ -18,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 
  * @param <S> the result type for each reloader in the reload
  */
-public class SimpleResourceReload<S> implements ResourceReload {
+public class SimpleResourceReload<S> implements FutureResourceReload {
     /**
      * The weight of either prepare or apply stages' progress in the total progress
      * calculation. Has value {@value}.
@@ -135,7 +136,7 @@ public class SimpleResourceReload<S> implements ResourceReload {
             final List<ResourceReloader> reloaders,
             Executor prepareExecutor,
             Executor applyExecutor,
-            ResourceReloaderProfilers.Factory profilersFactory,
+            Consumer3<ResourceReloader, String, String> profilerListener,
             CompletableFuture<Unit> initialStage
     ) {
         return new ProfiledResourceReload(
@@ -145,7 +146,7 @@ public class SimpleResourceReload<S> implements ResourceReload {
                         .orElse(reloaders),
                 prepareExecutor,
                 applyExecutor,
-                profilersFactory,
+                profilerListener,
                 initialStage
         );
     }

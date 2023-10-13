@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.block;
+package net.modificationstation.stationapi.mixin.maths;
 
 import net.minecraft.util.maths.TilePos;
 import org.spongepowered.asm.mixin.Mixin;

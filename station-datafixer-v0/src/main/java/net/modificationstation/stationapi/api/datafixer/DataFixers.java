@@ -13,7 +13,7 @@ import net.modificationstation.stationapi.api.event.datafixer.DataFixerRegisterE
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.Util;
 
-import java.util.Collections;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -70,6 +70,25 @@ public final class DataFixers {
                 return true;
         return false;
     }
+
+    public static <T> Set<UpdateData> getUpdateList(Dynamic<T> dynamic) {
+        init();
+
+        HashSet<UpdateData> set = new HashSet<>();
+        Dynamic<T> dataVersions = getDataVersions(dynamic);
+
+        for (Reference2ReferenceMap.Entry<ModID, DataFixerEntry> fixerEntry : DATA_FIXERS.reference2ReferenceEntrySet()) {
+            int dataVersion = dataVersions.get(fixerEntry.getKey().toString()).asInt(0);
+            int currentVersion = fixerEntry.getValue().currentVersion;
+
+            if (dataVersion < currentVersion)
+                set.add(new UpdateData(fixerEntry.getKey(), dataVersion, currentVersion));
+        }
+
+        return set;
+    }
+
+    public record UpdateData(ModID modID, int saveVersion, int currentVersion) {}
 
     private static void init() {
         if (!init) {

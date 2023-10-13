@@ -122,6 +122,7 @@ allprojects {
         implementation "com.mojang:datafixerupper:${project.dfu_version}"
         implementation "maven.modrinth:spasm:${project.spasm_version}"
         implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixinextras_version}"))
+        implementation "com.oath.cyclops:cyclops:${project.cyclops_version}"
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
@@ -234,6 +235,7 @@ allprojects {
                         deps.add(["commons-io", "commons-io", "2.5"] as String[])
                         deps.add(["maven.modrinth", "spasm", "${project.spasm_version}"] as String[])
                         deps.add(["com.github.llamalad7.mixinextras", "mixinextras-fabric", "${project.mixinextras_version}"] as String[])
+                        deps.add(["com.oath.cyclops", "cyclops", "${project.cyclops_version}"] as String[])
                         deps.each {
                             def depNode = depsNode.appendNode("dependency")
                             depNode.appendNode("groupId", it[0])
@@ -316,6 +318,10 @@ dependencies {
     include "com.mojang:datafixerupper:${project.dfu_version}"
     include "maven.modrinth:spasm:${project.spasm_version}"
     include "com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixinextras_version}"
+    include "com.oath.cyclops:cyclops:${project.cyclops_version}"
+    include "org.reactivestreams:reactive-streams:${project.reactivestreams_version}"
+    include "io.kindedj:kindedj:${project.kindedj_version}"
+    include "org.agrona:Agrona:${project.agrona_version}"
 }
 
 // Makes java shut up
