@@ -7,10 +7,10 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.mod.PreInitEvent;
-import net.modificationstation.stationapi.api.lang.I18n;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.resource.language.LanguageManager;
 import net.modificationstation.stationapi.api.util.Null;
 
 import java.util.HashSet;
@@ -35,7 +35,7 @@ public class VanillaChecker {
     @EventListener
     private static void init(PreInitEvent event) {
         LOGGER.info("Adding vanilla checker lang folder...");
-        I18n.addLangFolder(StationAPI.MODID, "/assets/" + MODID + "/lang");
+        LanguageManager.addPath("/assets/" + MODID + "/lang", StationAPI.MODID);
         LOGGER.info("Gathering mods that require client verification...");
         String value = StationAPI.MODID + ":verify_client";
         FabricLoader.getInstance().getAllMods().forEach(modContainer -> {

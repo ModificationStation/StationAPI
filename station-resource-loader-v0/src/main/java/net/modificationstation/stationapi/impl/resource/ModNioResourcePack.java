@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.resource;
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
+import lombok.val;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -171,17 +172,19 @@ public class ModNioResourcePack implements ModResourcePack {
 
 	@Override
 	public void findResources(ResourceType type, ModID namespace, String path, ResultConsumer visitor) {
-		if (!namespaces.getOrDefault(type, Collections.emptySet()).contains(namespace)) return;
+		val atRoot = path.startsWith("/");
+		if (!atRoot && !namespaces.getOrDefault(type, Collections.emptySet()).contains(namespace)) return;
 		for (Path basePath : basePaths) {
 			String separator = basePath.getFileSystem().getSeparator();
-			Path nsPath = basePath.resolve(type.getDirectory()).resolve(namespace.toString());
-			Path searchPath = nsPath.resolve(path.replace("/", separator)).normalize();
+			Path nsPath = atRoot ? basePath : basePath.resolve(type.getDirectory()).resolve(namespace.toString());
+			Path searchPath = nsPath.resolve((atRoot ? path.substring(1) : path).replace("/", separator)).normalize();
 			if (!exists(searchPath)) continue;
 			try {
 				Files.walkFileTree(searchPath, new SimpleFileVisitor<>() {
 					@Override
 					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
 						String filename = nsPath.relativize(file).toString().replace(separator, "/");
+						if (atRoot) filename = "/" + filename;
 						Identifier identifier = namespace.id(filename);
 						visitor.accept(identifier, InputSupplier.create(file));
 						return FileVisitResult.CONTINUE;

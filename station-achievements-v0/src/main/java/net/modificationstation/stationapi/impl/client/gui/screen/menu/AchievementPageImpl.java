@@ -10,10 +10,10 @@ import net.modificationstation.stationapi.api.client.event.gui.screen.menu.Achie
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
 import net.modificationstation.stationapi.api.event.achievement.AchievementRegisterEvent;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
-import net.modificationstation.stationapi.api.lang.I18n;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.resource.language.LanguageManager;
 import net.modificationstation.stationapi.api.util.Null;
 import org.apache.logging.log4j.Logger;
 
@@ -63,6 +63,6 @@ public class AchievementPageImpl {
     @EventListener
     private static void registerLang(InitEvent event) {
         LOGGER.info("Adding lang folder...");
-        I18n.addLangFolder(StationAPI.MODID, "/assets/" + MODID + "/lang");
+        LanguageManager.addPath("/assets/" + MODID + "/lang", StationAPI.MODID);
     }
 }

@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.resource;
 
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
+import lombok.val;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.resource.InputSupplier;
@@ -23,7 +24,7 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 public class DefaultResourcePack implements ResourcePack {
 
-    private static final Path[] ROOT_PATHS = ModID.MINECRAFT.getContainer().getRootPaths().toArray(new Path[0]);
+    private static final List<Path> ROOT_PATHS = ModID.MINECRAFT.getContainer().getRootPaths();
     private static final Map<ResourceType, List<Path>> NAMESPACE_PATHS = Util.make(new EnumMap<>(ResourceType.class), m -> {
         for (ResourceType type : ResourceType.values())
             for (Path rootPath : ROOT_PATHS) {
@@ -66,29 +67,32 @@ public class DefaultResourcePack implements ResourcePack {
 
     @Override
     public void findResources(ResourceType type, ModID namespace, String prefix, ResultConsumer consumer) {
-        PathUtil.split(prefix).get().ifLeft(segments -> {
-            if (NAMESPACE_PATHS.containsKey(type)) {
-                List<Path> list = NAMESPACE_PATHS.get(type);
-                int i = list.size();
-                if (i == 1) DefaultResourcePack.collectIdentifiers(consumer, namespace, list.get(0), segments);
-                else if (i > 1) {
-                    HashMap<Identifier, InputSupplier<InputStream>> map = new HashMap<>();
-                    for (int j = 0; j < i - 1; ++j)
-                        DefaultResourcePack.collectIdentifiers(map::putIfAbsent, namespace, list.get(j), segments);
-                    Path path = list.get(i - 1);
-                    if (map.isEmpty()) DefaultResourcePack.collectIdentifiers(consumer, namespace, path, segments);
-                    else {
-                        DefaultResourcePack.collectIdentifiers(map::putIfAbsent, namespace, path, segments);
-                        map.forEach(consumer);
-                    }
+        val atRoot = prefix.startsWith("/");
+        PathUtil.split(atRoot ? prefix.substring(1) : prefix).get().ifLeft(segments -> {
+            final List<Path> paths;
+            if (namespace == ModID.MINECRAFT && atRoot) {
+                paths = ROOT_PATHS;
+            } else if (NAMESPACE_PATHS.containsKey(type)) {
+                paths = NAMESPACE_PATHS.get(type);
+            } else return;
+            int i = paths.size();
+            if (i == 1) DefaultResourcePack.collectIdentifiers(consumer, namespace, paths.get(0), segments, atRoot);
+            else if (i > 1) {
+                HashMap<Identifier, InputSupplier<InputStream>> map = new HashMap<>();
+                for (int j = 0; j < i - 1; ++j)
+                    DefaultResourcePack.collectIdentifiers(map::putIfAbsent, namespace, paths.get(j), segments, atRoot);
+                Path path = paths.get(i - 1);
+                if (map.isEmpty()) DefaultResourcePack.collectIdentifiers(consumer, namespace, path, segments, atRoot);
+                else {
+                    DefaultResourcePack.collectIdentifiers(map::putIfAbsent, namespace, path, segments, atRoot);
+                    map.forEach(consumer);
                 }
             }
         }).ifRight(result -> LOGGER.error("Invalid path {}: {}", prefix, result.message()));
     }
 
-    private static void collectIdentifiers(ResourcePack.ResultConsumer consumer, ModID namespace, Path root, List<String> prefixSegments) {
-        Path path = root.resolve(namespace.toString());
-        DirectoryResourcePack.findResources(namespace, path, prefixSegments, consumer);
+    private static void collectIdentifiers(ResultConsumer consumer, ModID namespace, Path root, List<String> prefixSegments, boolean atRoot) {
+        DirectoryResourcePack.findResources(namespace, atRoot ? root : root.resolve(namespace.toString()), prefixSegments, consumer, atRoot);
     }
 
     @Override

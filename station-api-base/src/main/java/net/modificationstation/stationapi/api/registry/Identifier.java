@@ -28,7 +28,7 @@ public final class Identifier implements Comparable<@NotNull Identifier> {
     @NotNull
     private static final Cache<@NotNull IdentifierCacheKey, @NotNull Identifier> CACHE = Caffeine.newBuilder().softValues().build();
     @NotNull
-    private static final Function<@NotNull IdentifierCacheKey, @NotNull Identifier> IDENTIFIER_FACTORY = key -> new Identifier(key.namespace, key.id);
+    private static final Function<@NotNull IdentifierCacheKey, @NotNull Identifier> IDENTIFIER_FACTORY = Identifier::new;
 
     public static @NotNull Identifier of(@NotNull final String identifier) {
         final int i = identifier.indexOf(SEPARATOR);
@@ -74,9 +74,9 @@ public final class Identifier implements Comparable<@NotNull Identifier> {
     private final String toString;
     private final int hashCode;
 
-    private Identifier(@NotNull final ModID modID, @NotNull final String id) {
-        this.modID = modID;
-        this.id = id;
+    private Identifier(@NotNull final IdentifierCacheKey key) {
+        modID = key.namespace;
+        id = key.id;
         toString = modID + SEPARATOR + id;
         hashCode = toString.hashCode();
     }

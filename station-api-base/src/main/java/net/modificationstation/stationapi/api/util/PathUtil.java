@@ -20,7 +20,7 @@ public class PathUtil {
     private static final Pattern FILE_NAME_WITH_COUNT = Pattern.compile("(<name>.*) \\((<count>\\d*)\\)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
     private static final int MAX_NAME_LENGTH = 255;
     private static final Pattern RESERVED_WINDOWS_NAMES = Pattern.compile(".*\\.|(?:COM|CLOCK\\$|CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\\..*)?", Pattern.CASE_INSENSITIVE);
-    private static final Pattern VALID_FILE_NAME = Pattern.compile("[-._a-z0-9]+");
+    private static final Pattern VALID_FILE_NAME = Pattern.compile("[-._a-z0-9]+", Pattern.CASE_INSENSITIVE);
     private static final char[] INVALID_CHARS_LEVEL_NAME = new char[] {'/', '\n', '\r', '\t', '\u0000', '\f', '`', '?', '*', '\\', '<', '>', '|', '"', ':'};
 
     public static String getNextUniqueName(Path path, String name, String extension) throws IOException {

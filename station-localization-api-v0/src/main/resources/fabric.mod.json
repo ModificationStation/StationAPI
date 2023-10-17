@@ -19,8 +19,8 @@
 
   "environment": "*",
   "entrypoints": {
-    "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.lang.LangLoader"
+    "stationapi:event_bus_client": [
+      "net.modificationstation.stationapi.api.resource.language.LanguageManager"
     ]
   },
   "mixins": [

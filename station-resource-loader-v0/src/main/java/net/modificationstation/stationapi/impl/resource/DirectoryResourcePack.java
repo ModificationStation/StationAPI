@@ -82,10 +82,15 @@ public class DirectoryResourcePack extends AbstractFileResourcePack {
     }
 
     public static void findResources(ModID namespace, Path path, List<String> prefixSegments, ResourcePack.ResultConsumer consumer) {
+        findResources(namespace, path, prefixSegments, consumer, false);
+    }
+
+    public static void findResources(ModID namespace, Path path, List<String> prefixSegments, ResultConsumer consumer, boolean atRoot) {
         Path path22 = PathUtil.getPath(path, prefixSegments);
         try (Stream<Path> stream2 = Files.find(path22, Integer.MAX_VALUE, (path2, attributes) -> attributes.isRegularFile())){
             stream2.forEach(foundPath -> {
                 String string2 = SEPARATOR_JOINER.join(path.relativize(foundPath));
+                if (atRoot) string2 = "/" + string2;
                 Identifier identifier = Identifier.of(namespace, string2);
                 consumer.accept(identifier, InputSupplier.create(foundPath));
             });
