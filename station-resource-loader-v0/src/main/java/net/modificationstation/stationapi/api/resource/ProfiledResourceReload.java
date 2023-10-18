@@ -2,14 +2,13 @@ package net.modificationstation.stationapi.api.resource;
 
 import com.google.common.base.Stopwatch;
 import cyclops.function.Consumer3;
-import cyclops.function.Function1;
-import cyclops.function.Function2;
 import lombok.val;
 import net.modificationstation.stationapi.api.util.Unit;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.profiler.ProfileResult;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
 import net.modificationstation.stationapi.api.util.profiler.ProfilerSystem;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -21,30 +20,11 @@ import java.util.function.Supplier;
 import static cyclops.function.FluentFunctions.expression;
 import static cyclops.function.Function0.λ;
 import static cyclops.function.Function1.lazy;
-import static cyclops.function.Function1.λ;
-import static cyclops.function.Function2.λ;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.util.profiler.Profiler.union;
 
 public class ProfiledResourceReload extends SimpleResourceReload<ProfiledResourceReload.Summary> {
     private static final String LOCATION_FORMAT = "%s: %s (%s)";
-    private static final Function1<String, String> UPPER_CASE_FIRST_CHAR =
-            λ(String::concat)
-                    .curry()
-                    .compose(
-                            λ(String::charAt)
-                                    .reverse()
-                                    .apply(0)
-                                    .andThen(λ(Character::toUpperCase))
-                                    .andThen(String::valueOf)
-                    ).flatMapFn(Function2
-                            .<Function1<String, String>, Function1<? super String, ? extends String>, Function1<String, String>>λ(Function1::andThen)
-                            .apply(Function2
-                                    .<String, Integer, String>λ(String::substring)
-                                    .reverse()
-                                    .apply(1)
-                            )
-                    );
 
     private final Stopwatch reloadTimer = Stopwatch.createUnstarted();
 
@@ -63,7 +43,7 @@ public class ProfiledResourceReload extends SimpleResourceReload<ProfiledResourc
             val managerName = resourceManager
                     .getResourceType()
                     .map(ResourceType::getDirectory)
-                    .map(UPPER_CASE_FIRST_CHAR)
+                    .map(StringUtils::capitalize)
                     .orElseGet(
                             λ(resourceManager::getClass)
                                     .andThen(Class::getSimpleName)
