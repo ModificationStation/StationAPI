@@ -43,6 +43,7 @@ public class WorldDecoratorImpl {
         long dy = (RANDOM.nextLong() >> 1) << 1 | 1;
         RANDOM.setSeed((long) cx * dx + (long) cz * dy ^ level.getSeed());
         
-        biome.getStructures().forEach(structure -> structure.generate(level, RANDOM, x1, 0, z1));
+        int y = level.getHeight(x1, z1);
+        biome.getStructures().forEach(structure -> structure.generate(level, RANDOM, x1, y, z1));
     }
 }

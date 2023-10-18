@@ -87,8 +87,8 @@ public class BiomeBuilder {
      * Add overworld lakes into the biome
      */
     public BiomeBuilder overworldLakes() {
-        structure(DefaultStructures.WATER_LAKE);
-        structure(DefaultStructures.LAVA_LAKE);
+        structure(DefaultStructures.WATER_LAKE_SCATTERED);
+        structure(DefaultStructures.LAVA_LAKE_SCATTERED);
         return this;
     }
     
@@ -96,14 +96,14 @@ public class BiomeBuilder {
      * Add overworld ores into the biome
      */
     public BiomeBuilder overworldOres() {
-        structure(DefaultStructures.DIRT_ORE);
-        structure(DefaultStructures.GRAVEL_ORE);
-        structure(DefaultStructures.COAL_ORE);
-        structure(DefaultStructures.IRON_ORE);
-        structure(DefaultStructures.GOLD_ORE);
-        structure(DefaultStructures.REDSTONE_ORE);
-        structure(DefaultStructures.DIAMOND_ORE);
-        structure(DefaultStructures.LAPIS_LAZULI_ORE);
+        structure(DefaultStructures.DIRT_ORE_SCATTERED);
+        structure(DefaultStructures.GRAVEL_ORE_SCATTERED);
+        structure(DefaultStructures.COAL_ORE_SCATTERED);
+        structure(DefaultStructures.IRON_ORE_SCATTERED);
+        structure(DefaultStructures.GOLD_ORE_SCATTERED);
+        structure(DefaultStructures.REDSTONE_ORE_SCATTERED);
+        structure(DefaultStructures.DIAMOND_ORE_SCATTERED);
+        structure(DefaultStructures.LAPIS_LAZULI_ORE_SCATTERED);
         return this;
     }
 

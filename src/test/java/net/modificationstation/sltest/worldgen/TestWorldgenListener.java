@@ -14,6 +14,7 @@ import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeBuilder;
 import net.modificationstation.stationapi.api.worldgen.biome.ClimateBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biome.VoronoiBiomeProvider;
+import net.modificationstation.stationapi.api.worldgen.structure.DefaultStructures;
 import net.modificationstation.stationapi.api.worldgen.structure.HeightScatterStructure;
 import net.modificationstation.stationapi.api.worldgen.structure.LeveledScatterStructure;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceBuilder;
@@ -41,8 +42,6 @@ public class TestWorldgenListener {
         SurfaceRule filler = SurfaceBuilder.start(BlockBase.BEDROCK).replace(BlockBase.STONE).build();
         SurfaceRule slope = SurfaceBuilder.start(BlockBase.SPONGE).replace(BlockBase.STONE).ground(3).slope(30).build();
         SurfaceRule bottom = SurfaceBuilder.start(BlockBase.ICE).replace(BlockBase.STONE).ceiling(2).build();
-
-        Structure spruce = new HeightScatterStructure(new SpruceTree(), 3);
         
         climateTest = new Biome[8];
         for (int i = 0; i < climateTest.length; i++) {
@@ -75,14 +74,14 @@ public class TestWorldgenListener {
             voronoiTest[i] = BiomeBuilder
                 .start("Voronoi " + i)
                 .grassAndLeavesColor(color)
-                .structure(spruce)
+                .structure(DefaultStructures.SPRUCE_TREE_SCATTERED)
                 .fogColor(color)
                 .height(55, 60)
                 .build();
             voronoiTest[i].grassColour = color;
         }
     
-        spruce = new LeveledScatterStructure(new SpruceTree(), 3);
+        Structure tree = new LeveledScatterStructure(new SpruceTree(), 3);
         
         testNether = BiomeBuilder
             .start("Test Nether")
@@ -90,10 +89,10 @@ public class TestWorldgenListener {
             .surfaceRule(SurfaceBuilder.start(BlockBase.DIRT).replace(BlockBase.NETHERRACK).ground(3).build())
             .noDimensionStructures()
             .fogColor(0xFFFF00FF)
-            .structure(spruce)
+            .structure(tree)
             .build();
     
-        Structure tree = new LeveledScatterStructure(new TestTree(BlockBase.SOUL_SAND, BlockBase.GLOWSTONE), 3);
+        tree = new LeveledScatterStructure(new TestTree(BlockBase.SOUL_SAND, BlockBase.GLOWSTONE), 3);
         
         testNether2 = BiomeBuilder
             .start("Test Nether")
