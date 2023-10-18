@@ -31,7 +31,8 @@ public class MixinNetherLevelSource {
         at = @At(value = "FIELD", target = "Lnet/minecraft/block/Sand;fallInstantly:Z", ordinal = 0, shift = Shift.BEFORE),
         cancellable = true
     )
-    private void cancelStructureGeneration(LevelSource source, int cx, int cz, CallbackInfo info, @Local Biome biome) {
+    private void cancelStructureGeneration(LevelSource source, int cx, int cz, CallbackInfo info) {
+        Biome biome = this.level.getBiomeSource().getBiome(cx + 16, cz + 16);
         if (biome.isNoDimensionStrucutres()) {
             Sand.fallInstantly = false;
             info.cancel();
