@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.client.event.resource.language;
+package net.modificationstation.stationapi.api.event.resource.language;
 
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;

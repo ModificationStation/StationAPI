@@ -9,7 +9,8 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.resource.AssetsResourceReloaderRegisterEvent;
-import net.modificationstation.stationapi.api.client.event.resource.language.TranslationInvalidationEvent;
+import net.modificationstation.stationapi.api.event.resource.DataReloadEvent;
+import net.modificationstation.stationapi.api.event.resource.language.TranslationInvalidationEvent;
 import net.modificationstation.stationapi.api.client.resource.ReloadableAssetsManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -37,7 +38,6 @@ import java.util.stream.Collectors;
 import static java.util.regex.Pattern.quote;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-@Environment(EnvType.CLIENT)
 @Entrypoint(eventBus = @EventBusPolicy(registerStatic = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class LanguageManager extends SinglePreparationResourceReloader<Map<Object, Object>> implements IdentifiableResourceReloadListener {
@@ -59,14 +59,7 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
 
     public static void changeLanguage(String langDef) {
         pathPredicate = buildPathPredicate(langDef);
-        INSTANCE.apply(
-                INSTANCE.prepare(
-                        ReloadableAssetsManager.INSTANCE,
-                        DummyProfiler.INSTANCE
-                ),
-                ReloadableAssetsManager.INSTANCE,
-                DummyProfiler.INSTANCE
-        );
+        INSTANCE.reload();
     }
 
     public static void addPath(String path) {
@@ -78,8 +71,26 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
     }
 
     @EventListener
+    @Environment(EnvType.CLIENT)
     private void registerToManager(AssetsResourceReloaderRegisterEvent event) {
         event.resourceManager.registerReloader(this);
+    }
+
+    @EventListener
+    @Environment(EnvType.SERVER)
+    private void loadOnServer(DataReloadEvent event) {
+        reload();
+    }
+
+    private void reload() {
+        INSTANCE.apply(
+                INSTANCE.prepare(
+                        ReloadableAssetsManager.INSTANCE,
+                        DummyProfiler.INSTANCE
+                ),
+                ReloadableAssetsManager.INSTANCE,
+                DummyProfiler.INSTANCE
+        );
     }
 
     @Override

@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.mixin.lang;
 import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.stat.Stat;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.client.event.resource.language.TranslationInvalidationEvent;
+import net.modificationstation.stationapi.api.event.resource.language.TranslationInvalidationEvent;
 import net.modificationstation.stationapi.impl.resource.language.DeferredTranslationKeyHolder;
 import org.spongepowered.asm.mixin.*;
 

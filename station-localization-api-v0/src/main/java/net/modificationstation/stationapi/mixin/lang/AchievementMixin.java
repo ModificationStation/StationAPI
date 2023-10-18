@@ -10,7 +10,7 @@ import net.minecraft.achievement.Achievement;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemInstance;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.client.event.resource.language.TranslationInvalidationEvent;
+import net.modificationstation.stationapi.api.event.resource.language.TranslationInvalidationEvent;
 import net.modificationstation.stationapi.impl.resource.language.DeferredTranslationKeyHolder;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
