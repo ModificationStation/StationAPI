@@ -1,11 +1,13 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
 import net.minecraft.level.Level;
+import net.minecraft.level.structure.Structure;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 
 import javax.swing.text.html.parser.Entity;
+import java.util.List;
 
 public interface StationBiome {
     default BiomeColorProvider getGrassColor() {
@@ -93,5 +95,13 @@ public interface StationBiome {
 
     default void setMaxHeight(int height) {
         Util.assertImpl();
+    }
+    
+    default List<Structure> getStructures() {
+        return Util.assertImpl();
+    }
+    
+    default void addStructure(Structure structure) {
+        getStructures().add(structure);
     }
 }

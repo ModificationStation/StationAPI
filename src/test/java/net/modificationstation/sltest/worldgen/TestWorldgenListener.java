@@ -3,6 +3,8 @@ package net.modificationstation.sltest.worldgen;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.biome.Biome;
+import net.minecraft.level.structure.SpruceTree;
+import net.minecraft.level.structure.Structure;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEvent;
@@ -11,6 +13,7 @@ import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeBuilder;
 import net.modificationstation.stationapi.api.worldgen.biome.ClimateBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biome.VoronoiBiomeProvider;
+import net.modificationstation.stationapi.api.worldgen.structure.HeightScatterStructure;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceBuilder;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 
@@ -35,6 +38,8 @@ public class TestWorldgenListener {
         SurfaceRule slope = SurfaceBuilder.start(BlockBase.SPONGE).replace(BlockBase.STONE).ground(3).slope(30).build();
         SurfaceRule bottom = SurfaceBuilder.start(BlockBase.ICE).replace(BlockBase.STONE).ceiling(2).build();
 
+        Structure spruce = new HeightScatterStructure(new SpruceTree(), 3);
+        
         climateTest = new Biome[8];
         for (int i = 0; i < climateTest.length; i++) {
             BiomeBuilder builder = BiomeBuilder.start("Climate " + i);
@@ -54,6 +59,9 @@ public class TestWorldgenListener {
                 int col = (int) (r * d);
                 return 0xFF0000FF | col << 16 | col << 8;
             });
+    
+            builder.overworldLakes();
+            builder.overworldOres();
 
             climateTest[i] = builder.build();
             climateTest[i].grassColour = color;
@@ -63,7 +71,15 @@ public class TestWorldgenListener {
         Random random = new Random(15);
         for (int i = 0; i < voronoiTest.length; i++) {
             int color = 0xFF000000 | random.nextInt();
-            voronoiTest[i] = BiomeBuilder.start("Voronoi " + i).grassAndLeavesColor(color).fogColor(color).height(55, 60).build();
+            voronoiTest[i] = BiomeBuilder
+                .start("Voronoi " + i)
+                .grassAndLeavesColor(color)
+                .structure(spruce)
+                .overworldLakes()
+                .overworldOres()
+                .fogColor(color)
+                .height(55, 60)
+                .build();
             voronoiTest[i].grassColour = color;
         }
     }
