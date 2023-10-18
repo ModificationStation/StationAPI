@@ -25,8 +25,9 @@ public class WorldDecoratorImpl {
         for (int x = x1; x < x2; x++) {
             for (int z = z1; z < z2; z++) {
                 Biome biome = BIOMES[index++];
-                int h = level.dimension.halvesMapping ? level.getHeight() : level.getHeight(x, z);
-                for (int y = 0; y < h; y++) {
+                int minY = level.getBottomY();
+                int maxY = level.dimension.halvesMapping ? level.getTopY() : level.getHeight(x, z);
+                for (int y = minY; y < maxY; y++) {
                     BlockState state = level.getBlockState(x, y, z);
                     biome.applySurfaceRules(level, x, y, z, state);
                 }

@@ -6,8 +6,8 @@ import net.minecraft.level.structure.Structure;
 import java.util.Random;
 
 public abstract class ScatterStructure extends Structure {
-	private final Structure structure;
-	private final int iterations;
+	protected final Structure structure;
+	protected final int iterations;
 	
 	public ScatterStructure(Structure structure, int iterations) {
 		this.structure = structure;
@@ -20,11 +20,11 @@ public abstract class ScatterStructure extends Structure {
 		for (int i = 0; i < iterations; i++) {
 			int px = x + random.nextInt(16);
 			int pz = z + random.nextInt(16);
-			int py = getHeight(level, random, px, pz);
+			int py = getHeight(level, random, px, y, pz);
 			result = structure.generate(level, random, px, py, pz) | result;
 		}
 		return result;
 	}
 	
-	abstract int getHeight(Level level, Random random, int x, int z);
+	abstract int getHeight(Level level, Random random, int x, int y, int z);
 }

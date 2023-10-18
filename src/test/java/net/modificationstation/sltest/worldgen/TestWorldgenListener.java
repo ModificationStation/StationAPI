@@ -3,6 +3,7 @@ package net.modificationstation.sltest.worldgen;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.biome.Biome;
+import net.minecraft.level.structure.OakTree;
 import net.minecraft.level.structure.SpruceTree;
 import net.minecraft.level.structure.Structure;
 import net.modificationstation.sltest.SLTest;
@@ -14,6 +15,7 @@ import net.modificationstation.stationapi.api.worldgen.biome.BiomeBuilder;
 import net.modificationstation.stationapi.api.worldgen.biome.ClimateBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biome.VoronoiBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.structure.HeightScatterStructure;
+import net.modificationstation.stationapi.api.worldgen.structure.LeveledScatterStructure;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceBuilder;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 
@@ -26,6 +28,7 @@ public class TestWorldgenListener {
     private Biome[] climateTest;
     private Biome[] voronoiTest;
     private Biome testNether;
+    private Biome testNether2;
 
     @EventListener
     public void registerBiomes(BiomeRegisterEvent event) {
@@ -78,6 +81,8 @@ public class TestWorldgenListener {
                 .build();
             voronoiTest[i].grassColour = color;
         }
+    
+        spruce = new LeveledScatterStructure(new SpruceTree(), 3);
         
         testNether = BiomeBuilder
             .start("Test Nether")
@@ -86,6 +91,16 @@ public class TestWorldgenListener {
             .noDimensionStructures()
             .fogColor(0xFFFF00FF)
             .structure(spruce)
+            .build();
+    
+        Structure tree = new LeveledScatterStructure(new TestTree(BlockBase.SOUL_SAND, BlockBase.GLOWSTONE), 3);
+        
+        testNether2 = BiomeBuilder
+            .start("Test Nether")
+            .surfaceRule(SurfaceBuilder.start(BlockBase.SOUL_SAND).replace(BlockBase.NETHERRACK).ground(2).build())
+            .noDimensionStructures()
+            .fogColor(0xFFFFBC5E)
+            .structure(tree)
             .build();
     }
 
@@ -115,8 +130,7 @@ public class TestWorldgenListener {
         BiomeAPI.addOverworldBiomeProvider(StationAPI.MODID.id("voronoi_provider"), voronoi);
 
         // Nether biomes test
-        for (int i = 0; i < 3; i++) {
-            BiomeAPI.addNetherBiome(testNether);
-        }
+        BiomeAPI.addNetherBiome(testNether);
+        BiomeAPI.addNetherBiome(testNether2);
     }
 }

@@ -20,7 +20,7 @@ public class VolumetricScatterStructure extends ScatterStructure {
 	}
 	
 	@Override
-	int getHeight(Level level, Random random, int x, int z) {
+	int getHeight(Level level, Random random, int x, int y, int z) {
 		return minHeight + random.nextInt(deltaHeight);
 	}
 }
