@@ -7,11 +7,17 @@ import net.modificationstation.stationapi.api.worldgen.biome.BiomeProvider;
 
 public class NetherBiomeSourceImpl extends FixedBiomeSource {
     private static final NetherBiomeSourceImpl INSTANCE = new NetherBiomeSourceImpl();
+    private static final Biome[] BUFFER = new Biome[1];
 
     private NetherBiomeSourceImpl() {
         super(Biome.NETHER, 1.0, 0.0);
     }
-
+    
+    @Override
+    public Biome getBiome(int x, int z) {
+        return getBiomes(BUFFER, x, z, 1, 1)[0];
+    }
+    
     @Override
     public Biome[] getBiomes(Biome[] data, int x, int z, int dx, int dz) {
         data = super.getBiomes(data, x, z, dx, dz);

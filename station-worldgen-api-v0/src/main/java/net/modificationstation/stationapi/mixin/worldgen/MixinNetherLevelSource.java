@@ -1,12 +1,16 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
+import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.block.Sand;
 import net.minecraft.level.Level;
+import net.minecraft.level.biome.Biome;
 import net.minecraft.level.source.LevelSource;
 import net.minecraft.level.source.NetherLevelSource;
 import net.modificationstation.stationapi.impl.worldgen.WorldDecoratorImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -20,5 +24,17 @@ public class MixinNetherLevelSource {
     )
     private void makeSurface(LevelSource source, int cx, int cz, CallbackInfo info) {
         WorldDecoratorImpl.decorate(this.level, cx, cz);
+    }
+    
+    @Inject(
+        method = "decorate",
+        at = @At(value = "FIELD", target = "Lnet/minecraft/block/Sand;fallInstantly:Z", ordinal = 0, shift = Shift.BEFORE),
+        cancellable = true
+    )
+    private void cancelStructureGeneration(LevelSource source, int cx, int cz, CallbackInfo info, @Local Biome biome) {
+        if (biome.isNoDimensionStrucutres()) {
+            Sand.fallInstantly = false;
+            info.cancel();
+        }
     }
 }

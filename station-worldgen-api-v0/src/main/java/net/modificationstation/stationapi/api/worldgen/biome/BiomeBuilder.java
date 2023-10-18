@@ -22,6 +22,7 @@ public class BiomeBuilder {
     private BiomeColorProvider grassColor;
     private BiomeColorProvider leavesColor;
     private BiomeColorProvider fogColor;
+    private boolean noDimensionStructures;
     private boolean precipitation;
     private boolean snow;
     private String name;
@@ -37,6 +38,7 @@ public class BiomeBuilder {
         BiomeBuilder instance = INSTANCES.get();
 
         instance.name = name;
+        instance.noDimensionStructures = false;
         instance.precipitation = true;
         instance.snow = false;
         instance.minHeight = 40;
@@ -61,6 +63,14 @@ public class BiomeBuilder {
      */
     public BiomeBuilder surfaceRule(SurfaceRule rule) {
         rules.add(rule);
+        return this;
+    }
+    
+    /**
+     * Disable default dimension structures for the biome (lakes, ores, etc)
+     */
+    public BiomeBuilder noDimensionStructures() {
+        noDimensionStructures = true;
         return this;
     }
     
@@ -224,6 +234,7 @@ public class BiomeBuilder {
         biome.setFogColor(fogColor);
         biome.setMinHeight(minHeight);
         biome.setMaxHeight(maxHeight);
+        biome.setNoDimensionStrucutres(noDimensionStructures);
 
         hostileEntities.forEach(biome::addHostileEntity);
         passiveEntities.forEach(biome::addPassiveEntity);

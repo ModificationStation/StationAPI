@@ -104,4 +104,12 @@ public interface StationBiome {
     default void addStructure(Structure structure) {
         getStructures().add(structure);
     }
+    
+    default void setNoDimensionStrucutres(boolean noDimensionStrucutres) {
+        Util.assertImpl();
+    }
+    
+    default boolean isNoDimensionStrucutres() {
+        return Util.assertImpl();
+    }
 }

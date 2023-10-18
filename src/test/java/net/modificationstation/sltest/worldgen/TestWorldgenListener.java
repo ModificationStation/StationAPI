@@ -25,6 +25,7 @@ public class TestWorldgenListener {
     private Biome testBiome3;
     private Biome[] climateTest;
     private Biome[] voronoiTest;
+    private Biome testNether;
 
     @EventListener
     public void registerBiomes(BiomeRegisterEvent event) {
@@ -59,9 +60,6 @@ public class TestWorldgenListener {
                 int col = (int) (r * d);
                 return 0xFF0000FF | col << 16 | col << 8;
             });
-    
-            builder.overworldLakes();
-            builder.overworldOres();
 
             climateTest[i] = builder.build();
             climateTest[i].grassColour = color;
@@ -75,13 +73,20 @@ public class TestWorldgenListener {
                 .start("Voronoi " + i)
                 .grassAndLeavesColor(color)
                 .structure(spruce)
-                .overworldLakes()
-                .overworldOres()
                 .fogColor(color)
                 .height(55, 60)
                 .build();
             voronoiTest[i].grassColour = color;
         }
+        
+        testNether = BiomeBuilder
+            .start("Test Nether")
+            .surfaceRule(SurfaceBuilder.start(BlockBase.GRASS).replace(BlockBase.NETHERRACK).ground(1).build())
+            .surfaceRule(SurfaceBuilder.start(BlockBase.DIRT).replace(BlockBase.NETHERRACK).ground(3).build())
+            .noDimensionStructures()
+            .fogColor(0xFFFF00FF)
+            .structure(spruce)
+            .build();
     }
 
     @EventListener
@@ -110,8 +115,8 @@ public class TestWorldgenListener {
         BiomeAPI.addOverworldBiomeProvider(StationAPI.MODID.id("voronoi_provider"), voronoi);
 
         // Nether biomes test
-        BiomeAPI.addNetherBiome(testBiome1);
-        BiomeAPI.addNetherBiome(testBiome2);
-        BiomeAPI.addNetherBiome(testBiome3);
+        for (int i = 0; i < 3; i++) {
+            BiomeAPI.addNetherBiome(testNether);
+        }
     }
 }

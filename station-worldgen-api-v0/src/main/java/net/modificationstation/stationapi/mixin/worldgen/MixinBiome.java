@@ -30,6 +30,7 @@ public class MixinBiome implements StationBiome {
     @Unique private BiomeColorProvider fogColor = BiomeColorsImpl.DEFAULT_FOG_COLOR;
     @Unique private final List<SurfaceRule> surfaceRules = new ArrayList<>();
     @Unique private final List<Structure> structures = new ArrayList<>();
+    @Unique private boolean noDimensionStrucutres;
     @Unique private int minHeight = 40;
     @Unique private int maxHeight = 128;
 
@@ -131,5 +132,15 @@ public class MixinBiome implements StationBiome {
     @Override
     public List<Structure> getStructures() {
         return structures;
+    }
+    
+    @Override
+    public void setNoDimensionStrucutres(boolean noDimensionStrucutres) {
+        this.noDimensionStrucutres = false;
+    }
+    
+    @Override
+    public boolean isNoDimensionStrucutres() {
+        return noDimensionStrucutres;
     }
 }
