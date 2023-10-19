@@ -11,7 +11,7 @@ public class BottomWeightedScatter extends VolumetricScatterStructure {
 	}
 	
 	@Override
-	int getHeight(Level level, Random random, int x, int y, int z) {
+	protected int getHeight(Level level, Random random, int x, int y, int z) {
 		return random.nextInt(minHeight + random.nextInt(deltaHeight));
 	}
 }

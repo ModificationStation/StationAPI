@@ -26,5 +26,5 @@ public abstract class ScatterStructure extends Structure {
 		return result;
 	}
 	
-	abstract int getHeight(Level level, Random random, int x, int y, int z);
+	protected abstract int getHeight(Level level, Random random, int x, int y, int z);
 }

@@ -31,7 +31,7 @@ public class LeveledScatterStructure extends ScatterStructure {
 	}
 	
 	@Override
-	int getHeight(Level level, Random random, int x, int y, int z) {
+	protected int getHeight(Level level, Random random, int x, int y, int z) {
 		boolean opaque = level.getBlockState(x, y, z).getBlock().isFullOpaque();
 		for (int i = 1; i < 16; i++) {
 			boolean opaque2 = level.getBlockState(x, --y, z).getBlock().isFullOpaque();

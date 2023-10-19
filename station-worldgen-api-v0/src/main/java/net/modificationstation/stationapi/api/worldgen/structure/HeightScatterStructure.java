@@ -11,7 +11,7 @@ public class HeightScatterStructure extends ScatterStructure {
 	}
 	
 	@Override
-	int getHeight(Level level, Random random, int x, int y, int z) {
+	protected int getHeight(Level level, Random random, int x, int y, int z) {
 		return level.getHeight(x, z);
 	}
 }
