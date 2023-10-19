@@ -18,60 +18,60 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class StateIdTracker<T, S> {
-	private final Registry<T> registry;
-	private final IdList<S> stateList;
-	private final Function<T, Collection<S>> stateGetter;
-	private int currentHighestId = 0;
+    private final Registry<T> registry;
+    private final IdList<S> stateList;
+    private final Function<T, Collection<S>> stateGetter;
+    private int currentHighestId = 0;
 
-	public static <T, S, R extends Registry<T> & ListenableRegistry> void register(R registry, IdList<S> stateList, Function<T, Collection<S>> stateGetter) {
-		StateIdTracker<T, S> tracker = new StateIdTracker<>(registry, stateList, stateGetter);
-		registry.getEventBus().register(Listener.object()
-				.listener(tracker)
-				.build());
-	}
+    public static <T, S, R extends Registry<T> & ListenableRegistry> void register(R registry, IdList<S> stateList, Function<T, Collection<S>> stateGetter) {
+        StateIdTracker<T, S> tracker = new StateIdTracker<>(registry, stateList, stateGetter);
+        registry.getEventBus().register(Listener.object()
+                .listener(tracker)
+                .build());
+    }
 
-	private StateIdTracker(Registry<T> registry, IdList<S> stateList, Function<T, Collection<S>> stateGetter) {
-		this.registry = registry;
-		this.stateList = stateList;
-		this.stateGetter = stateGetter;
+    private StateIdTracker(Registry<T> registry, IdList<S> stateList, Function<T, Collection<S>> stateGetter) {
+        this.registry = registry;
+        this.stateList = stateList;
+        this.stateGetter = stateGetter;
 
-		recalcHighestId();
-	}
+        recalcHighestId();
+    }
 
-	@EventListener
-	private void onEntryAdded(RegistryEntryAddedEvent<T> event) {
-		if (event.rawId == currentHighestId + 1) {
-			stateGetter.apply(event.object).forEach(stateList::add);
-			currentHighestId = event.rawId;
-		} else {
-			LOGGER.debug("Non-sequential RegistryEntryAddedEvent for " + event.object.getClass().getSimpleName() + " ID tracker (at " + event.id + "), forcing state map recalculation...");
-			recalcStateMap();
-		}
-	}
+    @EventListener
+    private void onEntryAdded(RegistryEntryAddedEvent<T> event) {
+        if (event.rawId == currentHighestId + 1) {
+            stateGetter.apply(event.object).forEach(stateList::add);
+            currentHighestId = event.rawId;
+        } else {
+            LOGGER.debug("Non-sequential RegistryEntryAddedEvent for " + event.object.getClass().getSimpleName() + " ID tracker (at " + event.id + "), forcing state map recalculation...");
+            recalcStateMap();
+        }
+    }
 
-	@EventListener
-	private void onRemap(RegistryIdRemapEvent<T> event) {
-		recalcStateMap();
-	}
+    @EventListener
+    private void onRemap(RegistryIdRemapEvent<T> event) {
+        recalcStateMap();
+    }
 
-	private void recalcStateMap() {
-		stateList.clear();
+    private void recalcStateMap() {
+        stateList.clear();
 
-		Int2ReferenceMap<T> sortedBlocks = new Int2ReferenceRBTreeMap<>();
+        Int2ReferenceMap<T> sortedBlocks = new Int2ReferenceRBTreeMap<>();
 
-		currentHighestId = 0;
-		registry.forEach((t) -> {
-			int rawId = registry.getRawId(t);
-			currentHighestId = Math.max(currentHighestId, rawId);
-			sortedBlocks.put(rawId, t);
-		});
+        currentHighestId = 0;
+        registry.forEach((t) -> {
+            int rawId = registry.getRawId(t);
+            currentHighestId = Math.max(currentHighestId, rawId);
+            sortedBlocks.put(rawId, t);
+        });
 
-		for (T b : sortedBlocks.values()) stateGetter.apply(b).forEach(stateList::add);
-	}
+        for (T b : sortedBlocks.values()) stateGetter.apply(b).forEach(stateList::add);
+    }
 
-	private void recalcHighestId() {
-		currentHighestId = 0;
+    private void recalcHighestId() {
+        currentHighestId = 0;
 
-		for (T object : registry) currentHighestId = Math.max(currentHighestId, registry.getRawId(object));
-	}
+        for (T object : registry) currentHighestId = Math.max(currentHighestId, registry.getRawId(object));
+    }
 }

@@ -14,108 +14,108 @@ import net.modificationstation.stationapi.impl.client.arsenic.renderer.helper.Ge
  * All of this is implementation-specific - that's why it isn't a "helper" class.
  */
 public abstract class EncodingFormat {
-	private EncodingFormat() { }
+    private EncodingFormat() { }
 
-	static final int HEADER_BITS = 0;
-	static final int HEADER_COLOR_INDEX = 1;
-	static final int HEADER_TAG = 2;
-	public static final int HEADER_STRIDE = 3;
+    static final int HEADER_BITS = 0;
+    static final int HEADER_COLOR_INDEX = 1;
+    static final int HEADER_TAG = 2;
+    public static final int HEADER_STRIDE = 3;
 
-	static final int VERTEX_X;
-	static final int VERTEX_Y;
-	static final int VERTEX_Z;
-	static final int VERTEX_COLOR;
-	static final int VERTEX_U;
-	static final int VERTEX_V;
-	static final int VERTEX_NORMAL;
-	public static final int VERTEX_STRIDE;
+    static final int VERTEX_X;
+    static final int VERTEX_Y;
+    static final int VERTEX_Z;
+    static final int VERTEX_COLOR;
+    static final int VERTEX_U;
+    static final int VERTEX_V;
+    static final int VERTEX_NORMAL;
+    public static final int VERTEX_STRIDE;
 
-	public static final int QUAD_STRIDE;
-	public static final int QUAD_STRIDE_BYTES;
-	public static final int TOTAL_STRIDE;
+    public static final int QUAD_STRIDE;
+    public static final int QUAD_STRIDE_BYTES;
+    public static final int TOTAL_STRIDE;
 
-	static {
-		VERTEX_X = HEADER_STRIDE;
-		VERTEX_Y = HEADER_STRIDE + 1;
-		VERTEX_Z = HEADER_STRIDE + 2;
-		VERTEX_U = HEADER_STRIDE + 4;
-		VERTEX_V = VERTEX_U + 1;
-		VERTEX_COLOR = HEADER_STRIDE + 6;
-		VERTEX_NORMAL = HEADER_STRIDE + 7;
-		VERTEX_STRIDE = 8;
-		QUAD_STRIDE = VERTEX_STRIDE * 4;
-		QUAD_STRIDE_BYTES = QUAD_STRIDE * 4;
-		TOTAL_STRIDE = HEADER_STRIDE + QUAD_STRIDE;
+    static {
+        VERTEX_X = HEADER_STRIDE;
+        VERTEX_Y = HEADER_STRIDE + 1;
+        VERTEX_Z = HEADER_STRIDE + 2;
+        VERTEX_U = HEADER_STRIDE + 4;
+        VERTEX_V = VERTEX_U + 1;
+        VERTEX_COLOR = HEADER_STRIDE + 6;
+        VERTEX_NORMAL = HEADER_STRIDE + 7;
+        VERTEX_STRIDE = 8;
+        QUAD_STRIDE = VERTEX_STRIDE * 4;
+        QUAD_STRIDE_BYTES = QUAD_STRIDE * 4;
+        TOTAL_STRIDE = HEADER_STRIDE + QUAD_STRIDE;
 
-		//noinspection ConstantValue
-		Preconditions.checkState(VERTEX_STRIDE == QuadView.VANILLA_VERTEX_STRIDE, "Indigo vertex stride (%s) mismatched with rendering API (%s)", VERTEX_STRIDE, QuadView.VANILLA_VERTEX_STRIDE);
-		//noinspection ConstantValue
-		Preconditions.checkState(QUAD_STRIDE == QuadView.VANILLA_QUAD_STRIDE, "Indigo quad stride (%s) mismatched with rendering API (%s)", QUAD_STRIDE, QuadView.VANILLA_QUAD_STRIDE);
-	}
+        //noinspection ConstantValue
+        Preconditions.checkState(VERTEX_STRIDE == QuadView.VANILLA_VERTEX_STRIDE, "Indigo vertex stride (%s) mismatched with rendering API (%s)", VERTEX_STRIDE, QuadView.VANILLA_VERTEX_STRIDE);
+        //noinspection ConstantValue
+        Preconditions.checkState(QUAD_STRIDE == QuadView.VANILLA_QUAD_STRIDE, "Indigo quad stride (%s) mismatched with rendering API (%s)", QUAD_STRIDE, QuadView.VANILLA_QUAD_STRIDE);
+    }
 
-	/** used for quick clearing of quad buffers. */
-	static final int[] EMPTY = new int[TOTAL_STRIDE];
+    /** used for quick clearing of quad buffers. */
+    static final int[] EMPTY = new int[TOTAL_STRIDE];
 
-	private static final int DIRECTION_MASK = MathHelper.smallestEncompassingPowerOfTwo(ModelHelper.NULL_FACE_ID) - 1;
-	private static final int DIRECTION_BIT_COUNT = Integer.bitCount(DIRECTION_MASK);
-	private static final int CULL_SHIFT = 0;
-	private static final int CULL_INVERSE_MASK = ~(DIRECTION_MASK << CULL_SHIFT);
-	private static final int LIGHT_SHIFT = CULL_SHIFT + DIRECTION_BIT_COUNT;
-	private static final int LIGHT_INVERSE_MASK = ~(DIRECTION_MASK << LIGHT_SHIFT);
-	private static final int NORMALS_SHIFT = LIGHT_SHIFT + DIRECTION_BIT_COUNT;
-	private static final int NORMALS_COUNT = 4;
-	private static final int NORMALS_MASK = (1 << NORMALS_COUNT) - 1;
-	private static final int NORMALS_INVERSE_MASK = ~(NORMALS_MASK << NORMALS_SHIFT);
-	private static final int GEOMETRY_SHIFT = NORMALS_SHIFT + NORMALS_COUNT;
-	private static final int GEOMETRY_MASK = (1 << GeometryHelper.FLAG_BIT_COUNT) - 1;
-	private static final int GEOMETRY_INVERSE_MASK = ~(GEOMETRY_MASK << GEOMETRY_SHIFT);
-	private static final int MATERIAL_SHIFT = GEOMETRY_SHIFT + GeometryHelper.FLAG_BIT_COUNT;
-	private static final int MATERIAL_MASK = MathHelper.smallestEncompassingPowerOfTwo(RenderMaterialImpl.VALUE_COUNT) - 1;
-	private static final int MATERIAL_BIT_COUNT = Integer.bitCount(MATERIAL_MASK);
-	private static final int MATERIAL_INVERSE_MASK = ~(MATERIAL_MASK << MATERIAL_SHIFT);
+    private static final int DIRECTION_MASK = MathHelper.smallestEncompassingPowerOfTwo(ModelHelper.NULL_FACE_ID) - 1;
+    private static final int DIRECTION_BIT_COUNT = Integer.bitCount(DIRECTION_MASK);
+    private static final int CULL_SHIFT = 0;
+    private static final int CULL_INVERSE_MASK = ~(DIRECTION_MASK << CULL_SHIFT);
+    private static final int LIGHT_SHIFT = CULL_SHIFT + DIRECTION_BIT_COUNT;
+    private static final int LIGHT_INVERSE_MASK = ~(DIRECTION_MASK << LIGHT_SHIFT);
+    private static final int NORMALS_SHIFT = LIGHT_SHIFT + DIRECTION_BIT_COUNT;
+    private static final int NORMALS_COUNT = 4;
+    private static final int NORMALS_MASK = (1 << NORMALS_COUNT) - 1;
+    private static final int NORMALS_INVERSE_MASK = ~(NORMALS_MASK << NORMALS_SHIFT);
+    private static final int GEOMETRY_SHIFT = NORMALS_SHIFT + NORMALS_COUNT;
+    private static final int GEOMETRY_MASK = (1 << GeometryHelper.FLAG_BIT_COUNT) - 1;
+    private static final int GEOMETRY_INVERSE_MASK = ~(GEOMETRY_MASK << GEOMETRY_SHIFT);
+    private static final int MATERIAL_SHIFT = GEOMETRY_SHIFT + GeometryHelper.FLAG_BIT_COUNT;
+    private static final int MATERIAL_MASK = MathHelper.smallestEncompassingPowerOfTwo(RenderMaterialImpl.VALUE_COUNT) - 1;
+    private static final int MATERIAL_BIT_COUNT = Integer.bitCount(MATERIAL_MASK);
+    private static final int MATERIAL_INVERSE_MASK = ~(MATERIAL_MASK << MATERIAL_SHIFT);
 
-	static {
-		Preconditions.checkArgument(MATERIAL_SHIFT + MATERIAL_BIT_COUNT <= 32, "Indigo header encoding bit count (%s) exceeds integer bit length)", TOTAL_STRIDE);
-	}
+    static {
+        Preconditions.checkArgument(MATERIAL_SHIFT + MATERIAL_BIT_COUNT <= 32, "Indigo header encoding bit count (%s) exceeds integer bit length)", TOTAL_STRIDE);
+    }
 
-	static Direction cullFace(int bits) {
-		return ModelHelper.faceFromIndex((bits >> CULL_SHIFT) & DIRECTION_MASK);
-	}
+    static Direction cullFace(int bits) {
+        return ModelHelper.faceFromIndex((bits >> CULL_SHIFT) & DIRECTION_MASK);
+    }
 
-	static int cullFace(int bits, Direction face) {
-		return (bits & CULL_INVERSE_MASK) | (ModelHelper.toFaceIndex(face) << CULL_SHIFT);
-	}
+    static int cullFace(int bits, Direction face) {
+        return (bits & CULL_INVERSE_MASK) | (ModelHelper.toFaceIndex(face) << CULL_SHIFT);
+    }
 
-	static Direction lightFace(int bits) {
-		return ModelHelper.faceFromIndex((bits >> LIGHT_SHIFT) & DIRECTION_MASK);
-	}
+    static Direction lightFace(int bits) {
+        return ModelHelper.faceFromIndex((bits >> LIGHT_SHIFT) & DIRECTION_MASK);
+    }
 
-	static int lightFace(int bits, Direction face) {
-		return (bits & LIGHT_INVERSE_MASK) | (ModelHelper.toFaceIndex(face) << LIGHT_SHIFT);
-	}
+    static int lightFace(int bits, Direction face) {
+        return (bits & LIGHT_INVERSE_MASK) | (ModelHelper.toFaceIndex(face) << LIGHT_SHIFT);
+    }
 
-	/** indicate if vertex normal has been set - bits correspond to vertex ordinals. */
-	static int normalFlags(int bits) {
-		return (bits >> NORMALS_SHIFT) & NORMALS_MASK;
-	}
+    /** indicate if vertex normal has been set - bits correspond to vertex ordinals. */
+    static int normalFlags(int bits) {
+        return (bits >> NORMALS_SHIFT) & NORMALS_MASK;
+    }
 
-	static int normalFlags(int bits, int normalFlags) {
-		return (bits & NORMALS_INVERSE_MASK) | ((normalFlags & NORMALS_MASK) << NORMALS_SHIFT);
-	}
+    static int normalFlags(int bits, int normalFlags) {
+        return (bits & NORMALS_INVERSE_MASK) | ((normalFlags & NORMALS_MASK) << NORMALS_SHIFT);
+    }
 
-	static int geometryFlags(int bits) {
-		return (bits >> GEOMETRY_SHIFT) & GEOMETRY_MASK;
-	}
+    static int geometryFlags(int bits) {
+        return (bits >> GEOMETRY_SHIFT) & GEOMETRY_MASK;
+    }
 
-	static int geometryFlags(int bits, int geometryFlags) {
-		return (bits & GEOMETRY_INVERSE_MASK) | ((geometryFlags & GEOMETRY_MASK) << GEOMETRY_SHIFT);
-	}
+    static int geometryFlags(int bits, int geometryFlags) {
+        return (bits & GEOMETRY_INVERSE_MASK) | ((geometryFlags & GEOMETRY_MASK) << GEOMETRY_SHIFT);
+    }
 
-	static RenderMaterialImpl.Value material(int bits) {
-		return RenderMaterialImpl.byIndex((bits >> MATERIAL_SHIFT) & MATERIAL_MASK);
-	}
+    static RenderMaterialImpl.Value material(int bits) {
+        return RenderMaterialImpl.byIndex((bits >> MATERIAL_SHIFT) & MATERIAL_MASK);
+    }
 
-	static int material(int bits, RenderMaterialImpl.Value material) {
-		return (bits & MATERIAL_INVERSE_MASK) | (material.index() << MATERIAL_SHIFT);
-	}
+    static int material(int bits, RenderMaterialImpl.Value material) {
+        return (bits & MATERIAL_INVERSE_MASK) | (material.index() << MATERIAL_SHIFT);
+    }
 }

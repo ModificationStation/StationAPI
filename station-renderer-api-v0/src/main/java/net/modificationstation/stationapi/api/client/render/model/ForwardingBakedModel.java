@@ -20,59 +20,59 @@ import java.util.function.Supplier;
  */
 public abstract class ForwardingBakedModel implements BakedModel {
 
-	/** implementations must set this somehow. */
-	protected BakedModel wrapped;
+    /** implementations must set this somehow. */
+    protected BakedModel wrapped;
 
-	public void emitBlockQuads(BlockView blockView, BlockState state, TilePos pos, Supplier<Random> randomSupplier, RenderContext context) {
-		wrapped.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-	}
+    public void emitBlockQuads(BlockView blockView, BlockState state, TilePos pos, Supplier<Random> randomSupplier, RenderContext context) {
+        wrapped.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+    }
 
-	public boolean isVanillaAdapter() {
-		return wrapped.isVanillaAdapter();
-	}
+    public boolean isVanillaAdapter() {
+        return wrapped.isVanillaAdapter();
+    }
 
-	public void emitItemQuads(ItemInstance stack, Supplier<Random> randomSupplier, RenderContext context) {
-		wrapped.emitItemQuads(stack, randomSupplier, context);
-	}
+    public void emitItemQuads(ItemInstance stack, Supplier<Random> randomSupplier, RenderContext context) {
+        wrapped.emitItemQuads(stack, randomSupplier, context);
+    }
 
-	@Override
-	public ImmutableList<BakedQuad> getQuads(BlockState blockState, Direction face, Random rand) {
-		return wrapped.getQuads(blockState, face, rand);
-	}
+    @Override
+    public ImmutableList<BakedQuad> getQuads(BlockState blockState, Direction face, Random rand) {
+        return wrapped.getQuads(blockState, face, rand);
+    }
 
-	@Override
-	public boolean useAmbientOcclusion() {
-		return wrapped.useAmbientOcclusion();
-	}
+    @Override
+    public boolean useAmbientOcclusion() {
+        return wrapped.useAmbientOcclusion();
+    }
 
-	@Override
-	public boolean hasDepth() {
-		return wrapped.hasDepth();
-	}
+    @Override
+    public boolean hasDepth() {
+        return wrapped.hasDepth();
+    }
 
-	@Override
-	public boolean isBuiltin() {
-		return wrapped.isBuiltin();
-	}
+    @Override
+    public boolean isBuiltin() {
+        return wrapped.isBuiltin();
+    }
 
-	@Override
-	public Sprite getSprite() {
-		return wrapped.getSprite();
-	}
+    @Override
+    public Sprite getSprite() {
+        return wrapped.getSprite();
+    }
 
-	@Override
-	public boolean isSideLit() {
-		return wrapped.isSideLit();
-	}
+    @Override
+    public boolean isSideLit() {
+        return wrapped.isSideLit();
+    }
 
-	@Override
-	public ModelTransformation getTransformation() {
-		return wrapped.getTransformation();
-	}
+    @Override
+    public ModelTransformation getTransformation() {
+        return wrapped.getTransformation();
+    }
 
-	@Override
-	public ModelOverrideList getOverrides() {
-		return wrapped.getOverrides();
-	}
+    @Override
+    public ModelOverrideList getOverrides() {
+        return wrapped.getOverrides();
+    }
 
 }

@@ -36,54 +36,54 @@ import java.util.function.Supplier;
  * so they can be applied together with chunk offsets.
  */
 public class BlockRenderInfo {
-	private final BlockColors blockColorMap = StationRenderAPI.getBlockColors();
-	public final Random random = new Random();
-	public BlockView blockView;
-	public TilePos blockPos;
-	public BlockState blockState;
-	public long seed;
-	boolean defaultAo;
+    private final BlockColors blockColorMap = StationRenderAPI.getBlockColors();
+    public final Random random = new Random();
+    public BlockView blockView;
+    public TilePos blockPos;
+    public BlockState blockState;
+    public long seed;
+    boolean defaultAo;
 
-	public final Supplier<Random> randomSupplier = () -> {
-		final Random result = random;
-		long seed = this.seed;
+    public final Supplier<Random> randomSupplier = () -> {
+        final Random result = random;
+        long seed = this.seed;
 
-		if (seed == -1L) {
-			seed = blockState.getRenderingSeed(blockPos);
-			this.seed = seed;
-		}
+        if (seed == -1L) {
+            seed = blockState.getRenderingSeed(blockPos);
+            this.seed = seed;
+        }
 
-		result.setSeed(seed);
-		return result;
-	};
+        result.setSeed(seed);
+        return result;
+    };
 
-	public void setBlockView(BlockView blockView) {
-		this.blockView = blockView;
-	}
+    public void setBlockView(BlockView blockView) {
+        this.blockView = blockView;
+    }
 
-	public void prepareForBlock(BlockState blockState, TilePos blockPos, boolean modelAO) {
-		this.blockPos = blockPos;
-		this.blockState = blockState;
-		// in the unlikely case seed actually matches this, we'll simply retrieve it more than one
-		seed = -1L;
-		defaultAo = modelAO && Minecraft.isSmoothLightingEnabled() && blockState.getLuminance() == 0;
-	}
+    public void prepareForBlock(BlockState blockState, TilePos blockPos, boolean modelAO) {
+        this.blockPos = blockPos;
+        this.blockState = blockState;
+        // in the unlikely case seed actually matches this, we'll simply retrieve it more than one
+        seed = -1L;
+        defaultAo = modelAO && Minecraft.isSmoothLightingEnabled() && blockState.getLuminance() == 0;
+    }
 
-	public void release() {
-		blockPos = null;
-		blockState = null;
-	}
+    public void release() {
+        blockPos = null;
+        blockState = null;
+    }
 
-	int blockColour(int colorIndex) {
-		return 0xFF000000 | blockColorMap.getColor(blockState, blockView, blockPos, colorIndex);
-	}
+    int blockColour(int colorIndex) {
+        return 0xFF000000 | blockColorMap.getColor(blockState, blockView, blockPos, colorIndex);
+    }
 
-	boolean shouldDrawFace(Direction face) {
-		return true;
-	}
+    boolean shouldDrawFace(Direction face) {
+        return true;
+    }
 
-	boolean shouldDrawQuad(MutableQuadViewImpl quad) {
-		Direction cull = quad.cullFace();
-		return cull == null || blockState.getBlock().isSideRendered(blockView, blockPos.x + cull.getOffsetX(), blockPos.y + cull.getOffsetY(), blockPos.z + cull.getOffsetZ(), cull.ordinal());
-	}
+    boolean shouldDrawQuad(MutableQuadViewImpl quad) {
+        Direction cull = quad.cullFace();
+        return cull == null || blockState.getBlock().isSideRendered(blockView, blockPos.x + cull.getOffsetX(), blockPos.y + cull.getOffsetY(), blockPos.z + cull.getOffsetZ(), cull.ordinal());
+    }
 }

@@ -16,29 +16,29 @@ import java.util.List;
 
 @Mixin(LevelMonsterSpawner.class)
 public class MixinLevelMonsterSpawner {
-	@Unique private static Level currentLevel;
-	
-	@Inject(method = "method_1869(Lnet/minecraft/level/Level;Ljava/util/List;)Z", at = @At("HEAD"))
-	private static void method_1869(Level level, List list, CallbackInfoReturnable<Boolean> info) {
-		currentLevel = level;
-	}
-	
-	@Inject(method = "method_1868(Lnet/minecraft/level/Level;II)Lnet/minecraft/util/maths/TilePos;", at = @At("HEAD"))
-	private static void method_1869(Level level, int px, int pz, CallbackInfoReturnable<TilePos> info) {
-		currentLevel = level;
-	}
-	
-	@ModifyConstant(method = {
-		"method_1869(Lnet/minecraft/level/Level;Ljava/util/List;)Z",
-		"method_1868(Lnet/minecraft/level/Level;II)Lnet/minecraft/util/maths/TilePos;"
-	}, constant = @Constant(intValue = 128))
-	private static int changeMaxHeight(int value) {
-		return getLevelHeight(currentLevel);
-	}
-	
-	@Unique
-	private static int getLevelHeight(Level level) {
-		StationDimension dimension = StationDimension.class.cast(level.dimension);
-		return dimension.getActualLevelHeight();
-	}
+    @Unique private static Level currentLevel;
+
+    @Inject(method = "method_1869(Lnet/minecraft/level/Level;Ljava/util/List;)Z", at = @At("HEAD"))
+    private static void method_1869(Level level, List list, CallbackInfoReturnable<Boolean> info) {
+        currentLevel = level;
+    }
+
+    @Inject(method = "method_1868(Lnet/minecraft/level/Level;II)Lnet/minecraft/util/maths/TilePos;", at = @At("HEAD"))
+    private static void method_1869(Level level, int px, int pz, CallbackInfoReturnable<TilePos> info) {
+        currentLevel = level;
+    }
+
+    @ModifyConstant(method = {
+            "method_1869(Lnet/minecraft/level/Level;Ljava/util/List;)Z",
+            "method_1868(Lnet/minecraft/level/Level;II)Lnet/minecraft/util/maths/TilePos;"
+    }, constant = @Constant(intValue = 128))
+    private static int changeMaxHeight(int value) {
+        return getLevelHeight(currentLevel);
+    }
+
+    @Unique
+    private static int getLevelHeight(Level level) {
+        StationDimension dimension = StationDimension.class.cast(level.dimension);
+        return dimension.getActualLevelHeight();
+    }
 }

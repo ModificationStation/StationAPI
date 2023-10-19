@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(BaseClientInteractionManager.class)
 public class MixinBaseClientInteractionManager {
-	@Shadow @Final protected Minecraft minecraft;
-	
-	@ModifyConstant(method = "method_1716", constant = @Constant(intValue = 256))
-	private int changeMetaShift(int value) {
-		return 268435456;
-	}
+    @Shadow @Final protected Minecraft minecraft;
+
+    @ModifyConstant(method = "method_1716", constant = @Constant(intValue = 256))
+    private int changeMetaShift(int value) {
+        return 268435456;
+    }
 }

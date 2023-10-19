@@ -15,10 +15,10 @@ import java.util.function.Consumer;
  * <p>Only the renderer should implement or extend this interface.
  */
 public interface Mesh {
-	/**
-	 * Use to access all of the quads encoded in this mesh. The quad instances
-	 * sent to the consumer will likely be threadlocal/reused and should never
-	 * be retained by the consumer.
-	 */
-	void forEach(Consumer<QuadView> consumer);
+    /**
+     * Use to access all of the quads encoded in this mesh. The quad instances
+     * sent to the consumer will likely be threadlocal/reused and should never
+     * be retained by the consumer.
+     */
+    void forEach(Consumer<QuadView> consumer);
 }
