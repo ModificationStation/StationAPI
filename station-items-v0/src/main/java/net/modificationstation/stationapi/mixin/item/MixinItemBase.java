@@ -22,6 +22,8 @@ public abstract class MixinItemBase implements StationItem {
 
     @Shadow public abstract ItemBase setTranslationKey(String string);
 
+    @Shadow public abstract int getDurability();
+
     @ModifyVariable(
             method = "setTranslationKey(Ljava/lang/String;)Lnet/minecraft/item/ItemBase;",
             at = @At("HEAD"),
@@ -56,5 +58,10 @@ public abstract class MixinItemBase implements StationItem {
     @Unique
     public boolean preMine(ItemInstance itemInstance, BlockState blockState, int x, int y, int z, int side, PlayerBase player) {
         return true;
+    }
+
+    @Override
+    public int getDurability(ItemInstance stack) {
+        return getDurability();
     }
 }

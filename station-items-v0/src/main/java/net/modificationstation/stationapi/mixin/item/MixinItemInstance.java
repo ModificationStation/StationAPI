@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -133,5 +134,27 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
     @Unique
     public boolean preMine(BlockState blockState, int x, int y, int z, int side, PlayerBase player) {
         return getType().preMine(ItemInstance.class.cast(this), blockState, x, y, z, side, player);
+    }
+
+    @Redirect(
+            method = "getDurability",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/item/ItemBase;getDurability()I"
+            )
+    )
+    private int stationapi_getDurabilityPerStack(ItemBase instance) {
+        return instance.getDurability(ItemInstance.class.cast(this));
+    }
+
+    @Redirect(
+            method = "hasDurability",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/item/ItemBase;getDurability()I"
+            )
+    )
+    private int stationapi_hasDurability_getDurabilityPerStack(ItemBase instance) {
+        return instance.getDurability(ItemInstance.class.cast(this));
     }
 }

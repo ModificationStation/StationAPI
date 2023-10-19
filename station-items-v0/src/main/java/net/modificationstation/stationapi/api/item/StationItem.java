@@ -19,7 +19,15 @@ public interface StationItem {
         return Util.assertImpl();
     }
 
-    default boolean preHit(ItemInstance itemInstance, EntityBase otherEntity, PlayerBase player){ return Util.assertImpl(); }
+    default boolean preHit(ItemInstance itemInstance, EntityBase otherEntity, PlayerBase player) {
+        return Util.assertImpl();
+    }
 
-    default boolean preMine(ItemInstance itemInstance, BlockState blockState, int x, int y, int z, int side, PlayerBase player){ return Util.assertImpl(); }
+    default boolean preMine(ItemInstance itemInstance, BlockState blockState, int x, int y, int z, int side, PlayerBase player) {
+        return Util.assertImpl();
+    }
+
+    default int getDurability(ItemInstance stack) {
+        return Util.assertImpl();
+    }
 }
