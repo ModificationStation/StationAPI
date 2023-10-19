@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.block.Sand;
 import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.source.LevelSource;
@@ -29,6 +30,18 @@ public class MixinOverworldLevelSource {
     )
     private void decorateSurface(LevelSource source, int cx, int cz, CallbackInfo info) {
         WorldDecoratorImpl.decorate(this.level, cx, cz);
+    }
+    
+    @Inject(
+        method = "decorate",
+        at = @At(value = "INVOKE", target = "Ljava/util/Random;setSeed(J)V", ordinal = 0, shift = Shift.BEFORE),
+        cancellable = true
+    )
+    private void cancelStructureGeneration(LevelSource source, int cx, int cz, CallbackInfo info, @Local Biome biome) {
+        if (biome.isNoDimensionStrucutres()) {
+            Sand.fallInstantly = false;
+            info.cancel();
+        }
     }
 
     @ModifyConstant(

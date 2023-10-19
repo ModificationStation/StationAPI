@@ -28,15 +28,14 @@ public abstract class MixinLevel {
         at = @At("TAIL")
     )*/
     private void onInit(DimensionData string, String l, long par3, CallbackInfo ci) {
-        if (!FabricLoader.getInstance().isDevelopmentEnvironment()) return;
-
         int side = 800;
 
         BufferedImage buffer = new BufferedImage(side, side, BufferedImage.TYPE_INT_ARGB);
         int[] pixels = ((DataBufferInt) buffer.getRaster().getDataBuffer()).getData();
 
+        int start = -(side >> 1);
         BiomeSource biomeSource = getBiomeSource();
-        Biome[] biomes = biomeSource.getBiomes(new Biome[side * side], 0, 0, side, side);
+        Biome[] biomes = biomeSource.getBiomes(new Biome[side * side], start, start, side, side);
 
         for (int i = 0; i < pixels.length; i++) {
             pixels[i] = biomes[i].grassColour | 0xFF000000;

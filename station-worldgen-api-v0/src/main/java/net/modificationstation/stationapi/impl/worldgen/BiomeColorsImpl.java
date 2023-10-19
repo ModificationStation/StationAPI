@@ -8,14 +8,14 @@ import net.modificationstation.stationapi.api.worldgen.biome.BiomeColorProvider;
 
 public class BiomeColorsImpl {
     public static final BiomeColorProvider DEFAULT_GRASS_COLOR = (BiomeSource source, int x, int z) -> {
-        source.getBiome(x, z);
+        source.getBiomes(x, z, 1, 1);
         double t = source.temperatureNoises[0];
         double w = source.rainfallNoises[0];
         return GrassColour.get(t, w);
     };
 
     public static final BiomeColorProvider DEFAULT_LEAVES_COLOR = (BiomeSource source, int x, int z) -> {
-        source.getBiome(x, z);
+        source.getBiomes(x, z, 1, 1);
         double t = source.temperatureNoises[0];
         double w = source.rainfallNoises[0];
         return FoliageColour.method_1080(t, w);

@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.mixin.worldgen;
 import net.minecraft.entity.EntityEntry;
 import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
+import net.minecraft.level.structure.Structure;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeColorProvider;
 import net.modificationstation.stationapi.api.worldgen.biome.StationBiome;
@@ -28,6 +29,8 @@ public class MixinBiome implements StationBiome {
     @Unique private BiomeColorProvider leavesColor = BiomeColorsImpl.DEFAULT_LEAVES_COLOR;
     @Unique private BiomeColorProvider fogColor = BiomeColorsImpl.DEFAULT_FOG_COLOR;
     @Unique private final List<SurfaceRule> surfaceRules = new ArrayList<>();
+    @Unique private final List<Structure> structures = new ArrayList<>();
+    @Unique private boolean noDimensionStrucutres;
     @Unique private int minHeight = 40;
     @Unique private int maxHeight = 128;
 
@@ -124,5 +127,20 @@ public class MixinBiome implements StationBiome {
     @Override
     public void setMaxHeight(int height) {
         maxHeight = height;
+    }
+    
+    @Override
+    public List<Structure> getStructures() {
+        return structures;
+    }
+    
+    @Override
+    public void setNoDimensionStrucutres(boolean noDimensionStrucutres) {
+        this.noDimensionStrucutres = false;
+    }
+    
+    @Override
+    public boolean isNoDimensionStrucutres() {
+        return noDimensionStrucutres;
     }
 }
