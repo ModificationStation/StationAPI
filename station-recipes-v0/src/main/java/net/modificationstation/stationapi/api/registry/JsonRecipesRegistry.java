@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.serialization.Lifecycle;
+import net.modificationstation.stationapi.impl.recipe.RecipeManager;
 
 import java.net.URL;
 import java.util.Collections;
@@ -8,6 +9,10 @@ import java.util.Set;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
+/**
+ * @deprecated Use {@link RecipeManager} instead.
+ */
+@Deprecated
 public final class JsonRecipesRegistry extends SimpleRegistry<Set<URL>> {
 
     @SuppressWarnings("CollectionContainsUrl")

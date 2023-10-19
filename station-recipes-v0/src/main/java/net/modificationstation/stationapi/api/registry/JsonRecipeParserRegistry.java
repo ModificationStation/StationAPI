@@ -10,8 +10,12 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
 /**
  * The JSON recipe parser registry that holds all JSON recipe parsers to automatically run when {@link RecipeRegisterEvent} event is called with a proper identifier.
+ *
+ * @deprecated Use {@link RecipeSerializerRegistry} instead.
+ *
  * @author mine_diver
  */
+@Deprecated
 public final class JsonRecipeParserRegistry extends SimpleRegistry<Consumer<URL>> {
 
     private static final Consumer<URL> EMPTY = url -> {};

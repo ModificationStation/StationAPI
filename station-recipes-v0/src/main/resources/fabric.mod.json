@@ -23,7 +23,8 @@
       "net.modificationstation.stationapi.impl.recipe.json.JsonRecipeParserRegisterImpl",
       "net.modificationstation.stationapi.impl.recipe.JsonRecipeParserInit",
       "net.modificationstation.stationapi.impl.recipe.JsonRecipesLoader",
-      "net.modificationstation.stationapi.api.recipe.FuelRegistry"
+      "net.modificationstation.stationapi.api.recipe.FuelRegistry",
+      "net.modificationstation.stationapi.impl.recipe.RecipeManager"
     ]
   },
   "mixins": [
@@ -36,6 +37,11 @@
   },
 
   "custom": {
-    "modmenu:api": true
+    "modmenu:api": true,
+    "loom:injected_interfaces": {
+      "net/minecraft/class_160": [
+        "net/modificationstation/stationapi/api/recipe/StationCraftingRecipe"
+      ]
+    }
   }
 }

@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
 import net.minecraft.item.ItemInstance;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.ShapelessRecipe;
-import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.List;
 
 @Mixin(ShapelessRecipe.class)
-public class MixinShapelessRecipe implements StationRecipe {
+abstract class MixinShapelessRecipe implements Recipe {
 
     @Shadow @Final private List<ItemInstance> input;
 

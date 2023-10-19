@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.item.ItemInstance;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -7,18 +9,11 @@ import net.modificationstation.stationapi.api.recipe.FuelRegistry;
 import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(TileEntityFurnace.class)
-public class MixinTileEntityFurnace {
-
-    @Shadow
-    private ItemInstance[] inventory;
-
+class MixinTileEntityFurnace {
     @Redirect(
             method = {
                     "canAcceptRecipeOutput()Z",
@@ -30,7 +25,8 @@ public class MixinTileEntityFurnace {
             )
     )
     private ItemInstance getResult(SmeltingRecipeRegistry smeltingRecipeRegistry, int i) {
-        return SmeltingRegistry.getResultFor(inventory[0]);
+        //noinspection DataFlowIssue
+        return SmeltingRegistry.getResult((TileEntityFurnace) (Object) this);
     }
 
     @Inject(
@@ -42,23 +38,6 @@ public class MixinTileEntityFurnace {
         cir.setReturnValue(FuelRegistry.getFuelTime(arg));
     }
 
-    @Inject(
-            method = "craftRecipe()V",
-            at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/item/ItemInstance;count:I",
-                    opcode = Opcodes.GETFIELD,
-                    ordinal = 0,
-                    shift = At.Shift.AFTER
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private void captureLocals(CallbackInfo ci, ItemInstance var1) {
-        capturedItemInstance = var1;
-    }
-
-    private ItemInstance capturedItemInstance;
-
     @ModifyConstant(
             method = "craftRecipe()V",
             constant = @Constant(
@@ -66,27 +45,14 @@ public class MixinTileEntityFurnace {
                     ordinal = 0
             )
     )
-    private int modifyStackIncrement(int constant) {
-        return capturedItemInstance.count;
+    private int modifyStackIncrement(
+            int constant,
+            @Local(index = 1) ItemInstance itemInstance
+    ) {
+        return itemInstance.count;
     }
 
-    @Inject(
-            method = "canAcceptRecipeOutput()Z",
-            at = @At(
-                    value = "FIELD",
-                    target = "Lnet/minecraft/item/ItemInstance;count:I",
-                    opcode = Opcodes.GETFIELD,
-                    shift = At.Shift.BEFORE
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private void captureLocals2(CallbackInfoReturnable<Boolean> cir, ItemInstance var1) {
-        capturedItemInstance2ElectricBoogaloo = var1;
-    }
-
-    private ItemInstance capturedItemInstance2ElectricBoogaloo;
-
-    @Redirect(
+    @ModifyExpressionValue(
             method = "canAcceptRecipeOutput()Z",
             at = @At(
                     value = "FIELD",
@@ -94,7 +60,10 @@ public class MixinTileEntityFurnace {
                     opcode = Opcodes.GETFIELD
             )
     )
-    private int fixOverstack(ItemInstance itemInstance) {
-        return itemInstance.count + capturedItemInstance2ElectricBoogaloo.count - 1;
+    private int fixOverstack(
+            int count,
+            @Local(index = 1) ItemInstance itemInstance
+    ) {
+        return count + itemInstance.count - 1;
     }
 }

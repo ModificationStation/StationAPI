@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(TileEntityFurnace.class)
 public interface TileEntityFurnaceAccessor {
-
     @Invoker
     int invokeGetFuelTime(ItemInstance itemInstance);
 }

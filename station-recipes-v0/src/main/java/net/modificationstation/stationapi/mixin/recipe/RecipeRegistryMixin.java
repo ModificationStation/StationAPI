@@ -15,7 +15,7 @@ import static net.modificationstation.stationapi.api.event.recipe.RecipeRegister
 import static net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent.Vanilla.CRAFTING_SHAPELESS;
 
 @Mixin(RecipeRegistry.class)
-public class RecipeRegistryMixin {
+class RecipeRegistryMixin {
     @Mutable
     @Shadow
     @Final

@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
 import net.minecraft.item.ItemInstance;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.ShapedRecipe;
-import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ShapedRecipe.class)
-public class MixinShapedRecipe implements StationRecipe {
+abstract class MixinShapedRecipe implements Recipe {
 
     @Shadow private int width;
     @Shadow private int height;

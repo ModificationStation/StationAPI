@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(CraftingResult.class)
-public class MixinCraftingResult {
+class MixinCraftingResult {
 
     @Shadow
     private PlayerBase player;

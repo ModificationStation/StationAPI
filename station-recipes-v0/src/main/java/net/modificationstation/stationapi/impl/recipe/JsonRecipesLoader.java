@@ -22,6 +22,10 @@ import java.util.Objects;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
+/**
+ * @deprecated Use {@link RecipeManager} instead.
+ */
+@Deprecated
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class JsonRecipesLoader {
