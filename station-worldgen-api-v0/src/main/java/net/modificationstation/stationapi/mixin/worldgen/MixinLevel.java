@@ -23,6 +23,9 @@ public class MixinLevel {
         )
     )
     private void onInit(DimensionData data, String name, long seed, Dimension dimension, CallbackInfo info) {
+        if (data.getLevelProperties() != null) {
+            seed = data.getLevelProperties().getSeed();
+        }
         BiomeAPI.init(seed);
     }
     
@@ -36,6 +39,9 @@ public class MixinLevel {
     )
     @Environment(value= EnvType.CLIENT)
     private void onInit(DimensionData data, String name, Dimension dimension, long seed, CallbackInfo info) {
+        if (data.getLevelProperties() != null) {
+            seed = data.getLevelProperties().getSeed();
+        }
         BiomeAPI.init(seed);
     }
     
