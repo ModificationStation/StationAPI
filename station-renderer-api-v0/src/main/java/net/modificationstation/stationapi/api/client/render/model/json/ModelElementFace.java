@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.JsonHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.api.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
@@ -38,6 +39,7 @@ public class ModelElementFace {
             String string = this.deserializeTexture(jsonObject);
             ModelElementTexture modelElementTexture = jsonDeserializationContext.deserialize(jsonObject, ModelElementTexture.class);
             float emission = JsonHelper.getFloat(jsonObject, "emission", 0F);
+            emission = MathHelper.clamp(emission, 0F, 1F);
             return new ModelElementFace(direction, i, string, modelElementTexture, emission);
         }
 
