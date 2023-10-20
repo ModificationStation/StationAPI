@@ -21,7 +21,8 @@ public enum Blocks {
     CUSTOM_MODEL_BLOCK("farlands_block", "farlands_block", id -> new ModdedModelBlock(id, Material.DIRT).setHardness(1)),
     FREEZER("freezer", "freezer", id -> new BlockFreezer(id).setHardness(2.5F).setSounds(TemplateBlockBase.STONE_SOUNDS)),
     ALTAR("altar", "altar", id -> new BlockAltar(id, Material.STONE).setHardness(3)),
-    VARIATION_BLOCK("variation_block", "variationBlock", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSounds(BlockBase.STONE_SOUNDS).disableAutomaticBlockItemRegistration());
+    VARIATION_BLOCK("variation_block", "variationBlock", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSounds(BlockBase.STONE_SOUNDS).disableAutomaticBlockItemRegistration()),
+    EMISSION_CHECKER("emission_checker", "emissionChecker", LampBlock::new);
 
     private final Runnable register;
     private BlockBase block;
