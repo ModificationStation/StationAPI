@@ -16,7 +16,7 @@ public class BakedQuadFactory {
     private static final float MIN_SCALE = 1.0F / (float)Math.cos(0.39269909262657166D) - 1.0F;
     private static final float MAX_SCALE = 1.0F / (float)Math.cos(0.7853981852531433D) - 1.0F;
 
-    public BakedQuad bake(Vec3f from, Vec3f to, ModelElementFace face, Sprite texture, Direction side, ModelBakeSettings settings, @Nullable ModelRotation rotation, boolean shade, Identifier modelId) {
+    public BakedQuad bake(Vec3f from, Vec3f to, ModelElementFace face, Sprite texture, Direction side, ModelBakeSettings settings, @Nullable ModelRotation rotation, boolean shade, Identifier modelId, float emission) {
         ModelElementTexture modelElementTexture = face.textureData;
         if (settings.isUvLocked()) {
             modelElementTexture = uvLock(face.textureData, side, settings.getRotation(), modelId);
@@ -38,7 +38,7 @@ public class BakedQuadFactory {
             this.encodeDirection(is, direction);
         }
 
-        return new BakedQuad(is, face.tintIndex, direction, texture, shade);
+        return new BakedQuad(is, face.tintIndex, direction, texture, shade, emission);
     }
 
     public static ModelElementTexture uvLock(ModelElementTexture texture, Direction orientation, AffineTransformation rotation, Identifier modelId) {

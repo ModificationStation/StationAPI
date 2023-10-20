@@ -15,12 +15,14 @@ public class ModelElementFace {
     public final int tintIndex;
     public final String textureId;
     public final ModelElementTexture textureData;
+    public final float emission;
 
-    public ModelElementFace(@Nullable Direction cullFace, int tintIndex, String textureId, ModelElementTexture textureData) {
+    public ModelElementFace(@Nullable Direction cullFace, int tintIndex, String textureId, ModelElementTexture textureData, float emission) {
         this.cullFace = cullFace;
         this.tintIndex = tintIndex;
         this.textureId = textureId;
         this.textureData = textureData;
+        this.emission = emission;
     }
 
     @Environment(EnvType.CLIENT)
@@ -35,7 +37,8 @@ public class ModelElementFace {
             int i = this.deserializeTintIndex(jsonObject);
             String string = this.deserializeTexture(jsonObject);
             ModelElementTexture modelElementTexture = jsonDeserializationContext.deserialize(jsonObject, ModelElementTexture.class);
-            return new ModelElementFace(direction, i, string, modelElementTexture);
+            float emission = JsonHelper.getFloat(jsonObject, "emission", 0F);
+            return new ModelElementFace(direction, i, string, modelElementTexture, emission);
         }
 
         protected int deserializeTintIndex(JsonObject object) {

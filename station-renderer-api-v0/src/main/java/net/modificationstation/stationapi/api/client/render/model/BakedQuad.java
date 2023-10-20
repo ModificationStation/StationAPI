@@ -12,13 +12,15 @@ public class BakedQuad {
    protected final Direction face;
    protected final Sprite sprite;
    private final boolean shade;
+   private final float emission;
 
-   public BakedQuad(int[] vertexData, int colorIndex, Direction face, Sprite sprite, boolean shade) {
+   public BakedQuad(int[] vertexData, int colorIndex, Direction face, Sprite sprite, boolean shade, float emission) {
       this.vertexData = vertexData;
       this.colorIndex = colorIndex;
       this.face = face;
       this.sprite = sprite;
       this.shade = shade;
+      this.emission = emission;
    }
 
    public int[] getVertexData() {
@@ -39,5 +41,9 @@ public class BakedQuad {
 
    public boolean hasShade() {
       return this.shade;
+   }
+   
+   public float getEmission() {
+      return emission;
    }
 }

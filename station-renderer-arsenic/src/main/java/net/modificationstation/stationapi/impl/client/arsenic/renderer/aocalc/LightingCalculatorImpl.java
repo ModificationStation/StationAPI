@@ -80,6 +80,13 @@ public final class LightingCalculatorImpl {
     }
 
     public void calculateForQuad(BakedQuad q) {
+        float emission = q.getEmission();
+        
+        if (emission >= 1) {
+            Arrays.fill(light, emission);
+        }
+        else if (emission < 0) emission = 0;
+        
         Direction face = q.getFace();
         calculateForQuad(
                 face,
@@ -97,6 +104,10 @@ public final class LightingCalculatorImpl {
                 z + Float.intBitsToFloat(q.getVertexData()[26]),
                 q.hasShade()
         );
+        
+        for (byte i = 0; i < light.length; i++) {
+            light[i] = MathHelper.lerp(emission, light[i], 1F);
+        }
     }
 
     public void calculateForQuad(MutableQuadViewImpl q) {
