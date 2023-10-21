@@ -16,14 +16,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import java.util.function.Function;
+import java.util.function.ToIntFunction;
 
 @Mixin(BlockBase.class)
 public abstract class MixinBlockBase implements StationBlock {
-    @Unique private Function<BlockState, Integer> emittanceProvider;
+    @Unique private ToIntFunction<BlockState> emittanceProvider;
 
     @Shadow public abstract BlockBase setTranslationKey(String string);
-    
-    @Shadow @Final public static BlockBase JACK_O_LANTERN;
     
     @Shadow @Final public int id;
     
@@ -38,7 +37,7 @@ public abstract class MixinBlockBase implements StationBlock {
     }
     
     @Override
-    public BlockBase setEmittance(Function<BlockState, Integer> provider) {
+    public BlockBase setEmittance(ToIntFunction<BlockState> provider) {
         emittanceProvider = provider;
         
         // Need for proper functionality of LevelMixin
@@ -50,7 +49,7 @@ public abstract class MixinBlockBase implements StationBlock {
     @Override
     public int getEmittance(BlockState state) {
         if (emittanceProvider != null) {
-            return emittanceProvider.apply(state);
+            return emittanceProvider.applyAsInt(state);
         }
         return BlockBase.EMITTANCE[state.getBlock().id];
     }

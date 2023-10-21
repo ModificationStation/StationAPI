@@ -7,6 +7,7 @@ import net.modificationstation.stationapi.api.registry.RemappableRawIdHolder;
 import net.modificationstation.stationapi.api.util.Util;
 
 import java.util.function.Function;
+import java.util.function.ToIntFunction;
 
 public interface StationBlock extends RemappableRawIdHolder {
 
@@ -18,7 +19,7 @@ public interface StationBlock extends RemappableRawIdHolder {
         return Util.assertImpl();
     }
     
-    default BlockBase setEmittance(Function<BlockState, Integer> provider) {
+    default BlockBase setEmittance(ToIntFunction<BlockState> provider) {
        return Util.assertImpl();
     }
     
