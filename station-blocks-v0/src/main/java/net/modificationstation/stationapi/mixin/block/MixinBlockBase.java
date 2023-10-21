@@ -20,11 +20,10 @@ import java.util.function.ToIntFunction;
 
 @Mixin(BlockBase.class)
 public abstract class MixinBlockBase implements StationBlock {
-    @Unique private ToIntFunction<BlockState> emittanceProvider;
-
     @Shadow public abstract BlockBase setTranslationKey(String string);
-    
     @Shadow @Final public int id;
+    
+    @Unique private ToIntFunction<BlockState> emittanceProvider;
     
     @Override
     public BlockBase setTranslationKey(ModID modID, String translationKey) {
@@ -41,7 +40,7 @@ public abstract class MixinBlockBase implements StationBlock {
         emittanceProvider = provider;
         
         // Need for proper functionality of LevelMixin
-        BlockBase.EMITTANCE[BlockBase.class.cast(this).id] = 15;
+        BlockBase.EMITTANCE[id] = 15;
         
         return BlockBase.class.cast(this);
     }
