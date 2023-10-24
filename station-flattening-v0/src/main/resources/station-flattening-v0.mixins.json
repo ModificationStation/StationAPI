@@ -34,6 +34,8 @@
     "RegionFileAccessor"
   ],
   "client": [
+    "client.MixinBaseClientInteractionManager",
+    "client.MixinBlockRenderer",
     "client.MixinClientLevel",
     "client.MixinInGame",
     "client.MixinMinecraft",
@@ -41,8 +43,7 @@
     "client.MixinMultiPlayerClientInteractionManager",
     "client.MixinPlayerRenderer",
     "client.MixinSinglePlayerClientInteractionManager",
-    "client.MixinWorldRenderer",
-    "client.MixinBaseClientInteractionManager"
+    "client.MixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

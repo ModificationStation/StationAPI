@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerBase;
@@ -19,16 +21,19 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.api.registry.sync.trackers.*;
 import net.modificationstation.stationapi.api.state.StateManager;
+import net.modificationstation.stationapi.impl.block.BlockBrightness;
 import net.modificationstation.stationapi.impl.block.BlockDropListImpl;
+import net.modificationstation.stationapi.impl.block.StationFlatteningBlockInternal;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
+import java.util.function.ToIntFunction;
 
 @Mixin(BlockBase.class)
-public abstract class MixinBlockBase implements StationFlatteningBlock {
+public abstract class MixinBlockBase implements StationFlatteningBlock, StationFlatteningBlockInternal {
 
     @Shadow public abstract void beforeDestroyedByExplosion(Level arg, int i, int j, int k, int l, float f);
 
@@ -317,5 +322,29 @@ public abstract class MixinBlockBase implements StationFlatteningBlock {
     )
     private static ItemBase onlyUnderShift(ItemBase[] array, int index) {
         return index < ItemRegistry.ID_SHIFT ? array[index] : null;
+    }
+
+    @Unique private ToIntFunction<BlockState> stationapi_luminance = state -> BlockBase.EMITTANCE[state.getBlock().id];
+
+    @Override
+    public BlockBase setLuminance(ToIntFunction<BlockState> provider) {
+        stationapi_luminance = provider;
+
+        // Need for proper functionality of LevelMixin
+        BlockBase.EMITTANCE[id] = 15;
+
+        return BlockBase.class.cast(this);
+    }
+
+    @Override
+    @Unique
+    public ToIntFunction<BlockState> stationapi_getLuminanceProvider() {
+        return stationapi_luminance;
+    }
+
+    @Environment(value= EnvType.CLIENT)
+    @ModifyArg(method = "getBrightness", at = @At(value = "INVOKE", target = "Lnet/minecraft/level/BlockView;method_1784(IIII)F"), index = 3)
+    private int getStateBrightness(int original) {
+        return BlockBrightness.light;
     }
 }
