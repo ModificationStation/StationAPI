@@ -1,28 +1,36 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
+import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.gen.BiomeSource;
+import net.modificationstation.stationapi.api.util.math.MathHelper;
 
 public class WorldGeneratorImpl {
     private static final BiomeDataInterpolator MIN_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(Biome::getMinHeight, 16, 4, 8);
     private static final BiomeDataInterpolator MAX_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(Biome::getMaxHeight, 16, 4, 8);
 
-    public static void updateNoise(int cx, int cz, double[] data, BiomeSource biomeSource) {
+    public static void updateNoise(Level level, int cx, int cz, double[] data) {
         float min = 0;
         float max = 0;
         float n = 0;
         cx <<= 4;
         cz <<= 4;
+    
+        BiomeSource biomeSource = level.getBiomeSource();
+        int sideY = data.length / 25;
+        int dx = sideY * 5;
 
         for (int i = 0; i < data.length; i++) {
-            int y = i % 17;
+            int y = (i % sideY);
 
             if (y == 0) {
-                int x = ((i / 85) << 2) + cx;
-                int z = (((i / 17) % 5) << 2) + cz;
+                int x = ((i / dx) << 2) + cx;
+                int z = (((i / sideY) % 5) << 2) + cz;
                 min = MIN_HEIGHT_INTERPOLATOR.get(biomeSource, x, z) / 8F;
                 max = MAX_HEIGHT_INTERPOLATOR.get(biomeSource, x, z) / 8F;
             }
+            
+            y += level.getBottomY();
 
             if (y < min) {
                 float d = (min - y) * 100 + n * 10;

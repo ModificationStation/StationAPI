@@ -73,10 +73,10 @@ public class TestWorldgenListener {
             int color = 0xFF000000 | random.nextInt();
             voronoiTest[i] = BiomeBuilder
                 .start("Voronoi " + i)
+                .height(256, 256)
                 .grassAndLeavesColor(color)
                 .structure(DefaultStructures.SPRUCE_TREE_SCATTERED)
                 .fogColor(color)
-                .height(55, 60)
                 .build();
             voronoiTest[i].grassColour = color;
         }

@@ -43,13 +43,17 @@ public class FlattenedChunk extends Chunk {
     }
 
     public void fromLegacy(byte[] tiles) {
+        int mask = (tiles.length >> 8) - 1;
+        int offsetZ = mask == 127 ? 7 : net.modificationstation.stationapi.api.util.math.MathHelper.ceilLog2(mask + 1);
+        int offsetX = offsetZ + 4;
+        int id, bx, by, bz;
         for(int i = 0; i < tiles.length; i++) {
-            int id = Byte.toUnsignedInt(tiles[i]);
+            id = Byte.toUnsignedInt(tiles[i]);
             if (id == 0 || id >= BlockBase.BY_ID.length) continue;
-            int by = i & 127;
+            by = i & mask;
             if (by > lastBlock) continue;
-            int bx = (i >> 11) & 15;
-            int bz = (i >> 7) & 15;
+            bx = (i >> offsetX) & 15;
+            bz = (i >> offsetZ) & 15;
             Objects.requireNonNull(getOrCreateSection(by, false)).setBlockState(bx, by & 15, bz, BlockBase.BY_ID[id].getDefaultState());
         }
     }

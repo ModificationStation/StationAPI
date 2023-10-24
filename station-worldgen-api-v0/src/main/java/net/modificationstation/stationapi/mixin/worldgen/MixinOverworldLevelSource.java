@@ -6,6 +6,7 @@ import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.source.LevelSource;
 import net.minecraft.level.source.OverworldLevelSource;
+import net.modificationstation.stationapi.impl.level.StationDimension;
 import net.modificationstation.stationapi.impl.worldgen.WorldDecoratorImpl;
 import net.modificationstation.stationapi.impl.worldgen.WorldGeneratorImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -49,7 +50,7 @@ public class MixinOverworldLevelSource {
             constant = @Constant(intValue = 127)
     )
     private int cancelSurfaceMaking(int constant, @Local Biome biome) {
-        return biome.noSurfaceRules() ? constant : -1;
+        return biome.noSurfaceRules() ? level.getTopY() - 1 : -1;
     }
 
     @Inject(
@@ -61,6 +62,6 @@ public class MixinOverworldLevelSource {
             )
     )
     private void changeHeight(int cx, int cz, byte[] args, Biome[] biomes, double[] par5, CallbackInfo info) {
-        WorldGeneratorImpl.updateNoise(cx, cz, this.noises, level.getBiomeSource());
+        WorldGeneratorImpl.updateNoise(level, cx, cz, this.noises);
     }
 }
