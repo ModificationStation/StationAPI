@@ -1,0 +1,34 @@
+{
+    "parent": "block/block",
+	"textures": {
+		"all": "minecraft:block/dirt",
+		"emissive": "sltest:blocks/dirt_e",
+		"particles": "#all"
+	},
+    "elements": [
+        {
+			"from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down":  { "texture": "#all", "cullface": "down" },
+                "up":    { "texture": "#all", "cullface": "up" },
+                "north": { "texture": "#all", "cullface": "north" },
+                "south": { "texture": "#all", "cullface": "south" },
+                "west":  { "texture": "#all", "cullface": "west" },
+                "east":  { "texture": "#all", "cullface": "east" }
+            }
+        },
+		{
+			"from": [ 0, 0, 0 ],
+            "to": [ 16, 16, 16 ],
+            "faces": {
+                "down":  { "texture": "#emissive", "cullface": "down", "emission": 1.0 },
+                "up":    { "texture": "#emissive", "cullface": "up", "emission": 1.0 },
+                "north": { "texture": "#emissive", "cullface": "north", "emission": 1.0 },
+                "south": { "texture": "#emissive", "cullface": "south", "emission": 1.0 },
+                "west":  { "texture": "#emissive", "cullface": "west", "emission": 1.0 },
+                "east":  { "texture": "#emissive", "cullface": "east", "emission": 1.0 }
+            }
+        }
+    ]
+}

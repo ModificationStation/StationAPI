@@ -38,7 +38,7 @@ public class BakedQuadFactory {
             this.encodeDirection(is, direction);
         }
 
-        return new BakedQuad(is, face.tintIndex, direction, texture, shade);
+        return new BakedQuad(is, face.tintIndex, direction, texture, shade, face.emission);
     }
 
     public static ModelElementTexture uvLock(ModelElementTexture texture, Direction orientation, AffineTransformation rotation, Identifier modelId) {

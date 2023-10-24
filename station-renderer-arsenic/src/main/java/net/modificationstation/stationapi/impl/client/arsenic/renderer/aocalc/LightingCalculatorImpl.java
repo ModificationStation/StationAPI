@@ -14,6 +14,7 @@ import static net.minecraft.block.BlockBase.ALLOWS_GRASS_UNDER;
 import static net.minecraft.util.maths.MathHelper.floor;
 
 public final class LightingCalculatorImpl {
+    private static final float[] FULL_BRIGHTNESS = new float[] { 1, 1, 1, 1 };
 
     private final int
             cacheRadius,
@@ -80,6 +81,13 @@ public final class LightingCalculatorImpl {
     }
 
     public void calculateForQuad(BakedQuad q) {
+        float emission = q.getEmission();
+        
+        if (emission == 1) {
+            System.arraycopy(FULL_BRIGHTNESS, 0, light, 0, light.length);
+            return;
+        }
+        
         Direction face = q.getFace();
         calculateForQuad(
                 face,
@@ -97,6 +105,13 @@ public final class LightingCalculatorImpl {
                 z + Float.intBitsToFloat(q.getVertexData()[26]),
                 q.hasShade()
         );
+    
+        if (emission == 0) return;
+
+        light[0] = MathHelper.lerp(emission, light[0], 1F);
+        light[1] = MathHelper.lerp(emission, light[1], 1F);
+        light[2] = MathHelper.lerp(emission, light[2], 1F);
+        light[3] = MathHelper.lerp(emission, light[3], 1F);
     }
 
     public void calculateForQuad(MutableQuadViewImpl q) {

@@ -5,6 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.JsonHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.api.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
@@ -15,12 +16,18 @@ public class ModelElementFace {
     public final int tintIndex;
     public final String textureId;
     public final ModelElementTexture textureData;
+    public final float emission;
 
     public ModelElementFace(@Nullable Direction cullFace, int tintIndex, String textureId, ModelElementTexture textureData) {
+        this(cullFace, tintIndex, textureId, textureData, 0);
+    }
+
+    public ModelElementFace(@Nullable Direction cullFace, int tintIndex, String textureId, ModelElementTexture textureData, float emission) {
         this.cullFace = cullFace;
         this.tintIndex = tintIndex;
         this.textureId = textureId;
         this.textureData = textureData;
+        this.emission = emission;
     }
 
     @Environment(EnvType.CLIENT)
@@ -35,7 +42,9 @@ public class ModelElementFace {
             int i = this.deserializeTintIndex(jsonObject);
             String string = this.deserializeTexture(jsonObject);
             ModelElementTexture modelElementTexture = jsonDeserializationContext.deserialize(jsonObject, ModelElementTexture.class);
-            return new ModelElementFace(direction, i, string, modelElementTexture);
+            float emission = JsonHelper.getFloat(jsonObject, "emission", 0F);
+            emission = MathHelper.clamp(emission, 0F, 1F);
+            return new ModelElementFace(direction, i, string, modelElementTexture, emission);
         }
 
         protected int deserializeTintIndex(JsonObject object) {

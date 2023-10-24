@@ -31,6 +31,7 @@ import net.modificationstation.stationapi.api.util.exception.CrashReport;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSectionBlockState;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc.LightingCalculatorImpl;
 import org.jetbrains.annotations.Nullable;
 
@@ -196,7 +197,8 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         for (BakedQuad bakedQuad : model.getQuads(null, null, random)) {
             if (bakedQuad.getFace() != Direction.WEST) continue;
             int i = bl && bakedQuad.hasColor() ? this.itemColors.getColor(stack, bakedQuad.getColorIndex()) : -1;
-            i = colorF2I(redI2F(i) * brightness, greenI2F(i) * brightness, blueI2F(i) * brightness);
+            float light = MathHelper.lerp(bakedQuad.getEmission(), brightness, 1F);
+            i = colorF2I(redI2F(i) * light, greenI2F(i) * light, blueI2F(i) * light);
             tessellator.quad(bakedQuad, 0, 0, 0, i, i, i, i, 0, 1, 0, false);
         }
     }
@@ -233,7 +235,8 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         boolean bl = stack != null && stack.itemId != 0 && stack.count > 0;
         for (BakedQuad bakedQuad : quads) {
             int i = bl && bakedQuad.hasColor() ? this.itemColors.getColor(stack, bakedQuad.getColorIndex()) : -1;
-            i = colorF2I(redI2F(i) * brightness, greenI2F(i) * brightness, blueI2F(i) * brightness);
+            float light = MathHelper.lerp(bakedQuad.getEmission(), brightness, 1F);
+            i = colorF2I(redI2F(i) * light, greenI2F(i) * light, blueI2F(i) * light);
             Direction face = bakedQuad.getFace();
             tessellator.quad(bakedQuad, 0, 0, 0, i, i, i, i, face.getOffsetX(), face.getOffsetY(), face.getOffsetZ(), false);
         }
