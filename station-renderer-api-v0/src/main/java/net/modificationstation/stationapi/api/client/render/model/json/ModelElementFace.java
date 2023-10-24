@@ -18,6 +18,10 @@ public class ModelElementFace {
     public final ModelElementTexture textureData;
     public final float emission;
 
+    public ModelElementFace(@Nullable Direction cullFace, int tintIndex, String textureId, ModelElementTexture textureData) {
+        this(cullFace, tintIndex, textureId, textureData, 0);
+    }
+
     public ModelElementFace(@Nullable Direction cullFace, int tintIndex, String textureId, ModelElementTexture textureData, float emission) {
         this.cullFace = cullFace;
         this.tintIndex = tintIndex;

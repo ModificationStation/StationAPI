@@ -157,7 +157,7 @@ public final class JsonUnbakedModel implements UnbakedModel {
     }
 
     private static BakedQuad createQuad(ModelElement element, ModelElementFace elementFace, Sprite sprite, Direction side, ModelBakeSettings settings, Identifier id) {
-        return QUAD_FACTORY.bake(element.from, element.to, elementFace, sprite, side, settings, element.rotation, element.shade, id, elementFace.emission);
+        return QUAD_FACTORY.bake(element.from, element.to, elementFace, sprite, side, settings, element.rotation, element.shade, id);
     }
 
     public boolean textureExists(String name) {
