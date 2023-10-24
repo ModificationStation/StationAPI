@@ -16,6 +16,7 @@ import net.modificationstation.stationapi.api.state.State;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
+import net.modificationstation.stationapi.impl.block.StationFlatteningBlockInternal;
 
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -26,6 +27,7 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
     private final MaterialColour materialColor;
     private final boolean toolRequired;
     private final boolean opaque;
+    private int luminance = -1;
 
     protected AbstractBlockState(BlockBase block, ImmutableMap<Property<?>, Comparable<?>> propertyMap, MapCodec<BlockState> mapCodec) {
         super(block, propertyMap, mapCodec);
@@ -48,7 +50,9 @@ public abstract class AbstractBlockState extends State<BlockBase, BlockState> {
      * Returns the light level emitted by this block state.
      */
     public int getLuminance() {
-        return BlockBase.EMITTANCE[owner.id];
+        return luminance == -1 ?
+                luminance = ((StationFlatteningBlockInternal) owner).stationapi_getLuminanceProvider().applyAsInt(asBlockState()) :
+                luminance;
     }
 
     public boolean isAir() {

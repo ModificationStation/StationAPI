@@ -6,9 +6,6 @@ import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.registry.RemappableRawIdHolder;
 import net.modificationstation.stationapi.api.util.Util;
 
-import java.util.function.Function;
-import java.util.function.ToIntFunction;
-
 public interface StationBlock extends RemappableRawIdHolder {
 
     default BlockBase setTranslationKey(ModID modID, String translationKey) {
@@ -16,14 +13,6 @@ public interface StationBlock extends RemappableRawIdHolder {
     }
 
     default BlockBase setTranslationKey(Identifier translationKey) {
-        return Util.assertImpl();
-    }
-    
-    default BlockBase setEmittance(ToIntFunction<BlockState> provider) {
-       return Util.assertImpl();
-    }
-    
-    default int getEmittance(BlockState state) {
         return Util.assertImpl();
     }
 }

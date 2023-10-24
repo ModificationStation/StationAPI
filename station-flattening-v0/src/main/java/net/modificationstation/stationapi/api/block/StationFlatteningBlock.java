@@ -17,6 +17,7 @@ import net.modificationstation.stationapi.api.util.collection.IdList;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
+import java.util.function.ToIntFunction;
 
 public interface StationFlatteningBlock extends
         RemappableRawIdHolder,
@@ -102,5 +103,9 @@ public interface StationFlatteningBlock extends
 
     default void onBlockPlaced(Level world, int x, int y, int z, BlockState replacedState) {
         Util.assertImpl();
+    }
+
+    default BlockBase setLuminance(ToIntFunction<BlockState> provider) {
+        return Util.assertImpl();
     }
 }

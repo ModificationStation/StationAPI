@@ -214,4 +214,17 @@ public abstract class MixinLevel implements StationFlatteningWorld {
     private BlockBase accountForAirBlock(BlockBase value) {
         return value == States.AIR.get().getBlock() ? null : value;
     }
+
+    @ModifyVariable(
+            method = "method_165(Lnet/minecraft/level/LightType;IIII)V",
+            at = @At(
+                    value = "STORE",
+                    ordinal = 1
+            ),
+            index = 5,
+            argsOnly = true
+    )
+    private int getStateLuminance(int original, @Local(index = 2) int x, @Local(index = 3) int y, @Local(index = 4) int z, @Local(index = 5) int light) {
+        return Math.max(getBlockState(x, y, z).getLuminance(), light);
+    }
 }

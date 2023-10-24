@@ -5,5 +5,5 @@ import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class BlockBrightness {
-	public static int light;
+    public static int light;
 }
