@@ -1,9 +1,12 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.level.biome.Biome;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Provides biomes based on temperature/wetness(humidity) climate model, similar to default Minecraft behaviour
@@ -29,7 +32,14 @@ public class ClimateBiomeProvider implements BiomeProvider {
         Biome biome = getBiome(temperature, wetness);
         return biome == null ? biomes.get(0).biome : biome;
     }
-
+    
+    @Override
+    public Collection<Biome> getBiomes() {
+        Set<Biome> biomes = new ObjectOpenHashSet<>();
+        this.biomes.forEach(info -> biomes.add(info.biome));
+        return biomes;
+    }
+    
     protected Biome getBiome(float temperature, float wetness) {
         for (BiomeInfo info : biomes) {
             if (info.t1 > temperature || info.t2 < temperature) continue;

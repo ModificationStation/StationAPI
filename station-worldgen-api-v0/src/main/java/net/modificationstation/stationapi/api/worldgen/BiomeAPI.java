@@ -1,10 +1,16 @@
 package net.modificationstation.stationapi.api.worldgen;
 
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
+import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeModificationEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeRegionsProvider;
+import net.modificationstation.stationapi.impl.level.StationDimension;
 import net.modificationstation.stationapi.impl.worldgen.NetherBiomeProviderImpl;
 import net.modificationstation.stationapi.impl.worldgen.OverworldBiomeProviderImpl;
 
@@ -14,6 +20,7 @@ import java.util.Map;
 public class BiomeAPI {
     private static Map<Identifier, BiomeProvider> overworldProviders = new Reference2ObjectOpenHashMap<>(16);
     private static Map<Identifier, BiomeProvider> netherProviders = new Reference2ObjectOpenHashMap<>(16);
+    private static Object2BooleanMap<Level> modificationsApplied = new Object2BooleanOpenHashMap<>(16);
 
     private static BiomeRegionsProvider overworldProvider;
     private static BiomeRegionsProvider netherProvider;
@@ -88,7 +95,9 @@ public class BiomeAPI {
         return netherProvider;
     }
 
-    public static void init(long seed) {
+    // Seed can be different from level seed (when read from properties)
+    // Parsed as separate args
+    public static void init(Level level, long seed) {
         // Call this to force biome registry event happen before init of regions
         //noinspection ResultOfMethodCallIgnored
         Biome.getBiome(0, 0);
@@ -119,5 +128,12 @@ public class BiomeAPI {
 
         overworldProvider.setSeed(seed);
         netherProvider.setSeed(seed);
+        
+        if (!modificationsApplied.getBoolean(level)) {
+            modificationsApplied.put(level, true);
+            ((StationDimension) level.dimension).getBiomes().forEach(biome -> {
+                StationAPI.EVENT_BUS.post(BiomeModificationEvent.builder().biome(biome).level(level).build());
+            });
+        }
     }
 }

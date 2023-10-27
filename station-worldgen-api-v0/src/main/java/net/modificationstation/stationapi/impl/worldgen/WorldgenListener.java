@@ -5,6 +5,7 @@ import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.level.biome.Biome;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEvent;
+import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeModificationEvent;
 import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeProviderRegisterEvent;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 

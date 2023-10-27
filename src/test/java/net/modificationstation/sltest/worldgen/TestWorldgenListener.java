@@ -1,6 +1,7 @@
 package net.modificationstation.sltest.worldgen;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.structure.OakTree;
@@ -9,7 +10,13 @@ import net.minecraft.level.structure.Structure;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEvent;
+import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeModificationEvent;
 import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeProviderRegisterEvent;
+import net.modificationstation.stationapi.api.registry.DimensionContainer;
+import net.modificationstation.stationapi.api.registry.DimensionRegistry;
+import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.registry.Registries;
+import net.modificationstation.stationapi.api.world.dimension.VanillaDimensions;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeBuilder;
 import net.modificationstation.stationapi.api.worldgen.biome.ClimateBiomeProvider;
@@ -20,6 +27,7 @@ import net.modificationstation.stationapi.api.worldgen.structure.LeveledScatterS
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceBuilder;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 
+import java.util.Optional;
 import java.util.Random;
 
 public class TestWorldgenListener {
@@ -131,5 +139,10 @@ public class TestWorldgenListener {
         // Nether biomes test
         BiomeAPI.addNetherBiome(testNether);
         BiomeAPI.addNetherBiome(testNether2);
+    }
+    
+    @EventListener
+    public void testBiomeModification(BiomeModificationEvent event) {
+        System.out.println(event.level + " " + event.biome + " " + event.biome.biomeName + " " + event.biome.getClass().getName());
     }
 }
