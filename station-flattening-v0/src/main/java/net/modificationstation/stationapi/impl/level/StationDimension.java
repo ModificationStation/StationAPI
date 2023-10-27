@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.impl.level;
 
 import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
-import net.modificationstation.stationapi.api.util.Util;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public interface StationDimension {
 
@@ -60,6 +60,6 @@ public interface StationDimension {
      * Get list of dimension biomes. Mods with custom dimensions should provide their biomes here
      */
     default Collection<Biome> getBiomes() {
-        return Util.assertImpl();
+        return Collections.emptyList();
     }
 }
