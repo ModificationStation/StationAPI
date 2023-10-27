@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
+import net.minecraft.entity.EntityBase;
 import net.minecraft.entity.EntityEntry;
 import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
@@ -95,17 +96,17 @@ public class MixinBiome implements StationBiome {
     }
 
     @Override
-    public void addPassiveEntity(Class<? extends Entity> entityClass, int rarity) {
+    public void addPassiveEntity(Class<? extends EntityBase> entityClass, int rarity) {
         this.creatures.add(new EntityEntry(entityClass, rarity));
     }
 
     @Override
-    public void addHostileEntity(Class<? extends Entity> entityClass, int rarity) {
+    public void addHostileEntity(Class<? extends EntityBase> entityClass, int rarity) {
         this.monsters.add(new EntityEntry(entityClass, rarity));
     }
 
     @Override
-    public void addWaterEntity(Class<? extends Entity> entityClass, int rarity) {
+    public void addWaterEntity(Class<? extends EntityBase> entityClass, int rarity) {
         this.waterCreatures.add(new EntityEntry(entityClass, rarity));
     }
 

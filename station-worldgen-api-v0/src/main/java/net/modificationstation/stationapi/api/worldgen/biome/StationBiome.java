@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
+import net.minecraft.entity.EntityBase;
 import net.minecraft.level.Level;
 import net.minecraft.level.structure.Structure;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.List;
 
 public interface StationBiome {
@@ -69,15 +69,15 @@ public interface StationBiome {
         Util.assertImpl();
     }
 
-    default void addPassiveEntity(Class<? extends Entity> entityClass, int rarity) {
+    default void addPassiveEntity(Class<? extends EntityBase> entityClass, int rarity) {
         Util.assertImpl();
     }
 
-    default void addHostileEntity(Class<? extends Entity> entityClass, int rarity) {
+    default void addHostileEntity(Class<? extends EntityBase> entityClass, int rarity) {
         Util.assertImpl();
     }
 
-    default void addWaterEntity(Class<? extends Entity> entityClass, int rarity) {
+    default void addWaterEntity(Class<? extends EntityBase> entityClass, int rarity) {
         Util.assertImpl();
     }
 

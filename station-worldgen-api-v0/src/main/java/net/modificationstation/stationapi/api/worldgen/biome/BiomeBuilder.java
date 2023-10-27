@@ -2,21 +2,21 @@ package net.modificationstation.stationapi.api.worldgen.biome;
 
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
+import net.minecraft.entity.EntityBase;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.structure.Structure;
 import net.modificationstation.stationapi.api.worldgen.structure.DefaultStructures;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 import net.modificationstation.stationapi.impl.worldgen.BiomeColorsImpl;
 
-import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BiomeBuilder {
     private static final ThreadLocal<BiomeBuilder> INSTANCES = ThreadLocal.withInitial(BiomeBuilder::new);
-    private final Reference2IntMap<Class<? extends Entity>> hostileEntities = new Reference2IntOpenHashMap<>(32);
-    private final Reference2IntMap<Class<? extends Entity>> passiveEntities = new Reference2IntOpenHashMap<>(32);
-    private final Reference2IntMap<Class<? extends Entity>> waterEntities = new Reference2IntOpenHashMap<>(32);
+    private final Reference2IntMap<Class<? extends EntityBase>> hostileEntities = new Reference2IntOpenHashMap<>(32);
+    private final Reference2IntMap<Class<? extends EntityBase>> passiveEntities = new Reference2IntOpenHashMap<>(32);
+    private final Reference2IntMap<Class<? extends EntityBase>> waterEntities = new Reference2IntOpenHashMap<>(32);
     private final List<Structure> structures = new ArrayList<>();
     private final List<SurfaceRule> rules = new ArrayList<>();
     private BiomeColorProvider grassColor;
@@ -127,7 +127,7 @@ public class BiomeBuilder {
      * Add hostile entity (mobs/monsters) to spawn list.
      * Larger rarity value = more frequent entity spawn compared to other entities
      */
-    public BiomeBuilder hostileEntity(Class<? extends Entity> entity, int rarity) {
+    public BiomeBuilder hostileEntity(Class<? extends EntityBase> entity, int rarity) {
         hostileEntities.put(entity, rarity);
         return this;
     }
@@ -136,7 +136,7 @@ public class BiomeBuilder {
      * Add passive entity (animals) to spawn list.
      * Larger rarity value = more frequent entity spawn compared to other entities
      */
-    public BiomeBuilder passiveEntity(Class<? extends Entity> entity, int rarity) {
+    public BiomeBuilder passiveEntity(Class<? extends EntityBase> entity, int rarity) {
         passiveEntities.put(entity, rarity);
         return this;
     }
@@ -145,7 +145,7 @@ public class BiomeBuilder {
      * Add water entity (water animals) to spawn list.
      * Larger rarity value = more frequent entity spawn compared to other entities
      */
-    public BiomeBuilder waterEntity(Class<? extends Entity> entity, int rarity) {
+    public BiomeBuilder waterEntity(Class<? extends EntityBase> entity, int rarity) {
         waterEntities.put(entity, rarity);
         return this;
     }
