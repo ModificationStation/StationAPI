@@ -3,9 +3,7 @@ package net.modificationstation.sltest.worldgen;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.minecraft.block.BlockBase;
-import net.minecraft.entity.monster.Creeper;
 import net.minecraft.level.biome.Biome;
-import net.minecraft.level.dimension.Overworld;
 import net.minecraft.level.structure.OakTree;
 import net.minecraft.level.structure.SpruceTree;
 import net.minecraft.level.structure.Structure;
@@ -145,8 +143,6 @@ public class TestWorldgenListener {
     
     @EventListener
     public void testBiomeModification(BiomeModificationEvent event) {
-        if (event.level.dimension instanceof Overworld) {
-            event.biome.addHostileEntity(Creeper.class, 10);
-        }
+        System.out.println(event.level + " " + event.biome + " " + event.biome.biomeName + " " + event.biome.getClass().getName());
     }
 }
