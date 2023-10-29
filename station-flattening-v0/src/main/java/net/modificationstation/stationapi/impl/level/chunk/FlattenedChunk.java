@@ -184,7 +184,7 @@ public class FlattenedChunk extends Chunk {
             for(int z = 0; z < 16; ++z) {
                 short height = lastBlock;
 
-                while (height > 0) {
+                while (height > firstBlock) {
                     if (BlockBase.LIGHT_OPACITY[getTileId(x, height - 1, z)] != 0) break;
                     --height;
                 }
@@ -208,7 +208,7 @@ public class FlattenedChunk extends Chunk {
                         }
 
                         --lightY;
-                    } while (lightY > 0 && light > 0);
+                    } while (lightY > firstBlock && light > 0);
                 }
             }
         }
