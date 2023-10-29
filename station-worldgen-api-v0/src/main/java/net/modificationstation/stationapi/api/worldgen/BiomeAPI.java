@@ -20,7 +20,7 @@ import java.util.Map;
 public class BiomeAPI {
     private static Map<Identifier, BiomeProvider> overworldProviders = new Reference2ObjectOpenHashMap<>(16);
     private static Map<Identifier, BiomeProvider> netherProviders = new Reference2ObjectOpenHashMap<>(16);
-    private static Object2BooleanMap<Level> modificationsApplied = new Object2BooleanOpenHashMap<>(16);
+    private static final Object2BooleanMap<Level> MODIFICATIONS_APPLIED = new Object2BooleanOpenHashMap<>(16);
 
     private static BiomeRegionsProvider overworldProvider;
     private static BiomeRegionsProvider netherProvider;
@@ -129,8 +129,8 @@ public class BiomeAPI {
         overworldProvider.setSeed(seed);
         netherProvider.setSeed(seed);
         
-        if (!modificationsApplied.getBoolean(level)) {
-            modificationsApplied.put(level, true);
+        if (!MODIFICATIONS_APPLIED.getBoolean(level)) {
+            MODIFICATIONS_APPLIED.put(level, true);
             ((StationDimension) level.dimension).getBiomes().forEach(biome -> {
                 StationAPI.EVENT_BUS.post(BiomeModificationEvent.builder().biome(biome).level(level).build());
             });

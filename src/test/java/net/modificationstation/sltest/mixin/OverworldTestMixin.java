@@ -6,13 +6,13 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(Overworld.class)
 public class OverworldTestMixin implements StationDimension {
-	@Override
-	public short getDefaultLevelHeight() {
-		return 256;
-	}
-	
-	@Override
-	public short getDefaultBottomY() {
-		return 0;
-	}
+    @Override
+    public short getDefaultLevelHeight() {
+        return 256;
+    }
+
+    @Override
+    public short getDefaultBottomY() {
+        return 0;
+    }
 }
