@@ -26,7 +26,7 @@ public class MixinLevel {
         if (data.getLevelProperties() != null) {
             seed = data.getLevelProperties().getSeed();
         }
-        BiomeAPI.init(seed);
+        BiomeAPI.init(Level.class.cast(this), seed);
     }
     
     @Inject(
@@ -42,7 +42,7 @@ public class MixinLevel {
         if (data.getLevelProperties() != null) {
             seed = data.getLevelProperties().getSeed();
         }
-        BiomeAPI.init(seed);
+        BiomeAPI.init(Level.class.cast(this), seed);
     }
     
     @Inject(
@@ -55,6 +55,6 @@ public class MixinLevel {
     )
     @Environment(value= EnvType.CLIENT)
     private void onInit(Level level, Dimension dimension, CallbackInfo info) {
-        BiomeAPI.init(level.getSeed());
+        BiomeAPI.init(level, level.getSeed());
     }
 }

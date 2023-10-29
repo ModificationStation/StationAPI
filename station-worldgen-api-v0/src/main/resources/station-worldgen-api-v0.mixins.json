@@ -9,6 +9,7 @@
     "MixinLevel",
     "MixinNether",
     "MixinNetherLevelSource",
+    "MixinOverworld",
     "MixinOverworldLevelSource",
     "MixinSimplexOctaveNoise"
   ],

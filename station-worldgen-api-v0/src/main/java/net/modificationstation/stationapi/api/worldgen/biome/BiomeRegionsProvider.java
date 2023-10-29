@@ -1,11 +1,14 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.util.noise.SimplexOctaveNoise;
 import net.modificationstation.stationapi.impl.worldgen.IDVoronoiNoise;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class BiomeRegionsProvider implements BiomeProvider {
     private final double[] buffer = new double[1];
@@ -26,7 +29,14 @@ public class BiomeRegionsProvider implements BiomeProvider {
         int id = idNoise.getID(px, pz, providers.size());
         return providers.get(id).getBiome(x, z, temperature, wetness);
     }
-
+    
+    @Override
+    public Collection<Biome> getBiomes() {
+        Set<Biome> biomes = new ObjectOpenHashSet<>();
+        providers.forEach(provider -> biomes.addAll(provider.getBiomes()));
+        return biomes;
+    }
+    
     @Override
     public void setSeed(long seed) {
         Random random = new Random(seed);

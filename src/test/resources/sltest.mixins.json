@@ -7,7 +7,7 @@
     "BlockBaseAccessor",
     "MixinLevel",
     "MixinNetherLevelSource",
-    "MixinOverworldLevelSource"
+    "OverworldTestMixin"
   ],
   "server": [
   ],
