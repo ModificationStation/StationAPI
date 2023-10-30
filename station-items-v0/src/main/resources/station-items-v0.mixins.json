@@ -1,33 +1,34 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "package": "net.modificationstation.stationapi.mixin.item",
-  "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "MixinBlockBase",
-    "MixinContainerBase",
-    "MixinInventoryUpdate0x68S2CPacket",
-    "MixinItemBase",
-    "MixinItemInstance",
-    "MixinPlayerBase",
-    "MixinPlayerInventory",
-    "MixinStats"
-  ],
-  "server": [
-    "server.Mixinclass_70",
-    "server.MixinServerPlayerPacketHandler"
-  ],
-  "client": [
-    "client.DrawableHelperInvoker",
-    "client.Mixinclass_608",
-    "client.MixinClientInteractionManager",
-    "client.MixinContainerBase",
-    "client.MixinGameRenderer",
-    "client.MixinItemRenderer",
-    "client.MixinMultiPlayerClientInteractionManager",
-    "client.MixinSinglePlayerClientInteractionManager"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.modificationstation.stationapi.mixin.item",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"MixinBlockBase",
+		"MixinContainerBase",
+		"MixinDye",
+		"MixinInventoryUpdate0x68S2CPacket",
+		"MixinItemBase",
+		"MixinItemInstance",
+		"MixinPlayerBase",
+		"MixinPlayerInventory",
+		"MixinStats"
+	],
+	"server": [
+		"server.Mixinclass_70",
+		"server.MixinServerPlayerPacketHandler"
+	],
+	"client": [
+		"client.DrawableHelperInvoker",
+		"client.Mixinclass_608",
+		"client.MixinClientInteractionManager",
+		"client.MixinContainerBase",
+		"client.MixinGameRenderer",
+		"client.MixinItemRenderer",
+		"client.MixinMultiPlayerClientInteractionManager",
+		"client.MixinSinglePlayerClientInteractionManager"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
 }

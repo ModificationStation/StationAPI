@@ -31,7 +31,8 @@
       "net.modificationstation.sltest.tileentity.TileEntityListener",
       "net.modificationstation.sltest.item.tool.ToolListener",
       "net.modificationstation.sltest.datafixer.DataFixerListener",
-      "net.modificationstation.sltest.worldgen.TestWorldgenListener"
+      "net.modificationstation.sltest.worldgen.TestWorldgenListener",
+      "net.modificationstation.sltest.bonemeal.BonemealListener"
     ],
     "stationapi:event_bus_client": [
       "net.modificationstation.sltest.gui.GuiListener",
