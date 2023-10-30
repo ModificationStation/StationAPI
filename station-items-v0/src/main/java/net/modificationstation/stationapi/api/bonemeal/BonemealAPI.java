@@ -96,6 +96,9 @@ public class BonemealAPI {
 	}
 	
 	static {
-		addPlant(BlockBase.GRASS.getDefaultState(), new GrassStructure(), 1);
+		BlockState grass = BlockBase.GRASS.getDefaultState();
+		addPlant(grass, new GrassStructure(), 10);
+		addPlant(grass, BlockBase.DANDELION.getDefaultState(), 1);
+		addPlant(grass, BlockBase.ROSE.getDefaultState(), 1);
 	}
 }
