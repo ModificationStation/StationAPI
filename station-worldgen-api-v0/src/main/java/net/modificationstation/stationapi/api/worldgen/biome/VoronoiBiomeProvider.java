@@ -5,11 +5,7 @@ import net.minecraft.level.biome.Biome;
 import net.minecraft.util.noise.SimplexOctaveNoise;
 import net.modificationstation.stationapi.impl.worldgen.IDVoronoiNoise;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Provides uniform biomes distribution based on voronoi cells with distortion

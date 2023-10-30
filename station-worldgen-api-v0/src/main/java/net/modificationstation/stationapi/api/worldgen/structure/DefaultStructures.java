@@ -1,16 +1,7 @@
 package net.modificationstation.stationapi.api.worldgen.structure;
 
 import net.minecraft.block.BlockBase;
-import net.minecraft.level.structure.BirchTree;
-import net.minecraft.level.structure.Cactus;
-import net.minecraft.level.structure.ClayDeposit;
-import net.minecraft.level.structure.Deadbush;
-import net.minecraft.level.structure.Dungeon;
-import net.minecraft.level.structure.Lake;
-import net.minecraft.level.structure.OakTree;
-import net.minecraft.level.structure.Ore;
-import net.minecraft.level.structure.SpruceTree;
-import net.minecraft.level.structure.Structure;
+import net.minecraft.level.structure.*;
 
 public class DefaultStructures {
     public static final Structure OAK_TREE = new OakTree();

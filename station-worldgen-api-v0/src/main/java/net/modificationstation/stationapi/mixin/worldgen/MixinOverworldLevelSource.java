@@ -6,7 +6,6 @@ import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.source.LevelSource;
 import net.minecraft.level.source.OverworldLevelSource;
-import net.modificationstation.stationapi.impl.level.StationDimension;
 import net.modificationstation.stationapi.impl.worldgen.WorldDecoratorImpl;
 import net.modificationstation.stationapi.impl.worldgen.WorldGeneratorImpl;
 import org.spongepowered.asm.mixin.Mixin;

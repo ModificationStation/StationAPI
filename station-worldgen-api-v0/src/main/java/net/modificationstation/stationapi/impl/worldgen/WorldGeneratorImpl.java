@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.impl.worldgen;
 import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;
 import net.minecraft.level.gen.BiomeSource;
-import net.modificationstation.stationapi.api.util.math.MathHelper;
 
 public class WorldGeneratorImpl {
     private static final BiomeDataInterpolator MIN_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(Biome::getMinHeight, 16, 4, 8);

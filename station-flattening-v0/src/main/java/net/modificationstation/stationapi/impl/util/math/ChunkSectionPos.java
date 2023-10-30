@@ -9,8 +9,8 @@ import net.minecraft.util.maths.MathHelper;
 import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Position;
-import net.modificationstation.stationapi.api.util.math.Vec3i;
 import net.modificationstation.stationapi.api.util.math.StationBlockPos;
+import net.modificationstation.stationapi.api.util.math.Vec3i;
 import net.modificationstation.stationapi.impl.util.CuboidBlockIterator;
 
 import java.util.Spliterator;

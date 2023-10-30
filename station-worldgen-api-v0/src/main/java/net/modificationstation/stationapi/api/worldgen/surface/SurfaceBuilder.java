@@ -4,13 +4,7 @@ import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.math.Direction.AxisDirection;
-import net.modificationstation.stationapi.api.worldgen.surface.condition.BlockSurfaceCondition;
-import net.modificationstation.stationapi.api.worldgen.surface.condition.DepthSurfaceCondition;
-import net.modificationstation.stationapi.api.worldgen.surface.condition.HeightSurfaceCondition;
-import net.modificationstation.stationapi.api.worldgen.surface.condition.SlopeSurfaceCondition;
-import net.modificationstation.stationapi.api.worldgen.surface.condition.StateSurfaceCondition;
-import net.modificationstation.stationapi.api.worldgen.surface.condition.SurfaceCondition;
-import net.modificationstation.stationapi.api.worldgen.surface.condition.TagSurfaceCondition;
+import net.modificationstation.stationapi.api.worldgen.surface.condition.*;
 
 import java.util.ArrayList;
 import java.util.List;

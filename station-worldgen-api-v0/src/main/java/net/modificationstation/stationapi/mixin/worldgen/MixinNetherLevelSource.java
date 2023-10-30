@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Sand;
 import net.minecraft.level.Level;
 import net.minecraft.level.biome.Biome;

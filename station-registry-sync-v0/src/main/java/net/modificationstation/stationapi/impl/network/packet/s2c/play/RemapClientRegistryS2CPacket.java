@@ -1,6 +1,9 @@
 package net.modificationstation.stationapi.impl.network.packet.s2c.play;
 
-import it.unimi.dsi.fastutil.objects.*;
+import it.unimi.dsi.fastutil.objects.Reference2IntLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import lombok.val;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
