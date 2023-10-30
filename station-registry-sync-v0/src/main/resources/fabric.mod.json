@@ -20,10 +20,18 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus_server": [
-      "net.modificationstation.stationapi.impl.server.registry.ServerRegistrySender"
+      "net.modificationstation.stationapi.impl.server.registry.ServerRegistrySender",
+      "net.modificationstation.stationapi.impl.server.registry.ServerRegistrySynchronizer"
     ],
     "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.client.registry.ClientServerRegistryRemapper"
+      "net.modificationstation.stationapi.impl.client.registry.ClientServerRegistryRemapper",
+      "net.modificationstation.stationapi.impl.client.registry.ClientRegistryRestorer"
+    ],
+    "main": [
+      "net.modificationstation.stationapi.impl.network.RegistryNetworkingInit"
+    ],
+    "client": [
+      "net.modificationstation.stationapi.impl.client.network.ClientRegistryNetworkingInit"
     ]
   },
 
