@@ -1,23 +1,23 @@
 {
-	"required": true,
-	"minVersion": "0.8",
-	"package": "net.modificationstation.sltest.mixin",
-	"compatibilityLevel": "JAVA_8",
-	"mixins": [
-		"BlockBaseAccessor",
-		"MixinLevel",
-		"MixinNetherLevelSource",
-		"MixinObsidian",
-		"OverworldTestMixin"
-	],
-	"server": [
-	],
-	"client": [
-		"MixinScreenBase",
-		"MixinScrollableBase",
-		"MixinWorldRenderer"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	}
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.sltest.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "BlockBaseAccessor",
+    "MixinLevel",
+    "MixinNetherLevelSource",
+    "MixinObsidian",
+    "OverworldTestMixin"
+  ],
+  "server": [
+  ],
+  "client": [
+    "MixinScreenBase",
+    "MixinScrollableBase",
+    "MixinWorldRenderer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
 }
