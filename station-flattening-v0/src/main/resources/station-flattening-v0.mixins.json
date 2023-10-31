@@ -29,6 +29,7 @@
     "MixinSkylandsLevelSource",
     "MixinWorldPopulationRegion",
     "MovingPistonBlockMixin",
+    "OakTreeMixin",
     "PistonBlockEntityMixin",
     "PistonBlockMixin",
     "RegionFileAccessor"

@@ -167,7 +167,14 @@ public abstract class MixinLevel implements StationFlatteningWorld {
             "method_193",
             "method_164"
     }, constant = @Constant(intValue = 0, ordinal = 0))
-    private int changeBottomY(int value) {
+    private int changeBottomYFirst(int value) {
+        return getBottomY();
+    }
+
+    @ModifyConstant(method = {
+            "getHeight"
+    }, constant = @Constant(intValue = 0))
+    private int changeBottomY(int constant) {
         return getBottomY();
     }
 
