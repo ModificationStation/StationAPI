@@ -112,7 +112,7 @@ public class ModelLoader {
         this.modelsToBake.keySet().forEach(modelId -> {
             BakedModel bakedModel = null;
             try {
-                bakedModel = new BakerImpl(spriteLoader, modelId).bake(modelId, ModelBakeRotation.Y0_Z0);
+                bakedModel = new BakerImpl(spriteLoader, modelId).bake(modelId, ModelBakeRotation.X0_Y0);
             } catch (Exception exception) {
                 LOGGER.warn("Unable to bake model: '{}': {}", modelId, exception);
             }

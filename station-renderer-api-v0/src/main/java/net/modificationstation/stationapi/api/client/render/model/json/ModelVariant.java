@@ -80,9 +80,9 @@ public class ModelVariant implements ModelBakeSettings {
         }
 
         protected ModelBakeRotation deserializeRotation(JsonObject object) {
-            int i = JsonHelper.getInt(object, "x", 0); // modern has x and z swapped
+            int i = JsonHelper.getInt(object, "x", 0);
             int j = JsonHelper.getInt(object, "y", 0);
-            ModelBakeRotation modelRotation = ModelBakeRotation.get(j, 360 - i); // modern has z inverted
+            ModelBakeRotation modelRotation = ModelBakeRotation.get(i, j);
             if (modelRotation == null) {
                 throw new JsonParseException("Invalid BlockModelRotation x: " + i + ", y: " + j);
             } else {

@@ -63,7 +63,7 @@ public class ModelOverrideList {
         if (Objects.equals(unbakedModel, parent)) {
             return null;
         }
-        return baker.bake(override.getModelId(), ModelBakeRotation.Y0_Z0);
+        return baker.bake(override.getModelId(), ModelBakeRotation.X0_Y0);
     }
 
     @Nullable
