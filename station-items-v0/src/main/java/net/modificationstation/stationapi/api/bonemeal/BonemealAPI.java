@@ -14,34 +14,32 @@ import java.util.Map;
 import java.util.Random;
 
 public class BonemealAPI {
-	private static final Map<BlockState, WeightedList<Structure>> PLACERS = new Reference2ObjectOpenHashMap<>();
+	private static final Map<TagKey<BlockBase>, WeightedList<Structure>> PLACERS_TAG = new Reference2ObjectOpenHashMap<>();
+	private static final Map<BlockState, WeightedList<Structure>> PLACERS_BLOCK = new Reference2ObjectOpenHashMap<>();
+	private static final WeightedList<Structure> CACHE = new WeightedList<>();
 	
 	public static void addPlant(BlockState ground, BlockState plant, int weight) {
 		addPlant(ground, new SimpleStateStructure(plant), weight);
 	}
 	
 	public static void addPlant(BlockState ground, Structure plant, int weight) {
-		PLACERS.computeIfAbsent(ground, g -> new WeightedList<>()).add(plant, weight);
+		PLACERS_BLOCK.computeIfAbsent(ground, g -> new WeightedList<>()).add(plant, weight);
 	}
 	
 	public static void addPlant(TagKey<BlockBase> ground, BlockState plant, int weight) {
-		BlockRegistry.INSTANCE.forEach(blockBase ->
-			blockBase.getStateManager().getStates().stream().filter(state -> state.isIn(ground)).forEach(state -> addPlant(state, plant, weight))
-		);
+		addPlant(ground, new SimpleStateStructure(plant), weight);
 	}
 	
 	public static void addPlant(TagKey<BlockBase> ground, Structure plant, int weight) {
-		BlockRegistry.INSTANCE.forEach(blockBase ->
-			blockBase.getStateManager().getStates().stream().filter(state -> state.isIn(ground)).forEach(state -> addPlant(state, plant, weight))
-		);
+		PLACERS_TAG.computeIfAbsent(ground, g -> new WeightedList<>()).add(plant, weight);
 	}
 	
 	public static boolean generate(Level level, int x, int y, int z, BlockState state, int side) {
-		WeightedList<Structure> structures = PLACERS.get(state);
-		if (structures == null) return false;
+		updateCache(state);
+		if (CACHE.isEmpty()) return false;
 		Random random = level.rand;
 		Direction offset = Direction.byId(side);
-		structures.get(random).generate(
+		CACHE.get(random).generate(
 			level,
 			random,
 			x + offset.getOffsetX(),
@@ -53,11 +51,21 @@ public class BonemealAPI {
 			int py = y + random.nextInt(5) - 2;
 			int pz = z + random.nextInt(7) - 3;
 			state = level.getBlockState(px, py, pz);
-			structures = PLACERS.get(state);
-			if (structures == null) continue;
-			structures.get(random).generate(level, random, px, py + 1, pz);
+			updateCache(state);
+			if (CACHE.isEmpty()) continue;
+			CACHE.get(random).generate(level, random, px, py + 1, pz);
 		}
 		return true;
+	}
+	
+	private static void updateCache(BlockState state) {
+		CACHE.clear();
+		WeightedList<Structure> structures = PLACERS_BLOCK.get(state);
+		if (structures != null) CACHE.addAll(structures);
+		state.streamTags().forEach(tag -> {
+			WeightedList<Structure> tagStructures = PLACERS_TAG.get(tag);
+			if (tagStructures != null) CACHE.addAll(tagStructures);
+		});
 	}
 	
 	private static class SimpleStateStructure extends Structure {

@@ -17,6 +17,16 @@ public class WeightedList<T> {
         maxWeight += weight;
         weights.add(maxWeight);
     }
+    
+    public void addAll(WeightedList<T> list) {
+        objects.addAll(list.objects);
+        int start = weights.size();
+        weights.addAll(list.weights);
+        for (int i = start; i < weights.size(); i++) {
+            weights.set(i, weights.getInt(i) + maxWeight);
+        }
+        maxWeight += list.maxWeight;
+    }
 
     public void clear() {
         objects.clear();
@@ -31,5 +41,9 @@ public class WeightedList<T> {
             if (weight < weights.getInt(i)) return objects.get(i);
         }
         return objects.get(0);
+    }
+    
+    public boolean isEmpty() {
+        return maxWeight == 0;
     }
 }
