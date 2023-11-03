@@ -6,6 +6,7 @@
   "mixins": [
     "MixinBlockBase",
     "MixinContainerBase",
+    "MixinDye",
     "MixinInventoryUpdate0x68S2CPacket",
     "MixinItemBase",
     "MixinItemInstance",
