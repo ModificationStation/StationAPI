@@ -78,9 +78,9 @@ public enum Direction implements StringIdentifiable {
         final float n = bl3 ? k : -k;
         final float o = l * i;
         final float p = n * i;
-        final Direction direction = bl ? EAST : WEST;
+        final Direction direction = bl ? SOUTH : NORTH;
         final Direction direction2 = bl2 ? UP : DOWN;
-        final Direction direction3 = bl3 ? SOUTH : NORTH;
+        final Direction direction3 = bl3 ? WEST : EAST;
         return l > n ? m > o ? Direction.listClosest(direction2, direction, direction3) : p > m ? Direction.listClosest(direction, direction3, direction2) : Direction.listClosest(direction, direction2, direction3) : m > p ? Direction.listClosest(direction2, direction3, direction) : o > m ? Direction.listClosest(direction3, direction, direction2) : Direction.listClosest(direction3, direction2, direction);
     }
 
