@@ -2,11 +2,11 @@ package net.modificationstation.stationapi.impl.vanillafix.client.gui.screen;
 
 import lombok.RequiredArgsConstructor;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.screen.ScreenBase;
-import net.minecraft.client.gui.widgets.Button;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.util.maths.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.client.gui.screen.StationScreen;
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetAttachedContext;
 import org.lwjgl.opengl.GL11;
@@ -24,7 +24,7 @@ public class WarningScreen extends StationScreen {
 
     private static final int CONFIRMATION_TIMEOUT = FabricLoader.getInstance().isDevelopmentEnvironment() ? 3000 : 25000;
 
-    private final ScreenBase parent;
+    private final Screen parent;
     private final Runnable action;
     private final String
             explanationKey,
@@ -37,15 +37,15 @@ public class WarningScreen extends StationScreen {
         super.init();
         confirmButton = btns.attach(
                 id -> {
-                    Button button = new Button(id, width / 2 - 100, height - height / 10 - 44, I18n.translate(confirmKey));
+                    ButtonWidget button = new ButtonWidget(id, width / 2 - 100, height - height / 10 - 44, I18n.getTranslation(confirmKey));
                     button.active = false;
                     return button;
                 },
                 button -> action.run()
         );
         btns.attach(
-                id -> new Button(id, width / 2 - 100, height - height / 10 - 20, I18n.translate("gui.cancel")),
-                button -> minecraft.openScreen(parent)
+                id -> new ButtonWidget(id, width / 2 - 100, height - height / 10 - 20, I18n.getTranslation("gui.cancel")),
+                button -> minecraft.setScreen(parent)
         );
     }
 
@@ -60,8 +60,8 @@ public class WarningScreen extends StationScreen {
         color = color << 16 | color << 8 | color;
         double offsetU = MathHelper.sin((float) ((time % 30000L) / 30000D * Math.PI * 2)) * 10;
         double offsetV = MathHelper.sin((float) ((time % 5000L) / 5000D * Math.PI * 2));
-        tessellator.start();
-        tessellator.colour(color);
+        tessellator.startQuads();
+        tessellator.color(color);
         tessellator.vertex(0.0, height, 0.0, offsetU, height / f + offsetV);
         tessellator.vertex(width, height, 0.0, width / f + offsetU, height / f + offsetV);
         tessellator.vertex(width, 0.0, 0.0, width / f + offsetU, offsetV);
@@ -74,16 +74,16 @@ public class WarningScreen extends StationScreen {
         long time = System.currentTimeMillis();
         renderDirtBackground(time);
         GL11.glPushMatrix();
-        String warning = I18n.translate(WARNING_KEY);
+        String warning = I18n.getTranslation(WARNING_KEY);
         double warningScale = 2 + MathHelper.sin((float) ((time % 5000L) / 5000D * Math.PI * 2)) * 0.1F;
-        GL11.glTranslated(width / 2D - textManager.getTextWidth(warning) * warningScale / 2D, height / 10D, 0);
+        GL11.glTranslated(width / 2D - textRenderer.getWidth(warning) * warningScale / 2D, height / 10D, 0);
         GL11.glScaled(warningScale, warningScale, 1);
-        drawTextWithShadow(textManager, warning, 0, 0, Color.YELLOW.hashCode());
+        drawTextWithShadow(textRenderer, warning, 0, 0, Color.YELLOW.hashCode());
         GL11.glPopMatrix();
-        String[] info = I18n.translate(explanationKey).split("\\n");
+        String[] info = I18n.getTranslation(explanationKey).split("\\n");
         int curHeight = height / 3;
         for (String line : info) {
-            int lineWidth = textManager.getTextWidth(line);
+            int lineWidth = textRenderer.getWidth(line);
             if (lineWidth > width - 20) {
                 int begin = 0;
                 int lastSpace = -1;
@@ -92,22 +92,22 @@ public class WarningScreen extends StationScreen {
                     boolean isEnd = cur + 1 == lineLength;
                     if (isSpace || isEnd) {
                         String newLine = isEnd ? line.substring(begin) : line.substring(begin, cur);
-                        int newLineWidth = textManager.getTextWidth(newLine);
+                        int newLineWidth = textRenderer.getWidth(newLine);
                         if (newLineWidth > width - 20) {
-                            drawTextWithShadowCentred(textManager, line.substring(begin, lastSpace), width / 2, curHeight, Color.WHITE.hashCode());
+                            drawCenteredTextWithShadow(textRenderer, line.substring(begin, lastSpace), width / 2, curHeight, Color.WHITE.hashCode());
                             curHeight += 10;
                             begin = lastSpace + 1;
                         }
                         if (isSpace)
                             lastSpace = cur;
                         if (isEnd) {
-                            drawTextWithShadowCentred(textManager, line.substring(begin), width / 2, curHeight, Color.WHITE.hashCode());
+                            drawCenteredTextWithShadow(textRenderer, line.substring(begin), width / 2, curHeight, Color.WHITE.hashCode());
                             curHeight += 10;
                         }
                     }
                 }
             } else {
-                drawTextWithShadowCentred(textManager, line, width / 2, curHeight, Color.WHITE.hashCode());
+                drawCenteredTextWithShadow(textRenderer, line, width / 2, curHeight, Color.WHITE.hashCode());
                 curHeight += 10;
             }
         }
@@ -115,9 +115,9 @@ public class WarningScreen extends StationScreen {
         if (confirmationTimeout > CONFIRMATION_TIMEOUT) {
             if (!confirmButton.button().active) {
                 confirmButton.button().active = true;
-                confirmButton.button().text = I18n.translate(confirmKey);
+                confirmButton.button().text = I18n.getTranslation(confirmKey);
             }
-        } else confirmButton.button().text = I18n.translate(confirmKey) + " (" + (CONFIRMATION_TIMEOUT - confirmationTimeout) / 1000 + "s)";
+        } else confirmButton.button().text = I18n.getTranslation(confirmKey) + " (" + (CONFIRMATION_TIMEOUT - confirmationTimeout) / 1000 + "s)";
         super.render(i, j, f);
     }
 }

@@ -4,7 +4,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.entity.player.ServerPlayer;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -32,7 +32,7 @@ public class ServerVanillaChecker {
             ((ModdedPacketHandlerSetter) event.serverPacketHandler).setModded();
         else if (!CLIENT_REQUIRED_MODS.isEmpty()) {
             LOGGER.error("Player \"" + event.loginRequestPacket.username + "\" attempted joining the server without " + MODID.getName() + ", disconnecting.");
-            event.serverPacketHandler.disconnect(I18n.translate("disconnect.stationapi:missing_station"));
+            event.serverPacketHandler.disconnect(I18n.getTranslation("disconnect.stationapi:missing_station"));
         }
     }
 
@@ -41,12 +41,12 @@ public class ServerVanillaChecker {
         Registry.register(event.registry, MODID.id("modlist"), (player, message) -> {
             if (!CLIENT_REQUIRED_MODS.isEmpty()) {
                 LOGGER.info("Received a list of mods from player \"" + player.name + "\", verifying...");
-                ServerPlayer serverPlayer = (ServerPlayer) player;
+                ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
                 String version = message.strings[0];
                 String serverStationVersion = MODID.getVersion().getFriendlyString();
                 if (!version.equals(serverStationVersion)) {
                     LOGGER.error("Player \"" + player.name + "\" has a mismatching " + MODID.getName() + " version \"" + version + "\", disconnecting.");
-                    serverPlayer.packetHandler.kick(I18n.translate("disconnect.stationapi:station_version_mismatch", serverStationVersion, version));
+                    serverPlayer.field_255.method_833(I18n.getTranslation("disconnect.stationapi:station_version_mismatch", serverStationVersion, version));
                     return;
                 }
                 Map<String, String> clientMods = new HashMap<>();
@@ -64,12 +64,12 @@ public class ServerVanillaChecker {
                         clientVersion = clientMods.get(modid);
                         if (clientVersion == null || !clientVersion.equals(serverVersion)) {
                             LOGGER.error("Player \"" + player.name + "\" has a mismatching " + modMetadata.getName() + " (" + modid + ")" + " version \"" + clientVersion + "\", disconnecting.");
-                            serverPlayer.packetHandler.kick(I18n.translate("disconnect.stationapi:mod_version_mismatch", modMetadata.getName(), modid, serverVersion, clientVersion == null ? "null" : clientVersion));
+                            serverPlayer.field_255.method_833(I18n.getTranslation("disconnect.stationapi:mod_version_mismatch", modMetadata.getName(), modid, serverVersion, clientVersion == null ? "null" : clientVersion));
                             return;
                         }
                     } else {
                         LOGGER.error("Player \"" + player.name + "\" has a missing mod " + modMetadata.getName() + " (" + modid + "), disconnecting.");
-                        serverPlayer.packetHandler.kick(I18n.translate("disconnect.stationapi:missing_mod", modMetadata.getName(), modid, serverVersion));
+                        serverPlayer.field_255.method_833(I18n.getTranslation("disconnect.stationapi:missing_mod", modMetadata.getName(), modid, serverVersion));
                         return;
                     }
                 }

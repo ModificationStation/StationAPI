@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.model.block;
 
-import net.minecraft.client.render.block.BlockRenderer;
-import net.minecraft.level.BlockView;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.client.render.block.BlockRenderManager;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.model.Model;
 import net.modificationstation.stationapi.api.world.BlockStateView;
@@ -22,9 +22,9 @@ public interface BlockWorldModelProvider extends BlockWithWorldRenderer {
 
     @Override
     @Deprecated
-    default boolean renderWorld(BlockRenderer blockRenderer, BlockView blockView, int x, int y, int z) {
+    default boolean renderWorld(BlockRenderManager blockRenderer, BlockView blockView, int x, int y, int z) {
         BlockState state = ((BlockStateView) blockView).getBlockState(x, y, z);
-        TilePos pos = new TilePos(x, y, z);
+        BlockPos pos = new BlockPos(x, y, z);
         return BAKED_MODEL_RENDERER.get().render(blockView, getCustomWorldModel(blockView, x, y, z).getBaked(), state, pos, true, new Random(), state.getRenderingSeed(pos));
     }
 }

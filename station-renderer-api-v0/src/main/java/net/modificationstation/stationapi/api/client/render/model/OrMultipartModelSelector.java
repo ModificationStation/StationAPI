@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.client.render.model;
 import com.google.common.collect.Streams;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.state.StateManager;
 
@@ -19,7 +19,7 @@ public class OrMultipartModelSelector implements MultipartModelSelector {
       this.selectors = selectors;
    }
 
-   public Predicate<BlockState> getPredicate(StateManager<BlockBase, BlockState> stateManager) {
+   public Predicate<BlockState> getPredicate(StateManager<Block, BlockState> stateManager) {
       List<Predicate<BlockState>> list = Streams.stream(this.selectors).map((multipartModelSelector) -> multipartModelSelector.getPredicate(stateManager)).collect(Collectors.toList());
       return (blockState) -> list.stream().anyMatch((predicate) -> predicate.test(blockState));
    }

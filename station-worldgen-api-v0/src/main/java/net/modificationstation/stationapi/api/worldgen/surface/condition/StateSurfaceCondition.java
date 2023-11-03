@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.worldgen.surface.condition;
 
-import net.minecraft.level.Level;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 
 public class StateSurfaceCondition implements SurfaceCondition {
@@ -11,7 +11,7 @@ public class StateSurfaceCondition implements SurfaceCondition {
     }
 
     @Override
-    public boolean canApply(Level level, int x, int y, int z, BlockState state) {
+    public boolean canApply(World level, int x, int y, int z, BlockState state) {
         return state == this.state;
     }
 }

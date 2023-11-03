@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
+import net.minecraft.class_321;
 import net.minecraft.class_556;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.block.BlockRenderer;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.sortme.MapThing;
+import net.minecraft.client.render.block.BlockRenderManager;
+import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -15,7 +15,7 @@ public interface class_556Accessor {
     Minecraft stationapi$getField_2401();
 
     @Accessor("field_2402")
-    ItemInstance stationapi$getField_2402();
+    ItemStack stationapi$getField_2402();
 
     @Accessor("field_2403")
     float stationapi$getField_2403();
@@ -24,8 +24,8 @@ public interface class_556Accessor {
     float stationapi$getField_2404();
 
     @Accessor("field_2405")
-    BlockRenderer stationapi$getField_2405();
+    BlockRenderManager stationapi$getField_2405();
 
     @Accessor("field_2406")
-    MapThing stationapi$getField_2406();
+    class_321 stationapi$getField_2406();
 }

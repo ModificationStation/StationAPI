@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.entity;
 
-import net.minecraft.entity.EntityBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityRegistry;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.entity.EntityRegister;
@@ -16,11 +16,11 @@ import java.util.Map;
 public class MixinEntityRegistry {
 
     @Shadow
-    private static void register(Class<? extends EntityBase> arg, String string, int i) { }
+    private static void register(Class<? extends Entity> arg, String string, int i) { }
 
-    @Shadow private static Map<String, Class<? extends EntityBase>> STRING_ID_TO_CLASS;
+    @Shadow private static Map<String, Class<? extends Entity>> STRING_ID_TO_CLASS;
 
-    @Shadow private static Map<Class<? extends EntityBase>, String> CLASS_TO_STRING_ID;
+    @Shadow private static Map<Class<? extends Entity>, String> CLASS_TO_STRING_ID;
 
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void onEntityRegister(CallbackInfo ci) {

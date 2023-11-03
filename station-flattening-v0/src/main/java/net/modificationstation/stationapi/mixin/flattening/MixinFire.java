@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.Fire;
+import net.minecraft.block.Block;
+import net.minecraft.block.FireBlock;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.sync.trackers.IntArrayTracker;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Fire.class)
+@Mixin(FireBlock.class)
 public class MixinFire {
 
     @Shadow private int[] field_2307;
@@ -24,7 +24,7 @@ public class MixinFire {
             constant = @Constant(intValue = 256)
     )
     private int blocksSize(int constant) {
-        return BlockBase.BY_ID.length;
+        return Block.BLOCKS.length;
     }
 
     @Inject(

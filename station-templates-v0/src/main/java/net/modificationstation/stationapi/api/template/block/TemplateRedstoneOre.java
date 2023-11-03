@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.RedstoneOre;
+import net.minecraft.block.RedstoneOreBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateRedstoneOre extends RedstoneOre implements BlockTemplate {
+public class TemplateRedstoneOre extends RedstoneOreBlock implements BlockTemplate {
     
     public TemplateRedstoneOre(Identifier identifier, int j, boolean isLit) {
         this(BlockTemplate.getNextId(), j, isLit);

@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.block;
 
-import net.minecraft.item.Block;
+import net.minecraft.item.BlockItem;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 import net.modificationstation.stationapi.api.template.item.MetaNamedBlock;
 import net.modificationstation.stationapi.impl.block.HasMetaNamedBlockItemImpl;
@@ -25,7 +25,7 @@ public interface MetaNamedBlockItemProvider extends CustomBlockItemFactoryProvid
      * @return {@link MetaNamedBlock#MetaNamedBlock(int)}.
      */
     @Override
-    default IntFunction<Block> getBlockItemFactory() {
+    default IntFunction<BlockItem> getBlockItemFactory() {
         return HasMetaNamedBlockItemImpl.FACTORY;
     }
 

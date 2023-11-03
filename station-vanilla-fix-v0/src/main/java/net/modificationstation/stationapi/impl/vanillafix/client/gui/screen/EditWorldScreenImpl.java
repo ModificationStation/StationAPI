@@ -5,9 +5,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widgets.Button;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.util.io.CompoundTag;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.screen.EditWorldScreenEvent;
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetDetachedContext;
@@ -36,11 +35,11 @@ public final class EditWorldScreenImpl {
     private static void registerConversionButton(EditWorldScreenEvent.ScrollableButtonContextRegister event) {
         event.contexts.add(screen -> new ButtonWidgetDetachedContext(
                 id -> {
-                    Button button = new Button(id, 0, 0, I18n.translate(CONVERT_TO_MCREGION_KEY));
-                    button.active = NbtHelper.getDataVersions(((FlattenedWorldStorage) ((ScreenBaseAccessor) screen).getMinecraft().getLevelStorage()).getWorldTag(screen.worldData.getFileName())).containsKey(MODID.toString());
+                    ButtonWidget button = new ButtonWidget(id, 0, 0, I18n.getTranslation(CONVERT_TO_MCREGION_KEY));
+                    button.active = NbtHelper.getDataVersions(((FlattenedWorldStorage) ((ScreenBaseAccessor) screen).getMinecraft().method_2127()).getWorldTag(screen.worldData.method_1956())).contains(MODID.toString());
                     return button;
                 },
-                button -> ((ScreenBaseAccessor) screen).getMinecraft().openScreen(new WarningScreen(screen, () -> {
+                button -> ((ScreenBaseAccessor) screen).getMinecraft().setScreen(new WarningScreen(screen, () -> {
                     Minecraft mc = ((ScreenBaseAccessor) screen).getMinecraft();
                     mc.openScreen(null);
                     FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.getLevelStorage();

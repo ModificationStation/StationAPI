@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.block;
 
-import net.minecraft.block.Fire;
-import net.minecraft.level.Level;
+import net.minecraft.block.FireBlock;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.block.FireBurnableRegisterEvent;
 import net.modificationstation.stationapi.api.tag.BlockTags;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
 
-@Mixin(Fire.class)
+@Mixin(FireBlock.class)
 public abstract class MixinFire {
 
     @Shadow protected abstract void addBurnable(int i, int j, int k);
@@ -41,7 +41,7 @@ public abstract class MixinFire {
                     )
             }
     )
-    private int stationapi_allowInfiniburnBlocks(int constant, Level arg, int i, int j, int k, Random random) {
+    private int stationapi_allowInfiniburnBlocks(int constant, World arg, int i, int j, int k, Random random) {
         return arg.getBlockState(i, j - 1, k).isIn(BlockTags.INFINIBURN) ? 1 : 0;
     }
 }

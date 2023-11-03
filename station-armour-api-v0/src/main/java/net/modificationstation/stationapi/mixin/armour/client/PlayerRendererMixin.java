@@ -4,19 +4,19 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.PlayerRenderer;
-import net.minecraft.client.render.entity.model.EntityModelBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.armour.Armour;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ArmorItem;
 import net.modificationstation.stationapi.api.client.item.ArmourTextureProvider;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(PlayerRenderer.class)
+@Mixin(PlayerEntityRenderer.class)
 public class PlayerRendererMixin extends LivingEntityRenderer {
-    public PlayerRendererMixin(EntityModelBase arg, float f) {
+    public PlayerRendererMixin(EntityModel arg, float f) {
         super(arg, f);
     }
 
@@ -29,10 +29,10 @@ public class PlayerRendererMixin extends LivingEntityRenderer {
             )
     )
     private void stationapi_onArmorTexture(
-            PlayerRenderer renderer, String texture,
+            PlayerEntityRenderer renderer, String texture,
             Operation<Void> fallback,
-            PlayerBase player, int i, float f,
-            @Local(index = 6) Armour armor
+            PlayerEntity player, int i, float f,
+            @Local(index = 6) ArmorItem armor
     ) {
         fallback.call(renderer, armor instanceof ArmourTextureProvider provider ? stationapi_getTexturePath(provider.getTexture(armor), i) : texture);
     }

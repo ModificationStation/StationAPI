@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.dimension.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.AbstractClientPlayer;
+import net.minecraft.entity.player.ClientPlayerEntity;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.DimensionRegistryEvent;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
 
-    @Shadow public AbstractClientPlayer player;
+    @Shadow public ClientPlayerEntity player;
 
     @Inject(
             method = "init()V",

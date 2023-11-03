@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.minecraft.item.Coal;
+import net.minecraft.item.CoalItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateCoal extends Coal implements ItemTemplate {
+public class TemplateCoal extends CoalItem implements ItemTemplate {
     
     public TemplateCoal(Identifier identifier) {
         this(ItemTemplate.getNextId());

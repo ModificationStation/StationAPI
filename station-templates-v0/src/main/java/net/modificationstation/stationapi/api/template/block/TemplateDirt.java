@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Dirt;
+import net.minecraft.block.DirtBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateDirt extends Dirt implements BlockTemplate {
+public class TemplateDirt extends DirtBlock implements BlockTemplate {
 
     public TemplateDirt(Identifier identifier, int texture) {
         this(BlockTemplate.getNextId(), texture);

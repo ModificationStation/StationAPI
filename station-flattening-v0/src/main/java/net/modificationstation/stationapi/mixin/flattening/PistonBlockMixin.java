@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.Piston;
-import net.minecraft.level.Level;
-import net.minecraft.tileentity.TileEntityBase;
-import net.minecraft.tileentity.TileEntityPiston;
+import net.minecraft.block.Block;
+import net.minecraft.block.PistonBlock;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.class_283;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.impl.block.StationFlatteningMovingPistonImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(Piston.class)
+@Mixin(PistonBlock.class)
 public class PistonBlockMixin {
     @Unique
     private BlockState stationapi_pushedBlockState;
@@ -24,7 +24,7 @@ public class PistonBlockMixin {
             method = "onTileAction",
             at = @At("HEAD")
     )
-    private void stationapi_getPushedBlockState1(Level world, int x, int y, int z, int direction, int meta, CallbackInfo ci) {
+    private void stationapi_getPushedBlockState1(World world, int x, int y, int z, int direction, int meta, CallbackInfo ci) {
         stationapi_pushedBlockState = world.getBlockState(x, y, z);
     }
 
@@ -37,8 +37,8 @@ public class PistonBlockMixin {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void stationapi_getPushedBlockState2(
-            Level world, int x, int y, int z, int direction, int meta, CallbackInfo ci,
-            int var7, TileEntityBase var8, int pushedX, int pushedY, int pushedZ
+            World world, int x, int y, int z, int direction, int meta, CallbackInfo ci,
+            int var7, BlockEntity var8, int pushedX, int pushedY, int pushedZ
     ) {
         stationapi_pushedBlockState = world.getBlockState(pushedX, pushedY, pushedZ);
     }
@@ -52,8 +52,8 @@ public class PistonBlockMixin {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void stationapi_getPushedBlockState3(
-            Level world, int x, int y, int z, int direction, int meta, CallbackInfo ci,
-            int var7, TileEntityBase var8, int pushedX, int pushedY, int pushedZ, int var12, int var13, int var14, TileEntityBase var15, TileEntityPiston pistonBlockEntity
+            World world, int x, int y, int z, int direction, int meta, CallbackInfo ci,
+            int var7, BlockEntity var8, int pushedX, int pushedY, int pushedZ, int var12, int var13, int var14, BlockEntity var15, class_283 pistonBlockEntity
     ) {
         stationapi_pushedBlockState = pistonBlockEntity.getPushedBlockState();
     }
@@ -65,7 +65,7 @@ public class PistonBlockMixin {
                     target = "Lnet/minecraft/block/MovingPiston;method_1533(IIIZZ)Lnet/minecraft/tileentity/TileEntityBase;"
             )
     )
-    private void stationapi_passPushedBlockState1(Level world, int x, int y, int z, int direction, int meta, CallbackInfo ci) {
+    private void stationapi_passPushedBlockState1(World world, int x, int y, int z, int direction, int meta, CallbackInfo ci) {
         StationFlatteningMovingPistonImpl.pushedBlockState = stationapi_pushedBlockState;
     }
 
@@ -79,7 +79,7 @@ public class PistonBlockMixin {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void stationapi_getPushedBlockState4(
-            Level world, int x, int y, int z, int direction, CallbackInfoReturnable<Boolean> cir,
+            World world, int x, int y, int z, int direction, CallbackInfoReturnable<Boolean> cir,
             int var6, int var7, int var8, int pushedX, int pushedY, int pushedZ
     ) {
         stationapi_pushedBlockState = world.getBlockState(pushedX, pushedY, pushedZ);
@@ -93,8 +93,8 @@ public class PistonBlockMixin {
                     ordinal = 0
             )
     )
-    private void stationapi_passPushedBlockState2(Level world, int x, int y, int z, int direction, CallbackInfoReturnable<Boolean> cir) {
-        StationFlatteningMovingPistonImpl.pushedBlockState = BlockBase.PISTON_HEAD.getDefaultState();
+    private void stationapi_passPushedBlockState2(World world, int x, int y, int z, int direction, CallbackInfoReturnable<Boolean> cir) {
+        StationFlatteningMovingPistonImpl.pushedBlockState = Block.PISTON_HEAD.getDefaultState();
     }
 
     @Inject(
@@ -105,7 +105,7 @@ public class PistonBlockMixin {
                     ordinal = 1
             )
     )
-    private void stationapi_passPushedBlockState3(Level world, int x, int y, int z, int direction, CallbackInfoReturnable<Boolean> cir) {
+    private void stationapi_passPushedBlockState3(World world, int x, int y, int z, int direction, CallbackInfoReturnable<Boolean> cir) {
         StationFlatteningMovingPistonImpl.pushedBlockState = stationapi_pushedBlockState;
     }
 }

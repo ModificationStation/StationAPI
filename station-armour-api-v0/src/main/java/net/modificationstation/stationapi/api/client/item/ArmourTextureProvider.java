@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.item;
 
-import net.minecraft.item.armour.Armour;
+import net.minecraft.item.ArmorItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
 public interface ArmourTextureProvider {
-    Identifier getTexture(Armour armour);
+    Identifier getTexture(ArmorItem armour);
 }

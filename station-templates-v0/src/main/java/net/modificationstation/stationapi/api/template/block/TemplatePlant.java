@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Plant;
+import net.minecraft.block.PlantBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplatePlant extends Plant implements BlockTemplate {
+public class TemplatePlant extends PlantBlock implements BlockTemplate {
 
     public TemplatePlant(Identifier identifier, int texture) {
         this(BlockTemplate.getNextId(), texture);

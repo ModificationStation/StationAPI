@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.entity.player;
 
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.network.PacketHandler;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.NetworkHandler;
 import net.modificationstation.stationapi.api.util.API;
 import net.modificationstation.stationapi.api.util.SideUtils;
 import net.modificationstation.stationapi.impl.client.entity.player.PlayerHelperClientImpl;
@@ -24,16 +24,16 @@ public final class PlayerHelper {
      * @return client's player instance if the current side is client, or null if the current side is server.
      */
     @API
-    public static PlayerBase getPlayerFromGame() {
+    public static PlayerEntity getPlayerFromGame() {
         return INSTANCE.getPlayerFromGame();
     }
 
     /**
-     * @param packetHandler the {@link PacketHandler} to retrieve the player instance from.
-     * @return {@link PlayerHelper#getPlayerFromGame()} if the current side is client, or the player instance from the given {@link PacketHandler} if the current side is server.
+     * @param packetHandler the {@link NetworkHandler} to retrieve the player instance from.
+     * @return {@link PlayerHelper#getPlayerFromGame()} if the current side is client, or the player instance from the given {@link NetworkHandler} if the current side is server.
      */
     @API
-    public static PlayerBase getPlayerFromPacketHandler(PacketHandler packetHandler) {
+    public static PlayerEntity getPlayerFromPacketHandler(NetworkHandler packetHandler) {
         return INSTANCE.getPlayerFromPacketHandler(packetHandler);
     }
 }

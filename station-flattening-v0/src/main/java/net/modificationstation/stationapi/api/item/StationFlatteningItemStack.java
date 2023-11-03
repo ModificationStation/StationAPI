@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.item;
 
-import net.minecraft.item.ItemBase;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -8,11 +8,11 @@ import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationFlatteningItemStack extends ItemStackStrengthWithBlockState {
 
-    default RegistryEntry.Reference<ItemBase> getRegistryEntry() {
+    default RegistryEntry.Reference<Item> getRegistryEntry() {
         return Util.assertImpl();
     }
 
-    default boolean isIn(TagKey<ItemBase> tag) {
+    default boolean isIn(TagKey<Item> tag) {
         return getRegistryEntry().isIn(tag);
     }
 
@@ -29,7 +29,7 @@ public interface StationFlatteningItemStack extends ItemStackStrengthWithBlockSt
     /**
      * {@return whether the item is {@code item}}
      */
-    default boolean isOf(ItemBase item) {
+    default boolean isOf(Item item) {
         return Util.assertImpl();
     }
 }

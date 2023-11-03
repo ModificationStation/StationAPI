@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Button;
+import net.minecraft.block.ButtonBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateButton extends Button implements BlockTemplate {
+public class TemplateButton extends ButtonBlock implements BlockTemplate {
 
     public TemplateButton(Identifier identifier, int texture) {
         this(BlockTemplate.getNextId(), texture);

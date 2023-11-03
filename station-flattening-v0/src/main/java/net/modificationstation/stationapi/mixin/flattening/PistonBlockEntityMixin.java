@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.level.Level;
-import net.minecraft.tileentity.TileEntityPiston;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.class_283;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.entity.StationFlatteningPistonBlockEntity;
 import net.modificationstation.stationapi.api.nbt.FlatteningNbtHelper;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(TileEntityPiston.class)
+@Mixin(class_283.class)
 class PistonBlockEntityMixin implements StationFlatteningPistonBlockEntity, StationFlatteningPistonBlockEntityImpl {
     @Unique
     private BlockState stationapi_pushedBlockState;
@@ -41,7 +41,7 @@ class PistonBlockEntityMixin implements StationFlatteningPistonBlockEntity, Stat
                     target = "Lnet/minecraft/level/Level;placeBlockWithMetaData(IIIII)Z"
             )
     )
-    private boolean stationapi_setPushedBlockState(Level world, int x, int y, int z, int blockId, int blockMeta) {
+    private boolean stationapi_setPushedBlockState(World world, int x, int y, int z, int blockId, int blockMeta) {
         return world.setBlockStateWithMetadataWithNotify(x, y, z, stationapi_pushedBlockState, blockMeta) != null;
     }
 
@@ -53,8 +53,8 @@ class PistonBlockEntityMixin implements StationFlatteningPistonBlockEntity, Stat
                     ordinal = 0
             )
     )
-    private int stationapi_readPushedBlockState(CompoundTag nbt, String tag) {
-        stationapi_pushedBlockState = FlatteningNbtHelper.toBlockState(BlockRegistry.INSTANCE.getReadOnlyWrapper(), nbt.getCompoundTag("blockState"));
+    private int stationapi_readPushedBlockState(NbtCompound nbt, String tag) {
+        stationapi_pushedBlockState = FlatteningNbtHelper.toBlockState(BlockRegistry.INSTANCE.getReadOnlyWrapper(), nbt.getCompound("blockState"));
         return stationapi_pushedBlockState.getBlock().id;
     }
 
@@ -66,7 +66,7 @@ class PistonBlockEntityMixin implements StationFlatteningPistonBlockEntity, Stat
                     ordinal = 0
             )
     )
-    private void stationapi_writePushedBlockState(CompoundTag nbt, String tag, int value) {
+    private void stationapi_writePushedBlockState(NbtCompound nbt, String tag, int value) {
         nbt.put("blockState", FlatteningNbtHelper.fromBlockState(stationapi_pushedBlockState));
     }
 }

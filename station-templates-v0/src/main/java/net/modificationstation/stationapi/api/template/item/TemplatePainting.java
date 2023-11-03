@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.minecraft.item.Painting;
+import net.minecraft.item.PaintingItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplatePainting extends Painting implements ItemTemplate {
+public class TemplatePainting extends PaintingItem implements ItemTemplate {
     
     public TemplatePainting(Identifier identifier) {
         this(ItemTemplate.getNextId());

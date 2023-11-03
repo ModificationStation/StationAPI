@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.level.Level;
-import net.minecraft.level.dimension.Dimension;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.level.StationDimension;
@@ -25,19 +25,19 @@ public class MixinDimension implements StationDimension {
     @Unique private short bottomY = 0;
     @Shadow public int id;
 
-    @Shadow public Level level;
+    @Shadow public World level;
 
     @Inject(method = "initDimension(Lnet/minecraft/level/Level;)V", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/level/dimension/Dimension;pregenLight()V",
             shift = Shift.AFTER
     ))
-    private void onDimensionInit(Level level, CallbackInfo info) {
-        StationLevelProperties properties = (StationLevelProperties) level.getProperties();
+    private void onDimensionInit(World level, CallbackInfo info) {
+        StationLevelProperties properties = (StationLevelProperties) level.method_262();
         Optional<Identifier> optional = DimensionRegistry.INSTANCE.getIdByLegacyId(this.id);
         if (optional.isPresent()) {
             Identifier id = optional.get();
-            CompoundTag tag = properties.getDimensionTag(id);
+            NbtCompound tag = properties.getDimensionTag(id);
             loadFromNBT(tag);
             saveToNBT(tag);
         }
@@ -71,9 +71,9 @@ public class MixinDimension implements StationDimension {
     }
 
     @Unique
-    public void loadFromNBT(CompoundTag tag) {
-        height = tag.containsKey(HEIGHT_KEY) ? tag.getShort(HEIGHT_KEY) : getDefaultLevelHeight();
-        bottomY = tag.containsKey(BOTTOM_Y_KEY) ? tag.getShort(BOTTOM_Y_KEY) : getDefaultBottomY();
+    public void loadFromNBT(NbtCompound tag) {
+        height = tag.contains(HEIGHT_KEY) ? tag.getShort(HEIGHT_KEY) : getDefaultLevelHeight();
+        bottomY = tag.contains(BOTTOM_Y_KEY) ? tag.getShort(BOTTOM_Y_KEY) : getDefaultBottomY();
 
         if (height <= 0) {
             height = 16;
@@ -84,8 +84,8 @@ public class MixinDimension implements StationDimension {
     }
 
     @Unique
-    public void saveToNBT(CompoundTag tag) {
-        tag.put(HEIGHT_KEY, getActualLevelHeight());
-        tag.put(BOTTOM_Y_KEY, getActualBottomY());
+    public void saveToNBT(NbtCompound tag) {
+        tag.putShort(HEIGHT_KEY, getActualLevelHeight());
+        tag.putShort(BOTTOM_Y_KEY, getActualBottomY());
     }
 }

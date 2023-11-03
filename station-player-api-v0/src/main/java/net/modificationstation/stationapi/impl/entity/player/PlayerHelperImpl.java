@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.impl.entity.player;
 
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.network.PacketHandler;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.NetworkHandler;
 
 public abstract class PlayerHelperImpl {
 
-    public abstract PlayerBase getPlayerFromGame();
+    public abstract PlayerEntity getPlayerFromGame();
 
-    public abstract PlayerBase getPlayerFromPacketHandler(PacketHandler packetHandler);
+    public abstract PlayerEntity getPlayerFromPacketHandler(NetworkHandler packetHandler);
 }

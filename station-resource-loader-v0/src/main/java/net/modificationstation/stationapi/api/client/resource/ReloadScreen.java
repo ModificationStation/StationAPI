@@ -8,10 +8,10 @@ import cyclops.function.FluentFunctions;
 import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import it.unimi.dsi.fastutil.longs.Long2DoubleFunction;
 import lombok.val;
-import net.minecraft.client.gui.screen.ScreenBase;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.TextRenderer;
-import net.minecraft.util.maths.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.resource.ResourceReload;
 import net.modificationstation.stationapi.api.util.math.ColorHelper;
 import net.modificationstation.stationapi.impl.client.resource.ReloadScreenManagerImpl;
@@ -27,7 +27,9 @@ import static net.modificationstation.stationapi.api.util.math.MathHelper.ceil;
 import static net.modificationstation.stationapi.api.util.math.MathHelper.lerp;
 import static org.lwjgl.opengl.GL11.*;
 
-class ReloadScreen extends ScreenBase {
+import I;
+
+class ReloadScreen extends Screen {
     private static final long
             MAX_FPS = 60,
             BACKGROUND_START = 0,
@@ -70,7 +72,7 @@ class ReloadScreen extends ScreenBase {
         return ifFalse -> value -> (condition.getAsBoolean() ? ifTrue : ifFalse).applyAsDouble(value);
     }
 
-    private final ScreenBase parent;
+    private final Screen parent;
     private final Runnable done;
     private final Tessellator tessellator;
     private boolean firstRenderTick = true;
@@ -89,7 +91,7 @@ class ReloadScreen extends ScreenBase {
     private Exception exception;
 
     ReloadScreen(
-            ScreenBase parent,
+            Screen parent,
             Runnable done,
             Tessellator tessellator
     ) {
@@ -166,15 +168,15 @@ class ReloadScreen extends ScreenBase {
         val color = (int) (delta * 0xFF) << 24 | 0xFFFFFF;
         val v = (float) (10 - delta * 10);
         val ev = exceptionThrown ? (float) (10 - deltaFunc.applyAsDouble(STAGE_0_EXCEPTION_DELTA_KEY) * 10) * 3 - 1 : 0;
-        drawLineHorizontal(40, width - 40 - 1, (int) (height - 90 + v * 5), color);
-        if (exceptionThrown) drawLineHorizontal(40, width - 40 - 1, (int) (height - 90 + v * 5 + ev), color);
-        drawLineHorizontal(40, width - 40 - 1, (int) (height - 50 + v), color);
-        drawLineHorizontal(40, width - 40 - 1, (int) (height - 40 - 1 + v), color);
-        drawLineVertical(40, (int) (height - 40 + v), (int) (height - 90 + v * 5), color);
-        drawLineVertical(width - 40 - 1, (int) (height - 40 + v), (int) (height - 90 + v * 5), color);
+        drawHorizontalLine(40, width - 40 - 1, (int) (height - 90 + v * 5), color);
+        if (exceptionThrown) drawHorizontalLine(40, width - 40 - 1, (int) (height - 90 + v * 5 + ev), color);
+        drawHorizontalLine(40, width - 40 - 1, (int) (height - 50 + v), color);
+        drawHorizontalLine(40, width - 40 - 1, (int) (height - 40 - 1 + v), color);
+        drawVerticalLine(40, (int) (height - 40 + v), (int) (height - 90 + v * 5), color);
+        drawVerticalLine(width - 40 - 1, (int) (height - 40 + v), (int) (height - 90 + v * 5), color);
         fill(40 + 3, (int) (height - 50 + 3 + v), ceil((width - (40 + 3) * 2) * progress + 40 + 3), (int) (height - 40 - 3 + v), color);
-        val xScale = (float) minecraft.actualWidth / width;
-        val yScale = (float) minecraft.actualHeight / height;
+        val xScale = (float) minecraft.displayWidth / width;
+        val yScale = (float) minecraft.displayHeight / height;
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         val locationsScissorsHeight = (int) ((40 - 1 - v * 4 + ev) * yScale);
@@ -186,7 +188,7 @@ class ReloadScreen extends ScreenBase {
             for (int i = 0; i < to; i++) {
                 val y = ceil(height - 88 + (10 * i) + (scrollDelta * 10) + v * 5 + ev);
                 if (y > height - 50 + v) break;
-                drawTextWithShadow(textManager, ReloadScreenManager.LOCATIONS.get(to - i - 1), 40 + 3, y, color);
+                drawTextWithShadow(textRenderer, ReloadScreenManager.LOCATIONS.get(to - i - 1), 40 + 3, y, color);
             }
             glDisable(GL_SCISSOR_TEST);
         }
@@ -196,7 +198,7 @@ class ReloadScreen extends ScreenBase {
             glScissor((int) ((40 + 3) * xScale), (int) ((91 - v - ev) * yScale), (int) ((width - (40 + 3) * 2) * xScale), exceptionScissorsHeight);
             val line = exception.getMessage();
             var curHeight = height - 88;
-            val lineWidth = textManager.getTextWidth(line);
+            val lineWidth = textRenderer.getWidth(line);
             if (lineWidth > width - (40 + 3) * 2) {
                 var begin = 0;
                 var lastSpace = -1;
@@ -205,24 +207,24 @@ class ReloadScreen extends ScreenBase {
                     val isEnd = cur + 1 == lineLength;
                     if (isSpace || isEnd) {
                         val newLine = isEnd ? line.substring(begin) : line.substring(begin, cur);
-                        val newLineWidth = textManager.getTextWidth(newLine);
+                        val newLineWidth = textRenderer.getWidth(newLine);
                         if (newLineWidth > width - (40 + 3) * 2) {
-                            drawTextWithShadow(textManager, line.substring(begin, lastSpace), 40 + 3, curHeight, color);
+                            drawTextWithShadow(textRenderer, line.substring(begin, lastSpace), 40 + 3, curHeight, color);
                             curHeight += 10;
                             begin = lastSpace + 1;
                         }
                         if (isSpace)
                             lastSpace = cur;
                         if (isEnd) {
-                            drawTextWithShadow(textManager, line.substring(begin), 40 + 3, curHeight, color);
+                            drawTextWithShadow(textRenderer, line.substring(begin), 40 + 3, curHeight, color);
                             curHeight += 10;
                         }
                     }
                 }
-            } else drawTextWithShadow(textManager, line, 40 + 3, curHeight, color);
+            } else drawTextWithShadow(textRenderer, line, 40 + 3, curHeight, color);
             glDisable(GL_SCISSOR_TEST);
         }
-        drawTextWithShadow(textManager, "Minecraft: " + (
+        drawTextWithShadow(textRenderer, "Minecraft: " + (
                 ReloadScreenManagerImpl.isMinecraftDone ?
                         "Done" :
                         "Working..."
@@ -234,7 +236,7 @@ class ReloadScreen extends ScreenBase {
                                 "Working..." :
                         "Idle"
         );
-        drawTextWithShadow(textManager, stationStatus, width - 40 - 3 - textManager.getTextWidth(stationStatus), (int) (height - 100 + v * 5), color);
+        drawTextWithShadow(textRenderer, stationStatus, width - 40 - 3 - textRenderer.getWidth(stationStatus), (int) (height - 100 + v * 5), color);
         glDisable(GL_BLEND);
     }
 
@@ -245,8 +247,8 @@ class ReloadScreen extends ScreenBase {
         minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId(logo));
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        tessellator.start();
-        tessellator.colour(0xFF, 0xFF, 0xFF, (int) (0xFF * delta));
+        tessellator.startQuads();
+        tessellator.color(0xFF, 0xFF, 0xFF, (int) (0xFF * delta));
         tessellator.vertex(width / 2D - 120, (height - 90D) / 2 - 20 - v, 0, 0, 0);
         tessellator.vertex(width / 2D - 120, (height - 90D) / 2 + 20 - v, 0, 0, 1);
         tessellator.vertex(width / 2D + 120, (height - 90D) / 2 + 20 - v, 0, 1, 1);
@@ -306,7 +308,7 @@ class ReloadScreen extends ScreenBase {
     }
 
     @Override
-    protected void drawLineHorizontal(int startX, int endX, int y, int color) {
+    protected void drawHorizontalLine(int startX, int endX, int y, int color) {
         if (endX < startX) {
             val n = startX;
             startX = endX;
@@ -316,7 +318,7 @@ class ReloadScreen extends ScreenBase {
     }
 
     @Override
-    protected void drawLineVertical(int x, int startY, int endY, int color) {
+    protected void drawVerticalLine(int x, int startY, int endY, int color) {
         if (endY < startY) {
             val n = startY;
             startY = endY;
@@ -346,17 +348,17 @@ class ReloadScreen extends ScreenBase {
         glDisable(GL_TEXTURE_2D);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glColor4f(r, g, b, a);
-        tessellator.start();
-        tessellator.addVertex(startX, endY, 0.0);
-        tessellator.addVertex(endX, endY, 0.0);
-        tessellator.addVertex(endX, startY, 0.0);
-        tessellator.addVertex(startX, startY, 0.0);
+        tessellator.startQuads();
+        tessellator.vertex(startX, endY, 0.0);
+        tessellator.vertex(endX, endY, 0.0);
+        tessellator.vertex(endX, startY, 0.0);
+        tessellator.vertex(startX, startY, 0.0);
         tessellator.draw();
         glEnable(GL_TEXTURE_2D);
         glDisable(GL_BLEND);
     }
 
     void setTextRenderer(TextRenderer textRenderer) {
-        textManager = textRenderer;
+        textRenderer = textRenderer;
     }
 }

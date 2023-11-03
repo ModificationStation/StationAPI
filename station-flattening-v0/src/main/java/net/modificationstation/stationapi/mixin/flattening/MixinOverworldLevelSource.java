@@ -2,10 +2,10 @@ package net.modificationstation.stationapi.mixin.flattening;
 
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import net.minecraft.level.Level;
-import net.minecraft.level.biome.Biome;
-import net.minecraft.level.chunk.Chunk;
-import net.minecraft.level.source.OverworldLevelSource;
+import net.minecraft.class_153;
+import net.minecraft.class_43;
+import net.minecraft.class_538;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(OverworldLevelSource.class)
+@Mixin(class_538.class)
 public class MixinOverworldLevelSource {
-    @Shadow private Level level;
+    @Shadow private World level;
     @Shadow private double[] noises;
     
     @ModifyConstant(method = "decorate(Lnet/minecraft/level/source/LevelSource;II)V", constant = @Constant(intValue = 128))
@@ -34,7 +34,7 @@ public class MixinOverworldLevelSource {
                     target = "(Lnet/minecraft/level/Level;[BII)Lnet/minecraft/level/chunk/Chunk;"
             )
     )
-    private Chunk redirectChunk(Level world, byte[] tiles, int xPos, int zPos) {
+    private class_43 redirectChunk(World world, byte[] tiles, int xPos, int zPos) {
         return new FlattenedChunk(world, xPos, zPos);
     }
 
@@ -46,7 +46,7 @@ public class MixinOverworldLevelSource {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void populateChunk(int j, int par2, CallbackInfoReturnable<Chunk> cir, byte[] tiles, Chunk chunk) {
+    private void populateChunk(int j, int par2, CallbackInfoReturnable<class_43> cir, byte[] tiles, class_43 chunk) {
         if (chunk instanceof FlattenedChunk stationChunk) stationChunk.fromLegacy(tiles);
     }
     
@@ -57,7 +57,7 @@ public class MixinOverworldLevelSource {
     
     @Inject(method = "shapeChunk", at = @At("HEAD"))
     private void initChunkLocals(
-        int j, int bs, byte[] args, Biome[] ds, double[] par5, CallbackInfo ci,
+        int j, int bs, byte[] args, class_153[] ds, double[] par5, CallbackInfo ci,
         @Share("offsetX") LocalIntRef offsetX, @Share("offsetZ") LocalIntRef offsetZ, @Share("vertical") LocalIntRef vertical
     ) {
         int dz = MathHelper.ceilLog2(level.getHeight());
@@ -75,7 +75,7 @@ public class MixinOverworldLevelSource {
         target = "Lnet/minecraft/level/source/OverworldLevelSource;calculateNoise([DIIIIII)[D",
         shift = Shift.AFTER
     ))
-    private void fixNoiseValues(int j, int bs, byte[] args, Biome[] ds, double[] par5, CallbackInfo ci) {
+    private void fixNoiseValues(int j, int bs, byte[] args, class_153[] ds, double[] par5, CallbackInfo ci) {
         int height = (level.getHeight() >> 3) + 1;
         int length = height * 25;
         int bottom = level.getBottomY() >> 3;

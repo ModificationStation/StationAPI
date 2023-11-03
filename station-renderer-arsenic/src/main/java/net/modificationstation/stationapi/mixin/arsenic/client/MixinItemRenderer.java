@@ -2,12 +2,12 @@ package net.modificationstation.stationapi.mixin.arsenic.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.TextRenderer;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.ItemRenderer;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.TextureManager;
-import net.minecraft.entity.Item;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicItemRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -28,7 +28,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
      * @author mine_diver
      */
     @Overwrite
-    public void method_1484(Item arg, double d, double d1, double d2, float f, float f1) {
+    public void method_1484(ItemEntity arg, double d, double d1, double d2, float f, float f1) {
         arsenic_plugin.render(arg, d, d1, d2, f, f1);
     }
 
@@ -46,7 +46,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
             at = @At("HEAD"),
             cancellable = true
     )
-    private void onRenderItemOnGuiItemInstance(TextRenderer arg1, TextureManager arg2, ItemInstance i, int j, int par5, CallbackInfo ci) {
+    private void onRenderItemOnGuiItemInstance(TextRenderer arg1, TextureManager arg2, ItemStack i, int j, int par5, CallbackInfo ci) {
         arsenic_plugin.renderItemOnGui(arg1, arg2, i, j, par5, ci);
     }
 

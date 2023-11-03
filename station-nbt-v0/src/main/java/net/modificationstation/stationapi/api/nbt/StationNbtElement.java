@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.nbt;
 
-import net.minecraft.util.io.AbstractTag;
+import net.minecraft.nbt.NbtElement;
 
 public interface StationNbtElement {
 
-    AbstractTag copy();
+    NbtElement copy();
 }

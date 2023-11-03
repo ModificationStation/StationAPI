@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.mixin.arsenic.client.entity;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -29,7 +29,7 @@ public class EntityRendererMixin {
             @Local(index = 9) int textureId,
             @Share("texture1") LocalRef<Sprite> texture1, @Share("texture2") LocalRef<Sprite> texture2
     ) {
-        Atlas atlas = BlockBase.FIRE.getAtlas();
+        Atlas atlas = Block.FIRE.getAtlas();
         texture1.set(atlas.getTexture(textureId).getSprite());
         texture2.set(atlas.getTexture(textureId + 16).getSprite());
         return texture1.get().getX();

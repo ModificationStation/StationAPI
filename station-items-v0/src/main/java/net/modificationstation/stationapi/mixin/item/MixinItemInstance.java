@@ -2,12 +2,12 @@ package net.modificationstation.stationapi.mixin.item;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.entity.EntityBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.ItemStackEvent;
@@ -27,19 +27,19 @@ import java.util.Objects;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
-@Mixin(ItemInstance.class)
+@Mixin(ItemStack.class)
 public abstract class MixinItemInstance implements StationItemStack, StationNBTSetter {
 
     @Shadow
     public int itemId;
 
-    @Shadow public abstract ItemBase getType();
+    @Shadow public abstract Item getType();
 
     @Inject(method = "onCrafted(Lnet/minecraft/level/Level;Lnet/minecraft/entity/player/PlayerBase;)V", at = @At("RETURN"))
-    private void onCreation(Level arg, PlayerBase arg1, CallbackInfo ci) {
+    private void onCreation(World arg, PlayerEntity arg1, CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(
                 ItemStackEvent.Crafted.builder()
-                        .itemStack(ItemInstance.class.cast(this))
+                        .itemStack(ItemStack.class.cast(this))
                         .level(arg)
                         .player(arg1)
                         .build()
@@ -48,13 +48,13 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
 
     @Unique
     @Getter @Setter
-    private CompoundTag stationNBT = new CompoundTag();
+    private NbtCompound stationNBT = new NbtCompound();
 
     @Inject(
             method = "split(I)Lnet/minecraft/item/ItemInstance;",
             at = @At("RETURN")
     )
-    private void setSplitStackNbt(int par1, CallbackInfoReturnable<ItemInstance> cir) {
+    private void setSplitStackNbt(int par1, CallbackInfoReturnable<ItemStack> cir) {
         if (!stationNBT.values().isEmpty())
             StationNBTSetter.cast(cir.getReturnValue()).setStationNBT(stationNBT.copy());
     }
@@ -63,7 +63,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
             method = "toTag(Lnet/minecraft/util/io/CompoundTag;)Lnet/minecraft/util/io/CompoundTag;",
             at = @At("RETURN")
     )
-    private void toTagCustom(CompoundTag par1, CallbackInfoReturnable<CompoundTag> cir) {
+    private void toTagCustom(NbtCompound par1, CallbackInfoReturnable<NbtCompound> cir) {
         if (!stationNBT.values().isEmpty())
             cir.getReturnValue().put(of(MODID, "item_nbt").toString(), stationNBT);
     }
@@ -72,15 +72,15 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
             method = "fromTag(Lnet/minecraft/util/io/CompoundTag;)V",
             at = @At("RETURN")
     )
-    private void fromTagCustom(CompoundTag par1, CallbackInfo ci) {
-        stationNBT = par1.getCompoundTag(of(MODID, "item_nbt").toString());
+    private void fromTagCustom(NbtCompound par1, CallbackInfo ci) {
+        stationNBT = par1.getCompound(of(MODID, "item_nbt").toString());
     }
 
     @Inject(
             method = "copy()Lnet/minecraft/item/ItemInstance;",
             at = @At("RETURN")
     )
-    private void copy(CallbackInfoReturnable<ItemInstance> cir) {
+    private void copy(CallbackInfoReturnable<ItemStack> cir) {
         if (!stationNBT.values().isEmpty())
             StationNBTSetter.cast(cir.getReturnValue()).setStationNBT(stationNBT.copy());
     }
@@ -90,7 +90,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
             at = @At("HEAD"),
             cancellable = true
     )
-    private void isStackIdentical(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
+    private void isStackIdentical(ItemStack par1, CallbackInfoReturnable<Boolean> cir) {
         if (!Objects.equals(stationNBT, par1.getStationNBT()))
             cir.setReturnValue(false);
     }
@@ -100,7 +100,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
             at = @At("HEAD"),
             cancellable = true
     )
-    private void isDamageAndIDIdentical(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
+    private void isDamageAndIDIdentical(ItemStack par1, CallbackInfoReturnable<Boolean> cir) {
         if (!Objects.equals(stationNBT, par1.getStationNBT()))
             cir.setReturnValue(false);
     }
@@ -119,21 +119,21 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
             at = @At("HEAD"),
             cancellable = true
     )
-    private void isStackIdentical2(ItemInstance par1, CallbackInfoReturnable<Boolean> cir) {
+    private void isStackIdentical2(ItemStack par1, CallbackInfoReturnable<Boolean> cir) {
         if (!Objects.equals(stationNBT, par1.getStationNBT()))
             cir.setReturnValue(false);
     }
 
     @Override
     @Unique
-    public boolean preHit(EntityBase otherEntity, PlayerBase player) {
-        return getType().preHit(ItemInstance.class.cast(this), otherEntity, player);
+    public boolean preHit(Entity otherEntity, PlayerEntity player) {
+        return getType().preHit(ItemStack.class.cast(this), otherEntity, player);
     }
 
     @Override
     @Unique
-    public boolean preMine(BlockState blockState, int x, int y, int z, int side, PlayerBase player) {
-        return getType().preMine(ItemInstance.class.cast(this), blockState, x, y, z, side, player);
+    public boolean preMine(BlockState blockState, int x, int y, int z, int side, PlayerEntity player) {
+        return getType().preMine(ItemStack.class.cast(this), blockState, x, y, z, side, player);
     }
 
     @Redirect(
@@ -143,8 +143,8 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
                     target = "Lnet/minecraft/item/ItemBase;getDurability()I"
             )
     )
-    private int stationapi_getDurabilityPerStack(ItemBase instance) {
-        return instance.getDurability(ItemInstance.class.cast(this));
+    private int stationapi_getDurabilityPerStack(Item instance) {
+        return instance.getDurability(ItemStack.class.cast(this));
     }
 
     @Redirect(
@@ -154,7 +154,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
                     target = "Lnet/minecraft/item/ItemBase;getDurability()I"
             )
     )
-    private int stationapi_hasDurability_getDurabilityPerStack(ItemBase instance) {
-        return instance.getDurability(ItemInstance.class.cast(this));
+    private int stationapi_hasDurability_getDurabilityPerStack(Item instance) {
+        return instance.getDurability(ItemStack.class.cast(this));
     }
 }

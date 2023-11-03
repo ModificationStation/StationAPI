@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.world;
 
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.util.math.BlockPos;
 import net.modificationstation.stationapi.impl.util.math.ChunkSectionPos;
 
 /**
@@ -87,7 +87,7 @@ public interface HeightLimitView {
      * 
      * @param pos the position to check
      */
-    default boolean isOutOfHeightLimit(TilePos pos) {
+    default boolean isOutOfHeightLimit(BlockPos pos) {
         return this.isOutOfHeightLimit(pos.y);
     }
 

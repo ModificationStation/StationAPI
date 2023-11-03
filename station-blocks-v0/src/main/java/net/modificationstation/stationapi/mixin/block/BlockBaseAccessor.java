@@ -1,17 +1,17 @@
 package net.modificationstation.stationapi.mixin.block;
 
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(BlockBase.class)
+@Mixin(Block.class)
 public interface BlockBaseAccessor {
 
     @Mutable
     @Accessor("BY_ID")
-    static void stationapi$setById(BlockBase[] byId) {
+    static void stationapi$setById(Block[] byId) {
         Util.assertMixin();
     }
 

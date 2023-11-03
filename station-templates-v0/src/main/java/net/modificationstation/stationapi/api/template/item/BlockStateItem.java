@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.maths.Box;
-import net.minecraft.util.maths.Vec3f;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
@@ -30,12 +30,12 @@ public class BlockStateItem extends TemplateItemBase {
     }
 
     @Override
-    public boolean useOnTile(ItemInstance itemStack, PlayerBase player, Level world, int clickX, int clickY, int clickZ, int side) {
+    public boolean useOnBlock(ItemStack itemStack, PlayerEntity player, World world, int clickX, int clickY, int clickZ, int side) {
         final Direction direction;
         final int x;
         final int y;
         final int z;
-        if (world.getTileId(clickX, clickY, clickZ) == BlockBase.SNOW.id) {
+        if (world.getBlockId(clickX, clickY, clickZ) == Block.SNOW.id) {
             direction = Direction.DOWN;
             side = 0;
             x = clickX;
@@ -48,14 +48,14 @@ public class BlockStateItem extends TemplateItemBase {
             z = clickZ + direction.getOffsetZ();
         }
         if (itemStack.count == 0) return false;
-        if (y == world.getTopY() - 1 && blockState.getMaterial().isSolid()) return false;
-        BlockBase block = blockState.getBlock();
+        if (y == world.getTopY() - 1 && blockState.getMaterial().method_905()) return false;
+        Block block = blockState.getBlock();
 
         Box box = block.getCollisionShape(world, x, y, z);
         if (
                 (box == null || world.canSpawnEntity(box)) && StationAPI.EVENT_BUS.post(
                         IsBlockReplaceableEvent.builder()
-                                .context(new ItemPlacementContext(player, itemStack, new HitResult(clickX, clickY, clickZ, side, Vec3f.from(x, y, z))))
+                                .context(new ItemPlacementContext(player, itemStack, new HitResult(clickX, clickY, clickZ, side, Vec3d.createCached(x, y, z))))
                                 .build()
                 ).context.canPlace() && block.canPlaceAt(world, x, y, z, side)
         ) {
@@ -69,9 +69,9 @@ public class BlockStateItem extends TemplateItemBase {
                     .placeFunction(() -> world.setBlockStateWithNotify(x, y, z, blockState) != null)
                     .build()).placeFunction.getAsBoolean()
             ) {
-                block.onBlockPlaced(world, x, y, z, direction.getId());
-                block.afterPlaced(world, x, y, z, player);
-                world.playSound((float)x + 0.5f, (float)y + 0.5f, (float)z + 0.5f, block.sounds.getWalkSound(), (block.sounds.getVolume() + 1.0f) / 2.0f, block.sounds.getPitch() * 0.8f);
+                block.onPlaced(world, x, y, z, direction.getId());
+                block.onPlaced(world, x, y, z, player);
+                world.playSound((float)x + 0.5f, (float)y + 0.5f, (float)z + 0.5f, block.soundGroup.getSound(), (block.soundGroup.method_1976() + 1.0f) / 2.0f, block.soundGroup.method_1977() * 0.8f);
                 --itemStack.count;
             }
             return true;

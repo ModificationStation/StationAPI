@@ -1,17 +1,17 @@
 package net.modificationstation.stationapi.mixin.nbt;
 
-import net.minecraft.util.io.AbstractTag;
-import net.minecraft.util.io.ListTag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.List;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
 
-@Mixin(ListTag.class)
+@Mixin(NbtList.class)
 public interface ListTagAccessor {
 
     @Accessor("data")
-    void stationapi$setData(List<? extends AbstractTag> data);
+    void stationapi$setData(List<? extends NbtElement> data);
 
     @Accessor("listTypeId")
     byte stationapi$getListTypeId();
@@ -20,5 +20,5 @@ public interface ListTagAccessor {
     void stationapi$setListTypeId(byte listTypeId);
 
     @Accessor("data")
-    List<AbstractTag> stationapi$getData();
+    List<NbtElement> stationapi$getData();
 }

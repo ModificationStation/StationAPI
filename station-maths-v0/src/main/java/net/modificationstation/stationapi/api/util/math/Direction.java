@@ -6,8 +6,8 @@ import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import lombok.RequiredArgsConstructor;
-import net.minecraft.entity.EntityBase;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
 import net.modificationstation.stationapi.api.util.StringIdentifiable;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.NotNull;
@@ -63,13 +63,13 @@ public enum Direction implements StringIdentifiable {
         offsetZ = vector.getZ();
     }
 
-    public static Direction[] getEntityFacingOrder(EntityBase entity) {
+    public static Direction[] getEntityFacingOrder(Entity entity) {
         final float f = entity.pitch * ((float)Math.PI / 180);
         final float g = -entity.yaw * ((float)Math.PI / 180);
-        final float h = net.minecraft.util.maths.MathHelper.sin(f);
-        final float i = net.minecraft.util.maths.MathHelper.cos(f);
-        final float j = net.minecraft.util.maths.MathHelper.sin(g);
-        final float k = net.minecraft.util.maths.MathHelper.cos(g);
+        final float h = net.minecraft.util.math.MathHelper.sin(f);
+        final float i = net.minecraft.util.math.MathHelper.cos(f);
+        final float j = net.minecraft.util.math.MathHelper.sin(g);
+        final float k = net.minecraft.util.math.MathHelper.cos(g);
         final boolean bl = j > 0.0f;
         final boolean bl2 = h < 0.0f;
         final boolean bl3 = k > 0.0f;
@@ -139,7 +139,7 @@ public enum Direction implements StringIdentifiable {
         return direction;
     }
 
-    public static Direction getLookDirectionForAxis(EntityBase entity, Axis axis) {
+    public static Direction getLookDirectionForAxis(Entity entity, Axis axis) {
         return switch (axis) {
             case X -> NORTH.pointsTo(entity.yaw) ? NORTH : SOUTH;
             case Z -> EAST.pointsTo(entity.yaw) ? EAST : WEST;
@@ -265,7 +265,7 @@ public enum Direction implements StringIdentifiable {
     }
 
     @Nullable
-    public static Direction fromVector(TilePos pos) {
+    public static Direction fromVector(BlockPos pos) {
         return VECTOR_TO_DIRECTION.get(pos.asLong());
     }
 
@@ -275,7 +275,7 @@ public enum Direction implements StringIdentifiable {
     }
 
     public static Direction fromRotation(double rotation) {
-        return Direction.fromHorizontal(net.minecraft.util.maths.MathHelper.floor(rotation / 90.0 + 0.5) & 3);
+        return Direction.fromHorizontal(net.minecraft.util.math.MathHelper.floor(rotation / 90.0 + 0.5) & 3);
     }
 
     public static Direction from(Axis axis, AxisDirection direction) {
@@ -344,8 +344,8 @@ public enum Direction implements StringIdentifiable {
      */
     public boolean pointsTo(float yaw) {
         float f = yaw * ((float)Math.PI / 180);
-        float g = -net.minecraft.util.maths.MathHelper.sin(f);
-        float h = net.minecraft.util.maths.MathHelper.cos(f);
+        float g = -net.minecraft.util.math.MathHelper.sin(f);
+        float h = net.minecraft.util.math.MathHelper.cos(f);
         return (float)vector.getX() * g + (float)vector.getZ() * h > 0.0f;
     }
 

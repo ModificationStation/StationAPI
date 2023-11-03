@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.worldgen.surface.condition;
 
-import net.minecraft.level.Level;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.math.Vec3f;
 
@@ -16,11 +16,11 @@ public class SlopeSurfaceCondition implements SurfaceCondition {
     }
 
     @Override
-    public boolean canApply(Level level, int x, int y, int z, BlockState state) {
-        a.set(2, level.getHeight(x + 1, z) - level.getHeight(x - 1, z), 0);
+    public boolean canApply(World level, int x, int y, int z, BlockState state) {
+        a.set(2, level.method_222(x + 1, z) - level.method_222(x - 1, z), 0);
         a.normalize();
 
-        b.set(0, level.getHeight(x, z + 1) - level.getHeight(x, z - 1), 2);
+        b.set(0, level.method_222(x, z + 1) - level.method_222(x, z - 1), 2);
         b.normalize();
 
         a.cross(b);

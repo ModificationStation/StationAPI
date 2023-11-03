@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.resourceloader.client;
 
-import net.minecraft.client.resource.TexturePack;
+import net.minecraft.class_285;
 import net.modificationstation.stationapi.api.client.resource.ReloadableAssetsManager;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
@@ -12,7 +12,7 @@ import uk.co.benjiweber.expressions.exception.Exceptions;
 
 import java.io.InputStream;
 
-@Mixin(TexturePack.class)
+@Mixin(class_285.class)
 public class MixinTexturePack {
 
     @Inject(

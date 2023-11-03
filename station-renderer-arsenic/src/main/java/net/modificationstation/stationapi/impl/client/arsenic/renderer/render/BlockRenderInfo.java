@@ -17,8 +17,8 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.level.BlockView;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
@@ -39,7 +39,7 @@ public class BlockRenderInfo {
     private final BlockColors blockColorMap = StationRenderAPI.getBlockColors();
     public final Random random = new Random();
     public BlockView blockView;
-    public TilePos blockPos;
+    public BlockPos blockPos;
     public BlockState blockState;
     public long seed;
     boolean defaultAo;
@@ -61,12 +61,12 @@ public class BlockRenderInfo {
         this.blockView = blockView;
     }
 
-    public void prepareForBlock(BlockState blockState, TilePos blockPos, boolean modelAO) {
+    public void prepareForBlock(BlockState blockState, BlockPos blockPos, boolean modelAO) {
         this.blockPos = blockPos;
         this.blockState = blockState;
         // in the unlikely case seed actually matches this, we'll simply retrieve it more than one
         seed = -1L;
-        defaultAo = modelAO && Minecraft.isSmoothLightingEnabled() && blockState.getLuminance() == 0;
+        defaultAo = modelAO && Minecraft.method_2148() && blockState.getLuminance() == 0;
     }
 
     public void release() {
@@ -84,6 +84,6 @@ public class BlockRenderInfo {
 
     boolean shouldDrawQuad(MutableQuadViewImpl quad) {
         Direction cull = quad.cullFace();
-        return cull == null || blockState.getBlock().isSideRendered(blockView, blockPos.x + cull.getOffsetX(), blockPos.y + cull.getOffsetY(), blockPos.z + cull.getOffsetZ(), cull.ordinal());
+        return cull == null || blockState.getBlock().isSideVisible(blockView, blockPos.x + cull.getOffsetX(), blockPos.y + cull.getOffsetY(), blockPos.z + cull.getOffsetZ(), cull.ordinal());
     }
 }

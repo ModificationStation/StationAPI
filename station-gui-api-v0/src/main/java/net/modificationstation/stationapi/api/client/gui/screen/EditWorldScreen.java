@@ -3,13 +3,13 @@ package net.modificationstation.stationapi.api.client.gui.screen;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.ScreenBase;
-import net.minecraft.client.gui.widgets.Button;
-import net.minecraft.client.gui.widgets.OptionButton;
-import net.minecraft.client.gui.widgets.ScrollableBase;
+import net.minecraft.class_591;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.EntryListWidget;
+import net.minecraft.client.gui.widget.OptionButtonWidget;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.level.storage.LevelMetadata;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.screen.EditWorldScreenEvent;
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetAttachedContext;
@@ -31,11 +31,11 @@ public class EditWorldScreen extends StationScreen {
             EDIT_TITLE_KEY = SELECTWORLD_KEY + "." + MODID.id("editTitle");
     private static final ImmutableList<ButtonWidgetDeferredDetachedContext<EditWorldScreen>> CUSTOM_EDIT_BUTTONS = StationAPI.EVENT_BUS.post(EditWorldScreenEvent.ScrollableButtonContextRegister.builder().contexts(ImmutableList.builder()).build()).contexts.build();
 
-    protected final ScreenBase parent;
-    public final LevelMetadata worldData;
+    protected final Screen parent;
+    public final class_591 worldData;
     protected EditButtonList buttonMenu;
 
-    public EditWorldScreen(ScreenBase parent, LevelMetadata worldData) {
+    public EditWorldScreen(Screen parent, class_591 worldData) {
         this.parent = parent;
         this.worldData = worldData;
     }
@@ -44,8 +44,8 @@ public class EditWorldScreen extends StationScreen {
     public void init() {
         super.init();
         btns.attach(
-                id -> new OptionButton(id, width / 2 - 75, height - 48, I18n.translate("gui.done")),
-                button -> minecraft.openScreen(parent)
+                id -> new OptionButtonWidget(id, width / 2 - 75, height - 48, I18n.getTranslation("gui.done")),
+                button -> minecraft.setScreen(parent)
         );
         buttonMenu = new EditButtonList();
         CUSTOM_EDIT_BUTTONS.stream().map(context -> context.init(this)).forEach(buttonMenu.btns::attach);
@@ -54,40 +54,40 @@ public class EditWorldScreen extends StationScreen {
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         buttonMenu.render(mouseX, mouseY, delta);
-        drawTextWithShadowCentred(textManager, I18n.translate(EDIT_TITLE_KEY), width / 2, 20, Color.WHITE.hashCode());
+        drawCenteredTextWithShadow(textRenderer, I18n.getTranslation(EDIT_TITLE_KEY), width / 2, 20, Color.WHITE.hashCode());
         super.render(mouseX, mouseY, delta);
     }
 
     @Environment(EnvType.CLIENT)
-    protected class EditButtonList extends ScrollableBase {
+    protected class EditButtonList extends EntryListWidget {
 
         protected final List<ButtonWidgetAttachedContext> editButtons = new ArrayList<>();
         protected final ButtonWidgetContextAttacher btns = ButtonWidgetContextAttacher.toList(editButtons);
-        protected Button lastClickedButton;
+        protected ButtonWidget lastClickedButton;
 
         public EditButtonList() {
             super(minecraft, EditWorldScreen.this.width, EditWorldScreen.this.height, 32, EditWorldScreen.this.height - 64, 24);
-            setDrawingSelectionBackground(false);
+            method_1260(false);
         }
 
         @Override
-        protected int getSize() {
+        protected int getEntryCount() {
             return editButtons.size();
         }
 
         @Override
         protected void entryClicked(int id, boolean doubleClick) {
             ButtonWidgetAttachedContext entry = editButtons.get(id);
-            Button button = entry.button();
+            ButtonWidget button = entry.button();
             if (button.isMouseOver(minecraft, mouseX, mouseY)) {
                 lastClickedButton = button;
-                minecraft.soundHelper.playSound("random.click", 1.0f, 1.0f);
+                minecraft.soundManager.method_2009("random.click", 1.0f, 1.0f);
                 entry.action().onPress(button);
             }
         }
 
         @Override
-        protected boolean isEntrySelected(int i) {
+        protected boolean isSelectedEntry(int i) {
             return lastClickedButton.id == i;
         }
 
@@ -107,7 +107,7 @@ public class EditWorldScreen extends StationScreen {
 
         @Override
         protected void renderEntry(int entryId, int x, int y, int height, Tessellator tessellator) {
-            Button button = editButtons.get(entryId).button();
+            ButtonWidget button = editButtons.get(entryId).button();
             button.x = x + 10;
             button.y = y;
             button.render(minecraft, mouseX, mouseY);

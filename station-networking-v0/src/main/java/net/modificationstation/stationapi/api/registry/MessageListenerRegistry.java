@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.registry;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.minecraft.entity.player.PlayerBase;
+import net.minecraft.entity.player.PlayerEntity;
 import net.modificationstation.stationapi.api.packet.Message;
 
 import java.util.function.BiConsumer;
@@ -19,7 +19,7 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MessageListenerRegistry {
 
-    private static final BiConsumer<PlayerBase, Message> EMPTY = (player, message) -> {};
-    public static final RegistryKey<Registry<BiConsumer<PlayerBase, Message>>> KEY = RegistryKey.ofRegistry(MODID.id("message_listeners"));
-    public static final Registry<BiConsumer<PlayerBase, Message>> INSTANCE = Registries.create(KEY, registry -> EMPTY);
+    private static final BiConsumer<PlayerEntity, Message> EMPTY = (player, message) -> {};
+    public static final RegistryKey<Registry<BiConsumer<PlayerEntity, Message>>> KEY = RegistryKey.ofRegistry(MODID.id("message_listeners"));
+    public static final Registry<BiConsumer<PlayerEntity, Message>> INSTANCE = Registries.create(KEY, registry -> EMPTY);
 }

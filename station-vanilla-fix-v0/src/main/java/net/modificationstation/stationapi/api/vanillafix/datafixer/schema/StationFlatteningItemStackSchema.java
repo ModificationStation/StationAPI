@@ -5,7 +5,7 @@ import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.templates.TypeTemplate;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
 import net.modificationstation.stationapi.api.util.Util;
@@ -22,18 +22,18 @@ public class StationFlatteningItemStackSchema extends Schema {
     private static final String[] OLD_ID_TO_ITEM = new String[32000];
     private static final Object2IntOpenHashMap<String> ITEM_TO_OLD_ID = Util.make(new Object2IntOpenHashMap<>(512), map -> map.defaultReturnValue(0));
 
-    public static void putState(int oldId, String id, CompoundTag properties) {
-        putState(oldId, Util.make(new CompoundTag(), tag -> {
-            tag.put("Name", id);
+    public static void putState(int oldId, String id, NbtCompound properties) {
+        putState(oldId, Util.make(new NbtCompound(), tag -> {
+            tag.putString("Name", id);
             tag.put("Properties", properties);
         }));
     }
 
     public static void putState(int oldId, String id) {
-        putState(oldId, Util.make(new CompoundTag(), tag -> tag.put("Name", id)));
+        putState(oldId, Util.make(new NbtCompound(), tag -> tag.putString("Name", id)));
     }
 
-    public static void putState(int oldId, CompoundTag tag) {
+    public static void putState(int oldId, NbtCompound tag) {
         String id = tag.getString("Name");
         BLOCK_TO_OLD_ID.put(id, oldId);
         Dynamic<?> dynamic = new Dynamic<>(NbtOps.INSTANCE, tag);

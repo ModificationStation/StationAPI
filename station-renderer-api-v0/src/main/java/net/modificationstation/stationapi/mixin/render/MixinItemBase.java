@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.mixin.render;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
-import net.minecraft.item.ItemBase;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.client.item.StationRendererItem;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
@@ -15,13 +15,13 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.function.Function;
 
-@Mixin(ItemBase.class)
+@Mixin(Item.class)
 @EnvironmentInterface(value = EnvType.CLIENT, itf = StationRendererItem.class)
 public abstract class MixinItemBase implements StationRendererItem {
 
-    @Shadow public abstract ItemBase setTexturePosition(int i);
+    @Shadow public abstract Item setTexturePosition(int i);
 
-    @Shadow public abstract ItemBase setTexturePosition(int i, int j);
+    @Shadow public abstract Item setTexturePosition(int i, int j);
 
     @Override
     @Environment(EnvType.CLIENT)
@@ -50,7 +50,7 @@ public abstract class MixinItemBase implements StationRendererItem {
     @Environment(EnvType.CLIENT)
     public <E extends StationTextureBinder> E setTextureBinder(Identifier staticReference, Function<Atlas.Sprite, E> initializer) {
         E textureBinder = ((ExpandableAtlas) getAtlas()).addTextureBinder(staticReference, initializer);
-        setTexturePosition(textureBinder.index);
+        setTexturePosition(textureBinder.field_1412);
         return textureBinder;
     }
 }

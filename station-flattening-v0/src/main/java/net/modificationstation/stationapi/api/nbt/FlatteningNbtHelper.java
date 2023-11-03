@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.nbt;
 
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.block.BlockBase;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.block.Block;
+import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.registry.*;
@@ -26,18 +26,18 @@ public class FlatteningNbtHelper {
      *
      * @see #fromBlockState(BlockState)
      */
-    public static BlockState toBlockState(RegistryEntryLookup<BlockBase> blockLookup, CompoundTag nbt) {
-        if (!nbt.containsKey("Name")) return States.AIR.get();
+    public static BlockState toBlockState(RegistryEntryLookup<Block> blockLookup, NbtCompound nbt) {
+        if (!nbt.contains("Name")) return States.AIR.get();
         Identifier identifier = Identifier.of(nbt.getString("Name"));
-        Optional<RegistryEntry.Reference<BlockBase>> optional = blockLookup.getOptional(RegistryKey.of(BlockRegistry.KEY, identifier));
+        Optional<RegistryEntry.Reference<Block>> optional = blockLookup.getOptional(RegistryKey.of(BlockRegistry.KEY, identifier));
         if (optional.isEmpty()) {
             return States.AIR.get();
         }
-        BlockBase block = optional.get().value();
+        Block block = optional.get().value();
         BlockState blockState = block.getDefaultState();
-        if (nbt.containsKey("Properties")) {
-            CompoundTag nbtCompound = nbt.getCompoundTag("Properties");
-            StateManager<BlockBase, BlockState> stateManager = block.getStateManager();
+        if (nbt.contains("Properties")) {
+            NbtCompound nbtCompound = nbt.getCompound("Properties");
+            StateManager<Block, BlockState> stateManager = block.getStateManager();
             for (String string : ((CompoundTagAccessor) nbtCompound).stationapi$getData().keySet()) {
                 Property<?> property = stateManager.getProperty(string);
                 if (property == null) continue;
@@ -47,7 +47,7 @@ public class FlatteningNbtHelper {
         return blockState;
     }
 
-    private static <S extends State<?, S>, T extends Comparable<T>> S withProperty(S state, Property<T> property, String key, CompoundTag properties, CompoundTag root) {
+    private static <S extends State<?, S>, T extends Comparable<T>> S withProperty(S state, Property<T> property, String key, NbtCompound properties, NbtCompound root) {
         Optional<T> optional = property.parse(properties.getString(key));
         if (optional.isPresent()) return state.with(property, optional.get());
         LOGGER.warn("Unable to read property: {} with value: {} for blockstate: {}", key, properties.getString(key), root.toString());
@@ -57,17 +57,17 @@ public class FlatteningNbtHelper {
     /**
      * {@return the serialized block state}
      *
-     * @see #toBlockState(RegistryEntryLookup, CompoundTag)
+     * @see #toBlockState(RegistryEntryLookup, NbtCompound)
      */
-    public static CompoundTag fromBlockState(BlockState state) {
-        CompoundTag nbtCompound = new CompoundTag();
-        nbtCompound.put("Name", Objects.requireNonNull(BlockRegistry.INSTANCE.getId(state.getBlock())).toString());
+    public static NbtCompound fromBlockState(BlockState state) {
+        NbtCompound nbtCompound = new NbtCompound();
+        nbtCompound.putString("Name", Objects.requireNonNull(BlockRegistry.INSTANCE.getId(state.getBlock())).toString());
         ImmutableMap<Property<?>, Comparable<?>> immutableMap = state.getEntries();
         if (!immutableMap.isEmpty()) {
-            CompoundTag nbtCompound2 = new CompoundTag();
+            NbtCompound nbtCompound2 = new NbtCompound();
             for (Map.Entry<Property<?>, Comparable<?>> entry : immutableMap.entrySet()) {
                 Property<?> property = entry.getKey();
-                nbtCompound2.put(property.getName(), nameValue(property, entry.getValue()));
+                nbtCompound2.putString(property.getName(), nameValue(property, entry.getValue()));
             }
             nbtCompound.put("Properties", nbtCompound2);
         }

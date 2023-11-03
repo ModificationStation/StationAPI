@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Ore;
+import net.minecraft.block.OreBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateOre extends Ore implements BlockTemplate {
+public class TemplateOre extends OreBlock implements BlockTemplate {
 
     public TemplateOre(Identifier identifier, int j) {
         this(BlockTemplate.getNextId(), j);

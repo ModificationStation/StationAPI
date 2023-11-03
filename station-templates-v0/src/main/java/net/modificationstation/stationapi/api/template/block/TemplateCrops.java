@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Crops;
+import net.minecraft.block.CropBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateCrops extends Crops implements BlockTemplate {
+public class TemplateCrops extends CropBlock implements BlockTemplate {
 
     public TemplateCrops(Identifier identifier, int j) {
         this(BlockTemplate.getNextId(), j);

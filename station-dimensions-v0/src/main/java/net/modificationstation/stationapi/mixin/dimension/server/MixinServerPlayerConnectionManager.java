@@ -2,10 +2,10 @@ package net.modificationstation.stationapi.mixin.dimension.server;
 
 import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.ints.IntSortedSet;
-import net.minecraft.entity.player.ServerPlayer;
+import net.minecraft.class_166;
+import net.minecraft.class_167;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.ServerPlayerConnectionManager;
-import net.minecraft.server.ServerPlayerView;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,10 +18,10 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(ServerPlayerConnectionManager.class)
+@Mixin(class_166.class)
 public class MixinServerPlayerConnectionManager {
 
-    @Shadow private ServerPlayerView[] playerViews;
+    @Shadow private class_167[] playerViews;
 
     @ModifyConstant(
             method = "<init>(Lnet/minecraft/server/MinecraftServer;)V",
@@ -40,7 +40,7 @@ public class MixinServerPlayerConnectionManager {
         IntSortedSet dimensions = DimensionRegistry.INSTANCE.serialView.keySet();
         int[] otherDimensions = dimensions.tailSet(dimensions.toIntArray()[2]).toIntArray();
         for (int i = 0; i < otherDimensions.length; i++)
-            playerViews[i + 2] = new ServerPlayerView(server, otherDimensions[i], var2);
+            playerViews[i + 2] = new class_167(server, otherDimensions[i], var2);
     }
 
     @Inject(
@@ -53,11 +53,11 @@ public class MixinServerPlayerConnectionManager {
                     ordinal = 0
             )
     )
-    private void addPlayerToDimension(ServerPlayer player, CallbackInfo ci) {
+    private void addPlayerToDimension(ServerPlayerEntity player, CallbackInfo ci) {
         IntSortedSet dimensions = DimensionRegistry.INSTANCE.serialView.keySet();
         int[] otherDimensions = dimensions.tailSet(dimensions.toIntArray()[2]).toIntArray();
         for (int i = 0; i < otherDimensions.length; i++)
-            playerViews[i + 2].addPlayer(player);
+            playerViews[i + 2].method_1748(player);
     }
 
     /**
@@ -65,7 +65,7 @@ public class MixinServerPlayerConnectionManager {
      * @author mine_diver
      */
     @Overwrite
-    private ServerPlayerView getPlayerView(int dimension) {
+    private class_167 getPlayerView(int dimension) {
         return playerViews[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), dimension, DimensionRegistry.DIMENSIONS_COMPARATOR)];
     }
 }

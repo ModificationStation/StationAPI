@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.item.Block;
+import net.minecraft.item.BlockItem;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.*;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
@@ -40,5 +40,5 @@ public class HasMetaBlockItemImpl {
      * {@link MetaBlock#MetaBlock(int)} field.
      */
     @SuppressWarnings("Convert2MethodRef") // Method references load their target classes, which may load ItemBase before it should be loaded normally.
-    public static final IntFunction<Block> FACTORY = i -> new MetaBlock(i);
+    public static final IntFunction<BlockItem> FACTORY = i -> new MetaBlock(i);
 }

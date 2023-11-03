@@ -1,25 +1,25 @@
 package net.modificationstation.stationapi.api.item.tool;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.item.tool.ToolMaterial;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationHoeItem extends ToolLevel {
 
     @Override
-    default void setEffectiveBlocks(TagKey<BlockBase> effectiveBlocks) {
+    default void setEffectiveBlocks(TagKey<Block> effectiveBlocks) {
         Util.assertImpl();
     }
 
     @Override
-    default TagKey<BlockBase> getEffectiveBlocks(ItemInstance itemInstance) {
+    default TagKey<Block> getEffectiveBlocks(ItemStack itemInstance) {
         return Util.assertImpl();
     }
 
     @Override
-    default ToolMaterial getMaterial(ItemInstance itemInstance) {
+    default ToolMaterial getMaterial(ItemStack itemInstance) {
         return Util.assertImpl();
     }
 }

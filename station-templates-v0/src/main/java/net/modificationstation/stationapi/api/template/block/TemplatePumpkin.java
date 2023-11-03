@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Pumpkin;
+import net.minecraft.block.PumpkinBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplatePumpkin extends Pumpkin implements BlockTemplate {
+public class TemplatePumpkin extends PumpkinBlock implements BlockTemplate {
 
     public TemplatePumpkin(Identifier identifier, int j, boolean flag) {
         this(BlockTemplate.getNextId(), j, flag);

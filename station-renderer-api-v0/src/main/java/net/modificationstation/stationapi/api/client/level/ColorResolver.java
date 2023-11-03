@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.level;
 
-import net.minecraft.level.BlockView;
-import net.minecraft.level.biome.Biome;
-import net.minecraft.util.maths.MathHelper;
+import net.minecraft.class_153;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.BlockView;
 
 @FunctionalInterface
 public interface ColorResolver {
@@ -14,9 +14,9 @@ public interface ColorResolver {
 
         @Override
         default int getColor(BlockView world, double x, double y, double z) {
-            world.getBiomeSource().getBiomes(MathHelper.floor(x), MathHelper.floor(z), 1, 1);
-            double temperature = world.getBiomeSource().temperatureNoises[0];
-            double rainfall = world.getBiomeSource().rainfallNoises[0];
+            world.method_1781().method_1788(MathHelper.floor(x), MathHelper.floor(z), 1, 1);
+            double temperature = world.method_1781().field_2235[0];
+            double rainfall = world.method_1781().field_2236[0];
             return getColour(temperature, rainfall);
         }
 
@@ -28,10 +28,10 @@ public interface ColorResolver {
 
         @Override
         default int getColor(BlockView blockView, double x, double y, double z) {
-            return getColour(blockView.getBiomeSource().getBiome(MathHelper.floor(x), MathHelper.floor(z)), x, z);
+            return getColour(blockView.method_1781().method_1787(MathHelper.floor(x), MathHelper.floor(z)), x, z);
         }
 
-        int getColour(Biome biome, double x, double z);
+        int getColour(class_153 biome, double x, double z);
     }
 
     interface ByBlockCoordinates extends ColorResolver {

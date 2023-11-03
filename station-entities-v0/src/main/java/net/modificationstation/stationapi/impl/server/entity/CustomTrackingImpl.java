@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.server.entity;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.network.EntityHashSet;
-import net.minecraft.server.network.ServerEntityTracker;
+import net.minecraft.class_488;
+import net.minecraft.class_80;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -24,7 +24,7 @@ import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEve
 public final class CustomTrackingImpl {
 
     /**
-     * Invokes {@link CustomTracking#track(ServerEntityTracker, EntityHashSet)} in entity if it's instance of {@link CustomTracking} via {@link TrackEntityEvent} hook.
+     * Invokes {@link CustomTracking#track(class_488, class_80)} in entity if it's instance of {@link CustomTracking} via {@link TrackEntityEvent} hook.
      * @param event the {@link TrackEntityEvent} event.
      * @see TrackEntityEvent
      */

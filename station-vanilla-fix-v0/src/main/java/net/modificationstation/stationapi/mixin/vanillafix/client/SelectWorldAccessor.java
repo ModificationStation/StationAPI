@@ -1,15 +1,15 @@
 package net.modificationstation.stationapi.mixin.vanillafix.client;
 
-import net.minecraft.client.gui.screen.menu.SelectWorld;
-import net.minecraft.level.storage.LevelMetadata;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.List;
+import net.minecraft.class_591;
+import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 
-@Mixin(SelectWorld.class)
+@Mixin(SelectWorldScreen.class)
 public interface SelectWorldAccessor {
 
     @Accessor
-    List<LevelMetadata> getWorlds();
+    List<class_591> getWorlds();
 }

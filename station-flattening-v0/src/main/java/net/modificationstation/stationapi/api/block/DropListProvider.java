@@ -1,11 +1,10 @@
 package net.modificationstation.stationapi.api.block;
 
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
-
 import java.util.List;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 public interface DropListProvider {
 
-    List<ItemInstance> getDropList(Level level, int x, int y, int z, BlockState state, int meta);
+    List<ItemStack> getDropList(World level, int x, int y, int z, BlockState state, int meta);
 }

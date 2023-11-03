@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.arsenic.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.TextureBinder;
+import net.minecraft.class_336;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -90,8 +90,8 @@ public class MixinTextureManager {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void stationapi_tick_ensureBufferCapacity(CallbackInfo ci, int var1, TextureBinder var2) {
-        arsenic_plugin.ensureBufferCapacity(var2.grid.length);
+    private void stationapi_tick_ensureBufferCapacity(CallbackInfo ci, int var1, class_336 var2) {
+        arsenic_plugin.ensureBufferCapacity(var2.field_1411.length);
     }
 
     @Redirect(
@@ -101,15 +101,15 @@ public class MixinTextureManager {
                     target = "Lnet/minecraft/client/render/TextureBinder;bindTexture(Lnet/minecraft/client/texture/TextureManager;)V"
             )
     )
-    private void stationapi_tick_preventBindingTextureAndCheckCustomBinder(TextureBinder instance, TextureManager manager) {
+    private void stationapi_tick_preventBindingTextureAndCheckCustomBinder(class_336 instance, TextureManager manager) {
         if (instance instanceof StaticReferenceProvider provider) {
             final Sprite staticReference = provider.getStaticReference().getSprite();
             final SpriteContents contents = staticReference.getContents();
             stationapi_customBinder = true;
             stationapi_customBinderX = staticReference.getX();
             stationapi_customBinderY = staticReference.getY();
-            stationapi_binderScaledWidth = contents.getWidth() / instance.textureSize;
-            stationapi_binderScaledHeight = contents.getHeight() / instance.textureSize;
+            stationapi_binderScaledWidth = contents.getWidth() / instance.field_1415;
+            stationapi_binderScaledHeight = contents.getHeight() / instance.field_1415;
         } else stationapi_customBinder = false;
     }
 
@@ -133,7 +133,7 @@ public class MixinTextureManager {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void stationapi_tick_captureCurrentBinderOffsets(CallbackInfo ci, int var1, TextureBinder var2, int var3, int var4) {
+    private void stationapi_tick_captureCurrentBinderOffsets(CallbackInfo ci, int var1, class_336 var2, int var3, int var4) {
         stationapi_binderXOffset = var3;
         stationapi_binderYOffset = var4;
     }

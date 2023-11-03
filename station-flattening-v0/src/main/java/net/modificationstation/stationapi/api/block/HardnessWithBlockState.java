@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.api.block;
 
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.level.BlockView;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 
 public interface HardnessWithBlockState {
 
-    float getHardness(BlockState state, BlockView blockView, TilePos pos);
+    float getHardness(BlockState state, BlockView blockView, BlockPos pos);
 
-    float calcBlockBreakingDelta(BlockState state, PlayerBase player, BlockView world, TilePos pos);
+    float calcBlockBreakingDelta(BlockState state, PlayerEntity player, BlockView world, BlockPos pos);
 }

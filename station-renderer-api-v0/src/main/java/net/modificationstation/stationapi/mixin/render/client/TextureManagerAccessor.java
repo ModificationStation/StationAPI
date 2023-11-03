@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.render.client;
 
-import net.minecraft.client.TexturePackManager;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.render.TextureBinder;
+import net.minecraft.class_303;
+import net.minecraft.class_336;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.texture.TextureManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -21,7 +21,7 @@ public interface TextureManagerAccessor {
     GameOptions getGameOptions();
 
     @Accessor
-    List<TextureBinder> getTextureBinders();
+    List<class_336> getTextureBinders();
 
     @Accessor
     HashMap<String, Integer> getTextures();
@@ -45,5 +45,5 @@ public interface TextureManagerAccessor {
     int stationapi$method_1098(int i, int j);
 
     @Accessor("texturePackManager")
-    TexturePackManager stationapi$getTexturePackManager();
+    class_303 stationapi$getTexturePackManager();
 }

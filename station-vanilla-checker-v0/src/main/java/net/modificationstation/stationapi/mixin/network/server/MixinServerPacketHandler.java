@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.mixin.network.server;
 
-import net.minecraft.entity.player.ServerPlayer;
-import net.minecraft.packet.login.LoginRequest0x1Packet;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.network.ServerPacketHandler;
-import net.minecraft.server.network.ServerPlayerPacketHandler;
-import net.minecraft.util.Vec3i;
+import net.minecraft.class_73;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.packet.login.LoginHelloPacket;
+import net.minecraft.server.network.ServerLoginNetworkHandler;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.util.math.Vec3i;
 import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
 import net.modificationstation.stationapi.impl.network.ModdedPacketHandlerSetter;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(ServerPacketHandler.class)
+@Mixin(ServerLoginNetworkHandler.class)
 public class MixinServerPacketHandler {
 
     @Inject(
@@ -27,7 +27,7 @@ public class MixinServerPacketHandler {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void checkModded(LoginRequest0x1Packet arg, CallbackInfo ci, ServerPlayer var2, ServerLevel var3, Vec3i var4, ServerPlayerPacketHandler var5) {
+    private void checkModded(LoginHelloPacket arg, CallbackInfo ci, ServerPlayerEntity var2, class_73 var3, Vec3i var4, ServerPlayNetworkHandler var5) {
         if (((ModdedPacketHandler) this).isModded())
             ((ModdedPacketHandlerSetter) var5).setModded();
     }

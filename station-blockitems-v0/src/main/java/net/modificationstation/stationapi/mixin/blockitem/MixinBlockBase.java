@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.blockitem;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.Block;
-import net.minecraft.item.ItemBase;
+import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.StationBlockItemsBlock;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
@@ -22,12 +22,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(BlockBase.class)
+@Mixin(Block.class)
 public class MixinBlockBase implements StationBlockItemsBlock {
 
     @Shadow
     @Final
-    public static BlockBase[] BY_ID;
+    public static Block[] BY_ID;
 
     @Unique
     private boolean stationapi$disableAutomaticBlockItemRegistration;
@@ -46,7 +46,7 @@ public class MixinBlockBase implements StationBlockItemsBlock {
                     ordinal = 8
             )
     )
-    private static void eradicateNotchCode(ItemBase[] array, int index, ItemBase value) {} // it's set in the ItemBase constructor anyway
+    private static void eradicateNotchCode(Item[] array, int index, Item value) {} // it's set in the ItemBase constructor anyway
 
     @SuppressWarnings({"InvalidMemberReference", "InvalidInjectorMethodSignature", "MixinAnnotationTarget", "UnresolvedMixinReference"})
     @Redirect(
@@ -56,12 +56,12 @@ public class MixinBlockBase implements StationBlockItemsBlock {
                     target = "(I)Lnet/minecraft/item/Block;"
             )
     )
-    private static Block getBlockItem(int blockID) {
-        BlockBase block = BY_ID[blockID + ItemRegistry.ID_SHIFT];
+    private static BlockItem getBlockItem(int blockID) {
+        Block block = BY_ID[blockID + ItemRegistry.ID_SHIFT];
         BlockItemFactoryEvent event = StationAPI.EVENT_BUS.post(
                 BlockItemFactoryEvent.builder()
                         .block(block)
-                        .currentFactory(Block::new)
+                        .currentFactory(BlockItem::new)
                         .build()
         );
         return event.isCanceled() ?
@@ -93,9 +93,9 @@ public class MixinBlockBase implements StationBlockItemsBlock {
 
     @Override
     @Unique
-    public BlockBase disableAutomaticBlockItemRegistration() {
+    public Block disableAutomaticBlockItemRegistration() {
         stationapi$disableAutomaticBlockItemRegistration = true;
-        return BlockBase.class.cast(this);
+        return Block.class.cast(this);
     }
 
     @Override

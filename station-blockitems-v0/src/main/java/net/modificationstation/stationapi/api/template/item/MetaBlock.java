@@ -4,11 +4,11 @@ public class MetaBlock extends TemplateBlock {
 
     public MetaBlock(int i) {
         super(i);
-        setHasSubItems(true);
+        setFuel(true);
     }
 
     @Override
-    public int getMetaData(int i) {
+    public int method_470(int i) {
         return i;
     }
 }

@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.mixin.flattening.server;
 
-import net.minecraft.level.Level;
-import net.minecraft.packet.play.BlockChange0x35S2CPacket;
-import net.minecraft.server.network.ServerPlayerPacketHandler;
+import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(ServerPlayerPacketHandler.class)
+@Mixin(ServerPlayNetworkHandler.class)
 public class MixinServerPlayerPacketHandler {
     @Redirect(
             method = {
@@ -20,7 +20,7 @@ public class MixinServerPlayerPacketHandler {
                     target = "(IIILnet/minecraft/level/Level;)Lnet/minecraft/packet/play/BlockChange0x35S2CPacket;"
             )
     )
-    private BlockChange0x35S2CPacket flatten(int x, int y, int z, Level world) {
+    private BlockUpdateS2CPacket flatten(int x, int y, int z, World world) {
         return new FlattenedBlockChangeS2CPacket(x, y, z, world);
     }
 }

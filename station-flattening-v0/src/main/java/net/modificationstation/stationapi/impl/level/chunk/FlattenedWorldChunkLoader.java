@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.impl.level.chunk;
 
-import net.minecraft.level.Level;
-import net.minecraft.level.LevelProperties;
-import net.minecraft.level.chunk.Chunk;
-import net.minecraft.level.chunk.ChunkIO;
-import net.minecraft.level.storage.RegionLoader;
-import net.minecraft.util.io.AbstractTag;
-import net.minecraft.util.io.CompoundTag;
-import net.minecraft.util.io.NBTIO;
+import net.minecraft.class_243;
+import net.minecraft.class_379;
+import net.minecraft.class_43;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldProperties;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.impl.level.FlattenedWorldManager;
@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import static net.modificationstation.stationapi.impl.level.FlattenedWorldManager.SECTIONS;
 
-public class FlattenedWorldChunkLoader implements ChunkIO {
+public class FlattenedWorldChunkLoader implements class_243 {
 
     protected final File dimFolder;
 
@@ -28,57 +28,57 @@ public class FlattenedWorldChunkLoader implements ChunkIO {
     }
 
     @Override
-    public Chunk getChunk(Level arg, int i, int j) {
-        DataInputStream dataInputStream = RegionLoader.method_1215(dimFolder, i, j);
+    public class_43 method_811(World arg, int i, int j) {
+        DataInputStream dataInputStream = class_379.method_1215(dimFolder, i, j);
         if (dataInputStream == null)
             return null;
-        CompoundTag compoundTag = NBTIO.readTag(dataInputStream);
-        if (!compoundTag.containsKey("Level")) {
+        NbtCompound compoundTag = NbtIo.read(dataInputStream);
+        if (!compoundTag.contains("Level")) {
             System.out.println("Chunk file at " + i + "," + j + " is missing level data, skipping");
             return null;
         }
         compoundTag = NbtHelper.update(TypeReferences.CHUNK, compoundTag);
-        if (!compoundTag.getCompoundTag("Level").containsKey(SECTIONS)) {
+        if (!compoundTag.getCompound("Level").contains(SECTIONS)) {
             System.out.println("Chunk file at " + i + "," + j + " is missing section data, skipping");
             return null;
         }
-        Chunk chunk = FlattenedWorldManager.loadChunk(arg, compoundTag.getCompoundTag("Level"));
-        if (!chunk.isSameXAndZ(i, j)) {
-            System.out.println("Chunk file at " + i + "," + j + " is in the wrong location; relocating. (Expected " + i + ", " + j + ", got " + chunk.x + ", " + chunk.z + ")");
-            compoundTag.put("xPos", i);
-            compoundTag.put("zPos", j);
-            chunk = FlattenedWorldManager.loadChunk(arg, compoundTag.getCompoundTag("Level"));
+        class_43 chunk = FlattenedWorldManager.loadChunk(arg, compoundTag.getCompound("Level"));
+        if (!chunk.method_858(i, j)) {
+            System.out.println("Chunk file at " + i + "," + j + " is in the wrong location; relocating. (Expected " + i + ", " + j + ", got " + chunk.field_962 + ", " + chunk.field_963 + ")");
+            compoundTag.putInt("xPos", i);
+            compoundTag.putInt("zPos", j);
+            chunk = FlattenedWorldManager.loadChunk(arg, compoundTag.getCompound("Level"));
         }
         chunk.method_890();
         return chunk;
     }
 
     @Override
-    public void saveChunk(Level world, Chunk oldChunk) {
+    public void method_812(World world, class_43 oldChunk) {
         if (!(oldChunk instanceof FlattenedChunk chunk)) throw new IllegalStateException(getClass().getSimpleName() + " can't save chunk of type \"" + oldChunk.getClass().getName() + "\"!");
-        world.checkSessionLock();
-        DataOutputStream dataOutputStream = RegionLoader.method_1216(dimFolder, chunk.x, chunk.z);
-        CompoundTag compoundTag = new CompoundTag();
-        CompoundTag compoundTag2 = new CompoundTag();
-        compoundTag.put("Level", (AbstractTag) compoundTag2);
+        world.method_251();
+        DataOutputStream dataOutputStream = class_379.method_1216(dimFolder, chunk.field_962, chunk.field_963);
+        NbtCompound compoundTag = new NbtCompound();
+        NbtCompound compoundTag2 = new NbtCompound();
+        compoundTag.put("Level", (NbtElement) compoundTag2);
         FlattenedWorldManager.saveChunk(chunk, world, compoundTag2);
         compoundTag = NbtHelper.addDataVersions(compoundTag);
-        NBTIO.writeTag(compoundTag, dataOutputStream);
+        NbtIo.write(compoundTag, dataOutputStream);
         try {
             dataOutputStream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        LevelProperties levelProperties = world.getProperties();
-        levelProperties.setSizeOnDisk(levelProperties.getSizeOnDisk() + (long) RegionLoader.method_1214(dimFolder, chunk.x, chunk.z));
+        WorldProperties levelProperties = world.method_262();
+        levelProperties.setSizeOnDisk(levelProperties.getSizeOnDisk() + (long) class_379.method_1214(dimFolder, chunk.field_962, chunk.field_963));
     }
 
     @Override
-    public void iDoNothingToo(Level arg, Chunk arg2) {}
+    public void method_814(World arg, class_43 arg2) {}
 
     @Override
-    public void iAmUseless() {}
+    public void method_810() {}
 
     @Override
-    public void iAmActuallyUseless() {}
+    public void method_813() {}
 }

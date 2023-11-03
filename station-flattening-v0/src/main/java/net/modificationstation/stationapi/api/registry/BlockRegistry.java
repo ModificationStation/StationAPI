@@ -1,16 +1,16 @@
 package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttribute;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttributeHolder;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-public final class BlockRegistry extends SimpleRegistry<BlockBase> {
+public final class BlockRegistry extends SimpleRegistry<Block> {
 
-    public static final RegistryKey<Registry<BlockBase>> KEY = RegistryKey.ofRegistry(MODID.id("blocks"));
-    public static final BlockRegistry INSTANCE = Registries.create(KEY, new BlockRegistry(), registry -> BlockBase.BY_ID[0], Lifecycle.experimental());
+    public static final RegistryKey<Registry<Block>> KEY = RegistryKey.ofRegistry(MODID.id("blocks"));
+    public static final BlockRegistry INSTANCE = Registries.create(KEY, new BlockRegistry(), registry -> Block.BLOCKS[0], Lifecycle.experimental());
 
     private BlockRegistry() {
         super(KEY, Lifecycle.experimental(), true);

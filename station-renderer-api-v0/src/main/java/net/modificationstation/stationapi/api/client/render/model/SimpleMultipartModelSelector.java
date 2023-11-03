@@ -4,7 +4,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Splitter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.state.property.Property;
@@ -25,7 +25,7 @@ public class SimpleMultipartModelSelector implements MultipartModelSelector {
       this.valueString = valueString;
    }
 
-   public Predicate<BlockState> getPredicate(StateManager<BlockBase, BlockState> stateManager) {
+   public Predicate<BlockState> getPredicate(StateManager<Block, BlockState> stateManager) {
       Property<?> property = stateManager.getProperty(this.key);
       if (property == null) {
          throw new RuntimeException(String.format("Unknown property '%s' on '%s'", this.key, stateManager.getOwner().toString()));
@@ -53,7 +53,7 @@ public class SimpleMultipartModelSelector implements MultipartModelSelector {
       }
    }
 
-   private Predicate<BlockState> createPredicate(StateManager<BlockBase, BlockState> stateFactory, Property<?> property, String valueString) {
+   private Predicate<BlockState> createPredicate(StateManager<Block, BlockState> stateFactory, Property<?> property, String valueString) {
       Optional<?> optional = property.parse(valueString);
       if (optional.isEmpty()) {
          throw new RuntimeException(String.format("Unknown value '%s' for property '%s' on '%s' in '%s'", valueString, this.key, stateFactory.getOwner().toString(), this.valueString));

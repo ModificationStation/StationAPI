@@ -1,10 +1,9 @@
 package net.modificationstation.stationapi.impl.level;
 
-import net.minecraft.level.Level;
-import net.minecraft.level.biome.Biome;
-
 import java.util.Collection;
 import java.util.Collections;
+import net.minecraft.class_153;
+import net.minecraft.world.World;
 
 public interface StationDimension {
 
@@ -51,7 +50,7 @@ public interface StationDimension {
     /**
      * Get count of chunk sections based on current world height.
      *
-     * @deprecated Use {@link Level#countVerticalSections()} instead.
+     * @deprecated Use {@link World#countVerticalSections()} instead.
      */
     @Deprecated
     default short getSectionCount() { return 8; }
@@ -59,7 +58,7 @@ public interface StationDimension {
     /**
      * Get list of dimension biomes. Mods with custom dimensions should provide their biomes here
      */
-    default Collection<Biome> getBiomes() {
+    default Collection<class_153> getBiomes() {
         return Collections.emptyList();
     }
 }

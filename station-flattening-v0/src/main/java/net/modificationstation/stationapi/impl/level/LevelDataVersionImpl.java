@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.impl.level;
 
 import com.google.common.collect.Iterators;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.util.io.AbstractTag;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.LevelPropertiesEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -19,7 +19,7 @@ public final class LevelDataVersionImpl {
 
     @EventListener
     private static void addDataVersions(LevelPropertiesEvent.Save event) {
-        Map.Entry<String, ? extends AbstractTag> entry = Iterators.getOnlyElement(((CompoundTagAccessor) NbtHelper.addDataVersions(new CompoundTag())).stationapi$getData().entrySet().iterator());
+        Map.Entry<String, ? extends NbtElement> entry = Iterators.getOnlyElement(((CompoundTagAccessor) NbtHelper.addDataVersions(new NbtCompound())).stationapi$getData().entrySet().iterator());
         event.tag.put(entry.getKey(), entry.getValue());
     }
 }

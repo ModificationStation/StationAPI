@@ -8,7 +8,7 @@ import lombok.val;
 import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.achievement.Achievement;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.resource.language.TranslationInvalidationEvent;
 import net.modificationstation.stationapi.impl.resource.language.DeferredTranslationKeyHolder;
@@ -53,7 +53,7 @@ class AchievementMixin {
         StationAPI.EVENT_BUS.register(
                 Listener.<TranslationInvalidationEvent>simple()
                         .phase(StationAPI.INTERNAL_PHASE)
-                        .listener(event -> description = I18n.translate(descriptionTranslationKey))
+                        .listener(event -> description = I18n.getTranslation(descriptionTranslationKey))
                         .build()
         );
         return original.call(descriptionTranslationKey);
@@ -64,10 +64,10 @@ class AchievementMixin {
             at = @At("RETURN")
     )
     private void stationapi_setCapturedTranslationKey(
-            int string, String j, int k, int arg, ItemInstance arg2, Achievement par6, CallbackInfo ci,
+            int string, String j, int k, int arg, ItemStack arg2, Achievement par6, CallbackInfo ci,
             @Share("translationKey") LocalRef<String> translationKey
     ) {
         val capturedTranslationKey = translationKey.get();
-        ((DeferredTranslationKeyHolder) this).stationapi_initTranslationKey(() -> I18n.translate(capturedTranslationKey));
+        ((DeferredTranslationKeyHolder) this).stationapi_initTranslationKey(() -> I18n.getTranslation(capturedTranslationKey));
     }
 }

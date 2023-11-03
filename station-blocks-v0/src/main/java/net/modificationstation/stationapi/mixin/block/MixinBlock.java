@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.block;
 
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.Block;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(Block.class)
+@Mixin(BlockItem.class)
 public class MixinBlock {
 
     @Redirect(
@@ -23,8 +23,8 @@ public class MixinBlock {
             )
     )
     private boolean handlePlace(
-            Level level, int x, int y, int z, int id, int meta,
-            ItemInstance blockItem, PlayerBase player, Level argLevel, int argX, int argY, int argZ, int side
+            World level, int x, int y, int z, int id, int meta,
+            ItemStack blockItem, PlayerEntity player, World argLevel, int argX, int argY, int argZ, int side
     ) {
         return StationAPI.EVENT_BUS.post(
                 BlockEvent.BeforePlacedByItem.builder()
@@ -35,7 +35,7 @@ public class MixinBlock {
                         .block(BlockRegistry.INSTANCE.get(id))
                         .meta(meta)
                         .blockItem(blockItem)
-                        .placeFunction(() -> level.placeBlockWithMetaData(x, y, z, id, meta))
+                        .placeFunction(() -> level.method_201(x, y, z, id, meta))
                         .build()
         ).placeFunction.getAsBoolean();
     }

@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.vanillafix.client;
 
-import net.minecraft.client.gui.screen.menu.SelectWorld;
+import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 import net.modificationstation.stationapi.impl.vanillafix.client.gui.screen.WorldConversionWarning;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,7 +16,7 @@ public class MixinWorldList {
                     target = "Lnet/minecraft/client/gui/screen/menu/SelectWorld;loadWorld(I)V"
             )
     )
-    private void warn(SelectWorld instance, int i) {
-        WorldConversionWarning.warnIfMcRegion(((ScreenBaseAccessor) instance).getMinecraft(), instance, ((SelectWorldAccessor) instance).getWorlds().get(i), () -> instance.loadWorld(i));
+    private void warn(SelectWorldScreen instance, int i) {
+        WorldConversionWarning.warnIfMcRegion(((ScreenBaseAccessor) instance).getMinecraft(), instance, ((SelectWorldAccessor) instance).getWorlds().get(i), () -> instance.method_1891(i));
     }
 }

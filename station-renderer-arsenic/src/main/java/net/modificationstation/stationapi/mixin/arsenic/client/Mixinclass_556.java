@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.mixin.arsenic.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.class_556;
-import net.minecraft.entity.Living;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicOverlayRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -22,7 +22,7 @@ public class Mixinclass_556 {
      * @author mine_diver
      */
     @Overwrite
-    public void method_1862(Living entity, ItemInstance item) {
+    public void method_1862(LivingEntity entity, ItemStack item) {
         arsenic_plugin.renderItem3D(entity, item);
     }
 

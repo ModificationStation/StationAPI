@@ -2,8 +2,7 @@ package net.modificationstation.stationapi.api.client.event.option;
 
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
-import net.minecraft.client.options.KeyBinding;
-
+import net.minecraft.client.option.KeyBinding;
 import java.util.List;
 
 /**

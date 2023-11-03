@@ -1,26 +1,26 @@
 package net.modificationstation.stationapi.api.item;
 
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.maths.TilePos;
-import net.minecraft.util.maths.Vec3f;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 public class AutomaticItemPlacementContext
 extends ItemPlacementContext {
 
-    private final TilePos pos;
+    private final BlockPos pos;
     private final Direction facing;
 
-    public AutomaticItemPlacementContext(Level world, TilePos pos, Direction facing, ItemInstance stack, Direction side) {
-        super(world, null, stack, new HitResult(pos.getX(), pos.getY(), pos.getZ(), side.getId(), Vec3f.from(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5)));
+    public AutomaticItemPlacementContext(World world, BlockPos pos, Direction facing, ItemStack stack, Direction side) {
+        super(world, null, stack, new HitResult(pos.getX(), pos.getY(), pos.getZ(), side.getId(), Vec3d.createCached(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5)));
         this.pos = pos;
         this.facing = facing;
     }
 
     @Override
-    public TilePos getBlockPos() {
+    public BlockPos getBlockPos() {
         return pos;
     }
 

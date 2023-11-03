@@ -3,13 +3,13 @@ package net.modificationstation.stationapi.impl.client.network;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.class_270;
+import net.minecraft.class_454;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.level.ClientLevel;
-import net.minecraft.entity.EntityBase;
-import net.minecraft.entity.Living;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.level.Level;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.entity.HasOwner;
 import net.modificationstation.stationapi.api.event.registry.EntityHandlerRegistryEvent;
@@ -46,8 +46,8 @@ public final class EntityClientNetworkHandler {
         StationAPI.EVENT_BUS.post(new MobHandlerRegistryEvent());
     }
 
-    private static void handleEntitySpawn(PlayerBase player, Message message) {
-        QuadFunction<Level, Double, Double, Double, EntityBase> entityHandler = EntityHandlerRegistry.INSTANCE.get(of(message.strings[0]));
+    private static void handleEntitySpawn(PlayerEntity player, Message message) {
+        QuadFunction<World, Double, Double, Double, Entity> entityHandler = EntityHandlerRegistry.INSTANCE.get(of(message.strings[0]));
         if (entityHandler != null) {
             double
                     x = message.ints[1] / 32D,
@@ -55,20 +55,20 @@ public final class EntityClientNetworkHandler {
                     z = message.ints[3] / 32D;
             //noinspection deprecation
             ClientPlayNetworkHandlerAccessor networkHandler = (ClientPlayNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-            ClientLevel level = networkHandler.getLevel();
-            EntityBase entity = entityHandler.apply(level, x, y, z);
+            class_454 level = networkHandler.getLevel();
+            Entity entity = entityHandler.apply(level, x, y, z);
             if (entity != null) {
-                entity.clientX = message.ints[1];
-                entity.clientY = message.ints[2];
-                entity.clientZ = message.ints[3];
+                entity.field_1654 = message.ints[1];
+                entity.field_1655 = message.ints[2];
+                entity.field_1656 = message.ints[3];
                 entity.yaw = 0.0F;
                 entity.pitch = 0.0F;
-                entity.entityId = message.ints[0];
+                entity.id = message.ints[0];
                 level.method_1495(message.ints[0], entity);
                 if (message.ints[4] > 0) {
                     if (entity instanceof HasOwner hasOwner)
                         hasOwner.setOwner(networkHandler.invokeMethod_1645(message.ints[4]));
-                    entity.setVelocity((double) message.shorts[0] / 8000.0D, (double) message.shorts[1] / 8000.0D, (double) message.shorts[2] / 8000.0D);
+                    entity.method_1365((double) message.shorts[0] / 8000.0D, (double) message.shorts[1] / 8000.0D, (double) message.shorts[2] / 8000.0D);
                 }
                 if (entity instanceof StationSpawnDataProvider provider)
                     provider.readFromMessage(message);
@@ -76,8 +76,8 @@ public final class EntityClientNetworkHandler {
         }
     }
 
-    private static void handleMobSpawn(PlayerBase player, Message message) {
-        Function<Level, Living> mobHandler = MobHandlerRegistry.INSTANCE.get(of(message.strings[0]));
+    private static void handleMobSpawn(PlayerEntity player, Message message) {
+        Function<World, LivingEntity> mobHandler = MobHandlerRegistry.INSTANCE.get(of(message.strings[0]));
         if (mobHandler != null) {
             double
                     x = message.ints[1] / 32D,
@@ -87,20 +87,20 @@ public final class EntityClientNetworkHandler {
             float pitch = (float)(message.bytes[1] * 360) / 256.0F;
             //noinspection deprecation
             ClientPlayNetworkHandlerAccessor networkHandler = (ClientPlayNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-            ClientLevel level = networkHandler.getLevel();
-            Living mob = mobHandler.apply(level);
+            class_454 level = networkHandler.getLevel();
+            LivingEntity mob = mobHandler.apply(level);
             if (mob != null) {
-                mob.clientX = message.ints[1];
-                mob.clientY = message.ints[2];
-                mob.clientZ = message.ints[3];
-                mob.entityId = message.ints[0];
+                mob.field_1654 = message.ints[1];
+                mob.field_1655 = message.ints[2];
+                mob.field_1656 = message.ints[3];
+                mob.id = message.ints[0];
                 mob.method_1338(x, y, z, yaw, pitch);
                 mob.field_1026 = true;
                 level.method_1495(message.ints[0], mob);
                 //noinspection unchecked
-                List<class_270> data = DataTracker.readTrackedData(new DataInputStream(new ByteArrayInputStream(Arrays.copyOfRange(message.bytes, 2, message.bytes.length))));
+                List<class_270> data = DataTracker.method_1503(new DataInputStream(new ByteArrayInputStream(Arrays.copyOfRange(message.bytes, 2, message.bytes.length))));
                 if (data != null)
-                    mob.getDataTracker().method_1511(data);
+                    mob.method_1331().method_1511(data);
                 if (mob instanceof StationSpawnDataProvider provider)
                     provider.readFromMessage(message);
             }

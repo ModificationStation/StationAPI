@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.client.color.item.ItemColors;
 import net.modificationstation.stationapi.api.client.render.material.BlendMode;
 import net.modificationstation.stationapi.api.client.render.mesh.Mesh;
@@ -34,7 +34,7 @@ public class ItemRenderContext extends AbstractRenderContext {
     /** used to accept a method reference from the ItemRenderer. */
     @FunctionalInterface
     public interface VanillaQuadHandler {
-        void accept(BakedModel model, ItemInstance stack, float brightness);
+        void accept(BakedModel model, ItemStack stack, float brightness);
     }
 
     private final ItemColors colorMap;
@@ -52,7 +52,7 @@ public class ItemRenderContext extends AbstractRenderContext {
     private float brightness;
     private int lightmap;
     private int overlay;
-    private ItemInstance itemStack;
+    private ItemStack itemStack;
     private VanillaQuadHandler vanillaHandler;
 
     private final Supplier<Random> randomSupplier = () -> {
@@ -67,7 +67,7 @@ public class ItemRenderContext extends AbstractRenderContext {
         fallbackConsumer = this::fallbackConsumer;
     }
 
-    public void renderModel(ItemInstance itemStack, ModelTransformation.Mode transformMode, BakedModel model, VanillaQuadHandler vanillaHandler) {
+    public void renderModel(ItemStack itemStack, ModelTransformation.Mode transformMode, BakedModel model, VanillaQuadHandler vanillaHandler) {
         this.itemStack = itemStack;
 //        this.vertexConsumerProvider = vertexConsumerProvider;
 //        this.matrixStack = matrixStack;

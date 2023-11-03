@@ -4,8 +4,8 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelManager;
 import net.modificationstation.stationapi.api.client.render.model.ModelIdentifier;
@@ -31,21 +31,21 @@ public class ItemModels {
         ITEM_MODELS.add(this);
     }
 
-    public BakedModel getModel(ItemInstance stack) {
-        BakedModel bakedModel = this.getModel(stack.getType());
+    public BakedModel getModel(ItemStack stack) {
+        BakedModel bakedModel = this.getModel(stack.getItem());
         return bakedModel == null ? this.modelManager.getMissingModel() : bakedModel;
     }
 
     @Nullable
-    public BakedModel getModel(ItemBase item) {
+    public BakedModel getModel(Item item) {
         return this.models.get(ItemModels.getModelId(item));
     }
 
-    private static int getModelId(ItemBase item) {
+    private static int getModelId(Item item) {
         return ItemRegistry.INSTANCE.getRawId(item);
     }
 
-    public void putModel(ItemBase item, ModelIdentifier modelId) {
+    public void putModel(Item item, ModelIdentifier modelId) {
         this.modelIds.put(ItemModels.getModelId(item), modelId);
     }
 

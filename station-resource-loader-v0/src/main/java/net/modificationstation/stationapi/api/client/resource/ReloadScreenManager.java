@@ -4,10 +4,10 @@ import cyclops.control.Option;
 import lombok.Getter;
 import lombok.val;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.class_564;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.TextRenderer;
-import net.minecraft.client.util.ScreenScaler;
 import net.modificationstation.stationapi.api.resource.CompositeResourceReload;
 import net.modificationstation.stationapi.api.resource.ResourceReload;
 import net.modificationstation.stationapi.api.resource.ResourceReloader;
@@ -118,7 +118,7 @@ public class ReloadScreenManager {
                 expression(done::set).applyLazy(true)::apply,
                 ReloadScreenTessellatorHolder.reloadScreenTessellator = TessellatorAccessor.stationapi_create(48)
         );
-        val screenScaler = new ScreenScaler(minecraft.options, minecraft.actualWidth, minecraft.actualHeight);
+        val screenScaler = new class_564(minecraft.options, minecraft.displayWidth, minecraft.displayHeight);
         val width = screenScaler.getScaledWidth();
         val height = screenScaler.getScaledHeight();
         reloadScreen.init(minecraft, width, height);
@@ -131,7 +131,7 @@ public class ReloadScreenManager {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         glTranslatef(0.0f, 0.0f, -2000.0f);
-        glViewport(0, 0, minecraft.actualWidth, minecraft.actualHeight);
+        glViewport(0, 0, minecraft.displayWidth, minecraft.displayHeight);
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glDisable(GL_LIGHTING);
         glEnable(GL_TEXTURE_2D);
@@ -142,8 +142,8 @@ public class ReloadScreenManager {
             val f = timer.field_2370;
             timer.method_1853();
             timer.field_2370 = f;
-            val mouseX = Mouse.getX() * width / minecraft.actualWidth;
-            val mouseY = height - Mouse.getY() * height / minecraft.actualHeight - 1;
+            val mouseX = Mouse.getX() * width / minecraft.displayWidth;
+            val mouseY = height - Mouse.getY() * height / minecraft.displayHeight - 1;
             reloadScreen.render(mouseX, mouseY, timer.field_2370);
             Display.update();
         }

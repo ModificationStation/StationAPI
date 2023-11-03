@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.util.math;
 
 import java.util.EnumSet;
 
-import static net.minecraft.util.maths.MathHelper.*;
+import static net.minecraft.util.math.MathHelper.*;
 
 /**
  * An immutable vector composed of 3 doubles.

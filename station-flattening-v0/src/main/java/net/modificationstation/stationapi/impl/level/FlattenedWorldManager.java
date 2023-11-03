@@ -1,15 +1,15 @@
 package net.modificationstation.stationapi.impl.level;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockBase;
-import net.minecraft.entity.EntityBase;
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.class_43;
+import net.minecraft.class_56;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityRegistry;
-import net.minecraft.level.Level;
-import net.minecraft.level.LightType;
-import net.minecraft.level.chunk.Chunk;
-import net.minecraft.tileentity.TileEntityBase;
-import net.minecraft.util.io.CompoundTag;
-import net.minecraft.util.io.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
@@ -23,7 +23,7 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 public class FlattenedWorldManager {
 
-    private static final Codec<PalettedContainer<BlockState>> CODEC = PalettedContainer.createCodec(BlockBase.STATE_IDS, BlockState.CODEC, PalettedContainer.PaletteProvider.BLOCK_STATE, States.AIR.get());
+    private static final Codec<PalettedContainer<BlockState>> CODEC = PalettedContainer.createCodec(Block.STATE_IDS, BlockState.CODEC, PalettedContainer.PaletteProvider.BLOCK_STATE, States.AIR.get());
     public static final String SECTIONS = of(MODID, "sections").toString();
     private static final String METADATA_KEY = "data";
     private static final String SKY_LIGHT_KEY = "sky_light";
@@ -31,87 +31,87 @@ public class FlattenedWorldManager {
     private static final String HEIGHTMAP_KEY = "height_map";
     private static final String HEIGHT_KEY = "y";
 
-    public static void saveChunk(FlattenedChunk chunk, Level world, CompoundTag chunkTag) {
-        world.checkSessionLock();
-        chunkTag.put("xPos", chunk.x);
-        chunkTag.put("zPos", chunk.z);
-        chunkTag.put("LastUpdate", world.getLevelTime());
+    public static void saveChunk(FlattenedChunk chunk, World world, NbtCompound chunkTag) {
+        world.method_251();
+        chunkTag.putInt("xPos", chunk.field_962);
+        chunkTag.putInt("zPos", chunk.field_963);
+        chunkTag.putLong("LastUpdate", world.getTime());
         ChunkSection[] sections = chunk.sections;
-        ListTag sectionTags = new ListTag();
+        NbtList sectionTags = new NbtList();
         for (int sectionY = world.getBottomSectionCoord(); sectionY < world.getTopSectionCoord() + 2; ++sectionY) {
             int index = world.sectionCoordToIndex(sectionY);
             if (index < 0 || index >= sections.length) continue;
             ChunkSection section = sections[index];
             if (!ChunkSection.isEmpty(section)) {
-                CompoundTag sectionTag = new CompoundTag();
-                sectionTag.put(HEIGHT_KEY, (byte)sectionY);
+                NbtCompound sectionTag = new NbtCompound();
+                sectionTag.putByte(HEIGHT_KEY, (byte)sectionY);
                 sectionTag.put("block_states", CODEC.encodeStart(NbtOps.INSTANCE, section.getBlockStateContainer()).getOrThrow(false, LOGGER::error));
                 sectionTag.put(METADATA_KEY, section.getMetadataArray().toTag());
-                sectionTag.put(SKY_LIGHT_KEY, section.getLightArray(LightType.field_2757).toTag());
-                sectionTag.put(BLOCK_LIGHT_KEY, section.getLightArray(LightType.field_2758).toTag());
+                sectionTag.put(SKY_LIGHT_KEY, section.getLightArray(class_56.field_2757).toTag());
+                sectionTag.put(BLOCK_LIGHT_KEY, section.getLightArray(class_56.field_2758).toTag());
                 sectionTags.add(sectionTag);
             }
         }
         chunkTag.put(SECTIONS, sectionTags);
-        chunkTag.put(HEIGHTMAP_KEY, chunk.getStoredHeightmap());
-        chunkTag.put("TerrainPopulated", chunk.decorated);
+        chunkTag.putByteArray(HEIGHTMAP_KEY, chunk.getStoredHeightmap());
+        chunkTag.putBoolean("TerrainPopulated", chunk.field_966);
         chunk.field_969 = false;
-        ListTag entityTags = new ListTag();
-        for (int i = 0; i < chunk.entities.length; ++i) {
-            for (Object object : chunk.entities[i]) {
+        NbtList entityTags = new NbtList();
+        for (int i = 0; i < chunk.field_965.length; ++i) {
+            for (Object object : chunk.field_965[i]) {
                 chunk.field_969 = true;
-                CompoundTag entityTag = new CompoundTag();
-                if (!((EntityBase)object).method_1343(entityTag)) continue;
+                NbtCompound entityTag = new NbtCompound();
+                if (!((Entity)object).method_1343(entityTag)) continue;
                 entityTags.add(entityTag);
             }
         }
         chunkTag.put("Entities", entityTags);
-        ListTag tileEntityTags = new ListTag();
+        NbtList tileEntityTags = new NbtList();
         for (Object object : chunk.field_964.values()) {
-            CompoundTag tileEntityTag = new CompoundTag();
-            ((TileEntityBase)object).writeIdentifyingData(tileEntityTag);
+            NbtCompound tileEntityTag = new NbtCompound();
+            ((BlockEntity)object).writeNbt(tileEntityTag);
             tileEntityTags.add(tileEntityTag);
         }
         chunkTag.put("TileEntities", tileEntityTags);
     }
 
-    public static Chunk loadChunk(Level world, CompoundTag chunkTag) {
+    public static class_43 loadChunk(World world, NbtCompound chunkTag) {
         int xPos = chunkTag.getInt("xPos");
         int zPos = chunkTag.getInt("zPos");
         FlattenedChunk chunk = new FlattenedChunk(world, xPos, zPos);
         ChunkSection[] sections = chunk.sections;
-        if (chunkTag.containsKey(SECTIONS)) {
-            ListTag sectionTags = chunkTag.getListTag(SECTIONS);
+        if (chunkTag.contains(SECTIONS)) {
+            NbtList sectionTags = chunkTag.getList(SECTIONS);
             for (int i = 0; i < sectionTags.size(); i++) {
-                CompoundTag sectionTag = (CompoundTag) sectionTags.get(i);
+                NbtCompound sectionTag = (NbtCompound) sectionTags.get(i);
                 int sectionY = sectionTag.getByte(HEIGHT_KEY);
                 int index = world.sectionCoordToIndex(sectionY);
                 if (index < 0 || index >= sections.length) continue;
-                PalettedContainer<BlockState> blockStates = sectionTag.containsKey("block_states") ? CODEC.parse(NbtOps.INSTANCE, sectionTag.getCompoundTag("block_states")).promotePartial(errorMessage -> logRecoverableError(xPos, zPos, sectionY, errorMessage)).getOrThrow(false, LOGGER::error) : new PalettedContainer<>(BlockBase.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
+                PalettedContainer<BlockState> blockStates = sectionTag.contains("block_states") ? CODEC.parse(NbtOps.INSTANCE, sectionTag.getCompound("block_states")).promotePartial(errorMessage -> logRecoverableError(xPos, zPos, sectionY, errorMessage)).getOrThrow(false, LOGGER::error) : new PalettedContainer<>(Block.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
                 ChunkSection chunkSection = new ChunkSection(sectionY, blockStates);
                 chunkSection.getMetadataArray().copyArray(sectionTag.getByteArray(METADATA_KEY));
-                chunkSection.getLightArray(LightType.field_2757).copyArray(sectionTag.getByteArray(SKY_LIGHT_KEY));
-                chunkSection.getLightArray(LightType.field_2758).copyArray(sectionTag.getByteArray(BLOCK_LIGHT_KEY));
+                chunkSection.getLightArray(class_56.field_2757).copyArray(sectionTag.getByteArray(SKY_LIGHT_KEY));
+                chunkSection.getLightArray(class_56.field_2758).copyArray(sectionTag.getByteArray(BLOCK_LIGHT_KEY));
                 sections[index] = chunkSection;
             }
         }
         chunk.loadStoredHeightmap(chunkTag.getByteArray(HEIGHTMAP_KEY));
-        chunk.decorated = chunkTag.getBoolean("TerrainPopulated");
-        ListTag entityTags = chunkTag.getListTag("Entities");
+        chunk.field_966 = chunkTag.getBoolean("TerrainPopulated");
+        NbtList entityTags = chunkTag.getList("Entities");
         if (entityTags != null) {
             for (int i = 0; i < entityTags.size(); ++i) {
-                CompoundTag compoundTag = (CompoundTag) entityTags.get(i);
-                EntityBase object = EntityRegistry.create(compoundTag, world);
+                NbtCompound compoundTag = (NbtCompound) entityTags.get(i);
+                Entity object = EntityRegistry.getEntityFromNbt(compoundTag, world);
                 chunk.field_969 = true;
                 if (object == null) continue;
-                chunk.addEntity(object);
+                chunk.method_868(object);
             }
         }
-        ListTag tileEntityTags = chunkTag.getListTag("TileEntities");
+        NbtList tileEntityTags = chunkTag.getList("TileEntities");
         if (tileEntityTags != null) {
             for (int i = 0; i < tileEntityTags.size(); ++i) {
-                CompoundTag object = (CompoundTag) tileEntityTags.get(i);
-                TileEntityBase tileEntityBase = TileEntityBase.tileEntityFromNBT(object);
+                NbtCompound object = (NbtCompound) tileEntityTags.get(i);
+                BlockEntity tileEntityBase = BlockEntity.method_1068(object);
                 if (tileEntityBase == null) continue;
                 chunk.method_867(tileEntityBase);
             }

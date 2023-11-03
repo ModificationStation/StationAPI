@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.mixin.tools;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSets;
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.tool.ToolMaterial;
+import net.minecraft.block.Block;
+import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.item.tool.StationToolMaterial;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -21,7 +21,7 @@ import java.util.Collections;
 public class MixinToolMaterial implements StationToolMaterial {
 
     @Unique
-    private TagKey<BlockBase> stationapi_requiredBlockTag;
+    private TagKey<Block> stationapi_requiredBlockTag;
     @Unique
     private ReferenceSet<ToolMaterial> stationapi_parentMaterials;
     @Unique
@@ -59,7 +59,7 @@ public class MixinToolMaterial implements StationToolMaterial {
 
     @Override
     @Unique
-    public TagKey<BlockBase> getRequiredBlockTag() {
+    public TagKey<Block> getRequiredBlockTag() {
         return stationapi_requiredBlockTag;
     }
 }

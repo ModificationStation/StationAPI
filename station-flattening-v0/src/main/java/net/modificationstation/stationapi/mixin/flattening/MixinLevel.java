@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.block.BlockBase;
-import net.minecraft.level.Level;
-import net.minecraft.level.chunk.Chunk;
-import net.minecraft.level.dimension.Dimension;
+import net.minecraft.block.Block;
+import net.minecraft.class_43;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
@@ -15,9 +15,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 
-@Mixin(Level.class)
+@Mixin(World.class)
 public abstract class MixinLevel implements StationFlatteningWorld {
-    @Shadow public abstract Chunk getChunk(int x, int z);
+    @Shadow public abstract class_43 getChunk(int x, int z);
 
     @Shadow @Final public Dimension dimension;
 
@@ -104,7 +104,7 @@ public abstract class MixinLevel implements StationFlatteningWorld {
     )
     private int stationapi_changeTickBlockId(
             int blockId,
-            @Local(index = 5) Chunk chunk,
+            @Local(index = 5) class_43 chunk,
             @Local(index = 8) int x, @Local(index = 10) int y, @Local(index = 9) int z
     ) {
         return chunk.getBlockState(x, y, z).getBlock().id;
@@ -218,7 +218,7 @@ public abstract class MixinLevel implements StationFlatteningWorld {
                     ordinal = 6
             )
     )
-    private BlockBase accountForAirBlock(BlockBase value) {
+    private Block accountForAirBlock(Block value) {
         return value == States.AIR.get().getBlock() ? null : value;
     }
 

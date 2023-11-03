@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.impl.level.chunk;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockBase;
-import net.minecraft.level.LightType;
+import net.minecraft.block.Block;
+import net.minecraft.class_56;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.util.Util;
@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 
 public class ChunkSection {
 
-    private static final byte[] INITIAL_SKY_LIGHT = Util.make(new byte[2048], array -> Arrays.fill(array, (byte) (LightType.field_2757.field_2759 << 4 | LightType.field_2757.field_2759)));
+    private static final byte[] INITIAL_SKY_LIGHT = Util.make(new byte[2048], array -> Arrays.fill(array, (byte) (class_56.field_2757.field_2759 << 4 | class_56.field_2757.field_2759)));
     public static final ChunkSection EMPTY = Util.make(new ChunkSection(0), ChunkSection::initSkyLight);
     private final short yOffset;
     private short nonEmptyBlockCount;
@@ -34,7 +34,7 @@ public class ChunkSection {
 
     public ChunkSection(int chunkPos) {
         this.yOffset = (short) ChunkSection.blockCoordFromChunkCoord(chunkPos);
-        this.blockStateContainer = new PalettedContainer<>(BlockBase.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
+        this.blockStateContainer = new PalettedContainer<>(Block.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
     }
 
     public static int blockCoordFromChunkCoord(int chunkPos) {
@@ -175,19 +175,19 @@ public class ChunkSection {
         setMeta(getIndex(x, y, z), meta);
     }
 
-    public int getLight(LightType type, int index) {
+    public int getLight(class_56 type, int index) {
         return getLightArray(type).getValue(index);
     }
 
-    public int getLight(LightType type, int x, int y, int z) {
+    public int getLight(class_56 type, int x, int y, int z) {
         return getLight(type, getIndex(x, y, z));
     }
 
-    public void setLight(LightType type, int index, int light) {
+    public void setLight(class_56 type, int index, int light) {
         getLightArray(type).setValue(index, light);
     }
 
-    public void setLight(LightType type, int x, int y, int z, int light) {
+    public void setLight(class_56 type, int x, int y, int z, int light) {
         setLight(type, getIndex(x, y, z), light);
     }
 
@@ -195,8 +195,8 @@ public class ChunkSection {
         return x << 8 | y << 4 | z;
     }
 
-    public NibbleArray getLightArray(LightType type) {
-        return type == LightType.field_2758 ? blockLightArray : skyLightArray;
+    public NibbleArray getLightArray(class_56 type) {
+        return type == class_56.field_2758 ? blockLightArray : skyLightArray;
     }
 
     public void initSkyLight() {

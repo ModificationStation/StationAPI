@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.impl.packet;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import net.minecraft.network.PacketHandler;
+import net.minecraft.network.NetworkHandler;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
 import java.util.Map;
@@ -14,5 +14,5 @@ public class IdentifiablePacketImpl {
             SERVER_TO_CLIENT_PACKETS = new ReferenceOpenHashSet<>(),
             CLIENT_TO_SERVER_PACKETS = new ReferenceOpenHashSet<>();
 
-    public static final Map<Identifier, PacketHandler> HANDLERS = new Reference2ReferenceOpenHashMap<>();
+    public static final Map<Identifier, NetworkHandler> HANDLERS = new Reference2ReferenceOpenHashMap<>();
 }

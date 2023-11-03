@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.item.Block;
+import net.minecraft.item.BlockItem;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -15,9 +15,9 @@ import org.jetbrains.annotations.ApiStatus;
 public class BlockFormOnlyHandler {
 
     @ApiStatus.Internal
-    public static final Lazy<Block> EMPTY_BLOCK_ITEM = new Lazy<>(() -> {
+    public static final Lazy<BlockItem> EMPTY_BLOCK_ITEM = new Lazy<>(() -> {
         try {
-            return (Block) UnsafeProvider.theUnsafe.allocateInstance(Block.class);
+            return (BlockItem) UnsafeProvider.theUnsafe.allocateInstance(BlockItem.class);
         } catch (InstantiationException e) {
             throw new RuntimeException(e);
         }

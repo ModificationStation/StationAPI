@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.impl.server.network;
 
 import lombok.RequiredArgsConstructor;
-import net.minecraft.block.BlockBase;
-import net.minecraft.server.ServerPlayerView;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tileentity.TileEntityBase;
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.class_167;
+import net.minecraft.class_73;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkSectionDataS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedMultiBlockChangeS2CPacket;
@@ -16,8 +16,8 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class ChunkSectionTracker {
-    private final ServerPlayerView playerView;
-    private final ServerPlayerView.class_514 chunkTracker;
+    private final class_167 playerView;
+    private final class_167.class_514 chunkTracker;
     private final int
             chunkX,
             chunkZ,
@@ -68,7 +68,7 @@ public class ChunkSectionTracker {
     }
 
     public void sendQueue() {
-        ServerLevel world = playerView.method_1741();
+        class_73 world = playerView.method_1741();
         int sectionY = world.sectionIndexToCoord(sectionIndex);
         if (this.updatesCount == 0) {
             return;
@@ -78,8 +78,8 @@ public class ChunkSectionTracker {
             int y = (sectionY << 4) + this.minY;
             int z = (this.chunkZ << 4) + this.minZ;
             chunkTracker.method_1755(new FlattenedBlockChangeS2CPacket(x, y, z, world));
-            if (BlockBase.HAS_TILE_ENTITY[world.getTileId(x, y, z)]) {
-                ((class_514Accessor) chunkTracker).invokeMethod_1756(world.getTileEntity(x, y, z));
+            if (Block.BLOCKS_WITH_ENTITY[world.getBlockId(x, y, z)]) {
+                ((class_514Accessor) chunkTracker).invokeMethod_1756(world.method_1777(x, y, z));
             }
         } else if (this.updatesCount == 10) {
             this.minY = this.minY / 2 * 2;
@@ -92,7 +92,7 @@ public class ChunkSectionTracker {
             int sizeZ = this.maxZ - this.minZ + 1;
             chunkTracker.method_1755(new FlattenedChunkSectionDataS2CPacket(world, chunkX, chunkZ, sectionIndex));
             //noinspection unchecked
-            List<TileEntityBase> list = world.method_330(x, y, z, x + sizeX, y + sizeY, z + sizeZ);
+            List<BlockEntity> list = world.method_330(x, y, z, x + sizeX, y + sizeY, z + sizeZ);
             for (int i = 0; i < list.size(); ++i) {
                 ((class_514Accessor) chunkTracker).invokeMethod_1756(list.get(i));
             }
@@ -102,9 +102,9 @@ public class ChunkSectionTracker {
                 int n = this.chunkX * 16 + (this.updatesCount >> 12 & 0xF);
                 int n9 = this.updatesCount & 0xFF;
                 int n10 = this.chunkZ * 16 + (this.updatesCount >> 8 & 0xF);
-                if (!BlockBase.HAS_TILE_ENTITY[world.getTileId(n, n9, n10)]) continue;
+                if (!Block.BLOCKS_WITH_ENTITY[world.getBlockId(n, n9, n10)]) continue;
                 System.out.println("Sending!");
-                ((class_514Accessor) chunkTracker).invokeMethod_1756(world.getTileEntity(n, n9, n10));
+                ((class_514Accessor) chunkTracker).invokeMethod_1756(world.method_1777(n, n9, n10));
             }
         }
         this.updatesCount = 0;

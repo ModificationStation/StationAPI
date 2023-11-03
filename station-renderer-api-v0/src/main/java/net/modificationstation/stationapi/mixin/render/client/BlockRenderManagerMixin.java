@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.render.client;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.block.BlockRenderer;
-import net.minecraft.level.BlockView;
+import net.minecraft.block.Block;
+import net.minecraft.client.render.block.BlockRenderManager;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.render.RendererAccess;
@@ -15,14 +15,14 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Random;
 
-@Mixin(BlockRenderer.class)
+@Mixin(BlockRenderManager.class)
 abstract class BlockRenderManagerMixin implements StationRendererBlockRenderManager {
     @Unique
     private final MutableBlockPos stationapi_pos = new MutableBlockPos(0, 0, 0);
     @Unique
     private final Random stationapi_random = new Random();
 
-    @Shadow public abstract void renderAllSides(BlockBase arg, int i, int j, int k);
+    @Shadow public abstract void renderAllSides(Block arg, int i, int j, int k);
 
     @Shadow private BlockView blockView;
 

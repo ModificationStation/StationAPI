@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.block;
 
-import net.minecraft.item.Block;
+import net.minecraft.item.BlockItem;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 import net.modificationstation.stationapi.api.template.item.MetaBlock;
 import net.modificationstation.stationapi.impl.block.HasMetaBlockItemImpl;
@@ -25,7 +25,7 @@ public interface MetaBlockItemProvider extends CustomBlockItemFactoryProvider {
      * @return {@link MetaBlock#MetaBlock(int)}.
      */
     @Override
-    default IntFunction<Block> getBlockItemFactory() {
+    default IntFunction<BlockItem> getBlockItemFactory() {
         return HasMetaBlockItemImpl.FACTORY;
     }
 }

@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.packet;
 
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.packet.AbstractPacket;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.util.API;
 import net.modificationstation.stationapi.api.util.SideUtils;
@@ -29,7 +29,7 @@ public final class PacketHelper {
      * @param packet the packet to send/handle.
      */
     @API
-    public static void send(AbstractPacket packet) {
+    public static void send(Packet packet) {
         INSTANCE.send(packet);
     }
 
@@ -40,7 +40,7 @@ public final class PacketHelper {
      * @param packet the packet to send/handle.
      */
     @API
-    public static void sendTo(PlayerBase player, AbstractPacket packet) {
+    public static void sendTo(PlayerEntity player, Packet packet) {
         INSTANCE.sendTo(player, packet);
     }
 
@@ -55,10 +55,10 @@ public final class PacketHelper {
      *                 except for already taken packet IDs.
      * @param receivableOnClient whether this packet is supposed to be received on the client side.
      * @param receivableOnServer whether this packet is supposed to be received on the server side.
-     * @param packetClass the packet's class that extends {@link AbstractPacket} or a subclass of it.
+     * @param packetClass the packet's class that extends {@link Packet} or a subclass of it.
      */
     @API
-    public static void register(int packetId, boolean receivableOnClient, boolean receivableOnServer, Class<? extends AbstractPacket> packetClass) {
+    public static void register(int packetId, boolean receivableOnClient, boolean receivableOnServer, Class<? extends Packet> packetClass) {
         AbstractPacketAccessor.invokeRegister(packetId, receivableOnClient, receivableOnServer, packetClass);
     }
 }

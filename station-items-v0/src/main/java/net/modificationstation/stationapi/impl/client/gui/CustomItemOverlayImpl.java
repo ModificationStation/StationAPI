@@ -13,7 +13,7 @@ public class CustomItemOverlayImpl {
 
     @EventListener
     private static void renderItemOverlay(ItemOverlayRenderEvent event) {
-        if (event.itemInstance != null && event.itemInstance.getType() instanceof CustomItemOverlay itemOverlay)
+        if (event.itemInstance != null && event.itemInstance.getItem() instanceof CustomItemOverlay itemOverlay)
             itemOverlay.renderItemOverlay(event.itemRenderer, event.itemX, event.itemY, event.itemInstance, event.textRenderer, event.textureManager);
     }
 }

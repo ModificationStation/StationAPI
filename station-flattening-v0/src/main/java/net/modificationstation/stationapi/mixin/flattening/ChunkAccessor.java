@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.level.chunk.Chunk;
+import net.minecraft.class_43;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(Chunk.class)
+@Mixin(class_43.class)
 public interface ChunkAccessor {
 
     @Invoker

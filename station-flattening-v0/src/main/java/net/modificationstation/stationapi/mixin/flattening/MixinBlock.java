@@ -1,15 +1,15 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
 import net.mine_diver.unsafeevents.listener.Listener;
-import net.minecraft.block.BlockBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.Block;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.maths.Box;
-import net.minecraft.util.maths.Vec3f;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.block.IsBlockReplaceableEvent;
 import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEvent;
@@ -24,8 +24,8 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Block.class)
-public class MixinBlock extends ItemBase implements StationFlatteningBlockItem {
+@Mixin(BlockItem.class)
+public class MixinBlock extends Item implements StationFlatteningBlockItem {
     @Shadow private int blockId;
     @Unique private short maxHeight;
 
@@ -34,7 +34,7 @@ public class MixinBlock extends ItemBase implements StationFlatteningBlockItem {
     }
 
     @Inject(method = "useOnTile", at = @At("HEAD"))
-    private void storeLevel(ItemInstance item, PlayerBase player, Level level, int x, int y, int z, int facing, CallbackInfoReturnable<Boolean> info) {
+    private void storeLevel(ItemStack item, PlayerEntity player, World level, int x, int y, int z, int facing, CallbackInfoReturnable<Boolean> info) {
         maxHeight = (short) (level.getTopY() - 1);
     }
 
@@ -51,11 +51,11 @@ public class MixinBlock extends ItemBase implements StationFlatteningBlockItem {
             )
     )
     private boolean canReplace(
-            Level argWorld, int blockID, int argX, int argY, int argZ, boolean checkCollision, int argSide,
-            ItemInstance itemStack, PlayerBase player, Level world, int x, int y, int z, int side
+            World argWorld, int blockID, int argX, int argY, int argZ, boolean checkCollision, int argSide,
+            ItemStack itemStack, PlayerEntity player, World world, int x, int y, int z, int side
     ) {
         Direction direction = Direction.byId(side);
-        Box box = BlockBase.BY_ID[blockID].getCollisionShape(world, x, y, z);
+        Box box = Block.BLOCKS[blockID].getCollisionShape(world, x, y, z);
         return (box == null || world.canSpawnEntity(box)) && StationAPI.EVENT_BUS.post(
                 IsBlockReplaceableEvent.builder()
                         .context(new ItemPlacementContext(
@@ -65,11 +65,11 @@ public class MixinBlock extends ItemBase implements StationFlatteningBlockItem {
                                         x - direction.getOffsetX(),
                                         y - direction.getOffsetY(),
                                         z - direction.getOffsetZ(),
-                                        side, Vec3f.from(x, y, z)
+                                        side, Vec3d.createCached(x, y, z)
                                 )
                         ))
                         .build()
-        ).context.canPlace() && BlockBase.BY_ID[blockID].canPlaceAt(world, x, y, z, side);
+        ).context.canPlace() && Block.BLOCKS[blockID].canPlaceAt(world, x, y, z, side);
     }
 
     @Inject(
@@ -77,21 +77,21 @@ public class MixinBlock extends ItemBase implements StationFlatteningBlockItem {
             at = @At("RETURN")
     )
     private void registerCallback(int par1, CallbackInfo ci) {
-        BlockRegistry.INSTANCE.getEventBus().register(Listener.<RegistryIdRemapEvent<BlockBase>>simple()
+        BlockRegistry.INSTANCE.getEventBus().register(Listener.<RegistryIdRemapEvent<Block>>simple()
                 .listener(event -> blockId = event.state.getRawIdChangeMap().getOrDefault(blockId, blockId))
                 .phase(StationAPI.INTERNAL_PHASE)
                 .build());
     }
 
     @Override
-    public BlockBase getBlock() {
-        return BlockBase.BY_ID[blockId];
+    public Block getBlock() {
+        return Block.BLOCKS[blockId];
     }
 
     @Override
-    public void setBlock(BlockBase block) {
+    public void setBlock(Block block) {
         blockId = block.id;
-        setTexturePosition(block.getTextureForSide(2));
+        method_458(block.getTexture(2));
     }
 
     @Redirect(
@@ -102,7 +102,7 @@ public class MixinBlock extends ItemBase implements StationFlatteningBlockItem {
                     args = "array=get"
             )
     )
-    private BlockBase failsafeBlock(BlockBase[] array, int index) {
+    private Block failsafeBlock(Block[] array, int index) {
         return index < 0 ? null : array[index];
     }
 
@@ -113,7 +113,7 @@ public class MixinBlock extends ItemBase implements StationFlatteningBlockItem {
                     target = "Lnet/minecraft/block/BlockBase;getTextureForSide(I)I"
             )
     )
-    private int failsafeTexture(BlockBase instance, int i) {
-        return instance == null ? 0 : instance.getTextureForSide(i);
+    private int failsafeTexture(Block instance, int i) {
+        return instance == null ? 0 : instance.getTexture(i);
     }
 }

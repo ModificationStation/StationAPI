@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.impl.vanillafix.recipe;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemBase;
+import net.minecraft.block.Block;
+import net.minecraft.block.Material;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -18,12 +18,12 @@ public final class VanillaFuelItemFixImpl {
     @EventListener
     private static void registerFuel(RecipeRegisterEvent event) {
         if (RecipeRegisterEvent.Vanilla.SMELTING.type() == event.recipeId) {
-            for (BlockBase block : BlockBase.BY_ID)
-                if (block != null && block.material == Material.WOOD && ItemBase.byId[block.id] != null)
-                    FuelRegistry.addFuelItem(ItemBase.byId[block.id], 300);
-            FuelRegistry.addFuelItem(ItemBase.stick, 100);
+            for (Block block : Block.BLOCKS)
+                if (block != null && block.material == Material.WOOD && Item.ITEMS[block.id] != null)
+                    FuelRegistry.addFuelItem(Item.ITEMS[block.id], 300);
+            FuelRegistry.addFuelItem(Item.STICK, 100);
             FuelRegistry.addFuelTag(ItemTags.COALS, 1600);
-            FuelRegistry.addFuelItem(ItemBase.lavaBucket, 20000);
+            FuelRegistry.addFuelItem(Item.LAVA_BUCKET, 20000);
             FuelRegistry.addFuelTag(ItemTags.SAPLINGS, 100);
         }
     }

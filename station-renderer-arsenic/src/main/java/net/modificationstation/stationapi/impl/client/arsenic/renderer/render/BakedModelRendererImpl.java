@@ -3,16 +3,16 @@ package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
+import net.minecraft.class_454;
+import net.minecraft.class_583;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.level.ClientLevel;
-import net.minecraft.client.render.RenderHelper;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.entity.Living;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.BlockView;
-import net.minecraft.level.Level;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
@@ -65,7 +65,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     private boolean damage;
 
     @Override
-    public boolean renderBlock(BlockState state, TilePos pos, BlockView world, boolean cull, Random random) {
+    public boolean renderBlock(BlockState state, BlockPos pos, BlockView world, boolean cull, Random random) {
         try {
 //            BlockRenderType blockRenderType = state.getRenderType();
 //            if (blockRenderType != BlockRenderType.MODEL) {
@@ -82,17 +82,17 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     }
 
     @Override
-    public boolean render(BlockView world, BakedModel model, BlockState state, TilePos pos, boolean cull, Random random, long seed) {
+    public boolean render(BlockView world, BakedModel model, BlockState state, BlockPos pos, boolean cull, Random random, long seed) {
         boolean rendered = false;
         model = Objects.requireNonNull(model.getOverrides().apply(model, state, world, pos, (int) seed));
         if (!model.isVanillaAdapter()) {
             rendered = BLOCK_CONTEXTS.get().render(world, model, state, pos, random, seed);
         } else {
-            BlockBase block = state.getBlock();
+            Block block = state.getBlock();
             light.initialize(
                     block,
                     world, pos.x, pos.y, pos.z,
-                    Minecraft.isSmoothLightingEnabled() && model.useAmbientOcclusion()
+                    Minecraft.method_2148() && model.useAmbientOcclusion()
             );
             ImmutableList<BakedQuad> qs;
             BakedQuad q;
@@ -101,7 +101,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                 Direction face = DIRECTIONS[quadSet];
                 random.setSeed(seed);
                 qs = model.getQuads(state, face, random);
-                if (!qs.isEmpty() && (face == null || block.isSideRendered(world, pos.x + face.getOffsetX(), pos.y + face.getOffsetY(), pos.z + face.getOffsetZ(), quadSet))) {
+                if (!qs.isEmpty() && (face == null || block.isSideVisible(world, pos.x + face.getOffsetX(), pos.y + face.getOffsetY(), pos.z + face.getOffsetZ(), quadSet))) {
                     rendered = true;
                     for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
                         q = qs.get(j);
@@ -138,7 +138,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     }
 
     @Override
-    public void renderDamage(BlockState state, TilePos pos, BlockView world, float progress) {
+    public void renderDamage(BlockState state, BlockPos pos, BlockView world, float progress) {
 //        if (state.getRenderType() != BlockRenderType.MODEL) {
 //            return;
 //        }
@@ -151,7 +151,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         damage = false;
     }
 
-    private void renderQuad(BlockView world, BlockState state, TilePos pos, BakedQuad quad, float[] brightness) {
+    private void renderQuad(BlockView world, BlockState state, BlockPos pos, BakedQuad quad, float[] brightness) {
         if (quad.hasColor()) {
             int i = blockColors.getColor(state, world, pos, quad.getColorIndex());
             float
@@ -182,7 +182,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         return this.itemModels;
     }
 
-    private void renderBakedItemModel(BakedModel model, ItemInstance stack, float brightness) {
+    private void renderBakedItemModel(BakedModel model, ItemStack stack, float brightness) {
         for (Direction direction : Direction.values()) {
             random.setSeed(42L);
             renderBakedItemQuads(model.getQuads(null, direction, random), stack, brightness);
@@ -191,7 +191,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         renderBakedItemQuads(model.getQuads(null, null, random), stack, brightness);
     }
 
-    private void renderBakedItemModelFlat(BakedModel model, ItemInstance stack, float brightness) {
+    private void renderBakedItemModelFlat(BakedModel model, ItemStack stack, float brightness) {
         random.setSeed(42L);
         boolean bl = stack != null && stack.itemId != 0 && stack.count > 0;
         for (BakedQuad bakedQuad : model.getQuads(null, null, random)) {
@@ -204,7 +204,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     }
 
     @Override
-    public void renderItem(ItemInstance stack, ModelTransformation.Mode renderMode, float brightness, BakedModel model) {
+    public void renderItem(ItemStack stack, ModelTransformation.Mode renderMode, float brightness, BakedModel model) {
         if (stack == null || stack.itemId == 0) return;
         if (model.isVanillaAdapter()) {
             Transformation transformation = model.getTransformation().getTransformation(renderMode);
@@ -213,10 +213,10 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
             if (side && renderMode == ModelTransformation.Mode.GUI) {
                 float angle = transformation.rotation.getY() - 315;
                 if (angle != 0) {
-                    RenderHelper.disableLighting();
+                    class_583.method_1927();
                     glPushMatrix();
                     glRotatef(angle, 0, 1, 0);
-                    RenderHelper.enableLighting();
+                    class_583.method_1930();
                     glPopMatrix();
                 }
             }
@@ -231,7 +231,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         }
     }
 
-    private void renderBakedItemQuads(List<BakedQuad> quads, ItemInstance stack, float brightness) {
+    private void renderBakedItemQuads(List<BakedQuad> quads, ItemStack stack, float brightness) {
         boolean bl = stack != null && stack.itemId != 0 && stack.count > 0;
         for (BakedQuad bakedQuad : quads) {
             int i = bl && bakedQuad.hasColor() ? this.itemColors.getColor(stack, bakedQuad.getColorIndex()) : -1;
@@ -243,21 +243,21 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     }
 
     @Override
-    public BakedModel getModel(ItemInstance stack, @Nullable Level world, @Nullable Living entity, int seed) {
+    public BakedModel getModel(ItemStack stack, @Nullable World world, @Nullable LivingEntity entity, int seed) {
         BakedModel bakedModel = this.itemModels.getModel(stack);
-        ClientLevel clientWorld = world instanceof ClientLevel ? (ClientLevel) world : null;
+        class_454 clientWorld = world instanceof class_454 ? (class_454) world : null;
         BakedModel bakedModel2 = bakedModel.getOverrides().apply(bakedModel, stack, clientWorld, entity, seed);
         return bakedModel2 == null ? this.itemModels.getModelManager().getMissingModel() : bakedModel2;
     }
 
     @Override
-    public void renderItem(@Nullable Living entity, ItemInstance item, ModelTransformation.Mode renderMode, @Nullable Level world, float brightness, int seed) {
+    public void renderItem(@Nullable LivingEntity entity, ItemStack item, ModelTransformation.Mode renderMode, @Nullable World world, float brightness, int seed) {
         if (item == null || item.itemId == 0 || item.count < 1) return;
         BakedModel bakedModel = this.getModel(item, world, entity, seed);
         this.renderItem(item, renderMode, brightness, bakedModel);
     }
 
-    protected void renderGuiItemModel(ItemInstance stack, int x, int y, BakedModel model) {
+    protected void renderGuiItemModel(ItemStack stack, int x, int y, BakedModel model) {
         StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).setFilter(false, false);
         glPushMatrix();
         glTranslated(x, y, 14.5 /* approximate. should probably be replaced later with a value properly calculated against vanilla's transformations */);
@@ -266,16 +266,16 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         glScalef(16, 16, 16);
         boolean flat = !model.isSideLit();
         if (flat) glDisable(GL_LIGHTING);
-        tessellator.start();
+        tessellator.startQuads();
         this.renderItem(stack, ModelTransformation.Mode.GUI, 1, model);
         tessellator.draw();
         if (flat) glEnable(GL_LIGHTING);
         glPopMatrix();
         if (!flat) {
-            RenderHelper.disableLighting();
+            class_583.method_1927();
             glPushMatrix();
             glRotatef(120.0f, 1.0f, 0.0f, 0.0f);
-            RenderHelper.enableLighting();
+            class_583.method_1930();
             glPopMatrix();
         }
         glEnable(GL_CULL_FACE);
@@ -286,12 +286,12 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
      * for calculating model overrides.
      */
     @Override
-    public void renderInGuiWithOverrides(ItemInstance stack, int x, int y) {
+    public void renderInGuiWithOverrides(ItemStack stack, int x, int y) {
         //noinspection deprecation
         this.innerRenderInGui(((Minecraft) FabricLoader.getInstance().getGameInstance()).player, stack, x, y, 0);
     }
 
-    private void innerRenderInGui(@Nullable Living entity, ItemInstance stack, int x, int y, int seed) {
+    private void innerRenderInGui(@Nullable LivingEntity entity, ItemStack stack, int x, int y, int seed) {
         if (stack == null || stack.itemId == 0 || stack.count < 1) return;
         BakedModel bakedModel = this.getModel(stack, null, entity, seed);
         try {
@@ -300,7 +300,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         catch (Throwable throwable) {
             CrashReport crashReport = CrashReport.create(throwable, "Rendering item");
             CrashReportSection crashReportSection = crashReport.addElement("Item being rendered");
-            crashReportSection.add("Item Type", () -> String.valueOf(stack.getType()));
+            crashReportSection.add("Item Type", () -> String.valueOf(stack.getItem()));
             crashReportSection.add("Item Damage", () -> String.valueOf(stack.getDamage()));
             crashReportSection.add("Item NBT", () -> String.valueOf(stack.getStationNBT()));
             throw new CrashException(crashReport);

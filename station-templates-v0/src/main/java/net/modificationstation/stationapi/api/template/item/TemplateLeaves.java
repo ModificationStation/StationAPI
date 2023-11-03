@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.minecraft.item.Leaves;
+import net.minecraft.item.LeavesBlockItem;
 
-public class TemplateLeaves extends Leaves implements ItemTemplate {
+public class TemplateLeaves extends LeavesBlockItem implements ItemTemplate {
     
     public TemplateLeaves(int i) {
         super(i);

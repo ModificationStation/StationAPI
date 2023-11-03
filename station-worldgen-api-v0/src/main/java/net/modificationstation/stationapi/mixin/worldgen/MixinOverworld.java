@@ -1,18 +1,18 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
-import net.minecraft.level.biome.Biome;
-import net.minecraft.level.dimension.Dimension;
-import net.minecraft.level.dimension.Overworld;
+import net.minecraft.class_153;
+import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.OverworldDimension;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.impl.level.StationDimension;
 import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.Collection;
 
-@Mixin(Overworld.class)
+@Mixin(OverworldDimension.class)
 public class MixinOverworld extends Dimension implements StationDimension {
     @Override
-    public Collection<Biome> getBiomes() {
+    public Collection<class_153> getBiomes() {
         return BiomeAPI.getOverworldProvider().getBiomes();
     }
 }

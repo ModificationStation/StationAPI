@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.item;
 
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.util.hit.HitType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.hit.HitResultType;
 
 public interface CustomReachProvider {
 
-    double getReach(ItemInstance itemInstance, PlayerBase player, HitType type, double currentReach);
+    double getReach(ItemStack itemInstance, PlayerEntity player, HitResultType type, double currentReach);
 }

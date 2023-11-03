@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.level.Level;
-import net.minecraft.level.chunk.Chunk;
-import net.minecraft.level.source.SkylandsLevelSource;
+import net.minecraft.class_208;
+import net.minecraft.class_43;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(SkylandsLevelSource.class)
+@Mixin(class_208.class)
 public class MixinSkylandsLevelSource {
 
     @SuppressWarnings({"InvalidMemberReference", "UnresolvedMixinReference", "MixinAnnotationTarget", "InvalidInjectorMethodSignature"})
@@ -22,7 +22,7 @@ public class MixinSkylandsLevelSource {
                     target = "(Lnet/minecraft/level/Level;[BII)Lnet/minecraft/level/chunk/Chunk;"
             )
     )
-    private Chunk redirectChunk(Level world, byte[] tiles, int xPos, int zPos) {
+    private class_43 redirectChunk(World world, byte[] tiles, int xPos, int zPos) {
         return new FlattenedChunk(world, xPos, zPos);
     }
 
@@ -34,7 +34,7 @@ public class MixinSkylandsLevelSource {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void populateChunk(int j, int par2, CallbackInfoReturnable<Chunk> cir, byte[] tiles, Chunk chunk) {
+    private void populateChunk(int j, int par2, CallbackInfoReturnable<class_43> cir, byte[] tiles, class_43 chunk) {
         if (chunk instanceof FlattenedChunk stationChunk) stationChunk.fromLegacy(tiles);
     }
 }

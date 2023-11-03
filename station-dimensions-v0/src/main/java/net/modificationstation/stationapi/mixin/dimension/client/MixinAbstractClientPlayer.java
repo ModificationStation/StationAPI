@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.dimension.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.AbstractClientPlayer;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.level.Level;
+import net.minecraft.entity.player.ClientPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.entity.HasTeleportationManager;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 import net.modificationstation.stationapi.api.world.dimension.VanillaDimensions;
@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(AbstractClientPlayer.class)
-public abstract class MixinAbstractClientPlayer extends PlayerBase implements HasTeleportationManager {
+@Mixin(ClientPlayerEntity.class)
+public abstract class MixinAbstractClientPlayer extends PlayerEntity implements HasTeleportationManager {
 
-    public MixinAbstractClientPlayer(Level arg) {
+    public MixinAbstractClientPlayer(World arg) {
         super(arg);
     }
 
@@ -26,7 +26,7 @@ public abstract class MixinAbstractClientPlayer extends PlayerBase implements Ha
             constant = @Constant(intValue = 0)
     )
     private int getRespawnDimension(int constant) {
-        return level.dimension.canPlayerSleep() ? dimensionId : DimensionRegistry.INSTANCE.getLegacyId(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Couldn't find overworld dimension in the registry!"));
+        return world.dimension.method_1766() ? dimensionId : DimensionRegistry.INSTANCE.getLegacyId(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Couldn't find overworld dimension in the registry!"));
     }
 
     @Redirect(
@@ -37,6 +37,6 @@ public abstract class MixinAbstractClientPlayer extends PlayerBase implements Ha
             )
     )
     private void overrideSwitchDimensions(Minecraft minecraft) {
-        getTeleportationManager().switchDimension((AbstractClientPlayer) (Object) this);
+        getTeleportationManager().switchDimension((ClientPlayerEntity) (Object) this);
     }
 }

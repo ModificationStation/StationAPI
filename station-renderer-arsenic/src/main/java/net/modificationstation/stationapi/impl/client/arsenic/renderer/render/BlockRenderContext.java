@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.level.BlockView;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.render.mesh.Mesh;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
@@ -50,7 +50,7 @@ public class BlockRenderContext extends AbstractRenderContext {
         return bufferBuilder;
     }
 
-    public boolean render(BlockView blockView, BakedModel model, BlockState state, TilePos pos, Random random, long seed) {
+    public boolean render(BlockView blockView, BakedModel model, BlockState state, BlockPos pos, Random random, long seed) {
         this.bufferBuilder = Tessellator.INSTANCE;
 //        this.matrix = matrixStack.peek().getPositionMatrix();
 //        this.normalMatrix = matrixStack.peek().getNormalMatrix();
@@ -59,7 +59,7 @@ public class BlockRenderContext extends AbstractRenderContext {
 
 //        this.overlay = overlay;
         this.didOutput = false;
-        aoCalc.initialize(state.getBlock(), blockView, pos.x, pos.y, pos.z, Minecraft.isSmoothLightingEnabled() && model.useAmbientOcclusion());
+        aoCalc.initialize(state.getBlock(), blockView, pos.x, pos.y, pos.z, Minecraft.method_2148() && model.useAmbientOcclusion());
         blockInfo.setBlockView(blockView);
         blockInfo.prepareForBlock(state, pos, model.useAmbientOcclusion());
 

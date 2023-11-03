@@ -5,9 +5,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.sound.SoundHelper;
-import net.minecraft.client.sound.SoundMap;
+import net.minecraft.class_266;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.sound.SoundManager;
 import net.modificationstation.stationapi.api.client.resource.CustomSoundMap;
 import net.modificationstation.stationapi.api.resource.RecursiveReader;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,17 +23,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 // TODO: look into refactoring this, although not necessary.
-@Mixin(SoundHelper.class)
+@Mixin(SoundManager.class)
 public class MixinSoundHelper {
 
-    @Shadow private SoundMap sounds;
+    @Shadow private class_266 sounds;
 
-    @Shadow private SoundMap streaming;
+    @Shadow private class_266 streaming;
 
-    @Shadow private SoundMap music;
+    @Shadow private class_266 music;
 
     @Environment(EnvType.CLIENT)
-    private static void loadModAudio(SoundMap array, String channel) {
+    private static void loadModAudio(class_266 array, String channel) {
         try {
             for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
                 ModMetadata stationMod = modContainer.getMetadata();

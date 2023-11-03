@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.BlockView;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.render.RenderContext;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelOverrideList;
@@ -47,14 +47,14 @@ public class WeightedBakedModel implements BakedModel {
    }
 
    @Override
-   public void emitBlockQuads(BlockView blockView, BlockState state, TilePos pos, Supplier<Random> randomSupplier, RenderContext context) {
+   public void emitBlockQuads(BlockView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
       Entry entry = WeightedPicker.getAt(this.models, Math.abs((int) randomSupplier.get().nextLong()) % this.totalWeight);
       if (entry != null)
          entry.model.emitBlockQuads(blockView, state, pos, randomSupplier, context);
    }
 
    @Override
-   public void emitItemQuads(ItemInstance stack, Supplier<Random> randomSupplier, RenderContext context) {
+   public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
       Entry entry = WeightedPicker.getAt(this.models, Math.abs((int) randomSupplier.get().nextLong()) % this.totalWeight);
       if (entry != null)
          entry.model.emitItemQuads(stack, randomSupplier, context);

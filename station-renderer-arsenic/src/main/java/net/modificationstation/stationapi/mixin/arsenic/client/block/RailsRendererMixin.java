@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.mixin.arsenic.client.block;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.minecraft.block.Rail;
-import net.minecraft.client.render.block.BlockRenderer;
+import net.minecraft.block.RailBlock;
+import net.minecraft.client.render.block.BlockRenderManager;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
-@Mixin(BlockRenderer.class)
+@Mixin(BlockRenderManager.class)
 public class RailsRendererMixin {
     @Inject(
             method = "renderRails",
@@ -29,7 +29,7 @@ public class RailsRendererMixin {
             )
     )
     private void stationapi_rails_captureTexture(
-            Rail block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
+            RailBlock block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
             @Local(index = 7) int textureId,
             @Share("texture") LocalRef<Sprite> texture
     ) {

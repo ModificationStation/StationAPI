@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.mixin.worldgen;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.level.Level;
-import net.minecraft.level.dimension.Dimension;
-import net.minecraft.level.dimension.DimensionData;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionData;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Level.class)
+@Mixin(World.class)
 public class MixinLevel {
     @Inject(
         method = "<init>(Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/level/dimension/Dimension;)V",
@@ -23,10 +23,10 @@ public class MixinLevel {
         )
     )
     private void onInit(DimensionData data, String name, long seed, Dimension dimension, CallbackInfo info) {
-        if (data.getLevelProperties() != null) {
-            seed = data.getLevelProperties().getSeed();
+        if (data.method_1737() != null) {
+            seed = data.method_1737().getSeed();
         }
-        BiomeAPI.init(Level.class.cast(this), seed);
+        BiomeAPI.init(World.class.cast(this), seed);
     }
     
     @Inject(
@@ -39,10 +39,10 @@ public class MixinLevel {
     )
     @Environment(value= EnvType.CLIENT)
     private void onInit(DimensionData data, String name, Dimension dimension, long seed, CallbackInfo info) {
-        if (data.getLevelProperties() != null) {
-            seed = data.getLevelProperties().getSeed();
+        if (data.method_1737() != null) {
+            seed = data.method_1737().getSeed();
         }
-        BiomeAPI.init(Level.class.cast(this), seed);
+        BiomeAPI.init(World.class.cast(this), seed);
     }
     
     @Inject(
@@ -54,7 +54,7 @@ public class MixinLevel {
         )
     )
     @Environment(value= EnvType.CLIENT)
-    private void onInit(Level level, Dimension dimension, CallbackInfo info) {
+    private void onInit(World level, Dimension dimension, CallbackInfo info) {
         BiomeAPI.init(level, level.getSeed());
     }
 }

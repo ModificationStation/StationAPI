@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.impl.packet;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.level.Level;
-import net.minecraft.network.PacketHandler;
-import net.minecraft.packet.play.MapChunk0x33S2CPacket;
+import net.minecraft.network.NetworkHandler;
+import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
@@ -23,7 +23,7 @@ import java.util.zip.Inflater;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-public class FlattenedChunkDataS2CPacket extends MapChunk0x33S2CPacket implements IdentifiablePacket {
+public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements IdentifiablePacket {
 
     public static final Identifier PACKET_ID = MODID.id("flattening/chunk_data");
 
@@ -35,10 +35,10 @@ public class FlattenedChunkDataS2CPacket extends MapChunk0x33S2CPacket implement
     public FlattenedChunkDataS2CPacket() {}
 
     @Environment(EnvType.SERVER)
-    public FlattenedChunkDataS2CPacket(Level world, int chunkX, int chunkZ) {
+    public FlattenedChunkDataS2CPacket(World world, int chunkX, int chunkZ) {
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
-        FlattenedChunk chunk = (FlattenedChunk) world.getChunkFromCache(chunkX, chunkZ);
+        FlattenedChunk chunk = (FlattenedChunk) world.method_214(chunkX, chunkZ);
         ChunkSection[] sections = chunk.sections;
         byte[] sectionsData = new byte[getSectionsPacketSize(chunk)];
         ByteBuffer buf = ByteBuffer.wrap(sectionsData);
@@ -101,12 +101,12 @@ public class FlattenedChunkDataS2CPacket extends MapChunk0x33S2CPacket implement
     }
 
     @Override
-    public void apply(PacketHandler handler) {
+    public void apply(NetworkHandler handler) {
         ((StationFlatteningPacketHandler) handler).onMapChunk(this);
     }
 
     @Override
-    public int length() {
+    public int size() {
         return 16 + sectionsSize;
     }
 

@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.entity.FallingBlock;
-import net.minecraft.level.Level;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.entity.FallingBlockEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.block.IsBlockReplaceableEvent;
 import net.modificationstation.stationapi.api.item.AutomaticItemPlacementContext;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(FallingBlock.class)
+@Mixin(FallingBlockEntity.class)
 public class MixinFallingBlock {
 
     @Redirect(
@@ -21,7 +21,7 @@ public class MixinFallingBlock {
                     target = "Lnet/minecraft/level/Level;canPlaceTile(IIIIZI)Z"
             )
     )
-    private boolean redirectCanPlace(Level world, int blockId, int x, int y, int z, boolean skipEntityCollisionCheck, int side) {
-        return StationAPI.EVENT_BUS.post(IsBlockReplaceableEvent.builder().context(new AutomaticItemPlacementContext(world, new TilePos(x, y, z), Direction.DOWN, null, Direction.byId(side))).build()).context.canPlace();
+    private boolean redirectCanPlace(World world, int blockId, int x, int y, int z, boolean skipEntityCollisionCheck, int side) {
+        return StationAPI.EVENT_BUS.post(IsBlockReplaceableEvent.builder().context(new AutomaticItemPlacementContext(world, new BlockPos(x, y, z), Direction.DOWN, null, Direction.byId(side))).build()).context.canPlace();
     }
 }

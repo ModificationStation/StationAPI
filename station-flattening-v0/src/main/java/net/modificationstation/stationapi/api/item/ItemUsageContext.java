@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.api.item;
 
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.maths.MathHelper;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Vec3d;
@@ -13,16 +13,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class ItemUsageContext {
     @Nullable
-    private final PlayerBase player;
+    private final PlayerEntity player;
     private final HitResult hit;
-    private final Level world;
-    private final ItemInstance stack;
+    private final World world;
+    private final ItemStack stack;
 
-    public ItemUsageContext(PlayerBase player, HitResult hit) {
-        this(player.level, player, player.getHeldItem(), hit);
+    public ItemUsageContext(PlayerEntity player, HitResult hit) {
+        this(player.world, player, player.getHand(), hit);
     }
 
-    protected ItemUsageContext(Level world, @Nullable PlayerBase player, ItemInstance stack, HitResult hit) {
+    protected ItemUsageContext(World world, @Nullable PlayerEntity player, ItemStack stack, HitResult hit) {
         this.player = player;
         this.hit = hit;
         this.stack = stack;
@@ -33,32 +33,32 @@ public class ItemUsageContext {
         return this.hit;
     }
 
-    public TilePos getBlockPos() {
-        return new TilePos(hit.x, hit.y, hit.z);
+    public BlockPos getBlockPos() {
+        return new BlockPos(hit.blockX, hit.blockY, hit.blockZ);
     }
 
     public Direction getSide() {
-        return Direction.byId(this.hit.field_1987);
+        return Direction.byId(this.hit.side);
     }
 
     public Vec3d getHitPos() {
-        return new Vec3d(hit.field_1988.x, hit.field_1988.y, hit.field_1988.z);
+        return new Vec3d(hit.pos.x, hit.pos.y, hit.pos.z);
     }
 
     public boolean hitsInsideBlock() {
-        return world.getBlockState(MathHelper.floor(hit.field_1988.x), MathHelper.floor(hit.field_1988.y), MathHelper.floor(hit.field_1988.z)) == States.AIR.get();
+        return world.getBlockState(MathHelper.floor(hit.pos.x), MathHelper.floor(hit.pos.y), MathHelper.floor(hit.pos.z)) == States.AIR.get();
     }
 
-    public ItemInstance getStack() {
+    public ItemStack getStack() {
         return this.stack;
     }
 
     @Nullable
-    public PlayerBase getPlayer() {
+    public PlayerEntity getPlayer() {
         return this.player;
     }
 
-    public Level getWorld() {
+    public World getWorld() {
         return this.world;
     }
 

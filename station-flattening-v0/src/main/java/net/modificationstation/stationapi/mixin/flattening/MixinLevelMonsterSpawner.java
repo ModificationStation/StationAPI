@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.level.Level;
-import net.minecraft.sortme.LevelMonsterSpawner;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.class_567;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.impl.level.StationDimension;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -14,17 +14,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Mixin(LevelMonsterSpawner.class)
+@Mixin(class_567.class)
 public class MixinLevelMonsterSpawner {
-    @Unique private static Level currentLevel;
+    @Unique private static World currentLevel;
 
     @Inject(method = "method_1869(Lnet/minecraft/level/Level;Ljava/util/List;)Z", at = @At("HEAD"))
-    private static void method_1869(Level level, List list, CallbackInfoReturnable<Boolean> info) {
+    private static void method_1869(World level, List list, CallbackInfoReturnable<Boolean> info) {
         currentLevel = level;
     }
 
     @Inject(method = "method_1868(Lnet/minecraft/level/Level;II)Lnet/minecraft/util/maths/TilePos;", at = @At("HEAD"))
-    private static void method_1869(Level level, int px, int pz, CallbackInfoReturnable<TilePos> info) {
+    private static void method_1869(World level, int px, int pz, CallbackInfoReturnable<BlockPos> info) {
         currentLevel = level;
     }
 
@@ -37,7 +37,7 @@ public class MixinLevelMonsterSpawner {
     }
 
     @Unique
-    private static int getLevelHeight(Level level) {
+    private static int getLevelHeight(World level) {
         StationDimension dimension = StationDimension.class.cast(level.dimension);
         return dimension.getActualLevelHeight();
     }

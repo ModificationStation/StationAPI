@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.template.block;
 
 import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Material;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
 public abstract class TemplateBlockWithEntity extends BlockWithEntity implements BlockTemplate {

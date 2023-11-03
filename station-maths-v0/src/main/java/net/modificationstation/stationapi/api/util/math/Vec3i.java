@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-import static net.minecraft.util.maths.MathHelper.floor;
+import static net.minecraft.util.math.MathHelper.floor;
 import static net.modificationstation.stationapi.api.util.math.MathHelper.square;
 
 /**

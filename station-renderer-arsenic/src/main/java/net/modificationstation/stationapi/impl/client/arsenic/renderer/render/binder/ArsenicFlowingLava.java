@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder;
 
-import net.minecraft.client.resource.TexturePack;
-import net.minecraft.util.maths.MathHelper;
+import net.minecraft.class_285;
+import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
@@ -15,24 +15,24 @@ public class ArsenicFlowingLava extends StationTextureBinder {
 
     public ArsenicFlowingLava(Atlas.Sprite staticReference) {
         super(staticReference);
-        textureSize = 2;
+        field_1415 = 2;
     }
 
     @Override
-    public void reloadFromTexturePack(TexturePack newTexturePack) {
-        int square = (getStaticReference().getWidth() / textureSize) * (getStaticReference().getHeight() / textureSize);
+    public void reloadFromTexturePack(class_285 newTexturePack) {
+        int square = (getStaticReference().getWidth() / field_1415) * (getStaticReference().getHeight() / field_1415);
         field_1166 = new float[square];
         field_1167 = new float[square];
         field_1168 = new float[square];
         field_1169 = new float[square];
-        grid = new byte[square * 4];
+        field_1411 = new byte[square * 4];
     }
 
     @Override
-    public void update() {
+    public void method_1205() {
         int
-                textureWidth = getStaticReference().getWidth() / textureSize,
-                textureHeight = getStaticReference().getHeight() / textureSize;
+                textureWidth = getStaticReference().getWidth() / field_1415,
+                textureHeight = getStaticReference().getHeight() / field_1415;
         ++this.field_1170;
 
         for(int var1 = 0; var1 < textureWidth; ++var1) {
@@ -83,7 +83,7 @@ public class ArsenicFlowingLava extends StationTextureBinder {
             int var14 = (int)(var13 * 100.0F + 155.0F);
             int var15 = (int)(var13 * var13 * 255.0F);
             int var16 = (int)(var13 * var13 * var13 * var13 * 128.0F);
-            if (this.render3d) {
+            if (this.field_1413) {
                 int var17 = (var14 * 30 + var15 * 59 + var16 * 11) / 100;
                 int var18 = (var14 * 30 + var15 * 70) / 100;
                 int var10 = (var14 * 30 + var16 * 70) / 100;
@@ -92,10 +92,10 @@ public class ArsenicFlowingLava extends StationTextureBinder {
                 var16 = var10;
             }
 
-            this.grid[var12 * 4] = (byte)var14;
-            this.grid[var12 * 4 + 1] = (byte)var15;
-            this.grid[var12 * 4 + 2] = (byte)var16;
-            this.grid[var12 * 4 + 3] = -1;
+            this.field_1411[var12 * 4] = (byte)var14;
+            this.field_1411[var12 * 4 + 1] = (byte)var15;
+            this.field_1411[var12 * 4 + 2] = (byte)var16;
+            this.field_1411[var12 * 4 + 3] = -1;
         }
     }
 }

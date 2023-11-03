@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.impl.packet;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.level.Level;
-import net.minecraft.network.PacketHandler;
-import net.minecraft.packet.play.MultiBlockChange0x34S2CPacket;
+import net.minecraft.block.Block;
+import net.minecraft.network.NetworkHandler;
+import net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
@@ -19,7 +19,7 @@ import java.util.Objects;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-public class FlattenedMultiBlockChangeS2CPacket extends MultiBlockChange0x34S2CPacket implements IdentifiablePacket {
+public class FlattenedMultiBlockChangeS2CPacket extends ChunkDeltaUpdateS2CPacket implements IdentifiablePacket {
 
     public static final Identifier PACKET_ID = MODID.id("flattening/multi_block_change");
 
@@ -29,39 +29,39 @@ public class FlattenedMultiBlockChangeS2CPacket extends MultiBlockChange0x34S2CP
     @ApiStatus.Internal
     public FlattenedMultiBlockChangeS2CPacket() {}
 
-    public FlattenedMultiBlockChangeS2CPacket(int chunkX, int chunkZ, int sectionIndex, short[] positions, int arraySize, Level world) {
-        this.chunkX = chunkX;
-        this.chunkZ = chunkZ;
+    public FlattenedMultiBlockChangeS2CPacket(int chunkX, int chunkZ, int sectionIndex, short[] positions, int arraySize, World world) {
+        this.x = chunkX;
+        this.z = chunkZ;
         this.sectionIndex = sectionIndex;
-        this.arraySize = arraySize;
-        coordinateArray = new short[arraySize];
+        this.size = arraySize;
+        positions = new short[arraySize];
         stateArray = new int[arraySize];
-        metadataArray = new byte[arraySize];
-        ChunkSection section = Objects.requireNonNullElse(((FlattenedChunk) world.getChunkFromCache(chunkX, chunkZ)).sections[sectionIndex], ChunkSection.EMPTY);
+        blockMetadata = new byte[arraySize];
+        ChunkSection section = Objects.requireNonNullElse(((FlattenedChunk) world.method_214(chunkX, chunkZ)).sections[sectionIndex], ChunkSection.EMPTY);
         for (int i = 0; i < arraySize; i++) {
             short position = positions[i];
-            coordinateArray[i] = position;
+            positions[i] = position;
             int localX = ChunkSectionPos.unpackLocalX(position);
             int localY = ChunkSectionPos.unpackLocalY(position);
             int localZ = ChunkSectionPos.unpackLocalZ(position);
-            stateArray[i] = BlockBase.STATE_IDS.getRawId(section.getBlockState(localX, localY, localZ));
-            metadataArray[i] = (byte) section.getMeta(localX, localY, localZ);
+            stateArray[i] = Block.STATE_IDS.getRawId(section.getBlockState(localX, localY, localZ));
+            blockMetadata[i] = (byte) section.getMeta(localX, localY, localZ);
         }
     }
 
     @Override
     public void read(DataInputStream in) {
         try {
-            chunkX = in.readInt();
-            chunkZ = in.readInt();
+            x = in.readInt();
+            z = in.readInt();
             sectionIndex = in.read();
-            arraySize = in.read();
-            coordinateArray = new short[arraySize];
-            stateArray = new int[arraySize];
-            metadataArray = new byte[arraySize];
-            for (int i = 0; i < arraySize; i++) coordinateArray[i] = in.readShort();
-            for (int i = 0; i < arraySize; i++) stateArray[i] = in.readInt();
-            in.readFully(metadataArray);
+            size = in.read();
+            positions = new short[size];
+            stateArray = new int[size];
+            blockMetadata = new byte[size];
+            for (int i = 0; i < size; i++) positions[i] = in.readShort();
+            for (int i = 0; i < size; i++) stateArray[i] = in.readInt();
+            in.readFully(blockMetadata);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -70,26 +70,26 @@ public class FlattenedMultiBlockChangeS2CPacket extends MultiBlockChange0x34S2CP
     @Override
     public void write(DataOutputStream out) {
         try {
-            out.writeInt(chunkX);
-            out.writeInt(chunkZ);
+            out.writeInt(x);
+            out.writeInt(z);
             out.write(sectionIndex);
-            out.write(arraySize);
-            for (short position : coordinateArray) out.writeShort(position);
+            out.write(size);
+            for (short position : positions) out.writeShort(position);
             for (int stateId : stateArray) out.writeInt(stateId);
-            out.write(metadataArray);
+            out.write(blockMetadata);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void apply(PacketHandler handler) {
+    public void apply(NetworkHandler handler) {
         ((StationFlatteningPacketHandler) handler).onMultiBlockChange(this);
     }
 
     @Override
-    public int length() {
-        return 10 + arraySize * 7;
+    public int size() {
+        return 10 + size * 7;
     }
 
     @Override

@@ -4,15 +4,15 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import lombok.val;
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemBase;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.tag.ItemTags;
 import net.modificationstation.stationapi.api.tag.TagKey;
 
 public class VanillaTagRecipeFixImpl {
-    private static final Supplier<ImmutableMap<ItemBase, TagKey<ItemBase>>> TAGIFICATION_MAP = Suppliers.memoize(() -> {
-        val builder = ImmutableMap.<ItemBase, TagKey<ItemBase>>builder();
-        builder.put(BlockBase.WOOD.asItem(), ItemTags.PLANKS);
+    private static final Supplier<ImmutableMap<Item, TagKey<Item>>> TAGIFICATION_MAP = Suppliers.memoize(() -> {
+        val builder = ImmutableMap.<Item, TagKey<Item>>builder();
+        builder.put(Block.PLANKS.asItem(), ItemTags.PLANKS);
         return builder.build();
     });
 
@@ -23,9 +23,9 @@ public class VanillaTagRecipeFixImpl {
         for (; i < input.length; i += 2) {
             Object rawIngredient = input[i];
 
-            ItemBase ingredient;
-            if (rawIngredient instanceof ItemBase item) ingredient = item;
-            else if (rawIngredient instanceof BlockBase block) ingredient = block.asItem();
+            Item ingredient;
+            if (rawIngredient instanceof Item item) ingredient = item;
+            else if (rawIngredient instanceof Block block) ingredient = block.asItem();
             else continue;
 
             val tagificationMap = TAGIFICATION_MAP.get();

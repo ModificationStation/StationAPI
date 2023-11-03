@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Noteblock;
+import net.minecraft.block.NoteBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateNoteblock extends Noteblock implements BlockTemplate {
+public class TemplateNoteblock extends NoteBlock implements BlockTemplate {
     
     public TemplateNoteblock(Identifier identifier) {
         this(BlockTemplate.getNextId());

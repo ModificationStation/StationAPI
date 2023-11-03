@@ -9,7 +9,7 @@ import lombok.val;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.block.BlockState;
@@ -161,7 +161,7 @@ public class BakedModelManager implements IdentifiableResourceReloadListener, Au
         Map<Identifier, BakedModel> map = modelLoader.getBakedModelMap();
         BakedModel bakedModel = map.get(ModelLoader.MISSING_ID.asIdentifier());
         Map<BlockState, BakedModel> map2 = new IdentityHashMap<>();
-        for (BlockBase block : BlockRegistry.INSTANCE)
+        for (Block block : BlockRegistry.INSTANCE)
             block.getStateManager().getStates().forEach(state -> {
                 Identifier identifier = state.getBlock().getRegistryEntry().registryKey().getValue();
                 BakedModel bakedModel2 = map.getOrDefault(BlockModels.getModelId(identifier, state).asIdentifier(), bakedModel);

@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.dimension;
 
-import net.minecraft.block.Portal;
-import net.minecraft.entity.EntityBase;
-import net.minecraft.level.Level;
+import net.minecraft.block.NetherPortalBlock;
+import net.minecraft.entity.Entity;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.entity.HasTeleportationManager;
 import net.modificationstation.stationapi.api.world.dimension.TeleportationManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Portal.class)
+@Mixin(NetherPortalBlock.class)
 public class MixinPortal implements TeleportationManager {
 
     @Inject(
@@ -20,7 +20,7 @@ public class MixinPortal implements TeleportationManager {
                     target = "Lnet/minecraft/entity/EntityBase;method_1388()V"
             )
     )
-    private void onEntityCollision(Level level, int x, int y, int z, EntityBase entityBase, CallbackInfo ci) {
+    private void onEntityCollision(World level, int x, int y, int z, Entity entityBase, CallbackInfo ci) {
         if (entityBase instanceof HasTeleportationManager manager)
             manager.setTeleportationManager(this);
     }

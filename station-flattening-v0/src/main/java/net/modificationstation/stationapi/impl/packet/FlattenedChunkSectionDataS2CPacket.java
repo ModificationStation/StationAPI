@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.packet;
 
-import net.minecraft.level.Level;
-import net.minecraft.network.PacketHandler;
-import net.minecraft.packet.AbstractPacket;
+import net.minecraft.network.NetworkHandler;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
@@ -21,7 +21,7 @@ import java.util.zip.Inflater;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-public class FlattenedChunkSectionDataS2CPacket extends AbstractPacket implements IdentifiablePacket {
+public class FlattenedChunkSectionDataS2CPacket extends Packet implements IdentifiablePacket {
     public static final Identifier PACKET_ID = MODID.id("flattening/chunk_section_data");
 
     public int chunkX, chunkZ, sectionIndex;
@@ -30,15 +30,15 @@ public class FlattenedChunkSectionDataS2CPacket extends AbstractPacket implement
 
     @ApiStatus.Internal
     public FlattenedChunkSectionDataS2CPacket() {
-        levelPacket = true;
+        worldPacket = true;
     }
 
-    public FlattenedChunkSectionDataS2CPacket(Level world, int chunkX, int chunkZ, int sectionIndex) {
-        levelPacket = true;
+    public FlattenedChunkSectionDataS2CPacket(World world, int chunkX, int chunkZ, int sectionIndex) {
+        worldPacket = true;
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         this.sectionIndex = sectionIndex;
-        FlattenedChunk chunk = (FlattenedChunk) world.getChunkFromCache(chunkX, chunkZ);
+        FlattenedChunk chunk = (FlattenedChunk) world.method_214(chunkX, chunkZ);
         ChunkSection section = Objects.requireNonNullElse(chunk.sections[sectionIndex], ChunkSection.EMPTY);
         byte[] sectionData = new byte[section.getPacketSize()];
         ByteBuffer buf = ByteBuffer.wrap(sectionData);
@@ -94,12 +94,12 @@ public class FlattenedChunkSectionDataS2CPacket extends AbstractPacket implement
     }
 
     @Override
-    public void apply(PacketHandler arg) {
+    public void apply(NetworkHandler arg) {
         ((StationFlatteningPacketHandler) arg).onChunkSection(this);
     }
 
     @Override
-    public int length() {
+    public int size() {
         return 17 + sectionSize;
     }
 

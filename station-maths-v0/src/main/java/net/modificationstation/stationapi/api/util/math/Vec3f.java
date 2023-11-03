@@ -27,7 +27,7 @@ public final class Vec3f {
         this(vec.getX(), vec.getY(), vec.getZ());
     }
 
-    public Vec3f(net.minecraft.util.maths.Vec3f other) {
+    public Vec3f(net.minecraft.util.math.Vec3d other) {
         this((float)other.x, (float)other.y, (float)other.z);
     }
 

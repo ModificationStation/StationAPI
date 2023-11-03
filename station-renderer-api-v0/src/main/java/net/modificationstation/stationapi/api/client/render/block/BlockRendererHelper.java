@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.api.client.render.block;
 
-import net.minecraft.client.render.block.BlockRenderer;
+import net.minecraft.client.render.block.BlockRenderManager;
 
 public interface BlockRendererHelper {
 
-    static BlockRendererHelper of(BlockRenderer blockRenderer) {
+    static BlockRendererHelper of(BlockRenderManager blockRenderer) {
         return () -> blockRenderer;
     }
 
-    BlockRenderer blockRenderer();
+    BlockRenderManager blockRenderer();
 
     default void setBottomFaceRotation(int rotation) {
         BlockRendererUtil.setBottomFaceRotation(blockRenderer(), rotation);

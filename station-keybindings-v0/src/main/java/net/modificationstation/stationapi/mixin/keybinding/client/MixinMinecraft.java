@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.keybinding.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ScreenBase;
+import net.minecraft.client.gui.screen.Screen;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.keyboard.KeyStateChangedEvent;
 import org.lwjgl.input.Keyboard;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinMinecraft {
 
     @Shadow
-    public ScreenBase currentScreen;
+    public Screen currentScreen;
 
     @Inject(method = "tick()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ScreenBase;onKeyboardEvent()V", shift = At.Shift.AFTER))
     private void keyPressInGUI(CallbackInfo ci) {

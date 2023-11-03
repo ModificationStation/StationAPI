@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.block;
 
-import net.minecraft.item.Block;
+import net.minecraft.item.BlockItem;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 
 import java.lang.annotation.*;
@@ -25,5 +25,5 @@ public @interface HasCustomBlockItemFactory {
      * BlockItem class supplier method.
      * @return the block item class that'll be instantiated and used as current block's item.
      */
-    Class<? extends Block> value();
+    Class<? extends BlockItem> value();
 }

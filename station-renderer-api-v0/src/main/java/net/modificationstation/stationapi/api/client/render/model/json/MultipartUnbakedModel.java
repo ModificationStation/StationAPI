@@ -5,7 +5,7 @@ import com.google.common.collect.Sets;
 import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.render.model.*;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 
 @Environment(EnvType.CLIENT)
 public class MultipartUnbakedModel implements UnbakedModel {
-    private final StateManager<BlockBase, BlockState> stateFactory;
+    private final StateManager<Block, BlockState> stateFactory;
     private final List<MultipartModelComponent> components;
 
-    public MultipartUnbakedModel(StateManager<BlockBase, BlockState> stateFactory, List<MultipartModelComponent> components) {
+    public MultipartUnbakedModel(StateManager<Block, BlockState> stateFactory, List<MultipartModelComponent> components) {
         this.stateFactory = stateFactory;
         this.components = components;
     }

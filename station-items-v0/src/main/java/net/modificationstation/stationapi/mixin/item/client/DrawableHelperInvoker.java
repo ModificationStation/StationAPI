@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.item.client;
 
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(DrawableHelper.class)
+@Mixin(DrawContext.class)
 public interface DrawableHelperInvoker {
 
     @Invoker

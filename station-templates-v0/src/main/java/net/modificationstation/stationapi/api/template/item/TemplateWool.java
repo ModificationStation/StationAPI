@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.minecraft.item.Wool;
+import net.minecraft.item.WoolBlockItem;
 
-public class TemplateWool extends Wool implements ItemTemplate {
+public class TemplateWool extends WoolBlockItem implements ItemTemplate {
 
     public TemplateWool(int i) {
         super(i);

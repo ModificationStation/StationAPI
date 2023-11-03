@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.mixin.flattening.server;
 
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.minecraft.class_70;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.level.Level;
-import net.minecraft.packet.play.BlockChange0x35S2CPacket;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.class_73;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(class_70.class)
 public class Mixinclass_70 {
 
-    @Shadow private ServerLevel field_2310;
+    @Shadow private class_73 field_2310;
     @Shadow private int field_2318;
     @Shadow private int field_2319;
     @Shadow private int field_2320;
@@ -33,8 +33,8 @@ public class Mixinclass_70 {
                     target = "Lnet/minecraft/block/BlockBase;getHardness(Lnet/minecraft/entity/player/PlayerBase;)F"
             )
     )
-    private float getHardnessPerMeta(BlockBase blockBase, PlayerBase arg) {
-        return field_2310.getBlockState(field_2318, field_2319, field_2320).calcBlockBreakingDelta(arg, field_2310, new TilePos(field_2318, field_2319, field_2320));
+    private float getHardnessPerMeta(Block blockBase, PlayerEntity arg) {
+        return field_2310.getBlockState(field_2318, field_2319, field_2320).calcBlockBreakingDelta(arg, field_2310, new BlockPos(field_2318, field_2319, field_2320));
     }
 
     @Redirect(
@@ -44,8 +44,8 @@ public class Mixinclass_70 {
                     target = "Lnet/minecraft/block/BlockBase;getHardness(Lnet/minecraft/entity/player/PlayerBase;)F"
             )
     )
-    private float getHardnessPerMeta2(BlockBase blockBase, PlayerBase arg, int i, int j, int k, int i1) {
-        return field_2310.getBlockState(i, j, k).calcBlockBreakingDelta(arg, field_2310, new TilePos(i, j, k));
+    private float getHardnessPerMeta2(Block blockBase, PlayerEntity arg, int i, int j, int k, int i1) {
+        return field_2310.getBlockState(i, j, k).calcBlockBreakingDelta(arg, field_2310, new BlockPos(i, j, k));
     }
 
     @Redirect(
@@ -55,8 +55,8 @@ public class Mixinclass_70 {
                     target = "Lnet/minecraft/block/BlockBase;getHardness(Lnet/minecraft/entity/player/PlayerBase;)F"
             )
     )
-    private float getHardnessPerMeta3(BlockBase blockBase, PlayerBase arg, int i, int j, int k) {
-        return field_2310.getBlockState(i, j, k).calcBlockBreakingDelta(arg, field_2310, new TilePos(i, j, k));
+    private float getHardnessPerMeta3(Block blockBase, PlayerEntity arg, int i, int j, int k) {
+        return field_2310.getBlockState(i, j, k).calcBlockBreakingDelta(arg, field_2310, new BlockPos(i, j, k));
     }
 
     @Inject(
@@ -78,7 +78,7 @@ public class Mixinclass_70 {
                     target = "Lnet/minecraft/entity/player/PlayerBase;canRemoveBlock(Lnet/minecraft/block/BlockBase;)Z"
             )
     )
-    private boolean canRemoveBlock(PlayerBase playerBase, BlockBase arg) {
+    private boolean canRemoveBlock(PlayerEntity playerBase, Block arg) {
         return playerBase.canHarvest(stationapi_method_1834_state);
     }
 
@@ -89,7 +89,7 @@ public class Mixinclass_70 {
                     target = "Lnet/minecraft/block/BlockBase;afterBreak(Lnet/minecraft/level/Level;Lnet/minecraft/entity/player/PlayerBase;IIII)V"
             )
     )
-    private void redirectAfterBreak(BlockBase block, Level level, PlayerBase player, int x, int y, int z, int meta) {
+    private void redirectAfterBreak(Block block, World level, PlayerEntity player, int x, int y, int z, int meta) {
         block.afterBreak(level, player, x, y, z, stationapi_method_1834_state, meta);
     }
 
@@ -108,7 +108,7 @@ public class Mixinclass_70 {
                     target = "(IIILnet/minecraft/level/Level;)Lnet/minecraft/packet/play/BlockChange0x35S2CPacket;"
             )
     )
-    private BlockChange0x35S2CPacket flatten(int x, int y, int z, Level world) {
+    private BlockUpdateS2CPacket flatten(int x, int y, int z, World world) {
         return new FlattenedBlockChangeS2CPacket(x, y, z, world);
     }
     

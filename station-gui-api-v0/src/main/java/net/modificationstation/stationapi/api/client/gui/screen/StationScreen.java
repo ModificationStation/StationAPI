@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.api.client.gui.screen;
 
-import net.minecraft.client.gui.screen.ScreenBase;
-import net.minecraft.client.gui.widgets.Button;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetContextAttacher;
 import net.modificationstation.stationapi.api.client.gui.widget.PressAction;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StationScreen extends ScreenBase {
+public class StationScreen extends Screen {
 
     protected final List<PressAction> actions = new ArrayList<>();
     @SuppressWarnings("unchecked")
@@ -22,7 +22,7 @@ public class StationScreen extends ScreenBase {
     }
 
     @Override
-    protected void buttonClicked(Button button) {
+    protected void buttonClicked(ButtonWidget button) {
         super.buttonClicked(button);
         actions.get(button.id).onPress(button);
     }

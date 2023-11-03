@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
-import net.minecraft.entity.EntityBase;
-import net.minecraft.entity.EntityEntry;
-import net.minecraft.level.Level;
-import net.minecraft.level.biome.Biome;
-import net.minecraft.level.structure.Structure;
+import net.minecraft.class_153;
+import net.minecraft.class_239;
+import net.minecraft.class_288;
+import net.minecraft.entity.Entity;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeColorProvider;
 import net.modificationstation.stationapi.api.worldgen.biome.StationBiome;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mixin(Biome.class)
+@Mixin(class_153.class)
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class MixinBiome implements StationBiome {
     @Shadow private boolean precipitates;
@@ -29,7 +29,7 @@ public class MixinBiome implements StationBiome {
     @Unique private BiomeColorProvider leavesColor = BiomeColorsImpl.DEFAULT_LEAVES_COLOR;
     @Unique private BiomeColorProvider fogColor = BiomeColorsImpl.DEFAULT_FOG_COLOR;
     @Unique private final List<SurfaceRule> surfaceRules = new ArrayList<>();
-    @Unique private final List<Structure> structures = new ArrayList<>();
+    @Unique private final List<class_239> structures = new ArrayList<>();
     @Unique private boolean noDimensionStrucutres;
     @Unique private int minHeight = 40;
     @Unique private int maxHeight = 128;
@@ -70,7 +70,7 @@ public class MixinBiome implements StationBiome {
     }
 
     @Override
-    public void applySurfaceRules(Level level, int x, int y, int z, BlockState state) {
+    public void applySurfaceRules(World level, int x, int y, int z, BlockState state) {
         for (SurfaceRule rule : surfaceRules) {
             if (rule.canApply(level, x, y, z, state)) {
                 rule.apply(level, x, y, z);
@@ -95,18 +95,18 @@ public class MixinBiome implements StationBiome {
     }
 
     @Override
-    public void addPassiveEntity(Class<? extends EntityBase> entityClass, int rarity) {
-        this.creatures.add(new EntityEntry(entityClass, rarity));
+    public void addPassiveEntity(Class<? extends Entity> entityClass, int rarity) {
+        this.creatures.add(new class_288(entityClass, rarity));
     }
 
     @Override
-    public void addHostileEntity(Class<? extends EntityBase> entityClass, int rarity) {
-        this.monsters.add(new EntityEntry(entityClass, rarity));
+    public void addHostileEntity(Class<? extends Entity> entityClass, int rarity) {
+        this.monsters.add(new class_288(entityClass, rarity));
     }
 
     @Override
-    public void addWaterEntity(Class<? extends EntityBase> entityClass, int rarity) {
-        this.waterCreatures.add(new EntityEntry(entityClass, rarity));
+    public void addWaterEntity(Class<? extends Entity> entityClass, int rarity) {
+        this.waterCreatures.add(new class_288(entityClass, rarity));
     }
 
     @Override
@@ -130,7 +130,7 @@ public class MixinBiome implements StationBiome {
     }
     
     @Override
-    public List<Structure> getStructures() {
+    public List<class_239> getStructures() {
         return structures;
     }
     

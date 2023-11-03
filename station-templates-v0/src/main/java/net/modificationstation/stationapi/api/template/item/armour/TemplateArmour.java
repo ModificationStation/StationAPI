@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.template.item.armour;
 
-import net.minecraft.item.armour.Armour;
+import net.minecraft.item.ArmorItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateArmour extends Armour implements ItemTemplate {
+public class TemplateArmour extends ArmorItem implements ItemTemplate {
 
     public TemplateArmour(Identifier identifier, int j, int k, int slot) {
         this(ItemTemplate.getNextId(), j, k, slot);

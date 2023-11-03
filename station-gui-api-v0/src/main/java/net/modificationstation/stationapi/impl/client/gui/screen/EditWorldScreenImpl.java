@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.client.gui.screen;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.client.gui.screen.menu.EditLevel;
-import net.minecraft.client.gui.widgets.Button;
+import net.minecraft.client.gui.screen.world.EditWorldScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.screen.EditWorldScreenEvent;
@@ -18,8 +18,8 @@ public final class EditWorldScreenImpl {
     @EventListener
     private static void registerRenameWorld(EditWorldScreenEvent.ScrollableButtonContextRegister event) {
         event.contexts.add(screen -> new ButtonWidgetDetachedContext(
-                id -> new Button(id, 0, 0, I18n.translate("selectWorld.rename")),
-                button -> ((ScreenBaseAccessor) screen).getMinecraft().openScreen(new EditLevel(screen, screen.worldData.getLevelName()))
+                id -> new ButtonWidget(id, 0, 0, I18n.getTranslation("selectWorld.rename")),
+                button -> ((ScreenBaseAccessor) screen).getMinecraft().setScreen(new EditWorldScreen(screen, screen.worldData.method_1958()))
         ));
     }
 }

@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.client.texture.atlas;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.util.maths.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.client.resource.metadata.AnimationResourceMetadata;
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.NativeImage;
@@ -44,7 +44,7 @@ public class UnstitchAtlasSource implements AtlasSource {
         if (optional.isPresent()) {
             Sprite sprite = new Sprite(identifier, optional.get(), this.regions.size());
             for (Region region : this.regions)
-                regions.add(region.sprite, new SpriteRegion(sprite, region, this.divisorX, this.divisorY));
+                regions.add(region.sprite, new net.modificationstation.stationapi.api.client.texture.atlas.UnstitchAtlasSource.SpriteRegion(sprite, region, this.divisorX, this.divisorY));
         } else LOGGER.warn("Missing sprite: {}", identifier);
     }
 

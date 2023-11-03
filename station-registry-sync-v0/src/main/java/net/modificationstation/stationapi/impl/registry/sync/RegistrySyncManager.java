@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.objects.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.entity.player.PlayerBase;
+import net.minecraft.entity.player.PlayerEntity;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttribute;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttributeHolder;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
@@ -36,7 +36,7 @@ public final class RegistrySyncManager {
 	private RegistrySyncManager() {}
 
 	@Environment(EnvType.SERVER)
-	public static void configureClient(PlayerBase player) {
+	public static void configureClient(PlayerEntity player) {
 		final Reference2ReferenceMap<Identifier, Reference2IntMap<Identifier>> map = RegistrySyncManager.createAndPopulateRegistryMap();
 
 		// Don't send when there is nothing to map
@@ -208,11 +208,11 @@ public final class RegistrySyncManager {
 
 		final int count = missingEntries.values().stream().mapToInt(List::size).sum();
 
-		if (count == 1) text.append(I18n.translate("station-registry-api-v0.unknown-remote.title.singular"));
-		else text.append(I18n.translate("station-registry-api-v0.unknown-remote.title.plural", count));
+		if (count == 1) text.append(I18n.getTranslation("station-registry-api-v0.unknown-remote.title.singular"));
+		else text.append(I18n.getTranslation("station-registry-api-v0.unknown-remote.title.plural", count));
 
-		text.append(Colours.GREEN).append(I18n.translate("station-registry-api-v0.unknown-remote.subtitle.1"));
-		text.append(I18n.translate("station-registry-api-v0.unknown-remote.subtitle.2"));
+		text.append(Colours.GREEN).append(I18n.getTranslation("station-registry-api-v0.unknown-remote.subtitle.1"));
+		text.append(I18n.getTranslation("station-registry-api-v0.unknown-remote.subtitle.2"));
 
 		final int toDisplay = 4;
 		// Get the distinct missing namespaces
@@ -229,7 +229,7 @@ public final class RegistrySyncManager {
 		}
 
 		if (namespaces.size() > toDisplay) {
-			text.append(I18n.translate("station-registry-api-v0.unknown-remote.footer", namespaces.size() - toDisplay));
+			text.append(I18n.getTranslation("station-registry-api-v0.unknown-remote.footer", namespaces.size() - toDisplay));
 		}
 
 		throw new RemapException(text.toString());

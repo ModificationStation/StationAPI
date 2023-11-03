@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.level.client;
 
-import net.minecraft.level.Level;
-import net.minecraft.level.chunk.ChunkCache;
-import net.minecraft.level.source.LevelSource;
+import net.minecraft.class_390;
+import net.minecraft.class_51;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.gen.LevelGenEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,18 +13,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
 
-@Mixin(ChunkCache.class)
+@Mixin(class_390.class)
 public class MixinChunkCache {
 
     @Shadow
-    private Level level;
+    private World level;
 
     @Shadow
-    private LevelSource levelSource;
+    private class_51 levelSource;
     private Random modRandom;
 
     @Inject(method = "decorate(Lnet/minecraft/level/source/LevelSource;II)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/level/source/LevelSource;decorate(Lnet/minecraft/level/source/LevelSource;II)V", shift = At.Shift.AFTER))
-    private void onPopulate(LevelSource levelSource, int chunkX, int chunkZ, CallbackInfo ci) {
+    private void onPopulate(class_51 levelSource, int chunkX, int chunkZ, CallbackInfo ci) {
         int blockX = chunkX * 16;
         int blockZ = chunkZ * 16;
         if (modRandom == null)
@@ -37,7 +37,7 @@ public class MixinChunkCache {
                 LevelGenEvent.ChunkDecoration.builder()
                         .level(level)
                         .levelSource(this.levelSource)
-                        .biome(level.getBiomeSource().getBiome(blockX + 16, blockZ + 16))
+                        .biome(level.method_1781().method_1787(blockX + 16, blockZ + 16))
                         .x(blockX).z(blockZ)
                         .random(modRandom)
                         .build()

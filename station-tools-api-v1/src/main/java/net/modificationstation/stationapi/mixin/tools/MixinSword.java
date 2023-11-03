@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.tools;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.item.tool.Sword;
-import net.minecraft.item.tool.ToolMaterial;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
+import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.item.tool.StationSwordItem;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -14,13 +14,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Sword.class)
+@Mixin(SwordItem.class)
 public class MixinSword implements StationSwordItem {
 
     @Unique
     private ToolMaterial stationapi_toolMaterial;
     @Unique
-    private TagKey<BlockBase> stationapi_effectiveBlocks;
+    private TagKey<Block> stationapi_effectiveBlocks;
 
     @Inject(method = "<init>(ILnet/minecraft/item/tool/ToolMaterial;)V", at = @At("RETURN"))
     private void captureToolMaterial(int i, ToolMaterial arg, CallbackInfo ci) {
@@ -29,17 +29,17 @@ public class MixinSword implements StationSwordItem {
     }
 
     @Override
-    public void setEffectiveBlocks(TagKey<BlockBase> effectiveBlocks) {
+    public void setEffectiveBlocks(TagKey<Block> effectiveBlocks) {
         stationapi_effectiveBlocks = effectiveBlocks;
     }
 
     @Override
-    public TagKey<BlockBase> getEffectiveBlocks(ItemInstance itemInstance) {
+    public TagKey<Block> getEffectiveBlocks(ItemStack itemInstance) {
         return stationapi_effectiveBlocks;
     }
 
     @Override
-    public ToolMaterial getMaterial(ItemInstance itemInstance) {
+    public ToolMaterial getMaterial(ItemStack itemInstance) {
         return stationapi_toolMaterial;
     }
 }

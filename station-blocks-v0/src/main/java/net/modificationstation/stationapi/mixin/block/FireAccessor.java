@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.block;
 
-import net.minecraft.block.Fire;
+import net.minecraft.block.FireBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(Fire.class)
+@Mixin(FireBlock.class)
 public interface FireAccessor {
 
     @Accessor

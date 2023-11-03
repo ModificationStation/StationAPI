@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.api.registry.sync.trackers.vanilla;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.Listener;
-import net.minecraft.item.Block;
-import net.minecraft.item.ItemBase;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedEvent;
 import net.modificationstation.stationapi.api.registry.ListenableRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
@@ -11,14 +11,14 @@ import net.modificationstation.stationapi.api.registry.Registry;
 public final class BlockItemTracker {
     private BlockItemTracker() { }
 
-    public static <R extends Registry<ItemBase> & ListenableRegistry> void register(R registry) {
+    public static <R extends Registry<Item> & ListenableRegistry> void register(R registry) {
         BlockItemTracker tracker = new BlockItemTracker();
         registry.getEventBus().register(Listener.object().listener(tracker).build());
     }
 
     @EventListener
-    private void onEntryAdded(RegistryEntryAddedEvent<ItemBase> event) {
-        if (event.object instanceof Block blockItem)
-            blockItem.appendBlocks(ItemBase.BLOCK_ITEMS, event.object);
+    private void onEntryAdded(RegistryEntryAddedEvent<Item> event) {
+        if (event.object instanceof BlockItem blockItem)
+            blockItem.appendBlocks(Item.BLOCK_ITEMS, event.object);
     }
 }

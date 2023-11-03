@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.vanillafix.recipe;
 
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.recipe.RecipeRegistry;
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.CraftingRecipeManager;
 import net.minecraft.recipe.ToolRecipes;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 import net.modificationstation.stationapi.impl.vanillafix.recipe.VanillaTagRecipeFixImpl;
@@ -19,7 +19,7 @@ public class ToolRecipesMixin {
             )
     )
     private boolean stationapi_tagifyShapedRecipes(
-            RecipeRegistry registry, ItemInstance result, Object[] ingredientMap
+            CraftingRecipeManager registry, ItemStack result, Object[] ingredientMap
     ) {
         boolean tagified = VanillaTagRecipeFixImpl.tagifyIngredients(ingredientMap);
         if (tagified) CraftingRegistry.addShapedRecipe(result, ingredientMap);

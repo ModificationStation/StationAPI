@@ -1,20 +1,20 @@
 package net.modificationstation.stationapi.api.util.exception;
 
 import com.google.common.collect.Lists;
-import net.minecraft.level.BlockView;
-import net.minecraft.util.maths.TilePos;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 
 public class CrashReportSection {
     public static String createPositionString(BlockView world, double x, double y, double z) {
-        return String.format(Locale.ROOT, "%.2f,%.2f,%.2f - %s", x, y, z, CrashReportSection.createPositionString(world, new TilePos((int) x, (int) y, (int) z)));
+        return String.format(Locale.ROOT, "%.2f,%.2f,%.2f - %s", x, y, z, CrashReportSection.createPositionString(world, new BlockPos((int) x, (int) y, (int) z)));
     }
 
-    public static String createPositionString(BlockView world, TilePos pos) {
+    public static String createPositionString(BlockView world, BlockPos pos) {
         return CrashReportSection.createPositionString(world, pos.x, pos.y, pos.z);
     }
 

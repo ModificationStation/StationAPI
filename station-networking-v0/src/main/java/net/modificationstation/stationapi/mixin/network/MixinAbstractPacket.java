@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.network;
 
-import net.minecraft.packet.AbstractPacket;
+import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.packet.PacketRegisterEvent;
 import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
@@ -19,11 +19,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-@Mixin(AbstractPacket.class)
+@Mixin(Packet.class)
 public abstract class MixinAbstractPacket {
 
     @Shadow
-    static void register(int id, boolean flag, boolean flag1, Class<? extends AbstractPacket> arg) {
+    static void register(int id, boolean flag, boolean flag1, Class<? extends Packet> arg) {
     }
 
     @Shadow
@@ -36,7 +36,7 @@ public abstract class MixinAbstractPacket {
     }
 
     @Shadow
-    public static AbstractPacket create(int i) {
+    public static Packet create(int i) {
         return Null.get();
     }
 
@@ -62,7 +62,7 @@ public abstract class MixinAbstractPacket {
                     target = "Lnet/minecraft/packet/AbstractPacket;write(Ljava/io/DataOutputStream;)V"
             )
     )
-    private static void ifIdentifiable(AbstractPacket packet, DataOutputStream out, CallbackInfo ci) {
+    private static void ifIdentifiable(Packet packet, DataOutputStream out, CallbackInfo ci) {
         if (packet instanceof IdentifiablePacket idPacket)
             writeString(idPacket.getId().toString(), out);
     }
@@ -74,7 +74,7 @@ public abstract class MixinAbstractPacket {
                     target = "Lnet/minecraft/packet/AbstractPacket;create(I)Lnet/minecraft/packet/AbstractPacket;"
             )
     )
-    private static AbstractPacket ifIdentifiable(int id, DataInputStream in, boolean server) throws IOException {
+    private static Packet ifIdentifiable(int id, DataInputStream in, boolean server) throws IOException {
         if (id == IdentifiablePacket.PACKET_ID) {
             Identifier identifier = Identifier.of(readString(in, Short.MAX_VALUE));
             if (

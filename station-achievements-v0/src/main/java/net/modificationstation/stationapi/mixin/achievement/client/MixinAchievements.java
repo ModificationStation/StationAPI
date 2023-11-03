@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.mixin.achievement.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.achievement.Achievement;
-import net.minecraft.client.gui.screen.ScreenBase;
-import net.minecraft.client.gui.screen.menu.Achievements;
-import net.minecraft.client.gui.widgets.Button;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.achievement.AchievementsScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsEvent;
@@ -20,8 +20,8 @@ import java.util.Random;
 import static net.minecraft.achievement.Achievements.ACHIEVEMENTS;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-@Mixin(Achievements.class)
-class MixinAchievements extends ScreenBase {
+@Mixin(AchievementsScreen.class)
+class MixinAchievements extends Screen {
     @Unique
     private static final int
             STATIONAPI$PREV_BUTTON_ID = MODID.id("prev").hashCode(),
@@ -36,8 +36,8 @@ class MixinAchievements extends ScreenBase {
     private void stationapi_initPrevNext(CallbackInfo ci) {
         // Prev and next buttons.
         if (AchievementPage.getPageCount() <= 1) return;
-        this.buttons.add(new Button(STATIONAPI$PREV_BUTTON_ID, this.width / 2 - 113, this.height / 2 + 74, 20, 20, "<"));
-        this.buttons.add(new Button(STATIONAPI$NEXT_BUTTON_ID, this.width / 2 - 93, this.height / 2 + 74, 20, 20, ">"));
+        this.buttons.add(new ButtonWidget(STATIONAPI$PREV_BUTTON_ID, this.width / 2 - 113, this.height / 2 + 74, 20, 20, "<"));
+        this.buttons.add(new ButtonWidget(STATIONAPI$NEXT_BUTTON_ID, this.width / 2 - 93, this.height / 2 + 74, 20, 20, ">"));
     }
 
     @Inject(
@@ -47,7 +47,7 @@ class MixinAchievements extends ScreenBase {
                     target = "Lnet/minecraft/client/gui/screen/ScreenBase;buttonClicked(Lnet/minecraft/client/gui/widgets/Button;)V"
             )
     )
-    private void stationapi_buttonClickedNextPrev(Button button, CallbackInfo ci) {
+    private void stationapi_buttonClickedNextPrev(ButtonWidget button, CallbackInfo ci) {
         if (button.id == STATIONAPI$PREV_BUTTON_ID) AchievementPage.prevPage();
         else if (button.id == STATIONAPI$NEXT_BUTTON_ID) AchievementPage.nextPage();
     }
@@ -57,8 +57,8 @@ class MixinAchievements extends ScreenBase {
             at = @At("TAIL")
     )
     private void stationapi_doDrawTitle(CallbackInfo ci) {
-        if (AchievementPage.getPageCount() > 1) this.textManager.drawText(
-                I18n.translate("stationapi:achievementPage." + AchievementPage.getCurrentPageName()),
+        if (AchievementPage.getPageCount() > 1) this.textRenderer.draw(
+                I18n.getTranslation("stationapi:achievementPage." + AchievementPage.getCurrentPageName()),
                 this.width / 2 - 69, this.height / 2 + 80, 0
         );
     }
@@ -85,7 +85,7 @@ class MixinAchievements extends ScreenBase {
         //noinspection DataFlowIssue
         return StationAPI.EVENT_BUS.post(
                 AchievementsEvent.BackgroundTextureRender.builder()
-                        .achievementsScreen((Achievements) (Object) this)
+                        .achievementsScreen((AchievementsScreen) (Object) this)
                         .random(random)
                         .column(baseColumn + deltaColumn)
                         .row(baseRow + deltaRow)
@@ -108,7 +108,7 @@ class MixinAchievements extends ScreenBase {
         //noinspection DataFlowIssue
         return StationAPI.EVENT_BUS.post(
                 AchievementsEvent.LineRender.builder()
-                        .achievementsScreen((Achievements) (Object) this)
+                        .achievementsScreen((AchievementsScreen) (Object) this)
                         .achievement(achievement)
                         .build()
         ).isCanceled() ? null : achievement.parent;
@@ -147,7 +147,7 @@ class MixinAchievements extends ScreenBase {
         while (
                 achievementOrdinal < ACHIEVEMENTS.size() && StationAPI.EVENT_BUS.post(
                         AchievementsEvent.AchievementIconRender.builder()
-                                .achievementsScreen((Achievements) (Object) this)
+                                .achievementsScreen((AchievementsScreen) (Object) this)
                                 .achievement((Achievement) ACHIEVEMENTS.get(achievementOrdinal))
                                 .build()
                 ).isCanceled()

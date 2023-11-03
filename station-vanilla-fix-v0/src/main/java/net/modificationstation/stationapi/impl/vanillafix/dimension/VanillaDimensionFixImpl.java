@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.impl.vanillafix.dimension;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.level.dimension.Dimension;
-import net.minecraft.level.dimension.Nether;
-import net.minecraft.level.dimension.Overworld;
-import net.minecraft.level.dimension.Skylands;
+import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.NetherDimension;
+import net.minecraft.world.dimension.OverworldDimension;
+import net.minecraft.world.dimension.SkylandsDimension;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.DimensionRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -26,8 +26,8 @@ public final class VanillaDimensionFixImpl {
     @EventListener
     private static void registerDimensions(DimensionRegistryEvent event) {
         DimensionRegister r = (id, serialID, factory) -> event.registry.register(id, serialID, new DimensionContainer<>(factory));
-        r.accept(THE_NETHER, -1, Nether::new);
-        r.accept(OVERWORLD, 0, Overworld::new);
-        r.accept(SKYLANDS, 1, Skylands::new);
+        r.accept(THE_NETHER, -1, NetherDimension::new);
+        r.accept(OVERWORLD, 0, OverworldDimension::new);
+        r.accept(SKYLANDS, 1, SkylandsDimension::new);
     }
 }

@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.impl.recipe;
 
 import com.mojang.datafixers.util.Either;
-import net.minecraft.inventory.Crafting;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.recipe.Recipe;
+import net.minecraft.class_159;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.CraftingRecipe;
 import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -13,15 +13,15 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Function;
 
-public class StationShapedRecipe implements Recipe, StationRecipe {
+public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
 
     private static final Random RANDOM = new Random();
 
     private final int width, height;
-    private final Either<TagKey<ItemBase>, ItemInstance>[] grid;
-    private final ItemInstance output;
+    private final Either<TagKey<Item>, ItemStack>[] grid;
+    private final ItemStack output;
 
-    public StationShapedRecipe(int width, int height, Either<TagKey<ItemBase>, ItemInstance>[] grid, ItemInstance output) {
+    public StationShapedRecipe(int width, int height, Either<TagKey<Item>, ItemStack>[] grid, ItemStack output) {
         this.width = width;
         this.height = height;
         this.grid = grid;
@@ -29,7 +29,7 @@ public class StationShapedRecipe implements Recipe, StationRecipe {
     }
 
     @Override
-    public boolean canCraft(Crafting grid) {
+    public boolean matches(class_159 grid) {
         for(int x = 0; x <= 3 - this.width; ++x)
             for (int y = 0; y <= 3 - this.height; ++y) {
                 if (this.matches(grid, x, y, true)) return true;
@@ -39,28 +39,28 @@ public class StationShapedRecipe implements Recipe, StationRecipe {
         return false;
     }
 
-    private boolean matches(Crafting grid, int startX, int startY, boolean mirror) {
+    private boolean matches(class_159 grid, int startX, int startY, boolean mirror) {
         for(int x = 0; x < 3; ++x)
             for (int y = 0; y < 3; ++y) {
                 int dx = x - startX;
                 int dy = y - startY;
-                Either<TagKey<ItemBase>, ItemInstance> ingredient = null;
+                Either<TagKey<Item>, ItemStack> ingredient = null;
                 if (dx >= 0 && dy >= 0 && dx < this.width && dy < this.height)
                     ingredient = this.grid[(mirror ? this.width - dx - 1 : dx) + dy * this.width];
-                ItemInstance itemToTest = grid.getInventoryItemXY(x, y);
+                ItemStack itemToTest = grid.method_974(x, y);
                 if (itemToTest != null || ingredient != null) {
                     if (itemToTest == null || ingredient == null) return false;
-                    Optional<TagKey<ItemBase>> tagOpt = ingredient.left();
+                    Optional<TagKey<Item>> tagOpt = ingredient.left();
                     if (tagOpt.isPresent()) {
                         if (!itemToTest.isIn(tagOpt.get()))
                             return false;
                     } else {
-                        Optional<ItemInstance> itemOpt = ingredient.right();
+                        Optional<ItemStack> itemOpt = ingredient.right();
                         if (itemOpt.isPresent()) {
-                            ItemInstance item = itemOpt.get();
+                            ItemStack item = itemOpt.get();
                             boolean ignoreDamage = item.getDamage() == -1;
                             if (ignoreDamage) item.setDamage(itemToTest.getDamage());
-                            boolean equals = item.isDamageAndIDIdentical(itemToTest);
+                            boolean equals = item.isItemEqual(itemToTest);
                             if (ignoreDamage) item.setDamage(-1);
                             if (!equals) return false;
                         }
@@ -71,36 +71,36 @@ public class StationShapedRecipe implements Recipe, StationRecipe {
     }
 
     @Override
-    public ItemInstance craft(Crafting arg) {
+    public ItemStack craft(class_159 arg) {
         return output.copy();
     }
 
     @Override
-    public int getIngredientCount() {
+    public int getSize() {
         return width * height;
     }
 
     @Override
-    public ItemInstance getOutput() {
+    public ItemStack getOutput() {
         return output;
     }
 
     @Override
-    public ItemInstance[] getIngredients() {
-        ItemInstance[] itemInstances = new ItemInstance[9];
+    public ItemStack[] getIngredients() {
+        ItemStack[] itemInstances = new ItemStack[9];
         for (int h = 0; h < height; h++)
             for (int w = 0; w < width; w++) {
                 int localId = (h * width) + w;
-                Either<TagKey<ItemBase>, ItemInstance> ingredient = grid[localId];
+                Either<TagKey<Item>, ItemStack> ingredient = grid[localId];
                 if (ingredient == null) continue;
                 int id = (h * 3) + w;
-                itemInstances[id] = ingredient.map(tag -> new ItemInstance(ItemRegistry.INSTANCE.getEntryList(tag).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + tag.id() + "\" has no entry in the tag registry!")).getRandom(RANDOM).orElseThrow().value()), Function.identity());
+                itemInstances[id] = ingredient.map(tag -> new ItemStack(ItemRegistry.INSTANCE.getEntryList(tag).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + tag.id() + "\" has no entry in the tag registry!")).getRandom(RANDOM).orElseThrow().value()), Function.identity());
             }
         return itemInstances;
     }
 
     @Override
-    public ItemInstance[] getOutputs() {
-        return new ItemInstance[] { output };
+    public ItemStack[] getOutputs() {
+        return new ItemStack[] { output };
     }
 }

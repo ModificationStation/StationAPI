@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.item.client;
 
-import net.minecraft.client.BaseClientInteractionManager;
+import net.minecraft.MultiplayerInteractionManager;
+import net.minecraft.client.InteractionManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MultiPlayerClientInteractionManager;
-import net.minecraft.util.hit.HitType;
+import net.minecraft.util.hit.HitResultType;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(MultiPlayerClientInteractionManager.class)
-public class Mixinclass_608 extends BaseClientInteractionManager {
+@Mixin(MultiplayerInteractionManager.class)
+public class Mixinclass_608 extends InteractionManager {
 
     public Mixinclass_608(Minecraft minecraft) {
         super(minecraft);
@@ -23,7 +23,7 @@ public class Mixinclass_608 extends BaseClientInteractionManager {
         cir.setReturnValue((float) StationAPI.EVENT_BUS.post(
                 PlayerEvent.Reach.builder()
                         .player(minecraft.player)
-                        .type(HitType.field_789)
+                        .type(HitResultType.BLOCK)
                         .currentReach(cir.getReturnValueF())
                         .build()
         ).currentReach);

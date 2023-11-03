@@ -1,15 +1,15 @@
 package net.modificationstation.stationapi.api.entity.player;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.Sign;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityBase;
-import net.minecraft.inventory.InventoryBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.tileentity.TileEntityDispenser;
-import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.SleepStatus;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.block.Block;
+import net.minecraft.block.Material;
+import net.minecraft.block.SignBlock;
+import net.minecraft.block.entity.DispenserBlockEntity;
+import net.minecraft.block.entity.FurnaceBlockEntity;
+import net.minecraft.class_141;
+import net.minecraft.entity.Entity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 
 public interface PlayerHandler {
 
@@ -25,11 +25,11 @@ public interface PlayerHandler {
         return false;
     }
 
-    default boolean writeEntityBaseToNBT(CompoundTag tag) {
+    default boolean writeEntityBaseToNBT(NbtCompound tag) {
         return false;
     }
 
-    default boolean readEntityBaseFromNBT(CompoundTag tag) {
+    default boolean readEntityBaseFromNBT(NbtCompound tag) {
         return false;
     }
 
@@ -37,7 +37,7 @@ public interface PlayerHandler {
         return false;
     }
 
-    default boolean onDeath(EntityBase killer) {
+    default boolean onDeath(Entity killer) {
         return false;
     }
 
@@ -45,7 +45,7 @@ public interface PlayerHandler {
         return false;
     }
 
-    default boolean attackEntityBaseFrom(EntityBase attacker, int damage) {
+    default boolean attackEntityBaseFrom(Entity attacker, int damage) {
         return false;
     }
 
@@ -73,7 +73,7 @@ public interface PlayerHandler {
         return armor;
     }
 
-    default float getCurrentPlayerStrVsBlock(BlockBase block, float f) {
+    default float getCurrentPlayerStrVsBlock(Block block, float f) {
         return f;
     }
 
@@ -85,7 +85,7 @@ public interface PlayerHandler {
         return false;
     }
 
-    default SleepStatus sleepInBedAt(int x, int y, int z, SleepStatus status) {
+    default class_141 sleepInBedAt(int x, int y, int z, class_141 status) {
         return status;
     }
 
@@ -124,15 +124,15 @@ public interface PlayerHandler {
         return false;
     }
 
-    default boolean dropPlayerItem(ItemInstance itemstack) {
+    default boolean dropPlayerItem(ItemStack itemstack) {
         return false;
     }
 
-    default boolean displayGUIEditSign(Sign sign) {
+    default boolean displayGUIEditSign(SignBlock sign) {
         return false;
     }
 
-    default boolean displayGUIChest(InventoryBase iinventory) {
+    default boolean displayGUIChest(Inventory iinventory) {
         return false;
     }
 
@@ -140,11 +140,11 @@ public interface PlayerHandler {
         return false;
     }
 
-    default boolean displayGUIFurnace(TileEntityFurnace furnace) {
+    default boolean displayGUIFurnace(FurnaceBlockEntity furnace) {
         return false;
     }
 
-    default boolean displayGUIDispenser(TileEntityDispenser dispenser) {
+    default boolean displayGUIDispenser(DispenserBlockEntity dispenser) {
         return false;
     }
 
@@ -156,7 +156,7 @@ public interface PlayerHandler {
         return null;
     }
 
-    default Boolean canHarvestBlock(BlockBase block, Boolean previous) {
+    default Boolean canHarvestBlock(Block block, Boolean previous) {
         return null;
     }
 
@@ -172,11 +172,11 @@ public interface PlayerHandler {
         return false;
     }
 
-    default Double getDistanceSqToEntityBase(EntityBase EntityBase, Double previous) {
+    default Double getDistanceSqToEntityBase(Entity EntityBase, Double previous) {
         return null;
     }
 
-    default boolean attackTargetEntityBaseWithCurrentItem(EntityBase EntityBase) {
+    default boolean attackTargetEntityBaseWithCurrentItem(Entity EntityBase) {
         return false;
     }
 
@@ -188,7 +188,7 @@ public interface PlayerHandler {
         return null;
     }
 
-    default boolean dropPlayerItemWithRandomChoice(ItemInstance itemstack, boolean flag) {
+    default boolean dropPlayerItemWithRandomChoice(ItemStack itemstack, boolean flag) {
         return false;
     }
 

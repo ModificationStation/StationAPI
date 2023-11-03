@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.impl.level.chunk;
 
-import net.minecraft.util.io.ByteArrayTag;
+import net.minecraft.nbt.NbtByteArray;
 
 public class NibbleArray {
     public final byte[] data;
@@ -26,8 +26,8 @@ public class NibbleArray {
         data[index2] = (byte) internal;
     }
 
-    public ByteArrayTag toTag() {
-        return new ByteArrayTag(data);
+    public NbtByteArray toTag() {
+        return new NbtByteArray(data);
     }
 
     public void copyArray(byte[] array) {

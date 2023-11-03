@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
-import net.minecraft.recipe.SmeltingRecipeRegistry;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import org.spongepowered.asm.mixin.Final;
@@ -13,13 +12,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent.Vanilla.SMELTING;
 
-@Mixin(SmeltingRecipeRegistry.class)
+import net.minecraft.recipe.SmeltingRecipeManager;
+
+@Mixin(SmeltingRecipeManager.class)
 public class MixinSmeltingRecipeRegistry {
 
     @Mutable
     @Shadow
     @Final
-    private static SmeltingRecipeRegistry INSTANCE;
+    private static SmeltingRecipeManager INSTANCE;
 
 //    @ModifyArg(method = "addSmeltingRecipe", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"), index = 0)
 //    public Object mine(Object itemId) {
@@ -36,7 +37,7 @@ public class MixinSmeltingRecipeRegistry {
 
     @Inject(method = "<init>()V", at = @At("RETURN"))
     private void afterRecipeRegister(CallbackInfo ci) {
-        INSTANCE = (SmeltingRecipeRegistry) (Object) this;
+        INSTANCE = (SmeltingRecipeManager) (Object) this;
         StationAPI.EVENT_BUS.post(RecipeRegisterEvent.builder().recipeId(SMELTING.type()).build());
     }
 }

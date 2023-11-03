@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.mixin.dimension;
 
-import net.minecraft.entity.player.PlayerBase;
+import net.minecraft.entity.player.PlayerEntity;
 import net.modificationstation.stationapi.api.entity.HasTeleportationManager;
 import net.modificationstation.stationapi.api.world.dimension.TeleportationManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(PlayerBase.class)
+@Mixin(PlayerEntity.class)
 public class MixinPlayerBase implements HasTeleportationManager {
 
     @Unique

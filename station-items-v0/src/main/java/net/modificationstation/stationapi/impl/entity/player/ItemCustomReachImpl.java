@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.entity.player;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
 import net.modificationstation.stationapi.api.item.CustomReachProvider;
@@ -15,9 +15,9 @@ public class ItemCustomReachImpl {
 
     @EventListener
     private static void getReach(PlayerEvent.Reach event) {
-        ItemInstance itemInstance = event.player.getHeldItem();
+        ItemStack itemInstance = event.player.getHand();
         if (itemInstance != null) {
-            ItemBase item = itemInstance.getType();
+            Item item = itemInstance.getItem();
             if (item instanceof CustomReachProvider provider)
                 event.currentReach = provider.getReach(itemInstance, event.player, event.type, event.currentReach);
         }

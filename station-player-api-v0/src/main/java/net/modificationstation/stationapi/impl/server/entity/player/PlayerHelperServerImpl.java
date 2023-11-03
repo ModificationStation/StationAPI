@@ -1,20 +1,20 @@
 package net.modificationstation.stationapi.impl.server.entity.player;
 
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.network.PacketHandler;
-import net.minecraft.server.network.ServerPlayerPacketHandler;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.NetworkHandler;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.modificationstation.stationapi.impl.entity.player.PlayerHelperImpl;
 import net.modificationstation.stationapi.mixin.player.server.ServerPlayerPacketHandlerAccessor;
 
 public class PlayerHelperServerImpl extends PlayerHelperImpl {
 
     @Override
-    public PlayerBase getPlayerFromGame() {
+    public PlayerEntity getPlayerFromGame() {
         return null;
     }
 
     @Override
-    public PlayerBase getPlayerFromPacketHandler(PacketHandler packetHandler) {
-        return packetHandler instanceof ServerPlayerPacketHandler ? ((ServerPlayerPacketHandlerAccessor) packetHandler).getServerPlayer() : getPlayerFromGame();
+    public PlayerEntity getPlayerFromPacketHandler(NetworkHandler packetHandler) {
+        return packetHandler instanceof ServerPlayNetworkHandler ? ((ServerPlayerPacketHandlerAccessor) packetHandler).getServerPlayer() : getPlayerFromGame();
     }
 }

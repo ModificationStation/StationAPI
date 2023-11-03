@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.block;
 
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 
 public interface BlockItemToggle {
 
-    BlockBase disableAutomaticBlockItemRegistration();
+    Block disableAutomaticBlockItemRegistration();
 
     boolean isAutomaticBlockItemRegistrationDisabled();
 }

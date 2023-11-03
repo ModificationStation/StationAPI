@@ -2,15 +2,15 @@ package net.modificationstation.stationapi.impl.level.chunk;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockBase;
-import net.minecraft.entity.EntityBase;
-import net.minecraft.level.Level;
-import net.minecraft.level.LightType;
-import net.minecraft.level.chunk.Chunk;
-import net.minecraft.tileentity.TileEntityBase;
-import net.minecraft.util.maths.Box;
-import net.minecraft.util.maths.MathHelper;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.class_43;
+import net.minecraft.class_56;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
@@ -23,22 +23,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FlattenedChunk extends Chunk {
+public class FlattenedChunk extends class_43 {
 
     public final ChunkSection[] sections;
     public final short firstBlock;
     public final short lastBlock;
     private final short[] stationHeightmap = new short[256];
 
-    public FlattenedChunk(Level world, int xPos, int zPos) {
+    public FlattenedChunk(World world, int xPos, int zPos) {
         super(world, xPos, zPos);
-        int countSections = level.countVerticalSections();
+        int countSections = field_956.countVerticalSections();
         sections = new ChunkSection[countSections];
-        firstBlock = (short) level.getBottomY();
-        lastBlock = (short) (level.getTopY() - 1);
-        entities = new List[countSections];
-        for(short i = 0; i < entities.length; i++) {
-            this.entities[i] = new ArrayList<>();
+        firstBlock = (short) field_956.getBottomY();
+        lastBlock = (short) (field_956.getTopY() - 1);
+        field_965 = new List[countSections];
+        for(short i = 0; i < field_965.length; i++) {
+            this.field_965[i] = new ArrayList<>();
         }
     }
 
@@ -49,12 +49,12 @@ public class FlattenedChunk extends Chunk {
         int id, bx, by, bz;
         for(int i = 0; i < tiles.length; i++) {
             id = Byte.toUnsignedInt(tiles[i]);
-            if (id == 0 || id >= BlockBase.BY_ID.length) continue;
+            if (id == 0 || id >= Block.BLOCKS.length) continue;
             by = i & mask;
             if (by > lastBlock) continue;
             bx = (i >> offsetX) & 15;
             bz = (i >> offsetZ) & 15;
-            Objects.requireNonNull(getOrCreateSection(by, false)).setBlockState(bx, by & 15, bz, BlockBase.BY_ID[id].getDefaultState());
+            Objects.requireNonNull(getOrCreateSection(by, false)).setBlockState(bx, by & 15, bz, Block.BLOCKS[id].getDefaultState());
         }
     }
 
@@ -87,12 +87,12 @@ public class FlattenedChunk extends Chunk {
     }
 
     @Override
-    public int getHeight(int x, int z) {
+    public int method_874(int x, int z) {
         return getShortHeight(x, z);
     }
 
     @Override
-    public boolean isAboveGround(int relX, int y, int relZ) {
+    public boolean method_879(int relX, int y, int relZ) {
         return y >= getShortHeight(relX, relZ);
     }
 
@@ -100,14 +100,14 @@ public class FlattenedChunk extends Chunk {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
-        return sections[level.sectionCoordToIndex(y >> 4)];
+        return sections[field_956.sectionCoordToIndex(y >> 4)];
     }
 
     @Override
-    public int method_864(LightType type, int x, int y, int z) {
+    public int method_864(class_56 type, int x, int y, int z) {
         ChunkSection section = getSection(y);
         return section == null ?
-                type == LightType.field_2757 && level.dimension.halvesMapping ?
+                type == class_56.field_2757 && field_956.dimension.field_2177 ?
                         0 :
                         type.field_2759 :
                 section.getLight(type, x, y & 15, z);
@@ -117,11 +117,11 @@ public class FlattenedChunk extends Chunk {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
-        int index = level.sectionCoordToIndex(y >> 4);
+        int index = field_956.sectionCoordToIndex(y >> 4);
         ChunkSection section = sections[index];
         if (section == null) {
-            section = new ChunkSection(level.sectionIndexToCoord(index));
-            if (!level.dimension.halvesMapping && fillSkyLight) {
+            section = new ChunkSection(field_956.sectionIndexToCoord(index));
+            if (!field_956.dimension.field_2177 && fillSkyLight) {
                 section.initSkyLight();
             }
             sections[index] = section;
@@ -130,7 +130,7 @@ public class FlattenedChunk extends Chunk {
     }
 
     @Override
-    public void method_865(LightType type, int x, int y, int z, int light) {
+    public void method_865(class_56 type, int x, int y, int z, int light) {
         this.field_967 = true;
         ChunkSection section = getOrCreateSection(y, true);
         if (section != null) {
@@ -141,13 +141,13 @@ public class FlattenedChunk extends Chunk {
     @Override
     public int method_880(int x, int y, int z, int light) {
         ChunkSection section = getSection(y);
-        int lightLevel = section == null ? 15 : section.getLight(LightType.field_2757, x, y & 15, z);
+        int lightLevel = section == null ? 15 : section.getLight(class_56.field_2757, x, y & 15, z);
         if (lightLevel > 0) {
             field_953 = true;
         }
 
         lightLevel -= light;
-        int blockLight = section == null ? 0 : section.getLight(LightType.field_2758, x, y & 15, z);
+        int blockLight = section == null ? 0 : section.getLight(class_56.field_2758, x, y & 15, z);
         if (blockLight > lightLevel) {
             lightLevel = blockLight;
         }
@@ -168,7 +168,7 @@ public class FlattenedChunk extends Chunk {
             for(int z = 0; z < 16; ++z) {
                 short height;
                 for (height = lastBlock; height > firstBlock; height--) {
-                    if (BlockBase.LIGHT_OPACITY[getTileId(x, height - 1, z)] != 0) break;
+                    if (Block.BLOCKS_LIGHT_OPACITY[method_859(x, height - 1, z)] != 0) break;
                 }
                 setShortHeight(x, z, height);
                 if (height < chunkHeight) {
@@ -182,14 +182,14 @@ public class FlattenedChunk extends Chunk {
     }
 
     @Override
-    public void generateHeightmap() {
+    public void method_873() {
         int minHeight = lastBlock;
         for(int x = 0; x < 16; ++x) {
             for(int z = 0; z < 16; ++z) {
                 short height = lastBlock;
 
                 while (height > firstBlock) {
-                    if (BlockBase.LIGHT_OPACITY[getTileId(x, height - 1, z)] != 0) break;
+                    if (Block.BLOCKS_LIGHT_OPACITY[method_859(x, height - 1, z)] != 0) break;
                     --height;
                 }
 
@@ -198,16 +198,16 @@ public class FlattenedChunk extends Chunk {
                     minHeight = height;
                 }
 
-                if (!this.level.dimension.halvesMapping) {
+                if (!this.field_956.dimension.field_2177) {
                     int light = 15;
                     int lightY = lastBlock;
 
                     do {
-                        light -= BlockBase.LIGHT_OPACITY[getTileId(x, lightY, z)];
+                        light -= Block.BLOCKS_LIGHT_OPACITY[method_859(x, lightY, z)];
                         if (light > 0) {
                             ChunkSection section = getSection(lightY);
                             if (section != null) {
-                                section.setLight(LightType.field_2757, x, lightY & 15, z, light);
+                                section.setLight(class_56.field_2757, x, lightY & 15, z, light);
                             }
                         }
 
@@ -233,12 +233,12 @@ public class FlattenedChunk extends Chunk {
             maxHeight = lastBlock;
         }
 
-        while (maxHeight > firstBlock && BlockBase.LIGHT_OPACITY[getTileId(x, maxHeight - 1, z)] == 0) {
+        while (maxHeight > firstBlock && Block.BLOCKS_LIGHT_OPACITY[method_859(x, maxHeight - 1, z)] == 0) {
             --maxHeight;
         }
 
         if (maxHeight != height) {
-            this.level.method_240(x, z, maxHeight, height);
+            this.field_956.method_240(x, z, maxHeight, height);
             setShortHeight(x, z, maxHeight);
             if (maxHeight < this.field_961) {
                 this.field_961 = maxHeight;
@@ -256,23 +256,23 @@ public class FlattenedChunk extends Chunk {
                 this.field_961 = var7;
             }
 
-            int posX = this.x << 4 | x;
-            int posZ = this.z << 4 | z;
+            int posX = this.field_962 << 4 | x;
+            int posZ = this.field_963 << 4 | z;
 
             if (maxHeight < height) {
                 for (int h = maxHeight; h < height; ++h) {
                     ChunkSection section = getSection(h);
                     if (section != null) {
-                        section.setLight(LightType.field_2757, x, h & 15, z, 15);
+                        section.setLight(class_56.field_2757, x, h & 15, z, 15);
                     }
                 }
             }
             else {
-                this.level.method_166(LightType.field_2757, posX, height, posZ, posX, maxHeight, posZ);
+                this.field_956.method_166(class_56.field_2757, posX, height, posZ, posX, maxHeight, posZ);
                 for (int h = height; h < maxHeight; ++h) {
                     ChunkSection section = getSection(h);
                     if (section != null) {
-                        section.setLight(LightType.field_2757, x, h & 15, z, 0);
+                        section.setLight(class_56.field_2757, x, h & 15, z, 0);
                     }
                 }
             }
@@ -281,7 +281,7 @@ public class FlattenedChunk extends Chunk {
             int light = 15;
             for(h = maxHeight; maxHeight > firstBlock && light > 0;) {
                 --maxHeight;
-                int var11 = BlockBase.LIGHT_OPACITY[this.getTileId(x, maxHeight, z)];
+                int var11 = Block.BLOCKS_LIGHT_OPACITY[this.method_859(x, maxHeight, z)];
                 if (var11 == 0) {
                     var11 = 1;
                 }
@@ -292,16 +292,16 @@ public class FlattenedChunk extends Chunk {
                 }
                 ChunkSection section = getSection(maxHeight);
                 if (section != null) {
-                    section.setLight(LightType.field_2757, x, maxHeight & 15, z, light);
+                    section.setLight(class_56.field_2757, x, maxHeight & 15, z, light);
                 }
             }
 
-            while(maxHeight > firstBlock && BlockBase.LIGHT_OPACITY[this.getTileId(x, maxHeight - 1, z)] == 0) {
+            while(maxHeight > firstBlock && Block.BLOCKS_LIGHT_OPACITY[this.method_859(x, maxHeight - 1, z)] == 0) {
                 --maxHeight;
             }
 
             if (maxHeight != h) {
-                this.level.method_166(LightType.field_2757, posX - 1, maxHeight, posZ - 1, posX + 1, h, posZ + 1);
+                this.field_956.method_166(class_56.field_2757, posX - 1, maxHeight, posZ - 1, posX + 1, h, posZ + 1);
             }
 
             this.field_967 = true;
@@ -309,18 +309,18 @@ public class FlattenedChunk extends Chunk {
     }
 
     @Override
-    public int getTileId(int x, int y, int z) {
+    public int method_859(int x, int y, int z) {
         return getBlockState(x, y, z).getBlock().id;
     }
 
     @Override
-    public boolean setTileWithMetadata(int x, int y, int z, int blockId, int meta) {
-        return setBlockStateWithMetadata(x, y, z, BlockBase.BY_ID[blockId].getDefaultState(), meta) != null;
+    public boolean method_861(int x, int y, int z, int blockId, int meta) {
+        return setBlockStateWithMetadata(x, y, z, Block.BLOCKS[blockId].getDefaultState(), meta) != null;
     }
 
     @Override
     public boolean method_860(int x, int y, int z, int blockId) {
-        return setBlockState(x, y, z, BlockBase.BY_ID[blockId].getDefaultState()) != null;
+        return setBlockState(x, y, z, Block.BLOCKS[blockId].getDefaultState()) != null;
     }
 
     @Override
@@ -333,8 +333,8 @@ public class FlattenedChunk extends Chunk {
     public void method_876(int x, int y, int z, int meta) {
         MetaSetEvent event =
                 MetaSetEvent.builder()
-                        .level(level).chunk(this)
-                        .x(this.x << 4 | x).y(y).z(this.z << 4 | z)
+                        .level(field_956).chunk(this)
+                        .x(this.field_962 << 4 | x).y(y).z(this.field_963 << 4 | z)
                         .blockMeta(meta)
                         .overrideMeta(meta)
                         .build();
@@ -358,11 +358,11 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public BlockState setBlockStateWithMetadata(int x, int y, int z, BlockState state, int meta) {
-        int levelX = this.x << 4 | x;
-        int levelZ = this.z << 4 | z;
+        int levelX = this.field_962 << 4 | x;
+        int levelZ = this.field_963 << 4 | z;
         BlockSetEvent event =
                 BlockSetEvent.builder()
-                        .level(level).chunk(this)
+                        .level(field_956).chunk(this)
                         .x(levelX).y(y).z(levelZ)
                         .blockState(state).blockMeta(meta)
                         .overrideState(state).overrideMeta(meta)
@@ -377,34 +377,34 @@ public class FlattenedChunk extends Chunk {
         BlockState oldState = section.getBlockState(x, y & 15, z);
         if (oldState == state && sameMeta) return null;
 
-        BlockBase oldBlock = oldState.getBlock();
+        Block oldBlock = oldState.getBlock();
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
                         .block(oldBlock)
-                        .level(level)
+                        .level(field_956)
                         .x(levelX).y(y).z(levelZ)
                         .build()
                 ).isCanceled()
         ) return null;
         section.setBlockState(x, y & 15, z, state);
-        if (!level.isServerSide)
-            oldBlock.onBlockRemoved(this.level, levelX, y, levelZ);
+        if (!field_956.isRemote)
+            oldBlock.onBreak(this.field_956, levelX, y, levelZ);
         section.setMeta(x, y & 15, z, meta);
 
-        if (!this.level.dimension.halvesMapping) {
-            if (BlockBase.LIGHT_OPACITY[state.getBlock().id] != 0) {
+        if (!this.field_956.dimension.field_2177) {
+            if (Block.BLOCKS_LIGHT_OPACITY[state.getBlock().id] != 0) {
                 if (y >= var6)
                     this.method_889(x, y + 1, z);
             } else if (y == var6 - 1)
                 this.method_889(x, y, z);
 
-            this.level.method_166(LightType.field_2757, levelX, y, levelZ, levelX, y, levelZ);
+            this.field_956.method_166(class_56.field_2757, levelX, y, levelZ, levelX, y, levelZ);
         }
 
-        this.level.method_166(LightType.field_2758, levelX, y, levelZ, levelX, y, levelZ);
+        this.field_956.method_166(class_56.field_2758, levelX, y, levelZ, levelX, y, levelZ);
         ((ChunkAccessor) this).invokeMethod_887(x, z);
         section.setMeta(x, y & 15, z, meta);
-        state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ, oldState);
+        state.getBlock().onBlockPlaced(this.field_956, levelX, y, levelZ, oldState);
 
         this.field_967 = true;
         return oldState;
@@ -412,12 +412,12 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public BlockState setBlockState(int x, int y, int z, BlockState state) {
-        int levelX = this.x << 4 | x;
-        int levelZ = this.z << 4 | z;
+        int levelX = this.field_962 << 4 | x;
+        int levelZ = this.field_963 << 4 | z;
         if (
                 StationAPI.EVENT_BUS.post(
                         BlockSetEvent.builder()
-                                .level(level).chunk(this)
+                                .level(field_956).chunk(this)
                                 .x(levelX).y(y).z(levelZ)
                                 .blockState(state)
                                 .build()
@@ -429,28 +429,28 @@ public class FlattenedChunk extends Chunk {
         if (oldState == state) return null;
 
         short topY = getShortHeight(x, z);
-        BlockBase oldBlock = oldState.getBlock();
+        Block oldBlock = oldState.getBlock();
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
                         .block(oldBlock)
-                        .level(level)
+                        .level(field_956)
                         .x(levelX).y(y).z(levelZ)
                         .build()
                 ).isCanceled()
         ) return null;
         section.setBlockState(x, y & 15, z, state);
-        oldBlock.onBlockRemoved(this.level, levelX, y, levelZ);
+        oldBlock.onBreak(this.field_956, levelX, y, levelZ);
         section.setMeta(x, y & 15, z, 0);
-        if (BlockBase.LIGHT_OPACITY[state.getBlock().id] != 0) {
+        if (Block.BLOCKS_LIGHT_OPACITY[state.getBlock().id] != 0) {
             if (y >= topY)
                 this.method_889(x, y + 1, z);
         } else if (y == topY - 1)
             this.method_889(x, y, z);
-        this.level.method_166(LightType.field_2757, levelX, y, levelZ, levelX, y, levelZ);
-        this.level.method_166(LightType.field_2758, levelX, y, levelZ, levelX, y, levelZ);
+        this.field_956.method_166(class_56.field_2757, levelX, y, levelZ, levelX, y, levelZ);
+        this.field_956.method_166(class_56.field_2758, levelX, y, levelZ, levelX, y, levelZ);
         ((ChunkAccessor) this).invokeMethod_887(x, z);
-        if (!this.level.isServerSide) {
-            state.getBlock().onBlockPlaced(this.level, levelX, y, levelZ, oldState);
+        if (!this.field_956.isRemote) {
+            state.getBlock().onBlockPlaced(this.field_956, levelX, y, levelZ, oldState);
         }
 
         this.field_967 = true;
@@ -458,45 +458,45 @@ public class FlattenedChunk extends Chunk {
     }
 
     @Override
-    public void addEntity(EntityBase entity) {
+    public void method_868(Entity entity) {
         int n;
         this.field_969 = true;
         int n2 = MathHelper.floor(entity.x / 16.0);
         int n3 = MathHelper.floor(entity.z / 16.0);
-        if (n2 != this.x || n3 != this.z) {
+        if (n2 != this.field_962 || n3 != this.field_963) {
             System.out.println("Wrong location! " + entity);
             Thread.dumpStack();
         }
-        if ((n = MathHelper.floor((entity.y - level.getBottomY()) / 16.0)) < 0) {
+        if ((n = MathHelper.floor((entity.y - field_956.getBottomY()) / 16.0)) < 0) {
             n = 0;
         }
-        if (n >= this.entities.length) {
-            n = this.entities.length - 1;
+        if (n >= this.field_965.length) {
+            n = this.field_965.length - 1;
         }
         entity.field_1618 = true;
-        entity.chunkX = this.x;
-        entity.chunkIndex = n;
-        entity.chunkZ = this.z;
+        entity.field_1619 = this.field_962;
+        entity.field_1620 = n;
+        entity.field_1621 = this.field_963;
         //noinspection unchecked
-        this.entities[n].add(entity);
+        this.field_965[n].add(entity);
     }
 
     @Override
-    public void method_870(EntityBase entity, Box box, List entities) {
-        int n = MathHelper.floor((box.minY - level.getBottomY() - 2.0) / 16.0);
-        int n2 = MathHelper.floor((box.maxY - level.getBottomY() + 2.0) / 16.0);
+    public void method_870(Entity entity, Box box, List entities) {
+        int n = MathHelper.floor((box.minY - field_956.getBottomY() - 2.0) / 16.0);
+        int n2 = MathHelper.floor((box.maxY - field_956.getBottomY() + 2.0) / 16.0);
         if (n < 0) {
             n = 0;
         }
-        if (n2 >= this.entities.length) {
-            n2 = this.entities.length - 1;
+        if (n2 >= this.field_965.length) {
+            n2 = this.field_965.length - 1;
         }
         for (int i = n; i <= n2; ++i) {
             //noinspection unchecked
-            List<EntityBase> list2 = this.entities[i];
+            List<Entity> list2 = this.field_965[i];
             for (int j = 0; j < list2.size(); ++j) {
-                EntityBase entityBase = list2.get(j);
-                if (entityBase == entity || !entityBase.boundingBox.boxIntersects(box)) continue;
+                Entity entityBase = list2.get(j);
+                if (entityBase == entity || !entityBase.boundingBox.intersects(box)) continue;
                 //noinspection unchecked
                 entities.add(entityBase);
             }
@@ -505,21 +505,21 @@ public class FlattenedChunk extends Chunk {
 
     @Override
     public void method_866(Class class_, Box arg, List list) {
-        int n = MathHelper.floor((arg.minY - level.getBottomY() - 2.0) / 16.0);
-        int n2 = MathHelper.floor((arg.maxY - level.getBottomY() + 2.0) / 16.0);
+        int n = MathHelper.floor((arg.minY - field_956.getBottomY() - 2.0) / 16.0);
+        int n2 = MathHelper.floor((arg.maxY - field_956.getBottomY() + 2.0) / 16.0);
         if (n < 0) {
             n = 0;
         }
-        if (n2 >= this.entities.length) {
-            n2 = this.entities.length - 1;
+        if (n2 >= this.field_965.length) {
+            n2 = this.field_965.length - 1;
         }
         for (int i = n; i <= n2; ++i) {
             //noinspection unchecked
-            List<EntityBase> list2 = this.entities[i];
+            List<Entity> list2 = this.field_965[i];
             for (int j = 0; j < list2.size(); ++j) {
-                EntityBase entityBase = list2.get(j);
+                Entity entityBase = list2.get(j);
                 //noinspection unchecked
-                if (!class_.isAssignableFrom(entityBase.getClass()) || !entityBase.boundingBox.boxIntersects(arg)) continue;
+                if (!class_.isAssignableFrom(entityBase.getClass()) || !entityBase.boundingBox.intersects(arg)) continue;
                 //noinspection unchecked
                 list.add(entityBase);
             }
@@ -530,17 +530,17 @@ public class FlattenedChunk extends Chunk {
     public void method_890() {}
 
     @Override
-    public void placeTileEntity(int relX, int relY, int relZ, TileEntityBase arg) {
-        TilePos tilePos = new TilePos(relX, relY, relZ);
-        arg.level = this.level;
-        arg.x = this.x * 16 + relX;
+    public void method_862(int relX, int relY, int relZ, BlockEntity arg) {
+        BlockPos tilePos = new BlockPos(relX, relY, relZ);
+        arg.world = this.field_956;
+        arg.x = this.field_962 * 16 + relX;
         arg.y = relY;
-        arg.z = this.z * 16 + relZ;
-        if (this.getTileId(relX, relY, relZ) == 0 || !BlockBase.HAS_TILE_ENTITY[this.getTileId(relX, relY, relZ)]) {
+        arg.z = this.field_963 * 16 + relZ;
+        if (this.method_859(relX, relY, relZ) == 0 || !Block.BLOCKS_WITH_ENTITY[this.method_859(relX, relY, relZ)]) {
             System.out.println("Attempted to place a tile entity where there was no entity tile!");
             return;
         }
-        arg.validate();
+        arg.method_1073();
         //noinspection unchecked
         this.field_964.put(tilePos, arg);
     }

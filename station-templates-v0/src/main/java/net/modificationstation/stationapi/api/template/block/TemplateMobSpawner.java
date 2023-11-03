@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.MobSpawner;
+import net.minecraft.block.SpawnerBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateMobSpawner extends MobSpawner implements BlockTemplate {
+public class TemplateMobSpawner extends SpawnerBlock implements BlockTemplate {
 
     public TemplateMobSpawner(Identifier identifier, int j) {
         this(BlockTemplate.getNextId(), j);

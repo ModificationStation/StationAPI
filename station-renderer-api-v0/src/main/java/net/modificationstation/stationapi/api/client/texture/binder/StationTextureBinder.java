@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.api.client.texture.binder;
 
 import lombok.Getter;
-import net.minecraft.client.render.TextureBinder;
+import net.minecraft.class_336;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 
-public abstract class StationTextureBinder extends TextureBinder implements StaticReferenceProvider, TexturePackDependent {
+public abstract class StationTextureBinder extends class_336 implements StaticReferenceProvider, TexturePackDependent {
 
     @Getter
     private final Atlas.Sprite staticReference;
@@ -19,7 +19,7 @@ public abstract class StationTextureBinder extends TextureBinder implements Stat
     }
 
     @Override
-    public void bindTexture(TextureManager manager) {
+    public void method_1206(TextureManager manager) {
         StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).bindTexture();
     }
 }

@@ -1,13 +1,12 @@
 package net.modificationstation.stationapi.api.nbt;
 
-import net.minecraft.util.io.AbstractTag;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
+import net.minecraft.nbt.NbtElement;
 
-public class NbtIntArray extends AbstractTag {
+public class NbtIntArray extends NbtElement {
 
     public int[] data;
 
@@ -41,7 +40,7 @@ public class NbtIntArray extends AbstractTag {
     }
 
     @Override
-    public byte getId() {
+    public byte getType() {
         return 11;
     }
 

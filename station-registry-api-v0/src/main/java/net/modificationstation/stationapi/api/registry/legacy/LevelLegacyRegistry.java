@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.registry.legacy;
 
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.legacy.PostRegistryRemapEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -30,10 +30,10 @@ public interface LevelLegacyRegistry<T> {
      *
      * @param tag the level properties NBT tag.
      */
-    private void save(@NotNull CompoundTag tag) {
+    private void save(@NotNull NbtCompound tag) {
         //noinspection unchecked
         AbstractLegacyRegistry<T> registry = (AbstractLegacyRegistry<T>) this;
-        registry.forEach(value -> tag.put(Objects.requireNonNull(registry.getId(value)).toString(), registry.getLegacyId(value)));
+        registry.forEach(value -> tag.putInt(Objects.requireNonNull(registry.getId(value)).toString(), registry.getLegacyId(value)));
     }
 
     /**
@@ -42,12 +42,12 @@ public interface LevelLegacyRegistry<T> {
      *
      * @param tag the level properties NBT tag.
      */
-    private void load(@NotNull CompoundTag tag) {
+    private void load(@NotNull NbtCompound tag) {
         //noinspection unchecked
         AbstractLegacyRegistry<T> registry = (AbstractLegacyRegistry<T>) this;
         registry.forEach(value -> {
             String id = Objects.requireNonNull(registry.getId(value)).toString();
-            if (tag.containsKey(id))
+            if (tag.contains(id))
                 remap(tag.getInt(id), value);
         });
     }
@@ -67,11 +67,11 @@ public interface LevelLegacyRegistry<T> {
      *
      * @param tag the tag to save all registries to.
      */
-    static void saveAll(CompoundTag tag) {
+    static void saveAll(NbtCompound tag) {
         Registries.REGISTRIES.getIds().forEach(registryId -> {
             Registry<?> registry = Registries.REGISTRIES.get(registryId);
             if (registry instanceof LevelLegacyRegistry<?> llRegistry) {
-                CompoundTag registryTag = new CompoundTag();
+                NbtCompound registryTag = new NbtCompound();
                 llRegistry.save(registryTag);
                 tag.put(registryId.toString(), registryTag);
             }
@@ -83,13 +83,13 @@ public interface LevelLegacyRegistry<T> {
      *
      * @param tag the tag to load all registries from.
      */
-    static void loadAll(CompoundTag tag) {
+    static void loadAll(NbtCompound tag) {
         Registries.REGISTRIES.getIds().forEach(registryId -> {
             Registry<?> registry = Registries.REGISTRIES.get(registryId);
             String id = registryId.toString();
-            if (registry instanceof LevelLegacyRegistry<?> llRegistry && tag.containsKey(id)) {
+            if (registry instanceof LevelLegacyRegistry<?> llRegistry && tag.contains(id)) {
                 LOGGER.info("Remapping \"" + id + "\" registry...");
-                llRegistry.load(tag.getCompoundTag(id));
+                llRegistry.load(tag.getCompound(id));
             }
         });
         StationAPI.EVENT_BUS.post(PostRegistryRemapEvent.builder().build());

@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.client.render.material;
 
-import net.minecraft.block.BlockBase;
 import net.modificationstation.stationapi.api.client.render.Renderer;
 import net.modificationstation.stationapi.api.client.render.mesh.MeshBuilder;
 import net.modificationstation.stationapi.api.client.render.mesh.MutableQuadView;
@@ -8,6 +7,8 @@ import net.modificationstation.stationapi.api.registry.Identifier;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
+
+import net.minecraft.block.Block;
 
 /**
  * All model quads have an associated render material governing
@@ -53,7 +54,7 @@ public interface RenderMaterial {
      * This will be identical to the material that would be obtained by calling {@link MaterialFinder#find()}
      * on a new, unaltered, {@link MaterialFinder} instance.  It is defined here for clarity and convenience.
      *
-     * <p>Quads using this material use {@link BlockBase#getRenderPass()} of
+     * <p>Quads using this material use {@link Block#getRenderLayer()} of
      * the associated block to determine texture blending, honor block color index, are non-emissive, and apply both
      * diffuse and ambient occlusion shading to vertex colors.
      *

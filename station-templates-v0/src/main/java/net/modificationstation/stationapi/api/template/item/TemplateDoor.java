@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.item.Door;
+import net.minecraft.block.Material;
+import net.minecraft.item.DoorItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateDoor extends Door implements ItemTemplate {
+public class TemplateDoor extends DoorItem implements ItemTemplate {
     
     public TemplateDoor(Identifier identifier, Material arg) {
         this(ItemTemplate.getNextId(), arg);

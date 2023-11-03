@@ -1,15 +1,15 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.class_564;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.InGame;
-import net.minecraft.client.render.TextRenderer;
-import net.minecraft.client.util.ScreenScaler;
-import net.minecraft.tileentity.TileEntityBase;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.hit.HitType;
+import net.minecraft.util.hit.HitResultType;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -23,8 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Collection;
 
-@Mixin(InGame.class)
-public abstract class MixinInGame extends DrawableHelper {
+@Mixin(InGameHud.class)
+public abstract class MixinInGame extends DrawContext {
     @Shadow private Minecraft minecraft;
 
     @Inject(
@@ -32,46 +32,46 @@ public abstract class MixinInGame extends DrawableHelper {
             at = @At(value = "INVOKE", target = "Ljava/lang/Runtime;maxMemory()J", shift = Shift.BEFORE),
             locals = LocalCapture.CAPTURE_FAILSOFT
     )
-    private void stapi_renderHud(float bl, boolean i, int j, int par4, CallbackInfo ci, ScreenScaler scaler, int var6, int var7, TextRenderer var8) {
-        HitResult hit = minecraft.hitResult;
+    private void stapi_renderHud(float bl, boolean i, int j, int par4, CallbackInfo ci, class_564 scaler, int var6, int var7, TextRenderer var8) {
+        HitResult hit = minecraft.field_2823;
         int offset = 22;
-        if (hit != null && hit.type == HitType.field_789) {
-            BlockState state = minecraft.level.getBlockState(hit.x, hit.y, hit.z);
+        if (hit != null && hit.type == HitResultType.BLOCK) {
+            BlockState state = minecraft.world.getBlockState(hit.blockX, hit.blockY, hit.blockZ);
 
             String text = "Block: " + state.getBlock().getTranslatedName();
-            drawTextWithShadow(var8, text, var6 - var8.getTextWidth(text) - 2, offset += 10, 16777215);
+            drawTextWithShadow(var8, text, var6 - var8.getWidth(text) - 2, offset += 10, 16777215);
 
-            text = "Meta: " + minecraft.level.getTileMeta(hit.x, hit.y, hit.z);
-            drawTextWithShadow(var8, text, var6 - var8.getTextWidth(text) - 2, offset += 10, 16777215);
+            text = "Meta: " + minecraft.world.getBlockMeta(hit.blockX, hit.blockY, hit.blockZ);
+            drawTextWithShadow(var8, text, var6 - var8.getWidth(text) - 2, offset += 10, 16777215);
 
             Collection<Property<?>> properties = state.getProperties();
             if (properties.size() > 0) {
                 text = "Properties:";
-                drawTextWithShadow(var8, text, var6 - var8.getTextWidth(text) - 2, offset += 10, 16777215);
+                drawTextWithShadow(var8, text, var6 - var8.getWidth(text) - 2, offset += 10, 16777215);
 
                 for (Property<?> property : properties) {
                     text = property.getName() + ": " + state.get(property);
-                    drawTextWithShadow(var8, text, var6 - var8.getTextWidth(text) - 2, offset += 10, 14737632);
+                    drawTextWithShadow(var8, text, var6 - var8.getWidth(text) - 2, offset += 10, 14737632);
                 }
             }
 
-            Collection<TagKey<BlockBase>> tags = state.streamTags().toList();
+            Collection<TagKey<Block>> tags = state.streamTags().toList();
             if (tags.size() > 0) {
                 text = "Tags:";
-                drawTextWithShadow(var8, text, var6 - var8.getTextWidth(text) - 2, offset += 10, 16777215);
+                drawTextWithShadow(var8, text, var6 - var8.getWidth(text) - 2, offset += 10, 16777215);
 
-                for (TagKey<BlockBase> property : tags) {
+                for (TagKey<Block> property : tags) {
                     text = "#" + property.id();
-                    drawTextWithShadow(var8, text, var6 - var8.getTextWidth(text) - 2, offset += 10, 14737632);
+                    drawTextWithShadow(var8, text, var6 - var8.getWidth(text) - 2, offset += 10, 14737632);
                 }
             }
 
             if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-                TileEntityBase entity = minecraft.level.getTileEntity(hit.x, hit.y, hit.z);
+                BlockEntity entity = minecraft.world.method_1777(hit.blockX, hit.blockY, hit.blockZ);
                 if (entity != null) {
                     String className = entity.getClass().getName();
                     text = "Tile Entity: " + className.substring(className.lastIndexOf('.') + 1);
-                    drawTextWithShadow(var8, text, var6 - var8.getTextWidth(text) - 2, offset + 20, 16777215);
+                    drawTextWithShadow(var8, text, var6 - var8.getWidth(text) - 2, offset + 20, 16777215);
                 }
             }
         }

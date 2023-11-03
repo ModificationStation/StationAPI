@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.client.level.ClientLevel;
-import net.minecraft.level.Level;
-import net.minecraft.level.dimension.Dimension;
-import net.minecraft.level.dimension.DimensionData;
+import net.minecraft.block.Block;
+import net.minecraft.class_454;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionData;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.impl.client.level.ClientBlockChange;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.LinkedList;
 
-@Mixin(ClientLevel.class)
-public abstract class MixinClientLevel extends Level {
+@Mixin(class_454.class)
+public abstract class MixinClientLevel extends World {
 
     @Shadow private LinkedList field_1722;
 
@@ -46,7 +46,7 @@ public abstract class MixinClientLevel extends Level {
                     target = "(Lnet/minecraft/client/level/ClientLevel;IIIII)Lnet/minecraft/client/level/ClientLevel$class_456;"
             )
     )
-    private ClientLevel.class_456 stationapi_storeBlockState(ClientLevel world, int x, int y, int z, int blockId, int metadata) {
+    private class_454.class_456 stationapi_storeBlockState(class_454 world, int x, int y, int z, int blockId, int metadata) {
         return new ClientBlockChange(world, x, y, z, world.getBlockState(x, y, z), metadata);
     }
 
@@ -58,12 +58,12 @@ public abstract class MixinClientLevel extends Level {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void stationapi_captureClientBlockChange(CallbackInfo ci, int var1, int var2, ClientLevel.class_456 var3) {
+    private void stationapi_captureClientBlockChange(CallbackInfo ci, int var1, int var2, class_454.class_456 var3) {
         stationapi_clientBlockChange = var3;
     }
 
     @Unique
-    private ClientLevel.class_456 stationapi_clientBlockChange;
+    private class_454.class_456 stationapi_clientBlockChange;
 
     @Redirect(
             method = "method_242",
@@ -72,8 +72,8 @@ public abstract class MixinClientLevel extends Level {
                     target = "Lnet/minecraft/level/Level;setTileWithMetadata(IIIII)Z"
             )
     )
-    private boolean stationapi_useBlockState(Level instance, int x, int y, int z, int blockId, int metadata) {
-        boolean result = super.setBlockStateWithMetadata(x, y, z, BlockBase.STATE_IDS.get(((ClientBlockChange) stationapi_clientBlockChange).stateId), metadata) != null;
+    private boolean stationapi_useBlockState(World instance, int x, int y, int z, int blockId, int metadata) {
+        boolean result = super.setBlockStateWithMetadata(x, y, z, Block.STATE_IDS.get(((ClientBlockChange) stationapi_clientBlockChange).stateId), metadata) != null;
         stationapi_clientBlockChange = null;
         return result;
     }
@@ -81,11 +81,11 @@ public abstract class MixinClientLevel extends Level {
     @Override
     public BlockState setBlockState(int x, int y, int z, BlockState blockState) {
         BlockState n = this.getBlockState(x, y, z);
-        int n2 = this.getTileMeta(x, y, z);
+        int n2 = this.getBlockMeta(x, y, z);
         BlockState result = super.setBlockState(x, y, z, blockState);
         if (result != null) {
             //noinspection unchecked,DataFlowIssue
-            this.field_1722.add(new ClientBlockChange((ClientLevel) (Object) this, x, y, z, n, n2));
+            this.field_1722.add(new ClientBlockChange((class_454) (Object) this, x, y, z, n, n2));
         }
         return result;
     }

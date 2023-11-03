@@ -1,39 +1,39 @@
 package net.modificationstation.stationapi.api.item;
 
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.maths.TilePos;
-import net.minecraft.util.maths.Vec3f;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemPlacementContext
 extends ItemUsageContext {
-    private final TilePos placementPos;
+    private final BlockPos placementPos;
     protected boolean canReplaceExisting;
 
-    public ItemPlacementContext(PlayerBase player, ItemInstance stack, HitResult hitResult) {
-        this(player.level, player, stack, hitResult);
+    public ItemPlacementContext(PlayerEntity player, ItemStack stack, HitResult hitResult) {
+        this(player.world, player, stack, hitResult);
     }
 
     public ItemPlacementContext(ItemUsageContext context) {
         this(context.getWorld(), context.getPlayer(), context.getStack(), context.getHitResult());
     }
 
-    protected ItemPlacementContext(Level world, @Nullable PlayerBase playerEntity, ItemInstance itemStack, HitResult blockHitResult) {
+    protected ItemPlacementContext(World world, @Nullable PlayerEntity playerEntity, ItemStack itemStack, HitResult blockHitResult) {
         super(world, playerEntity, itemStack, blockHitResult);
-        this.placementPos = new TilePos(blockHitResult.x, blockHitResult.y, blockHitResult.z).offset(Direction.byId(blockHitResult.field_1987));
-        this.canReplaceExisting = world.getBlockState(blockHitResult.x, blockHitResult.y, blockHitResult.z).canReplace(this);
+        this.placementPos = new BlockPos(blockHitResult.blockX, blockHitResult.blockY, blockHitResult.blockZ).offset(Direction.byId(blockHitResult.side));
+        this.canReplaceExisting = world.getBlockState(blockHitResult.blockX, blockHitResult.blockY, blockHitResult.blockZ).canReplace(this);
     }
 
-    public static ItemPlacementContext offset(ItemPlacementContext context, TilePos pos, Direction side) {
-        return new ItemPlacementContext(context.getWorld(), context.getPlayer(), context.getStack(), new HitResult(pos.getX(), pos.getY(), pos.getZ(), side.getId(), Vec3f.from(pos.getX() + 0.5 + (double)side.getOffsetX() * 0.5, (double)pos.getY() + 0.5 + (double)side.getOffsetY() * 0.5, (double)pos.getZ() + 0.5 + (double)side.getOffsetZ() * 0.5)));
+    public static ItemPlacementContext offset(ItemPlacementContext context, BlockPos pos, Direction side) {
+        return new ItemPlacementContext(context.getWorld(), context.getPlayer(), context.getStack(), new HitResult(pos.getX(), pos.getY(), pos.getZ(), side.getId(), Vec3d.createCached(pos.getX() + 0.5 + (double)side.getOffsetX() * 0.5, (double)pos.getY() + 0.5 + (double)side.getOffsetY() * 0.5, (double)pos.getZ() + 0.5 + (double)side.getOffsetZ() * 0.5)));
     }
 
     @Override
-    public TilePos getBlockPos() {
+    public BlockPos getBlockPos() {
         return this.canReplaceExisting ? super.getBlockPos() : this.placementPos;
     }
 

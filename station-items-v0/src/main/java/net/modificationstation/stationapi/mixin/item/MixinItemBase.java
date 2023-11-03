@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.item;
 
-import net.minecraft.entity.EntityBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.ItemEvent;
@@ -14,13 +14,13 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(ItemBase.class)
+@Mixin(Item.class)
 public abstract class MixinItemBase implements StationItem {
 
     @Mutable
     @Shadow @Final public int id;
 
-    @Shadow public abstract ItemBase setTranslationKey(String string);
+    @Shadow public abstract Item setTranslationKey(String string);
 
     @Shadow public abstract int getDurability();
 
@@ -32,36 +32,36 @@ public abstract class MixinItemBase implements StationItem {
     private String getName(String name) {
         return StationAPI.EVENT_BUS.post(
                 ItemEvent.TranslationKeyChanged.builder()
-                        .item(ItemBase.class.cast(this))
+                        .item(Item.class.cast(this))
                         .translationKeyOverride(name)
                         .build()
         ).translationKeyOverride;
     }
 
     @Override
-    public ItemBase setTranslationKey(ModID modID, String translationKey) {
+    public Item setTranslationKey(ModID modID, String translationKey) {
         return setTranslationKey(Identifier.of(modID, translationKey).toString());
     }
 
     @Override
-    public ItemBase setTranslationKey(Identifier translationKey) {
+    public Item setTranslationKey(Identifier translationKey) {
         return setTranslationKey(translationKey.toString());
     }
 
     @Override
     @Unique
-    public boolean preHit(ItemInstance itemInstance, EntityBase otherEntity, PlayerBase player) {
+    public boolean preHit(ItemStack itemInstance, Entity otherEntity, PlayerEntity player) {
         return true;
     }
 
     @Override
     @Unique
-    public boolean preMine(ItemInstance itemInstance, BlockState blockState, int x, int y, int z, int side, PlayerBase player) {
+    public boolean preMine(ItemStack itemInstance, BlockState blockState, int x, int y, int z, int side, PlayerEntity player) {
         return true;
     }
 
     @Override
-    public int getDurability(ItemInstance stack) {
+    public int getDurability(ItemStack stack) {
         return getDurability();
     }
 }

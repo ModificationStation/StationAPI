@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.event.packet;
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.event.EventPhases;
-import net.minecraft.packet.AbstractPacket;
+import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.packet.Message;
 import uk.co.benjiweber.expressions.function.QuadConsumer;
@@ -27,7 +27,7 @@ public class PacketRegisterEvent extends Event {
      * so we pass it as an event parameter from a mixin
      * that can access the method directly and turn it into a method reference.
      */
-    public final QuadConsumer<Integer, Boolean, Boolean, Class<? extends AbstractPacket>> register;
+    public final QuadConsumer<Integer, Boolean, Boolean, Class<? extends Packet>> register;
 
     /**
      * Registers the given packet.
@@ -39,9 +39,9 @@ public class PacketRegisterEvent extends Event {
      *                 except for already taken packet IDs.
      * @param receivableOnClient whether this packet is supposed to be received on the client side.
      * @param receivableOnServer whether this packet is supposed to be received on the server side.
-     * @param packetClass the packet's class that extends {@link AbstractPacket} or a sub class of it.
+     * @param packetClass the packet's class that extends {@link Packet} or a sub class of it.
      */
-    public final void register(int packetId, boolean receivableOnClient, boolean receivableOnServer, Class<? extends AbstractPacket> packetClass) {
+    public final void register(int packetId, boolean receivableOnClient, boolean receivableOnServer, Class<? extends Packet> packetClass) {
         register.accept(packetId, receivableOnClient, receivableOnServer, packetClass);
     }
 }

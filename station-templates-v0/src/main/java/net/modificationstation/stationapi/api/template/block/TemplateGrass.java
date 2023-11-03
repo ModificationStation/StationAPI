@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Grass;
+import net.minecraft.block.GrassBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateGrass extends Grass implements BlockTemplate {
+public class TemplateGrass extends GrassBlock implements BlockTemplate {
 
     public TemplateGrass(Identifier identifier) {
         this(BlockTemplate.getNextId());

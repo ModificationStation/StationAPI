@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Farmland;
+import net.minecraft.block.FarmlandBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateFarmland extends Farmland implements BlockTemplate {
+public class TemplateFarmland extends FarmlandBlock implements BlockTemplate {
 
     public TemplateFarmland(Identifier identifier) {
         this(BlockTemplate.getNextId());

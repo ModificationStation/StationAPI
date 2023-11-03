@@ -5,7 +5,7 @@ import com.google.common.collect.Streams;
 import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.render.model.AndMultipartModelSelector;
 import net.modificationstation.stationapi.api.client.render.model.MultipartModelSelector;
@@ -41,7 +41,7 @@ public class MultipartModelComponent {
         return this.model;
     }
 
-    public Predicate<BlockState> getPredicate(StateManager<BlockBase, BlockState> stateFactory) {
+    public Predicate<BlockState> getPredicate(StateManager<Block, BlockState> stateFactory) {
         return this.selector.getPredicate(stateFactory);
     }
 

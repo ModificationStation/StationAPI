@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
@@ -18,23 +18,23 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ItemBase.class)
+@Mixin(Item.class)
 public abstract class MixinItemBase implements StationFlatteningItem {
 
-    @Shadow public abstract boolean isEffectiveOn(BlockBase arg);
+    @Shadow public abstract boolean isEffectiveOn(Block arg);
 
-    @Shadow public abstract float getStrengthOnBlock(ItemInstance arg, BlockBase arg2);
+    @Shadow public abstract float getStrengthOnBlock(ItemStack arg, Block arg2);
 
-    @Shadow public static ItemBase[] byId;
+    @Shadow public static Item[] byId;
 
     @Mutable
     @Shadow @Final public int id;
 
-    private RegistryEntry.Reference<ItemBase> stationapi_registryEntry;
+    private RegistryEntry.Reference<Item> stationapi_registryEntry;
 
     @Override
     @Unique
-    public RegistryEntry.Reference<ItemBase> getRegistryEntry() {
+    public RegistryEntry.Reference<Item> getRegistryEntry() {
         return stationapi_registryEntry;
     }
 
@@ -46,8 +46,8 @@ public abstract class MixinItemBase implements StationFlatteningItem {
 
     @Override
     @Unique
-    public ItemBase asItem() {
-        return ItemBase.class.cast(this);
+    public Item asItem() {
+        return Item.class.cast(this);
     }
 
     @Inject(
@@ -63,12 +63,12 @@ public abstract class MixinItemBase implements StationFlatteningItem {
     }
 
     @Override
-    public boolean isSuitableFor(ItemInstance itemStack, BlockState state) {
+    public boolean isSuitableFor(ItemStack itemStack, BlockState state) {
         return isEffectiveOn(state.getBlock());
     }
 
     @Override
-    public float getMiningSpeedMultiplier(ItemInstance itemStack, BlockState state) {
+    public float getMiningSpeedMultiplier(ItemStack itemStack, BlockState state) {
         return getStrengthOnBlock(itemStack, state.getBlock());
     }
 
@@ -95,7 +95,7 @@ public abstract class MixinItemBase implements StationFlatteningItem {
     )
     private int ensureCapacity(int rawId) {
         //noinspection DataFlowIssue
-        rawId = (stationapi_registryEntry = ItemRegistry.INSTANCE.createReservedEntry(rawId + ItemRegistry.ID_SHIFT, (ItemBase) (Object) this)).reservedRawId();
+        rawId = (stationapi_registryEntry = ItemRegistry.INSTANCE.createReservedEntry(rawId + ItemRegistry.ID_SHIFT, (Item) (Object) this)).reservedRawId();
         // unfortunately, this array is accessed
         // too early for the tracker to resize it,
         // so we have to do it manually here

@@ -1,17 +1,17 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.client.BaseClientInteractionManager;
+import net.minecraft.MultiplayerInteractionManager;
+import net.minecraft.block.Block;
+import net.minecraft.client.InteractionManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MultiPlayerClientInteractionManager;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(MultiPlayerClientInteractionManager.class)
-public class MixinMultiPlayerClientInteractionManager extends BaseClientInteractionManager {
+@Mixin(MultiplayerInteractionManager.class)
+public class MixinMultiPlayerClientInteractionManager extends InteractionManager {
 
     public MixinMultiPlayerClientInteractionManager(Minecraft minecraft) {
         super(minecraft);
@@ -27,7 +27,7 @@ public class MixinMultiPlayerClientInteractionManager extends BaseClientInteract
                     target = "Lnet/minecraft/block/BlockBase;getHardness(Lnet/minecraft/entity/player/PlayerBase;)F"
             )
     )
-    private float getHardnessPerMeta(BlockBase blockBase, PlayerBase arg, int i, int j, int k, int i1) {
-        return minecraft.level.getBlockState(i, j, k).calcBlockBreakingDelta(arg, minecraft.level, new TilePos(i, j, k));
+    private float getHardnessPerMeta(Block blockBase, PlayerEntity arg, int i, int j, int k, int i1) {
+        return minecraft.world.getBlockState(i, j, k).calcBlockBreakingDelta(arg, minecraft.world, new BlockPos(i, j, k));
     }
 }

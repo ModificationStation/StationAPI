@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.mixin.vanillafix;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.level.LevelProperties;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.WorldProperties;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import org.objectweb.asm.Opcodes;
@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(LevelProperties.class)
+@Mixin(WorldProperties.class)
 public class MixinLevelProperties {
-    @Shadow private CompoundTag playerData;
+    @Shadow private NbtCompound playerData;
 
     /**
      * Since Minecraft reads the entire level.dat of all worlds whenever it shows the world selection menu,
@@ -38,7 +38,7 @@ public class MixinLevelProperties {
                     shift = At.Shift.AFTER
             )
     )
-    private CompoundTag addDataVersions(CompoundTag playerTag) {
+    private NbtCompound addDataVersions(NbtCompound playerTag) {
         return NbtHelper.addDataVersions(playerTag);
     }
 
@@ -59,7 +59,7 @@ public class MixinLevelProperties {
                     shift = At.Shift.BEFORE
             )
     )
-    private void assert1(CallbackInfoReturnable<CompoundTag> cir) {
+    private void assert1(CallbackInfoReturnable<NbtCompound> cir) {
         stationapi$assertPlayerDataVersion();
     }
 
@@ -73,7 +73,7 @@ public class MixinLevelProperties {
                     shift = At.Shift.BEFORE
             )
     )
-    private void assert2(CallbackInfoReturnable<CompoundTag> cir) {
+    private void assert2(CallbackInfoReturnable<NbtCompound> cir) {
         stationapi$assertPlayerDataVersion();
     }
 
@@ -87,7 +87,7 @@ public class MixinLevelProperties {
                     shift = At.Shift.AFTER
             )
     )
-    private void assertTrue(CompoundTag par1, CallbackInfo ci) {
+    private void assertTrue(NbtCompound par1, CallbackInfo ci) {
         stationapi$playerDataUnchecked = false;
     }
 }

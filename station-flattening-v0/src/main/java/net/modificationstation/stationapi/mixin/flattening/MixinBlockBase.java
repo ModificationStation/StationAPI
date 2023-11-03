@@ -2,14 +2,14 @@ package net.modificationstation.stationapi.mixin.flattening;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.BlockView;
-import net.minecraft.level.Level;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.block.Block;
+import net.minecraft.block.Material;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.StationFlatteningBlock;
@@ -32,25 +32,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.function.ToIntFunction;
 
-@Mixin(BlockBase.class)
+@Mixin(Block.class)
 public abstract class MixinBlockBase implements StationFlatteningBlock, StationFlatteningBlockInternal {
 
-    @Shadow public abstract void beforeDestroyedByExplosion(Level arg, int i, int j, int k, int l, float f);
+    @Shadow public abstract void beforeDestroyedByExplosion(World arg, int i, int j, int k, int l, float f);
 
-    @Shadow protected abstract void drop(Level arg, int i, int j, int k, ItemInstance arg2);
+    @Shadow protected abstract void drop(World arg, int i, int j, int k, ItemStack arg2);
 
-    @Shadow public abstract void afterBreak(Level arg, PlayerBase arg2, int i, int j, int k, int l);
+    @Shadow public abstract void afterBreak(World arg, PlayerEntity arg2, int i, int j, int k, int l);
 
-    @Shadow public abstract void drop(Level arg, int i, int j, int k, int l);
+    @Shadow public abstract void drop(World arg, int i, int j, int k, int l);
 
     @Shadow public abstract float getHardness();
 
     @Shadow @Final public Material material;
 
-    @Shadow public abstract void onBlockPlaced(Level arg, int i, int j, int k);
+    @Shadow public abstract void onBlockPlaced(World arg, int i, int j, int k);
 
     @Mutable
-    @Shadow @Final public static BlockBase[] BY_ID;
+    @Shadow @Final public static Block[] BY_ID;
 
     @Mutable
     @Shadow @Final public static boolean[] TICKS_RANDOMLY;
@@ -77,11 +77,11 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
     @Shadow @Final public int id;
 
     @Unique
-    private RegistryEntry.Reference<BlockBase> stationapi_registryEntry;
+    private RegistryEntry.Reference<Block> stationapi_registryEntry;
 
     @Override
     @Unique
-    public RegistryEntry.Reference<BlockBase> getRegistryEntry() {
+    public RegistryEntry.Reference<Block> getRegistryEntry() {
         return stationapi_registryEntry;
     }
 
@@ -112,15 +112,15 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
             )
     )
     private static int getBlocksSize(int constant) {
-        return BlockBase.BY_ID.length;
+        return Block.BLOCKS.length;
     }
 
-    private ItemBase cachedBlockItem;
+    private Item cachedBlockItem;
 
     @Override
-    public ItemBase asItem() {
+    public Item asItem() {
         //noinspection SuspiciousMethodCalls
-        return cachedBlockItem == null ? (cachedBlockItem = ItemBase.BLOCK_ITEMS.get(this)) : cachedBlockItem;
+        return cachedBlockItem == null ? (cachedBlockItem = Item.BLOCK_ITEMS.get(this)) : cachedBlockItem;
     }
 
     @Inject(
@@ -128,20 +128,20 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
             at = @At("RETURN")
     )
     private void onInit(int material, Material par2, CallbackInfo ci) {
-        StateManager.Builder<BlockBase, BlockState> builder = new StateManager.Builder<>(BlockBase.class.cast(this));
+        StateManager.Builder<Block, BlockState> builder = new StateManager.Builder<>(Block.class.cast(this));
         appendProperties(builder);
-        stationapi_stateManager = builder.build(BlockBase::getDefaultState, BlockState::new);
+        stationapi_stateManager = builder.build(Block::getDefaultState, BlockState::new);
         setDefaultState(stationapi_stateManager.getDefaultState());
     }
 
     @Unique
-    private StateManager<BlockBase, BlockState> stationapi_stateManager;
+    private StateManager<Block, BlockState> stationapi_stateManager;
     @Unique
     private BlockState stationapi_defaultState;
 
     @Override
     @Unique
-    public StateManager<BlockBase, BlockState> getStateManager() {
+    public StateManager<Block, BlockState> getStateManager() {
         return stationapi_stateManager;
     }
 
@@ -153,7 +153,7 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
 
     @Override
     @Unique
-    public void appendProperties(StateManager.Builder<BlockBase, BlockState> builder) {}
+    public void appendProperties(StateManager.Builder<Block, BlockState> builder) {}
 
     @Override
     @Unique
@@ -166,12 +166,12 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
             at = @At("HEAD"),
             cancellable = true
     )
-    private void dropWithAChanceInject(Level level, int x, int y, int z, int meta, float chance, CallbackInfo ci) {
+    private void dropWithAChanceInject(World level, int x, int y, int z, int meta, float chance, CallbackInfo ci) {
         if (BlockDropListImpl.drop(level, x, y, z, level.getBlockState(x, y, z), meta, chance, this::drop, this)) ci.cancel();
     }
 
     @Override
-    public void dropWithChance(Level level, int x, int y, int z, BlockState state, int meta, float chance) {
+    public void dropWithChance(World level, int x, int y, int z, BlockState state, int meta, float chance) {
         if (!BlockDropListImpl.drop(level, x, y, z, state, meta, chance, this::drop, this)) beforeDestroyedByExplosion(level, x, y, z, meta, chance);
     }
 
@@ -186,13 +186,13 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
             ),
             cancellable = true
     )
-    private void beforeDrop(Level level, int x, int y, int z, int meta, float chance, CallbackInfo ci) {
+    private void beforeDrop(World level, int x, int y, int z, int meta, float chance, CallbackInfo ci) {
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeDrop.builder()
                         .level(level)
                         .x(x).y(y).z(z)
                         .chance(chance)
-                        .block(BlockBase.class.cast(this))
+                        .block(Block.class.cast(this))
                         .build()
                 ).isCanceled()
         ) ci.cancel();
@@ -200,7 +200,7 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
 
     @Override
     @Unique
-    public List<ItemInstance> getDropList(Level level, int x, int y, int z, BlockState state, int meta) {
+    public List<ItemStack> getDropList(World level, int x, int y, int z, BlockState state, int meta) {
         return null;
     }
 
@@ -210,7 +210,7 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
     private BlockState stationapi_afterBreak_state;
 
     @Override
-    public void afterBreak(Level level, PlayerBase player, int x, int y, int z, BlockState state, int meta) {
+    public void afterBreak(World level, PlayerEntity player, int x, int y, int z, BlockState state, int meta) {
         stationapi_afterBreak_state = state;
         stationapi_afterBreak_argsPresent = true;
         afterBreak(level, player, x, y, z, meta);
@@ -225,18 +225,18 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
                     target = "Lnet/minecraft/block/BlockBase;drop(Lnet/minecraft/level/Level;IIII)V"
             )
     )
-    private void redirectDropToDropWithBlockState(BlockBase block, Level level, int x, int y, int z, int meta) {
+    private void redirectDropToDropWithBlockState(Block block, World level, int x, int y, int z, int meta) {
         if (stationapi_afterBreak_argsPresent) drop(level, x, y, z, stationapi_afterBreak_state, meta);
         else drop(level, x, y, z, meta);
     }
 
     @Override
-    public float getHardness(BlockState state, BlockView blockView, TilePos pos) {
+    public float getHardness(BlockState state, BlockView blockView, BlockPos pos) {
         return getHardness();
     }
 
     @Override
-    public float calcBlockBreakingDelta(BlockState state, PlayerBase player, BlockView world, TilePos pos) {
+    public float calcBlockBreakingDelta(BlockState state, PlayerEntity player, BlockView world, BlockPos pos) {
         float hardness = getHardness(state, world, pos);
         if (hardness < 0.0f) return 0.0f;
         if (!player.canHarvest(state)) return 1.0f / hardness / 100.0f;
@@ -245,11 +245,11 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
 
     @Override
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
-        return material.isReplaceable() && (context.getStack() == null || !context.getStack().isOf(asItem()));
+        return material.method_896() && (context.getStack() == null || !context.getStack().isOf(asItem()));
     }
 
     @Override
-    public void onBlockPlaced(Level world, int x, int y, int z, BlockState replacedState) {
+    public void onBlockPlaced(World world, int x, int y, int z, BlockState replacedState) {
         onBlockPlaced(world, x, y, z);
     }
 
@@ -261,7 +261,7 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
     private String getTranslationKey(String name) {
         return StationAPI.EVENT_BUS.post(
                 BlockEvent.TranslationKeyChanged.builder()
-                        .block(BlockBase.class.cast(this))
+                        .block(Block.class.cast(this))
                         .currentTranslationKey(name)
                         .build()
         ).currentTranslationKey;
@@ -297,7 +297,7 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
     )
     private int ensureCapacity(int rawId) {
         //noinspection DataFlowIssue
-        rawId = (stationapi_registryEntry = BlockRegistry.INSTANCE.createReservedEntry(rawId, (BlockBase) (Object) this)).reservedRawId();
+        rawId = (stationapi_registryEntry = BlockRegistry.INSTANCE.createReservedEntry(rawId, (Block) (Object) this)).reservedRawId();
         // unfortunately, these arrays are accessed
         // too early for the trackers to resize them,
         // so we have to do it manually here
@@ -320,20 +320,20 @@ public abstract class MixinBlockBase implements StationFlatteningBlock, StationF
                     args = "array=get"
             )
     )
-    private static ItemBase onlyUnderShift(ItemBase[] array, int index) {
+    private static Item onlyUnderShift(Item[] array, int index) {
         return index < ItemRegistry.ID_SHIFT ? array[index] : null;
     }
 
-    @Unique private ToIntFunction<BlockState> stationapi_luminance = state -> BlockBase.EMITTANCE[state.getBlock().id];
+    @Unique private ToIntFunction<BlockState> stationapi_luminance = state -> Block.BLOCKS_LIGHT_LUMINANCE[state.getBlock().id];
 
     @Override
-    public BlockBase setLuminance(ToIntFunction<BlockState> provider) {
+    public Block setLuminance(ToIntFunction<BlockState> provider) {
         stationapi_luminance = provider;
 
         // Need for proper functionality of LevelMixin
-        BlockBase.EMITTANCE[id] = 15;
+        Block.BLOCKS_LIGHT_LUMINANCE[id] = 15;
 
-        return BlockBase.class.cast(this);
+        return Block.class.cast(this);
     }
 
     @Override

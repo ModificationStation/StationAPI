@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Cactus;
+import net.minecraft.block.CactusBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateCactus extends Cactus implements BlockTemplate {
+public class TemplateCactus extends CactusBlock implements BlockTemplate {
 
     public TemplateCactus(Identifier identifier, int texture) {
         this(BlockTemplate.getNextId(), texture);

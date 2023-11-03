@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.api.block;
 
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationBlockItemsBlock extends BlockItemToggle {
 
     @Override
-    default BlockBase disableAutomaticBlockItemRegistration() {
+    default Block disableAutomaticBlockItemRegistration() {
         return Util.assertImpl();
     }
 

@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.item;
 
-import net.minecraft.entity.EntityBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 public interface UseOnEntityFirst {
-    boolean onUseOnEntityFirst(ItemInstance itemInstance, PlayerBase playerBase, Level level, EntityBase entityBase);
+    boolean onUseOnEntityFirst(ItemStack itemInstance, PlayerEntity playerBase, World level, Entity entityBase);
 }

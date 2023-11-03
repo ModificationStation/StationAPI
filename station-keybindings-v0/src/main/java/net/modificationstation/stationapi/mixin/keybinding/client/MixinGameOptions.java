@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.mixin.keybinding.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.option.KeyBinding;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegisterEvent;
 import org.objectweb.asm.Opcodes;

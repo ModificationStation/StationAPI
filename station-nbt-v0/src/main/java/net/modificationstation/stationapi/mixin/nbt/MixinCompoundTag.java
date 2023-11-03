@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.nbt;
 
-import net.minecraft.util.io.AbstractTag;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.modificationstation.stationapi.api.nbt.NbtIntArray;
 import net.modificationstation.stationapi.api.nbt.NbtLongArray;
 import net.modificationstation.stationapi.api.nbt.StationNbtCompound;
@@ -13,15 +13,15 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.Map;
 import java.util.Objects;
 
-@Mixin(CompoundTag.class)
+@Mixin(NbtCompound.class)
 public class MixinCompoundTag implements StationNbtCompound {
 
-    @Shadow private Map<String, AbstractTag> data;
+    @Shadow private Map<String, NbtElement> data;
 
     @Override
     @Unique
     public void put(String key, int[] item) {
-        data.put(key, new NbtIntArray(item).setType(key));
+        data.put(key, new NbtIntArray(item).setKey(key));
     }
 
     @Override
@@ -33,7 +33,7 @@ public class MixinCompoundTag implements StationNbtCompound {
     @Override
     @Unique
     public void put(String key, long[] item) {
-        data.put(key, new NbtLongArray(item).setType(key));
+        data.put(key, new NbtLongArray(item).setKey(key));
     }
 
     @Override
@@ -44,11 +44,11 @@ public class MixinCompoundTag implements StationNbtCompound {
 
     @Override
     public boolean equals(Object obj) {
-        return this == obj || (obj instanceof CompoundTag tag && Objects.equals(data, ((CompoundTagAccessor) tag).stationapi$getData()));
+        return this == obj || (obj instanceof NbtCompound tag && Objects.equals(data, ((CompoundTagAccessor) tag).stationapi$getData()));
     }
 
     @Override
-    public CompoundTag copy() {
-        return Util.make(new CompoundTag(), tag -> data.forEach((key, value) -> tag.put(key, value.copy())));
+    public NbtCompound copy() {
+        return Util.make(new NbtCompound(), tag -> data.forEach((key, value) -> tag.put(key, value.copy())));
     }
 }

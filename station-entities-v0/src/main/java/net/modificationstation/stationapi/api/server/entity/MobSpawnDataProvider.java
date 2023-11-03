@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.server.entity;
 
 import com.google.common.primitives.Bytes;
-import net.minecraft.entity.Living;
-import net.minecraft.packet.AbstractPacket;
-import net.minecraft.util.maths.MathHelper;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.packet.Message;
 
 import java.io.ByteArrayOutputStream;
@@ -15,12 +15,12 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 public interface MobSpawnDataProvider extends StationSpawnDataProvider {
 
     @Override
-    default AbstractPacket getSpawnData() {
-        Living mob = (Living) this;
+    default Packet getSpawnData() {
+        LivingEntity mob = (LivingEntity) this;
         Message message = new Message(of(MODID, "spawn_mob"));
         message.strings = new String[] { getHandlerIdentifier().toString() };
         message.ints = new int[] {
-                mob.entityId,
+                mob.id,
                 MathHelper.floor(mob.x * 32.0D),
                 MathHelper.floor(mob.y * 32.0D),
                 MathHelper.floor(mob.z * 32.0D)
@@ -30,7 +30,7 @@ public interface MobSpawnDataProvider extends StationSpawnDataProvider {
                 (byte)((int)(mob.pitch * 256.0F / 360.0F))
         };
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        mob.getDataTracker().write(new DataOutputStream(outputStream));
+        mob.method_1331().method_1504(new DataOutputStream(outputStream));
         byte[] data = outputStream.toByteArray();
         message.bytes = Bytes.concat(rotations, data);
         writeToMessage(message);

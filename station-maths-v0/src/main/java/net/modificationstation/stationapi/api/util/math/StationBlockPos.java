@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.api.util.math;
 
 import com.google.common.collect.AbstractIterator;
 import com.mojang.serialization.Codec;
-import net.minecraft.util.maths.Box;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.modificationstation.stationapi.api.util.BlockRotation;
 import net.modificationstation.stationapi.api.util.Util;
 import org.apache.commons.lang3.Validate;
@@ -15,17 +15,17 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static net.minecraft.util.maths.MathHelper.floor;
+import static net.minecraft.util.math.MathHelper.floor;
 
 public interface StationBlockPos {
-    Codec<TilePos> CODEC = Codec.INT_STREAM.comapFlatMap(
-            stream -> Util.toArray(stream, 3).map(values -> new TilePos(values[0], values[1], values[2])),
+    Codec<BlockPos> CODEC = Codec.INT_STREAM.comapFlatMap(
+            stream -> Util.toArray(stream, 3).map(values -> new BlockPos(values[0], values[1], values[2])),
             pos -> IntStream.of(pos.getX(), pos.getY(), pos.getZ())
     ).stable();
     /**
      * The block position which x, y, and z values are all zero.
      */
-    TilePos ORIGIN = new TilePos(0, 0, 0);
+    BlockPos ORIGIN = new BlockPos(0, 0, 0);
     int
             SIZE_BITS_X = 1 + MathHelper.floorLog2(MathHelper.smallestEncompassingPowerOfTwo(30000000)),
             SIZE_BITS_Z = SIZE_BITS_X,
@@ -37,20 +37,20 @@ public interface StationBlockPos {
             BITS_Z = (1L << SIZE_BITS_Z) - 1L,
             BITS_Y = (1L << SIZE_BITS_Y) - 1L;
 
-    static TilePos create(double x, double y, double z) {
-        return new TilePos(floor(x), floor(y), floor(z));
+    static BlockPos create(double x, double y, double z) {
+        return new BlockPos(floor(x), floor(y), floor(z));
     }
 
-    static TilePos create(Vec3d pos) {
+    static BlockPos create(Vec3d pos) {
         return create(pos.x, pos.y, pos.z);
     }
 
-    static TilePos create(Position pos) {
+    static BlockPos create(Position pos) {
         return create(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    static TilePos create(Vec3i pos) {
-        return new TilePos(pos.getX(), pos.getY(), pos.getZ());
+    static BlockPos create(Vec3i pos) {
+        return new BlockPos(pos.getX(), pos.getY(), pos.getZ());
     }
 
     static long offset(long value, Direction direction) {
@@ -73,8 +73,8 @@ public interface StationBlockPos {
         return (int) (packedPos << 64 - BIT_SHIFT_Z - SIZE_BITS_Z >> 64 - SIZE_BITS_Z);
     }
 
-    static TilePos fromLong(long packedPos) {
-        return new TilePos(unpackLongX(packedPos), unpackLongY(packedPos), unpackLongZ(packedPos));
+    static BlockPos fromLong(long packedPos) {
+        return new BlockPos(unpackLongX(packedPos), unpackLongY(packedPos), unpackLongZ(packedPos));
     }
 
     static long asLong(int x, int y, int z) {
@@ -95,10 +95,10 @@ public interface StationBlockPos {
      * may be returned multiple times by the iterator.
      *
      * @param range  the maximum distance from the given pos in any axis
-     * @param around the {@link TilePos} to iterate around
+     * @param around the {@link BlockPos} to iterate around
      * @param count  the number of positions to iterate
      */
-    static Iterable<TilePos> iterateRandomly(Random random, int count, TilePos around, int range) {
+    static Iterable<BlockPos> iterateRandomly(Random random, int count, BlockPos around, int range) {
         return iterateRandomly(
                 random, count,
                 around.getX() - range, around.getY() - range, around.getZ() - range,
@@ -120,7 +120,7 @@ public interface StationBlockPos {
      * @param maxY  the maximum y value for returned positions
      * @param maxZ  the maximum z value for returned positions
      */
-    static Iterable<TilePos> iterateRandomly(Random random, int count, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    static Iterable<BlockPos> iterateRandomly(Random random, int count, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         final int i = maxX - minX + 1;
         final int j = maxY - minY + 1;
         final int k = maxZ - minZ + 1;
@@ -129,7 +129,7 @@ public interface StationBlockPos {
             int remaining = count;
 
             @Override
-            protected TilePos computeNext() {
+            protected BlockPos computeNext() {
                 if (this.remaining <= 0) {
                     return this.endOfData();
                 }
@@ -157,7 +157,7 @@ public interface StationBlockPos {
      * @param center the center of iteration
      * @param rangeX the maximum x difference from the center
      */
-    static Iterable<TilePos> iterateOutwards(TilePos center, int rangeX, int rangeY, int rangeZ) {
+    static Iterable<BlockPos> iterateOutwards(BlockPos center, int rangeX, int rangeY, int rangeZ) {
         final int sum = rangeX + rangeY + rangeZ;
         final int x = center.getX();
         final int y = center.getY();
@@ -172,7 +172,7 @@ public interface StationBlockPos {
             private boolean swapZ;
 
             @Override
-            protected TilePos computeNext() {
+            protected BlockPos computeNext() {
                 if (this.swapZ) {
                     this.swapZ = false;
                     this.pos.setZ(z - (this.pos.z - z));
@@ -207,38 +207,38 @@ public interface StationBlockPos {
         };
     }
 
-    static Optional<TilePos> findClosest(TilePos pos, int horizontalRange, int verticalRange, Predicate<TilePos> condition) {
-        for (TilePos blockPos : iterateOutwards(pos, horizontalRange, verticalRange, horizontalRange)) {
+    static Optional<BlockPos> findClosest(BlockPos pos, int horizontalRange, int verticalRange, Predicate<BlockPos> condition) {
+        for (BlockPos blockPos : iterateOutwards(pos, horizontalRange, verticalRange, horizontalRange)) {
             if (!condition.test(blockPos)) continue;
             return Optional.of(blockPos);
         }
         return Optional.empty();
     }
 
-    static Stream<TilePos> streamOutwards(TilePos center, int maxX, int maxY, int maxZ) {
+    static Stream<BlockPos> streamOutwards(BlockPos center, int maxX, int maxY, int maxZ) {
         return StreamSupport.stream(iterateOutwards(center, maxX, maxY, maxZ).spliterator(), false);
     }
 
-    static Iterable<TilePos> iterate(TilePos start, TilePos end) {
+    static Iterable<BlockPos> iterate(BlockPos start, BlockPos end) {
         return iterate(
                 Math.min(start.getX(), end.getX()), Math.min(start.getY(), end.getY()), Math.min(start.getZ(), end.getZ()),
                 Math.max(start.getX(), end.getX()), Math.max(start.getY(), end.getY()), Math.max(start.getZ(), end.getZ())
         );
     }
 
-    static Stream<TilePos> stream(TilePos start, TilePos end) {
+    static Stream<BlockPos> stream(BlockPos start, BlockPos end) {
         return StreamSupport.stream(iterate(start, end).spliterator(), false);
     }
 
-    static Stream<TilePos> stream(Box box) {
+    static Stream<BlockPos> stream(Box box) {
         return stream(floor(box.minX), floor(box.minY), floor(box.minZ), floor(box.maxX), floor(box.maxY), floor(box.maxZ));
     }
 
-    static Stream<TilePos> stream(int startX, int startY, int startZ, int endX, int endY, int endZ) {
+    static Stream<BlockPos> stream(int startX, int startY, int startZ, int endX, int endY, int endZ) {
         return StreamSupport.stream(iterate(startX, startY, startZ, endX, endY, endZ).spliterator(), false);
     }
 
-    static Iterable<TilePos> iterate(int startX, int startY, int startZ, int endX, int endY, int endZ) {
+    static Iterable<BlockPos> iterate(int startX, int startY, int startZ, int endX, int endY, int endZ) {
         final int i = endX - startX + 1;
         final int j = endY - startY + 1;
         int k = endZ - startZ + 1;
@@ -248,7 +248,7 @@ public interface StationBlockPos {
             private int index;
 
             @Override
-            protected TilePos computeNext() {
+            protected BlockPos computeNext() {
                 if (this.index == l) {
                     return this.endOfData();
                 }
@@ -277,7 +277,7 @@ public interface StationBlockPos {
      * @param radius          the maximum chebychev distance
      * @throws IllegalStateException when the 2 directions lie on the same axis
      */
-    static Iterable<MutableBlockPos> iterateInSquare(TilePos center, int radius, Direction firstDirection, Direction secondDirection) {
+    static Iterable<MutableBlockPos> iterateInSquare(BlockPos center, int radius, Direction firstDirection, Direction secondDirection) {
         Validate.validState(firstDirection.getAxis() != secondDirection.getAxis(), "The two directions cannot be on the same axis");
         return () -> new AbstractIterator<>() {
             private final Direction[] directions;
@@ -336,103 +336,103 @@ public interface StationBlockPos {
         return asLong(getX(), getY(), getZ());
     }
 
-    default TilePos add(double d, double e, double f) {
+    default BlockPos add(double d, double e, double f) {
         return Util.assertImpl();
     }
 
-    default TilePos add(int i, int j, int k) {
+    default BlockPos add(int i, int j, int k) {
         return Util.assertImpl();
     }
 
-    default TilePos add(Vec3i vec3i) {
+    default BlockPos add(Vec3i vec3i) {
         return add(vec3i.getX(), vec3i.getY(), vec3i.getZ());
     }
 
-    default TilePos subtract(Vec3i vec3i) {
+    default BlockPos subtract(Vec3i vec3i) {
         return add(-vec3i.getX(), -vec3i.getY(), -vec3i.getZ());
     }
 
-    default TilePos multiply(int i) {
+    default BlockPos multiply(int i) {
         return Util.assertImpl();
     }
 
-    default TilePos down() {
-        return new TilePos(getX(), getY() - 1, getZ());
+    default BlockPos down() {
+        return new BlockPos(getX(), getY() - 1, getZ());
     }
 
-    default TilePos down(int distance) {
-        return new TilePos(getX(), getY() - distance, getZ());
+    default BlockPos down(int distance) {
+        return new BlockPos(getX(), getY() - distance, getZ());
     }
 
-    default TilePos up() {
-        return new TilePos(getX(), getY() + 1, getZ());
+    default BlockPos up() {
+        return new BlockPos(getX(), getY() + 1, getZ());
     }
 
-    default TilePos up(int distance) {
-        return new TilePos(getX(), getY() + distance, getZ());
+    default BlockPos up(int distance) {
+        return new BlockPos(getX(), getY() + distance, getZ());
     }
 
-    default TilePos east() {
-        return new TilePos(getX(), getY(), getZ() - 1);
+    default BlockPos east() {
+        return new BlockPos(getX(), getY(), getZ() - 1);
     }
 
-    default TilePos east(int distance) {
-        return new TilePos(getX(), getY(), getZ() - distance);
+    default BlockPos east(int distance) {
+        return new BlockPos(getX(), getY(), getZ() - distance);
     }
 
-    default TilePos west() {
-        return new TilePos(getX(), getY(), getZ() + 1);
+    default BlockPos west() {
+        return new BlockPos(getX(), getY(), getZ() + 1);
     }
 
-    default TilePos west(int distance) {
-        return new TilePos(getX(), getY(), getZ() + distance);
+    default BlockPos west(int distance) {
+        return new BlockPos(getX(), getY(), getZ() + distance);
     }
 
-    default TilePos north() {
-        return new TilePos(getX() - 1, getY(), getZ());
+    default BlockPos north() {
+        return new BlockPos(getX() - 1, getY(), getZ());
     }
 
-    default TilePos north(int distance) {
-        return new TilePos(getX() - distance, getY(), getZ());
+    default BlockPos north(int distance) {
+        return new BlockPos(getX() - distance, getY(), getZ());
     }
 
-    default TilePos south() {
-        return new TilePos(getX() + 1, getY(), getZ());
+    default BlockPos south() {
+        return new BlockPos(getX() + 1, getY(), getZ());
     }
 
-    default TilePos south(int distance) {
-        return new TilePos(getX() + distance, getY(), getZ());
+    default BlockPos south(int distance) {
+        return new BlockPos(getX() + distance, getY(), getZ());
     }
 
-    default TilePos offset(Direction direction) {
-        return new TilePos(getX() + direction.getOffsetX(), getY() + direction.getOffsetY(), getZ() + direction.getOffsetZ());
+    default BlockPos offset(Direction direction) {
+        return new BlockPos(getX() + direction.getOffsetX(), getY() + direction.getOffsetY(), getZ() + direction.getOffsetZ());
     }
 
-    default TilePos offset(Direction direction, int i) {
+    default BlockPos offset(Direction direction, int i) {
         return Util.assertImpl();
     }
 
-    default TilePos offset(Direction.Axis axis, int i) {
+    default BlockPos offset(Direction.Axis axis, int i) {
         return Util.assertImpl();
     }
 
-    default TilePos rotate(BlockRotation rotation) {
+    default BlockPos rotate(BlockRotation rotation) {
         return Util.assertImpl();
     }
 
-    default TilePos crossProduct(Vec3i pos) {
-        return new TilePos(
+    default BlockPos crossProduct(Vec3i pos) {
+        return new BlockPos(
                 getY() * pos.getZ() - getZ() * pos.getY(),
                 getZ() * pos.getX() - getX() * pos.getZ(),
                 getX() * pos.getY() - getY() * pos.getX()
         );
     }
 
-    default TilePos withY(int y) {
-        return new TilePos(this.getX(), y, this.getZ());
+    default BlockPos withY(int y) {
+        return new BlockPos(this.getX(), y, this.getZ());
     }
 
-    default TilePos toImmutable() {
+    default BlockPos toImmutable() {
         return Util.assertImpl();
     }
 

@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.client.render.model;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.BlockView;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.render.RenderContext;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelOverrideList;
@@ -97,7 +97,7 @@ public interface BakedModel {
      * Will not be thread-safe. Do not cache or retain a reference.
      * @param context Accepts model output.
      */
-    default void emitBlockQuads(BlockView blockView, BlockState state, TilePos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    default void emitBlockQuads(BlockView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
         context.fallbackConsumer().accept(this);
     }
 
@@ -128,7 +128,7 @@ public interface BakedModel {
      * logic here, instead of returning every possible shape from {@link BakedModel#getOverrides}
      * as vanilla baked models.
      */
-    default void emitItemQuads(ItemInstance stack, Supplier<Random> randomSupplier, RenderContext context) {
+    default void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
         context.fallbackConsumer().accept(this);
     }
 }

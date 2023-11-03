@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.api.block;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.BlockView;
-import net.minecraft.level.Level;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
@@ -38,17 +38,17 @@ public interface StationFlatteningBlock extends
         Util.assertImpl();
     }
 
-    default RegistryEntry.Reference<BlockBase> getRegistryEntry() {
+    default RegistryEntry.Reference<Block> getRegistryEntry() {
         return Util.assertImpl();
     }
 
     @Override
-    default ItemBase asItem() {
+    default Item asItem() {
         return Util.assertImpl();
     }
 
     @Override
-    default StateManager<BlockBase, BlockState> getStateManager() {
+    default StateManager<Block, BlockState> getStateManager() {
         return Util.assertImpl();
     }
 
@@ -58,7 +58,7 @@ public interface StationFlatteningBlock extends
     }
 
     @Override
-    default void appendProperties(StateManager.Builder<BlockBase, BlockState> builder) {
+    default void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         Util.assertImpl();
     }
 
@@ -68,27 +68,27 @@ public interface StationFlatteningBlock extends
     }
 
     @Override
-    default void afterBreak(Level level, PlayerBase player, int x, int y, int z, BlockState state, int meta) {
+    default void afterBreak(World level, PlayerEntity player, int x, int y, int z, BlockState state, int meta) {
         Util.assertImpl();
     }
 
     @Override
-    default List<ItemInstance> getDropList(Level level, int x, int y, int z, BlockState state, int meta) {
+    default List<ItemStack> getDropList(World level, int x, int y, int z, BlockState state, int meta) {
         return Util.assertImpl();
     }
 
     @Override
-    default void dropWithChance(Level level, int x, int y, int z, BlockState state, int meta, float chance) {
+    default void dropWithChance(World level, int x, int y, int z, BlockState state, int meta, float chance) {
         Util.assertImpl();
     }
 
     @Override
-    default float getHardness(BlockState state, BlockView blockView, TilePos pos) {
+    default float getHardness(BlockState state, BlockView blockView, BlockPos pos) {
         return Util.assertImpl();
     }
 
     @Override
-    default float calcBlockBreakingDelta(BlockState state, PlayerBase player, BlockView world, TilePos pos) {
+    default float calcBlockBreakingDelta(BlockState state, PlayerEntity player, BlockView world, BlockPos pos) {
         return Util.assertImpl();
     }
 
@@ -101,11 +101,11 @@ public interface StationFlatteningBlock extends
         return Util.assertImpl();
     }
 
-    default void onBlockPlaced(Level world, int x, int y, int z, BlockState replacedState) {
+    default void onBlockPlaced(World world, int x, int y, int z, BlockState replacedState) {
         Util.assertImpl();
     }
 
-    default BlockBase setLuminance(ToIntFunction<BlockState> provider) {
+    default Block setLuminance(ToIntFunction<BlockState> provider) {
         return Util.assertImpl();
     }
 }

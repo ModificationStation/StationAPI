@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.gui;
 
-import net.minecraft.item.ItemInstance;
+import net.minecraft.item.ItemStack;
 
 public interface CustomTooltipProvider {
 
-    String[] getTooltip(ItemInstance itemInstance, String originalTooltip);
+    String[] getTooltip(ItemStack itemInstance, String originalTooltip);
 }

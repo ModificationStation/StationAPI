@@ -1,18 +1,18 @@
 package net.modificationstation.stationapi.mixin.entity.client;
 
-import net.minecraft.client.level.ClientLevel;
-import net.minecraft.entity.EntityBase;
-import net.minecraft.network.ClientPlayNetworkHandler;
+import net.minecraft.class_454;
+import net.minecraft.client.network.ClientNetworkHandler;
+import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(ClientPlayNetworkHandler.class)
+@Mixin(ClientNetworkHandler.class)
 public interface ClientPlayNetworkHandlerAccessor {
 
     @Accessor
-    ClientLevel getLevel();
+    class_454 getLevel();
 
     @Invoker
-    EntityBase invokeMethod_1645(int entityId);
+    Entity invokeMethod_1645(int entityId);
 }

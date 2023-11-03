@@ -1,28 +1,28 @@
 package net.modificationstation.stationapi.api.block;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.material.Material;
-import net.minecraft.level.BlockView;
-import net.minecraft.level.Level;
+import net.minecraft.block.Block;
+import net.minecraft.block.Material;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.maths.Box;
-import net.minecraft.util.maths.Vec3f;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 
 import java.util.Random;
 
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
-final class Air extends BlockBase {
+final class Air extends Block {
 
     Air(int id) {
         super(id, Material.AIR);
         setHardness(0);
-        setBlastResistance(0);
-        setSounds(BlockBase.GLASS_SOUNDS);
+        setResistance(0);
+        setSoundGroup(Block.GLASS_SOUND_GROUP);
         setTranslationKey(of("air").toString());
-        disableNotifyOnMetaDataChange();
-        disableStat();
+        ignoreMetaUpdates();
+        disableTrackingStatistics();
     }
 
     @Override
@@ -31,37 +31,37 @@ final class Air extends BlockBase {
     }
 
     @Override
-    public boolean isSideRendered(BlockView tileView, int x, int y, int z, int side) {
+    public boolean isSideVisible(BlockView tileView, int x, int y, int z, int side) {
         return false;
     }
 
     @Override
-    public Box getOutlineShape(Level level, int x, int y, int z) {
+    public Box getBoundingBox(World level, int x, int y, int z) {
         return null;
     }
 
     @Override
-    public Box getCollisionShape(Level level, int x, int y, int z) {
+    public Box getCollisionShape(World level, int x, int y, int z) {
         return null;
     }
 
     @Override
-    public boolean isFullOpaque() {
+    public boolean isOpaque() {
         return false;
     }
 
     @Override
-    public boolean isCollidable(int meta, boolean flag) {
+    public boolean hasCollision(int meta, boolean flag) {
         return false;
     }
 
     @Override
-    public int getDropCount(Random rand) {
+    public int getDroppedItemCount(Random rand) {
         return 0;
     }
 
     @Override
-    public HitResult method_1564(Level arg, int x, int y, int z, Vec3f arg1, Vec3f arg2) {
+    public HitResult raycast(World arg, int x, int y, int z, Vec3d arg1, Vec3d arg2) {
         return null;
     }
 

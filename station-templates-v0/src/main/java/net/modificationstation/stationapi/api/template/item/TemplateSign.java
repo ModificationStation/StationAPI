@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.minecraft.item.Sign;
+import net.minecraft.item.SignItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateSign extends Sign implements ItemTemplate {
+public class TemplateSign extends SignItem implements ItemTemplate {
     
     public TemplateSign(Identifier identifier) {
         this(ItemTemplate.getNextId());

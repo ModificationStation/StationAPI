@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render.particle;
 
 import lombok.Getter;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
+import net.minecraft.client.particle.BlockParticle;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.particle.Digging;
-import net.minecraft.entity.ParticleBase;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.block.BlockWorldModelProvider;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
@@ -16,23 +16,23 @@ import net.modificationstation.stationapi.mixin.arsenic.client.ParticleBaseAcces
 
 public class ArsenicDiggingParticle {
 
-    private final Digging digging;
+    private final BlockParticle digging;
     private final ParticleBaseAccessor particleBaseAccessor;
     @Getter
     private Sprite texture;
 
-    public ArsenicDiggingParticle(Digging digging) {
+    public ArsenicDiggingParticle(BlockParticle digging) {
         this.digging = digging;
         particleBaseAccessor = (ParticleBaseAccessor) digging;
         texture = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(((DiggingAccessor) digging).getField_2383().getAtlas().getTexture(particleBaseAccessor.getField_2635()).getId());
     }
 
     public void checkBlockCoords(int x, int y, int z) {
-        BlockBase block = ((DiggingAccessor) digging).getField_2383();
+        Block block = ((DiggingAccessor) digging).getField_2383();
         if (block instanceof BlockWorldModelProvider provider)
-            texture = provider.getCustomWorldModel(digging.level, x, y, z).getBaked().getSprite();
+            texture = provider.getCustomWorldModel(digging.world, x, y, z).getBaked().getSprite();
         else {
-            BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(((BlockStateView) digging.level).getBlockState(x, y, z));
+            BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(((BlockStateView) digging.world).getBlockState(x, y, z));
             if (!model.isBuiltin())
                 texture = model.getSprite();
         }
@@ -45,11 +45,11 @@ public class ArsenicDiggingParticle {
                 startV = texture.getMinV() + (particleBaseAccessor.getField_2637() / 4) * (texture.getMaxV() - texture.getMinV()),
                 endV = startV + 0.24975F * (texture.getMaxV() - texture.getMinV()),
                 randomMultiplier = 0.1F * particleBaseAccessor.getField_2640(),
-                renderX = (float)(digging.prevX + (digging.x - digging.prevX) * (double)delta - ParticleBase.field_2645),
-                renderY = (float)(digging.prevY + (digging.y - digging.prevY) * (double)delta - ParticleBase.field_2646),
-                renderZ = (float)(digging.prevZ + (digging.z - digging.prevZ) * (double)delta - ParticleBase.field_2647),
-                brightness = digging.getBrightnessAtEyes(delta);
-        tessellator.colour(brightness * particleBaseAccessor.getField_2642(), brightness * particleBaseAccessor.getField_2643(), brightness * particleBaseAccessor.getField_2644());
+                renderX = (float)(digging.prevX + (digging.x - digging.prevX) * (double)delta - Particle.field_2645),
+                renderY = (float)(digging.prevY + (digging.y - digging.prevY) * (double)delta - Particle.field_2646),
+                renderZ = (float)(digging.prevZ + (digging.z - digging.prevZ) * (double)delta - Particle.field_2647),
+                brightness = digging.method_1394(delta);
+        tessellator.color(brightness * particleBaseAccessor.getField_2642(), brightness * particleBaseAccessor.getField_2643(), brightness * particleBaseAccessor.getField_2644());
         tessellator.vertex(renderX - yawX * randomMultiplier - pitchY1 * randomMultiplier, renderY - pitchX * randomMultiplier, renderZ - yawY * randomMultiplier - pitchY2 * randomMultiplier, startU, endV);
         tessellator.vertex(renderX - yawX * randomMultiplier + pitchY1 * randomMultiplier, renderY + pitchX * randomMultiplier, renderZ - yawY * randomMultiplier + pitchY2 * randomMultiplier, startU, startV);
         tessellator.vertex(renderX + yawX * randomMultiplier + pitchY1 * randomMultiplier, renderY + pitchX * randomMultiplier, renderZ + yawY * randomMultiplier + pitchY2 * randomMultiplier, endU, startV);

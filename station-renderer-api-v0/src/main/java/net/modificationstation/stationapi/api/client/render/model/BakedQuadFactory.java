@@ -76,7 +76,7 @@ public class BakedQuadFactory {
         }
 
         float v = (float)Math.toRadians(texture.rotation);
-        Vec3f vector3f = new Vec3f(net.minecraft.util.maths.MathHelper.cos(v), net.minecraft.util.maths.MathHelper.sin(v), 0.0F);
+        Vec3f vector3f = new Vec3f(net.minecraft.util.math.MathHelper.cos(v), net.minecraft.util.math.MathHelper.sin(v), 0.0F);
         Matrix3f matrix3f = new Matrix3f(matrix4f);
         vector3f.transform(matrix3f);
         int w = Math.floorMod(-((int)Math.round(Math.toDegrees(Math.atan2(vector3f.getY(), vector3f.getX())) / 90.0D)) * 90, 360);

@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.item;
 
-import net.minecraft.entity.EntityBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
@@ -11,23 +11,23 @@ import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationItem {
 
-    default ItemBase setTranslationKey(ModID modID, String translationKey) {
+    default Item setTranslationKey(ModID modID, String translationKey) {
         return Util.assertImpl();
     }
 
-    default ItemBase setTranslationKey(Identifier translationKey) {
+    default Item setTranslationKey(Identifier translationKey) {
         return Util.assertImpl();
     }
 
-    default boolean preHit(ItemInstance itemInstance, EntityBase otherEntity, PlayerBase player) {
+    default boolean preHit(ItemStack itemInstance, Entity otherEntity, PlayerEntity player) {
         return Util.assertImpl();
     }
 
-    default boolean preMine(ItemInstance itemInstance, BlockState blockState, int x, int y, int z, int side, PlayerBase player) {
+    default boolean preMine(ItemStack itemInstance, BlockState blockState, int x, int y, int z, int side, PlayerEntity player) {
         return Util.assertImpl();
     }
 
-    default int getDurability(ItemInstance stack) {
+    default int getDurability(ItemStack stack) {
         return Util.assertImpl();
     }
 }

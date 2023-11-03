@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.gui.screen.container;
 
-import net.minecraft.container.ContainerBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.inventory.InventoryBase;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Inventory;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
@@ -12,11 +12,11 @@ import java.util.function.Consumer;
 
 public abstract class GuiHelperImpl {
 
-    public void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container) {
+    public void openGUI(PlayerEntity player, Identifier identifier, Inventory inventory, Container container) {
         openGUI(player, identifier, inventory, container, (message) -> {});
     }
 
-    public void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container, Consumer<Message> customData) {
+    public void openGUI(PlayerEntity player, Identifier identifier, Inventory inventory, Container container, Consumer<Message> customData) {
         Message message = new Message(Identifier.of(StationAPI.MODID, "open_gui"));
         message.strings = new String[] { identifier.toString() };
         sideDependentPacket(player, inventory, message);
@@ -25,7 +25,7 @@ public abstract class GuiHelperImpl {
         afterPacketSent(player, container);
     }
 
-    protected abstract void sideDependentPacket(PlayerBase player, InventoryBase inventory, Message message);
+    protected abstract void sideDependentPacket(PlayerEntity player, Inventory inventory, Message message);
 
-    protected abstract void afterPacketSent(PlayerBase player, ContainerBase container);
+    protected abstract void afterPacketSent(PlayerEntity player, Container container);
 }

@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.mixin.dimension.server;
 
-import net.minecraft.entity.player.ServerPlayer;
-import net.minecraft.server.ServerPlayerConnectionManager;
+import net.minecraft.class_166;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.modificationstation.stationapi.api.entity.HasTeleportationManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(ServerPlayer.class)
+@Mixin(ServerPlayerEntity.class)
 public abstract class MixinServerPlayer implements HasTeleportationManager {
 
     @Redirect(
@@ -17,7 +17,7 @@ public abstract class MixinServerPlayer implements HasTeleportationManager {
                     target = "Lnet/minecraft/server/ServerPlayerConnectionManager;sendToOppositeDimension(Lnet/minecraft/entity/player/ServerPlayer;)V"
             )
     )
-    private void overrideSwitchDimensions(ServerPlayerConnectionManager serverPlayerConnectionManager, ServerPlayer serverPlayer) {
-        getTeleportationManager().switchDimension((ServerPlayer) (Object) this);
+    private void overrideSwitchDimensions(class_166 serverPlayerConnectionManager, ServerPlayerEntity serverPlayer) {
+        getTeleportationManager().switchDimension((ServerPlayerEntity) (Object) this);
     }
 }

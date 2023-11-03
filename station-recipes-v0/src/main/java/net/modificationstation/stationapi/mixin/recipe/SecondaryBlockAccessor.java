@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
-import net.minecraft.item.SecondaryBlock;
+import net.minecraft.item.SecondaryBlockItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(SecondaryBlock.class)
+@Mixin(SecondaryBlockItem.class)
 public interface SecondaryBlockAccessor {
 
     @Accessor

@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.event.block;
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.event.Cancelable;
 import net.mine_diver.unsafeevents.event.EventPhases;
-import net.minecraft.item.Block;
+import net.minecraft.item.BlockItem;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.*;
 import org.jetbrains.annotations.NotNull;
@@ -28,5 +28,5 @@ public class BlockItemFactoryEvent extends BlockEvent {
      * Current factory that's going to be executed to get block item instance.
      * <p>Can not return null due to limitations from mixin's side. Cancel instead.
      */
-    public @NotNull IntFunction<@NotNull Block> currentFactory;
+    public @NotNull IntFunction<@NotNull BlockItem> currentFactory;
 }

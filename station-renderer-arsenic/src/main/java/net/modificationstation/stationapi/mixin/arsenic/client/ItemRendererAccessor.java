@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
-import net.minecraft.client.render.block.BlockRenderer;
-import net.minecraft.client.render.entity.ItemRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.Random;
+import net.minecraft.client.render.block.BlockRenderManager;
+import net.minecraft.client.render.item.ItemRenderer;
 
 @Mixin(ItemRenderer.class)
 public interface ItemRendererAccessor {
@@ -14,5 +14,5 @@ public interface ItemRendererAccessor {
     Random getRand();
 
     @Accessor
-    BlockRenderer getField_1708();
+    BlockRenderManager getField_1708();
 }

@@ -7,8 +7,8 @@ import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import lombok.val;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.PacketHandler;
-import net.minecraft.packet.AbstractPacket;
+import net.minecraft.network.NetworkHandler;
+import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.impl.network.RegistryPacketHandler;
@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 
-public class RemapClientRegistryS2CPacket extends AbstractPacket implements IdentifiablePacket {
+public class RemapClientRegistryS2CPacket extends Packet implements IdentifiablePacket {
     public static final Identifier PACKET_ID = MODID.id("registry/remap_client");
 
     public Reference2ReferenceMap<Identifier, Reference2IntMap<Identifier>> map;
@@ -76,12 +76,12 @@ public class RemapClientRegistryS2CPacket extends AbstractPacket implements Iden
     }
 
     @Override
-    public void apply(PacketHandler arg) {
+    public void apply(NetworkHandler arg) {
         ((RegistryPacketHandler) arg).onRemapClientRegistry(this);
     }
 
     @Override
-    public int length() {
+    public int size() {
         return map.entrySet()
                 .stream()
                 .mapToInt(entry ->

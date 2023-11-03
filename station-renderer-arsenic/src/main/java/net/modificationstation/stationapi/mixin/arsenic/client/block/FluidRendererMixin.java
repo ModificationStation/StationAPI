@@ -5,11 +5,11 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.block.BlockRenderer;
-import net.minecraft.level.BlockView;
-import net.minecraft.util.maths.MathHelper;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.block.Block;
+import net.minecraft.client.render.block.BlockRenderManager;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
-@Mixin(BlockRenderer.class)
+@Mixin(BlockRenderManager.class)
 public class FluidRendererMixin {
     @Shadow private BlockView blockView;
 
@@ -31,7 +31,7 @@ public class FluidRendererMixin {
             at = @At("HEAD")
     )
     private void stationapi_fluid_init(
-            BlockBase block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
+            Block block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
             @Share("atlas") LocalRef<Atlas> atlas, @Share("textureScale") LocalIntRef textureScale
     ) {
         atlas.set(block.getAtlas());
@@ -43,10 +43,10 @@ public class FluidRendererMixin {
             index = 6,
             at = @At("STORE")
     )
-    private int stationapi_fluid_modColor(int value, BlockBase block, int x, int y, int z) {
-        return (block.id == BlockBase.FLOWING_WATER.id || block.id == BlockBase.STILL_WATER.id) &&
-                Atlases.getTerrain().getTexture(block.getTextureForSide(0)).getSprite().getContents().getAnimation() != null ?
-                StationRenderAPI.getBlockColors().getColor(((BlockStateView) blockView).getBlockState(x, y, z), blockView, new TilePos(x, y, z), -1) :
+    private int stationapi_fluid_modColor(int value, Block block, int x, int y, int z) {
+        return (block.id == Block.FLOWING_WATER.id || block.id == Block.WATER.id) &&
+                Atlases.getTerrain().getTexture(block.getTexture(0)).getSprite().getContents().getAnimation() != null ?
+                StationRenderAPI.getBlockColors().getColor(((BlockStateView) blockView).getBlockState(x, y, z), blockView, new BlockPos(x, y, z), -1) :
                 value;
     }
 
@@ -60,7 +60,7 @@ public class FluidRendererMixin {
             )
     )
     private void stationapi_fluid_rescaleTexture(
-            BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
+            Block i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
             @Share("textureScale") LocalIntRef textureScale
     ) {
         textureScale.set(2);
@@ -77,7 +77,7 @@ public class FluidRendererMixin {
             )
     )
     private void stationapi_fluid_captureTexture1(
-            BlockBase block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
+            Block block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
             @Local(index = 28) int textureId,
             @Share("atlas") LocalRef<Atlas> atlas, @Share("texture") LocalRef<Sprite> texture
     ) {
@@ -272,7 +272,7 @@ public class FluidRendererMixin {
             )
     )
     private void stationapi_fluid_calculateAtlasSizeIndependentUV(
-            BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
+            Block i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
             @Local(index = 29) float var29, @Local(index = 36) float var36, @Local(index = 37) float var37,
             @Share("textureScale") LocalIntRef textureScale, @Share("texture") LocalRef<Sprite> texture,
             @Share("us") LocalFloatRef us, @Share("uc") LocalFloatRef uc, @Share("vs") LocalFloatRef vs, @Share("vc") LocalFloatRef vc
@@ -505,7 +505,7 @@ public class FluidRendererMixin {
             )
     )
     private void stationapi_fluid_captureTexture2(
-            BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
+            Block i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
             @Local(index = 32) int textureId,
             @Share("atlas") LocalRef<Atlas> atlas, @Share("texture") LocalRef<Sprite> texture
     ) {

@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.entity.player;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.EntityBase;
+import net.minecraft.block.Material;
+import net.minecraft.entity.Entity;
 
 public interface PlayerBaseSuper {
     void superMoveFlying(float f, float f1, float f2);
@@ -18,7 +18,7 @@ public interface PlayerBaseSuper {
 
     void superDamageEntity(int i);
 
-    double superGetDistanceSqToEntity(EntityBase entity);
+    double superGetDistanceSqToEntity(Entity entity);
 
     boolean superHandleWaterMovement();
 

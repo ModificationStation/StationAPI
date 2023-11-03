@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.tileentity;
 
-import net.minecraft.tileentity.TileEntityBase;
+import net.minecraft.block.entity.BlockEntity;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.tileentity.TileEntityRegisterEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(TileEntityBase.class)
+@Mixin(BlockEntity.class)
 public class MixinTileEntityBase {
 
     @Shadow

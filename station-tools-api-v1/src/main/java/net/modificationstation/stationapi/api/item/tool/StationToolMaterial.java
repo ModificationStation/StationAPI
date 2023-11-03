@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.api.item.tool;
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.tool.ToolMaterial;
+import net.minecraft.block.Block;
+import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 public interface StationToolMaterial {
 
-    ReferenceSet<TagKey<BlockBase>> ALL_TOOL_MATERIAL_TAGS = new ReferenceOpenHashSet<>();
+    ReferenceSet<TagKey<Block>> ALL_TOOL_MATERIAL_TAGS = new ReferenceOpenHashSet<>();
 
     default ToolMaterial inheritsFrom(ToolMaterial... toolMaterials) {
         return Util.assertImpl();
@@ -28,7 +28,7 @@ public interface StationToolMaterial {
         return Util.assertImpl();
     }
 
-    default TagKey<BlockBase> getRequiredBlockTag() {
+    default TagKey<Block> getRequiredBlockTag() {
         return Util.assertImpl();
     }
 
@@ -37,7 +37,7 @@ public interface StationToolMaterial {
     }
 
     private boolean matches0(BlockState state) {
-        TagKey<BlockBase> tag = getRequiredBlockTag();
+        TagKey<Block> tag = getRequiredBlockTag();
         if (tag != null) {
             if (state.isIn(tag)) return true;
             BiPredicate<ToolMaterial, BlockState> matches0 = StationToolMaterial::matches0;

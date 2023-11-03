@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Leaves;
+import net.minecraft.block.LeavesBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateLeaves extends Leaves implements BlockTemplate {
+public class TemplateLeaves extends LeavesBlock implements BlockTemplate {
 
     public TemplateLeaves(Identifier identifier, int j) {
         this(BlockTemplate.getNextId(), j);

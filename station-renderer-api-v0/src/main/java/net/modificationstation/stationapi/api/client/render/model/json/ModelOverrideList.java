@@ -4,12 +4,12 @@ import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockBase;
-import net.minecraft.entity.Living;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.BlockView;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.block.Block;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.model.block.BlockModelPredicateProvider;
 import net.modificationstation.stationapi.api.client.model.item.ItemModelPredicateProvider;
@@ -67,9 +67,9 @@ public class ModelOverrideList {
     }
 
     @Nullable
-    public BakedModel apply(BakedModel model, BlockState state, @Nullable BlockView world, @Nullable TilePos pos, int seed) {
+    public BakedModel apply(BakedModel model, BlockState state, @Nullable BlockView world, @Nullable BlockPos pos, int seed) {
         if (this.overrides.length != 0) {
-            BlockBase block = state.getBlock();
+            Block block = state.getBlock();
             int i = this.conditionTypes.length;
             float[] fs = new float[i];
             for (int j = 0; j < i; ++j) {
@@ -90,9 +90,9 @@ public class ModelOverrideList {
     }
 
     @Nullable
-    public BakedModel apply(BakedModel model, ItemInstance stack, @Nullable BlockView world, @Nullable Living entity, int seed) {
+    public BakedModel apply(BakedModel model, ItemStack stack, @Nullable BlockView world, @Nullable LivingEntity entity, int seed) {
         if (this.overrides.length != 0) {
-            ItemBase item = stack.getType();
+            Item item = stack.getItem();
             int i = this.conditionTypes.length;
             float[] fs = new float[i];
             for (int j = 0; j < i; ++j) {

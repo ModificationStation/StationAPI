@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.IsItemSuitableForStateEvent;
@@ -30,27 +30,27 @@ public class ToolEffectivenessImplV1 {
 
     @EventListener(priority = LOW)
     private static void getItems(ItemRegistryEvent event) {
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.shears));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.woodAxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.woodPickaxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.woodShovel));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.woodSword));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.stoneAxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.stonePickaxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.stoneShovel));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.stoneSword));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.ironAxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.ironPickaxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.ironShovel));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.ironSword));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.diamondAxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.diamondPickaxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.diamondShovel));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.diamondSword));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.goldAxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.goldPickaxe));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.goldShovel));
-        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(ItemBase.goldSword));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.SHEARS));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.WOODEN_AXE));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.WOODEN_PICKAXE));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.WOODEN_SHOVEL));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.WOODEN_SWORD));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.STONE_HATCHET));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.STONE_PICKAXE));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.STONE_SHOVEL));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.STONE_SWORD));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.IRON_AXE));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.IRON_PICKAXE));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.IRON_SHOVEL));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.IRON_SWORD));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.DIAMOND_AXE));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.DIAMOND_PICKAXE));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.DIAMOND_SHOVEL));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.DIAMOND_SWORD));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.GOLDEN_AXE));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.GOLDEN_PICKAXE));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.GOLDEN_SHOVEL));
+        VANILLA_TOOLS.add(ItemRegistry.INSTANCE.getId(Item.GOLDEN_SWORD));
     }
 
     @EventListener
@@ -60,10 +60,10 @@ public class ToolEffectivenessImplV1 {
 
     @EventListener
     private static void getStrength(ItemMiningSpeedMultiplierOnStateEvent event) {
-        if (!(VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getId(event.itemStack.getType())) && Objects.requireNonNull(BlockRegistry.INSTANCE.getId(event.state.getBlock())).modID == ModID.MINECRAFT) && isSuitable(event.itemStack, event.state)) event.miningSpeedMultiplier = ((ToolLevel) event.itemStack.getType()).getMaterial(event.itemStack).getMiningSpeed();
+        if (!(VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getId(event.itemStack.getItem())) && Objects.requireNonNull(BlockRegistry.INSTANCE.getId(event.state.getBlock())).modID == ModID.MINECRAFT) && isSuitable(event.itemStack, event.state)) event.miningSpeedMultiplier = ((ToolLevel) event.itemStack.getItem()).getMaterial(event.itemStack).getMiningSpeed();
     }
 
-    private static boolean isSuitable(ItemInstance item, BlockState state) {
-        return item.getType() instanceof ToolLevel toolLevel && state.isIn(toolLevel.getEffectiveBlocks(item)) && toolLevel.getMaterial(item).matches(state);
+    private static boolean isSuitable(ItemStack item, BlockState state) {
+        return item.getItem() instanceof ToolLevel toolLevel && state.isIn(toolLevel.getEffectiveBlocks(item)) && toolLevel.getMaterial(item).matches(state);
     }
 }

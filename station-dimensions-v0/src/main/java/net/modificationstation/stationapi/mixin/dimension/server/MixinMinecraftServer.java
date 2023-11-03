@@ -2,11 +2,11 @@ package net.modificationstation.stationapi.mixin.dimension.server;
 
 import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.ints.IntSortedSet;
-import net.minecraft.level.dimension.DimensionData;
+import net.minecraft.class_120;
+import net.minecraft.class_488;
+import net.minecraft.class_73;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.OtherServerLevel;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.network.ServerEntityTracker;
+import net.minecraft.world.dimension.DimensionData;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.DimensionRegistryEvent;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
@@ -20,9 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(MinecraftServer.class)
 public class MixinMinecraftServer {
 
-    @Shadow public ServerEntityTracker[] field_2847;
+    @Shadow public class_488[] field_2847;
 
-    @Shadow public ServerLevel[] levels;
+    @Shadow public class_73[] levels;
 
     @ModifyConstant(
             method = "<init>()V",
@@ -47,7 +47,7 @@ public class MixinMinecraftServer {
         IntSortedSet dimensions = DimensionRegistry.INSTANCE.serialView.keySet();
         int[] otherDimensions = dimensions.tailSet(dimensions.toIntArray()[2]).toIntArray();
         for (int i = 0; i < otherDimensions.length; i++)
-            field_2847[i + 2] = new ServerEntityTracker((MinecraftServer) (Object) this, otherDimensions[i]);
+            field_2847[i + 2] = new class_488((MinecraftServer) (Object) this, otherDimensions[i]);
     }
 
     @ModifyConstant(
@@ -96,8 +96,8 @@ public class MixinMinecraftServer {
                     target = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;IJLnet/minecraft/server/level/ServerLevel;)Lnet/minecraft/server/level/OtherServerLevel;"
             )
     )
-    private OtherServerLevel instantiateOtherServerLevel(MinecraftServer minecraftServer, DimensionData arg, String string, int i, long l, ServerLevel arg1) {
-        return new OtherServerLevel(minecraftServer, arg, string, DimensionRegistry.INSTANCE.serialView.keySet().toIntArray()[capturedIndex], l, arg1);
+    private class_120 instantiateOtherServerLevel(MinecraftServer minecraftServer, DimensionData arg, String string, int i, long l, class_73 arg1) {
+        return new class_120(minecraftServer, arg, string, DimensionRegistry.INSTANCE.serialView.keySet().toIntArray()[capturedIndex], l, arg1);
     }
 
     /**
@@ -105,7 +105,7 @@ public class MixinMinecraftServer {
      * @author mine_diver
      */
     @Overwrite
-    public ServerLevel getLevel(int index) {
+    public class_73 getLevel(int index) {
         return levels[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), index, DimensionRegistry.DIMENSIONS_COMPARATOR)];
     }
 
@@ -114,7 +114,7 @@ public class MixinMinecraftServer {
      * @author mine_diver
      */
     @Overwrite
-    public ServerEntityTracker method_2165(int i) {
+    public class_488 method_2165(int i) {
         return field_2847[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), i, DimensionRegistry.DIMENSIONS_COMPARATOR)];
     }
 }

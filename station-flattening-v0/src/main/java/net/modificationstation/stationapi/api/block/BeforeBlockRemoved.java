@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.block;
 
-import net.minecraft.level.Level;
+import net.minecraft.world.World;
 
 @FunctionalInterface
 public interface BeforeBlockRemoved {
 
-    void beforeBlockRemoved(Level arg, int i, int j, int k);
+    void beforeBlockRemoved(World arg, int i, int j, int k);
 }

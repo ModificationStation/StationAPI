@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.RedstoneRepeater;
+import net.minecraft.block.RepeaterBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateRedstoneRepeater extends RedstoneRepeater implements BlockTemplate {
+public class TemplateRedstoneRepeater extends RepeaterBlock implements BlockTemplate {
     
     public TemplateRedstoneRepeater(Identifier identifier, boolean flag) {
         this(BlockTemplate.getNextId(), flag);

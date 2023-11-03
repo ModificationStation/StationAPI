@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.registry;
 
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.item.ItemBase;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.render.model.ItemModelPredicateProviderRegistryEvent;
 import net.modificationstation.stationapi.api.client.model.item.ItemModelPredicateProvider;
@@ -26,23 +26,23 @@ public final class ItemModelPredicateProviderRegistry extends SimpleRegistry<Ite
     private static final Identifier DAMAGE_ID = Identifier.of("damage");
     private static final Identifier META_ID = Identifier.of("meta");
     private static final ItemModelPredicateProvider DAMAGED_PROVIDER = (itemInstance, clientWorld, livingEntity, seed) -> itemInstance.isDamaged() ? 1.0F : 0.0F;
-    private static final ItemModelPredicateProvider DAMAGE_PROVIDER = (itemInstance, clientWorld, livingEntity, seed) -> MathHelper.clamp((float)itemInstance.getDamage() / (float)itemInstance.getDurability(), 0.0F, 1.0F);
+    private static final ItemModelPredicateProvider DAMAGE_PROVIDER = (itemInstance, clientWorld, livingEntity, seed) -> MathHelper.clamp((float)itemInstance.getDamage() / (float)itemInstance.getMaxDamage(), 0.0F, 1.0F);
     private static final ItemModelPredicateProvider META_PROVIDER = (itemInstance, clientWorld, livingEntity, seed) -> MathHelper.clamp((float)itemInstance.getDamage(), 0, 65535);
-    private final Map<ItemBase, Map<Identifier, ItemModelPredicateProvider>> ITEM_SPECIFIC = new IdentityHashMap<>();
+    private final Map<Item, Map<Identifier, ItemModelPredicateProvider>> ITEM_SPECIFIC = new IdentityHashMap<>();
 
     private ItemModelPredicateProviderRegistry() {
         super(KEY, Lifecycle.experimental(), false);
     }
 
-    public ItemModelPredicateProvider get(ItemBase item, Identifier identifier) {
-        if (item.getDurability() > 0) {
+    public ItemModelPredicateProvider get(Item item, Identifier identifier) {
+        if (item.getMaxDamage() > 0) {
             if (identifier == DAMAGE_ID)
                 return DAMAGE_PROVIDER;
 
             if (identifier == DAMAGED_ID)
                 return DAMAGED_PROVIDER;
         }
-        if (item.usesMeta()) if (identifier == META_ID)
+        if (item.method_462()) if (identifier == META_ID)
             return META_PROVIDER;
 
         ItemModelPredicateProvider modelPredicateProvider = get(identifier);
@@ -52,7 +52,7 @@ public final class ItemModelPredicateProviderRegistry extends SimpleRegistry<Ite
         } else return modelPredicateProvider;
     }
 
-    public void register(ItemBase item, Identifier id, ItemModelPredicateProvider provider) {
+    public void register(Item item, Identifier id, ItemModelPredicateProvider provider) {
         ITEM_SPECIFIC.computeIfAbsent(item, itemx -> new IdentityHashMap<>()).put(id, provider);
     }
 

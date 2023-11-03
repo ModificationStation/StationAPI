@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.item;
 
-import net.minecraft.entity.player.PlayerBase;
+import net.minecraft.entity.player.PlayerEntity;
 
 public interface CustomArmourValue {
-    double modifyDamageDealt(PlayerBase playerBase, int armourSlot, int initialDamage, double currentAdjustedDamage);
+    double modifyDamageDealt(PlayerEntity playerBase, int armourSlot, int initialDamage, double currentAdjustedDamage);
 }

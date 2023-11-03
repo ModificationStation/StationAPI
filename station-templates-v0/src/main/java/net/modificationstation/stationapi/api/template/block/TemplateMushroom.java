@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Mushroom;
+import net.minecraft.block.MushroomPlantBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateMushroom extends Mushroom implements BlockTemplate {
+public class TemplateMushroom extends MushroomPlantBlock implements BlockTemplate {
 
     public TemplateMushroom(Identifier identifier, int j) {
         this(BlockTemplate.getNextId(), j);

@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Torch;
+import net.minecraft.block.TorchBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateTorch extends Torch implements BlockTemplate {
+public class TemplateTorch extends TorchBlock implements BlockTemplate {
     
     public TemplateTorch(Identifier identifier, int j) {
         this(BlockTemplate.getNextId(), j);

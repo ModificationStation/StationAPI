@@ -1,14 +1,7 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.minecraft.level.biome.Biome;
-import net.minecraft.level.biome.Forest;
-import net.minecraft.level.biome.Hell;
-import net.minecraft.level.biome.Rainforest;
-import net.minecraft.level.biome.Sky;
-import net.minecraft.level.biome.SparseBiome;
-import net.minecraft.level.biome.Swampland;
-import net.minecraft.level.biome.Taiga;
+import net.minecraft.class_153;
 import net.modificationstation.stationapi.api.worldgen.biome.ClimateBiomeProvider;
 
 import java.util.Collection;
@@ -21,31 +14,31 @@ public class OverworldBiomeProviderImpl extends ClimateBiomeProvider {
     }
 
     @Override
-    public Biome getBiome(int x, int z, float temperature, float wetness) {
-        Biome biome = getBiome(temperature, wetness);
-        return biome == null ? Biome.getBiome(temperature, wetness) : biome;
+    public class_153 getBiome(int x, int z, float temperature, float wetness) {
+        class_153 biome = getBiome(temperature, wetness);
+        return biome == null ? class_153.method_786(temperature, wetness) : biome;
     }
 
     @Override
-    protected Biome getBiome(float temperature, float wetness) {
-        Biome biome = super.getBiome(temperature, wetness);
-        return biome == null ? Biome.getBiome(temperature, wetness) : biome;
+    protected class_153 getBiome(float temperature, float wetness) {
+        class_153 biome = super.getBiome(temperature, wetness);
+        return biome == null ? class_153.method_786(temperature, wetness) : biome;
     }
     
     @Override
-    public Collection<Biome> getBiomes() {
-        Collection<Biome> biomes = super.getBiomes();
-        biomes.add(Biome.RAINFOREST);
-        biomes.add(Biome.SWAMPLAND);
-        biomes.add(Biome.SEASONAL_FOREST);
-        biomes.add(Biome.FOREST);
-        biomes.add(Biome.SAVANNA);
-        biomes.add(Biome.SHRUBLAND);
-        biomes.add(Biome.TAIGA);
-        biomes.add(Biome.DESERT);
-        biomes.add(Biome.PLAINS);
-        biomes.add(Biome.ICE_DESERT);
-        biomes.add(Biome.TUNDRA);
+    public Collection<class_153> getBiomes() {
+        Collection<class_153> biomes = super.getBiomes();
+        biomes.add(class_153.field_875);
+        biomes.add(class_153.field_876);
+        biomes.add(class_153.field_877);
+        biomes.add(class_153.field_878);
+        biomes.add(class_153.field_879);
+        biomes.add(class_153.field_880);
+        biomes.add(class_153.field_881);
+        biomes.add(class_153.field_882);
+        biomes.add(class_153.field_883);
+        biomes.add(class_153.field_884);
+        biomes.add(class_153.field_885);
         return biomes;
     }
 

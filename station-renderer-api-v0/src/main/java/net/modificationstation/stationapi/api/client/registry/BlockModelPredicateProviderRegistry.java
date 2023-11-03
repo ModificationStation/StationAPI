@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.registry;
 
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.render.model.BlockModelPredicateProviderRegistryEvent;
 import net.modificationstation.stationapi.api.client.model.block.BlockModelPredicateProvider;
@@ -23,14 +23,14 @@ public final class BlockModelPredicateProviderRegistry extends SimpleRegistry<Bl
     public static final BlockModelPredicateProviderRegistry INSTANCE = Registries.create(KEY, new BlockModelPredicateProviderRegistry(), registry -> EMPTY, Lifecycle.experimental());
 
     private static final Identifier META_ID = Identifier.of("meta");
-    private static final BlockModelPredicateProvider META_PROVIDER = (state, clientWorld, pos, seed) -> clientWorld == null || pos == null ? 0 : MathHelper.clamp(clientWorld.getTileMeta(pos.x, pos.y, pos.z), 0, 15);
-    private final Map<BlockBase, Map<Identifier, BlockModelPredicateProvider>> BLOCK_SPECIFIC = new IdentityHashMap<>();
+    private static final BlockModelPredicateProvider META_PROVIDER = (state, clientWorld, pos, seed) -> clientWorld == null || pos == null ? 0 : MathHelper.clamp(clientWorld.getBlockMeta(pos.x, pos.y, pos.z), 0, 15);
+    private final Map<Block, Map<Identifier, BlockModelPredicateProvider>> BLOCK_SPECIFIC = new IdentityHashMap<>();
 
     private BlockModelPredicateProviderRegistry() {
         super(KEY, Lifecycle.experimental(), false);
     }
 
-    public BlockModelPredicateProvider get(BlockBase block, Identifier identifier) {
+    public BlockModelPredicateProvider get(Block block, Identifier identifier) {
         if (identifier == META_ID)
             return META_PROVIDER;
 
@@ -41,7 +41,7 @@ public final class BlockModelPredicateProviderRegistry extends SimpleRegistry<Bl
         } else return modelPredicateProvider;
     }
 
-    public void register(BlockBase block, Identifier id, BlockModelPredicateProvider provider) {
+    public void register(Block block, Identifier id, BlockModelPredicateProvider provider) {
         BLOCK_SPECIFIC.computeIfAbsent(block, blockx -> new IdentityHashMap<>()).put(id, provider);
     }
 

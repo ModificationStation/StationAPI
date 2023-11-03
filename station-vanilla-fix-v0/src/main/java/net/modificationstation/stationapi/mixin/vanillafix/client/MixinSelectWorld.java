@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.vanillafix.client;
 
-import net.minecraft.client.gui.screen.ScreenBase;
-import net.minecraft.client.gui.screen.menu.SelectWorld;
-import net.minecraft.level.storage.LevelMetadata;
+import net.minecraft.class_591;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 import net.modificationstation.stationapi.impl.vanillafix.client.gui.screen.WorldConversionWarning;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -11,10 +11,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
 
-@Mixin(SelectWorld.class)
-public abstract class MixinSelectWorld extends ScreenBase {
+@Mixin(SelectWorldScreen.class)
+public abstract class MixinSelectWorld extends Screen {
 
-    @Shadow private List<LevelMetadata> worlds;
+    @Shadow private List<class_591> worlds;
 
     @Redirect(
             method = "buttonClicked(Lnet/minecraft/client/gui/widgets/Button;)V",
@@ -23,7 +23,7 @@ public abstract class MixinSelectWorld extends ScreenBase {
                     target = "Lnet/minecraft/client/gui/screen/menu/SelectWorld;loadWorld(I)V"
             )
     )
-    private void warn(SelectWorld instance, int i) {
-        WorldConversionWarning.warnIfMcRegion(minecraft, instance, worlds.get(i), () -> instance.loadWorld(i));
+    private void warn(SelectWorldScreen instance, int i) {
+        WorldConversionWarning.warnIfMcRegion(minecraft, instance, worlds.get(i), () -> instance.method_1891(i));
     }
 }

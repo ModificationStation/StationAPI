@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
+import net.minecraft.client.particle.BlockParticle;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.particle.Digging;
-import net.minecraft.level.Level;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.particle.ArsenicDiggingParticle;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Digging.class)
+@Mixin(BlockParticle.class)
 public class MixinDigging {
 
     @Unique
@@ -23,15 +23,15 @@ public class MixinDigging {
             method = "<init>(Lnet/minecraft/level/Level;DDDDDDLnet/minecraft/block/BlockBase;II)V",
             at = @At("RETURN")
     )
-    private void onCor(Level arg, double d, double d1, double d2, double d3, double d4, double d5, BlockBase arg1, int i, int j, CallbackInfo ci) {
-        stationapi$arsenicDiggingParticle = new ArsenicDiggingParticle((Digging) (Object) this);
+    private void onCor(World arg, double d, double d1, double d2, double d3, double d4, double d5, Block arg1, int i, int j, CallbackInfo ci) {
+        stationapi$arsenicDiggingParticle = new ArsenicDiggingParticle((BlockParticle) (Object) this);
     }
 
     @Inject(
             method = "method_1856(III)Lnet/minecraft/client/render/particle/Digging;",
             at = @At("HEAD")
     )
-    private void checkBlockCoords(int i, int j, int k, CallbackInfoReturnable<Digging> cir) {
+    private void checkBlockCoords(int i, int j, int k, CallbackInfoReturnable<BlockParticle> cir) {
         stationapi$arsenicDiggingParticle.checkBlockCoords(i, j, k);
     }
 

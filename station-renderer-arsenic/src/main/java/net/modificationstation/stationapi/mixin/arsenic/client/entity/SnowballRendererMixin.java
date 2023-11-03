@@ -3,14 +3,14 @@ package net.modificationstation.stationapi.mixin.arsenic.client.entity;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.minecraft.client.render.entity.SnowballRenderer;
-import net.minecraft.item.ItemBase;
+import net.minecraft.client.render.entity.FireballEntityRenderer;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(SnowballRenderer.class)
+@Mixin(FireballEntityRenderer.class)
 public class SnowballRendererMixin {
     @ModifyVariable(
             method = "method_1207",
@@ -22,7 +22,7 @@ public class SnowballRendererMixin {
             @Local(index = 11) int textureId,
             @Share("texture") LocalRef<Sprite> texture
     ) {
-        texture.set(ItemBase.snowball.getAtlas().getTexture(textureId).getSprite());
+        texture.set(Item.SNOWBALL.getAtlas().getTexture(textureId).getSprite());
         return texture.get().getMinU();
     }
 

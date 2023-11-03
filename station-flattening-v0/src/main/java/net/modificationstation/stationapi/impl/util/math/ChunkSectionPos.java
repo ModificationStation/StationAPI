@@ -4,9 +4,9 @@
 package net.modificationstation.stationapi.impl.util.math;
 
 import it.unimi.dsi.fastutil.longs.LongConsumer;
-import net.minecraft.level.chunk.Chunk;
-import net.minecraft.util.maths.MathHelper;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.class_43;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Position;
 import net.modificationstation.stationapi.api.util.math.StationBlockPos;
@@ -50,7 +50,7 @@ public class ChunkSectionPos
         return new ChunkSectionPos(x, y, z);
     }
 
-    public static ChunkSectionPos from(TilePos pos) {
+    public static ChunkSectionPos from(BlockPos pos) {
         return new ChunkSectionPos(ChunkSectionPos.getSectionCoord(pos.getX()), ChunkSectionPos.getSectionCoord(pos.getY()), ChunkSectionPos.getSectionCoord(pos.getZ()));
     }
 
@@ -77,8 +77,8 @@ public class ChunkSectionPos
         return new ChunkSectionPos(ChunkSectionPos.unpackX(packed), ChunkSectionPos.unpackY(packed), ChunkSectionPos.unpackZ(packed));
     }
 
-    public static ChunkSectionPos from(Chunk chunk) {
-        return ChunkSectionPos.from(new ChunkPos(chunk.x, chunk.z), chunk.level.getBottomSectionCoord());
+    public static ChunkSectionPos from(class_43 chunk) {
+        return ChunkSectionPos.from(new ChunkPos(chunk.field_962, chunk.field_963), chunk.field_956.getBottomSectionCoord());
     }
 
     /**
@@ -125,7 +125,7 @@ public class ChunkSectionPos
      * Returns the local position of the given block position relative to
      * its respective chunk section, packed into a short.
      */
-    public static short packLocal(TilePos pos) {
+    public static short packLocal(BlockPos pos) {
         int i = ChunkSectionPos.getLocalCoord(pos.getX());
         int j = ChunkSectionPos.getLocalCoord(pos.getY());
         int k = ChunkSectionPos.getLocalCoord(pos.getZ());
@@ -196,8 +196,8 @@ public class ChunkSectionPos
      *
      * @see #packLocal
      */
-    public TilePos unpackBlockPos(short packedLocalPos) {
-        return new TilePos(unpackBlockX(packedLocalPos), unpackBlockY(packedLocalPos), unpackBlockZ(packedLocalPos));
+    public BlockPos unpackBlockPos(short packedLocalPos) {
+        return new BlockPos(unpackBlockX(packedLocalPos), unpackBlockY(packedLocalPos), unpackBlockZ(packedLocalPos));
     }
 
     /**
@@ -273,9 +273,9 @@ public class ChunkSectionPos
     }
 
     /**
-     * Gets the packed chunk section coordinate for a given packed {@link TilePos}.
+     * Gets the packed chunk section coordinate for a given packed {@link BlockPos}.
      * @see #asLong
-     * @see TilePos#asLong
+     * @see BlockPos#asLong
      */
     public static long fromBlockPos(long blockPos) {
         return ChunkSectionPos.asLong(ChunkSectionPos.getSectionCoord(StationBlockPos.unpackLongX(blockPos)), ChunkSectionPos.getSectionCoord(StationBlockPos.unpackLongY(blockPos)), ChunkSectionPos.getSectionCoord(StationBlockPos.unpackLongZ(blockPos)));
@@ -290,11 +290,11 @@ public class ChunkSectionPos
         return pos & 0xFFFFFFFFFFF00000L;
     }
 
-    public TilePos getMinPos() {
-        return new TilePos(ChunkSectionPos.getBlockCoord(getSectionX()), ChunkSectionPos.getBlockCoord(getSectionY()), ChunkSectionPos.getBlockCoord(getSectionZ()));
+    public BlockPos getMinPos() {
+        return new BlockPos(ChunkSectionPos.getBlockCoord(getSectionX()), ChunkSectionPos.getBlockCoord(getSectionY()), ChunkSectionPos.getBlockCoord(getSectionZ()));
     }
 
-    public TilePos getCenterPos() {
+    public BlockPos getCenterPos() {
         return getMinPos().add(8, 8, 8);
     }
 
@@ -302,7 +302,7 @@ public class ChunkSectionPos
         return new ChunkPos(getSectionX(), getSectionZ());
     }
 
-    public static long toLong(TilePos pos) {
+    public static long toLong(BlockPos pos) {
         return ChunkSectionPos.asLong(ChunkSectionPos.getSectionCoord(pos.getX()), ChunkSectionPos.getSectionCoord(pos.getY()), ChunkSectionPos.getSectionCoord(pos.getZ()));
     }
 
@@ -325,7 +325,7 @@ public class ChunkSectionPos
         return new ChunkSectionPos(getSectionX() + i, getSectionY() + j, getSectionZ() + k);
     }
 
-    public Stream<TilePos> streamBlocks() {
+    public Stream<BlockPos> streamBlocks() {
         return StationBlockPos.stream(getMinX(), getMinY(), getMinZ(), getMaxX(), getMaxY(), getMaxZ());
     }
 
@@ -357,7 +357,7 @@ public class ChunkSectionPos
         }, false);
     }
 
-    public static void forEachChunkSectionAround(TilePos pos, LongConsumer consumer) {
+    public static void forEachChunkSectionAround(BlockPos pos, LongConsumer consumer) {
         ChunkSectionPos.forEachChunkSectionAround(pos.getX(), pos.getY(), pos.getZ(), consumer);
     }
 

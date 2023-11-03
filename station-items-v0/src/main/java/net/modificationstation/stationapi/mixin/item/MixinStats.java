@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.item;
 
-import net.minecraft.item.ItemBase;
+import net.minecraft.item.Item;
 import net.minecraft.stat.Stats;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.AfterBlockAndItemRegisterEvent;
@@ -19,7 +19,7 @@ public class MixinStats {
             constant = @Constant(intValue = 32000)
     )
     private static int getItemsSize(int constant) {
-        return ItemBase.byId.length;
+        return Item.ITEMS.length;
     }
 
     @SuppressWarnings({"InvalidMemberReference", "UnresolvedMixinReference", "MixinAnnotationTarget"})

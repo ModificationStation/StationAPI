@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Cake;
+import net.minecraft.block.CakeBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateCake extends Cake implements BlockTemplate {
+public class TemplateCake extends CakeBlock implements BlockTemplate {
 
     public TemplateCake(Identifier identifier, int texture) {
         this(BlockTemplate.getNextId(), texture);

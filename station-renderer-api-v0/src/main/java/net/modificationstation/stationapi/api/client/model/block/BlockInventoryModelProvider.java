@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.client.model.block;
 
-import net.minecraft.client.render.block.BlockRenderer;
+import net.minecraft.client.render.block.BlockRenderManager;
 import net.modificationstation.stationapi.api.client.model.Model;
 
 @Deprecated
@@ -14,7 +14,7 @@ public interface BlockInventoryModelProvider extends BlockWithInventoryRenderer 
 
     @Override
     @Deprecated
-    default void renderInventory(BlockRenderer blockRenderer, int meta) {
+    default void renderInventory(BlockRenderManager blockRenderer, int meta) {
         // TODO: maybe implement this later for backwards compat with PRE2
 //        BAKED_MODEL_RENDERER.get().renderInventory(getInventoryModel(meta).getBaked());
     }

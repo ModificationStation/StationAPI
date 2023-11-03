@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.api.nbt;
 
-import net.minecraft.util.io.ByteArrayTag;
+import net.minecraft.nbt.NbtByteArray;
 import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationNbtByteArray extends StationNbtElement {
 
     @Override
-    default ByteArrayTag copy() {
+    default NbtByteArray copy() {
         return Util.assertImpl();
     }
 }

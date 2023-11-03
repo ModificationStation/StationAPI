@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.mixin.arsenic.client.block;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.block.BlockRenderer;
+import net.minecraft.block.Block;
+import net.minecraft.client.render.block.BlockRenderManager;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
@@ -16,14 +16,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
-@Mixin(BlockRenderer.class)
+@Mixin(BlockRenderManager.class)
 public class BedRendererMixin {
     @Inject(
             method = "renderBed",
             at = @At("HEAD")
     )
     private void stationapi_bed_captureAtlas(
-            BlockBase block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
+            Block block, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
             @Share("atlas") LocalRef<Atlas> atlas
     ) {
         atlas.set(block.getAtlas());
@@ -40,7 +40,7 @@ public class BedRendererMixin {
             )
     )
     private void stationapi_bed_captureTexture1(
-            BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
+            Block i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
             @Local(index = 26) int texture1,
             @Share("atlas") LocalRef<Atlas> atlas, @Share("texture") LocalRef<Sprite> texture
     ) {
@@ -191,7 +191,7 @@ public class BedRendererMixin {
             )
     )
     private void stationapi_bed_captureTexture2(
-            BlockBase i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
+            Block i, int j, int k, int par4, CallbackInfoReturnable<Boolean> cir,
             @Local(index = 27) int texture2,
             @Share("atlas") LocalRef<Atlas> atlas, @Share("texture") LocalRef<Sprite> texture
     ) {

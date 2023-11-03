@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.level.BlockView;
+import net.minecraft.block.Block;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.util.math.Direction;
@@ -10,8 +10,8 @@ import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.Muta
 
 import java.util.Arrays;
 
-import static net.minecraft.block.BlockBase.ALLOWS_GRASS_UNDER;
-import static net.minecraft.util.maths.MathHelper.floor;
+import static net.minecraft.block.Block.BLOCKS_ALLOW_VISION;
+import static net.minecraft.util.math.MathHelper.floor;
 
 public final class LightingCalculatorImpl {
     private static final float[] FULL_BRIGHTNESS = new float[] { 1, 1, 1, 1 };
@@ -21,7 +21,7 @@ public final class LightingCalculatorImpl {
             cacheDiameter,
             cacheSelf;
 
-    private BlockBase block;
+    private Block block;
     private BlockView blockView;
     private int x, y, z;
     private boolean ao;
@@ -50,7 +50,7 @@ public final class LightingCalculatorImpl {
     }
 
     public void initialize(
-            BlockBase block,
+            Block block,
             BlockView blockView, int x, int y, int z,
             boolean ao
     ) {
@@ -67,13 +67,13 @@ public final class LightingCalculatorImpl {
     private int id(int x, int y, int z) {
         int index = toIndex(x - this.x, y - this.y, z - this.z);
         int id = idCache[index];
-        return id == UNCACHED_ID ? idCache[index] = index == cacheSelf ? block.id : blockView.getTileId(x, y, z) : id;
+        return id == UNCACHED_ID ? idCache[index] = index == cacheSelf ? block.id : blockView.getBlockId(x, y, z) : id;
     }
 
     private float light(int x, int y, int z) {
         int index = toIndex(x - this.x, y - this.y, z - this.z);
         float brightness = lightCache[index];
-        return Float.isNaN(brightness) ? lightCache[index] = block.getBrightness(blockView, x, y, z) : brightness;
+        return Float.isNaN(brightness) ? lightCache[index] = block.getLuminance(blockView, x, y, z) : brightness;
     }
 
     private int toIndex(int x, int y, int z) {
@@ -214,30 +214,30 @@ public final class LightingCalculatorImpl {
                         light[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0), light(v00x0, v00y1, v00z0), light(v00x1, v00y1, v00z0),
-                                light(v00x0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z0)] || ALLOWS_GRASS_UNDER[id(v00x0, v00y1, v00z1)] ? v00y0 : v00y1, v00z1),
-                                light(v00x1, ALLOWS_GRASS_UNDER[id(v00x1, v00y0, v00z0)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z1)] ? v00y0 : v00y1, v00z1),
+                                light(v00x0, BLOCKS_ALLOW_VISION[id(v00x0, v00y0, v00z0)] || BLOCKS_ALLOW_VISION[id(v00x0, v00y1, v00z1)] ? v00y0 : v00y1, v00z1),
+                                light(v00x1, BLOCKS_ALLOW_VISION[id(v00x1, v00y0, v00z0)] || BLOCKS_ALLOW_VISION[id(v00x1, v00y1, v00z1)] ? v00y0 : v00y1, v00z1),
                                 light(v00x0, v00y1, v00z1), light(v00x1, v00y1, v00z1)
                         );
                         light[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
-                                light(v01x0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z1)] || ALLOWS_GRASS_UNDER[id(v01x0, v01y1, v01z0)] ? v01y0 : v01y1, v01z0),
-                                light(v01x1, ALLOWS_GRASS_UNDER[id(v01x1, v01y0, v01z1)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z0)] ? v01y0 : v01y1, v01z0),
+                                light(v01x0, BLOCKS_ALLOW_VISION[id(v01x0, v01y0, v01z1)] || BLOCKS_ALLOW_VISION[id(v01x0, v01y1, v01z0)] ? v01y0 : v01y1, v01z0),
+                                light(v01x1, BLOCKS_ALLOW_VISION[id(v01x1, v01y0, v01z1)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y1, v01z0)] ? v01y0 : v01y1, v01z0),
                                 light(v01x0, v01y1, v01z0), light(v01x1, v01y1, v01z0), light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1),
                                 light(v01x0, v01y1, v01z1), light(v01x1, v01y1, v01z1)
                         );
                         light[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
                                 light(v11x0, v11y0, v11z0), light(v11x1, v11y0, v11z0),
-                                light(v11x0, ALLOWS_GRASS_UNDER[id(v11x0, v11y1, v11z1)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z0)] ? v11y1 : v11y0, v11z0),
-                                light(v11x1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z1)] || ALLOWS_GRASS_UNDER[id(v11x1, v11y0, v11z0)] ? v11y1 : v11y0, v11z0),
+                                light(v11x0, BLOCKS_ALLOW_VISION[id(v11x0, v11y1, v11z1)] || BLOCKS_ALLOW_VISION[id(v11x0, v11y0, v11z0)] ? v11y1 : v11y0, v11z0),
+                                light(v11x1, BLOCKS_ALLOW_VISION[id(v11x1, v11y1, v11z1)] || BLOCKS_ALLOW_VISION[id(v11x1, v11y0, v11z0)] ? v11y1 : v11y0, v11z0),
                                 light(v11x0, v11y0, v11z1), light(v11x1, v11y0, v11z1), light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
                         );
                         light[3] = MathHelper.interpolate3D(
                                 v10dx, v10dy, v10dz,
                                 light(v10x0, v10y0, v10z0), light(v10x1, v10y0, v10z0),
                                 light(v10x0, v10y1, v10z0), light(v10x1, v10y1, v10z0), light(v10x0, v10y0, v10z1), light(v10x1, v10y0, v10z1),
-                                light(v10x0, ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z0)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y0, v10z1)] ? v10y1 : v10y0, v10z1),
-                                light(v10x1, ALLOWS_GRASS_UNDER[id(v10x1, v10y1, v10z0)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z1)] ? v10y1 : v10y0, v10z1)
+                                light(v10x0, BLOCKS_ALLOW_VISION[id(v10x0, v10y1, v10z0)] || BLOCKS_ALLOW_VISION[id(v10x0, v10y0, v10z1)] ? v10y1 : v10y0, v10z1),
+                                light(v10x1, BLOCKS_ALLOW_VISION[id(v10x1, v10y1, v10z0)] || BLOCKS_ALLOW_VISION[id(v10x1, v10y0, v10z1)] ? v10y1 : v10y0, v10z1)
                         );
                     }
                     case NEGATIVE -> {
@@ -253,28 +253,28 @@ public final class LightingCalculatorImpl {
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0), light(v00x0, v00y1, v00z0), light(v00x1, v00y1, v00z0),
                                 light(v00x0, v00y0, v00z1), light(v00x1, v00y0, v00z1),
-                                light(v00x0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x0, v00y1, v00z0)] ? v00y1 : v00y0, v00z1),
-                                light(v00x1, ALLOWS_GRASS_UNDER[id(v00x1, v00y0, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z0)] ? v00y1 : v00y0, v00z1)
+                                light(v00x0, BLOCKS_ALLOW_VISION[id(v00x0, v00y0, v00z1)] || BLOCKS_ALLOW_VISION[id(v00x0, v00y1, v00z0)] ? v00y1 : v00y0, v00z1),
+                                light(v00x1, BLOCKS_ALLOW_VISION[id(v00x1, v00y0, v00z1)] || BLOCKS_ALLOW_VISION[id(v00x1, v00y1, v00z0)] ? v00y1 : v00y0, v00z1)
                         );
                         light[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
                                 light(v01x0, v01y0, v01z0), light(v01x1, v01y0, v01z0),
-                                light(v01x0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x0, v01y1, v01z1)] ? v01y1 : v01y0, v01z0),
-                                light(v01x1, ALLOWS_GRASS_UNDER[id(v01x1, v01y0, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z1)] ? v01y1 : v01y0, v01z0),
+                                light(v01x0, BLOCKS_ALLOW_VISION[id(v01x0, v01y0, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x0, v01y1, v01z1)] ? v01y1 : v01y0, v01z0),
+                                light(v01x1, BLOCKS_ALLOW_VISION[id(v01x1, v01y0, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y1, v01z1)] ? v01y1 : v01y0, v01z0),
                                 light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1), light(v01x0, v01y1, v01z1), light(v01x1, v01y1, v01z1)
                         );
                         light[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
-                                light(v11x0, ALLOWS_GRASS_UNDER[id(v11x0, v11y1, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z1)] ? v11y0 : v11y1, v11z0),
-                                light(v11x1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x1, v11y0, v11z1)] ? v11y0 : v11y1, v11z0),
+                                light(v11x0, BLOCKS_ALLOW_VISION[id(v11x0, v11y1, v11z0)] || BLOCKS_ALLOW_VISION[id(v11x0, v11y0, v11z1)] ? v11y0 : v11y1, v11z0),
+                                light(v11x1, BLOCKS_ALLOW_VISION[id(v11x1, v11y1, v11z0)] || BLOCKS_ALLOW_VISION[id(v11x1, v11y0, v11z1)] ? v11y0 : v11y1, v11z0),
                                 light(v11x0, v11y1, v11z0), light(v11x1, v11y1, v11z0), light(v11x0, v11y0, v11z1), light(v11x1, v11y0, v11z1),
                                 light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
                         );
                         light[3] = MathHelper.interpolate3D(
                                 v10dx, v10dy, v10dz,
                                 light(v10x0, v10y0, v10z0), light(v10x1, v10y0, v10z0), light(v10x0, v10y1, v10z0), light(v10x1, v10y1, v10z0),
-                                light(v10x0, ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y0, v10z0)] ? v10y0 : v10y1, v10z1),
-                                light(v10x1, ALLOWS_GRASS_UNDER[id(v10x1, v10y1, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z0)] ? v10y0 : v10y1, v10z1),
+                                light(v10x0, BLOCKS_ALLOW_VISION[id(v10x0, v10y1, v10z1)] || BLOCKS_ALLOW_VISION[id(v10x0, v10y0, v10z0)] ? v10y0 : v10y1, v10z1),
+                                light(v10x1, BLOCKS_ALLOW_VISION[id(v10x1, v10y1, v10z1)] || BLOCKS_ALLOW_VISION[id(v10x1, v10y0, v10z0)] ? v10y0 : v10y1, v10z1),
                                 light(v10x0, v10y1, v10z1), light(v10x1, v10y1, v10z1)
                         );
                     }
@@ -295,20 +295,20 @@ public final class LightingCalculatorImpl {
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0),
                                 light(v00x0, v00y1, v00z0), light(v00x1, v00y1, v00z0),
-                                light(v00x0, v00y0, v00z1), light(v00x1, v00y0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y0, v00z0)] ? v00z1 : v00z0),
-                                light(v00x0, v00y1, v00z1), light(v00x1, v00y1, ALLOWS_GRASS_UNDER[id(v00x0, v00y1, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z0)] ? v00z1 : v00z0)
+                                light(v00x0, v00y0, v00z1), light(v00x1, v00y0, BLOCKS_ALLOW_VISION[id(v00x0, v00y0, v00z1)] || BLOCKS_ALLOW_VISION[id(v00x1, v00y0, v00z0)] ? v00z1 : v00z0),
+                                light(v00x0, v00y1, v00z1), light(v00x1, v00y1, BLOCKS_ALLOW_VISION[id(v00x0, v00y1, v00z1)] || BLOCKS_ALLOW_VISION[id(v00x1, v00y1, v00z0)] ? v00z1 : v00z0)
                         );
                         light[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
-                                light(v01x0, v01y0, v01z0), light(v01x1, v01y0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y0, v01z1)] ? v01z0 : v01z1),
-                                light(v01x0, v01y1, v01z0), light(v01x1, v01y1, ALLOWS_GRASS_UNDER[id(v01x0, v01y1, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z1)] ? v01z0 : v01z1),
+                                light(v01x0, v01y0, v01z0), light(v01x1, v01y0, BLOCKS_ALLOW_VISION[id(v01x0, v01y0, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y0, v01z1)] ? v01z0 : v01z1),
+                                light(v01x0, v01y1, v01z0), light(v01x1, v01y1, BLOCKS_ALLOW_VISION[id(v01x0, v01y1, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y1, v01z1)] ? v01z0 : v01z1),
                                 light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1),
                                 light(v01x0, v01y1, v01z1), light(v01x1, v01y1, v01z1)
                         );
                         light[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
-                                light(v11x0, v11y0, ALLOWS_GRASS_UNDER[id(v11x1, v11y0, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z1)] ? v11z0 : v11z1), light(v11x1, v11y0, v11z0),
-                                light(v11x0, v11y1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y1, v11z1)] ? v11z0 : v11z1), light(v11x1, v11y1, v11z0),
+                                light(v11x0, v11y0, BLOCKS_ALLOW_VISION[id(v11x1, v11y0, v11z0)] || BLOCKS_ALLOW_VISION[id(v11x0, v11y0, v11z1)] ? v11z0 : v11z1), light(v11x1, v11y0, v11z0),
+                                light(v11x0, v11y1, BLOCKS_ALLOW_VISION[id(v11x1, v11y1, v11z0)] || BLOCKS_ALLOW_VISION[id(v11x0, v11y1, v11z1)] ? v11z0 : v11z1), light(v11x1, v11y1, v11z0),
                                 light(v11x0, v11y0, v11z1), light(v11x1, v11y0, v11z1),
                                 light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
                         );
@@ -316,8 +316,8 @@ public final class LightingCalculatorImpl {
                                 v10dx, v10dy, v10dz,
                                 light(v10x0, v10y0, v10z0), light(v10x1, v10y0, v10z0),
                                 light(v10x0, v10y1, v10z0), light(v10x1, v10y1, v10z0),
-                                light(v10x0, v10y0, ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y0, v10z0)] ? v10z1 : v10z0), light(v10x1, v10y0, v10z1),
-                                light(v10x0, v10y1, ALLOWS_GRASS_UNDER[id(v10x1, v10y1, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z0)] ? v10z1 : v10z0), light(v10x1, v10y1, v10z1)
+                                light(v10x0, v10y0, BLOCKS_ALLOW_VISION[id(v10x1, v10y0, v10z1)] || BLOCKS_ALLOW_VISION[id(v10x0, v10y0, v10z0)] ? v10z1 : v10z0), light(v10x1, v10y0, v10z1),
+                                light(v10x0, v10y1, BLOCKS_ALLOW_VISION[id(v10x1, v10y1, v10z1)] || BLOCKS_ALLOW_VISION[id(v10x0, v10y1, v10z0)] ? v10z1 : v10z0), light(v10x1, v10y1, v10z1)
                         );
                     }
                     case NEGATIVE -> {
@@ -333,20 +333,20 @@ public final class LightingCalculatorImpl {
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0),
                                 light(v00x0, v00y1, v00z0), light(v00x1, v00y1, v00z0),
-                                light(v00x0, v00y0, ALLOWS_GRASS_UNDER[id(v00x1, v00y0, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z0)] ? v00z1 : v00z0), light(v00x1, v00y0, v00z1),
-                                light(v00x0, v00y1, ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x0, v00y1, v00z0)] ? v00z1 : v00z0), light(v00x1, v00y1, v00z1)
+                                light(v00x0, v00y0, BLOCKS_ALLOW_VISION[id(v00x1, v00y0, v00z1)] || BLOCKS_ALLOW_VISION[id(v00x0, v00y0, v00z0)] ? v00z1 : v00z0), light(v00x1, v00y0, v00z1),
+                                light(v00x0, v00y1, BLOCKS_ALLOW_VISION[id(v00x1, v00y1, v00z1)] || BLOCKS_ALLOW_VISION[id(v00x0, v00y1, v00z0)] ? v00z1 : v00z0), light(v00x1, v00y1, v00z1)
                         );
                         light[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
-                                light(v01x0, v01y0, ALLOWS_GRASS_UNDER[id(v01x1, v01y0, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z1)] ? v01z0 : v01z1), light(v01x1, v01y0, v01z0),
-                                light(v01x0, v01y1, ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x0, v01y1, v01z1)] ? v01z0 : v01z1), light(v01x1, v01y1, v01z0),
+                                light(v01x0, v01y0, BLOCKS_ALLOW_VISION[id(v01x1, v01y0, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x0, v01y0, v01z1)] ? v01z0 : v01z1), light(v01x1, v01y0, v01z0),
+                                light(v01x0, v01y1, BLOCKS_ALLOW_VISION[id(v01x1, v01y1, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x0, v01y1, v01z1)] ? v01z0 : v01z1), light(v01x1, v01y1, v01z0),
                                 light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1),
                                 light(v01x0, v01y1, v01z1), light(v01x1, v01y1, v01z1)
                         );
                         light[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
-                                light(v11x0, v11y0, v11z0), light(v11x1, v11y0, ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x1, v11y0, v11z1)] ? v11z0 : v11z1),
-                                light(v11x0, v11y1, v11z0), light(v11x1, v11y1, ALLOWS_GRASS_UNDER[id(v11x0, v11y1, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z1)] ? v11z0 : v11z1),
+                                light(v11x0, v11y0, v11z0), light(v11x1, v11y0, BLOCKS_ALLOW_VISION[id(v11x0, v11y0, v11z0)] || BLOCKS_ALLOW_VISION[id(v11x1, v11y0, v11z1)] ? v11z0 : v11z1),
+                                light(v11x0, v11y1, v11z0), light(v11x1, v11y1, BLOCKS_ALLOW_VISION[id(v11x0, v11y1, v11z0)] || BLOCKS_ALLOW_VISION[id(v11x1, v11y1, v11z1)] ? v11z0 : v11z1),
                                 light(v11x0, v11y0, v11z1), light(v11x1, v11y0, v11z1),
                                 light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
                         );
@@ -354,8 +354,8 @@ public final class LightingCalculatorImpl {
                                 v10dx, v10dy, v10dz,
                                 light(v10x0, v10y0, v10z0), light(v10x1, v10y0, v10z0),
                                 light(v10x0, v10y1, v10z0), light(v10x1, v10y1, v10z0),
-                                light(v10x0, v10y0, v10z1), light(v10x1, v10y0, ALLOWS_GRASS_UNDER[id(v10x0, v10y0, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z0)] ? v10z1 : v10z0),
-                                light(v10x0, v10y1, v10z1), light(v10x1, v10y1, ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y1, v10z0)] ? v10z1 : v10z0)
+                                light(v10x0, v10y0, v10z1), light(v10x1, v10y0, BLOCKS_ALLOW_VISION[id(v10x0, v10y0, v10z1)] || BLOCKS_ALLOW_VISION[id(v10x1, v10y0, v10z0)] ? v10z1 : v10z0),
+                                light(v10x0, v10y1, v10z1), light(v10x1, v10y1, BLOCKS_ALLOW_VISION[id(v10x0, v10y1, v10z1)] || BLOCKS_ALLOW_VISION[id(v10x1, v10y1, v10z0)] ? v10z1 : v10z0)
                         );
                     }
                 }
@@ -374,30 +374,30 @@ public final class LightingCalculatorImpl {
                         light[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0),
-                                light(v00x0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z0)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z0)] ? v00y1 : v00y0, v00z0), light(v00x1, v00y1, v00z0),
+                                light(v00x0, BLOCKS_ALLOW_VISION[id(v00x0, v00y0, v00z0)] || BLOCKS_ALLOW_VISION[id(v00x1, v00y1, v00z0)] ? v00y1 : v00y0, v00z0), light(v00x1, v00y1, v00z0),
                                 light(v00x0, v00y0, v00z1), light(v00x1, v00y0, v00z1),
-                                light(v00x0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z1)] ? v00y1 : v00y0, v00z1), light(v00x1, v00y1, v00z1)
+                                light(v00x0, BLOCKS_ALLOW_VISION[id(v00x0, v00y0, v00z1)] || BLOCKS_ALLOW_VISION[id(v00x1, v00y1, v00z1)] ? v00y1 : v00y0, v00z1), light(v00x1, v00y1, v00z1)
                         );
                         light[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
                                 light(v01x0, v01y0, v01z0), light(v01x1, v01y0, v01z0),
-                                light(v01x0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z0)] ? v01y1 : v01y0, v01z0), light(v01x1, v01y1, v01z0),
+                                light(v01x0, BLOCKS_ALLOW_VISION[id(v01x0, v01y0, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y1, v01z0)] ? v01y1 : v01y0, v01z0), light(v01x1, v01y1, v01z0),
                                 light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1),
-                                light(v01x0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z1)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z1)] ? v01y1 : v01y0, v01z1), light(v01x1, v01y1, v01z1)
+                                light(v01x0, BLOCKS_ALLOW_VISION[id(v01x0, v01y0, v01z1)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y1, v01z1)] ? v01y1 : v01y0, v01z1), light(v01x1, v01y1, v01z1)
                         );
                         light[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
-                                light(v11x0, v11y0, v11z0), light(v11x1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z0)] ? v11y0 : v11y1, v11z0),
+                                light(v11x0, v11y0, v11z0), light(v11x1, BLOCKS_ALLOW_VISION[id(v11x1, v11y1, v11z0)] || BLOCKS_ALLOW_VISION[id(v11x0, v11y0, v11z0)] ? v11y0 : v11y1, v11z0),
                                 light(v11x0, v11y1, v11z0), light(v11x1, v11y1, v11z0),
-                                light(v11x0, v11y0, v11z1), light(v11x1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z1)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z1)] ? v11y0 : v11y1, v11z1),
+                                light(v11x0, v11y0, v11z1), light(v11x1, BLOCKS_ALLOW_VISION[id(v11x1, v11y1, v11z1)] || BLOCKS_ALLOW_VISION[id(v11x0, v11y0, v11z1)] ? v11y0 : v11y1, v11z1),
                                 light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
                         );
                         light[3] = MathHelper.interpolate3D(
                                 v10dx, v10dy, v10dz,
                                 light(v10x0, v10y0, v10z0), light(v10x1, v10y0, v10z0),
-                                light(v10x0, v10y1, v10z0), light(v10x1, ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z0)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z0)] ? v10y1 : v10y0, v10z0),
+                                light(v10x0, v10y1, v10z0), light(v10x1, BLOCKS_ALLOW_VISION[id(v10x1, v10y0, v10z0)] || BLOCKS_ALLOW_VISION[id(v10x0, v10y1, v10z0)] ? v10y1 : v10y0, v10z0),
                                 light(v10x0, v10y0, v10z1), light(v10x1, v10y0, v10z1),
-                                light(v10x0, v10y1, v10z1), light(v10x1, ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z1)] ? v10y1 : v10y0, v10z1)
+                                light(v10x0, v10y1, v10z1), light(v10x1, BLOCKS_ALLOW_VISION[id(v10x1, v10y0, v10z1)] || BLOCKS_ALLOW_VISION[id(v10x0, v10y1, v10z1)] ? v10y1 : v10y0, v10z1)
                         );
                     }
                     case NEGATIVE -> {
@@ -412,29 +412,29 @@ public final class LightingCalculatorImpl {
                         light[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
                                 light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0),
-                                light(v00x0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z0)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z0)] ? v00y1 : v00y0, v00z0), light(v00x1, v00y1, v00z0),
+                                light(v00x0, BLOCKS_ALLOW_VISION[id(v00x0, v00y0, v00z0)] || BLOCKS_ALLOW_VISION[id(v00x1, v00y1, v00z0)] ? v00y1 : v00y0, v00z0), light(v00x1, v00y1, v00z0),
                                 light(v00x0, v00y0, v00z1), light(v00x1, v00y0, v00z1),
-                                light(v00x0, ALLOWS_GRASS_UNDER[id(v00x0, v00y0, v00z1)] || ALLOWS_GRASS_UNDER[id(v00x1, v00y1, v00z1)] ? v00y1 : v00y0, v00z1), light(v00x1, v00y1, v00z1)
+                                light(v00x0, BLOCKS_ALLOW_VISION[id(v00x0, v00y0, v00z1)] || BLOCKS_ALLOW_VISION[id(v00x1, v00y1, v00z1)] ? v00y1 : v00y0, v00z1), light(v00x1, v00y1, v00z1)
                         );
                         light[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
                                 light(v01x0, v01y0, v01z0), light(v01x1, v01y0, v01z0),
-                                light(v01x0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z0)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z0)] ? v01y1 : v01y0, v01z0), light(v01x1, v01y1, v01z0),
+                                light(v01x0, BLOCKS_ALLOW_VISION[id(v01x0, v01y0, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y1, v01z0)] ? v01y1 : v01y0, v01z0), light(v01x1, v01y1, v01z0),
                                 light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1),
-                                light(v01x0, ALLOWS_GRASS_UNDER[id(v01x0, v01y0, v01z1)] || ALLOWS_GRASS_UNDER[id(v01x1, v01y1, v01z1)] ? v01y1 : v01y0, v01z1), light(v01x1, v01y1, v01z1)
+                                light(v01x0, BLOCKS_ALLOW_VISION[id(v01x0, v01y0, v01z1)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y1, v01z1)] ? v01y1 : v01y0, v01z1), light(v01x1, v01y1, v01z1)
                         );
                         light[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
-                                light(v11x0, v11y0, v11z0), light(v11x1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z0)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z0)] ? v11y0 : v11y1, v11z0),
+                                light(v11x0, v11y0, v11z0), light(v11x1, BLOCKS_ALLOW_VISION[id(v11x1, v11y1, v11z0)] || BLOCKS_ALLOW_VISION[id(v11x0, v11y0, v11z0)] ? v11y0 : v11y1, v11z0),
                                 light(v11x0, v11y1, v11z0), light(v11x1, v11y1, v11z0),
-                                light(v11x0, v11y0, v11z1), light(v11x1, ALLOWS_GRASS_UNDER[id(v11x1, v11y1, v11z1)] || ALLOWS_GRASS_UNDER[id(v11x0, v11y0, v11z1)] ? v11y0 : v11y1, v11z1),
+                                light(v11x0, v11y0, v11z1), light(v11x1, BLOCKS_ALLOW_VISION[id(v11x1, v11y1, v11z1)] || BLOCKS_ALLOW_VISION[id(v11x0, v11y0, v11z1)] ? v11y0 : v11y1, v11z1),
                                 light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
                         );
                         light[3] = MathHelper.interpolate3D(
                                 v10dx, v10dy, v10dz,
-                                light(v10x0, ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z0)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z0)] ? v10y0 : v10y1, v10z0), light(v10x1, v10y0, v10z0),
+                                light(v10x0, BLOCKS_ALLOW_VISION[id(v10x0, v10y1, v10z0)] || BLOCKS_ALLOW_VISION[id(v10x1, v10y0, v10z0)] ? v10y0 : v10y1, v10z0), light(v10x1, v10y0, v10z0),
                                 light(v10x0, v10y1, v10z0), light(v10x1, v10y1, v10z0),
-                                light(v10x0, ALLOWS_GRASS_UNDER[id(v10x0, v10y1, v10z1)] || ALLOWS_GRASS_UNDER[id(v10x1, v10y0, v10z1)] ? v10y0 : v10y1, v10z1), light(v10x1, v10y0, v10z1),
+                                light(v10x0, BLOCKS_ALLOW_VISION[id(v10x0, v10y1, v10z1)] || BLOCKS_ALLOW_VISION[id(v10x1, v10y0, v10z1)] ? v10y0 : v10y1, v10z1), light(v10x1, v10y0, v10z1),
                                 light(v10x0, v10y1, v10z1), light(v10x1, v10y1, v10z1)
                         );
                     }

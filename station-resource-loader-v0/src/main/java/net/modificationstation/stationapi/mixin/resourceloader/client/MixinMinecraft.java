@@ -5,7 +5,7 @@ import lombok.val;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.level.Level;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.resource.AssetsReloadEvent;
 import net.modificationstation.stationapi.api.client.event.resource.AssetsResourceReloaderRegisterEvent;
@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 @Environment(EnvType.CLIENT)
 public class MixinMinecraft {
-    @Shadow public Level level;
+    @Shadow public World level;
 
     @Unique
     private static final String STATIONAPI$MINECRAFT_LOCATION_FORMAT = "Minecraft: %s";

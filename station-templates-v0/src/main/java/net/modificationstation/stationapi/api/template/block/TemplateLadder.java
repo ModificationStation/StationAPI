@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Ladder;
+import net.minecraft.block.LadderBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateLadder extends Ladder implements BlockTemplate {
+public class TemplateLadder extends LadderBlock implements BlockTemplate {
 
     public TemplateLadder(Identifier identifier, int texUVStart) {
         this(BlockTemplate.getNextId(), texUVStart);

@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.client.render.model;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.BlockView;
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.render.RenderContext;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelOverrideList;
@@ -23,7 +23,7 @@ public abstract class ForwardingBakedModel implements BakedModel {
     /** implementations must set this somehow. */
     protected BakedModel wrapped;
 
-    public void emitBlockQuads(BlockView blockView, BlockState state, TilePos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
         wrapped.emitBlockQuads(blockView, state, pos, randomSupplier, context);
     }
 
@@ -31,7 +31,7 @@ public abstract class ForwardingBakedModel implements BakedModel {
         return wrapped.isVanillaAdapter();
     }
 
-    public void emitItemQuads(ItemInstance stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
         wrapped.emitItemQuads(stack, randomSupplier, context);
     }
 

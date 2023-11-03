@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.packet;
 
-import net.minecraft.network.PacketHandler;
-import net.minecraft.packet.AbstractPacket;
+import net.minecraft.network.NetworkHandler;
+import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.registry.IdentifiablePacketRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
@@ -20,13 +20,13 @@ public interface IdentifiablePacket {
         return ret;
     }
 
-    static void setHandler(Identifier packetId, PacketHandler handler) {
-        PacketHandler previous = IdentifiablePacketImpl.HANDLERS.put(packetId, handler);
+    static void setHandler(Identifier packetId, NetworkHandler handler) {
+        NetworkHandler previous = IdentifiablePacketImpl.HANDLERS.put(packetId, handler);
         if (previous != null)
             throw new IllegalArgumentException("Duplicate handler for packet id \"" + packetId + "\"! Previous: \"" + previous.getClass().getName() + "\", new: \"" + handler.getClass().getName() + "\"");
     }
 
-    static AbstractPacket create(Identifier id) {
+    static Packet create(Identifier id) {
         Factory factory = IdentifiablePacketRegistry.INSTANCE.get(id);
         return factory == null ? null : factory.create();
     }
@@ -35,6 +35,6 @@ public interface IdentifiablePacket {
 
     @FunctionalInterface
     interface Factory {
-        AbstractPacket create();
+        Packet create();
     }
 }

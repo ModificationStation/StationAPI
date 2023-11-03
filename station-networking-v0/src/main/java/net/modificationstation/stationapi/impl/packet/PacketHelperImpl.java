@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.impl.packet;
 
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.packet.AbstractPacket;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.packet.Packet;
 
 public abstract class PacketHelperImpl {
 
-    public abstract void send(AbstractPacket packet);
+    public abstract void send(Packet packet);
 
-    public abstract void sendTo(PlayerBase player, AbstractPacket packet);
+    public abstract void sendTo(PlayerEntity player, Packet packet);
 }

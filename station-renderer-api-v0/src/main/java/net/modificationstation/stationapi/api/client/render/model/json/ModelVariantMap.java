@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.util.JsonHelper;
@@ -121,13 +121,13 @@ public class ModelVariantMap {
     @Environment(EnvType.CLIENT)
     public static final class DeserializationContext {
         protected final Gson gson = (new GsonBuilder()).registerTypeAdapter(ModelVariantMap.class, new ModelVariantMap.Deserializer()).registerTypeAdapter(ModelVariant.class, new ModelVariant.Deserializer()).registerTypeAdapter(WeightedUnbakedModel.class, new WeightedUnbakedModel.Deserializer()).registerTypeAdapter(MultipartUnbakedModel.class, new MultipartUnbakedModel.Deserializer(this)).registerTypeAdapter(MultipartModelComponent.class, new MultipartModelComponent.Deserializer()).create();
-        private StateManager<BlockBase, BlockState> stateFactory;
+        private StateManager<Block, BlockState> stateFactory;
 
-        public StateManager<BlockBase, BlockState> getStateFactory() {
+        public StateManager<Block, BlockState> getStateFactory() {
             return this.stateFactory;
         }
 
-        public void setStateFactory(StateManager<BlockBase, BlockState> stateFactory) {
+        public void setStateFactory(StateManager<Block, BlockState> stateFactory) {
             this.stateFactory = stateFactory;
         }
     }

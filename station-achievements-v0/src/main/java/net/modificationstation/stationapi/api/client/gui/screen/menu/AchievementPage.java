@@ -103,7 +103,7 @@ public class AchievementPage implements Named<AchievementPage> {
         return IntLists.unmodifiable(
                 achievements
                         .stream()
-                        .mapToInt(achievement -> achievement.ID)
+                        .mapToInt(achievement -> achievement.id)
                         .collect(IntArrayList::new, IntCollection::add, IntCollection::addAll)
         );
     }

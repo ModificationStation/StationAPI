@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.impl.server.entity;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.entity.EntityBase;
-import net.minecraft.network.EntityHashSet;
-import net.minecraft.server.network.ServerEntityTracker;
+import net.minecraft.class_488;
+import net.minecraft.class_80;
+import net.minecraft.entity.Entity;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -32,7 +32,7 @@ public class TrackingParametersImpl {
      */
     @EventListener
     private static void trackEntity(TrackEntityEvent event) {
-        Class<? extends EntityBase> entityClass = event.entityToTrack.getClass();
+        Class<? extends Entity> entityClass = event.entityToTrack.getClass();
         if (entityClass.isAnnotationPresent(HasTrackingParameters.class)) {
             HasTrackingParameters at = entityClass.getAnnotation(HasTrackingParameters.class);
             track(event.entityTracker, event.trackedEntities, event.entityToTrack, at.trackingDistance(), at.updatePeriod(), at.sendVelocity());
@@ -48,12 +48,12 @@ public class TrackingParametersImpl {
      * @param updatePeriod the period in ticks with which the entity updates should be sent to client (position, velocity, etc).
      * @param sendVelocity whether or not should server send velocity updates to clients (fireballs don't send velocity, because client can calculate it itself, and paintings don't have velocity at all).
      */
-    public static void track(ServerEntityTracker entityTracker, EntityHashSet trackedEntities, EntityBase entityToTrack, int trackingDistance, int updatePeriod, TriState sendVelocity) {
-        if (trackedEntities.containsId(entityToTrack.entityId))
+    public static void track(class_488 entityTracker, class_80 trackedEntities, Entity entityToTrack, int trackingDistance, int updatePeriod, TriState sendVelocity) {
+        if (trackedEntities.method_777(entityToTrack.id))
             entityTracker.method_1669(entityToTrack);
         if (sendVelocity == TriState.UNSET)
             entityTracker.method_1666(entityToTrack, trackingDistance, updatePeriod);
         else
-            entityTracker.trackEntity(entityToTrack, trackingDistance, updatePeriod, sendVelocity.getBool());
+            entityTracker.method_1667(entityToTrack, trackingDistance, updatePeriod, sendVelocity.getBool());
     }
 }

@@ -1,14 +1,13 @@
 package net.modificationstation.stationapi.api.client.gui.widget;
 
-import net.minecraft.client.gui.widgets.Button;
-
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntSupplier;
+import net.minecraft.client.gui.widget.ButtonWidget;
 
 public interface ButtonWidgetContextAttacher {
 
-    static ButtonWidgetContextAttacher toListDeconstructed(List<Button> buttons, List<PressAction> actions) {
+    static ButtonWidgetContextAttacher toListDeconstructed(List<ButtonWidget> buttons, List<PressAction> actions) {
         return toDeconstructed(() -> {
             int buttonSize = buttons.size();
             int actionSize = actions.size();
@@ -29,7 +28,7 @@ public interface ButtonWidgetContextAttacher {
         };
     }
 
-    static ButtonWidgetContextAttacher toDeconstructed(IntSupplier nextId, Consumer<Button> buttonPostProcess, Consumer<PressAction> actionPostProcess) {
+    static ButtonWidgetContextAttacher toDeconstructed(IntSupplier nextId, Consumer<ButtonWidget> buttonPostProcess, Consumer<PressAction> actionPostProcess) {
         return to(nextId, attachedContext -> {
             buttonPostProcess.accept(attachedContext.button());
             actionPostProcess.accept(attachedContext.action());

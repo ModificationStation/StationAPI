@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.StillFluid;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Material;
+import net.minecraft.block.StillLiquidBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateStillFluid extends StillFluid implements BlockTemplate {
+public class TemplateStillFluid extends StillLiquidBlock implements BlockTemplate {
 
     public TemplateStillFluid(Identifier identifier, Material arg) {
         this(BlockTemplate.getNextId(), arg);

@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Block;
+import net.minecraft.block.Material;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateBlockBase extends BlockBase implements BlockTemplate {
+public class TemplateBlockBase extends Block implements BlockTemplate {
 
     public TemplateBlockBase(Identifier identifier, Material material) {
         this(BlockTemplate.getNextId(), material);

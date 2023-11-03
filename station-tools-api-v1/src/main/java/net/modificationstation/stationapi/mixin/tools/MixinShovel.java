@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.tools;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.tool.Shovel;
-import net.minecraft.item.tool.ToolBase;
-import net.minecraft.item.tool.ToolMaterial;
+import net.minecraft.block.Block;
+import net.minecraft.item.ShovelItem;
+import net.minecraft.item.ToolItem;
+import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Shovel.class)
-public class MixinShovel extends ToolBase {
+@Mixin(ShovelItem.class)
+public class MixinShovel extends ToolItem {
 
-    protected MixinShovel(int i, int j, ToolMaterial arg, BlockBase[] args) {
+    protected MixinShovel(int i, int j, ToolMaterial arg, Block[] args) {
         super(i, j, arg, args);
     }
 

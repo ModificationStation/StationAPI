@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.item.nbt;
 
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 public interface StationNBT {
 
-    CompoundTag getStationNBT();
+    NbtCompound getStationNBT();
 }

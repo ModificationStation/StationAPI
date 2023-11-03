@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.block;
 
-import net.minecraft.item.ItemBase;
+import net.minecraft.item.Item;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +18,7 @@ public class MixinStats {
             )
     )
     private static Stat[] stop1(Stat[] statArray, String translationKey, int startId, int statAmount, int arrayLength) {
-        return new Stat[ItemBase.byId.length];
+        return new Stat[Item.ITEMS.length];
     }
 
     @Redirect(
@@ -29,7 +29,7 @@ public class MixinStats {
             )
     )
     private static Stat[] stop2(Stat[] statArray, String translationKey, int startId, int statAmount, int arrayLength) {
-        return new Stat[ItemBase.byId.length];
+        return new Stat[Item.ITEMS.length];
     }
 
     @Redirect(
@@ -40,7 +40,7 @@ public class MixinStats {
             )
     )
     private static Stat[] stop3(Stat[] statArray, String translationKey, int startId, int statAmount, int arrayLength) {
-        return new Stat[ItemBase.byId.length];
+        return new Stat[Item.ITEMS.length];
     }
 
     @Redirect(
@@ -51,6 +51,6 @@ public class MixinStats {
             )
     )
     private static Stat[] stop4(Stat[] statArray, String translationKey, int startId, int statAmount, int arrayLength) {
-        return new Stat[ItemBase.byId.length];
+        return new Stat[Item.ITEMS.length];
     }
 }

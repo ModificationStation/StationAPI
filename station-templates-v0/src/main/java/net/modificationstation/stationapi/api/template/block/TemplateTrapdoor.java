@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Trapdoor;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Material;
+import net.minecraft.block.TrapdoorBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateTrapdoor extends Trapdoor implements BlockTemplate {
+public class TemplateTrapdoor extends TrapdoorBlock implements BlockTemplate {
     
     public TemplateTrapdoor(Identifier identifier, Material arg) {
         this(BlockTemplate.getNextId(), arg);

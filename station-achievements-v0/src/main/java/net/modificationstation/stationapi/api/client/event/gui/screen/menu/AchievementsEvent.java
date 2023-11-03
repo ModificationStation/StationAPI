@@ -5,14 +5,14 @@ import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.event.Cancelable;
 import net.mine_diver.unsafeevents.event.EventPhases;
 import net.minecraft.achievement.Achievement;
-import net.minecraft.client.gui.screen.menu.Achievements;
+import net.minecraft.client.gui.screen.achievement.AchievementsScreen;
 import net.modificationstation.stationapi.api.StationAPI;
 
 import java.util.Random;
 
 @SuperBuilder
 public abstract class AchievementsEvent extends Event {
-    public final Achievements achievementsScreen;
+    public final AchievementsScreen achievementsScreen;
 
     @SuperBuilder
     @EventPhases(StationAPI.INTERNAL_PHASE)

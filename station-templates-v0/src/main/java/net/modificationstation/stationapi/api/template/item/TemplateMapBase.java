@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.minecraft.item.MapBase;
+import net.minecraft.class_561;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateMapBase extends MapBase implements ItemTemplate {
+public class TemplateMapBase extends class_561 implements ItemTemplate {
 
     public TemplateMapBase(Identifier identifier) {
         this(ItemTemplate.getNextId());

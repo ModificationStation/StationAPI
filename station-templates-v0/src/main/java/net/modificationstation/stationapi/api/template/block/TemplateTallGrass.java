@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.TallGrass;
+import net.minecraft.block.TallPlantBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateTallGrass extends TallGrass implements BlockTemplate {
+public class TemplateTallGrass extends TallPlantBlock implements BlockTemplate {
     
     public TemplateTallGrass(Identifier identifier, int j) {
         this(BlockTemplate.getNextId(), j);

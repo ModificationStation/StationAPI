@@ -6,11 +6,11 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import lombok.val;
-import net.minecraft.block.BlockBase;
-import net.minecraft.client.StatEntity;
+import net.minecraft.block.Block;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.item.ItemBase;
-import net.minecraft.stat.RegisteringStat;
+import net.minecraft.item.Item;
+import net.minecraft.stat.ItemOrBlockStat;
+import net.minecraft.stat.SimpleStat;
 import net.minecraft.stat.Stats;
 import net.modificationstation.stationapi.impl.resource.language.DeferredTranslationKeyHolder;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,12 +48,12 @@ class StatsMixin {
                     )
             }
     )
-    private static RegisteringStat stationapi_setCapturedTranslationKey(
-            RegisteringStat original,
+    private static SimpleStat stationapi_setCapturedTranslationKey(
+            SimpleStat original,
             @Share("translationKey") LocalRef<String> translationKey
     ) {
         val capturedTranslationKey = translationKey.get();
-        ((DeferredTranslationKeyHolder) original).stationapi_initTranslationKey(() -> I18n.translate(capturedTranslationKey));
+        ((DeferredTranslationKeyHolder) original).stationapi_initTranslationKey(() -> I18n.getTranslation(capturedTranslationKey));
         return original;
     }
 
@@ -69,7 +69,7 @@ class StatsMixin {
             )
     )
     private static String stationapi_captureFormatStringGetter(
-            ItemBase instance, Operation<String> original,
+            Item instance, Operation<String> original,
             @Share("formatStringGetter") LocalRef<Supplier<String>> capturedFormatStringGetter
     ) {
         capturedFormatStringGetter.set(() -> original.call(instance));
@@ -84,7 +84,7 @@ class StatsMixin {
             )
     )
     private static String stationapi_captureFormatStringGetter(
-            BlockBase instance, Operation<String> original,
+            Block instance, Operation<String> original,
             @Share("formatStringGetter") LocalRef<Supplier<String>> capturedFormatStringGetter
     ) {
         capturedFormatStringGetter.set(() -> original.call(instance));
@@ -123,14 +123,14 @@ class StatsMixin {
                     target = "(ILjava/lang/String;I)Lnet/minecraft/client/StatEntity;"
             )
     )
-    private static StatEntity stationapi_setTranslationKey(
-            StatEntity original,
+    private static ItemOrBlockStat stationapi_setTranslationKey(
+            ItemOrBlockStat original,
             @Share("translationKey") LocalRef<String> translationKey,
             @Share("formatStringGetter") LocalRef<Supplier<String>> formatStringGetter
     ) {
         val capturedTranslationKey = translationKey.get();
         val capturedFormatStringGetter = formatStringGetter.get();
-        ((DeferredTranslationKeyHolder) original).stationapi_initTranslationKey(() -> I18n.translate(capturedTranslationKey, capturedFormatStringGetter.get()));
+        ((DeferredTranslationKeyHolder) original).stationapi_initTranslationKey(() -> I18n.getTranslation(capturedTranslationKey, capturedFormatStringGetter.get()));
         return original;
     }
 }

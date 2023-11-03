@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.item;
 
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.impl.item.nbt.StationNBTSetter;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ import java.util.Objects;
 public class MixinPlayerInventory {
 
     @Shadow
-    public ItemInstance[] main;
+    public ItemStack[] main;
 
     @Inject(
             method = "mergeStacks(Lnet/minecraft/item/ItemInstance;)I",
@@ -31,7 +31,7 @@ public class MixinPlayerInventory {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void newItemInstance(ItemInstance par1, CallbackInfoReturnable<Integer> cir, int var2, int var3, int var4) {
+    private void newItemInstance(ItemStack par1, CallbackInfoReturnable<Integer> cir, int var2, int var3, int var4) {
         StationNBTSetter.cast(main[var4]).setStationNBT(par1.getStationNBT());
     }
 
@@ -44,7 +44,7 @@ public class MixinPlayerInventory {
                     ordinal = 1
             )
     )
-    private int captureItemInstance(ItemInstance instance, ItemInstance instance2) {
+    private int captureItemInstance(ItemStack instance, ItemStack instance2) {
         if (Objects.equals(instance.getStationNBT(), instance2.getStationNBT()))
             return instance.count;
         else {
@@ -68,6 +68,6 @@ public class MixinPlayerInventory {
             notchGodDamnit = false;
             return Integer.MIN_VALUE;
         } else
-            return instance.getMaxItemCount();
+            return instance.getMaxCountPerStack();
     }
 }

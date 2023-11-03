@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.client.option;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.minecraft.client.options.Option;
+import net.minecraft.client.option.Option;
 import net.modificationstation.stationapi.api.factory.EnumFactory;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

@@ -11,7 +11,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
@@ -70,7 +70,7 @@ public class ModelLoader {
     public static final JsonUnbakedModel BLOCK_ENTITY_MARKER;
     public static final JsonUnbakedModel VANILLA_MARKER;
     private static final ItemModelGenerator ITEM_MODEL_GENERATOR;
-    private static final Map<Identifier, StateManager<BlockBase, BlockState>> STATIC_DEFINITIONS;
+    private static final Map<Identifier, StateManager<Block, BlockState>> STATIC_DEFINITIONS;
     private final BlockColors blockColors;
     private final Map<Identifier, JsonUnbakedModel> jsonUnbakedModels;
     private final Map<Identifier, List<SourceTrackedData>> blockStates;
@@ -98,7 +98,7 @@ public class ModelLoader {
         profiler.swap("static_definitions");
         STATIC_DEFINITIONS.forEach((id, stateManager) -> stateManager.getStates().forEach(state -> this.addModel(BlockModels.getModelId(id, state).asIdentifier())));
         profiler.swap("blocks");
-        for (BlockBase block : BlockRegistry.INSTANCE)
+        for (Block block : BlockRegistry.INSTANCE)
             block.getStateManager().getStates().forEach(state -> this.addModel(BlockModels.getModelId(state).asIdentifier()));
         profiler.swap("items");
         for (Identifier identifier : ItemRegistry.INSTANCE.getIds())
@@ -120,7 +120,7 @@ public class ModelLoader {
         });
     }
 
-    private static Predicate<BlockState> stateKeyToPredicate(StateManager<BlockBase, BlockState> stateFactory, String key) {
+    private static Predicate<BlockState> stateKeyToPredicate(StateManager<Block, BlockState> stateFactory, String key) {
         Map<Property<?>, Comparable<?>> map = new HashMap<>();
         Iterator<String> var3 = COMMA_SPLITTER.split(key).iterator();
 
@@ -128,7 +128,7 @@ public class ModelLoader {
             Iterator<String> iterator;
             do {
                 if (!var3.hasNext()) {
-                    BlockBase block = stateFactory.getOwner();
+                    Block block = stateFactory.getOwner();
                     return (blockState) -> {
                         if (blockState != null && block == blockState.getBlock()) {
                             Iterator<Entry<Property<?>, Comparable<?>>> var4 = map.entrySet().iterator();
@@ -213,7 +213,7 @@ public class ModelLoader {
             this.putModel(modelIdentifier.asIdentifier(), unbakedModel);
             this.unbakedModels.put(identifier, unbakedModel);
         } else {
-            StateManager<BlockBase, BlockState> stateManager = /*Optional.ofNullable(STATIC_DEFINITIONS.get(identifier)).orElseGet(() -> */((BlockStateHolder) Objects.requireNonNull(BlockRegistry.INSTANCE.get(modelIdentifier.id))).getStateManager()/*)*/;
+            StateManager<Block, BlockState> stateManager = /*Optional.ofNullable(STATIC_DEFINITIONS.get(identifier)).orElseGet(() -> */((BlockStateHolder) Objects.requireNonNull(BlockRegistry.INSTANCE.get(modelIdentifier.id))).getStateManager()/*)*/;
             variantMapDeserializationContext.setStateFactory(stateManager);
             ImmutableList<Property<?>> list = ImmutableList.copyOf(this.blockColors.getProperties(stateManager.getOwner()));
             ImmutableList<BlockState> immutableList = stateManager.getStates();
@@ -391,7 +391,7 @@ public class ModelLoader {
         }
 
         public static ModelLoader.ModelDefinition create(BlockState state, MultipartUnbakedModel rawModel, Collection<Property<?>> properties) {
-            StateManager<BlockBase, BlockState> stateManager = ((BlockStateHolder) state.getBlock()).getStateManager();
+            StateManager<Block, BlockState> stateManager = ((BlockStateHolder) state.getBlock()).getStateManager();
             List<UnbakedModel> list = rawModel.getComponents().stream().filter((multipartModelComponent) -> multipartModelComponent.getPredicate(stateManager).test(state)).map(MultipartModelComponent::getModel).collect(ImmutableList.toImmutableList());
             ImmutableList<Object> list2 = getStateValues(state, properties);
             return new ModelLoader.ModelDefinition(list, list2);

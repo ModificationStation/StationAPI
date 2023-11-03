@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.client.color.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
 import net.modificationstation.stationapi.api.client.event.color.item.ItemColorsRegisterEvent;
@@ -26,8 +26,8 @@ public class ItemColors {
         return itemColors;
     }
 
-    public int getColor(ItemInstance item, int tintIndex) {
-        ItemColorProvider itemColorProvider = this.providers.get(ItemRegistry.INSTANCE.getRawId(item.getType()));
+    public int getColor(ItemStack item, int tintIndex) {
+        ItemColorProvider itemColorProvider = this.providers.get(ItemRegistry.INSTANCE.getRawId(item.getItem()));
         return itemColorProvider == null ? -1 : itemColorProvider.getColor(item, tintIndex);
     }
 

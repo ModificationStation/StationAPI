@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.item.server;
 
-import net.minecraft.entity.player.ServerPlayer;
-import net.minecraft.server.network.ServerPlayerPacketHandler;
-import net.minecraft.util.hit.HitType;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.util.hit.HitResultType;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,18 +10,18 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(ServerPlayerPacketHandler.class)
+@Mixin(ServerPlayNetworkHandler.class)
 public class MixinServerPlayerPacketHandler {
 
     @Shadow
-    private ServerPlayer serverPlayer;
+    private ServerPlayerEntity serverPlayer;
 
     @ModifyConstant(method = "onPlayerDigging(Lnet/minecraft/packet/play/PlayerDigging0xEC2SPacket;)V", constant = @Constant(doubleValue = 36))
     private double getBlockReach(double originalReach) {
         return Math.pow(StationAPI.EVENT_BUS.post(
                 PlayerEvent.Reach.builder()
                         .player(serverPlayer)
-                        .type(HitType.field_789)
+                        .type(HitResultType.BLOCK)
                         .currentReach(Math.sqrt(originalReach))
                         .build()
         ).currentReach, 2);
@@ -32,7 +32,7 @@ public class MixinServerPlayerPacketHandler {
         return Math.pow(StationAPI.EVENT_BUS.post(
                 PlayerEvent.Reach.builder()
                         .player(serverPlayer)
-                        .type(HitType.field_790)
+                        .type(HitResultType.ENTITY)
                         .currentReach(Math.sqrt(originalReach))
                         .build()
         ).currentReach, 2);

@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
+import net.minecraft.class_336;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.TextureBinder;
 import net.minecraft.client.texture.TextureManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,5 +17,5 @@ public class MixinMinecraft {
                     target = "Lnet/minecraft/client/texture/TextureManager;addTextureBinder(Lnet/minecraft/client/render/TextureBinder;)V"
             )
     )
-    private void stopVanillaTextureBinders(TextureManager textureManager, TextureBinder arg) { }
+    private void stopVanillaTextureBinders(TextureManager textureManager, class_336 arg) { }
 }

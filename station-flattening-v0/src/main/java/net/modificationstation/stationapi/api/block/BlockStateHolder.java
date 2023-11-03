@@ -1,15 +1,15 @@
 package net.modificationstation.stationapi.api.block;
 
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.state.StateManager;
 
 public interface BlockStateHolder {
 
-    StateManager<BlockBase, BlockState> getStateManager();
+    StateManager<Block, BlockState> getStateManager();
 
     BlockState getDefaultState();
 
-    void appendProperties(StateManager.Builder<BlockBase, BlockState> builder);
+    void appendProperties(StateManager.Builder<Block, BlockState> builder);
 
     void setDefaultState(BlockState state);
 }

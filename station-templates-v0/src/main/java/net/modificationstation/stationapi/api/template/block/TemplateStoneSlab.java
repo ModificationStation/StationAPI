@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.StoneSlab;
+import net.minecraft.block.SlabBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateStoneSlab extends StoneSlab implements BlockTemplate {
+public class TemplateStoneSlab extends SlabBlock implements BlockTemplate {
     
     public TemplateStoneSlab(Identifier identifier, boolean flag) {
         this(BlockTemplate.getNextId(), flag);

@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.api.nbt;
 
-import net.minecraft.util.io.LongTag;
+import net.minecraft.nbt.NbtLong;
 import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationNbtLong extends StationNbtElement {
 
     @Override
-    default LongTag copy() {
+    default NbtLong copy() {
         return Util.assertImpl();
     }
 }

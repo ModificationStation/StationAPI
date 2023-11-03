@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.vanillafix.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.class_182;
 import net.minecraft.client.Minecraft;
-import net.minecraft.level.storage.LevelStorage;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.registry.ModID;
@@ -23,11 +23,11 @@ import static net.modificationstation.stationapi.impl.vanillafix.datafixer.Vanil
 
 @Mixin(Minecraft.class)
 public class MixinMinecraft {
-    @Shadow private LevelStorage levelStorage;
+    @Shadow private class_182 levelStorage;
 
     @ModifyArg(method = "convertWorldFormat", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/ProgressListenerImpl;notifyWithGameRunning(Ljava/lang/String;)V"))
     private String changeProgressListenerTitle(String string, @Local(ordinal = 0) String worldName) {
-        CompoundTag worldTag = ((FlattenedWorldStorage)this.levelStorage).getWorldTag(worldName);
+        NbtCompound worldTag = ((FlattenedWorldStorage)this.levelStorage).getWorldTag(worldName);
 
         Set<DataFixers.UpdateData> updateList = NbtHelper.getUpdateList(worldTag);
 
@@ -42,7 +42,7 @@ public class MixinMinecraft {
 
     @ModifyArg(method = "convertWorldFormat", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/ProgressListenerImpl;method_1796(Ljava/lang/String;)V"))
     private String changeProgressListenerDesc(String string, @Local(ordinal = 0) String worldName) {
-        CompoundTag worldTag = ((FlattenedWorldStorage)this.levelStorage).getWorldTag(worldName);
+        NbtCompound worldTag = ((FlattenedWorldStorage)this.levelStorage).getWorldTag(worldName);
 
         Set<DataFixers.UpdateData> updateList = NbtHelper.getUpdateList(worldTag);
 

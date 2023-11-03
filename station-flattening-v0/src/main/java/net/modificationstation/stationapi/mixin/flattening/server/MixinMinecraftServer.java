@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.flattening.server;
 
-import net.minecraft.level.dimension.McRegionDimensionFile;
+import net.minecraft.class_294;
 import net.minecraft.server.MinecraftServer;
 import net.modificationstation.stationapi.impl.level.dimension.FlattenedDimensionFile;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +20,7 @@ public class MixinMinecraftServer {
                     target = "(Ljava/io/File;Ljava/lang/String;Z)Lnet/minecraft/level/dimension/McRegionDimensionFile;"
             )
     )
-    private McRegionDimensionFile flatten(File file, String string, boolean bl) {
+    private class_294 flatten(File file, String string, boolean bl) {
         return new FlattenedDimensionFile(file, string, bl);
     }
 }

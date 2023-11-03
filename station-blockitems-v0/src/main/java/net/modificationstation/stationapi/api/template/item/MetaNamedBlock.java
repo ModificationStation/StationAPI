@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.minecraft.item.ItemInstance;
+import net.minecraft.item.ItemStack;
 
 public class MetaNamedBlock extends MetaBlock {
 
@@ -9,7 +9,7 @@ public class MetaNamedBlock extends MetaBlock {
     }
 
     @Override
-    public String getTranslationKey(ItemInstance item) {
+    public String getTranslationKey(ItemStack item) {
         return getTranslationKey() + item.getDamage();
     }
 }

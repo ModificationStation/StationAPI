@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder;
 
-import net.minecraft.client.resource.TexturePack;
+import net.minecraft.class_285;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
@@ -16,17 +16,17 @@ public class ArsenicStillWater extends StationTextureBinder {
     }
 
     @Override
-    public void reloadFromTexturePack(TexturePack newTexturePack) {
+    public void reloadFromTexturePack(class_285 newTexturePack) {
         int square = getStaticReference().getWidth() * getStaticReference().getHeight();
         field_2566 = new float[square];
         field_2567 = new float[square];
         field_2568 = new float[square];
         field_2569 = new float[square];
-        grid = new byte[square * 4];
+        field_1411 = new byte[square * 4];
     }
 
     @Override
-    public void update() {
+    public void method_1205() {
         int
                 textureWidth = getStaticReference().getWidth(),
                 textureHeight = getStaticReference().getHeight();
@@ -77,7 +77,7 @@ public class ArsenicStillWater extends StationTextureBinder {
             int var19 = (int)(50.0F + var17 * 64.0F);
             int var7 = 255;
             int var8 = (int)(146.0F + var17 * 50.0F);
-            if (this.render3d) {
+            if (this.field_1413) {
                 int var9 = (var18 * 30 + var19 * 59 + var7 * 11) / 100;
                 int var10 = (var18 * 30 + var19 * 70) / 100;
                 int var11 = (var18 * 30 + var7 * 70) / 100;
@@ -86,10 +86,10 @@ public class ArsenicStillWater extends StationTextureBinder {
                 var7 = var11;
             }
 
-            this.grid[var15 * 4] = (byte)var18;
-            this.grid[var15 * 4 + 1] = (byte)var19;
-            this.grid[var15 * 4 + 2] = (byte)var7;
-            this.grid[var15 * 4 + 3] = (byte)var8;
+            this.field_1411[var15 * 4] = (byte)var18;
+            this.field_1411[var15 * 4 + 1] = (byte)var19;
+            this.field_1411[var15 * 4 + 2] = (byte)var7;
+            this.field_1411[var15 * 4 + 3] = (byte)var8;
         }
     }
 }

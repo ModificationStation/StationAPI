@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.overlay;
 
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.minecraft.class_556;
 import net.minecraft.client.Minecraft;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
@@ -37,9 +37,9 @@ public class BlockOverlayMixin {
     private void stationapi_overlay_overrideAtlas(
             float par1, CallbackInfo ci, int x, int y, int z, int var5, int blockId
     ) {
-        BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(field_2401.level.getBlockState(x, y, z));
+        BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(field_2401.world.getBlockState(x, y, z));
         if (model.isBuiltin())
-            stationapi_block_atlas = BlockBase.BY_ID[blockId].getAtlas();
+            stationapi_block_atlas = Block.BLOCKS[blockId].getAtlas();
         else
             stationapi_block_texture = model.getSprite();
     }

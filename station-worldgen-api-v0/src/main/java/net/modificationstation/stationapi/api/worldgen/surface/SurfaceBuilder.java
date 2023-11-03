@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.worldgen.surface;
 
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.math.Direction.AxisDirection;
@@ -35,7 +35,7 @@ public class SurfaceBuilder {
     /**
      * Start surface building with {@link StateSurfaceRule} with default blockstate
      */
-    public static SurfaceBuilder start(BlockBase block) {
+    public static SurfaceBuilder start(Block block) {
         return start(new StateSurfaceRule(block.getDefaultState()));
     }
 
@@ -109,14 +109,14 @@ public class SurfaceBuilder {
     /**
      * Add state condition - surface will replace only this block
      */
-    public SurfaceBuilder replace(BlockBase filter) {
+    public SurfaceBuilder replace(Block filter) {
         return condition(new BlockSurfaceCondition(filter), 4);
     }
 
     /**
      * Add state condition - surface will replace only blocks with specified tag
      */
-    public SurfaceBuilder replace(TagKey<BlockBase> filter) {
+    public SurfaceBuilder replace(TagKey<Block> filter) {
         return condition(new TagSurfaceCondition(filter), 4);
     }
 

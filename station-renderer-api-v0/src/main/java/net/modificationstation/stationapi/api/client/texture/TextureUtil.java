@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.client.texture;
 
-import net.minecraft.class_214;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
@@ -13,6 +12,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
+import net.minecraft.client.util.GlAllocationUtils;
 
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
@@ -63,16 +63,16 @@ public class TextureUtil {
         ByteBuffer byteBuffer;
         if (inputStream instanceof FileInputStream fileInputStream) {
             FileChannel fileChannel = fileInputStream.getChannel();
-            byteBuffer = class_214.method_744((int)fileChannel.size() + 1);
+            byteBuffer = GlAllocationUtils.allocateByteBuffer((int)fileChannel.size() + 1);
             while (true) {
                 if (fileChannel.read(byteBuffer) == -1) break;
             }
         } else {
-            byteBuffer = class_214.method_744(DEFAULT_IMAGE_BUFFER_SIZE);
+            byteBuffer = GlAllocationUtils.allocateByteBuffer(DEFAULT_IMAGE_BUFFER_SIZE);
             ReadableByteChannel readableByteChannel = Channels.newChannel(inputStream);
             while (readableByteChannel.read(byteBuffer) != -1) {
                 if (byteBuffer.remaining() != 0) continue;
-                byteBuffer = class_214.method_744(byteBuffer.capacity() * 2);
+                byteBuffer = GlAllocationUtils.allocateByteBuffer(byteBuffer.capacity() * 2);
             }
         }
         return byteBuffer;

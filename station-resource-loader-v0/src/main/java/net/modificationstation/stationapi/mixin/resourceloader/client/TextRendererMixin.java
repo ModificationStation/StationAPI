@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.mixin.resourceloader.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import cyclops.function.FluentFunctions;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.TextRenderer;
 import net.modificationstation.stationapi.api.client.resource.ReloadScreenManager;
 import net.modificationstation.stationapi.impl.client.resource.ReloadScreenTessellatorHolder;
 import org.objectweb.asm.Opcodes;

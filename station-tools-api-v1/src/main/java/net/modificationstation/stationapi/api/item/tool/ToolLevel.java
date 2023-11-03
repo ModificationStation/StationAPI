@@ -1,15 +1,15 @@
 package net.modificationstation.stationapi.api.item.tool;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.item.tool.ToolMaterial;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.tag.TagKey;
 
 public interface ToolLevel {
 
-    void setEffectiveBlocks(TagKey<BlockBase> effectiveBlocks);
+    void setEffectiveBlocks(TagKey<Block> effectiveBlocks);
 
-    TagKey<BlockBase> getEffectiveBlocks(ItemInstance itemInstance);
+    TagKey<Block> getEffectiveBlocks(ItemStack itemInstance);
 
-    ToolMaterial getMaterial(ItemInstance itemInstance);
+    ToolMaterial getMaterial(ItemStack itemInstance);
 }

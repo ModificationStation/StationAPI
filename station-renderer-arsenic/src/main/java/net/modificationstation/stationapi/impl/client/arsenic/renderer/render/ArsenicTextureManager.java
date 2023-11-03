@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
-import net.minecraft.class_214;
 import net.minecraft.client.texture.TextureManager;
+import net.minecraft.client.util.GlAllocationUtils;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
@@ -25,6 +25,6 @@ public final class ArsenicTextureManager {
 
     public void ensureBufferCapacity(int expectedCapacity) {
         if (expectedCapacity > access.getCurrentImageBuffer().capacity())
-            access.setCurrentImageBuffer(class_214.method_744(expectedCapacity));
+            access.setCurrentImageBuffer(GlAllocationUtils.allocateByteBuffer(expectedCapacity));
     }
 }

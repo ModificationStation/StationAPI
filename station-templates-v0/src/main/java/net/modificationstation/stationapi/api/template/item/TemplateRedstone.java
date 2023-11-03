@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.minecraft.item.Redstone;
+import net.minecraft.item.RedstoneItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateRedstone extends Redstone implements ItemTemplate {
+public class TemplateRedstone extends RedstoneItem implements ItemTemplate {
     
     public TemplateRedstone(Identifier identifier) {
         this(ItemTemplate.getNextId());

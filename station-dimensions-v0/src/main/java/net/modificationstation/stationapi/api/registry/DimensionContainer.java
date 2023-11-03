@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.registry;
 
-import net.minecraft.level.dimension.Dimension;
+import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.registry.serial.LegacyIDHolder;
 import org.jetbrains.annotations.NotNull;
 

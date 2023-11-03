@@ -1,13 +1,12 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
-import net.minecraft.level.biome.Biome;
-import net.minecraft.level.gen.BiomeSource;
-import net.minecraft.util.maths.MathHelper;
-
 import java.util.function.Function;
+import net.minecraft.class_153;
+import net.minecraft.class_519;
+import net.minecraft.util.math.MathHelper;
 
 public class BiomeDataInterpolator {
-    private final Function<Biome, Number> provider;
+    private final Function<class_153, Number> provider;
     private final float[] data = new float[4];
     private final int bitShift;
     private final int side;
@@ -19,7 +18,7 @@ public class BiomeDataInterpolator {
     private int lastX;
     private int lastZ;
 
-    public BiomeDataInterpolator(Function<Biome, Number> provider, int side, int radius, int distance) {
+    public BiomeDataInterpolator(Function<class_153, Number> provider, int side, int radius, int distance) {
         this.side = side;
         this.radius = radius;
         this.distance = distance;
@@ -28,7 +27,7 @@ public class BiomeDataInterpolator {
         this.provider = provider;
     }
 
-    public float get(BiomeSource source, int x, int z) {
+    public float get(class_519 source, int x, int z) {
         int x1 = x >> bitShift;
         int z1 = z >> bitShift;
 
@@ -58,11 +57,11 @@ public class BiomeDataInterpolator {
         return net.modificationstation.stationapi.api.util.math.MathHelper.lerp(dz, a, b);
     }
 
-    private float getInArea(BiomeSource source, int x, int z) {
+    private float getInArea(class_519 source, int x, int z) {
         float value = 0;
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dz = -radius; dz <= radius; dz++) {
-                Biome biome = source.getBiome(x + dx * distance, z + dz * distance);
+                class_153 biome = source.method_1787(x + dx * distance, z + dz * distance);
                 value += provider.apply(biome).floatValue();
             }
         }

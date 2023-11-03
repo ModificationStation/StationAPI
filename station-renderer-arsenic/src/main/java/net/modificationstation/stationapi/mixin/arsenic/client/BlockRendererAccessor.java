@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.client.render.block.BlockRenderer;
-import net.minecraft.level.BlockView;
+import net.minecraft.block.Material;
+import net.minecraft.client.render.block.BlockRenderManager;
+import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(BlockRenderer.class)
+@Mixin(BlockRenderManager.class)
 public interface BlockRendererAccessor {
 
     @Accessor

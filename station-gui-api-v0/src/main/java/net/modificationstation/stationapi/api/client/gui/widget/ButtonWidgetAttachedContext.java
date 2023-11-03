@@ -1,5 +1,5 @@
 package net.modificationstation.stationapi.api.client.gui.widget;
 
-import net.minecraft.client.gui.widgets.Button;
+import net.minecraft.client.gui.widget.ButtonWidget;
 
-public record ButtonWidgetAttachedContext(Button button, PressAction action) {}
+public record ButtonWidgetAttachedContext(ButtonWidget button, PressAction action) {}

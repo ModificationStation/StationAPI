@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.impl.client.texture;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.minecraft.class_285;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resource.TexturePack;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.event.resource.AssetsReloadEvent;
@@ -155,7 +155,7 @@ public class StationRenderImpl {
                 StationAPI.EVENT_BUS.post(TextureRegisterEvent.builder().build());
                 //noinspection deprecation
                 Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
-                TexturePack texturePack = minecraft.texturePackManager.texturePack;
+                class_285 texturePack = minecraft.field_2768.field_1175;
                 profiler.swap("texture_binders");
                 TERRAIN.registerTextureBinders(minecraft.textureManager, texturePack);
                 GUI_ITEMS.registerTextureBinders(minecraft.textureManager, texturePack);

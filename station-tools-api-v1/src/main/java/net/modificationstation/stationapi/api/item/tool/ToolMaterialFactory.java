@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.item.tool;
 
-import net.minecraft.item.tool.ToolMaterial;
+import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.factory.EnumFactory;
 
 public class ToolMaterialFactory {

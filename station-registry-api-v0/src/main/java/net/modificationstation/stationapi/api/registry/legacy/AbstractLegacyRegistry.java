@@ -18,7 +18,7 @@ import java.util.function.IntFunction;
 /**
  * Abstract extension of {@link SimpleRegistry} which allows interaction with objects that also have legacy IDs assigned to them.
  *
- * <p>For example, "minecraft:dirt" -> {@link net.minecraft.block.BlockBase#DIRT}; "minecraft:dirt" -> 3 (legacy ID)
+ * <p>For example, "minecraft:dirt" -> {@link net.minecraft.block.Block#DIRT}; "minecraft:dirt" -> 3 (legacy ID)
  *
  * <p>Legacy IDs act like identifiers. Every object must have a legacy ID, but not all legacy IDs must have an object.
  * Legacy IDs are integers.
@@ -26,7 +26,7 @@ import java.util.function.IntFunction;
  * <p>Unlike identifiers though, legacy IDs are limited and can be iterated through, as they're just integer numbers.
  *
  * <p>This registry has a lot of abstract methods to allow direct interaction with already existing methods of
- * legacy ID lookup, for example {@link net.minecraft.block.BlockBase#id} and {@link net.minecraft.block.BlockBase#BY_ID}.
+ * legacy ID lookup, for example {@link net.minecraft.block.Block#id} and {@link net.minecraft.block.Block#BLOCKS}.
  *
  * @param <T> the object's type that's stored in the registry.
  * @author mine_diver
@@ -71,7 +71,7 @@ public abstract class AbstractLegacyRegistry<T> extends SimpleRegistry<T> {
     /**
      * Defines registry's legacy IDs limit.
      *
-     * <p>For example, the length of {@link net.minecraft.block.BlockBase#BY_ID} array.
+     * <p>For example, the length of {@link net.minecraft.block.Block#BLOCKS} array.
      *
      * @return the maximum legacy ID value (exclusive).
      */
@@ -184,7 +184,7 @@ public abstract class AbstractLegacyRegistry<T> extends SimpleRegistry<T> {
      *
      * <p>This is useful for the ItemRegistry, in which usual items take IDs from 0->size-shift range
      * (shift being 256, the default size of BlockRegistry),
-     * but {@link net.minecraft.item.ItemBase#id} has the true ID that's shifted back to shift->size range.
+     * but {@link net.minecraft.item.Item#id} has the true ID that's shifted back to shift->size range.
      *
      * @return the next serial ID but shifted to 0.
      */

@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.mixin.block;
 
-import net.minecraft.item.ItemBase;
+import net.minecraft.item.Item;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(ItemBase.class)
+@Mixin(Item.class)
 public interface ItemBaseAccessor {
 
     @Mutable

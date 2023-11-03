@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.nbt;
 
-import net.minecraft.util.io.AbstractTag;
+import net.minecraft.nbt.NbtElement;
 import net.modificationstation.stationapi.api.nbt.NbtIntArray;
 import net.modificationstation.stationapi.api.nbt.NbtLongArray;
 import net.modificationstation.stationapi.api.nbt.StationNbtElement;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(AbstractTag.class)
+@Mixin(NbtElement.class)
 public abstract class MixinAbstractTag implements StationNbtElement {
 
     @Inject(
@@ -22,7 +22,7 @@ public abstract class MixinAbstractTag implements StationNbtElement {
             ),
             cancellable = true
     )
-    private static void getCustomTag(byte id, CallbackInfoReturnable<AbstractTag> cir) {
+    private static void getCustomTag(byte id, CallbackInfoReturnable<NbtElement> cir) {
         switch (id) {
             case 11 -> cir.setReturnValue(new NbtIntArray());
             case 12 -> cir.setReturnValue(new NbtLongArray());

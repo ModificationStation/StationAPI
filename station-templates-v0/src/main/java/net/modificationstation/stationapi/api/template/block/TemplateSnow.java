@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Snow;
+import net.minecraft.block.SnowyBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateSnow extends Snow implements BlockTemplate {
+public class TemplateSnow extends SnowyBlock implements BlockTemplate {
     
     public TemplateSnow(Identifier identifier, int texUVStart) {
         this(BlockTemplate.getNextId(), texUVStart);

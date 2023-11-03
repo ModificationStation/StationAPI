@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.gui.widget;
 
-import net.minecraft.client.gui.widgets.Button;
+import net.minecraft.client.gui.widget.ButtonWidget;
 
 public interface PressAction {
 
-    void onPress(Button button);
+    void onPress(ButtonWidget button);
 }

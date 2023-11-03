@@ -1,20 +1,20 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
-import net.minecraft.item.ItemInstance;
-import net.minecraft.recipe.Recipe;
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.CraftingRecipe;
 import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(Recipe.class)
+@Mixin(CraftingRecipe.class)
 public interface MixinRecipe extends StationRecipe {
 
     @Override
-    default ItemInstance[] getIngredients() {
+    default ItemStack[] getIngredients() {
         throw new UnsupportedOperationException("Your custom recipe registry needs to implement the methods found in \"net.modificationstation.stationapi.api.recipe.StationRecipe\"!");
     }
 
     @Override
-    default ItemInstance[] getOutputs() {
+    default ItemStack[] getOutputs() {
         throw new UnsupportedOperationException("Your custom recipe registry needs to implement the methods found in \"net.modificationstation.stationapi.api.recipe.StationRecipe\"!");
     }
 }

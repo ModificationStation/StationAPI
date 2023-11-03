@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.packet;
 
 import com.google.gson.Gson;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.network.PacketHandler;
-import net.minecraft.packet.AbstractPacket;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.NetworkHandler;
+import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.entity.player.PlayerHelper;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
@@ -39,7 +39,7 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
  *
  * @author mine_diver
  */
-public class Message extends AbstractPacket implements IdentifiablePacket {
+public class Message extends Packet implements IdentifiablePacket {
 
     public static final Identifier PACKET_ID = MODID.id("message");
 
@@ -96,7 +96,7 @@ public class Message extends AbstractPacket implements IdentifiablePacket {
     /**
      * Array of strings to send.
      *
-     * <p>Due to a hard limit in {@link AbstractPacket#writeString(String, DataOutputStream)},
+     * <p>Due to a hard limit in {@link Packet#writeString(String, DataOutputStream)},
      * the maximum allowed length of a single string is 32767.
      *
      * <p>String's single character is 2 bytes, allowing all unicode characters.
@@ -443,8 +443,8 @@ public class Message extends AbstractPacket implements IdentifiablePacket {
      *                but can be used to get the player's instance that received the packet.
      */
     @Override
-    public void apply(PacketHandler handler) {
-        BiConsumer<PlayerBase, Message> messageListener = MessageListenerRegistry.INSTANCE.get(identifier);
+    public void apply(NetworkHandler handler) {
+        BiConsumer<PlayerEntity, Message> messageListener = MessageListenerRegistry.INSTANCE.get(identifier);
         if (messageListener != null)
             messageListener.accept(PlayerHelper.getPlayerFromPacketHandler(handler), this);
     }
@@ -455,7 +455,7 @@ public class Message extends AbstractPacket implements IdentifiablePacket {
      * @return the packet's size.
      */
     @Override
-    public int length() {
+    public int size() {
         return size(identifier.toString().toCharArray()) +
                 Short.BYTES +
                 (booleans == null ? 0 : size(booleans)) +

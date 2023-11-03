@@ -1,16 +1,16 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.entity.PlayerRenderer;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.block.Block;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.item.BlockItemForm;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(PlayerRenderer.class)
+@Mixin(PlayerEntityRenderer.class)
 public class MixinPlayerRenderer {
 
     @Unique
@@ -23,7 +23,7 @@ public class MixinPlayerRenderer {
                     target = "Lnet/minecraft/item/ItemBase;id:I"
             )
     )
-    private int isBlockItemForm(ItemBase instance) {
+    private int isBlockItemForm(Item instance) {
         if (instance instanceof BlockItemForm blockItemForm){
             stationapi_blockItemForm = blockItemForm;
             return 255;
@@ -39,8 +39,8 @@ public class MixinPlayerRenderer {
                     ordinal = 1
             )
     )
-    private int isBlockItemForm(ItemInstance instance) {
-        if (instance.getType() instanceof BlockItemForm blockItemForm) {
+    private int isBlockItemForm(ItemStack instance) {
+        if (instance.getItem() instanceof BlockItemForm blockItemForm) {
             stationapi_blockItemForm = blockItemForm;
             return 255;
         }
@@ -55,7 +55,7 @@ public class MixinPlayerRenderer {
                     args = "array=get"
             )
     )
-    private BlockBase getBlockItemForm(BlockBase[] array, int index) {
+    private Block getBlockItemForm(Block[] array, int index) {
         return stationapi_blockItemForm.getBlock();
     }
 }

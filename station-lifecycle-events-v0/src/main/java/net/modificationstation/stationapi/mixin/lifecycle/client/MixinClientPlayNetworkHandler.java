@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.lifecycle.client;
 
-import net.minecraft.network.ClientPlayNetworkHandler;
-import net.minecraft.packet.login.LoginRequest0x1Packet;
-import net.minecraft.packet.misc.Disconnect0xFFPacket;
+import net.minecraft.client.network.ClientNetworkHandler;
+import net.minecraft.network.packet.login.LoginHelloPacket;
+import net.minecraft.network.packet.play.DisconnectPacket;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.network.MultiplayerLogoutEvent;
 import net.modificationstation.stationapi.api.client.event.network.ServerLoginSuccessEvent;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ClientPlayNetworkHandler.class)
+@Mixin(ClientNetworkHandler.class)
 public abstract class MixinClientPlayNetworkHandler {
 
     @Inject(
@@ -19,11 +19,11 @@ public abstract class MixinClientPlayNetworkHandler {
             at = @At("HEAD"),
             cancellable = true
     )
-    private void onLoginSuccess(LoginRequest0x1Packet packet, CallbackInfo ci) {
+    private void onLoginSuccess(LoginHelloPacket packet, CallbackInfo ci) {
         if (
                 StationAPI.EVENT_BUS.post(
                         ServerLoginSuccessEvent.builder()
-                                .networkHandler((ClientPlayNetworkHandler) (Object) this)
+                                .networkHandler((ClientNetworkHandler) (Object) this)
                                 .loginRequestPacket(packet)
                                 .build()
                 ).isCanceled()
@@ -34,7 +34,7 @@ public abstract class MixinClientPlayNetworkHandler {
             method = "onDisconnect(Lnet/minecraft/packet/misc/Disconnect0xFFPacket;)V",
             at = @At("HEAD")
     )
-    private void onKicked(Disconnect0xFFPacket packet, CallbackInfo ci) {
+    private void onKicked(DisconnectPacket packet, CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(
                 MultiplayerLogoutEvent.builder()
                         .packet(packet)
@@ -51,7 +51,7 @@ public abstract class MixinClientPlayNetworkHandler {
     private void onDropped(String reason, Object[] stacktrace, CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(
                 MultiplayerLogoutEvent.builder()
-                        .packet(new Disconnect0xFFPacket(reason))
+                        .packet(new DisconnectPacket(reason))
                         .stacktrace(stacktrace instanceof String[] strings ? strings : new String[0])
                         .dropped(true)
                         .build()

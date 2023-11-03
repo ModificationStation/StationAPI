@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.block.BlockRenderer;
+import net.minecraft.block.Block;
+import net.minecraft.client.render.block.BlockRenderManager;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
@@ -88,17 +88,17 @@ public final class ArsenicBlockRenderer {
         return extractMultiplier(constant * sprite.getContents().getHeight());
     }
 
-    private final BlockRenderer blockRenderer;
+    private final BlockRenderManager blockRenderer;
     private final BlockRendererAccessor blockRendererAccessor;
     private final Random random = new Random();
     private final MutableBlockPos blockPos = new MutableBlockPos(0, 0, 0);
 
-    public ArsenicBlockRenderer(BlockRenderer blockRenderer) {
+    public ArsenicBlockRenderer(BlockRenderManager blockRenderer) {
         this.blockRenderer = blockRenderer;
         blockRendererAccessor = (BlockRendererAccessor) blockRenderer;
     }
 
-    public void renderWorld(BlockBase block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
+    public void renderWorld(Block block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         BlockState state = ((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z);
         BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state);
         if (!model.isBuiltin()) {
@@ -111,10 +111,10 @@ public final class ArsenicBlockRenderer {
         }
     }
 
-    public void renderInventory(BlockBase block, int meta, float brightness, CallbackInfo ci) {
+    public void renderInventory(Block block, int meta, float brightness, CallbackInfo ci) {
         if (block instanceof BlockWithInventoryRenderer renderer) {
-            if (blockRenderer.itemColourEnabled) {
-                int var5 = block.getBaseColour(meta);
+            if (blockRenderer.inventoryColorEnabled) {
+                int var5 = block.getColor(meta);
                 float var6 = (float)((var5 >> 16) & 255) / 255.0F;
                 float var7 = (float)((var5 >> 8) & 255) / 255.0F;
                 float var8 = (float)(var5 & 255) / 255.0F;

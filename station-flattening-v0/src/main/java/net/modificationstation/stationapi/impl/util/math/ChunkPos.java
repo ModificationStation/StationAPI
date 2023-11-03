@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.impl.util.math;
 
-import net.minecraft.util.maths.TilePos;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Spliterator;
@@ -8,6 +7,7 @@ import java.util.Spliterators;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import net.minecraft.util.math.BlockPos;
 
 public class ChunkPos {
 
@@ -31,7 +31,7 @@ public class ChunkPos {
         this.z = z;
     }
 
-    public ChunkPos(TilePos pos) {
+    public ChunkPos(BlockPos pos) {
         this.x = ChunkSectionPos.getSectionCoord(pos.x);
         this.z = ChunkSectionPos.getSectionCoord(pos.z);
     }
@@ -57,7 +57,7 @@ public class ChunkPos {
         return (long)chunkX & field_30954 | ((long)chunkZ & field_30954) << 32;
     }
 
-    public static long toLong(TilePos pos) {
+    public static long toLong(BlockPos pos) {
         return ChunkPos.toLong(ChunkSectionPos.getSectionCoord(pos.x), ChunkSectionPos.getSectionCoord(pos.z));
     }
 
@@ -129,8 +129,8 @@ public class ChunkPos {
         return this.z & 0x1F;
     }
 
-    public TilePos getBlockPos(int offsetX, int y, int offsetZ) {
-        return new TilePos(this.getOffsetX(offsetX), y, this.getOffsetZ(offsetZ));
+    public BlockPos getBlockPos(int offsetX, int y, int offsetZ) {
+        return new BlockPos(this.getOffsetX(offsetX), y, this.getOffsetZ(offsetZ));
     }
 
     public int getOffsetX(int offset) {
@@ -141,8 +141,8 @@ public class ChunkPos {
         return ChunkSectionPos.getOffsetPos(this.z, offset);
     }
 
-    public TilePos getCenterAtY(int y) {
-        return new TilePos(this.getCenterX(), y, this.getCenterZ());
+    public BlockPos getCenterAtY(int y) {
+        return new BlockPos(this.getCenterX(), y, this.getCenterZ());
     }
 
     @Override
@@ -150,8 +150,8 @@ public class ChunkPos {
         return "[" + this.x + ", " + this.z + "]";
     }
 
-    public TilePos getStartPos() {
-        return new TilePos(this.getStartX(), 0, this.getStartZ());
+    public BlockPos getStartPos() {
+        return new BlockPos(this.getStartX(), 0, this.getStartZ());
     }
 
     public int getChebyshevDistance(ChunkPos pos) {

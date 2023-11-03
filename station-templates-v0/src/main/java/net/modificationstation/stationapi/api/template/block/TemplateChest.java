@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Chest;
+import net.minecraft.block.ChestBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateChest extends Chest implements BlockTemplate {
+public class TemplateChest extends ChestBlock implements BlockTemplate {
 
     public TemplateChest(Identifier identifier) {
         this(BlockTemplate.getNextId());

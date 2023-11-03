@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Portal;
+import net.minecraft.block.NetherPortalBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplatePortal extends Portal implements BlockTemplate {
+public class TemplatePortal extends NetherPortalBlock implements BlockTemplate {
 
     public TemplatePortal(Identifier identifier, int j) {
         this(BlockTemplate.getNextId(), j);

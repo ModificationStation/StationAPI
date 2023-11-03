@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.RedstoneTorch;
+import net.minecraft.block.RedstoneTorchBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateRedstoneTorch extends RedstoneTorch implements BlockTemplate {
+public class TemplateRedstoneTorch extends RedstoneTorchBlock implements BlockTemplate {
     
     public TemplateRedstoneTorch(Identifier identifier, int j, boolean flag) {
         this(BlockTemplate.getNextId(), j, flag);

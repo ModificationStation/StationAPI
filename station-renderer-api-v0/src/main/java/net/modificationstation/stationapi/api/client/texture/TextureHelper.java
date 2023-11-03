@@ -20,6 +20,6 @@ public class TextureHelper {
 
     public static InputStream getTextureStream(String path) {
         //noinspection deprecation
-        return ((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePackManager.texturePack.getResourceAsStream(path);
+        return ((Minecraft) FabricLoader.getInstance().getGameInstance()).field_2768.field_1175.method_976(path);
     }
 }

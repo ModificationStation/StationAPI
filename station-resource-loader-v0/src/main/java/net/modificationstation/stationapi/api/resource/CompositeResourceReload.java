@@ -19,6 +19,8 @@ import static cyclops.data.tuple.Tuple.tuple;
 import static cyclops.function.Function1.constant;
 import static cyclops.function.Function2._2;
 
+import F;
+
 public final class CompositeResourceReload implements ResourceReload {
     private static final float DEFAULT_WEIGHT = 1;
     private static final Function2<Function<Float, Float>, Tuple2<Option<Supplier<ResourceReload>>, Float>, Tuple2<Option<Supplier<ResourceReload>>, Float>> WEIGHT_MAPPER_FACTORY = Function2.<Tuple2<Option<Supplier<ResourceReload>>, Float>, Function<Float, Float>, Tuple2<Option<Supplier<ResourceReload>>, Float>>λ(Tuple2::map2).reverse();

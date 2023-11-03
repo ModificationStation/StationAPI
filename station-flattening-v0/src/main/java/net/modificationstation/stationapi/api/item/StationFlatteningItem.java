@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.item;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.api.registry.RemappableRawIdHolder;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 public interface StationFlatteningItem extends RemappableRawIdHolder, ItemConvertible, ItemStrengthWithBlockState {
 
-    Map<BlockBase, ItemBase> BLOCK_ITEMS = new Reference2ReferenceOpenHashMap<>();
+    Map<Block, Item> BLOCK_ITEMS = new Reference2ReferenceOpenHashMap<>();
 
     @Override
     @ApiStatus.Internal
@@ -23,21 +23,21 @@ public interface StationFlatteningItem extends RemappableRawIdHolder, ItemConver
     }
 
     @Override
-    default ItemBase asItem() {
+    default Item asItem() {
         return Util.assertImpl();
     }
 
-    default RegistryEntry.Reference<ItemBase> getRegistryEntry() {
-        return Util.assertImpl();
-    }
-
-    @Override
-    default boolean isSuitableFor(ItemInstance itemStack, BlockState state) {
+    default RegistryEntry.Reference<Item> getRegistryEntry() {
         return Util.assertImpl();
     }
 
     @Override
-    default float getMiningSpeedMultiplier(ItemInstance itemStack, BlockState state) {
+    default boolean isSuitableFor(ItemStack itemStack, BlockState state) {
+        return Util.assertImpl();
+    }
+
+    @Override
+    default float getMiningSpeedMultiplier(ItemStack itemStack, BlockState state) {
         return Util.assertImpl();
     }
 }

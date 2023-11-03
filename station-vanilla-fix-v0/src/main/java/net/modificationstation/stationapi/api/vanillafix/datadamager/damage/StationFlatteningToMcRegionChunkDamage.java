@@ -7,7 +7,7 @@ import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.Type;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.class_257;
-import net.minecraft.level.LightType;
+import net.minecraft.class_56;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.util.collection.PackedIntegerArray;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
@@ -29,8 +29,8 @@ public class StationFlatteningToMcRegionChunkDamage extends DataFix {
     private final static byte[] DEFAULT_BLOCK_LIGHT = new byte[CHUNK_SIZE >> 1];
     private final static byte[] DEFAULT_SKY_LIGHT = new byte[CHUNK_SIZE >> 1];
     static {
-        Arrays.fill(DEFAULT_BLOCK_LIGHT, (byte) (LightType.field_2758.field_2759 << 4 | LightType.field_2758.field_2759));
-        Arrays.fill(DEFAULT_SKY_LIGHT, (byte) (LightType.field_2757.field_2759 << 4 | LightType.field_2757.field_2759));
+        Arrays.fill(DEFAULT_BLOCK_LIGHT, (byte) (class_56.field_2758.field_2759 << 4 | class_56.field_2758.field_2759));
+        Arrays.fill(DEFAULT_SKY_LIGHT, (byte) (class_56.field_2757.field_2759 << 4 | class_56.field_2757.field_2759));
     }
 
     private final String name;

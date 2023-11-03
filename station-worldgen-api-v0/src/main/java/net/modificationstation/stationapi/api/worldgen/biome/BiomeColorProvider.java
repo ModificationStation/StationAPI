@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
-import net.minecraft.level.gen.BiomeSource;
+import net.minecraft.class_519;
 
 @FunctionalInterface
 public interface BiomeColorProvider {
-    int getColor(BiomeSource source, int x, int z);
+    int getColor(class_519 source, int x, int z);
 }
 

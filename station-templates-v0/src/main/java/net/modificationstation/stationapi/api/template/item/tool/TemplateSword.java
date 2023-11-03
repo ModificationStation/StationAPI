@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.api.template.item.tool;
 
-import net.minecraft.item.tool.Sword;
-import net.minecraft.item.tool.ToolMaterial;
+import net.minecraft.item.SwordItem;
+import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateSword extends Sword implements ItemTemplate {
+public class TemplateSword extends SwordItem implements ItemTemplate {
     
     public TemplateSword(Identifier identifier, ToolMaterial arg) {
         this(ItemTemplate.getNextId(), arg);

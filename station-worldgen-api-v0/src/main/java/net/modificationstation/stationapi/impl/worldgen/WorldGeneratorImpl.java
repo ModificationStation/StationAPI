@@ -1,21 +1,21 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
-import net.minecraft.level.Level;
-import net.minecraft.level.biome.Biome;
-import net.minecraft.level.gen.BiomeSource;
+import net.minecraft.class_153;
+import net.minecraft.class_519;
+import net.minecraft.world.World;
 
 public class WorldGeneratorImpl {
-    private static final BiomeDataInterpolator MIN_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(Biome::getMinHeight, 16, 4, 8);
-    private static final BiomeDataInterpolator MAX_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(Biome::getMaxHeight, 16, 4, 8);
+    private static final BiomeDataInterpolator MIN_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(class_153::getMinHeight, 16, 4, 8);
+    private static final BiomeDataInterpolator MAX_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(class_153::getMaxHeight, 16, 4, 8);
 
-    public static void updateNoise(Level level, int cx, int cz, double[] data) {
+    public static void updateNoise(World level, int cx, int cz, double[] data) {
         float min = 0;
         float max = 0;
         float n = 0;
         cx <<= 4;
         cz <<= 4;
     
-        BiomeSource biomeSource = level.getBiomeSource();
+        class_519 biomeSource = level.method_1781();
         int sideY = data.length / 25;
         int dx = sideY * 5;
 

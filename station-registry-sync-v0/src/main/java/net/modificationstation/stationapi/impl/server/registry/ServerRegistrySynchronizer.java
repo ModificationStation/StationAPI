@@ -13,7 +13,7 @@ import net.modificationstation.stationapi.impl.registry.sync.RegistrySyncManager
 public class ServerRegistrySynchronizer {
     @EventListener
     private static void sendLevelRegistry(PlayerPacketHandlerSetEvent event) {
-        if (((ModdedPacketHandler) event.player.packetHandler).isModded())
+        if (((ModdedPacketHandler) event.player.field_255).isModded())
             RegistrySyncManager.configureClient(event.player);
     }
 }

@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.mixin.arsenic.client.block;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.block.BlockRenderer;
+import net.minecraft.block.Block;
+import net.minecraft.client.render.block.BlockRenderManager;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
@@ -21,7 +21,7 @@ import java.util.Objects;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
-@Mixin(BlockRenderer.class)
+@Mixin(BlockRenderManager.class)
 public class PistonHeadRendererMixin {
 
     // PISTON ROD START
@@ -232,7 +232,7 @@ public class PistonHeadRendererMixin {
             method = "renderPistonHead",
             at = @At("HEAD")
     )
-    private void stationapi_pistonHead_captureAtlas(BlockBase block, int j, int k, int bl, boolean par5, CallbackInfoReturnable<Boolean> cir) {
+    private void stationapi_pistonHead_captureAtlas(Block block, int j, int k, int bl, boolean par5, CallbackInfoReturnable<Boolean> cir) {
         stationapi_pistonHead_atlas = block.getAtlas();
     }
 
@@ -240,7 +240,7 @@ public class PistonHeadRendererMixin {
             method = "renderPistonHead",
             at = @At("RETURN")
     )
-    private void stationapi_pistonHead_releaseCaptured(BlockBase i, int j, int k, int bl, boolean par5, CallbackInfoReturnable<Boolean> cir) {
+    private void stationapi_pistonHead_releaseCaptured(Block i, int j, int k, int bl, boolean par5, CallbackInfoReturnable<Boolean> cir) {
         stationapi_pistonHead_atlas = null;
     }
 

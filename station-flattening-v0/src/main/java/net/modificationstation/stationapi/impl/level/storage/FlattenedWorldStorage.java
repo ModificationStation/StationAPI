@@ -6,16 +6,16 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.level.LevelProperties;
-import net.minecraft.level.dimension.DimensionData;
-import net.minecraft.level.storage.LevelMetadata;
-import net.minecraft.level.storage.McRegionLevelStorage;
-import net.minecraft.level.storage.RegionFile;
-import net.minecraft.level.storage.RegionLoader;
-import net.minecraft.util.ProgressListener;
-import net.minecraft.util.io.CompoundTag;
-import net.minecraft.util.io.NBTIO;
-import net.minecraft.util.maths.MathHelper;
+import net.minecraft.class_157;
+import net.minecraft.class_353;
+import net.minecraft.class_379;
+import net.minecraft.class_591;
+import net.minecraft.class_62;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.WorldProperties;
+import net.minecraft.world.dimension.DimensionData;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.util.Util;
@@ -29,7 +29,7 @@ import java.util.function.BiFunction;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
-public class FlattenedWorldStorage extends McRegionLevelStorage {
+public class FlattenedWorldStorage extends class_157 {
 
     public FlattenedWorldStorage(File file) {
         super(file);
@@ -37,42 +37,42 @@ public class FlattenedWorldStorage extends McRegionLevelStorage {
 
     @Environment(value=EnvType.CLIENT)
     @Override
-    public String getLevelFormat() {
-        return "Modded " + super.getLevelFormat();
+    public String method_1001() {
+        return "Modded " + super.method_1001();
     }
 
     @Environment(value=EnvType.CLIENT)
     public String getPreviousWorldFormat() {
-        return super.getLevelFormat();
+        return super.method_1001();
     }
 
     @Environment(value=EnvType.CLIENT)
-    public List<LevelMetadata> getMetadata() {
-        ArrayList<LevelMetadata> worlds = new ArrayList<>();
-        for (File worldPath : Objects.requireNonNull(this.path.listFiles())) {
+    public List<class_591> method_1002() {
+        ArrayList<class_591> worlds = new ArrayList<>();
+        for (File worldPath : Objects.requireNonNull(this.field_1706.listFiles())) {
             String worldFolder;
-            LevelProperties data;
-            if (!worldPath.isDirectory() || (data = this.getLevelData(worldFolder = worldPath.getName())) == null) continue;
-            CompoundTag worldTag = getWorldTag(worldFolder);
+            WorldProperties data;
+            if (!worldPath.isDirectory() || (data = this.method_1004(worldFolder = worldPath.getName())) == null) continue;
+            NbtCompound worldTag = getWorldTag(worldFolder);
             boolean requiresUpdating = data.getVersion() != 19132 || NbtHelper.requiresUpdating(worldTag);
             String worldName = data.getName();
-            if (worldName == null || MathHelper.isStringEmpty(worldName)) worldName = worldFolder;
-            worlds.add(new LevelMetadata(worldFolder, worldName, data.getLastPlayed(), data.getSizeOnDisk(), requiresUpdating));
+            if (worldName == null || MathHelper.isNullOrEmtpy(worldName)) worldName = worldFolder;
+            worlds.add(new class_591(worldFolder, worldName, data.setLastPlayed(), data.getSizeOnDisk(), requiresUpdating));
         }
         return worlds;
     }
 
-    public CompoundTag getWorldTag(String worldFolder) {
-        File worldPath = new File(path, worldFolder);
+    public NbtCompound getWorldTag(String worldFolder) {
+        File worldPath = new File(field_1706, worldFolder);
         if (!worldPath.exists()) return null;
         File worldData = new File(worldPath, "level.dat");
         if (worldData.exists()) try {
-            return NBTIO.readGzipped(new FileInputStream(worldData)).getCompoundTag("Data");
+            return NbtIo.readCompressed(new FileInputStream(worldData)).getCompound("Data");
         } catch (Exception e) {
             e.printStackTrace();
         }
         if ((worldData = new File(worldPath, "level.dat_old")).exists()) try {
-            return NBTIO.readGzipped(new FileInputStream(worldData)).getCompoundTag("Data");
+            return NbtIo.readCompressed(new FileInputStream(worldData)).getCompound("Data");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,38 +80,38 @@ public class FlattenedWorldStorage extends McRegionLevelStorage {
     }
 
     @Override
-    public DimensionData createDimensionFile(String string, boolean bl) {
-        return new FlattenedDimensionFile(this.path, string, bl);
+    public DimensionData method_1009(String string, boolean bl) {
+        return new FlattenedDimensionFile(this.field_1706, string, bl);
     }
 
     @Override
-    public boolean isOld(String string) {
-        if (super.isOld(string))
+    public boolean method_1007(String string) {
+        if (super.method_1007(string))
             return true;
-        CompoundTag worldTag = getWorldTag(string);
+        NbtCompound worldTag = getWorldTag(string);
         return worldTag != null && NbtHelper.requiresUpdating(worldTag);
     }
 
     @Override
-    public boolean convertLevel(String worldFolder, ProgressListener progress) {
+    public boolean method_1008(String worldFolder, class_62 progress) {
         return convertLevel(worldFolder, (type, compound) -> NbtHelper.addDataVersions(NbtHelper.update(type, compound)), progress);
     }
 
-    public boolean convertLevel(String worldFolder, BiFunction<DSL.TypeReference, CompoundTag, CompoundTag> convertFunction, ProgressListener progress) {
-        RegionLoader.clearCache();
+    public boolean convertLevel(String worldFolder, BiFunction<DSL.TypeReference, NbtCompound, NbtCompound> convertFunction, class_62 progress) {
+        class_379.method_1212();
         LOGGER.info("Creating a backup of world \"" + worldFolder + "\"...");
-        File worldFile = new File(path, worldFolder);
+        File worldFile = new File(field_1706, worldFolder);
         try {
-            Util.pack(worldFile.toPath(), new File(path, worldFolder + "-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".zip").toPath());
+            Util.pack(worldFile.toPath(), new File(field_1706, worldFolder + "-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".zip").toPath());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (super.isOld(worldFolder)) {
-            LOGGER.info("Converting to \"" + super.getLevelFormat() + "\" first...");
-            super.convertLevel(worldFolder, progress);
+        if (super.method_1007(worldFolder)) {
+            LOGGER.info("Converting to \"" + super.method_1001() + "\" first...");
+            super.method_1008(worldFolder, progress);
         }
-        progress.progressStagePercentage(0);
-        List<RegionFile> regions = new ArrayList<>();
+        progress.method_1794(0);
+        List<class_353> regions = new ArrayList<>();
         LOGGER.info("Scanning folders...");
         scanDimensionDir(worldFile, regions);
         File[] dims = worldFile.listFiles((dir, name) -> new File(dir, name).isDirectory() && name.startsWith("DIM"));
@@ -119,16 +119,16 @@ public class FlattenedWorldStorage extends McRegionLevelStorage {
             for (File dim : dims)
                 scanDimensionDir(dim, regions);
         convertChunks(regions, convertFunction, progress);
-        CompoundTag newWorldTag = new CompoundTag();
-        CompoundTag newWorldDataTag = convertFunction.apply(TypeReferences.LEVEL, getWorldTag(worldFolder));
+        NbtCompound newWorldTag = new NbtCompound();
+        NbtCompound newWorldDataTag = convertFunction.apply(TypeReferences.LEVEL, getWorldTag(worldFolder));
         LOGGER.info("Converting player inventory...");
-        newWorldDataTag.put("Player", convertFunction.apply(TypeReferences.PLAYER, newWorldDataTag.getCompoundTag("Player")));
+        newWorldDataTag.put("Player", convertFunction.apply(TypeReferences.PLAYER, newWorldDataTag.getCompound("Player")));
         newWorldTag.put("Data", newWorldDataTag);
         try {
             File file = new File(worldFile, "level.dat_new");
             File file2 = new File(worldFile, "level.dat_old");
             File file3 = new File(worldFile, "level.dat");
-            NBTIO.writeGzipped(newWorldTag, new FileOutputStream(file));
+            NbtIo.writeCompressed(newWorldTag, new FileOutputStream(file));
             if (file2.exists()) //noinspection ResultOfMethodCallIgnored
                 file2.delete();
             //noinspection ResultOfMethodCallIgnored
@@ -145,17 +145,17 @@ public class FlattenedWorldStorage extends McRegionLevelStorage {
         return true;
     }
 
-    private void scanDimensionDir(File dimensionFolder, List<RegionFile> regions) {
+    private void scanDimensionDir(File dimensionFolder, List<class_353> regions) {
         File regionFolder = new File(dimensionFolder, "region");
         File[] regionFiles = regionFolder.listFiles((dir, name) -> new File(dir, name).isFile() && name.endsWith(".mcr"));
         if (regionFiles != null)
-            Arrays.stream(regionFiles).map(RegionFile::new).forEach(regions::add);
+            Arrays.stream(regionFiles).map(class_353::new).forEach(regions::add);
     }
 
-    private void convertChunks(List<RegionFile> regions, BiFunction<DSL.TypeReference, CompoundTag, CompoundTag> convertFunction, ProgressListener progress) {
+    private void convertChunks(List<class_353> regions, BiFunction<DSL.TypeReference, NbtCompound, NbtCompound> convertFunction, class_62 progress) {
         List<IntSet> existingChunks = new ArrayList<>();
         int totalChunks = 0;
-        for (RegionFile region : regions) {
+        for (class_353 region : regions) {
             int[] offsets = ((RegionFileAccessor) region).getOffsets();
             IntSet chunks = new IntOpenHashSet(offsets.length);
             for (int i = 0; i < offsets.length; i++)
@@ -167,31 +167,31 @@ public class FlattenedWorldStorage extends McRegionLevelStorage {
         LOGGER.info("Total conversion count is " + totalChunks);
         int updatedChunks = 0;
         for (int i = 0; i < regions.size(); i++) {
-            RegionFile region = regions.get(i);
+            class_353 region = regions.get(i);
             IntSet chunks = existingChunks.get(i);
             IntIterator it = chunks.iterator();
             while (it.hasNext()) {
                 int index = it.nextInt();
                 int x = index & 0b11111;
                 int z = index >> 5;
-                DataInputStream stream = region.getChunkDataInputStream(x, z);
+                DataInputStream stream = region.method_1159(x, z);
                 if (stream != null) {
-                    CompoundTag chunkTag = NBTIO.readTag(stream);
+                    NbtCompound chunkTag = NbtIo.read(stream);
                     try {
                         stream.close();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    CompoundTag updatedChunkTag = convertFunction.apply(TypeReferences.CHUNK, chunkTag);
-                    try (DataOutputStream outStream = region.getChunkDataOutputStream(x, z)) {
-                        NBTIO.writeTag(updatedChunkTag, outStream);
+                    NbtCompound updatedChunkTag = convertFunction.apply(TypeReferences.CHUNK, chunkTag);
+                    try (DataOutputStream outStream = region.method_1167(x, z)) {
+                        NbtIo.write(updatedChunkTag, outStream);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 }
-                progress.progressStagePercentage(++updatedChunks * 100 / totalChunks);
+                progress.method_1794(++updatedChunks * 100 / totalChunks);
             }
-            region.close();
+            region.method_1166();
         }
     }
 }

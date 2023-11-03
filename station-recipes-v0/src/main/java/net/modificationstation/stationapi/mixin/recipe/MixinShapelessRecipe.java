@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
-import net.minecraft.item.ItemInstance;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.ShapelessRecipe;
 import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import org.spongepowered.asm.mixin.Final;
@@ -12,17 +12,17 @@ import java.util.List;
 @Mixin(ShapelessRecipe.class)
 public class MixinShapelessRecipe implements StationRecipe {
 
-    @Shadow @Final private List<ItemInstance> input;
+    @Shadow @Final private List<ItemStack> input;
 
-    @Shadow @Final private ItemInstance output;
+    @Shadow @Final private ItemStack output;
 
     @Override
-    public ItemInstance[] getIngredients() {
-        return input.toArray(ItemInstance[]::new);
+    public ItemStack[] getIngredients() {
+        return input.toArray(ItemStack[]::new);
     }
 
     @Override
-    public ItemInstance[] getOutputs() {
-        return new ItemInstance[] { output };
+    public ItemStack[] getOutputs() {
+        return new ItemStack[] { output };
     }
 }

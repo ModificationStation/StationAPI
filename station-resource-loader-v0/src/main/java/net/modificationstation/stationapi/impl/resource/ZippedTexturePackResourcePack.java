@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.impl.resource;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
-import net.minecraft.client.resource.ZippedTexturePack;
+import net.minecraft.class_592;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.resource.InputSupplier;
@@ -21,10 +21,10 @@ import static net.modificationstation.stationapi.impl.resource.ZipResourcePack.T
 
 public class ZippedTexturePackResourcePack extends AbstractFileResourcePack {
 
-    private final ZippedTexturePack texturePack;
+    private final class_592 texturePack;
     private final ZippedTexturePackAccessor texturePackAccessor;
 
-    public ZippedTexturePackResourcePack(ZippedTexturePack texturePack, boolean alwaysStable) {
+    public ZippedTexturePackResourcePack(class_592 texturePack, boolean alwaysStable) {
         super(((ZippedTexturePackAccessor) texturePack).getZipFile().getName(), alwaysStable);
         this.texturePack = texturePack;
         this.texturePackAccessor = (ZippedTexturePackAccessor) texturePack;
@@ -51,7 +51,7 @@ public class ZippedTexturePackResourcePack extends AbstractFileResourcePack {
         ZipEntry zipEntry = zipFile.getEntry(path);
         if (zipEntry == null) return switch (path) {
             case "pack.mcmeta" -> () -> {
-                String metadata = ModResourcePackUtil.serializeMetadata(13, texturePack.description);
+                String metadata = ModResourcePackUtil.serializeMetadata(13, texturePack.field_1138);
                 return IOUtils.toInputStream(metadata, Charsets.UTF_8);
             };
             default -> null;

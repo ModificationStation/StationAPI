@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.entity;
 
-import net.minecraft.entity.EntityBase;
+import net.minecraft.entity.Entity;
 
 public interface HasOwner {
 
-    EntityBase getOwner();
+    Entity getOwner();
 
-    void setOwner(EntityBase entityBase);
+    void setOwner(Entity entityBase);
 }

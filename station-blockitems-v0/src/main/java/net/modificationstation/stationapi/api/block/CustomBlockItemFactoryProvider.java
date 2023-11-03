@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.block;
 
-import net.minecraft.item.Block;
+import net.minecraft.item.BlockItem;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 
 import java.util.function.IntFunction;
@@ -21,5 +21,5 @@ public interface CustomBlockItemFactoryProvider {
      * BlockItem factory supplier method.
      * @return the {@link IntFunction} instance that'll be executed to get block item's instance.
      */
-    IntFunction<Block> getBlockItemFactory();
+    IntFunction<BlockItem> getBlockItemFactory();
 }

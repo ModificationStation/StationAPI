@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
-import net.minecraft.client.render.entity.PlayerRenderer;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.client.render.RendererAccess;
 import net.modificationstation.stationapi.api.client.render.model.VanillaBakedModel;
 import org.lwjgl.opengl.GL11;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(PlayerRenderer.class)
+@Mixin(PlayerEntityRenderer.class)
 public class MixinPlayerRenderer {
 
     @Inject(
@@ -24,7 +24,7 @@ public class MixinPlayerRenderer {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void pushIfJson(PlayerBase f, float par2, CallbackInfo ci, ItemInstance var3, ItemInstance var4) {
+    private void pushIfJson(PlayerEntity f, float par2, CallbackInfo ci, ItemStack var3, ItemStack var4) {
         if (RendererAccess.INSTANCE.hasRenderer() && !(RendererAccess.INSTANCE.getRenderer().bakedModelRenderer().getItemModels().getModel(var4) instanceof VanillaBakedModel))
             GL11.glPushMatrix();
     }
@@ -38,7 +38,7 @@ public class MixinPlayerRenderer {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void popIfJson(PlayerBase f, float par2, CallbackInfo ci, ItemInstance var3, ItemInstance var4) {
+    private void popIfJson(PlayerEntity f, float par2, CallbackInfo ci, ItemStack var3, ItemStack var4) {
         if (RendererAccess.INSTANCE.hasRenderer() && !(RendererAccess.INSTANCE.getRenderer().bakedModelRenderer().getItemModels().getModel(var4) instanceof VanillaBakedModel))
             GL11.glPopMatrix();
     }

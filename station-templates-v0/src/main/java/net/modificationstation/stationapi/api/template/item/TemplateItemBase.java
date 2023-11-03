@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.minecraft.item.ItemBase;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateItemBase extends ItemBase implements ItemTemplate {
+public class TemplateItemBase extends Item implements ItemTemplate {
 
     public TemplateItemBase(Identifier identifier) {
         this(ItemTemplate.getNextId());

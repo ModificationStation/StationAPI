@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.overlay;
 
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.minecraft.class_556;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -26,7 +26,7 @@ public class FireOverlayMixin {
             at = @At("HEAD")
     )
     private void stationapi_fire_captureAtlas(float par1, CallbackInfo ci) {
-        stationapi_fire_atlas = BlockBase.FIRE.getAtlas();
+        stationapi_fire_atlas = Block.FIRE.getAtlas();
     }
 
     @ModifyVariable(

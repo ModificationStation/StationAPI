@@ -7,9 +7,9 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.class_214;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.options.GameOptions;
+import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.util.GlAllocationUtils;
 import net.modificationstation.stationapi.api.util.UnsafeProvider;
 import net.modificationstation.stationapi.api.util.Util;
 import org.apache.commons.io.IOUtils;
@@ -66,7 +66,7 @@ implements AutoCloseable {
         this.height = height;
         this.sizeBytes = (long) width * (long) height * (long) format.getChannelCount();
         this.isStbImage = false;
-        buffer = class_214.method_744((int) sizeBytes);
+        buffer = GlAllocationUtils.allocateByteBuffer((int) sizeBytes);
 
     }
 
@@ -139,7 +139,7 @@ implements AutoCloseable {
             bytes[var7 * 4 + 2] = (byte)var11;
             bytes[var7 * 4 + 3] = (byte)var8;
         }
-        ByteBuffer directBuffer = class_214.method_744(sizeBytes);
+        ByteBuffer directBuffer = GlAllocationUtils.allocateByteBuffer(sizeBytes);
         directBuffer.put(bytes);
         directBuffer.position(0);
         return directBuffer;
@@ -332,7 +332,7 @@ implements AutoCloseable {
         this.checkAllocated();
         int i = this.format.getChannelCount();
         int j = this.getWidth() * i;
-        ByteBuffer l = class_214.method_744(j);
+        ByteBuffer l = GlAllocationUtils.allocateByteBuffer(j);
         byte[] tmp = new byte[j];
         for (int k = 0; k < this.getHeight() / 2; ++k) {
             int m = k * this.getWidth() * i;
@@ -349,7 +349,7 @@ implements AutoCloseable {
 
     public static NativeImage read(String dataUri) throws IOException {
         byte[] bs = Base64.getDecoder().decode(dataUri.replaceAll("\n", "").getBytes(Charsets.UTF_8));
-        ByteBuffer byteBuffer = class_214.method_744(bs.length);
+        ByteBuffer byteBuffer = GlAllocationUtils.allocateByteBuffer(bs.length);
         byteBuffer.put(bs);
         byteBuffer.rewind();
         return NativeImage.read(byteBuffer);

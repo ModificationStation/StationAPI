@@ -1,12 +1,13 @@
 package net.modificationstation.stationapi.api.util.math;
 
-import net.minecraft.util.maths.TilePos;
 import net.modificationstation.stationapi.api.util.BlockRotation;
 import net.modificationstation.stationapi.mixin.maths.TilePosAccessor;
 
-import static net.minecraft.util.maths.MathHelper.floor;
+import static net.minecraft.util.math.MathHelper.floor;
 
-public class MutableBlockPos extends TilePos {
+import net.minecraft.util.math.BlockPos;
+
+public class MutableBlockPos extends BlockPos {
     private final TilePosAccessor _super = (TilePosAccessor) this;
 
     public MutableBlockPos() {
@@ -22,32 +23,32 @@ public class MutableBlockPos extends TilePos {
     }
 
     @Override
-    public TilePos add(double d, double e, double f) {
+    public BlockPos add(double d, double e, double f) {
         return super.add(d, e, f).toImmutable();
     }
 
     @Override
-    public TilePos add(int i, int j, int k) {
+    public BlockPos add(int i, int j, int k) {
         return super.add(i, j, k).toImmutable();
     }
 
     @Override
-    public TilePos multiply(int i) {
+    public BlockPos multiply(int i) {
         return super.multiply(i).toImmutable();
     }
 
     @Override
-    public TilePos offset(Direction direction, int i) {
+    public BlockPos offset(Direction direction, int i) {
         return super.offset(direction, i).toImmutable();
     }
 
     @Override
-    public TilePos offset(Direction.Axis axis, int i) {
+    public BlockPos offset(Direction.Axis axis, int i) {
         return super.offset(axis, i).toImmutable();
     }
 
     @Override
-    public TilePos rotate(BlockRotation rotation) {
+    public BlockPos rotate(BlockRotation rotation) {
         return super.rotate(rotation).toImmutable();
     }
 
@@ -138,7 +139,7 @@ public class MutableBlockPos extends TilePos {
     }
 
     @Override
-    public TilePos toImmutable() {
-        return new TilePos(getX(), getY(), getZ());
+    public BlockPos toImmutable() {
+        return new BlockPos(getX(), getY(), getZ());
     }
 }

@@ -1,9 +1,8 @@
 package net.modificationstation.stationapi.api.client.resource;
 
-import net.minecraft.client.sound.SoundEntry;
-
 import java.net.URL;
+import net.minecraft.class_267;
 
 public interface CustomSoundMap {
-    SoundEntry putSound(String id, URL url);
+    class_267 putSound(String id, URL url);
 }

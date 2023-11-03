@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.api.registry;
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemBase;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
@@ -28,7 +28,7 @@ import java.util.stream.StreamSupport;
  * <p>A <strong>registry</strong> is an object that holds the mapping between three things:
  * the string ID, the numeric ID, and the registered value. There are many registries
  * for different types of registerable objects, and a registry's type parameter indicates
- * the accepted type. For example, you register your {@link BlockBase} to {@code
+ * the accepted type. For example, you register your {@link Block} to {@code
  * Registry<Block>}. It's important to note that registries themselves are registered
  * in a "registry of registries", {@link Registries#ROOT}.
  * 
@@ -127,7 +127,7 @@ import java.util.stream.StreamSupport;
  * </ul>
  * 
  * <p>When a class whose instances are registered as intrusive holders, such as
- * {@link BlockBase} or {@link ItemBase}, are instantiated
+ * {@link Block} or {@link Item}, are instantiated
  * without registering, the game crashes with "Some intrusive holders were not added to
  * registry" error message. <strong>This includes conditional registration</strong>.
  * For example, the code below can cause a crash:
@@ -350,7 +350,7 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
      * Similar to {@link #createEntry(Object)}, except
      * it also reserves a raw ID for the entry.
      *
-     * <p>This is helpful in cases such as {@link BlockBase},
+     * <p>This is helpful in cases such as {@link Block},
      * where raw ID is already required in the constructor.
      *
      * @param rawId the raw ID to reserve (or -1 to use next ID)

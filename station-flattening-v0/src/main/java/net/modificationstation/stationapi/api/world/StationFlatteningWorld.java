@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.world;
 
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.util.math.BlockPos;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.Util;
 
@@ -23,11 +23,11 @@ public interface StationFlatteningWorld extends BlockStateView, HeightLimitView 
         return Util.assertImpl();
     }
 
-    default BlockState setBlockState(TilePos pos, BlockState blockState) {
+    default BlockState setBlockState(BlockPos pos, BlockState blockState) {
         return setBlockState(pos.x, pos.y, pos.z, blockState);
     }
 
-    default BlockState setBlockStateWithNotify(TilePos pos, BlockState blockState) {
+    default BlockState setBlockStateWithNotify(BlockPos pos, BlockState blockState) {
         return setBlockStateWithNotify(pos.x, pos.y, pos.z, blockState);
     }
 

@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.impl.vanillafix.client.gui.screen;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import net.minecraft.class_591;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ScreenBase;
-import net.minecraft.level.storage.LevelMetadata;
+import net.minecraft.client.gui.screen.Screen;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.impl.level.storage.FlattenedWorldStorage;
 
@@ -19,9 +19,9 @@ public final class WorldConversionWarning {
             TO_MCREGION_EXPLANATION_KEY = ROOT_KEY + "." + MODID.id("toMcRegionExplanation"),
             CONVERT_KEY = ROOT_KEY + "." + MODID.id("convert");
 
-    public static void warnIfMcRegion(Minecraft minecraft, ScreenBase parentScreen, LevelMetadata worldData, Runnable loadWorld) {
-        if (NbtHelper.getDataVersions(((FlattenedWorldStorage) minecraft.getLevelStorage()).getWorldTag(worldData.getFileName())).containsKey(MODID.toString()))
+    public static void warnIfMcRegion(Minecraft minecraft, Screen parentScreen, class_591 worldData, Runnable loadWorld) {
+        if (NbtHelper.getDataVersions(((FlattenedWorldStorage) minecraft.method_2127()).getWorldTag(worldData.method_1956())).contains(MODID.toString()))
             loadWorld.run();
-        else minecraft.openScreen(new WarningScreen(parentScreen, loadWorld, FROM_MCREGION_EXPLANATION_KEY, CONVERT_KEY));
+        else minecraft.setScreen(new WarningScreen(parentScreen, loadWorld, FROM_MCREGION_EXPLANATION_KEY, CONVERT_KEY));
     }
 }

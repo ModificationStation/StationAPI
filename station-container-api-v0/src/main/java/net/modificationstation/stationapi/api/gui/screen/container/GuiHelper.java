@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.gui.screen.container;
 
-import net.minecraft.container.ContainerBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.inventory.InventoryBase;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Inventory;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.registry.GuiHandlerRegistry;
@@ -37,10 +37,10 @@ public final class GuiHelper {
      * @param container the container to open.
      * @see GuiHandlerRegistryEvent
      * @see GuiHandlerRegistry
-     * @see GuiHelper#openGUI(PlayerBase, Identifier, InventoryBase, ContainerBase, Consumer)
+     * @see GuiHelper#openGUI(PlayerEntity, Identifier, Inventory, Container, Consumer)
      */
     @API
-    public static void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container) {
+    public static void openGUI(PlayerEntity player, Identifier identifier, Inventory inventory, Container container) {
         INSTANCE.openGUI(player, identifier, inventory, container);
     }
 
@@ -55,10 +55,10 @@ public final class GuiHelper {
      * @param customData the packet consumer that can add additional data to the GUI packet.
      * @see GuiHandlerRegistryEvent
      * @see GuiHandlerRegistry
-     * @see GuiHelper#openGUI(PlayerBase, Identifier, InventoryBase, ContainerBase)
+     * @see GuiHelper#openGUI(PlayerEntity, Identifier, Inventory, Container)
      */
     @API
-    public static void openGUI(PlayerBase player, Identifier identifier, InventoryBase inventory, ContainerBase container, Consumer<Message> customData) {
+    public static void openGUI(PlayerEntity player, Identifier identifier, Inventory inventory, Container container, Consumer<Message> customData) {
         INSTANCE.openGUI(player, identifier, inventory, container, customData);
     }
 }

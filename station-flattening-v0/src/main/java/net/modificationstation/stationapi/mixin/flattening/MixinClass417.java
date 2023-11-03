@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.flattening;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.class_417;
-import net.minecraft.level.Level;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
@@ -14,7 +14,7 @@ public class MixinClass417 {
     @Unique private short minBlock;
 
     @Inject(method = "method_1402(Lnet/minecraft/level/Level;)V", at = @At("HEAD"))
-    private void method_1869(Level level, CallbackInfo info) {
+    private void method_1869(World level, CallbackInfo info) {
         maxBlock = (short) level.getTopY();
         minBlock = (short) level.getBottomY();
     }
@@ -47,7 +47,7 @@ public class MixinClass417 {
             ),
             index = 20
     )
-    private int getStateLuminance(int original, @Local Level level, @Local(index = 10) int x, @Local(index = 15) int y, @Local(index = 11) int z) {
+    private int getStateLuminance(int original, @Local World level, @Local(index = 10) int x, @Local(index = 15) int y, @Local(index = 11) int z) {
         return level.getBlockState(x, y, z).getLuminance();
     }
 }

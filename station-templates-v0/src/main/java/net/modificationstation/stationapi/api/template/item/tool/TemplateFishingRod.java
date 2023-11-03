@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.api.template.item.tool;
 
-import net.minecraft.item.tool.FishingRod;
+import net.minecraft.item.FishingRodItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateFishingRod extends FishingRod implements ItemTemplate {
+public class TemplateFishingRod extends FishingRodItem implements ItemTemplate {
     
     public TemplateFishingRod(Identifier identifier) {
         this(ItemTemplate.getNextId());

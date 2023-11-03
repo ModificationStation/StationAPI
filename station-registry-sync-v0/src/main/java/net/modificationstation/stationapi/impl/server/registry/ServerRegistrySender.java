@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.server.registry;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.util.io.CompoundTag;
-import net.minecraft.util.io.NBTIO;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtIo;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -24,12 +24,12 @@ public class ServerRegistrySender {
 
     @EventListener
     private static void sendLevelRegistry(PlayerPacketHandlerSetEvent event) {
-        if (((ModdedPacketHandler) event.player.packetHandler).isModded()) {
+        if (((ModdedPacketHandler) event.player.field_255).isModded()) {
             LOGGER.info("Sending level registries to \"" + event.player.name + "\"...");
-            CompoundTag registries = new CompoundTag();
+            NbtCompound registries = new NbtCompound();
             LevelLegacyRegistry.saveAll(registries);
             ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-            NBTIO.writeGzipped(registries, byteOutputStream);
+            NbtIo.writeCompressed(registries, byteOutputStream);
             Message message = new Message(of(MODID, "server_registry_sync"));
             message.bytes = byteOutputStream.toByteArray();
             PacketHelper.sendTo(event.player, message);

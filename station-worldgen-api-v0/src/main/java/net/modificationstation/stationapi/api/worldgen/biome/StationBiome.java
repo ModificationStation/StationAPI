@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
-import net.minecraft.entity.EntityBase;
-import net.minecraft.level.Level;
-import net.minecraft.level.structure.Structure;
+import net.minecraft.class_239;
+import net.minecraft.entity.Entity;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
@@ -53,7 +53,7 @@ public interface StationBiome {
         Util.assertImpl();
     }
 
-    default void applySurfaceRules(Level level, int x, int y, int z, BlockState state) {
+    default void applySurfaceRules(World level, int x, int y, int z, BlockState state) {
         Util.assertImpl();
     }
 
@@ -69,15 +69,15 @@ public interface StationBiome {
         Util.assertImpl();
     }
 
-    default void addPassiveEntity(Class<? extends EntityBase> entityClass, int rarity) {
+    default void addPassiveEntity(Class<? extends Entity> entityClass, int rarity) {
         Util.assertImpl();
     }
 
-    default void addHostileEntity(Class<? extends EntityBase> entityClass, int rarity) {
+    default void addHostileEntity(Class<? extends Entity> entityClass, int rarity) {
         Util.assertImpl();
     }
 
-    default void addWaterEntity(Class<? extends EntityBase> entityClass, int rarity) {
+    default void addWaterEntity(Class<? extends Entity> entityClass, int rarity) {
         Util.assertImpl();
     }
 
@@ -97,11 +97,11 @@ public interface StationBiome {
         Util.assertImpl();
     }
     
-    default List<Structure> getStructures() {
+    default List<class_239> getStructures() {
         return Util.assertImpl();
     }
     
-    default void addStructure(Structure structure) {
+    default void addStructure(class_239 structure) {
         getStructures().add(structure);
     }
     

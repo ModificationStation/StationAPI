@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.level.storage.RegionFile;
+import net.minecraft.class_353;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(RegionFile.class)
+@Mixin(class_353.class)
 public interface RegionFileAccessor {
 
     @Accessor

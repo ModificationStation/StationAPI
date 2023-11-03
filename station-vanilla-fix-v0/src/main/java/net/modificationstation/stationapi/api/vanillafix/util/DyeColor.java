@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.vanillafix.util;
 
-import net.minecraft.block.Wool;
-import net.minecraft.item.Dye;
+import net.minecraft.block.WoolBlock;
+import net.minecraft.item.DyeItem;
 import net.modificationstation.stationapi.api.util.StringIdentifiable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +35,7 @@ public enum DyeColor implements StringIdentifiable {
     DyeColor(int id, String name) {
         this.id = id;
         this.name = name;
-        int color = Dye.COLOURS[Wool.getColour(id)];
+        int color = DyeItem.colors[WoolBlock.method_1(id)];
         int j = (color & 0xFF0000) >> 16;
         int k = (color & 0xFF00) >> 8;
         int l = (color & 0xFF);

@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.MovingPiston;
+import net.minecraft.block.entity.PistonExtensionBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateMovingPiston extends MovingPiston implements BlockTemplate {
+public class TemplateMovingPiston extends PistonExtensionBlock implements BlockTemplate {
     
     public TemplateMovingPiston(Identifier identifier) {
         this(BlockTemplate.getNextId());

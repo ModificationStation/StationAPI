@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.mixin.item;
 
-import net.minecraft.container.ContainerBase;
-import net.minecraft.container.slot.Slot;
-import net.minecraft.entity.player.PlayerBase;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.slot.Slot;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Objects;
 
-@Mixin(ContainerBase.class)
+@Mixin(Container.class)
 public class MixinContainerBase {
 
     @Inject(
@@ -30,12 +30,12 @@ public class MixinContainerBase {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void captureSecondItemInstance(int clickType, int flag, boolean player, PlayerBase par4, CallbackInfoReturnable<ItemInstance> cir, ItemInstance var5, PlayerInventory var6, Slot var12, ItemInstance var13, ItemInstance var14) {
+    private void captureSecondItemInstance(int clickType, int flag, boolean player, PlayerEntity par4, CallbackInfoReturnable<ItemStack> cir, ItemStack var5, PlayerInventory var6, Slot var12, ItemStack var13, ItemStack var14) {
         otherStationNBT = var14.getStationNBT();
     }
 
     @Unique
-    private CompoundTag otherStationNBT;
+    private NbtCompound otherStationNBT;
 
     @Redirect(
             method = "clickSlot(IIZLnet/minecraft/entity/player/PlayerBase;)Lnet/minecraft/item/ItemInstance;",
@@ -46,7 +46,7 @@ public class MixinContainerBase {
                     ordinal = 0
             )
     )
-    private int continueStatement(ItemInstance instance) {
+    private int continueStatement(ItemStack instance) {
         if (Objects.equals(instance.getStationNBT(), otherStationNBT))
             return instance.itemId;
         else {
@@ -67,7 +67,7 @@ public class MixinContainerBase {
                     ordinal = 1
             )
     )
-    private int fixStackableNBTs(ItemInstance instance) {
+    private int fixStackableNBTs(ItemStack instance) {
         if (notchGodDamnit) {
             notchGodDamnit = false;
             return Integer.MAX_VALUE;
@@ -85,12 +85,12 @@ public class MixinContainerBase {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void captureFirstItemInstance(int clickType, int flag, boolean player, PlayerBase par4, CallbackInfoReturnable<ItemInstance> cir, ItemInstance var5, PlayerInventory var6, Slot var12, ItemInstance var13) {
+    private void captureFirstItemInstance(int clickType, int flag, boolean player, PlayerEntity par4, CallbackInfoReturnable<ItemStack> cir, ItemStack var5, PlayerInventory var6, Slot var12, ItemStack var13) {
         thisStationNBT = var13.getStationNBT();
     }
 
     @Unique
-    private CompoundTag thisStationNBT;
+    private NbtCompound thisStationNBT;
 
     @Redirect(
             method = "clickSlot(IIZLnet/minecraft/entity/player/PlayerBase;)Lnet/minecraft/item/ItemInstance;",
@@ -100,7 +100,7 @@ public class MixinContainerBase {
                     ordinal = 2
             )
     )
-    private int cancelStatement(ItemInstance instance) {
+    private int cancelStatement(ItemStack instance) {
         return Objects.equals(thisStationNBT, instance.getStationNBT()) ? instance.itemId : 0;
     }
 
@@ -113,7 +113,7 @@ public class MixinContainerBase {
                     ordinal = 0
             )
     )
-    private int checkStatement(ItemInstance instance, ItemInstance arg, int i, int j, boolean flag) {
+    private int checkStatement(ItemStack instance, ItemStack arg, int i, int j, boolean flag) {
         if (Objects.equals(instance.getStationNBT(), arg.getStationNBT()))
             return instance.itemId;
         else

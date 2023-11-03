@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Ice;
+import net.minecraft.block.IceBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateIce extends Ice implements BlockTemplate {
+public class TemplateIce extends IceBlock implements BlockTemplate {
 
     public TemplateIce(Identifier identifier, int j) {
         this(BlockTemplate.getNextId(), j);

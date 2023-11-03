@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.Workbench;
+import net.minecraft.block.WorkbenchBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateWorkbench extends Workbench implements BlockTemplate {
+public class TemplateWorkbench extends WorkbenchBlock implements BlockTemplate {
     
     public TemplateWorkbench(Identifier identifier) {
         this(BlockTemplate.getNextId());

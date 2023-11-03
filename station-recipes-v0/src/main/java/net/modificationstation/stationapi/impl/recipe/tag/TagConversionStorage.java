@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.recipe.tag;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemBase;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
@@ -107,7 +107,7 @@ public class TagConversionStorage {
 //    }
 
     private static BiTuple<Identifier, Integer> getIdentifier(Object o, int meta) {
-        return o instanceof BlockBase block ? BiTuple.of(BlockRegistry.INSTANCE.getId(block), meta) : BiTuple.of(ItemRegistry.INSTANCE.getId((ItemBase) o), meta);
+        return o instanceof Block block ? BiTuple.of(BlockRegistry.INSTANCE.getId(block), meta) : BiTuple.of(ItemRegistry.INSTANCE.getId((Item) o), meta);
     }
 
     private static BiTuple<Identifier, Integer> getIdentifier(Object o) {

@@ -3,9 +3,9 @@ package net.modificationstation.stationapi.impl.client.network;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ScreenBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.inventory.InventoryBase;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
@@ -32,13 +32,13 @@ public final class GuiClientNetworkHandler {
         StationAPI.EVENT_BUS.post(new GuiHandlerRegistryEvent());
     }
 
-    private static void handleGui(PlayerBase player, Message message) {
-        boolean isClient = player.level.isServerSide;
-        BiTuple<TriFunction<PlayerBase, InventoryBase, Message, ScreenBase>, Supplier<InventoryBase>> guiHandler = GuiHandlerRegistry.INSTANCE.get(Identifier.of(message.strings[0]));
+    private static void handleGui(PlayerEntity player, Message message) {
+        boolean isClient = player.world.isRemote;
+        BiTuple<TriFunction<PlayerEntity, Inventory, Message, Screen>, Supplier<Inventory>> guiHandler = GuiHandlerRegistry.INSTANCE.get(Identifier.of(message.strings[0]));
         if (guiHandler != null)
             //noinspection deprecation
-            ((Minecraft) FabricLoader.getInstance().getGameInstance()).openScreen(guiHandler.one().apply(player, isClient ? guiHandler.two().get() : (InventoryBase) message.objects[0], message));
+            ((Minecraft) FabricLoader.getInstance().getGameInstance()).setScreen(guiHandler.one().apply(player, isClient ? guiHandler.two().get() : (Inventory) message.objects[0], message));
         if (isClient)
-            player.container.currentContainerId = message.ints[0];
+            player.container.syncId = message.ints[0];
     }
 }

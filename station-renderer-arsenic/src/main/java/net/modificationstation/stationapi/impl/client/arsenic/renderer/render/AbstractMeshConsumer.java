@@ -81,7 +81,7 @@ public abstract class AbstractMeshConsumer extends AbstractQuadRenderer implemen
 
         final RenderMaterialImpl.Value mat = q.material();
 
-        if (!mat.disableAo(0) && Minecraft.isSmoothLightingEnabled()) {
+        if (!mat.disableAo(0) && Minecraft.method_2148()) {
             // needs to happen before offsets are applied
             aoCalc.calculateForQuad(q);
         }

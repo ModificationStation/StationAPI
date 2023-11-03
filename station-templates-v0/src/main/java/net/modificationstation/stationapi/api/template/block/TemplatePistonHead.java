@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.block;
 
-import net.minecraft.block.PistonHead;
+import net.minecraft.block.PistonHeadBlock;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplatePistonHead extends PistonHead implements BlockTemplate {
+public class TemplatePistonHead extends PistonHeadBlock implements BlockTemplate {
 
     public TemplatePistonHead(Identifier identifier, int j) {
         this(BlockTemplate.getNextId(), j);

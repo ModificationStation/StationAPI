@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
+import net.minecraft.class_555;
 import net.minecraft.client.Minecraft;
-import net.minecraft.sortme.GameRenderer;
 import net.modificationstation.stationapi.impl.worldgen.FogRendererImpl;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(GameRenderer.class)
+@Mixin(class_555.class)
 public class MixinGameRenderer {
     @Shadow private Minecraft minecraft;
     @Shadow float field_2346;

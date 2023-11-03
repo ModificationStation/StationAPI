@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.nbt;
 
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationNbtCompound extends StationNbtElement {
@@ -22,7 +22,7 @@ public interface StationNbtCompound extends StationNbtElement {
     }
 
     @Override
-    default CompoundTag copy() {
+    default NbtCompound copy() {
         return Util.assertImpl();
     }
 }

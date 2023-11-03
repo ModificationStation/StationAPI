@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.datafixers.util.Either;
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemBase;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import org.jetbrains.annotations.Nullable;
 
@@ -99,12 +99,12 @@ public interface RegistryEntry<T> {
     class Reference<T> implements RegistryEntry<T> {
         private final RegistryEntryOwner<T> owner;
         private Set<TagKey<T>> tags = Set.of();
-        private final Type referenceType;
+        private final net.modificationstation.stationapi.api.registry.RegistryEntry.Reference.Type referenceType;
         /**
          * Isn't actually used for storing the raw ID.
          * The only purpose for this field is to be able
-         * to override raw IDs from {@link BlockBase}
-         * or {@link ItemBase} constructors before actually
+         * to override raw IDs from {@link Block}
+         * or {@link Item} constructors before actually
          * registering them.
          */
         private int reservedRawId;
@@ -113,7 +113,7 @@ public interface RegistryEntry<T> {
         @Nullable
         private T value;
 
-        private Reference(Type referenceType, RegistryEntryOwner<T> owner, int reservedRawId, @Nullable RegistryKey<T> registryKey, @Nullable T value) {
+        private Reference(net.modificationstation.stationapi.api.registry.RegistryEntry.Reference.Type referenceType, RegistryEntryOwner<T> owner, int reservedRawId, @Nullable RegistryKey<T> registryKey, @Nullable T value) {
             this.owner = owner;
             this.referenceType = referenceType;
             this.reservedRawId = reservedRawId;
@@ -132,7 +132,7 @@ public interface RegistryEntry<T> {
         }
 
         static <T> Reference<T> intrusive(RegistryEntryOwner<T> owner, int reservedRawId, @Nullable T value) {
-            return new Reference<>(Type.INTRUSIVE, owner, reservedRawId, null, value);
+            return new Reference<>(net.modificationstation.stationapi.api.registry.RegistryEntry.Reference.Type.INTRUSIVE, owner, reservedRawId, null, value);
         }
 
         public int reservedRawId() {

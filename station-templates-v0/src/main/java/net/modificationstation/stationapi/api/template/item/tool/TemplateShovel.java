@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.api.template.item.tool;
 
-import net.minecraft.item.tool.Shovel;
-import net.minecraft.item.tool.ToolMaterial;
+import net.minecraft.item.ShovelItem;
+import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
-public class TemplateShovel extends Shovel implements ItemTemplate {
+public class TemplateShovel extends ShovelItem implements ItemTemplate {
     
     public TemplateShovel(Identifier identifier, ToolMaterial arg) {
         this(ItemTemplate.getNextId(), arg);

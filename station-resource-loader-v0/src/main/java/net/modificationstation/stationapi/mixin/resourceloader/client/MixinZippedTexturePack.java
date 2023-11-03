@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.resourceloader.client;
 
-import net.minecraft.client.resource.TexturePack;
-import net.minecraft.client.resource.ZippedTexturePack;
+import net.minecraft.class_285;
+import net.minecraft.class_592;
 import net.modificationstation.stationapi.api.client.resource.ReloadableAssetsManager;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
@@ -13,8 +13,8 @@ import uk.co.benjiweber.expressions.exception.Exceptions;
 
 import java.io.InputStream;
 
-@Mixin(ZippedTexturePack.class)
-public class MixinZippedTexturePack extends TexturePack {
+@Mixin(class_592.class)
+public class MixinZippedTexturePack extends class_285 {
 
     @Inject(
             method = "getResourceAsStream(Ljava/lang/String;)Ljava/io/InputStream;",

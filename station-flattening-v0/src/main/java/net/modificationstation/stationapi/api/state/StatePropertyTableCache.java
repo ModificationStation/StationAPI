@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.state;
 
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.util.collection.FastImmutableTableCache;
@@ -22,6 +22,6 @@ public class StatePropertyTableCache {
 
     @SuppressWarnings("unchecked")
     public static <S, O> FastImmutableTableCache<Property<?>, Comparable<?>, S> getTableCache(O owner) {
-        return owner instanceof BlockBase ? (FastImmutableTableCache<Property<?>, Comparable<?>, S>) BLOCK_STATE_TABLE : null;
+        return owner instanceof Block ? (FastImmutableTableCache<Property<?>, Comparable<?>, S>) BLOCK_STATE_TABLE : null;
     }
 }

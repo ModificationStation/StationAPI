@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.gui.client;
 
-import net.minecraft.client.gui.screen.ScreenBase;
-import net.minecraft.client.gui.screen.menu.SelectWorld;
-import net.minecraft.level.storage.LevelMetadata;
+import net.minecraft.class_591;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.world.SelectWorldScreen;
 import net.modificationstation.stationapi.api.client.gui.screen.EditWorldScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,10 +15,10 @@ import java.util.List;
 
 import static net.modificationstation.stationapi.api.client.gui.screen.EditWorldScreen.EDIT_KEY;
 
-@Mixin(SelectWorld.class)
-public class MixinSelectWorld extends ScreenBase {
+@Mixin(SelectWorldScreen.class)
+public class MixinSelectWorld extends Screen {
 
-    @Shadow private List<LevelMetadata> worlds;
+    @Shadow private List<class_591> worlds;
     @Shadow private int selectedWorld;
 
     @ModifyConstant(
@@ -38,7 +38,7 @@ public class MixinSelectWorld extends ScreenBase {
             ),
             index = 0
     )
-    private ScreenBase openEditWorld(ScreenBase arg) {
+    private Screen openEditWorld(Screen arg) {
         return new EditWorldScreen(this, worlds.get(selectedWorld));
     }
 }

@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.mixin.arsenic.client.block;
 
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.minecraft.block.BlockBase;
-import net.minecraft.client.render.block.BlockRenderer;
+import net.minecraft.block.Block;
+import net.minecraft.client.render.block.BlockRenderManager;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
-@Mixin(BlockRenderer.class)
+@Mixin(BlockRenderManager.class)
 public class BlockRendererMixin {
     @Inject(
             method = {
@@ -38,7 +38,7 @@ public class BlockRendererMixin {
             )
     )
     private void stationapi_block_captureTexture(
-            BlockBase block, double e, double f, double i, int textureId, CallbackInfo ci,
+            Block block, double e, double f, double i, int textureId, CallbackInfo ci,
             @Share("texture") LocalRef<Sprite> texture
     ) {
         texture.set(block.getAtlas().getTexture(textureId).getSprite());
@@ -495,14 +495,14 @@ public class BlockRendererMixin {
     }
 
     @Unique
-    private final ArsenicBlockRenderer arsenic_plugin = new ArsenicBlockRenderer((BlockRenderer) (Object) this);
+    private final ArsenicBlockRenderer arsenic_plugin = new ArsenicBlockRenderer((BlockRenderManager) (Object) this);
 
     @Inject(
             method = "render(Lnet/minecraft/block/BlockBase;III)Z",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void onRenderInWorld(BlockBase block, int blockX, int blockY, int blockZ, CallbackInfoReturnable<Boolean> cir) {
+    private void onRenderInWorld(Block block, int blockX, int blockY, int blockZ, CallbackInfoReturnable<Boolean> cir) {
         arsenic_plugin.renderWorld(block, blockX, blockY, blockZ, cir);
     }
 
@@ -514,7 +514,7 @@ public class BlockRendererMixin {
             ),
             cancellable = true
     )
-    private void onRenderInInventory(BlockBase arg, int meta, float brightness, CallbackInfo ci) {
+    private void onRenderInInventory(Block arg, int meta, float brightness, CallbackInfo ci) {
         arsenic_plugin.renderInventory(arg, meta, brightness, ci);
     }
 }

@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.mixin.maths;
 
-import net.minecraft.util.maths.TilePos;
+import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(TilePos.class)
+@Mixin(BlockPos.class)
 public interface TilePosAccessor {
     @Mutable
     @Accessor("x")

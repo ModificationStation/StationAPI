@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
-import net.minecraft.util.noise.SimplexNoise;
-import net.minecraft.util.noise.SimplexOctaveNoise;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -9,10 +7,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Arrays;
+import net.minecraft.class_458;
+import net.minecraft.class_459;
 
-@Mixin(SimplexOctaveNoise.class)
+@Mixin(class_458.class)
 public class MixinSimplexOctaveNoise {
-    @Shadow private SimplexNoise[] generators;
+    @Shadow private class_459[] generators;
     @Shadow private int octaves;
 
     // Noise fill optimisation
@@ -39,7 +39,7 @@ public class MixinSimplexOctaveNoise {
         double d3 = 1.0;
 
         for (short index = 0; index < this.octaves; index++) {
-            this.generators[index].sample(data, x, y, dx, dy, f * d3, g * d3, 0.55 / d2);
+            this.generators[index].method_1759(data, x, y, dx, dy, f * d3, g * d3, 0.55 / d2);
             d3 *= h;
             d2 *= k;
         }

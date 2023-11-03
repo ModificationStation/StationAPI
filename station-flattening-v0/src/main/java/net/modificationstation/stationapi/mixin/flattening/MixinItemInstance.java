@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.IsItemSuitableForStateEvent;
@@ -26,34 +26,34 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
-@Mixin(ItemInstance.class)
+@Mixin(ItemStack.class)
 public abstract class MixinItemInstance implements StationFlatteningItemStack {
     @Shadow public int itemId;
 
-    @Shadow public abstract ItemBase getType();
+    @Shadow public abstract Item getType();
 
     @Unique
     private static final String STATION_ID = of(MODID, "id").toString();
     
     @Inject(method = "<init>(Lnet/minecraft/block/BlockBase;)V", at = @At("TAIL"))
-    private void onInitFromBlock(BlockBase block, CallbackInfo info) {
-        ItemBase item = block.asItem();
+    private void onInitFromBlock(Block block, CallbackInfo info) {
+        Item item = block.asItem();
         if (item != null) {
             this.itemId = item.id;
         }
     }
     
     @Inject(method = "<init>(Lnet/minecraft/block/BlockBase;I)V", at = @At("TAIL"))
-    private void onInitFromBlock(BlockBase block, int count, CallbackInfo info) {
-        ItemBase item = block.asItem();
+    private void onInitFromBlock(Block block, int count, CallbackInfo info) {
+        Item item = block.asItem();
         if (item != null) {
             this.itemId = item.id;
         }
     }
     
     @Inject(method = "<init>(Lnet/minecraft/block/BlockBase;II)V", at = @At("TAIL"))
-    private void onInitFromBlock(BlockBase block, int count, int meta, CallbackInfo info) {
-        ItemBase item = block.asItem();
+    private void onInitFromBlock(Block block, int count, int meta, CallbackInfo info) {
+        Item item = block.asItem();
         if (item != null) {
             this.itemId = item.id;
         }
@@ -67,8 +67,8 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
                     ordinal = 0
             )
     )
-    private void saveIdentifier(CompoundTag instance, String item, short i) {
-        instance.put(STATION_ID, ItemRegistry.INSTANCE.getId(itemId).orElseThrow().toString());
+    private void saveIdentifier(NbtCompound instance, String item, short i) {
+        instance.putString(STATION_ID, ItemRegistry.INSTANCE.getId(itemId).orElseThrow().toString());
     }
 
     @Inject(
@@ -80,7 +80,7 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
                     shift = At.Shift.AFTER
             )
     )
-    private void loadIdentifier(CompoundTag par1, CallbackInfo ci) {
+    private void loadIdentifier(NbtCompound par1, CallbackInfo ci) {
         String id = par1.getString(STATION_ID);
         if (id.isEmpty())
             LOGGER.warn("Attempted to load an item stack without Station Flattening ID! StationAPI will ignore this and accept the vanilla ID (" + itemId + "), but this should have been handled by DFU beforehand");
@@ -88,7 +88,7 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
     }
 
     @Override
-    public RegistryEntry.Reference<ItemBase> getRegistryEntry() {
+    public RegistryEntry.Reference<Item> getRegistryEntry() {
         return getType().getRegistryEntry();
     }
 
@@ -96,9 +96,9 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
     public boolean isSuitableFor(BlockState state) {
         return StationAPI.EVENT_BUS.post(
                 IsItemSuitableForStateEvent.builder()
-                        .itemStack(ItemInstance.class.cast(this))
+                        .itemStack(ItemStack.class.cast(this))
                         .state(state)
-                        .suitable(getType().isSuitableFor(ItemInstance.class.cast(this), state))
+                        .suitable(getType().isSuitableFor(ItemStack.class.cast(this), state))
                         .build()
         ).suitable;
     }
@@ -107,15 +107,15 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
     public float getMiningSpeedMultiplier(BlockState state) {
         return StationAPI.EVENT_BUS.post(
                 ItemMiningSpeedMultiplierOnStateEvent.builder()
-                        .itemStack(ItemInstance.class.cast(this))
+                        .itemStack(ItemStack.class.cast(this))
                         .state(state)
-                        .miningSpeedMultiplier(getType().getMiningSpeedMultiplier(ItemInstance.class.cast(this), state))
+                        .miningSpeedMultiplier(getType().getMiningSpeedMultiplier(ItemStack.class.cast(this), state))
                         .build()
         ).miningSpeedMultiplier;
     }
 
     @Override
-    public boolean isOf(ItemBase item) {
+    public boolean isOf(Item item) {
         return this.getType() == item;
     }
 }

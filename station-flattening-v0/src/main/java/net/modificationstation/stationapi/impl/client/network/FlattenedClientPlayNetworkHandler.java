@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.impl.client.network;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
+import net.minecraft.class_43;
+import net.minecraft.class_454;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.level.ClientLevel;
-import net.minecraft.level.chunk.Chunk;
 import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
@@ -25,11 +25,11 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
     @Override
     public void onMapChunk(FlattenedChunkDataS2CPacket packet) {
         //noinspection deprecation
-        ClientLevel world = (ClientLevel) ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
+        class_454 world = (class_454) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
         int fromX = packet.chunkX << 4;
         int fromZ = packet.chunkZ << 4;
         world.method_1498(fromX, world.getBottomY(), fromZ, fromX + 15, world.getTopY() - 1, fromZ + 15);
-        Chunk chunk = world.getChunkFromCache(packet.chunkX, packet.chunkZ);
+        class_43 chunk = world.method_214(packet.chunkX, packet.chunkZ);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
             ByteBuffer buf = ByteBuffer.wrap(packet.sectionsData);
             for (int i = 0; i < world.countVerticalSections(); i++)
@@ -42,33 +42,33 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
     @Override
     public void onBlockChange(FlattenedBlockChangeS2CPacket packet) {
         //noinspection deprecation
-        ClientLevel world = (ClientLevel) ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
+        class_454 world = (class_454) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
         world.method_1498(packet.x, packet.y, packet.z, packet.x, packet.y, packet.z);
-        world.setBlockStateWithMetadataWithNotify(packet.x, packet.y, packet.z, BlockBase.STATE_IDS.get(packet.stateId), packet.metadata);
+        world.setBlockStateWithMetadataWithNotify(packet.x, packet.y, packet.z, Block.STATE_IDS.get(packet.stateId), packet.blockMetadata);
     }
 
     @Override
     public void onMultiBlockChange(FlattenedMultiBlockChangeS2CPacket packet) {
         //noinspection deprecation
-        ClientLevel world = (ClientLevel) ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
-        Chunk chunk = world.getChunkFromCache(packet.chunkX, packet.chunkZ);
+        class_454 world = (class_454) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
+        class_43 chunk = world.method_214(packet.x, packet.z);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
             flatteningChunk.getOrCreateSection(world.sectionIndexToCoord(packet.sectionIndex), true);
             int
-                    x = packet.chunkX * 16,
+                    x = packet.x * 16,
                     y = world.sectionIndexToCoord(packet.sectionIndex) * 16,
-                    z = packet.chunkZ * 16;
-            for (int i = 0; i < packet.arraySize; i++) {
+                    z = packet.z * 16;
+            for (int i = 0; i < packet.size; i++) {
                 int localX, localY, localZ;
                 {
-                    short position = packet.coordinateArray[i];
+                    short position = packet.positions[i];
                     localX = ChunkSectionPos.unpackLocalX(position);
                     localY = ChunkSectionPos.unpackLocalY(position);
                     localZ = ChunkSectionPos.unpackLocalZ(position);
                 }
                 int stateId = packet.stateArray[i];
-                byte metadata = packet.metadataArray[i];
-                chunk.setBlockStateWithMetadata(localX, y + localY, localZ, BlockBase.STATE_IDS.get(stateId), metadata);
+                byte metadata = packet.blockMetadata[i];
+                chunk.setBlockStateWithMetadata(localX, y + localY, localZ, Block.STATE_IDS.get(stateId), metadata);
                 int
                         updateX = x + localX,
                         updateY = y + localY,
@@ -82,12 +82,12 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
     @Override
     public void onChunkSection(FlattenedChunkSectionDataS2CPacket packet) {
         //noinspection deprecation
-        ClientLevel world = (ClientLevel) ((Minecraft) FabricLoader.getInstance().getGameInstance()).level;
+        class_454 world = (class_454) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
         int fromX = packet.chunkX << 4;
         int fromY = world.sectionIndexToCoord(packet.sectionIndex) << 4;
         int fromZ = packet.chunkZ << 4;
         world.method_1498(fromX, fromY, fromZ, fromX + 15, fromY + 15, fromZ + 15);
-        Chunk chunk = world.getChunkFromCache(packet.chunkX, packet.chunkZ);
+        class_43 chunk = world.method_214(packet.chunkX, packet.chunkZ);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
             ByteBuffer buf = ByteBuffer.wrap(packet.sectionData);
             flatteningChunk.getOrCreateSection(fromY, true).readDataPacket(buf);

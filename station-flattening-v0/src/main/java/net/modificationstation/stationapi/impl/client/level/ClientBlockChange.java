@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.impl.client.level;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.client.level.ClientLevel;
+import net.minecraft.block.Block;
+import net.minecraft.class_454;
 import net.modificationstation.stationapi.api.block.BlockState;
 
-public class ClientBlockChange extends ClientLevel.class_456 {
+public class ClientBlockChange extends class_454.class_456 {
     public int stateId;
 
-    public ClientBlockChange(ClientLevel world, int x, int y, int z, BlockState state, int metadata) {
+    public ClientBlockChange(class_454 world, int x, int y, int z, BlockState state, int metadata) {
         world.super(x, y, z, state.getBlock().id, metadata);
-        stateId = BlockBase.STATE_IDS.getRawId(state);
+        stateId = Block.STATE_IDS.getRawId(state);
     }
 }

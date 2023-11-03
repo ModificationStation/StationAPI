@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.template.item;
 
-import net.minecraft.item.Seeds;
+import net.minecraft.item.SeedsItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
-public class TemplateSeeds extends Seeds implements ItemTemplate {
+public class TemplateSeeds extends SeedsItem implements ItemTemplate {
 
     public TemplateSeeds(Identifier identifier, int j) {
         this(ItemTemplate.getNextId(), j);

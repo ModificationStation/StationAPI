@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
-import net.minecraft.class_66;
+import net.minecraft.client.render.chunk.ChunkBuilder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(class_66.class)
+@Mixin(ChunkBuilder.class)
 public interface class_66Accessor {
 
     @Invoker("method_306")
