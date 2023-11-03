@@ -1,11 +1,8 @@
 package net.modificationstation.sltest.mixin;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.Obsidian;
-import net.minecraft.level.Level;
-import net.minecraft.level.biome.Biome;
-import net.minecraft.level.dimension.DimensionData;
-import net.minecraft.level.gen.BiomeSource;
+import net.minecraft.block.Block;
+import net.minecraft.block.ObsidianBlock;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.StationBlock;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,11 +15,11 @@ import javax.swing.JLabel;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
-@Mixin(Obsidian.class)
+@Mixin(ObsidianBlock.class)
 public abstract class MixinObsidian implements StationBlock {
     @Override
-    public boolean onBonemealUse(Level level, int x, int y, int z, BlockState state) {
-        level.setBlockState(x, y, z, BlockBase.LOG.getDefaultState());
+    public boolean onBonemealUse(World level, int x, int y, int z, BlockState state) {
+        level.setBlockState(x, y, z, Block.LOG.getDefaultState());
         System.out.println(x + " " + y + " " + z);
         return true;
     }

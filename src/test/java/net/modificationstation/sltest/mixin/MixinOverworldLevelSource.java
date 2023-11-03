@@ -1,11 +1,11 @@
 package net.modificationstation.sltest.mixin;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.level.Level;
-import net.minecraft.level.biome.Biome;
-import net.minecraft.level.chunk.Chunk;
-import net.minecraft.level.source.OverworldLevelSource;
-import net.minecraft.util.noise.PerlinOctaveNoise;
+import net.minecraft.block.Block;
+import net.minecraft.class_153;
+import net.minecraft.class_209;
+import net.minecraft.class_43;
+import net.minecraft.class_538;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.world.HeightLimitView;
@@ -23,10 +23,10 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.IntStream;
 
-@Mixin(OverworldLevelSource.class)
+@Mixin(class_538.class)
 public class MixinOverworldLevelSource {
-    @Shadow private PerlinOctaveNoise interpolationNoise;
-    @Shadow private Level level;
+    @Shadow private class_209 interpolationNoise;
+    @Shadow private World level;
 
     @Unique
     private ForkJoinPool customPool = new ForkJoinPool(8);
@@ -35,15 +35,15 @@ public class MixinOverworldLevelSource {
             value = "INVOKE",
             target = "Lnet/minecraft/level/source/OverworldLevelSource;shapeChunk(II[B[Lnet/minecraft/level/biome/Biome;[D)V"
     ), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> info, byte[] blocks, Chunk chunk, double[] var5) {
+    private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<class_43> info, byte[] blocks, class_43 chunk, double[] var5) {
         short height = (short) ((HeightLimitView) level).getTopY();
         if (height < 129) return;
 
-        BlockState stone = ((BlockStateHolder) BlockBase.STONE).getDefaultState();
-        BlockState dirt = ((BlockStateHolder) BlockBase.DIRT).getDefaultState();
-        BlockState grass = ((BlockStateHolder) BlockBase.GRASS).getDefaultState();
-        BlockState water = ((BlockStateHolder) BlockBase.STILL_WATER).getDefaultState();
-        BlockState gravel = ((BlockStateHolder) BlockBase.GRAVEL).getDefaultState();
+        BlockState stone = ((BlockStateHolder) Block.STONE).getDefaultState();
+        BlockState dirt = ((BlockStateHolder) Block.DIRT).getDefaultState();
+        BlockState grass = ((BlockStateHolder) Block.GRASS_BLOCK).getDefaultState();
+        BlockState water = ((BlockStateHolder) Block.WATER).getDefaultState();
+        BlockState gravel = ((BlockStateHolder) Block.GRAVEL).getDefaultState();
 
         ChunkSectionsAccessor accessor = (ChunkSectionsAccessor) chunk;
         ChunkSection[] sections = accessor.getSections();
@@ -138,14 +138,14 @@ public class MixinOverworldLevelSource {
     }
 
     @Inject(method = "shapeChunk(II[B[Lnet/minecraft/level/biome/Biome;[D)V", at = @At("HEAD"), cancellable = true)
-    private void disableShapeChunk(int chunkX, int chunkZ, byte[] tiles, Biome[] biomes, double[] temperatures, CallbackInfo info) {
+    private void disableShapeChunk(int chunkX, int chunkZ, byte[] tiles, class_153[] biomes, double[] temperatures, CallbackInfo info) {
         if (canApply()) {
             info.cancel();
         }
     }
 
     @Inject(method = "buildSurface(II[B[Lnet/minecraft/level/biome/Biome;)V", at = @At("HEAD"), cancellable = true)
-    private void disableBuildSurface(int chunkX, int chunkZ, byte[] tiles, Biome[] biomes, CallbackInfo info) {
+    private void disableBuildSurface(int chunkX, int chunkZ, byte[] tiles, class_153[] biomes, CallbackInfo info) {
         if (canApply()) {
             info.cancel();
         }
@@ -153,7 +153,7 @@ public class MixinOverworldLevelSource {
 
     @Unique
     private float getNoise(double x, double z) {
-        float noise = (float) interpolationNoise.sample(x, z);
+        float noise = (float) interpolationNoise.method_1513(x, z);
         return (noise + 150.0F) / 300.0F;
     }
 

@@ -1,10 +1,10 @@
 package net.modificationstation.sltest.item;
 
 import lombok.Value;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
-import net.minecraft.util.hit.HitType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.hit.HitResultType;
+import net.minecraft.world.World;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.client.gui.CustomTooltipProvider;
 import net.modificationstation.stationapi.api.item.CustomReachProvider;
@@ -24,8 +24,8 @@ public class ModdedItem extends TemplateItemBase implements CustomReachProvider,
     public static @Value class TestNetworkData { int hmmSho; }
 
     @Override
-    public ItemInstance use(ItemInstance item, Level level, PlayerBase player) {
-        if (!level.isServerSide) {
+    public ItemStack use(ItemStack item, World level, PlayerEntity player) {
+        if (!level.isRemote) {
             Message message = new Message(Identifier.of(SLTest.MODID, "send_an_object"));
             hmmSho = new Random().nextInt();
             SLTest.LOGGER.info(String.valueOf(hmmSho));
@@ -38,15 +38,15 @@ public class ModdedItem extends TemplateItemBase implements CustomReachProvider,
     public int hmmSho;
 
     @Override
-    public double getReach(ItemInstance itemInstance, PlayerBase player, HitType type, double currentReach) {
+    public double getReach(ItemStack itemInstance, PlayerEntity player, HitResultType type, double currentReach) {
         return switch (type) {
-            case field_789 -> 50;
-            case field_790 -> 10;
+            case BLOCK -> 50;
+            case ENTITY -> 10;
         };
     }
 
     @Override
-    public String[] getTooltip(ItemInstance itemInstance, String originalTooltip) {
+    public String[] getTooltip(ItemStack itemInstance, String originalTooltip) {
         return new String[] {
                 "This has 50 block reach for tiles!",
                 originalTooltip

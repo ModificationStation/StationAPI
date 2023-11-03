@@ -1,6 +1,6 @@
 package net.modificationstation.sltest.achievement;
 
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
 import net.modificationstation.stationapi.api.registry.Identifier;
 
@@ -13,21 +13,21 @@ public class AchievementPageTest extends AchievementPage {
 
     @Override
     public int getBackgroundTexture(Random random, int i, int j, int randomizedRow, int currentTexture) {
-        int k = BlockBase.GRAVEL.texture;
+        int k = Block.GRAVEL.textureId;
         if (randomizedRow <= 37 && j != 35) {
             if (randomizedRow == 22) {
-                k = random.nextInt(2) != 0 ? BlockBase.STILL_LAVA.texture : BlockBase.GRAVEL.texture;
+                k = random.nextInt(2) != 0 ? Block.LAVA.textureId : Block.GRAVEL.textureId;
             } else if (randomizedRow == 10) {
-                k = BlockBase.GLOWSTONE.texture;
+                k = Block.GLOWSTONE.textureId;
             } else if (randomizedRow == 8) {
-                k = BlockBase.SOUL_SAND.texture;
+                k = Block.SOUL_SAND.textureId;
             } else if (randomizedRow > 4) {
-                k = BlockBase.NETHERRACK.texture;
+                k = Block.NETHERRACK.textureId;
             } else if (randomizedRow > 0) {
-                k = BlockBase.BEDROCK.texture;
+                k = Block.BEDROCK.textureId;
             }
         } else {
-            k = BlockBase.BEDROCK.texture;
+            k = Block.BEDROCK.textureId;
         }
 
         return k;

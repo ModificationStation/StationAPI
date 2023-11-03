@@ -1,10 +1,10 @@
 package net.modificationstation.sltest.mixin;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.level.Level;
-import net.minecraft.level.chunk.Chunk;
-import net.minecraft.level.source.NetherLevelSource;
-import net.minecraft.util.noise.PerlinOctaveNoise;
+import net.minecraft.block.Block;
+import net.minecraft.class_209;
+import net.minecraft.class_359;
+import net.minecraft.class_43;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.world.HeightLimitView;
@@ -22,21 +22,21 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.IntStream;
 
-@Mixin(NetherLevelSource.class)
+@Mixin(class_359.class)
 public class MixinNetherLevelSource {
-    @Shadow private PerlinOctaveNoise field_1347;
-    @Shadow private Level level;
+    @Shadow private class_209 field_1347;
+    @Shadow private World level;
 
     @Unique
     private ForkJoinPool customPool = new ForkJoinPool(8);
 
     @Inject(method = "getChunk(II)Lnet/minecraft/level/chunk/Chunk;", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> info, byte[] blocks, Chunk chunk) {
+    private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<class_43> info, byte[] blocks, class_43 chunk) {
         short height = (short) ((HeightLimitView) level).getTopY();
         if (height < 129) return;
 
-        BlockState netherrack = BlockStateHolder.class.cast(BlockBase.NETHERRACK).getDefaultState();
-        BlockState lava = BlockStateHolder.class.cast(BlockBase.STILL_LAVA).getDefaultState();
+        BlockState netherrack = BlockStateHolder.class.cast(Block.NETHERRACK).getDefaultState();
+        BlockState lava = BlockStateHolder.class.cast(Block.LAVA).getDefaultState();
 
         ChunkSectionsAccessor accessor = ChunkSectionsAccessor.class.cast(chunk);
         ChunkSection[] sections = accessor.getSections();
@@ -109,7 +109,7 @@ public class MixinNetherLevelSource {
 
     @Unique
     private float getNoise(double x, double z) {
-        float noise = (float) field_1347.sample(x, z);
+        float noise = (float) field_1347.method_1513(x, z);
         return (noise + 128) / 256F;
     }
 

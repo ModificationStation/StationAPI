@@ -1,8 +1,8 @@
 package net.modificationstation.sltest.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Block;
+import net.minecraft.block.Material;
 import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -17,21 +17,21 @@ import static net.modificationstation.stationapi.api.registry.Identifier.of;
 public enum Blocks {
 
     TEST_BLOCK("test_block", "testBlock", id -> new TemplateBlockBase(id, Material.CLAY).setHardness(1)),
-    TEST_ANIMATED_BLOCK("test_animated_block", "testAnimatedBlock", id -> new ModdedMetaBlock(id, Material.PORTAL)),
-    CUSTOM_MODEL_BLOCK("farlands_block", "farlands_block", id -> new ModdedModelBlock(id, Material.DIRT).setHardness(1)),
-    FREEZER("freezer", "freezer", id -> new BlockFreezer(id).setHardness(2.5F).setSounds(TemplateBlockBase.STONE_SOUNDS)),
+    TEST_ANIMATED_BLOCK("test_animated_block", "testAnimatedBlock", id -> new ModdedMetaBlock(id, Material.NETHER_PORTAL)),
+    CUSTOM_MODEL_BLOCK("farlands_block", "farlands_block", id -> new ModdedModelBlock(id, Material.SOIL).setHardness(1)),
+    FREEZER("freezer", "freezer", id -> new BlockFreezer(id).setHardness(2.5F).setSoundGroup(TemplateBlockBase.DEFAULT_SOUND_GROUP)),
     ALTAR("altar", "altar", id -> new BlockAltar(id, Material.STONE).setHardness(3)),
-    VARIATION_BLOCK("variation_block", "variationBlock", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSounds(BlockBase.STONE_SOUNDS).disableAutomaticBlockItemRegistration()),
+    VARIATION_BLOCK("variation_block", "variationBlock", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSoundGroup(Block.DEFAULT_SOUND_GROUP).disableAutomaticBlockItemRegistration()),
     EMISSION_CHECKER("emission_checker", "emissionChecker", LampBlock::new);
 
     private final Runnable register;
-    private BlockBase block;
+    private Block block;
 
-    Blocks(String id, String translationKey, Function<Identifier, BlockBase> factory) {
+    Blocks(String id, String translationKey, Function<Identifier, Block> factory) {
         this.register = () -> block = factory.apply(of(MODID, id)).setTranslationKey(MODID, translationKey);
     }
 
-    public BlockBase get() {
+    public Block get() {
         return block;
     }
 
@@ -40,7 +40,7 @@ public enum Blocks {
         @EventListener
         private static void registerBlocks(BlockRegistryEvent event) {
 //            BlockBase.ALLOWS_GRASS_UNDER[BlockBase.STILL_WATER.id] = BlockBase.ALLOWS_GRASS_UNDER[BlockBase.FLOWING_WATER.id] = true;
-            ((BlockBaseAccessor) BlockBase.BEDROCK).invokeSetHardness(2);
+            ((BlockBaseAccessor) Block.BEDROCK).invokeSetHardness(2);
 //            int blocksAmount = 100000;
 //            BLOCKS = new TemplateBlockBase[blocksAmount];
 //            Random random = new Random(42);

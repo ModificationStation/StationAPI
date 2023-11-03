@@ -1,10 +1,10 @@
 package net.modificationstation.sltest.worldgen;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.block.BlockBase;
-import net.minecraft.level.biome.Biome;
-import net.minecraft.level.structure.SpruceTree;
-import net.minecraft.level.structure.Structure;
+import net.minecraft.block.Block;
+import net.minecraft.class_153;
+import net.minecraft.class_239;
+import net.minecraft.class_512;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEvent;
@@ -22,13 +22,13 @@ import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 import java.util.Random;
 
 public class TestWorldgenListener {
-    private Biome testBiome1;
-    private Biome testBiome2;
-    private Biome testBiome3;
-    private Biome[] climateTest;
-    private Biome[] voronoiTest;
-    private Biome testNether;
-    private Biome testNether2;
+    private class_153 testBiome1;
+    private class_153 testBiome2;
+    private class_153 testBiome3;
+    private class_153[] climateTest;
+    private class_153[] voronoiTest;
+    private class_153 testNether;
+    private class_153 testNether2;
 
     @EventListener
     public void registerBiomes(BiomeRegisterEvent event) {
@@ -38,11 +38,11 @@ public class TestWorldgenListener {
         testBiome2 = BiomeBuilder.start("Test Biome 2").grassAndLeavesColor(0xFFFFFF00).build();
         testBiome3 = BiomeBuilder.start("Test Biome 3").grassAndLeavesColor(0xFFFF00FF).build();
 
-        SurfaceRule filler = SurfaceBuilder.start(BlockBase.BEDROCK).replace(BlockBase.STONE).build();
-        SurfaceRule slope = SurfaceBuilder.start(BlockBase.SPONGE).replace(BlockBase.STONE).ground(3).slope(30).build();
-        SurfaceRule bottom = SurfaceBuilder.start(BlockBase.ICE).replace(BlockBase.STONE).ceiling(2).build();
+        SurfaceRule filler = SurfaceBuilder.start(Block.BEDROCK).replace(Block.STONE).build();
+        SurfaceRule slope = SurfaceBuilder.start(Block.SPONGE).replace(Block.STONE).ground(3).slope(30).build();
+        SurfaceRule bottom = SurfaceBuilder.start(Block.ICE).replace(Block.STONE).ceiling(2).build();
         
-        climateTest = new Biome[8];
+        climateTest = new class_153[8];
         for (int i = 0; i < climateTest.length; i++) {
             BiomeBuilder builder = BiomeBuilder.start("Climate " + i);
             builder.height(100, 128);
@@ -63,10 +63,10 @@ public class TestWorldgenListener {
             });
 
             climateTest[i] = builder.build();
-            climateTest[i].grassColour = color;
+            climateTest[i].field_889 = color;
         }
 
-        voronoiTest = new Biome[5];
+        voronoiTest = new class_153[5];
         Random random = new Random(15);
         for (int i = 0; i < voronoiTest.length; i++) {
             int color = 0xFF000000 | random.nextInt();
@@ -77,25 +77,25 @@ public class TestWorldgenListener {
                 .structure(DefaultStructures.SPRUCE_TREE_SCATTERED)
                 .fogColor(color)
                 .build();
-            voronoiTest[i].grassColour = color;
+            voronoiTest[i].field_889 = color;
         }
     
-        Structure tree = new LeveledScatterStructure(new SpruceTree(), 3);
+        class_239 tree = new LeveledScatterStructure(new class_512(), 3);
         
         testNether = BiomeBuilder
             .start("Test Nether")
-            .surfaceRule(SurfaceBuilder.start(BlockBase.GRASS).replace(BlockBase.NETHERRACK).ground(1).build())
-            .surfaceRule(SurfaceBuilder.start(BlockBase.DIRT).replace(BlockBase.NETHERRACK).ground(3).build())
+            .surfaceRule(SurfaceBuilder.start(Block.GRASS_BLOCK).replace(Block.NETHERRACK).ground(1).build())
+            .surfaceRule(SurfaceBuilder.start(Block.DIRT).replace(Block.NETHERRACK).ground(3).build())
             .noDimensionStructures()
             .fogColor(0xFFFF00FF)
             .structure(tree)
             .build();
     
-        tree = new LeveledScatterStructure(new TestTree(BlockBase.SOUL_SAND, BlockBase.GLOWSTONE), 3);
+        tree = new LeveledScatterStructure(new TestTree(Block.SOUL_SAND, Block.GLOWSTONE), 3);
         
         testNether2 = BiomeBuilder
             .start("Test Nether")
-            .surfaceRule(SurfaceBuilder.start(BlockBase.SOUL_SAND).replace(BlockBase.NETHERRACK).ground(2).build())
+            .surfaceRule(SurfaceBuilder.start(Block.SOUL_SAND).replace(Block.NETHERRACK).ground(2).build())
             .noDimensionStructures()
             .fogColor(0xFFFFBC5E)
             .structure(tree)
@@ -122,7 +122,7 @@ public class TestWorldgenListener {
 
         // Voronoi test
         VoronoiBiomeProvider voronoi = new VoronoiBiomeProvider();
-        for (Biome biome : voronoiTest) {
+        for (class_153 biome : voronoiTest) {
             voronoi.addBiome(biome);
         }
         BiomeAPI.addOverworldBiomeProvider(StationAPI.MODID.id("voronoi_provider"), voronoi);
@@ -134,6 +134,6 @@ public class TestWorldgenListener {
     
     @EventListener
     public void testBiomeModification(BiomeModificationEvent event) {
-        System.out.println(event.level + " " + event.biome + " " + event.biome.biomeName + " " + event.biome.getClass().getName());
+        System.out.println(event.level + " " + event.biome + " " + event.biome.field_888 + " " + event.biome.getClass().getName());
     }
 }

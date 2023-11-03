@@ -6,22 +6,19 @@
 package net.modificationstation.sltest.util;
 
 
-// Referenced classes of package net.minecraft.src:
-//            ItemStack
-
-import net.minecraft.item.ItemInstance;
+import net.minecraft.item.ItemStack;
 
 public class Frozen
 {
 
-    public Frozen(ItemInstance from, ItemInstance to, int i)
+    public Frozen(ItemStack from, ItemStack to, int i)
     {
         frozenFrom = from;
         frozenTo = to;
         frozenPowerNeeded = i;
     }
 
-    public ItemInstance frozenFrom;
-    public ItemInstance frozenTo;
+    public ItemStack frozenFrom;
+    public ItemStack frozenTo;
     public int frozenPowerNeeded;
 }

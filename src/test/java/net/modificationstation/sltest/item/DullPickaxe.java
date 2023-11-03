@@ -1,8 +1,8 @@
 package net.modificationstation.sltest.item;
 
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.item.tool.ToolMaterial;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.item.tool.TemplatePickaxe;
@@ -13,13 +13,13 @@ public class DullPickaxe extends TemplatePickaxe {
     }
 
     @Override
-    public boolean preMine(ItemInstance itemInstance, BlockState blockState, int x, int y, int z, int l, PlayerBase player) {
-        if(player.level.isServerSide){
+    public boolean preMine(ItemStack itemInstance, BlockState blockState, int x, int y, int z, int l, PlayerEntity player) {
+        if(player.world.isRemote){
             return false;
         }
-        itemInstance.applyDamage(1,player);
-        if(itemInstance.getDamage() >= itemInstance.getDurability()){
-            player.inventory.setInventoryItem(player.inventory.selectedHotbarSlot, null);
+        itemInstance.damage(1,player);
+        if(itemInstance.getDamage() >= itemInstance.getMaxDamage()){
+            player.inventory.setStack(player.inventory.selectedSlot, null);
         }
         return false;
     }

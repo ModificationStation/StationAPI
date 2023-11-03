@@ -1,9 +1,9 @@
 package net.modificationstation.sltest.packet;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemBase;
-import net.minecraft.item.ItemInstance;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.item.ModdedItem;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
@@ -17,17 +17,17 @@ public class MessageListenerListener {
 
     @EventListener
     public void registerMessageListeners(MessageListenerRegistryEvent event) {
-        Registry<BiConsumer<PlayerBase, Message>> registry = event.registry;
+        Registry<BiConsumer<PlayerEntity, Message>> registry = event.registry;
         Registry.register(registry, Identifier.of(SLTest.MODID, "give_me_diamonds"), this::handleGiveMeDiamonds);
         Registry.register(registry, Identifier.of(SLTest.MODID, "send_an_object"), this::handleSendCoords);
     }
 
-    public void handleGiveMeDiamonds(PlayerBase playerBase, Message message) {
-        playerBase.sendMessage("Have a diamond!");
-        playerBase.inventory.addStack(new ItemInstance(ItemBase.diamond));
+    public void handleGiveMeDiamonds(PlayerEntity playerBase, Message message) {
+        playerBase.method_490("Have a diamond!");
+        playerBase.inventory.method_671(new ItemStack(Item.DIAMOND));
     }
 
-    public void handleSendCoords(PlayerBase playerBase, Message message) {
+    public void handleSendCoords(PlayerEntity playerBase, Message message) {
         SLTest.LOGGER.info(String.valueOf(((ModdedItem.TestNetworkData) message.objects[0]).getHmmSho()));
     }
 }

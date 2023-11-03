@@ -1,17 +1,17 @@
 package net.modificationstation.sltest.worldgen;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.level.Level;
-import net.minecraft.level.structure.Structure;
+import net.minecraft.block.Block;
+import net.minecraft.class_239;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 
 import java.util.Random;
 
-public class TestTree extends Structure {
+public class TestTree extends class_239 {
     final BlockState log;
     final BlockState leaves;
 
-    public TestTree(BlockBase log, BlockBase leaves) {
+    public TestTree(Block log, Block leaves) {
         this(log.getDefaultState(), leaves.getDefaultState());
     }
 
@@ -20,7 +20,7 @@ public class TestTree extends Structure {
         this.leaves = leaves;
     }
 
-    public boolean generate(Level level, Random random, int x, int y, int z) {
+    public boolean method_1142(World level, Random random, int x, int y, int z) {
         int height = random.nextInt(3) + 4;
 
         for (int py = y - 3 + height; py <= y + height; ++py) {
@@ -34,7 +34,7 @@ public class TestTree extends Structure {
                             Math.abs(dx) == side &&
                                     Math.abs(dz) == side &&
                                     (random.nextInt(2) == 0 || dy == 0) ||
-                                    BlockBase.FULL_OPAQUE[level.getTileId(px, py, pz)]
+                                    Block.BLOCKS_OPAQUE[level.getBlockId(px, py, pz)]
                     ) continue;
                     level.setBlockState(px, py, pz, leaves);
                 }
@@ -43,7 +43,7 @@ public class TestTree extends Structure {
 
         for (int i = 0; i < height; ++i) {
             BlockState state = level.getBlockState(x, y + i, z);
-            if (!state.isAir() && !state.getMaterial().isReplaceable() && state.isOf(BlockBase.LEAVES)) continue;
+            if (!state.isAir() && !state.getMaterial().method_896() && state.isOf(Block.LEAVES)) continue;
             level.setBlockState(x, y + i, z, log);
         }
 

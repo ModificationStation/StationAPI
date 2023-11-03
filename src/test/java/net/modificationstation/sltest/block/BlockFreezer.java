@@ -5,15 +5,15 @@
 
 package net.modificationstation.sltest.block;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Item;
-import net.minecraft.entity.Living;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
-import net.minecraft.tileentity.TileEntityBase;
-import net.minecraft.util.maths.MathHelper;
+import net.minecraft.block.Block;
+import net.minecraft.block.Material;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.modificationstation.sltest.inventory.ContainerFreezer;
 import net.modificationstation.sltest.tileentity.TileEntityFreezer;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
@@ -36,52 +36,52 @@ public class BlockFreezer extends TemplateBlockWithEntity
 
     protected BlockFreezer(Identifier blockID)
     {
-        super(blockID, Material.SNOW);
+        super(blockID, Material.field_998);
         FrozenRand = new Random();
     }
 
     @Override
-    public void onBlockPlaced(Level world, int i, int j, int k)
+    public void onPlaced(World world, int i, int j, int k)
     {
-        super.onBlockPlaced(world, i, j, k);
+        super.onPlaced(world, i, j, k);
         setDefaultDirection(world, i, j, k);
     }
 
-    private void setDefaultDirection(Level world, int i, int j, int k)
+    private void setDefaultDirection(World world, int i, int j, int k)
     {
-        if(world.isServerSide)
+        if(world.isRemote)
         {
             return;
         }
-        int l = world.getTileId(i, j, k - 1);
-        int i1 = world.getTileId(i, j, k + 1);
-        int j1 = world.getTileId(i - 1, j, k);
-        int k1 = world.getTileId(i + 1, j, k);
+        int l = world.getBlockId(i, j, k - 1);
+        int i1 = world.getBlockId(i, j, k + 1);
+        int j1 = world.getBlockId(i - 1, j, k);
+        int k1 = world.getBlockId(i + 1, j, k);
         byte byte0 = 3;
-        if(BlockBase.FULL_OPAQUE[l] && !BlockBase.FULL_OPAQUE[i1])
+        if(Block.BLOCKS_OPAQUE[l] && !Block.BLOCKS_OPAQUE[i1])
         {
             byte0 = 3;
         }
-        if(BlockBase.FULL_OPAQUE[i1] && !BlockBase.FULL_OPAQUE[l])
+        if(Block.BLOCKS_OPAQUE[i1] && !Block.BLOCKS_OPAQUE[l])
         {
             byte0 = 2;
         }
-        if(BlockBase.FULL_OPAQUE[j1] && !BlockBase.FULL_OPAQUE[k1])
+        if(Block.BLOCKS_OPAQUE[j1] && !Block.BLOCKS_OPAQUE[k1])
         {
             byte0 = 5;
         }
-        if(BlockBase.FULL_OPAQUE[k1] && !BlockBase.FULL_OPAQUE[j1])
+        if(Block.BLOCKS_OPAQUE[k1] && !Block.BLOCKS_OPAQUE[j1])
         {
             byte0 = 4;
         }
-        world.setTileMeta(i, j, k, byte0);
+        world.method_215(i, j, k, byte0);
     }
 
     @Override
-    public void randomDisplayTick(Level world, int i, int j, int k, Random random)
+    public void randomDisplayTick(World world, int i, int j, int k, Random random)
     {
-        TileEntityFreezer tileentity = (TileEntityFreezer)world.getTileEntity(i, j, k);
-        if(world.isServerSide ? tileentity.getCachedId() == 1 : tileentity.isBurning())
+        TileEntityFreezer tileentity = (TileEntityFreezer)world.method_1777(i, j, k);
+        if(world.isRemote ? tileentity.method_1069() == 1 : tileentity.isBurning())
         {
             float f = (float)i + 0.5F;
             float f1 = (float)j + 1.0F + (random.nextFloat() * 6F) / 16F;
@@ -94,15 +94,15 @@ public class BlockFreezer extends TemplateBlockWithEntity
     }
 
     @Override
-    public int getTextureForSide(int i)
+    public int getTexture(int i)
     {
         if(i == 1)
         {
-            return texture;
+            return textureId;
         }
         if(i == 0)
         {
-            return texture;
+            return textureId;
         } else
         {
             return sideTexture;
@@ -110,58 +110,58 @@ public class BlockFreezer extends TemplateBlockWithEntity
     }
 
     @Override
-    public boolean canUse(Level world, int i, int j, int k, PlayerBase entityplayer)
+    public boolean onUse(World world, int i, int j, int k, PlayerEntity entityplayer)
     {
-        TileEntityBase tileentityFreezer = world.getTileEntity(i, j, k);
+        BlockEntity tileentityFreezer = world.method_1777(i, j, k);
         if (tileentityFreezer instanceof TileEntityFreezer freezer)
             GuiHelper.openGUI(entityplayer, of(MODID, "freezer"), freezer, new ContainerFreezer(entityplayer.inventory, freezer));
         return true;
     }
 
-    public static void updateFreezerBlockState(boolean flag, Level world, int i, int j, int k)
+    public static void updateFreezerBlockState(boolean flag, World world, int i, int j, int k)
     {
-        int l = world.getTileMeta(i, j, k);
-        TileEntityBase tileentity = world.getTileEntity(i, j, k);
-        world.setTile(i, j, k, l);
-        world.setTileEntity(i, j, k, tileentity);
+        int l = world.getBlockMeta(i, j, k);
+        BlockEntity tileentity = world.method_1777(i, j, k);
+        world.setBlock(i, j, k, l);
+        world.method_157(i, j, k, tileentity);
     }
 
     @Override
-    protected TileEntityBase createTileEntity()
+    protected BlockEntity createBlockEntity()
     {
         return new TileEntityFreezer();
     }
 
     @Override
-    public void afterPlaced(Level world, int i, int j, int k, Living entityliving)
+    public void onPlaced(World world, int i, int j, int k, LivingEntity entityliving)
     {
         int l = MathHelper.floor((double)((entityliving.yaw * 4F) / 360F) + 0.5D) & 3;
         if(l == 0)
         {
-            world.setTileMeta(i, j, k, 2);
+            world.method_215(i, j, k, 2);
         }
         if(l == 1)
         {
-            world.setTileMeta(i, j, k, 5);
+            world.method_215(i, j, k, 5);
         }
         if(l == 2)
         {
-            world.setTileMeta(i, j, k, 3);
+            world.method_215(i, j, k, 3);
         }
         if(l == 3)
         {
-            world.setTileMeta(i, j, k, 4);
+            world.method_215(i, j, k, 4);
         }
     }
 
     @Override
-    public void onBlockRemoved(Level world, int i, int j, int k)
+    public void onBreak(World world, int i, int j, int k)
     {
-        TileEntityFreezer tileentityFreezer = (TileEntityFreezer)world.getTileEntity(i, j, k);
+        TileEntityFreezer tileentityFreezer = (TileEntityFreezer)world.method_1777(i, j, k);
 label0:
-        for(int l = 0; l < tileentityFreezer.getInventorySize(); l++)
+        for(int l = 0; l < tileentityFreezer.size(); l++)
         {
-            ItemInstance itemstack = tileentityFreezer.getInventoryItem(l);
+            ItemStack itemstack = tileentityFreezer.getStack(l);
             if(itemstack == null)
             {
                 continue;
@@ -181,16 +181,16 @@ label0:
                     i1 = itemstack.count;
                 }
                 itemstack.count -= i1;
-                Item entityitem = new Item(world, (float)i + f, (float)j + f1, (float)k + f2, new ItemInstance(itemstack.itemId, i1, itemstack.getDamage()));
+                ItemEntity entityitem = new ItemEntity(world, (float)i + f, (float)j + f1, (float)k + f2, new ItemStack(itemstack.itemId, i1, itemstack.getDamage()));
                 float f3 = 0.05F;
                 entityitem.velocityX = (float)FrozenRand.nextGaussian() * f3;
                 entityitem.velocityY = (float)FrozenRand.nextGaussian() * f3 + 0.2F;
                 entityitem.velocityZ = (float)FrozenRand.nextGaussian() * f3;
-                world.spawnEntity(entityitem);
+                world.method_210(entityitem);
             } while(true);
         }
 
-        super.onBlockRemoved(world, i, j, k);
+        super.onBreak(world, i, j, k);
     }
 
     private Random FrozenRand;

@@ -1,12 +1,12 @@
 package net.modificationstation.sltest.mixin;
 
-import net.minecraft.block.BlockBase;
+import net.minecraft.block.Block;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(BlockBase.class)
+@Mixin(Block.class)
 public interface BlockBaseAccessor {
 
     @Invoker
-    BlockBase invokeSetHardness(float hardness);
+    Block invokeSetHardness(float hardness);
 }

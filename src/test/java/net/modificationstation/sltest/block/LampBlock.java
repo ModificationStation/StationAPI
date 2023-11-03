@@ -1,10 +1,10 @@
 package net.modificationstation.sltest.block;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.level.BlockView;
-import net.minecraft.level.Level;
+import net.minecraft.block.Block;
+import net.minecraft.block.Material;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager.Builder;
@@ -19,34 +19,34 @@ public class LampBlock extends TemplateBlockBase {
         super(id, Material.WOOD);
         setLuminance(state -> state.get(ACTIVE) ? 15 : 0);
         setTranslationKey(id);
-        setSounds(WOOD_SOUNDS);
+        setSoundGroup(WOOD_SOUND_GROUP);
         setDefaultState(getDefaultState().with(ACTIVE, false));
     }
 
     @Override
-    public void appendProperties(Builder<BlockBase, BlockState> builder) {
+    public void appendProperties(Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
         builder.add(ACTIVE);
     }
 
     @Override
-    public int getTextureForSide(BlockView view, int x, int y, int z, int side) {
+    public int getTextureId(BlockView view, int x, int y, int z, int side) {
         if (view instanceof BlockStateView stateView) {
-            return stateView.getBlockState(x, y, z).get(ACTIVE) ? STILL_LAVA.texture : OBSIDIAN.texture;
+            return stateView.getBlockState(x, y, z).get(ACTIVE) ? LAVA.textureId : OBSIDIAN.textureId;
         }
-        return OBSIDIAN.texture;
+        return OBSIDIAN.textureId;
     }
 
     @Override
-    public int getTextureForSide(int side) {
-        return OBSIDIAN.texture;
+    public int getTexture(int side) {
+        return OBSIDIAN.textureId;
     }
 
     @Override
-    public boolean canUse(Level level, int x, int y, int z, PlayerBase player) {
+    public boolean onUse(World level, int x, int y, int z, PlayerEntity player) {
         BlockState state = level.getBlockState(x, y, z);
         state = state.with(ACTIVE, !state.get(ACTIVE));
         level.setBlockState(x, y, z, state);
-        return super.canUse(level, x, y, z, player);
+        return super.onUse(level, x, y, z, player);
     }
 }

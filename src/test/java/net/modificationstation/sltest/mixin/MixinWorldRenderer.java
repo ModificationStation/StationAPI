@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.texture.TextureManager;
-import net.minecraft.level.Level;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import org.lwjgl.opengl.GL11;
@@ -20,7 +20,7 @@ public class MixinWorldRenderer {
 
     @Shadow private TextureManager textureManager;
 
-    @Shadow private Level level;
+    @Shadow private World level;
 
     @Shadow private Minecraft client;
 
@@ -67,7 +67,7 @@ public class MixinWorldRenderer {
                 GL11.glRotatef(-90.0F, 0.0F, 0.0F, 1.0F);
             }
 
-            var21.start();
+            var21.startQuads();
             //var21.colour(2631720);
             //var21.colour(0xffffff);
 
@@ -75,8 +75,8 @@ public class MixinWorldRenderer {
             float l = (float) ((light.x + light.y + light.z) / 3);
             var21.colour(l, l, l);*/
 
-            float light = level.dimension.lightTable[15 - level.field_202];
-            var21.colour(light, light, light);
+            float light = level.dimension.field_2178[15 - level.field_202];
+            var21.color(light, light, light);
 
             if (var22 == 2) {
                 var21.vertex(-100.0D, -100.0D, -100.0D, 0.0D, 0.0D);

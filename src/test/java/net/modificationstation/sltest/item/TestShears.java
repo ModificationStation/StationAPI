@@ -1,10 +1,10 @@
 package net.modificationstation.sltest.item;
 
 import net.minecraft.entity.EntityRegistry;
-import net.minecraft.entity.Living;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.item.tool.TemplateShears;
 import net.modificationstation.stationapi.api.util.math.Direction;
@@ -15,21 +15,21 @@ public class TestShears extends TemplateShears {
     }
 
     @Override
-    public boolean useOnTile(ItemInstance item, PlayerBase player, Level level, int x, int y, int z, int facing) {
+    public boolean useOnBlock(ItemStack item, PlayerEntity player, World level, int x, int y, int z, int facing) {
         if (player.method_1373()) {
-            if (!level.isServerSide) {
-                level.setTile(x, y, z, 0);
+            if (!level.isRemote) {
+                level.setBlock(x, y, z, 0);
             }
-            item.cooldown = 20;
+            item.bobbingAnimationTime = 20;
             return true;
         } else if (facing == Direction.UP.ordinal()) {
-            if (!level.isServerSide) {
-                Living entity = (Living) EntityRegistry.create("Sheep", level);
-                entity.setPosition(x + 0.5, y + 1, z + 0.5);
-                level.spawnEntity(entity);
-                entity.onSpawnedFromSpawner();
+            if (!level.isRemote) {
+                LivingEntity entity = (LivingEntity) EntityRegistry.create("Sheep", level);
+                entity.method_1340(x + 0.5, y + 1, z + 0.5);
+                level.method_210(entity);
+                entity.method_919();
             }
-            item.cooldown = 20;
+            item.bobbingAnimationTime = 20;
             return true;
         } else
             return false;

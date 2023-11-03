@@ -1,14 +1,14 @@
 package net.modificationstation.sltest.mixin;
 
-import net.minecraft.client.gui.screen.ScreenBase;
-import net.minecraft.util.maths.MathHelper;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(ScreenBase.class)
+@Mixin(Screen.class)
 public class MixinScreenBase {
 
     @ModifyConstant(method = "renderDirtBackground(I)V", constant = @Constant(intValue = 4210752))

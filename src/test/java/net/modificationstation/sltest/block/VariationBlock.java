@@ -1,9 +1,9 @@
 package net.modificationstation.sltest.block;
 
-import net.minecraft.block.BlockBase;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemInstance;
-import net.minecraft.level.Level;
+import net.minecraft.block.Block;
+import net.minecraft.block.Material;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.modificationstation.sltest.item.ItemListener;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.Identifier;
@@ -34,13 +34,13 @@ public class VariationBlock extends TemplateBlockBase {
     }
 
     @Override
-    public void appendProperties(StateManager.Builder<BlockBase, BlockState> builder) {
+    public void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(VARIANT);
     }
 
     @Override
-    public List<ItemInstance> getDropList(Level level, int x, int y, int z, BlockState blockState, int meta) {
-        return List.of(new ItemInstance(switch (blockState.get(VARIANT)) {
+    public List<ItemStack> getDropList(World level, int x, int y, int z, BlockState blockState, int meta) {
+        return List.of(new ItemStack(switch (blockState.get(VARIANT)) {
             case IDLE -> ItemListener.variationBlockIdle;
             case PASSIVE -> ItemListener.variationBlockPassive;
             case ACTIVE -> ItemListener.variationBlockActive;

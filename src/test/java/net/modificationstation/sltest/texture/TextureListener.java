@@ -21,9 +21,9 @@ public class TextureListener {
 
         ExpandableAtlas terrain = Atlases.getTerrain();
 
-        TEST_BLOCK.get().texture = terrain.addTexture(of(MODID, "blocks/testBlock")).index;
-        TEST_ANIMATED_BLOCK.get().texture = terrain.addTexture(of(MODID, "blocks/testAnimatedBlock")).index;
-        FREEZER.get().texture = terrain.addTexture(of(MODID, "blocks/FreezerTop")).index;
+        TEST_BLOCK.get().textureId = terrain.addTexture(of(MODID, "blocks/testBlock")).index;
+        TEST_ANIMATED_BLOCK.get().textureId = terrain.addTexture(of(MODID, "blocks/testAnimatedBlock")).index;
+        FREEZER.get().textureId = terrain.addTexture(of(MODID, "blocks/FreezerTop")).index;
         ((BlockFreezer) FREEZER.get()).sideTexture = terrain.addTexture(of(MODID, "blocks/FreezerSide")).index;
 
         altarTextures[Direction.DOWN.ordinal()] = terrain.addTexture(of(MODID, "blocks/altar_bottom")).index;

@@ -3,9 +3,9 @@ package net.modificationstation.sltest.gui;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.client.gui.screen.ScreenBase;
-import net.minecraft.entity.player.PlayerBase;
-import net.minecraft.inventory.InventoryBase;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.tileentity.TileEntityFreezer;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
@@ -23,7 +23,7 @@ public class GuiListener {
     }
 
     @Environment(EnvType.CLIENT)
-    public ScreenBase openFreezer(PlayerBase player, InventoryBase inventoryBase) {
+    public Screen openFreezer(PlayerEntity player, Inventory inventoryBase) {
         return new GuiFreezer(player.inventory, (TileEntityFreezer) inventoryBase);
     }
 }

@@ -1,20 +1,20 @@
 package net.modificationstation.sltest.mixin;
 
-import net.minecraft.level.Level;
-import net.minecraft.level.biome.Biome;
-import net.minecraft.level.dimension.DimensionData;
-import net.minecraft.level.gen.BiomeSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.swing.*;
+import net.minecraft.class_153;
+import net.minecraft.class_519;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionData;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
-@Mixin(Level.class)
+@Mixin(World.class)
 public abstract class MixinLevel {
-    @Shadow public abstract BiomeSource getBiomeSource();
+    @Shadow public abstract class_519 getBiomeSource();
 
     /*@Inject(
         method = "<init>(Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;J)V",
@@ -27,11 +27,11 @@ public abstract class MixinLevel {
         int[] pixels = ((DataBufferInt) buffer.getRaster().getDataBuffer()).getData();
 
         int start = -(side >> 1);
-        BiomeSource biomeSource = getBiomeSource();
-        Biome[] biomes = biomeSource.getBiomes(new Biome[side * side], start, start, side, side);
+        class_519 biomeSource = getBiomeSource();
+        class_153[] biomes = biomeSource.method_1791(new class_153[side * side], start, start, side, side);
 
         for (int i = 0; i < pixels.length; i++) {
-            pixels[i] = biomes[i].grassColour | 0xFF000000;
+            pixels[i] = biomes[i].field_889 | 0xFF000000;
         }
 
         JFrame frame = new JFrame();

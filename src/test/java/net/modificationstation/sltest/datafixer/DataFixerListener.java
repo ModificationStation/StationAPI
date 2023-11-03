@@ -1,7 +1,7 @@
 package net.modificationstation.sltest.datafixer;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.util.io.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.event.datafixer.DataFixerRegisterEvent;
 import net.modificationstation.stationapi.api.util.Util;
 
@@ -14,7 +14,7 @@ public class DataFixerListener {
     private static void registerFixer(DataFixerRegisterEvent event) {
         putState(97, "sltest:test_animated_block");
         putState(98, "sltest:test_block");
-        putState(99, "sltest:farlands_block", Util.make(new CompoundTag(), tag -> tag.put("facing", "north")));
+        putState(99, "sltest:farlands_block", Util.make(new NbtCompound(), tag -> tag.putString("facing", "north")));
         putState(100, "sltest:freezer");
         putState(101, "sltest:altar");
         putItem(360, "sltest:test_item");

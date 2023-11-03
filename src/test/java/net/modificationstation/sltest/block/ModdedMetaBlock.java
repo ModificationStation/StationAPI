@@ -2,8 +2,8 @@ package net.modificationstation.sltest.block;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.material.Material;
-import net.minecraft.level.BlockView;
+import net.minecraft.block.Material;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
@@ -16,14 +16,14 @@ public class ModdedMetaBlock extends TemplateBlockBase {
     }
 
     @Override
-    protected int droppedMeta(int i) {
+    protected int getDroppedItemMeta(int i) {
         return i;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public float getBrightness(BlockView arg, int i, int j, int k) {
-        if (arg.getTileMeta(i, j, k) == 1) {
+    public float getLuminance(BlockView arg, int i, int j, int k) {
+        if (arg.getBlockMeta(i, j, k) == 1) {
             lightchecks = 6;
             return 1.0F;
         }
@@ -32,7 +32,7 @@ public class ModdedMetaBlock extends TemplateBlockBase {
             return 1.0F;
         }
         else
-            return super.getBrightness(arg, i, j, k);
+            return super.getLuminance(arg, i, j, k);
     }
 
     public int lightchecks = 0;

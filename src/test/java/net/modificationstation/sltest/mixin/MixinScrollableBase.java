@@ -1,11 +1,11 @@
 package net.modificationstation.sltest.mixin;
 
-import net.minecraft.client.gui.widgets.ScrollableBase;
+import net.minecraft.client.gui.widget.EntryListWidget;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(ScrollableBase.class)
+@Mixin(EntryListWidget.class)
 public class MixinScrollableBase {
 
     @ModifyArg(method = "render(IIF)V", index = 4, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/Tessellator;vertex(DDDDD)V", ordinal = 0))

@@ -1,9 +1,9 @@
 package net.modificationstation.sltest.entity;
 
 import lombok.Getter;
-import net.minecraft.entity.animal.AnimalBase;
-import net.minecraft.item.ItemBase;
-import net.minecraft.level.Level;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.item.Item;
+import net.minecraft.world.World;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.server.entity.HasTrackingParameters;
@@ -13,9 +13,9 @@ import static net.modificationstation.sltest.SLTest.MODID;
 import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 @HasTrackingParameters(trackingDistance = 5, updatePeriod = 2)
-public class PoorGuy extends AnimalBase implements MobSpawnDataProvider {
+public class PoorGuy extends AnimalEntity implements MobSpawnDataProvider {
 
-    public PoorGuy(Level arg) {
+    public PoorGuy(World arg) {
         super(arg);
         SLTest.LOGGER.info("well guess im dead");
         texture = "/assets/sltest/textures/entities/geisterspoor.png";
@@ -29,8 +29,8 @@ public class PoorGuy extends AnimalBase implements MobSpawnDataProvider {
 //    }
 
     @Override
-    protected int getMobDrops() {
-        return ItemBase.wheat.id;
+    protected int method_914() {
+        return Item.WHEAT.id;
     }
 
     @Getter

@@ -1,6 +1,6 @@
 package net.modificationstation.sltest.block;
 
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Material;
 import net.modificationstation.sltest.texture.TextureListener;
 import net.modificationstation.stationapi.api.registry.Identifier;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
@@ -12,7 +12,7 @@ public class BlockAltar extends TemplateBlockBase {
     }
 
     @Override
-    public int getTextureForSide(int side) {
+    public int getTexture(int side) {
         return TextureListener.altarTextures[side];
     }
 }
