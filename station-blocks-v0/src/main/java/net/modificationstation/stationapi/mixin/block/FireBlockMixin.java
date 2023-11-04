@@ -4,7 +4,7 @@ import net.minecraft.block.FireBlock;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.block.FireBurnableRegisterEvent;
-import net.modificationstation.stationapi.api.tag.BlockTags;
+import net.modificationstation.stationapi.api.registry.tag.BlockTags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,20 +16,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 
 @Mixin(FireBlock.class)
-public abstract class MixinFire {
-
-    @Shadow protected abstract void addBurnable(int i, int j, int k);
+abstract class FireBlockMixin {
+    @Shadow protected abstract void method_1822(int i, int j, int k);
 
     @Inject(
-            method = "init()V",
+            method = "init",
             at = @At("RETURN")
     )
-    private void postBurnableRegister(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(FireBurnableRegisterEvent.builder().addBurnable(this::addBurnable).build());
+    private void stationapi_postBurnableRegister(CallbackInfo ci) {
+        StationAPI.EVENT_BUS.post(FireBurnableRegisterEvent.builder().addBurnable(this::method_1822).build());
     }
 
     @ModifyConstant(
-            method = "onScheduledTick",
+            method = "onTick",
             constant = {
                     @Constant(
                             intValue = 0,
@@ -41,7 +40,7 @@ public abstract class MixinFire {
                     )
             }
     )
-    private int stationapi_allowInfiniburnBlocks(int constant, World arg, int i, int j, int k, Random random) {
-        return arg.getBlockState(i, j - 1, k).isIn(BlockTags.INFINIBURN) ? 1 : 0;
+    private int stationapi_allowInfiniburnBlocks(int constant, World world, int x, int y, int z, Random random) {
+        return world.getBlockState(x, y - 1, z).isIn(BlockTags.INFINIBURN) ? 1 : 0;
     }
 }

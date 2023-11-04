@@ -1,9 +1,10 @@
-package net.modificationstation.stationapi.api.tag;
+package net.modificationstation.stationapi.api.registry.tag;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

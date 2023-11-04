@@ -18,8 +18,8 @@ import java.awt.image.DataBufferInt;
 @Mixin(ObsidianBlock.class)
 public abstract class MixinObsidian implements StationBlock {
     @Override
-    public boolean onBonemealUse(World level, int x, int y, int z, BlockState state) {
-        level.setBlockState(x, y, z, Block.LOG.getDefaultState());
+    public boolean onBonemealUse(World world, int x, int y, int z, BlockState state) {
+        world.setBlockState(x, y, z, Block.LOG.getDefaultState());
         System.out.println(x + " " + y + " " + z);
         return true;
     }

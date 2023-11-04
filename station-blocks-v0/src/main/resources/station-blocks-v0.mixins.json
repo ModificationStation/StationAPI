@@ -4,18 +4,11 @@
   "package": "net.modificationstation.stationapi.mixin.block",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "AchievementGUIDAccessor",
-    "BlockBaseAccessor",
-    "FireAccessor",
-    "ItemBaseAccessor",
-    "MixinBlock",
-    "MixinBlockBase",
-    "MixinFire",
-    "MixinSecondaryBlock",
-    "MixinStats",
-    "StatAccessor",
-    "StatEntityAccessor",
-    "StatsAccessor"
+    "BlockItemMixin",
+    "BlockMixin",
+    "FireBlockMixin",
+    "SecondaryBlockItemMixin",
+    "StatsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
