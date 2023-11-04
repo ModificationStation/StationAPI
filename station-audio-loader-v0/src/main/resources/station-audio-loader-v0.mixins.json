@@ -4,11 +4,11 @@
   "package": "net.modificationstation.stationapi.mixin.audio",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinBlockSounds"
+    "BlockSoundGroupMixin"
   ],
   "client": [
-    "client.MixinSoundHelper",
-    "client.MixinSoundMap"
+    "client.SoundManagerMixin",
+    "client.SoundMapMixin"
   ],
   "injectors": {
     "defaultRequire": 1
