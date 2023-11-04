@@ -15,8 +15,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
@@ -24,11 +24,11 @@ public class ClientVanillaChecker {
 
     @EventListener
     private static void handleServerLogin(ServerLoginSuccessEvent event) {
-        if (Arrays.asList(event.loginRequestPacket.username.split(";")).contains(MODID.toString())) {
+        if (Arrays.asList(event.loginRequestPacket.username.split(";")).contains(NAMESPACE.toString())) {
             ((ModdedPacketHandlerSetter) event.networkHandler).setModded();
-            Message message = new Message(of(MODID, "modlist"));
+            Message message = new Message(of(NAMESPACE, "modlist"));
             List<String> mods = new ArrayList<>();
-            mods.add(MODID.getVersion().getFriendlyString());
+            mods.add(NAMESPACE.getVersion().getFriendlyString());
             FabricLoader.getInstance().getAllMods().stream().map(ModContainer::getMetadata).forEach(modMetadata -> Collections.addAll(mods, modMetadata.getId(), modMetadata.getVersion().getFriendlyString()));
             message.strings = mods.toArray(new String[0]);
             event.networkHandler.sendPacket(message);

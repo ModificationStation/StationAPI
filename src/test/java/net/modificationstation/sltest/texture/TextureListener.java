@@ -12,7 +12,7 @@ import net.modificationstation.stationapi.api.util.math.Direction;
 
 import static net.modificationstation.sltest.SLTest.MODID;
 import static net.modificationstation.sltest.block.Blocks.*;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public class TextureListener {
 

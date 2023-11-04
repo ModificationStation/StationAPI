@@ -5,13 +5,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationItem {
 
-    default Item setTranslationKey(ModID modID, String translationKey) {
+    default Item setTranslationKey(Namespace namespace, String translationKey) {
         return Util.assertImpl();
     }
 

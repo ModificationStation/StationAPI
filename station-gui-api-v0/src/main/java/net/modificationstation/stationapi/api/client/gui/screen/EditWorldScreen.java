@@ -20,15 +20,15 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Environment(EnvType.CLIENT)
 public class EditWorldScreen extends StationScreen {
 
     public static final String
             SELECTWORLD_KEY = "selectWorld",
-            EDIT_KEY = SELECTWORLD_KEY + "." + MODID.id("edit"),
-            EDIT_TITLE_KEY = SELECTWORLD_KEY + "." + MODID.id("editTitle");
+            EDIT_KEY = SELECTWORLD_KEY + "." + NAMESPACE.id("edit"),
+            EDIT_TITLE_KEY = SELECTWORLD_KEY + "." + NAMESPACE.id("editTitle");
     private static final ImmutableList<ButtonWidgetDeferredDetachedContext<EditWorldScreen>> CUSTOM_EDIT_BUTTONS = StationAPI.EVENT_BUS.post(EditWorldScreenEvent.ScrollableButtonContextRegister.builder().contexts(ImmutableList.builder()).build()).contexts.build();
 
     protected final Screen parent;

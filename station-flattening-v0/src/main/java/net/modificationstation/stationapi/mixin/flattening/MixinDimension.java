@@ -4,7 +4,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.level.StationDimension;
 import net.modificationstation.stationapi.impl.level.StationLevelProperties;
 import org.spongepowered.asm.mixin.Mixin;

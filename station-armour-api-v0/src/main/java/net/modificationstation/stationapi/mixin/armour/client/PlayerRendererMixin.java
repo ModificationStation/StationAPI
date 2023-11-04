@@ -9,7 +9,7 @@ import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
 import net.modificationstation.stationapi.api.client.item.ArmourTextureProvider;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,6 +39,6 @@ public class PlayerRendererMixin extends LivingEntityRenderer {
 
     @Unique
     private String stationapi_getTexturePath(Identifier identifier, int armourIndex) {
-        return "assets/" + identifier.modID + "/stationapi/textures/armour/" + identifier.id.replace(".", "/") + (armourIndex == 2 ? "_2" : "_1") + ".png";
+        return "assets/" + identifier.namespace + "/stationapi/textures/armour/" + identifier.path.replace(".", "/") + (armourIndex == 2 ? "_2" : "_1") + ".png";
     }
 }

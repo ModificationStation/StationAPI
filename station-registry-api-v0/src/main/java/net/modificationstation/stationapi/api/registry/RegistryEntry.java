@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;

@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.resource;
 
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.metadata.ResourceMetadata;
 import net.modificationstation.stationapi.api.resource.metadata.ResourceMetadataReader;
 import org.jetbrains.annotations.Nullable;

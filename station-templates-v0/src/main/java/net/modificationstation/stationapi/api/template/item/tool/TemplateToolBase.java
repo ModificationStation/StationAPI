@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.template.item.tool;
 import net.minecraft.block.Block;
 import net.minecraft.item.ToolItem;
 import net.minecraft.item.ToolMaterial;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
 public class TemplateToolBase extends ToolItem implements ItemTemplate {

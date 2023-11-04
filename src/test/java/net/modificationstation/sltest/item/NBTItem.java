@@ -5,13 +5,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.item.nbt.StationNBT;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
 
 import java.util.Random;
 
 import static net.modificationstation.sltest.SLTest.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public class NBTItem extends TemplateItemBase {
 

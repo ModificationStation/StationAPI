@@ -17,6 +17,7 @@ import net.modificationstation.stationapi.api.registry.RegistryEntry.Reference;
 import net.modificationstation.stationapi.api.registry.RegistryEntryList.Named;
 import net.modificationstation.stationapi.api.registry.RegistryWrapper.Impl;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.impl.registry.sync.RemapStateImpl;
 import org.apache.commons.lang3.Validate;

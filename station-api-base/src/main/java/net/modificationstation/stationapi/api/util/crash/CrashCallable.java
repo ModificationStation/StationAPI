@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.util.exception;
+package net.modificationstation.stationapi.api.util.crash;
 
 import java.util.concurrent.Callable;
 

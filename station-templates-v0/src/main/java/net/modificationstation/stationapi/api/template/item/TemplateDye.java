@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.template.item;
 
 import net.minecraft.item.DyeItem;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateDye extends DyeItem implements ItemTemplate {
     

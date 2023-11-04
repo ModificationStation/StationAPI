@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.client.texture.StationRenderImpl;
 
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public final class Atlases {
 

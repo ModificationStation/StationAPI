@@ -10,17 +10,17 @@ import net.fabricmc.api.Environment;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.network.RegistryPacketHandler;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public class RemapClientRegistryS2CPacket extends Packet implements IdentifiablePacket {
-    public static final Identifier PACKET_ID = MODID.id("registry/remap_client");
+    public static final Identifier PACKET_ID = NAMESPACE.id("registry/remap_client");
 
     public Reference2ReferenceMap<Identifier, Reference2IntMap<Identifier>> map;
 

@@ -7,7 +7,7 @@ import com.mojang.datafixers.types.templates.Const;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public class IdentifierNormalizingSchema extends Schema {
     public static final PrimitiveCodec<String> CODEC = new PrimitiveCodec<>() {

@@ -7,13 +7,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
-import net.modificationstation.stationapi.api.util.SideUtils;
+import net.modificationstation.stationapi.api.util.SideUtil;
 
 public class NetherPortalImpl {
 
     public static void switchDimension(PlayerEntity player) {
         //noinspection Convert2MethodRef
-        SideUtils.run(() -> switchDimensionClient(), () -> switchDimensionServer(player));
+        SideUtil.run(() -> switchDimensionClient(), () -> switchDimensionServer(player));
     }
 
     @Environment(EnvType.SERVER)

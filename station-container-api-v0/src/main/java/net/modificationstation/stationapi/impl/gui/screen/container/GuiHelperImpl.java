@@ -6,7 +6,7 @@ import net.minecraft.inventory.Inventory;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.function.Consumer;
 
@@ -17,7 +17,7 @@ public abstract class GuiHelperImpl {
     }
 
     public void openGUI(PlayerEntity player, Identifier identifier, Inventory inventory, Container container, Consumer<Message> customData) {
-        Message message = new Message(Identifier.of(StationAPI.MODID, "open_gui"));
+        Message message = new Message(Identifier.of(StationAPI.NAMESPACE, "open_gui"));
         message.strings = new String[] { identifier.toString() };
         sideDependentPacket(player, inventory, message);
         customData.accept(message);

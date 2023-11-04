@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.impl.resource;
 
 import com.google.common.collect.Lists;
 import cyclops.function.Consumer3;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.*;
 import net.modificationstation.stationapi.api.util.Unit;
 
@@ -83,7 +83,7 @@ public class ReloadableResourceManager implements ResourceManager, AutoCloseable
     }
 
     @Override
-    public Set<ModID> getAllNamespaces() {
+    public Set<Namespace> getAllNamespaces() {
         return this.activeManager.getAllNamespaces();
     }
 

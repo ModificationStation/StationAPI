@@ -5,7 +5,7 @@ import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.minecraft.block.Block;
 import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
 

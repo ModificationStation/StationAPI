@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.impl.network.VanillaChecker.MASK;
 
 @Mixin(LoginHelloPacket.class)
@@ -25,7 +25,7 @@ public class MixinLoginRequest0x1Packet {
     )
     @Environment(EnvType.SERVER)
     private void injectStAPIFlag(String username, int protocolVersion, long worldSeed, byte dimensionId, CallbackInfo ci) {
-        this.username += MODID + ";";
+        this.username += NAMESPACE + ";";
     }
 
     @Inject(

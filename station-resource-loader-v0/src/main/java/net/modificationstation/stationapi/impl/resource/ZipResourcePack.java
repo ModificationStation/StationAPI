@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.impl.resource;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.InputSupplier;
 import net.modificationstation.stationapi.api.resource.ResourcePack;
 import net.modificationstation.stationapi.api.resource.ResourceType;
@@ -49,7 +49,7 @@ public class ZipResourcePack extends AbstractFileResourcePack {
     }
 
     private static String toPath(ResourceType type, Identifier id) {
-        return String.format(Locale.ROOT, "%s/%s/%s", type.getDirectory(), id.modID, id.id);
+        return String.format(Locale.ROOT, "%s/%s/%s", type.getDirectory(), id.namespace, id.path);
     }
 
     @Override
@@ -77,13 +77,13 @@ public class ZipResourcePack extends AbstractFileResourcePack {
     }
 
     @Override
-    public Set<ModID> getNamespaces(ResourceType type) {
+    public Set<Namespace> getNamespaces(ResourceType type) {
         ZipFile zipFile = this.getZipFile();
         if (zipFile == null) {
             return Set.of();
         }
         Enumeration<? extends ZipEntry> enumeration = zipFile.entries();
-        HashSet<ModID> set = new HashSet<>();
+        HashSet<Namespace> set = new HashSet<>();
         while (enumeration.hasMoreElements()) {
             ArrayList<String> list;
             ZipEntry zipEntry = enumeration.nextElement();
@@ -91,7 +91,7 @@ public class ZipResourcePack extends AbstractFileResourcePack {
             if (!string.startsWith(type.getDirectory() + "/") || (list = Lists.newArrayList(TYPE_NAMESPACE_SPLITTER.split(string))).size() <= 1) continue;
             String string2 = list.get(1);
             if (string2.equals(string2.toLowerCase(Locale.ROOT))) {
-                set.add(ModID.of(string2));
+                set.add(Namespace.of(string2));
                 continue;
             }
             LOGGER.warn("Ignored non-lowercase namespace: {} in {}", string2, this.backingZipFile);
@@ -115,7 +115,7 @@ public class ZipResourcePack extends AbstractFileResourcePack {
     }
 
     @Override
-    public void findResources(ResourceType type, ModID namespace, String prefix, ResourcePack.ResultConsumer consumer) {
+    public void findResources(ResourceType type, Namespace namespace, String prefix, ResourcePack.ResultConsumer consumer) {
         ZipFile zipFile = this.getZipFile();
         if (zipFile == null) {
             return;

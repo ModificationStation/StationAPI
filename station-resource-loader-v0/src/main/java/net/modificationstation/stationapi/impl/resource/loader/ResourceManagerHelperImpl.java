@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.resource.loader;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.loader.api.ModContainer;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.*;
 import net.modificationstation.stationapi.impl.resource.ModNioResourcePack;
 import net.modificationstation.stationapi.impl.resource.ResourcePackProfile;
@@ -66,7 +66,7 @@ public class ResourceManagerHelperImpl implements ResourceManagerHelper {
      * @see ResourceManagerHelper#registerBuiltinResourcePack(Identifier, ModContainer, String, ResourcePackActivationType)
      */
     public static boolean registerBuiltinResourcePack(Identifier id, String subPath, ModContainer container, ResourcePackActivationType activationType) {
-        return registerBuiltinResourcePack(id, subPath, container, id.modID + "/" + id.id, activationType);
+        return registerBuiltinResourcePack(id, subPath, container, id.namespace + "/" + id.path, activationType);
     }
 
     public static void registerBuiltinResourcePacks(ResourceType resourceType, Consumer<ResourcePackProfile> consumer) {

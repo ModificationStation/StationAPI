@@ -8,6 +8,7 @@ import com.google.gson.JsonSyntaxException;
 import com.mojang.serialization.*;
 import net.modificationstation.stationapi.api.registry.*;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -36,10 +37,10 @@ public interface EntryLoader {
             public <E> Map<RegistryKey<E>, Parseable<E>> getKnownEntryPaths(RegistryKey<? extends Registry<E>> key) {
                 String string = getPath(key.getValue());
                 Map<RegistryKey<E>, Parseable<E>> map = new HashMap<>();
-                resourceManager.findResources(string, id -> id.id.endsWith(JSON)).forEach((id, resourceRef) -> {
-                    String string2 = id.id;
+                resourceManager.findResources(string, id -> id.path.endsWith(JSON)).forEach((id, resourceRef) -> {
+                    String string2 = id.path;
                     String string3 = string2.substring(string.length() + 1, string2.length() - JSON.length());
-                    RegistryKey<E> registryKey2 = RegistryKey.of(key, Identifier.of(id.modID, string3));
+                    RegistryKey<E> registryKey2 = RegistryKey.of(key, Identifier.of(id.namespace, string3));
                     map.put(registryKey2, (jsonOps, decoder) -> {
                         try {
                             Reader reader = resourceRef.getReader();
@@ -111,11 +112,11 @@ public interface EntryLoader {
             }
 
             private static String getPath(Identifier id) {
-                return id.id;
+                return id.path;
             }
 
             private static <E> Identifier createId(RegistryKey<E> rootKey) {
-                return Identifier.of(rootKey.getValue().modID, getPath(rootKey.getRegistry()) + "/" + rootKey.getValue().id + JSON);
+                return Identifier.of(rootKey.getValue().namespace, getPath(rootKey.getRegistry()) + "/" + rootKey.getValue().path + JSON);
             }
 
             public String toString() {

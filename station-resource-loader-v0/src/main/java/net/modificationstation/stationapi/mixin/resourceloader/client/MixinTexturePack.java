@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.resourceloader.client;
 
 import net.minecraft.class_285;
 import net.modificationstation.stationapi.api.client.resource.ReloadableAssetsManager;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

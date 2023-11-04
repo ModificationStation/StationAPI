@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.packet;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.network.NetworkHandler;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.Map;
 import java.util.Set;

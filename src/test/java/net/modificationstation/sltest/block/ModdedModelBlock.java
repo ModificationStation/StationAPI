@@ -1,7 +1,7 @@
 package net.modificationstation.sltest.block;
 
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 import net.modificationstation.stationapi.api.util.math.Direction;

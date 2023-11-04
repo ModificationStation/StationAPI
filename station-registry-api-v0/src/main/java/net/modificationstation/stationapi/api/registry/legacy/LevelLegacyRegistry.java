@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.registry.legacy;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.legacy.PostRegistryRemapEvent;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.Registries;
 import net.modificationstation.stationapi.api.registry.Registry;
 import org.jetbrains.annotations.NotNull;

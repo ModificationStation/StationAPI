@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.entity.player;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.NetworkHandler;
 import net.modificationstation.stationapi.api.util.API;
-import net.modificationstation.stationapi.api.util.SideUtils;
+import net.modificationstation.stationapi.api.util.SideUtil;
 import net.modificationstation.stationapi.impl.client.entity.player.PlayerHelperClientImpl;
 import net.modificationstation.stationapi.impl.entity.player.PlayerHelperImpl;
 import net.modificationstation.stationapi.impl.server.entity.player.PlayerHelperServerImpl;
@@ -18,7 +18,7 @@ public final class PlayerHelper {
      * Implementation instance.
      */
     @SuppressWarnings("Convert2MethodRef") // Method references load their target classes on both sides, causing crashes.
-    private static final PlayerHelperImpl INSTANCE = SideUtils.get(() -> new PlayerHelperClientImpl(), () -> new PlayerHelperServerImpl());
+    private static final PlayerHelperImpl INSTANCE = SideUtil.get(() -> new PlayerHelperClientImpl(), () -> new PlayerHelperServerImpl());
 
     /**
      * @return client's player instance if the current side is client, or null if the current side is server.

@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.*;
 import net.modificationstation.stationapi.api.resource.metadata.ResourceMetadata;
 import net.modificationstation.stationapi.api.util.PathUtil;
@@ -23,9 +23,9 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 public class NamespaceResourceManager implements ResourceManager {
     protected final List<FilterablePack> packList = Lists.newArrayList();
     public final ResourceType type;
-    private final ModID namespace;
+    private final Namespace namespace;
 
-    public NamespaceResourceManager(ResourceType type, ModID namespace) {
+    public NamespaceResourceManager(ResourceType type, Namespace namespace) {
         this.type = type;
         this.namespace = namespace;
     }
@@ -46,13 +46,13 @@ public class NamespaceResourceManager implements ResourceManager {
         packList.add(new FilterablePack(name, underlyingPack, filter));
     }
 
-    public Set<ModID> getAllNamespaces() {
+    public Set<Namespace> getAllNamespaces() {
         return ImmutableSet.of(namespace);
     }
 
     private Function<ResourcePack, InputSupplier<InputStream>> createOpener(Identifier id) {
-        if (id.modID == ModID.MINECRAFT && id.id.startsWith("/")) {
-            final String[] segments = PathUtil.split(id.id.substring(1)).getOrThrow(false, LOGGER::error).toArray(String[]::new);
+        if (id.namespace == Namespace.MINECRAFT && id.path.startsWith("/")) {
+            final String[] segments = PathUtil.split(id.path.substring(1)).getOrThrow(false, LOGGER::error).toArray(String[]::new);
             return pack -> pack.openRoot(segments.clone());
         } else return pack -> pack.open(type, id);
     }
@@ -132,15 +132,15 @@ public class NamespaceResourceManager implements ResourceManager {
     }
 
     private static boolean isMcmeta(Identifier id) {
-        return id.id.endsWith(".mcmeta");
+        return id.path.endsWith(".mcmeta");
     }
 
     private static Identifier getMetadataFileName(Identifier id) {
-        return id.modID.id(id.id.substring(0, id.id.length() - ".mcmeta".length()));
+        return id.namespace.id(id.path.substring(0, id.path.length() - ".mcmeta".length()));
     }
 
     public static Identifier getMetadataPath(Identifier id) {
-        return id.append(".mcmeta");
+        return id.withSuffixedPath(".mcmeta");
     }
 
     @Override

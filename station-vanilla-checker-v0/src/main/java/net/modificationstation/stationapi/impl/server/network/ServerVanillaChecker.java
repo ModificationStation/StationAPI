@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.impl.network.VanillaChecker.CLIENT_REQUIRED_MODS;
 import static net.modificationstation.stationapi.impl.network.VanillaChecker.MASK;
 
@@ -31,21 +31,21 @@ public class ServerVanillaChecker {
         if ((event.loginRequestPacket.worldSeed & MASK) == MASK)
             ((ModdedPacketHandlerSetter) event.serverPacketHandler).setModded();
         else if (!CLIENT_REQUIRED_MODS.isEmpty()) {
-            LOGGER.error("Player \"" + event.loginRequestPacket.username + "\" attempted joining the server without " + MODID.getName() + ", disconnecting.");
+            LOGGER.error("Player \"" + event.loginRequestPacket.username + "\" attempted joining the server without " + NAMESPACE.getName() + ", disconnecting.");
             event.serverPacketHandler.disconnect(I18n.getTranslation("disconnect.stationapi:missing_station"));
         }
     }
 
     @EventListener
     private static void registerMessages(MessageListenerRegistryEvent event) {
-        Registry.register(event.registry, MODID.id("modlist"), (player, message) -> {
+        Registry.register(event.registry, NAMESPACE.id("modlist"), (player, message) -> {
             if (!CLIENT_REQUIRED_MODS.isEmpty()) {
                 LOGGER.info("Received a list of mods from player \"" + player.name + "\", verifying...");
                 ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
                 String version = message.strings[0];
-                String serverStationVersion = MODID.getVersion().getFriendlyString();
+                String serverStationVersion = NAMESPACE.getVersion().getFriendlyString();
                 if (!version.equals(serverStationVersion)) {
-                    LOGGER.error("Player \"" + player.name + "\" has a mismatching " + MODID.getName() + " version \"" + version + "\", disconnecting.");
+                    LOGGER.error("Player \"" + player.name + "\" has a mismatching " + NAMESPACE.getName() + " version \"" + version + "\", disconnecting.");
                     serverPlayer.field_255.method_833(I18n.getTranslation("disconnect.stationapi:station_version_mismatch", serverStationVersion, version));
                     return;
                 }

@@ -22,7 +22,7 @@ import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloadListener;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
@@ -38,14 +38,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.ModID.MINECRAFT;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+import static net.modificationstation.stationapi.api.util.Namespace.MINECRAFT;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 @Environment(EnvType.CLIENT)
 public class BakedModelManager implements IdentifiableResourceReloadListener, AutoCloseable {
 
-    public static final Identifier MODELS = MODID.id("models");
+    public static final Identifier MODELS = NAMESPACE.id("models");
 
     private Map<Identifier, BakedModel> models;
     @SuppressWarnings("deprecation")

@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.client.render.model;
 
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 public interface Baker {

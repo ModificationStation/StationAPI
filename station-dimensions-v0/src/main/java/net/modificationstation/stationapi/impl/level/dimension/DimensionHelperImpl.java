@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.impl.level.dimension;
 
 import net.minecraft.class_467;
 import net.minecraft.entity.player.PlayerEntity;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public abstract class DimensionHelperImpl {
 

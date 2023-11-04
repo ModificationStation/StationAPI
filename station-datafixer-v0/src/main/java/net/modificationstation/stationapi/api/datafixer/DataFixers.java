@@ -10,7 +10,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.datafixer.DataFixerRegisterEvent;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.Util;
 
 import java.util.Collections;
@@ -21,22 +21,22 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DataFixers {
 
-    public static final String DATA_VERSIONS = MODID.id("data_versions").toString();
+    public static final String DATA_VERSIONS = NAMESPACE.id("data_versions").toString();
 
     private record DataFixerEntry(Supplier<DataFixer> fixer, int currentVersion) {}
-    private static final Reference2ReferenceMap<ModID, DataFixerEntry> DATA_FIXERS = new Reference2ReferenceOpenHashMap<>();
+    private static final Reference2ReferenceMap<Namespace, DataFixerEntry> DATA_FIXERS = new Reference2ReferenceOpenHashMap<>();
     private static boolean init;
 
-    public static void registerFixer(ModID mod, Function<Executor, DataFixer> dataFixer, int currentVersion) {
+    public static void registerFixer(Namespace mod, Function<Executor, DataFixer> dataFixer, int currentVersion) {
         registerFixer(mod, () -> dataFixer.apply(Util.getBootstrapExecutor()), currentVersion);
     }
 
-    public static void registerFixer(ModID mod, Supplier<DataFixer> dataFixer, int currentVersion) {
+    public static void registerFixer(Namespace mod, Supplier<DataFixer> dataFixer, int currentVersion) {
         DATA_FIXERS.put(mod, new DataFixerEntry(Suppliers.memoize(dataFixer::get), currentVersion));
     }
 
@@ -44,7 +44,7 @@ public final class DataFixers {
         init();
         Dynamic<T> dataVersions = getDataVersions(dynamic);
         Dynamic<T> ret = dynamic;
-        for (Reference2ReferenceMap.Entry<ModID, DataFixerEntry> entry : DATA_FIXERS.reference2ReferenceEntrySet()) {
+        for (Reference2ReferenceMap.Entry<Namespace, DataFixerEntry> entry : DATA_FIXERS.reference2ReferenceEntrySet()) {
             DataFixerEntry fixerEntry = entry.getValue();
             int version = dataVersions.get(entry.getKey().toString()).asInt(0);
             int currentVersion = fixerEntry.currentVersion;
@@ -67,7 +67,7 @@ public final class DataFixers {
     public static <T> boolean requiresUpdating(Dynamic<T> dynamic) {
         init();
         Dynamic<T> dataVersions = getDataVersions(dynamic);
-        for (Reference2ReferenceMap.Entry<ModID, DataFixerEntry> fixerEntry : DATA_FIXERS.reference2ReferenceEntrySet())
+        for (Reference2ReferenceMap.Entry<Namespace, DataFixerEntry> fixerEntry : DATA_FIXERS.reference2ReferenceEntrySet())
             if (dataVersions.get(fixerEntry.getKey().toString()).asInt(0) < fixerEntry.getValue().currentVersion)
                 return true;
         return false;
@@ -79,7 +79,7 @@ public final class DataFixers {
         HashSet<UpdateData> set = new HashSet<>();
         Dynamic<T> dataVersions = getDataVersions(dynamic);
 
-        for (Reference2ReferenceMap.Entry<ModID, DataFixerEntry> fixerEntry : DATA_FIXERS.reference2ReferenceEntrySet()) {
+        for (Reference2ReferenceMap.Entry<Namespace, DataFixerEntry> fixerEntry : DATA_FIXERS.reference2ReferenceEntrySet()) {
             int dataVersion = dataVersions.get(fixerEntry.getKey().toString()).asInt(0);
             int currentVersion = fixerEntry.getValue().currentVersion;
 
@@ -90,7 +90,7 @@ public final class DataFixers {
         return set;
     }
 
-    public record UpdateData(ModID modID, int saveVersion, int currentVersion) {}
+    public record UpdateData(Namespace namespace, int saveVersion, int currentVersion) {}
 
     private static void init() {
         if (!init) {

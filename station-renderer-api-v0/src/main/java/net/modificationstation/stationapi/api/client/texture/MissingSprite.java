@@ -7,7 +7,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.modificationstation.stationapi.api.client.resource.metadata.AnimationFrameResourceMetadata;
 import net.modificationstation.stationapi.api.client.resource.metadata.AnimationResourceMetadata;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)

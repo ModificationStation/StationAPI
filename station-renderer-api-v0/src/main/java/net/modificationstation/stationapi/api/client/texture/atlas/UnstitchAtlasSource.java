@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.NativeImage;
 import net.modificationstation.stationapi.api.client.texture.SpriteContents;
 import net.modificationstation.stationapi.api.client.texture.SpriteDimensions;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;

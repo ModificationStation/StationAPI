@@ -23,12 +23,12 @@ import net.modificationstation.stationapi.api.client.render.model.json.ModelTran
 import net.modificationstation.stationapi.api.client.render.model.json.Transformation;
 import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.api.util.exception.CrashException;
-import net.modificationstation.stationapi.api.util.exception.CrashReport;
-import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
+import net.modificationstation.stationapi.api.util.crash.CrashException;
+import net.modificationstation.stationapi.api.util.crash.CrashReport;
+import net.modificationstation.stationapi.api.util.crash.CrashReportSection;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSectionBlockState;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;

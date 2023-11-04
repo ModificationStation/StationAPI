@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.serialization.Lifecycle;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 import org.apache.commons.lang3.Validate;
 
@@ -9,11 +10,11 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public class Registries {
     private static final Map<Identifier, Supplier<?>> DEFAULT_ENTRIES = new LinkedHashMap<>();
-    public static final Identifier ROOT_KEY = MODID.id("root");
+    public static final Identifier ROOT_KEY = NAMESPACE.id("root");
     private static final MutableRegistry<MutableRegistry<?>> ROOT = new SimpleRegistry<>(RegistryKey.ofRegistry(ROOT_KEY), Lifecycle.stable());
     public static final Registry<? extends Registry<?>> REGISTRIES = ROOT;
 

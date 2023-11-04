@@ -5,6 +5,10 @@ import org.apache.commons.lang3.function.TriFunction;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+/**
+ * @deprecated Use cyclops instead
+ */
+@Deprecated
 public class Curry {
 
     // Bi

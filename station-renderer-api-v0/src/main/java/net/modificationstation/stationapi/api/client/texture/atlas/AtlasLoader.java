@@ -8,7 +8,7 @@ import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteContents;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceFinder;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
@@ -21,11 +21,11 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 public class AtlasLoader {
-    private static final ResourceFinder FINDER = new ResourceFinder(MODID + "/atlases", ".json");
+    private static final ResourceFinder FINDER = new ResourceFinder(NAMESPACE + "/atlases", ".json");
     private final List<AtlasSource> sources;
 
     private AtlasLoader(List<AtlasSource> sources) {

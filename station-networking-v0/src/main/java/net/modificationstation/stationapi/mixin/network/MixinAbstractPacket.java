@@ -4,7 +4,7 @@ import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.packet.PacketRegisterEvent;
 import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.impl.packet.IdentifiablePacketImpl;
 import org.spongepowered.asm.mixin.Mixin;

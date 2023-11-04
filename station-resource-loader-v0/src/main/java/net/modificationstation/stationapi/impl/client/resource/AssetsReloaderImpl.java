@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static cyclops.control.Option.none;
 import static cyclops.control.Option.some;
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
@@ -45,7 +45,7 @@ public final class AssetsReloaderImpl {
         ReloadScreenManager.getCurrentReload()
                 .flatMap(reload1 -> reload1 instanceof CompositeResourceReload composite ? some(composite) : none())
                 .peek(manager -> manager.scheduleReload(
-                        MODID.id("assets"),
+                        NAMESPACE.id("assets"),
                         () -> ReloadableAssetsManager.INSTANCE.reload(
                                 Util.getMainWorkerExecutor(),
                                 ReloadScreenManager.getApplicationExecutor(),

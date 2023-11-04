@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.template.block;
 
 import net.minecraft.block.RailBlock;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateRail extends RailBlock implements BlockTemplate {
 

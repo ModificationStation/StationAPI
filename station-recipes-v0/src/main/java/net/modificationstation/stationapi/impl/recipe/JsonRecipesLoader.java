@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.mod.PreInitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.JsonRecipesRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.resource.Filters;
@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
@@ -29,7 +29,7 @@ public class JsonRecipesLoader {
     @EventListener
     private static void loadJsonRecipes(PreInitEvent event) {
         LOGGER.info("Searching for JSON recipes...");
-        String recipePath = MODID + "/recipes";
+        String recipePath = NAMESPACE + "/recipes";
         ResourceHelper.DATA.find(recipePath, Filters.FileType.JSON).forEach(JsonRecipesLoader::registerRecipe);
         ResourceHelper.ASSETS.find(recipePath, Filters.FileType.JSON).forEach(recipe -> {
             LOGGER.warn("Found a recipe (" + recipe + ") under assets directory, which is deprecated for recipes!");

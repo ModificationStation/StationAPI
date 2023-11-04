@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.client.resource.metadata.Animation
 import net.modificationstation.stationapi.api.client.texture.NativeImage;
 import net.modificationstation.stationapi.api.client.texture.SpriteContents;
 import net.modificationstation.stationapi.api.client.texture.SpriteDimensions;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.util.math.ColorHelper;
@@ -51,7 +51,7 @@ public class PalettedPermutationsAtlasSource implements AtlasSource {
             }
             Sprite sprite = new Sprite(identifier22, optional.get(), map.size());
             for (Map.Entry<String, Supplier<IntUnaryOperator>> entry : map.entrySet()) {
-                Identifier identifier3 = identifier2.append("_" + entry.getKey());
+                Identifier identifier3 = identifier2.withSuffixedPath("_" + entry.getKey());
                 regions.add(identifier3, new PalettedSpriteRegion(sprite, entry.getValue(), identifier3));
             }
         }

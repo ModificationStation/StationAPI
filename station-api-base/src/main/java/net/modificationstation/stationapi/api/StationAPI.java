@@ -8,15 +8,13 @@ import net.modificationstation.stationapi.api.event.mod.InitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.Null;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.jetbrains.annotations.ApiStatus;
-
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
 
 /**
  * StationAPI main class. Used for some initialization.
@@ -34,10 +32,10 @@ public class StationAPI implements PreLaunchEntrypoint {
     public static final StationAPI INSTANCE = Null.get();
 
     /**
-     * StationAPI's ModID.
+     * StationAPI's namespace.
      */
-    @Entrypoint.ModID
-    public static final ModID MODID = ModID.of("stationapi");
+    @Entrypoint.Namespace
+    public static final Namespace NAMESPACE = Namespace.of("stationapi");
 
     @Entrypoint.Logger("Station|API")
     public static final Logger LOGGER = Null.get();
@@ -56,7 +54,7 @@ public class StationAPI implements PreLaunchEntrypoint {
     @Override
     public void onPreLaunch() {
         FabricLoader.getInstance().getModContainer("stationapi").ifPresent(modContainer -> EntrypointManager.setup(this, modContainer));
-        String name = MODID.getName();
+        String name = NAMESPACE.getName();
         LOGGER.info("Initializing " + name + "...");
         Configurator.setLevel("mixin", Level.TRACE);
         Configurator.setLevel("Fabric|Loader", Level.INFO);
@@ -69,8 +67,8 @@ public class StationAPI implements PreLaunchEntrypoint {
      * Loads main entrypoints, also invokes preInit, init and postInit events. No Minecraft classes must be referenced here.
      */
     private void setupMods() {
-        setupEntrypoint(of(MODID, "event_bus"));
-        setupEntrypoint(of(MODID, "event_bus_" + FabricLoader.getInstance().getEnvironmentType().name().toLowerCase()));
+        setupEntrypoint(NAMESPACE.id("event_bus"));
+        setupEntrypoint(NAMESPACE.id("event_bus_" + FabricLoader.getInstance().getEnvironmentType().name().toLowerCase()));
         LOGGER.info("Invoking Init event...");
         EVENT_BUS.post(InitEvent.builder().build());
     }

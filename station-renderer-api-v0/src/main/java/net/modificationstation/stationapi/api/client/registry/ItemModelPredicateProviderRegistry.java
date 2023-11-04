@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.render.model.ItemModelPredicateProviderRegistryEvent;
 import net.modificationstation.stationapi.api.client.model.item.ItemModelPredicateProvider;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.Registries;
 import net.modificationstation.stationapi.api.registry.RegistryKey;
 import net.modificationstation.stationapi.api.registry.SimpleRegistry;
@@ -14,12 +14,12 @@ import net.modificationstation.stationapi.api.util.math.MathHelper;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public final class ItemModelPredicateProviderRegistry extends SimpleRegistry<ItemModelPredicateProvider> {
 
     private static final ItemModelPredicateProvider EMPTY = (stack, world, entity, seed) -> 0;
-    public static final RegistryKey<ItemModelPredicateProviderRegistry> KEY = RegistryKey.ofRegistry(MODID.id("item_model_predicate_providers"));
+    public static final RegistryKey<ItemModelPredicateProviderRegistry> KEY = RegistryKey.ofRegistry(NAMESPACE.id("item_model_predicate_providers"));
     public static final ItemModelPredicateProviderRegistry INSTANCE = Registries.create(KEY, new ItemModelPredicateProviderRegistry(), registry -> EMPTY, Lifecycle.experimental());
 
     private static final Identifier DAMAGED_ID = Identifier.of("damaged");

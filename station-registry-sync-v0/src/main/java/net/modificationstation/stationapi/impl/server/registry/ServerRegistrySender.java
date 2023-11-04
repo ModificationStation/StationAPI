@@ -15,8 +15,8 @@ import net.modificationstation.stationapi.api.server.event.network.PlayerPacketH
 import java.io.ByteArrayOutputStream;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
@@ -30,7 +30,7 @@ public class ServerRegistrySender {
             LevelLegacyRegistry.saveAll(registries);
             ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
             NbtIo.writeCompressed(registries, byteOutputStream);
-            Message message = new Message(of(MODID, "server_registry_sync"));
+            Message message = new Message(of(NAMESPACE, "server_registry_sync"));
             message.bytes = byteOutputStream.toByteArray();
             PacketHelper.sendTo(event.player, message);
         }

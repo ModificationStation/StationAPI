@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.util.exception;
+package net.modificationstation.stationapi.api.util.crash;
 
 public class CrashException extends RuntimeException {
     private final CrashReport report;
@@ -11,10 +11,12 @@ public class CrashException extends RuntimeException {
         return this.report;
     }
 
+    @Override
     public Throwable getCause() {
         return this.report.getCause();
     }
 
+    @Override
     public String getMessage() {
         return this.report.getMessage();
     }

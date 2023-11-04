@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 /**
  * Internal utilities for managing resource packs.
@@ -53,7 +53,7 @@ public final class ModResourcePackUtil {
                 updatePriorities(higherThan, id, priority, "higherThan");
             }
 
-            ModResourcePack pack = ModNioResourcePack.create(MODID.id(id), getName(metadata), container, subPath, type, ResourcePackActivationType.ALWAYS_ENABLED);
+            ModResourcePack pack = ModNioResourcePack.create(NAMESPACE.id(id), getName(metadata), container, subPath, type, ResourcePackActivationType.ALWAYS_ENABLED);
 
             if (pack != null) {
                 packs.add(pack);

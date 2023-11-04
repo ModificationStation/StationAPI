@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.client.texture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureManager;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import org.lwjgl.opengl.GL11;
 

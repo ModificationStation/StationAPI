@@ -6,8 +6,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 
 @SuppressWarnings("ClassCanBeRecord")
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -21,7 +21,7 @@ public final class ModelIdentifier {
 
    public static ModelIdentifier of(String string) {
       String[] strings = splitModelId(string);
-      return of(Identifier.of(ModID.of(strings[0]), strings[1]), strings[2]);
+      return of(Identifier.of(Namespace.of(strings[0]), strings[1]), strings[2]);
    }
 
    public static ModelIdentifier of(Identifier id, String variant) {
@@ -48,8 +48,8 @@ public final class ModelIdentifier {
    }
 
    private static String[] splitId(String id) {
-      String[] strings = new String[]{ModID.MINECRAFT.toString(), id};
-      int i = id.indexOf(Identifier.SEPARATOR);
+      String[] strings = new String[]{Namespace.MINECRAFT.toString(), id};
+      int i = id.indexOf(Identifier.NAMESPACE_SEPARATOR);
       if (i >= 0) {
          strings[1] = id.substring(i + 1);
          if (i >= 1) {
@@ -61,7 +61,7 @@ public final class ModelIdentifier {
    }
 
    public Identifier asIdentifier() {
-      return Identifier.of(id.modID, variant.isEmpty() ? id.id : id.id + '#' + variant);
+      return Identifier.of(id.namespace, variant.isEmpty() ? id.path : id.path + '#' + variant);
    }
 
    @Override

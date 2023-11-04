@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import static cyclops.control.Option.none;
 import static cyclops.control.Option.some;
 import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
@@ -61,7 +61,7 @@ public class DataReloaderImpl {
         ReloadScreenManager.getCurrentReload()
                 .flatMap(reload1 -> reload1 instanceof CompositeResourceReload composite ? some(composite) : none())
                 .peek(manager -> manager.scheduleReload(
-                        MODID.id("data"),
+                        NAMESPACE.id("data"),
                         () -> DataManager.INSTANCE.reload(
                                 Util.getMainWorkerExecutor(),
                                 ReloadScreenManager.getApplicationExecutor(),

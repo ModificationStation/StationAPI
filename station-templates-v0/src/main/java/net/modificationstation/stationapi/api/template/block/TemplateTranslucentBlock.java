@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.template.block;
 
 import net.minecraft.block.Material;
 import net.minecraft.class_221;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateTranslucentBlock extends class_221 implements BlockTemplate {
     

@@ -7,7 +7,7 @@ import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -15,11 +15,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public class FlattenedBlockChangeS2CPacket extends BlockUpdateS2CPacket implements IdentifiablePacket {
 
-    public static final Identifier PACKET_ID = MODID.id("flattening/block_change");
+    public static final Identifier PACKET_ID = NAMESPACE.id("flattening/block_change");
 
     public int stateId;
 

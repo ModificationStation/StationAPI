@@ -5,8 +5,9 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.util.Uuids;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.time.Instant;
@@ -25,7 +26,7 @@ import java.util.stream.Stream;
  * {@link #nonEmptyList(Codec)}.
  */
 public class Codecs {
-    public static final Codec<UUID> UUID = DynamicSerializableUuid.CODEC;
+    public static final Codec<UUID> UUID = Uuids.CODEC;
     public static final Codec<Integer> NONNEGATIVE_INT = Codecs.rangedInt(0, Integer.MAX_VALUE, v -> "Value must be non-negative: " + v);
     public static final Codec<Integer> POSITIVE_INT = Codecs.rangedInt(1, Integer.MAX_VALUE, v -> "Value must be positive: " + v);
     public static final Codec<Float> POSITIVE_FLOAT = Codecs.rangedFloat(0.0f, Float.MAX_VALUE, v -> "Value must be positive: " + v);

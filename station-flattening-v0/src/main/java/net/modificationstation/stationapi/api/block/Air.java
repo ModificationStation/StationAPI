@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 
 import java.util.Random;
 
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 final class Air extends Block {
 

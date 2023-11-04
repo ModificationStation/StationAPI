@@ -23,8 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Objects;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Mixin(ItemStack.class)
 public abstract class MixinItemInstance implements StationFlatteningItemStack {
@@ -33,7 +33,7 @@ public abstract class MixinItemInstance implements StationFlatteningItemStack {
     @Shadow public abstract Item getType();
 
     @Unique
-    private static final String STATION_ID = of(MODID, "id").toString();
+    private static final String STATION_ID = of(NAMESPACE, "id").toString();
     
     @Inject(method = "<init>(Lnet/minecraft/block/BlockBase;)V", at = @At("TAIL"))
     private void onInitFromBlock(Block block, CallbackInfo info) {

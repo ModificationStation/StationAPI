@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.client.texture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.client.resource.metadata.TextureResourceMetadata;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import org.apache.logging.log4j.LogManager;

@@ -14,8 +14,8 @@ import net.modificationstation.stationapi.api.event.resource.DataReloadEvent;
 import net.modificationstation.stationapi.api.event.resource.language.TranslationInvalidationEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloadListener;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.resource.SinglePreparationResourceReloader;
@@ -36,19 +36,19 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.regex.Pattern.quote;
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerStatic = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class LanguageManager extends SinglePreparationResourceReloader<Map<Object, Object>> implements IdentifiableResourceReloadListener {
-    public static final Identifier LANGUAGES = MODID.id("languages");
+    public static final Identifier LANGUAGES = NAMESPACE.id("languages");
     @Entrypoint.Instance
     private static final LanguageManager INSTANCE = Null.get();
     @NotNull
     private static Predicate<String> pathPredicate = buildPathPredicate("en_US");
-    private static final Object2ReferenceMap<String, ModID> LANG_PATHS = Util.make(new Object2ReferenceOpenHashMap<>(), paths -> {
-        paths.put("/lang", ModID.MINECRAFT);
-        paths.put(MODID + "/lang", null);
+    private static final Object2ReferenceMap<String, Namespace> LANG_PATHS = Util.make(new Object2ReferenceOpenHashMap<>(), paths -> {
+        paths.put("/lang", Namespace.MINECRAFT);
+        paths.put(NAMESPACE + "/lang", null);
     });
 
     private static Predicate<String> buildPathPredicate(String langDef) {
@@ -63,10 +63,10 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
     }
 
     public static void addPath(String path) {
-        LANG_PATHS.put(path, ModID.MINECRAFT);
+        LANG_PATHS.put(path, Namespace.MINECRAFT);
     }
 
-    public static void addPath(String path, ModID namespace) {
+    public static void addPath(String path, Namespace namespace) {
         LANG_PATHS.put(path, namespace);
     }
 
@@ -100,7 +100,7 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
         profiler.push("load");
         val result = LANG_PATHS.entrySet()
                 .stream()
-                .flatMap(pathNsEntry -> manager.findAllResources(pathNsEntry.getKey(), identifier -> pathPredicate.test(identifier.id)).entrySet()
+                .flatMap(pathNsEntry -> manager.findAllResources(pathNsEntry.getKey(), identifier -> pathPredicate.test(identifier.path)).entrySet()
                         .stream()
                         .flatMap(resourceEntry -> resourceEntry.getValue()
                                 .stream()
@@ -111,8 +111,8 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
                                     }
-                                    val langNs = pathNsEntry.getValue() == null ? resourceEntry.getKey().modID : pathNsEntry.getValue();
-                                    if (langNs == ModID.MINECRAFT) return properties.entrySet().stream();
+                                    val langNs = pathNsEntry.getValue() == null ? resourceEntry.getKey().namespace : pathNsEntry.getValue();
+                                    if (langNs == Namespace.MINECRAFT) return properties.entrySet().stream();
                                     val namespaceLang = new HashMap<>();
                                     properties.forEach((key, value) -> {
                                         if (key instanceof String string) {

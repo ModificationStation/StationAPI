@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.impl.level.storage.FlattenedWorldStorage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.CURRENT_VERSION;
 
 @Mixin(Minecraft.class)
@@ -32,7 +32,7 @@ public class MixinMinecraft {
         Set<DataFixers.UpdateData> updateList = NbtHelper.getUpdateList(worldTag);
 
         for (DataFixers.UpdateData updateData : updateList) {
-            if (updateData.modID().equals(MODID) && updateData.currentVersion() == CURRENT_VERSION) {
+            if (updateData.namespace().equals(NAMESPACE) && updateData.currentVersion() == CURRENT_VERSION) {
                 return string;
             }
         }
@@ -46,16 +46,16 @@ public class MixinMinecraft {
 
         Set<DataFixers.UpdateData> updateList = NbtHelper.getUpdateList(worldTag);
 
-        List<ModID> list = new ArrayList<>();
+        List<Namespace> list = new ArrayList<>();
 
         for (DataFixers.UpdateData updateData : updateList) {
-            if (updateData.modID().equals(MODID) && updateData.currentVersion() == CURRENT_VERSION) {
+            if (updateData.namespace().equals(NAMESPACE) && updateData.currentVersion() == CURRENT_VERSION) {
                 return string;
             }
 
-            list.add(updateData.modID());
+            list.add(updateData.namespace());
         }
 
-        return list.stream().map(ModID::toString).collect(Collectors.joining(", "));
+        return list.stream().map(Namespace::toString).collect(Collectors.joining(", "));
     }
 }

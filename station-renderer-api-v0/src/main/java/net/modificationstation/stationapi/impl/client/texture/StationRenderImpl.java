@@ -20,8 +20,8 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.*;
 import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
@@ -34,14 +34,14 @@ import java.util.Objects;
 import java.util.Set;
 
 import static net.mine_diver.unsafeevents.listener.ListenerPriority.HIGH;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class StationRenderImpl {
 
-    @Entrypoint.ModID
-    public static final ModID MODID = Null.get();
+    @Entrypoint.Namespace
+    public static final Namespace MODID = Null.get();
 
     @Entrypoint.Logger("StationRenderer|API")
     public static final Logger LOGGER = Null.get();
@@ -76,7 +76,7 @@ public class StationRenderImpl {
 
             @Override
             public Identifier getId() {
-                return StationAPI.MODID.id("private/item_models");
+                return StationAPI.NAMESPACE.id("private/item_models");
             }
 
             @Override
@@ -97,7 +97,7 @@ public class StationRenderImpl {
 
             @Override
             public Identifier getId() {
-                return StationAPI.MODID.id("private/block_destruction_stage_textures");
+                return StationAPI.NAMESPACE.id("private/block_destruction_stage_textures");
             }
 
             @Override
@@ -124,7 +124,7 @@ public class StationRenderImpl {
 
             @Override
             public Identifier getId() {
-                return StationAPI.MODID.id("private/mod_textures");
+                return StationAPI.NAMESPACE.id("private/mod_textures");
             }
 
             @Override

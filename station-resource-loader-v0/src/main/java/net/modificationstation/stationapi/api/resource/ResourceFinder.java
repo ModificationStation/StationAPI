@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.resource;
 
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.List;
 import java.util.Map;
@@ -19,19 +19,19 @@ public class ResourceFinder {
     }
 
     public Identifier toResourcePath(Identifier id) {
-        return id.id.startsWith("/") ? id : id.prepend(this.directoryName + "/").append(this.fileExtension);
+        return id.path.startsWith("/") ? id : id.withPrefixedPath(this.directoryName + "/").withSuffixedPath(this.fileExtension);
     }
 
     public Identifier toResourceId(Identifier path) {
-        String string = path.id;
-        return path.modID.id(string.substring(this.directoryName.length() + 1, string.length() - this.fileExtension.length()));
+        String string = path.path;
+        return path.namespace.id(string.substring(this.directoryName.length() + 1, string.length() - this.fileExtension.length()));
     }
 
     public Map<Identifier, Resource> findResources(ResourceManager resourceManager) {
-        return resourceManager.findResources(this.directoryName, path -> path.id.endsWith(this.fileExtension));
+        return resourceManager.findResources(this.directoryName, path -> path.path.endsWith(this.fileExtension));
     }
 
     public Map<Identifier, List<Resource>> findAllResources(ResourceManager resourceManager) {
-        return resourceManager.findAllResources(this.directoryName, path -> path.id.endsWith(this.fileExtension));
+        return resourceManager.findAllResources(this.directoryName, path -> path.path.endsWith(this.fileExtension));
     }
 }

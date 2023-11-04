@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.template.item;
 
 import net.minecraft.item.BoatItem;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateBoat extends BoatItem implements ItemTemplate {
     

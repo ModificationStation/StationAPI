@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.modificationstation.stationapi.api.resource.ResourceFinder;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public class DirectoryAtlasSource implements AtlasSource {
     public static final Codec<DirectoryAtlasSource> CODEC = RecordCodecBuilder.create(instance -> instance.group(Codec.STRING.fieldOf("source").forGetter(directoryAtlasSource -> directoryAtlasSource.source), Codec.STRING.fieldOf("prefix").forGetter(directoryAtlasSource -> directoryAtlasSource.prefix)).apply(instance, DirectoryAtlasSource::new));
@@ -19,8 +19,8 @@ public class DirectoryAtlasSource implements AtlasSource {
 
     @Override
     public void load(ResourceManager resourceManager, AtlasSource.SpriteRegions regions) {
-        ResourceFinder resourceFinder = new ResourceFinder(MODID + "/textures/" + this.source, ".png");
-        resourceFinder.findResources(resourceManager).forEach((identifier, resource) -> regions.add(resourceFinder.toResourceId(identifier).prepend(this.prefix), resource));
+        ResourceFinder resourceFinder = new ResourceFinder(NAMESPACE + "/textures/" + this.source, ".png");
+        resourceFinder.findResources(resourceManager).forEach((identifier, resource) -> regions.add(resourceFinder.toResourceId(identifier).withPrefixedPath(this.prefix), resource));
     }
 
     @Override

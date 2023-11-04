@@ -4,8 +4,8 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.ints.IntLists;
 import net.minecraft.achievement.Achievement;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import uk.co.benjiweber.expressions.property.Named;
 
 import java.util.ArrayList;
@@ -87,12 +87,12 @@ public class AchievementPage implements Named<AchievementPage> {
     /**
      * @deprecated Use {@link #AchievementPage(Identifier)} instead.
      *
-     * @param modID the {@link ModID} to add to the translation key.
+     * @param namespace the {@link Namespace} to add to the translation key.
      * @param pageName the name of the page that is shown on the achievements screen.
      */
     @Deprecated
-    public AchievementPage(ModID modID, String pageName) {
-        this(modID.id(pageName));
+    public AchievementPage(Namespace namespace, String pageName) {
+        this(namespace.id(pageName));
     }
 
     /**

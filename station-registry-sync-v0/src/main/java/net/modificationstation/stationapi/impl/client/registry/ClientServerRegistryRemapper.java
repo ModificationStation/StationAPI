@@ -14,7 +14,7 @@ import net.modificationstation.stationapi.api.registry.legacy.LevelLegacyRegistr
 import java.io.ByteArrayInputStream;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
@@ -22,7 +22,7 @@ public class ClientServerRegistryRemapper {
 
     @EventListener
     private static void registerListeners(MessageListenerRegistryEvent event) {
-        Registry.register(event.registry, MODID.id("server_registry_sync"), ClientServerRegistryRemapper::remapRegistries);
+        Registry.register(event.registry, NAMESPACE.id("server_registry_sync"), ClientServerRegistryRemapper::remapRegistries);
     }
 
     private static void remapRegistries(PlayerEntity player, Message message) {

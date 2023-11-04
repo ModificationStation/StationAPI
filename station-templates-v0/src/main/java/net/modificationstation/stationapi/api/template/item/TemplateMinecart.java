@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.template.item;
 
 import net.minecraft.item.MinecartItem;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateMinecart extends MinecartItem implements ItemTemplate {
     

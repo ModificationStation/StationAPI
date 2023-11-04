@@ -7,6 +7,7 @@ import com.mojang.serialization.*;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceFinder;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
@@ -76,7 +77,7 @@ public class RegistryLoader {
     }
 
     private static String getPath(Identifier id) {
-        return id.id;
+        return id.path;
     }
 
     static <E> void load(RegistryOps.RegistryInfoGetter registryInfoGetter, ResourceManager resourceManager, RegistryKey<? extends Registry<E>> registryRef, MutableRegistry<E> newRegistry, Decoder<E> decoder, Map<RegistryKey<?>, Exception> exceptions) {

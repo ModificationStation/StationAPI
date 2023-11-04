@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.template.item.food;
 
 import net.minecraft.item.MushroomStewItem;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.item.ItemTemplate;
 
 public class TemplateMushroomStew extends MushroomStewItem implements ItemTemplate {

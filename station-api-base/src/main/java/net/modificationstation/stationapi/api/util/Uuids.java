@@ -1,8 +1,7 @@
-package net.modificationstation.stationapi.api.util.dynamic;
+package net.modificationstation.stationapi.api.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
-import net.modificationstation.stationapi.api.util.Util;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -10,12 +9,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.UUID;
 
-public final class DynamicSerializableUuid {
-    public static final Codec<UUID> CODEC = Codec.INT_STREAM.comapFlatMap(uuidStream -> Util.toArray(uuidStream, 4).map(DynamicSerializableUuid::toUuid), uuid -> Arrays.stream(DynamicSerializableUuid.toIntArray(uuid)));
+public final class Uuids {
+    public static final Codec<UUID> CODEC = Codec.INT_STREAM.comapFlatMap(uuidStream -> Util.toArray(uuidStream, 4).map(Uuids::toUuid), uuid -> Arrays.stream(Uuids.toIntArray(uuid)));
     public static final int BYTE_ARRAY_SIZE = 16;
     private static final String OFFLINE_PLAYER_UUID_PREFIX = "OfflinePlayer:";
 
-    private DynamicSerializableUuid() {
+    private Uuids() {
     }
 
     public static UUID toUuid(int[] array) {
@@ -25,7 +24,7 @@ public final class DynamicSerializableUuid {
     public static int[] toIntArray(UUID uuid) {
         long l = uuid.getMostSignificantBits();
         long m = uuid.getLeastSignificantBits();
-        return DynamicSerializableUuid.toIntArray(l, m);
+        return Uuids.toIntArray(l, m);
     }
 
     private static int[] toIntArray(long uuidMost, long uuidLeast) {
@@ -43,7 +42,7 @@ public final class DynamicSerializableUuid {
         if (is.length != 4) {
             throw new IllegalArgumentException("Could not read UUID. Expected int-array of length 4, got " + is.length + ".");
         }
-        return DynamicSerializableUuid.toUuid(is);
+        return Uuids.toUuid(is);
     }
 
     public static UUID getOfflinePlayerUuid(String nickname) {

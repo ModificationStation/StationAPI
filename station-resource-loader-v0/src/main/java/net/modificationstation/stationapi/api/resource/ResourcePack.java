@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.resource;
 
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.metadata.ResourceMetadataReader;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,9 +20,9 @@ public interface ResourcePack extends AutoCloseable {
     @Nullable
     InputSupplier<InputStream> open(ResourceType type, Identifier id);
 
-    void findResources(ResourceType type, ModID namespace, String prefix, ResultConsumer consumer);
+    void findResources(ResourceType type, Namespace namespace, String prefix, ResultConsumer consumer);
 
-    Set<ModID> getNamespaces(ResourceType type);
+    Set<Namespace> getNamespaces(ResourceType type);
 
     @Nullable
     <T> T parseMetadata(ResourceMetadataReader<T> metaReader) throws IOException;

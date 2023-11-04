@@ -13,7 +13,8 @@ import net.modificationstation.stationapi.api.event.registry.RegistryAttribute;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttributeHolder;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
 import net.modificationstation.stationapi.api.registry.*;
-import net.modificationstation.stationapi.api.util.Colours;
+import net.modificationstation.stationapi.api.util.Formatting;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.network.packet.s2c.play.RemapClientRegistryS2CPacket;
 import org.jetbrains.annotations.Nullable;
 
@@ -211,20 +212,20 @@ public final class RegistrySyncManager {
 		if (count == 1) text.append(I18n.getTranslation("station-registry-api-v0.unknown-remote.title.singular"));
 		else text.append(I18n.getTranslation("station-registry-api-v0.unknown-remote.title.plural", count));
 
-		text.append(Colours.GREEN).append(I18n.getTranslation("station-registry-api-v0.unknown-remote.subtitle.1"));
+		text.append(Formatting.GREEN).append(I18n.getTranslation("station-registry-api-v0.unknown-remote.subtitle.1"));
 		text.append(I18n.getTranslation("station-registry-api-v0.unknown-remote.subtitle.2"));
 
 		final int toDisplay = 4;
 		// Get the distinct missing namespaces
 		final List<String> namespaces = missingEntries.values().stream()
 				.flatMap(List::stream)
-				.map(id -> id.modID.toString())
+				.map(id -> id.namespace.toString())
 				.distinct()
 				.sorted()
 				.toList();
 
 		for (int i = 0; i < Math.min(namespaces.size(), toDisplay); i++) {
-			text.append(Colours.YELLOW).append(namespaces.get(i));
+			text.append(Formatting.YELLOW).append(namespaces.get(i));
 			text.append("\n");
 		}
 

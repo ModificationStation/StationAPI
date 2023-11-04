@@ -17,13 +17,13 @@ import net.minecraft.world.World;
 import net.modificationstation.sltest.inventory.ContainerFreezer;
 import net.modificationstation.sltest.tileentity.TileEntityFreezer;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockWithEntity;
 
 import java.util.Random;
 
 import static net.modificationstation.sltest.SLTest.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 // Referenced classes of package net.minecraft.src:
 //            BlockContainer, Material, ModLoader, Level, 

@@ -1,13 +1,13 @@
-package net.modificationstation.stationapi.api.util.exception;
+package net.modificationstation.stationapi.api.util.crash;
 
 import com.google.common.collect.Lists;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 
 public class CrashReportSection {
     public static String createPositionString(BlockView world, double x, double y, double z) {

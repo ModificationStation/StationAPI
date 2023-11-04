@@ -9,15 +9,15 @@ import net.modificationstation.stationapi.api.packet.Message;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public interface MobSpawnDataProvider extends StationSpawnDataProvider {
 
     @Override
     default Packet getSpawnData() {
         LivingEntity mob = (LivingEntity) this;
-        Message message = new Message(of(MODID, "spawn_mob"));
+        Message message = new Message(of(NAMESPACE, "spawn_mob"));
         message.strings = new String[] { getHandlerIdentifier().toString() };
         message.ints = new int[] {
                 mob.id,

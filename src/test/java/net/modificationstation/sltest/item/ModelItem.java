@@ -1,6 +1,6 @@
 package net.modificationstation.sltest.item;
 
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
 
 public class ModelItem extends TemplateItemBase/* implements ItemModelProvider*/ {

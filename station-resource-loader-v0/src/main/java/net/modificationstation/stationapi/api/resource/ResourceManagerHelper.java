@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.resource;
 
 import net.fabricmc.loader.api.ModContainer;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.resource.loader.ResourceManagerHelperImpl;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -45,7 +45,7 @@ public interface ResourceManagerHelper {
      * @return {@code true} if successfully registered the resource pack, else {@code false}
      */
     static boolean registerBuiltinResourcePack(Identifier id, ModContainer container, ResourcePackActivationType activationType) {
-        return ResourceManagerHelperImpl.registerBuiltinResourcePack(id, "resourcepacks/" + id.id, container, activationType);
+        return ResourceManagerHelperImpl.registerBuiltinResourcePack(id, "resourcepacks/" + id.path, container, activationType);
     }
 
     /**
@@ -66,6 +66,6 @@ public interface ResourceManagerHelper {
      * @return {@code true} if successfully registered the resource pack, else {@code false}
      */
     static boolean registerBuiltinResourcePack(Identifier id, ModContainer container, String displayName, ResourcePackActivationType activationType) {
-        return ResourceManagerHelperImpl.registerBuiltinResourcePack(id, "resourcepacks/" + id.id, container, displayName, activationType);
+        return ResourceManagerHelperImpl.registerBuiltinResourcePack(id, "resourcepacks/" + id.path, container, displayName, activationType);
     }
 }

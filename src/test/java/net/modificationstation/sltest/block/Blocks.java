@@ -5,14 +5,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
 
 import java.util.Arrays;
 import java.util.function.Function;
 
 import static net.modificationstation.sltest.SLTest.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public enum Blocks {
 

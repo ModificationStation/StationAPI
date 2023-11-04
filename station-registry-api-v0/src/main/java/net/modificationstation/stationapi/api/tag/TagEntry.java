@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.tag;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
 import org.jetbrains.annotations.Nullable;
 

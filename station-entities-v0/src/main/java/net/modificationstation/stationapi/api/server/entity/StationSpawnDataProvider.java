@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.server.entity;
 
 import net.modificationstation.stationapi.api.packet.Message;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public interface StationSpawnDataProvider extends CustomSpawnDataProvider {
 

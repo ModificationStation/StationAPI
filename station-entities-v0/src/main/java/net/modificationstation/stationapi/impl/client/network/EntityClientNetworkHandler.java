@@ -31,8 +31,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
@@ -40,9 +40,9 @@ public final class EntityClientNetworkHandler {
 
     @EventListener
     private static void registerMessageListeners(MessageListenerRegistryEvent event) {
-        Registry.register(event.registry, MODID.id("spawn_entity"), EntityClientNetworkHandler::handleEntitySpawn);
+        Registry.register(event.registry, NAMESPACE.id("spawn_entity"), EntityClientNetworkHandler::handleEntitySpawn);
         StationAPI.EVENT_BUS.post(new EntityHandlerRegistryEvent());
-        Registry.register(event.registry, MODID.id("spawn_mob"), EntityClientNetworkHandler::handleMobSpawn);
+        Registry.register(event.registry, NAMESPACE.id("spawn_mob"), EntityClientNetworkHandler::handleMobSpawn);
         StationAPI.EVENT_BUS.post(new MobHandlerRegistryEvent());
     }
 

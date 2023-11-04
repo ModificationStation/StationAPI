@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.registry;
 
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public interface RemappableRegistry {
     /**

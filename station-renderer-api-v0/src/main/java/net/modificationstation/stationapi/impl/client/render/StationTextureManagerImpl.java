@@ -3,10 +3,10 @@ package net.modificationstation.stationapi.impl.client.render;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.resource.ReloadableAssetsManager;
 import net.modificationstation.stationapi.api.client.texture.*;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.util.exception.CrashException;
-import net.modificationstation.stationapi.api.util.exception.CrashReport;
-import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.crash.CrashException;
+import net.modificationstation.stationapi.api.util.crash.CrashReport;
+import net.modificationstation.stationapi.api.util.crash.CrashReportSection;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
 
 import java.io.IOException;

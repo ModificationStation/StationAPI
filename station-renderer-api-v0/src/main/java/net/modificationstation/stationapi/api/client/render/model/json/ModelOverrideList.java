@@ -19,7 +19,7 @@ import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.Baker;
 import net.modificationstation.stationapi.api.client.render.model.ModelBakeRotation;
 import net.modificationstation.stationapi.api.client.render.model.UnbakedModel;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

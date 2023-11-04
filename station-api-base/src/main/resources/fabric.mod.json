@@ -29,9 +29,6 @@
       "net.modificationstation.stationapi.impl.mod.DeprecatedInitEventsImpl"
     ]
   },
-  "mixins": [
-    "station-api-base.mixins.json"
-  ],
 
   "depends": {
     "fabricloader": "*",

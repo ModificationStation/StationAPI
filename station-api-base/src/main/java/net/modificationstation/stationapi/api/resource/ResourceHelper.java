@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.resource;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
 import net.modificationstation.stationapi.api.util.API;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static net.modificationstation.stationapi.api.registry.ModID.MINECRAFT;
+import static net.modificationstation.stationapi.api.util.Namespace.MINECRAFT;
 
 /**
  * @deprecated Use station-resource-loader-v0 instead.
@@ -41,13 +41,13 @@ public class ResourceHelper {
 
     @API
     public String toPath(Identifier identifier, String subPath, String extension) {
-        identifier = subPath.isEmpty() ? identifier : identifier.prepend(subPath + "/");
-        return toPath(extension.isEmpty() ? identifier : identifier.append("." + extension));
+        identifier = subPath.isEmpty() ? identifier : identifier.withPrefixedPath(subPath + "/");
+        return toPath(extension.isEmpty() ? identifier : identifier.withSuffixedPath("." + extension));
     }
 
     @API
     public String toPath(Identifier identifier) {
-        return identifier.modID == MINECRAFT && identifier.id.startsWith("/") ? identifier.id : rootPath + "/" + identifier.modID + "/" + identifier.id;
+        return identifier.namespace == MINECRAFT && identifier.path.startsWith("/") ? identifier.path : rootPath + "/" + identifier.namespace + "/" + identifier.path;
     }
 
     @API
@@ -63,7 +63,7 @@ public class ResourceHelper {
         int indexOfSubpath = path.indexOf("/");
         if (indexOfSubpath == -1)
             throw new IllegalArgumentException("The path \"" + path + "\" doesn't have a modid!");
-        ModID modid = ModID.of(path.substring(0, indexOfSubpath));
+        Namespace modid = Namespace.of(path.substring(0, indexOfSubpath));
         int indexOfId = indexOfSubpath + 1 + subPath.length();
         String subPathCheck = path.substring(indexOfSubpath + 1, indexOfId);
         if (!subPathCheck.equals(subPath))
@@ -73,12 +73,12 @@ public class ResourceHelper {
     }
 
     public Set<URL> find(String path, Predicate<String> filter) {
-        return FabricLoader.getInstance().getAllMods().stream().map(modContainer -> find(ModID.of(modContainer), path, filter)).flatMap(Collection::stream).collect(Collectors.toSet());
+        return FabricLoader.getInstance().getAllMods().stream().map(modContainer -> find(Namespace.of(modContainer), path, filter)).flatMap(Collection::stream).collect(Collectors.toSet());
     }
 
     @API
-    public Set<URL> find(ModID modID, String path, Predicate<String> filter) {
-        path = rootPath + "/" + modID + "/" + path;
+    public Set<URL> find(Namespace namespace, String path, Predicate<String> filter) {
+        path = rootPath + "/" + namespace + "/" + path;
         if (ResourceHelper.class.getResource(path) != null)
             try {
                 return new RecursiveReader(path, filter).read();

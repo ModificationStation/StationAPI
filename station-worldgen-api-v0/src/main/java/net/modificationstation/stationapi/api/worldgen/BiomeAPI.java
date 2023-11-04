@@ -7,7 +7,7 @@ import net.minecraft.class_153;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeModificationEvent;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeRegionsProvider;
 import net.modificationstation.stationapi.impl.level.StationDimension;

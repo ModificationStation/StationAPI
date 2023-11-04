@@ -13,7 +13,7 @@ import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceMaps;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.fabricmc.loader.api.FabricLoader;
-import net.modificationstation.stationapi.api.util.exception.CrashException;
+import net.modificationstation.stationapi.api.util.crash.CrashException;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;

@@ -12,7 +12,7 @@ import net.modificationstation.stationapi.api.event.achievement.AchievementRegis
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.language.LanguageManager;
 import net.modificationstation.stationapi.api.util.Null;
 import org.apache.logging.log4j.Logger;
@@ -22,8 +22,8 @@ import java.util.List;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class AchievementPageImpl {
-    @Entrypoint.ModID
-    public static final ModID MODID = Null.get();
+    @Entrypoint.Namespace
+    public static final Namespace MODID = Null.get();
     @Entrypoint.Logger
     public static final Logger LOGGER = Null.get();
 
@@ -34,7 +34,7 @@ public class AchievementPageImpl {
 
     @EventListener
     private static void registerAchievements(AchievementRegisterEvent event) {
-        AchievementPage page = new AchievementPage(StationAPI.MODID.id("minecraft"));
+        AchievementPage page = new AchievementPage(StationAPI.NAMESPACE.id("minecraft"));
         //noinspection unchecked
         page.addAchievements(((List<Achievement>) Achievements.ACHIEVEMENTS).toArray(Achievement[]::new));
     }
@@ -63,6 +63,6 @@ public class AchievementPageImpl {
     @EventListener
     private static void registerLang(InitEvent event) {
         LOGGER.info("Adding lang folder...");
-        LanguageManager.addPath("/assets/" + MODID + "/lang", StationAPI.MODID);
+        LanguageManager.addPath("/assets/" + MODID + "/lang", StationAPI.NAMESPACE);
     }
 }

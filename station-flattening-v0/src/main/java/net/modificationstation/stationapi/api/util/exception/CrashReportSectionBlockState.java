@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.util.crash.CrashReportSection;
 import org.jetbrains.annotations.Nullable;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

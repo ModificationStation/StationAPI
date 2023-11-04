@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
 import net.modificationstation.stationapi.api.client.texture.NativeImage;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
 
 import java.io.IOException;

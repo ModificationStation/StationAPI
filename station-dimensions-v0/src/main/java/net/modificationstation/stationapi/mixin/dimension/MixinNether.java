@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.client.level.dimension.TravelMessa
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Mixin(NetherDimension.class)
 @EnvironmentInterface(value = EnvType.CLIENT, itf = TravelMessageProvider.class)
@@ -17,8 +17,8 @@ public class MixinNether implements TravelMessageProvider {
 
     @Unique
     private static final String
-            entering = "gui." + of(MODID, "enteringNether"),
-            leaving = "gui." + of(MODID, "leavingNether");
+            entering = "gui." + of(NAMESPACE, "enteringNether"),
+            leaving = "gui." + of(NAMESPACE, "leavingNether");
 
     @Override
     @Environment(EnvType.CLIENT)

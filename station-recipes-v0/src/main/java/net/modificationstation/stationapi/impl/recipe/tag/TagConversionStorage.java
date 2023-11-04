@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.recipe.tag;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 

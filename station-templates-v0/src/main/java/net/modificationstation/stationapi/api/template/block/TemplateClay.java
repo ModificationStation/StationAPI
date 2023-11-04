@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.template.block;
 
 import net.minecraft.block.ClayBlock;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateClay extends ClayBlock implements BlockTemplate {
 

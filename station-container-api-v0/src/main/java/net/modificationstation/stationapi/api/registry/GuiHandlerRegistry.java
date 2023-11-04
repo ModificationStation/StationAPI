@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.util.Identifier;
 import uk.co.benjiweber.expressions.function.TriFunction;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 import uk.co.benjiweber.expressions.tuple.Tuple;
@@ -16,7 +17,7 @@ import java.util.function.Supplier;
 public final class GuiHandlerRegistry extends SimpleRegistry<BiTuple<TriFunction<PlayerEntity, Inventory, Message, Screen>, Supplier<Inventory>>> {
 
     private static final BiTuple<TriFunction<PlayerEntity, Inventory, Message, Screen>, Supplier<Inventory>> EMPTY = Tuple.tuple((playerBase, inventoryBase, message) -> null, () -> null);
-    public static final RegistryKey<GuiHandlerRegistry> KEY = RegistryKey.ofRegistry(Identifier.of(StationAPI.MODID, "gui_handlers"));
+    public static final RegistryKey<GuiHandlerRegistry> KEY = RegistryKey.ofRegistry(Identifier.of(StationAPI.NAMESPACE, "gui_handlers"));
     public static final GuiHandlerRegistry INSTANCE = Registries.create(KEY, new GuiHandlerRegistry(), registry -> EMPTY, Lifecycle.experimental());
 
     private GuiHandlerRegistry() {

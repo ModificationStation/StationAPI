@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.resource.metadata;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
 
 import java.util.Optional;
@@ -27,7 +27,7 @@ public class BlockEntry {
         this.namespacePredicate = namespace.map(Pattern::asPredicate).orElse(namespace_ -> true);
         this.path = path;
         this.pathPredicate = path.map(Pattern::asPredicate).orElse(path_ -> true);
-        this.identifierPredicate = id -> this.namespacePredicate.test(id.modID.toString()) && this.pathPredicate.test(id.id);
+        this.identifierPredicate = id -> this.namespacePredicate.test(id.namespace.toString()) && this.pathPredicate.test(id.path);
     }
 
     public Predicate<String> getNamespacePredicate() {

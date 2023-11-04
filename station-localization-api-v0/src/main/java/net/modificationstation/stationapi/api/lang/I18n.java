@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.lang;
 
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.language.LanguageManager;
 
 /**
@@ -12,8 +12,8 @@ public class I18n {
         LanguageManager.addPath(langFolder);
     }
 
-    public static void addLangFolder(ModID modID, String langFolder) {
-        LanguageManager.addPath(langFolder, modID);
+    public static void addLangFolder(Namespace namespace, String langFolder) {
+        LanguageManager.addPath(langFolder, namespace);
     }
 
     public static void changeLang(String region) {

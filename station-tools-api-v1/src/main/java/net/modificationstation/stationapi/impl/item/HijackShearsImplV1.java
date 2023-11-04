@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.item;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.item.tool.ToolLevel;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class HijackShearsImplV1 {

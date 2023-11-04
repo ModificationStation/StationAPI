@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.client.render.model.BakedModelMana
 import net.modificationstation.stationapi.api.client.render.model.ModelIdentifier;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.state.property.Property;
 
 import java.util.IdentityHashMap;

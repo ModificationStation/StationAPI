@@ -21,11 +21,11 @@ public class WorldgenListener {
     @EventListener(phase = StationAPI.INTERNAL_PHASE)
     public void registerBiomes(BiomeProviderRegisterEvent event) {
         BiomeAPI.addOverworldBiomeProvider(
-                StationAPI.MODID.id("overworld_biome_provider"),
+                StationAPI.NAMESPACE.id("overworld_biome_provider"),
                 OverworldBiomeProviderImpl.getInstance()
         );
         BiomeAPI.addNetherBiomeProvider(
-                StationAPI.MODID.id("nether_biome_provider"),
+                StationAPI.NAMESPACE.id("nether_biome_provider"),
                 NetherBiomeProviderImpl.getInstance()
         );
         class_153.field_886.setFogColor(0xFF330707);

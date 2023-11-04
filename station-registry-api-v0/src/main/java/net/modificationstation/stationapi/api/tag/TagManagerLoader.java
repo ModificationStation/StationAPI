@@ -5,6 +5,7 @@ import net.modificationstation.stationapi.api.registry.*;
 import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloadListener;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.resource.ResourceReloader;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
 
 import java.util.Collection;
@@ -15,10 +16,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public class TagManagerLoader implements IdentifiableResourceReloadListener {
-    public static final Identifier TAGS = MODID.id("tags");
+    public static final Identifier TAGS = NAMESPACE.id("tags");
 
     private final DynamicRegistryManager registryManager;
     private List<RegistryTags<?>> registryTags = List.of();
@@ -32,7 +33,7 @@ public class TagManagerLoader implements IdentifiableResourceReloadListener {
     }
 
     public static String getPath(RegistryKey<? extends Registry<?>> registry) {
-        return MODID + "/tags/" + registry.getValue().id;
+        return NAMESPACE + "/tags/" + registry.getValue().path;
     }
 
     @Override

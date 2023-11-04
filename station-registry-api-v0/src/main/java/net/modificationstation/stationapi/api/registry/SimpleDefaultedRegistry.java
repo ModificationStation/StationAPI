@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.serialization.Lifecycle;
+import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

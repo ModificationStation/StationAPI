@@ -5,7 +5,7 @@ import net.modificationstation.stationapi.api.client.render.model.SpriteFinder;
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.Map;
 import java.util.function.Consumer;

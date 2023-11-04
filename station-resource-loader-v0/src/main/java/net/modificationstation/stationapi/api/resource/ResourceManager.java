@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.resource;
 
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +18,7 @@ public interface ResourceManager extends ResourceFactory {
     /**
      * Gets a set of all namespaces offered by the resource packs loaded by this manager.
      */
-    Set<ModID> getAllNamespaces();
+    Set<Namespace> getAllNamespaces();
 
     /**
      * Gets all of the available resources to the corresponding resource identifier.
@@ -62,7 +62,7 @@ public interface ResourceManager extends ResourceFactory {
 
 
         @Override
-        public Set<ModID> getAllNamespaces() {
+        public Set<Namespace> getAllNamespaces() {
             return Set.of();
         }
 

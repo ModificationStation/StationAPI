@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.impl.resource;
 
 import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import lombok.val;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.InputSupplier;
 import net.modificationstation.stationapi.api.resource.ResourcePack;
 import net.modificationstation.stationapi.api.resource.ResourceType;
@@ -24,7 +24,7 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 public class DefaultResourcePack implements ResourcePack {
 
-    private static final List<Path> ROOT_PATHS = ModID.MINECRAFT.getContainer().getRootPaths();
+    private static final List<Path> ROOT_PATHS = Namespace.MINECRAFT.getContainer().getRootPaths();
     private static final Map<ResourceType, List<Path>> NAMESPACE_PATHS = Util.make(new EnumMap<>(ResourceType.class), m -> {
         for (ResourceType type : ResourceType.values())
             for (Path rootPath : ROOT_PATHS) {
@@ -51,8 +51,8 @@ public class DefaultResourcePack implements ResourcePack {
 
     @Override
     public @Nullable InputSupplier<InputStream> open(ResourceType type, Identifier id) {
-        return PathUtil.split(id.id).get().map(segments -> {
-            String string = id.modID.toString();
+        return PathUtil.split(id.path).get().map(segments -> {
+            String string = id.namespace.toString();
             if (NAMESPACE_PATHS.containsKey(type)) for (Path path : NAMESPACE_PATHS.get(type)) {
                 Path path2 = PathUtil.getPath(path.resolve(string), segments);
                 if (!Files.exists(path2) || !DirectoryResourcePack.isValidPath(path2)) continue;
@@ -66,11 +66,11 @@ public class DefaultResourcePack implements ResourcePack {
     }
 
     @Override
-    public void findResources(ResourceType type, ModID namespace, String prefix, ResultConsumer consumer) {
+    public void findResources(ResourceType type, Namespace namespace, String prefix, ResultConsumer consumer) {
         val atRoot = prefix.startsWith("/");
         PathUtil.split(atRoot ? prefix.substring(1) : prefix).get().ifLeft(segments -> {
             final List<Path> paths;
-            if (namespace == ModID.MINECRAFT && atRoot) {
+            if (namespace == Namespace.MINECRAFT && atRoot) {
                 paths = ROOT_PATHS;
             } else if (NAMESPACE_PATHS.containsKey(type)) {
                 paths = NAMESPACE_PATHS.get(type);
@@ -91,13 +91,13 @@ public class DefaultResourcePack implements ResourcePack {
         }).ifRight(result -> LOGGER.error("Invalid path {}: {}", prefix, result.message()));
     }
 
-    private static void collectIdentifiers(ResultConsumer consumer, ModID namespace, Path root, List<String> prefixSegments, boolean atRoot) {
+    private static void collectIdentifiers(ResultConsumer consumer, Namespace namespace, Path root, List<String> prefixSegments, boolean atRoot) {
         DirectoryResourcePack.findResources(namespace, atRoot ? root : root.resolve(namespace.toString()), prefixSegments, consumer, atRoot);
     }
 
     @Override
-    public Set<ModID> getNamespaces(ResourceType type) {
-        return Set.of(ModID.MINECRAFT);
+    public Set<Namespace> getNamespaces(ResourceType type) {
+        return Set.of(Namespace.MINECRAFT);
     }
 
     @Override

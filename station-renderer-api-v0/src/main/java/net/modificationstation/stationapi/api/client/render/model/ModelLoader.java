@@ -27,7 +27,7 @@ import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.resource.ResourceFinder;
 import net.modificationstation.stationapi.api.state.StateManager;
@@ -50,17 +50,17 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 @Environment(EnvType.CLIENT)
 public class ModelLoader {
 
     public static final List<Identifier> BLOCK_DESTRUCTION_STAGES = IntStream.range(0, 10).mapToObj(stage -> Identifier.of("block/destroy_stage_" + stage)).collect(Collectors.toList());
-    public static final List<Identifier> BLOCK_DESTRUCTION_STAGE_TEXTURES = BLOCK_DESTRUCTION_STAGES.stream().map(id -> Identifier.of(MODID + "/textures/" + id.id + ".png")).collect(Collectors.toList());
+    public static final List<Identifier> BLOCK_DESTRUCTION_STAGE_TEXTURES = BLOCK_DESTRUCTION_STAGES.stream().map(id -> Identifier.of(NAMESPACE + "/textures/" + id.path + ".png")).collect(Collectors.toList());
     public static final ModelIdentifier MISSING_ID;
-    public static final ResourceFinder BLOCK_STATES_FINDER = ResourceFinder.json(MODID + "/blockstates");
-    public static final ResourceFinder MODELS_FINDER = ResourceFinder.json(MODID + "/models");
+    public static final ResourceFinder BLOCK_STATES_FINDER = ResourceFinder.json(NAMESPACE + "/blockstates");
+    public static final ResourceFinder MODELS_FINDER = ResourceFinder.json(NAMESPACE + "/models");
     @VisibleForTesting
     public static final String MISSING_DEFINITION;
     private static final Map<String, String> BUILTIN_MODEL_DEFINITIONS;
@@ -178,8 +178,8 @@ public class ModelLoader {
             while(!this.modelsToLoad.isEmpty()) {
                 Identifier identifier = this.modelsToLoad.iterator().next();
                 Identifier processedId = identifier;
-                int atId = processedId.id.indexOf('@');
-                if (atId > -1) processedId = Identifier.of(processedId.modID, processedId.id.substring(atId + 1));
+                int atId = processedId.path.indexOf('@');
+                if (atId > -1) processedId = Identifier.of(processedId.namespace, processedId.path.substring(atId + 1));
 
                 try {
                     if (!this.unbakedModels.containsKey(processedId)) this.loadModel(identifier);
@@ -201,14 +201,14 @@ public class ModelLoader {
     }
 
     private void loadModel(Identifier id) throws Exception {
-        if (id.id.startsWith("dependency@")) {
-            id = Identifier.of(id.modID, id.id.substring(11));
+        if (id.path.startsWith("dependency@")) {
+            id = Identifier.of(id.namespace, id.path.substring(11));
             this.putModel(id, this.loadModelFromResource(id));
             return;
         }
         ModelIdentifier modelIdentifier = ModelIdentifier.of(id.toString());
         if (Objects.equals(modelIdentifier.variant, "inventory")) {
-            Identifier identifier = id.prepend("item/");
+            Identifier identifier = id.withPrefixedPath("item/");
             UnbakedModel unbakedModel = this.loadModelFromResource(identifier);
             this.putModel(modelIdentifier.asIdentifier(), unbakedModel);
             this.unbakedModels.put(identifier, unbakedModel);
@@ -290,7 +290,7 @@ public class ModelLoader {
 
     private void putModel(Identifier id, UnbakedModel unbakedModel) {
         this.unbakedModels.put(id, unbakedModel);
-        this.modelsToLoad.addAll(unbakedModel.getModelDependencies().stream().map(identifier -> identifier.prepend("dependency@")).toList());
+        this.modelsToLoad.addAll(unbakedModel.getModelDependencies().stream().map(identifier -> identifier.withPrefixedPath("dependency@")).toList());
     }
 
     private void addModel(Identifier modelId) {
@@ -324,7 +324,7 @@ public class ModelLoader {
 
     private JsonUnbakedModel loadModelFromJson(Identifier id) throws IOException {
         ModelIdentifier modelIdentifier = ModelIdentifier.of(id.toString());
-        String path = modelIdentifier.id.id;
+        String path = modelIdentifier.id.path;
         return switch (path) {
             case "builtin/generated" -> GENERATION_MARKER;
             case "builtin/entity" -> BLOCK_ENTITY_MARKER;
@@ -358,7 +358,7 @@ public class ModelLoader {
 
     static {
         MISSING_ID = ModelIdentifier.of("builtin/missing", "missing");
-        MISSING_DEFINITION = ("{    'textures': {       'particle': '" + MissingSprite.getMissingSpriteId().id + "',       'missingno': '" + MissingSprite.getMissingSpriteId().id + "'    },    'elements': [         {  'from': [ 0, 0, 0 ],            'to': [ 16, 16, 16 ],            'faces': {                'down':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'down',  'texture': '#missingno' },                'up':    { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'up',    'texture': '#missingno' },                'north': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'north', 'texture': '#missingno' },                'south': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'south', 'texture': '#missingno' },                'west':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'west',  'texture': '#missingno' },                'east':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'east',  'texture': '#missingno' }            }        }    ]}").replace('\'', '"');
+        MISSING_DEFINITION = ("{    'textures': {       'particle': '" + MissingSprite.getMissingSpriteId().path + "',       'missingno': '" + MissingSprite.getMissingSpriteId().path + "'    },    'elements': [         {  'from': [ 0, 0, 0 ],            'to': [ 16, 16, 16 ],            'faces': {                'down':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'down',  'texture': '#missingno' },                'up':    { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'up',    'texture': '#missingno' },                'north': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'north', 'texture': '#missingno' },                'south': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'south', 'texture': '#missingno' },                'west':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'west',  'texture': '#missingno' },                'east':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'east',  'texture': '#missingno' }            }        }    ]}").replace('\'', '"');
         BUILTIN_MODEL_DEFINITIONS = new HashMap<>(ImmutableMap.of("missing", MISSING_DEFINITION));
         COMMA_SPLITTER = Splitter.on(',');
         KEY_VALUE_SPLITTER = Splitter.on('=').limit(2);

@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.template.block;
 import net.minecraft.block.Material;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.class_389;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplatePressurePlate extends PressurePlateBlock implements BlockTemplate {
 

@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.JsonHelper;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
 

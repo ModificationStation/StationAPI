@@ -3,10 +3,10 @@ package net.modificationstation.stationapi.api.client.render.material;
 import net.modificationstation.stationapi.api.client.render.Renderer;
 import net.modificationstation.stationapi.api.client.render.mesh.MeshBuilder;
 import net.modificationstation.stationapi.api.client.render.mesh.MutableQuadView;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 import net.minecraft.block.Block;
 
@@ -60,7 +60,7 @@ public interface RenderMaterial {
      *
      * <p>All standard, non-fluid baked models are rendered using this material.
      */
-    Identifier MATERIAL_STANDARD = of(MODID, "standard");
+    Identifier MATERIAL_STANDARD = of(NAMESPACE, "standard");
 
     /**
      * How many sprite color/uv coordinates are in the material.

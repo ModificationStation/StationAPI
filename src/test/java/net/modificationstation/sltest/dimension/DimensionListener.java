@@ -6,7 +6,7 @@ import net.modificationstation.stationapi.api.registry.DimensionContainer;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 
 import static net.modificationstation.sltest.SLTest.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public class DimensionListener {
 

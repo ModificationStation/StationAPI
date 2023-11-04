@@ -21,7 +21,7 @@ import net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataF
 import net.modificationstation.stationapi.mixin.vanillafix.client.ScreenBaseAccessor;
 
 import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Environment(EnvType.CLIENT)
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
@@ -30,14 +30,14 @@ public final class EditWorldScreenImpl {
 
     private static final String
             ROOT_KEY = "selectWorld",
-            CONVERT_TO_MCREGION_KEY = ROOT_KEY + "." + MODID.id("convertToMcRegion");
+            CONVERT_TO_MCREGION_KEY = ROOT_KEY + "." + NAMESPACE.id("convertToMcRegion");
 
     @EventListener(priority = LOW)
     private static void registerConversionButton(EditWorldScreenEvent.ScrollableButtonContextRegister event) {
         event.contexts.add(screen -> new ButtonWidgetDetachedContext(
                 id -> {
                     ButtonWidget button = new ButtonWidget(id, 0, 0, I18n.getTranslation(CONVERT_TO_MCREGION_KEY));
-                    button.active = NbtHelper.getDataVersions(((FlattenedWorldStorage) ((ScreenBaseAccessor) screen).getMinecraft().method_2127()).getWorldTag(screen.worldData.method_1956())).contains(MODID.toString());
+                    button.active = NbtHelper.getDataVersions(((FlattenedWorldStorage) ((ScreenBaseAccessor) screen).getMinecraft().method_2127()).getWorldTag(screen.worldData.method_1956())).contains(NAMESPACE.toString());
                     return button;
                 },
                 button -> ((ScreenBaseAccessor) screen).getMinecraft().setScreen(new WarningScreen(screen, () -> {
@@ -46,7 +46,7 @@ public final class EditWorldScreenImpl {
                     FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.method_2127();
                     mc.field_2817.method_1491("Converting World to " + worldStorage.getPreviousWorldFormat());
                     mc.field_2817.method_1796("This may take a while :)");
-                    worldStorage.convertLevel(screen.worldData.method_1958(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(MODID.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.field_2817);
+                    worldStorage.convertLevel(screen.worldData.method_1958(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(NAMESPACE.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.field_2817);
                     mc.setScreen(screen);
                 }, WorldConversionWarning.TO_MCREGION_EXPLANATION_KEY, WorldConversionWarning.CONVERT_KEY))
         ));

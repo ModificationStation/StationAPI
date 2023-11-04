@@ -4,7 +4,7 @@ import net.modificationstation.stationapi.api.client.render.material.MaterialFin
 import net.modificationstation.stationapi.api.client.render.material.RenderMaterial;
 import net.modificationstation.stationapi.api.client.render.mesh.MeshBuilder;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelRenderer;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 /**

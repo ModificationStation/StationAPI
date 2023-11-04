@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.api.registry;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mojang.serialization.Codec;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.Optional;
 

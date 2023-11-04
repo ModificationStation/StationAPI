@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.packet;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.Packet;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.API;
-import net.modificationstation.stationapi.api.util.SideUtils;
+import net.modificationstation.stationapi.api.util.SideUtil;
 import net.modificationstation.stationapi.impl.client.packet.PacketHelperClientImpl;
 import net.modificationstation.stationapi.impl.packet.PacketHelperImpl;
 import net.modificationstation.stationapi.impl.server.packet.PacketHelperServerImpl;
@@ -21,7 +21,7 @@ public final class PacketHelper {
      * Implementation instance.
      */
     @SuppressWarnings("Convert2MethodRef") // Method references load their target classes on both sides, causing crashes.
-    private static final PacketHelperImpl INSTANCE = SideUtils.get(() -> new PacketHelperClientImpl(), () -> new PacketHelperServerImpl());
+    private static final PacketHelperImpl INSTANCE = SideUtil.get(() -> new PacketHelperClientImpl(), () -> new PacketHelperServerImpl());
 
     /**
      * On client, sends the packet to the server if the current game is multiplayer, or handles the packet locally if the current game is singleplayer.

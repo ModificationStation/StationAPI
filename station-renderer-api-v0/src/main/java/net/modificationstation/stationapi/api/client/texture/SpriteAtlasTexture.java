@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.api.client.texture;
 
 import lombok.Getter;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
-import net.modificationstation.stationapi.api.util.exception.CrashException;
-import net.modificationstation.stationapi.api.util.exception.CrashReport;
-import net.modificationstation.stationapi.api.util.exception.CrashReportSection;
+import net.modificationstation.stationapi.api.util.crash.CrashException;
+import net.modificationstation.stationapi.api.util.crash.CrashReport;
+import net.modificationstation.stationapi.api.util.crash.CrashReportSection;
 import net.modificationstation.stationapi.impl.client.render.SpriteFinderImpl;
 
 import java.io.BufferedWriter;

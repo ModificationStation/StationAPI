@@ -8,7 +8,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.packet.play.PlayerRespawnPacket;
 import net.minecraft.server.MinecraftServer;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.level.dimension.DimensionHelperImpl;
 
 import static net.modificationstation.stationapi.api.world.dimension.VanillaDimensions.OVERWORLD;

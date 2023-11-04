@@ -5,8 +5,8 @@ import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import lombok.val;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.InputSupplier;
 import net.modificationstation.stationapi.api.resource.ResourcePackActivationType;
 import net.modificationstation.stationapi.api.resource.ResourceType;
@@ -34,7 +34,7 @@ public class ModNioResourcePack implements ModResourcePack {
     private final ResourceType type;
     private final AutoCloseable closer;
     private final ResourcePackActivationType activationType;
-    private final Map<ResourceType, Set<ModID>> namespaces;
+    private final Map<ResourceType, Set<Namespace>> namespaces;
 
     public static ModNioResourcePack create(Identifier id, String name, ModContainer mod, String subPath, ResourceType type, ResourcePackActivationType activationType) {
         List<Path> rootPaths = mod.getRootPaths();
@@ -73,12 +73,12 @@ public class ModNioResourcePack implements ModResourcePack {
         this.namespaces = readNamespaces(paths, modInfo.getId());
     }
 
-    static Map<ResourceType, Set<ModID>> readNamespaces(List<Path> paths, String modId) {
-        Map<ResourceType, Set<ModID>> ret = new EnumMap<>(ResourceType.class);
+    static Map<ResourceType, Set<Namespace>> readNamespaces(List<Path> paths, String modId) {
+        Map<ResourceType, Set<Namespace>> ret = new EnumMap<>(ResourceType.class);
 
         for (ResourceType type : ResourceType.values()) {
-            ReferenceSet<ModID> namespaces = new ReferenceOpenHashSet<>();
-            namespaces.add(ModID.MINECRAFT);
+            ReferenceSet<Namespace> namespaces = new ReferenceOpenHashSet<>();
+            namespaces.add(Namespace.MINECRAFT);
 
             for (Path path : paths) {
                 Path dir = path.resolve(type.getDirectory());
@@ -99,7 +99,7 @@ public class ModNioResourcePack implements ModResourcePack {
                             continue;
                         }
 
-                        namespaces.add(ModID.of(s));
+                        namespaces.add(Namespace.of(s));
                     }
                 } catch (IOException e) {
                     LOGGER.warn("getNamespaces in mod " + modId + " failed!", e);
@@ -142,7 +142,7 @@ public class ModNioResourcePack implements ModResourcePack {
         int nsEnd = filename.indexOf('/', prefixLen);
         if (nsEnd < 0) return false;
 
-        return !namespaces.get(type).contains(ModID.of(filename.substring(prefixLen, nsEnd)));
+        return !namespaces.get(type).contains(Namespace.of(filename.substring(prefixLen, nsEnd)));
     }
 
     private InputSupplier<InputStream> openFile(String filename) {
@@ -171,7 +171,7 @@ public class ModNioResourcePack implements ModResourcePack {
     }
 
     @Override
-    public void findResources(ResourceType type, ModID namespace, String path, ResultConsumer visitor) {
+    public void findResources(ResourceType type, Namespace namespace, String path, ResultConsumer visitor) {
         val atRoot = path.startsWith("/");
         if (!atRoot && !namespaces.getOrDefault(type, Collections.emptySet()).contains(namespace)) return;
         for (Path basePath : basePaths) {
@@ -197,7 +197,7 @@ public class ModNioResourcePack implements ModResourcePack {
     }
 
     @Override
-    public Set<ModID> getNamespaces(ResourceType type) {
+    public Set<Namespace> getNamespaces(ResourceType type) {
         return namespaces.getOrDefault(type, Collections.emptySet());
     }
 
@@ -241,6 +241,6 @@ public class ModNioResourcePack implements ModResourcePack {
     }
 
     private static String getFilename(ResourceType type, Identifier id) {
-        return String.format(Locale.ROOT, "%s/%s/%s", type.getDirectory(), id.modID, id.id);
+        return String.format(Locale.ROOT, "%s/%s/%s", type.getDirectory(), id.namespace, id.path);
     }
 }

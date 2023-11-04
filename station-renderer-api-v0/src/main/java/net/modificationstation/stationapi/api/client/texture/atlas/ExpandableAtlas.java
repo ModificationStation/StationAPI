@@ -3,21 +3,21 @@ package net.modificationstation.stationapi.api.client.texture.atlas;
 import com.google.common.collect.ImmutableList;
 import net.modificationstation.stationapi.api.client.texture.SpritesheetHelper;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceHelper;
 
 import java.util.function.Function;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public class ExpandableAtlas extends Atlas {
 
     public ExpandableAtlas(final Identifier identifier) {
-        super(identifier, "/assets/" + MODID + "/atlases/" + identifier, 0, false);
+        super(identifier, "/assets/" + NAMESPACE + "/atlases/" + identifier, 0, false);
     }
 
     public ExpandableAtlas(final Identifier identifier, final Atlas parent) {
-        super(identifier, "/assets/" + MODID + "/atlases/" + identifier, 0, false, parent);
+        super(identifier, "/assets/" + NAMESPACE + "/atlases/" + identifier, 0, false, parent);
     }
 
     public Sprite addTexture(Identifier identifier) {
@@ -39,7 +39,7 @@ public class ExpandableAtlas extends Atlas {
 
     @Deprecated
     public Sprite addTexture(String texturePath) {
-        return addTexture(ResourceHelper.ASSETS.toId(texturePath, "/" + MODID + "/textures", "png"));
+        return addTexture(ResourceHelper.ASSETS.toId(texturePath, "/" + NAMESPACE + "/textures", "png"));
     }
 
     public ImmutableList<Sprite> addSpritesheet(int texturesPerLine, SpritesheetHelper spritesheetHelper) {

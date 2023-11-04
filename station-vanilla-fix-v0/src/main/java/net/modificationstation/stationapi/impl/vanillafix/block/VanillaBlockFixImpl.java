@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
 import static net.minecraft.block.Block.*;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
@@ -169,6 +169,6 @@ public final class VanillaBlockFixImpl {
         c.accept(Block.PISTON);
         c.accept(Block.STICKY_PISTON);
 
-        COLLISION_BLOCKS.get().forEach(block -> Registry.register(ItemRegistry.INSTANCE, Objects.requireNonNull(BlockRegistry.INSTANCE.getId(block)).append("_unobtainable"), new BlockItem(ItemRegistry.SHIFTED_ID.get(block.id))));
+        COLLISION_BLOCKS.get().forEach(block -> Registry.register(ItemRegistry.INSTANCE, Objects.requireNonNull(BlockRegistry.INSTANCE.getId(block)).withSuffixedPath("_unobtainable"), new BlockItem(ItemRegistry.SHIFTED_ID.get(block.id))));
     }
 }

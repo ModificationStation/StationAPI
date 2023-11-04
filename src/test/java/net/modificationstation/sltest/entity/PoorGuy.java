@@ -5,12 +5,12 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.modificationstation.sltest.SLTest;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.server.entity.HasTrackingParameters;
 import net.modificationstation.stationapi.api.server.entity.MobSpawnDataProvider;
 
 import static net.modificationstation.sltest.SLTest.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @HasTrackingParameters(trackingDistance = 5, updatePeriod = 2)
 public class PoorGuy extends AnimalEntity implements MobSpawnDataProvider {

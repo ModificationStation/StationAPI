@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.impl.resource;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.InputSupplier;
 import net.modificationstation.stationapi.api.resource.ResourcePack;
 import net.modificationstation.stationapi.api.resource.ResourceType;
@@ -51,12 +51,12 @@ public class DirectoryResourcePack extends AbstractFileResourcePack {
     @Override
     @Nullable
     public InputSupplier<InputStream> open(ResourceType type, Identifier id) {
-        Path path = this.root.resolve(type.getDirectory()).resolve(id.modID.toString());
+        Path path = this.root.resolve(type.getDirectory()).resolve(id.namespace.toString());
         return DirectoryResourcePack.open(id, path);
     }
 
     public static InputSupplier<InputStream> open(Identifier id, Path path) {
-        return PathUtil.split(id.id).get().map(segments -> {
+        return PathUtil.split(id.path).get().map(segments -> {
             Path path2 = PathUtil.getPath(path, segments);
             return DirectoryResourcePack.open(path2);
         }, result -> {
@@ -74,18 +74,18 @@ public class DirectoryResourcePack extends AbstractFileResourcePack {
     }
 
     @Override
-    public void findResources(ResourceType type, ModID namespace, String prefix, ResourcePack.ResultConsumer consumer) {
+    public void findResources(ResourceType type, Namespace namespace, String prefix, ResourcePack.ResultConsumer consumer) {
         PathUtil.split(prefix).get().ifLeft(prefixSegments -> {
             Path path = this.root.resolve(type.getDirectory()).resolve(namespace.toString());
             DirectoryResourcePack.findResources(namespace, path, prefixSegments, consumer);
         }).ifRight(result -> LOGGER.error("Invalid path {}: {}", prefix, result.message()));
     }
 
-    public static void findResources(ModID namespace, Path path, List<String> prefixSegments, ResourcePack.ResultConsumer consumer) {
+    public static void findResources(Namespace namespace, Path path, List<String> prefixSegments, ResourcePack.ResultConsumer consumer) {
         findResources(namespace, path, prefixSegments, consumer, false);
     }
 
-    public static void findResources(ModID namespace, Path path, List<String> prefixSegments, ResultConsumer consumer, boolean atRoot) {
+    public static void findResources(Namespace namespace, Path path, List<String> prefixSegments, ResultConsumer consumer, boolean atRoot) {
         Path path22 = PathUtil.getPath(path, prefixSegments);
         try (Stream<Path> stream2 = Files.find(path22, Integer.MAX_VALUE, (path2, attributes) -> attributes.isRegularFile())){
             stream2.forEach(foundPath -> {
@@ -101,14 +101,14 @@ public class DirectoryResourcePack extends AbstractFileResourcePack {
     }
 
     @Override
-    public Set<ModID> getNamespaces(ResourceType type) {
-        HashSet<ModID> set = Sets.newHashSet();
+    public Set<Namespace> getNamespaces(ResourceType type) {
+        HashSet<Namespace> set = Sets.newHashSet();
         Path path = this.root.resolve(type.getDirectory());
         try (DirectoryStream<Path> directoryStream2 = Files.newDirectoryStream(path)){
             for (Path path2 : directoryStream2) {
                 String string = path2.getFileName().toString();
                 if (string.equals(string.toLowerCase(Locale.ROOT))) {
-                    set.add(ModID.of(string));
+                    set.add(Namespace.of(string));
                     continue;
                 }
                 LOGGER.warn("Ignored non-lowercase namespace: {} in {}", string, this.root);

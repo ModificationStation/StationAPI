@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.mod.PreInitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.language.LanguageManager;
 import net.modificationstation.stationapi.api.util.Null;
 
@@ -22,10 +22,10 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class VanillaChecker {
 
-    @Entrypoint.ModID
-    private static final ModID MODID = Null.get();
+    @Entrypoint.Namespace
+    private static final Namespace MODID = Null.get();
 
-    public static final long MASK = Hashing.sipHash24().hashUnencodedChars(StationAPI.MODID.toString()).asLong();
+    public static final long MASK = Hashing.sipHash24().hashUnencodedChars(StationAPI.NAMESPACE.toString()).asLong();
 
     /**
      * A set of mods that need client-side verification when the client joins server.
@@ -35,9 +35,9 @@ public class VanillaChecker {
     @EventListener
     private static void init(PreInitEvent event) {
         LOGGER.info("Adding vanilla checker lang folder...");
-        LanguageManager.addPath("/assets/" + MODID + "/lang", StationAPI.MODID);
+        LanguageManager.addPath("/assets/" + MODID + "/lang", StationAPI.NAMESPACE);
         LOGGER.info("Gathering mods that require client verification...");
-        String value = StationAPI.MODID + ":verify_client";
+        String value = StationAPI.NAMESPACE + ":verify_client";
         FabricLoader.getInstance().getAllMods().forEach(modContainer -> {
             ModMetadata modMetadata = modContainer.getMetadata();
             if (modMetadata.containsCustomValue(value) && modMetadata.getCustomValue(value).getAsBoolean())

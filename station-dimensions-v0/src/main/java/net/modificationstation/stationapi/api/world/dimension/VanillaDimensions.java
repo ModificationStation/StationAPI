@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.world.dimension;
 
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public class VanillaDimensions {
 

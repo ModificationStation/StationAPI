@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.packet;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.registry.IdentifiablePacketRegistry;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.impl.packet.IdentifiablePacketImpl;
 

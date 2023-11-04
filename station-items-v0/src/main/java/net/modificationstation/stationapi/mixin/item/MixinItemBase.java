@@ -8,8 +8,8 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.ItemEvent;
 import net.modificationstation.stationapi.api.item.StationItem;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -39,8 +39,8 @@ public abstract class MixinItemBase implements StationItem {
     }
 
     @Override
-    public Item setTranslationKey(ModID modID, String translationKey) {
-        return setTranslationKey(Identifier.of(modID, translationKey).toString());
+    public Item setTranslationKey(Namespace namespace, String translationKey) {
+        return setTranslationKey(Identifier.of(namespace, translationKey).toString());
     }
 
     @Override

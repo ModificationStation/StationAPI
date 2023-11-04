@@ -6,6 +6,7 @@ import com.mojang.serialization.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
 import org.jetbrains.annotations.Nullable;

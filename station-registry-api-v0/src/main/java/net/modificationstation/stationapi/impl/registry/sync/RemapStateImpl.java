@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceMap;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
 import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEvent;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
 
 public class RemapStateImpl<T> implements RegistryIdRemapEvent.RemapState<T> {

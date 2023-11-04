@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelElementFace;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelElementTexture;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.math.*;
 import org.jetbrains.annotations.Nullable;
 

@@ -6,7 +6,7 @@ import net.fabricmc.api.EnvironmentInterface;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 
 import java.util.function.Function;

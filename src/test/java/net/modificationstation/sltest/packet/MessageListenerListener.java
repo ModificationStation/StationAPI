@@ -8,7 +8,7 @@ import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.item.ModdedItem;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.packet.Message;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
 
 import java.util.function.BiConsumer;

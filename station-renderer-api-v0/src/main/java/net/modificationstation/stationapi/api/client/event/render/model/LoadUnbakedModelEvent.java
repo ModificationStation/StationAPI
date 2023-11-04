@@ -6,7 +6,7 @@ import net.mine_diver.unsafeevents.event.EventPhases;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.render.model.ModelLoader;
 import net.modificationstation.stationapi.api.client.render.model.UnbakedModel;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 @SuperBuilder
 @EventPhases(StationAPI.INTERNAL_PHASE)

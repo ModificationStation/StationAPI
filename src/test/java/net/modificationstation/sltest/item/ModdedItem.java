@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.client.gui.CustomTooltipProvider;
 import net.modificationstation.stationapi.api.item.CustomReachProvider;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
 
 import java.util.Random;

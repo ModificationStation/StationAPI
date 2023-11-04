@@ -2,7 +2,7 @@ package net.modificationstation.sltest.achievement;
 
 import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.Random;
 

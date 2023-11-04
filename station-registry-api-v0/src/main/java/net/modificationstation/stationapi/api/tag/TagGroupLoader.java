@@ -14,7 +14,7 @@ import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import org.apache.logging.log4j.Logger;
@@ -42,10 +42,10 @@ public class TagGroupLoader<T> {
     public Map<Identifier, List<TrackedEntry>> loadTags(ResourceManager manager) {
         Reference2ReferenceMap<Identifier, List<TrackedEntry>> map = new Reference2ReferenceOpenHashMap<>();
 
-        for (Map.Entry<Identifier, List<Resource>> entry : manager.findAllResources(this.dataType, id -> id.id.endsWith(JSON_EXTENSION)).entrySet()) {
+        for (Map.Entry<Identifier, List<Resource>> entry : manager.findAllResources(this.dataType, id -> id.path.endsWith(JSON_EXTENSION)).entrySet()) {
             Identifier identifier = entry.getKey();
-            String string = identifier.id;
-            Identifier identifier2 = Identifier.of(identifier.modID, string.substring(this.dataType.length() + 1, string.length() - JSON_EXTENSION_LENGTH));
+            String string = identifier.path;
+            Identifier identifier2 = Identifier.of(identifier.namespace, string.substring(this.dataType.length() + 1, string.length() - JSON_EXTENSION_LENGTH));
 
             for (Resource resource : entry.getValue())
                 try {

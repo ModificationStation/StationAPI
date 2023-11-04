@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.template.block;
 
 import net.minecraft.block.GlassBlock;
 import net.minecraft.block.Material;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateGlass extends GlassBlock implements BlockTemplate {
 

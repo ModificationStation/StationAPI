@@ -27,23 +27,23 @@ public @interface Entrypoint {
     @interface Instance {}
 
     /**
-     * Marks the field to be set to the specified modid instance.
-     * Empty modid defaults to entrypoint's modid.
-     * @see net.modificationstation.stationapi.api.registry.ModID
+     * Marks the field to be set to the specified namespace instance.
+     * Empty namespace defaults to entrypoint's namespace.
+     * @see net.modificationstation.stationapi.api.util.Namespace
      */
     @Documented
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)
-    @interface ModID {
+    @interface Namespace {
         /**
-         * @return requested modid. Empty defaults to entrypoint's modid.
+         * @return requested namespace. Empty defaults to entrypoint's namespace.
          */
         String value() default "";
     }
 
     /**
      * Marks the field to be set to a logger with the specified name.
-     * If name is left empty, it defaults to "modid|Mod".
+     * If name is left empty, it defaults to "namespace|Mod".
      * @see org.apache.logging.log4j.Logger
      */
     @Documented
@@ -51,7 +51,7 @@ public @interface Entrypoint {
     @Target(ElementType.FIELD)
     @interface Logger {
         /**
-         * @return logger's name. Empty defaults to "modid|Mod"
+         * @return logger's name. Empty defaults to "namespace|Mod"
          */
         String value() default "";
     }

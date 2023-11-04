@@ -6,9 +6,9 @@ import net.minecraft.inventory.Inventory;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.registry.GuiHandlerRegistry;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.API;
-import net.modificationstation.stationapi.api.util.SideUtils;
+import net.modificationstation.stationapi.api.util.SideUtil;
 import net.modificationstation.stationapi.impl.client.gui.screen.container.GuiHelperClientImpl;
 import net.modificationstation.stationapi.impl.gui.screen.container.GuiHelperImpl;
 import net.modificationstation.stationapi.impl.server.gui.screen.container.GuiHelperServerImpl;
@@ -25,7 +25,7 @@ public final class GuiHelper {
      * Implementation instance.
      */
     @SuppressWarnings("Convert2MethodRef") // Method references load their target classes on both sides, causing crashes.
-    private static final GuiHelperImpl INSTANCE = SideUtils.get(() -> new GuiHelperClientImpl(), () -> new GuiHelperServerImpl());
+    private static final GuiHelperImpl INSTANCE = SideUtil.get(() -> new GuiHelperClientImpl(), () -> new GuiHelperServerImpl());
 
     /**
      * Handles side dependent container GUI.

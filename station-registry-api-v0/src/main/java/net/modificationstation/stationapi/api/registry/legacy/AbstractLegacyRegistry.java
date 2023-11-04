@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.registry.legacy;
 
 import com.mojang.serialization.Lifecycle;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.RegistryKey;
 import net.modificationstation.stationapi.api.registry.SimpleRegistry;

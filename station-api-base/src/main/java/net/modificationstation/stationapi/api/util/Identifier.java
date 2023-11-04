@@ -1,15 +1,17 @@
-package net.modificationstation.stationapi.api.registry;
+package net.modificationstation.stationapi.api.util;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
-import static net.modificationstation.stationapi.api.registry.ModID.MINECRAFT;
+import static net.modificationstation.stationapi.api.util.Namespace.MINECRAFT;
 
 public final class Identifier implements Comparable<@NotNull Identifier> {
     @NotNull
@@ -21,17 +23,16 @@ public final class Identifier implements Comparable<@NotNull Identifier> {
         }
     }, Identifier::toString).stable();
 
-    @NotNull
-    public static final String SEPARATOR = ":";
+    public static final char NAMESPACE_SEPARATOR = ':';
 
-    private record IdentifierCacheKey(@NotNull ModID namespace, @NotNull String id) {}
+    private record IdentifierCacheKey(@NotNull Namespace namespace, @NotNull String id) {}
     @NotNull
     private static final Cache<@NotNull IdentifierCacheKey, @NotNull Identifier> CACHE = Caffeine.newBuilder().softValues().build();
     @NotNull
     private static final Function<@NotNull IdentifierCacheKey, @NotNull Identifier> IDENTIFIER_FACTORY = Identifier::new;
 
     public static @NotNull Identifier of(@NotNull final String identifier) {
-        final int i = identifier.indexOf(SEPARATOR);
+        final int i = identifier.indexOf(NAMESPACE_SEPARATOR);
         final String namespace;
         final String path;
         if (i < 0) {
@@ -41,11 +42,11 @@ public final class Identifier implements Comparable<@NotNull Identifier> {
             namespace = identifier.substring(0, i);
             path = identifier.substring(i + 1);
         }
-        return of(ModID.of(namespace), path);
+        return of(Namespace.of(namespace), path);
     }
 
-    public static @NotNull Identifier of(@NotNull final ModID modID, @NotNull final String id) {
-        return CACHE.get(new IdentifierCacheKey(modID, id), IDENTIFIER_FACTORY);
+    public static @NotNull Identifier of(@NotNull final Namespace namespace, @NotNull final String id) {
+        return CACHE.get(new IdentifierCacheKey(namespace, id), IDENTIFIER_FACTORY);
     }
 
     public static @Nullable Identifier tryParse(@NotNull final String string) {
@@ -65,28 +66,38 @@ public final class Identifier implements Comparable<@NotNull Identifier> {
     }
 
     @NotNull
-    public final ModID modID;
+    @Getter
+    public final Namespace namespace;
 
     @NotNull
-    public final String id;
+    @Getter
+    public final String path;
 
     @NotNull
     private final String toString;
     private final int hashCode;
 
     private Identifier(@NotNull final IdentifierCacheKey key) {
-        modID = key.namespace;
-        id = key.id;
-        toString = modID + SEPARATOR + id;
+        namespace = key.namespace;
+        path = key.id;
+        toString = namespace + String.valueOf(NAMESPACE_SEPARATOR) + path;
         hashCode = toString.hashCode();
     }
 
-    public @NotNull Identifier prepend(@NotNull final String prefix) {
-        return of(modID, prefix + id);
+    public @NotNull Identifier withPath(@NotNull final String path) {
+        return of(namespace, path);
     }
 
-    public @NotNull Identifier append(@NotNull final String suffix) {
-        return of(modID, id + suffix);
+    public @NotNull Identifier withPath(@NotNull final UnaryOperator<String> pathFunction) {
+        return withPath(pathFunction.apply(path));
+    }
+
+    public @NotNull Identifier withPrefixedPath(@NotNull final String prefix) {
+        return withPath(prefix + path);
+    }
+
+    public @NotNull Identifier withSuffixedPath(@NotNull final String suffix) {
+        return withPath(path + suffix);
     }
 
     @Override

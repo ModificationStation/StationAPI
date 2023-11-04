@@ -9,6 +9,7 @@ import net.modificationstation.stationapi.api.registry.*;
 import net.modificationstation.stationapi.api.state.State;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.state.property.Property;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.mixin.nbt.CompoundTagAccessor;
 
 import java.util.Map;

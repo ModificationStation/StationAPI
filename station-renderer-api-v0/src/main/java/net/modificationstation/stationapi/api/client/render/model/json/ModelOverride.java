@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.JsonHelper;
 
 import java.lang.reflect.Type;

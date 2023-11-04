@@ -6,13 +6,13 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Set;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public final class JsonRecipesRegistry extends SimpleRegistry<Set<URL>> {
 
     @SuppressWarnings("CollectionContainsUrl")
     private static final Set<URL> EMPTY = Collections.emptySet();
-    public static final RegistryKey<JsonRecipesRegistry> KEY = RegistryKey.ofRegistry(MODID.id("json_recipes"));
+    public static final RegistryKey<JsonRecipesRegistry> KEY = RegistryKey.ofRegistry(NAMESPACE.id("json_recipes"));
     public static final JsonRecipesRegistry INSTANCE = Registries.create(KEY, new JsonRecipesRegistry(), registry -> EMPTY, Lifecycle.experimental());
 
     private JsonRecipesRegistry() {

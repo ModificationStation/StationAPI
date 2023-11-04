@@ -4,7 +4,7 @@ import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
@@ -19,10 +19,10 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public class FlattenedChunkSectionDataS2CPacket extends Packet implements IdentifiablePacket {
-    public static final Identifier PACKET_ID = MODID.id("flattening/chunk_section_data");
+    public static final Identifier PACKET_ID = NAMESPACE.id("flattening/chunk_section_data");
 
     public int chunkX, chunkZ, sectionIndex;
     private int sectionSize;

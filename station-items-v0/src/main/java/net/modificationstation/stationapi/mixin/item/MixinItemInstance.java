@@ -24,8 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Mixin(ItemStack.class)
 public abstract class MixinItemInstance implements StationItemStack, StationNBTSetter {
@@ -65,7 +65,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
     )
     private void toTagCustom(NbtCompound par1, CallbackInfoReturnable<NbtCompound> cir) {
         if (!stationNBT.values().isEmpty())
-            cir.getReturnValue().put(of(MODID, "item_nbt").toString(), stationNBT);
+            cir.getReturnValue().put(of(NAMESPACE, "item_nbt").toString(), stationNBT);
     }
 
     @Inject(
@@ -73,7 +73,7 @@ public abstract class MixinItemInstance implements StationItemStack, StationNBTS
             at = @At("RETURN")
     )
     private void fromTagCustom(NbtCompound par1, CallbackInfo ci) {
-        stationNBT = par1.getCompound(of(MODID, "item_nbt").toString());
+        stationNBT = par1.getCompound(of(NAMESPACE, "item_nbt").toString());
     }
 
     @Inject(

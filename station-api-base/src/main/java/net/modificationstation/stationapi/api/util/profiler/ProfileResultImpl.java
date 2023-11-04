@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMaps;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.Util;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -162,7 +162,7 @@ public class ProfileResultImpl implements ProfileResult {
         stringBuilder.append("// ");
         stringBuilder.append(generateWittyComment());
         stringBuilder.append("\n\n");
-        stringBuilder.append("Version: ").append(ModID.MINECRAFT.getVersion()).append('\n');
+        stringBuilder.append("Version: ").append(Namespace.MINECRAFT.getVersion()).append('\n');
         stringBuilder.append("Time span: ").append(timeSpan / 1000000L).append(" ms\n");
         stringBuilder.append("Tick span: ").append(tickSpan).append(" ticks\n");
         stringBuilder.append("// This is approximately ").append(String.format(Locale.ROOT, "%.2f", (float)tickSpan / ((float)timeSpan / 1.0E9F))).append(" ticks per second. It should be ").append(20).append(" ticks per second\n\n");

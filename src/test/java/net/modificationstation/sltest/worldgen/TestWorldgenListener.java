@@ -118,14 +118,14 @@ public class TestWorldgenListener {
             float t2 = (float) (i + 1) / climateTest.length;
             provider.addBiome(climateTest[i], t1, t2, 0, 1);
         }
-        BiomeAPI.addOverworldBiomeProvider(StationAPI.MODID.id("climate_provider"), provider);
+        BiomeAPI.addOverworldBiomeProvider(StationAPI.NAMESPACE.id("climate_provider"), provider);
 
         // Voronoi test
         VoronoiBiomeProvider voronoi = new VoronoiBiomeProvider();
         for (class_153 biome : voronoiTest) {
             voronoi.addBiome(biome);
         }
-        BiomeAPI.addOverworldBiomeProvider(StationAPI.MODID.id("voronoi_provider"), voronoi);
+        BiomeAPI.addOverworldBiomeProvider(StationAPI.NAMESPACE.id("voronoi_provider"), voronoi);
 
         // Nether biomes test
         BiomeAPI.addNetherBiome(testNether);

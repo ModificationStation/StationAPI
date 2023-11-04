@@ -13,14 +13,14 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.registry.GuiHandlerRegistry;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
 import uk.co.benjiweber.expressions.function.TriFunction;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.util.function.Supplier;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
@@ -28,7 +28,7 @@ public final class GuiClientNetworkHandler {
 
     @EventListener
     private static void registerMessageListeners(MessageListenerRegistryEvent event) {
-        Registry.register(event.registry, MODID.id("open_gui"), GuiClientNetworkHandler::handleGui);
+        Registry.register(event.registry, NAMESPACE.id("open_gui"), GuiClientNetworkHandler::handleGui);
         StationAPI.EVENT_BUS.post(new GuiHandlerRegistryEvent());
     }
 

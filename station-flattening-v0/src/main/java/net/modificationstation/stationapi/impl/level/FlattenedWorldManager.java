@@ -18,13 +18,13 @@ import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
 import net.modificationstation.stationapi.impl.level.chunk.PalettedContainer;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public class FlattenedWorldManager {
 
     private static final Codec<PalettedContainer<BlockState>> CODEC = PalettedContainer.createCodec(Block.STATE_IDS, BlockState.CODEC, PalettedContainer.PaletteProvider.BLOCK_STATE, States.AIR.get());
-    public static final String SECTIONS = of(MODID, "sections").toString();
+    public static final String SECTIONS = of(NAMESPACE, "sections").toString();
     private static final String METADATA_KEY = "data";
     private static final String SKY_LIGHT_KEY = "sky_light";
     private static final String BLOCK_LIGHT_KEY = "block_light";

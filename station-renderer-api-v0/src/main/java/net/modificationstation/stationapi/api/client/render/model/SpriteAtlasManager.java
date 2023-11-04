@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.client.texture.SpriteLoader;
 import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import org.jetbrains.annotations.Nullable;
 

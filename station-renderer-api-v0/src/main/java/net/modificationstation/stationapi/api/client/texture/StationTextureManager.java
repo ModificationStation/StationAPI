@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.texture;
 
 import net.minecraft.client.texture.TextureManager;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.client.render.StationTextureManagerImpl;
 
 import java.util.Set;

@@ -4,14 +4,14 @@ import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.event.EventPhases;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
-import static net.modificationstation.stationapi.api.registry.Identifier.of;
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 /**
  * Event that allows mods to listen for any type of recipe being registered.

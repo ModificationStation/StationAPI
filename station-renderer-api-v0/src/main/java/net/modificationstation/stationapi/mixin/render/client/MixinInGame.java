@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Objects;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Mixin(InGameHud.class)
 public class MixinInGame extends DrawContext {
@@ -29,6 +29,6 @@ public class MixinInGame extends DrawContext {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void showCurrentRenderer(float flag, boolean i, int j, int par4, CallbackInfo ci, class_564 var5, int var6, int var7, TextRenderer textRenderer) {
-        drawTextWithShadow(textRenderer, "[" + MODID.getName() + "] Active renderer: " + (RendererAccess.INSTANCE.hasRenderer() ? Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).getClass().getSimpleName() : "none (vanilla)"), 2, 98, 14737632);
+        drawTextWithShadow(textRenderer, "[" + NAMESPACE.getName() + "] Active renderer: " + (RendererAccess.INSTANCE.hasRenderer() ? Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).getClass().getSimpleName() : "none (vanilla)"), 2, 98, 14737632);
     }
 }

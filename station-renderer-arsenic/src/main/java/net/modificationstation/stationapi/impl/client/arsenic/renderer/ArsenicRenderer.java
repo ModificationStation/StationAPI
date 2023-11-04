@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer;
 
+import com.google.common.base.Suppliers;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.modificationstation.stationapi.api.client.render.Renderer;
@@ -7,13 +8,13 @@ import net.modificationstation.stationapi.api.client.render.material.MaterialFin
 import net.modificationstation.stationapi.api.client.render.material.RenderMaterial;
 import net.modificationstation.stationapi.api.client.render.mesh.MeshBuilder;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelRenderer;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.util.Lazy;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MeshBuilderImpl;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.BakedModelRendererImpl;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ArsenicRenderer implements Renderer {
@@ -57,5 +58,5 @@ public final class ArsenicRenderer implements Renderer {
         return bakedModelRenderer.get();
     }
 
-    private final Lazy<BakedModelRenderer> bakedModelRenderer = new Lazy<>(BakedModelRendererImpl::new);
+    private final Supplier<BakedModelRenderer> bakedModelRenderer = Suppliers.memoize(BakedModelRendererImpl::new);
 }

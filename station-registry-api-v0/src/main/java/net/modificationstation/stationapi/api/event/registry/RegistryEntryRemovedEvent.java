@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 @SuperBuilder
 @FieldDefaults(level = AccessLevel.PUBLIC, makeFinal = true)

@@ -18,14 +18,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 
 import static net.minecraft.achievement.Achievements.ACHIEVEMENTS;
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Mixin(AchievementsScreen.class)
 class MixinAchievements extends Screen {
     @Unique
     private static final int
-            STATIONAPI$PREV_BUTTON_ID = MODID.id("prev").hashCode(),
-            STATIONAPI$NEXT_BUTTON_ID = MODID.id("next").hashCode();
+            STATIONAPI$PREV_BUTTON_ID = NAMESPACE.id("prev").hashCode(),
+            STATIONAPI$NEXT_BUTTON_ID = NAMESPACE.id("next").hashCode();
 
 
     @SuppressWarnings("unchecked")

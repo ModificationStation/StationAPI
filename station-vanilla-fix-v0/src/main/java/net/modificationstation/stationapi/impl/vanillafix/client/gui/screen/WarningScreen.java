@@ -13,14 +13,14 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @RequiredArgsConstructor
 public class WarningScreen extends StationScreen {
 
     public static final String
-            ROOT_KEY = MODID.id("warning").toString(),
-            WARNING_KEY = ROOT_KEY + "." + MODID.id("warning");
+            ROOT_KEY = NAMESPACE.id("warning").toString(),
+            WARNING_KEY = ROOT_KEY + "." + NAMESPACE.id("warning");
 
     private static final int CONFIRMATION_TIMEOUT = FabricLoader.getInstance().isDevelopmentEnvironment() ? 3000 : 25000;
 

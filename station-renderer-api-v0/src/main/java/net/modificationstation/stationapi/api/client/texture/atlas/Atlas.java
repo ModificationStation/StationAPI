@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.TexturePackDependent;
 import net.modificationstation.stationapi.api.client.texture.binder.StaticReferenceProvider;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import uk.co.benjiweber.expressions.function.ObjIntFunction;

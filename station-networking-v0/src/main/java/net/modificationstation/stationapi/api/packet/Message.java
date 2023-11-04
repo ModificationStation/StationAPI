@@ -5,7 +5,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.entity.player.PlayerHelper;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -14,7 +14,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.function.BiConsumer;
 
-import static net.modificationstation.stationapi.api.StationAPI.MODID;
+import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 /**
  * Universal packet class that can hold any kind of data,
@@ -41,7 +41,7 @@ import static net.modificationstation.stationapi.api.StationAPI.MODID;
  */
 public class Message extends Packet implements IdentifiablePacket {
 
-    public static final Identifier PACKET_ID = MODID.id("message");
+    public static final Identifier PACKET_ID = NAMESPACE.id("message");
 
     /**
      * Message's identifier.

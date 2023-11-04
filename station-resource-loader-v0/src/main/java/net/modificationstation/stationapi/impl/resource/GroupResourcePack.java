@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.resource;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import net.modificationstation.stationapi.api.registry.Identifier;
-import net.modificationstation.stationapi.api.registry.ModID;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.InputSupplier;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourcePack;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public abstract class GroupResourcePack implements ResourcePack {
     protected final ResourceType type;
     protected final List<ModResourcePack> packs;
-    protected final Map<ModID, List<ModResourcePack>> namespacedPacks = new Reference2ReferenceOpenHashMap<>();
+    protected final Map<Namespace, List<ModResourcePack>> namespacedPacks = new Reference2ReferenceOpenHashMap<>();
 
     public GroupResourcePack(ResourceType type, List<ModResourcePack> packs) {
         this.type = type;
@@ -35,7 +35,7 @@ public abstract class GroupResourcePack implements ResourcePack {
 
     @Override
     public @Nullable InputSupplier<InputStream> openRoot(String... segments) {
-        List<ModResourcePack> packs = this.namespacedPacks.get(ModID.MINECRAFT);
+        List<ModResourcePack> packs = this.namespacedPacks.get(Namespace.MINECRAFT);
 
         if (packs != null) for (int i = packs.size() - 1; i >= 0; i--) {
             ResourcePack pack = packs.get(i);
@@ -49,7 +49,7 @@ public abstract class GroupResourcePack implements ResourcePack {
 
     @Override
     public InputSupplier<InputStream> open(ResourceType type, Identifier id) {
-        List<ModResourcePack> packs = this.namespacedPacks.get(id.modID);
+        List<ModResourcePack> packs = this.namespacedPacks.get(id.namespace);
 
         if (packs != null) for (int i = packs.size() - 1; i >= 0; i--) {
             ResourcePack pack = packs.get(i);
@@ -62,7 +62,7 @@ public abstract class GroupResourcePack implements ResourcePack {
     }
 
     @Override
-    public void findResources(ResourceType type, ModID namespace, String prefix, ResultConsumer consumer) {
+    public void findResources(ResourceType type, Namespace namespace, String prefix, ResultConsumer consumer) {
         List<ModResourcePack> packs = this.namespacedPacks.get(namespace);
 
         if (packs == null) return;
@@ -75,12 +75,12 @@ public abstract class GroupResourcePack implements ResourcePack {
     }
 
     @Override
-    public Set<ModID> getNamespaces(ResourceType type) {
+    public Set<Namespace> getNamespaces(ResourceType type) {
         return this.namespacedPacks.keySet();
     }
 
     public void appendResources(ResourceType type, Identifier id, List<Resource> resources) {
-        List<ModResourcePack> packs = this.namespacedPacks.get(id.modID);
+        List<ModResourcePack> packs = this.namespacedPacks.get(id.namespace);
 
         if (packs == null) return;
 

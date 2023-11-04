@@ -7,7 +7,7 @@ import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import net.modificationstation.stationapi.api.registry.Identifier;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.RegistryKey;
 
