@@ -3,23 +3,23 @@ package net.modificationstation.stationapi.api.item;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 
-public class ArmourUtils {
+public class ArmorUtil {
     /**
      * This is not perfect, but it gets very close to exact vanilla. Uses double to allow for extra precision.
-     * Gets vanilla armour reduction for the given armour piece.
+     * Gets vanilla armor reduction for the given armor piece.
       */
-    public static double getVanillaArmourReduction(ItemStack armour) {
+    public static double getVanillaArmorReduction(ItemStack armor) {
         double var1 = 0;
         double var2 = 0;
         double var3 = 0;
 
-        if (armour != null && armour.getItem() instanceof ArmorItem actualArmour) {
-            double var5 = armour.getMaxDamage();
-            double var6 = armour.method_721();
+        if (armor != null && armor.getItem() instanceof ArmorItem actualArmor) {
+            double var5 = armor.getMaxDamage();
+            double var6 = armor.method_721();
             double var7 = var5 - var6;
             var2 += var7;
             var3 += var5;
-            double var8 = actualArmour.field_2084;
+            double var8 = actualArmor.field_2084;
             var1 += var8;
         }
 

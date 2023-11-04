@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.armour.client;
+package net.modificationstation.stationapi.mixin.armor.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -8,24 +8,24 @@ import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArmorItem;
-import net.modificationstation.stationapi.api.client.item.ArmourTextureProvider;
+import net.modificationstation.stationapi.api.client.item.ArmorTextureProvider;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(PlayerEntityRenderer.class)
-public class PlayerRendererMixin extends LivingEntityRenderer {
-    public PlayerRendererMixin(EntityModel arg, float f) {
-        super(arg, f);
+class PlayerRendererMixin extends LivingEntityRenderer {
+    public PlayerRendererMixin(EntityModel model, float f) {
+        super(model, f);
     }
 
     // TODO: refactor. this seems a bit off in some places
     @WrapOperation(
-            method = "method_344",
+            method = "method_825",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/entity/PlayerRenderer;bindTexture(Ljava/lang/String;)V"
+                    target = "Lnet/minecraft/client/render/entity/PlayerEntityRenderer;bindTexture(Ljava/lang/String;)V"
             )
     )
     private void stationapi_onArmorTexture(
@@ -34,11 +34,11 @@ public class PlayerRendererMixin extends LivingEntityRenderer {
             PlayerEntity player, int i, float f,
             @Local(index = 6) ArmorItem armor
     ) {
-        fallback.call(renderer, armor instanceof ArmourTextureProvider provider ? stationapi_getTexturePath(provider.getTexture(armor), i) : texture);
+        fallback.call(renderer, armor instanceof ArmorTextureProvider provider ? stationapi_getTexturePath(provider.getTexture(armor), i) : texture);
     }
 
     @Unique
-    private String stationapi_getTexturePath(Identifier identifier, int armourIndex) {
-        return "assets/" + identifier.namespace + "/stationapi/textures/armour/" + identifier.path.replace(".", "/") + (armourIndex == 2 ? "_2" : "_1") + ".png";
+    private String stationapi_getTexturePath(Identifier identifier, int armorIndex) {
+        return "assets/" + identifier.namespace + "/stationapi/textures/armor/" + identifier.path.replace(".", "/") + (armorIndex == 2 ? "_2" : "_1") + ".png";
     }
 }

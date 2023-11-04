@@ -8,37 +8,37 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.entity.player.PlayerBaseSuper;
 import net.modificationstation.stationapi.api.entity.player.PlayerHandler;
 import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
-import net.modificationstation.stationapi.api.item.ArmourUtils;
-import net.modificationstation.stationapi.api.item.CustomArmourValue;
+import net.modificationstation.stationapi.api.item.ArmorUtil;
+import net.modificationstation.stationapi.api.item.CustomArmorValue;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
-public class CustomArmourValuesImpl {
+public class CustomArmorValuesImpl {
     @EventListener
-    private static void calcArmourDamageReduce(PlayerEvent.HandlerRegister event) {
-        event.playerHandlers.add(new ArmourHandler(event.player));
+    private static void calcArmorDamageReduce(PlayerEvent.HandlerRegister event) {
+        event.playerHandlers.add(new ArmorHandler(event.player));
     }
 
-    private record ArmourHandler(PlayerEntity player) implements PlayerHandler {
+    private record ArmorHandler(PlayerEntity player) implements PlayerHandler {
         @Override
         public boolean damageEntityBase(int initialDamage) {
             double damageAmount = initialDamage;
-            ItemStack[] armour = player.inventory.armor;
+            ItemStack[] armor = player.inventory.armor;
 
-            for (int i = 0; i < armour.length; i++) {
-                ItemStack armourInstance = armour[i];
+            for (int i = 0; i < armor.length; i++) {
+                ItemStack armorInstance = armor[i];
                 // This solution is not exact with vanilla, but is WAY better than previous solutions which weren't even close to vanilla.
-                if (armourInstance != null) {
-                    if (armourInstance.getItem() instanceof CustomArmourValue armor) {
-                        double damageNegated = armor.modifyDamageDealt(player, i, initialDamage, damageAmount);
+                if (armorInstance != null) {
+                    if (armorInstance.getItem() instanceof CustomArmorValue armorValue) {
+                        double damageNegated = armorValue.modifyDamageDealt(player, i, initialDamage, damageAmount);
                         damageAmount -= damageNegated;
-                    } else if (armourInstance.getItem() instanceof ArmorItem) {
-                        damageAmount -= ArmourUtils.getVanillaArmourReduction(armourInstance);
-                        armourInstance.damage(initialDamage, null);
-                        if (armourInstance.count <= 0) {
-                            armour[i] = null;
+                    } else if (armorInstance.getItem() instanceof ArmorItem) {
+                        damageAmount -= ArmorUtil.getVanillaArmorReduction(armorInstance);
+                        armorInstance.damage(initialDamage, null);
+                        if (armorInstance.count <= 0) {
+                            armor[i] = null;
                         }
                     }
                     if (damageAmount < 0) {

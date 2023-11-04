@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "station-armour-api-v0",
+  "id": "station-armor-api-v0",
   "version": "${version}",
 
-  "name": "Station Armour API (v0)",
-  "description": "Essential systems for modded armour.",
+  "name": "Station Armor API (v0)",
+  "description": "Essential systems for modded armor.",
   "authors": [
     "Modification Station"
   ],
@@ -15,16 +15,16 @@
   },
 
   "license": "MIT",
-  "icon": "assets/station-armour-api-v0/icon.png",
+  "icon": "assets/station-armor-api-v0/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.item.CustomArmourValuesImpl"
+      "net.modificationstation.stationapi.impl.item.CustomArmorValuesImpl"
     ]
   },
   "mixins": [
-    "station-armour-api-v0.mixins.json"
+    "station-armor-api-v0.mixins.json"
   ],
 
   "depends": {

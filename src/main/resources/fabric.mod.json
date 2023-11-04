@@ -34,7 +34,7 @@
     "station-blockitems-v0": "*",
     "station-container-api-v0": "*",
     "station-player-api-v0": "*",
-    "station-armour-api-v0": "*",
+    "station-armor-api-v0": "*",
     "station-localization-api-v0": "*",
     "station-achievements-v0": "*",
     "station-keybindings-v0": "*",
