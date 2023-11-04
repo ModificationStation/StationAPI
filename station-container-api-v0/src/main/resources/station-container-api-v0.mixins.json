@@ -6,7 +6,7 @@
   "mixins": [
   ],
   "server": [
-    "server.ServerPlayerAccessor"
+    "server.ServerPlayerEntityAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
