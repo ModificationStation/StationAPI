@@ -107,7 +107,7 @@ allprojects {
         //to change the versions see the gradle.properties file
         minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
-        mappings "net.glasslauncher:bin:${project.yarn_mappings}"
+        mappings "net.glasslauncher:biny:${project.yarn_mappings}:v2"
 
         modImplementation "babric:fabric-loader:${project.loader_version}"
 
@@ -150,6 +150,7 @@ allprojects {
     loom {
         gluedMinecraftJar()
         customMinecraftManifest.set("https://babric.github.io/manifest-polyfill/${minecraft_version}.json")
+        intermediaryUrl.set("https://maven.glass-launcher.net/babric/babric/intermediary/%1\$s/intermediary-%1\$s-v2.jar")
     }
 
     sourceSets {
