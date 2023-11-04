@@ -25,7 +25,6 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DataFixers {
-
     public static final String DATA_VERSIONS = NAMESPACE.id("data_versions").toString();
 
     private record DataFixerEntry(Supplier<DataFixer> fixer, int currentVersion) {}
