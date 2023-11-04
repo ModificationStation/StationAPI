@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 
 public class ChunkSection {
 
-    private static final byte[] INITIAL_SKY_LIGHT = Util.make(new byte[2048], array -> Arrays.fill(array, (byte) (class_56.field_2757.field_2759 << 4 | class_56.field_2757.field_2759)));
+    private static final byte[] INITIAL_SKY_LIGHT = Util.make(new byte[2048], array -> Arrays.fill(array, (byte) (class_56.SKY.field_2759 << 4 | class_56.SKY.field_2759)));
     public static final ChunkSection EMPTY = Util.make(new ChunkSection(0), ChunkSection::initSkyLight);
     private final short yOffset;
     private short nonEmptyBlockCount;
@@ -196,7 +196,7 @@ public class ChunkSection {
     }
 
     public NibbleArray getLightArray(class_56 type) {
-        return type == class_56.field_2758 ? blockLightArray : skyLightArray;
+        return type == class_56.BLOCK ? blockLightArray : skyLightArray;
     }
 
     public void initSkyLight() {

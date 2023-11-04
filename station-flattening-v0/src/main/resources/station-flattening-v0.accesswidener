@@ -1,4 +1,4 @@
 accessWidener	v2	named
 
-transitive-accessible	class	net/minecraft/server/ServerPlayerView$class_514
-transitive-accessible	class	net/minecraft/client/level/ClientLevel$class_456
+transitive-accessible	class	net/minecraft/class_167$class_514
+transitive-accessible	class	net/minecraft/class_454$class_456

@@ -7,6 +7,7 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.screen.EditWorldScreenEvent;
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetDetachedContext;
@@ -41,12 +42,12 @@ public final class EditWorldScreenImpl {
                 },
                 button -> ((ScreenBaseAccessor) screen).getMinecraft().setScreen(new WarningScreen(screen, () -> {
                     Minecraft mc = ((ScreenBaseAccessor) screen).getMinecraft();
-                    mc.openScreen(null);
-                    FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.getLevelStorage();
-                    mc.progressListener.notifyWithGameRunning("Converting World to " + worldStorage.getPreviousWorldFormat());
-                    mc.progressListener.method_1796("This may take a while :)");
-                    worldStorage.convertLevel(screen.worldData.getFileName(), (type, compound) -> (CompoundTag) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(MODID.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.progressListener);
-                    mc.openScreen(screen);
+                    mc.setScreen(null);
+                    FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.method_2127();
+                    mc.field_2817.method_1491("Converting World to " + worldStorage.getPreviousWorldFormat());
+                    mc.field_2817.method_1796("This may take a while :)");
+                    worldStorage.convertLevel(screen.worldData.method_1958(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(MODID.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.field_2817);
+                    mc.setScreen(screen);
                 }, WorldConversionWarning.TO_MCREGION_EXPLANATION_KEY, WorldConversionWarning.CONVERT_KEY))
         ));
     }

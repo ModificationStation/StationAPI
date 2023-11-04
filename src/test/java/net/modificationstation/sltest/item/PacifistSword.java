@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.template.item.tool.TemplateSword;
 
 public class PacifistSword extends TemplateSword {
     public PacifistSword(Identifier identifier) {
-        super(identifier, ToolMaterial.field_1692);
+        super(identifier, ToolMaterial.GOLD);
     }
 
     @Override

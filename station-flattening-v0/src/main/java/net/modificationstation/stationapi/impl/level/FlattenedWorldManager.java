@@ -47,8 +47,8 @@ public class FlattenedWorldManager {
                 sectionTag.putByte(HEIGHT_KEY, (byte)sectionY);
                 sectionTag.put("block_states", CODEC.encodeStart(NbtOps.INSTANCE, section.getBlockStateContainer()).getOrThrow(false, LOGGER::error));
                 sectionTag.put(METADATA_KEY, section.getMetadataArray().toTag());
-                sectionTag.put(SKY_LIGHT_KEY, section.getLightArray(class_56.field_2757).toTag());
-                sectionTag.put(BLOCK_LIGHT_KEY, section.getLightArray(class_56.field_2758).toTag());
+                sectionTag.put(SKY_LIGHT_KEY, section.getLightArray(class_56.SKY).toTag());
+                sectionTag.put(BLOCK_LIGHT_KEY, section.getLightArray(class_56.BLOCK).toTag());
                 sectionTags.add(sectionTag);
             }
         }
@@ -90,8 +90,8 @@ public class FlattenedWorldManager {
                 PalettedContainer<BlockState> blockStates = sectionTag.contains("block_states") ? CODEC.parse(NbtOps.INSTANCE, sectionTag.getCompound("block_states")).promotePartial(errorMessage -> logRecoverableError(xPos, zPos, sectionY, errorMessage)).getOrThrow(false, LOGGER::error) : new PalettedContainer<>(Block.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
                 ChunkSection chunkSection = new ChunkSection(sectionY, blockStates);
                 chunkSection.getMetadataArray().copyArray(sectionTag.getByteArray(METADATA_KEY));
-                chunkSection.getLightArray(class_56.field_2757).copyArray(sectionTag.getByteArray(SKY_LIGHT_KEY));
-                chunkSection.getLightArray(class_56.field_2758).copyArray(sectionTag.getByteArray(BLOCK_LIGHT_KEY));
+                chunkSection.getLightArray(class_56.SKY).copyArray(sectionTag.getByteArray(SKY_LIGHT_KEY));
+                chunkSection.getLightArray(class_56.BLOCK).copyArray(sectionTag.getByteArray(BLOCK_LIGHT_KEY));
                 sections[index] = chunkSection;
             }
         }

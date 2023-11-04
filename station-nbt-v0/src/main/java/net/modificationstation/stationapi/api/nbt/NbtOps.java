@@ -25,7 +25,6 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtLong;
 import net.minecraft.nbt.NbtShort;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.util.io.*;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.mixin.nbt.CompoundTagAccessor;
 import net.modificationstation.stationapi.mixin.nbt.ListTagAccessor;

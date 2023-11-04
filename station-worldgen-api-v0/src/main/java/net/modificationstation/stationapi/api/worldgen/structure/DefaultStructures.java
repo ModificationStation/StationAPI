@@ -11,7 +11,6 @@ import net.minecraft.class_512;
 import net.minecraft.class_543;
 import net.minecraft.class_624;
 import net.minecraft.class_82;
-import net.minecraft.level.structure.*;
 
 public class DefaultStructures {
     public static final class_239 OAK_TREE = new class_543();

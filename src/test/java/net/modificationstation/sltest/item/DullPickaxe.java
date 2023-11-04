@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.template.item.tool.TemplatePickaxe
 
 public class DullPickaxe extends TemplatePickaxe {
     public DullPickaxe(Identifier identifier) {
-        super(identifier, ToolMaterial.field_1692);
+        super(identifier, ToolMaterial.GOLD);
     }
 
     @Override

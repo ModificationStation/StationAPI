@@ -107,7 +107,7 @@ public class FlattenedChunk extends class_43 {
     public int method_864(class_56 type, int x, int y, int z) {
         ChunkSection section = getSection(y);
         return section == null ?
-                type == class_56.field_2757 && field_956.dimension.field_2177 ?
+                type == class_56.SKY && field_956.dimension.field_2177 ?
                         0 :
                         type.field_2759 :
                 section.getLight(type, x, y & 15, z);
@@ -141,13 +141,13 @@ public class FlattenedChunk extends class_43 {
     @Override
     public int method_880(int x, int y, int z, int light) {
         ChunkSection section = getSection(y);
-        int lightLevel = section == null ? 15 : section.getLight(class_56.field_2757, x, y & 15, z);
+        int lightLevel = section == null ? 15 : section.getLight(class_56.SKY, x, y & 15, z);
         if (lightLevel > 0) {
             field_953 = true;
         }
 
         lightLevel -= light;
-        int blockLight = section == null ? 0 : section.getLight(class_56.field_2758, x, y & 15, z);
+        int blockLight = section == null ? 0 : section.getLight(class_56.BLOCK, x, y & 15, z);
         if (blockLight > lightLevel) {
             lightLevel = blockLight;
         }
@@ -207,7 +207,7 @@ public class FlattenedChunk extends class_43 {
                         if (light > 0) {
                             ChunkSection section = getSection(lightY);
                             if (section != null) {
-                                section.setLight(class_56.field_2757, x, lightY & 15, z, light);
+                                section.setLight(class_56.SKY, x, lightY & 15, z, light);
                             }
                         }
 
@@ -263,16 +263,16 @@ public class FlattenedChunk extends class_43 {
                 for (int h = maxHeight; h < height; ++h) {
                     ChunkSection section = getSection(h);
                     if (section != null) {
-                        section.setLight(class_56.field_2757, x, h & 15, z, 15);
+                        section.setLight(class_56.SKY, x, h & 15, z, 15);
                     }
                 }
             }
             else {
-                this.field_956.method_166(class_56.field_2757, posX, height, posZ, posX, maxHeight, posZ);
+                this.field_956.method_166(class_56.SKY, posX, height, posZ, posX, maxHeight, posZ);
                 for (int h = height; h < maxHeight; ++h) {
                     ChunkSection section = getSection(h);
                     if (section != null) {
-                        section.setLight(class_56.field_2757, x, h & 15, z, 0);
+                        section.setLight(class_56.SKY, x, h & 15, z, 0);
                     }
                 }
             }
@@ -292,7 +292,7 @@ public class FlattenedChunk extends class_43 {
                 }
                 ChunkSection section = getSection(maxHeight);
                 if (section != null) {
-                    section.setLight(class_56.field_2757, x, maxHeight & 15, z, light);
+                    section.setLight(class_56.SKY, x, maxHeight & 15, z, light);
                 }
             }
 
@@ -301,7 +301,7 @@ public class FlattenedChunk extends class_43 {
             }
 
             if (maxHeight != h) {
-                this.field_956.method_166(class_56.field_2757, posX - 1, maxHeight, posZ - 1, posX + 1, h, posZ + 1);
+                this.field_956.method_166(class_56.SKY, posX - 1, maxHeight, posZ - 1, posX + 1, h, posZ + 1);
             }
 
             this.field_967 = true;
@@ -398,10 +398,10 @@ public class FlattenedChunk extends class_43 {
             } else if (y == var6 - 1)
                 this.method_889(x, y, z);
 
-            this.field_956.method_166(class_56.field_2757, levelX, y, levelZ, levelX, y, levelZ);
+            this.field_956.method_166(class_56.SKY, levelX, y, levelZ, levelX, y, levelZ);
         }
 
-        this.field_956.method_166(class_56.field_2758, levelX, y, levelZ, levelX, y, levelZ);
+        this.field_956.method_166(class_56.BLOCK, levelX, y, levelZ, levelX, y, levelZ);
         ((ChunkAccessor) this).invokeMethod_887(x, z);
         section.setMeta(x, y & 15, z, meta);
         state.getBlock().onBlockPlaced(this.field_956, levelX, y, levelZ, oldState);
@@ -446,8 +446,8 @@ public class FlattenedChunk extends class_43 {
                 this.method_889(x, y + 1, z);
         } else if (y == topY - 1)
             this.method_889(x, y, z);
-        this.field_956.method_166(class_56.field_2757, levelX, y, levelZ, levelX, y, levelZ);
-        this.field_956.method_166(class_56.field_2758, levelX, y, levelZ, levelX, y, levelZ);
+        this.field_956.method_166(class_56.SKY, levelX, y, levelZ, levelX, y, levelZ);
+        this.field_956.method_166(class_56.BLOCK, levelX, y, levelZ, levelX, y, levelZ);
         ((ChunkAccessor) this).invokeMethod_887(x, z);
         if (!this.field_956.isRemote) {
             state.getBlock().onBlockPlaced(this.field_956, levelX, y, levelZ, oldState);

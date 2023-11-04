@@ -15,14 +15,14 @@ public final class VanillaToolFixImpl {
 
     @EventListener
     private static void fixToolMaterials(ItemRegistryEvent event) {
-        ToolMaterial stone = ToolMaterial.field_1689;
-        ToolMaterial iron = ToolMaterial.field_1690;
+        ToolMaterial stone = ToolMaterial.STONE;
+        ToolMaterial iron = ToolMaterial.IRON;
         ToolMaterial diamond = ToolMaterial.DIAMOND;
-        stone.inheritsFrom(ToolMaterial.field_1688, ToolMaterial.field_1692);
+        stone.inheritsFrom(ToolMaterial.WOOD, ToolMaterial.GOLD);
         stone.requiredBlockTag(of("needs_stone_tool"));
-        iron.inheritsFrom(ToolMaterial.field_1689);
+        iron.inheritsFrom(ToolMaterial.STONE);
         iron.requiredBlockTag(of("needs_iron_tool"));
-        diamond.inheritsFrom(ToolMaterial.field_1690);
+        diamond.inheritsFrom(ToolMaterial.IRON);
         diamond.requiredBlockTag(of("needs_diamond_tool"));
     }
 }

@@ -24,7 +24,7 @@ public class MixinShears implements StationShearsItem {
 
     @Inject(method = "<init>(I)V", at = @At("RETURN"))
     private void captureToolMaterial(int i, CallbackInfo ci) {
-        stationapi_toolMaterial = ToolMaterial.field_1690;
+        stationapi_toolMaterial = ToolMaterial.IRON;
         setEffectiveBlocks(TagKey.of(BlockRegistry.INSTANCE.getKey(), Identifier.of("mineable/shears")));
     }
 

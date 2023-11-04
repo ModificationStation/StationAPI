@@ -76,10 +76,10 @@ public class ReloadScreenManager {
                     val parentScreen = minecraft.currentScreen;
                     val reloadScreen = new ReloadScreen(
                             parentScreen,
-                            expression(minecraft::openScreen).applyLazy(parentScreen)::apply,
+                            expression(minecraft::setScreen).applyLazy(parentScreen)::apply,
                             Tessellator.INSTANCE
                     );
-                    minecraft.openScreen(reloadScreen);
+                    minecraft.setScreen(reloadScreen);
                 }
         );
     }
@@ -119,15 +119,15 @@ public class ReloadScreenManager {
                 ReloadScreenTessellatorHolder.reloadScreenTessellator = TessellatorAccessor.stationapi_create(48)
         );
         val screenScaler = new class_564(minecraft.options, minecraft.displayWidth, minecraft.displayHeight);
-        val width = screenScaler.getScaledWidth();
-        val height = screenScaler.getScaledHeight();
+        val width = screenScaler.method_1857();
+        val height = screenScaler.method_1858();
         reloadScreen.init(minecraft, width, height);
         reloadScreen.setTextRenderer(new TextRenderer(minecraft.options, "/font/default.png", minecraft.textureManager));
         val timer = ((MinecraftAccessor) minecraft).getTickTimer();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(0.0, screenScaler.scaledWidth, screenScaler.scaledHeight, 0.0, 1000.0, 3000.0);
+        glOrtho(0.0, screenScaler.field_2389, screenScaler.field_2390, 0.0, 1000.0, 3000.0);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         glTranslatef(0.0f, 0.0f, -2000.0f);
