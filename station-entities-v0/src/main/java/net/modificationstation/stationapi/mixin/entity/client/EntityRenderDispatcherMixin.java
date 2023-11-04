@@ -12,10 +12,16 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.Map;
 
 @Mixin(EntityRenderDispatcher.class)
-public class MixinEntityRenderDispatcher {
-
-    @Redirect(method = "<init>()V", at = @At(value = "INVOKE", target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 27))
-    private <K, V> V afterVanillaRender(Map<K, V> map, K key, V value) {
+class EntityRenderDispatcherMixin {
+    @Redirect(
+            method = "<init>",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+                    ordinal = 27
+            )
+    )
+    private <K, V> V stationapi_afterVanillaRender(Map<K, V> map, K key, V value) {
         V ret = map.put(key, value);
         //noinspection unchecked
         StationAPI.EVENT_BUS.post(EntityRendererRegisterEvent.builder().renderers((Map<Class<? extends Entity>, EntityRenderer>) map).build());

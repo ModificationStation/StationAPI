@@ -4,16 +4,16 @@
   "package": "net.modificationstation.stationapi.mixin.entity",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinEntityRegistry"
+    "EntityRegistryMixin"
   ],
   "server": [
-    "server.MixinServerEntityTracker",
-    "server.MixinTrackedEntity"
+    "server.ServerEntityTrackerMixin",
+    "server.TrackedEntityMixin"
   ],
   "client": [
-    "client.ClientPlayNetworkHandlerAccessor",
-    "client.MixinClientPlayNetworkHandler",
-    "client.MixinEntityRenderDispatcher"
+    "client.ClientNetworkHandlerAccessor",
+    "client.ClientNetworkHandlerMixin",
+    "client.EntityRenderDispatcherMixin"
   ],
   "injectors": {
     "defaultRequire": 1

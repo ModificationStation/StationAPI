@@ -22,7 +22,7 @@ import net.modificationstation.stationapi.api.registry.EntityHandlerRegistry;
 import net.modificationstation.stationapi.api.registry.MobHandlerRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.server.entity.StationSpawnDataProvider;
-import net.modificationstation.stationapi.mixin.entity.client.ClientPlayNetworkHandlerAccessor;
+import net.modificationstation.stationapi.mixin.entity.client.ClientNetworkHandlerAccessor;
 import uk.co.benjiweber.expressions.function.QuadFunction;
 
 import java.io.ByteArrayInputStream;
@@ -54,8 +54,8 @@ public final class EntityClientNetworkHandler {
                     y = message.ints[2] / 32D,
                     z = message.ints[3] / 32D;
             //noinspection deprecation
-            ClientPlayNetworkHandlerAccessor networkHandler = (ClientPlayNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-            class_454 level = networkHandler.getLevel();
+            ClientNetworkHandlerAccessor networkHandler = (ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
+            class_454 level = networkHandler.getField_1973();
             Entity entity = entityHandler.apply(level, x, y, z);
             if (entity != null) {
                 entity.field_1654 = message.ints[1];
@@ -86,8 +86,8 @@ public final class EntityClientNetworkHandler {
             float yaw = (float)(message.bytes[0] * 360) / 256.0F;
             float pitch = (float)(message.bytes[1] * 360) / 256.0F;
             //noinspection deprecation
-            ClientPlayNetworkHandlerAccessor networkHandler = (ClientPlayNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-            class_454 level = networkHandler.getLevel();
+            ClientNetworkHandlerAccessor networkHandler = (ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
+            class_454 level = networkHandler.getField_1973();
             LivingEntity mob = mobHandler.apply(level);
             if (mob != null) {
                 mob.field_1654 = message.ints[1];

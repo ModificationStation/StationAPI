@@ -13,23 +13,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Map;
 
 @Mixin(EntityRegistry.class)
-public class MixinEntityRegistry {
-
+class EntityRegistryMixin {
     @Shadow
     private static void register(Class<? extends Entity> arg, String string, int i) { }
 
-    @Shadow private static Map<String, Class<? extends Entity>> STRING_ID_TO_CLASS;
+    @Shadow private static Map<String, Class<? extends Entity>> idToClass;
 
-    @Shadow private static Map<Class<? extends Entity>, String> CLASS_TO_STRING_ID;
+    @Shadow private static Map<Class<? extends Entity>, String> classToId;
 
     @Inject(method = "<clinit>", at = @At("RETURN"))
-    private static void onEntityRegister(CallbackInfo ci) {
+    private static void stationapi_onEntityRegister(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(
                 EntityRegister.builder()
-                        .register(MixinEntityRegistry::register)
+                        .register(EntityRegistryMixin::register)
                         .registerNoID((aClass, s) -> {
-                            STRING_ID_TO_CLASS.put(s, aClass);
-                            CLASS_TO_STRING_ID.put(aClass, s);
+                            idToClass.put(s, aClass);
+                            classToId.put(aClass, s);
                         })
                         .build()
         );

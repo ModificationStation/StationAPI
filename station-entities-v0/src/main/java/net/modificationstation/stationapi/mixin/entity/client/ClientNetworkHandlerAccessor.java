@@ -8,10 +8,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(ClientNetworkHandler.class)
-public interface ClientPlayNetworkHandlerAccessor {
-
+public interface ClientNetworkHandlerAccessor {
     @Accessor
-    class_454 getLevel();
+    class_454 getField_1973();
 
     @Invoker
     Entity invokeMethod_1645(int entityId);
