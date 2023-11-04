@@ -9,10 +9,10 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager.Builder;
 import net.modificationstation.stationapi.api.state.property.BooleanProperty;
-import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
+import net.modificationstation.stationapi.api.template.block.TemplateBlock;
 import net.modificationstation.stationapi.api.world.BlockStateView;
 
-public class LampBlock extends TemplateBlockBase {
+public class LampBlock extends TemplateBlock {
     private static final BooleanProperty ACTIVE = BooleanProperty.of("active");
 
     public LampBlock(Identifier id) {

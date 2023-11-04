@@ -6,14 +6,14 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.item.nbt.StationNBT;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
+import net.modificationstation.stationapi.api.template.item.TemplateItem;
 
 import java.util.Random;
 
 import static net.modificationstation.sltest.SLTest.MODID;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
-public class NBTItem extends TemplateItemBase {
+public class NBTItem extends TemplateItem {
 
     protected NBTItem(Identifier id) {
         super(id);

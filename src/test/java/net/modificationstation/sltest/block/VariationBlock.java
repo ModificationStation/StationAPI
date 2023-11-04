@@ -9,12 +9,12 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.state.property.EnumProperty;
-import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
+import net.modificationstation.stationapi.api.template.block.TemplateBlock;
 import net.modificationstation.stationapi.api.util.StringIdentifiable;
 
 import java.util.List;
 
-public class VariationBlock extends TemplateBlockBase {
+public class VariationBlock extends TemplateBlock {
 
     public enum Variant implements StringIdentifiable {
         IDLE,

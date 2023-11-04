@@ -6,7 +6,7 @@ import net.minecraft.block.Material;
 import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
+import net.modificationstation.stationapi.api.template.block.TemplateBlock;
 
 import java.util.Arrays;
 import java.util.function.Function;
@@ -16,10 +16,10 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public enum Blocks {
 
-    TEST_BLOCK("test_block", "testBlock", id -> new TemplateBlockBase(id, Material.CLAY).setHardness(1)),
+    TEST_BLOCK("test_block", "testBlock", id -> new TemplateBlock(id, Material.CLAY).setHardness(1)),
     TEST_ANIMATED_BLOCK("test_animated_block", "testAnimatedBlock", id -> new ModdedMetaBlock(id, Material.NETHER_PORTAL)),
     CUSTOM_MODEL_BLOCK("farlands_block", "farlands_block", id -> new ModdedModelBlock(id, Material.SOIL).setHardness(1)),
-    FREEZER("freezer", "freezer", id -> new BlockFreezer(id).setHardness(2.5F).setSoundGroup(TemplateBlockBase.DEFAULT_SOUND_GROUP)),
+    FREEZER("freezer", "freezer", id -> new BlockFreezer(id).setHardness(2.5F).setSoundGroup(TemplateBlock.DEFAULT_SOUND_GROUP)),
     ALTAR("altar", "altar", id -> new BlockAltar(id, Material.STONE).setHardness(3)),
     VARIATION_BLOCK("variation_block", "variationBlock", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSoundGroup(Block.DEFAULT_SOUND_GROUP).disableAutoItemRegistration()),
     EMISSION_CHECKER("emission_checker", "emissionChecker", LampBlock::new);

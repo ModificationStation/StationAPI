@@ -15,8 +15,7 @@ import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
-public class BlockStateItem extends TemplateItemBase {
-
+public class BlockStateItem extends TemplateItem {
     private final BlockState blockState;
 
     public BlockStateItem(Identifier identifier, BlockState blockState) {

@@ -6,10 +6,10 @@ import net.minecraft.block.Material;
 import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
+import net.modificationstation.stationapi.api.template.block.TemplateBlock;
 
 @HasMetaNamedBlockItem
-public class ModdedMetaBlock extends TemplateBlockBase {
+public class ModdedMetaBlock extends TemplateBlock {
 
     public ModdedMetaBlock(Identifier id, Material material) {
         super(id, material);

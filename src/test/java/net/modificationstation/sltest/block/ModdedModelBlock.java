@@ -3,7 +3,7 @@ package net.modificationstation.sltest.block;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.state.StateManager;
-import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
+import net.modificationstation.stationapi.api.template.block.TemplateBlock;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import static net.modificationstation.stationapi.api.state.property.Properties.HORIZONTAL_FACING;
@@ -14,7 +14,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class ModdedModelBlock extends TemplateBlockBase {
+public class ModdedModelBlock extends TemplateBlock {
 
     private static final Direction[] DIRECTIONS = new Direction[] { Direction.WEST, Direction.NORTH, Direction.EAST, Direction.SOUTH };
 

@@ -3,9 +3,9 @@ package net.modificationstation.sltest.block;
 import net.minecraft.block.Material;
 import net.modificationstation.sltest.texture.TextureListener;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.api.template.block.TemplateBlockBase;
+import net.modificationstation.stationapi.api.template.block.TemplateBlock;
 
-public class BlockAltar extends TemplateBlockBase {
+public class BlockAltar extends TemplateBlock {
 
     public BlockAltar(Identifier identifier, Material material) {
         super(identifier, material);

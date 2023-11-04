@@ -1,9 +1,9 @@
 package net.modificationstation.sltest.item;
 
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
+import net.modificationstation.stationapi.api.template.item.TemplateItem;
 
-public class ModelItem extends TemplateItemBase/* implements ItemModelProvider*/ {
+public class ModelItem extends TemplateItem/* implements ItemModelProvider*/ {
 
     public ModelItem(Identifier identifier) {
         super(identifier);

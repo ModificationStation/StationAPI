@@ -5,7 +5,6 @@ import net.minecraft.block.Material;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public abstract class TemplateBlockWithEntity extends BlockWithEntity implements BlockTemplate {
-
     public TemplateBlockWithEntity(Identifier identifier, Material material) {
         this(BlockTemplate.getNextId(), material);
         BlockTemplate.onConstructor(this, identifier);

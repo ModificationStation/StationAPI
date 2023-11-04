@@ -11,11 +11,11 @@ import net.modificationstation.stationapi.api.item.CustomReachProvider;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.api.template.item.TemplateItemBase;
+import net.modificationstation.stationapi.api.template.item.TemplateItem;
 
 import java.util.Random;
 
-public class ModdedItem extends TemplateItemBase implements CustomReachProvider, CustomTooltipProvider {
+public class ModdedItem extends TemplateItem implements CustomReachProvider, CustomTooltipProvider {
     public ModdedItem(Identifier id) {
         super(id);
     }

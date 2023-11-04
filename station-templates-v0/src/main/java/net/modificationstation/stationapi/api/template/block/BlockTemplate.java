@@ -2,11 +2,10 @@ package net.modificationstation.stationapi.api.template.block;
 
 import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public interface BlockTemplate {
-
     static int getNextId() {
         return BlockRegistry.AUTO_ID;
     }

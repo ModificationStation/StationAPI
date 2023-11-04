@@ -5,7 +5,6 @@ import net.minecraft.class_221;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateTranslucentBlock extends class_221 implements BlockTemplate {
-    
     public TemplateTranslucentBlock(Identifier identifier, int j, Material arg, boolean flag) {
         this(BlockTemplate.getNextId(), j, arg, flag);
         BlockTemplate.onConstructor(this, identifier);
