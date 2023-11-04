@@ -20,7 +20,6 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Inherited
 public @interface HasCustomBlockItemFactory {
-
     /**
      * BlockItem class supplier method.
      * @return the block item class that'll be instantiated and used as current block's item.

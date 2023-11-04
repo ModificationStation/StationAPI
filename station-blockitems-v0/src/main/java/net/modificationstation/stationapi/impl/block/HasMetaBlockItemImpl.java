@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.block.*;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.template.item.MetaBlock;
+import net.modificationstation.stationapi.api.template.item.MetaBlockItem;
 
 import java.util.function.IntFunction;
 
@@ -25,7 +25,6 @@ import java.util.function.IntFunction;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class HasMetaBlockItemImpl {
-
     /**
      * Handles block's {@link HasMetaBlockItem} annotation if it's present via {@link BlockItemFactoryEvent} hook.
      * @param event blockitemfactory callback.
@@ -37,8 +36,8 @@ public class HasMetaBlockItemImpl {
     }
 
     /**
-     * {@link MetaBlock#MetaBlock(int)} field.
+     * {@link MetaBlockItem#MetaBlockItem(int)} field.
      */
-    @SuppressWarnings("Convert2MethodRef") // Method references load their target classes, which may load ItemBase before it should be loaded normally.
-    public static final IntFunction<BlockItem> FACTORY = i -> new MetaBlock(i);
+    @SuppressWarnings("Convert2MethodRef") // Method references load their target classes, which may load Item before it should be loaded normally.
+    public static final IntFunction<BlockItem> FACTORY = i -> new MetaBlockItem(i);
 }

@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 
 public interface BlockItemToggle {
 
-    Block disableAutomaticBlockItemRegistration();
+    Block disableAutoItemRegistration();
 
-    boolean isAutomaticBlockItemRegistrationDisabled();
+    boolean isAutoItemRegistrationDisabled();
 }

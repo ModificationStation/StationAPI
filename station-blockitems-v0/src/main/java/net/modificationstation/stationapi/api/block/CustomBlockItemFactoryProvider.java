@@ -16,7 +16,6 @@ import java.util.function.IntFunction;
  * @see HasMetaNamedBlockItem
  */
 public interface CustomBlockItemFactoryProvider {
-
     /**
      * BlockItem factory supplier method.
      * @return the {@link IntFunction} instance that'll be executed to get block item's instance.

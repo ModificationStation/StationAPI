@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.block;
 
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
-import net.modificationstation.stationapi.api.template.item.MetaNamedBlock;
+import net.modificationstation.stationapi.api.template.item.MetaNamedBlockItem;
 
 import java.lang.annotation.*;
 
@@ -14,13 +14,12 @@ import java.lang.annotation.*;
  * @see MetaBlockItemProvider
  * @see HasMetaBlockItem
  * @see MetaNamedBlockItemProvider
- * @see MetaNamedBlock
+ * @see MetaNamedBlockItem
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 public @interface HasMetaNamedBlockItem {
-
     int[] validMetas() default { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
 }

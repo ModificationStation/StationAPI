@@ -152,7 +152,7 @@ public final class VanillaBlockFixImpl {
 
     @EventListener(priority = LOW)
     private static void disableAutomaticBlockItemRegistration(BlockRegistryEvent event) {
-        Consumer<Block> c = StationBlockItemsBlock::disableAutomaticBlockItemRegistration;
+        Consumer<Block> c = StationBlockItemsBlock::disableAutoItemRegistration;
         c.accept(BLOCKS[0]); // not supposed to have an item form
         COLLISION_BLOCKS.get().forEach(c); // item name collision
     }

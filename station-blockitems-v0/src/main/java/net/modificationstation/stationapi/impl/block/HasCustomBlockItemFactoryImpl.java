@@ -28,7 +28,6 @@ import java.util.function.IntFunction;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class HasCustomBlockItemFactoryImpl {
-
     /**
      * Processes {@link HasCustomBlockItemFactory} annotation if present via {@link BlockItemFactoryEvent} hook.
      * @param event blockitemfactory callback.

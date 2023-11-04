@@ -1,8 +1,7 @@
 package net.modificationstation.stationapi.api.template.item;
 
-public class MetaBlock extends TemplateBlock {
-
-    public MetaBlock(int i) {
+public class MetaBlockItem extends TemplateBlock {
+    public MetaBlockItem(int i) {
         super(i);
         setFuel(true);
     }

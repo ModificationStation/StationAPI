@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.blockitem;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -23,21 +25,20 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Block.class)
-public class MixinBlockBase implements StationBlockItemsBlock {
-
+class BlockMixin implements StationBlockItemsBlock {
     @Shadow
     @Final
-    public static Block[] BY_ID;
+    public static Block[] BLOCKS;
 
     @Unique
-    private boolean stationapi$disableAutomaticBlockItemRegistration;
+    private boolean stationapi$disableAutoItemRegistration;
 
     @SuppressWarnings({"InvalidInjectorMethodSignature", "MixinAnnotationTarget"})
     @Redirect(
-            method = "<clinit>()V",
+            method = "<clinit>",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/item/ItemBase;byId:[Lnet/minecraft/item/ItemBase;",
+                    target = "Lnet/minecraft/item/Item;ITEMS:[Lnet/minecraft/item/Item;",
                     opcode = Opcodes.GETSTATIC,
                     args = {
                             "array=set",
@@ -46,22 +47,21 @@ public class MixinBlockBase implements StationBlockItemsBlock {
                     ordinal = 8
             )
     )
-    private static void eradicateNotchCode(Item[] array, int index, Item value) {} // it's set in the ItemBase constructor anyway
+    private static void stationapi_eradicateNotchCode(Item[] array, int index, Item value) {} // it's set in the Item constructor anyway
 
-    @SuppressWarnings({"InvalidMemberReference", "InvalidInjectorMethodSignature", "MixinAnnotationTarget", "UnresolvedMixinReference"})
-    @Redirect(
-            method = "<clinit>()V",
+    @WrapOperation(
+            method = "<clinit>",
             at = @At(
                     value = "NEW",
-                    target = "(I)Lnet/minecraft/item/Block;"
+                    target = "(I)Lnet/minecraft/item/BlockItem;"
             )
     )
-    private static BlockItem getBlockItem(int blockID) {
-        Block block = BY_ID[blockID + ItemRegistry.ID_SHIFT];
+    private static BlockItem stationapi_getBlockItem(int blockId, Operation<BlockItem> currentFactory) {
+        Block block = BLOCKS[blockId + ItemRegistry.ID_SHIFT];
         BlockItemFactoryEvent event = StationAPI.EVENT_BUS.post(
                 BlockItemFactoryEvent.builder()
                         .block(block)
-                        .currentFactory(BlockItem::new)
+                        .currentFactory(currentFactory::call)
                         .build()
         );
         return event.isCanceled() ?
@@ -69,8 +69,8 @@ public class MixinBlockBase implements StationBlockItemsBlock {
                 Registry.register(
                         ItemRegistry.INSTANCE,
                         BlockRegistry.INSTANCE.getId(block),
-                        blockID < 0 ?
-                                event.currentFactory.apply(blockID) :
+                        blockId < 0 ?
+                                event.currentFactory.apply(blockId) :
                                 BlockItemForm.of(
                                         () -> event.currentFactory.apply(ItemRegistry.AUTO_ID),
                                         block
@@ -79,28 +79,28 @@ public class MixinBlockBase implements StationBlockItemsBlock {
     }
 
     @Inject(
-            method = "<clinit>()V",
+            method = "<clinit>",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/block/BlockBase;ALLOWS_GRASS_UNDER:[Z",
+                    target = "Lnet/minecraft/block/Block;BLOCKS_ALLOW_VISION:[Z",
                     opcode = Opcodes.GETSTATIC,
                     shift = At.Shift.BEFORE
             )
     )
-    private static void registerBlockItems(CallbackInfo ci) {
+    private static void stationapi_registerBlockItems(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(new BlockItemRegistryEvent());
     }
 
     @Override
     @Unique
-    public Block disableAutomaticBlockItemRegistration() {
-        stationapi$disableAutomaticBlockItemRegistration = true;
+    public Block disableAutoItemRegistration() {
+        stationapi$disableAutoItemRegistration = true;
         return Block.class.cast(this);
     }
 
     @Override
     @Unique
-    public boolean isAutomaticBlockItemRegistrationDisabled() {
-        return stationapi$disableAutomaticBlockItemRegistration;
+    public boolean isAutoItemRegistrationDisabled() {
+        return stationapi$disableAutoItemRegistration;
     }
 }

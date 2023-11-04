@@ -4,7 +4,7 @@
   "package": "net.modificationstation.stationapi.mixin.blockitem",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinBlockBase"
+    "BlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

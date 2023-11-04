@@ -2,9 +2,8 @@ package net.modificationstation.stationapi.api.template.item;
 
 import net.minecraft.item.ItemStack;
 
-public class MetaNamedBlock extends MetaBlock {
-
-    public MetaNamedBlock(int i) {
+public class MetaNamedBlockItem extends MetaBlockItem {
+    public MetaNamedBlockItem(int i) {
         super(i);
     }
 

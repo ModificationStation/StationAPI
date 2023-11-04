@@ -2,13 +2,13 @@ package net.modificationstation.stationapi.api.block;
 
 import net.minecraft.item.BlockItem;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
-import net.modificationstation.stationapi.api.template.item.MetaNamedBlock;
+import net.modificationstation.stationapi.api.template.item.MetaNamedBlockItem;
 import net.modificationstation.stationapi.impl.block.HasMetaNamedBlockItemImpl;
 
 import java.util.function.IntFunction;
 
 /**
- * Interface that pre-defines block item's factory to be {@link MetaNamedBlock#MetaNamedBlock(int)}
+ * Interface that pre-defines block item's factory to be {@link MetaNamedBlockItem#MetaNamedBlockItem(int)}
  * @author mine_diver
  * @see BlockItemFactoryEvent
  * @see CustomBlockItemFactoryProvider
@@ -16,13 +16,12 @@ import java.util.function.IntFunction;
  * @see MetaBlockItemProvider
  * @see HasMetaBlockItem
  * @see HasMetaNamedBlockItem
- * @see MetaNamedBlock
+ * @see MetaNamedBlockItem
  */
 public interface MetaNamedBlockItemProvider extends CustomBlockItemFactoryProvider {
-
     /**
      * The logic implementation.
-     * @return {@link MetaNamedBlock#MetaNamedBlock(int)}.
+     * @return {@link MetaNamedBlockItem#MetaNamedBlockItem(int)}.
      */
     @Override
     default IntFunction<BlockItem> getBlockItemFactory() {

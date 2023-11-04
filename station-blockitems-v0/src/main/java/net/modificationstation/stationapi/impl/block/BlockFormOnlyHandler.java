@@ -15,7 +15,6 @@ import java.util.function.Supplier;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class BlockFormOnlyHandler {
-
     @ApiStatus.Internal
     public static final Supplier<BlockItem> EMPTY_BLOCK_ITEM = Suppliers.memoize(() -> {
         try {
@@ -27,6 +26,6 @@ public class BlockFormOnlyHandler {
 
     @EventListener
     private static void registerBlockItem(BlockItemFactoryEvent event) {
-        if (event.block.isAutomaticBlockItemRegistrationDisabled()) event.cancel();
+        if (event.block.isAutoItemRegistrationDisabled()) event.cancel();
     }
 }

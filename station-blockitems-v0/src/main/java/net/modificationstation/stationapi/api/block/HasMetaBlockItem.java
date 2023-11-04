@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.block;
 
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
-import net.modificationstation.stationapi.api.template.item.MetaBlock;
+import net.modificationstation.stationapi.api.template.item.MetaBlockItem;
 
 import java.lang.annotation.*;
 
@@ -14,10 +14,10 @@ import java.lang.annotation.*;
  * @see MetaBlockItemProvider
  * @see MetaNamedBlockItemProvider
  * @see HasMetaNamedBlockItem
- * @see MetaBlock
+ * @see MetaBlockItem
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
-public @interface HasMetaBlockItem { }
+public @interface HasMetaBlockItem {}
