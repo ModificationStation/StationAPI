@@ -8,16 +8,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class MixinServerPlayer implements HasTeleportationManager {
-
+abstract class ServerPlayerEntityMixin implements HasTeleportationManager {
     @Redirect(
-            method = "tick(Z)V",
+            method = "method_313",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/ServerPlayerConnectionManager;sendToOppositeDimension(Lnet/minecraft/entity/player/ServerPlayer;)V"
+                    target = "Lnet/minecraft/class_166;method_578(Lnet/minecraft/entity/player/ServerPlayerEntity;)V"
             )
     )
-    private void overrideSwitchDimensions(class_166 serverPlayerConnectionManager, ServerPlayerEntity serverPlayer) {
+    private void stationapi_overrideSwitchDimensions(class_166 serverPlayerConnectionManager, ServerPlayerEntity serverPlayer) {
+        //noinspection DataFlowIssue
         getTeleportationManager().switchDimension((ServerPlayerEntity) (Object) this);
     }
 }

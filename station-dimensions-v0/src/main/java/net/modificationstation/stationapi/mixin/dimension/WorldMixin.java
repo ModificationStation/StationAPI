@@ -11,29 +11,28 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(World.class)
-public class MixinLevel {
-
+class WorldMixin {
     @Shadow protected WorldProperties properties;
 
     @Redirect(
-            method = "<init>(Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/level/dimension/Dimension;)V",
+            method = "<init>(Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/world/dimension/Dimension;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/level/LevelProperties;getDimensionId()I"
+                    target = "Lnet/minecraft/world/WorldProperties;getDimensionId()I"
             )
     )
-    private int modIf(WorldProperties levelProperties) {
+    private int stationapi_modIf(WorldProperties levelProperties) {
         return DimensionRegistry.INSTANCE.getByLegacyId(levelProperties.getDimensionId()).map(dimensionSupplier -> -1).orElse(0);
     }
 
     @ModifyConstant(
-            method = "<init>(Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/level/dimension/Dimension;)V",
+            method = "<init>(Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/world/dimension/Dimension;)V",
             constant = @Constant(
                     intValue = -1,
                     ordinal = 1
             )
     )
-    private int getDimensionId(int constant) {
+    private int stationapi_getDimensionId(int constant) {
         return properties.getDimensionId();
     }
 }

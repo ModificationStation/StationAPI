@@ -14,15 +14,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-public class MixinMinecraft {
-
+class MinecraftMixin {
     @Shadow public ClientPlayerEntity player;
 
     @Inject(
-            method = "init()V",
+            method = "init",
             at = @At("RETURN")
     )
-    private void initDimensions(CallbackInfo ci) {
+    private void stationapi_initDimensions(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(new DimensionRegistryEvent());
     }
 
@@ -30,10 +29,10 @@ public class MixinMinecraft {
             method = "method_2122(ZI)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/Minecraft;switchDimension()V"
+                    target = "Lnet/minecraft/client/Minecraft;method_2139()V"
             )
     )
-    private void switchDimension(Minecraft minecraft) {
+    private void stationapi_switchDimension(Minecraft minecraft) {
         DimensionHelper.switchDimension(player, DimensionRegistry.INSTANCE.getIdByLegacyId(player.dimensionId).orElseThrow(() -> new IllegalArgumentException("Unknown dimension: " + player.dimensionId + "!")), 1, null);
     }
 }

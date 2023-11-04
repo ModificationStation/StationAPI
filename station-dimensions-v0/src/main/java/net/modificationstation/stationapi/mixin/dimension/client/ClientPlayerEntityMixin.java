@@ -14,29 +14,28 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ClientPlayerEntity.class)
-public abstract class MixinAbstractClientPlayer extends PlayerEntity implements HasTeleportationManager {
-
-    public MixinAbstractClientPlayer(World arg) {
+abstract class ClientPlayerEntityMixin extends PlayerEntity implements HasTeleportationManager {
+    private ClientPlayerEntityMixin(World arg) {
         super(arg);
     }
 
-    @SuppressWarnings("DefaultAnnotationParam")
     @ModifyConstant(
-            method = "respawn()V",
+            method = "respawn",
             constant = @Constant(intValue = 0)
     )
-    private int getRespawnDimension(int constant) {
+    private int stationapi_getRespawnDimension(int constant) {
         return world.dimension.method_1766() ? dimensionId : DimensionRegistry.INSTANCE.getLegacyId(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Couldn't find overworld dimension in the registry!"));
     }
 
     @Redirect(
-            method = "updateDespawnCounter()V",
+            method = "method_937",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/Minecraft;switchDimension()V"
+                    target = "Lnet/minecraft/client/Minecraft;method_2139()V"
             )
     )
-    private void overrideSwitchDimensions(Minecraft minecraft) {
+    private void stationapi_overrideSwitchDimensions(Minecraft minecraft) {
+        //noinspection DataFlowIssue
         getTeleportationManager().switchDimension((ClientPlayerEntity) (Object) this);
     }
 }

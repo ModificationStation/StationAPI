@@ -9,16 +9,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Dimension.class)
-public class MixinDimension {
-
+class DimensionMixin {
     @Shadow public int id;
 
     @Inject(
-            method = "getByID(I)Lnet/minecraft/level/dimension/Dimension;",
+            method = "method_1767",
             at = @At("HEAD"),
             cancellable = true
     )
-    private static void getDimension(int id, CallbackInfoReturnable<Dimension> cir) {
+    private static void stationapi_getDimension(int id, CallbackInfoReturnable<Dimension> cir) {
         cir.setReturnValue(DimensionRegistry.INSTANCE.getByLegacyId(id).map(dimensionFactory -> dimensionFactory.factory.get()).orElse(null));
     }
 }

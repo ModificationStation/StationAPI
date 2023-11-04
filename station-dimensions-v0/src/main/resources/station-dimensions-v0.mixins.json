@@ -4,21 +4,21 @@
   "package": "net.modificationstation.stationapi.mixin.dimension",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinDimension",
-    "MixinLevel",
-    "MixinNether",
-    "MixinPlayerBase",
-    "MixinPortal",
-    "server.MixinServerPlayerPacketHandler"
+    "DimensionMixin",
+    "NetherDimensionMixin",
+    "NetherPortalBlockMixin",
+    "PlayerEntityMixin",
+    "WorldMixin"
   ],
   "server": [
-    "server.MixinMinecraftServer",
-    "server.MixinServerPlayer",
-    "server.MixinServerPlayerConnectionManager"
+    "server.MinecraftServerMixin",
+    "server.ServerPlayerConnectionManagerMixin",
+    "server.ServerPlayerEntityMixin",
+    "server.ServerPlayNetworkHandlerMixin"
   ],
   "client": [
-    "client.MixinAbstractClientPlayer",
-    "client.MixinMinecraft"
+    "client.ClientPlayerEntityMixin",
+    "client.MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -18,23 +18,22 @@ import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MinecraftServer.class)
-public class MixinMinecraftServer {
-
+class MinecraftServerMixin {
     @Shadow public class_488[] field_2847;
 
-    @Shadow public class_73[] levels;
+    @Shadow public class_73[] field_2841;
 
     @ModifyConstant(
             method = "<init>()V",
             constant = @Constant(intValue = 2)
     )
-    private int modifyServerEntityTrackersSize(int original) {
+    private int stationapi_modifyServerEntityTrackersSize(int original) {
         StationAPI.EVENT_BUS.post(new DimensionRegistryEvent());
         return DimensionRegistry.INSTANCE.serialView.size();
     }
 
     @Inject(
-            method = "start()Z",
+            method = "method_2166",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/System;nanoTime()J",
@@ -43,61 +42,60 @@ public class MixinMinecraftServer {
                     remap = false
             )
     )
-    private void registerServerEntityTrackers(CallbackInfoReturnable<Boolean> cir) {
+    private void stationapi_registerServerEntityTrackers(CallbackInfoReturnable<Boolean> cir) {
         IntSortedSet dimensions = DimensionRegistry.INSTANCE.serialView.keySet();
         int[] otherDimensions = dimensions.tailSet(dimensions.toIntArray()[2]).toIntArray();
         for (int i = 0; i < otherDimensions.length; i++)
+            //noinspection DataFlowIssue
             field_2847[i + 2] = new class_488((MinecraftServer) (Object) this, otherDimensions[i]);
     }
 
     @ModifyConstant(
-            method = "prepareLevel(Lnet/minecraft/level/storage/LevelStorage;Ljava/lang/String;J)V",
+            method = "method_2159",
             constant = @Constant(
                     intValue = 2,
                     ordinal = 0
             )
     )
-    private int modifyDimensionsSize(int original) {
+    private int stationapi_modifyDimensionsSize(int original) {
         return DimensionRegistry.INSTANCE.serialView.size();
     }
 
     @ModifyVariable(
-            method = "prepareLevel(Lnet/minecraft/level/storage/LevelStorage;Ljava/lang/String;J)V",
+            method = "method_2159",
             index = 6,
             at = @At(
                     value = "LOAD",
                     ordinal = 1
             )
     )
-    private int captureDimensionIndex(int index) {
-        return capturedIndex = index;
+    private int stationapi_captureDimensionIndex(int index) {
+        return stationapi_capturedIndex = index;
     }
 
     @Unique
-    private int capturedIndex;
+    private int stationapi_capturedIndex;
 
-    @SuppressWarnings("DefaultAnnotationParam")
     @ModifyConstant(
-            method = "prepareLevel(Lnet/minecraft/level/storage/LevelStorage;Ljava/lang/String;J)V",
+            method = "method_2159",
             constant = @Constant(
                     intValue = 0,
                     ordinal = 1
             )
     )
-    private int modifyOverworldId(int original) {
-        return DimensionRegistry.INSTANCE.serialView.keySet().toIntArray()[capturedIndex];
+    private int stationapi_modifyOverworldId(int original) {
+        return DimensionRegistry.INSTANCE.serialView.keySet().toIntArray()[stationapi_capturedIndex];
     }
 
-    @SuppressWarnings({"UnresolvedMixinReference", "MixinAnnotationTarget", "InvalidMemberReference", "InvalidInjectorMethodSignature"})
     @Redirect(
-            method = "prepareLevel(Lnet/minecraft/level/storage/LevelStorage;Ljava/lang/String;J)V",
+            method = "method_2159",
             at = @At(
                     value = "NEW",
-                    target = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;IJLnet/minecraft/server/level/ServerLevel;)Lnet/minecraft/server/level/OtherServerLevel;"
+                    target = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;IJLnet/minecraft/class_73;)Lnet/minecraft/class_120;"
             )
     )
-    private class_120 instantiateOtherServerLevel(MinecraftServer minecraftServer, DimensionData arg, String string, int i, long l, class_73 arg1) {
-        return new class_120(minecraftServer, arg, string, DimensionRegistry.INSTANCE.serialView.keySet().toIntArray()[capturedIndex], l, arg1);
+    private class_120 stationapi_instantiateOtherServerLevel(MinecraftServer minecraftServer, DimensionData arg, String string, int i, long l, class_73 arg1) {
+        return new class_120(minecraftServer, arg, string, DimensionRegistry.INSTANCE.serialView.keySet().toIntArray()[stationapi_capturedIndex], l, arg1);
     }
 
     /**
@@ -105,8 +103,8 @@ public class MixinMinecraftServer {
      * @author mine_diver
      */
     @Overwrite
-    public class_73 getLevel(int index) {
-        return levels[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), index, DimensionRegistry.DIMENSIONS_COMPARATOR)];
+    public class_73 method_2157(int index) {
+        return field_2841[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), index, DimensionRegistry.DIMENSIONS_COMPARATOR)];
     }
 
     /**

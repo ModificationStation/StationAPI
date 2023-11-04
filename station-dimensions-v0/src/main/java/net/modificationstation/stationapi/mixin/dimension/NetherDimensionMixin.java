@@ -13,22 +13,23 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Mixin(NetherDimension.class)
 @EnvironmentInterface(value = EnvType.CLIENT, itf = TravelMessageProvider.class)
-public class MixinNether implements TravelMessageProvider {
-
+class NetherDimensionMixin implements TravelMessageProvider {
     @Unique
     private static final String
-            entering = "gui." + of(NAMESPACE, "enteringNether"),
-            leaving = "gui." + of(NAMESPACE, "leavingNether");
+            STATIONAPI$ENTERING = "gui." + of(NAMESPACE, "enteringNether"),
+            STATIONAPI$LEAVING = "gui." + of(NAMESPACE, "leavingNether");
 
     @Override
+    @Unique
     @Environment(EnvType.CLIENT)
     public String getEnteringTranslationKey() {
-        return entering;
+        return STATIONAPI$ENTERING;
     }
 
     @Override
+    @Unique
     @Environment(EnvType.CLIENT)
     public String getLeavingTranslationKey() {
-        return leaving;
+        return STATIONAPI$LEAVING;
     }
 }

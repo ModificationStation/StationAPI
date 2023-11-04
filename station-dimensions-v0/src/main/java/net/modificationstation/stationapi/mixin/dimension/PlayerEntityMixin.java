@@ -7,20 +7,19 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(PlayerEntity.class)
-public class MixinPlayerBase implements HasTeleportationManager {
-
+class PlayerEntityMixin implements HasTeleportationManager {
     @Unique
-    private TeleportationManager teleportationManager;
+    private TeleportationManager stationapi_teleportationManager;
 
     @Unique
     @Override
     public void setTeleportationManager(TeleportationManager manager) {
-        teleportationManager = manager;
+        stationapi_teleportationManager = manager;
     }
 
     @Unique
     @Override
     public TeleportationManager getTeleportationManager() {
-        return teleportationManager;
+        return stationapi_teleportationManager;
     }
 }

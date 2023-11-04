@@ -19,15 +19,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(class_166.class)
-public class MixinServerPlayerConnectionManager {
-
-    @Shadow private class_167[] playerViews;
+class ServerPlayerConnectionManagerMixin {
+    @Shadow private class_167[] field_580;
 
     @ModifyConstant(
             method = "<init>(Lnet/minecraft/server/MinecraftServer;)V",
             constant = @Constant(intValue = 2)
     )
-    private int modifyPlayerViewsSize(int original) {
+    private int stationapi_modifyPlayerViewsSize(int original) {
         return DimensionRegistry.INSTANCE.serialView.size();
     }
 
@@ -36,28 +35,28 @@ public class MixinServerPlayerConnectionManager {
             at = @At("RETURN"),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void initializePlayerViews(MinecraftServer server, CallbackInfo ci, int var2) {
+    private void stationapi_initializePlayerViews(MinecraftServer server, CallbackInfo ci, int var2) {
         IntSortedSet dimensions = DimensionRegistry.INSTANCE.serialView.keySet();
         int[] otherDimensions = dimensions.tailSet(dimensions.toIntArray()[2]).toIntArray();
         for (int i = 0; i < otherDimensions.length; i++)
-            playerViews[i + 2] = new class_167(server, otherDimensions[i], var2);
+            field_580[i + 2] = new class_167(server, otherDimensions[i], var2);
     }
 
     @Inject(
-            method = "method_554(Lnet/minecraft/entity/player/ServerPlayer;)V",
+            method = "method_554(Lnet/minecraft/entity/player/ServerPlayerEntity;)V",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/entity/player/ServerPlayer;dimensionId:I",
+                    target = "Lnet/minecraft/entity/player/ServerPlayerEntity;dimensionId:I",
                     opcode = Opcodes.GETFIELD,
                     shift = At.Shift.BEFORE,
                     ordinal = 0
             )
     )
-    private void addPlayerToDimension(ServerPlayerEntity player, CallbackInfo ci) {
+    private void stationapi_addPlayerToDimension(ServerPlayerEntity player, CallbackInfo ci) {
         IntSortedSet dimensions = DimensionRegistry.INSTANCE.serialView.keySet();
         int[] otherDimensions = dimensions.tailSet(dimensions.toIntArray()[2]).toIntArray();
         for (int i = 0; i < otherDimensions.length; i++)
-            playerViews[i + 2].method_1748(player);
+            field_580[i + 2].method_1748(player);
     }
 
     /**
@@ -65,7 +64,7 @@ public class MixinServerPlayerConnectionManager {
      * @author mine_diver
      */
     @Overwrite
-    private class_167 getPlayerView(int dimension) {
-        return playerViews[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), dimension, DimensionRegistry.DIMENSIONS_COMPARATOR)];
+    private class_167 method_551(int dimension) {
+        return field_580[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), dimension, DimensionRegistry.DIMENSIONS_COMPARATOR)];
     }
 }

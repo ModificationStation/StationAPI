@@ -10,16 +10,14 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(ServerPlayNetworkHandler.class)
-public class MixinServerPlayerPacketHandler {
+class ServerPlayNetworkHandlerMixin {
+    @Shadow private ServerPlayerEntity field_920;
 
-    @Shadow private ServerPlayerEntity serverPlayer;
-
-    @SuppressWarnings("DefaultAnnotationParam")
     @ModifyConstant(
-            method = "onRespawn(Lnet/minecraft/packet/play/Respawn0x9C2SPacket;)V",
+            method = "onPlayerRespawn",
             constant = @Constant(intValue = 0)
     )
-    private int modifyRespawnDimension(int original) {
-        return serverPlayer.world.dimension.method_1766() ? serverPlayer.dimensionId : DimensionRegistry.INSTANCE.getLegacyId(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Overworld not found!"));
+    private int stationapi_modifyRespawnDimension(int original) {
+        return field_920.world.dimension.method_1766() ? field_920.dimensionId : DimensionRegistry.INSTANCE.getLegacyId(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Overworld not found!"));
     }
 }

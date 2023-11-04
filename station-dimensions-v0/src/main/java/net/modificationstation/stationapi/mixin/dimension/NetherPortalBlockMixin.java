@@ -11,16 +11,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(NetherPortalBlock.class)
-public class MixinPortal implements TeleportationManager {
-
+class NetherPortalBlockMixin implements TeleportationManager {
     @Inject(
-            method = "onEntityCollision(Lnet/minecraft/level/Level;IIILnet/minecraft/entity/EntityBase;)V",
+            method = "onEntityCollision",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/EntityBase;method_1388()V"
+                    target = "Lnet/minecraft/entity/Entity;method_1388()V"
             )
     )
-    private void onEntityCollision(World level, int x, int y, int z, Entity entityBase, CallbackInfo ci) {
+    private void stationapi_onEntityCollision(World level, int x, int y, int z, Entity entityBase, CallbackInfo ci) {
         if (entityBase instanceof HasTeleportationManager manager)
             manager.setTeleportationManager(this);
     }
