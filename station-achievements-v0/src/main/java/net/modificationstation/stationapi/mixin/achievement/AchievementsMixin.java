@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(Achievements.class)
-class MixinAchievements {
+class AchievementsMixin {
     @Shadow
     public static List<Achievement> ACHIEVEMENTS;
 

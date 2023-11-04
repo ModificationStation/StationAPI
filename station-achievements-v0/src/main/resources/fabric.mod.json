@@ -20,7 +20,7 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.client.gui.screen.menu.AchievementPageImpl"
+      "net.modificationstation.stationapi.impl.client.gui.screen.achievement.AchievementPageImpl"
     ]
   },
   "mixins": [

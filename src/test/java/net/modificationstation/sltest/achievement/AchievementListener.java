@@ -4,7 +4,7 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.achievement.Achievement;
 import net.minecraft.item.Item;
 import net.modificationstation.sltest.item.ItemListener;
-import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
+import net.modificationstation.stationapi.api.client.gui.screen.achievement.AchievementPage;
 import net.modificationstation.stationapi.api.event.achievement.AchievementRegisterEvent;
 
 import static net.modificationstation.sltest.SLTest.MODID;

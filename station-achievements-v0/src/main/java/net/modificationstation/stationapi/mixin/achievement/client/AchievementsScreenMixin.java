@@ -7,8 +7,8 @@ import net.minecraft.client.gui.screen.achievement.AchievementsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.client.event.gui.screen.menu.AchievementsEvent;
-import net.modificationstation.stationapi.api.client.gui.screen.menu.AchievementPage;
+import net.modificationstation.stationapi.api.client.event.gui.screen.achievement.AchievementsScreenEvent;
+import net.modificationstation.stationapi.api.client.gui.screen.achievement.AchievementPage;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,7 +21,7 @@ import static net.minecraft.achievement.Achievements.ACHIEVEMENTS;
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Mixin(AchievementsScreen.class)
-class MixinAchievements extends Screen {
+class AchievementsScreenMixin extends Screen {
     @Unique
     private static final int
             STATIONAPI$PREV_BUTTON_ID = NAMESPACE.id("prev").hashCode(),
@@ -44,7 +44,7 @@ class MixinAchievements extends Screen {
             method = "buttonClicked",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screen/ScreenBase;buttonClicked(Lnet/minecraft/client/gui/widgets/Button;)V"
+                    target = "Lnet/minecraft/client/gui/screen/Screen;buttonClicked(Lnet/minecraft/client/gui/widget/ButtonWidget;)V"
             )
     )
     private void stationapi_buttonClickedNextPrev(ButtonWidget button, CallbackInfo ci) {
@@ -53,7 +53,7 @@ class MixinAchievements extends Screen {
     }
 
     @Inject(
-            method = "drawHeader",
+            method = "method_1999",
             at = @At("TAIL")
     )
     private void stationapi_doDrawTitle(CallbackInfo ci) {
@@ -68,7 +68,7 @@ class MixinAchievements extends Screen {
             index = 26,
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/block/BlockBase;texture:I",
+                    target = "Lnet/minecraft/block/Block;textureId:I",
                     opcode = Opcodes.GETFIELD,
                     ordinal = 7,
                     shift = At.Shift.BY,
@@ -84,7 +84,7 @@ class MixinAchievements extends Screen {
     ) {
         //noinspection DataFlowIssue
         return StationAPI.EVENT_BUS.post(
-                AchievementsEvent.BackgroundTextureRender.builder()
+                AchievementsScreenEvent.BackgroundTextureRender.builder()
                         .achievementsScreen((AchievementsScreen) (Object) this)
                         .random(random)
                         .column(baseColumn + deltaColumn)
@@ -107,7 +107,7 @@ class MixinAchievements extends Screen {
     private Achievement stationapi_overrideLineRender(Achievement achievement) {
         //noinspection DataFlowIssue
         return StationAPI.EVENT_BUS.post(
-                AchievementsEvent.LineRender.builder()
+                AchievementsScreenEvent.LineRender.builder()
                         .achievementsScreen((AchievementsScreen) (Object) this)
                         .achievement(achievement)
                         .build()
@@ -146,7 +146,7 @@ class MixinAchievements extends Screen {
         //noinspection DataFlowIssue
         while (
                 achievementOrdinal < ACHIEVEMENTS.size() && StationAPI.EVENT_BUS.post(
-                        AchievementsEvent.AchievementIconRender.builder()
+                        AchievementsScreenEvent.AchievementIconRender.builder()
                                 .achievementsScreen((AchievementsScreen) (Object) this)
                                 .achievement((Achievement) ACHIEVEMENTS.get(achievementOrdinal))
                                 .build()

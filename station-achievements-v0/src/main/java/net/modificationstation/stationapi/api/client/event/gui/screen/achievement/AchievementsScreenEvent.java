@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.client.event.gui.screen.menu;
+package net.modificationstation.stationapi.api.client.event.gui.screen.achievement;
 
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
@@ -11,12 +11,12 @@ import net.modificationstation.stationapi.api.StationAPI;
 import java.util.Random;
 
 @SuperBuilder
-public abstract class AchievementsEvent extends Event {
+public abstract class AchievementsScreenEvent extends Event {
     public final AchievementsScreen achievementsScreen;
 
     @SuperBuilder
     @EventPhases(StationAPI.INTERNAL_PHASE)
-    public static class BackgroundTextureRender extends AchievementsEvent {
+    public static class BackgroundTextureRender extends AchievementsScreenEvent {
         public final Random random;
         public final int column, row, randomizedRow;
         public int backgroundTexture;
@@ -25,14 +25,14 @@ public abstract class AchievementsEvent extends Event {
     @Cancelable
     @SuperBuilder
     @EventPhases(StationAPI.INTERNAL_PHASE)
-    public static class AchievementIconRender extends AchievementsEvent {
+    public static class AchievementIconRender extends AchievementsScreenEvent {
         public final Achievement achievement;
     }
 
     @Cancelable
     @SuperBuilder
     @EventPhases(StationAPI.INTERNAL_PHASE)
-    public static class LineRender extends AchievementsEvent {
+    public static class LineRender extends AchievementsScreenEvent {
         public final Achievement achievement;
     }
 }

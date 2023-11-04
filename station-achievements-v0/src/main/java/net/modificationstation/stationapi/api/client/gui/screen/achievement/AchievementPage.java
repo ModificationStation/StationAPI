@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.client.gui.screen.menu;
+package net.modificationstation.stationapi.api.client.gui.screen.achievement;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntCollection;
