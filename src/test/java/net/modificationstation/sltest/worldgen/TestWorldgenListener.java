@@ -7,7 +7,7 @@ import net.minecraft.class_239;
 import net.minecraft.class_512;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.event.level.biome.BiomeRegisterEvent;
+import net.modificationstation.stationapi.api.event.world.biome.BiomeRegisterEvent;
 import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeModificationEvent;
 import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeProviderRegisterEvent;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
