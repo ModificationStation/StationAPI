@@ -10,7 +10,6 @@ import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationItem {
-
     default Item setTranslationKey(Namespace namespace, String translationKey) {
         return Util.assertImpl();
     }
@@ -19,15 +18,15 @@ public interface StationItem {
         return Util.assertImpl();
     }
 
-    default boolean preHit(ItemStack itemInstance, Entity otherEntity, PlayerEntity player) {
+    default boolean preHit(ItemStack stack, Entity otherEntity, PlayerEntity player) {
         return Util.assertImpl();
     }
 
-    default boolean preMine(ItemStack itemInstance, BlockState blockState, int x, int y, int z, int side, PlayerEntity player) {
+    default boolean preMine(ItemStack stack, BlockState blockState, int x, int y, int z, int side, PlayerEntity player) {
         return Util.assertImpl();
     }
 
-    default int getDurability(ItemStack stack) {
+    default int getMaxDamage(ItemStack stack) {
         return Util.assertImpl();
     }
 }

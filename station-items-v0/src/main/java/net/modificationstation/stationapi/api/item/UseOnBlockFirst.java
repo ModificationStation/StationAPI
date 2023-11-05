@@ -5,5 +5,5 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public interface UseOnBlockFirst {
-    boolean onUseOnBlockFirst(ItemStack itemInstance, PlayerEntity playerBase, World level, int x, int y, int z, int sideClicked);
+    boolean onUseOnBlockFirst(ItemStack stack, PlayerEntity player, World world, int x, int y, int z, int sideClicked);
 }

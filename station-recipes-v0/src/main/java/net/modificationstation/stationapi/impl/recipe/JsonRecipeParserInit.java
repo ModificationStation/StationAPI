@@ -64,7 +64,7 @@ public class JsonRecipeParserInit {
             keys[i + 1] = new Gson().fromJson(key.getValue(), JsonItemKey.class).get().map(Function.identity(), Function.identity());
             i += 2;
         }
-        CraftingRegistry.addShapedRecipe(json.getResult().getItemInstance(), keys);
+        CraftingRegistry.addShapedRecipe(json.getResult().getItemStack(), keys);
     }
 
     private static void parseCraftingShapeless(URL recipe) {
@@ -79,7 +79,7 @@ public class JsonRecipeParserInit {
         for (int i = 0; i < ingredients.length; i++)
             iteminstances[i] = ingredients[i].get().map(Function.identity(), Function.identity());
         try {
-            CraftingRegistry.addShapelessRecipe(json.getResult().getItemInstance(), iteminstances);
+            CraftingRegistry.addShapelessRecipe(json.getResult().getItemStack(), iteminstances);
         } catch (NullPointerException e) {
             throw new RuntimeException("Recipe: " + recipe, e);
         }
@@ -92,6 +92,6 @@ public class JsonRecipeParserInit {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        json.getIngredient().get().ifLeft(item -> SmeltingRegistry.addSmeltingRecipe(item, json.getResult().getItemInstance())).ifRight(tag -> SmeltingRegistry.addSmeltingRecipe(tag, json.getResult().getItemInstance()));
+        json.getIngredient().get().ifLeft(item -> SmeltingRegistry.addSmeltingRecipe(item, json.getResult().getItemStack())).ifRight(tag -> SmeltingRegistry.addSmeltingRecipe(tag, json.getResult().getItemStack()));
     }
 }

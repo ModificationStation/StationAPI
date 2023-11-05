@@ -4,29 +4,28 @@
   "package": "net.modificationstation.stationapi.mixin.item",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinBlockBase",
-    "MixinContainerBase",
-    "MixinDye",
-    "MixinInventoryUpdate0x68S2CPacket",
-    "MixinItemBase",
-    "MixinItemInstance",
-    "MixinPlayerBase",
-    "MixinPlayerInventory",
-    "MixinStats"
+    "BlockMixin",
+    "DyeItemMixin",
+    "InventoryS2CPacketMixin",
+    "ItemMixin",
+    "ItemStackMixin",
+    "PlayerEntityMixin",
+    "PlayerInventoryMixin",
+    "ScreenHandlerMixin",
+    "StatsMixin"
   ],
   "server": [
-    "server.Mixinclass_70",
-    "server.MixinServerPlayerPacketHandler"
+    "server.class_70Mixin",
+    "server.ServerPlayNetworkHandlerMixin"
   ],
   "client": [
-    "client.DrawableHelperInvoker",
-    "client.Mixinclass_608",
-    "client.MixinClientInteractionManager",
-    "client.MixinContainerBase",
-    "client.MixinGameRenderer",
-    "client.MixinItemRenderer",
-    "client.MixinMultiPlayerClientInteractionManager",
-    "client.MixinSinglePlayerClientInteractionManager"
+    "client.ContainerScreenMixin",
+    "client.DrawContextAccessor",
+    "client.GameRendererMixin",
+    "client.InteractionManagerMixin",
+    "client.ItemRendererMixin",
+    "client.MultiplayerInteractionManagerMixin",
+    "client.SingleplayerInteractionManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

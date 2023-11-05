@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import lombok.val;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.modificationstation.stationapi.api.tag.ItemTags;
+import net.modificationstation.stationapi.api.registry.tag.ItemTags;
 import net.modificationstation.stationapi.api.tag.TagKey;
 
 public class VanillaTagRecipeFixImpl {

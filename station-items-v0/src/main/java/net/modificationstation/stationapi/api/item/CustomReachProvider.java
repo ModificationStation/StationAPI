@@ -5,6 +5,5 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.HitResultType;
 
 public interface CustomReachProvider {
-
-    double getReach(ItemStack itemInstance, PlayerEntity player, HitResultType type, double currentReach);
+    double getReach(ItemStack stack, PlayerEntity player, HitResultType type, double currentReach);
 }

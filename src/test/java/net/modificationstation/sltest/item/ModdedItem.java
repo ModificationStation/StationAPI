@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.HitResultType;
 import net.minecraft.world.World;
 import net.modificationstation.sltest.SLTest;
-import net.modificationstation.stationapi.api.client.gui.CustomTooltipProvider;
+import net.modificationstation.stationapi.api.client.item.CustomTooltipProvider;
 import net.modificationstation.stationapi.api.item.CustomReachProvider;
 import net.modificationstation.stationapi.api.packet.Message;
 import net.modificationstation.stationapi.api.packet.PacketHelper;
@@ -38,7 +38,7 @@ public class ModdedItem extends TemplateItem implements CustomReachProvider, Cus
     public int hmmSho;
 
     @Override
-    public double getReach(ItemStack itemInstance, PlayerEntity player, HitResultType type, double currentReach) {
+    public double getReach(ItemStack stack, PlayerEntity player, HitResultType type, double currentReach) {
         return switch (type) {
             case BLOCK -> 50;
             case ENTITY -> 10;
@@ -46,7 +46,7 @@ public class ModdedItem extends TemplateItem implements CustomReachProvider, Cus
     }
 
     @Override
-    public String[] getTooltip(ItemStack itemInstance, String originalTooltip) {
+    public String[] getTooltip(ItemStack stack, String originalTooltip) {
         return new String[] {
                 "This has 50 block reach for tiles!",
                 originalTooltip

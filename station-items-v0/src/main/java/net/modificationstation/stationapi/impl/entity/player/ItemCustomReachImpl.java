@@ -11,15 +11,14 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
-public class ItemCustomReachImpl {
-
+public final class ItemCustomReachImpl {
     @EventListener
     private static void getReach(PlayerEvent.Reach event) {
-        ItemStack itemInstance = event.player.getHand();
-        if (itemInstance != null) {
-            Item item = itemInstance.getItem();
+        ItemStack stack = event.player.getHand();
+        if (stack != null) {
+            Item item = stack.getItem();
             if (item instanceof CustomReachProvider provider)
-                event.currentReach = provider.getReach(itemInstance, event.player, event.type, event.currentReach);
+                event.currentReach = provider.getReach(stack, event.player, event.type, event.currentReach);
         }
     }
 }

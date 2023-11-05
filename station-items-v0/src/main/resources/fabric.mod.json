@@ -23,8 +23,8 @@
       "net.modificationstation.stationapi.impl.entity.player.ItemCustomReachImpl"
     ],
     "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.client.gui.CustomItemOverlayImpl",
-      "net.modificationstation.stationapi.impl.client.gui.CustomTooltipRendererImpl"
+      "net.modificationstation.stationapi.impl.client.render.item.CustomItemOverlayImpl",
+      "net.modificationstation.stationapi.impl.client.gui.screen.container.CustomTooltipRendererImpl"
     ]
   },
   "mixins": [

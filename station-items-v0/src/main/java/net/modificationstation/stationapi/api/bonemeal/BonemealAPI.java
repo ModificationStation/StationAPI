@@ -5,7 +5,6 @@ import net.minecraft.block.Block;
 import net.minecraft.class_239;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.collection.WeightedList;
 import net.modificationstation.stationapi.api.util.math.Direction;
@@ -19,7 +18,7 @@ public class BonemealAPI {
     private static final WeightedList<class_239> CACHE = new WeightedList<>();
 
     public static void addPlant(BlockState ground, BlockState plant, int weight) {
-        addPlant(ground, new SimpleStateStructure(plant), weight);
+        addPlant(ground, new SimpleStateFeature(plant), weight);
     }
 
     public static void addPlant(BlockState ground, class_239 plant, int weight) {
@@ -27,20 +26,20 @@ public class BonemealAPI {
     }
 
     public static void addPlant(TagKey<Block> ground, BlockState plant, int weight) {
-        addPlant(ground, new SimpleStateStructure(plant), weight);
+        addPlant(ground, new SimpleStateFeature(plant), weight);
     }
 
     public static void addPlant(TagKey<Block> ground, class_239 plant, int weight) {
         PLACERS_TAG.computeIfAbsent(ground, g -> new WeightedList<>()).add(plant, weight);
     }
 
-    public static boolean generate(World level, int x, int y, int z, BlockState state, int side) {
+    public static boolean generate(World world, int x, int y, int z, BlockState state, int side) {
         updateCache(state);
         if (CACHE.isEmpty()) return false;
-        Random random = level.field_214;
+        Random random = world.field_214;
         Direction offset = Direction.byId(side);
         CACHE.get(random).method_1142(
-                level,
+                world,
                 random,
                 x + offset.getOffsetX(),
                 y + offset.getOffsetY(),
@@ -50,10 +49,10 @@ public class BonemealAPI {
             int px = x + random.nextInt(7) - 3;
             int py = y + random.nextInt(5) - 2;
             int pz = z + random.nextInt(7) - 3;
-            state = level.getBlockState(px, py, pz);
+            state = world.getBlockState(px, py, pz);
             updateCache(state);
             if (CACHE.isEmpty()) continue;
-            CACHE.get(random).method_1142(level, random, px, py + 1, pz);
+            CACHE.get(random).method_1142(world, random, px, py + 1, pz);
         }
         return true;
     }
@@ -68,35 +67,35 @@ public class BonemealAPI {
         });
     }
 
-    private static class SimpleStateStructure extends class_239 {
+    private static class SimpleStateFeature extends class_239 {
         private final BlockState state;
 
-        private SimpleStateStructure(BlockState state) {
+        private SimpleStateFeature(BlockState state) {
             this.state = state;
         }
 
         @Override
-        public boolean method_1142(World level, Random random, int x, int y, int z) {
-            BlockState levelState = level.getBlockState(x, y, z);
-            if (!levelState.isAir() && !levelState.getMaterial().method_893()) return false;
-            if (state.getBlock().canPlaceAt(level, x, y, z)) {
-                level.setBlockState(x, y, z, state);
+        public boolean method_1142(World world, Random random, int x, int y, int z) {
+            BlockState worldState = world.getBlockState(x, y, z);
+            if (!worldState.isAir() && !worldState.getMaterial().method_893()) return false;
+            if (state.getBlock().canPlaceAt(world, x, y, z)) {
+                world.setBlockState(x, y, z, state);
                 return true;
             }
             return false;
         }
     }
 
-    private static class GrassStructure extends class_239 {
+    private static class GrassFeature extends class_239 {
         private static final BlockState STATE = Block.GRASS.getDefaultState();
 
         @Override
-        public boolean method_1142(World level, Random random, int x, int y, int z) {
-            BlockState levelState = level.getBlockState(x, y, z);
-            if (!levelState.isAir() && !levelState.getMaterial().method_893()) return false;
-            if (STATE.getBlock().canPlaceAt(level, x, y, z)) {
-                level.setBlockState(x, y, z, STATE);
-                level.method_215(x, y, z, 1);
+        public boolean method_1142(World world, Random random, int x, int y, int z) {
+            BlockState worldState = world.getBlockState(x, y, z);
+            if (!worldState.isAir() && !worldState.getMaterial().method_893()) return false;
+            if (STATE.getBlock().canPlaceAt(world, x, y, z)) {
+                world.setBlockState(x, y, z, STATE);
+                world.method_215(x, y, z, 1);
                 return true;
             }
             return false;
@@ -105,7 +104,7 @@ public class BonemealAPI {
 
     static {
         BlockState grass = Block.GRASS_BLOCK.getDefaultState();
-        addPlant(grass, new GrassStructure(), 10);
+        addPlant(grass, new GrassFeature(), 10);
         addPlant(grass, Block.DANDELION.getDefaultState(), 1);
         addPlant(grass, Block.ROSE.getDefaultState(), 1);
     }

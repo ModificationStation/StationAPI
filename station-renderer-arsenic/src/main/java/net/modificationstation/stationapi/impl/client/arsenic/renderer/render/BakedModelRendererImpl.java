@@ -302,7 +302,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
             CrashReportSection crashReportSection = crashReport.addElement("Item being rendered");
             crashReportSection.add("Item Type", () -> String.valueOf(stack.getItem()));
             crashReportSection.add("Item Damage", () -> String.valueOf(stack.getDamage()));
-            crashReportSection.add("Item NBT", () -> String.valueOf(stack.getStationNBT()));
+            crashReportSection.add("Item NBT", () -> String.valueOf(stack.getStationNbt()));
             throw new CrashException(crashReport);
         }
     }

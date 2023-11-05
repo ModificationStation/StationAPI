@@ -4,7 +4,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
-import net.modificationstation.stationapi.api.item.nbt.StationNBT;
+import net.modificationstation.stationapi.api.item.StationItemNbt;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.item.TemplateItem;
 
@@ -21,7 +21,7 @@ public class NBTItem extends TemplateItem {
 
     @Override
     public boolean useOnBlock(ItemStack item, PlayerEntity player, World level, int x, int y, int z, int facing) {
-        NbtCompound nbt = StationNBT.class.cast(item).getStationNBT();
+        NbtCompound nbt = StationItemNbt.class.cast(item).getStationNbt();
         if (!nbt.contains(of(MODID, "rand_num").toString()))
             nbt.putInt(of(MODID, "rand_num").toString(), new Random().nextInt(3));
         player.method_490("Woah: " + nbt.getInt(of(MODID, "rand_num").toString()));

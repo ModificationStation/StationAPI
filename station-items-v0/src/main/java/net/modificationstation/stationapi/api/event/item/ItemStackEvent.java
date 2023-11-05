@@ -12,7 +12,7 @@ public abstract class ItemStackEvent extends Event {
 
     @SuperBuilder
     public static class Crafted extends ItemStackEvent {
-        public final World level;
+        public final World world;
         public final PlayerEntity player;
     }
 }

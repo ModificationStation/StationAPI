@@ -6,5 +6,5 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public interface UseOnEntityFirst {
-    boolean onUseOnEntityFirst(ItemStack itemInstance, PlayerEntity playerBase, World level, Entity entityBase);
+    boolean onUseOnEntityFirst(ItemStack stack, PlayerEntity player, World world, Entity entity);
 }
