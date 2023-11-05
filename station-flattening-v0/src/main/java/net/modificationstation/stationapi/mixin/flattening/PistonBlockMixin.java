@@ -16,12 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(PistonBlock.class)
-public class PistonBlockMixin {
+class PistonBlockMixin {
     @Unique
     private BlockState stationapi_pushedBlockState;
 
     @Inject(
-            method = "onTileAction",
+            method = "onBlockAction",
             at = @At("HEAD")
     )
     private void stationapi_getPushedBlockState1(World world, int x, int y, int z, int direction, int meta, CallbackInfo ci) {
@@ -29,10 +29,10 @@ public class PistonBlockMixin {
     }
 
     @Inject(
-            method = "onTileAction",
+            method = "onBlockAction",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/level/Level;getTileId(III)I"
+                    target = "Lnet/minecraft/world/World;getBlockId(III)I"
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
@@ -44,10 +44,10 @@ public class PistonBlockMixin {
     }
 
     @Inject(
-            method = "onTileAction",
+            method = "onBlockAction",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/tileentity/TileEntityPiston;method_1518()I"
+                    target = "Lnet/minecraft/class_283;method_1518()I"
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
@@ -59,10 +59,10 @@ public class PistonBlockMixin {
     }
 
     @Inject(
-            method = "onTileAction",
+            method = "onBlockAction",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/MovingPiston;method_1533(IIIZZ)Lnet/minecraft/tileentity/TileEntityBase;"
+                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;method_1533(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;"
             )
     )
     private void stationapi_passPushedBlockState1(World world, int x, int y, int z, int direction, int meta, CallbackInfo ci) {
@@ -73,7 +73,7 @@ public class PistonBlockMixin {
             method = "method_766",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/level/Level;getTileId(III)I",
+                    target = "Lnet/minecraft/world/World;getBlockId(III)I",
                     ordinal = 1
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
@@ -89,7 +89,7 @@ public class PistonBlockMixin {
             method = "method_766",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/MovingPiston;method_1533(IIIZZ)Lnet/minecraft/tileentity/TileEntityBase;",
+                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;method_1533(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
                     ordinal = 0
             )
     )
@@ -101,7 +101,7 @@ public class PistonBlockMixin {
             method = "method_766",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/MovingPiston;method_1533(IIIZZ)Lnet/minecraft/tileentity/TileEntityBase;",
+                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;method_1533(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
                     ordinal = 1
             )
     )

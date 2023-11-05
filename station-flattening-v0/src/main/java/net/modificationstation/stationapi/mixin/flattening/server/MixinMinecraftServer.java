@@ -11,16 +11,14 @@ import java.io.File;
 
 @Mixin(MinecraftServer.class)
 public class MixinMinecraftServer {
-
-    @SuppressWarnings({"InvalidInjectorMethodSignature", "InvalidMemberReference", "UnresolvedMixinReference", "MixinAnnotationTarget"})
     @Redirect(
-            method = "prepareLevel",
+            method = "method_2159",
             at = @At(
                     value = "NEW",
-                    target = "(Ljava/io/File;Ljava/lang/String;Z)Lnet/minecraft/level/dimension/McRegionDimensionFile;"
+                    target = "(Ljava/io/File;Ljava/lang/String;Z)Lnet/minecraft/class_294;"
             )
     )
-    private class_294 flatten(File file, String string, boolean bl) {
+    private class_294 stationapi_flatten(File file, String string, boolean bl) {
         return new FlattenedDimensionFile(file, string, bl);
     }
 }

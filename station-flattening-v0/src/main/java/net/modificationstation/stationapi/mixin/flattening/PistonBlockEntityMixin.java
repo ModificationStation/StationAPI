@@ -34,11 +34,11 @@ class PistonBlockEntityMixin implements StationFlatteningPistonBlockEntity, Stat
     @Redirect(
             method = {
                     "method_1523",
-                    "tick"
+                    "method_1076"
             },
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/level/Level;placeBlockWithMetaData(IIIII)Z"
+                    target = "Lnet/minecraft/world/World;method_201(IIIII)Z"
             )
     )
     private boolean stationapi_setPushedBlockState(World world, int x, int y, int z, int blockId, int blockMeta) {
@@ -46,10 +46,10 @@ class PistonBlockEntityMixin implements StationFlatteningPistonBlockEntity, Stat
     }
 
     @Redirect(
-            method = "readIdentifyingData",
+            method = "readNbt",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/io/CompoundTag;getInt(Ljava/lang/String;)I",
+                    target = "Lnet/minecraft/nbt/NbtCompound;getInt(Ljava/lang/String;)I",
                     ordinal = 0
             )
     )
@@ -59,10 +59,10 @@ class PistonBlockEntityMixin implements StationFlatteningPistonBlockEntity, Stat
     }
 
     @Redirect(
-            method = "writeIdentifyingData",
+            method = "writeNbt",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/util/io/CompoundTag;put(Ljava/lang/String;I)V",
+                    target = "Lnet/minecraft/nbt/NbtCompound;putInt(Ljava/lang/String;I)V",
                     ordinal = 0
             )
     )

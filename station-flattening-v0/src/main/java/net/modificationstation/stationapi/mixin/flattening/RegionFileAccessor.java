@@ -6,7 +6,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(class_353.class)
 public interface RegionFileAccessor {
-
     @Accessor
-    int[] getOffsets();
+    int[] getField_1318();
 }
