@@ -1,10 +1,9 @@
 {
   "values": [
-    "diamond_block",
-    "diamond_ore",
-    "gold_block",
-    "gold_ore",
-    "redstone_ore",
-    "redstone_ore_lit"
+    "#storage_blocks/diamond",
+    "#storage_blocks/gold",
+    "#ores/diamond",
+    "#ores/gold",
+    "#ores/redstone"
   ]
 }

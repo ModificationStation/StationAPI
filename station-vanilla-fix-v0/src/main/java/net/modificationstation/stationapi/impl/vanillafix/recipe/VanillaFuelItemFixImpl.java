@@ -21,7 +21,8 @@ public final class VanillaFuelItemFixImpl {
             for (BlockBase block : BlockBase.BY_ID)
                 if (block != null && block.material == Material.WOOD && ItemBase.byId[block.id] != null)
                     FuelRegistry.addFuelItem(ItemBase.byId[block.id], 300);
-            FuelRegistry.addFuelItem(ItemBase.stick, 100);
+            //FuelRegistry.addFuelItem(ItemBase.stick, 100);
+            FuelRegistry.addFuelTag(ItemTags.WOODEN_STICKS, 100);
             FuelRegistry.addFuelTag(ItemTags.COALS, 1600);
             FuelRegistry.addFuelItem(ItemBase.lavaBucket, 20000);
             FuelRegistry.addFuelTag(ItemTags.SAPLINGS, 100);
