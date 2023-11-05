@@ -6,14 +6,15 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.atlas.CustomAtlasProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BlockItem.class)
-public class MixinBlock implements CustomAtlasProvider {
-
-    @Shadow private int blockId;
+class BlockItemMixin implements CustomAtlasProvider {
+    @Shadow private int itemId;
 
     @Override
+    @Unique
     public Atlas getAtlas() {
-        return Block.BLOCKS[blockId].getAtlas();
+        return Block.BLOCKS[itemId].getAtlas();
     }
 }

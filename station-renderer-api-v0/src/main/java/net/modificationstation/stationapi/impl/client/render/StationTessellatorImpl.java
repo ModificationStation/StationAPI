@@ -83,19 +83,19 @@ public class StationTessellatorImpl implements StationTessellator {
             fastVertexData[27] = Float.floatToRawIntBits(-damageUV.getX());
             fastVertexData[28] = Float.floatToRawIntBits(-damageUV.getY());
         }
-        if (!access.getDisableColour()) {
+        if (!access.getColorDisabled()) {
             fastVertexData[5] = colour0;
             fastVertexData[13] = colour1;
             fastVertexData[21] = colour2;
             fastVertexData[29] = colour3;
-            access.setHasColour(true);
+            access.setHasColor(true);
         }
         access.setHasTexture(true);
         access.setHasNormals(true);
-        System.arraycopy(fastVertexData, 0, access.stationapi$getBufferArray(), access.stationapi$getBufferPosition(), 24);
-        System.arraycopy(fastVertexData, 0, access.stationapi$getBufferArray(), access.stationapi$getBufferPosition() + 24, 8);
-        System.arraycopy(fastVertexData, 16, access.stationapi$getBufferArray(), access.stationapi$getBufferPosition() + 32, 16);
-        access.stationapi$setVertexAmount(access.stationapi$getVertexAmount() + 4);
+        System.arraycopy(fastVertexData, 0, access.stationapi$getBuffer(), access.stationapi$getBufferPosition(), 24);
+        System.arraycopy(fastVertexData, 0, access.stationapi$getBuffer(), access.stationapi$getBufferPosition() + 24, 8);
+        System.arraycopy(fastVertexData, 16, access.stationapi$getBuffer(), access.stationapi$getBufferPosition() + 32, 16);
+        access.stationapi$setAddedVertexCount(access.stationapi$getAddedVertexCount() + 4);
         access.stationapi$setBufferPosition(access.stationapi$getBufferPosition() + 48);
         access.stationapi$setVertexCount(access.stationapi$getVertexCount() + 6);
         ensureBufferCapacity(48);
@@ -106,7 +106,7 @@ public class StationTessellatorImpl implements StationTessellator {
         if (access.stationapi$getBufferPosition() >= access.stationapi$getBufferSize() - criticalCapacity) {
             LOGGER.info("Tessellator is nearing its maximum capacity. Increasing the buffer size from {} to {}", access.stationapi$getBufferSize(), access.stationapi$getBufferSize() * 2);
             access.stationapi$setBufferSize(access.stationapi$getBufferSize() * 2);
-            access.stationapi$setBufferArray(Arrays.copyOf(access.stationapi$getBufferArray(), access.stationapi$getBufferSize()));
+            access.stationapi$setBuffer(Arrays.copyOf(access.stationapi$getBuffer(), access.stationapi$getBufferSize()));
             ByteBuffer newBuffer = GlAllocationUtils.allocateByteBuffer(access.stationapi$getBufferSize() * 4);
             access.stationapi$setByteBuffer(newBuffer);
             access.stationapi$setIntBuffer(newBuffer.asIntBuffer());

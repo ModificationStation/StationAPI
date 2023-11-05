@@ -15,7 +15,7 @@ public class TextureHelper {
 
     public static BufferedImage readTextureStream(InputStream stream) {
         //noinspection deprecation
-        return ((TextureManagerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager).invokeReadImage(stream);
+        return ((TextureManagerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager).invokeMethod_1091(stream);
     }
 
     public static InputStream getTextureStream(String path) {

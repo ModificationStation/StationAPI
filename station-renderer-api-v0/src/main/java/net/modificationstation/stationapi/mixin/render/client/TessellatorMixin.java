@@ -8,8 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(Tessellator.class)
-public class MixinTessellator implements StationTessellator {
-
+class TessellatorMixin implements StationTessellator {
     @Unique
     private final StationTessellatorImpl stationapi$stationTessellatorImpl = new StationTessellatorImpl((Tessellator) (Object) this);
 

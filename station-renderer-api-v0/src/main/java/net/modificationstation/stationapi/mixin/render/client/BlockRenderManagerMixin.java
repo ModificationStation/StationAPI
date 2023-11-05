@@ -22,7 +22,7 @@ abstract class BlockRenderManagerMixin implements StationRendererBlockRenderMana
     @Unique
     private final Random stationapi_random = new Random();
 
-    @Shadow public abstract void renderAllSides(Block arg, int i, int j, int k);
+    @Shadow public abstract void renderWithoutCulling(Block arg, int i, int j, int k);
 
     @Shadow private BlockView blockView;
 
@@ -31,7 +31,7 @@ abstract class BlockRenderManagerMixin implements StationRendererBlockRenderMana
     @Unique
     public void renderAllSides(BlockState state, int x, int y, int z) {
         if (StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state) instanceof VanillaBakedModel)
-            renderAllSides(state.getBlock(), x, y, z);
+            renderWithoutCulling(state.getBlock(), x, y, z);
         else if (RendererAccess.INSTANCE.hasRenderer())
             RendererAccess.INSTANCE.getRenderer().bakedModelRenderer().renderBlock(state, stationapi_pos.set(x, y, z), blockView, false, stationapi_random);
     }

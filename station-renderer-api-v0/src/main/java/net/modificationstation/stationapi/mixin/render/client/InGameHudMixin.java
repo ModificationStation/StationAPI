@@ -16,19 +16,18 @@ import java.util.Objects;
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Mixin(InGameHud.class)
-public class MixinInGame extends DrawContext {
-
+class InGameHudMixin extends DrawContext {
     @Inject(
-            method = "renderHud(FZII)V",
+            method = "render",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/InGame;drawTextWithShadow(Lnet/minecraft/client/render/TextRenderer;Ljava/lang/String;III)V",
+                    target = "Lnet/minecraft/client/font/TextRenderer;drawWithShadow(Ljava/lang/String;III)V",
                     ordinal = 5,
                     shift = At.Shift.AFTER
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void showCurrentRenderer(float flag, boolean i, int j, int par4, CallbackInfo ci, class_564 var5, int var6, int var7, TextRenderer textRenderer) {
+    private void stationapi_showCurrentRenderer(float flag, boolean i, int j, int par4, CallbackInfo ci, class_564 var5, int var6, int var7, TextRenderer textRenderer) {
         drawTextWithShadow(textRenderer, "[" + NAMESPACE.getName() + "] Active renderer: " + (RendererAccess.INSTANCE.hasRenderer() ? Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).getClass().getSimpleName() : "none (vanilla)"), 2, 98, 14737632);
     }
 }

@@ -16,34 +16,33 @@ import java.util.List;
 
 @Mixin(TextureManager.class)
 public interface TextureManagerAccessor {
-
     @Accessor
     GameOptions getGameOptions();
 
     @Accessor
-    List<class_336> getTextureBinders();
+    List<class_336> getField_1251();
 
     @Accessor
     HashMap<String, Integer> getTextures();
 
     @Accessor
-    ByteBuffer getCurrentImageBuffer();
+    ByteBuffer getField_1250();
 
     @Accessor
-    void setCurrentImageBuffer(ByteBuffer byteBuffer);
+    void setField_1250(ByteBuffer byteBuffer);
 
     @Invoker
-    BufferedImage invokeReadImage(InputStream var1);
+    BufferedImage invokeMethod_1091(InputStream var1);
 
-    @Accessor("isBlurTexture")
+    @Accessor("field_1255")
     boolean stationapi$isBlurTexture();
 
-    @Accessor("isClampTexture")
+    @Accessor("field_1254")
     boolean stationapi$isClampTexture();
 
     @Invoker("method_1098")
     int stationapi$method_1098(int i, int j);
 
-    @Accessor("texturePackManager")
+    @Accessor("field_1256")
     class_303 stationapi$getTexturePackManager();
 }

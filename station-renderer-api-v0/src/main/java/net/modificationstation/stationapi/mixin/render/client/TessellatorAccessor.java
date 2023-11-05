@@ -10,12 +10,11 @@ import java.nio.IntBuffer;
 
 @Mixin(Tessellator.class)
 public interface TessellatorAccessor {
+    @Accessor
+    boolean getColorDisabled();
 
     @Accessor
-    boolean getDisableColour();
-
-    @Accessor
-    void setHasColour(boolean hasColour);
+    void setHasColor(boolean hasColor);
 
     @Accessor
     void setHasTexture(boolean hasTexture);
@@ -33,24 +32,24 @@ public interface TessellatorAccessor {
     double getZOffset();
 
     @Accessor
-    int getColour();
+    int getColor();
 
     @Accessor
     int getNormal();
 
-    @Accessor("vertexAmount")
-    int stationapi$getVertexAmount();
+    @Accessor("addedVertexCount")
+    int stationapi$getAddedVertexCount();
 
-    @Accessor("vertexAmount")
-    void stationapi$setVertexAmount(int vertexAmount);
+    @Accessor("addedVertexCount")
+    void stationapi$setAddedVertexCount(int vertexAmount);
 
-    @Accessor("bufferArray")
-    int[] stationapi$getBufferArray();
+    @Accessor("buffer")
+    int[] stationapi$getBuffer();
 
-    @Accessor("field_2068")
+    @Accessor("bufferPosition")
     int stationapi$getBufferPosition();
 
-    @Accessor("field_2068")
+    @Accessor("bufferPosition")
     void stationapi$setBufferPosition(int bufferPosition);
 
     @Accessor("vertexCount")
@@ -59,8 +58,8 @@ public interface TessellatorAccessor {
     @Accessor("vertexCount")
     void stationapi$setVertexCount(int vertexCount);
 
-    @Accessor("bufferArray")
-    void stationapi$setBufferArray(int[] bufferArray);
+    @Accessor("buffer")
+    void stationapi$setBuffer(int[] buffer);
 
     @Accessor("bufferSize")
     int stationapi$getBufferSize();

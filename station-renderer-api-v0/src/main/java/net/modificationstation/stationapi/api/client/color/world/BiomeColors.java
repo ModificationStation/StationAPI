@@ -5,7 +5,7 @@ import net.minecraft.class_334;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.client.level.ColorResolver;
-import net.modificationstation.stationapi.mixin.render.client.WaterColourAccessor;
+import net.modificationstation.stationapi.mixin.render.client.WaterColorAccessor;
 
 public class BiomeColors {
 
@@ -15,7 +15,7 @@ public class BiomeColors {
         rainfall *= temperature;
         int var4 = (int)((1.0D - temperature) * 255.0D);
         int var5 = (int)((1.0D - rainfall) * 255.0D);
-        return WaterColourAccessor.stationapi$getMap()[(var5 << 8) | var4];
+        return WaterColorAccessor.stationapi$getMap()[(var5 << 8) | var4];
     };
 
     private static int getColor(BlockView world, BlockPos pos, ColorResolver resolver) {

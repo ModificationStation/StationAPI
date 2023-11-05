@@ -6,8 +6,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(TextureManager.class)
-public class MixinTextureManager implements StationTextureManagerImpl.StationTextureManagerAccess {
-
+class TextureManagerMixin implements StationTextureManagerImpl.StationTextureManagerAccess {
+    @SuppressWarnings("DataFlowIssue")
     @Unique
     private final StationTextureManagerImpl stationapi$stationTextureManagerImpl = new StationTextureManagerImpl((TextureManager) (Object) this);
 

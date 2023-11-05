@@ -12,45 +12,49 @@ import net.modificationstation.stationapi.api.client.texture.binder.StationTextu
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.function.Function;
 
 @Mixin(Item.class)
 @EnvironmentInterface(value = EnvType.CLIENT, itf = StationRendererItem.class)
-public abstract class MixinItemBase implements StationRendererItem {
-
-    @Shadow public abstract Item setTexturePosition(int i);
+abstract class ItemMixin implements StationRendererItem {
+    @Shadow public abstract Item method_458(int i);
 
     @Shadow public abstract Item setTexturePosition(int i, int j);
 
     @Override
     @Environment(EnvType.CLIENT)
+    @Unique
     public Atlas getAtlas() {
         return Atlases.getGuiItems();
     }
 
     @Override
     @Environment(EnvType.CLIENT)
+    @Unique
     public Atlas.Sprite setTexture(Identifier textureIdentifier) {
         Atlas.Sprite texture = ((ExpandableAtlas) getAtlas()).addTexture(textureIdentifier);
-        setTexturePosition(texture.index);
+        method_458(texture.index);
         return texture;
     }
 
     @Override
     @Deprecated
     @Environment(EnvType.CLIENT)
+    @Unique
     public Atlas.Sprite setTexture(String texturePath) {
         Atlas.Sprite texture = ((ExpandableAtlas) getAtlas()).addTexture(texturePath);
-        setTexturePosition(texture.index);
+        method_458(texture.index);
         return texture;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
+    @Unique
     public <E extends StationTextureBinder> E setTextureBinder(Identifier staticReference, Function<Atlas.Sprite, E> initializer) {
         E textureBinder = ((ExpandableAtlas) getAtlas()).addTextureBinder(staticReference, initializer);
-        setTexturePosition(textureBinder.field_1412);
+        method_458(textureBinder.field_1412);
         return textureBinder;
     }
 }
