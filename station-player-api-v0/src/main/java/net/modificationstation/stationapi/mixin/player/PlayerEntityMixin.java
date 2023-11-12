@@ -35,8 +35,7 @@ import java.util.List;
 import java.util.Random;
 
 @Mixin(PlayerEntity.class)
-public abstract class MixinPlayerBase extends LivingEntity implements PlayerBaseSettersGetters, PlayerHandlerContainer, PlayerBaseSuper {
-
+class PlayerEntityMixin extends LivingEntity implements PlayerBaseSettersGetters, PlayerHandlerContainer, PlayerBaseSuper {
     @Shadow
     public PlayerInventory inventory;
     @Shadow
@@ -44,7 +43,7 @@ public abstract class MixinPlayerBase extends LivingEntity implements PlayerBase
     @Unique
     private List<PlayerHandler> playerBases;
 
-    public MixinPlayerBase(World world) {
+    private PlayerEntityMixin(World world) {
         super(world);
     }
 
@@ -62,50 +61,82 @@ public abstract class MixinPlayerBase extends LivingEntity implements PlayerBase
         return playerBases;
     }
 
-    @Inject(method = "tickHandSwing", at = @At("HEAD"), cancellable = true)
-    private void onUpdatePlayerActionState(CallbackInfo ci) {
+    @Inject(
+            method = "method_910",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_onUpdatePlayerActionState(CallbackInfo ci) {
         if (PlayerAPI.updatePlayerActionState((PlayerEntity) (Object) this))
             ci.cancel();
     }
 
-    @Inject(method = "writeCustomDataToTag", at = @At("HEAD"), cancellable = true)
-    private void onWriteEntityToNBT(NbtCompound nbtTagCompound, CallbackInfo ci) {
+    @Inject(
+            method = "writeNbt",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_onWriteEntityToNBT(NbtCompound nbtTagCompound, CallbackInfo ci) {
         if (PlayerAPI.writeEntityToNBT((PlayerEntity) (Object) this, nbtTagCompound))
             ci.cancel();
     }
 
-    @Inject(method = "readCustomDataFromTag", at = @At("HEAD"), cancellable = true)
-    private void onReadEntityFromNBT(NbtCompound nbtTagCompound, CallbackInfo ci) {
+    @Inject(
+            method = "readNbt",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_onReadEntityFromNBT(NbtCompound nbtTagCompound, CallbackInfo ci) {
         if (PlayerAPI.readEntityFromNBT((PlayerEntity) (Object) this, nbtTagCompound))
             ci.cancel();
     }
 
-    @Inject(method = "closeContainer", at = @At("HEAD"), cancellable = true)
-    private void onCloseScreen(CallbackInfo ci) {
+    @Inject(
+            method = "closeScreen",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_onCloseScreen(CallbackInfo ci) {
         if (PlayerAPI.onExitGUI((PlayerEntity) (Object) this))
             ci.cancel();
     }
 
-    @Inject(method = "openChestScreen", at = @At("HEAD"), cancellable = true)
-    private void onDisplayGUIChest(Inventory iInventory, CallbackInfo ci) {
+    @Inject(
+            method = "method_486",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_onDisplayGUIChest(Inventory iInventory, CallbackInfo ci) {
         if (PlayerAPI.displayGUIChest((PlayerEntity) (Object) this, iInventory))
             ci.cancel();
     }
 
-    @Inject(method = "openCraftingScreen", at = @At("HEAD"), cancellable = true)
-    private void onDisplayWorkbenchGUI(int i, int i1, int i2, CallbackInfo ci) {
+    @Inject(
+            method = "method_484",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_onDisplayWorkbenchGUI(int i, int i1, int i2, CallbackInfo ci) {
         if (PlayerAPI.displayWorkbenchGUI((PlayerEntity) (Object) this, i, i1, i2))
             ci.cancel();
     }
 
-    @Inject(method = "openFurnaceScreen", at = @At("HEAD"), cancellable = true)
-    private void onDisplayGUIFurnace(FurnaceBlockEntity tileEntityFurnace, CallbackInfo ci) {
+    @Inject(
+            method = "method_487",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_onDisplayGUIFurnace(FurnaceBlockEntity tileEntityFurnace, CallbackInfo ci) {
         if (PlayerAPI.displayGUIFurnace((PlayerEntity) (Object) this, tileEntityFurnace))
             ci.cancel();
     }
 
-    @Inject(method = "openDispenserScreen", at = @At("HEAD"), cancellable = true)
-    private void onDisplayGUIDispenser(DispenserBlockEntity tileEntityDispenser, CallbackInfo ci) {
+    @Inject(
+            method = "method_485",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_onDisplayGUIDispenser(DispenserBlockEntity tileEntityDispenser, CallbackInfo ci) {
         if (PlayerAPI.displayGUIDispenser((PlayerEntity) (Object) this, tileEntityDispenser))
             ci.cancel();
     }
@@ -117,8 +148,12 @@ public abstract class MixinPlayerBase extends LivingEntity implements PlayerBase
         super.method_1340(v, v1, v2);
     }
 
-    @Inject(method = "getStrengh(Lnet/minecraft/block/BlockBase;)F", at = @At("RETURN"), cancellable = true)
-    private void getStrength(Block arg, CallbackInfoReturnable<Float> cir) {
+    @Inject(
+            method = "method_511",
+            at = @At("RETURN"),
+            cancellable = true
+    )
+    private void stationapi_getStrength(Block arg, CallbackInfoReturnable<Float> cir) {
         cir.setReturnValue(PlayerAPI.getCurrentPlayerStrVsBlock((PlayerEntity) (Object) this, arg, cir.getReturnValue()));
     }
 
@@ -129,26 +164,41 @@ public abstract class MixinPlayerBase extends LivingEntity implements PlayerBase
     }
 
     @Environment(EnvType.CLIENT)
-    @Inject(method = "respawn", at = @At("HEAD"), cancellable = true)
-    private void onRespawnPlayer(CallbackInfo ci) {
+    @Inject(
+            method = "respawn",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_onRespawnPlayer(CallbackInfo ci) {
         if (PlayerAPI.respawn((PlayerEntity) (Object) this))
             ci.cancel();
     }
 
-    @Inject(method = "updateDespawnCounter", at = @At("HEAD"), cancellable = true)
-    private void onLivingUpdate(CallbackInfo ci) {
+    @Inject(
+            method = "method_937",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_onLivingUpdate(CallbackInfo ci) {
         if (PlayerAPI.onLivingUpdate((PlayerEntity) (Object) this))
             ci.cancel();
     }
 
-    @Inject(method = "tick()V", at = @At("HEAD"), cancellable = true)
-    private void beforeTick(CallbackInfo ci) {
+    @Inject(
+            method = "tick()V",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_beforeTick(CallbackInfo ci) {
         PlayerAPI.beforeUpdate((PlayerEntity) (Object) this);
         if (PlayerAPI.onUpdate((PlayerEntity) (Object) this))
             ci.cancel();
     }
 
-    @Inject(method = "tick()V", at = @At("RETURN"))
+    @Inject(
+            method = "tick()V",
+            at = @At("RETURN")
+    )
     private void afterTick(CallbackInfo ci) {
         PlayerAPI.afterUpdate((PlayerEntity) (Object) this);
     }
@@ -167,8 +217,12 @@ public abstract class MixinPlayerBase extends LivingEntity implements PlayerBase
         PlayerAPI.afterMoveEntity((PlayerEntity) (Object) this, v, v1, v2);
     }
 
-    @Inject(method = "trySleep(III)Lnet/minecraft/util/SleepStatus;", at = @At("HEAD"), cancellable = true)
-    public void trySleep(int i, int i1, int i2, CallbackInfoReturnable<class_141> cir) {
+    @Inject(
+            method = "method_495",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    public void stationapi_trySleep(int i, int i1, int i2, CallbackInfoReturnable<class_141> cir) {
         PlayerAPI.beforeSleepInBedAt((PlayerEntity) (Object) this, i, i1, i2);
         class_141 enumstatus = PlayerAPI.sleepInBedAt((PlayerEntity) (Object) this, i, i1, i2);
         if (enumstatus != null)
@@ -215,8 +269,12 @@ public abstract class MixinPlayerBase extends LivingEntity implements PlayerBase
         eyeHeight = f;
     }
 
-    @Inject(method = "travel(FF)V", at = @At("HEAD"), cancellable = true)
-    private void travel(float f, float f1, CallbackInfo ci) {
+    @Inject(
+            method = "method_945",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_travel(float f, float f1, CallbackInfo ci) {
         if (PlayerAPI.moveEntityWithHeading((PlayerEntity) (Object) this, f, f1))
             ci.cancel();
     }
@@ -238,14 +296,22 @@ public abstract class MixinPlayerBase extends LivingEntity implements PlayerBase
         return PlayerAPI.isInsideOfMaterial((PlayerEntity) (Object) this, material, super.isInFluid(material));
     }
 
-    @Inject(method = "dropSelectedItem()V", at = @At("HEAD"), cancellable = true)
-    private void dropSelectedItem(CallbackInfo ci) {
+    @Inject(
+            method = "dropSelectedItem()V",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_dropSelectedItem(CallbackInfo ci) {
         if (PlayerAPI.dropCurrentItem((PlayerEntity) (Object) this))
             ci.cancel();
     }
 
-    @Inject(method = "dropItem(Lnet/minecraft/item/ItemInstance;)V", at = @At("HEAD"), cancellable = true)
-    private void dropItem(ItemStack arg, CallbackInfo ci) {
+    @Inject(
+            method = "method_513",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_dropItem(ItemStack arg, CallbackInfo ci) {
         if (PlayerAPI.dropPlayerItem((PlayerEntity) (Object) this, arg))
             ci.cancel();
     }
@@ -274,8 +340,12 @@ public abstract class MixinPlayerBase extends LivingEntity implements PlayerBase
         return super.method_912();
     }
 
-    @Inject(method = "canRemoveBlock(Lnet/minecraft/block/BlockBase;)Z", at = @At("HEAD"), cancellable = true)
-    private void canRemoveBlock(Block arg, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(
+            method = "method_514",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_canRemoveBlock(Block arg, CallbackInfoReturnable<Boolean> cir) {
         Boolean canHarvestBlock = PlayerAPI.canHarvestBlock((PlayerEntity) (Object) this, arg);
         if (canHarvestBlock != null)
             cir.setReturnValue(canHarvestBlock);
@@ -288,8 +358,12 @@ public abstract class MixinPlayerBase extends LivingEntity implements PlayerBase
         }
     }
 
-    @Inject(method = "handleFallDamage(F)V", at = @At("HEAD"), cancellable = true)
-    private void handleFallDamage(float height, CallbackInfo ci) {
+    @Inject(
+            method = "method_1389",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_handleFallDamage(float height, CallbackInfo ci) {
         if (PlayerAPI.fall((PlayerEntity) (Object) this, height))
             ci.cancel();
     }
@@ -299,8 +373,12 @@ public abstract class MixinPlayerBase extends LivingEntity implements PlayerBase
         super.method_1389(f);
     }
 
-    @Inject(method = "jump()V", at = @At("HEAD"), cancellable = true)
-    private void jump(CallbackInfo ci) {
+    @Inject(
+            method = "method_944",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_jump(CallbackInfo ci) {
         if (PlayerAPI.jump((PlayerEntity) (Object) this))
             ci.cancel();
     }
@@ -333,8 +411,12 @@ public abstract class MixinPlayerBase extends LivingEntity implements PlayerBase
         super.attack(entity);
     }*/
 
-    @Inject(method = "attack(Lnet/minecraft/entity/EntityBase;)V", at = @At("HEAD"), cancellable = true)
-    private void attackTargetEntityWithCurrentItem(Entity arg, CallbackInfo ci) {
+    @Inject(
+            method = "attack",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_attackTargetEntityWithCurrentItem(Entity arg, CallbackInfo ci) {
         if (PlayerAPI.attackTargetEntityWithCurrentItem((PlayerEntity) (Object) this, arg))
             ci.cancel();
     }
@@ -370,14 +452,22 @@ public abstract class MixinPlayerBase extends LivingEntity implements PlayerBase
         super.dropItem(itemstack, flag);
     }*/
 
-    @Inject(method = "dropItem(Lnet/minecraft/item/ItemInstance;Z)V", at = @At("HEAD"), cancellable = true)
-    public void dropPlayerItemWithRandomChoice(ItemStack arg, boolean flag, CallbackInfo ci) {
+    @Inject(
+            method = "method_509",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    public void stationapi_dropPlayerItemWithRandomChoice(ItemStack arg, boolean flag, CallbackInfo ci) {
         if (PlayerAPI.dropPlayerItemWithRandomChoice((PlayerEntity) (Object) this, arg, flag))
             ci.cancel();
     }
 
-    @Inject(method = "applyDamage(I)V", at = @At("HEAD"), cancellable = true)
-    private void applyDamage(int initialDamage, CallbackInfo ci) {
+    @Inject(
+            method = "method_946",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void stationapi_applyDamage(int initialDamage, CallbackInfo ci) {
         if (PlayerAPI.damageEntity((PlayerEntity) (Object) this, initialDamage))
             ci.cancel();
     }

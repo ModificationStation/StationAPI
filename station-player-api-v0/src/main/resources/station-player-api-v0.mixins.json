@@ -4,13 +4,13 @@
   "package": "net.modificationstation.stationapi.mixin.player",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinPlayerBase"
+    "PlayerEntityMixin"
   ],
   "server": [
-    "server.ServerPlayerPacketHandlerAccessor"
+    "server.ServerPlayNetworkHandlerAccessor"
   ],
   "client": [
-    "client.MixinAbstractClientPlayer"
+    "client.ClientPlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

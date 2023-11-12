@@ -9,8 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Environment(EnvType.SERVER)
 @Mixin(ServerPlayNetworkHandler.class)
-public interface ServerPlayerPacketHandlerAccessor {
-
+public interface ServerPlayNetworkHandlerAccessor {
     @Accessor
-    ServerPlayerEntity getServerPlayer();
+    ServerPlayerEntity getField_920();
 }

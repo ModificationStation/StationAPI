@@ -4,7 +4,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.modificationstation.stationapi.impl.entity.player.PlayerHelperImpl;
-import net.modificationstation.stationapi.mixin.player.server.ServerPlayerPacketHandlerAccessor;
+import net.modificationstation.stationapi.mixin.player.server.ServerPlayNetworkHandlerAccessor;
 
 public class PlayerHelperServerImpl extends PlayerHelperImpl {
 
@@ -15,6 +15,6 @@ public class PlayerHelperServerImpl extends PlayerHelperImpl {
 
     @Override
     public PlayerEntity getPlayerFromPacketHandler(NetworkHandler packetHandler) {
-        return packetHandler instanceof ServerPlayNetworkHandler ? ((ServerPlayerPacketHandlerAccessor) packetHandler).getServerPlayer() : getPlayerFromGame();
+        return packetHandler instanceof ServerPlayNetworkHandler ? ((ServerPlayNetworkHandlerAccessor) packetHandler).getField_920() : getPlayerFromGame();
     }
 }
