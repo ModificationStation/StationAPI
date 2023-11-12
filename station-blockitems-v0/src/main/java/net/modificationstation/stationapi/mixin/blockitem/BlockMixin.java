@@ -52,8 +52,8 @@ class BlockMixin implements StationBlockItemsBlock {
     @WrapOperation(
             method = "<clinit>",
             at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/item/BlockItem;<init>(I)V"
+                    value = "NEW",
+                    target = "(I)Lnet/minecraft/item/BlockItem;"
             )
     )
     private static BlockItem stationapi_getBlockItem(int blockId, Operation<BlockItem> currentFactory) {
