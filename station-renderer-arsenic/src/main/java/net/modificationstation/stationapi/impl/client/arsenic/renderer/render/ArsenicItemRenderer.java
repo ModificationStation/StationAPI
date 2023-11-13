@@ -162,8 +162,8 @@ public final class ArsenicItemRenderer {
 
     public void renderItemOnGui(TextRenderer textRenderer, TextureManager textureManager, ItemStack itemStack, int x, int y, CallbackInfo ci) {
         if (itemStack != null) {
-            Item itemBase = itemStack.getItem();
-            if (itemBase instanceof ItemWithRenderer renderer) {
+            Item item = itemStack.getItem();
+            if (item instanceof ItemWithRenderer renderer) {
                 renderer.renderItemOnGui(itemRenderer, textRenderer, textureManager, itemStack, x, y);
                 ci.cancel();
             } else if (!(RendererHolder.RENDERER.getItemModels().getModel(itemStack) instanceof VanillaBakedModel)) { // TODO: implement a better check
