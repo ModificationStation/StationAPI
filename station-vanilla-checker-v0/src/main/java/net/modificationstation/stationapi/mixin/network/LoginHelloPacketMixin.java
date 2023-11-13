@@ -13,8 +13,7 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.impl.network.VanillaChecker.MASK;
 
 @Mixin(LoginHelloPacket.class)
-public class MixinLoginRequest0x1Packet {
-
+class LoginHelloPacketMixin {
     @Shadow public String username;
 
     @Shadow public long worldSeed;
@@ -24,7 +23,7 @@ public class MixinLoginRequest0x1Packet {
             at = @At("RETURN")
     )
     @Environment(EnvType.SERVER)
-    private void injectStAPIFlag(String username, int protocolVersion, long worldSeed, byte dimensionId, CallbackInfo ci) {
+    private void stationapi_injectStAPIFlag(String username, int protocolVersion, long worldSeed, byte dimensionId, CallbackInfo ci) {
         this.username += NAMESPACE + ";";
     }
 
@@ -33,7 +32,7 @@ public class MixinLoginRequest0x1Packet {
             at = @At("RETURN")
     )
     @Environment(EnvType.CLIENT)
-    private void injectStAPIFlag(String username, int protocolVersion, CallbackInfo ci) {
+    private void stationapi_injectStAPIFlag(String username, int protocolVersion, CallbackInfo ci) {
         worldSeed |= MASK;
     }
 }

@@ -7,17 +7,18 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(NetworkHandler.class)
-public class MixinPacketHandler implements ModdedPacketHandler, ModdedPacketHandlerSetter {
-
+class NetworkHandlerMixin implements ModdedPacketHandler, ModdedPacketHandlerSetter {
     @Unique
     private boolean modded;
 
     @Override
+    @Unique
     public boolean isModded() {
         return modded;
     }
 
     @Override
+    @Unique
     public void setModded() {
         modded = true;
     }

@@ -4,11 +4,11 @@
   "package": "net.modificationstation.stationapi.mixin.network",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinLoginRequest0x1Packet",
-    "MixinPacketHandler"
+    "LoginHelloPacketMixin",
+    "NetworkHandlerMixin"
   ],
   "server": [
-    "server.MixinServerPacketHandler"
+    "server.ServerLoginNetworkHandlerMixin"
   ],
   "client": [
   ],

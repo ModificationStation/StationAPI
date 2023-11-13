@@ -15,19 +15,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ServerLoginNetworkHandler.class)
-public class MixinServerPacketHandler {
-
+class ServerLoginNetworkHandlerMixin {
     @Inject(
-            method = "complete(Lnet/minecraft/packet/login/LoginRequest0x1Packet;)V",
+            method = "accept",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/network/ServerPlayerPacketHandler;<init>(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/server/network/ClientConnection;Lnet/minecraft/entity/player/ServerPlayer;)V",
+                    target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;<init>(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/network/Connection;Lnet/minecraft/entity/player/ServerPlayerEntity;)V",
                     shift = At.Shift.BY,
                     by = 2
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void checkModded(LoginHelloPacket arg, CallbackInfo ci, ServerPlayerEntity var2, class_73 var3, Vec3i var4, ServerPlayNetworkHandler var5) {
+    private void stationapi_checkModded(LoginHelloPacket arg, CallbackInfo ci, ServerPlayerEntity var2, class_73 var3, Vec3i var4, ServerPlayNetworkHandler var5) {
         if (((ModdedPacketHandler) this).isModded())
             ((ModdedPacketHandlerSetter) var5).setModded();
     }
