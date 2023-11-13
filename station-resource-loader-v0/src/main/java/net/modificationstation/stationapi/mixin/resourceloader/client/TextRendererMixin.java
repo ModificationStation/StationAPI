@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.Objects;
 
 @Mixin(TextRenderer.class)
-public class TextRendererMixin {
+class TextRendererMixin {
     @ModifyExpressionValue(
             method = "<init>",
             at = @At(

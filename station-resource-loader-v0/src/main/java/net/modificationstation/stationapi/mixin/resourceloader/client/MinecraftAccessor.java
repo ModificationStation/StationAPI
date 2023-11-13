@@ -8,10 +8,9 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Minecraft.class)
 public interface MinecraftAccessor {
-
     @Accessor
-    Timer getTickTimer();
+    Timer getTimer();
 
     @Invoker
-    void invokePrintOpenGLError(String location);
+    void invokeLogGlError(String phase);
 }

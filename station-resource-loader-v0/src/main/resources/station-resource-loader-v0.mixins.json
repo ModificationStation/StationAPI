@@ -7,12 +7,12 @@
   ],
   "client": [
     "client.MinecraftAccessor",
-    "client.MixinMinecraft",
-    "client.MixinTexturePack",
-    "client.MixinZippedTexturePack",
+    "client.MinecraftMixin",
     "client.TessellatorAccessor",
     "client.TextRendererMixin",
-    "client.ZippedTexturePackAccessor"
+    "client.TexturePackMixin",
+    "client.ZipTexturePackAccessor",
+    "client.ZipTexturePackMixin"
   ],
   "injectors": {
     "defaultRequire": 1

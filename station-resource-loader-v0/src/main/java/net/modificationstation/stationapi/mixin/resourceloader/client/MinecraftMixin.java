@@ -27,8 +27,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 @Environment(EnvType.CLIENT)
-public class MixinMinecraft {
-    @Shadow public World level;
+class MinecraftMixin {
+    @Shadow public World world;
 
     @Unique
     private static final String STATIONAPI$MINECRAFT_LOCATION_FORMAT = "Minecraft: %s";
@@ -37,7 +37,7 @@ public class MixinMinecraft {
             method = "init",
             at = @At(
                     value = "NEW",
-                    target = "(Lnet/minecraft/client/TexturePackManager;Lnet/minecraft/client/options/GameOptions;)Lnet/minecraft/client/texture/TextureManager;"
+                    target = "(Lnet/minecraft/client/Minecraft;Ljava/io/File;)Lnet/minecraft/class_303;"
             )
     )
     private void stationapi_location_textureManager(CallbackInfo ci) {
@@ -73,7 +73,7 @@ public class MixinMinecraft {
             method = "init",
             at = @At(
                     value = "NEW",
-                    target = "(Lnet/minecraft/client/options/GameOptions;Ljava/lang/String;Lnet/minecraft/client/texture/TextureManager;)Lnet/minecraft/client/render/TextRenderer;"
+                    target = "(Lnet/minecraft/client/option/GameOptions;Ljava/lang/String;Lnet/minecraft/client/texture/TextureManager;)Lnet/minecraft/client/font/TextRenderer;"
             )
     )
     private void stationapi_location_textRenderer(CallbackInfo ci) {
@@ -84,7 +84,7 @@ public class MixinMinecraft {
             method = "init",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/texture/TextureManager;getColorMap(Ljava/lang/String;)[I",
+                    target = "Lnet/minecraft/client/texture/TextureManager;method_1092(Ljava/lang/String;)[I",
                     ordinal = 0
             )
     )
@@ -96,7 +96,7 @@ public class MixinMinecraft {
             method = "init",
             at = @At(
                     value = "NEW",
-                    target = "(Lnet/minecraft/client/util/Session;Ljava/io/File;)Lnet/minecraft/util/io/StatsFileWriter;"
+                    target = "(Lnet/minecraft/client/util/Session;Ljava/io/File;)Lnet/minecraft/class_96;"
             )
     )
     private void stationapi_location_stats(CallbackInfo ci) {
