@@ -11,10 +11,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(SheepEntity.class)
-public class MixinSheep {
-
-    @Redirect(method = "interact(Lnet/minecraft/entity/player/PlayerBase;)Z", at = @At(value = "FIELD", target = "Lnet/minecraft/item/ItemInstance;itemId:I", opcode = Opcodes.GETFIELD))
-    private int hijackSheepShearing(ItemStack itemInstance) {
+class SheepEntityMixin {
+    @Redirect(
+            method = "method_1323",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/item/ItemStack;itemId:I",
+                    opcode = Opcodes.GETFIELD
+            )
+    )
+    private int stationapi_hijackSheepShearing(ItemStack itemInstance) {
         return StationAPI.EVENT_BUS.post(
                 ShearsOverrideEvent.builder()
                         .itemStack(itemInstance)

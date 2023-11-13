@@ -11,8 +11,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ToolItem.class)
-public class MixinToolBase implements StationToolItem {
-
+class ToolItemMixin implements StationToolItem {
     @Shadow protected ToolMaterial toolMaterial;
     @Unique
     private TagKey<Block> stationapi_effectiveBlocks;

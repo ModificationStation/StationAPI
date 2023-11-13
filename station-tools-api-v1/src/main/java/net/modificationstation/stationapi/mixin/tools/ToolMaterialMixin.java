@@ -7,8 +7,8 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.item.tool.StationToolMaterial;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,8 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collections;
 
 @Mixin(ToolMaterial.class)
-public class MixinToolMaterial implements StationToolMaterial {
-
+class ToolMaterialMixin implements StationToolMaterial {
     @Unique
     private TagKey<Block> stationapi_requiredBlockTag;
     @Unique
@@ -31,7 +30,7 @@ public class MixinToolMaterial implements StationToolMaterial {
             method = "<init>(Ljava/lang/String;IIIFI)V",
             at = @At("RETURN")
     )
-    private void init(String i, int j, int k, int f, float l, int par6, CallbackInfo ci) {
+    private void stationapi_init(String i, int j, int k, int f, float l, int par6, CallbackInfo ci) {
         stationapi_parentMaterials = new ReferenceOpenHashSet<>();
         stationapi_parentMaterialsView = ReferenceSets.unmodifiable(stationapi_parentMaterials);
     }

@@ -1,31 +1,30 @@
 package net.modificationstation.stationapi.mixin.tools;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.HoeItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShearsItem;
 import net.minecraft.item.ToolMaterial;
-import net.modificationstation.stationapi.api.item.tool.StationShearsItem;
+import net.modificationstation.stationapi.api.item.tool.StationHoeItem;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ShearsItem.class)
-public class MixinShears implements StationShearsItem {
-
+@Mixin(HoeItem.class)
+class HoeItemMixin implements StationHoeItem {
     @Unique
     private ToolMaterial stationapi_toolMaterial;
     @Unique
     private TagKey<Block> stationapi_effectiveBlocks;
 
-    @Inject(method = "<init>(I)V", at = @At("RETURN"))
-    private void captureToolMaterial(int i, CallbackInfo ci) {
-        stationapi_toolMaterial = ToolMaterial.IRON;
-        setEffectiveBlocks(TagKey.of(BlockRegistry.INSTANCE.getKey(), Identifier.of("mineable/shears")));
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void stationapi_captureToolMaterial(int i, ToolMaterial arg, CallbackInfo ci) {
+        stationapi_toolMaterial = arg;
+        setEffectiveBlocks(TagKey.of(BlockRegistry.INSTANCE.getKey(), Identifier.of("mineable/hoe")));
     }
 
     @Override

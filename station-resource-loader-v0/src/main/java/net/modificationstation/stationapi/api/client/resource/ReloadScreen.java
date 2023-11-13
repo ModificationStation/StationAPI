@@ -357,6 +357,6 @@ class ReloadScreen extends Screen {
     }
 
     void setTextRenderer(TextRenderer textRenderer) {
-        textRenderer = textRenderer;
+        this.textRenderer = textRenderer;
     }
 }

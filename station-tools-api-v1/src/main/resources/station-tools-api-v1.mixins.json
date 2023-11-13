@@ -4,15 +4,15 @@
   "package": "net.modificationstation.stationapi.mixin.tools",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinHatchet",
-    "MixinHoe",
-    "MixinPickaxe",
-    "MixinShears",
-    "MixinSheep",
-    "MixinShovel",
-    "MixinSword",
-    "MixinToolBase",
-    "MixinToolMaterial"
+    "AxeItemMixin",
+    "HoeItemMixin",
+    "PickaxeItemMixin",
+    "ShearsItemMixin",
+    "SheepEntityMixin",
+    "ShovelItemMixin",
+    "SwordItemMixin",
+    "ToolItemMixin",
+    "ToolMaterialMixin"
   ],
   "server": [
   ],
