@@ -10,29 +10,28 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-public class MixinMinecraft {
-
+class MinecraftMixin {
     @Inject(
-            method = "tick()V",
+            method = "tick",
             at = @At("RETURN")
     )
-    private void endTick(CallbackInfo ci) {
+    private void stationapi_endTick(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(GameTickEvent.End.builder().build());
     }
 
     @SuppressWarnings("DefaultAnnotationParam")
     @Inject(
-            method = "run()V",
+            method = "run",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/Minecraft;printOpenGLError(Ljava/lang/String;)V",
+                    target = "Lnet/minecraft/client/Minecraft;logGlError(Ljava/lang/String;)V",
                     ordinal = 0,
                     shift = At.Shift.AFTER,
                     remap = true
             ),
             remap = false
     )
-    private void startRenderTick(CallbackInfo ci) {
+    private void stationapi_startRenderTick(CallbackInfo ci) {
         TickScheduler.CLIENT_RENDER_START.tick();
     }
 
@@ -41,13 +40,13 @@ public class MixinMinecraft {
             method = "run()V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/Minecraft;printOpenGLError(Ljava/lang/String;)V",
+                    target = "Lnet/minecraft/client/Minecraft;logGlError(Ljava/lang/String;)V",
                     ordinal = 1,
                     remap = true
             ),
             remap = false
     )
-    private void endRenderTick(CallbackInfo ci) {
+    private void stationapi_endRenderTick(CallbackInfo ci) {
         TickScheduler.CLIENT_RENDER_END.tick();
     }
 }

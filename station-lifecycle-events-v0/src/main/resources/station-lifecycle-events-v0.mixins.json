@@ -4,17 +4,17 @@
   "package": "net.modificationstation.stationapi.mixin.lifecycle",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "server.MixinServerPlayerPacketHandler"
+    "server.ServerPlayNetworkHandlerMixin"
   ],
   "server": [
-    "server.MixinMinecraftServer",
-    "server.MixinPendingConnection"
+    "server.MinecraftServerMixin",
+    "server.ServerLoginNetworkHandlerMixin"
   ],
   "client": [
-    "client.MixinClientLevel",
-    "client.MixinClientPlayNetworkHandler",
-    "client.MixinMinecraft",
-    "client.MixinTextureManager"
+    "client.ClientNetworkHandlerMixin",
+    "client.ClientWorldMixin",
+    "client.MinecraftMixin",
+    "client.TextureManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

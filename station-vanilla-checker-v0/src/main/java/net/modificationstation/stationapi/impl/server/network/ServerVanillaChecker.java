@@ -28,11 +28,11 @@ public class ServerVanillaChecker {
 
     @EventListener
     private static void onPlayerLogin(PlayerAttemptLoginEvent event) {
-        if ((event.loginRequestPacket.worldSeed & MASK) == MASK)
-            ((ModdedPacketHandlerSetter) event.serverPacketHandler).setModded();
+        if ((event.loginHelloPacket.worldSeed & MASK) == MASK)
+            ((ModdedPacketHandlerSetter) event.serverLoginNetworkHandler).setModded();
         else if (!CLIENT_REQUIRED_MODS.isEmpty()) {
-            LOGGER.error("Player \"" + event.loginRequestPacket.username + "\" attempted joining the server without " + NAMESPACE.getName() + ", disconnecting.");
-            event.serverPacketHandler.disconnect(I18n.getTranslation("disconnect.stationapi:missing_station"));
+            LOGGER.error("Player \"" + event.loginHelloPacket.username + "\" attempted joining the server without " + NAMESPACE.getName() + ", disconnecting.");
+            event.serverLoginNetworkHandler.disconnect(I18n.getTranslation("disconnect.stationapi:missing_station"));
         }
     }
 

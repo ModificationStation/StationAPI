@@ -7,6 +7,6 @@ import net.minecraft.network.packet.login.LoginHelloPacket;
 
 @SuperBuilder
 public class PlayerLoginEvent extends Event {
-    public final LoginHelloPacket loginPacket;
+    public final LoginHelloPacket loginHelloPacket;
     public final ServerPlayerEntity player;
 }

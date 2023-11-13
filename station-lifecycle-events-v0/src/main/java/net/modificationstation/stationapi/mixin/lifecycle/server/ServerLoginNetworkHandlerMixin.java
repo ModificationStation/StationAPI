@@ -13,23 +13,33 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ServerLoginNetworkHandler.class)
-public class MixinPendingConnection {
-
-    @Inject(method = "complete(Lnet/minecraft/packet/login/LoginRequest0x1Packet;)V", at = @At("HEAD"))
-    private void handleLogin(LoginHelloPacket arg, CallbackInfo ci) {
+class ServerLoginNetworkHandlerMixin {
+    @Inject(
+            method = "accept",
+            at = @At("HEAD")
+    )
+    private void stationapi_handleLogin(LoginHelloPacket arg, CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(
                 PlayerAttemptLoginEvent.builder()
-                        .serverPacketHandler((ServerLoginNetworkHandler) (Object) this)
-                        .loginRequestPacket(arg)
+                        .serverLoginNetworkHandler((ServerLoginNetworkHandler) (Object) this)
+                        .loginHelloPacket(arg)
                         .build()
         );
     }
 
-    @Inject(method = "complete(Lnet/minecraft/packet/login/LoginRequest0x1Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/ServerPlayer;method_317()V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void afterLogin(LoginHelloPacket arg, CallbackInfo ci, ServerPlayerEntity var2) {
+    @Inject(
+            method = "accept",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/player/ServerPlayerEntity;method_317()V",
+                    shift = At.Shift.AFTER
+            ),
+            locals = LocalCapture.CAPTURE_FAILHARD
+    )
+    private void stationapi_afterLogin(LoginHelloPacket arg, CallbackInfo ci, ServerPlayerEntity var2) {
         StationAPI.EVENT_BUS.post(
                 PlayerLoginEvent.builder()
-                        .loginPacket(arg)
+                        .loginHelloPacket(arg)
                         .player(var2).build()
         );
     }

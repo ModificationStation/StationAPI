@@ -11,16 +11,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(class_454.class)
-public class MixinClientLevel {
-
+class ClientWorldMixin {
     @Redirect(
-            method = "disconnect()V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ClientPlayNetworkHandler;method_1646(Lnet/minecraft/packet/AbstractPacket;)V")
+            method = "method_293",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/network/ClientNetworkHandler;method_1646(Lnet/minecraft/network/packet/Packet;)V"
+            )
     )
-    private void onDisconnect(ClientNetworkHandler clientPlayNetworkHandler, Packet arg) {
+    private void stationapi_onDisconnect(ClientNetworkHandler clientPlayNetworkHandler, Packet arg) {
         StationAPI.EVENT_BUS.post(
                 MultiplayerLogoutEvent.builder()
-                        .packet((DisconnectPacket) arg)
+                        .disconnectPacket((DisconnectPacket) arg)
                         .stacktrace(null)
                         .dropped(false)
                         .build()

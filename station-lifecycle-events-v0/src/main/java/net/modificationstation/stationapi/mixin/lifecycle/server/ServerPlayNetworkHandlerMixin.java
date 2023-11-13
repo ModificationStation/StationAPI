@@ -12,13 +12,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayNetworkHandler.class)
-public class MixinServerPlayerPacketHandler {
-
+class ServerPlayNetworkHandlerMixin {
     @Inject(
-            method = "<init>(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/server/network/ClientConnection;Lnet/minecraft/entity/player/ServerPlayer;)V",
+            method = "<init>",
             at = @At("RETURN")
     )
-    private void created(MinecraftServer minecraftServer, Connection arg, ServerPlayerEntity arg1, CallbackInfo ci) {
+    private void stationapi_created(MinecraftServer minecraftServer, Connection arg, ServerPlayerEntity arg1, CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(PlayerPacketHandlerSetEvent.builder().player(arg1).build());
     }
 }

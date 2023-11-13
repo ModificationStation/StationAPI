@@ -12,6 +12,6 @@ import net.modificationstation.stationapi.api.StationAPI;
 @SuperBuilder
 @EventPhases(StationAPI.INTERNAL_PHASE)
 public class ServerLoginSuccessEvent extends Event {
-    public final ClientNetworkHandler networkHandler;
-    public final LoginHelloPacket loginRequestPacket;
+    public final ClientNetworkHandler clientNetworkHandler;
+    public final LoginHelloPacket loginHelloPacket;
 }

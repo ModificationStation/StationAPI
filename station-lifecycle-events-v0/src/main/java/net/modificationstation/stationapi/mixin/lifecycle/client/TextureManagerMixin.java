@@ -11,32 +11,31 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TextureManager.class)
-public class MixinTextureManager {
-
-    @Shadow private class_303 texturePackManager;
+class TextureManagerMixin {
+    @Shadow private class_303 field_1256;
 
     @Inject(
-            method = "reloadTexturesFromTexturePack()V",
+            method = "method_1096",
             at = @At("HEAD")
     )
-    private void beforeTextureRefresh(CallbackInfo ci) {
+    private void stationapi_beforeTextureRefresh(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(
                 TexturePackLoadedEvent.Before.builder()
                         .textureManager((TextureManager) (Object) this)
-                        .newTexturePack(texturePackManager.field_1175)
+                        .newTexturePack(field_1256.field_1175)
                         .build()
         );
     }
 
     @Inject(
-            method = "reloadTexturesFromTexturePack()V",
+            method = "method_1096",
             at = @At("RETURN")
     )
-    private void texturesRefresh(CallbackInfo ci) {
+    private void stationapi_texturesRefresh(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(
                 TexturePackLoadedEvent.After.builder()
                         .textureManager((TextureManager) (Object) this)
-                        .newTexturePack(texturePackManager.field_1175)
+                        .newTexturePack(field_1256.field_1175)
                         .build()
         );
     }

@@ -9,13 +9,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftServer.class)
-public class MixinMinecraftServer {
-
+class MinecraftServerMixin {
     @Inject(
-            method = "skipNight()V",
+            method = "method_2171",
             at = @At("RETURN")
     )
-    private void endTick(CallbackInfo ci) {
+    private void stationapi_endTick(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(GameTickEvent.End.builder().build());
     }
 }

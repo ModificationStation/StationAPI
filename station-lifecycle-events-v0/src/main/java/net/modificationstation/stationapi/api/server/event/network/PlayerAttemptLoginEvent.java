@@ -10,6 +10,6 @@ import net.modificationstation.stationapi.api.StationAPI;
 @SuperBuilder
 @EventPhases(StationAPI.INTERNAL_PHASE)
 public class PlayerAttemptLoginEvent extends Event {
-    public final ServerLoginNetworkHandler serverPacketHandler;
-    public final LoginHelloPacket loginRequestPacket;
+    public final ServerLoginNetworkHandler serverLoginNetworkHandler;
+    public final LoginHelloPacket loginHelloPacket;
 }

@@ -24,14 +24,14 @@ public class ClientVanillaChecker {
 
     @EventListener
     private static void handleServerLogin(ServerLoginSuccessEvent event) {
-        if (Arrays.asList(event.loginRequestPacket.username.split(";")).contains(NAMESPACE.toString())) {
-            ((ModdedPacketHandlerSetter) event.networkHandler).setModded();
+        if (Arrays.asList(event.loginHelloPacket.username.split(";")).contains(NAMESPACE.toString())) {
+            ((ModdedPacketHandlerSetter) event.clientNetworkHandler).setModded();
             MessagePacket message = new MessagePacket(of(NAMESPACE, "modlist"));
             List<String> mods = new ArrayList<>();
             mods.add(NAMESPACE.getVersion().getFriendlyString());
             FabricLoader.getInstance().getAllMods().stream().map(ModContainer::getMetadata).forEach(modMetadata -> Collections.addAll(mods, modMetadata.getId(), modMetadata.getVersion().getFriendlyString()));
             message.strings = mods.toArray(new String[0]);
-            event.networkHandler.sendPacket(message);
+            event.clientNetworkHandler.sendPacket(message);
         }
     }
 }

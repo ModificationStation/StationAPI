@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 @SuperBuilder
 public class MultiplayerLogoutEvent extends Event {
-    @NotNull public final DisconnectPacket packet;
+    @NotNull public final DisconnectPacket disconnectPacket;
     @Nullable public final String[] stacktrace;
     public final boolean dropped;
 }
