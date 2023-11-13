@@ -7,9 +7,9 @@
     "BiomeMixin",
     "BiomeSourceMixin",
     "NetherDimensionMixin",
-    "NetherLevelSourceMixin",
+    "NetherWorldSourceMixin",
     "OverworldDimensionMixin",
-    "OverworldLevelSourceMixin",
+    "OverworldWorldSourceMixin",
     "SimplexOctaveNoiseMixin",
     "WorldMixin"
   ],
