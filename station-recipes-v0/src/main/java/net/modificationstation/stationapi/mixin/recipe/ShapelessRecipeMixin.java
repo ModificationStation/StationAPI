@@ -10,8 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.List;
 
 @Mixin(ShapelessRecipe.class)
-public class MixinShapelessRecipe implements StationRecipe {
-
+class ShapelessRecipeMixin implements StationRecipe {
     @Shadow @Final private List<ItemStack> input;
 
     @Shadow @Final private ItemStack output;

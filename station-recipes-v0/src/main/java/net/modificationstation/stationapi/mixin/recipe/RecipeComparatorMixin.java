@@ -9,10 +9,10 @@ import net.modificationstation.stationapi.impl.recipe.StationShapelessRecipe;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 
-@Mixin(targets = "net.minecraft.recipe.RecipeRegistry$1")
-public class RecipeComparatorMixin {
+@Mixin(targets = "net.minecraft.recipe.CraftingRecipeManager$1")
+class RecipeComparatorMixin {
     @WrapOperation(
-            method = "method_543",
+            method = "compare(Lnet/minecraft/recipe/CraftingRecipe;Lnet/minecraft/recipe/CraftingRecipe;)I",
             constant = @Constant(classValue = ShapelessRecipe.class)
     )
     private boolean stationapi_accountForStationShapelessRecipe(Object recipe, Operation<Boolean> otherConditions) {
@@ -20,7 +20,7 @@ public class RecipeComparatorMixin {
     }
 
     @WrapOperation(
-            method = "method_543",
+            method = "compare(Lnet/minecraft/recipe/CraftingRecipe;Lnet/minecraft/recipe/CraftingRecipe;)I",
             constant = @Constant(classValue = ShapedRecipe.class)
     )
     private boolean stationapi_accountForStationShapedRecipe(Object recipe, Operation<Boolean> otherConditions) {

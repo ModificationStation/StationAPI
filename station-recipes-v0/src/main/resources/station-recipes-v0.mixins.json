@@ -4,18 +4,16 @@
   "package": "net.modificationstation.stationapi.mixin.recipe",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinCraftingResult",
-    "MixinRecipe",
-    "MixinShapedRecipe",
-    "MixinShapelessRecipe",
-    "MixinSmeltingRecipeRegistry",
-    "MixinStats",
-    "MixinTileEntityFurnace",
+    "CraftingRecipeManagerMixin",
+    "CraftingRecipeMixin",
+    "CraftingResultMixin",
+    "FurnaceBlockEntityMixin",
     "RecipeComparatorMixin",
-    "RecipeRegistryMixin",
-    "SecondaryBlockAccessor",
-    "SmeltingRecipeRegistryAccessor",
-    "TileEntityFurnaceAccessor"
+    "ShapedRecipeMixin",
+    "ShapelessRecipeMixin",
+    "SmeltingRecipeManagerAccessor",
+    "SmeltingRecipeManagerMixin",
+    "StatsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

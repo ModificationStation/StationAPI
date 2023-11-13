@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
+import net.minecraft.recipe.CraftingRecipeManager;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import org.spongepowered.asm.mixin.Final;
@@ -13,10 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent.Vanilla.CRAFTING_SHAPED;
 import static net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent.Vanilla.CRAFTING_SHAPELESS;
 
-import net.minecraft.recipe.CraftingRecipeManager;
-
 @Mixin(CraftingRecipeManager.class)
-public class RecipeRegistryMixin {
+class CraftingRecipeManagerMixin {
     @Mutable
     @Shadow
     @Final

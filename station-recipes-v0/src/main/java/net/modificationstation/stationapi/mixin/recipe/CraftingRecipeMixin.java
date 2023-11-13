@@ -6,8 +6,7 @@ import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(CraftingRecipe.class)
-public interface MixinRecipe extends StationRecipe {
-
+public interface CraftingRecipeMixin extends StationRecipe {
     @Override
     default ItemStack[] getIngredients() {
         throw new UnsupportedOperationException("Your custom recipe registry needs to implement the methods found in \"net.modificationstation.stationapi.api.recipe.StationRecipe\"!");

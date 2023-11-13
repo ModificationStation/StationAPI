@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.recipe;
 
+import net.minecraft.recipe.SmeltingRecipeManager;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import org.spongepowered.asm.mixin.Final;
@@ -12,11 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent.Vanilla.SMELTING;
 
-import net.minecraft.recipe.SmeltingRecipeManager;
-
 @Mixin(SmeltingRecipeManager.class)
-public class MixinSmeltingRecipeRegistry {
-
+class SmeltingRecipeManagerMixin {
     @Mutable
     @Shadow
     @Final
@@ -35,8 +33,11 @@ public class MixinSmeltingRecipeRegistry {
 //        return itemId;
 //    }
 
-    @Inject(method = "<init>()V", at = @At("RETURN"))
-    private void afterRecipeRegister(CallbackInfo ci) {
+    @Inject(
+            method = "<init>",
+            at = @At("RETURN")
+    )
+    private void stationapi_afterRecipeRegister(CallbackInfo ci) {
         INSTANCE = (SmeltingRecipeManager) (Object) this;
         StationAPI.EVENT_BUS.post(RecipeRegisterEvent.builder().recipeId(SMELTING.type()).build());
     }

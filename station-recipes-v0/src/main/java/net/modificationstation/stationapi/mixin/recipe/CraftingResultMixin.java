@@ -15,21 +15,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(class_557.class)
-public class MixinCraftingResult {
-
+class CraftingResultMixin {
     @Shadow
-    private PlayerEntity player;
+    private PlayerEntity field_2367;
 
     @Shadow
     @Final
-    private Inventory resultInventory;
+    private Inventory field_2366;
 
-    @Inject(method = "onCrafted(Lnet/minecraft/item/ItemInstance;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/InventoryBase;setInventoryItem(ILnet/minecraft/item/ItemInstance;)V", shift = At.Shift.BY, by = 2), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onCrafted(ItemStack arg, CallbackInfo ci, int var2, ItemStack var3) {
+    @Inject(
+            method = "onCrafted",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/inventory/Inventory;setStack(ILnet/minecraft/item/ItemStack;)V",
+                    shift = At.Shift.BY,
+                    by = 2
+            ),
+            locals = LocalCapture.CAPTURE_FAILHARD
+    )
+    private void stationapi_onCrafted(ItemStack arg, CallbackInfo ci, int var2, ItemStack var3) {
         StationAPI.EVENT_BUS.post(
                 ItemUsedInCraftingEvent.builder()
-                        .player(player)
-                        .craftingMatrix(resultInventory)
+                        .player(field_2367)
+                        .craftingMatrix(field_2366)
                         .itemOrdinal(var2)
                         .itemCrafted(arg)
                         .itemUsed(var3)

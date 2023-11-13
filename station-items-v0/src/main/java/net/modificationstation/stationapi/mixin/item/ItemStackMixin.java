@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.mixin.item;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -49,7 +47,6 @@ abstract class ItemStackMixin implements StationItemStack, StationNBTSetter {
     }
 
     @Unique
-    @Getter @Setter
     private NbtCompound stationapi_stationNbt = new NbtCompound();
 
     @Inject(
@@ -158,5 +155,17 @@ abstract class ItemStackMixin implements StationItemStack, StationNBTSetter {
     )
     private int stationapi_hasDurability_getDurabilityPerStack(Item instance) {
         return instance.getMaxDamage(ItemStack.class.cast(this));
+    }
+
+    @Override
+    @Unique
+    public NbtCompound getStationNbt() {
+        return this.stationapi_stationNbt;
+    }
+
+    @Override
+    @Unique
+    public void setStationNbt(NbtCompound stationNbt) {
+        this.stationapi_stationNbt = stationNbt;
     }
 }

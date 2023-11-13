@@ -7,13 +7,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ShapedRecipe.class)
-public class MixinShapedRecipe implements StationRecipe {
-
+class ShapedRecipeMixin implements StationRecipe {
     @Shadow private int width;
     @Shadow private int height;
     @Shadow private ItemStack output;
 
-    @Shadow private ItemStack[] ingredients;
+    @Shadow private ItemStack[] input;
 
     @Override
     public ItemStack[] getIngredients() {
@@ -22,7 +21,7 @@ public class MixinShapedRecipe implements StationRecipe {
             for (int w = 0; w < width; w++) {
                 int localId = (h * width) + w;
                 int id = (h * 3) + w;
-                itemInstances[id] = ingredients[localId];
+                itemInstances[id] = input[localId];
             }
         }
         return itemInstances;
