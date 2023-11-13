@@ -25,18 +25,18 @@ import java.util.stream.IntStream;
 
 @Mixin(class_538.class)
 public class MixinOverworldLevelSource {
-    @Shadow private class_209 interpolationNoise;
-    @Shadow private World level;
+    @Shadow private class_209 field_2257;
+    @Shadow private World field_2260;
 
     @Unique
     private ForkJoinPool customPool = new ForkJoinPool(8);
 
-    @Inject(method = "getChunk(II)Lnet/minecraft/level/chunk/Chunk;", at = @At(
+    @Inject(method = "method_1806", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/level/source/OverworldLevelSource;shapeChunk(II[B[Lnet/minecraft/level/biome/Biome;[D)V"
+            target = "Lnet/minecraft/class_538;method_1798(II[B[Lnet/minecraft/class_153;[D)V"
     ), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<class_43> info, byte[] blocks, class_43 chunk, double[] var5) {
-        short height = (short) ((HeightLimitView) level).getTopY();
+        short height = (short) ((HeightLimitView) field_2260).getTopY();
         if (height < 129) return;
 
         BlockState stone = ((BlockStateHolder) Block.STONE).getDefaultState();
@@ -137,14 +137,14 @@ public class MixinOverworldLevelSource {
         }));
     }
 
-    @Inject(method = "shapeChunk(II[B[Lnet/minecraft/level/biome/Biome;[D)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "method_1798", at = @At("HEAD"), cancellable = true)
     private void disableShapeChunk(int chunkX, int chunkZ, byte[] tiles, class_153[] biomes, double[] temperatures, CallbackInfo info) {
         if (canApply()) {
             info.cancel();
         }
     }
 
-    @Inject(method = "buildSurface(II[B[Lnet/minecraft/level/biome/Biome;)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "method_1797", at = @At("HEAD"), cancellable = true)
     private void disableBuildSurface(int chunkX, int chunkZ, byte[] tiles, class_153[] biomes, CallbackInfo info) {
         if (canApply()) {
             info.cancel();
@@ -153,7 +153,7 @@ public class MixinOverworldLevelSource {
 
     @Unique
     private float getNoise(double x, double z) {
-        float noise = (float) interpolationNoise.method_1513(x, z);
+        float noise = (float) field_2257.method_1513(x, z);
         return (noise + 150.0F) / 300.0F;
     }
 
@@ -172,6 +172,6 @@ public class MixinOverworldLevelSource {
 
     @Unique
     private boolean canApply() {
-        return ((HeightLimitView) level).getTopY() > 128;
+        return ((HeightLimitView) field_2260).getTopY() > 128;
     }
 }

@@ -25,14 +25,14 @@ import java.util.stream.IntStream;
 @Mixin(class_359.class)
 public class MixinNetherLevelSource {
     @Shadow private class_209 field_1347;
-    @Shadow private World level;
+    @Shadow private World field_1350;
 
     @Unique
     private ForkJoinPool customPool = new ForkJoinPool(8);
 
-    @Inject(method = "getChunk(II)Lnet/minecraft/level/chunk/Chunk;", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "method_1806", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<class_43> info, byte[] blocks, class_43 chunk) {
-        short height = (short) ((HeightLimitView) level).getTopY();
+        short height = (short) ((HeightLimitView) field_1350).getTopY();
         if (height < 129) return;
 
         BlockState netherrack = BlockStateHolder.class.cast(Block.NETHERRACK).getDefaultState();
@@ -128,7 +128,7 @@ public class MixinNetherLevelSource {
 
     @Unique
     private boolean canApply() {
-        StationDimension dimension = StationDimension.class.cast(level.dimension);
+        StationDimension dimension = StationDimension.class.cast(field_1350.dimension);
         return dimension.getActualLevelHeight() != 128;
     }
 }

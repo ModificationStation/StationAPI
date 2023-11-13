@@ -14,7 +14,7 @@ import java.awt.image.DataBufferInt;
 
 @Mixin(World.class)
 public abstract class MixinLevel {
-    @Shadow public abstract class_519 getBiomeSource();
+    @Shadow public abstract class_519 method_1781();
 
     /*@Inject(
         method = "<init>(Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;J)V",
@@ -27,7 +27,7 @@ public abstract class MixinLevel {
         int[] pixels = ((DataBufferInt) buffer.getRaster().getDataBuffer()).getData();
 
         int start = -(side >> 1);
-        class_519 biomeSource = getBiomeSource();
+        class_519 biomeSource = method_1781();
         class_153[] biomes = biomeSource.method_1791(new class_153[side * side], start, start, side, side);
 
         for (int i = 0; i < pixels.length; i++) {

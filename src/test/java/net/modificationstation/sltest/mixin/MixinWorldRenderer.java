@@ -20,9 +20,9 @@ public class MixinWorldRenderer {
 
     @Shadow private TextureManager textureManager;
 
-    @Shadow private World level;
+    @Shadow private World field_1805;
 
-    @Shadow private Minecraft client;
+    @Shadow private Minecraft field_1814;
 
     //@Inject(method = "renderSky(F)V", at = @At("HEAD"), cancellable = true)
     private void endSky(float f, CallbackInfo ci) {
@@ -75,7 +75,7 @@ public class MixinWorldRenderer {
             float l = (float) ((light.x + light.y + light.z) / 3);
             var21.colour(l, l, l);*/
 
-            float light = level.dimension.field_2178[15 - level.field_202];
+            float light = field_1805.dimension.field_2178[15 - field_1805.field_202];
             var21.color(light, light, light);
 
             if (var22 == 2) {
