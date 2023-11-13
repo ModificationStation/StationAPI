@@ -35,7 +35,7 @@ class SingleplayerInteractionManagerMixin extends InteractionManager {
                     target = "Lnet/minecraft/block/Block;getHardness(Lnet/minecraft/entity/player/PlayerEntity;)F"
             )
     )
-    private float stationapi_getHardnessPerMeta(Block blockBase, PlayerEntity arg, int i, int j, int k, int i1) {
+    private float stationapi_getHardnessPerMeta(Block block, PlayerEntity arg, int i, int j, int k, int i1) {
         return minecraft.world.getBlockState(i, j, k).calcBlockBreakingDelta(arg, minecraft.world, new BlockPos(i, j, k));
     }
 

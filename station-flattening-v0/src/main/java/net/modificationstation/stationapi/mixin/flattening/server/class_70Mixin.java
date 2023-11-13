@@ -32,7 +32,7 @@ class class_70Mixin {
                     target = "Lnet/minecraft/block/Block;getHardness(Lnet/minecraft/entity/player/PlayerEntity;)F"
             )
     )
-    private float stationapi_getHardnessPerMeta(Block blockBase, PlayerEntity arg) {
+    private float stationapi_getHardnessPerMeta(Block block, PlayerEntity arg) {
         return field_2310.getBlockState(field_2318, field_2319, field_2320).calcBlockBreakingDelta(arg, field_2310, new BlockPos(field_2318, field_2319, field_2320));
     }
 
@@ -43,7 +43,7 @@ class class_70Mixin {
                     target = "Lnet/minecraft/block/Block;getHardness(Lnet/minecraft/entity/player/PlayerEntity;)F"
             )
     )
-    private float stationapi_getHardnessPerMeta2(Block blockBase, PlayerEntity arg, int i, int j, int k, int i1) {
+    private float stationapi_getHardnessPerMeta2(Block block, PlayerEntity arg, int i, int j, int k, int i1) {
         return field_2310.getBlockState(i, j, k).calcBlockBreakingDelta(arg, field_2310, new BlockPos(i, j, k));
     }
 
@@ -54,7 +54,7 @@ class class_70Mixin {
                     target = "Lnet/minecraft/block/Block;getHardness(Lnet/minecraft/entity/player/PlayerEntity;)F"
             )
     )
-    private float stationapi_getHardnessPerMeta3(Block blockBase, PlayerEntity arg, int i, int j, int k) {
+    private float stationapi_getHardnessPerMeta3(Block block, PlayerEntity arg, int i, int j, int k) {
         return field_2310.getBlockState(i, j, k).calcBlockBreakingDelta(arg, field_2310, new BlockPos(i, j, k));
     }
 
