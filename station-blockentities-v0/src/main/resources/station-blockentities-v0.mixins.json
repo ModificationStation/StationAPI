@@ -1,13 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.modificationstation.stationapi.mixin.tileentity",
+  "package": "net.modificationstation.stationapi.mixin.blockentity",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinTileEntityBase"
+    "BlockEntityMixin"
   ],
   "client": [
-    "client.MixinTileEntityRenderDispatcher"
+    "client.BlockEntityRenderDispatcherMixin"
   ],
   "injectors": {
     "defaultRequire": 1

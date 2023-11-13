@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "station-tileentities-v0",
+  "id": "station-blockentities-v0",
   "version": "${version}",
 
-  "name": "Station TileEntities (v0)",
-  "description": "Essential tile entities hooks.",
+  "name": "Station Block Entities (v0)",
+  "description": "Essential block entities hooks.",
   "authors": [
     "Modification Station"
   ],
@@ -15,11 +15,11 @@
   },
 
   "license": "MIT",
-  "icon": "assets/station-tileentities-v0/icon.png",
+  "icon": "assets/station-blockentities-v0/icon.png",
 
   "environment": "*",
   "mixins": [
-    "station-tileentities-v0.mixins.json"
+    "station-blockentities-v0.mixins.json"
   ],
 
   "depends": {

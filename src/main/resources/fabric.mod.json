@@ -28,7 +28,7 @@
     "station-recipes-v0": "*",
     "station-items-v0": "*",
     "station-blocks-v0": "*",
-    "station-tileentities-v0": "*",
+    "station-blockentities-v0": "*",
     "station-entities-v0": "*",
     "station-networking-v0": "*",
     "station-blockitems-v0": "*",
