@@ -52,7 +52,7 @@
     "server.class_514Accessor",
     "server.class_514Mixin",
     "server.class_70Mixin",
-    "server.MixinMinecraftServer",
+    "server.MinecraftServerMixin",
     "server.ServerPlayerEntityMixin",
     "server.ServerPlayerViewAccessor",
     "server.ServerPlayNetworkHandlerMixin"

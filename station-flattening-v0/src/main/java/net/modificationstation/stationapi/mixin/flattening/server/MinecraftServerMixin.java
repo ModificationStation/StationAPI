@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.io.File;
 
 @Mixin(MinecraftServer.class)
-public class MixinMinecraftServer {
+class MinecraftServerMixin {
     @Redirect(
             method = "method_2159",
             at = @At(
