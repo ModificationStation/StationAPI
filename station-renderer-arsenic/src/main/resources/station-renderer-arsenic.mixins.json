@@ -16,7 +16,6 @@
     "client.MinecraftMixin",
     "client.ParticleAccessor",
     "client.PlayerEntityRendererMixin",
-    "client.RenderListAccessor",
     "client.TessellatorAccessor",
     "client.TessellatorMixin",
     "client.TextureManagerMixin",
