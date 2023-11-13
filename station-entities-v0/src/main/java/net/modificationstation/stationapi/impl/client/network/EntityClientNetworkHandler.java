@@ -17,7 +17,7 @@ import net.modificationstation.stationapi.api.event.registry.MessageListenerRegi
 import net.modificationstation.stationapi.api.event.registry.MobHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.registry.EntityHandlerRegistry;
 import net.modificationstation.stationapi.api.registry.MobHandlerRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
@@ -46,7 +46,7 @@ public final class EntityClientNetworkHandler {
         StationAPI.EVENT_BUS.post(new MobHandlerRegistryEvent());
     }
 
-    private static void handleEntitySpawn(PlayerEntity player, Message message) {
+    private static void handleEntitySpawn(PlayerEntity player, MessagePacket message) {
         QuadFunction<World, Double, Double, Double, Entity> entityHandler = EntityHandlerRegistry.INSTANCE.get(of(message.strings[0]));
         if (entityHandler != null) {
             double
@@ -76,7 +76,7 @@ public final class EntityClientNetworkHandler {
         }
     }
 
-    private static void handleMobSpawn(PlayerEntity player, Message message) {
+    private static void handleMobSpawn(PlayerEntity player, MessagePacket message) {
         Function<World, LivingEntity> mobHandler = MobHandlerRegistry.INSTANCE.get(of(message.strings[0]));
         if (mobHandler != null) {
             double

@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryE
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.registry.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
@@ -32,9 +32,9 @@ public final class GuiClientNetworkHandler {
         StationAPI.EVENT_BUS.post(new GuiHandlerRegistryEvent());
     }
 
-    private static void handleGui(PlayerEntity player, Message message) {
+    private static void handleGui(PlayerEntity player, MessagePacket message) {
         boolean isClient = player.world.isRemote;
-        BiTuple<TriFunction<PlayerEntity, Inventory, Message, Screen>, Supplier<Inventory>> guiHandler = GuiHandlerRegistry.INSTANCE.get(Identifier.of(message.strings[0]));
+        BiTuple<TriFunction<PlayerEntity, Inventory, MessagePacket, Screen>, Supplier<Inventory>> guiHandler = GuiHandlerRegistry.INSTANCE.get(Identifier.of(message.strings[0]));
         if (guiHandler != null)
             //noinspection deprecation
             ((Minecraft) FabricLoader.getInstance().getGameInstance()).setScreen(guiHandler.one().apply(player, isClient ? guiHandler.two().get() : (Inventory) message.objects[0], message));

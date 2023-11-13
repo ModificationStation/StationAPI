@@ -10,19 +10,18 @@ import java.util.Set;
 
 @Mixin(Packet.class)
 public interface AbstractPacketAccessor {
-
     @Accessor
-    static Set<Integer> getServerToClientPackets() {
+    static Set<Integer> getClientBoundPackets() {
         return Util.assertMixin();
     }
 
     @Accessor
-    static Set<Integer> getClientToServerPackets() {
+    static Set<Integer> getServerBoundPackets() {
         return Util.assertMixin();
     }
 
     @Invoker
-    static void invokeRegister(int packetId, boolean receivableOnClient, boolean receivableOnServer, Class<? extends Packet> packetClass) {
+    static void invokeRegister(int rawId, boolean clientBound, boolean serverBound, Class<? extends Packet> type) {
         Util.assertMixin();
     }
 }

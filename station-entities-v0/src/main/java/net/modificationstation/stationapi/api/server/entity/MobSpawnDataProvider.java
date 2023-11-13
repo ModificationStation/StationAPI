@@ -4,7 +4,7 @@ import com.google.common.primitives.Bytes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.util.math.MathHelper;
-import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -17,7 +17,7 @@ public interface MobSpawnDataProvider extends StationSpawnDataProvider {
     @Override
     default Packet getSpawnData() {
         LivingEntity mob = (LivingEntity) this;
-        Message message = new Message(of(NAMESPACE, "spawn_mob"));
+        MessagePacket message = new MessagePacket(of(NAMESPACE, "spawn_mob"));
         message.strings = new String[] { getHandlerIdentifier().toString() };
         message.ints = new int[] {
                 mob.id,

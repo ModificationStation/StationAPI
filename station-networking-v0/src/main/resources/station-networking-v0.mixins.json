@@ -5,8 +5,8 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AbstractPacketAccessor",
-    "MixinAbstractPacket",
-    "MixinClientConnection"
+    "ConnectionMixin",
+    "PacketMixin"
   ],
   "injectors": {
     "defaultRequire": 1

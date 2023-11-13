@@ -4,14 +4,14 @@ import net.minecraft.class_633;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Inventory;
-import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.impl.gui.screen.container.GuiHelperImpl;
 import net.modificationstation.stationapi.mixin.container.server.ServerPlayerEntityAccessor;
 
 public class GuiHelperServerImpl extends GuiHelperImpl {
 
     @Override
-    protected void sideDependentPacket(PlayerEntity player, Inventory inventory, Message message) {
+    protected void sideDependentPacket(PlayerEntity player, Inventory inventory, MessagePacket message) {
         message.objects = new Object[] { null };
         ((ServerPlayerEntityAccessor) player).invokeMethod_314();
         message.ints = new int[] { ((ServerPlayerEntityAccessor) player).getField_260() };

@@ -6,7 +6,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.entity.HasOwner;
-import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public interface EntitySpawnDataProvider extends StationSpawnDataProvider {
@@ -20,7 +20,7 @@ public interface EntitySpawnDataProvider extends StationSpawnDataProvider {
             owner = owner == null ? entityBase : owner;
             ownerId = owner.id;
         }
-        Message message = new Message(Identifier.of(StationAPI.NAMESPACE, "spawn_entity"));
+        MessagePacket message = new MessagePacket(Identifier.of(StationAPI.NAMESPACE, "spawn_entity"));
         message.strings = new String[] { getHandlerIdentifier().toString() };
         message.ints = new int[] { entityBase.id, MathHelper.floor(entityBase.x * 32), MathHelper.floor(entityBase.y * 32), MathHelper.floor(entityBase.z * 32), ownerId };
         if (ownerId > 0) {

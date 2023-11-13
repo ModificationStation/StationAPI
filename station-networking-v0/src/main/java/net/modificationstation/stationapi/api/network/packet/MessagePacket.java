@@ -1,12 +1,12 @@
-package net.modificationstation.stationapi.api.packet;
+package net.modificationstation.stationapi.api.network.packet;
 
 import com.google.gson.Gson;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.entity.player.PlayerHelper;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
+import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.DataInputStream;
@@ -39,8 +39,7 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
  *
  * @author mine_diver
  */
-public class Message extends Packet implements IdentifiablePacket {
-
+public class MessagePacket extends Packet implements IdentifiablePacket {
     public static final Identifier PACKET_ID = NAMESPACE.id("message");
 
     /**
@@ -119,14 +118,14 @@ public class Message extends Packet implements IdentifiablePacket {
      * Internal Message constructor for initialization when received.
      */
     @ApiStatus.Internal
-    public Message() { }
+    public MessagePacket() {}
 
     /**
      * Default Message constructor.
      *
      * @param identifier the Message's identifier.
      */
-    public Message(Identifier identifier) {
+    public MessagePacket(Identifier identifier) {
         this.identifier = identifier;
     }
 
@@ -444,7 +443,7 @@ public class Message extends Packet implements IdentifiablePacket {
      */
     @Override
     public void apply(NetworkHandler handler) {
-        BiConsumer<PlayerEntity, Message> messageListener = MessageListenerRegistry.INSTANCE.get(identifier);
+        BiConsumer<PlayerEntity, MessagePacket> messageListener = MessageListenerRegistry.INSTANCE.get(identifier);
         if (messageListener != null)
             messageListener.accept(PlayerHelper.getPlayerFromPacketHandler(handler), this);
     }

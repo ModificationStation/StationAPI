@@ -11,7 +11,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttribute;
 import net.modificationstation.stationapi.api.event.registry.RegistryAttributeHolder;
-import net.modificationstation.stationapi.api.packet.PacketHelper;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.registry.*;
 import net.modificationstation.stationapi.api.util.Formatting;
 import net.modificationstation.stationapi.api.util.Identifier;

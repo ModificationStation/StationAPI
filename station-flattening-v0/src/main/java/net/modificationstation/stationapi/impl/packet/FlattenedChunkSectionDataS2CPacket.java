@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.packet;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.world.World;
-import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
+import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;

@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.event.registry;
 import net.mine_diver.unsafeevents.event.EventPhases;
 import net.minecraft.entity.player.PlayerEntity;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 
@@ -15,7 +15,7 @@ import java.util.function.BiConsumer;
  * @author mine_diver
  */
 @EventPhases(StationAPI.INTERNAL_PHASE)
-public class MessageListenerRegistryEvent extends RegistryEvent<Registry<BiConsumer<PlayerEntity, Message>>> {
+public class MessageListenerRegistryEvent extends RegistryEvent<Registry<BiConsumer<PlayerEntity, MessagePacket>>> {
     public MessageListenerRegistryEvent() {
         super(MessageListenerRegistry.INSTANCE);
     }

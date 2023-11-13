@@ -1,25 +1,24 @@
-package net.modificationstation.stationapi.api.event.packet;
+package net.modificationstation.stationapi.api.event.network.packet;
 
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.event.EventPhases;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.packet.Message;
-import uk.co.benjiweber.expressions.function.QuadConsumer;
+import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 
 /**
  * Event that fires after vanilla packets are registered.
  *
  * <p>Allows for registration of modded packets,
  * but discouraged for use in mods except for the case
- * that {@link Message} doesn't provide needed functionality.
+ * that {@link MessagePacket} doesn't provide needed functionality.
  *
  * @author mine_diver
  */
 @SuperBuilder
 @EventPhases(StationAPI.INTERNAL_PHASE)
-public class PacketRegisterEvent extends Event {
+public class PacketRegisterEvent extends Event implements PacketRegister {
     /**
      * Private packet registration method reference.
      *
@@ -27,7 +26,7 @@ public class PacketRegisterEvent extends Event {
      * so we pass it as an event parameter from a mixin
      * that can access the method directly and turn it into a method reference.
      */
-    public final QuadConsumer<Integer, Boolean, Boolean, Class<? extends Packet>> register;
+    public final PacketRegister register;
 
     /**
      * Registers the given packet.
@@ -41,7 +40,8 @@ public class PacketRegisterEvent extends Event {
      * @param receivableOnServer whether this packet is supposed to be received on the server side.
      * @param packetClass the packet's class that extends {@link Packet} or a sub class of it.
      */
+    @Override
     public final void register(int packetId, boolean receivableOnClient, boolean receivableOnServer, Class<? extends Packet> packetClass) {
-        register.accept(packetId, receivableOnClient, receivableOnServer, packetClass);
+        register.register(packetId, receivableOnClient, receivableOnServer, packetClass);
     }
 }

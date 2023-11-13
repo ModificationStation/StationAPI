@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.world.World;
-import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
+import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import org.jetbrains.annotations.ApiStatus;

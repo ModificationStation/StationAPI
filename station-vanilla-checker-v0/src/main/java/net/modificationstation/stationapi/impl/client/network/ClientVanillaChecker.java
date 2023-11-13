@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.network.ServerLoginSuccessEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.impl.network.ModdedPacketHandlerSetter;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class ClientVanillaChecker {
     private static void handleServerLogin(ServerLoginSuccessEvent event) {
         if (Arrays.asList(event.loginRequestPacket.username.split(";")).contains(NAMESPACE.toString())) {
             ((ModdedPacketHandlerSetter) event.networkHandler).setModded();
-            Message message = new Message(of(NAMESPACE, "modlist"));
+            MessagePacket message = new MessagePacket(of(NAMESPACE, "modlist"));
             List<String> mods = new ArrayList<>();
             mods.add(NAMESPACE.getVersion().getFriendlyString());
             FabricLoader.getInstance().getAllMods().stream().map(ModContainer::getMetadata).forEach(modMetadata -> Collections.addAll(mods, modMetadata.getId(), modMetadata.getVersion().getFriendlyString()));

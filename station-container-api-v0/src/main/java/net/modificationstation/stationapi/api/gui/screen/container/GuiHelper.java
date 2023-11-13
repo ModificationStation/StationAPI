@@ -4,7 +4,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Inventory;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
-import net.modificationstation.stationapi.api.packet.Message;
+import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.registry.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.API;
@@ -58,7 +58,7 @@ public final class GuiHelper {
      * @see GuiHelper#openGUI(PlayerEntity, Identifier, Inventory, Container)
      */
     @API
-    public static void openGUI(PlayerEntity player, Identifier identifier, Inventory inventory, Container container, Consumer<Message> customData) {
+    public static void openGUI(PlayerEntity player, Identifier identifier, Inventory inventory, Container container, Consumer<MessagePacket> customData) {
         INSTANCE.openGUI(player, identifier, inventory, container, customData);
     }
 }

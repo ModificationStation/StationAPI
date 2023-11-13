@@ -1,22 +1,21 @@
-package net.modificationstation.stationapi.api.packet;
+package net.modificationstation.stationapi.api.network.packet;
 
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.registry.IdentifiablePacketRegistry;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
-import net.modificationstation.stationapi.impl.packet.IdentifiablePacketImpl;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.impl.network.packet.IdentifiablePacketImpl;
 
 public interface IdentifiablePacket {
-
     int PACKET_ID = 254;
 
-    static Factory create(Identifier id, boolean receivableOnClient, boolean receivableOnServer, Factory factory) {
+    static Factory register(Identifier id, boolean clientBound, boolean serverBound, Factory factory) {
         if (IdentifiablePacketRegistry.INSTANCE.containsId(id))
             throw new IllegalArgumentException("Duplicate packet id:" + id);
         Factory ret = Registry.register(IdentifiablePacketRegistry.INSTANCE, id, factory);
-        if (receivableOnClient) IdentifiablePacketImpl.SERVER_TO_CLIENT_PACKETS.add(id);
-        if (receivableOnServer) IdentifiablePacketImpl.CLIENT_TO_SERVER_PACKETS.add(id);
+        if (clientBound) IdentifiablePacketImpl.CLIENT_BOUND_PACKETS.add(id);
+        if (serverBound) IdentifiablePacketImpl.SERVER_BOUND_PACKETS.add(id);
         return ret;
     }
 

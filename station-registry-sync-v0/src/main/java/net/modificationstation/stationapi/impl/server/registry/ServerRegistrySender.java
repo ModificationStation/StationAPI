@@ -7,8 +7,8 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
-import net.modificationstation.stationapi.api.packet.Message;
-import net.modificationstation.stationapi.api.packet.PacketHelper;
+import net.modificationstation.stationapi.api.network.packet.MessagePacket;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.registry.legacy.LevelLegacyRegistry;
 import net.modificationstation.stationapi.api.server.event.network.PlayerPacketHandlerSetEvent;
 
@@ -30,7 +30,7 @@ public class ServerRegistrySender {
             LevelLegacyRegistry.saveAll(registries);
             ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
             NbtIo.writeCompressed(registries, byteOutputStream);
-            Message message = new Message(of(NAMESPACE, "server_registry_sync"));
+            MessagePacket message = new MessagePacket(of(NAMESPACE, "server_registry_sync"));
             message.bytes = byteOutputStream.toByteArray();
             PacketHelper.sendTo(event.player, message);
         }

@@ -8,8 +8,8 @@ import net.minecraft.world.World;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.client.item.CustomTooltipProvider;
 import net.modificationstation.stationapi.api.item.CustomReachProvider;
-import net.modificationstation.stationapi.api.packet.Message;
-import net.modificationstation.stationapi.api.packet.PacketHelper;
+import net.modificationstation.stationapi.api.network.packet.MessagePacket;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.item.TemplateItem;
 
@@ -26,7 +26,7 @@ public class ModdedItem extends TemplateItem implements CustomReachProvider, Cus
     @Override
     public ItemStack use(ItemStack item, World level, PlayerEntity player) {
         if (!level.isRemote) {
-            Message message = new Message(Identifier.of(SLTest.MODID, "send_an_object"));
+            MessagePacket message = new MessagePacket(Identifier.of(SLTest.MODID, "send_an_object"));
             hmmSho = new Random().nextInt();
             SLTest.LOGGER.info(String.valueOf(hmmSho));
             message.objects = new Object[] { new TestNetworkData(hmmSho) };

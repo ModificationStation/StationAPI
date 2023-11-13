@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.impl.client.network;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.network.NetworkHandler;
-import net.modificationstation.stationapi.api.packet.IdentifiablePacket;
+import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkDataS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkSectionDataS2CPacket;
