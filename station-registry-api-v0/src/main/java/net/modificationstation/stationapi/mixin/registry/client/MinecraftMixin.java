@@ -8,14 +8,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-public class MixinMinecraft {
-
+class MinecraftMixin {
     @Inject(
             method = "run",
             at = @At("HEAD"),
             remap = false
     )
-    private void freeze(CallbackInfo ci) {
+    private void stationapi_freeze(CallbackInfo ci) {
         Registries.bootstrap();
     }
 }
