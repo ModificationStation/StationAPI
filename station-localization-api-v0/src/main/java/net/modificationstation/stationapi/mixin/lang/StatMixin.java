@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 @Mixin(Stat.class)
 class StatMixin implements DeferredTranslationKeyHolder {
     @Mutable
-    @Shadow @Final public String NAME;
+    @Shadow @Final public String stringId;
 
     @Override
     @Unique
@@ -20,7 +20,7 @@ class StatMixin implements DeferredTranslationKeyHolder {
         StationAPI.EVENT_BUS.register(
                 Listener.<TranslationInvalidationEvent>simple()
                         .phase(StationAPI.INTERNAL_PHASE)
-                        .listener(event -> NAME = translator.get())
+                        .listener(event -> stringId = translator.get())
                         .build()
         );
     }

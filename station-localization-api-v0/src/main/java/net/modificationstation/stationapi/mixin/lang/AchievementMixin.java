@@ -23,13 +23,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Achievement.class)
 class AchievementMixin {
     @Mutable
-    @Shadow @Final private String description;
+    @Shadow @Final private String translationKey;
 
     @WrapOperation(
-            method = "<init>(ILjava/lang/String;IILnet/minecraft/item/ItemInstance;Lnet/minecraft/achievement/Achievement;)V",
+            method = "<init>(ILjava/lang/String;IILnet/minecraft/item/ItemStack;Lnet/minecraft/achievement/Achievement;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/resource/language/I18n;translate(Ljava/lang/String;)Ljava/lang/String;",
+                    target = "Lnet/minecraft/client/resource/language/I18n;getTranslation(Ljava/lang/String;)Ljava/lang/String;",
                     ordinal = 0
             )
     )
@@ -42,10 +42,10 @@ class AchievementMixin {
     }
 
     @WrapOperation(
-            method = "<init>(ILjava/lang/String;IILnet/minecraft/item/ItemInstance;Lnet/minecraft/achievement/Achievement;)V",
+            method = "<init>(ILjava/lang/String;IILnet/minecraft/item/ItemStack;Lnet/minecraft/achievement/Achievement;)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/resource/language/I18n;translate(Ljava/lang/String;)Ljava/lang/String;",
+                    target = "Lnet/minecraft/client/resource/language/I18n;getTranslation(Ljava/lang/String;)Ljava/lang/String;",
                     ordinal = 1
             )
     )
@@ -53,14 +53,14 @@ class AchievementMixin {
         StationAPI.EVENT_BUS.register(
                 Listener.<TranslationInvalidationEvent>simple()
                         .phase(StationAPI.INTERNAL_PHASE)
-                        .listener(event -> description = I18n.getTranslation(descriptionTranslationKey))
+                        .listener(event -> translationKey = I18n.getTranslation(descriptionTranslationKey))
                         .build()
         );
         return original.call(descriptionTranslationKey);
     }
 
     @Inject(
-            method = "<init>(ILjava/lang/String;IILnet/minecraft/item/ItemInstance;Lnet/minecraft/achievement/Achievement;)V",
+            method = "<init>(ILjava/lang/String;IILnet/minecraft/item/ItemStack;Lnet/minecraft/achievement/Achievement;)V",
             at = @At("RETURN")
     )
     private void stationapi_setCapturedTranslationKey(

@@ -8,7 +8,6 @@ import java.util.Properties;
 
 @Mixin(TranslationStorage.class)
 public interface TranslationStorageAccessor {
-
     @Accessor
     Properties getTranslations();
 }

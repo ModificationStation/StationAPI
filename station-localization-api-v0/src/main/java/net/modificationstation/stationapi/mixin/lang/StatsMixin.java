@@ -24,7 +24,7 @@ class StatsMixin {
             method = "<clinit>",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/resource/language/I18n;translate(Ljava/lang/String;)Ljava/lang/String;"
+                    target = "Lnet/minecraft/client/resource/language/I18n;getTranslation(Ljava/lang/String;)Ljava/lang/String;"
             )
     )
     private static String stationapi_captureTranslationKey(
@@ -40,11 +40,11 @@ class StatsMixin {
             at = {
                     @At(
                             value = "NEW",
-                            target = "(ILjava/lang/String;)Lnet/minecraft/stat/RegisteringStat;"
+                            target = "(ILjava/lang/String;)Lnet/minecraft/stat/SimpleStat;"
                     ),
                     @At(
                             value = "NEW",
-                            target = "(ILjava/lang/String;Lnet/minecraft/stat/StatFormatter;)Lnet/minecraft/stat/RegisteringStat;"
+                            target = "(ILjava/lang/String;Lnet/minecraft/stat/StatFormatter;)Lnet/minecraft/stat/SimpleStat;"
                     )
             }
     )
@@ -59,13 +59,13 @@ class StatsMixin {
 
     @WrapOperation(
             method = {
-                    "setupCrafting",
-                    "setupUse",
-                    "setupBreak"
+                    "initializeCraftedItemStats",
+                    "method_752",
+                    "initializeBrokenItemStats"
             },
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/item/ItemBase;getTranslatedName()Ljava/lang/String;"
+                    target = "Lnet/minecraft/item/Item;getTranslatedName()Ljava/lang/String;"
             )
     )
     private static String stationapi_captureFormatStringGetter(
@@ -77,10 +77,10 @@ class StatsMixin {
     }
 
     @WrapOperation(
-            method = "setupMinedBlocks",
+            method = "method_749",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/BlockBase;getTranslatedName()Ljava/lang/String;"
+                    target = "Lnet/minecraft/block/Block;getTranslatedName()Ljava/lang/String;"
             )
     )
     private static String stationapi_captureFormatStringGetter(
@@ -93,14 +93,14 @@ class StatsMixin {
 
     @WrapOperation(
             method = {
-                    "setupCrafting",
-                    "setupMinedBlocks",
-                    "setupUse",
-                    "setupBreak"
+                    "initializeCraftedItemStats",
+                    "method_749",
+                    "method_752",
+                    "initializeBrokenItemStats"
             },
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/resource/language/I18n;translate(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+                    target = "Lnet/minecraft/client/resource/language/I18n;getTranslation(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
             )
     )
     private static String stationapi_captureTranslationKey(
@@ -113,14 +113,14 @@ class StatsMixin {
 
     @ModifyExpressionValue(
             method = {
-                    "setupCrafting",
-                    "setupMinedBlocks",
-                    "setupUse",
-                    "setupBreak"
+                    "initializeCraftedItemStats",
+                    "method_749",
+                    "method_752",
+                    "initializeBrokenItemStats"
             },
             at = @At(
                     value = "NEW",
-                    target = "(ILjava/lang/String;I)Lnet/minecraft/client/StatEntity;"
+                    target = "(ILjava/lang/String;I)Lnet/minecraft/stat/ItemOrBlockStat;"
             )
     )
     private static ItemOrBlockStat stationapi_setTranslationKey(
