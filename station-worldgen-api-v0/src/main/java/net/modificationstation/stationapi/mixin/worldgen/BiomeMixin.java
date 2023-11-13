@@ -19,18 +19,18 @@ import java.util.List;
 
 @Mixin(class_153.class)
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class MixinBiome implements StationBiome {
-    @Shadow private boolean precipitates;
-    @Shadow private boolean snows;
-    @Shadow protected List creatures;
-    @Shadow protected List monsters;
-    @Shadow protected List waterCreatures;
+class BiomeMixin implements StationBiome {
+    @Shadow private boolean field_897;
+    @Shadow private boolean field_896;
+    @Shadow protected List field_894;
+    @Shadow protected List field_893;
+    @Shadow protected List field_895;
     @Unique private BiomeColorProvider grassColor = BiomeColorsImpl.DEFAULT_GRASS_COLOR;
     @Unique private BiomeColorProvider leavesColor = BiomeColorsImpl.DEFAULT_LEAVES_COLOR;
     @Unique private BiomeColorProvider fogColor = BiomeColorsImpl.DEFAULT_FOG_COLOR;
     @Unique private final List<SurfaceRule> surfaceRules = new ArrayList<>();
-    @Unique private final List<class_239> structures = new ArrayList<>();
-    @Unique private boolean noDimensionStrucutres;
+    @Unique private final List<class_239> features = new ArrayList<>();
+    @Unique private boolean noDimensionFeatures;
     @Unique private int minHeight = 40;
     @Unique private int maxHeight = 128;
 
@@ -70,10 +70,10 @@ public class MixinBiome implements StationBiome {
     }
 
     @Override
-    public void applySurfaceRules(World level, int x, int y, int z, BlockState state) {
+    public void applySurfaceRules(World world, int x, int y, int z, BlockState state) {
         for (SurfaceRule rule : surfaceRules) {
-            if (rule.canApply(level, x, y, z, state)) {
-                rule.apply(level, x, y, z);
+            if (rule.canApply(world, x, y, z, state)) {
+                rule.apply(world, x, y, z);
                 return;
             }
         }
@@ -86,27 +86,27 @@ public class MixinBiome implements StationBiome {
 
     @Override
     public void setPrecipitation(boolean precipitation) {
-        this.precipitates = precipitation;
+        this.field_897 = precipitation;
     }
 
     @Override
     public void setSnow(boolean snow) {
-        this.snows = snow;
+        this.field_896 = snow;
     }
 
     @Override
     public void addPassiveEntity(Class<? extends Entity> entityClass, int rarity) {
-        this.creatures.add(new class_288(entityClass, rarity));
+        this.field_894.add(new class_288(entityClass, rarity));
     }
 
     @Override
     public void addHostileEntity(Class<? extends Entity> entityClass, int rarity) {
-        this.monsters.add(new class_288(entityClass, rarity));
+        this.field_893.add(new class_288(entityClass, rarity));
     }
 
     @Override
     public void addWaterEntity(Class<? extends Entity> entityClass, int rarity) {
-        this.waterCreatures.add(new class_288(entityClass, rarity));
+        this.field_895.add(new class_288(entityClass, rarity));
     }
 
     @Override
@@ -130,17 +130,17 @@ public class MixinBiome implements StationBiome {
     }
     
     @Override
-    public List<class_239> getStructures() {
-        return structures;
+    public List<class_239> getFeatures() {
+        return features;
     }
     
     @Override
-    public void setNoDimensionStrucutres(boolean noDimensionStrucutres) {
-        this.noDimensionStrucutres = false;
+    public void setNoDimensionFeatures(boolean noDimensionFeatures) {
+        this.noDimensionFeatures = false;
     }
     
     @Override
-    public boolean isNoDimensionStrucutres() {
-        return noDimensionStrucutres;
+    public boolean isNoDimensionFeatures() {
+        return noDimensionFeatures;
     }
 }

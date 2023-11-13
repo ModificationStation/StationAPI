@@ -10,6 +10,6 @@ import net.modificationstation.stationapi.api.StationAPI;
 @SuperBuilder
 @EventPhases(StationAPI.INTERNAL_PHASE)
 public class BiomeModificationEvent extends Event {
-    public final World level;
+    public final World world;
     public final class_153 biome;
 }

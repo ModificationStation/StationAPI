@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.worldgen;
+package net.modificationstation.stationapi.mixin.worldgen.client;
 
 import net.minecraft.class_555;
 import net.minecraft.client.Minecraft;
@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(class_555.class)
-public class MixinGameRenderer {
-    @Shadow private Minecraft minecraft;
+class GameRendererMixin {
+    @Shadow private Minecraft field_2349;
     @Shadow float field_2346;
     @Shadow float field_2347;
     @Shadow float field_2348;
@@ -22,8 +22,8 @@ public class MixinGameRenderer {
             method = "method_1842(IF)V",
             at = @At("HEAD")
     )
-    private void changeFogColor(int i, float delta, CallbackInfo info) {
-        FogRendererImpl.setupFog(minecraft, delta);
+    private void stationapi_changeFogColor(int i, float delta, CallbackInfo info) {
+        FogRendererImpl.setupFog(field_2349, delta);
         field_2346 = FogRendererImpl.getR();
         field_2347 = FogRendererImpl.getG();
         field_2348 = FogRendererImpl.getB();
@@ -38,7 +38,7 @@ public class MixinGameRenderer {
                     shift = Shift.AFTER
             )
     )
-    private void clearWithFogColor(float delta, CallbackInfo info) {
+    private void stationapi_clearWithFogColor(float delta, CallbackInfo info) {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         GL11.glClearColor(
                 FogRendererImpl.getR(),

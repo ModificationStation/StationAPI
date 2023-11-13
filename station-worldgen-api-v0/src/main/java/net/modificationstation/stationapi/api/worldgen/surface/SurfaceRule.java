@@ -10,11 +10,11 @@ import java.util.List;
 public abstract class SurfaceRule {
     private final List<SurfaceCondition> conditions = new ArrayList<>();
 
-    public abstract void apply(World level, int x, int y, int z);
+    public abstract void apply(World world, int x, int y, int z);
 
-    public boolean canApply(World level, int x, int y, int z, BlockState state) {
+    public boolean canApply(World world, int x, int y, int z, BlockState state) {
         for (SurfaceCondition condition : conditions) {
-            if (!condition.canApply(level, x, y, z, state)) return false;
+            if (!condition.canApply(world, x, y, z, state)) return false;
         }
         return true;
     }

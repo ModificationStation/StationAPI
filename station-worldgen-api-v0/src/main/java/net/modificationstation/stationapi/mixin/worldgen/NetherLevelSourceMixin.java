@@ -14,25 +14,25 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(class_359.class)
-public class MixinNetherLevelSource {
-    @Shadow private World level;
+class NetherLevelSourceMixin {
+    @Shadow private World field_1350;
 
     @Inject(
-            method = "decorate",
+            method = "method_1803",
             at = @At("HEAD")
     )
-    private void makeSurface(class_51 source, int cx, int cz, CallbackInfo info) {
-        WorldDecoratorImpl.decorate(this.level, cx, cz);
+    private void stationapi_makeSurface(class_51 source, int cx, int cz, CallbackInfo info) {
+        WorldDecoratorImpl.decorate(this.field_1350, cx, cz);
     }
     
     @Inject(
-        method = "decorate",
-        at = @At(value = "FIELD", target = "Lnet/minecraft/block/Sand;fallInstantly:Z", ordinal = 0, shift = Shift.BEFORE),
+        method = "method_1803",
+        at = @At(value = "FIELD", target = "Lnet/minecraft/block/SandBlock;field_375:Z", ordinal = 0, shift = Shift.BEFORE),
         cancellable = true
     )
-    private void cancelStructureGeneration(class_51 source, int cx, int cz, CallbackInfo info) {
-        class_153 biome = this.level.method_1781().method_1787(cx + 16, cz + 16);
-        if (biome.isNoDimensionStrucutres()) {
+    private void stationapi_cancelFeatureGeneration(class_51 source, int cx, int cz, CallbackInfo info) {
+        class_153 biome = this.field_1350.method_1781().method_1787(cx + 16, cz + 16);
+        if (biome.isNoDimensionFeatures()) {
             SandBlock.field_375 = false;
             info.cancel();
         }

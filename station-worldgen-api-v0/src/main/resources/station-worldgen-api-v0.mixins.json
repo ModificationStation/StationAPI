@@ -4,20 +4,20 @@
   "package": "net.modificationstation.stationapi.mixin.worldgen",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinBiome",
-    "MixinBiomeSource",
-    "MixinLevel",
-    "MixinNether",
-    "MixinNetherLevelSource",
-    "MixinOverworld",
-    "MixinOverworldLevelSource",
-    "MixinSimplexOctaveNoise"
+    "BiomeMixin",
+    "BiomeSourceMixin",
+    "NetherDimensionMixin",
+    "NetherLevelSourceMixin",
+    "OverworldDimensionMixin",
+    "OverworldLevelSourceMixin",
+    "SimplexOctaveNoiseMixin",
+    "WorldMixin"
   ],
   "client": [
-    "MixinGameRenderer",
-    "MixinGrass",
-    "MixinLeaves",
-    "MixinTallGrass"
+    "client.GameRendererMixin",
+    "client.GrassBlockMixin",
+    "client.LeavesBlockMixin",
+    "client.TallPlantBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

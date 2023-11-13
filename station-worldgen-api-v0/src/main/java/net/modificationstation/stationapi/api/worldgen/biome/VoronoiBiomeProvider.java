@@ -40,7 +40,7 @@ public class VoronoiBiomeProvider implements BiomeProvider {
     }
 
     @Override
-    public class_153 getBiome(int x, int z, float temperature, float wetness) {
+    public class_153 getBiome(int x, int z, float temperature, float downfall) {
         double px = x * s1 + distortX.method_1516(buffer, x, z, 1, 1, s2, s2, 0.25)[0] * distortion;
         double pz = z * s1 + distortZ.method_1516(buffer, x, z, 1, 1, s2, s2, 0.25)[0] * distortion;
         int id = idNoise.getID(px, pz, biomes.size());

@@ -18,49 +18,49 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(class_538.class)
-public class MixinOverworldLevelSource {
+class OverworldLevelSourceMixin {
     @Shadow
-    private World level;
+    private World field_2260;
     @Shadow
-    private double[] noises;
+    private double[] field_2261;
 
     @Inject(
-            method = "decorate",
+            method = "method_1803",
             at = @At("HEAD")
     )
-    private void decorateSurface(class_51 source, int cx, int cz, CallbackInfo info) {
-        WorldDecoratorImpl.decorate(this.level, cx, cz);
+    private void stationapi_decorateSurface(class_51 source, int cx, int cz, CallbackInfo info) {
+        WorldDecoratorImpl.decorate(this.field_2260, cx, cz);
     }
     
     @Inject(
-        method = "decorate",
+        method = "method_1803",
         at = @At(value = "INVOKE", target = "Ljava/util/Random;setSeed(J)V", ordinal = 0, shift = Shift.BEFORE),
         cancellable = true
     )
-    private void cancelStructureGeneration(class_51 source, int cx, int cz, CallbackInfo info, @Local class_153 biome) {
-        if (biome.isNoDimensionStrucutres()) {
+    private void stationapi_cancelFeatureGeneration(class_51 source, int cx, int cz, CallbackInfo info, @Local class_153 biome) {
+        if (biome.isNoDimensionFeatures()) {
             SandBlock.field_375 = false;
             info.cancel();
         }
     }
 
     @ModifyConstant(
-            method = "buildSurface",
+            method = "method_1797",
             constant = @Constant(intValue = 127)
     )
-    private int cancelSurfaceMaking(int constant, @Local class_153 biome) {
-        return biome.noSurfaceRules() ? level.getTopY() - 1 : -1;
+    private int stationapi_cancelSurfaceMaking(int constant, @Local class_153 biome) {
+        return biome.noSurfaceRules() ? field_2260.getTopY() - 1 : -1;
     }
 
     @Inject(
-            method = "shapeChunk",
+            method = "method_1798",
             at = @At(
                     value = "INVOKE_ASSIGN",
-                    target = "Lnet/minecraft/level/source/OverworldLevelSource;calculateNoise([DIIIIII)[D",
+                    target = "Lnet/minecraft/class_538;method_1799([DIIIIII)[D",
                     shift = Shift.AFTER
             )
     )
-    private void changeHeight(int cx, int cz, byte[] args, class_153[] biomes, double[] par5, CallbackInfo info) {
-        WorldGeneratorImpl.updateNoise(level, cx, cz, this.noises);
+    private void stationapi_changeHeight(int cx, int cz, byte[] args, class_153[] biomes, double[] par5, CallbackInfo info) {
+        WorldGeneratorImpl.updateNoise(field_2260, cx, cz, this.field_2261);
     }
 }

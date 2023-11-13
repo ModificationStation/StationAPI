@@ -1,11 +1,9 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.class_153;
 import net.modificationstation.stationapi.api.worldgen.biome.ClimateBiomeProvider;
 
 import java.util.Collection;
-import java.util.Set;
 
 public class OverworldBiomeProviderImpl extends ClimateBiomeProvider {
     private static final OverworldBiomeProviderImpl INSTANCE = new OverworldBiomeProviderImpl();
@@ -14,15 +12,15 @@ public class OverworldBiomeProviderImpl extends ClimateBiomeProvider {
     }
 
     @Override
-    public class_153 getBiome(int x, int z, float temperature, float wetness) {
-        class_153 biome = getBiome(temperature, wetness);
-        return biome == null ? class_153.method_786(temperature, wetness) : biome;
+    public class_153 getBiome(int x, int z, float temperature, float downfall) {
+        class_153 biome = getBiome(temperature, downfall);
+        return biome == null ? class_153.method_786(temperature, downfall) : biome;
     }
 
     @Override
-    protected class_153 getBiome(float temperature, float wetness) {
-        class_153 biome = super.getBiome(temperature, wetness);
-        return biome == null ? class_153.method_786(temperature, wetness) : biome;
+    protected class_153 getBiome(float temperature, float downfall) {
+        class_153 biome = super.getBiome(temperature, downfall);
+        return biome == null ? class_153.method_786(temperature, downfall) : biome;
     }
     
     @Override

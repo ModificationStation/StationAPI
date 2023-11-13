@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.worldgen;
+package net.modificationstation.stationapi.mixin.worldgen.client;
 
 import net.minecraft.block.TallPlantBlock;
 import net.minecraft.world.BlockView;
@@ -9,13 +9,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TallPlantBlock.class)
-public class MixinTallGrass {
+class TallPlantBlockMixin {
     @Inject(
-            method = "getColourMultiplier",
+            method = "getColorMultiplier",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void getBiomeColor(BlockView view, int x, int y, int z, CallbackInfoReturnable<Integer> info) {
+    private void stationapi_getBiomeColor(BlockView view, int x, int y, int z, CallbackInfoReturnable<Integer> info) {
         if (view.getBlockMeta(x, y, z) != 0) {
             long l = x * 3129871L + z * 6129781L + y;
             l = l * l * 42317861L + l * 11L;

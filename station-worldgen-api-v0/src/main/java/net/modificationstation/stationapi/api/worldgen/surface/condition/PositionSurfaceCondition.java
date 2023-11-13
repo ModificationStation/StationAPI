@@ -5,19 +5,19 @@ import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
 
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class PositionSurfaceCondition implements SurfaceCondition {
     private final MutableBlockPos pos = new MutableBlockPos(0, 0, 0);
-    private final Function<BlockPos, Boolean> function;
+    private final Predicate<BlockPos> predicate;
 
-    public PositionSurfaceCondition(Function<BlockPos, Boolean> function) {
-        this.function = function;
+    public PositionSurfaceCondition(Predicate<BlockPos> predicate) {
+        this.predicate = predicate;
     }
 
     @Override
-    public boolean canApply(World level, int x, int y, int z, BlockState state) {
+    public boolean canApply(World world, int x, int y, int z, BlockState state) {
         pos.set(x, y, z);
-        return function.apply(pos);
+        return predicate.test(pos);
     }
 }

@@ -1,11 +1,12 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.class_153;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import net.minecraft.class_153;
 
 /**
  * Provides biomes based on temperature/wetness(humidity) climate model, similar to default Minecraft behaviour
@@ -19,16 +20,16 @@ public class ClimateBiomeProvider implements BiomeProvider {
      * @param biome {@link class_153} to add
      * @param t1    minimum temperature
      * @param t2    maximum temperature
-     * @param w1    minimum wetness (rainfall)
-     * @param w2    maximum wetness (rainfall)
+     * @param d1    minimum wetness (downfall)
+     * @param d2    maximum wetness (downfall)
      */
-    public void addBiome(class_153 biome, float t1, float t2, float w1, float w2) {
-        biomes.add(new BiomeInfo(biome, t1, t2, w1, w2));
+    public void addBiome(class_153 biome, float t1, float t2, float d1, float d2) {
+        biomes.add(new BiomeInfo(biome, t1, t2, d1, d2));
     }
 
     @Override
-    public class_153 getBiome(int x, int z, float temperature, float wetness) {
-        class_153 biome = getBiome(temperature, wetness);
+    public class_153 getBiome(int x, int z, float temperature, float downfall) {
+        class_153 biome = getBiome(temperature, downfall);
         return biome == null ? biomes.get(0).biome : biome;
     }
     
@@ -42,13 +43,13 @@ public class ClimateBiomeProvider implements BiomeProvider {
     protected class_153 getBiome(float temperature, float wetness) {
         for (BiomeInfo info : biomes) {
             if (info.t1 > temperature || info.t2 < temperature) continue;
-            if (info.w1 > wetness || info.w2 < wetness) continue;
+            if (info.d1 > wetness || info.d2 < wetness) continue;
             return info.biome;
         }
         return null;
     }
 
     private record BiomeInfo(
-            class_153 biome, float t1, float t2, float w1, float w2
+            class_153 biome, float t1, float t2, float d1, float d2
     ) {}
 }

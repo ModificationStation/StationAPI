@@ -8,14 +8,14 @@ public class WorldGeneratorImpl {
     private static final BiomeDataInterpolator MIN_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(class_153::getMinHeight, 16, 4, 8);
     private static final BiomeDataInterpolator MAX_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(class_153::getMaxHeight, 16, 4, 8);
 
-    public static void updateNoise(World level, int cx, int cz, double[] data) {
+    public static void updateNoise(World world, int cx, int cz, double[] data) {
         float min = 0;
         float max = 0;
         float n = 0;
         cx <<= 4;
         cz <<= 4;
     
-        class_519 biomeSource = level.method_1781();
+        class_519 biomeSource = world.method_1781();
         int sideY = data.length / 25;
         int dx = sideY * 5;
 
@@ -29,7 +29,7 @@ public class WorldGeneratorImpl {
                 max = MAX_HEIGHT_INTERPOLATOR.get(biomeSource, x, z) / 8F;
             }
             
-            y += level.getBottomY();
+            y += world.getBottomY();
 
             if (y < min) {
                 float d = (min - y) * 100 + n * 10;

@@ -15,12 +15,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(class_519.class)
-public class MixinBiomeSource {
+class BiomeSourceMixin {
     @Inject(
-            method = "getBiomes([Lnet/minecraft/level/biome/Biome;IIII)[Lnet/minecraft/level/biome/Biome;",
+            method = "method_1791",
             at = @At("HEAD")
     )
-    private void capturePosition(
+    private void stationapi_capturePosition(
             class_153[] data, int x, int z, int dx, int dz, CallbackInfoReturnable<class_153[]> info,
             @Share("posX") LocalIntRef posX, @Share("posZ") LocalIntRef posZ
     ) {
@@ -29,13 +29,13 @@ public class MixinBiomeSource {
     }
 
     @WrapOperation(
-            method = "getBiomes([Lnet/minecraft/level/biome/Biome;IIII)[Lnet/minecraft/level/biome/Biome;",
+            method = "method_1791",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/level/biome/Biome;getBiome(DD)Lnet/minecraft/level/biome/Biome;"
+                    target = "Lnet/minecraft/class_153;method_786(DD)Lnet/minecraft/class_153;"
             )
     )
-    private class_153 getRegionBiome(
+    private class_153 stationapi_getRegionBiome(
             double temperature, double wetness, Operation<class_153> original,
             @Local(index = 7) int dx, @Local(index = 8) int dz,
             @Share("posX") LocalIntRef posX, @Share("posZ") LocalIntRef posZ

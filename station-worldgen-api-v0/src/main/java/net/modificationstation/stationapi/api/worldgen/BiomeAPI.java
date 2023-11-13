@@ -95,9 +95,9 @@ public class BiomeAPI {
         return netherProvider;
     }
 
-    // Seed can be different from level seed (when read from properties)
+    // Seed can be different from world seed (when read from properties)
     // Parsed as separate args
-    public static void init(World level, long seed) {
+    public static void init(World world, long seed) {
         // Call this to force biome registry event happen before init of regions
         //noinspection ResultOfMethodCallIgnored
         class_153.method_786(0, 0);
@@ -129,10 +129,10 @@ public class BiomeAPI {
         overworldProvider.setSeed(seed);
         netherProvider.setSeed(seed);
         
-        if (!MODIFICATIONS_APPLIED.getBoolean(level)) {
-            MODIFICATIONS_APPLIED.put(level, true);
-            ((StationDimension) level.dimension).getBiomes().forEach(biome -> {
-                StationAPI.EVENT_BUS.post(BiomeModificationEvent.builder().biome(biome).level(level).build());
+        if (!MODIFICATIONS_APPLIED.getBoolean(world)) {
+            MODIFICATIONS_APPLIED.put(world, true);
+            ((StationDimension) world.dimension).getBiomes().forEach(biome -> {
+                StationAPI.EVENT_BUS.post(BiomeModificationEvent.builder().biome(biome).world(world).build());
             });
         }
     }

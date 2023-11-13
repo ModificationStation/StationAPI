@@ -5,7 +5,7 @@ import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.class_153;
 import net.minecraft.class_239;
 import net.minecraft.entity.Entity;
-import net.modificationstation.stationapi.api.worldgen.structure.DefaultStructures;
+import net.modificationstation.stationapi.api.worldgen.feature.DefaultFeatures;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 import net.modificationstation.stationapi.impl.worldgen.BiomeColorsImpl;
 
@@ -17,12 +17,12 @@ public class BiomeBuilder {
     private final Reference2IntMap<Class<? extends Entity>> hostileEntities = new Reference2IntOpenHashMap<>(32);
     private final Reference2IntMap<Class<? extends Entity>> passiveEntities = new Reference2IntOpenHashMap<>(32);
     private final Reference2IntMap<Class<? extends Entity>> waterEntities = new Reference2IntOpenHashMap<>(32);
-    private final List<class_239> structures = new ArrayList<>();
+    private final List<class_239> features = new ArrayList<>();
     private final List<SurfaceRule> rules = new ArrayList<>();
     private BiomeColorProvider grassColor;
     private BiomeColorProvider leavesColor;
     private BiomeColorProvider fogColor;
-    private boolean noDimensionStructures;
+    private boolean noDimensionFeatures;
     private boolean precipitation;
     private boolean snow;
     private String name;
@@ -38,7 +38,7 @@ public class BiomeBuilder {
         BiomeBuilder instance = INSTANCES.get();
 
         instance.name = name;
-        instance.noDimensionStructures = false;
+        instance.noDimensionFeatures = false;
         instance.precipitation = true;
         instance.snow = false;
         instance.minHeight = 40;
@@ -51,7 +51,7 @@ public class BiomeBuilder {
         instance.hostileEntities.clear();
         instance.passiveEntities.clear();
         instance.waterEntities.clear();
-        instance.structures.clear();
+        instance.features.clear();
         instance.rules.clear();
 
         return instance;
@@ -67,19 +67,19 @@ public class BiomeBuilder {
     }
     
     /**
-     * Disable default dimension structures for the biome (lakes, ores, etc)
+     * Disable default dimension features for the biome (lakes, ores, etc)
      */
-    public BiomeBuilder noDimensionStructures() {
-        noDimensionStructures = true;
+    public BiomeBuilder noDimensionFeatures() {
+        noDimensionFeatures = true;
         return this;
     }
     
     /**
-     * Add structure into the biome.
-     * Biomes with empty structure list will generate same features as dimension decorator have
+     * Add feature into the biome.
+     * Biomes with empty feature list will generate same features as dimension decorator have
      */
-    public BiomeBuilder structure(class_239 structure) {
-        structures.add(structure);
+    public BiomeBuilder feature(class_239 feature) {
+        features.add(feature);
         return this;
     }
     
@@ -87,8 +87,8 @@ public class BiomeBuilder {
      * Add overworld lakes into the biome
      */
     public BiomeBuilder overworldLakes() {
-        structure(DefaultStructures.WATER_LAKE_SCATTERED);
-        structure(DefaultStructures.LAVA_LAKE_SCATTERED);
+        feature(DefaultFeatures.WATER_LAKE_SCATTERED);
+        feature(DefaultFeatures.LAVA_LAKE_SCATTERED);
         return this;
     }
     
@@ -96,14 +96,14 @@ public class BiomeBuilder {
      * Add overworld ores into the biome
      */
     public BiomeBuilder overworldOres() {
-        structure(DefaultStructures.DIRT_ORE_SCATTERED);
-        structure(DefaultStructures.GRAVEL_ORE_SCATTERED);
-        structure(DefaultStructures.COAL_ORE_SCATTERED);
-        structure(DefaultStructures.IRON_ORE_SCATTERED);
-        structure(DefaultStructures.GOLD_ORE_SCATTERED);
-        structure(DefaultStructures.REDSTONE_ORE_SCATTERED);
-        structure(DefaultStructures.DIAMOND_ORE_SCATTERED);
-        structure(DefaultStructures.LAPIS_LAZULI_ORE_SCATTERED);
+        feature(DefaultFeatures.DIRT_ORE_SCATTERED);
+        feature(DefaultFeatures.GRAVEL_ORE_SCATTERED);
+        feature(DefaultFeatures.COAL_ORE_SCATTERED);
+        feature(DefaultFeatures.IRON_ORE_SCATTERED);
+        feature(DefaultFeatures.GOLD_ORE_SCATTERED);
+        feature(DefaultFeatures.REDSTONE_ORE_SCATTERED);
+        feature(DefaultFeatures.DIAMOND_ORE_SCATTERED);
+        feature(DefaultFeatures.LAPIS_LAZULI_ORE_SCATTERED);
         return this;
     }
 
@@ -234,12 +234,12 @@ public class BiomeBuilder {
         biome.setFogColor(fogColor);
         biome.setMinHeight(minHeight);
         biome.setMaxHeight(maxHeight);
-        biome.setNoDimensionStrucutres(noDimensionStructures);
+        biome.setNoDimensionFeatures(noDimensionFeatures);
 
         hostileEntities.forEach(biome::addHostileEntity);
         passiveEntities.forEach(biome::addPassiveEntity);
         waterEntities.forEach(biome::addWaterEntity);
-        biome.getStructures().addAll(structures);
+        biome.getFeatures().addAll(features);
 
         return biome;
     }

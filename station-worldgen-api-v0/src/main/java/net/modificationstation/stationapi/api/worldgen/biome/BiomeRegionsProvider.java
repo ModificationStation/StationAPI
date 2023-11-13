@@ -23,11 +23,11 @@ public class BiomeRegionsProvider implements BiomeProvider {
     }
 
     @Override
-    public class_153 getBiome(int x, int z, float temperature, float wetness) {
+    public class_153 getBiome(int x, int z, float temperature, float downfall) {
         double px = x * 0.01 + distortX.method_1516(buffer, x, z, 1, 1, 0.1, 0.1, 0.25)[0] * 0.1;
         double pz = z * 0.01 + distortZ.method_1516(buffer, x, z, 1, 1, 0.1, 0.1, 0.25)[0] * 0.1;
         int id = idNoise.getID(px, pz, providers.size());
-        return providers.get(id).getBiome(x, z, temperature, wetness);
+        return providers.get(id).getBiome(x, z, temperature, downfall);
     }
     
     @Override

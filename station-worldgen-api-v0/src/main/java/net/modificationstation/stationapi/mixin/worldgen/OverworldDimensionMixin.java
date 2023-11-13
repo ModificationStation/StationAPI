@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import java.util.Collection;
 
 @Mixin(OverworldDimension.class)
-public class MixinOverworld extends Dimension implements StationDimension {
+class OverworldDimensionMixin extends Dimension implements StationDimension {
     @Override
     public Collection<class_153> getBiomes() {
         return BiomeAPI.getOverworldProvider().getBiomes();

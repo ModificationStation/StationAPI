@@ -14,8 +14,8 @@ import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeBuilder;
 import net.modificationstation.stationapi.api.worldgen.biome.ClimateBiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biome.VoronoiBiomeProvider;
-import net.modificationstation.stationapi.api.worldgen.structure.DefaultStructures;
-import net.modificationstation.stationapi.api.worldgen.structure.LeveledScatterStructure;
+import net.modificationstation.stationapi.api.worldgen.feature.DefaultFeatures;
+import net.modificationstation.stationapi.api.worldgen.feature.LeveledScatterFeature;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceBuilder;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 
@@ -74,31 +74,31 @@ public class TestWorldgenListener {
                 .start("Voronoi " + i)
                 .height(256, 256)
                 .grassAndLeavesColor(color)
-                .structure(DefaultStructures.SPRUCE_TREE_SCATTERED)
+                .feature(DefaultFeatures.SPRUCE_TREE_SCATTERED)
                 .fogColor(color)
                 .build();
             voronoiTest[i].field_889 = color;
         }
     
-        class_239 tree = new LeveledScatterStructure(new class_512(), 3);
+        class_239 tree = new LeveledScatterFeature(new class_512(), 3);
         
         testNether = BiomeBuilder
             .start("Test Nether")
             .surfaceRule(SurfaceBuilder.start(Block.GRASS_BLOCK).replace(Block.NETHERRACK).ground(1).build())
             .surfaceRule(SurfaceBuilder.start(Block.DIRT).replace(Block.NETHERRACK).ground(3).build())
-            .noDimensionStructures()
+            .noDimensionFeatures()
             .fogColor(0xFFFF00FF)
-            .structure(tree)
+            .feature(tree)
             .build();
     
-        tree = new LeveledScatterStructure(new TestTree(Block.SOUL_SAND, Block.GLOWSTONE), 3);
+        tree = new LeveledScatterFeature(new TestTree(Block.SOUL_SAND, Block.GLOWSTONE), 3);
         
         testNether2 = BiomeBuilder
             .start("Test Nether")
             .surfaceRule(SurfaceBuilder.start(Block.SOUL_SAND).replace(Block.NETHERRACK).ground(2).build())
-            .noDimensionStructures()
+            .noDimensionFeatures()
             .fogColor(0xFFFFBC5E)
-            .structure(tree)
+            .feature(tree)
             .build();
     }
 
@@ -134,6 +134,6 @@ public class TestWorldgenListener {
     
     @EventListener
     public void testBiomeModification(BiomeModificationEvent event) {
-        System.out.println(event.level + " " + event.biome + " " + event.biome.field_888 + " " + event.biome.getClass().getName());
+        System.out.println(event.world + " " + event.biome + " " + event.biome.field_888 + " " + event.biome.getClass().getName());
     }
 }

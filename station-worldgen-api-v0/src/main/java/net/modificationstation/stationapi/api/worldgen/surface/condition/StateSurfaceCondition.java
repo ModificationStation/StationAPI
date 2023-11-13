@@ -11,7 +11,7 @@ public class StateSurfaceCondition implements SurfaceCondition {
     }
 
     @Override
-    public boolean canApply(World level, int x, int y, int z, BlockState state) {
+    public boolean canApply(World world, int x, int y, int z, BlockState state) {
         return state == this.state;
     }
 }

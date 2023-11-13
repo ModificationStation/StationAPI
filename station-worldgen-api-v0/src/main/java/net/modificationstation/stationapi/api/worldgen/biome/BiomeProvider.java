@@ -1,7 +1,8 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
-import java.util.Collection;
 import net.minecraft.class_153;
+
+import java.util.Collection;
 
 public interface BiomeProvider {
     /**
@@ -10,10 +11,10 @@ public interface BiomeProvider {
      * @param x           block X position
      * @param z           block Z position
      * @param temperature temperature at position
-     * @param wetness     wetness (rainfall) at position
+     * @param downfall     wetness (downfall) at position
      * @return {@link class_153}
      */
-    class_153 getBiome(int x, int z, float temperature, float wetness);
+    class_153 getBiome(int x, int z, float temperature, float downfall);
 
     Collection<class_153> getBiomes();
     

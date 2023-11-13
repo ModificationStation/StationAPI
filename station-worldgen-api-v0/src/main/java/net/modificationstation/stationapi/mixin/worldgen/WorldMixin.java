@@ -13,16 +13,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(World.class)
-public class MixinLevel {
+class WorldMixin {
     @Inject(
-        method = "<init>(Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/level/dimension/Dimension;)V",
+        method = "<init>(Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/world/dimension/Dimension;)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/level/dimension/Dimension;initDimension(Lnet/minecraft/level/Level;)V",
+            target = "Lnet/minecraft/world/dimension/Dimension;method_1768(Lnet/minecraft/world/World;)V",
             shift = Shift.BEFORE
         )
     )
-    private void onInit(DimensionData data, String name, long seed, Dimension dimension, CallbackInfo info) {
+    private void stationapi_onInit(DimensionData data, String name, long seed, Dimension dimension, CallbackInfo info) {
         if (data.method_1737() != null) {
             seed = data.method_1737().getSeed();
         }
@@ -30,15 +30,15 @@ public class MixinLevel {
     }
     
     @Inject(
-        method = "<init>(Lnet/minecraft/level/dimension/DimensionData;Ljava/lang/String;Lnet/minecraft/level/dimension/Dimension;J)V",
+        method = "<init>(Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;Lnet/minecraft/world/dimension/Dimension;J)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/level/dimension/Dimension;initDimension(Lnet/minecraft/level/Level;)V",
+            target = "Lnet/minecraft/world/dimension/Dimension;method_1768(Lnet/minecraft/world/World;)V",
             shift = Shift.BEFORE
         )
     )
     @Environment(value= EnvType.CLIENT)
-    private void onInit(DimensionData data, String name, Dimension dimension, long seed, CallbackInfo info) {
+    private void stationapi_onInit(DimensionData data, String name, Dimension dimension, long seed, CallbackInfo info) {
         if (data.method_1737() != null) {
             seed = data.method_1737().getSeed();
         }
@@ -46,15 +46,15 @@ public class MixinLevel {
     }
     
     @Inject(
-        method = "<init>(Lnet/minecraft/level/Level;Lnet/minecraft/level/dimension/Dimension;)V",
+        method = "<init>(Lnet/minecraft/world/World;Lnet/minecraft/world/dimension/Dimension;)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/level/dimension/Dimension;initDimension(Lnet/minecraft/level/Level;)V",
+            target = "Lnet/minecraft/world/dimension/Dimension;method_1768(Lnet/minecraft/world/World;)V",
             shift = Shift.BEFORE
         )
     )
     @Environment(value= EnvType.CLIENT)
-    private void onInit(World level, Dimension dimension, CallbackInfo info) {
-        BiomeAPI.init(level, level.getSeed());
+    private void stationapi_onInit(World world, Dimension dimension, CallbackInfo info) {
+        BiomeAPI.init(world, world.getSeed());
     }
 }

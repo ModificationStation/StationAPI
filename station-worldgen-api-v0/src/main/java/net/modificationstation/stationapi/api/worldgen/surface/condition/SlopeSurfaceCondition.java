@@ -16,11 +16,11 @@ public class SlopeSurfaceCondition implements SurfaceCondition {
     }
 
     @Override
-    public boolean canApply(World level, int x, int y, int z, BlockState state) {
-        a.set(2, level.method_222(x + 1, z) - level.method_222(x - 1, z), 0);
+    public boolean canApply(World world, int x, int y, int z, BlockState state) {
+        a.set(2, world.method_222(x + 1, z) - world.method_222(x - 1, z), 0);
         a.normalize();
 
-        b.set(0, level.method_222(x, z + 1) - level.method_222(x, z - 1), 2);
+        b.set(0, world.method_222(x, z + 1) - world.method_222(x, z - 1), 2);
         b.normalize();
 
         a.cross(b);

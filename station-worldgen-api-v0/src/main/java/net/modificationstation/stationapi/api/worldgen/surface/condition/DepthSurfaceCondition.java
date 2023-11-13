@@ -26,12 +26,12 @@ public class DepthSurfaceCondition implements SurfaceCondition {
     }
 
     @Override
-    public boolean canApply(World level, int x, int y, int z, BlockState state) {
+    public boolean canApply(World world, int x, int y, int z, BlockState state) {
         int depth = minDepth;
         if (minDepth != maxDepth) {
             depth = MathHelper.lerp(NOISE.method_1516(BUFFER, x, z, 1, 1, 0.1, 0.1, 0.25)[0], minDepth, maxDepth);
         }
-        state = level.getBlockState(x, y - depth * direction.offset(), z);
+        state = world.getBlockState(x, y - depth * direction.offset(), z);
         return state.isAir() || state.getMaterial().method_893() || state.getMaterial().method_896() || !state.getMaterial().method_907();
     }
 }

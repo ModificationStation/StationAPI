@@ -53,7 +53,7 @@ public interface StationBiome {
         Util.assertImpl();
     }
 
-    default void applySurfaceRules(World level, int x, int y, int z, BlockState state) {
+    default void applySurfaceRules(World world, int x, int y, int z, BlockState state) {
         Util.assertImpl();
     }
 
@@ -97,19 +97,19 @@ public interface StationBiome {
         Util.assertImpl();
     }
     
-    default List<class_239> getStructures() {
+    default List<class_239> getFeatures() {
         return Util.assertImpl();
     }
     
-    default void addStructure(class_239 structure) {
-        getStructures().add(structure);
+    default void addFeature(class_239 feature) {
+        getFeatures().add(feature);
     }
     
-    default void setNoDimensionStrucutres(boolean noDimensionStrucutres) {
+    default void setNoDimensionFeatures(boolean noDimensionFeatures) {
         Util.assertImpl();
     }
     
-    default boolean isNoDimensionStrucutres() {
+    default boolean isNoDimensionFeatures() {
         return Util.assertImpl();
     }
 }

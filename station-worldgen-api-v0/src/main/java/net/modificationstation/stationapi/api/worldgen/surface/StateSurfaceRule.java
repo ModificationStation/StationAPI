@@ -11,7 +11,7 @@ public class StateSurfaceRule extends SurfaceRule {
     }
 
     @Override
-    public void apply(World level, int x, int y, int z) {
-        level.setBlockState(x, y, z, state);
+    public void apply(World world, int x, int y, int z) {
+        world.setBlockState(x, y, z, state);
     }
 }
