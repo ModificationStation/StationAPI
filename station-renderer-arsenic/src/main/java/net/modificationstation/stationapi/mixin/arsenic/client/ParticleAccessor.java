@@ -5,8 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Particle.class)
-public interface ParticleBaseAccessor {
-
+public interface ParticleAccessor {
     @Accessor
     int getField_2635();
 
@@ -17,14 +16,14 @@ public interface ParticleBaseAccessor {
     float getField_2637();
 
     @Accessor
-    float getField_2640();
+    float getScale();
 
     @Accessor
-    float getField_2642();
+    float getRed();
 
     @Accessor
-    float getField_2643();
+    float getGreen();
 
     @Accessor
-    float getField_2644();
+    float getBlue();
 }

@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderManager.class)
-public class BlockRendererMixin {
+class BlockRenderManagerMixin {
     @Inject(
             method = {
                     "renderBottomFace",
@@ -30,7 +30,7 @@ public class BlockRendererMixin {
             },
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/render/block/BlockRenderer;textureOverride:I",
+                    target = "Lnet/minecraft/client/render/block/BlockRenderManager;textureOverride:I",
                     opcode = Opcodes.GETFIELD,
                     ordinal = 1,
                     shift = At.Shift.BY,
@@ -498,23 +498,23 @@ public class BlockRendererMixin {
     private final ArsenicBlockRenderer arsenic_plugin = new ArsenicBlockRenderer((BlockRenderManager) (Object) this);
 
     @Inject(
-            method = "render(Lnet/minecraft/block/BlockBase;III)Z",
+            method = "render(Lnet/minecraft/block/Block;III)Z",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void onRenderInWorld(Block block, int blockX, int blockY, int blockZ, CallbackInfoReturnable<Boolean> cir) {
+    private void stationapi_onRenderInWorld(Block block, int blockX, int blockY, int blockZ, CallbackInfoReturnable<Boolean> cir) {
         arsenic_plugin.renderWorld(block, blockX, blockY, blockZ, cir);
     }
 
     @Inject(
-            method = "method_48(Lnet/minecraft/block/BlockBase;IF)V",
+            method = "render(Lnet/minecraft/block/Block;IF)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/BlockBase;getRenderType()I"
+                    target = "Lnet/minecraft/block/Block;getRenderType()I"
             ),
             cancellable = true
     )
-    private void onRenderInInventory(Block arg, int meta, float brightness, CallbackInfo ci) {
+    private void stationapi_onRenderInInventory(Block arg, int meta, float brightness, CallbackInfo ci) {
         arsenic_plugin.renderInventory(arg, meta, brightness, ci);
     }
 }

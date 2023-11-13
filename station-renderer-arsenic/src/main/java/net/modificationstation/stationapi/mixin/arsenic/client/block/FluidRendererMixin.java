@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderManager.class)
-public class FluidRendererMixin {
+class FluidRendererMixin {
     @Shadow private BlockView blockView;
 
     @Inject(

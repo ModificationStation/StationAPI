@@ -12,8 +12,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(class_556.class)
 @Environment(EnvType.CLIENT)
-public class Mixinclass_556 {
-
+class class_556Mixin {
     @Unique
     private final ArsenicOverlayRenderer arsenic_plugin = new ArsenicOverlayRenderer((class_556) (Object) this);
 

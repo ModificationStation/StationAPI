@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(class_556.class)
 public interface class_556Accessor {
-
     @Accessor("field_2401")
     Minecraft stationapi$getField_2401();
 

@@ -9,16 +9,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Tessellator.class)
-public class MixinTessellator {
-
+class TessellatorMixin {
     @Unique
     private final ArsenicTessellator arsenic_plugin = new ArsenicTessellator((Tessellator) (Object) this);
 
     @Inject(
-            method = "addVertex(DDD)V",
+            method = "vertex(DDD)V",
             at = @At("RETURN")
     )
-    private void afterVertex(double e, double f, double par3, CallbackInfo ci) {
+    private void stationapi_afterVertex(double e, double f, double par3, CallbackInfo ci) {
         arsenic_plugin.afterVertex();
     }
 }

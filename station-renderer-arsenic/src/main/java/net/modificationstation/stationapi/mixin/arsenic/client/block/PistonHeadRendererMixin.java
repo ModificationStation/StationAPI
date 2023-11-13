@@ -22,19 +22,19 @@ import java.util.Objects;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderManager.class)
-public class PistonHeadRendererMixin {
+class PistonHeadRendererMixin {
 
     // PISTON ROD START
 
     @Inject(
             method = {
-                    "method_41",
-                    "method_54",
-                    "method_60"
+                    "renderPistonHeadYAxis",
+                    "renderPistonHeadZAxis",
+                    "renderPistonHeadXAxis"
             },
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/render/block/BlockRenderer;textureOverride:I",
+                    target = "Lnet/minecraft/client/render/block/BlockRenderManager;textureOverride:I",
                     opcode = Opcodes.GETFIELD,
                     ordinal = 1,
                     shift = At.Shift.BY,
@@ -52,9 +52,9 @@ public class PistonHeadRendererMixin {
     @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
             method = {
-                    "method_41",
-                    "method_54",
-                    "method_60"
+                    "renderPistonHeadYAxis",
+                    "renderPistonHeadZAxis",
+                    "renderPistonHeadXAxis"
             },
             index = 17,
             at = @At(
@@ -72,9 +72,9 @@ public class PistonHeadRendererMixin {
     @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
             method = {
-                    "method_41",
-                    "method_54",
-                    "method_60"
+                    "renderPistonHeadYAxis",
+                    "renderPistonHeadZAxis",
+                    "renderPistonHeadXAxis"
             },
             index = 18,
             at = @At(
@@ -91,9 +91,9 @@ public class PistonHeadRendererMixin {
 
     @ModifyConstant(
             method = {
-                    "method_41",
-                    "method_54",
-                    "method_60"
+                    "renderPistonHeadYAxis",
+                    "renderPistonHeadZAxis",
+                    "renderPistonHeadXAxis"
             },
             constant = @Constant(
                     floatValue = ATLAS_SIZE,
@@ -106,9 +106,9 @@ public class PistonHeadRendererMixin {
 
     @ModifyConstant(
             method = {
-                    "method_41",
-                    "method_54",
-                    "method_60"
+                    "renderPistonHeadYAxis",
+                    "renderPistonHeadZAxis",
+                    "renderPistonHeadXAxis"
             },
             constant = @Constant(
                     floatValue = ATLAS_SIZE,
@@ -121,9 +121,9 @@ public class PistonHeadRendererMixin {
 
     @ModifyVariable(
             method = {
-                    "method_41",
-                    "method_54",
-                    "method_60"
+                    "renderPistonHeadYAxis",
+                    "renderPistonHeadZAxis",
+                    "renderPistonHeadXAxis"
             },
             index = 14,
             at = @At(
@@ -141,9 +141,9 @@ public class PistonHeadRendererMixin {
 
     @ModifyConstant(
             method = {
-                    "method_41",
-                    "method_54",
-                    "method_60"
+                    "renderPistonHeadYAxis",
+                    "renderPistonHeadZAxis",
+                    "renderPistonHeadXAxis"
             },
             constant = @Constant(
                     doubleValue = ArsenicBlockRenderer.TEX_SIZE_OFFSET,
@@ -159,9 +159,9 @@ public class PistonHeadRendererMixin {
 
     @ModifyConstant(
             method = {
-                    "method_41",
-                    "method_54",
-                    "method_60"
+                    "renderPistonHeadYAxis",
+                    "renderPistonHeadZAxis",
+                    "renderPistonHeadXAxis"
             },
             constant = @Constant(
                     doubleValue = ATLAS_SIZE,
@@ -174,9 +174,9 @@ public class PistonHeadRendererMixin {
 
     @ModifyConstant(
             method = {
-                    "method_41",
-                    "method_54",
-                    "method_60"
+                    "renderPistonHeadYAxis",
+                    "renderPistonHeadZAxis",
+                    "renderPistonHeadXAxis"
             },
             constant = @Constant(floatValue = 4)
     )
@@ -189,9 +189,9 @@ public class PistonHeadRendererMixin {
 
     @ModifyConstant(
             method = {
-                    "method_41",
-                    "method_54",
-                    "method_60"
+                    "renderPistonHeadYAxis",
+                    "renderPistonHeadZAxis",
+                    "renderPistonHeadXAxis"
             },
             constant = @Constant(
                     doubleValue = ArsenicBlockRenderer.TEX_SIZE_OFFSET,
@@ -207,9 +207,9 @@ public class PistonHeadRendererMixin {
 
     @ModifyConstant(
             method = {
-                    "method_41",
-                    "method_54",
-                    "method_60"
+                    "renderPistonHeadYAxis",
+                    "renderPistonHeadZAxis",
+                    "renderPistonHeadXAxis"
             },
             constant = @Constant(
                     doubleValue = ATLAS_SIZE,

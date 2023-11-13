@@ -20,23 +20,22 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.Objects;
 
 @Mixin(WorldRenderer.class)
-public abstract class MixinWorldRenderer {
-
-    @Shadow private World level;
+class WorldRendererMixin {
+    @Shadow private World field_1805;
     @Shadow public float field_1803;
 
     @Redirect(
-            method = "method_1547(Lnet/minecraft/entity/player/PlayerBase;Lnet/minecraft/util/hit/HitResult;ILnet/minecraft/item/ItemInstance;F)V",
+            method = "method_1547",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/block/BlockRenderer;renderWithTexture(Lnet/minecraft/block/BlockBase;IIII)V"
+                    target = "Lnet/minecraft/client/render/block/BlockRenderManager;renderWithTexture(Lnet/minecraft/block/Block;IIII)V"
             )
     )
-    private void renderDamage(BlockRenderManager instance, Block block, int j, int k, int l, int texture, PlayerEntity arg, HitResult arg2, int i, ItemStack arg3, float f) {
-        BlockState state = level.getBlockState(j, k, l);
+    private void stationapi_renderDamage(BlockRenderManager instance, Block block, int j, int k, int l, int texture, PlayerEntity arg, HitResult arg2, int i, ItemStack arg3, float f) {
+        BlockState state = field_1805.getBlockState(j, k, l);
         if (StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state) instanceof VanillaBakedModel)
             instance.renderWithTexture(block, j, k, l, texture);
         else
-            Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer().renderDamage(state, new BlockPos(j, k, l), level, field_1803);
+            Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer().renderDamage(state, new BlockPos(j, k, l), field_1805, field_1803);
     }
 }

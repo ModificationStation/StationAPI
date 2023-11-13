@@ -16,12 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderManager.class)
-public class RepeaterRendererMixin {
+class RepeaterRendererMixin {
     @Inject(
-            method = "renderRedstoneRepeater",
+            method = "renderRepeater",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/BlockBase;getTextureForSide(I)I",
+                    target = "Lnet/minecraft/block/Block;getTexture(I)I",
                     ordinal = 0,
                     shift = At.Shift.BY,
                     by = 2
@@ -37,7 +37,7 @@ public class RepeaterRendererMixin {
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
-            method = "renderRedstoneRepeater",
+            method = "renderRepeater",
             index = 21,
             at = @At(
                     value = "STORE",
@@ -53,7 +53,7 @@ public class RepeaterRendererMixin {
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
-            method = "renderRedstoneRepeater",
+            method = "renderRepeater",
             index = 22,
             at = @At(
                     value = "STORE",
@@ -68,7 +68,7 @@ public class RepeaterRendererMixin {
     }
 
     @ModifyConstant(
-            method = "renderRedstoneRepeater",
+            method = "renderRepeater",
             constant = {
                     @Constant(
                             floatValue = ATLAS_SIZE,
@@ -85,7 +85,7 @@ public class RepeaterRendererMixin {
     }
 
     @ModifyConstant(
-            method = "renderRedstoneRepeater",
+            method = "renderRepeater",
             constant = @Constant(
                     floatValue = ArsenicBlockRenderer.ADJUSTED_TEX_SIZE,
                     ordinal = 0
@@ -99,7 +99,7 @@ public class RepeaterRendererMixin {
     }
 
     @ModifyConstant(
-            method = "renderRedstoneRepeater",
+            method = "renderRepeater",
             constant = {
                     @Constant(
                             floatValue = ATLAS_SIZE,
@@ -116,7 +116,7 @@ public class RepeaterRendererMixin {
     }
 
     @ModifyConstant(
-            method = "renderRedstoneRepeater",
+            method = "renderRepeater",
             constant = @Constant(
                     floatValue = ArsenicBlockRenderer.ADJUSTED_TEX_SIZE,
                     ordinal = 1

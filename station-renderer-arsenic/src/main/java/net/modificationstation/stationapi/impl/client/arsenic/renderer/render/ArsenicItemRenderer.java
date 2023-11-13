@@ -42,7 +42,7 @@ public final class ArsenicItemRenderer {
     }
 
     public void render(ItemEntity item, double x, double y, double z, float rotation, float delta) {
-        itemRendererAccessor.getRand().setSeed(187L);
+        itemRendererAccessor.getField_1709().setSeed(187L);
         ItemStack var10 = item.stack;
         float var11 = MathHelper.sin(((float)item.itemAge + delta) / 10.0F + item.initialRotationAngle) * 0.1F + 0.1F;
         float var12 = (((float)item.itemAge + delta) / 20.0F + item.initialRotationAngle) * (180F / (float)Math.PI);
@@ -79,9 +79,9 @@ public final class ArsenicItemRenderer {
             for (int var29 = 0; var29 < renderedAmount; ++var29) {
                 glPushMatrix();
                 if (var29 > 0) {
-                    float var30 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
-                    float var31 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
-                    float var32 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
+                    float var30 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
+                    float var31 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
+                    float var32 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
                     glTranslatef(var30, var31, var32);
                 }
 
@@ -110,9 +110,9 @@ public final class ArsenicItemRenderer {
             for (int var33 = 0; var33 < renderedAmount; ++var33) {
                 glPushMatrix();
                 if (var33 > 0) {
-                    float var34 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
-                    float var35 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
-                    float var36 = (itemRendererAccessor.getRand().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var34 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var35 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var36 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.3F;
                     glTranslatef(var34, var35, var36);
                 }
 
@@ -144,9 +144,9 @@ public final class ArsenicItemRenderer {
             glPushMatrix();
             if (var29 > 0)
                 glTranslatef(
-                        (itemRendererAccessor.getRand().nextFloat() * 2 - 1) * .2F,
-                        (itemRendererAccessor.getRand().nextFloat() * 2 - 1) * .2F,
-                        (itemRendererAccessor.getRand().nextFloat() * 2 - 1) * .2F
+                        (itemRendererAccessor.getField_1709().nextFloat() * 2 - 1) * .2F,
+                        (itemRendererAccessor.getField_1709().nextFloat() * 2 - 1) * .2F,
+                        (itemRendererAccessor.getField_1709().nextFloat() * 2 - 1) * .2F
                 );
 
             if (!sideLit)

@@ -11,9 +11,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(FireballEntityRenderer.class)
-public class SnowballRendererMixin {
+class FireballEntityRendererMixin {
     @ModifyVariable(
-            method = "method_1207",
+            method = "render(Lnet/minecraft/entity/projectile/FireballEntity;DDDFF)V",
             at = @At("STORE"),
             index = 13
     )
@@ -27,7 +27,7 @@ public class SnowballRendererMixin {
     }
 
     @ModifyVariable(
-            method = "method_1207",
+            method = "render(Lnet/minecraft/entity/projectile/FireballEntity;DDDFF)V",
             at = @At("STORE"),
             index = 14
     )
@@ -39,7 +39,7 @@ public class SnowballRendererMixin {
     }
 
     @ModifyVariable(
-            method = "method_1207",
+            method = "render(Lnet/minecraft/entity/projectile/FireballEntity;DDDFF)V",
             at = @At("STORE"),
             index = 15
     )
@@ -51,7 +51,7 @@ public class SnowballRendererMixin {
     }
 
     @ModifyVariable(
-            method = "method_1207",
+            method = "render(Lnet/minecraft/entity/projectile/FireballEntity;DDDFF)V",
             at = @At("STORE"),
             index = 16
     )

@@ -17,12 +17,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderManager.class)
-public class LeverRendererMixin {
+class LeverRendererMixin {
     @Inject(
             method = "renderLever",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/render/block/BlockRenderer;textureOverride:I",
+                    target = "Lnet/minecraft/client/render/block/BlockRenderManager;textureOverride:I",
                     opcode = Opcodes.GETFIELD,
                     ordinal = 2,
                     shift = At.Shift.BY,

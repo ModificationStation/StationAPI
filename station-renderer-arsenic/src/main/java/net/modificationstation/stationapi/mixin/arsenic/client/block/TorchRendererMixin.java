@@ -18,10 +18,10 @@ import static net.modificationstation.stationapi.impl.client.arsenic.renderer.re
 @Mixin(BlockRenderManager.class)
 public class TorchRendererMixin {
     @Inject(
-            method = "renderTorchTilted",
+            method = "renderTiltedTorch",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/render/block/BlockRenderer;textureOverride:I",
+                    target = "Lnet/minecraft/client/render/block/BlockRenderManager;textureOverride:I",
                     opcode = Opcodes.GETFIELD,
                     ordinal = 1,
                     shift = At.Shift.BY,
@@ -37,7 +37,7 @@ public class TorchRendererMixin {
     }
 
     @ModifyVariable(
-            method = "renderTorchTilted",
+            method = "renderTiltedTorch",
             index = 14,
             at = @At("STORE")
     )
@@ -49,7 +49,7 @@ public class TorchRendererMixin {
     }
 
     @ModifyVariable(
-            method = "renderTorchTilted",
+            method = "renderTiltedTorch",
             index = 15,
             at = @At("STORE")
     )
@@ -61,7 +61,7 @@ public class TorchRendererMixin {
     }
 
     @ModifyConstant(
-            method = "renderTorchTilted",
+            method = "renderTiltedTorch",
             constant = {
                     @Constant(
                             floatValue = ATLAS_SIZE,
@@ -78,7 +78,7 @@ public class TorchRendererMixin {
     }
 
     @ModifyConstant(
-            method = "renderTorchTilted",
+            method = "renderTiltedTorch",
             constant = @Constant(
                     floatValue = ADJUSTED_TEX_SIZE,
                     ordinal = 0
@@ -92,7 +92,7 @@ public class TorchRendererMixin {
     }
 
     @ModifyConstant(
-            method = "renderTorchTilted",
+            method = "renderTiltedTorch",
             constant = {
                     @Constant(
                             floatValue = ATLAS_SIZE,
@@ -109,7 +109,7 @@ public class TorchRendererMixin {
     }
 
     @ModifyConstant(
-            method = "renderTorchTilted",
+            method = "renderTiltedTorch",
             constant = @Constant(
                     floatValue = ADJUSTED_TEX_SIZE,
                     ordinal = 1
@@ -123,7 +123,7 @@ public class TorchRendererMixin {
     }
 
     @ModifyConstant(
-            method = "renderTorchTilted",
+            method = "renderTiltedTorch",
             constant = {
                     @Constant(doubleValue = 7D / ATLAS_SIZE),
                     @Constant(doubleValue = 9D / ATLAS_SIZE)
@@ -137,7 +137,7 @@ public class TorchRendererMixin {
     }
 
     @ModifyConstant(
-            method = "renderTorchTilted",
+            method = "renderTiltedTorch",
             constant = {
                     @Constant(doubleValue = 6D / ATLAS_SIZE),
                     @Constant(doubleValue = 8D / ATLAS_SIZE)

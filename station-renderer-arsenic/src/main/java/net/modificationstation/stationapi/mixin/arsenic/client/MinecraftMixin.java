@@ -8,14 +8,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Minecraft.class)
-public class MixinMinecraft {
-
+class MinecraftMixin {
     @Redirect(
-            method = "init()V",
+            method = "init",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/texture/TextureManager;addTextureBinder(Lnet/minecraft/client/render/TextureBinder;)V"
+                    target = "Lnet/minecraft/client/texture/TextureManager;method_1087(Lnet/minecraft/class_336;)V"
             )
     )
-    private void stopVanillaTextureBinders(TextureManager textureManager, class_336 arg) { }
+    private void stationapi_stopVanillaTextureBinders(TextureManager textureManager, class_336 arg) {}
 }

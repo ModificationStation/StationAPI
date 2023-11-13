@@ -14,24 +14,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BlockParticle.class)
-public class MixinDigging {
-
+class BlockParticleMixin {
     @Unique
     private ArsenicDiggingParticle stationapi$arsenicDiggingParticle;
 
     @Inject(
-            method = "<init>(Lnet/minecraft/level/Level;DDDDDDLnet/minecraft/block/BlockBase;II)V",
+            method = "<init>",
             at = @At("RETURN")
     )
-    private void onCor(World arg, double d, double d1, double d2, double d3, double d4, double d5, Block arg1, int i, int j, CallbackInfo ci) {
+    private void stationapi_onCor(World arg, double d, double d1, double d2, double d3, double d4, double d5, Block arg1, int i, int j, CallbackInfo ci) {
         stationapi$arsenicDiggingParticle = new ArsenicDiggingParticle((BlockParticle) (Object) this);
     }
 
     @Inject(
-            method = "method_1856(III)Lnet/minecraft/client/render/particle/Digging;",
+            method = "method_1856",
             at = @At("HEAD")
     )
-    private void checkBlockCoords(int i, int j, int k, CallbackInfoReturnable<BlockParticle> cir) {
+    private void stationapi_checkBlockCoords(int i, int j, int k, CallbackInfoReturnable<BlockParticle> cir) {
         stationapi$arsenicDiggingParticle.checkBlockCoords(i, j, k);
     }
 

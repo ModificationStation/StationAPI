@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(AchievementsScreen.class)
-public class AchievementsMixin extends Screen {
+class AchievementsScreenMixin extends Screen {
     @Redirect(
             method = "method_1998",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screen/menu/Achievements;blit(IIIIII)V",
+                    target = "Lnet/minecraft/client/gui/screen/achievement/AchievementsScreen;drawTexture(IIIIII)V",
                     ordinal = 0
             )
     )

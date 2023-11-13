@@ -9,12 +9,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(class_282.class)
-public class PistonBlockEntityRenderer {
+class PistonBlockEntityRenderer {
     @Redirect(
-            method = "method_973",
+            method = "render(Lnet/minecraft/class_283;DDDF)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/block/BlockRenderer;renderAllSides(Lnet/minecraft/block/BlockBase;III)V"
+                    target = "Lnet/minecraft/client/render/block/BlockRenderManager;renderWithoutCulling(Lnet/minecraft/block/Block;III)V"
             )
     )
     private void stationapi_renderBlockState(

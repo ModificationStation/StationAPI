@@ -1,17 +1,18 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
 import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-import java.util.Random;
-
-@Mixin(ItemRenderer.class)
-public interface ItemRendererAccessor {
+@Mixin(BlockRenderManager.class)
+public interface BlockRenderManagerAccessor {
     @Accessor
-    Random getField_1709();
+    BlockView getBlockView();
 
     @Accessor
-    BlockRenderManager getField_1708();
+    int getTextureOverride();
+
+    @Accessor
+    boolean getSkipFaceCulling();
 }

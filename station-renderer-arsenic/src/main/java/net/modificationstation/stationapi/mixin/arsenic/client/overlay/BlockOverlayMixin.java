@@ -18,8 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(class_556.class)
-public class BlockOverlayMixin {
-
+class BlockOverlayMixin {
     @Shadow private Minecraft field_2401;
     @Unique
     private Atlas stationapi_block_atlas;

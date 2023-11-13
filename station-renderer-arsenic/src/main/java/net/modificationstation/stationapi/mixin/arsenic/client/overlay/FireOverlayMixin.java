@@ -14,8 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(class_556.class)
-public class FireOverlayMixin {
-
+class FireOverlayMixin {
     @Unique
     private Atlas stationapi_fire_atlas;
     @Unique

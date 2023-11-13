@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ProjectileEntityRenderer.class)
-public class ProjectileRendererMixin {
+class ProjectileEntityRendererMixin {
     @Shadow
-    private int field_177;
+    private int itemTextureId;
 
     @Inject(
             method = "render",
@@ -26,7 +26,7 @@ public class ProjectileRendererMixin {
             Entity d, double e, double f, double g, float h, float par6, CallbackInfo ci,
             @Share("texture") LocalRef<Sprite> texture
     ) {
-        texture.set(Atlases.getGuiItems().getTexture(field_177).getSprite());
+        texture.set(Atlases.getGuiItems().getTexture(itemTextureId).getSprite());
     }
 
     @ModifyVariable(

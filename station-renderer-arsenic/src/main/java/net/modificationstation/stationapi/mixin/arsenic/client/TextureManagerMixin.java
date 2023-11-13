@@ -27,7 +27,7 @@ import java.awt.image.BufferedImage;
 
 @Mixin(TextureManager.class)
 @Environment(EnvType.CLIENT)
-public class MixinTextureManager {
+class TextureManagerMixin {
     @SuppressWarnings("DataFlowIssue")
     @Unique
     private final ArsenicTextureManager arsenic_plugin = new ArsenicTextureManager((TextureManager) (Object) this);
@@ -37,12 +37,12 @@ public class MixinTextureManager {
             at = @At("HEAD"),
             cancellable = true
     )
-    private void getTextureId(String par1, CallbackInfoReturnable<Integer> cir) {
+    private void stationapi_getTextureId(String par1, CallbackInfoReturnable<Integer> cir) {
         arsenic_plugin.getTextureId(par1, cir);
     }
 
     @Inject(
-            method = "bindImageToId(Ljava/awt/image/BufferedImage;I)V",
+            method = "method_1089",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/nio/ByteBuffer;clear()Ljava/nio/Buffer;",
@@ -55,7 +55,7 @@ public class MixinTextureManager {
     }
 
     @Inject(
-            method = "bindImageToId([IIII)V",
+            method = "method_1095",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/nio/ByteBuffer;clear()Ljava/nio/Buffer;",
@@ -68,7 +68,7 @@ public class MixinTextureManager {
     }
 
     @Inject(
-            method = "tick",
+            method = "method_1084",
             at = @At("HEAD")
     )
     private void stationapi_tick_onTickStart(CallbackInfo ci) {
@@ -81,7 +81,7 @@ public class MixinTextureManager {
     }
 
     @Inject(
-            method = "tick",
+            method = "method_1084",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/nio/ByteBuffer;clear()Ljava/nio/Buffer;",
@@ -95,10 +95,10 @@ public class MixinTextureManager {
     }
 
     @Redirect(
-            method = "tick",
+            method = "method_1084",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/TextureBinder;bindTexture(Lnet/minecraft/client/texture/TextureManager;)V"
+                    target = "Lnet/minecraft/class_336;method_1206(Lnet/minecraft/client/texture/TextureManager;)V"
             )
     )
     private void stationapi_tick_preventBindingTextureAndCheckCustomBinder(class_336 instance, TextureManager manager) {
@@ -125,7 +125,7 @@ public class MixinTextureManager {
             stationapi_binderScaledHeight;
 
     @Inject(
-            method = "tick",
+            method = "method_1084",
             at = @At(
                     value = "CONSTANT",
                     args = "intValue=3553",
@@ -139,7 +139,7 @@ public class MixinTextureManager {
     }
 
     @ModifyArg(
-            method = "tick",
+            method = "method_1084",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glTexSubImage2D(IIIIIIIILjava/nio/ByteBuffer;)V",
@@ -153,7 +153,7 @@ public class MixinTextureManager {
     }
 
     @ModifyArg(
-            method = "tick",
+            method = "method_1084",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glTexSubImage2D(IIIIIIIILjava/nio/ByteBuffer;)V",
@@ -167,7 +167,7 @@ public class MixinTextureManager {
     }
 
     @ModifyArg(
-            method = "tick",
+            method = "method_1084",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glTexSubImage2D(IIIIIIIILjava/nio/ByteBuffer;)V",
@@ -181,7 +181,7 @@ public class MixinTextureManager {
     }
 
     @ModifyArg(
-            method = "tick",
+            method = "method_1084",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glTexSubImage2D(IIIIIIIILjava/nio/ByteBuffer;)V",

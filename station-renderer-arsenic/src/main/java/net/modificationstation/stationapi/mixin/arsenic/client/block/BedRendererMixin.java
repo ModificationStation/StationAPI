@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderManager.class)
-public class BedRendererMixin {
+class BedRendererMixin {
     @Inject(
             method = "renderBed",
             at = @At("HEAD")
@@ -33,7 +33,7 @@ public class BedRendererMixin {
             method = "renderBed",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/BlockBase;getTextureForSide(Lnet/minecraft/level/BlockView;IIII)I",
+                    target = "Lnet/minecraft/block/Block;getTextureId(Lnet/minecraft/world/BlockView;IIII)I",
                     ordinal = 0,
                     shift = At.Shift.BY,
                     by = 2

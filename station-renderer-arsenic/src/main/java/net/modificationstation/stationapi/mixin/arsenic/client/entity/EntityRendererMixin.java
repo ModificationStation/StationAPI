@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(EntityRenderer.class)
-public class EntityRendererMixin {
+class EntityRendererMixin {
     @ModifyVariable(
             method = "method_2028",
             at = @At("STORE"),

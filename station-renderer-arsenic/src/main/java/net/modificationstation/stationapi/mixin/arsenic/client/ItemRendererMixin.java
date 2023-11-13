@@ -18,8 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
 @Environment(EnvType.CLIENT)
-public abstract class MixinItemRenderer extends EntityRenderer {
-
+abstract class ItemRendererMixin extends EntityRenderer {
     @Unique
     private final ArsenicItemRenderer arsenic_plugin = new ArsenicItemRenderer((ItemRenderer) (Object) this);
 
@@ -28,7 +27,7 @@ public abstract class MixinItemRenderer extends EntityRenderer {
      * @author mine_diver
      */
     @Overwrite
-    public void method_1484(ItemEntity arg, double d, double d1, double d2, float f, float f1) {
+    public void render(ItemEntity arg, double d, double d1, double d2, float f, float f1) {
         arsenic_plugin.render(arg, d, d1, d2, f, f1);
     }
 
@@ -37,16 +36,16 @@ public abstract class MixinItemRenderer extends EntityRenderer {
      * @author mine_diver
      */
     @Overwrite
-    public void renderItemOnGui(TextRenderer textRenderer, TextureManager textureManagerArg, int itemId, int damage, int textureIndex, int textureX, int textureY) {
+    public void method_1486(TextRenderer textRenderer, TextureManager textureManagerArg, int itemId, int damage, int textureIndex, int textureX, int textureY) {
         arsenic_plugin.renderItemOnGui(textRenderer, textureManagerArg, itemId, damage, textureIndex, textureX, textureY);
     }
 
     @Inject(
-            method = "method_1487(Lnet/minecraft/client/render/TextRenderer;Lnet/minecraft/client/texture/TextureManager;Lnet/minecraft/item/ItemInstance;II)V",
+            method = "method_1487",
             at = @At("HEAD"),
             cancellable = true
     )
-    private void onRenderItemOnGuiItemInstance(TextRenderer arg1, TextureManager arg2, ItemStack i, int j, int par5, CallbackInfo ci) {
+    private void stationapi_onRenderItemOnGuiItemInstance(TextRenderer arg1, TextureManager arg2, ItemStack i, int j, int par5, CallbackInfo ci) {
         arsenic_plugin.renderItemOnGui(arg1, arg2, i, j, par5, ci);
     }
 

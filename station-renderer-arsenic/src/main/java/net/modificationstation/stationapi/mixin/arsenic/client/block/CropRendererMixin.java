@@ -16,19 +16,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderManager.class)
-public class CrossedRendererMixin {
+class CropRendererMixin {
     @Inject(
-            method = "method_47",
+            method = "renderCrop(Lnet/minecraft/block/Block;IDDD)V",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/render/block/BlockRenderer;textureOverride:I",
+                    target = "Lnet/minecraft/client/render/block/BlockRenderManager;textureOverride:I",
                     opcode = Opcodes.GETFIELD,
                     ordinal = 1,
                     shift = At.Shift.BY,
                     by = 3
             )
     )
-    private void stationapi_crossed_captureTexture(
+    private void stationapi_column_captureTexture(
             Block block, int d, double e, double f, double par5, CallbackInfo ci,
             @Local(index = 10) int textureId,
             @Share("texture") LocalRef<Sprite> texture
@@ -37,11 +37,11 @@ public class CrossedRendererMixin {
     }
 
     @ModifyVariable(
-            method = "method_47",
+            method = "renderCrop(Lnet/minecraft/block/Block;IDDD)V",
             index = 11,
             at = @At("STORE")
     )
-    private int stationapi_crossed_modTextureX(
+    private int stationapi_column_modTextureX(
             int value,
             @Share("texture") LocalRef<Sprite> texture
     ) {
@@ -49,11 +49,11 @@ public class CrossedRendererMixin {
     }
 
     @ModifyVariable(
-            method = "method_47",
+            method = "renderCrop(Lnet/minecraft/block/Block;IDDD)V",
             index = 12,
             at = @At("STORE")
     )
-    private int stationapi_crossed_modTextureY(
+    private int stationapi_column_modTextureY(
             int value,
             @Share("texture") LocalRef<Sprite> texture
     ) {
@@ -61,7 +61,7 @@ public class CrossedRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_47",
+            method = "renderCrop(Lnet/minecraft/block/Block;IDDD)V",
             constant = {
                     @Constant(
                             floatValue = ATLAS_SIZE,
@@ -73,18 +73,18 @@ public class CrossedRendererMixin {
                     )
             }
     )
-    private float stationapi_crossed_modAtlasWidth(float constant) {
+    private float stationapi_column_modAtlasWidth(float constant) {
         return StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getWidth();
     }
 
     @ModifyConstant(
-            method = "method_47",
+            method = "renderCrop(Lnet/minecraft/block/Block;IDDD)V",
             constant = @Constant(
                     floatValue = ADJUSTED_TEX_SIZE,
                     ordinal = 0
             )
     )
-    private float stationapi_crossed_modTextureWidth(
+    private float stationapi_column_modTextureWidth(
             float constant,
             @Share("texture") LocalRef<Sprite> texture
     ) {
@@ -92,7 +92,7 @@ public class CrossedRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_47",
+            method = "renderCrop(Lnet/minecraft/block/Block;IDDD)V",
             constant = {
                     @Constant(
                             floatValue = ATLAS_SIZE,
@@ -104,18 +104,18 @@ public class CrossedRendererMixin {
                     )
             }
     )
-    private float stationapi_crossed_modAtlasHeight(float constant) {
+    private float stationapi_column_modAtlasHeight(float constant) {
         return StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getHeight();
     }
 
     @ModifyConstant(
-            method = "method_47",
+            method = "renderCrop(Lnet/minecraft/block/Block;IDDD)V",
             constant = @Constant(
                     floatValue = ADJUSTED_TEX_SIZE,
                     ordinal = 1
             )
     )
-    private float stationapi_crossed_modTextureHeight(
+    private float stationapi_column_modTextureHeight(
             float constant,
             @Share("texture") LocalRef<Sprite> texture
     ) {
