@@ -5,7 +5,7 @@ import net.modificationstation.stationapi.api.event.entity.EntityRegister;
 import net.modificationstation.stationapi.api.event.registry.MobHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.registry.Registry;
 
-import static net.modificationstation.sltest.SLTest.MODID;
+import static net.modificationstation.sltest.SLTest.NAMESPACE;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public class EntityListener {
@@ -22,6 +22,6 @@ public class EntityListener {
 
     @EventListener
     public void registerMobHandlers(MobHandlerRegistryEvent event) {
-        Registry.register(event.registry, of(MODID, "gpoor"), PoorGuy::new);
+        Registry.register(event.registry, of(NAMESPACE, "gpoor"), PoorGuy::new);
     }
 }

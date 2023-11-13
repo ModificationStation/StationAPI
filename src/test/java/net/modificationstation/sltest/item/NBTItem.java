@@ -5,12 +5,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.item.StationItemNbt;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.item.TemplateItem;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.Random;
 
-import static net.modificationstation.sltest.SLTest.MODID;
+import static net.modificationstation.sltest.SLTest.NAMESPACE;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public class NBTItem extends TemplateItem {
@@ -22,9 +22,9 @@ public class NBTItem extends TemplateItem {
     @Override
     public boolean useOnBlock(ItemStack item, PlayerEntity player, World level, int x, int y, int z, int facing) {
         NbtCompound nbt = StationItemNbt.class.cast(item).getStationNbt();
-        if (!nbt.contains(of(MODID, "rand_num").toString()))
-            nbt.putInt(of(MODID, "rand_num").toString(), new Random().nextInt(3));
-        player.method_490("Woah: " + nbt.getInt(of(MODID, "rand_num").toString()));
+        if (!nbt.contains(of(NAMESPACE, "rand_num").toString()))
+            nbt.putInt(of(NAMESPACE, "rand_num").toString(), new Random().nextInt(3));
+        player.method_490("Woah: " + nbt.getInt(of(NAMESPACE, "rand_num").toString()));
         return true;
     }
 

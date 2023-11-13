@@ -20,9 +20,9 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
+import net.modificationstation.stationapi.api.resource.*;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
-import net.modificationstation.stationapi.api.resource.*;
 import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
 import org.apache.logging.log4j.Logger;
@@ -41,7 +41,7 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 public class StationRenderImpl {
 
     @Entrypoint.Namespace
-    public static final Namespace MODID = Null.get();
+    public static final Namespace NAMESPACE = Null.get();
 
     @Entrypoint.Logger("StationRenderer|API")
     public static final Logger LOGGER = Null.get();

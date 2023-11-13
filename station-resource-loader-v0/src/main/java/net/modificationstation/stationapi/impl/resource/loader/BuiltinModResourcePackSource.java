@@ -3,10 +3,10 @@ package net.modificationstation.stationapi.impl.resource.loader;
 import net.modificationstation.stationapi.impl.resource.ResourcePackSource;
 
 public class BuiltinModResourcePackSource implements ResourcePackSource {
-    private final String modId;
+    private final String namespace;
 
-    public BuiltinModResourcePackSource(String modId) {
-        this.modId = modId;
+    public BuiltinModResourcePackSource(String namespace) {
+        this.namespace = namespace;
     }
 
     @Override
@@ -21,6 +21,6 @@ public class BuiltinModResourcePackSource implements ResourcePackSource {
 
     @Override
     public String decorate(String packName) {
-        return "fixText" + modId;
+        return "fixText" + namespace;
     }
 }

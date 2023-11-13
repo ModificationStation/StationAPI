@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.api.registry.legacy;
 
 import com.mojang.serialization.Lifecycle;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.RegistryKey;
 import net.modificationstation.stationapi.api.registry.SimpleRegistry;
 import net.modificationstation.stationapi.api.registry.serial.LegacyIDHolder;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
@@ -197,7 +197,7 @@ public abstract class AbstractLegacyRegistry<T> extends SimpleRegistry<T> {
      * and adding it to the registry with the given {@code identifier}.
      *
      * <p>A practical use case would be:
-     * <p><code>myCoolBlock = registry.register(Identifier.of(MODID, "my_cool_block"), MyCoolBlock::new).setTranslationKey(MODID, "myCoolBlock");</code>
+     * <p><code>myCoolBlock = registry.register(Identifier.of(NAMESPACE, "my_cool_block"), MyCoolBlock::new).setTranslationKey(MODID, "myCoolBlock");</code>
      *
      * @param identifier the identifier that should be associated to the object.
      * @param initializer the function that initializes the object with the serial ID (for example, {@code MyCoolBlock::new}).

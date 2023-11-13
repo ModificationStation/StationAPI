@@ -19,7 +19,7 @@ public class GuiListener {
     @EventListener
     public void registerGuiHandlers(GuiHandlerRegistryEvent event) {
         GuiHandlerRegistry registry = event.registry;
-        registry.registerValueNoMessage(Identifier.of(SLTest.MODID, "freezer"), BiTuple.of(this::openFreezer, TileEntityFreezer::new));
+        registry.registerValueNoMessage(Identifier.of(SLTest.NAMESPACE, "freezer"), BiTuple.of(this::openFreezer, TileEntityFreezer::new));
     }
 
     @Environment(EnvType.CLIENT)

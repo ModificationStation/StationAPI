@@ -20,11 +20,11 @@ public class SLTest {
     public static final SLTest INSTANCE = Null.get();
 
     @Entrypoint.Namespace
-    public static final Namespace MODID = Null.get();
+    public static final Namespace NAMESPACE = Null.get();
 
     @EventListener
     public void init(InitEvent event) {
-        SLTest.LOGGER.info(MODID.toString());
+        SLTest.LOGGER.info(NAMESPACE.toString());
         EventBus eventBus = new EventBus();
         eventBus.register(this::onTestEvent, ListenerPriority.LOWEST.numPriority);
         eventBus.register(this::onTestEventbutCOOLER, ListenerPriority.HIGH.numPriority);

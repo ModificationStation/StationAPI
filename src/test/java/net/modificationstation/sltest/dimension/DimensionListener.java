@@ -5,7 +5,7 @@ import net.modificationstation.stationapi.api.event.registry.DimensionRegistryEv
 import net.modificationstation.stationapi.api.registry.DimensionContainer;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 
-import static net.modificationstation.sltest.SLTest.MODID;
+import static net.modificationstation.sltest.SLTest.NAMESPACE;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public class DimensionListener {
@@ -13,6 +13,6 @@ public class DimensionListener {
     @EventListener
     private static void registerDimensions(DimensionRegistryEvent event) {
         DimensionRegistry r = event.registry;
-        r.register(of(MODID, "test_dimension"), new DimensionContainer<>(TestDimension::new));
+        r.register(of(NAMESPACE, "test_dimension"), new DimensionContainer<>(TestDimension::new));
     }
 }

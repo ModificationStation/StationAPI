@@ -62,14 +62,14 @@ public class ResourceHelper {
         path = path.substring((rootPath + "/").length());
         int indexOfSubpath = path.indexOf("/");
         if (indexOfSubpath == -1)
-            throw new IllegalArgumentException("The path \"" + path + "\" doesn't have a modid!");
-        Namespace modid = Namespace.of(path.substring(0, indexOfSubpath));
+            throw new IllegalArgumentException("The path \"" + path + "\" doesn't have a namespace!");
+        Namespace namespace = Namespace.of(path.substring(0, indexOfSubpath));
         int indexOfId = indexOfSubpath + 1 + subPath.length();
         String subPathCheck = path.substring(indexOfSubpath + 1, indexOfId);
         if (!subPathCheck.equals(subPath))
-            throw new IllegalArgumentException("The path \"" + path + "\" doesn't have a matching subpath \"" + subPath + "\" after modid!");
+            throw new IllegalArgumentException("The path \"" + path + "\" doesn't have a matching subpath \"" + subPath + "\" after namespace!");
         String id = path.substring(indexOfId + 1);
-        return Identifier.of(modid, id.substring(0, id.length() - extension.length() - 1));
+        return Identifier.of(namespace, id.substring(0, id.length() - extension.length() - 1));
     }
 
     public Set<URL> find(String path, Predicate<String> filter) {

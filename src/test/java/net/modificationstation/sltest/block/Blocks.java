@@ -5,13 +5,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.block.TemplateBlock;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.Arrays;
 import java.util.function.Function;
 
-import static net.modificationstation.sltest.SLTest.MODID;
+import static net.modificationstation.sltest.SLTest.NAMESPACE;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public enum Blocks {
@@ -28,7 +28,7 @@ public enum Blocks {
     private Block block;
 
     Blocks(String id, String translationKey, Function<Identifier, Block> factory) {
-        this.register = () -> block = factory.apply(of(MODID, id)).setTranslationKey(MODID, translationKey);
+        this.register = () -> block = factory.apply(of(NAMESPACE, id)).setTranslationKey(NAMESPACE, translationKey);
     }
 
     public Block get() {

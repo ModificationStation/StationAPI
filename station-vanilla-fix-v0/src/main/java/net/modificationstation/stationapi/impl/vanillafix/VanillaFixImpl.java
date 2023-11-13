@@ -15,11 +15,11 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class VanillaFixImpl {
     @Entrypoint.Namespace
-    public static final Namespace MODID = Null.get();
+    public static final Namespace NAMESPACE = Null.get();
 
     @EventListener
     private static void registerLang(InitEvent event) {
         LOGGER.info("Adding vanilla fix lang folder...");
-        LanguageManager.addPath("/assets/" + MODID + "/lang", StationAPI.NAMESPACE);
+        LanguageManager.addPath("/assets/" + NAMESPACE + "/lang", StationAPI.NAMESPACE);
     }
 }

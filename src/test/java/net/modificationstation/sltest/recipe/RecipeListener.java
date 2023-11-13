@@ -11,7 +11,7 @@ import net.modificationstation.stationapi.api.item.StationItemNbt;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
 
-import static net.modificationstation.sltest.SLTest.MODID;
+import static net.modificationstation.sltest.SLTest.NAMESPACE;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public class RecipeListener {
@@ -38,7 +38,7 @@ public class RecipeListener {
                 SmeltingRegistry.addSmeltingRecipe(new ItemStack(Block.OBSIDIAN), new ItemStack(Block.COAL_ORE, 2));
                 SmeltingRegistry.addSmeltingRecipe(new ItemStack(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 0), new ItemStack(Blocks.TEST_ANIMATED_BLOCK.get(), 1, 1));
                 ItemStack itemInstance = new ItemStack(ItemListener.testNBTItem);
-                StationItemNbt.class.cast(itemInstance).getStationNbt().putInt(of(MODID, "rand_num").toString(), 10);
+                StationItemNbt.class.cast(itemInstance).getStationNbt().putInt(of(NAMESPACE, "rand_num").toString(), 10);
                 SmeltingRegistry.addSmeltingRecipe(ItemListener.testItem.id, itemInstance);
             }
         }

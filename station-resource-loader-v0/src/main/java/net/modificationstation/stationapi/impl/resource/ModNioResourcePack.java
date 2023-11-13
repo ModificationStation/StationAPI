@@ -5,12 +5,12 @@ import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import lombok.val;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.InputSupplier;
 import net.modificationstation.stationapi.api.resource.ResourcePackActivationType;
 import net.modificationstation.stationapi.api.resource.ResourceType;
 import net.modificationstation.stationapi.api.resource.metadata.ResourceMetadataReader;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.PathUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,7 +73,7 @@ public class ModNioResourcePack implements ModResourcePack {
         this.namespaces = readNamespaces(paths, modInfo.getId());
     }
 
-    static Map<ResourceType, Set<Namespace>> readNamespaces(List<Path> paths, String modId) {
+    static Map<ResourceType, Set<Namespace>> readNamespaces(List<Path> paths, String namespace) {
         Map<ResourceType, Set<Namespace>> ret = new EnumMap<>(ResourceType.class);
 
         for (ResourceType type : ResourceType.values()) {
@@ -95,14 +95,14 @@ public class ModNioResourcePack implements ModResourcePack {
                         s = s.replace(separator, "");
 
                         if (!RESOURCE_PACK_PATH.matcher(s).matches()) {
-                            LOGGER.warn("Fabric NioResourcePack: ignored invalid namespace: {} in mod ID {}", s, modId);
+                            LOGGER.warn("Fabric NioResourcePack: ignored invalid namespace: {} in mod ID {}", s, namespace);
                             continue;
                         }
 
                         namespaces.add(Namespace.of(s));
                     }
                 } catch (IOException e) {
-                    LOGGER.warn("getNamespaces in mod " + modId + " failed!", e);
+                    LOGGER.warn("getNamespaces in mod " + namespace + " failed!", e);
                 }
             }
 
