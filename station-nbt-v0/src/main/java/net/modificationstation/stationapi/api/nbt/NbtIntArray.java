@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.api.nbt;
 
+import net.minecraft.nbt.NbtElement;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
-import net.minecraft.nbt.NbtElement;
 
 public class NbtIntArray extends NbtElement {
-
     public int[] data;
 
     public NbtIntArray() {}

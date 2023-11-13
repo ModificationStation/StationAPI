@@ -4,7 +4,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationNbtCompound extends StationNbtElement {
-
     default void put(String key, int[] item) {
         Util.assertImpl();
     }

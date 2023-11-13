@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.event.level.LevelPropertiesEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
-import net.modificationstation.stationapi.mixin.nbt.CompoundTagAccessor;
+import net.modificationstation.stationapi.mixin.nbt.NbtCompoundAccessor;
 
 import java.util.Map;
 
@@ -19,7 +19,7 @@ public final class LevelDataVersionImpl {
 
     @EventListener
     private static void addDataVersions(LevelPropertiesEvent.Save event) {
-        Map.Entry<String, ? extends NbtElement> entry = Iterators.getOnlyElement(((CompoundTagAccessor) NbtHelper.addDataVersions(new NbtCompound())).stationapi$getData().entrySet().iterator());
+        Map.Entry<String, ? extends NbtElement> entry = Iterators.getOnlyElement(((NbtCompoundAccessor) NbtHelper.addDataVersions(new NbtCompound())).stationapi$getEntries().entrySet().iterator());
         event.tag.put(entry.getKey(), entry.getValue());
     }
 }

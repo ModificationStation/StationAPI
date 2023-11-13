@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.state.State;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.mixin.nbt.CompoundTagAccessor;
+import net.modificationstation.stationapi.mixin.nbt.NbtCompoundAccessor;
 
 import java.util.Map;
 import java.util.Objects;
@@ -39,7 +39,7 @@ public class FlatteningNbtHelper {
         if (nbt.contains("Properties")) {
             NbtCompound nbtCompound = nbt.getCompound("Properties");
             StateManager<Block, BlockState> stateManager = block.getStateManager();
-            for (String string : ((CompoundTagAccessor) nbtCompound).stationapi$getData().keySet()) {
+            for (String string : ((NbtCompoundAccessor) nbtCompound).stationapi$getEntries().keySet()) {
                 Property<?> property = stateManager.getProperty(string);
                 if (property == null) continue;
                 blockState = withProperty(blockState, property, string, nbtCompound, nbt);

@@ -13,21 +13,10 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapLike;
 import com.mojang.serialization.RecordBuilder;
-import net.minecraft.nbt.NbtByte;
-import net.minecraft.nbt.NbtByteArray;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtDouble;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtEnd;
-import net.minecraft.nbt.NbtFloat;
-import net.minecraft.nbt.NbtInt;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtLong;
-import net.minecraft.nbt.NbtShort;
-import net.minecraft.nbt.NbtString;
+import net.minecraft.nbt.*;
 import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.mixin.nbt.CompoundTagAccessor;
-import net.modificationstation.stationapi.mixin.nbt.ListTagAccessor;
+import net.modificationstation.stationapi.mixin.nbt.NbtCompoundAccessor;
+import net.modificationstation.stationapi.mixin.nbt.NbtListAccessor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -173,8 +162,8 @@ public class NbtOps implements DynamicOps<NbtElement> {
             final Predicate<U> adder = adderFactory.apply(array);
             final IntFunction<U> getter = getterFactory.apply(array);
             final IntSupplier sizeGetter = sizeGetterFactory.apply(array);
-            final ListTagAccessor _super = (ListTagAccessor) this;
-            _super.stationapi$setData(new AbstractList<U>() {
+            final NbtListAccessor _super = (NbtListAccessor) this;
+            _super.stationapi$setValue(new AbstractList<U>() {
 
                 @Override
                 public boolean add(U abstractTag) {
@@ -191,7 +180,7 @@ public class NbtOps implements DynamicOps<NbtElement> {
                     return sizeGetter.getAsInt();
                 }
             });
-            _super.stationapi$setListTypeId(listTypeId);
+            _super.stationapi$setType(listTypeId);
         }
 
         @Override
@@ -254,7 +243,7 @@ public class NbtOps implements DynamicOps<NbtElement> {
     public DataResult<NbtElement> mergeToList(NbtElement nbtElement, NbtElement nbtElement2) {
         if (!(nbtElement instanceof NbtList) && !(nbtElement instanceof NbtEnd))
             return DataResult.error(() -> "mergeToList called with not a list: " + nbtElement, nbtElement);
-        NbtList abstractNbtList = NbtOps.createList(nbtElement instanceof NbtList ? ((ListTagAccessor)nbtElement).stationapi$getListTypeId() : (byte)0, nbtElement2.getType());
+        NbtList abstractNbtList = NbtOps.createList(nbtElement instanceof NbtList ? ((NbtListAccessor)nbtElement).stationapi$getType() : (byte)0, nbtElement2.getType());
         NbtOps.addAll(abstractNbtList, nbtElement, nbtElement2);
         return DataResult.success(abstractNbtList);
     }
@@ -263,7 +252,7 @@ public class NbtOps implements DynamicOps<NbtElement> {
     public DataResult<NbtElement> mergeToList(NbtElement nbtElement, List<NbtElement> list) {
         if (!(nbtElement instanceof NbtList) && !(nbtElement instanceof NbtEnd))
             return DataResult.error(() -> "mergeToList called with not a list: " + nbtElement, nbtElement);
-        NbtList abstractNbtList = NbtOps.createList(nbtElement instanceof NbtList ? ((ListTagAccessor)nbtElement).stationapi$getListTypeId() : (byte)0, list.stream().findFirst().map(NbtElement::getType).orElse((byte)0));
+        NbtList abstractNbtList = NbtOps.createList(nbtElement instanceof NbtList ? ((NbtListAccessor)nbtElement).stationapi$getType() : (byte)0, list.stream().findFirst().map(NbtElement::getType).orElse((byte)0));
         NbtOps.addAll(abstractNbtList, nbtElement, list);
         return DataResult.success(abstractNbtList);
     }
@@ -298,13 +287,13 @@ public class NbtOps implements DynamicOps<NbtElement> {
     @Override
     public DataResult<Stream<Pair<NbtElement, NbtElement>>> getMapValues(NbtElement nbtElement) {
         if (!(nbtElement instanceof NbtCompound nbtCompound)) return DataResult.error(() -> "Not a map: " + nbtElement);
-        return DataResult.success(((CompoundTagAccessor) nbtCompound).stationapi$getData().entrySet().stream().map(entry -> Pair.of(createString(entry.getKey()), entry.getValue())));
+        return DataResult.success(((NbtCompoundAccessor) nbtCompound).stationapi$getEntries().entrySet().stream().map(entry -> Pair.of(createString(entry.getKey()), entry.getValue())));
     }
 
     @Override
     public DataResult<Consumer<BiConsumer<NbtElement, NbtElement>>> getMapEntries(NbtElement nbtElement) {
         if (!(nbtElement instanceof NbtCompound nbtCompound)) return DataResult.error(() -> "Not a map: " + nbtElement);
-        return DataResult.success(entryConsumer -> ((CompoundTagAccessor) nbtCompound).stationapi$getData().forEach((key, value) -> entryConsumer.accept(this.createString(key), value)));
+        return DataResult.success(entryConsumer -> ((NbtCompoundAccessor) nbtCompound).stationapi$getEntries().forEach((key, value) -> entryConsumer.accept(this.createString(key), value)));
     }
 
     @Override
@@ -315,18 +304,18 @@ public class NbtOps implements DynamicOps<NbtElement> {
             @Override
             @Nullable
             public NbtElement get(NbtElement nbtElement) {
-                return ((CompoundTagAccessor) nbtCompound).stationapi$getData().get(nbtElement.toString());
+                return ((NbtCompoundAccessor) nbtCompound).stationapi$getEntries().get(nbtElement.toString());
             }
 
             @Override
             @Nullable
             public NbtElement get(String string) {
-                return ((CompoundTagAccessor) nbtCompound).stationapi$getData().get(string);
+                return ((NbtCompoundAccessor) nbtCompound).stationapi$getEntries().get(string);
             }
 
             @Override
             public Stream<Pair<NbtElement, NbtElement>> entries() {
-                return ((CompoundTagAccessor) nbtCompound).stationapi$getData().entrySet().stream().map(entry -> Pair.of(createString(entry.getKey()), entry.getValue()));
+                return ((NbtCompoundAccessor) nbtCompound).stationapi$getEntries().entrySet().stream().map(entry -> Pair.of(createString(entry.getKey()), entry.getValue()));
             }
 
             public String toString() {
@@ -419,7 +408,7 @@ public class NbtOps implements DynamicOps<NbtElement> {
     public NbtElement remove(NbtElement nbtElement, String string) {
         if (nbtElement instanceof NbtCompound nbtCompound) {
             NbtCompound nbtCompound2 = new NbtCompound();
-            ((CompoundTagAccessor) nbtCompound).stationapi$getData().entrySet().stream().filter(entry -> !Objects.equals(entry.getKey(), string)).forEach(entry -> nbtCompound2.put(entry.getKey(), entry.getValue()));
+            ((NbtCompoundAccessor) nbtCompound).stationapi$getEntries().entrySet().stream().filter(entry -> !Objects.equals(entry.getKey(), string)).forEach(entry -> nbtCompound2.put(entry.getKey(), entry.getValue()));
             return nbtCompound2;
         }
         return nbtElement;
@@ -455,8 +444,8 @@ public class NbtOps implements DynamicOps<NbtElement> {
         protected DataResult<NbtElement> build(NbtCompound nbtCompound, NbtElement nbtElement) {
             if (nbtElement == null || nbtElement instanceof NbtEnd) return DataResult.success(nbtCompound);
             if (nbtElement instanceof NbtCompound nbtCompound3) {
-                NbtCompound nbtCompound2 = Util.make(new NbtCompound(), compoundTag -> ((CompoundTagAccessor) nbtCompound3).stationapi$getData().forEach(compoundTag::put));
-                ((CompoundTagAccessor) nbtCompound).stationapi$getData().forEach(nbtCompound2::put);
+                NbtCompound nbtCompound2 = Util.make(new NbtCompound(), compoundTag -> ((NbtCompoundAccessor) nbtCompound3).stationapi$getEntries().forEach(compoundTag::put));
+                ((NbtCompoundAccessor) nbtCompound).stationapi$getEntries().forEach(nbtCompound2::put);
                 return DataResult.success(nbtCompound2);
             }
             return DataResult.error(() -> "mergeToMap called with not a map: " + nbtElement, nbtElement);

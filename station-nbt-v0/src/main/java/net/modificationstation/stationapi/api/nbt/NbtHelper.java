@@ -8,7 +8,6 @@ import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import java.util.Set;
 
 public class NbtHelper {
-
     /**
      * Uses the data fixer to update an NBT compound object.
      *
