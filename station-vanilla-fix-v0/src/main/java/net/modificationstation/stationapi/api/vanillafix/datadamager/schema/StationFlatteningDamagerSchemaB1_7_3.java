@@ -14,7 +14,6 @@ import static net.modificationstation.stationapi.impl.level.FlattenedWorldManage
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
 
 public class StationFlatteningDamagerSchemaB1_7_3 extends Schema {
-
     public StationFlatteningDamagerSchemaB1_7_3(int versionKey, Schema parent) {
         super(versionKey, parent);
     }

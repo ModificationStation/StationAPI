@@ -31,7 +31,6 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaDataFixerImpl {
-
     public static final String STATION_ID = NAMESPACE.id("id").toString();
     public static final int CURRENT_VERSION = 69421;
     public static final int HIGHEST_VERSION = Integer.MAX_VALUE / 10;

@@ -30,7 +30,6 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaBlockFixImpl {
-
     public static final Supplier<ReferenceSet<Block>> COLLISION_BLOCKS = Suppliers.memoize(() -> Util.make(new ReferenceOpenHashSet<>(), s -> {
         s.add(BED);
         s.add(WHEAT);

@@ -24,7 +24,6 @@ import java.util.function.Function;
 import static net.modificationstation.stationapi.impl.level.FlattenedWorldManager.SECTIONS;
 
 public class StationFlatteningToMcRegionChunkDamage extends DataFix {
-
     private final static int CHUNK_SIZE = 16 * 128 * 16;
     private final static byte[] DEFAULT_BLOCK_LIGHT = new byte[CHUNK_SIZE >> 1];
     private final static byte[] DEFAULT_SKY_LIGHT = new byte[CHUNK_SIZE >> 1];

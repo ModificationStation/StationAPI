@@ -26,7 +26,6 @@ import java.util.Optional;
 import static net.modificationstation.stationapi.impl.level.FlattenedWorldManager.SECTIONS;
 
 public class McRegionToStationFlatteningChunkFix extends DataFix {
-
     private final String name;
 
     public McRegionToStationFlatteningChunkFix(Schema outputSchema, String name) {

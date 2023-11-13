@@ -12,18 +12,17 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.List;
 
 @Mixin(SelectWorldScreen.class)
-public abstract class MixinSelectWorld extends Screen {
-
-    @Shadow private List<class_591> worlds;
+class SelectWorldScreenMixin extends Screen {
+    @Shadow private List<class_591> field_2436;
 
     @Redirect(
-            method = "buttonClicked(Lnet/minecraft/client/gui/widgets/Button;)V",
+            method = "buttonClicked",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screen/menu/SelectWorld;loadWorld(I)V"
+                    target = "Lnet/minecraft/client/gui/screen/world/SelectWorldScreen;method_1891(I)V"
             )
     )
-    private void warn(SelectWorldScreen instance, int i) {
-        WorldConversionWarning.warnIfMcRegion(minecraft, instance, worlds.get(i), () -> instance.method_1891(i));
+    private void stationapi_warn(SelectWorldScreen instance, int i) {
+        WorldConversionWarning.warnIfMcRegion(minecraft, instance, field_2436.get(i), () -> instance.method_1891(i));
     }
 }

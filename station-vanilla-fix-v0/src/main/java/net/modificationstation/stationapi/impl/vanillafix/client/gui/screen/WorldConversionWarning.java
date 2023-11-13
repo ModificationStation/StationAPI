@@ -12,7 +12,6 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WorldConversionWarning {
-
     public static final String
             ROOT_KEY = NAMESPACE.id("worldConversion").toString(),
             FROM_MCREGION_EXPLANATION_KEY = ROOT_KEY + "." + NAMESPACE.id("fromMcRegionExplanation"),

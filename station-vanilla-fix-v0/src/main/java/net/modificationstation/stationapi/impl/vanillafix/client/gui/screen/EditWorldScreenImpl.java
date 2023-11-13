@@ -18,7 +18,7 @@ import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
 import net.modificationstation.stationapi.impl.level.storage.FlattenedWorldStorage;
 import net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl;
-import net.modificationstation.stationapi.mixin.vanillafix.client.ScreenBaseAccessor;
+import net.modificationstation.stationapi.mixin.vanillafix.client.ScreenAccessor;
 
 import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
@@ -27,7 +27,6 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class EditWorldScreenImpl {
-
     private static final String
             ROOT_KEY = "selectWorld",
             CONVERT_TO_MCREGION_KEY = ROOT_KEY + "." + NAMESPACE.id("convertToMcRegion");
@@ -37,11 +36,11 @@ public final class EditWorldScreenImpl {
         event.contexts.add(screen -> new ButtonWidgetDetachedContext(
                 id -> {
                     ButtonWidget button = new ButtonWidget(id, 0, 0, I18n.getTranslation(CONVERT_TO_MCREGION_KEY));
-                    button.active = NbtHelper.getDataVersions(((FlattenedWorldStorage) ((ScreenBaseAccessor) screen).getMinecraft().method_2127()).getWorldTag(screen.worldData.method_1956())).contains(NAMESPACE.toString());
+                    button.active = NbtHelper.getDataVersions(((FlattenedWorldStorage) ((ScreenAccessor) screen).getMinecraft().method_2127()).getWorldTag(screen.worldData.method_1956())).contains(NAMESPACE.toString());
                     return button;
                 },
-                button -> ((ScreenBaseAccessor) screen).getMinecraft().setScreen(new WarningScreen(screen, () -> {
-                    Minecraft mc = ((ScreenBaseAccessor) screen).getMinecraft();
+                button -> ((ScreenAccessor) screen).getMinecraft().setScreen(new WarningScreen(screen, () -> {
+                    Minecraft mc = ((ScreenAccessor) screen).getMinecraft();
                     mc.setScreen(null);
                     FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.method_2127();
                     mc.field_2817.method_1491("Converting World to " + worldStorage.getPreviousWorldFormat());

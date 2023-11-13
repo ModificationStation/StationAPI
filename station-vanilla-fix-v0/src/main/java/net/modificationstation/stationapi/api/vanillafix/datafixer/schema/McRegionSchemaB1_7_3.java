@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class McRegionSchemaB1_7_3 extends Schema {
-
     public McRegionSchemaB1_7_3(int versionKey, Schema parent) {
         super(versionKey, parent);
     }

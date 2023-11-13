@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class McRegionChunkDamagerSchema extends Schema {
-
     public McRegionChunkDamagerSchema(int versionKey, Schema parent) {
         super(versionKey, parent);
     }

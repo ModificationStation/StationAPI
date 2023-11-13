@@ -17,7 +17,6 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @RequiredArgsConstructor
 public class WarningScreen extends StationScreen {
-
     public static final String
             ROOT_KEY = NAMESPACE.id("warning").toString(),
             WARNING_KEY = ROOT_KEY + "." + NAMESPACE.id("warning");

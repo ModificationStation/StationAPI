@@ -12,7 +12,6 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaToolFixImpl {
-
     @EventListener
     private static void fixToolMaterials(ItemRegistryEvent event) {
         ToolMaterial stone = ToolMaterial.STONE;

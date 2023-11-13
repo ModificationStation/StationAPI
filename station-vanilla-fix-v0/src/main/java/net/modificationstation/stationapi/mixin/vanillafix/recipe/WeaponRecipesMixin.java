@@ -10,12 +10,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(WeaponRecipes.class)
-public class WeaponRecipesMixin {
+class WeaponRecipesMixin {
     @WrapWithCondition(
-            method = "register",
+            method = "add",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/recipe/RecipeRegistry;addShapedRecipe(Lnet/minecraft/item/ItemInstance;[Ljava/lang/Object;)V"
+                    target = "Lnet/minecraft/recipe/CraftingRecipeManager;addShapedRecipe(Lnet/minecraft/item/ItemStack;[Ljava/lang/Object;)V"
             )
     )
     private boolean stationapi_tagifyShapedRecipes(

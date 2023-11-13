@@ -16,7 +16,6 @@ import java.util.function.Supplier;
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
 
 public class StationFlatteningItemStackSchema extends Schema {
-
     private static final Dynamic<?>[] OLD_ID_TO_BLOCKSTATE = new Dynamic[256];
     private static final Object2IntOpenHashMap<String> BLOCK_TO_OLD_ID = Util.make(new Object2IntOpenHashMap<>(256), map -> map.defaultReturnValue(0));
     private static final String[] OLD_ID_TO_ITEM = new String[32000];

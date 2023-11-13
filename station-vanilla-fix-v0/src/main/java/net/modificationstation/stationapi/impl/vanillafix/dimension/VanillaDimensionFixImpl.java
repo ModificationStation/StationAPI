@@ -20,7 +20,6 @@ import static net.modificationstation.stationapi.api.world.dimension.VanillaDime
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaDimensionFixImpl {
-
     @FunctionalInterface
     interface DimensionRegister { void accept(final @NotNull Identifier id, final int serialID, final @NotNull Supplier<@NotNull Dimension> factory); }
     @EventListener

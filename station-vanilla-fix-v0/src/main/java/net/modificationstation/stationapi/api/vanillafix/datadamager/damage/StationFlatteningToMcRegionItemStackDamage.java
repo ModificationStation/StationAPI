@@ -10,7 +10,6 @@ import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.Statio
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
 
 public class StationFlatteningToMcRegionItemStackDamage extends DataFix {
-
     private final String name;
 
     public StationFlatteningToMcRegionItemStackDamage(Schema outputSchema, String name) {

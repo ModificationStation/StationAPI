@@ -11,7 +11,6 @@ import java.util.function.Supplier;
 import static net.modificationstation.stationapi.impl.level.FlattenedWorldManager.SECTIONS;
 
 public class StationFlatteningChunkSchema extends Schema {
-
     public StationFlatteningChunkSchema(int versionKey, Schema parent) {
         super(versionKey, parent);
     }

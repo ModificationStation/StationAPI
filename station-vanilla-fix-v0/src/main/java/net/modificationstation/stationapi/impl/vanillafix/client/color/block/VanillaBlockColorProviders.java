@@ -12,7 +12,6 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaBlockColorProviders {
-
     @EventListener
     private static void registerBlockColors(BlockColorsRegisterEvent event) {
         event.blockColors.registerColorProvider(

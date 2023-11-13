@@ -17,8 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(WorldProperties.class)
-public class MixinLevelProperties {
-    @Shadow private NbtCompound playerData;
+class WorldPropertiesMixin {
+    @Shadow private NbtCompound playerNbt;
 
     /**
      * Since Minecraft reads the entire level.dat of all worlds whenever it shows the world selection menu,
@@ -27,31 +27,31 @@ public class MixinLevelProperties {
      * this boolean was added.
      */
     @Unique
-    private boolean stationapi$playerDataUnchecked;
+    private boolean stationapi_playerNbtUnchecked;
 
     @ModifyVariable(
-            method = "getFirstEntityDataFromList(Ljava/util/List;)Lnet/minecraft/util/io/CompoundTag;",
+            method = "asNbt(Ljava/util/List;)Lnet/minecraft/nbt/NbtCompound;",
             index = 4,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerBase;toTag(Lnet/minecraft/util/io/CompoundTag;)V",
+                    target = "Lnet/minecraft/entity/player/PlayerEntity;write(Lnet/minecraft/nbt/NbtCompound;)V",
                     shift = At.Shift.AFTER
             )
     )
-    private NbtCompound addDataVersions(NbtCompound playerTag) {
+    private NbtCompound stationapi_addDataVersions(NbtCompound playerTag) {
         return NbtHelper.addDataVersions(playerTag);
     }
 
     @Unique
-    private void stationapi$assertPlayerDataVersion() {
-        if (stationapi$playerDataUnchecked) {
-            stationapi$playerDataUnchecked = false;
-            playerData = NbtHelper.update(TypeReferences.PLAYER, playerData);
+    private void stationapi_assertPlayerDataVersion() {
+        if (stationapi_playerNbtUnchecked) {
+            stationapi_playerNbtUnchecked = false;
+            playerNbt = NbtHelper.update(TypeReferences.PLAYER, playerNbt);
         }
     }
 
     @Inject(
-            method = "getPlayerTag()Lnet/minecraft/util/io/CompoundTag;",
+            method = "getPlayerNbt",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/level/LevelProperties;playerData:Lnet/minecraft/util/io/CompoundTag;",
@@ -59,35 +59,35 @@ public class MixinLevelProperties {
                     shift = At.Shift.BEFORE
             )
     )
-    private void assert1(CallbackInfoReturnable<NbtCompound> cir) {
-        stationapi$assertPlayerDataVersion();
+    private void stationapi_assert1(CallbackInfoReturnable<NbtCompound> cir) {
+        stationapi_assertPlayerDataVersion();
     }
 
     @Environment(EnvType.CLIENT)
     @Inject(
-            method = "getPlayerData()Lnet/minecraft/util/io/CompoundTag;",
+            method = "getPlayerNbt",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/level/LevelProperties;playerData:Lnet/minecraft/util/io/CompoundTag;",
+                    target = "Lnet/minecraft/world/WorldProperties;playerNbt:Lnet/minecraft/nbt/NbtCompound;",
                     opcode = Opcodes.GETFIELD,
                     shift = At.Shift.BEFORE
             )
     )
-    private void assert2(CallbackInfoReturnable<NbtCompound> cir) {
-        stationapi$assertPlayerDataVersion();
+    private void stationapi_assert2(CallbackInfoReturnable<NbtCompound> cir) {
+        stationapi_assertPlayerDataVersion();
     }
 
     @Environment(EnvType.CLIENT)
     @Inject(
-            method = "setPlayerData(Lnet/minecraft/util/io/CompoundTag;)V",
+            method = "setPlayerNbt",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/level/LevelProperties;playerData:Lnet/minecraft/util/io/CompoundTag;",
+                    target = "Lnet/minecraft/world/WorldProperties;playerNbt:Lnet/minecraft/nbt/NbtCompound;",
                     opcode = Opcodes.PUTFIELD,
                     shift = At.Shift.AFTER
             )
     )
-    private void assertTrue(NbtCompound par1, CallbackInfo ci) {
-        stationapi$playerDataUnchecked = false;
+    private void stationapi_assertTrue(NbtCompound par1, CallbackInfo ci) {
+        stationapi_playerNbtUnchecked = false;
     }
 }

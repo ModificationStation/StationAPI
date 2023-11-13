@@ -16,7 +16,6 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaItemFixImpl {
-
     @EventListener
     private static void registerItems(ItemRegistryEvent event) {
         ItemRegistry registry = event.registry;

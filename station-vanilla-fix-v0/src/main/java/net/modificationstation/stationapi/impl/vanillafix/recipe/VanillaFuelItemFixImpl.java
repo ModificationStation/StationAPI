@@ -14,7 +14,6 @@ import net.modificationstation.stationapi.api.registry.tag.ItemTags;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaFuelItemFixImpl {
-
     @EventListener
     private static void registerFuel(RecipeRegisterEvent event) {
         if (RecipeRegisterEvent.Vanilla.SMELTING.type() == event.recipeId) {

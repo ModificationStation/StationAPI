@@ -4,20 +4,20 @@
   "package": "net.modificationstation.stationapi.mixin.vanillafix",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinLevelProperties",
-    "recipe.CraftingManagerMixin",
+    "WorldPropertiesMixin",
+    "recipe.BasicBlockRecipesMixin",
+    "recipe.CraftingRecipeManagerMixin",
     "recipe.ToolRecipesMixin",
-    "recipe.UtilitiesAndSandstoneRecipesMixin",
     "recipe.WeaponRecipesMixin"
   ],
   "server": [
   ],
   "client": [
-    "client.MixinMinecraft",
-    "client.MixinSelectWorld",
-    "client.MixinWorldList",
-    "client.ScreenBaseAccessor",
-    "client.SelectWorldAccessor"
+    "client.MinecraftMixin",
+    "client.ScreenAccessor",
+    "client.SelectWorldScreenAccessor",
+    "client.SelectWorldScreenMixin",
+    "client.WorldListWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

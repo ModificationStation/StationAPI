@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class McRegionItemStackDamagerSchema extends Schema {
-
     public McRegionItemStackDamagerSchema(int versionKey, Schema parent) {
         super(versionKey, parent);
     }
