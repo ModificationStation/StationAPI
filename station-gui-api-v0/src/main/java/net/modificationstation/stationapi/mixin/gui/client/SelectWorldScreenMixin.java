@@ -16,29 +16,28 @@ import java.util.List;
 import static net.modificationstation.stationapi.api.client.gui.screen.EditWorldScreen.EDIT_KEY;
 
 @Mixin(SelectWorldScreen.class)
-public class MixinSelectWorld extends Screen {
-
-    @Shadow private List<class_591> worlds;
-    @Shadow private int selectedWorld;
+class SelectWorldScreenMixin extends Screen {
+    @Shadow private List<class_591> field_2436;
+    @Shadow private int field_2435;
 
     @ModifyConstant(
-            method = "addButtons()V",
+            method = "method_1896",
             constant = @Constant(stringValue = "selectWorld.rename")
     )
-    private String replaceRenameWithEdit(String constant) {
+    private String stationapi_replaceRenameWithEdit(String constant) {
         return EDIT_KEY;
     }
 
     @ModifyArg(
-            method = "buttonClicked(Lnet/minecraft/client/gui/widgets/Button;)V",
+            method = "buttonClicked",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/Minecraft;openScreen(Lnet/minecraft/client/gui/screen/ScreenBase;)V",
+                    target = "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V",
                     ordinal = 2
             ),
             index = 0
     )
-    private Screen openEditWorld(Screen arg) {
-        return new EditWorldScreen(this, worlds.get(selectedWorld));
+    private Screen stationapi_openEditWorld(Screen arg) {
+        return new EditWorldScreen(this, field_2436.get(field_2435));
     }
 }

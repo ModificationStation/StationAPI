@@ -6,8 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "client.MixinSelectWorld",
-    "client.ScreenBaseAccessor"
+    "client.ScreenAccessor",
+    "client.SelectWorldScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

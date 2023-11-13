@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.client.event.gui.screen.EditWorldS
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetDetachedContext;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.mixin.gui.client.ScreenBaseAccessor;
+import net.modificationstation.stationapi.mixin.gui.client.ScreenAccessor;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
@@ -19,7 +19,7 @@ public final class EditWorldScreenImpl {
     private static void registerRenameWorld(EditWorldScreenEvent.ScrollableButtonContextRegister event) {
         event.contexts.add(screen -> new ButtonWidgetDetachedContext(
                 id -> new ButtonWidget(id, 0, 0, I18n.getTranslation("selectWorld.rename")),
-                button -> ((ScreenBaseAccessor) screen).getMinecraft().setScreen(new EditWorldScreen(screen, screen.worldData.method_1958()))
+                button -> ((ScreenAccessor) screen).getMinecraft().setScreen(new EditWorldScreen(screen, screen.worldData.method_1958()))
         ));
     }
 }
