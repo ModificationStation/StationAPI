@@ -19,7 +19,7 @@ class NetherPortalBlockMixin implements TeleportationManager {
                     target = "Lnet/minecraft/entity/Entity;method_1388()V"
             )
     )
-    private void stationapi_onEntityCollision(World level, int x, int y, int z, Entity entityBase, CallbackInfo ci) {
+    private void stationapi_onEntityCollision(World world, int x, int y, int z, Entity entityBase, CallbackInfo ci) {
         if (entityBase instanceof HasTeleportationManager manager)
             manager.setTeleportationManager(this);
     }

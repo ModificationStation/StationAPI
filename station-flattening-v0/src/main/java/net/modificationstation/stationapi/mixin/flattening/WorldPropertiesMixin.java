@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.mixin.flattening;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.WorldProperties;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.impl.level.StationLevelProperties;
+import net.modificationstation.stationapi.impl.world.StationWorldProperties;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +14,7 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Mixin(WorldProperties.class)
-class WorldPropertiesMixin implements StationLevelProperties {
+class WorldPropertiesMixin implements StationWorldProperties {
     @Unique private static final String STATIONAPI$DIMENSIONS_KEY = of(NAMESPACE, "dimensions").toString();
     @Unique private static NbtCompound stationapi_dimensionsRoot;
 

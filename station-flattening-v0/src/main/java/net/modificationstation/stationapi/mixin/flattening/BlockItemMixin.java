@@ -37,8 +37,8 @@ class BlockItemMixin extends Item implements StationFlatteningBlockItem {
             method = "useOnBlock",
             at = @At("HEAD")
     )
-    private void stationapi_storeLevel(ItemStack item, PlayerEntity player, World level, int x, int y, int z, int facing, CallbackInfoReturnable<Boolean> info) {
-        maxHeight = (short) (level.getTopY() - 1);
+    private void stationapi_storeWorld(ItemStack item, PlayerEntity player, World world, int x, int y, int z, int facing, CallbackInfoReturnable<Boolean> info) {
+        maxHeight = (short) (world.getTopY() - 1);
     }
 
     @ModifyConstant(

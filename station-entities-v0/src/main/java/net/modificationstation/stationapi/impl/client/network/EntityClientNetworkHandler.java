@@ -55,8 +55,8 @@ public final class EntityClientNetworkHandler {
                     z = message.ints[3] / 32D;
             //noinspection deprecation
             ClientNetworkHandlerAccessor networkHandler = (ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-            class_454 level = networkHandler.getField_1973();
-            Entity entity = entityHandler.apply(level, x, y, z);
+            class_454 world = networkHandler.getField_1973();
+            Entity entity = entityHandler.apply(world, x, y, z);
             if (entity != null) {
                 entity.field_1654 = message.ints[1];
                 entity.field_1655 = message.ints[2];
@@ -64,7 +64,7 @@ public final class EntityClientNetworkHandler {
                 entity.yaw = 0.0F;
                 entity.pitch = 0.0F;
                 entity.id = message.ints[0];
-                level.method_1495(message.ints[0], entity);
+                world.method_1495(message.ints[0], entity);
                 if (message.ints[4] > 0) {
                     if (entity instanceof HasOwner hasOwner)
                         hasOwner.setOwner(networkHandler.invokeMethod_1645(message.ints[4]));
@@ -87,8 +87,8 @@ public final class EntityClientNetworkHandler {
             float pitch = (float)(message.bytes[1] * 360) / 256.0F;
             //noinspection deprecation
             ClientNetworkHandlerAccessor networkHandler = (ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-            class_454 level = networkHandler.getField_1973();
-            LivingEntity mob = mobHandler.apply(level);
+            class_454 world = networkHandler.getField_1973();
+            LivingEntity mob = mobHandler.apply(world);
             if (mob != null) {
                 mob.field_1654 = message.ints[1];
                 mob.field_1655 = message.ints[2];
@@ -96,7 +96,7 @@ public final class EntityClientNetworkHandler {
                 mob.id = message.ints[0];
                 mob.method_1338(x, y, z, yaw, pitch);
                 mob.field_1026 = true;
-                level.method_1495(message.ints[0], mob);
+                world.method_1495(message.ints[0], mob);
                 //noinspection unchecked
                 List<class_270> data = DataTracker.method_1503(new DataInputStream(new ByteArrayInputStream(Arrays.copyOfRange(message.bytes, 2, message.bytes.length))));
                 if (data != null)

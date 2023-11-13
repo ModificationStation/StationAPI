@@ -5,8 +5,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.impl.level.StationDimension;
-import net.modificationstation.stationapi.impl.level.StationLevelProperties;
+import net.modificationstation.stationapi.impl.world.StationDimension;
+import net.modificationstation.stationapi.impl.world.StationWorldProperties;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -35,8 +35,8 @@ class DimensionMixin implements StationDimension {
                     shift = Shift.AFTER
             )
     )
-    private void stationapi_onDimensionInit(World level, CallbackInfo info) {
-        StationLevelProperties properties = (StationLevelProperties) level.method_262();
+    private void stationapi_onDimensionInit(World world, CallbackInfo info) {
+        StationWorldProperties properties = (StationWorldProperties) world.method_262();
         Optional<Identifier> optional = DimensionRegistry.INSTANCE.getIdByLegacyId(this.id);
         if (optional.isPresent()) {
             Identifier id = optional.get();
@@ -51,13 +51,13 @@ class DimensionMixin implements StationDimension {
 
     @Unique
     @Override
-    public short getDefaultLevelHeight() {
+    public short getDefaultWorldHeight() {
         return 128;
     }
 
     @Unique
     @Override
-    public short getActualLevelHeight() {
+    public short getActualWorldHeight() {
         return height;
     }
 
@@ -76,7 +76,7 @@ class DimensionMixin implements StationDimension {
 
     @Unique
     public void loadFromNBT(NbtCompound tag) {
-        height = tag.contains(HEIGHT_KEY) ? tag.getShort(HEIGHT_KEY) : getDefaultLevelHeight();
+        height = tag.contains(HEIGHT_KEY) ? tag.getShort(HEIGHT_KEY) : getDefaultWorldHeight();
         bottomY = tag.contains(BOTTOM_Y_KEY) ? tag.getShort(BOTTOM_Y_KEY) : getDefaultBottomY();
 
         if (height <= 0) {
@@ -89,7 +89,7 @@ class DimensionMixin implements StationDimension {
 
     @Unique
     public void saveToNBT(NbtCompound tag) {
-        tag.putShort(HEIGHT_KEY, getActualLevelHeight());
+        tag.putShort(HEIGHT_KEY, getActualWorldHeight());
         tag.putShort(BOTTOM_Y_KEY, getActualBottomY());
     }
 }

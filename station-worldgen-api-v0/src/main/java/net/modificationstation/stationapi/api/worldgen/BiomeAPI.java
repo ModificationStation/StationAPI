@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeModifica
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeRegionsProvider;
-import net.modificationstation.stationapi.impl.level.StationDimension;
+import net.modificationstation.stationapi.impl.world.StationDimension;
 import net.modificationstation.stationapi.impl.worldgen.NetherBiomeProviderImpl;
 import net.modificationstation.stationapi.impl.worldgen.OverworldBiomeProviderImpl;
 

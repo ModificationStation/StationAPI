@@ -9,7 +9,7 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public final class EntityHandlerRegistry extends SimpleRegistry<QuadFunction<World, Double, Double, Double, Entity>> {
 
-    private static final QuadFunction<World, Double, Double, Double, Entity> EMPTY = (level, x, y, z) -> null;
+    private static final QuadFunction<World, Double, Double, Double, Entity> EMPTY = (world, x, y, z) -> null;
     public static final RegistryKey<EntityHandlerRegistry> KEY = RegistryKey.ofRegistry(NAMESPACE.id("entity_handlers"));
     public static final EntityHandlerRegistry INSTANCE = Registries.create(KEY, new EntityHandlerRegistry(), registry -> EMPTY, Lifecycle.experimental());
 

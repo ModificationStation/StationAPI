@@ -68,17 +68,17 @@ public interface StationFlatteningBlock extends
     }
 
     @Override
-    default void afterBreak(World level, PlayerEntity player, int x, int y, int z, BlockState state, int meta) {
+    default void afterBreak(World world, PlayerEntity player, int x, int y, int z, BlockState state, int meta) {
         Util.assertImpl();
     }
 
     @Override
-    default List<ItemStack> getDropList(World level, int x, int y, int z, BlockState state, int meta) {
+    default List<ItemStack> getDropList(World world, int x, int y, int z, BlockState state, int meta) {
         return Util.assertImpl();
     }
 
     @Override
-    default void dropWithChance(World level, int x, int y, int z, BlockState state, int meta, float chance) {
+    default void dropWithChance(World world, int x, int y, int z, BlockState state, int meta, float chance) {
         Util.assertImpl();
     }
 

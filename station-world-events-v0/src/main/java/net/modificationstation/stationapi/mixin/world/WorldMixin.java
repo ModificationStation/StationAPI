@@ -19,6 +19,6 @@ class WorldMixin {
             at = @At("RETURN")
     )
     private void stationapi_onCor1(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(WorldEvent.Init.builder().level(World.class.cast(this)).build());
+        StationAPI.EVENT_BUS.post(WorldEvent.Init.builder().world(World.class.cast(this)).build());
     }
 }

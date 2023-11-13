@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.minecraft.world.dimension.NetherDimension;
-import net.modificationstation.stationapi.api.client.level.dimension.TravelMessageProvider;
+import net.modificationstation.stationapi.api.client.world.dimension.TravelMessageProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 

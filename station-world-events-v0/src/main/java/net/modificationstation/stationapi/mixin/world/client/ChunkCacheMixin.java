@@ -32,7 +32,7 @@ class ChunkCacheMixin {
                     shift = At.Shift.AFTER
             )
     )
-    private void stationapi_onPopulate(class_51 levelSource, int chunkX, int chunkZ, CallbackInfo ci) {
+    private void stationapi_onPopulate(class_51 worldSource, int chunkX, int chunkZ, CallbackInfo ci) {
         int blockX = chunkX * 16;
         int blockZ = chunkZ * 16;
         if (modRandom == null)
@@ -43,8 +43,8 @@ class ChunkCacheMixin {
         modRandom.setSeed((long) chunkX * xRandomMultiplier + (long) chunkZ * zRandomMultiplier ^ field_1515.getSeed());
         StationAPI.EVENT_BUS.post(
                 WorldGenEvent.ChunkDecoration.builder()
-                        .level(field_1515)
-                        .levelSource(this.field_1512)
+                        .world(field_1515)
+                        .worldSource(this.field_1512)
                         .biome(field_1515.method_1781().method_1787(blockX + 16, blockZ + 16))
                         .x(blockX).z(blockZ)
                         .random(modRandom)

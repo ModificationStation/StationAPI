@@ -167,14 +167,14 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
             at = @At("HEAD"),
             cancellable = true
     )
-    private void stationapi_dropWithAChanceInject(World level, int x, int y, int z, int meta, float chance, CallbackInfo ci) {
-        if (BlockDropListImpl.drop(level, x, y, z, level.getBlockState(x, y, z), meta, chance, this::dropStack, this)) ci.cancel();
+    private void stationapi_dropWithAChanceInject(World world, int x, int y, int z, int meta, float chance, CallbackInfo ci) {
+        if (BlockDropListImpl.drop(world, x, y, z, world.getBlockState(x, y, z), meta, chance, this::dropStack, this)) ci.cancel();
     }
 
     @Override
     @Unique
-    public void dropWithChance(World level, int x, int y, int z, BlockState state, int meta, float chance) {
-        if (!BlockDropListImpl.drop(level, x, y, z, state, meta, chance, this::dropStack, this)) dropStacks(level, x, y, z, meta, chance);
+    public void dropWithChance(World world, int x, int y, int z, BlockState state, int meta, float chance) {
+        if (!BlockDropListImpl.drop(world, x, y, z, state, meta, chance, this::dropStack, this)) dropStacks(world, x, y, z, meta, chance);
     }
 
     @Inject(
@@ -188,10 +188,10 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
             ),
             cancellable = true
     )
-    private void stationapi_beforeDrop(World level, int x, int y, int z, int meta, float chance, CallbackInfo ci) {
+    private void stationapi_beforeDrop(World world, int x, int y, int z, int meta, float chance, CallbackInfo ci) {
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeDrop.builder()
-                        .level(level)
+                        .world(world)
                         .x(x).y(y).z(z)
                         .chance(chance)
                         .block(Block.class.cast(this))
@@ -202,7 +202,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
 
     @Override
     @Unique
-    public List<ItemStack> getDropList(World level, int x, int y, int z, BlockState state, int meta) {
+    public List<ItemStack> getDropList(World world, int x, int y, int z, BlockState state, int meta) {
         return null;
     }
 
@@ -213,10 +213,10 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
 
     @Override
     @Unique
-    public void afterBreak(World level, PlayerEntity player, int x, int y, int z, BlockState state, int meta) {
+    public void afterBreak(World world, PlayerEntity player, int x, int y, int z, BlockState state, int meta) {
         stationapi_afterBreak_state = state;
         stationapi_afterBreak_argsPresent = true;
-        afterBreak(level, player, x, y, z, meta);
+        afterBreak(world, player, x, y, z, meta);
         stationapi_afterBreak_argsPresent = false;
         stationapi_afterBreak_state = null;
     }
@@ -228,9 +228,9 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
                     target = "Lnet/minecraft/block/Block;dropStacks(Lnet/minecraft/world/World;IIII)V"
             )
     )
-    private void stationapi_redirectDropToDropWithBlockState(Block block, World level, int x, int y, int z, int meta) {
-        if (stationapi_afterBreak_argsPresent) drop(level, x, y, z, stationapi_afterBreak_state, meta);
-        else dropStacks(level, x, y, z, meta);
+    private void stationapi_redirectDropToDropWithBlockState(Block block, World world, int x, int y, int z, int meta) {
+        if (stationapi_afterBreak_argsPresent) drop(world, x, y, z, stationapi_afterBreak_state, meta);
+        else dropStacks(world, x, y, z, meta);
     }
 
     @Override

@@ -23,7 +23,7 @@ class DimensionFileMixin {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void onLoadLevelPropertiesOnLevelInit(CallbackInfoReturnable<WorldProperties> cir, File file, NbtCompound var7, NbtCompound var8) {
+    private void onLoadWorldPropertiesOnLevelInit(CallbackInfoReturnable<WorldProperties> cir, File file, NbtCompound var7, NbtCompound var8) {
         StationAPI.EVENT_BUS.post(
                 WorldPropertiesEvent.LoadOnWorldInit.builder()
                         .worldProperties(cir.getReturnValue())
@@ -40,7 +40,7 @@ class DimensionFileMixin {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void onLoadLevelPropertiesOnLevelInit_old(CallbackInfoReturnable<WorldProperties> cir, File file, NbtCompound var2, NbtCompound var3) {
+    private void onLoadWorldPropertiesOnWorldInit_old(CallbackInfoReturnable<WorldProperties> cir, File file, NbtCompound var2, NbtCompound var3) {
         StationAPI.EVENT_BUS.post(
                 WorldPropertiesEvent.LoadOnWorldInit.builder()
                         .worldProperties(cir.getReturnValue())

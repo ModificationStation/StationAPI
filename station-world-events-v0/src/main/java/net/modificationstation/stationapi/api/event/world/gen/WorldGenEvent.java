@@ -9,7 +9,7 @@ import java.util.Random;
 
 @SuperBuilder
 public abstract class WorldGenEvent extends WorldEvent {
-    public final class_51 levelSource;
+    public final class_51 worldSource;
 
     @SuperBuilder
     public static class ChunkDecoration extends WorldGenEvent {

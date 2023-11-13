@@ -17,23 +17,23 @@ class OakTreeFeatureMixin {
                     ordinal = 1
             )
     )
-    private int stationapi_changeBottomYPlus1(int constant, World level, Random random, int x, int y, int z) {
-        return level.getBottomY() + 1;
+    private int stationapi_changeBottomYPlus1(int constant, World world, Random random, int x, int y, int z) {
+        return world.getBottomY() + 1;
     }
 
     @ModifyConstant(
             method = "method_1142",
             constant = @Constant(intValue = 128)
     )
-    private int stationapi_changeMaxHeight(int constant, World level, Random random, int x, int y, int z) {
-        return level.getTopY();
+    private int stationapi_changeMaxHeight(int constant, World world, Random random, int x, int y, int z) {
+        return world.getTopY();
     }
 
     @ModifyConstant(
             method = "method_1142",
             constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_ZERO)
     )
-    private int stationapi_changeBottomYLT(int constant, World level, Random random, int x, int y, int z) {
-        return level.getBottomY();
+    private int stationapi_changeBottomYLT(int constant, World world, Random random, int x, int y, int z) {
+        return world.getBottomY();
     }
 }

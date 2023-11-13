@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.world.chunk;
 
-import net.modificationstation.stationapi.impl.level.chunk.Palette;
+import net.modificationstation.stationapi.impl.world.chunk.Palette;
 
 public interface CompactingPackedIntegerArray {
 

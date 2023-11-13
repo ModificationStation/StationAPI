@@ -4,13 +4,13 @@ import com.mojang.serialization.Lifecycle;
 import it.unimi.dsi.fastutil.ints.*;
 import net.minecraft.world.dimension.OverworldDimension;
 import net.modificationstation.stationapi.api.registry.legacy.AbstractInt2ObjectMapBackedLegacyRegistry;
-import net.modificationstation.stationapi.api.registry.legacy.LevelLegacyRegistry;
+import net.modificationstation.stationapi.api.registry.legacy.WorldLegacyRegistry;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
-public final class DimensionRegistry extends AbstractInt2ObjectMapBackedLegacyRegistry<DimensionContainer<?>> implements LevelLegacyRegistry<DimensionContainer<?>> {
+public final class DimensionRegistry extends AbstractInt2ObjectMapBackedLegacyRegistry<DimensionContainer<?>> implements WorldLegacyRegistry<DimensionContainer<?>> {
 
     private static final int
             VANILLA_MIN = -1,

@@ -5,13 +5,13 @@ import net.minecraft.block.Block;
 import net.minecraft.class_43;
 import net.minecraft.class_454;
 import net.minecraft.client.Minecraft;
-import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkDataS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkSectionDataS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedMultiBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.util.math.ChunkSectionPos;
+import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 
 import java.nio.ByteBuffer;
 

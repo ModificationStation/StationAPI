@@ -88,8 +88,8 @@ class class_70Mixin {
                     target = "Lnet/minecraft/block/Block;afterBreak(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;IIII)V"
             )
     )
-    private void stationapi_redirectAfterBreak(Block block, World level, PlayerEntity player, int x, int y, int z, int meta) {
-        block.afterBreak(level, player, x, y, z, stationapi_method_1834_state, meta);
+    private void stationapi_redirectAfterBreak(Block block, World world, PlayerEntity player, int x, int y, int z, int meta) {
+        block.afterBreak(world, player, x, y, z, stationapi_method_1834_state, meta);
     }
 
     @Inject(

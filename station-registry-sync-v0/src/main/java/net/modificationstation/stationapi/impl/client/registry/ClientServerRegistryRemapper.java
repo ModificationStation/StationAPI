@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.registry.Registry;
-import net.modificationstation.stationapi.api.registry.legacy.LevelLegacyRegistry;
+import net.modificationstation.stationapi.api.registry.legacy.WorldLegacyRegistry;
 
 import java.io.ByteArrayInputStream;
 
@@ -27,7 +27,7 @@ public class ClientServerRegistryRemapper {
 
     private static void remapRegistries(PlayerEntity player, MessagePacket message) {
         LOGGER.info("Received level registries from server. Remapping...");
-        LevelLegacyRegistry.loadAll(NbtIo.readCompressed(new ByteArrayInputStream(message.bytes)));
+        WorldLegacyRegistry.loadAll(NbtIo.readCompressed(new ByteArrayInputStream(message.bytes)));
         LOGGER.info("Successfully synchronized registries with the server.");
     }
 }

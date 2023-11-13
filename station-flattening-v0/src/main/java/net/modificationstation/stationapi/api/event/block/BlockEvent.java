@@ -26,14 +26,14 @@ public abstract class BlockEvent extends Event {
     @SuperBuilder
     @EventPhases(StationAPI.INTERNAL_PHASE)
     public static final class BeforeRemoved extends BlockEvent {
-        public final World level;
+        public final World world;
         public final int x, y, z;
     }
 
     @Cancelable
     @SuperBuilder
     public static final class BeforeDrop extends BlockEvent {
-        public final World level;
+        public final World world;
         public final int x, y, z, meta;
         public final float chance;
     }

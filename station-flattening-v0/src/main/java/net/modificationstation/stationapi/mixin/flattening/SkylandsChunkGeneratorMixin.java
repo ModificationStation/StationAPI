@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.mixin.flattening;
 import net.minecraft.class_208;
 import net.minecraft.class_43;
 import net.minecraft.world.World;
-import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
+import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

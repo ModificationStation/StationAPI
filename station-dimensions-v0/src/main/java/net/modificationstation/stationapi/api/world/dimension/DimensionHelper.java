@@ -4,9 +4,9 @@ import net.minecraft.class_467;
 import net.minecraft.entity.player.PlayerEntity;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.SideUtil;
-import net.modificationstation.stationapi.impl.client.level.dimension.DimensionHelperClientImpl;
-import net.modificationstation.stationapi.impl.level.dimension.DimensionHelperImpl;
-import net.modificationstation.stationapi.impl.server.level.dimension.DimensionHelperServerImpl;
+import net.modificationstation.stationapi.impl.client.world.dimension.DimensionHelperClientImpl;
+import net.modificationstation.stationapi.impl.server.world.dimension.DimensionHelperServerImpl;
+import net.modificationstation.stationapi.impl.world.dimension.DimensionHelperImpl;
 
 public class DimensionHelper {
 

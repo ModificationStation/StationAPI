@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static net.modificationstation.stationapi.impl.level.FlattenedWorldManager.SECTIONS;
 import static net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl.STATION_ID;
+import static net.modificationstation.stationapi.impl.world.FlattenedWorldManager.SECTIONS;
 
 public class StationFlatteningDamagerSchemaB1_7_3 extends Schema {
     public StationFlatteningDamagerSchemaB1_7_3(int versionKey, Schema parent) {

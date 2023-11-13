@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.class_334;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
-import net.modificationstation.stationapi.api.client.level.ColorResolver;
+import net.modificationstation.stationapi.api.client.world.ColorResolver;
 import net.modificationstation.stationapi.mixin.render.client.WaterColorAccessor;
 
 public class BiomeColors {

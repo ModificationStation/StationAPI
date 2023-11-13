@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static net.modificationstation.stationapi.impl.level.FlattenedWorldManager.SECTIONS;
+import static net.modificationstation.stationapi.impl.world.FlattenedWorldManager.SECTIONS;
 
 public class McRegionToStationFlatteningChunkFix extends DataFix {
     private final String name;

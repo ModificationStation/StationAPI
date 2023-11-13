@@ -36,12 +36,12 @@ final class Air extends Block {
     }
 
     @Override
-    public Box getBoundingBox(World level, int x, int y, int z) {
+    public Box getBoundingBox(World world, int x, int y, int z) {
         return null;
     }
 
     @Override
-    public Box getCollisionShape(World level, int x, int y, int z) {
+    public Box getCollisionShape(World world, int x, int y, int z) {
         return null;
     }
 

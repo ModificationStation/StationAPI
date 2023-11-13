@@ -31,7 +31,7 @@ import java.util.function.IntFunction;
  * @param <T> the object's type that's stored in the registry.
  * @author mine_diver
  * @see Registry
- * @see LevelLegacyRegistry
+ * @see WorldLegacyRegistry
  */
 public abstract class AbstractLegacyRegistry<T> extends SimpleRegistry<T> {
 

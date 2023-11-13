@@ -13,6 +13,6 @@ public final class BlockInteractionImpl {
 
     @EventListener
     private static void beforeBlockRemoved(BlockEvent.BeforeRemoved event) {
-        if (event.block instanceof BeforeBlockRemoved listener) listener.beforeBlockRemoved(event.level, event.x, event.y, event.z);
+        if (event.block instanceof BeforeBlockRemoved listener) listener.beforeBlockRemoved(event.world, event.x, event.y, event.z);
     }
 }

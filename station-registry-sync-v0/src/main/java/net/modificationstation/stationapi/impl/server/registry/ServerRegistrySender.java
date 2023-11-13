@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
-import net.modificationstation.stationapi.api.registry.legacy.LevelLegacyRegistry;
+import net.modificationstation.stationapi.api.registry.legacy.WorldLegacyRegistry;
 import net.modificationstation.stationapi.api.server.event.network.PlayerPacketHandlerSetEvent;
 
 import java.io.ByteArrayOutputStream;
@@ -23,11 +23,11 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 public class ServerRegistrySender {
 
     @EventListener
-    private static void sendLevelRegistry(PlayerPacketHandlerSetEvent event) {
+    private static void sendWorldRegistry(PlayerPacketHandlerSetEvent event) {
         if (((ModdedPacketHandler) event.player.field_255).isModded()) {
             LOGGER.info("Sending level registries to \"" + event.player.name + "\"...");
             NbtCompound registries = new NbtCompound();
-            LevelLegacyRegistry.saveAll(registries);
+            WorldLegacyRegistry.saveAll(registries);
             ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
             NbtIo.writeCompressed(registries, byteOutputStream);
             MessagePacket message = new MessagePacket(of(NAMESPACE, "server_registry_sync"));

@@ -6,7 +6,7 @@ import net.minecraft.class_591;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
-import net.modificationstation.stationapi.impl.level.storage.FlattenedWorldStorage;
+import net.modificationstation.stationapi.impl.world.storage.FlattenedWorldStorage;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 

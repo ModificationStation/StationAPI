@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.world.chunk;
 
-import net.modificationstation.stationapi.impl.level.chunk.NibbleArray;
+import net.modificationstation.stationapi.impl.world.chunk.NibbleArray;
 
 public final class ChunkNibbleArray extends NibbleArray {
 

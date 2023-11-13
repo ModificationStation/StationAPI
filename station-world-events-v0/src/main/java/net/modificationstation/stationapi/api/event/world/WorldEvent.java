@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 @SuperBuilder
 public abstract class WorldEvent extends Event {
-    public final World level;
+    public final World world;
 
     @SuperBuilder
     public static class Init extends WorldEvent {}

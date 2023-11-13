@@ -21,8 +21,8 @@ class WorldMixin {
                     target = "Lnet/minecraft/world/WorldProperties;getDimensionId()I"
             )
     )
-    private int stationapi_modIf(WorldProperties levelProperties) {
-        return DimensionRegistry.INSTANCE.getByLegacyId(levelProperties.getDimensionId()).map(dimensionSupplier -> -1).orElse(0);
+    private int stationapi_modIf(WorldProperties worldProperties) {
+        return DimensionRegistry.INSTANCE.getByLegacyId(worldProperties.getDimensionId()).map(dimensionSupplier -> -1).orElse(0);
     }
 
     @ModifyConstant(

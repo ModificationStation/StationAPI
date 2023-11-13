@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.util.collection;
 
 import net.modificationstation.stationapi.api.world.chunk.CompactingPackedIntegerArray;
-import net.modificationstation.stationapi.impl.level.chunk.Palette;
+import net.modificationstation.stationapi.impl.world.chunk.Palette;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 

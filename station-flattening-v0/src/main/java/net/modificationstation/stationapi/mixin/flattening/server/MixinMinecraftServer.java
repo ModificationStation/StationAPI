@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.flattening.server;
 
 import net.minecraft.class_294;
 import net.minecraft.server.MinecraftServer;
-import net.modificationstation.stationapi.impl.level.dimension.FlattenedDimensionFile;
+import net.modificationstation.stationapi.impl.world.dimension.FlattenedDimensionFile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;

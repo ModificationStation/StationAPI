@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
-import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
+import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

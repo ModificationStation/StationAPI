@@ -1,13 +1,13 @@
 package net.modificationstation.sltest.mixin;
 
 import net.minecraft.world.dimension.OverworldDimension;
-import net.modificationstation.stationapi.impl.level.StationDimension;
+import net.modificationstation.stationapi.impl.world.StationDimension;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(OverworldDimension.class)
 public class OverworldTestMixin implements StationDimension {
     @Override
-    public short getDefaultLevelHeight() {
+    public short getDefaultWorldHeight() {
         return 256;
     }
 

@@ -17,9 +17,9 @@ class class_417Mixin {
             method = "method_1402(Lnet/minecraft/world/World;)V",
             at = @At("HEAD")
     )
-    private void stationapi_method_1869(World level, CallbackInfo info) {
-        maxBlock = (short) level.getTopY();
-        minBlock = (short) level.getBottomY();
+    private void stationapi_method_1869(World world, CallbackInfo info) {
+        maxBlock = (short) world.getTopY();
+        minBlock = (short) world.getBottomY();
     }
 
     @ModifyConstant(
@@ -68,7 +68,7 @@ class class_417Mixin {
             ),
             index = 20
     )
-    private int stationapi_getStateLuminance(int original, @Local World level, @Local(index = 10) int x, @Local(index = 15) int y, @Local(index = 11) int z) {
-        return level.getBlockState(x, y, z).getLuminance();
+    private int stationapi_getStateLuminance(int original, @Local World world, @Local(index = 10) int x, @Local(index = 15) int y, @Local(index = 11) int z) {
+        return world.getBlockState(x, y, z).getLuminance();
     }
 }

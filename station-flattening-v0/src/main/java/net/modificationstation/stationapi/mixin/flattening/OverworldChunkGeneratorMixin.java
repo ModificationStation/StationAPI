@@ -7,7 +7,7 @@ import net.minecraft.class_43;
 import net.minecraft.class_538;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
-import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
+import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;

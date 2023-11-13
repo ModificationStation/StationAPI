@@ -8,7 +8,7 @@ import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static net.modificationstation.stationapi.impl.level.FlattenedWorldManager.SECTIONS;
+import static net.modificationstation.stationapi.impl.world.FlattenedWorldManager.SECTIONS;
 
 public class StationFlatteningChunkSchema extends Schema {
     public StationFlatteningChunkSchema(int versionKey, Schema parent) {

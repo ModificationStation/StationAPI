@@ -20,7 +20,7 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.registry.LevelRegistryRemapper",
+      "net.modificationstation.stationapi.impl.registry.WorldRegistryRemapper",
       "net.modificationstation.stationapi.impl.registry.TagReloaderImpl"
     ]
   },

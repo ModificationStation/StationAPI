@@ -8,7 +8,7 @@ import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
-import net.modificationstation.stationapi.impl.level.StationDimension;
+import net.modificationstation.stationapi.impl.world.StationDimension;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -207,7 +207,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     @Unique
     @Override
     public int getHeight() {
-        return ((StationDimension) this.dimension).getActualLevelHeight();
+        return ((StationDimension) this.dimension).getActualWorldHeight();
     }
 
     @Override

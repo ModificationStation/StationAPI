@@ -94,7 +94,7 @@ class MinecraftServerMixin {
                     target = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;IJLnet/minecraft/class_73;)Lnet/minecraft/class_120;"
             )
     )
-    private class_120 stationapi_instantiateOtherServerLevel(MinecraftServer minecraftServer, DimensionData arg, String string, int i, long l, class_73 arg1) {
+    private class_120 stationapi_instantiateOtherServerWorld(MinecraftServer minecraftServer, DimensionData arg, String string, int i, long l, class_73 arg1) {
         return new class_120(minecraftServer, arg, string, DimensionRegistry.INSTANCE.serialView.keySet().toIntArray()[stationapi_capturedIndex], l, arg1);
     }
 

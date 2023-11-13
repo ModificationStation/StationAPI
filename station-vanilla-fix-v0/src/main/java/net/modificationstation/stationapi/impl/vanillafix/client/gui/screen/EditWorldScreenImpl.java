@@ -16,8 +16,8 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
-import net.modificationstation.stationapi.impl.level.storage.FlattenedWorldStorage;
 import net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl;
+import net.modificationstation.stationapi.impl.world.storage.FlattenedWorldStorage;
 import net.modificationstation.stationapi.mixin.vanillafix.client.ScreenAccessor;
 
 import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
@@ -45,7 +45,7 @@ public final class EditWorldScreenImpl {
                     FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.method_2127();
                     mc.field_2817.method_1491("Converting World to " + worldStorage.getPreviousWorldFormat());
                     mc.field_2817.method_1796("This may take a while :)");
-                    worldStorage.convertLevel(screen.worldData.method_1958(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(NAMESPACE.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.field_2817);
+                    worldStorage.convertWorld(screen.worldData.method_1958(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(NAMESPACE.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.field_2817);
                     mc.setScreen(screen);
                 }, WorldConversionWarning.TO_MCREGION_EXPLANATION_KEY, WorldConversionWarning.CONVERT_KEY))
         ));

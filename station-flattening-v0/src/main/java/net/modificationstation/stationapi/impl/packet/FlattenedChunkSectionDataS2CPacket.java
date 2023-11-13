@@ -5,9 +5,9 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.impl.level.chunk.ChunkSection;
-import net.modificationstation.stationapi.impl.level.chunk.FlattenedChunk;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
+import net.modificationstation.stationapi.impl.world.chunk.ChunkSection;
+import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.DataInputStream;

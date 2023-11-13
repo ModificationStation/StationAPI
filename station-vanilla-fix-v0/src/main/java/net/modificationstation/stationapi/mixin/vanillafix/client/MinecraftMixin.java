@@ -7,7 +7,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.util.Namespace;
-import net.modificationstation.stationapi.impl.level.storage.FlattenedWorldStorage;
+import net.modificationstation.stationapi.impl.world.storage.FlattenedWorldStorage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

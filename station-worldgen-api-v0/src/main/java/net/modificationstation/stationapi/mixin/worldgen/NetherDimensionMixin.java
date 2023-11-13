@@ -4,7 +4,7 @@ import net.minecraft.class_153;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.NetherDimension;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
-import net.modificationstation.stationapi.impl.level.StationDimension;
+import net.modificationstation.stationapi.impl.world.StationDimension;
 import net.modificationstation.stationapi.impl.worldgen.NetherBiomeSourceImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -12,7 +12,7 @@ import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.util.collection.PackedIntegerArray;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema;
-import net.modificationstation.stationapi.impl.level.chunk.NibbleArray;
+import net.modificationstation.stationapi.impl.world.chunk.NibbleArray;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static net.modificationstation.stationapi.impl.level.FlattenedWorldManager.SECTIONS;
+import static net.modificationstation.stationapi.impl.world.FlattenedWorldManager.SECTIONS;
 
 public class StationFlatteningToMcRegionChunkDamage extends DataFix {
     private final static int CHUNK_SIZE = 16 * 128 * 16;
