@@ -54,7 +54,7 @@ class FluidRendererMixin {
             method = "renderFluid",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/BlockBase;getTextureForSide(II)I",
+                    target = "Lnet/minecraft/block/Block;getTexture(II)I",
                     ordinal = 1,
                     shift = At.Shift.AFTER
             )
@@ -70,7 +70,7 @@ class FluidRendererMixin {
             method = "renderFluid",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/BlockBase;getTextureForSide(II)I",
+                    target = "Lnet/minecraft/block/Block;getTexture(II)I",
                     ordinal = 1,
                     shift = At.Shift.BY,
                     by = 3
@@ -267,7 +267,7 @@ class FluidRendererMixin {
             method = "renderFluid",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/BlockBase;getBrightness(Lnet/minecraft/level/BlockView;III)F",
+                    target = "Lnet/minecraft/block/Block;getLuminance(Lnet/minecraft/world/BlockView;III)F",
                     ordinal = 0
             )
     )
@@ -498,7 +498,7 @@ class FluidRendererMixin {
             method = "renderFluid",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/BlockBase;getTextureForSide(II)I",
+                    target = "Lnet/minecraft/block/Block;getTexture(II)I",
                     ordinal = 2,
                     shift = At.Shift.BY,
                     by = 2

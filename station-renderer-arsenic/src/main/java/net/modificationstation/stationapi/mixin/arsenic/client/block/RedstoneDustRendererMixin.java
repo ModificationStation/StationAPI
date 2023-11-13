@@ -283,12 +283,12 @@ class RedstoneDustRendererMixin {
             method = "renderRedstoneDust",
             slice = @Slice(from = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/Tessellator;colour(FFF)V",
+                    target = "Lnet/minecraft/client/render/Tessellator;color(FFF)V",
                     ordinal = 1
             )),
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/Tessellator;colour(FFF)V"
+                    target = "Lnet/minecraft/client/render/Tessellator;color(FFF)V"
             )
     )
     private void stationapi_redstone_removeInvisibleTextures1(Tessellator instance, float g, float h, float v) {

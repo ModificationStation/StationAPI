@@ -184,7 +184,7 @@ class BedRendererMixin {
             method = "renderBed",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/BlockBase;getTextureForSide(Lnet/minecraft/level/BlockView;IIII)I",
+                    target = "Lnet/minecraft/block/Block;getTextureId(Lnet/minecraft/world/BlockView;IIII)I",
                     ordinal = 1,
                     shift = At.Shift.BY,
                     by = 2
