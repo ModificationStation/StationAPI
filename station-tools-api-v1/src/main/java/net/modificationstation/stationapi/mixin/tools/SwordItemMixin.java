@@ -33,12 +33,12 @@ class SwordItemMixin implements StationSwordItem {
     }
 
     @Override
-    public TagKey<Block> getEffectiveBlocks(ItemStack itemInstance) {
+    public TagKey<Block> getEffectiveBlocks(ItemStack stack) {
         return stationapi_effectiveBlocks;
     }
 
     @Override
-    public ToolMaterial getMaterial(ItemStack itemInstance) {
+    public ToolMaterial getMaterial(ItemStack stack) {
         return stationapi_toolMaterial;
     }
 }

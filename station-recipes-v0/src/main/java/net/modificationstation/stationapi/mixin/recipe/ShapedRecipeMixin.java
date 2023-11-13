@@ -16,15 +16,15 @@ class ShapedRecipeMixin implements StationRecipe {
 
     @Override
     public ItemStack[] getIngredients() {
-        ItemStack[] itemInstances = new ItemStack[9];
+        ItemStack[] stacks = new ItemStack[9];
         for (int h = 0; h < height; h++) {
             for (int w = 0; w < width; w++) {
                 int localId = (h * width) + w;
                 int id = (h * 3) + w;
-                itemInstances[id] = input[localId];
+                stacks[id] = input[localId];
             }
         }
-        return itemInstances;
+        return stacks;
     }
 
     @Override

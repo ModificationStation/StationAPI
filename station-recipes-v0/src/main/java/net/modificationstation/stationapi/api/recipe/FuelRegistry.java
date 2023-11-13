@@ -20,8 +20,8 @@ public class FuelRegistry {
     private static boolean viewInvalidated;
 
     @API
-    public static int getFuelTime(ItemStack itemInstance) {
-        return itemInstance == null ? 0 : itemInstance.getRegistryEntry().streamTags().mapToInt(TAG_FUEL_TIME::getInt).filter(value -> value > 0).findFirst().orElseGet(() -> ITEM_FUEL_TIME.getInt(itemInstance.getItem()));
+    public static int getFuelTime(ItemStack stack) {
+        return stack == null ? 0 : stack.getRegistryEntry().streamTags().mapToInt(TAG_FUEL_TIME::getInt).filter(value -> value > 0).findFirst().orElseGet(() -> ITEM_FUEL_TIME.getInt(stack.getItem()));
     }
 
     @API

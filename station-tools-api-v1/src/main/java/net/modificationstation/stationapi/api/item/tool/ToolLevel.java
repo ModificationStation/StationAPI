@@ -9,7 +9,7 @@ public interface ToolLevel {
 
     void setEffectiveBlocks(TagKey<Block> effectiveBlocks);
 
-    TagKey<Block> getEffectiveBlocks(ItemStack itemInstance);
+    TagKey<Block> getEffectiveBlocks(ItemStack stack);
 
-    ToolMaterial getMaterial(ItemStack itemInstance);
+    ToolMaterial getMaterial(ItemStack stack);
 }

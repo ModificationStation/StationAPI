@@ -87,16 +87,16 @@ public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
 
     @Override
     public ItemStack[] getIngredients() {
-        ItemStack[] itemInstances = new ItemStack[9];
+        ItemStack[] stacks = new ItemStack[9];
         for (int h = 0; h < height; h++)
             for (int w = 0; w < width; w++) {
                 int localId = (h * width) + w;
                 Either<TagKey<Item>, ItemStack> ingredient = grid[localId];
                 if (ingredient == null) continue;
                 int id = (h * 3) + w;
-                itemInstances[id] = ingredient.map(tag -> new ItemStack(ItemRegistry.INSTANCE.getEntryList(tag).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + tag.id() + "\" has no entry in the tag registry!")).getRandom(RANDOM).orElseThrow().value()), Function.identity());
+                stacks[id] = ingredient.map(tag -> new ItemStack(ItemRegistry.INSTANCE.getEntryList(tag).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + tag.id() + "\" has no entry in the tag registry!")).getRandom(RANDOM).orElseThrow().value()), Function.identity());
             }
-        return itemInstances;
+        return stacks;
     }
 
     @Override

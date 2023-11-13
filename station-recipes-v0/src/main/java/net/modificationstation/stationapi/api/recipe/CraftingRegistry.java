@@ -54,7 +54,7 @@ public class CraftingRegistry {
         Either<TagKey<Item>, ItemStack>[] grid = new Either[width * height];
         for (int i = 0; i < width * height; ++i) {
             char c = ingredients.charAt(i);
-            grid[i] = keyToIngredient.containsKey(c) ? keyToIngredient.get(c).mapRight(itemInstance1 -> itemInstance1.copy()) : null;
+            grid[i] = keyToIngredient.containsKey(c) ? keyToIngredient.get(c).mapRight(ItemStack::copy) : null;
         }
         //noinspection unchecked
         CraftingRecipeManager.getInstance().getRecipes().add(new StationShapedRecipe(width, height, grid, output));

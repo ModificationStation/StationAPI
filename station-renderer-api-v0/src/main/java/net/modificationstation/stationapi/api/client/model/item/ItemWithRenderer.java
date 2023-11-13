@@ -12,7 +12,7 @@ public interface ItemWithRenderer {
     void renderItemOnGui(ItemRenderer itemRenderer, TextRenderer textRenderer, TextureManager textureManager, int itemId, int damage, int textureIndex, int x, int y);
 
     @Deprecated
-    default void renderItemOnGui(ItemRenderer itemRenderer, TextRenderer textRenderer, TextureManager textureManager, ItemStack itemInstance, int x, int y) {
-        renderItemOnGui(itemRenderer, textRenderer, textureManager, itemInstance.itemId, itemInstance.getDamage(), itemInstance.method_725(), x, y);
+    default void renderItemOnGui(ItemRenderer itemRenderer, TextRenderer textRenderer, TextureManager textureManager, ItemStack stack, int x, int y) {
+        renderItemOnGui(itemRenderer, textRenderer, textureManager, stack.itemId, stack.getDamage(), stack.method_725(), x, y);
     }
 }

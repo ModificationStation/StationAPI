@@ -45,7 +45,7 @@ abstract class ItemRendererMixin extends EntityRenderer {
             at = @At("HEAD"),
             cancellable = true
     )
-    private void stationapi_onRenderItemOnGuiItemInstance(TextRenderer arg1, TextureManager arg2, ItemStack i, int j, int par5, CallbackInfo ci) {
+    private void stationapi_onRenderItemOnGuiItemStack(TextRenderer arg1, TextureManager arg2, ItemStack i, int j, int par5, CallbackInfo ci) {
         arsenic_plugin.renderItemOnGui(arg1, arg2, i, j, par5, ci);
     }
 

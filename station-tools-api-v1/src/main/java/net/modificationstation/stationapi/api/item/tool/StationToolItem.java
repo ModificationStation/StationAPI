@@ -14,12 +14,12 @@ public interface StationToolItem extends ToolLevel {
     }
 
     @Override
-    default TagKey<Block> getEffectiveBlocks(ItemStack itemInstance) {
+    default TagKey<Block> getEffectiveBlocks(ItemStack stack) {
         return Util.assertImpl();
     }
 
     @Override
-    default ToolMaterial getMaterial(ItemStack itemInstance) {
+    default ToolMaterial getMaterial(ItemStack stack) {
         return Util.assertImpl();
     }
 }

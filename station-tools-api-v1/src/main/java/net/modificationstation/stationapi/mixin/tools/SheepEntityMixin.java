@@ -20,12 +20,12 @@ class SheepEntityMixin {
                     opcode = Opcodes.GETFIELD
             )
     )
-    private int stationapi_hijackSheepShearing(ItemStack itemInstance) {
+    private int stationapi_hijackSheepShearing(ItemStack stack) {
         return StationAPI.EVENT_BUS.post(
                 ShearsOverrideEvent.builder()
-                        .itemStack(itemInstance)
+                        .itemStack(stack)
                         .overrideShears(false)
                         .build()
-        ).overrideShears ? Item.SHEARS.id : itemInstance.itemId;
+        ).overrideShears ? Item.SHEARS.id : stack.itemId;
     }
 }

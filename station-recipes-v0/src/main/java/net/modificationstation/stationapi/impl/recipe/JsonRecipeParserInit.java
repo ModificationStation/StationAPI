@@ -75,11 +75,11 @@ public class JsonRecipeParserInit {
             throw new RuntimeException(e);
         }
         JsonItemKey[] ingredients = json.getIngredients();
-        Object[] iteminstances = new Object[json.getIngredients().length];
+        Object[] stacks = new Object[json.getIngredients().length];
         for (int i = 0; i < ingredients.length; i++)
-            iteminstances[i] = ingredients[i].get().map(Function.identity(), Function.identity());
+            stacks[i] = ingredients[i].get().map(Function.identity(), Function.identity());
         try {
-            CraftingRegistry.addShapelessRecipe(json.getResult().getItemStack(), iteminstances);
+            CraftingRegistry.addShapelessRecipe(json.getResult().getItemStack(), stacks);
         } catch (NullPointerException e) {
             throw new RuntimeException("Recipe: " + recipe, e);
         }

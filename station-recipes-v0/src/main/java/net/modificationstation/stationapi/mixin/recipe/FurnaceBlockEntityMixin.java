@@ -54,11 +54,11 @@ class FurnaceBlockEntityMixin {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void stationapi_captureLocals(CallbackInfo ci, ItemStack var1) {
-        capturedItemInstance = var1;
+        capturedItemStack = var1;
     }
 
     @Unique
-    private ItemStack capturedItemInstance;
+    private ItemStack capturedItemStack;
 
     @ModifyConstant(
             method = "method_1282",
@@ -68,7 +68,7 @@ class FurnaceBlockEntityMixin {
             )
     )
     private int stationapi_modifyStackIncrement(int constant) {
-        return capturedItemInstance.count;
+        return capturedItemStack.count;
     }
 
     @Inject(
@@ -82,11 +82,11 @@ class FurnaceBlockEntityMixin {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void stationapi_captureLocals2(CallbackInfoReturnable<Boolean> cir, ItemStack var1) {
-        capturedItemInstance2ElectricBoogaloo = var1;
+        capturedItemStack2ElectricBoogaloo = var1;
     }
 
     @Unique
-    private ItemStack capturedItemInstance2ElectricBoogaloo;
+    private ItemStack capturedItemStack2ElectricBoogaloo;
 
     @Redirect(
             method = "method_1283",
@@ -96,7 +96,7 @@ class FurnaceBlockEntityMixin {
                     opcode = Opcodes.GETFIELD
             )
     )
-    private int stationapi_fixOverstack(ItemStack itemInstance) {
-        return itemInstance.count + capturedItemInstance2ElectricBoogaloo.count - 1;
+    private int stationapi_fixOverstack(ItemStack stack) {
+        return stack.count + capturedItemStack2ElectricBoogaloo.count - 1;
     }
 }
