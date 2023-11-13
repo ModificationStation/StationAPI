@@ -6,9 +6,9 @@
   "mixins": [
   ],
   "client": [
-    "client.MixinGameOptions",
-    "client.MixinMinecraft",
-    "client.MixinScreenBase"
+    "client.GameOptionsMixin",
+    "client.MinecraftMixin",
+    "client.ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

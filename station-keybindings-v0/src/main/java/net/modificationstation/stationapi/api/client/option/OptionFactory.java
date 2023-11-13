@@ -7,7 +7,6 @@ import net.modificationstation.stationapi.api.factory.EnumFactory;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class OptionFactory {
-
     public static Option create(String optionName, String translationKey, boolean slider, boolean toggle) {
         return EnumFactory.addEnum(
                 Option.class, optionName,

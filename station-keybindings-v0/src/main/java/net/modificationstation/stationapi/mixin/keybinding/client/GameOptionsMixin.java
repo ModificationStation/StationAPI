@@ -19,10 +19,9 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 @Mixin(GameOptions.class)
-public class MixinGameOptions {
-
+class GameOptionsMixin {
     @Shadow
-    public KeyBinding[] keyBindings;
+    public KeyBinding[] allKeys;
 
     @Shadow
     public int difficulty;
@@ -31,12 +30,12 @@ public class MixinGameOptions {
             method = "<init>(Lnet/minecraft/client/Minecraft;Ljava/io/File;)V",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/options/GameOptions;difficulty:I",
+                    target = "Lnet/minecraft/client/option/GameOptions;difficulty:I",
                     opcode = Opcodes.PUTFIELD
             )
     )
-    private void redirectKeyBindings1(GameOptions gameOptions, int value) {
-        initKeyBindings();
+    private void stationapi_redirectKeyBindings1(GameOptions gameOptions, int value) {
+        stationapi_initKeyBindings();
         difficulty = value;
     }
 
@@ -44,19 +43,19 @@ public class MixinGameOptions {
             method = "<init>()V",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/client/options/GameOptions;difficulty:I",
+                    target = "Lnet/minecraft/client/option/GameOptions;difficulty:I",
                     opcode = Opcodes.PUTFIELD
             )
     )
-    private void redirectKeyBindings2(GameOptions gameOptions, int value) {
-        initKeyBindings();
+    private void stationapi_redirectKeyBindings2(GameOptions gameOptions, int value) {
+        stationapi_initKeyBindings();
         difficulty = value;
     }
 
     @Unique
-    private void initKeyBindings() {
-        List<KeyBinding> keyBindingList = new ArrayList<>(Arrays.asList(keyBindings));
+    private void stationapi_initKeyBindings() {
+        List<KeyBinding> keyBindingList = new ArrayList<>(Arrays.asList(allKeys));
         StationAPI.EVENT_BUS.post(KeyBindingRegisterEvent.builder().keyBindings(keyBindingList).build());
-        keyBindings = keyBindingList.toArray(new KeyBinding[0]);
+        allKeys = keyBindingList.toArray(new KeyBinding[0]);
     }
 }
