@@ -54,7 +54,7 @@ class WorldPropertiesMixin {
             method = "getPlayerNbt",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/level/LevelProperties;playerData:Lnet/minecraft/util/io/CompoundTag;",
+                    target = "Lnet/minecraft/world/WorldProperties;playerNbt:Lnet/minecraft/nbt/NbtCompound;",
                     opcode = Opcodes.GETFIELD,
                     shift = At.Shift.BEFORE
             )
