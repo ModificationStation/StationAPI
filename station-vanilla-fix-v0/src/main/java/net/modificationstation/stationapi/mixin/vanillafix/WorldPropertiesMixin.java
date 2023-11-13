@@ -50,6 +50,7 @@ class WorldPropertiesMixin {
         }
     }
 
+    @Environment(EnvType.CLIENT)
     @Inject(
             method = "getPlayerNbt",
             at = @At(
