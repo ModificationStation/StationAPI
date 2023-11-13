@@ -22,7 +22,7 @@ rootProject.name = "Station API"
 include 'station-api-base'
 
 include 'station-registry-api-v0'
-include 'station-level-events-v0'
+include 'station-world-events-v0'
 include 'station-biome-events-v0'
 include 'station-recipes-v0'
 include 'station-items-v0'

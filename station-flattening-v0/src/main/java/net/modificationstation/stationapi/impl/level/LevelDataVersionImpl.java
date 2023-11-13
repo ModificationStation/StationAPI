@@ -5,7 +5,7 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.event.level.LevelPropertiesEvent;
+import net.modificationstation.stationapi.api.event.world.WorldPropertiesEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
@@ -18,8 +18,8 @@ import java.util.Map;
 public final class LevelDataVersionImpl {
 
     @EventListener
-    private static void addDataVersions(LevelPropertiesEvent.Save event) {
+    private static void addDataVersions(WorldPropertiesEvent.Save event) {
         Map.Entry<String, ? extends NbtElement> entry = Iterators.getOnlyElement(((NbtCompoundAccessor) NbtHelper.addDataVersions(new NbtCompound())).stationapi$getEntries().entrySet().iterator());
-        event.tag.put(entry.getKey(), entry.getValue());
+        event.nbt.put(entry.getKey(), entry.getValue());
     }
 }

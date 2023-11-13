@@ -23,7 +23,7 @@
     "fabricloader": "*",
     "minecraft": "1.0.0-beta.7.3",
     "station-registry-api-v0": "*",
-    "station-level-events-v0": "*",
+    "station-world-events-v0": "*",
     "station-biome-events-v0": "*",
     "station-recipes-v0": "*",
     "station-items-v0": "*",

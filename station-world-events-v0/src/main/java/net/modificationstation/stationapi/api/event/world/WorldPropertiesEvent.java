@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.event.level;
+package net.modificationstation.stationapi.api.event.world;
 
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
@@ -8,20 +8,20 @@ import net.minecraft.world.WorldProperties;
 import net.modificationstation.stationapi.api.StationAPI;
 
 @SuperBuilder
-public abstract class LevelPropertiesEvent extends Event {
-    public final WorldProperties levelProperties;
-    public final NbtCompound tag;
+public abstract class WorldPropertiesEvent extends Event {
+    public final WorldProperties worldProperties;
+    public final NbtCompound nbt;
 
     @SuperBuilder
-    public static class Load extends LevelPropertiesEvent {}
+    public static class Load extends WorldPropertiesEvent {}
 
     @SuperBuilder
     @EventPhases(StationAPI.INTERNAL_PHASE)
-    public static class Save extends LevelPropertiesEvent {
-        public final NbtCompound spPlayerData;
+    public static class Save extends WorldPropertiesEvent {
+        public final NbtCompound spPlayerNbt;
     }
 
     @SuperBuilder
     @EventPhases(StationAPI.INTERNAL_PHASE)
-    public static class LoadOnLevelInit extends LevelPropertiesEvent {}
+    public static class LoadOnWorldInit extends WorldPropertiesEvent {}
 }

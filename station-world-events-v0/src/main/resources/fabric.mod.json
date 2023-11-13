@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "station-level-events-v0",
+  "id": "station-world-events-v0",
   "version": "${version}",
 
-  "name": "Station Level Events (v0)",
-  "description": "Provides some essential hooks for level-related things.",
+  "name": "Station World Events (v0)",
+  "description": "Provides some essential hooks for world-related things.",
   "authors": [
     "Modification Station"
   ],
@@ -15,11 +15,11 @@
   },
 
   "license": "MIT",
-  "icon": "assets/station-level-events-v0/icon.png",
+  "icon": "assets/station-world-events-v0/icon.png",
 
   "environment": "*",
   "mixins": [
-    "station-level-events-v0.mixins.json"
+    "station-world-events-v0.mixins.json"
   ],
 
   "depends": {
