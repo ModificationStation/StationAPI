@@ -77,7 +77,7 @@ public class BonemealAPI {
         @Override
         public boolean method_1142(World world, Random random, int x, int y, int z) {
             BlockState worldState = world.getBlockState(x, y, z);
-            if (!worldState.isAir() && !worldState.getMaterial().method_893()) return false;
+            if (!worldState.isAir()) return false;
             if (state.getBlock().canPlaceAt(world, x, y, z)) {
                 world.setBlockState(x, y, z, state);
                 return true;
