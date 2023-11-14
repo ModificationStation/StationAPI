@@ -245,7 +245,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     
     @Inject(method = "method_152", at = @At("HEAD"), cancellable = true)
     private void fixHeightSearch(int x, int z, CallbackInfoReturnable<Integer> info) {
-        int top = getTopY();
+        int top = getTopY() - 1;
         int id = 0;
         for (int i = 63; i < top; i++) {
             id = this.getBlockId(x, i, z);
