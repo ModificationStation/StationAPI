@@ -50,7 +50,7 @@ public class FlattenedChunk extends class_43 {
         for(int i = 0; i < tiles.length; i++) {
             id = Byte.toUnsignedInt(tiles[i]);
             if (id == 0 || id >= Block.BLOCKS.length) continue;
-            by = i & mask;
+            by = (i & mask) + this.field_956.getBottomY();
             if (by > lastBlock) continue;
             bx = (i >> offsetX) & 15;
             bz = (i >> offsetZ) & 15;

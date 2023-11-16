@@ -57,7 +57,7 @@ class OverworldChunkGeneratorMixin {
             constant = @Constant(intValue = 32768)
     )
     private int stationapi_changeArrayCapacity(int original) {
-        return field_2260.getHeight() << 8;
+        return 1 << (MathHelper.ceilLog2(field_2260.getHeight()) + 8);
     }
     
     @Inject(
@@ -66,13 +66,15 @@ class OverworldChunkGeneratorMixin {
     )
     private void stationapi_initChunkLocals(
         int j, int bs, byte[] args, class_153[] ds, double[] par5, CallbackInfo ci,
-        @Share("offsetX") LocalIntRef offsetX, @Share("offsetZ") LocalIntRef offsetZ, @Share("vertical") LocalIntRef vertical
+        @Share("offsetX") LocalIntRef offsetX, @Share("offsetZ") LocalIntRef offsetZ, @Share("vertical") LocalIntRef vertical, @Share("height") LocalIntRef height
     ) {
         int dz = MathHelper.ceilLog2(field_2260.getHeight());
+        height.set(1 << dz);
         offsetZ.set(dz);
         offsetX.set(dz + 4);
-        vertical.set(field_2260.getHeight() >> 3);
-        int length = ((field_2260.getHeight() >> 3) + 1) * 25;
+        int heightPacked = 1 << (dz - 3);
+        vertical.set(heightPacked);
+        int length = (heightPacked + 1) * 25;
         if (field_2261 == null || field_2261.length < length) {
             field_2261 = new double[length];
         }
@@ -86,8 +88,8 @@ class OverworldChunkGeneratorMixin {
                     shift = Shift.AFTER
             )
     )
-    private void stationapi_fixNoiseValues(int j, int bs, byte[] args, class_153[] ds, double[] par5, CallbackInfo ci) {
-        int height = (field_2260.getHeight() >> 3) + 1;
+    private void stationapi_fixNoiseValues(int j, int bs, byte[] args, class_153[] ds, double[] par5, CallbackInfo ci, @Share("vertical") LocalIntRef vertical) {
+        int height = vertical.get() + 1;
         int length = height * 25;
         int bottom = field_2260.getBottomY() >> 3;
         for (int i = length - 1; i >= 0; i--) {
@@ -115,8 +117,8 @@ class OverworldChunkGeneratorMixin {
             method = "method_1798",
             constant = @Constant(intValue = 17)
     )
-    private int stationapi_changeVerticalArraySize(int original) {
-        return (field_2260.getHeight() >> 3) + 1;
+    private int stationapi_changeVerticalArraySize(int original, @Share("vertical") LocalIntRef vertical) {
+        return vertical.get() + 1;
     }
     
     @ModifyConstant(
@@ -142,14 +144,24 @@ class OverworldChunkGeneratorMixin {
     }
     
     @ModifyConstant(
-            method = {
-                    "method_1798",
-                    "method_1797"
-            },
+            method = "method_1798",
             constant = @Constant(intValue = 128)
     )
-    private int stationapi_changeFillStep(int original) {
-        return field_2260.getHeight();
+    private int stationapi_changeFillStep(int original, @Share("height") LocalIntRef height) {
+        return height.get();
+    }
+    
+    @Inject(method = "method_1797", at = @At("HEAD"))
+    private void stationapi_initLocals(int j, int bs, byte[] args, class_153[] par4, CallbackInfo ci, @Share("vertical2") LocalIntRef vertical2) {
+        vertical2.set(1 << MathHelper.ceilLog2(field_2260.getHeight()));
+    }
+    
+    @ModifyConstant(
+        method = "method_1797",
+        constant = @Constant(intValue = 128)
+    )
+    private int stationapi_changeFillStep2(int original, @Share("vertical2") LocalIntRef vertical2) {
+        return vertical2.get();
     }
     
     @ModifyConstant(

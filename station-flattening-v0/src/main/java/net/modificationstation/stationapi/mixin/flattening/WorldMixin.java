@@ -243,17 +243,18 @@ abstract class WorldMixin implements StationFlatteningWorld {
         return Math.max(getBlockState(x, y, z).getLuminance(), light);
     }
     
-    @Inject(method = "method_152", at = @At("HEAD"), cancellable = true)
+    /*@Inject(method = "method_152", at = @At("HEAD"), cancellable = true)
     private void fixHeightSearch(int x, int z, CallbackInfoReturnable<Integer> info) {
         int top = getTopY() - 1;
-        int id = 0;
+        int id = this.getBlockId(x, 63, z);
         for (int i = 63; i < top; i++) {
-            id = this.getBlockId(x, i, z);
-            if (id > 0) {
+            int nextId = this.getBlockId(x, i + 1, z);
+            if (nextId == 0) {
                 info.setReturnValue(id);
                 return;
             }
+            id = nextId;
         }
         info.setReturnValue(id);
-    }
+    }*/
 }
