@@ -1,7 +1,9 @@
 package net.modificationstation.stationapi.mixin.worldgen.client;
 
+import net.minecraft.block.Material;
 import net.minecraft.class_555;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.LivingEntity;
 import net.modificationstation.stationapi.impl.worldgen.FogRendererImpl;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,10 +25,13 @@ class GameRendererMixin {
             at = @At("HEAD")
     )
     private void stationapi_changeFogColor(int i, float delta, CallbackInfo info) {
-        FogRendererImpl.setupFog(field_2349, delta);
-        field_2346 = FogRendererImpl.getR();
-        field_2347 = FogRendererImpl.getG();
-        field_2348 = FogRendererImpl.getB();
+        LivingEntity livingEntity = this.field_2349.field_2807;
+        if (!livingEntity.isInFluid(Material.WATER) && !livingEntity.isInFluid(Material.LAVA)) {
+            FogRendererImpl.setupFog(field_2349, delta);
+            field_2346 = FogRendererImpl.getR();
+            field_2347 = FogRendererImpl.getG();
+            field_2348 = FogRendererImpl.getB();
+        }
     }
 
     @Inject(
