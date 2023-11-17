@@ -13,6 +13,6 @@ public class OverworldTestMixin implements StationDimension {
 
     @Override
     public short getDefaultBottomY() {
-        return 0;
+        return -64;
     }
 }

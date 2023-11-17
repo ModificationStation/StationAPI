@@ -1,25 +1,26 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "package": "net.modificationstation.stationapi.mixin.worldgen",
-  "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "BiomeMixin",
-    "BiomeSourceMixin",
-    "NetherDimensionMixin",
-    "NetherWorldSourceMixin",
-    "OverworldDimensionMixin",
-    "OverworldWorldSourceMixin",
-    "SimplexOctaveNoiseMixin",
-    "WorldMixin"
-  ],
-  "client": [
-    "client.GameRendererMixin",
-    "client.GrassBlockMixin",
-    "client.LeavesBlockMixin",
-    "client.TallPlantBlockMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.modificationstation.stationapi.mixin.worldgen",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"BiomeMixin",
+		"BiomeSourceMixin",
+		"DimensionMixin",
+		"NetherDimensionMixin",
+		"NetherWorldSourceMixin",
+		"OverworldDimensionMixin",
+		"OverworldWorldSourceMixin",
+		"SimplexOctaveNoiseMixin",
+		"WorldMixin"
+	],
+	"client": [
+		"client.GameRendererMixin",
+		"client.GrassBlockMixin",
+		"client.LeavesBlockMixin",
+		"client.TallPlantBlockMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
 }

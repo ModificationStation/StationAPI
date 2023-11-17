@@ -46,15 +46,17 @@ public class FlattenedChunk extends class_43 {
         int mask = (tiles.length >> 8) - 1;
         int offsetZ = mask == 127 ? 7 : net.modificationstation.stationapi.api.util.math.MathHelper.ceilLog2(mask + 1);
         int offsetX = offsetZ + 4;
+        int bottom = this.field_956.getBottomY();
         int id, bx, by, bz;
         for(int i = 0; i < tiles.length; i++) {
             id = Byte.toUnsignedInt(tiles[i]);
             if (id == 0 || id >= Block.BLOCKS.length) continue;
-            by = (i & mask) + this.field_956.getBottomY();
-            if (by > lastBlock) continue;
+            by = (i & mask) + bottom;
+            ChunkSection section = getOrCreateSection(by, false);
+            if (section == null) continue;
             bx = (i >> offsetX) & 15;
             bz = (i >> offsetZ) & 15;
-            Objects.requireNonNull(getOrCreateSection(by, false)).setBlockState(bx, by & 15, bz, Block.BLOCKS[id].getDefaultState());
+            section.setBlockState(bx, by & 15, bz, Block.BLOCKS[id].getDefaultState());
         }
     }
 

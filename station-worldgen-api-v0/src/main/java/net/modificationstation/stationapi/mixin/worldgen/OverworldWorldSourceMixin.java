@@ -1,6 +1,8 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.minecraft.block.SandBlock;
 import net.minecraft.class_153;
 import net.minecraft.class_51;

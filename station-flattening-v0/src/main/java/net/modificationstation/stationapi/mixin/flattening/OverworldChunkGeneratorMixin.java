@@ -10,6 +10,7 @@ import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 class OverworldChunkGeneratorMixin {
     @Shadow private World field_2260;
     @Shadow private double[] field_2261;
+    @Unique private double[] densityCache;
     
     @ModifyConstant(
             method = "method_1803",
@@ -92,12 +94,18 @@ class OverworldChunkGeneratorMixin {
         int height = vertical.get() + 1;
         int length = height * 25;
         int bottom = field_2260.getBottomY() >> 3;
-        for (int i = length - 1; i >= 0; i--) {
+        
+        if (densityCache == null || densityCache.length != length) {
+            densityCache = new double[field_2261.length];
+        }
+        System.arraycopy(field_2261, 0, densityCache, 0, field_2261.length);
+        
+        for (int i = 0; i < length; i++) {
             int y = (i % height) + bottom;
             y = MathHelper.clamp(y, 0, 16);
             int zx = i / height;
             int index = zx * 17 + y;
-            field_2261[i] = field_2261[index];
+            field_2261[i] = densityCache[index];
         }
     }
     
@@ -130,17 +138,6 @@ class OverworldChunkGeneratorMixin {
     )
     private int stationapi_changeVerticalIterations(int original, @Share("vertical") LocalIntRef vertical) {
         return vertical.get();
-    }
-    
-    @ModifyConstant(
-            method = "method_1798",
-            constant = @Constant(
-                    intValue = 0,
-                    ordinal = 0
-            )
-    )
-    private int stationapi_changeNoiseBottomY(int original) {
-        return field_2260.getBottomY();
     }
     
     @ModifyConstant(
