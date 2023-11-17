@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(World.class)
 abstract class WorldMixin implements StationFlatteningWorld {
@@ -22,7 +23,9 @@ abstract class WorldMixin implements StationFlatteningWorld {
     @Shadow @Final public Dimension dimension;
 
     @Shadow protected abstract void method_235(int i, int j, int k, int l);
-
+    
+    @Shadow public abstract int getBlockId(int x, int y, int z);
+    
     @Override
     @Unique
     public BlockState getBlockState(int x, int y, int z) {
@@ -239,4 +242,19 @@ abstract class WorldMixin implements StationFlatteningWorld {
     private int stationapi_getStateLuminance(int original, @Local(index = 2) int x, @Local(index = 3) int y, @Local(index = 4) int z, @Local(index = 5) int light) {
         return Math.max(getBlockState(x, y, z).getLuminance(), light);
     }
+    
+    /*@Inject(method = "method_152", at = @At("HEAD"), cancellable = true)
+    private void fixHeightSearch(int x, int z, CallbackInfoReturnable<Integer> info) {
+        int top = getTopY() - 1;
+        int id = this.getBlockId(x, 63, z);
+        for (int i = 63; i < top; i++) {
+            int nextId = this.getBlockId(x, i + 1, z);
+            if (nextId == 0) {
+                info.setReturnValue(id);
+                return;
+            }
+            id = nextId;
+        }
+        info.setReturnValue(id);
+    }*/
 }

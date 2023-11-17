@@ -8,11 +8,11 @@ import org.spongepowered.asm.mixin.Mixin;
 public class OverworldTestMixin implements StationDimension {
     @Override
     public short getDefaultWorldHeight() {
-        return 256;
+        return 320;
     }
 
     @Override
     public short getDefaultBottomY() {
-        return 0;
+        return -64;
     }
 }

@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.impl.worldgen;
 import net.minecraft.class_153;
 import net.minecraft.class_519;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.util.math.MathHelper;
 
 public class WorldGeneratorImpl {
     private static final BiomeDataInterpolator MIN_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(class_153::getMinHeight, 16, 4, 8);
@@ -16,7 +17,8 @@ public class WorldGeneratorImpl {
         cz <<= 4;
     
         class_519 biomeSource = world.method_1781();
-        int sideY = data.length / 25;
+        int sideY = (1 << (MathHelper.ceilLog2(world.getHeight()) - 3)) + 1;
+        int bottom = world.getBottomY() >> 3;
         int dx = sideY * 5;
 
         for (int i = 0; i < data.length; i++) {
@@ -29,7 +31,7 @@ public class WorldGeneratorImpl {
                 max = MAX_HEIGHT_INTERPOLATOR.get(biomeSource, x, z) / 8F;
             }
             
-            y += world.getBottomY();
+            y += bottom;
 
             if (y < min) {
                 float d = (min - y) * 100 + n * 10;
