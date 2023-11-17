@@ -44,12 +44,10 @@ class GameRendererMixin {
             )
     )
     private void stationapi_clearWithFogColor(float delta, CallbackInfo info) {
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-        GL11.glClearColor(
-                FogRendererImpl.getR(),
-                FogRendererImpl.getG(),
-                FogRendererImpl.getB(),
-                1F
-        );
+        LivingEntity livingEntity = this.field_2349.field_2807;
+        if (!livingEntity.isInFluid(Material.WATER) && !livingEntity.isInFluid(Material.LAVA)) {
+            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+            GL11.glClearColor(FogRendererImpl.getR(), FogRendererImpl.getG(), FogRendererImpl.getB(), 1F);
+        }
     }
 }
