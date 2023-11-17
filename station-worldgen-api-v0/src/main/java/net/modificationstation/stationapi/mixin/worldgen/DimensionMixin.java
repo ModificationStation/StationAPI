@@ -11,12 +11,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Dimension.class)
 public class DimensionMixin {
-	@Shadow public World field_2173;
-	
-	@Inject(method = "method_1770", at = @At("HEAD"), cancellable = true)
-	private void fixSpawnPosition(int x, int z, CallbackInfoReturnable<Boolean> info) {
-		int blockID = this.field_2173.method_152(x, z);
-		Block block = Block.BLOCKS[blockID];
-		info.setReturnValue(block != null && block.isFullCube() && block.isOpaque());
-	}
+    @Shadow public World field_2173;
+
+    @Inject(method = "method_1770", at = @At("HEAD"), cancellable = true)
+    private void fixSpawnPosition(int x, int z, CallbackInfoReturnable<Boolean> info) {
+        int blockID = this.field_2173.method_152(x, z);
+        Block block = Block.BLOCKS[blockID];
+        info.setReturnValue(block != null && block.isFullCube() && block.isOpaque());
+    }
 }
