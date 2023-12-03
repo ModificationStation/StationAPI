@@ -14,6 +14,8 @@ abstract class ChunkMixin implements StationFlatteningChunk {
 
     @Shadow public abstract boolean method_860(int i, int j, int k, int l);
 
+    @Shadow public abstract boolean method_861(int i, int j, int k, int l, int m);
+
     @Override
     @Unique
     public BlockState getBlockState(int x, int y, int z) {
@@ -25,5 +27,12 @@ abstract class ChunkMixin implements StationFlatteningChunk {
     public BlockState setBlockState(int x, int y, int z, BlockState blockState) {
         BlockState oldState = getBlockState(x, y, z);
         return method_860(x, y, z, blockState.getBlock().id) ? oldState : null;
+    }
+
+    @Override
+    @Unique
+    public BlockState setBlockStateWithMetadata(int x, int y, int z, BlockState blockState, int meta) {
+        BlockState oldState = getBlockState(x, y, z);
+        return method_861(x, y, z, blockState.getBlock().id, meta) ? oldState : null;
     }
 }
