@@ -24,7 +24,7 @@ public final class CustomTooltipRendererImpl {
                 int tooltipX = event.mouseX - event.containerX + 12;
                 int tooltipY = event.mouseY - event.containerY - 12;
                 ((DrawContextAccessor) event.container).invokeFillGradient(tooltipX - 3, tooltipY - 3, tooltipX + tooltipWidth + 3, tooltipY + (8 * newTooltip.length) + (3 * newTooltip.length), -1073741824, -1073741824);
-                IntStream.range(0, newTooltip.length).forEach(currentTooltip -> event.textManager.drawWithShadow(newTooltip[currentTooltip], tooltipX, tooltipY + (8 * currentTooltip) + (3 * currentTooltip), -1));
+                IntStream.range(0, newTooltip.length).forEach(currentTooltip -> event.textManager.drawWithShadow(newTooltip[currentTooltip], tooltipX + tooltipWidth + 3, tooltipY + (8 * currentTooltip) + (3 * currentTooltip), -1));
             });
             event.cancel();
         }
