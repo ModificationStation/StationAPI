@@ -92,7 +92,11 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeMetaBitmask(int value) {
-        return 15;
+        if (0xFF < Block.BLOCKS.length) {
+            return 15;
+        } else {
+            return 0xFF;
+        }
     }
 
     @ModifyConstant(
@@ -100,7 +104,11 @@ class WorldRendererMixin {
             constant = @Constant(intValue = 8)
     )
     private int stationapi_changeMetaBitshift(int value) {
-        return 28;
+        if (0xFF < Block.BLOCKS.length) {
+            return 28;
+        } else {
+            return 8;
+        }
     }
 
     @ModifyArg(
