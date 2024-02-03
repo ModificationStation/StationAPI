@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -61,7 +62,11 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeBlockIDBitmask1(int value) {
-        return 0x0FFFFFFF;
+        if (0xFF < Block.BLOCKS.length) {
+            return 0x0FFFFFFF;
+        } else {
+            return 0xFF;
+        }
     }
 
     @ModifyConstant(
@@ -72,7 +77,11 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeBlockIDBitmask2(int value) {
-        return 0x0FFFFFFF;
+        if (0xFF < Block.BLOCKS.length) {
+            return 0x0FFFFFFF;
+        } else {
+            return 0xFF;
+        }
     }
 
     @ModifyConstant(
