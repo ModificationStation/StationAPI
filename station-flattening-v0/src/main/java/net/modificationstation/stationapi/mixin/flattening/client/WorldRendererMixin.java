@@ -1,8 +1,11 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
@@ -62,7 +65,8 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeBlockIDBitmask1(int value) {
-        if (0xFF < Block.BLOCKS.length) {
+        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
+        if (null == moddedPacketHandler || moddedPacketHandler.isModded()) {
             return 0x0FFFFFFF;
         } else {
             return 0xFF;
@@ -77,7 +81,8 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeBlockIDBitmask2(int value) {
-        if (0xFF < Block.BLOCKS.length) {
+        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
+        if (null == moddedPacketHandler || moddedPacketHandler.isModded()) {
             return 0x0FFFFFFF;
         } else {
             return 0xFF;
@@ -92,7 +97,7 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeMetaBitmask(int value) {
-        return 15;
+        return 0xF;
     }
 
     @ModifyConstant(
@@ -100,7 +105,8 @@ class WorldRendererMixin {
             constant = @Constant(intValue = 8)
     )
     private int stationapi_changeMetaBitshift(int value) {
-        if (0xFF < Block.BLOCKS.length) {
+        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
+        if (null == moddedPacketHandler || moddedPacketHandler.isModded()) {
             return 28;
         } else {
             return 8;
