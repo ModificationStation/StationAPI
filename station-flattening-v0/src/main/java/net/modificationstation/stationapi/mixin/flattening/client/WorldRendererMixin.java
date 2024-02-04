@@ -92,11 +92,7 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeMetaBitmask(int value) {
-        if (0xFF < Block.BLOCKS.length) {
-            return 15;
-        } else {
-            return 0xFF;
-        }
+        return 15;
     }
 
     @ModifyConstant(
