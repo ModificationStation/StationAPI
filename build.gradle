@@ -121,15 +121,15 @@ allprojects {
         implementation "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
         implementation "com.mojang:datafixerupper:${project.dfu_version}"
         implementation "maven.modrinth:spasm:${project.spasm_version}"
-        implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixinextras_version}"))
+        implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.mixinextras_version}"))
         implementation "com.oath.cyclops:cyclops:${project.cyclops_version}"
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
-        compileOnly 'org.projectlombok:lombok:1.18.24'
-        annotationProcessor 'org.projectlombok:lombok:1.18.24'
-        testCompileOnly 'org.projectlombok:lombok:1.18.24'
-        testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+        compileOnly 'org.projectlombok:lombok:1.18.30'
+        annotationProcessor 'org.projectlombok:lombok:1.18.30'
+        testCompileOnly 'org.projectlombok:lombok:1.18.30'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
         implementationOnly 'org.jetbrains:annotations:23.0.0'
@@ -138,13 +138,14 @@ allprojects {
             transitive false
         }
 
-//        implementation "blue.endless:jankson:1.2.1"
-//        modLocalRuntime("net.glasslauncher.mods:GlassConfigAPI:${project.gcapi_version}") {
-//            transitive false
-//        }
-//        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.hmi_version}") {
-//            transitive false
-//        }
+        implementation "blue.endless:jankson:1.2.1"
+        modLocalRuntime("net.glasslauncher.mods:GlassConfigAPI:${project.gcapi_version}") {
+            transitive false
+        }
+        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.hmi_version}") {
+            transitive false
+        }
+//        modLocalRuntime "maven.modrinth:mojangfix:${project.mojangfix_version}"
     }
 
     loom {
