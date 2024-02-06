@@ -7,6 +7,7 @@
   ],
   "client": [
     "client.GameOptionsMixin",
+    "client.KeyBindingMixin",
     "client.MinecraftMixin",
     "client.ScreenMixin"
   ],

@@ -11,7 +11,7 @@ public class OptionListener {
     @Environment(EnvType.CLIENT)
     @EventListener
     public void registerKeyBindings(KeyBindingRegisterEvent event) {
-        testBind = new KeyBinding("key.sltest.testBind", 21);
+        testBind = new KeyBinding("key.sltest:testBind", 21);
         event.keyBindings.add(testBind);
     }
 
