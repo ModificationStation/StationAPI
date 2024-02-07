@@ -13,6 +13,7 @@
   "client": [
     "client.ClientNetworkHandlerMixin",
     "client.ClientWorldMixin",
+    "client.GameOptionsMixin",
     "client.MinecraftMixin",
     "client.TextureManagerMixin"
   ],

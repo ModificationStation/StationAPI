@@ -18,6 +18,11 @@
   "icon": "assets/station-keybindings-v0/icon.png",
 
   "environment": "client",
+  "entrypoints": {
+    "stationapi:event_bus_client": [
+      "net.modificationstation.stationapi.impl.client.option.StationKeyBindingsManager"
+    ]
+  },
   "mixins": [
     "station-keybindings-v0.mixins.json"
   ],

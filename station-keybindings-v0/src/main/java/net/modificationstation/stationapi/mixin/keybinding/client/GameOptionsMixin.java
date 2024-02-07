@@ -5,8 +5,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBinding;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.client.event.option.KeyBindingEvent;
 import net.modificationstation.stationapi.api.client.event.option.KeyBindingRegisterEvent;
-import net.modificationstation.stationapi.impl.client.option.StationKeyBindingImpl;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -62,6 +62,19 @@ class GameOptionsMixin {
     }
 
     @ModifyVariable(
+            method = "load",
+            at = @At(
+                    value = "LOAD",
+                    ordinal = 0
+            ),
+            index = 4
+    )
+    private int stationapi_postKeyBindingLoadEvent(int i) {
+        while (i < allKeys.length && StationAPI.EVENT_BUS.post(KeyBindingEvent.Load.builder().keyBinding(allKeys[i]).build()).isCanceled()) i++;
+        return i;
+    }
+
+    @ModifyVariable(
             method = "save",
             at = @At(
                     value = "LOAD",
@@ -69,8 +82,8 @@ class GameOptionsMixin {
             ),
             index = 2
     )
-    private int stationapi_skipCustomKeybindings(int i) {
-        while (i < allKeys.length && ((StationKeyBindingImpl) allKeys[i]).stationapi_useCustomFile()) i++;
+    private int stationapi_postKeyBindingSaveEvent(int i) {
+        while (i < allKeys.length && StationAPI.EVENT_BUS.post(KeyBindingEvent.Save.builder().keyBinding(allKeys[i]).build()).isCanceled()) i++;
         return i;
     }
 }
