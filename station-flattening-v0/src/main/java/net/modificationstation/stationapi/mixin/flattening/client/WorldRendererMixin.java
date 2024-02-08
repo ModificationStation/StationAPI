@@ -1,7 +1,9 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
@@ -9,6 +11,8 @@ import org.spongepowered.asm.mixin.injection.*;
 @Mixin(WorldRenderer.class)
 class WorldRendererMixin {
     @Shadow private World field_1805;
+
+    @Shadow private Minecraft field_1814;
 
     @ModifyConstant(
             method = "method_1544",
@@ -61,7 +65,8 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeBlockIDBitmask1(int value) {
-        return 0x0FFFFFFF;
+        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) field_1814.getNetworkHandler();
+        return null == moddedPacketHandler || moddedPacketHandler.isModded() ? 0x0FFFFFFF : value;
     }
 
     @ModifyConstant(
@@ -72,7 +77,8 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeBlockIDBitmask2(int value) {
-        return 0x0FFFFFFF;
+        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) field_1814.getNetworkHandler();
+        return null == moddedPacketHandler || moddedPacketHandler.isModded() ? 0x0FFFFFFF : value;
     }
 
     @ModifyConstant(
@@ -83,7 +89,7 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeMetaBitmask(int value) {
-        return 15;
+        return 0xF;
     }
 
     @ModifyConstant(
@@ -91,7 +97,8 @@ class WorldRendererMixin {
             constant = @Constant(intValue = 8)
     )
     private int stationapi_changeMetaBitshift(int value) {
-        return 28;
+        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) field_1814.getNetworkHandler();
+        return null == moddedPacketHandler || moddedPacketHandler.isModded() ? 28 : value;
     }
 
     @ModifyArg(
