@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.world.World;
@@ -13,6 +11,8 @@ import org.spongepowered.asm.mixin.injection.*;
 @Mixin(WorldRenderer.class)
 class WorldRendererMixin {
     @Shadow private World field_1805;
+
+    @Shadow private Minecraft field_1814;
 
     @ModifyConstant(
             method = "method_1544",
@@ -65,12 +65,8 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeBlockIDBitmask1(int value) {
-        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-        if (null == moddedPacketHandler || moddedPacketHandler.isModded()) {
-            return 0x0FFFFFFF;
-        } else {
-            return 0xFF;
-        }
+        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) field_1814.getNetworkHandler();
+        return null == moddedPacketHandler || moddedPacketHandler.isModded() ? 0x0FFFFFFF : value;
     }
 
     @ModifyConstant(
@@ -81,12 +77,8 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeBlockIDBitmask2(int value) {
-        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-        if (null == moddedPacketHandler || moddedPacketHandler.isModded()) {
-            return 0x0FFFFFFF;
-        } else {
-            return 0xFF;
-        }
+        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) field_1814.getNetworkHandler();
+        return null == moddedPacketHandler || moddedPacketHandler.isModded() ? 0x0FFFFFFF : value;
     }
 
     @ModifyConstant(
@@ -105,12 +97,8 @@ class WorldRendererMixin {
             constant = @Constant(intValue = 8)
     )
     private int stationapi_changeMetaBitshift(int value) {
-        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-        if (null == moddedPacketHandler || moddedPacketHandler.isModded()) {
-            return 28;
-        } else {
-            return 8;
-        }
+        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) field_1814.getNetworkHandler();
+        return null == moddedPacketHandler || moddedPacketHandler.isModded() ? 28 : value;
     }
 
     @ModifyArg(
