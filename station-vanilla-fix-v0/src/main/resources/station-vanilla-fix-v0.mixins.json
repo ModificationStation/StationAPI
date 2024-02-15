@@ -17,6 +17,7 @@
     "client.ScreenAccessor",
     "client.SelectWorldScreenAccessor",
     "client.SelectWorldScreenMixin",
+    "client.SoundMapMixin",
     "client.WorldListWidgetMixin"
   ],
   "injectors": {
