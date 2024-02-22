@@ -10,4 +10,7 @@ public abstract class WorldEvent extends Event {
 
     @SuperBuilder
     public static class Init extends WorldEvent {}
+
+    @SuperBuilder
+    public static class Save extends WorldEvent {}
 }

@@ -21,4 +21,9 @@ class WorldMixin {
     private void stationapi_onCor1(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(WorldEvent.Init.builder().world(World.class.cast(this)).build());
     }
+	
+	@Inject(method = "method_195", at = @At("HEAD"))
+	public void stationapi_onLevelSave(CallbackInfo ci) {
+		StationAPI.EVENT_BUS.post(WorldEvent.Save.builder().world(World.class.cast(this)).build());
+	}
 }
