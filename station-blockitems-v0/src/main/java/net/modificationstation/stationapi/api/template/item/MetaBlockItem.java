@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.api.template.item;
 public class MetaBlockItem extends TemplateBlockItem {
     public MetaBlockItem(int i) {
         super(i);
-        setFuel(true);
+        setHasSubtypes(true);
     }
 
     @Override

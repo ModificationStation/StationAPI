@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.worldgen.biome;
 
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
-import net.minecraft.class_153;
-import net.minecraft.class_239;
 import net.minecraft.entity.Entity;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.feature.Feature;
 import net.modificationstation.stationapi.api.worldgen.feature.DefaultFeatures;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 import net.modificationstation.stationapi.impl.worldgen.BiomeColorsImpl;
@@ -17,7 +17,7 @@ public class BiomeBuilder {
     private final Reference2IntMap<Class<? extends Entity>> hostileEntities = new Reference2IntOpenHashMap<>(32);
     private final Reference2IntMap<Class<? extends Entity>> passiveEntities = new Reference2IntOpenHashMap<>(32);
     private final Reference2IntMap<Class<? extends Entity>> waterEntities = new Reference2IntOpenHashMap<>(32);
-    private final List<class_239> features = new ArrayList<>();
+    private final List<Feature> features = new ArrayList<>();
     private final List<SurfaceRule> rules = new ArrayList<>();
     private BiomeColorProvider grassColor;
     private BiomeColorProvider leavesColor;
@@ -78,7 +78,7 @@ public class BiomeBuilder {
      * Add feature into the biome.
      * Biomes with empty feature list will generate same features as dimension decorator have
      */
-    public BiomeBuilder feature(class_239 feature) {
+    public BiomeBuilder feature(Feature feature) {
         features.add(feature);
         return this;
     }
@@ -222,14 +222,14 @@ public class BiomeBuilder {
         return this;
     }
 
-    public class_153 build() {
-        class_153 biome = new TemplateBiome(name);
+    public Biome build() {
+        Biome biome = new TemplateBiome(name);
 
         rules.forEach(biome::addSurfaceRule);
         biome.setPrecipitation(precipitation);
         biome.setSnow(snow);
 
-        biome.setGrassColor(grassColor);
+        biome.setGrassColorProvider(grassColor);
         biome.setLeavesColor(leavesColor);
         biome.setFogColor(fogColor);
         biome.setMinHeight(minHeight);

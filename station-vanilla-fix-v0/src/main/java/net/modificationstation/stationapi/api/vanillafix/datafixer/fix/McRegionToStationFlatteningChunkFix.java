@@ -10,7 +10,6 @@ import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
 import it.unimi.dsi.fastutil.objects.ReferenceList;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
-import net.minecraft.class_257;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.util.collection.Int2ObjectBiMap;
 import net.modificationstation.stationapi.api.util.collection.PackedIntegerArray;
@@ -58,19 +57,19 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
 
     static final class Level {
         private final Dynamic<?> level;
-        private final class_257 block_light;
+        private final net.minecraft.world.chunk.ChunkNibbleArray block_light;
         private final ByteBuffer blocks;
-        private final class_257 data;
+        private final net.minecraft.world.chunk.ChunkNibbleArray data;
         private final ByteBuffer height_map;
-        private final class_257 sky_light;
+        private final net.minecraft.world.chunk.ChunkNibbleArray sky_light;
 
         public Level(Dynamic<?> dynamic) {
             level = dynamic;
-            block_light = new class_257(DataFixUtils.toArray(dynamic.get("BlockLight").asByteBuffer()));
+            block_light = new net.minecraft.world.chunk.ChunkNibbleArray(DataFixUtils.toArray(dynamic.get("BlockLight").asByteBuffer()));
             blocks = dynamic.get("Blocks").asByteBuffer();
-            data = new class_257(DataFixUtils.toArray(dynamic.get("Data").asByteBuffer()));
+            data = new net.minecraft.world.chunk.ChunkNibbleArray(DataFixUtils.toArray(dynamic.get("Data").asByteBuffer()));
             height_map = dynamic.get("HeightMap").asByteBuffer();
-            sky_light = new class_257(DataFixUtils.toArray(dynamic.get("SkyLight").asByteBuffer()));
+            sky_light = new net.minecraft.world.chunk.ChunkNibbleArray(DataFixUtils.toArray(dynamic.get("SkyLight").asByteBuffer()));
         }
 
         public Dynamic<?> transform() {
@@ -85,7 +84,7 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
                 int z = i >> 7 & 0b1111;
                 int x = i >> 11;
                 int block = Byte.toUnsignedInt(blocks.get(i));
-                int data = this.data.method_1703(x, worldY, z);
+                int data = this.data.get(x, worldY, z);
                 if (block > 0 || data > 0) {
                     if (sections[sectionY] == null)
                         sections[sectionY] = new Section(self.createMap(Map.of(self.createString("y"), self.createByte((byte) sectionY))));
@@ -105,8 +104,8 @@ public class McRegionToStationFlatteningChunkFix extends DataFix {
                         int y = i >> 4 & 0b1111;
                         int z = i & 0b1111;
                         int worldY = sectionWorldY | y;
-                        section.setSkyLight(x, y, z, sky_light.method_1703(x, worldY, z));
-                        section.setBlockLight(x, y, z, block_light.method_1703(x, worldY, z));
+                        section.setSkyLight(x, y, z, sky_light.get(x, worldY, z));
+                        section.setBlockLight(x, y, z, block_light.get(x, worldY, z));
                     }
                 }
             }

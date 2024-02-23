@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.worldgen.feature;
 
-import net.minecraft.class_239;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.Feature;
 
 import java.util.Random;
 
@@ -9,12 +9,12 @@ import java.util.Random;
  * Scatter feature in "levels" (each 16 blocks), should be good for caves and Nether
  */
 public class LeveledScatterFeature extends ScatterFeature {
-    public LeveledScatterFeature(class_239 feature, int iterations) {
+    public LeveledScatterFeature(Feature feature, int iterations) {
         super(feature, iterations);
     }
 
     @Override
-    public boolean method_1142(World world, Random random, int x, int y, int z) {
+    public boolean generate(World world, Random random, int x, int y, int z) {
         boolean result = false;
         int minY = world.getBottomY() >> 4;
         int maxY = world.getTopY() >> 4;
@@ -24,7 +24,7 @@ public class LeveledScatterFeature extends ScatterFeature {
                 int pz = z + random.nextInt(16);
                 int py = getHeight(world, random, px, index << 4, pz);
                 if (py == Integer.MIN_VALUE) continue;
-                result = feature.method_1142(world, random, px, py, pz) | result;
+                result = feature.generate(world, random, px, py, pz) | result;
             }
         }
         return result;

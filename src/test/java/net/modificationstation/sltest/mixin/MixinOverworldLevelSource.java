@@ -1,11 +1,11 @@
 package net.modificationstation.sltest.mixin;
 
 import net.minecraft.block.Block;
-import net.minecraft.class_153;
 import net.minecraft.class_209;
-import net.minecraft.class_43;
 import net.minecraft.class_538;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.world.HeightLimitView;
@@ -33,9 +33,9 @@ public class MixinOverworldLevelSource {
 
     @Inject(method = "method_1806", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/class_538;method_1798(II[B[Lnet/minecraft/class_153;[D)V"
+            target = "Lnet/minecraft/class_538;method_1798(II[B[Lnet/minecraft/world/biome/Biome;[D)V"
     ), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<class_43> info, byte[] blocks, class_43 chunk, double[] var5) {
+    private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> info, byte[] blocks, Chunk chunk, double[] var5) {
         short height = (short) ((HeightLimitView) field_2260).getTopY();
         if (height < 129) return;
 
@@ -138,14 +138,14 @@ public class MixinOverworldLevelSource {
     }
 
     @Inject(method = "method_1798", at = @At("HEAD"), cancellable = true)
-    private void disableShapeChunk(int chunkX, int chunkZ, byte[] tiles, class_153[] biomes, double[] temperatures, CallbackInfo info) {
+    private void disableShapeChunk(int chunkX, int chunkZ, byte[] tiles, Biome[] biomes, double[] temperatures, CallbackInfo info) {
         if (canApply()) {
             info.cancel();
         }
     }
 
     @Inject(method = "method_1797", at = @At("HEAD"), cancellable = true)
-    private void disableBuildSurface(int chunkX, int chunkZ, byte[] tiles, class_153[] biomes, CallbackInfo info) {
+    private void disableBuildSurface(int chunkX, int chunkZ, byte[] tiles, Biome[] biomes, CallbackInfo info) {
         if (canApply()) {
             info.cancel();
         }

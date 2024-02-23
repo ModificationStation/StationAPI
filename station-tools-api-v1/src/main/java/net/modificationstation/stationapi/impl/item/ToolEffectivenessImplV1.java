@@ -12,8 +12,8 @@ import net.modificationstation.stationapi.api.item.tool.ToolLevel;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class ToolEffectivenessImplV1 {
 
     @EventListener
     private static void getStrength(ItemMiningSpeedMultiplierOnStateEvent event) {
-        if (!(VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getId(event.itemStack.getItem())) && Objects.requireNonNull(BlockRegistry.INSTANCE.getId(event.state.getBlock())).namespace == Namespace.MINECRAFT) && isSuitable(event.itemStack, event.state)) event.miningSpeedMultiplier = ((ToolLevel) event.itemStack.getItem()).getMaterial(event.itemStack).getMiningSpeed();
+        if (!(VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getId(event.itemStack.getItem())) && Objects.requireNonNull(BlockRegistry.INSTANCE.getId(event.state.getBlock())).namespace == Namespace.MINECRAFT) && isSuitable(event.itemStack, event.state)) event.miningSpeedMultiplier = ((ToolLevel) event.itemStack.getItem()).getMaterial(event.itemStack).getMiningSpeedMultiplier();
     }
 
     private static boolean isSuitable(ItemStack item, BlockState state) {

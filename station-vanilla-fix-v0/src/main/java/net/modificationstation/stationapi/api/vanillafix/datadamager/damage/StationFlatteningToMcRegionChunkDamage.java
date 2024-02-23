@@ -6,8 +6,8 @@ import com.mojang.datafixers.TypeRewriteRule;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.Type;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.class_257;
-import net.minecraft.class_56;
+import net.minecraft.world.LightType;
+import net.minecraft.world.chunk.ChunkNibbleArray;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.util.collection.PackedIntegerArray;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
@@ -28,8 +28,8 @@ public class StationFlatteningToMcRegionChunkDamage extends DataFix {
     private final static byte[] DEFAULT_BLOCK_LIGHT = new byte[CHUNK_SIZE >> 1];
     private final static byte[] DEFAULT_SKY_LIGHT = new byte[CHUNK_SIZE >> 1];
     static {
-        Arrays.fill(DEFAULT_BLOCK_LIGHT, (byte) (class_56.BLOCK.field_2759 << 4 | class_56.BLOCK.field_2759));
-        Arrays.fill(DEFAULT_SKY_LIGHT, (byte) (class_56.SKY.field_2759 << 4 | class_56.SKY.field_2759));
+        Arrays.fill(DEFAULT_BLOCK_LIGHT, (byte) (LightType.BLOCK.defaultValue << 4 | LightType.BLOCK.defaultValue));
+        Arrays.fill(DEFAULT_SKY_LIGHT, (byte) (LightType.SKY.defaultValue << 4 | LightType.SKY.defaultValue));
     }
 
     private final String name;
@@ -68,10 +68,10 @@ public class StationFlatteningToMcRegionChunkDamage extends DataFix {
         public Dynamic<?> transform() {
             Dynamic<?> self = this.level;
 
-            class_257 blockLight = new class_257(Arrays.copyOf(DEFAULT_BLOCK_LIGHT, CHUNK_SIZE >> 1));
+            ChunkNibbleArray blockLight = new ChunkNibbleArray(Arrays.copyOf(DEFAULT_BLOCK_LIGHT, CHUNK_SIZE >> 1));
             byte[] blocks = new byte[CHUNK_SIZE];
-            class_257 data = new class_257(CHUNK_SIZE);
-            class_257 skyLight = new class_257(Arrays.copyOf(DEFAULT_SKY_LIGHT, CHUNK_SIZE >> 1));
+            ChunkNibbleArray data = new ChunkNibbleArray(CHUNK_SIZE);
+            ChunkNibbleArray skyLight = new ChunkNibbleArray(Arrays.copyOf(DEFAULT_SKY_LIGHT, CHUNK_SIZE >> 1));
             for (Section section : sections) {
                 int yOff = section.y << 4;
                 for (int i = 0; i < 4096; i++) {
@@ -79,10 +79,10 @@ public class StationFlatteningToMcRegionChunkDamage extends DataFix {
                     int y = i >> 4 & 0b1111;
                     int z = i & 0b1111;
                     int worldY = yOff + y;
-                    blockLight.method_1704(x, worldY, z, section.block_light.getValue(i));
+                    blockLight.set(x, worldY, z, section.block_light.getValue(i));
                     blocks[x << 11 | z << 7 | worldY] = (byte) StationFlatteningItemStackSchema.lookupOldBlockId(section.palette.get(section.statesData.get((y << 4 | z) << 4 | x)));
-                    data.method_1704(x, worldY, z, section.data.getValue(i));
-                    skyLight.method_1704(x, worldY, z, section.sky_light.getValue(i));
+                    data.set(x, worldY, z, section.data.getValue(i));
+                    skyLight.set(x, worldY, z, section.sky_light.getValue(i));
                 }
             }
 
@@ -90,11 +90,11 @@ public class StationFlatteningToMcRegionChunkDamage extends DataFix {
             for (int i = 0; i < heightMap.length; i++) heightMap[i] = this.height_map.get(i << 1);
 
             return self
-                    .set("BlockLight", self.createByteList(ByteBuffer.wrap(blockLight.field_2103)))
+                    .set("BlockLight", self.createByteList(ByteBuffer.wrap(blockLight.bytes)))
                     .set("Blocks", self.createByteList(ByteBuffer.wrap(blocks)))
-                    .set("Data", self.createByteList(ByteBuffer.wrap(data.field_2103)))
+                    .set("Data", self.createByteList(ByteBuffer.wrap(data.bytes)))
                     .set("HeightMap", self.createByteList(ByteBuffer.wrap(heightMap)))
-                    .set("SkyLight", self.createByteList(ByteBuffer.wrap(skyLight.field_2103)))
+                    .set("SkyLight", self.createByteList(ByteBuffer.wrap(skyLight.bytes)))
                     .remove(SECTIONS)
                     .remove("height_map");
         }

@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
-import net.minecraft.class_153;
 import net.minecraft.class_519;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 
 public class WorldGeneratorImpl {
-    private static final BiomeDataInterpolator MIN_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(class_153::getMinHeight, 16, 4, 8);
-    private static final BiomeDataInterpolator MAX_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(class_153::getMaxHeight, 16, 4, 8);
+    private static final BiomeDataInterpolator MIN_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(Biome::getMinHeight, 16, 4, 8);
+    private static final BiomeDataInterpolator MAX_HEIGHT_INTERPOLATOR = new BiomeDataInterpolator(Biome::getMaxHeight, 16, 4, 8);
 
     public static void updateNoise(World world, int cx, int cz, double[] data) {
         float min = 0;

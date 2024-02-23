@@ -4,13 +4,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.class_43;
-import net.minecraft.class_56;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
@@ -21,9 +21,8 @@ import net.modificationstation.stationapi.mixin.flattening.ChunkAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class FlattenedChunk extends class_43 {
+public class FlattenedChunk extends Chunk {
 
     public final ChunkSection[] sections;
     public final short firstBlock;
@@ -32,13 +31,13 @@ public class FlattenedChunk extends class_43 {
 
     public FlattenedChunk(World world, int xPos, int zPos) {
         super(world, xPos, zPos);
-        int countSections = field_956.countVerticalSections();
+        int countSections = world.countVerticalSections();
         sections = new ChunkSection[countSections];
-        firstBlock = (short) field_956.getBottomY();
-        lastBlock = (short) (field_956.getTopY() - 1);
-        field_965 = new List[countSections];
-        for(short i = 0; i < field_965.length; i++) {
-            this.field_965[i] = new ArrayList<>();
+        firstBlock = (short) world.getBottomY();
+        lastBlock = (short) (world.getTopY() - 1);
+        entities = new List[countSections];
+        for(short i = 0; i < entities.length; i++) {
+            this.entities[i] = new ArrayList<>();
         }
     }
 
@@ -46,7 +45,7 @@ public class FlattenedChunk extends class_43 {
         int mask = (tiles.length >> 8) - 1;
         int offsetZ = mask == 127 ? 7 : net.modificationstation.stationapi.api.util.math.MathHelper.ceilLog2(mask + 1);
         int offsetX = offsetZ + 4;
-        int bottom = this.field_956.getBottomY();
+        int bottom = this.world.getBottomY();
         int id, bx, by, bz;
         for(int i = 0; i < tiles.length; i++) {
             id = Byte.toUnsignedInt(tiles[i]);
@@ -89,12 +88,12 @@ public class FlattenedChunk extends class_43 {
     }
 
     @Override
-    public int method_874(int x, int z) {
+    public int getHeight(int x, int z) {
         return getShortHeight(x, z);
     }
 
     @Override
-    public boolean method_879(int relX, int y, int relZ) {
+    public boolean isAboveMaxHeight(int relX, int y, int relZ) {
         return y >= getShortHeight(relX, relZ);
     }
 
@@ -102,16 +101,16 @@ public class FlattenedChunk extends class_43 {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
-        return sections[field_956.sectionCoordToIndex(y >> 4)];
+        return sections[world.sectionCoordToIndex(y >> 4)];
     }
 
     @Override
-    public int method_864(class_56 type, int x, int y, int z) {
+    public int getLight(LightType type, int x, int y, int z) {
         ChunkSection section = getSection(y);
         return section == null ?
-                type == class_56.SKY && field_956.dimension.field_2177 ?
+                type == LightType.SKY && world.dimension.field_2177 ?
                         0 :
-                        type.field_2759 :
+                        type.defaultValue :
                 section.getLight(type, x, y & 15, z);
     }
 
@@ -119,11 +118,11 @@ public class FlattenedChunk extends class_43 {
         if (y < firstBlock || y > lastBlock) {
             return null;
         }
-        int index = field_956.sectionCoordToIndex(y >> 4);
+        int index = world.sectionCoordToIndex(y >> 4);
         ChunkSection section = sections[index];
         if (section == null) {
-            section = new ChunkSection(field_956.sectionIndexToCoord(index));
-            if (!field_956.dimension.field_2177 && fillSkyLight) {
+            section = new ChunkSection(world.sectionIndexToCoord(index));
+            if (!world.dimension.field_2177 && fillSkyLight) {
                 section.initSkyLight();
             }
             sections[index] = section;
@@ -132,7 +131,7 @@ public class FlattenedChunk extends class_43 {
     }
 
     @Override
-    public void method_865(class_56 type, int x, int y, int z, int light) {
+    public void setLight(LightType type, int x, int y, int z, int light) {
         this.field_967 = true;
         ChunkSection section = getOrCreateSection(y, true);
         if (section != null) {
@@ -141,15 +140,15 @@ public class FlattenedChunk extends class_43 {
     }
 
     @Override
-    public int method_880(int x, int y, int z, int light) {
+    public int getLight(int x, int y, int z, int light) {
         ChunkSection section = getSection(y);
-        int lightLevel = section == null ? 15 : section.getLight(class_56.SKY, x, y & 15, z);
+        int lightLevel = section == null ? 15 : section.getLight(LightType.SKY, x, y & 15, z);
         if (lightLevel > 0) {
             field_953 = true;
         }
 
         lightLevel -= light;
-        int blockLight = section == null ? 0 : section.getLight(class_56.BLOCK, x, y & 15, z);
+        int blockLight = section == null ? 0 : section.getLight(LightType.BLOCK, x, y & 15, z);
         if (blockLight > lightLevel) {
             lightLevel = blockLight;
         }
@@ -163,14 +162,14 @@ public class FlattenedChunk extends class_43 {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void method_892() {
+    public void populateHeightmap() {
         int chunkHeight = lastBlock;
 
         for(int x = 0; x < 16; ++x) {
             for(int z = 0; z < 16; ++z) {
                 short height;
                 for (height = lastBlock; height > firstBlock; height--) {
-                    if (Block.BLOCKS_LIGHT_OPACITY[method_859(x, height - 1, z)] != 0) break;
+                    if (Block.BLOCKS_LIGHT_OPACITY[getBlockId(x, height - 1, z)] != 0) break;
                 }
                 setShortHeight(x, z, height);
                 if (height < chunkHeight) {
@@ -179,7 +178,7 @@ public class FlattenedChunk extends class_43 {
             }
         }
 
-        this.field_961 = chunkHeight;
+        this.minHeightmapValue = chunkHeight;
         this.field_967 = true;
     }
 
@@ -191,7 +190,7 @@ public class FlattenedChunk extends class_43 {
                 short height = lastBlock;
 
                 while (height > firstBlock) {
-                    if (Block.BLOCKS_LIGHT_OPACITY[method_859(x, height - 1, z)] != 0) break;
+                    if (Block.BLOCKS_LIGHT_OPACITY[getBlockId(x, height - 1, z)] != 0) break;
                     --height;
                 }
 
@@ -200,16 +199,16 @@ public class FlattenedChunk extends class_43 {
                     minHeight = height;
                 }
 
-                if (!this.field_956.dimension.field_2177) {
+                if (!this.world.dimension.field_2177) {
                     int light = 15;
                     int lightY = lastBlock;
 
                     do {
-                        light -= Block.BLOCKS_LIGHT_OPACITY[method_859(x, lightY, z)];
+                        light -= Block.BLOCKS_LIGHT_OPACITY[getBlockId(x, lightY, z)];
                         if (light > 0) {
                             ChunkSection section = getSection(lightY);
                             if (section != null) {
-                                section.setLight(class_56.SKY, x, lightY & 15, z, light);
+                                section.setLight(LightType.SKY, x, lightY & 15, z, light);
                             }
                         }
 
@@ -219,7 +218,7 @@ public class FlattenedChunk extends class_43 {
             }
         }
 
-        this.field_961 = minHeight;
+        this.minHeightmapValue = minHeight;
 
         for (short i = 0; i < 256; i++) {
             ((ChunkAccessor) this).invokeMethod_887(i & 15, i >> 4);
@@ -235,15 +234,15 @@ public class FlattenedChunk extends class_43 {
             maxHeight = lastBlock;
         }
 
-        while (maxHeight > firstBlock && Block.BLOCKS_LIGHT_OPACITY[method_859(x, maxHeight - 1, z)] == 0) {
+        while (maxHeight > firstBlock && Block.BLOCKS_LIGHT_OPACITY[getBlockId(x, maxHeight - 1, z)] == 0) {
             --maxHeight;
         }
 
         if (maxHeight != height) {
-            this.field_956.method_240(x, z, maxHeight, height);
+            this.world.method_240(x, z, maxHeight, height);
             setShortHeight(x, z, maxHeight);
-            if (maxHeight < this.field_961) {
-                this.field_961 = maxHeight;
+            if (maxHeight < this.minHeightmapValue) {
+                this.minHeightmapValue = maxHeight;
             }
             else {
                 int var7 = lastBlock;
@@ -255,26 +254,26 @@ public class FlattenedChunk extends class_43 {
                     }
                 }
 
-                this.field_961 = var7;
+                this.minHeightmapValue = var7;
             }
 
-            int posX = this.field_962 << 4 | x;
-            int posZ = this.field_963 << 4 | z;
+            int posX = this.x << 4 | x;
+            int posZ = this.z << 4 | z;
 
             if (maxHeight < height) {
                 for (int h = maxHeight; h < height; ++h) {
                     ChunkSection section = getSection(h);
                     if (section != null) {
-                        section.setLight(class_56.SKY, x, h & 15, z, 15);
+                        section.setLight(LightType.SKY, x, h & 15, z, 15);
                     }
                 }
             }
             else {
-                this.field_956.method_166(class_56.SKY, posX, height, posZ, posX, maxHeight, posZ);
+                this.world.method_166(LightType.SKY, posX, height, posZ, posX, maxHeight, posZ);
                 for (int h = height; h < maxHeight; ++h) {
                     ChunkSection section = getSection(h);
                     if (section != null) {
-                        section.setLight(class_56.SKY, x, h & 15, z, 0);
+                        section.setLight(LightType.SKY, x, h & 15, z, 0);
                     }
                 }
             }
@@ -283,7 +282,7 @@ public class FlattenedChunk extends class_43 {
             int light = 15;
             for(h = maxHeight; maxHeight > firstBlock && light > 0;) {
                 --maxHeight;
-                int var11 = Block.BLOCKS_LIGHT_OPACITY[this.method_859(x, maxHeight, z)];
+                int var11 = Block.BLOCKS_LIGHT_OPACITY[this.getBlockId(x, maxHeight, z)];
                 if (var11 == 0) {
                     var11 = 1;
                 }
@@ -294,16 +293,16 @@ public class FlattenedChunk extends class_43 {
                 }
                 ChunkSection section = getSection(maxHeight);
                 if (section != null) {
-                    section.setLight(class_56.SKY, x, maxHeight & 15, z, light);
+                    section.setLight(LightType.SKY, x, maxHeight & 15, z, light);
                 }
             }
 
-            while(maxHeight > firstBlock && Block.BLOCKS_LIGHT_OPACITY[this.method_859(x, maxHeight - 1, z)] == 0) {
+            while(maxHeight > firstBlock && Block.BLOCKS_LIGHT_OPACITY[this.getBlockId(x, maxHeight - 1, z)] == 0) {
                 --maxHeight;
             }
 
             if (maxHeight != h) {
-                this.field_956.method_166(class_56.SKY, posX - 1, maxHeight, posZ - 1, posX + 1, h, posZ + 1);
+                this.world.method_166(LightType.SKY, posX - 1, maxHeight, posZ - 1, posX + 1, h, posZ + 1);
             }
 
             this.field_967 = true;
@@ -311,32 +310,32 @@ public class FlattenedChunk extends class_43 {
     }
 
     @Override
-    public int method_859(int x, int y, int z) {
+    public int getBlockId(int x, int y, int z) {
         return getBlockState(x, y, z).getBlock().id;
     }
 
     @Override
-    public boolean method_861(int x, int y, int z, int blockId, int meta) {
+    public boolean setBlock(int x, int y, int z, int blockId, int meta) {
         return setBlockStateWithMetadata(x, y, z, Block.BLOCKS[blockId].getDefaultState(), meta) != null;
     }
 
     @Override
-    public boolean method_860(int x, int y, int z, int blockId) {
+    public boolean setBlockId(int x, int y, int z, int blockId) {
         return setBlockState(x, y, z, Block.BLOCKS[blockId].getDefaultState()) != null;
     }
 
     @Override
-    public int method_875(int x, int y, int z) {
+    public int getBlockMeta(int x, int y, int z) {
         ChunkSection section = getSection(y);
         return section == null ? 0 : section.getMeta(x, y & 15, z);
     }
 
     @Override
-    public void method_876(int x, int y, int z, int meta) {
+    public void setBlockMeta(int x, int y, int z, int meta) {
         MetaSetEvent event =
                 MetaSetEvent.builder()
-                        .world(field_956).chunk(this)
-                        .x(this.field_962 << 4 | x).y(y).z(this.field_963 << 4 | z)
+                        .world(world).chunk(this)
+                        .x(this.x << 4 | x).y(y).z(this.z << 4 | z)
                         .blockMeta(meta)
                         .overrideMeta(meta)
                         .build();
@@ -360,11 +359,11 @@ public class FlattenedChunk extends class_43 {
 
     @Override
     public BlockState setBlockStateWithMetadata(int x, int y, int z, BlockState state, int meta) {
-        int worldX = this.field_962 << 4 | x;
-        int worldZ = this.field_963 << 4 | z;
+        int worldX = this.x << 4 | x;
+        int worldZ = this.z << 4 | z;
         BlockSetEvent event =
                 BlockSetEvent.builder()
-                        .world(field_956).chunk(this)
+                        .world(world).chunk(this)
                         .x(worldX).y(y).z(worldZ)
                         .blockState(state).blockMeta(meta)
                         .overrideState(state).overrideMeta(meta)
@@ -383,30 +382,30 @@ public class FlattenedChunk extends class_43 {
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
                         .block(oldBlock)
-                        .world(field_956)
+                        .world(world)
                         .x(worldX).y(y).z(worldZ)
                         .build()
                 ).isCanceled()
         ) return null;
         section.setBlockState(x, y & 15, z, state);
-        if (!field_956.isRemote)
-            oldBlock.onBreak(this.field_956, worldX, y, worldZ);
+        if (!world.isRemote)
+            oldBlock.onBreak(this.world, worldX, y, worldZ);
         section.setMeta(x, y & 15, z, meta);
 
-        if (!this.field_956.dimension.field_2177) {
+        if (!this.world.dimension.field_2177) {
             if (Block.BLOCKS_LIGHT_OPACITY[state.getBlock().id] != 0) {
                 if (y >= var6)
                     this.method_889(x, y + 1, z);
             } else if (y == var6 - 1)
                 this.method_889(x, y, z);
 
-            this.field_956.method_166(class_56.SKY, worldX, y, worldZ, worldX, y, worldZ);
+            this.world.method_166(LightType.SKY, worldX, y, worldZ, worldX, y, worldZ);
         }
 
-        this.field_956.method_166(class_56.BLOCK, worldX, y, worldZ, worldX, y, worldZ);
+        this.world.method_166(LightType.BLOCK, worldX, y, worldZ, worldX, y, worldZ);
         ((ChunkAccessor) this).invokeMethod_887(x, z);
         section.setMeta(x, y & 15, z, meta);
-        state.getBlock().onBlockPlaced(this.field_956, worldX, y, worldZ, oldState);
+        state.getBlock().onBlockPlaced(this.world, worldX, y, worldZ, oldState);
 
         this.field_967 = true;
         return oldState;
@@ -414,12 +413,12 @@ public class FlattenedChunk extends class_43 {
 
     @Override
     public BlockState setBlockState(int x, int y, int z, BlockState state) {
-        int worldX = this.field_962 << 4 | x;
-        int worldZ = this.field_963 << 4 | z;
+        int worldX = this.x << 4 | x;
+        int worldZ = this.z << 4 | z;
         if (
                 StationAPI.EVENT_BUS.post(
                         BlockSetEvent.builder()
-                                .world(field_956).chunk(this)
+                                .world(world).chunk(this)
                                 .x(worldX).y(y).z(worldZ)
                                 .blockState(state)
                                 .build()
@@ -435,24 +434,24 @@ public class FlattenedChunk extends class_43 {
         if (
                 StationAPI.EVENT_BUS.post(BlockEvent.BeforeRemoved.builder()
                         .block(oldBlock)
-                        .world(field_956)
+                        .world(world)
                         .x(worldX).y(y).z(worldZ)
                         .build()
                 ).isCanceled()
         ) return null;
         section.setBlockState(x, y & 15, z, state);
-        oldBlock.onBreak(this.field_956, worldX, y, worldZ);
+        oldBlock.onBreak(this.world, worldX, y, worldZ);
         section.setMeta(x, y & 15, z, 0);
         if (Block.BLOCKS_LIGHT_OPACITY[state.getBlock().id] != 0) {
             if (y >= topY)
                 this.method_889(x, y + 1, z);
         } else if (y == topY - 1)
             this.method_889(x, y, z);
-        this.field_956.method_166(class_56.SKY, worldX, y, worldZ, worldX, y, worldZ);
-        this.field_956.method_166(class_56.BLOCK, worldX, y, worldZ, worldX, y, worldZ);
+        this.world.method_166(LightType.SKY, worldX, y, worldZ, worldX, y, worldZ);
+        this.world.method_166(LightType.BLOCK, worldX, y, worldZ, worldX, y, worldZ);
         ((ChunkAccessor) this).invokeMethod_887(x, z);
-        if (!this.field_956.isRemote) {
-            state.getBlock().onBlockPlaced(this.field_956, worldX, y, worldZ, oldState);
+        if (!this.world.isRemote) {
+            state.getBlock().onBlockPlaced(this.world, worldX, y, worldZ, oldState);
         }
 
         this.field_967 = true;
@@ -460,42 +459,42 @@ public class FlattenedChunk extends class_43 {
     }
 
     @Override
-    public void method_868(Entity entity) {
+    public void addEntity(Entity entity) {
         int n;
         this.field_969 = true;
         int n2 = MathHelper.floor(entity.x / 16.0);
         int n3 = MathHelper.floor(entity.z / 16.0);
-        if (n2 != this.field_962 || n3 != this.field_963) {
+        if (n2 != this.x || n3 != this.z) {
             System.out.println("Wrong location! " + entity);
             Thread.dumpStack();
         }
-        if ((n = MathHelper.floor((entity.y - field_956.getBottomY()) / 16.0)) < 0) {
+        if ((n = MathHelper.floor((entity.y - world.getBottomY()) / 16.0)) < 0) {
             n = 0;
         }
-        if (n >= this.field_965.length) {
-            n = this.field_965.length - 1;
+        if (n >= this.entities.length) {
+            n = this.entities.length - 1;
         }
         entity.field_1618 = true;
-        entity.field_1619 = this.field_962;
-        entity.field_1620 = n;
-        entity.field_1621 = this.field_963;
+        entity.chunkX = this.x;
+        entity.chunkY = n;
+        entity.chunkZ = this.z;
         //noinspection unchecked
-        this.field_965[n].add(entity);
+        this.entities[n].add(entity);
     }
 
     @Override
-    public void method_870(Entity entity, Box box, List entities) {
-        int n = MathHelper.floor((box.minY - field_956.getBottomY() - 2.0) / 16.0);
-        int n2 = MathHelper.floor((box.maxY - field_956.getBottomY() + 2.0) / 16.0);
+    public void collectOtherEntities(Entity entity, Box box, List entities) {
+        int n = MathHelper.floor((box.minY - world.getBottomY() - 2.0) / 16.0);
+        int n2 = MathHelper.floor((box.maxY - world.getBottomY() + 2.0) / 16.0);
         if (n < 0) {
             n = 0;
         }
-        if (n2 >= this.field_965.length) {
-            n2 = this.field_965.length - 1;
+        if (n2 >= this.entities.length) {
+            n2 = this.entities.length - 1;
         }
         for (int i = n; i <= n2; ++i) {
             //noinspection unchecked
-            List<Entity> list2 = this.field_965[i];
+            List<Entity> list2 = this.entities[i];
             for (int j = 0; j < list2.size(); ++j) {
                 Entity entityBase = list2.get(j);
                 if (entityBase == entity || !entityBase.boundingBox.intersects(box)) continue;
@@ -506,18 +505,18 @@ public class FlattenedChunk extends class_43 {
     }
 
     @Override
-    public void method_866(Class class_, Box arg, List list) {
-        int n = MathHelper.floor((arg.minY - field_956.getBottomY() - 2.0) / 16.0);
-        int n2 = MathHelper.floor((arg.maxY - field_956.getBottomY() + 2.0) / 16.0);
+    public void collectEntitiesByClass(Class class_, Box arg, List list) {
+        int n = MathHelper.floor((arg.minY - world.getBottomY() - 2.0) / 16.0);
+        int n2 = MathHelper.floor((arg.maxY - world.getBottomY() + 2.0) / 16.0);
         if (n < 0) {
             n = 0;
         }
-        if (n2 >= this.field_965.length) {
-            n2 = this.field_965.length - 1;
+        if (n2 >= this.entities.length) {
+            n2 = this.entities.length - 1;
         }
         for (int i = n; i <= n2; ++i) {
             //noinspection unchecked
-            List<Entity> list2 = this.field_965[i];
+            List<Entity> list2 = this.entities[i];
             for (int j = 0; j < list2.size(); ++j) {
                 Entity entityBase = list2.get(j);
                 //noinspection unchecked
@@ -532,18 +531,18 @@ public class FlattenedChunk extends class_43 {
     public void method_890() {}
 
     @Override
-    public void method_862(int relX, int relY, int relZ, BlockEntity arg) {
+    public void setBlockEntity(int relX, int relY, int relZ, BlockEntity arg) {
         BlockPos tilePos = new BlockPos(relX, relY, relZ);
-        arg.world = this.field_956;
-        arg.x = this.field_962 * 16 + relX;
+        arg.world = this.world;
+        arg.x = this.x * 16 + relX;
         arg.y = relY;
-        arg.z = this.field_963 * 16 + relZ;
-        if (this.method_859(relX, relY, relZ) == 0 || !Block.BLOCKS_WITH_ENTITY[this.method_859(relX, relY, relZ)]) {
+        arg.z = this.z * 16 + relZ;
+        if (this.getBlockId(relX, relY, relZ) == 0 || !Block.BLOCKS_WITH_ENTITY[this.getBlockId(relX, relY, relZ)]) {
             System.out.println("Attempted to place a tile entity where there was no entity tile!");
             return;
         }
         arg.method_1073();
         //noinspection unchecked
-        this.field_964.put(tilePos, arg);
+        this.blockEntities.put(tilePos, arg);
     }
 }

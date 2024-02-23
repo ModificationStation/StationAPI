@@ -2,9 +2,9 @@ package net.modificationstation.sltest.worldgen;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.Block;
-import net.minecraft.class_153;
-import net.minecraft.class_239;
-import net.minecraft.class_512;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.SpruceTreeFeature;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.world.biome.BiomeRegisterEvent;
@@ -22,13 +22,13 @@ import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
 import java.util.Random;
 
 public class TestWorldgenListener {
-    private class_153 testBiome1;
-    private class_153 testBiome2;
-    private class_153 testBiome3;
-    private class_153[] climateTest;
-    private class_153[] voronoiTest;
-    private class_153 testNether;
-    private class_153 testNether2;
+    private Biome testBiome1;
+    private Biome testBiome2;
+    private Biome testBiome3;
+    private Biome[] climateTest;
+    private Biome[] voronoiTest;
+    private Biome testNether;
+    private Biome testNether2;
 
     @EventListener
     public void registerBiomes(BiomeRegisterEvent event) {
@@ -42,7 +42,7 @@ public class TestWorldgenListener {
         SurfaceRule slope = SurfaceBuilder.start(Block.SPONGE).replace(Block.STONE).ground(3).slope(30).build();
         SurfaceRule bottom = SurfaceBuilder.start(Block.ICE).replace(Block.STONE).ceiling(2).build();
         
-        climateTest = new class_153[8];
+        climateTest = new Biome[8];
         for (int i = 0; i < climateTest.length; i++) {
             BiomeBuilder builder = BiomeBuilder.start("Climate " + i);
             builder.height(100, 128);
@@ -63,10 +63,10 @@ public class TestWorldgenListener {
             });
 
             climateTest[i] = builder.build();
-            climateTest[i].field_889 = color;
+            climateTest[i].grassColor = color;
         }
 
-        voronoiTest = new class_153[5];
+        voronoiTest = new Biome[5];
         Random random = new Random(15);
         for (int i = 0; i < voronoiTest.length; i++) {
             int color = 0xFF000000 | random.nextInt();
@@ -77,10 +77,10 @@ public class TestWorldgenListener {
                 .feature(DefaultFeatures.SPRUCE_TREE_SCATTERED)
                 .fogColor(color)
                 .build();
-            voronoiTest[i].field_889 = color;
+            voronoiTest[i].grassColor = color;
         }
     
-        class_239 tree = new LeveledScatterFeature(new class_512(), 3);
+        Feature tree = new LeveledScatterFeature(new SpruceTreeFeature(), 3);
         
         testNether = BiomeBuilder
             .start("Test Nether")
@@ -122,7 +122,7 @@ public class TestWorldgenListener {
 
         // Voronoi test
         VoronoiBiomeProvider voronoi = new VoronoiBiomeProvider();
-        for (class_153 biome : voronoiTest) {
+        for (Biome biome : voronoiTest) {
             voronoi.addBiome(biome);
         }
         BiomeAPI.addOverworldBiomeProvider(StationAPI.NAMESPACE.id("voronoi_provider"), voronoi);
@@ -134,6 +134,6 @@ public class TestWorldgenListener {
     
     @EventListener
     public void testBiomeModification(BiomeModificationEvent event) {
-        System.out.println(event.world + " " + event.biome + " " + event.biome.field_888 + " " + event.biome.getClass().getName());
+        System.out.println(event.world + " " + event.biome + " " + event.biome.name + " " + event.biome.getClass().getName());
     }
 }

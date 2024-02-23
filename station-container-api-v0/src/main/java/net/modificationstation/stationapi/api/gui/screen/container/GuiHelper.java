@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.api.gui.screen.container;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.screen.ScreenHandler;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.registry.GuiHandlerRegistry;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.API;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.SideUtil;
 import net.modificationstation.stationapi.impl.client.gui.screen.container.GuiHelperClientImpl;
 import net.modificationstation.stationapi.impl.gui.screen.container.GuiHelperImpl;
@@ -37,10 +37,10 @@ public final class GuiHelper {
      * @param container the container to open.
      * @see GuiHandlerRegistryEvent
      * @see GuiHandlerRegistry
-     * @see GuiHelper#openGUI(PlayerEntity, Identifier, Inventory, Container, Consumer)
+     * @see GuiHelper#openGUI(PlayerEntity, Identifier, Inventory, ScreenHandler, Consumer)
      */
     @API
-    public static void openGUI(PlayerEntity player, Identifier identifier, Inventory inventory, Container container) {
+    public static void openGUI(PlayerEntity player, Identifier identifier, Inventory inventory, ScreenHandler container) {
         INSTANCE.openGUI(player, identifier, inventory, container);
     }
 
@@ -55,10 +55,10 @@ public final class GuiHelper {
      * @param customData the packet consumer that can add additional data to the GUI packet.
      * @see GuiHandlerRegistryEvent
      * @see GuiHandlerRegistry
-     * @see GuiHelper#openGUI(PlayerEntity, Identifier, Inventory, Container)
+     * @see GuiHelper#openGUI(PlayerEntity, Identifier, Inventory, ScreenHandler)
      */
     @API
-    public static void openGUI(PlayerEntity player, Identifier identifier, Inventory inventory, Container container, Consumer<MessagePacket> customData) {
+    public static void openGUI(PlayerEntity player, Identifier identifier, Inventory inventory, ScreenHandler container, Consumer<MessagePacket> customData) {
         INSTANCE.openGUI(player, identifier, inventory, container, customData);
     }
 }

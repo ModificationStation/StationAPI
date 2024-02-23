@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.class_359;
-import net.minecraft.class_43;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,10 +17,10 @@ class NetherChunkGeneratorMixin {
             method = "method_1806",
             at = @At(
                     value = "NEW",
-                    target = "(Lnet/minecraft/world/World;[BII)Lnet/minecraft/class_43;"
+                    target = "(Lnet/minecraft/world/World;[BII)Lnet/minecraft/world/chunk/Chunk;"
             )
     )
-    private class_43 stationapi_redirectChunk(World world, byte[] tiles, int xPos, int zPos) {
+    private Chunk stationapi_redirectChunk(World world, byte[] tiles, int xPos, int zPos) {
         return new FlattenedChunk(world, xPos, zPos);
     }
 
@@ -29,7 +29,7 @@ class NetherChunkGeneratorMixin {
             at = @At("RETURN"),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void stationapi_populateChunk(int j, int par2, CallbackInfoReturnable<class_43> cir, byte[] tiles) {
+    private void stationapi_populateChunk(int j, int par2, CallbackInfoReturnable<Chunk> cir, byte[] tiles) {
         if (cir.getReturnValue() instanceof FlattenedChunk stationChunk) stationChunk.fromLegacy(tiles);
     }
 }

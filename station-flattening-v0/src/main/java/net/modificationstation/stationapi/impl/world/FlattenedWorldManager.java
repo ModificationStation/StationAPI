@@ -3,13 +3,13 @@ package net.modificationstation.stationapi.impl.world;
 import com.mojang.serialization.Codec;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.class_43;
-import net.minecraft.class_56;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
@@ -33,8 +33,8 @@ public class FlattenedWorldManager {
 
     public static void saveChunk(FlattenedChunk chunk, World world, NbtCompound chunkTag) {
         world.method_251();
-        chunkTag.putInt("xPos", chunk.field_962);
-        chunkTag.putInt("zPos", chunk.field_963);
+        chunkTag.putInt("xPos", chunk.x);
+        chunkTag.putInt("zPos", chunk.z);
         chunkTag.putLong("LastUpdate", world.getTime());
         ChunkSection[] sections = chunk.sections;
         NbtList sectionTags = new NbtList();
@@ -47,8 +47,8 @@ public class FlattenedWorldManager {
                 sectionTag.putByte(HEIGHT_KEY, (byte)sectionY);
                 sectionTag.put("block_states", CODEC.encodeStart(NbtOps.INSTANCE, section.getBlockStateContainer()).getOrThrow(false, LOGGER::error));
                 sectionTag.put(METADATA_KEY, section.getMetadataArray().toTag());
-                sectionTag.put(SKY_LIGHT_KEY, section.getLightArray(class_56.SKY).toTag());
-                sectionTag.put(BLOCK_LIGHT_KEY, section.getLightArray(class_56.BLOCK).toTag());
+                sectionTag.put(SKY_LIGHT_KEY, section.getLightArray(LightType.SKY).toTag());
+                sectionTag.put(BLOCK_LIGHT_KEY, section.getLightArray(LightType.BLOCK).toTag());
                 sectionTags.add(sectionTag);
             }
         }
@@ -57,8 +57,8 @@ public class FlattenedWorldManager {
         chunkTag.putBoolean("TerrainPopulated", chunk.field_966);
         chunk.field_969 = false;
         NbtList entityTags = new NbtList();
-        for (int i = 0; i < chunk.field_965.length; ++i) {
-            for (Object object : chunk.field_965[i]) {
+        for (int i = 0; i < chunk.entities.length; ++i) {
+            for (Object object : chunk.entities[i]) {
                 chunk.field_969 = true;
                 NbtCompound entityTag = new NbtCompound();
                 if (!((Entity)object).method_1343(entityTag)) continue;
@@ -67,7 +67,7 @@ public class FlattenedWorldManager {
         }
         chunkTag.put("Entities", entityTags);
         NbtList tileEntityTags = new NbtList();
-        for (Object object : chunk.field_964.values()) {
+        for (Object object : chunk.blockEntities.values()) {
             NbtCompound tileEntityTag = new NbtCompound();
             ((BlockEntity)object).writeNbt(tileEntityTag);
             tileEntityTags.add(tileEntityTag);
@@ -75,7 +75,7 @@ public class FlattenedWorldManager {
         chunkTag.put("TileEntities", tileEntityTags);
     }
 
-    public static class_43 loadChunk(World world, NbtCompound chunkTag) {
+    public static Chunk loadChunk(World world, NbtCompound chunkTag) {
         int xPos = chunkTag.getInt("xPos");
         int zPos = chunkTag.getInt("zPos");
         FlattenedChunk chunk = new FlattenedChunk(world, xPos, zPos);
@@ -90,8 +90,8 @@ public class FlattenedWorldManager {
                 PalettedContainer<BlockState> blockStates = sectionTag.contains("block_states") ? CODEC.parse(NbtOps.INSTANCE, sectionTag.getCompound("block_states")).promotePartial(errorMessage -> logRecoverableError(xPos, zPos, sectionY, errorMessage)).getOrThrow(false, LOGGER::error) : new PalettedContainer<>(Block.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
                 ChunkSection chunkSection = new ChunkSection(sectionY, blockStates);
                 chunkSection.getMetadataArray().copyArray(sectionTag.getByteArray(METADATA_KEY));
-                chunkSection.getLightArray(class_56.SKY).copyArray(sectionTag.getByteArray(SKY_LIGHT_KEY));
-                chunkSection.getLightArray(class_56.BLOCK).copyArray(sectionTag.getByteArray(BLOCK_LIGHT_KEY));
+                chunkSection.getLightArray(LightType.SKY).copyArray(sectionTag.getByteArray(SKY_LIGHT_KEY));
+                chunkSection.getLightArray(LightType.BLOCK).copyArray(sectionTag.getByteArray(BLOCK_LIGHT_KEY));
                 sections[index] = chunkSection;
             }
         }
@@ -104,7 +104,7 @@ public class FlattenedWorldManager {
                 Entity object = EntityRegistry.getEntityFromNbt(compoundTag, world);
                 chunk.field_969 = true;
                 if (object == null) continue;
-                chunk.method_868(object);
+                chunk.addEntity(object);
             }
         }
         NbtList tileEntityTags = chunkTag.getList("TileEntities");
@@ -113,7 +113,7 @@ public class FlattenedWorldManager {
                 NbtCompound object = (NbtCompound) tileEntityTags.get(i);
                 BlockEntity tileEntityBase = BlockEntity.method_1068(object);
                 if (tileEntityBase == null) continue;
-                chunk.method_867(tileEntityBase);
+                chunk.addBlockEntity(tileEntityBase);
             }
         }
         return chunk;

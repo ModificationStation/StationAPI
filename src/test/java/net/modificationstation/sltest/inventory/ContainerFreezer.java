@@ -5,12 +5,12 @@
 
 package net.modificationstation.sltest.inventory;
 
-import net.minecraft.class_497;
 import net.minecraft.class_633;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.FurnaceOutputSlot;
 import net.minecraft.screen.slot.Slot;
 import net.modificationstation.sltest.tileentity.TileEntityFreezer;
 
@@ -18,7 +18,7 @@ import net.modificationstation.sltest.tileentity.TileEntityFreezer;
 //            Container, Slot, SlotFurnace, InventoryPlayer, 
 //            TileEntityFreezer, ICrafting, ItemStack, EntityPlayer
 
-public class ContainerFreezer extends Container
+public class ContainerFreezer extends ScreenHandler
 {
 
     public ContainerFreezer(PlayerInventory inventoryplayer, TileEntityFreezer tileentityfreezer)
@@ -27,21 +27,21 @@ public class ContainerFreezer extends Container
         burnTime = 0;
         itemBurnTime = 0;
         freezer = tileentityfreezer;
-        method_2079(new Slot(tileentityfreezer, 0, 56, 17));
-        method_2079(new Slot(tileentityfreezer, 1, 56, 53));
-        method_2079(new class_497(inventoryplayer.player, tileentityfreezer, 2, 116, 35));
+        addSlot(new Slot(tileentityfreezer, 0, 56, 17));
+        addSlot(new Slot(tileentityfreezer, 1, 56, 53));
+        addSlot(new FurnaceOutputSlot(inventoryplayer.player, tileentityfreezer, 2, 116, 35));
         for(int i = 0; i < 3; i++)
         {
             for(int k = 0; k < 9; k++)
             {
-                method_2079(new Slot(inventoryplayer, k + i * 9 + 9, 8 + k * 18, 84 + i * 18));
+                addSlot(new Slot(inventoryplayer, k + i * 9 + 9, 8 + k * 18, 84 + i * 18));
             }
 
         }
 
         for(int j = 0; j < 9; j++)
         {
-            method_2079(new Slot(inventoryplayer, j, 8 + j * 18, 142));
+            addSlot(new Slot(inventoryplayer, j, 8 + j * 18, 142));
         }
 
     }
@@ -55,7 +55,7 @@ public class ContainerFreezer extends Container
     public void method_2075()
     {
         super.method_2075();
-        for (Object o : field_2736) {
+        for (Object o : listeners) {
             class_633 icrafting = (class_633) o;
             if (cookTime != freezer.frozenTimeForItem) {
                 icrafting.method_2099(this, 0, freezer.frozenTimeForItem);
@@ -91,13 +91,13 @@ public class ContainerFreezer extends Container
     }
 
     @Override
-    public boolean method_2094(PlayerEntity entityplayer)
+    public boolean canUse(PlayerEntity entityplayer)
     {
         return freezer.canPlayerUse(entityplayer);
     }
 
     @Override
-    public ItemStack method_2086(int i)
+    public ItemStack getStackInSlot(int i)
     {
         ItemStack itemstack = null;
         Slot slot = (Slot)slots.get(i);
@@ -139,8 +139,8 @@ public class ContainerFreezer extends Container
     }
 
     @Override
-    public void method_2076(class_633 crafting) {
-        super.method_2076(crafting);
+    public void addListener(class_633 crafting) {
+        super.addListener(crafting);
         crafting.method_2099(this, 0, freezer.frozenTimeForItem);
         crafting.method_2099(this, 1, freezer.frozenProgress);
         crafting.method_2099(this, 2, freezer.frozenPowerRemaining);

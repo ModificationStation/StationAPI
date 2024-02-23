@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.mixin.flattening;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Block;
-import net.minecraft.class_43;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
@@ -14,11 +14,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(World.class)
 abstract class WorldMixin implements StationFlatteningWorld {
-    @Shadow public abstract class_43 method_199(int x, int z);
+    @Shadow public abstract Chunk method_199(int x, int z);
 
     @Shadow @Final public Dimension dimension;
 
@@ -94,7 +93,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
             method = "method_248()V",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/class_43;field_954:[B",
+                    target = "Lnet/minecraft/world/chunk/Chunk;blocks:[B",
                     args = "array=get"
             )
     )
@@ -112,7 +111,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     )
     private int stationapi_changeTickBlockId(
             int blockId,
-            @Local(index = 5) class_43 chunk,
+            @Local(index = 5) Chunk chunk,
             @Local(index = 8) int x, @Local(index = 10) int y, @Local(index = 9) int z
     ) {
         return chunk.getBlockState(x, y, z).getBlock().id;
@@ -180,7 +179,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     }
 
     @ModifyConstant(method = {
-            "method_222"
+            "getTopY"
     }, constant = @Constant(intValue = 0))
     private int stationapi_changeBottomY(int constant) {
         return getBottomY();

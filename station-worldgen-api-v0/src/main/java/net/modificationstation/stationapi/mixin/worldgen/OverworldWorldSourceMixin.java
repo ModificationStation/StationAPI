@@ -1,13 +1,11 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.minecraft.block.SandBlock;
-import net.minecraft.class_153;
 import net.minecraft.class_51;
 import net.minecraft.class_538;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.modificationstation.stationapi.impl.worldgen.WorldDecoratorImpl;
 import net.modificationstation.stationapi.impl.worldgen.WorldGeneratorImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,7 +37,7 @@ class OverworldWorldSourceMixin {
         at = @At(value = "INVOKE", target = "Ljava/util/Random;setSeed(J)V", ordinal = 0, shift = Shift.BEFORE),
         cancellable = true
     )
-    private void stationapi_cancelFeatureGeneration(class_51 source, int cx, int cz, CallbackInfo info, @Local class_153 biome) {
+    private void stationapi_cancelFeatureGeneration(class_51 source, int cx, int cz, CallbackInfo info, @Local Biome biome) {
         if (biome.isNoDimensionFeatures()) {
             SandBlock.field_375 = false;
             info.cancel();
@@ -50,7 +48,7 @@ class OverworldWorldSourceMixin {
             method = "method_1797",
             constant = @Constant(intValue = 127)
     )
-    private int stationapi_cancelSurfaceMaking(int constant, @Local class_153 biome) {
+    private int stationapi_cancelSurfaceMaking(int constant, @Local Biome biome) {
         return biome.noSurfaceRules() ? field_2260.getTopY() - 1 : -1;
     }
 
@@ -62,7 +60,7 @@ class OverworldWorldSourceMixin {
                     shift = Shift.AFTER
             )
     )
-    private void stationapi_changeHeight(int cx, int cz, byte[] args, class_153[] biomes, double[] par5, CallbackInfo info) {
+    private void stationapi_changeHeight(int cx, int cz, byte[] args, Biome[] biomes, double[] par5, CallbackInfo info) {
         WorldGeneratorImpl.updateNoise(field_2260, cx, cz, this.field_2261);
     }
 }

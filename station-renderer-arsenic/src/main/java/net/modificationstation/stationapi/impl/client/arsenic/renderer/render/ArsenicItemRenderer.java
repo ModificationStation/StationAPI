@@ -90,7 +90,7 @@ public final class ArsenicItemRenderer {
             }
         } else {
             glScalef(0.5F, 0.5F, 0.5F);
-            int var14 = var10.method_725();
+            int var14 = var10.getTextureId();
             atlas.bindTexture();
             Sprite texture = atlas.getSprite(((CustomAtlasProvider) var10.getItem()).getAtlas().getTexture(var14).getId());
 

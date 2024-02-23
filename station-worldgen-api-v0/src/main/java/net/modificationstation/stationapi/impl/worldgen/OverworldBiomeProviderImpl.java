@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
-import net.minecraft.class_153;
+import net.minecraft.world.biome.Biome;
 import net.modificationstation.stationapi.api.worldgen.biome.ClimateBiomeProvider;
 
 import java.util.Collection;
@@ -12,31 +12,31 @@ public class OverworldBiomeProviderImpl extends ClimateBiomeProvider {
     }
 
     @Override
-    public class_153 getBiome(int x, int z, float temperature, float downfall) {
-        class_153 biome = getBiome(temperature, downfall);
-        return biome == null ? class_153.method_786(temperature, downfall) : biome;
+    public Biome getBiome(int x, int z, float temperature, float downfall) {
+        Biome biome = getBiome(temperature, downfall);
+        return biome == null ? Biome.method_786(temperature, downfall) : biome;
     }
 
     @Override
-    protected class_153 getBiome(float temperature, float downfall) {
-        class_153 biome = super.getBiome(temperature, downfall);
-        return biome == null ? class_153.method_786(temperature, downfall) : biome;
+    protected Biome getBiome(float temperature, float downfall) {
+        Biome biome = super.getBiome(temperature, downfall);
+        return biome == null ? Biome.method_786(temperature, downfall) : biome;
     }
     
     @Override
-    public Collection<class_153> getBiomes() {
-        Collection<class_153> biomes = super.getBiomes();
-        biomes.add(class_153.field_875);
-        biomes.add(class_153.field_876);
-        biomes.add(class_153.field_877);
-        biomes.add(class_153.field_878);
-        biomes.add(class_153.field_879);
-        biomes.add(class_153.field_880);
-        biomes.add(class_153.field_881);
-        biomes.add(class_153.field_882);
-        biomes.add(class_153.field_883);
-        biomes.add(class_153.field_884);
-        biomes.add(class_153.field_885);
+    public Collection<Biome> getBiomes() {
+        Collection<Biome> biomes = super.getBiomes();
+        biomes.add(Biome.RAINFOREST);
+        biomes.add(Biome.SWAMPLAND);
+        biomes.add(Biome.SEASONAL_FOREST);
+        biomes.add(Biome.FOREST);
+        biomes.add(Biome.SAVANNA);
+        biomes.add(Biome.SHRUBLAND);
+        biomes.add(Biome.TAIGA);
+        biomes.add(Biome.DESERT);
+        biomes.add(Biome.PLAINS);
+        biomes.add(Biome.ICE_DESERT);
+        biomes.add(Biome.TUNDRA);
         return biomes;
     }
 

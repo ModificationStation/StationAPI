@@ -99,7 +99,7 @@ class BlockItemMixin extends Item implements StationFlatteningBlockItem {
     @Unique
     public void setBlock(Block block) {
         itemId = block.id;
-        method_458(block.getTexture(2));
+        setTextureId(block.getTexture(2));
     }
 
     @Redirect(

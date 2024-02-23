@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.impl.worldgen;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
-import net.minecraft.class_153;
+import net.minecraft.world.biome.Biome;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.world.biome.BiomeRegisterEvent;
 import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeProviderRegisterEvent;
@@ -28,6 +28,6 @@ public class WorldgenListener {
                 StationAPI.NAMESPACE.id("nether_biome_provider"),
                 NetherBiomeProviderImpl.getInstance()
         );
-        class_153.field_886.setFogColor(0xFF330707);
+        Biome.HELL.setFogColor(0xFF330707);
     }
 }

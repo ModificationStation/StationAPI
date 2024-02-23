@@ -42,7 +42,7 @@ public final class ItemModelPredicateProviderRegistry extends SimpleRegistry<Ite
             if (identifier == DAMAGED_ID)
                 return DAMAGED_PROVIDER;
         }
-        if (item.method_462()) if (identifier == META_ID)
+        if (item.hasSubtypes()) if (identifier == META_ID)
             return META_PROVIDER;
 
         ItemModelPredicateProvider modelPredicateProvider = get(identifier);

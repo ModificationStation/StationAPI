@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
-import net.minecraft.class_153;
 import net.minecraft.class_519;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.biome.Biome;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeColorProvider;
 
 import java.util.function.Function;
 
 public class BiomeColorInterpolator {
-    private final Function<class_153, BiomeColorProvider> provider;
+    private final Function<Biome, BiomeColorProvider> provider;
     private final int[] colors = new int[4];
     private final int bitShift;
     private final int side;
@@ -17,7 +17,7 @@ public class BiomeColorInterpolator {
     private int lastX;
     private int lastZ;
 
-    public BiomeColorInterpolator(Function<class_153, BiomeColorProvider> provider, int side) {
+    public BiomeColorInterpolator(Function<Biome, BiomeColorProvider> provider, int side) {
         this.side = side;
         this.bitShift = MathHelper.floor(Math.log(side) / Math.log(2));
         this.provider = provider;

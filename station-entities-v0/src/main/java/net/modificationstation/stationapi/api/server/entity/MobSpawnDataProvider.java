@@ -30,7 +30,7 @@ public interface MobSpawnDataProvider extends StationSpawnDataProvider {
                 (byte)((int)(mob.pitch * 256.0F / 360.0F))
         };
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        mob.method_1331().method_1504(new DataOutputStream(outputStream));
+        mob.method_1331().writeAllEntries(new DataOutputStream(outputStream));
         byte[] data = outputStream.toByteArray();
         message.bytes = Bytes.concat(rotations, data);
         writeToMessage(message);

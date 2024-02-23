@@ -2,10 +2,10 @@ package net.modificationstation.stationapi.mixin.flattening;
 
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import net.minecraft.class_153;
-import net.minecraft.class_43;
 import net.minecraft.class_538;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,10 +35,10 @@ class OverworldChunkGeneratorMixin {
             method = "method_1806",
             at = @At(
                     value = "NEW",
-                    target = "(Lnet/minecraft/world/World;[BII)Lnet/minecraft/class_43;"
+                    target = "(Lnet/minecraft/world/World;[BII)Lnet/minecraft/world/chunk/Chunk;"
             )
     )
-    private class_43 stationapi_redirectChunk(World world, byte[] tiles, int xPos, int zPos) {
+    private Chunk stationapi_redirectChunk(World world, byte[] tiles, int xPos, int zPos) {
         return new FlattenedChunk(world, xPos, zPos);
     }
 
@@ -46,11 +46,11 @@ class OverworldChunkGeneratorMixin {
             method = "method_1806",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_43;method_873()V"
+                    target = "Lnet/minecraft/world/chunk/Chunk;method_873()V"
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void stationapi_populateChunk(int j, int par2, CallbackInfoReturnable<class_43> cir, byte[] tiles, class_43 chunk) {
+    private void stationapi_populateChunk(int j, int par2, CallbackInfoReturnable<Chunk> cir, byte[] tiles, Chunk chunk) {
         if (chunk instanceof FlattenedChunk stationChunk) stationChunk.fromLegacy(tiles);
     }
     
@@ -67,7 +67,7 @@ class OverworldChunkGeneratorMixin {
             at = @At("HEAD")
     )
     private void stationapi_initChunkLocals(
-        int j, int bs, byte[] args, class_153[] ds, double[] par5, CallbackInfo ci,
+        int j, int bs, byte[] args, Biome[] ds, double[] par5, CallbackInfo ci,
         @Share("offsetX") LocalIntRef offsetX, @Share("offsetZ") LocalIntRef offsetZ, @Share("vertical") LocalIntRef vertical, @Share("height") LocalIntRef height
     ) {
         int dz = MathHelper.ceilLog2(field_2260.getHeight());
@@ -90,7 +90,7 @@ class OverworldChunkGeneratorMixin {
                     shift = Shift.AFTER
             )
     )
-    private void stationapi_fixNoiseValues(int j, int bs, byte[] args, class_153[] ds, double[] par5, CallbackInfo ci, @Share("vertical") LocalIntRef vertical) {
+    private void stationapi_fixNoiseValues(int j, int bs, byte[] args, Biome[] ds, double[] par5, CallbackInfo ci, @Share("vertical") LocalIntRef vertical) {
         int height = vertical.get() + 1;
         int length = height * 25;
         int bottom = field_2260.getBottomY() >> 3;
@@ -149,7 +149,7 @@ class OverworldChunkGeneratorMixin {
     }
     
     @Inject(method = "method_1797", at = @At("HEAD"))
-    private void stationapi_initLocals(int j, int bs, byte[] args, class_153[] par4, CallbackInfo ci, @Share("vertical2") LocalIntRef vertical2) {
+    private void stationapi_initLocals(int j, int bs, byte[] args, Biome[] par4, CallbackInfo ci, @Share("vertical2") LocalIntRef vertical2) {
         vertical2.set(1 << MathHelper.ceilLog2(field_2260.getHeight()));
     }
     

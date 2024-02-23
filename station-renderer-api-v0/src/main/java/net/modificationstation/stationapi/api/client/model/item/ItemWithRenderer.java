@@ -13,6 +13,6 @@ public interface ItemWithRenderer {
 
     @Deprecated
     default void renderItemOnGui(ItemRenderer itemRenderer, TextRenderer textRenderer, TextureManager textureManager, ItemStack stack, int x, int y) {
-        renderItemOnGui(itemRenderer, textRenderer, textureManager, stack.itemId, stack.getDamage(), stack.method_725(), x, y);
+        renderItemOnGui(itemRenderer, textRenderer, textureManager, stack.itemId, stack.getDamage(), stack.getTextureId(), x, y);
     }
 }

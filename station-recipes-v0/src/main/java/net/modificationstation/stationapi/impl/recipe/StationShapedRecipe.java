@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.recipe;
 
 import com.mojang.datafixers.util.Either;
-import net.minecraft.class_159;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
@@ -29,7 +29,7 @@ public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
     }
 
     @Override
-    public boolean matches(class_159 grid) {
+    public boolean matches(CraftingInventory grid) {
         for(int x = 0; x <= 3 - this.width; ++x)
             for (int y = 0; y <= 3 - this.height; ++y) {
                 if (this.matches(grid, x, y, true)) return true;
@@ -39,7 +39,7 @@ public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
         return false;
     }
 
-    private boolean matches(class_159 grid, int startX, int startY, boolean mirror) {
+    private boolean matches(CraftingInventory grid, int startX, int startY, boolean mirror) {
         for(int x = 0; x < 3; ++x)
             for (int y = 0; y < 3; ++y) {
                 int dx = x - startX;
@@ -47,7 +47,7 @@ public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
                 Either<TagKey<Item>, ItemStack> ingredient = null;
                 if (dx >= 0 && dy >= 0 && dx < this.width && dy < this.height)
                     ingredient = this.grid[(mirror ? this.width - dx - 1 : dx) + dy * this.width];
-                ItemStack itemToTest = grid.method_974(x, y);
+                ItemStack itemToTest = grid.getStack(x, y);
                 if (itemToTest != null || ingredient != null) {
                     if (itemToTest == null || ingredient == null) return false;
                     Optional<TagKey<Item>> tagOpt = ingredient.left();
@@ -71,7 +71,7 @@ public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
     }
 
     @Override
-    public ItemStack craft(class_159 arg) {
+    public ItemStack craft(CraftingInventory arg) {
         return output.copy();
     }
 

@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.world;
 
-import net.minecraft.class_153;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -59,7 +59,7 @@ public interface StationDimension {
     /**
      * Get list of dimension biomes. Mods with custom dimensions should provide their biomes here
      */
-    default Collection<class_153> getBiomes() {
+    default Collection<Biome> getBiomes() {
         return Collections.emptyList();
     }
 }

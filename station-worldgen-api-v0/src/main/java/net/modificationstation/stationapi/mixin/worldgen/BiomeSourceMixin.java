@@ -5,8 +5,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
-import net.minecraft.class_153;
 import net.minecraft.class_519;
+import net.minecraft.world.biome.Biome;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeProvider;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +21,7 @@ class BiomeSourceMixin {
             at = @At("HEAD")
     )
     private void stationapi_capturePosition(
-            class_153[] data, int x, int z, int dx, int dz, CallbackInfoReturnable<class_153[]> info,
+            Biome[] data, int x, int z, int dx, int dz, CallbackInfoReturnable<Biome[]> info,
             @Share("posX") LocalIntRef posX, @Share("posZ") LocalIntRef posZ
     ) {
         posX.set(x);
@@ -32,11 +32,11 @@ class BiomeSourceMixin {
             method = "method_1791",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_153;method_786(DD)Lnet/minecraft/class_153;"
+                    target = "Lnet/minecraft/world/biome/Biome;method_786(DD)Lnet/minecraft/world/biome/Biome;"
             )
     )
-    private class_153 stationapi_getRegionBiome(
-            double temperature, double wetness, Operation<class_153> original,
+    private Biome stationapi_getRegionBiome(
+            double temperature, double wetness, Operation<Biome> original,
             @Local(index = 7) int dx, @Local(index = 8) int dz,
             @Share("posX") LocalIntRef posX, @Share("posZ") LocalIntRef posZ
     ) {

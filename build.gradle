@@ -2,7 +2,7 @@ import net.fabricmc.loom.util.GroovyXmlUtil
 
 plugins {
     id "maven-publish"
-    id 'babric-loom' version '1.4.2'
+    id 'babric-loom' version '1.5.3'
 }
 
 @SuppressWarnings('unused') // Shut up, it IS used.
@@ -121,7 +121,6 @@ allprojects {
         implementation "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
         implementation "com.mojang:datafixerupper:${project.dfu_version}"
         implementation "maven.modrinth:spasm:${project.spasm_version}"
-        implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.mixinextras_version}"))
         implementation "com.oath.cyclops:cyclops:${project.cyclops_version}"
 
         // convenience stuff
@@ -320,7 +319,6 @@ dependencies {
     include "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
     include "com.mojang:datafixerupper:${project.dfu_version}"
     include "maven.modrinth:spasm:${project.spasm_version}"
-    include "com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixinextras_version}"
     include "com.oath.cyclops:cyclops:${project.cyclops_version}"
     include "org.reactivestreams:reactive-streams:${project.reactivestreams_version}"
     include "io.kindedj:kindedj:${project.kindedj_version}"

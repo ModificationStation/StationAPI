@@ -1,13 +1,13 @@
 package net.modificationstation.sltest.worldgen;
 
 import net.minecraft.block.Block;
-import net.minecraft.class_239;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.Feature;
 import net.modificationstation.stationapi.api.block.BlockState;
 
 import java.util.Random;
 
-public class TestTree extends class_239 {
+public class TestTree extends Feature {
     final BlockState log;
     final BlockState leaves;
 
@@ -20,7 +20,7 @@ public class TestTree extends class_239 {
         this.leaves = leaves;
     }
 
-    public boolean method_1142(World level, Random random, int x, int y, int z) {
+    public boolean generate(World level, Random random, int x, int y, int z) {
         int height = random.nextInt(3) + 4;
 
         for (int py = y - 3 + height; py <= y + height; ++py) {

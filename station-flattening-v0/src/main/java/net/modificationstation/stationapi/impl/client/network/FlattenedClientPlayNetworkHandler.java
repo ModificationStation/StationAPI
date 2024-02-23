@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.impl.client.network;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
-import net.minecraft.class_43;
 import net.minecraft.class_454;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkDataS2CPacket;
@@ -29,13 +29,13 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
         int fromX = packet.chunkX << 4;
         int fromZ = packet.chunkZ << 4;
         world.method_1498(fromX, world.getBottomY(), fromZ, fromX + 15, world.getTopY() - 1, fromZ + 15);
-        class_43 chunk = world.method_214(packet.chunkX, packet.chunkZ);
+        Chunk chunk = world.method_214(packet.chunkX, packet.chunkZ);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
             ByteBuffer buf = ByteBuffer.wrap(packet.sectionsData);
             for (int i = 0; i < world.countVerticalSections(); i++)
                 flatteningChunk.getOrCreateSection(world.sectionIndexToCoord(i) << 4, true).readDataPacket(buf);
         }
-        chunk.method_892();
+        chunk.populateHeightmap();
         world.method_202(fromX, world.getBottomY(), fromZ, fromX + 16, world.getTopY(), fromZ + 16);
     }
 
@@ -51,7 +51,7 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
     public void onMultiBlockChange(FlattenedMultiBlockChangeS2CPacket packet) {
         //noinspection deprecation
         class_454 world = (class_454) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
-        class_43 chunk = world.method_214(packet.x, packet.z);
+        Chunk chunk = world.method_214(packet.x, packet.z);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
             flatteningChunk.getOrCreateSection(world.sectionIndexToCoord(packet.sectionIndex), true);
             int
@@ -87,12 +87,12 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
         int fromY = world.sectionIndexToCoord(packet.sectionIndex) << 4;
         int fromZ = packet.chunkZ << 4;
         world.method_1498(fromX, fromY, fromZ, fromX + 15, fromY + 15, fromZ + 15);
-        class_43 chunk = world.method_214(packet.chunkX, packet.chunkZ);
+        Chunk chunk = world.method_214(packet.chunkX, packet.chunkZ);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
             ByteBuffer buf = ByteBuffer.wrap(packet.sectionData);
             flatteningChunk.getOrCreateSection(fromY, true).readDataPacket(buf);
         }
-        chunk.method_892();
+        chunk.populateHeightmap();
         world.method_202(fromX, fromY, fromZ, fromX + 16, fromY + 16, fromZ + 16);
     }
 }

@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.class_42;
-import net.minecraft.class_43;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkCache;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorldPopulationRegion;
@@ -12,21 +12,21 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(class_42.class)
+@Mixin(ChunkCache.class)
 class ChunkCacheMixin implements StationFlatteningWorldPopulationRegion {
-    @Shadow private int field_166;
-    @Shadow private int field_167;
-    @Shadow private class_43[][] field_168;
-    @Shadow private World field_169;
+    @Shadow private int minX;
+    @Shadow private int minZ;
+    @Shadow private Chunk[][] chunks;
+    @Shadow private World world;
 
     @Override
     @Unique
     public BlockState getBlockState(int x, int y, int z) {
-        if (y >= field_169.getBottomY() && y < field_169.getTopY()) {
-            int var4 = (x >> 4) - this.field_166;
-            int var5 = (z >> 4) - this.field_167;
-            if (var4 >= 0 && var4 < this.field_168.length && var5 >= 0 && var5 < this.field_168[var4].length) {
-                class_43 var6 = this.field_168[var4][var5];
+        if (y >= world.getBottomY() && y < world.getTopY()) {
+            int var4 = (x >> 4) - this.minX;
+            int var5 = (z >> 4) - this.minZ;
+            if (var4 >= 0 && var4 < this.chunks.length && var5 >= 0 && var5 < this.chunks[var4].length) {
+                Chunk var6 = this.chunks[var4][var5];
                 return var6 == null ? States.AIR.get() : var6.getBlockState(x & 15, y, z & 15);
             }
         }
@@ -39,7 +39,7 @@ class ChunkCacheMixin implements StationFlatteningWorldPopulationRegion {
             "getBlockMeta"
     }, constant = @Constant(intValue = 128))
     private int stationapi_changeMaxHeight(int value) {
-        return field_169.getTopY();
+        return world.getTopY();
     }
 
     @ModifyConstant(method = {
@@ -48,6 +48,6 @@ class ChunkCacheMixin implements StationFlatteningWorldPopulationRegion {
             "getBlockMeta"
     }, constant = @Constant(expandZeroConditions = Constant.Condition.GREATER_THAN_OR_EQUAL_TO_ZERO, ordinal = 0))
     private int stationapi_changeMinHeightGE(int value) {
-        return field_169.getBottomY();
+        return world.getBottomY();
     }
 }

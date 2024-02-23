@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.world;
 
-import net.minecraft.class_153;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.biome.Biome;
 
 @FunctionalInterface
 public interface ColorResolver {
@@ -31,7 +31,7 @@ public interface ColorResolver {
             return getColour(blockView.method_1781().method_1787(MathHelper.floor(x), MathHelper.floor(z)), x, z);
         }
 
-        int getColour(class_153 biome, double x, double z);
+        int getColour(Biome biome, double x, double z);
     }
 
     interface ByBlockCoordinates extends ColorResolver {

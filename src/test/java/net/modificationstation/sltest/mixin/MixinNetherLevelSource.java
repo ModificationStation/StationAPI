@@ -3,8 +3,8 @@ package net.modificationstation.sltest.mixin;
 import net.minecraft.block.Block;
 import net.minecraft.class_209;
 import net.minecraft.class_359;
-import net.minecraft.class_43;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.world.HeightLimitView;
@@ -31,7 +31,7 @@ public class MixinNetherLevelSource {
     private ForkJoinPool customPool = new ForkJoinPool(8);
 
     @Inject(method = "method_1806", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<class_43> info, byte[] blocks, class_43 chunk) {
+    private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> info, byte[] blocks, Chunk chunk) {
         short height = (short) ((HeightLimitView) field_1350).getTopY();
         if (height < 129) return;
 

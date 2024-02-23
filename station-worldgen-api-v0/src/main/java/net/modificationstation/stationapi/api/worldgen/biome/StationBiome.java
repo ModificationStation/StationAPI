@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
-import net.minecraft.class_239;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.Feature;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.worldgen.surface.SurfaceRule;
@@ -22,7 +22,7 @@ public interface StationBiome {
         return Util.assertImpl();
     }
 
-    default void setGrassColor(BiomeColorProvider provider) {
+    default void setGrassColorProvider(BiomeColorProvider provider) {
         Util.assertImpl();
     }
 
@@ -34,9 +34,9 @@ public interface StationBiome {
         Util.assertImpl();
     }
 
-    default void setGrassColor(int rgb) {
+    default void setFixedGrassColorProvider(int rgb) {
         final int color = 0xFF000000 | rgb;
-        setGrassColor((source, x, z) -> color);
+        setGrassColorProvider((source, x, z) -> color);
     }
 
     default void setLeavesColor(int rgb) {
@@ -97,11 +97,11 @@ public interface StationBiome {
         Util.assertImpl();
     }
     
-    default List<class_239> getFeatures() {
+    default List<Feature> getFeatures() {
         return Util.assertImpl();
     }
     
-    default void addFeature(class_239 feature) {
+    default void addFeature(Feature feature) {
         getFeatures().add(feature);
     }
     

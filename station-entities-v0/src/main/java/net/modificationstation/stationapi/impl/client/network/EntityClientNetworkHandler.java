@@ -2,12 +2,12 @@ package net.modificationstation.stationapi.impl.client.network;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.class_270;
 import net.minecraft.class_454;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.DataTrackerEntry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -98,9 +98,9 @@ public final class EntityClientNetworkHandler {
                 mob.field_1026 = true;
                 world.method_1495(message.ints[0], mob);
                 //noinspection unchecked
-                List<class_270> data = DataTracker.method_1503(new DataInputStream(new ByteArrayInputStream(Arrays.copyOfRange(message.bytes, 2, message.bytes.length))));
+                List<DataTrackerEntry> data = DataTracker.readEntries(new DataInputStream(new ByteArrayInputStream(Arrays.copyOfRange(message.bytes, 2, message.bytes.length))));
                 if (data != null)
-                    mob.method_1331().method_1511(data);
+                    mob.method_1331().writeUpdatedEntries(data);
                 if (mob instanceof StationSpawnDataProvider provider)
                     provider.readFromMessage(message);
             }

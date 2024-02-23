@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.api.bonemeal;
 
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.block.Block;
-import net.minecraft.class_239;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.Feature;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.collection.WeightedList;
@@ -13,15 +13,15 @@ import java.util.Map;
 import java.util.Random;
 
 public class BonemealAPI {
-    private static final Map<TagKey<Block>, WeightedList<class_239>> PLACERS_TAG = new Reference2ObjectOpenHashMap<>();
-    private static final Map<BlockState, WeightedList<class_239>> PLACERS_BLOCK = new Reference2ObjectOpenHashMap<>();
-    private static final WeightedList<class_239> CACHE = new WeightedList<>();
+    private static final Map<TagKey<Block>, WeightedList<Feature>> PLACERS_TAG = new Reference2ObjectOpenHashMap<>();
+    private static final Map<BlockState, WeightedList<Feature>> PLACERS_BLOCK = new Reference2ObjectOpenHashMap<>();
+    private static final WeightedList<Feature> CACHE = new WeightedList<>();
 
     public static void addPlant(BlockState ground, BlockState plant, int weight) {
         addPlant(ground, new SimpleStateFeature(plant), weight);
     }
 
-    public static void addPlant(BlockState ground, class_239 plant, int weight) {
+    public static void addPlant(BlockState ground, Feature plant, int weight) {
         PLACERS_BLOCK.computeIfAbsent(ground, g -> new WeightedList<>()).add(plant, weight);
     }
 
@@ -29,7 +29,7 @@ public class BonemealAPI {
         addPlant(ground, new SimpleStateFeature(plant), weight);
     }
 
-    public static void addPlant(TagKey<Block> ground, class_239 plant, int weight) {
+    public static void addPlant(TagKey<Block> ground, Feature plant, int weight) {
         PLACERS_TAG.computeIfAbsent(ground, g -> new WeightedList<>()).add(plant, weight);
     }
 
@@ -38,7 +38,7 @@ public class BonemealAPI {
         if (CACHE.isEmpty()) return false;
         Random random = world.field_214;
         Direction offset = Direction.byId(side);
-        CACHE.get(random).method_1142(
+        CACHE.get(random).generate(
                 world,
                 random,
                 x + offset.getOffsetX(),
@@ -52,22 +52,22 @@ public class BonemealAPI {
             state = world.getBlockState(px, py, pz);
             updateCache(state);
             if (CACHE.isEmpty()) continue;
-            CACHE.get(random).method_1142(world, random, px, py + 1, pz);
+            CACHE.get(random).generate(world, random, px, py + 1, pz);
         }
         return true;
     }
 
     private static void updateCache(BlockState state) {
         CACHE.clear();
-        WeightedList<class_239> structures = PLACERS_BLOCK.get(state);
+        WeightedList<Feature> structures = PLACERS_BLOCK.get(state);
         if (structures != null) CACHE.addAll(structures);
         state.streamTags().forEach(tag -> {
-            WeightedList<class_239> tagStructures = PLACERS_TAG.get(tag);
+            WeightedList<Feature> tagStructures = PLACERS_TAG.get(tag);
             if (tagStructures != null) CACHE.addAll(tagStructures);
         });
     }
 
-    private static class SimpleStateFeature extends class_239 {
+    private static class SimpleStateFeature extends Feature {
         private final BlockState state;
 
         private SimpleStateFeature(BlockState state) {
@@ -75,7 +75,7 @@ public class BonemealAPI {
         }
 
         @Override
-        public boolean method_1142(World world, Random random, int x, int y, int z) {
+        public boolean generate(World world, Random random, int x, int y, int z) {
             BlockState worldState = world.getBlockState(x, y, z);
             if (!worldState.isAir()) return false;
             if (state.getBlock().canPlaceAt(world, x, y, z)) {
@@ -86,11 +86,11 @@ public class BonemealAPI {
         }
     }
 
-    private static class GrassFeature extends class_239 {
+    private static class GrassFeature extends Feature {
         private static final BlockState STATE = Block.GRASS.getDefaultState();
 
         @Override
-        public boolean method_1142(World world, Random random, int x, int y, int z) {
+        public boolean generate(World world, Random random, int x, int y, int z) {
             BlockState worldState = world.getBlockState(x, y, z);
             if (!worldState.isAir()) return false;
             if (STATE.getBlock().canPlaceAt(world, x, y, z)) {

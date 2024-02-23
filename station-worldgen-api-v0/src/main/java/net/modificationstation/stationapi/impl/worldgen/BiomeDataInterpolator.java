@@ -1,12 +1,13 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
-import java.util.function.Function;
-import net.minecraft.class_153;
 import net.minecraft.class_519;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.biome.Biome;
+
+import java.util.function.Function;
 
 public class BiomeDataInterpolator {
-    private final Function<class_153, Number> provider;
+    private final Function<Biome, Number> provider;
     private final float[] data = new float[4];
     private final int bitShift;
     private final int side;
@@ -18,7 +19,7 @@ public class BiomeDataInterpolator {
     private int lastX;
     private int lastZ;
 
-    public BiomeDataInterpolator(Function<class_153, Number> provider, int side, int radius, int distance) {
+    public BiomeDataInterpolator(Function<Biome, Number> provider, int side, int radius, int distance) {
         this.side = side;
         this.radius = radius;
         this.distance = distance;
@@ -61,7 +62,7 @@ public class BiomeDataInterpolator {
         float value = 0;
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dz = -radius; dz <= radius; dz++) {
-                class_153 biome = source.method_1787(x + dx * distance, z + dz * distance);
+                Biome biome = source.method_1787(x + dx * distance, z + dz * distance);
                 value += provider.apply(biome).floatValue();
             }
         }

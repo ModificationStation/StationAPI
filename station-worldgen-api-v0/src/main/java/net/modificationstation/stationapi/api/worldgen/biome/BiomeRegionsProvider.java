@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.minecraft.class_153;
 import net.minecraft.class_458;
+import net.minecraft.world.biome.Biome;
 import net.modificationstation.stationapi.impl.worldgen.IDVoronoiNoise;
 
 import java.util.Collection;
@@ -23,7 +23,7 @@ public class BiomeRegionsProvider implements BiomeProvider {
     }
 
     @Override
-    public class_153 getBiome(int x, int z, float temperature, float downfall) {
+    public Biome getBiome(int x, int z, float temperature, float downfall) {
         double px = x * 0.01 + distortX.method_1516(buffer, x, z, 1, 1, 0.1, 0.1, 0.25)[0] * 0.1;
         double pz = z * 0.01 + distortZ.method_1516(buffer, x, z, 1, 1, 0.1, 0.1, 0.25)[0] * 0.1;
         int id = idNoise.getID(px, pz, providers.size());
@@ -31,8 +31,8 @@ public class BiomeRegionsProvider implements BiomeProvider {
     }
     
     @Override
-    public Collection<class_153> getBiomes() {
-        Set<class_153> biomes = new ObjectOpenHashSet<>();
+    public Collection<Biome> getBiomes() {
+        Set<Biome> biomes = new ObjectOpenHashSet<>();
         providers.forEach(provider -> biomes.addAll(provider.getBiomes()));
         return biomes;
     }

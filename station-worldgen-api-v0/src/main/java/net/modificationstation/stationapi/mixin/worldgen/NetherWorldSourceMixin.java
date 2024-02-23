@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
 import net.minecraft.block.SandBlock;
-import net.minecraft.class_153;
 import net.minecraft.class_359;
 import net.minecraft.class_51;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.modificationstation.stationapi.impl.worldgen.WorldDecoratorImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,7 +31,7 @@ class NetherWorldSourceMixin {
         cancellable = true
     )
     private void stationapi_cancelFeatureGeneration(class_51 source, int cx, int cz, CallbackInfo info) {
-        class_153 biome = this.field_1350.method_1781().method_1787(cx + 16, cz + 16);
+        Biome biome = this.field_1350.method_1781().method_1787(cx + 16, cz + 16);
         if (biome.isNoDimensionFeatures()) {
             SandBlock.field_375 = false;
             info.cancel();

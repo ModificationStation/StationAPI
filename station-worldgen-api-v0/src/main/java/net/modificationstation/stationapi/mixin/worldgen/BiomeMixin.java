@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
-import net.minecraft.class_153;
-import net.minecraft.class_239;
 import net.minecraft.class_288;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.feature.Feature;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeColorProvider;
 import net.modificationstation.stationapi.api.worldgen.biome.StationBiome;
@@ -17,19 +17,19 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mixin(class_153.class)
+@Mixin(Biome.class)
 @SuppressWarnings({"rawtypes", "unchecked"})
 class BiomeMixin implements StationBiome {
-    @Shadow private boolean field_897;
-    @Shadow private boolean field_896;
-    @Shadow protected List field_894;
-    @Shadow protected List field_893;
-    @Shadow protected List field_895;
+    @Shadow private boolean hasRain;
+    @Shadow private boolean hasSnow;
+    @Shadow protected List spawnablePassive;
+    @Shadow protected List spawnableMonsters;
+    @Shadow protected List spawnableWaterCreatures;
     @Unique private BiomeColorProvider grassColor = BiomeColorsImpl.DEFAULT_GRASS_COLOR;
     @Unique private BiomeColorProvider leavesColor = BiomeColorsImpl.DEFAULT_LEAVES_COLOR;
     @Unique private BiomeColorProvider fogColor = BiomeColorsImpl.DEFAULT_FOG_COLOR;
     @Unique private final List<SurfaceRule> surfaceRules = new ArrayList<>();
-    @Unique private final List<class_239> features = new ArrayList<>();
+    @Unique private final List<Feature> features = new ArrayList<>();
     @Unique private boolean noDimensionFeatures;
     @Unique private int minHeight = 40;
     @Unique private int maxHeight = 128;
@@ -50,7 +50,7 @@ class BiomeMixin implements StationBiome {
     }
 
     @Override
-    public void setGrassColor(BiomeColorProvider provider) {
+    public void setGrassColorProvider(BiomeColorProvider provider) {
         grassColor = provider;
     }
 
@@ -86,27 +86,27 @@ class BiomeMixin implements StationBiome {
 
     @Override
     public void setPrecipitation(boolean precipitation) {
-        this.field_897 = precipitation;
+        this.hasRain = precipitation;
     }
 
     @Override
     public void setSnow(boolean snow) {
-        this.field_896 = snow;
+        this.hasSnow = snow;
     }
 
     @Override
     public void addPassiveEntity(Class<? extends Entity> entityClass, int rarity) {
-        this.field_894.add(new class_288(entityClass, rarity));
+        this.spawnablePassive.add(new class_288(entityClass, rarity));
     }
 
     @Override
     public void addHostileEntity(Class<? extends Entity> entityClass, int rarity) {
-        this.field_893.add(new class_288(entityClass, rarity));
+        this.spawnableMonsters.add(new class_288(entityClass, rarity));
     }
 
     @Override
     public void addWaterEntity(Class<? extends Entity> entityClass, int rarity) {
-        this.field_895.add(new class_288(entityClass, rarity));
+        this.spawnableWaterCreatures.add(new class_288(entityClass, rarity));
     }
 
     @Override
@@ -130,7 +130,7 @@ class BiomeMixin implements StationBiome {
     }
     
     @Override
-    public List<class_239> getFeatures() {
+    public List<Feature> getFeatures() {
         return features;
     }
     

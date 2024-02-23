@@ -63,8 +63,8 @@ public class Arsenic {
         terrain.addTextureBinder(terrain.getTexture(Block.FIRE.textureId), ArsenicFire::new);
         terrain.addTextureBinder(terrain.getTexture(Block.FIRE.textureId + 16), ArsenicFire::new);
         terrain.addTextureBinder(terrain.getTexture(Block.NETHER_PORTAL.textureId), ArsenicPortal::new);
-        guiItems.addTextureBinder(guiItems.getTexture(Item.COMPASS.method_441(0)), ArsenicCompass::new);
-        guiItems.addTextureBinder(guiItems.getTexture(Item.CLOCK.method_441(0)), ArsenicClock::new);
+        guiItems.addTextureBinder(guiItems.getTexture(Item.COMPASS.getTextureId(0)), ArsenicCompass::new);
+        guiItems.addTextureBinder(guiItems.getTexture(Item.CLOCK.getTextureId(0)), ArsenicClock::new);
     }
 
     private static void beforeTexturePackApplied(TexturePackLoadedEvent.Before event) {

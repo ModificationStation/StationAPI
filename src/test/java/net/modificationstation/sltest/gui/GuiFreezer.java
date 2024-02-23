@@ -5,7 +5,7 @@
 
 package net.modificationstation.sltest.gui;
 
-import net.minecraft.client.gui.screen.container.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.modificationstation.sltest.inventory.ContainerFreezer;
 import net.modificationstation.sltest.tileentity.TileEntityFreezer;
@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 //            GuiContainer, ContainerFreezer, FontRenderer, RenderEngine, 
 //            TileEntityFreezer, InventoryPlayer
 
-public class GuiFreezer extends ContainerScreen
+public class GuiFreezer extends HandledScreen
 {
 
     public GuiFreezer(PlayerInventory inventoryplayer, TileEntityFreezer tileentityFreezer)

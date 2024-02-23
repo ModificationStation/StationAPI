@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
-import net.minecraft.class_153;
+import net.minecraft.world.biome.Biome;
 import net.modificationstation.stationapi.api.worldgen.biome.VoronoiBiomeProvider;
 
 public class NetherBiomeProviderImpl extends VoronoiBiomeProvider {
     private static final NetherBiomeProviderImpl INSTANCE = new NetherBiomeProviderImpl();
 
     private NetherBiomeProviderImpl() {
-        addBiome(class_153.field_886);
+        addBiome(Biome.HELL);
     }
 
     public static NetherBiomeProviderImpl getInstance() {

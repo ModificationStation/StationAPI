@@ -15,11 +15,11 @@ public class ArmorUtil {
 
         if (armor != null && armor.getItem() instanceof ArmorItem actualArmor) {
             double var5 = armor.getMaxDamage();
-            double var6 = armor.method_721();
+            double var6 = armor.getDamage2();
             double var7 = var5 - var6;
             var2 += var7;
             var3 += var5;
-            double var8 = actualArmor.field_2084;
+            double var8 = actualArmor.maxProtection;
             var1 += var8;
         }
 

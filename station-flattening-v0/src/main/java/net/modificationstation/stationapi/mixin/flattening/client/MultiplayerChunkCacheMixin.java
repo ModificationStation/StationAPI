@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.class_43;
 import net.minecraft.class_455;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Mixin(class_455.class)
 class MultiplayerChunkCacheMixin {
-    @Shadow private Map<ChunkPos, class_43> field_2553;
+    @Shadow private Map<ChunkPos, Chunk> field_2553;
 
     @Shadow private World field_2555;
 
@@ -27,7 +27,7 @@ class MultiplayerChunkCacheMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void stationapi_loadChunk(int i, int j, CallbackInfoReturnable<class_43> cir) {
+    public void stationapi_loadChunk(int i, int j, CallbackInfoReturnable<Chunk> cir) {
         //noinspection deprecation
         if (!((ModdedPacketHandler) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler()).isModded())
             return;

@@ -307,7 +307,7 @@ class PlayerEntityMixin extends LivingEntity implements PlayerBaseSettersGetters
     }
 
     @Inject(
-            method = "method_513",
+            method = "dropItem(Lnet/minecraft/item/ItemStack;)V",
             at = @At("HEAD"),
             cancellable = true
     )
@@ -453,7 +453,7 @@ class PlayerEntityMixin extends LivingEntity implements PlayerBaseSettersGetters
     }*/
 
     @Inject(
-            method = "method_509",
+            method = "dropItem(Lnet/minecraft/item/ItemStack;Z)V",
             at = @At("HEAD"),
             cancellable = true
     )

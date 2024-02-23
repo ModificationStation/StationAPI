@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.api.worldgen;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import net.minecraft.class_153;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeModificationEvent;
 import net.modificationstation.stationapi.api.util.Identifier;
@@ -28,13 +28,13 @@ public class BiomeAPI {
     /**
      * Add biome into default Overworld region with specified temperature and wetness (humidity) range
      *
-     * @param biome {@link class_153} to add
+     * @param biome {@link Biome} to add
      * @param t1    minimum temperature
      * @param t2    maximum temperature
      * @param w1    minimum wetness (humidity)
      * @param w2    maximum wetness (humidity)
      */
-    public static void addOverworldBiome(class_153 biome, float t1, float t2, float w1, float w2) {
+    public static void addOverworldBiome(Biome biome, float t1, float t2, float w1, float w2) {
         OverworldBiomeProviderImpl.getInstance().addBiome(biome, t1, t2, w1, w2);
     }
 
@@ -61,9 +61,9 @@ public class BiomeAPI {
     /**
      * Add biome into default Nether region
      *
-     * @param biome {@link class_153} to add
+     * @param biome {@link Biome} to add
      */
-    public static void addNetherBiome(class_153 biome) {
+    public static void addNetherBiome(Biome biome) {
         NetherBiomeProviderImpl.getInstance().addBiome(biome);
     }
 
@@ -100,7 +100,7 @@ public class BiomeAPI {
     public static void init(World world, long seed) {
         // Call this to force biome registry event happen before init of regions
         //noinspection ResultOfMethodCallIgnored
-        class_153.method_786(0, 0);
+        Biome.method_786(0, 0);
 
         if (overworldProvider == null) {
             List<BiomeProvider> biomes = overworldProviders

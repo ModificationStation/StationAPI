@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.impl.recipe;
 
 import com.mojang.datafixers.util.Either;
-import net.minecraft.class_159;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
@@ -29,11 +29,11 @@ public class StationShapelessRecipe implements CraftingRecipe, StationRecipe {
     }
 
     @Override
-    public boolean matches(class_159 arg) {
+    public boolean matches(CraftingInventory arg) {
         matchedIngredients.clear();
         for (int y = 0; y < 3; ++y) {
             for (int x = 0; x < 3; ++x) {
-                ItemStack itemToTest = arg.method_974(x, y);
+                ItemStack itemToTest = arg.getStack(x, y);
                 if (itemToTest == null) continue;
                 boolean noMatch = true;
                 for (int i = 0, ingredientsLength = ingredients.length; i < ingredientsLength; i++) {
@@ -66,7 +66,7 @@ public class StationShapelessRecipe implements CraftingRecipe, StationRecipe {
     }
 
     @Override
-    public ItemStack craft(class_159 arg) {
+    public ItemStack craft(CraftingInventory arg) {
         return output.copy();
     }
 

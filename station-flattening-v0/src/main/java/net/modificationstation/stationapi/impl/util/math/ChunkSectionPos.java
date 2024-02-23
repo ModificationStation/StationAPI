@@ -4,9 +4,9 @@
 package net.modificationstation.stationapi.impl.util.math;
 
 import it.unimi.dsi.fastutil.longs.LongConsumer;
-import net.minecraft.class_43;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Position;
 import net.modificationstation.stationapi.api.util.math.StationBlockPos;
@@ -77,8 +77,8 @@ public class ChunkSectionPos
         return new ChunkSectionPos(ChunkSectionPos.unpackX(packed), ChunkSectionPos.unpackY(packed), ChunkSectionPos.unpackZ(packed));
     }
 
-    public static ChunkSectionPos from(class_43 chunk) {
-        return ChunkSectionPos.from(new ChunkPos(chunk.field_962, chunk.field_963), chunk.field_956.getBottomSectionCoord());
+    public static ChunkSectionPos from(Chunk chunk) {
+        return ChunkSectionPos.from(new ChunkPos(chunk.x, chunk.z), chunk.world.getBottomSectionCoord());
     }
 
     /**

@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.item.client;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.container.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.slot.Slot;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 // TODO: make this use translation keys instead and automatically add lines depending on the translated text's width.
-@Mixin(ContainerScreen.class)
+@Mixin(HandledScreen.class)
 class ContainerScreenMixin extends Screen {
     @Unique
     private boolean cancelTooltipRender;
@@ -33,7 +33,7 @@ class ContainerScreenMixin extends Screen {
         cancelTooltipRender = StationAPI.EVENT_BUS.post(
                 TooltipRenderEvent.builder()
                         .itemStack(slot.getStack())
-                        .container((ContainerScreen) (Object) this)
+                        .container((HandledScreen) (Object) this)
                         .textManager(this.textRenderer)
                         .inventory(inventory)
                         .containerX(containerX).containerY(containerY)
