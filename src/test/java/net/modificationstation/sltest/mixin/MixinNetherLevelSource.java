@@ -8,7 +8,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.world.HeightLimitView;
-import net.modificationstation.stationapi.impl.world.StationDimension;
 import net.modificationstation.stationapi.impl.world.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.world.chunk.ChunkSectionsAccessor;
 import org.spongepowered.asm.mixin.Mixin;
@@ -128,7 +127,6 @@ public class MixinNetherLevelSource {
 
     @Unique
     private boolean canApply() {
-        StationDimension dimension = StationDimension.class.cast(field_1350.dimension);
-        return dimension.getActualWorldHeight() != 128;
+        return field_1350.getHeight() != 128;
     }
 }

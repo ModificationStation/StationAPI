@@ -74,6 +74,9 @@
       ],
       "net/minecraft/class_283": [
         "net/modificationstation/stationapi/api/block/entity/StationFlatteningPistonBlockEntity"
+      ],
+      "net/minecraft/class_50": [
+        "net/modificationstation/stationapi/api/world/dimension/StationDimension"
       ]
     }
   }

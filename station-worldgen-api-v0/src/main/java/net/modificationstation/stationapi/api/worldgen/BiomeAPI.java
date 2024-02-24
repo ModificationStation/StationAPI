@@ -10,7 +10,6 @@ import net.modificationstation.stationapi.api.event.worldgen.biome.BiomeModifica
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeProvider;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeRegionsProvider;
-import net.modificationstation.stationapi.impl.world.StationDimension;
 import net.modificationstation.stationapi.impl.worldgen.NetherBiomeProviderImpl;
 import net.modificationstation.stationapi.impl.worldgen.OverworldBiomeProviderImpl;
 
@@ -131,7 +130,7 @@ public class BiomeAPI {
         
         if (!MODIFICATIONS_APPLIED.getBoolean(world)) {
             MODIFICATIONS_APPLIED.put(world, true);
-            ((StationDimension) world.dimension).getBiomes().forEach(biome -> {
+            world.dimension.getBiomes().forEach(biome -> {
                 StationAPI.EVENT_BUS.post(BiomeModificationEvent.builder().biome(biome).world(world).build());
             });
         }

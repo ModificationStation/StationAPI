@@ -66,11 +66,11 @@ transitive-accessible	method	net/minecraft/block/WorkbenchBlock	<init>	(I)V
 
 # Items
 transitive-accessible	method	net/minecraft/item/Item	<init>	(I)V
-transitive-accessible	method	net/minecraft/item/Item	setFuel	(Z)Lnet/minecraft/item/Item;
+transitive-accessible	method	net/minecraft/item/Item	setHasSubtypes	(Z)Lnet/minecraft/item/Item;
 transitive-accessible	method	net/minecraft/item/Item	setMaxDamage	(I)Lnet/minecraft/item/Item;
 transitive-accessible	method	net/minecraft/item/AxeItem	<init>	(ILnet/minecraft/item/ToolMaterial;)V
 transitive-accessible	method	net/minecraft/item/PickaxeItem	<init>	(ILnet/minecraft/item/ToolMaterial;)V
 transitive-accessible	method	net/minecraft/item/ToolItem	<init>	(IILnet/minecraft/item/ToolMaterial;[Lnet/minecraft/block/Block;)V
 transitive-accessible	method	net/minecraft/item/MapItem	<init>	(I)V
 transitive-accessible	method	net/minecraft/class_561	<init>	(I)V
-transitive-accessible	method	net/minecraft/item/RecordItem	<init>	(ILjava/lang/String;)V
+transitive-accessible	method	net/minecraft/item/MusicDiscItem	<init>	(ILjava/lang/String;)V

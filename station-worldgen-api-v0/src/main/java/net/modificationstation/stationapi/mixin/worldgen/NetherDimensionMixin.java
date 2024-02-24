@@ -4,7 +4,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.NetherDimension;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
-import net.modificationstation.stationapi.impl.world.StationDimension;
 import net.modificationstation.stationapi.impl.worldgen.NetherBiomeSourceImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collection;
 
 @Mixin(NetherDimension.class)
-class NetherDimensionMixin extends Dimension implements StationDimension {
+class NetherDimensionMixin extends Dimension {
     @Inject(
             method = "method_1769",
             at = @At("TAIL")
