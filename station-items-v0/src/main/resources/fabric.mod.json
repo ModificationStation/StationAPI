@@ -25,6 +25,9 @@
     "stationapi:event_bus_client": [
       "net.modificationstation.stationapi.impl.client.render.item.CustomItemOverlayImpl",
       "net.modificationstation.stationapi.impl.client.gui.screen.container.CustomTooltipRendererImpl"
+    ],
+    "main": [
+      "net.modificationstation.stationapi.impl.packet.StationItemsNetworkingImpl"
     ]
   },
   "mixins": [

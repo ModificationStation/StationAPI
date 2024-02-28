@@ -16,7 +16,9 @@
   ],
   "server": [
     "server.class_70Mixin",
-    "server.ServerPlayNetworkHandlerMixin"
+    "server.ServerPlayNetworkHandlerMixin",
+    "server.network.ServerPlayerEntityMixin",
+    "server.network.ServerPlayNetworkHandlerMixin"
   ],
   "client": [
     "client.ContainerScreenMixin",

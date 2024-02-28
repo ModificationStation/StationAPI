@@ -4,6 +4,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.client.item.CustomTooltipProvider;
 import net.modificationstation.stationapi.api.item.StationItemNbt;
 import net.modificationstation.stationapi.api.template.item.TemplateItem;
 import net.modificationstation.stationapi.api.util.Identifier;
@@ -13,7 +14,7 @@ import java.util.Random;
 import static net.modificationstation.sltest.SLTest.NAMESPACE;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
-public class NBTItem extends TemplateItem {
+public class NBTItem extends TemplateItem implements CustomTooltipProvider {
 
     protected NBTItem(Identifier id) {
         super(id);
@@ -44,5 +45,13 @@ public class NBTItem extends TemplateItem {
 //        CompoundTag newChunk = NbtHelper.update(TypeReferences.CHUNK, chunkTag);
 //        System.out.println(((CompoundTag) newChunk.getCompoundTag("Level").getListTag("Entities").get(0)).getCompoundTag("Item").getString(STATION_ID));
         return super.use(arg, arg2, arg3);
+    }
+
+    @Override
+    public String[] getTooltip(ItemStack stack, String originalTooltip) {
+        return new String[] {
+                originalTooltip,
+                String.valueOf(stack.getStationNbt().getInt(of(NAMESPACE, "rand_num").toString()))
+        };
     }
 }
