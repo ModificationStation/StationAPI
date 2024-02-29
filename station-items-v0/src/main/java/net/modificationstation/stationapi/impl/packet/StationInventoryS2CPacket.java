@@ -40,7 +40,7 @@ public class StationInventoryS2CPacket extends InventoryS2CPacket implements Ide
                 ItemStack stack = new ItemStack(s, by, s2);
 
                 if (!stream.readBoolean())
-                    StationNBTSetter.cast(contents[i]).setStationNbt((NbtCompound) NbtElement.readTag(stream));
+                    StationNBTSetter.cast(stack).setStationNbt((NbtCompound) NbtElement.readTag(stream));
 
                 this.contents[i] = stack;
             }
