@@ -19,7 +19,7 @@ import java.util.function.Function;
 @Mixin(Item.class)
 @EnvironmentInterface(value = EnvType.CLIENT, itf = StationRendererItem.class)
 abstract class ItemMixin implements StationRendererItem {
-    @Shadow public abstract Item method_458(int i);
+    @Shadow public abstract Item setTextureId(int i);
 
     @Shadow public abstract Item setTexturePosition(int i, int j);
 
@@ -35,7 +35,7 @@ abstract class ItemMixin implements StationRendererItem {
     @Unique
     public Atlas.Sprite setTexture(Identifier textureIdentifier) {
         Atlas.Sprite texture = ((ExpandableAtlas) getAtlas()).addTexture(textureIdentifier);
-        method_458(texture.index);
+        setTextureId(texture.index);
         return texture;
     }
 
@@ -45,7 +45,7 @@ abstract class ItemMixin implements StationRendererItem {
     @Unique
     public Atlas.Sprite setTexture(String texturePath) {
         Atlas.Sprite texture = ((ExpandableAtlas) getAtlas()).addTexture(texturePath);
-        method_458(texture.index);
+        setTextureId(texture.index);
         return texture;
     }
 
@@ -54,7 +54,7 @@ abstract class ItemMixin implements StationRendererItem {
     @Unique
     public <E extends StationTextureBinder> E setTextureBinder(Identifier staticReference, Function<Atlas.Sprite, E> initializer) {
         E textureBinder = ((ExpandableAtlas) getAtlas()).addTextureBinder(staticReference, initializer);
-        method_458(textureBinder.field_1412);
+        setTextureId(textureBinder.field_1412);
         return textureBinder;
     }
 }
