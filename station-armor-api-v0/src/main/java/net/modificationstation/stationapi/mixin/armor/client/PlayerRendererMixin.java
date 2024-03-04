@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.mixin.armor.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -14,8 +15,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
+import java.util.Map;
+
 @Mixin(PlayerEntityRenderer.class)
 class PlayerRendererMixin extends LivingEntityRenderer {
+    @Unique private static final Map<Identifier, String[]> STAPI_CACHE = new Object2ObjectOpenHashMap<>();
+    
     public PlayerRendererMixin(EntityModel model, float f) {
         super(model, f);
     }
@@ -34,11 +39,22 @@ class PlayerRendererMixin extends LivingEntityRenderer {
             PlayerEntity player, int i, float f,
             @Local(index = 6) ArmorItem armor
     ) {
-        fallback.call(renderer, armor instanceof ArmorTextureProvider provider ? stationapi_getTexturePath(provider.getTexture(armor), i) : texture);
+        if (armor instanceof ArmorTextureProvider provider) {
+            Identifier id = provider.getTexture(armor);
+            String[] textures = STAPI_CACHE.computeIfAbsent(id, k -> {
+                String[] data = new String[4];
+                for (byte n = 0; n < 4; n++) {
+                    data[n] = stationapi_getTexturePath(id, n);
+                }
+                return data;
+            });
+            fallback.call(renderer, textures[i]);
+        }
+        fallback.call(renderer, texture);
     }
 
     @Unique
     private String stationapi_getTexturePath(Identifier identifier, int armorIndex) {
-        return "assets/" + identifier.namespace + "/stationapi/textures/armor/" + identifier.path.replace(".", "/") + (armorIndex == 2 ? "_2" : "_1") + ".png";
+        return "/assets/" + identifier.namespace + "/stationapi/textures/armor/" + identifier.path.replace(".", "/") + (armorIndex == 2 ? "_2.png" : "_1.png");
     }
 }
