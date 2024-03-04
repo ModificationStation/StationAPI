@@ -50,7 +50,7 @@ class PlayerRendererMixin extends LivingEntityRenderer {
             });
             fallback.call(renderer, textures[i]);
         }
-        fallback.call(renderer, texture);
+        else fallback.call(renderer, texture);
     }
 
     @Unique
