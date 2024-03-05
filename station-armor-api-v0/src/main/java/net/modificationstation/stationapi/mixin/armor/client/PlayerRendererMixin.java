@@ -41,13 +41,8 @@ class PlayerRendererMixin extends LivingEntityRenderer {
     ) {
         if (armor instanceof ArmorTextureProvider provider) {
             Identifier id = provider.getTexture(armor);
-            String[] textures = STAPI_CACHE.computeIfAbsent(id, k -> {
-                String[] data = new String[4];
-                for (byte n = 0; n < 4; n++) {
-                    data[n] = stationapi_getTexturePath(id, n);
-                }
-                return data;
-            });
+            String[] textures = STAPI_CACHE.computeIfAbsent(id, k -> new String[4]);
+            if (textures[i] == null) textures[i] = stationapi_getTexturePath(id, i);
             fallback.call(renderer, textures[i]);
         }
         else fallback.call(renderer, texture);
