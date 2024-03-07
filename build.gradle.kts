@@ -207,8 +207,6 @@ base.archivesName.set(project.properties["archives_base_name"] as String)
 version = (if (project.hasProperty("override_version")) (project.properties["override_version"] as String).substring(0, 7) else project.properties["mod_version"])!!
 
 subprojects {
-    assert(parent != null)
-
     // This makes the older pre-releases easier to clean up.
     if(rootProject.hasProperty("override_version")) {
         group = (project.properties["maven_group"] as String) + ".${project.properties["archivesBaseName"]}.${(rootProject.properties["override_version"] as String).substring(0, 7)}"
@@ -237,6 +235,7 @@ subprojects {
 
     artifacts {
         artifacts.add("out", tasks.getByName("remapJar"))
+        artifacts.add("dev", tasks.getByName("jar"))
         artifacts.add("test", tasks.getByName("testJar"))
     }
 
