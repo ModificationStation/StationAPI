@@ -38,9 +38,9 @@ allprojects {
     }
 
     configurations {
-        create("implementationOnly") //A non-transitive implementation
-        this["runtimeClasspath"].extendsFrom(this["implementationOnly"])
-        this["compileClasspath"].extendsFrom(this["implementationOnly"])
+        val implementationOnly = create("implementationOnly") //A non-transitive implementation
+        runtimeClasspath.get().extendsFrom(implementationOnly)
+        compileClasspath.get().extendsFrom(implementationOnly)
 
         // Required cause loom 0.14 for some reason doesn"t remove asm-all 4.1. Ew.
         all {
@@ -165,8 +165,8 @@ allprojects {
         publications {
             create<MavenPublication>("mavenJava") {
                 afterEvaluate {
-//                    artifact(tasks.getByName("remapJar")).builtBy(tasks.getByName("remapJar"))
-//                    artifact(tasks.getByName("remapSourcesJar")).builtBy(tasks.getByName("remapJar"))
+                    artifact(tasks.getByName("remapJar")).builtBy(tasks.getByName("remapJar"))
+                    artifact(tasks.getByName("remapSourcesJar")).builtBy(tasks.getByName("remapJar"))
                 }
 
                 pom {
@@ -208,8 +208,6 @@ version = (if (project.hasProperty("override_version")) (project.properties["ove
 
 subprojects {
     assert(parent != null)
-
-//    tasks.getByName("remapJar").dependsOn(parent!!.tasks.getByName("remapJar"))
 
     // This makes the older pre-releases easier to clean up.
     if(rootProject.hasProperty("override_version")) {
@@ -266,7 +264,6 @@ dependencies {
     include("com.github.mineLdiver:expressions:${project.properties["expressions_version"]}")
     include("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
     include("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
-    //noinspection GradlePackageUpdate
     include("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
     include("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
     include("maven.modrinth:spasm:${project.properties["spasm_version"]}")
