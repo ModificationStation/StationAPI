@@ -1,8 +1,8 @@
 import net.modificationstation.stationapi.gradle.SubprojectHelpers.getSubprojectVersion
-import net.modificationstation.stationapi.gradle.SubprojectHelpers.moduleDependencies
-archivesBaseName = "station-audio-loader-v0"
+import net.modificationstation.stationapi.gradle.SubprojectHelpers.addModuleDependencies
+base.archivesName.set("station-audio-loader-v0")
 version = getSubprojectVersion(project, "1.0.0")
 
-moduleDependencies(project,
-        'station-api-base'
+addModuleDependencies(project,
+        "station-api-base"
 )

@@ -1,170 +1,124 @@
-import net.fabricmc.loom.util.GroovyXmlUtil
+// tl;dr, tells us off for using properties for versions. Too bad, we don't like trawling this file for version numbers.
+@file:Suppress("GradlePackageVersionRange")
+
+import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependencyXML
 
 plugins {
     id("maven-publish")
-    id('babric-loom') version '1.5.3'
+    id("babric-loom") version "1.5.3"
 }
 
-@SuppressWarnings('unused') // Shut up, it IS used.
-static def getSubprojectVersion(project, ver) {
-    return "${project.mod_version}-$ver"
-}
-
-@SuppressWarnings('unused')
-def moduleDependencies(Project project, String... projectNames) {
-    project.with {
-        def modules = projectNames.collect { dependencies.project(path: ":$it", configuration: 'dev') }
-
-        dependencies {
-            modules.each {
-                implementationOnly it
-            }
-        }
-        publishing {
-            publications {
-                mavenJava(MavenPublication) {
-                    pom.withXml {
-                        addDependency(it, 'implementation', *modules)
-                    }
-                }
-            }
-        }
-    }
-}
-
-void addDependency(XmlProvider xml, String scope, Object... dependencies) {
-    def dependenciesNode = GroovyXmlUtil.getOrCreateNode(xml.asNode(), "dependencies")
-
-    dependencies.each {dependency ->
-        dependenciesNode.appendNode('dependency').with {
-            appendNode('groupId', dependency.group)
-            appendNode('artifactId', dependency.name)
-            appendNode('version', dependency.version)
-            appendNode('scope', scope)
-        }
-    }
+// https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
+inline fun <reified C> Project.configure(name: String, configuration: C.() -> Unit) {
+    (tasks.getByName(name) as C).configuration()
 }
 
 allprojects {
-    apply plugin: 'maven-publish'
-    apply plugin: 'babric-loom'
+    apply(plugin = "maven-publish")
+    apply(plugin = "babric-loom")
 
-    sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
+    java.sourceCompatibility = JavaVersion.VERSION_17
+    java.targetCompatibility = JavaVersion.VERSION_17
 
     repositories {
-        maven {
-            name = 'Froge'
-            url = 'https://maven.minecraftforge.net/'
-        }
-        maven {
-            name = 'Babric'
-            url = 'https://maven.glass-launcher.net/babric'
-        }
-        maven {
-            name = 'Glass Snapshots'
-            url = 'https://maven.glass-launcher.net/snapshots'
-        }
-        maven {
-            name = 'Glass Releases'
-            url = 'https://maven.glass-launcher.net/releases'
-        }
-        maven {
-            name = 'Jitpack'
-            url = 'https://jitpack.io/'
-        }
+        maven(url = "https://maven.minecraftforge.net/")
+        maven(url = "https://maven.glass-launcher.net/babric")
+        maven(url = "https://maven.glass-launcher.net/snapshots")
+        maven(url = "https://maven.glass-launcher.net/releases")
+        maven(url = "https://jitpack.io/")
         mavenCentral()
         exclusiveContent {
             forRepository {
-                maven {
-                    name = "Modrinth"
-                    url = "https://api.modrinth.com/maven"
-                }
+                maven(url = "https://api.modrinth.com/maven")
             }
             filter {
-                includeGroup "maven.modrinth"
+                includeGroup("maven.modrinth")
             }
         }
     }
 
     configurations {
-        implementationOnly //A non-transitive implementation
-        runtimeClasspath.extendsFrom implementationOnly
-        compileClasspath.extendsFrom implementationOnly
+        create("implementationOnly") //A non-transitive implementation
+        this["runtimeClasspath"].extendsFrom(this["implementationOnly"])
+        this["compileClasspath"].extendsFrom(this["implementationOnly"])
 
-        // Required cause loom 0.14 for some reason doesn't remove asm-all 4.1. Ew.
-        all*.exclude group: 'org.ow2.asm', module: "asm-debug-all"
-        all*.exclude group: 'org.ow2.asm', module: "asm-all"
+        // Required cause loom 0.14 for some reason doesn"t remove asm-all 4.1. Ew.
+        all {
+            exclude(group = "org.ow2.asm", module = "asm-debug-all")
+            exclude(group = "org.ow2.asm", module = "asm-all")
+        }
     }
 
     dependencies {
-        implementation "org.slf4j:slf4j-api:1.8.0-beta4"
-        implementation 'org.apache.logging.log4j:log4j-slf4j18-impl:2.17.2'
+        implementation("org.slf4j:slf4j-api:1.8.0-beta4")
+        implementation("org.apache.logging.log4j:log4j-slf4j18-impl:2.17.2")
 
-        implementation "org.apache.logging.log4j:log4j-core:2.17.2"
-        implementation "com.google.guava:guava:31.1-jre"
-        implementation "com.google.code.gson:gson:2.9.0"
+        implementation("org.apache.logging.log4j:log4j-core:2.17.2")
+        implementation("com.google.guava:guava:31.1-jre")
+        implementation("com.google.code.gson:gson:2.9.0")
 
         //to change the versions see the gradle.properties file
-        minecraft "com.mojang:minecraft:${project.minecraft_version}"
+        minecraft("com.mojang:minecraft:${project.properties["minecraft_version"]}")
 
-        mappings "net.glasslauncher:biny:${project.yarn_mappings}:v2"
+        mappings("net.glasslauncher:biny:${project.properties["yarn_mappings"]}:v2")
 
-        modImplementation "babric:fabric-loader:${project.loader_version}"
+        modImplementation("babric:fabric-loader:${project.properties["loader_version"]}")
 
-        implementationOnly 'org.apache.commons:commons-lang3:3.12.0'
-        implementationOnly 'commons-io:commons-io:2.11.0'
-        implementation "net.jodah:typetools:${project.typetools_version}"
-        implementation "com.github.mineLdiver:expressions:${project.expressions_version}"
-        implementation "com.github.mineLdiver:UnsafeEvents:${project.unsafeevents_version}"
-        implementation "it.unimi.dsi:fastutil:${project.fastutil_version}"
+        "implementationOnly"("org.apache.commons:commons-lang3:3.12.0")
+        "implementationOnly"("commons-io:commons-io:2.11.0")
+        implementation("net.jodah:typetools:${project.properties["typetools_version"]}")
+        implementation("com.github.mineLdiver:expressions:${project.properties["expressions_version"]}")
+        implementation("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
+        implementation("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
         //noinspection GradlePackageUpdate
-        implementation "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
-        implementation "com.mojang:datafixerupper:${project.dfu_version}"
-        implementation "maven.modrinth:spasm:${project.spasm_version}"
-        implementation "com.oath.cyclops:cyclops:${project.cyclops_version}"
+        implementation("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
+        implementation("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
+        implementation("maven.modrinth:spasm:${project.properties["spasm_version"]}")
+        implementation("com.oath.cyclops:cyclops:${project.properties["cyclops_version"]}")
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
-        compileOnly 'org.projectlombok:lombok:1.18.30'
-        annotationProcessor 'org.projectlombok:lombok:1.18.30'
-        testCompileOnly 'org.projectlombok:lombok:1.18.30'
-        testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+        compileOnly("org.projectlombok:lombok:1.18.30")
+        annotationProcessor("org.projectlombok:lombok:1.18.30")
+        testCompileOnly("org.projectlombok:lombok:1.18.30")
+        testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
 
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
-        implementationOnly 'org.jetbrains:annotations:23.0.0'
+        "implementationOnly"("org.jetbrains:annotations:23.0.0")
 
-        modLocalRuntime("com.github.calmilamsy:ModMenu:${project.modmenu_version}") {
-            transitive false
+        modLocalRuntime("com.github.calmilamsy:ModMenu:${project.properties["modmenu_version"]}") {
+            isTransitive = false
         }
 
-        implementation "blue.endless:jankson:1.2.1"
-        modLocalRuntime("net.glasslauncher.mods:GlassConfigAPI:${project.gcapi_version}") {
-            transitive false
+        implementation("blue.endless:jankson:1.2.1")
+        modLocalRuntime("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") {
+            isTransitive = false
         }
-        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.hmi_version}") {
-            transitive false
+        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.properties["hmi_version"]}") {
+            isTransitive = false
         }
-//        modLocalRuntime "maven.modrinth:mojangfix:${project.mojangfix_version}"
+        // Optional bugfix mod for testing qol. Remove the // to enable.
+        //modLocalRuntime "maven.modrinth:mojangfix:${project.properties["mojangfix_version"]}"
     }
 
     loom {
         gluedMinecraftJar()
-        customMinecraftManifest.set("https://babric.github.io/manifest-polyfill/${minecraft_version}.json")
+        customMinecraftManifest.set("https://babric.github.io/manifest-polyfill/${project.properties["minecraft_version"]}.json")
         intermediaryUrl.set("https://maven.glass-launcher.net/babric/babric/intermediary/%1\$s/intermediary-%1\$s-v2.jar")
     }
 
     sourceSets {
         test {
-            compileClasspath += main.compileClasspath + main.output
-            runtimeClasspath += main.runtimeClasspath + main.output
+            compileClasspath += sourceSets["main"].compileClasspath + sourceSets["main"].output
+            runtimeClasspath += sourceSets["main"].runtimeClasspath + sourceSets["main"].output
         }
     }
 
-    processResources {
-        inputs.property "version", project.version
+    configure<ProcessResources>("processResources") {
+        inputs.property("version", project.properties["version"])
 
         filesMatching("fabric.mod.json") {
-            expand "version": project.version
+            expand(mapOf("version" to project.properties["version"]))
         }
     }
 
@@ -176,69 +130,64 @@ allprojects {
     }
 
     // Include license inside of the mod jar
-    jar {
+    configure<Jar>("jar") {
         from("LICENSE") {
-            rename { "${it}_${project.archivesBaseName}" }
+            rename { "${it}_${project.properties["archivesBaseName"]}" }
         }
     }
 
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly
     // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
+    tasks.withType<JavaCompile> {
+        options.encoding = "UTF-8"
     }
 
     // Makes gradle shut up
-    compileJava {
-        options.compilerArgs << '-XDignore.symbol.file'
-        options.fork = true
-        options.forkOptions.executable = System.getProperty("java.home") + "/bin/javac" + (System.getProperty("os.name").startsWith("Windows")? ".exe" : "")
+    configure<JavaCompile>("compileJava") {
+        options.compilerArgs.add("-XDignore.symbol.file")
+        options.isFork = true
+        options.forkOptions.executable = System.getProperty("java.home") + "/bin/javac" + (if (System.getProperty("os.name").startsWith("Windows")) ".exe" else "")
     }
 
     publishing {
         repositories {
             if (project.hasProperty("glass_maven_url")) {
                 maven {
-                    url = "${project.glass_maven_url}"
+                    url = uri("${project.properties["glass_maven_url"]}")
                     credentials {
-                        username "${project.glass_maven_username}"
-                        password "${project.glass_maven_password}"
+                        username = "${project.properties["glass_maven_username"]}"
+                        password = "${project.properties["glass_maven_password"]}"
                     }
                 }
             }
         }
         publications {
-            mavenJava(MavenPublication) {
+            create<MavenPublication>("mavenJava") {
                 afterEvaluate {
-                    artifact(remapJar) {
-                        builtBy remapJar
-                    }
-
-                    artifact(sourcesJar) {
-                        builtBy remapSourcesJar
-                    }
+//                    artifact(tasks.getByName("remapJar")).builtBy(tasks.getByName("remapJar"))
+//                    artifact(tasks.getByName("remapSourcesJar")).builtBy(tasks.getByName("remapJar"))
                 }
 
                 pom {
                     withXml {
                         //noinspection GroovyImplicitNullArgumentCall Not an implicit null, you fuck
-                        def depsNode = asNode().appendNode("dependencies")
+                        val depsNode = asNode().appendNode("dependencies")
                         // Jank solution to an annoying issue
-                        ArrayList<String[]> deps = new ArrayList<>()
-                        deps.add(["net.jodah", "typetools", "${project.typetools_version}"] as String[])
-                        deps.add(["com.github.mineLdiver", "expressions", "${project.expressions_version}"] as String[])
-                        deps.add(["com.github.mineLdiver", "UnsafeEvents", "${project.unsafeevents_version}"] as String[])
-                        deps.add(["it.unimi.dsi", "fastutil", "${project.fastutil_version}"] as String[])
-                        deps.add(["com.github.ben-manes.caffeine", "caffeine", "${project.caffeine_version}"] as String[])
-                        deps.add(["com.mojang", "datafixerupper", "${project.dfu_version}"] as String[])
-                        deps.add(["org.apache.commons", "commons-lang3", "3.5"] as String[])
-                        deps.add(["commons-io", "commons-io", "2.5"] as String[])
-                        deps.add(["maven.modrinth", "spasm", "${project.spasm_version}"] as String[])
-                        deps.add(["com.github.llamalad7.mixinextras", "mixinextras-fabric", "${project.mixinextras_version}"] as String[])
-                        deps.add(["com.oath.cyclops", "cyclops", "${project.cyclops_version}"] as String[])
-                        deps.each {
-                            def depNode = depsNode.appendNode("dependency")
+                        val deps = arrayListOf<Array<String>>()
+                        deps.add(arrayOf("net.jodah", "typetools", "${project.properties["typetools_version"]}"))
+                        deps.add(arrayOf("com.github.mineLdiver", "expressions", "${project.properties["expressions_version"]}"))
+                        deps.add(arrayOf("com.github.mineLdiver", "UnsafeEvents", "${project.properties["unsafeevents_version"]}"))
+                        deps.add(arrayOf("it.unimi.dsi", "fastutil", "${project.properties["fastutil_version"]}"))
+                        deps.add(arrayOf("com.github.ben-manes.caffeine", "caffeine", "${project.properties["caffeine_version"]}"))
+                        deps.add(arrayOf("com.mojang", "datafixerupper", "${project.properties["dfu_version"]}"))
+                        deps.add(arrayOf("org.apache.commons", "commons-lang3", "3.5"))
+                        deps.add(arrayOf("commons-io", "commons-io", "2.5"))
+                        deps.add(arrayOf("maven.modrinth", "spasm", "${project.properties["spasm_version"]}"))
+                        deps.add(arrayOf("com.github.llamalad7.mixinextras", "mixinextras-fabric", "${project.properties["mixinextras_version"]}"))
+                        deps.add(arrayOf("com.oath.cyclops", "cyclops", "${project.properties["cyclops_version"]}"))
+                        deps.forEach {
+                            val depNode = depsNode.appendNode("dependency")
                             depNode.appendNode("groupId", it[0])
                             depNode.appendNode("artifactId", it[1])
                             depNode.appendNode("version", it[2])
@@ -253,57 +202,59 @@ allprojects {
 
 //Subprojects will set these themselves
 //Not neatly. - calm
-project.group = project.maven_group
-project.archivesBaseName = project.archives_base_name
-project.version = project.hasProperty("override_version")? project.override_version.substring(0, 7) : project.mod_version
+group = project.properties["maven_group"]!!
+base.archivesName.set(project.properties["archives_base_name"] as String)
+version = (if (project.hasProperty("override_version")) (project.properties["override_version"] as String).substring(0, 7) else project.properties["mod_version"])!!
 
-subprojects {subproject ->
+subprojects {
+    assert(parent != null)
 
-    assert this.remapJar != remapJar //No accidents moving this around
-    this.remapJar.dependsOn(remapJar)
+//    tasks.getByName("remapJar").dependsOn(parent!!.tasks.getByName("remapJar"))
 
-    group = project.maven_group + ".${project.parent.archivesBaseName}.${project.hasProperty("override_version")? project.override_version.substring(0, 7) : project.mod_version}"
+    // This makes the older pre-releases easier to clean up.
+    if(rootProject.hasProperty("override_version")) {
+        group = (project.properties["maven_group"] as String) + ".${project.properties["archivesBaseName"]}.${(rootProject.properties["override_version"] as String).substring(0, 7)}"
+    }
 
     configurations {
-        out {
-            canBeConsumed = true
-            canBeResolved = false
+        create("out") {
+            isCanBeConsumed = true
+            isCanBeResolved = false
         }
-        dev {
-            canBeConsumed = true
-            canBeResolved = false
+        create("dev") {
+            isCanBeConsumed = true
+            isCanBeResolved = false
         }
-        test {
-            canBeConsumed = true
-            canBeResolved = false
+        create("test") {
+            isCanBeConsumed = true
+            isCanBeResolved = false
         }
     }
 
-    task testJar(type: Jar) {
-        from sourceSets.test.output
-        archiveClassifier.convention('test')
-        archiveClassifier.set('test')
+    tasks.register<Jar>("testJar") {
+        from(sourceSets["test"].output)
+        archiveClassifier.convention("test")
+        archiveClassifier.set("test")
     }
 
     artifacts {
-        out remapJar
-        dev jar
-        test testJar
+        artifacts.add("out", tasks.getByName("remapJar"))
+        artifacts.add("test", tasks.getByName("testJar"))
     }
 
     //Attach the subproject to the root project
-    this.dependencies {
-        implementationOnly project(path: ":$name", configuration: 'dev')
-        testImplementation project(path: ":$name", configuration: 'test')
-        include project(path: ":$name", configuration: 'out')
+    rootProject.dependencies {
+        "implementationOnly"(project(path = ":$name", configuration = "dev"))
+        testImplementation(project(path = ":$name", configuration = "test"))
+        include(project(path = ":$name", configuration = "out"))
     }
 
     //Mark the subproject as a compile time dependency of the root project
-    this.publishing {
+    publishing {
         publications {
-            mavenJava(MavenPublication) {
-                pom.withXml {xml ->
-                    addDependency(xml, 'compile', subproject)
+            getByName("mavenJava", MavenPublication::class) {
+                pom.withXml {
+                    addDependencyXML(asNode(), "compile", this)
                 }
             }
         }
@@ -311,48 +262,50 @@ subprojects {subproject ->
 }
 
 dependencies {
-    include "net.jodah:typetools:${project.typetools_version}"
-    include "com.github.mineLdiver:expressions:${project.expressions_version}"
-    include "com.github.mineLdiver:UnsafeEvents:${project.unsafeevents_version}"
-    include "it.unimi.dsi:fastutil:${project.fastutil_version}"
+    include("net.jodah:typetools:${project.properties["typetools_version"]}")
+    include("com.github.mineLdiver:expressions:${project.properties["expressions_version"]}")
+    include("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
+    include("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
     //noinspection GradlePackageUpdate
-    include "com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"
-    include "com.mojang:datafixerupper:${project.dfu_version}"
-    include "maven.modrinth:spasm:${project.spasm_version}"
-    include "com.oath.cyclops:cyclops:${project.cyclops_version}"
-    include "org.reactivestreams:reactive-streams:${project.reactivestreams_version}"
-    include "io.kindedj:kindedj:${project.kindedj_version}"
-    include "org.agrona:Agrona:${project.agrona_version}"
+    include("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
+    include("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
+    include("maven.modrinth:spasm:${project.properties["spasm_version"]}")
+    include("com.oath.cyclops:cyclops:${project.properties["cyclops_version"]}")
+    include("org.reactivestreams:reactive-streams:${project.properties["reactivestreams_version"]}")
+    include("io.kindedj:kindedj:${project.properties["kindedj_version"]}")
+    include("org.agrona:Agrona:${project.properties["agrona_version"]}")
 }
 
 // Makes java shut up
-compileTestJava {
-    options.compilerArgs << '-XDignore.symbol.file'
-    options.fork = true
-    options.forkOptions.executable = System.getProperty("java.home") + "/bin/javac" + (System.getProperty("os.name").startsWith("Windows")? ".exe" : "")
+configure<JavaCompile>("compileTestJava") {
+    options.compilerArgs.add("-XDignore.symbol.file")
+    options.isFork = true
+    options.forkOptions.executable = System.getProperty("java.home") + "/bin/javac" + (if (System.getProperty("os.name").startsWith("Windows")) ".exe" else "")
 }
 
-publishing.publications.mavenJava(MavenPublication) {
-    artifactId project.archives_base_name
+publishing {
+    publications {
+        getByName("mavenJava", MavenPublication::class) {
+            artifactId = project.properties["archives_base_name"] as String
+        }
+    }
 }
 
 loom {
     runs {
         register("runTestmodClient") {
             source("test")
-            //noinspection GroovyImplicitNullArgumentCall
             client()
         }
         register("runTestmodServer") {
             source("test")
-            //noinspection GroovyImplicitNullArgumentCall
             server()
         }
     }
 }
 
-task testJar(type: Jar) {
-    from sourceSets.test.output
-    archiveClassifier.convention('test')
-    archiveClassifier.set('test')
+tasks.register<Jar>("testJar") {
+    from(sourceSets["test"].output)
+    archiveClassifier.convention("test")
+    archiveClassifier.set("test")
 }
