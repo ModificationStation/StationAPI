@@ -2,6 +2,9 @@
 @file:Suppress("GradlePackageVersionRange")
 
 import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependencyXML
+import net.modificationstation.stationapi.gradle.GitHelpers
+
+GitHelpers.forceGoodFileAndLineEndPractises() // Haha, keep your no-newline ends to yourself
 
 plugins {
     id("maven-publish")
