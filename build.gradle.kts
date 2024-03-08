@@ -102,6 +102,10 @@ allprojects {
     }
 
     loom {
+        @Suppress("UnstableApiUsage") // Too bad, this is needed.
+        mixin {
+            useLegacyMixinAp.set(true)
+        }
         gluedMinecraftJar()
         customMinecraftManifest.set("https://babric.github.io/manifest-polyfill/${project.properties["minecraft_version"]}.json")
         intermediaryUrl.set("https://maven.glass-launcher.net/babric/babric/intermediary/%1\$s/intermediary-%1\$s-v2.jar")
@@ -171,7 +175,6 @@ allprojects {
 
                 pom {
                     withXml {
-                        //noinspection GroovyImplicitNullArgumentCall Not an implicit null, you fuck
                         val depsNode = asNode().appendNode("dependencies")
                         // Jank solution to an annoying issue
                         val deps = arrayListOf<Array<String>>()
@@ -209,7 +212,10 @@ version = (if (project.hasProperty("override_version")) (project.properties["ove
 subprojects {
     // This makes the older pre-releases easier to clean up.
     if(rootProject.hasProperty("override_version")) {
-        group = (project.properties["maven_group"] as String) + ".${project.properties["archivesBaseName"]}.${(rootProject.properties["override_version"] as String).substring(0, 7)}"
+        group = (project.properties["maven_group"] as String) + ".${project.properties["archivesBaseName"]}.${(project.properties["override_version"] as String).substring(0, 7)}"
+    }
+    else {
+        group = (project.properties["maven_group"] as String) + ".StationAPI.submodule.${project.properties["archivesBaseName"]}"
     }
 
     configurations {
