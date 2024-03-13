@@ -10,10 +10,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.impl.network.ModdedPacketHandlerSetter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
@@ -24,14 +21,31 @@ public class ClientVanillaChecker {
 
     @EventListener
     private static void handleServerLogin(ServerLoginSuccessEvent event) {
-        if (Arrays.asList(event.loginHelloPacket.username.split(";")).contains(NAMESPACE.toString())) {
-            ((ModdedPacketHandlerSetter) event.clientNetworkHandler).setModded();
+        List<String> splitName = Arrays.asList(event.loginHelloPacket.username.split(";"));
+        if (splitName.contains(NAMESPACE.toString())) {
             MessagePacket message = new MessagePacket(of(NAMESPACE, "modlist"));
             List<String> mods = new ArrayList<>();
             mods.add(NAMESPACE.getVersion().getFriendlyString());
             FabricLoader.getInstance().getAllMods().stream().map(ModContainer::getMetadata).forEach(modMetadata -> Collections.addAll(mods, modMetadata.getId(), modMetadata.getVersion().getFriendlyString()));
             message.strings = mods.toArray(new String[0]);
             event.clientNetworkHandler.sendPacket(message);
+
+            // This definitely doesn't have a modlist entry.
+            if(splitName.size() <= splitName.indexOf(NAMESPACE.toString()))
+                return;
+
+            String modListString = splitName.get(splitName.indexOf(NAMESPACE.toString()) + 1); // Mod list string should ALWAYS follow stapi's string.
+
+            // If this doesn't contain stationapi, this isn't a stationapi mod list.
+            if(!modListString.contains("stationapi="))
+                return;
+
+            Map<String, String> modList = new HashMap<>();
+            Arrays.stream(modListString.split(":")).forEach(nameVersion -> {
+                String[] nameVersionArr = nameVersion.split("=");
+                modList.put(nameVersionArr[0], nameVersionArr[1]);
+            });
+            ((ModdedPacketHandlerSetter) event.clientNetworkHandler).setModded(modList);
         }
     }
 }

@@ -27,7 +27,8 @@ class ServerLoginNetworkHandlerMixin {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void stationapi_checkModded(LoginHelloPacket arg, CallbackInfo ci, ServerPlayerEntity var2, class_73 var3, Vec3i var4, ServerPlayNetworkHandler var5) {
-        if (((ModdedPacketHandler) this).isModded())
-            ((ModdedPacketHandlerSetter) var5).setModded();
+        ModdedPacketHandler moddedPacketHandler = ((ModdedPacketHandler) this);
+        if (moddedPacketHandler.isModded())
+            ((ModdedPacketHandlerSetter) var5).setModded(moddedPacketHandler.getMods());
     }
 }
