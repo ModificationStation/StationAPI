@@ -17,6 +17,7 @@
   "server": [
     "server.class_70Mixin",
     "server.ServerPlayNetworkHandlerMixin",
+    "server.network.class_174Mixin",
     "server.network.ServerPlayerEntityMixin",
     "server.network.ServerPlayNetworkHandlerMixin"
   ],

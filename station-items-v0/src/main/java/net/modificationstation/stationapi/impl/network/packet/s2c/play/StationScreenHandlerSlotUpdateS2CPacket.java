@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.packet;
+package net.modificationstation.stationapi.impl.network.packet.s2c.play;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;

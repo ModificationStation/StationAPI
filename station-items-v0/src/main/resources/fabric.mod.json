@@ -27,7 +27,10 @@
       "net.modificationstation.stationapi.impl.client.gui.screen.container.CustomTooltipRendererImpl"
     ],
     "main": [
-      "net.modificationstation.stationapi.impl.packet.StationItemsNetworkingImpl"
+      "net.modificationstation.stationapi.impl.network.packet.StationItemsNetworkingImpl"
+    ],
+    "client": [
+      "net.modificationstation.stationapi.impl.client.network.StationItemsClientNetworkingImpl"
     ]
   },
   "mixins": [
