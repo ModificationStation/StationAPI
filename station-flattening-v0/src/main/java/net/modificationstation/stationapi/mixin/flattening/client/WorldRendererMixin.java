@@ -10,16 +10,16 @@ import org.spongepowered.asm.mixin.injection.*;
 
 @Mixin(WorldRenderer.class)
 class WorldRendererMixin {
-    @Shadow private World field_1805;
+    @Shadow private World world;
 
-    @Shadow private Minecraft field_1814;
+    @Shadow private Minecraft client;
 
     @ModifyConstant(
             method = "method_1544",
             constant = @Constant(expandZeroConditions = Constant.Condition.GREATER_THAN_OR_EQUAL_TO_ZERO)
     )
     private int stationapi_changeMinHeight(int value) {
-        return field_1805.getBottomY();
+        return world.getBottomY();
     }
 
     @ModifyConstant(
@@ -30,7 +30,7 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeMinBlockHeight(int value) {
-        return field_1805.getBottomY();
+        return world.getBottomY();
     }
 
     @ModifyConstant(
@@ -38,7 +38,7 @@ class WorldRendererMixin {
             constant = @Constant(intValue = 128)
     )
     private int stationapi_changeMaxHeight(int value) {
-        return field_1805.getTopY();
+        return world.getTopY();
     }
 
     @ModifyConstant(
@@ -46,7 +46,7 @@ class WorldRendererMixin {
             constant = @Constant(intValue = 127)
     )
     private int stationapi_changeMaxBlockHeight(int value) {
-        return field_1805.getTopY() - 1;
+        return world.getTopY() - 1;
     }
 
     @ModifyConstant(
@@ -54,7 +54,7 @@ class WorldRendererMixin {
             constant = @Constant(intValue = 8)
     )
     private int stationapi_changeSectionCount(int value) {
-        return field_1805 == null ? value : field_1805.countVerticalSections();
+        return world == null ? value : world.countVerticalSections();
     }
 
     @ModifyConstant(
@@ -65,7 +65,7 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeBlockIDBitmask1(int value) {
-        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) field_1814.getNetworkHandler();
+        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) client.getNetworkHandler();
         return null == moddedPacketHandler || moddedPacketHandler.isModded() ? 0x0FFFFFFF : value;
     }
 
@@ -77,7 +77,7 @@ class WorldRendererMixin {
             )
     )
     private int stationapi_changeBlockIDBitmask2(int value) {
-        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) field_1814.getNetworkHandler();
+        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) client.getNetworkHandler();
         return null == moddedPacketHandler || moddedPacketHandler.isModded() ? 0x0FFFFFFF : value;
     }
 
@@ -97,7 +97,7 @@ class WorldRendererMixin {
             constant = @Constant(intValue = 8)
     )
     private int stationapi_changeMetaBitshift(int value) {
-        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) field_1814.getNetworkHandler();
+        ModdedPacketHandler moddedPacketHandler = (ModdedPacketHandler) client.getNetworkHandler();
         return null == moddedPacketHandler || moddedPacketHandler.isModded() ? 28 : value;
     }
 
@@ -110,7 +110,7 @@ class WorldRendererMixin {
             index = 3
     )
     private int stationapi_offsetYBlockCoord1(int original) {
-        return field_1805 == null ? original : field_1805.getBottomY() + original;
+        return world == null ? original : world.getBottomY() + original;
     }
 
     @ModifyArg(
@@ -122,7 +122,7 @@ class WorldRendererMixin {
             index = 1
     )
     private int stationapi_offsetYBlockCoord2(int y) {
-        return field_1805.getBottomY() + y;
+        return world.getBottomY() + y;
     }
 
     @ModifyVariable(
@@ -132,7 +132,7 @@ class WorldRendererMixin {
             argsOnly = true
     )
     private int stationapi_modWhateverTheFuckThisIs1(int value) {
-        return value - field_1805.getBottomY();
+        return value - world.getBottomY();
     }
 
     @ModifyVariable(
@@ -142,6 +142,6 @@ class WorldRendererMixin {
             argsOnly = true
     )
     private int stationapi_modWhateverTheFuckThisIs2(int value) {
-        return value - field_1805.getBottomY();
+        return value - world.getBottomY();
     }
 }

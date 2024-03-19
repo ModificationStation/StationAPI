@@ -21,7 +21,7 @@ import java.util.Objects;
 
 @Mixin(WorldRenderer.class)
 class WorldRendererMixin {
-    @Shadow private World field_1805;
+    @Shadow private World world;
     @Shadow public float field_1803;
 
     @Redirect(
@@ -32,10 +32,10 @@ class WorldRendererMixin {
             )
     )
     private void stationapi_renderDamage(BlockRenderManager instance, Block block, int j, int k, int l, int texture, PlayerEntity arg, HitResult arg2, int i, ItemStack arg3, float f) {
-        BlockState state = field_1805.getBlockState(j, k, l);
+        BlockState state = world.getBlockState(j, k, l);
         if (StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state) instanceof VanillaBakedModel)
             instance.renderWithTexture(block, j, k, l, texture);
         else
-            Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer().renderDamage(state, new BlockPos(j, k, l), field_1805, field_1803);
+            Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer().renderDamage(state, new BlockPos(j, k, l), world, field_1803);
     }
 }
