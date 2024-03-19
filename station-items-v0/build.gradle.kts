@@ -10,5 +10,6 @@ addModuleDependencies(project,
         "station-flattening-v0",
         "station-blocks-v0",
         "station-player-api-v0",
-        "station-nbt-v0"
+        "station-nbt-v0",
+        "station-networking-v0"
 )

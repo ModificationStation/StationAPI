@@ -187,7 +187,6 @@ allprojects {
                         deps.add(arrayOf("org.apache.commons", "commons-lang3", "3.5"))
                         deps.add(arrayOf("commons-io", "commons-io", "2.5"))
                         deps.add(arrayOf("maven.modrinth", "spasm", "${project.properties["spasm_version"]}"))
-                        deps.add(arrayOf("com.github.llamalad7.mixinextras", "mixinextras-fabric", "${project.properties["mixinextras_version"]}"))
                         deps.add(arrayOf("com.oath.cyclops", "cyclops", "${project.properties["cyclops_version"]}"))
                         deps.forEach {
                             val depNode = depsNode.appendNode("dependency")
