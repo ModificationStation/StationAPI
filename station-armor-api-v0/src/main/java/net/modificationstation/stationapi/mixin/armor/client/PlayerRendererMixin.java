@@ -51,6 +51,6 @@ class PlayerRendererMixin extends LivingEntityRenderer {
 
     @Unique
     private String stationapi_getTexturePath(Identifier identifier, int armorIndex) {
-        return "/assets/" + identifier.namespace + "/stationapi/textures/armor/" + identifier.path.replace(".", "/") + (armorIndex == 2 ? "_2.png" : "_1.png");
+        return "/assets/" + identifier.namespace + "/stationapi/textures/armor/" + identifier.path + (armorIndex == 2 ? "_2.png" : "_1.png");
     }
 }
