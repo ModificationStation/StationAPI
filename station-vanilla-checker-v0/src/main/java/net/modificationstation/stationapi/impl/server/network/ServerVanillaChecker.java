@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.impl.server.network;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.mine_diver.unsafeevents.listener.EventListener;
@@ -28,8 +29,11 @@ public class ServerVanillaChecker {
 
     @EventListener
     private static void onPlayerLogin(PlayerAttemptLoginEvent event) {
-        if ((event.loginHelloPacket.worldSeed & MASK) == MASK)
-            ((ModdedPacketHandlerSetter) event.serverLoginNetworkHandler).setModded();
+        if ((event.loginHelloPacket.worldSeed & MASK) == MASK) {
+            Map<String, String> mods = new HashMap<>();
+            FabricLoader.getInstance().getAllMods().forEach(modContainer -> mods.put(modContainer.getMetadata().getName(), modContainer.getMetadata().getVersion().getFriendlyString()));
+            ((ModdedPacketHandlerSetter) event.serverLoginNetworkHandler).setModded(mods);
+        }
         else if (!CLIENT_REQUIRED_MODS.isEmpty()) {
             LOGGER.error("Player \"" + event.loginHelloPacket.username + "\" attempted joining the server without " + NAMESPACE.getName() + ", disconnecting.");
             event.serverLoginNetworkHandler.disconnect(I18n.getTranslation("disconnect.stationapi:missing_station"));
