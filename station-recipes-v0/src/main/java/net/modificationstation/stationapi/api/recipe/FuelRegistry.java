@@ -31,9 +31,15 @@ public class FuelRegistry {
     }
 
     @API
-    public static void addFuelItem(ItemStack item, int fuelTime) {
+    public static void addFuelItem(Item item, int fuelTime) {
         viewInvalidated = true;
-        ITEM_FUEL_TIME.put(item, fuelTime);
+        ITEM_FUEL_TIME.put(new ItemStack(item, 1), fuelTime);
+    }
+
+    @API
+    public static void addFuelItem(ItemStack itemStack, int fuelTime) {
+        viewInvalidated = true;
+        ITEM_FUEL_TIME.put(itemStack, fuelTime);
     }
 
     @API
