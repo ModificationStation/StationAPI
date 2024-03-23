@@ -22,6 +22,7 @@ public class TextureListener {
         ExpandableAtlas terrain = Atlases.getTerrain();
 
         TEST_BLOCK.get().textureId = terrain.addTexture(of(NAMESPACE, "blocks/testBlock")).index;
+        INDISPENSABLE_BLOCK.get().textureId = terrain.addTexture(of(NAMESPACE, "blocks/indispensableBlock")).index;
         TEST_ANIMATED_BLOCK.get().textureId = terrain.addTexture(of(NAMESPACE, "blocks/testAnimatedBlock")).index;
         FREEZER.get().textureId = terrain.addTexture(of(NAMESPACE, "blocks/FreezerTop")).index;
         ((BlockFreezer) FREEZER.get()).sideTexture = terrain.addTexture(of(NAMESPACE, "blocks/FreezerSide")).index;
