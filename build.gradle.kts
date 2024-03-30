@@ -211,7 +211,7 @@ version = (if (project.hasProperty("override_version")) (project.properties["ove
 subprojects {
     // This makes the older pre-releases easier to clean up.
     if(rootProject.hasProperty("override_version")) {
-        group = (project.properties["maven_group"] as String) + ".${project.properties["archivesBaseName"]}.${(project.properties["override_version"] as String).substring(0, 7)}"
+        group = (project.properties["maven_group"] as String) + ".StationAPI.${(project.properties["override_version"] as String).substring(0, 7)}"
     }
     else {
         group = (project.properties["maven_group"] as String) + ".StationAPI.submodule.${project.properties["archivesBaseName"]}"
@@ -252,11 +252,11 @@ subprojects {
     }
 
     //Mark the subproject as a compile time dependency of the root project
-    publishing {
+    rootProject.publishing {
         publications {
             getByName("mavenJava", MavenPublication::class) {
                 pom.withXml {
-                    addDependencyXML(asNode(), "compile", this)
+                    addDependencyXML(asNode(), "compile", project)
                 }
             }
         }
