@@ -64,8 +64,8 @@ allprojects {
 
         modImplementation("babric:fabric-loader:${project.properties["loader_version"]}")
 
-//        implementation("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
-//        annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
+        implementation("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
+        annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
 
         "implementationOnly"("org.apache.commons:commons-lang3:3.12.0")
         "implementationOnly"("commons-io:commons-io:2.11.0")
@@ -267,7 +267,7 @@ subprojects {
 }
 
 dependencies {
-//    include("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.properties["mixinextras_version"]}")
+    include("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.properties["mixinextras_version"]}")
     include("net.jodah:typetools:${project.properties["typetools_version"]}")
     include("com.github.mineLdiver:expressions:${project.properties["expressions_version"]}")
     include("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
