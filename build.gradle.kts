@@ -5,7 +5,8 @@ import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependency
 
 plugins {
     id("maven-publish")
-    id("babric-loom") version "1.4.2"
+    id("fabric-loom") version "1.6.6"
+    id("babric-loom-extension") version "1.6.8"
 }
 
 // https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
@@ -15,7 +16,8 @@ inline fun <reified C> Project.configure(name: String, configuration: C.() -> Un
 
 allprojects {
     apply(plugin = "maven-publish")
-    apply(plugin = "babric-loom")
+    apply(plugin = "fabric-loom")
+    apply(plugin = "babric-loom-extension")
 
     java.sourceCompatibility = JavaVersion.VERSION_17
     java.targetCompatibility = JavaVersion.VERSION_17
@@ -109,7 +111,6 @@ allprojects {
         mixin {
             useLegacyMixinAp.set(true)
         }
-        gluedMinecraftJar()
         customMinecraftManifest.set("https://babric.github.io/manifest-polyfill/${project.properties["minecraft_version"]}.json")
         intermediaryUrl.set("https://maven.glass-launcher.net/babric/babric/intermediary/%1\$s/intermediary-%1\$s-v2.jar")
     }
