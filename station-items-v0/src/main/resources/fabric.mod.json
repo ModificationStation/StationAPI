@@ -53,6 +53,9 @@
       ],
       "net/minecraft/class_17": [
         "net/modificationstation/stationapi/api/block/StationItemsBlock"
+      ],
+      "net/minecraft/class_57": [
+        "net/modificationstation/stationapi/api/entity/StationItemsEntity"
       ]
     }
   }

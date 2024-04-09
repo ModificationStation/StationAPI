@@ -6,6 +6,7 @@
   "mixins": [
     "BlockMixin",
     "DyeItemMixin",
+    "EntityMixin",
     "InventoryS2CPacketMixin",
     "ItemMixin",
     "ItemStackMixin",
@@ -22,12 +23,14 @@
     "server.network.ServerPlayNetworkHandlerMixin"
   ],
   "client": [
+    "client.ClientNetworkHandlerAccessor",
     "client.ContainerScreenMixin",
     "client.DrawContextAccessor",
     "client.GameRendererMixin",
     "client.InteractionManagerMixin",
     "client.ItemRendererMixin",
     "client.MultiplayerInteractionManagerMixin",
+    "client.OtherPlayerEntityMixin",
     "client.SingleplayerInteractionManagerMixin"
   ],
   "injectors": {
