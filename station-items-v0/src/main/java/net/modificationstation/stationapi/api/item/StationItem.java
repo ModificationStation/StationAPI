@@ -29,8 +29,4 @@ public interface StationItem {
     default int getMaxDamage(ItemStack stack) {
         return Util.assertImpl();
     }
-
-    default int getTextureId(ItemStack itemStack) {
-        return Util.assertImpl();
-    }
 }

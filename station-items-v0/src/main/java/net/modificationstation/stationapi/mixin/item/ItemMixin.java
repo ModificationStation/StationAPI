@@ -23,8 +23,6 @@ abstract class ItemMixin implements StationItem {
 
     @Shadow public abstract int getMaxDamage();
 
-    @Shadow public abstract int getTextureId(int damage);
-
     @ModifyVariable(
             method = "setTranslationKey(Ljava/lang/String;)Lnet/minecraft/item/Item;",
             at = @At("HEAD"),
@@ -67,10 +65,5 @@ abstract class ItemMixin implements StationItem {
     @Unique
     public int getMaxDamage(ItemStack stack) {
         return getMaxDamage();
-    }
-
-    @Override
-    public int getTextureId(ItemStack itemStack) {
-        return getTextureId(itemStack.getDamage());
     }
 }
