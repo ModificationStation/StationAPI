@@ -19,6 +19,6 @@ abstract class EntityMixin implements StationItemsEntity {
     @Unique
     @Environment(EnvType.CLIENT)
     public void equipStack(int slot, ItemStack stack) {
-        method_1361(slot, stack.itemId, stack.count);
+        method_1361(slot, stack == null ? -1 : stack.itemId, stack == null ? 0 : stack.getDamage());
     }
 }
