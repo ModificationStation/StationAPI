@@ -31,7 +31,8 @@
     "client.ItemRendererMixin",
     "client.MultiplayerInteractionManagerMixin",
     "client.OtherPlayerEntityMixin",
-    "client.SingleplayerInteractionManagerMixin"
+    "client.SingleplayerInteractionManagerMixin",
+    "client.network.itemnbt.MultiplayerInteractionManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
