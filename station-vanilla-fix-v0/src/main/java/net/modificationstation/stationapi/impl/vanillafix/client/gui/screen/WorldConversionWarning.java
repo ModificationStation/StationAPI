@@ -13,10 +13,10 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class WorldConversionWarning {
     public static final String
-            ROOT_KEY = NAMESPACE.id("worldConversion").toString(),
-            FROM_MCREGION_EXPLANATION_KEY = ROOT_KEY + "." + NAMESPACE.id("fromMcRegionExplanation"),
-            TO_MCREGION_EXPLANATION_KEY = ROOT_KEY + "." + NAMESPACE.id("toMcRegionExplanation"),
-            CONVERT_KEY = ROOT_KEY + "." + NAMESPACE.id("convert");
+            ROOT_KEY = "gui." + NAMESPACE + ".worldConversion",
+            FROM_MCREGION_EXPLANATION_KEY = ROOT_KEY + ".fromMcRegionExplanation",
+            TO_MCREGION_EXPLANATION_KEY = ROOT_KEY + ".toMcRegionExplanation",
+            CONVERT_KEY = ROOT_KEY + ".convert";
 
     public static void warnIfMcRegion(Minecraft minecraft, Screen parentScreen, class_591 worldData, Runnable loadWorld) {
         if (NbtHelper.getDataVersions(((FlattenedWorldStorage) minecraft.method_2127()).getWorldTag(worldData.method_1956())).contains(NAMESPACE.toString()))

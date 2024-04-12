@@ -13,7 +13,6 @@ import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.world.dimension.DimensionHelperImpl;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
-import static net.modificationstation.stationapi.api.util.Identifier.of;
 import static net.modificationstation.stationapi.api.world.dimension.VanillaDimensions.OVERWORLD;
 
 public class DimensionHelperClientImpl extends DimensionHelperImpl {
@@ -44,7 +43,7 @@ public class DimensionHelperClientImpl extends DimensionHelperImpl {
 
             Dimension dimension = Dimension.method_1767(destinationSerial);
             World var10 = new World(game.world, dimension);
-            game.method_2115(var10, I18n.getTranslation(dimension instanceof TravelMessageProvider provider ? provider.getEnteringTranslationKey() : "gui." + of(NAMESPACE, "entering"), destination), player);
+            game.method_2115(var10, I18n.getTranslation(dimension instanceof TravelMessageProvider provider ? provider.getEnteringTranslationKey() : "gui." + NAMESPACE + ".entering", destination), player);
         } else {
             var1 /= scale;
             var3 /= scale;
@@ -54,7 +53,7 @@ public class DimensionHelperClientImpl extends DimensionHelperImpl {
             }
 
             World var12 = new World(game.world, Dimension.method_1767(overworldSerial));
-            game.method_2115(var12, I18n.getTranslation(player.world.dimension instanceof TravelMessageProvider provider ? provider.getLeavingTranslationKey() : "gui." + of(NAMESPACE, "leaving"), destination), player);
+            game.method_2115(var12, I18n.getTranslation(player.world.dimension instanceof TravelMessageProvider provider ? provider.getLeavingTranslationKey() : "gui." + NAMESPACE + ".leaving", destination), player);
         }
 
         player.world = game.world;

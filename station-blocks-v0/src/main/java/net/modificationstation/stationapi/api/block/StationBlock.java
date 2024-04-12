@@ -13,7 +13,7 @@ public interface StationBlock extends RemappableRawIdHolder {
     }
 
     default Block setTranslationKey(Identifier translationKey) {
-        return Util.assertImpl();
+        return setTranslationKey(translationKey.namespace, translationKey.path);
     }
     
     default boolean onBonemealUse(World world, int x, int y, int z, BlockState state) {
