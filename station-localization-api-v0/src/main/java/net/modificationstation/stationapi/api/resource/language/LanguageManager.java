@@ -14,11 +14,11 @@ import net.modificationstation.stationapi.api.event.resource.DataReloadEvent;
 import net.modificationstation.stationapi.api.event.resource.language.TranslationInvalidationEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloadListener;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.resource.SinglePreparationResourceReloader;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.profiler.DummyProfiler;
@@ -50,6 +50,7 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
         paths.put("/lang", Namespace.MINECRAFT);
         paths.put(NAMESPACE + "/lang", null);
     });
+    private static final Pattern NAMESPACE_PLACEHOLDER = Pattern.compile("(^|\\.)@($|\\.)");
 
     private static Predicate<String> buildPathPredicate(String langDef) {
         return Pattern
@@ -111,16 +112,11 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
                                     }
-                                    val langNs = pathNsEntry.getValue() == null ? resourceEntry.getKey().namespace : pathNsEntry.getValue();
-                                    if (langNs == Namespace.MINECRAFT) return properties.entrySet().stream();
                                     val namespaceLang = new HashMap<>();
+                                    val nsRegex = "$1" + (pathNsEntry.getValue() == null ? resourceEntry.getKey().namespace : pathNsEntry.getValue()) + "$2";
                                     properties.forEach((key, value) -> {
-                                        if (key instanceof String string) {
-                                            String[] strings = string.split("\\.");
-                                            if (strings.length > 1)
-                                                strings[1] = langNs + ":" + strings[1];
-                                            key = String.join(".", strings);
-                                        }
+                                        if (key instanceof String string)
+                                            key = NAMESPACE_PLACEHOLDER.matcher(string).replaceAll(nsRegex);
                                         namespaceLang.put(key, value);
                                     });
                                     return namespaceLang.entrySet().stream();

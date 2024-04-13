@@ -53,11 +53,11 @@ public class AchievementPage implements Named<AchievementPage> {
         return PAGES.size();
     }
 
-    private final Identifier id;
+    private final String translationKey;
     private final List<Achievement> achievements = new ArrayList<>();
 
     public AchievementPage(Identifier id) {
-        this.id = id;
+        translationKey = id.namespace + "." + id.path;
         addPage(this);
     }
 
@@ -77,7 +77,7 @@ public class AchievementPage implements Named<AchievementPage> {
 
     @Override
     public String name() {
-        return id.toString();
+        return translationKey;
     }
 
     public List<Achievement> getAchievements() {

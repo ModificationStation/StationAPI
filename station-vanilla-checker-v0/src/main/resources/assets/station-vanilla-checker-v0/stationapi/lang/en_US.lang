@@ -1,0 +1,5 @@
+# Network
+disconnect.stationapi.missingStation=Station API is required to join this server.
+disconnect.stationapi.stationVersionMismatch=This server runs on Station API %s (you have %s).
+disconnect.stationapi.missingMod=Mod %s (%s) %s is required to join.
+disconnect.stationapi.modVersionMismatch=%s (%s) %s is required (you have %s).
