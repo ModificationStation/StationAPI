@@ -18,8 +18,8 @@ public class AchievementListener {
     @EventListener
     public void registerAchievements(AchievementRegisterEvent event) {
         testAchievementPage = new AchievementPageTest(NAMESPACE.id("testPage"));
-        testAchievement = new Achievement(69696969, "sltest:testAchievement", 0, 0, ItemListener.testItem, null);
-        testAchievementChild = new Achievement(69696970, "sltest:testAchievementChild", 0, 2, Item.GOLDEN_APPLE, testAchievement);
+        testAchievement = new Achievement(69696969, "sltest.testAchievement", 0, 0, ItemListener.testItem, null);
+        testAchievementChild = new Achievement(69696970, "sltest.testAchievementChild", 0, 2, Item.GOLDEN_APPLE, testAchievement);
         event.achievements.add(testAchievement);
         event.achievements.add(testAchievementChild);
         testAchievementPage.addAchievements(testAchievement, testAchievementChild);

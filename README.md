@@ -1,7 +1,7 @@
 # StationAPI for Minecraft Beta 1.7.3 Babric
 
 <!---
-WHHYYYYY JITPACK?!
+Buildbot moment.
 -->
 
 A general use API for Fabric Loader mods on legacy Minecraft versions.

@@ -58,7 +58,7 @@ class AchievementsScreenMixin extends Screen {
     )
     private void stationapi_doDrawTitle(CallbackInfo ci) {
         if (AchievementPage.getPageCount() > 1) this.textRenderer.draw(
-                I18n.getTranslation("stationapi:achievementPage." + AchievementPage.getCurrentPageName()),
+                I18n.getTranslation("gui." + NAMESPACE + ".achievementPage." + AchievementPage.getCurrentPageName()),
                 this.width / 2 - 69, this.height / 2 + 80, 0
         );
     }

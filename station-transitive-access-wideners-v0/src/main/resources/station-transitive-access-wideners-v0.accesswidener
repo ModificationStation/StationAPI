@@ -74,3 +74,4 @@ transitive-accessible	method	net/minecraft/item/ToolItem	<init>	(IILnet/minecraf
 transitive-accessible	method	net/minecraft/item/MapItem	<init>	(I)V
 transitive-accessible	method	net/minecraft/class_561	<init>	(I)V
 transitive-accessible	method	net/minecraft/item/MusicDiscItem	<init>	(ILjava/lang/String;)V
+transitive-extendable	method	net/minecraft/item/Item	getTextureId	(Lnet/minecraft/item/ItemStack;)I

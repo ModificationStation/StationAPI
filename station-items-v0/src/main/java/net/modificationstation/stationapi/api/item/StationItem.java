@@ -15,7 +15,7 @@ public interface StationItem {
     }
 
     default Item setTranslationKey(Identifier translationKey) {
-        return Util.assertImpl();
+        return setTranslationKey(translationKey.namespace, translationKey.path);
     }
 
     default boolean preHit(ItemStack stack, Entity otherEntity, PlayerEntity player) {

@@ -8,7 +8,6 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.ItemEvent;
 import net.modificationstation.stationapi.api.item.StationItem;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -40,13 +39,7 @@ abstract class ItemMixin implements StationItem {
     @Override
     @Unique
     public Item setTranslationKey(Namespace namespace, String translationKey) {
-        return setTranslationKey(Identifier.of(namespace, translationKey).toString());
-    }
-
-    @Override
-    @Unique
-    public Item setTranslationKey(Identifier translationKey) {
-        return setTranslationKey(translationKey.toString());
+        return setTranslationKey(namespace + "." + translationKey);
     }
 
     @Override

@@ -28,8 +28,8 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class EditWorldScreenImpl {
     private static final String
-            ROOT_KEY = "selectWorld",
-            CONVERT_TO_MCREGION_KEY = ROOT_KEY + "." + NAMESPACE.id("convertToMcRegion");
+            ROOT_KEY = "selectWorld." + NAMESPACE,
+            CONVERT_TO_MCREGION_KEY = ROOT_KEY + ".convertToMcRegion";
 
     @EventListener(priority = LOW)
     private static void registerConversionButton(EditWorldScreenEvent.ScrollableButtonContextRegister event) {

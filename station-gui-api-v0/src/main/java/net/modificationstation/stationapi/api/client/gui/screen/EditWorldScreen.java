@@ -27,8 +27,8 @@ public class EditWorldScreen extends StationScreen {
 
     public static final String
             SELECTWORLD_KEY = "selectWorld",
-            EDIT_KEY = SELECTWORLD_KEY + "." + NAMESPACE.id("edit"),
-            EDIT_TITLE_KEY = SELECTWORLD_KEY + "." + NAMESPACE.id("editTitle");
+            EDIT_KEY = SELECTWORLD_KEY + "." + NAMESPACE + ".edit",
+            EDIT_TITLE_KEY = SELECTWORLD_KEY + "." + NAMESPACE + ".editTitle";
     private static final ImmutableList<ButtonWidgetDeferredDetachedContext<EditWorldScreen>> CUSTOM_EDIT_BUTTONS = StationAPI.EVENT_BUS.post(EditWorldScreenEvent.ScrollableButtonContextRegister.builder().contexts(ImmutableList.builder()).build()).contexts.build();
 
     protected final Screen parent;

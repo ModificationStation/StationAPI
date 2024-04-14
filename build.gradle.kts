@@ -5,7 +5,8 @@ import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependency
 
 plugins {
     id("maven-publish")
-    id("babric-loom") version "1.5.3"
+    id("fabric-loom") version "1.6.6"
+    id("babric-loom-extension") version "1.6.8"
 }
 
 // https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
@@ -15,7 +16,8 @@ inline fun <reified C> Project.configure(name: String, configuration: C.() -> Un
 
 allprojects {
     apply(plugin = "maven-publish")
-    apply(plugin = "babric-loom")
+    apply(plugin = "fabric-loom")
+    apply(plugin = "babric-loom-extension")
 
     java.sourceCompatibility = JavaVersion.VERSION_17
     java.targetCompatibility = JavaVersion.VERSION_17
@@ -42,7 +44,7 @@ allprojects {
         runtimeClasspath.get().extendsFrom(implementationOnly)
         compileClasspath.get().extendsFrom(implementationOnly)
 
-        // Required cause loom 0.14 for some reason doesn"t remove asm-all 4.1. Ew.
+        // Required cause loom 0.14 for some reason doesn't remove asm-all 4.1. Ew.
         all {
             exclude(group = "org.ow2.asm", module = "asm-debug-all")
             exclude(group = "org.ow2.asm", module = "asm-all")
@@ -63,6 +65,9 @@ allprojects {
         mappings("net.glasslauncher:biny:${project.properties["yarn_mappings"]}:v2")
 
         modImplementation("babric:fabric-loader:${project.properties["loader_version"]}")
+
+        implementation("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
+        annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
 
         "implementationOnly"("org.apache.commons:commons-lang3:3.12.0")
         "implementationOnly"("commons-io:commons-io:2.11.0")
@@ -106,7 +111,6 @@ allprojects {
         mixin {
             useLegacyMixinAp.set(true)
         }
-        gluedMinecraftJar()
         customMinecraftManifest.set("https://babric.github.io/manifest-polyfill/${project.properties["minecraft_version"]}.json")
         intermediaryUrl.set("https://maven.glass-launcher.net/babric/babric/intermediary/%1\$s/intermediary-%1\$s-v2.jar")
     }
@@ -210,11 +214,11 @@ version = (if (project.hasProperty("override_version")) (project.properties["ove
 
 subprojects {
     // This makes the older pre-releases easier to clean up.
-    if(rootProject.hasProperty("override_version")) {
-        group = (project.properties["maven_group"] as String) + ".${project.properties["archivesBaseName"]}.${(project.properties["override_version"] as String).substring(0, 7)}"
+    group = if (rootProject.hasProperty("override_version")) {
+        (project.properties["maven_group"] as String) + ".StationAPI.${(project.properties["override_version"] as String).substring(0, 7)}"
     }
     else {
-        group = (project.properties["maven_group"] as String) + ".StationAPI.submodule.${project.properties["archivesBaseName"]}"
+        (project.properties["maven_group"] as String) + ".StationAPI.submodule.${project.properties["archivesBaseName"]}"
     }
 
     configurations {
@@ -252,11 +256,11 @@ subprojects {
     }
 
     //Mark the subproject as a compile time dependency of the root project
-    publishing {
+    rootProject.publishing {
         publications {
             getByName("mavenJava", MavenPublication::class) {
                 pom.withXml {
-                    addDependencyXML(asNode(), "compile", this)
+                    addDependencyXML(asNode(), "compile", project)
                 }
             }
         }
@@ -264,6 +268,7 @@ subprojects {
 }
 
 dependencies {
+    include("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.properties["mixinextras_version"]}")
     include("net.jodah:typetools:${project.properties["typetools_version"]}")
     include("com.github.mineLdiver:expressions:${project.properties["expressions_version"]}")
     include("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
