@@ -5,7 +5,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.item.CustomDispenseBehavior;
+import net.modificationstation.stationapi.api.item.DispenseEvent;
 import net.modificationstation.stationapi.api.item.DispenseUtil;
 import net.modificationstation.stationapi.impl.dispenser.DispenserInfoStorage;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,20 +33,19 @@ public class DispenserBlockMixin {
         int slot = DispenserInfoStorage.slot;
         ItemStack[] inventory = DispenserInfoStorage.inventory;
 
-        // non-invasive restore
-        if (inventory != null) {
-            if (inventory[slot] == null) {
-                inventory[slot] = currentItemStack;
-            } else {
-                inventory[slot].count++;
-            }
+        DispenseUtil util = new DispenseUtil(world, currentItemStack, dispenserBlockEntity, inventory, slot);
+
+        if (StationAPI.EVENT_BUS.post(
+                DispenseEvent.builder().dispenseUtil(util).build()
+        ).isCanceled()) {
+            ci.cancel();
         }
-
-
-        if (currentItemStack != null) {
-            if (currentItemStack.getItem() instanceof CustomDispenseBehavior behavior) {
-                behavior.dispense(new DispenseUtil(world, currentItemStack, dispenserBlockEntity, inventory, slot));
-                ci.cancel();
+        else {
+            if (currentItemStack != null) {
+                if (currentItemStack.getItem() instanceof CustomDispenseBehavior behavior) {
+                    behavior.dispense(util);
+                    ci.cancel();
+                }
             }
         }
     }

@@ -10,6 +10,12 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
+/**
+ * Utility class for changing dispenser behavior, providing tools to customize behavior
+ * @author matthewperiut
+ * @see DispenseEvent
+ * @see CustomDispenseBehavior
+ */
 public class DispenseUtil {
     public World world;
     public DispenserBlockEntity dispenserBlockEntity;
@@ -37,18 +43,23 @@ public class DispenseUtil {
     }
 
     public void decrementItem(int amount) {
-        if (inventory[slot] != null) {
-            if (inventory[slot].count - amount <= 0) {
-                inventory[slot] = null;
-            } else {
-                shotItemStack = inventory[slot].split(amount);
+        if (inventory != null) {
+            if (inventory[slot] != null) {
+                if (inventory[slot].count - amount <= 0) {
+                    inventory[slot] = null;
+                } else {
+                    shotItemStack = inventory[slot].split(amount);
+                }
+                dispenserBlockEntity.markDirty();
             }
-            dispenserBlockEntity.markDirty();
         }
     }
 
     public void setItem(ItemStack itemStack) {
-        inventory[slot] = itemStack;
+        if (inventory != null) {
+            inventory[slot] = itemStack;
+            dispenserBlockEntity.markDirty();
+        }
     }
 
     private void populateData() {
