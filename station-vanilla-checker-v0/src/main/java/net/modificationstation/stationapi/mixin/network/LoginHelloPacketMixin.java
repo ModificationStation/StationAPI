@@ -52,8 +52,7 @@ class LoginHelloPacketMixin {
             constant = @Constant(
                     ordinal = 0,
                     intValue = 16
-            ),
-            remap = false
+            )
     )
     private int stationapi_injectHugeStringLimit(int constant) {
         return Short.MAX_VALUE;
