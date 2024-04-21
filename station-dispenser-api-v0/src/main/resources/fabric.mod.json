@@ -15,6 +15,11 @@
   "license": "MIT",
   "icon": "assets/station-dispenser-api-v0/icon.png",
   "environment": "*",
+  "entrypoints": {
+    "stationapi:event_bus": [
+      "net.modificationstation.stationapi.impl.dispenser.CustomDispenseBehaviorHandler"
+      ]
+  },
   "mixins": [
     "station-dispenser-api-v0.mixins.json"
   ],

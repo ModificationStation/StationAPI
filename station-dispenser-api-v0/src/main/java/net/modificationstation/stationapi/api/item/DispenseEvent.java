@@ -10,11 +10,11 @@ import net.modificationstation.stationapi.api.StationAPI;
  * Event that gets called when dispenser is activated, precedes and overrides CustomDispenseBehavior.
  * @author matthewperiut
  * @see CustomDispenseBehavior
- * @see DispenseUtil
+ * @see ItemDispenseContext
  */
 @Cancelable
 @SuperBuilder
 @EventPhases(StationAPI.INTERNAL_PHASE)
 public class DispenseEvent extends Event {
-    public final DispenseUtil dispenseUtil;
+    public final ItemDispenseContext itemDispenseContext;
 }

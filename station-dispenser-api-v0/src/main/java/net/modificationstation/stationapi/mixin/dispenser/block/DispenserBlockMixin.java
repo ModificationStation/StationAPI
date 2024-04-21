@@ -6,9 +6,8 @@ import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.item.CustomDispenseBehavior;
 import net.modificationstation.stationapi.api.item.DispenseEvent;
-import net.modificationstation.stationapi.api.item.DispenseUtil;
+import net.modificationstation.stationapi.api.item.ItemDispenseContext;
 import net.modificationstation.stationapi.impl.dispenser.DispenserInfoStorage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -20,43 +19,35 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 
 @Mixin(DispenserBlock.class)
-public class DispenserBlockMixin {
+class DispenserBlockMixin {
     @Unique
-    DispenserBlockEntity dispenserBlockEntity;
+    private DispenserBlockEntity dispenserBlockEntity;
     @Unique
-    ItemStack currentItemStack;
+    private ItemStack currentItemStack;
 
     @Inject(method = "method_1774", at = @At("HEAD"), cancellable = true)
-    private void dispense(World world, int x, int y, int z, Random random, CallbackInfo ci) {
+    private void stationapi_customDispense(World world, int x, int y, int z, Random random, CallbackInfo ci) {
         dispenserBlockEntity = (DispenserBlockEntity) world.method_1777(x, y, z);
         currentItemStack = dispenserBlockEntity.method_665();
         int slot = DispenserInfoStorage.slot;
         ItemStack[] inventory = DispenserInfoStorage.inventory;
 
-        DispenseUtil util = new DispenseUtil(world, currentItemStack, dispenserBlockEntity, inventory, slot);
+        ItemDispenseContext context = new ItemDispenseContext(world, currentItemStack, dispenserBlockEntity, inventory, slot);
 
         if (StationAPI.EVENT_BUS.post(
-                DispenseEvent.builder().dispenseUtil(util).build()
+                DispenseEvent.builder().itemDispenseContext(context).build()
         ).isCanceled()) {
             ci.cancel();
-        }
-        else {
-            if (currentItemStack != null) {
-                if (currentItemStack.getItem() instanceof CustomDispenseBehavior behavior) {
-                    behavior.dispense(util);
-                    ci.cancel();
-                }
-            }
         }
     }
 
     @Redirect(method = "method_1774", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;method_1777(III)Lnet/minecraft/block/entity/BlockEntity;"))
-    BlockEntity giveBlockEntity(World instance, int j, int k, int i) {
+    private BlockEntity stationapi_provideBlockEntity(World instance, int j, int k, int i) {
         return dispenserBlockEntity;
     }
 
     @Redirect(method = "method_1774", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/entity/DispenserBlockEntity;method_665()Lnet/minecraft/item/ItemStack;"))
-    ItemStack giveItemStack(DispenserBlockEntity instance) {
+    private ItemStack stationapi_provideItemStack(DispenserBlockEntity instance) {
         return currentItemStack;
     }
 }

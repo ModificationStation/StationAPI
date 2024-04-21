@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.modificationstation.sltest.block.Blocks;
 import net.modificationstation.stationapi.api.client.item.CustomTooltipProvider;
 import net.modificationstation.stationapi.api.item.CustomDispenseBehavior;
-import net.modificationstation.stationapi.api.item.DispenseUtil;
+import net.modificationstation.stationapi.api.item.ItemDispenseContext;
 
 public class IndispensableBlockItem extends BlockItem implements CustomDispenseBehavior, CustomTooltipProvider {
     public IndispensableBlockItem(int i) {
@@ -14,11 +14,11 @@ public class IndispensableBlockItem extends BlockItem implements CustomDispenseB
     }
 
     @Override
-    public void dispense(DispenseUtil util) {
-        BlockPos pos = util.getFacingBlockPos();
-        if (util.world.getBlockId(pos.x, pos.y, pos.z) == 0) {
-            util.world.setBlock(pos.x, pos.y, pos.z, Blocks.INDISPENSABLE_BLOCK.get().id);
-            util.world.playSound((float)pos.x + 0.5f, (float)pos.y + 0.5f, (float)pos.z + 0.5f, Blocks.INDISPENSABLE_BLOCK.get().soundGroup.getSound(), (Blocks.INDISPENSABLE_BLOCK.get().soundGroup.method_1976() + 1.0f) / 2.0f, Blocks.INDISPENSABLE_BLOCK.get().soundGroup.method_1977() * 0.8f);
+    public void dispense(ItemDispenseContext context) {
+        BlockPos pos = context.getFacingBlockPos();
+        if (context.world.getBlockId(pos.x, pos.y, pos.z) == 0) {
+            context.world.setBlock(pos.x, pos.y, pos.z, Blocks.INDISPENSABLE_BLOCK.get().id);
+            context.world.playSound((float)pos.x + 0.5f, (float)pos.y + 0.5f, (float)pos.z + 0.5f, Blocks.INDISPENSABLE_BLOCK.get().soundGroup.getSound(), (Blocks.INDISPENSABLE_BLOCK.get().soundGroup.method_1976() + 1.0f) / 2.0f, Blocks.INDISPENSABLE_BLOCK.get().soundGroup.method_1977() * 0.8f);
         }
     }
 

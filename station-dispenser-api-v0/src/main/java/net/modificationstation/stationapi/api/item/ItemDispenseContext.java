@@ -16,24 +16,24 @@ import java.util.Random;
  * @see DispenseEvent
  * @see CustomDispenseBehavior
  */
-public class DispenseUtil {
-    public World world;
-    public DispenserBlockEntity dispenserBlockEntity;
-    public ItemStack itemStack;
-    private ItemStack shotItemStack;
+public class ItemDispenseContext {
+    public final Random random = new Random();
+    public final World world;
+    public final DispenserBlockEntity dispenserBlockEntity;
     public final ItemStack[] inventory;
     public final int slot;
-    public Random random = new Random();
+    public final ItemStack itemStack;
+    private ItemStack shotItemStack;
+    public byte xDir = 0;
+    public byte zDir = 0;
     public int x;
     public int y;
     public int z;
-    public byte xDir = 0;
-    public byte zDir = 0;
     public double xVel;
     public double yVel;
     public double zVel;
 
-    public DispenseUtil(World world, ItemStack itemStack, DispenserBlockEntity dispenserBlockEntity, ItemStack[] inventory, int slot) {
+    public ItemDispenseContext(World world, ItemStack itemStack, DispenserBlockEntity dispenserBlockEntity, ItemStack[] inventory, int slot) {
         this.world = world;
         this.dispenserBlockEntity = dispenserBlockEntity;
         this.inventory = inventory;
@@ -81,7 +81,7 @@ public class DispenseUtil {
         zVel = z + zDir * 0.6 + 0.5;
     }
 
-    public void shootItemStack() {
+    public void shootStack() {
         populateData();
         ItemEntity itemEntity = new ItemEntity(world, xVel, yVel - 0.3, zVel, shotItemStack);
         double var20 = random.nextDouble() * 0.1 + 0.2;
@@ -95,9 +95,9 @@ public class DispenseUtil {
         world.method_230(1000, x, y, z, 0);
     }
 
-    public void shootItemStack(ItemStack itemStack) {
+    public void shootStack(ItemStack itemStack) {
         shotItemStack = itemStack;
-        shootItemStack();
+        shootStack();
     }
 
     public void genericThrowEntity(Entity entity, double xDir, double yVel, double zDir, float pitch, float yaw) {
