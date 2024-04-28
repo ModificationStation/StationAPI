@@ -13,7 +13,9 @@
     "PlayerEntityMixin",
     "PlayerInventoryMixin",
     "ScreenHandlerMixin",
-    "StatsMixin"
+    "StatsMixin",
+    "dispenser.block.DispenserBlockMixin",
+    "dispenser.block.entity.DispenserBlockEntityMixin"
   ],
   "server": [
     "server.class_70Mixin",

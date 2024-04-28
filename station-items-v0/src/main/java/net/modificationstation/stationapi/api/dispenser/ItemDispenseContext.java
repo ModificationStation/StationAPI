@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.item;
+package net.modificationstation.stationapi.api.dispenser;
 
 import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.entity.Entity;
@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.item.CustomDispenseBehavior;
 
 import java.util.Random;
 

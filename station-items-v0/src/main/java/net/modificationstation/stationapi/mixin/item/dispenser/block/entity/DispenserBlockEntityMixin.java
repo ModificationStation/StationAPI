@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.dispenser.block.entity;
+package net.modificationstation.stationapi.mixin.item.dispenser.block.entity;
 
 import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.item.ItemStack;

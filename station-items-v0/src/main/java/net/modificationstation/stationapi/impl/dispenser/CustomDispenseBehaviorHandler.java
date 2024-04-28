@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.impl.dispenser;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.dispenser.DispenseEvent;
 import net.modificationstation.stationapi.api.item.CustomDispenseBehavior;
-import net.modificationstation.stationapi.api.item.DispenseEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 

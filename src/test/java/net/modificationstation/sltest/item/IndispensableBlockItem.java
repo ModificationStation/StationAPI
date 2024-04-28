@@ -5,8 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.modificationstation.sltest.block.Blocks;
 import net.modificationstation.stationapi.api.client.item.CustomTooltipProvider;
+import net.modificationstation.stationapi.api.dispenser.ItemDispenseContext;
 import net.modificationstation.stationapi.api.item.CustomDispenseBehavior;
-import net.modificationstation.stationapi.api.item.ItemDispenseContext;
 
 public class IndispensableBlockItem extends BlockItem implements CustomDispenseBehavior, CustomTooltipProvider {
     public IndispensableBlockItem(int i) {

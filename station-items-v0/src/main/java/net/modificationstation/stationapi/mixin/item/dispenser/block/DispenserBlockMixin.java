@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.dispenser.block;
+package net.modificationstation.stationapi.mixin.item.dispenser.block;
 
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.entity.BlockEntity;
@@ -6,8 +6,8 @@ import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.item.DispenseEvent;
-import net.modificationstation.stationapi.api.item.ItemDispenseContext;
+import net.modificationstation.stationapi.api.dispenser.DispenseEvent;
+import net.modificationstation.stationapi.api.dispenser.ItemDispenseContext;
 import net.modificationstation.stationapi.impl.dispenser.DispenserInfoStorage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

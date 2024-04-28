@@ -6,8 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.modificationstation.stationapi.api.item.DispenseEvent;
-import net.modificationstation.stationapi.api.item.ItemDispenseContext;
+import net.modificationstation.stationapi.api.dispenser.DispenseEvent;
+import net.modificationstation.stationapi.api.dispenser.ItemDispenseContext;
 
 public class DispenserListener {
     @EventListener
