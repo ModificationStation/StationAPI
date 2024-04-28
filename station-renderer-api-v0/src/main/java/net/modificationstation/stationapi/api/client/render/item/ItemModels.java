@@ -10,6 +10,7 @@ import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelManager;
 import net.modificationstation.stationapi.api.client.render.model.ModelIdentifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.registry.sync.trackers.Int2ObjectMapTracker;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +30,8 @@ public class ItemModels {
     public ItemModels(BakedModelManager modelManager) {
         this.modelManager = modelManager;
         ITEM_MODELS.add(this);
+        Int2ObjectMapTracker.register(ItemRegistry.INSTANCE, "ItemModels.modelIds", modelIds);
+        Int2ObjectMapTracker.register(ItemRegistry.INSTANCE, "ItemModels.models", models);
     }
 
     public BakedModel getModel(ItemStack stack) {

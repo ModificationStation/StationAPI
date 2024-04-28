@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import lombok.val;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -8,9 +10,11 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.IsItemSuitableForStateEvent;
 import net.modificationstation.stationapi.api.event.item.ItemMiningSpeedMultiplierOnStateEvent;
+import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEvent;
 import net.modificationstation.stationapi.api.item.StationFlatteningItemStack;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
+import net.modificationstation.stationapi.api.util.Util;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,7 +24,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
@@ -34,6 +41,19 @@ abstract class ItemStackMixin implements StationFlatteningItemStack {
 
     @Unique
     private static final String STATION_ID = of(NAMESPACE, "id").toString();
+
+    @Unique
+    private static final Set<ItemStack> STATION_ITEM_STACKS = Util.make(
+            Collections.newSetFromMap(new WeakHashMap<>()),
+            stacks -> ItemRegistry.INSTANCE.getEventBus().register(Listener.<RegistryIdRemapEvent<ItemRegistry>>simple()
+                    .listener(event -> {
+                        val remap = event.state.getRawIdChangeMap();
+                        stacks.forEach(
+                                stack -> stack.itemId = remap.getOrDefault(stack.itemId, stack.itemId)
+                        );
+                    })
+                    .build()
+    ));
     
     @Inject(
             method = "<init>(Lnet/minecraft/block/Block;)V",
@@ -130,5 +150,16 @@ abstract class ItemStackMixin implements StationFlatteningItemStack {
     @Unique
     public boolean isOf(Item item) {
         return this.getItem() == item;
+    }
+
+    @Inject(
+            method = {
+                    "<init>(III)V",
+                    "<init>(Lnet/minecraft/nbt/NbtCompound;)V"
+            },
+            at = @At("RETURN")
+    )
+    private void stationapi_trackItemStack(CallbackInfo ci) {
+        STATION_ITEM_STACKS.add((ItemStack) (Object) this);
     }
 }

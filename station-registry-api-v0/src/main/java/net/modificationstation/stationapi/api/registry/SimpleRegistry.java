@@ -10,9 +10,7 @@ import it.unimi.dsi.fastutil.ints.Int2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.*;
 import net.mine_diver.unsafeevents.EventBus;
 import net.mine_diver.unsafeevents.MutableEventBus;
-import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedEvent;
-import net.modificationstation.stationapi.api.event.registry.RegistryEntryRemovedEvent;
-import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEvent;
+import net.modificationstation.stationapi.api.event.registry.*;
 import net.modificationstation.stationapi.api.registry.RegistryEntry.Reference;
 import net.modificationstation.stationapi.api.registry.RegistryEntryList.Named;
 import net.modificationstation.stationapi.api.registry.RegistryWrapper.Impl;
@@ -30,6 +28,7 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNullElseGet;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
+import static net.modificationstation.stationapi.api.util.Namespace.MINECRAFT;
 
 public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry, ListenableRegistry {
     final RegistryKey<? extends Registry<T>> key;
@@ -132,6 +131,17 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         return set(rawId, registryKey, value, lifecycle, true);
     }
 
+    private void onChange(RegistryKey<T> registryKey) {
+        if (MINECRAFT == registryKey.getValue().getNamespace()) return;
+
+        RegistryAttributeHolder holder = RegistryAttributeHolder.get(getKey());
+
+        if (holder.hasAttribute(RegistryAttribute.MODDED)) return;
+
+        RegistryAttributeHolder.get(getKey()).addAttribute(RegistryAttribute.MODDED);
+        LOGGER.debug("Registry {} has been marked as modded, registry entry {} was changed", getKey().getValue(), registryKey.getValue());
+    }
+
     private Reference<T> set(int rawId, RegistryKey<T> registryKey, T value, Lifecycle lifecycle, boolean checkReservation) {
         this.assertNotFrozen(registryKey);
         Validate.notNull(registryKey);
@@ -204,6 +214,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
                     .object(value)
                     .build());
 
+        onChange(registryKey);
         return reference;
     }
 
