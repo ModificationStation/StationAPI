@@ -9,12 +9,12 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
-public class CustomDispenseBehaviorHandler {
+class CustomDispenseBehaviorHandler {
     @EventListener
-    public static void implementCustomDispenseBehaviorInterface(DispenseEvent event) {
-        if (event.itemDispenseContext.itemStack != null) {
-            if (event.itemDispenseContext.itemStack.getItem() instanceof CustomDispenseBehavior behavior) {
-                behavior.dispense(event.itemDispenseContext);
+    private static void implementCustomDispenseBehaviorInterface(DispenseEvent event) {
+        if (event.context.itemStack != null) {
+            if (event.context.itemStack.getItem() instanceof CustomDispenseBehavior behavior) {
+                behavior.dispense(event.context);
                 event.cancel();
             }
         }

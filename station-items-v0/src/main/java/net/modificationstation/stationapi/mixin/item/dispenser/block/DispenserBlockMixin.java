@@ -35,7 +35,7 @@ class DispenserBlockMixin {
         ItemDispenseContext context = new ItemDispenseContext(world, currentItemStack, dispenserBlockEntity, inventory, slot);
 
         if (StationAPI.EVENT_BUS.post(
-                DispenseEvent.builder().itemDispenseContext(context).build()
+                DispenseEvent.builder().context(context).build()
         ).isCanceled()) {
             ci.cancel();
         }

@@ -8,5 +8,5 @@ import net.modificationstation.stationapi.api.dispenser.ItemDispenseContext;
  * @see ItemDispenseContext
  */
 public interface CustomDispenseBehavior {
-    void dispense(ItemDispenseContext util);
+    void dispense(ItemDispenseContext context);
 }

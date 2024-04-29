@@ -56,7 +56,7 @@ public class ItemDispenseContext {
         }
     }
 
-    public void setItem(ItemStack itemStack) {
+    public void setStack(ItemStack itemStack) {
         if (inventory != null) {
             inventory[slot] = itemStack;
             dispenserBlockEntity.markDirty();

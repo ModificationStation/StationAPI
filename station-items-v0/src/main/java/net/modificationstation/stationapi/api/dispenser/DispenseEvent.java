@@ -17,5 +17,5 @@ import net.modificationstation.stationapi.api.item.CustomDispenseBehavior;
 @SuperBuilder
 @EventPhases(StationAPI.INTERNAL_PHASE)
 public class DispenseEvent extends Event {
-    public final ItemDispenseContext itemDispenseContext;
+    public final ItemDispenseContext context;
 }
