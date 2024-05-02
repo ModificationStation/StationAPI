@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.impl.item;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.IsItemSuitableForStateEvent;
@@ -17,6 +18,7 @@ import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +27,6 @@ import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class ToolEffectivenessImplV1 {
-
     public static final List<Identifier> VANILLA_TOOLS = new ArrayList<>();
 
     @EventListener(priority = LOW)
@@ -55,15 +56,36 @@ public class ToolEffectivenessImplV1 {
 
     @EventListener
     private static void isEffective(IsItemSuitableForStateEvent event) {
-        event.suitable = event.suitable || isSuitable(event.itemStack, event.state);
+        // Disable custom tool logic if both the block and the tool are vanilla
+        // This is done to preserve the vanilla mining speeds
+        if (VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getId(event.itemStack.getItem()))
+                && Objects.requireNonNull(BlockRegistry.INSTANCE.getId(event.state.getBlock())).namespace == Namespace.MINECRAFT) return;
+
+        event.suitable = isSuitable(event.itemStack, event.state);
     }
 
     @EventListener
     private static void getStrength(ItemMiningSpeedMultiplierOnStateEvent event) {
-        if (!(VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getId(event.itemStack.getItem())) && Objects.requireNonNull(BlockRegistry.INSTANCE.getId(event.state.getBlock())).namespace == Namespace.MINECRAFT) && isSuitable(event.itemStack, event.state)) event.miningSpeedMultiplier = ((ToolLevel) event.itemStack.getItem()).getMaterial(event.itemStack).getMiningSpeedMultiplier();
+        // Disable custom tool logic if both the block and the tool are vanilla
+        // This is done to preserve the vanilla mining speeds
+        if (VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getId(event.itemStack.getItem()))
+                && Objects.requireNonNull(BlockRegistry.INSTANCE.getId(event.state.getBlock())).namespace == Namespace.MINECRAFT) return;
+
+        if (!isSuitable(event.itemStack, event.state)) return;
+
+        event.miningSpeedMultiplier = ((ToolLevel) event.itemStack.getItem()).getMaterial(event.itemStack).getMiningSpeedMultiplier();
     }
 
     private static boolean isSuitable(ItemStack item, BlockState state) {
-        return item.getItem() instanceof ToolLevel toolLevel && state.isIn(toolLevel.getEffectiveBlocks(item)) && toolLevel.getMaterial(item).matches(state);
+        return item.getItem() instanceof ToolLevel toolLevel
+                && state.isIn(toolLevel.getEffectiveBlocks(item))
+                &&
+                (
+                        state.isIn(toolLevel.getMaterial(item).getMiningLevelTag())
+                                || Arrays
+                                .stream(ToolMaterial.values())
+                                .filter(toolMaterial -> toolMaterial.getMiningLevelTag() != null)
+                                .noneMatch(toolMaterial -> state.isIn(toolMaterial.getMiningLevelTag()))
+                );
     }
 }

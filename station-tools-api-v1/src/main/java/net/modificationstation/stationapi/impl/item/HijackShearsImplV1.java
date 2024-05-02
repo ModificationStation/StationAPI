@@ -7,7 +7,6 @@ import net.modificationstation.stationapi.api.util.Identifier;
 
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class HijackShearsImplV1 {
-
     //TODO: Make this match anything that has shear tool properties. Not sure how to go around this at the moment.
     @EventListener
     private static void hijackShearsEvent(ShearsOverrideEvent event) {

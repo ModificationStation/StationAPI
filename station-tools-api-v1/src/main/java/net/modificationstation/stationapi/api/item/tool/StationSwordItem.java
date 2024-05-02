@@ -7,7 +7,6 @@ import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationSwordItem extends ToolLevel {
-
     @Override
     default void setEffectiveBlocks(TagKey<Block> effectiveBlocks) {
         Util.assertImpl();

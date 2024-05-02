@@ -6,7 +6,6 @@ import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.tag.TagKey;
 
 public interface ToolLevel {
-
     void setEffectiveBlocks(TagKey<Block> effectiveBlocks);
 
     TagKey<Block> getEffectiveBlocks(ItemStack stack);

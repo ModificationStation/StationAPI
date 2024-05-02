@@ -1,5 +1,6 @@
 {
   "values": [
+    "#needs_stone_tool",
     "diamond_block",
     "diamond_ore",
     "gold_block",

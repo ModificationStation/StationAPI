@@ -7,8 +7,10 @@ import net.modificationstation.sltest.block.Blocks;
 import net.modificationstation.sltest.block.VariationBlock;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.item.tool.ToolMaterialFactory;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.template.item.BlockStateItem;
 
 import static net.modificationstation.sltest.SLTest.NAMESPACE;
@@ -18,7 +20,7 @@ public class ItemListener {
     @EventListener
     public void registerItems(ItemRegistryEvent event) {
         testItem = new ModdedItem(NAMESPACE.id("test_item")).setTranslationKey(NAMESPACE, "testItem"); //8475
-        testMaterial = ToolMaterialFactory.create("testMaterial", 3, Integer.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE - 2);
+        testMaterial = ToolMaterialFactory.create("testMaterial", 3, Integer.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE - 2).miningLevelTag(TagKey.of(BlockRegistry.KEY, NAMESPACE.id("needs_tool_level_modded")));
         testPickaxe = new ModdedPickaxeItem(NAMESPACE.id("test_pickaxe"), testMaterial).setTranslationKey(NAMESPACE, "testPickaxe"); //8476
         testNBTItem = new NBTItem(NAMESPACE.id("nbt_item")).setTranslationKey(NAMESPACE, "nbt_item"); //8477
         testModelItem = new ModelItem(NAMESPACE.id("model_item")).setMaxCount(1).setTranslationKey(NAMESPACE, "idkSomething");
