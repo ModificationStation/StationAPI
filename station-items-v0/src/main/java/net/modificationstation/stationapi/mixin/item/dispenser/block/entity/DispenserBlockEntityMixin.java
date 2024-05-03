@@ -16,9 +16,6 @@ class DispenserBlockEntityMixin {
 
     @Inject(method = "removeStack", at = @At("HEAD"))
     private void stationapi_customDispenserCaptureInventoryAndSlot(int slot, int amt, CallbackInfoReturnable<ItemStack> cir) {
-        if (inventory[slot] != null) {
-            DispenserInfoStorage.slot = slot;
-            DispenserInfoStorage.inventory = inventory;
-        }
+        DispenserInfoStorage.slot = slot;
     }
 }

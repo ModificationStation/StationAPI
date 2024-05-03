@@ -8,8 +8,8 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.dispenser.ItemDispenseContext;
 import net.modificationstation.stationapi.api.item.CustomDispenseBehavior;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.item.TemplatePickaxeItem;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 public class ModdedPickaxeItem extends TemplatePickaxeItem implements CustomDispenseBehavior {
@@ -41,7 +41,7 @@ public class ModdedPickaxeItem extends TemplatePickaxeItem implements CustomDisp
 
     @Override
     public void dispense(ItemDispenseContext context) {
-        LivingEntity entity = (LivingEntity) EntityRegistry.create("GPoor", context.world);
+        LivingEntity entity = (LivingEntity) EntityRegistry.create("GPoor", context.dispenserBlockEntity.world);
         context.shootEntity(entity);
     }
 }

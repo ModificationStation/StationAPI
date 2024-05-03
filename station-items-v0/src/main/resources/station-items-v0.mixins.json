@@ -6,6 +6,7 @@
   "mixins": [
     "BlockMixin",
     "DyeItemMixin",
+    "EntityAccessor",
     "EntityMixin",
     "InventoryS2CPacketMixin",
     "ItemMixin",
