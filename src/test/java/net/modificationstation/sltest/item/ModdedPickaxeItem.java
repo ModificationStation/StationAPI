@@ -41,7 +41,7 @@ public class ModdedPickaxeItem extends TemplatePickaxeItem implements CustomDisp
 
     @Override
     public void dispense(ItemDispenseContext context) {
-        LivingEntity entity = (LivingEntity) EntityRegistry.create("GPoor", context.dispenserBlockEntity.world);
+        LivingEntity entity = (LivingEntity) EntityRegistry.create("GPoor", context.dispenser.world);
         context.shootEntity(entity);
     }
 }

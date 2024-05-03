@@ -18,20 +18,20 @@ import java.util.Random;
  * @see CustomDispenseBehavior
  */
 public class ItemDispenseContext {
-    public final DispenserBlockEntity dispenserBlockEntity;
+    public final DispenserBlockEntity dispenser;
     public final int slot;
-    public final Direction dispenseDirection;
+    public final Direction direction;
     public ItemStack itemStack;
     /**
      * Skips special vanilla behavior for arrows, snowballs and eggs.
      */
     public boolean skipSpecial;
 
-    public ItemDispenseContext(ItemStack itemStack, DispenserBlockEntity dispenserBlockEntity, int slot) {
-        this.dispenserBlockEntity = dispenserBlockEntity;
+    public ItemDispenseContext(ItemStack itemStack, DispenserBlockEntity dispenser, int slot) {
+        this.dispenser = dispenser;
         this.itemStack = itemStack;
         this.slot = slot;
-        dispenseDirection = Direction.byId(dispenserBlockEntity.world.getBlockMeta(dispenserBlockEntity.x, dispenserBlockEntity.y, dispenserBlockEntity.z));
+        direction = Direction.byId(dispenser.world.getBlockMeta(dispenser.x, dispenser.y, dispenser.z));
     }
 
     public static void genericShootEntity(Entity entity, double velX, double velY, double velZ, float pitch, float yaw) {
@@ -63,14 +63,14 @@ public class ItemDispenseContext {
     }
 
     public void shootEntity(Entity entity, ShootEntityFunction shootFunc) {
-        entity.method_1340(dispenserBlockEntity.x + 0.5, dispenserBlockEntity.y + 0.5, dispenserBlockEntity.z + 0.5);
-        shootFunc.shoot(entity, dispenseDirection.getOffsetX(), dispenseDirection.getOffsetY() + 0.1, dispenseDirection.getOffsetZ(), 1.1F, 6.0F);
-        dispenserBlockEntity.world.method_210(entity);
-        dispenserBlockEntity.world.method_230(1002, dispenserBlockEntity.x, dispenserBlockEntity.y, dispenserBlockEntity.z, 0);
-        dispenserBlockEntity.world.method_230(2000, dispenserBlockEntity.x, dispenserBlockEntity.y, dispenserBlockEntity.z, dispenseDirection.getOffsetX() + 1 + (dispenseDirection.getOffsetZ() + 1) * 3);
+        entity.method_1340(dispenser.x + 0.5, dispenser.y + 0.5, dispenser.z + 0.5);
+        shootFunc.shoot(entity, direction.getOffsetX(), direction.getOffsetY() + 0.1, direction.getOffsetZ(), 1.1F, 6.0F);
+        dispenser.world.method_210(entity);
+        dispenser.world.method_230(1002, dispenser.x, dispenser.y, dispenser.z, 0);
+        dispenser.world.method_230(2000, dispenser.x, dispenser.y, dispenser.z, direction.getOffsetX() + 1 + (direction.getOffsetZ() + 1) * 3);
     }
 
     public BlockPos getFacingBlockPos() {
-        return new BlockPos(dispenserBlockEntity.x, dispenserBlockEntity.y, dispenserBlockEntity.z).add(dispenseDirection.getVector());
+        return new BlockPos(dispenser.x, dispenser.y, dispenser.z).add(direction.getVector());
     }
 }

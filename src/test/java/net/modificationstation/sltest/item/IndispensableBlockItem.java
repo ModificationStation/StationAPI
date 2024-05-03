@@ -16,7 +16,7 @@ public class IndispensableBlockItem extends BlockItem implements CustomDispenseB
 
     @Override
     public void dispense(ItemDispenseContext context) {
-        World world = context.dispenserBlockEntity.world;
+        World world = context.dispenser.world;
         BlockPos pos = context.getFacingBlockPos();
         if (world.getBlockId(pos.x, pos.y, pos.z) == 0) {
             world.setBlock(pos.x, pos.y, pos.z, Blocks.INDISPENSABLE_BLOCK.get().id);

@@ -15,7 +15,7 @@ public class DispenserListener {
     @EventListener
     public static void changeDispenseBehavior(DispenseEvent event) {
         ItemDispenseContext context = event.context;
-        World world = context.dispenserBlockEntity.world;
+        World world = context.dispenser.world;
 
         if (context.itemStack != null) {
             // Make arrows drop as an item instead of shoot as an entity
@@ -29,13 +29,13 @@ public class DispenserListener {
             if (context.itemStack.itemId == Item.BUCKET.id) {
                 if (world.method_1779(facing.x, facing.y, facing.z) == Material.WATER && world.getBlockMeta(facing.x, facing.y, facing.z) == 0) {
                     world.setBlock(facing.x, facing.y, facing.z, 0);
-                    context.dispenserBlockEntity.setStack(context.slot, new ItemStack(Item.WATER_BUCKET));
+                    context.dispenser.setStack(context.slot, new ItemStack(Item.WATER_BUCKET));
                     event.cancel();
                 }
 
                 if (world.method_1779(facing.x, facing.y, facing.z) == Material.LAVA && world.getBlockMeta(facing.x, facing.y, facing.z) == 0) {
                     world.setBlock(facing.x, facing.y, facing.z, 0);
-                    context.dispenserBlockEntity.setStack(context.slot, new ItemStack(Item.LAVA_BUCKET));
+                    context.dispenser.setStack(context.slot, new ItemStack(Item.LAVA_BUCKET));
                     event.cancel();
                 }
             }
@@ -44,7 +44,7 @@ public class DispenserListener {
             if (context.itemStack.itemId == Item.WATER_BUCKET.id) {
                 if (world.method_1779(facing.x, facing.y, facing.z) == Material.AIR) {
                     world.setBlockStateWithNotify(facing.x, facing.y, facing.z, Block.WATER.getDefaultState());
-                    context.dispenserBlockEntity.setStack(context.slot, new ItemStack(Item.BUCKET));
+                    context.dispenser.setStack(context.slot, new ItemStack(Item.BUCKET));
                     event.cancel();
                 }
             }
@@ -53,7 +53,7 @@ public class DispenserListener {
             if (context.itemStack.itemId == Item.LAVA_BUCKET.id) {
                 if (world.method_1779(facing.x, facing.y, facing.z) == Material.AIR) {
                     world.setBlockStateWithNotify(facing.x, facing.y, facing.z, Block.LAVA.getDefaultState());
-                    context.dispenserBlockEntity.setStack(context.slot, new ItemStack(Item.BUCKET));
+                    context.dispenser.setStack(context.slot, new ItemStack(Item.BUCKET));
                     event.cancel();
                 }
             }
