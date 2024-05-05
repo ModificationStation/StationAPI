@@ -95,10 +95,14 @@ allprojects {
             isTransitive = false
         }
 
-        implementation("blue.endless:jankson:1.2.1")
-        modLocalRuntime("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") {
+        compileOnlyApi("com.github.calmilamsy:ModMenu:${project.properties["modmenu_version"]}") {
             isTransitive = false
         }
+
+        implementation("blue.endless:jankson:1.2.1")
+//        modLocalRuntime("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") {
+//            isTransitive = false
+//        }
         modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.properties["hmi_version"]}") {
             isTransitive = false
         }
