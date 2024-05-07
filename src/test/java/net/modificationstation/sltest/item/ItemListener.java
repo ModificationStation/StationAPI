@@ -6,6 +6,7 @@ import net.minecraft.item.ToolMaterial;
 import net.modificationstation.sltest.block.Blocks;
 import net.modificationstation.sltest.block.VariationBlock;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
+import net.modificationstation.stationapi.api.item.tool.MiningLevelManager;
 import net.modificationstation.stationapi.api.item.tool.ToolMaterialFactory;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
@@ -19,8 +20,13 @@ public class ItemListener {
 
     @EventListener
     public void registerItems(ItemRegistryEvent event) {
+        MiningLevelManager.LevelNode moddedNode = new MiningLevelManager.LevelNode(TagKey.of(BlockRegistry.KEY, NAMESPACE.id("needs_tool_level_modded")));
+        MiningLevelManager.GRAPH.putEdge(ToolMaterial.STONE.getMiningLevelNode(), moddedNode);
+        MiningLevelManager.GRAPH.putEdge(moddedNode, ToolMaterial.IRON.getMiningLevelNode());
+        MiningLevelManager.invalidateCache();
+
         testItem = new ModdedItem(NAMESPACE.id("test_item")).setTranslationKey(NAMESPACE, "testItem"); //8475
-        testMaterial = ToolMaterialFactory.create("testMaterial", 3, Integer.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE - 2).miningLevelTag(TagKey.of(BlockRegistry.KEY, NAMESPACE.id("needs_tool_level_modded")));
+        testMaterial = ToolMaterialFactory.create("testMaterial", 3, Integer.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE - 2).miningLevelNode(moddedNode);
         testPickaxe = new ModdedPickaxeItem(NAMESPACE.id("test_pickaxe"), testMaterial).setTranslationKey(NAMESPACE, "testPickaxe"); //8476
         testNBTItem = new NBTItem(NAMESPACE.id("nbt_item")).setTranslationKey(NAMESPACE, "nbt_item"); //8477
         testModelItem = new ModelItem(NAMESPACE.id("model_item")).setMaxCount(1).setTranslationKey(NAMESPACE, "idkSomething");
@@ -32,6 +38,8 @@ public class ItemListener {
         testShears = new TestShearsItem(NAMESPACE.id("test_shears")).setTranslationKey(NAMESPACE, "test_shears");
         pacifistSword = new PacifistSwordItem(NAMESPACE.id("pacifist_sword")).setTranslationKey(NAMESPACE, "pacifist_sword");
         dullPickaxe = new DullPickaxeItem(NAMESPACE.id("dull_pickaxe")).setTranslationKey(NAMESPACE, "dull_pickaxe");
+
+
     }
 
     public static Item testItem;
