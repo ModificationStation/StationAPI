@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.impl.config;
 
 import org.simpleyaml.configuration.comments.format.YamlCommentFormat;
 import org.simpleyaml.configuration.file.YamlFile;
-import org.simpleyaml.configuration.file.YamlFileWrapper;
 import org.simpleyaml.configuration.implementation.api.QuoteStyle;
 
 import java.io.*;
@@ -22,8 +21,11 @@ public class GlassYamlFile extends YamlFile {
     public GlassYamlFile(File file) throws IllegalArgumentException {
         super(file);
         options().useComments(true);
-        options().quoteStyleDefaults().setDefaultQuoteStyle(QuoteStyle.DOUBLE);
         setCommentFormat(YamlCommentFormat.PRETTY);
+        options().quoteStyleDefaults().setQuoteStyle(List.class, QuoteStyle.DOUBLE);
+        options().quoteStyleDefaults().setQuoteStyle(Map.class, QuoteStyle.DOUBLE);
+        options().quoteStyleDefaults().setQuoteStyle(String.class, QuoteStyle.DOUBLE);
+        options().quoteStyleDefaults().setQuoteStyle(String[].class, QuoteStyle.DOUBLE);
         options().headerFormatter()
                 .prefixFirst("#####################################################")
                 .commentPrefix("##  ")
@@ -47,7 +49,6 @@ public class GlassYamlFile extends YamlFile {
         return (Float) get(key);
     }
 
-    // WHyyyy
     public <T extends Enum<?>> T getEnum(String key, Class<T> targetEnum, T defaultValue) {
         return targetEnum.getEnumConstants()[getInt(key, defaultValue.ordinal())];
     }
@@ -86,5 +87,9 @@ public class GlassYamlFile extends YamlFile {
     @Override
     public GlassYamlWrapper path(String path) {
         return new GlassYamlWrapper(this, path);
+    }
+
+    public GlassYamlWrapper path() {
+        return new GlassYamlWrapper(this, "");
     }
 }

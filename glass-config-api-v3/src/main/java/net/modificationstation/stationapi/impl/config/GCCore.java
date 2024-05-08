@@ -203,6 +203,7 @@ public class GCCore implements PreLaunchEntrypoint {
             }
             net.modificationstation.stationapi.impl.config.object.ConfigCategory configCategory = new net.modificationstation.stationapi.impl.config.object.ConfigCategory(modContainer.getMetadata().getId(), configField.getAnnotation(GConfig.class).visibleName(), null, configField, objField, configField.isAnnotationPresent(MultiplayerSynced.class), HashMultimap.create(), true);
             readDeeper(rootConfigObject, configField, modConfigFile.path(""), configCategory, totalReadFields, totalReadCategories, isMultiplayer, defaultEntry);
+            readDeeper(rootConfigObject, configField, modConfigFile.path(), configCategory, totalReadFields, totalReadCategories, isMultiplayer, defaultEntry);
             if (!loaded) {
                 MOD_CONFIGS.put(configID, BiTuple.of(MOD_CONFIGS.remove(configID).one(), configCategory));
             } else {
@@ -308,8 +309,7 @@ public class GCCore implements PreLaunchEntrypoint {
             GlassYamlFile configFile = new GlassYamlFile(new File(FabricLoader.getInstance().getConfigDir().toFile(), container.getProvider().getMetadata().getId() + "/" + category.parentField.getAnnotation(GConfig.class).value() + ".yml"));
             configFile.createNewFile();
             GlassYamlFile serverExported = new GlassYamlFile();
-            // The path("") is critical for saving a shitton of copy-paste snowflake code. Thank you library maker, for not being controlling.
-            saveDeeper(configFile.path(""), serverExported.path(""), category, category.parentField, readValues, readCategories);
+            saveDeeper(configFile.path(), serverExported.path(), category, category.parentField, readValues, readCategories);
 
             if (EventStorage.PRE_SAVE_LISTENERS.containsKey(container.getProvider().getMetadata().getId())) {
                 EventStorage.PRE_SAVE_LISTENERS.get(container.getProvider().getMetadata().getId()).getEntrypoint().onPreConfigSaved(source, new GlassYamlFile(configFile.getConfigurationFile()), configFile);
@@ -341,9 +341,9 @@ public class GCCore implements PreLaunchEntrypoint {
                 }
                 Object jsonElement = configFactory.apply(((ConfigEntry<?>) entry).value);
                 if (!((ConfigEntry<?>) entry).multiplayerLoaded) {
-                    YamlFileWrapper child = newValues.setChild(entry.id, jsonElement);
+                    newValues.setChild(entry.id, jsonElement);
                     if (entry.description != null && !entry.description.isEmpty()) {
-                        child.comment(entry.description);
+                        newValues.path(entry.id).comment(entry.description);
                     }
                 }
                 if (entry.multiplayerSynced) {

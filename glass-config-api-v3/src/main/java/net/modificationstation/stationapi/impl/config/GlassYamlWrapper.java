@@ -2,6 +2,9 @@ package net.modificationstation.stationapi.impl.config;
 
 import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.configuration.file.YamlFileWrapper;
+import org.simpleyaml.configuration.implementation.api.YamlImplementation;
+
+import java.util.*;
 
 // And so the code crimes continue.
 public class GlassYamlWrapper extends YamlFileWrapper {
@@ -23,6 +26,7 @@ public class GlassYamlWrapper extends YamlFileWrapper {
 
     @Override
     public GlassYamlWrapper path(String path) {
-        return new GlassYamlWrapper(this.configuration, path, this);
+        // Fixes some fuckery with comments.
+        return new GlassYamlWrapper(this.configuration, path, Objects.equals(this.path, "") ? null : this);
     }
 }
