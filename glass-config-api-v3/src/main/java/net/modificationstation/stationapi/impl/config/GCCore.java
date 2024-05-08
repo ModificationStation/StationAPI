@@ -202,7 +202,6 @@ public class GCCore implements PreLaunchEntrypoint {
                 defaultEntry = DEFAULT_MOD_CONFIGS.get(configID);
             }
             net.modificationstation.stationapi.impl.config.object.ConfigCategory configCategory = new net.modificationstation.stationapi.impl.config.object.ConfigCategory(modContainer.getMetadata().getId(), configField.getAnnotation(GConfig.class).visibleName(), null, configField, objField, configField.isAnnotationPresent(MultiplayerSynced.class), HashMultimap.create(), true);
-            readDeeper(rootConfigObject, configField, modConfigFile.path(""), configCategory, totalReadFields, totalReadCategories, isMultiplayer, defaultEntry);
             readDeeper(rootConfigObject, configField, modConfigFile.path(), configCategory, totalReadFields, totalReadCategories, isMultiplayer, defaultEntry);
             if (!loaded) {
                 MOD_CONFIGS.put(configID, BiTuple.of(MOD_CONFIGS.remove(configID).one(), configCategory));
