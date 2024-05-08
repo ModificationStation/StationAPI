@@ -1,10 +1,6 @@
 package net.modificationstation.stationapi.impl.config;
 
 
-import blue.endless.jankson.Comment;
-import blue.endless.jankson.Jankson;
-import blue.endless.jankson.JsonElement;
-import blue.endless.jankson.JsonObject;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
 import net.fabricmc.api.EnvType;
@@ -12,6 +8,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
+import net.modificationstation.stationapi.api.config.Comment;
 import net.modificationstation.stationapi.api.config.ConfigCategory;
 import net.modificationstation.stationapi.api.config.ConfigFactoryProvider;
 import net.modificationstation.stationapi.api.config.ConfigName;
@@ -29,6 +26,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.simpleyaml.configuration.file.YamlFileWrapper;
+import org.simpleyaml.configuration.implementation.api.QuoteStyle;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.io.*;
@@ -90,7 +89,7 @@ public class GCCore implements PreLaunchEntrypoint {
             BiTuple<EntrypointContainer<Object>, net.modificationstation.stationapi.impl.config.object.ConfigCategory> category = MOD_CONFIGS.get(mod.get());
             saveConfig(category.one(), category.two(), EventStorage.EventSource.SERVER_JOIN | EventStorage.EventSource.MODDED_SERVER_JOIN);
             try {
-                loadModConfig(category.one().getEntrypoint(), category.one().getProvider(), category.two().parentField, mod.get(), Jankson.builder().build().load(string));
+                loadModConfig(category.one().getEntrypoint(), category.one().getProvider(), category.two().parentField, mod.get(), new GlassYamlFile(string));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -132,7 +131,7 @@ public class GCCore implements PreLaunchEntrypoint {
         ConfigFactories.loadFactories = loadImmutableBuilder.build();
         log(ConfigFactories.loadFactories.size() + " config load factories loaded.");
 
-        ImmutableMap.Builder<Type, Function<Object, JsonElement>> saveImmutableBuilder = ImmutableMap.builder();
+        ImmutableMap.Builder<Type, Function<Object, Object>> saveImmutableBuilder = ImmutableMap.builder();
         containers.forEach((customConfigFactoryProviderEntrypointContainer -> customConfigFactoryProviderEntrypointContainer.getEntrypoint().provideSaveFactories(saveImmutableBuilder)));
         ConfigFactories.saveFactories = saveImmutableBuilder.build();
         log(ConfigFactories.saveFactories.size() + " config save factories loaded.");
@@ -165,7 +164,7 @@ public class GCCore implements PreLaunchEntrypoint {
         loaded = true;
     }
 
-    public static void loadModConfig(Object rootConfigObject, ModContainer modContainer, Field configField, Identifier configID, JsonObject jsonOverride) {
+    public static void loadModConfig(Object rootConfigObject, ModContainer modContainer, Field configField, Identifier configID, GlassYamlFile jsonOverride) {
         AtomicInteger totalReadCategories = new AtomicInteger();
         AtomicInteger totalReadFields = new AtomicInteger();
         try {
@@ -176,19 +175,13 @@ public class GCCore implements PreLaunchEntrypoint {
                     return;
                 }
             }
-            File modConfigFile = new File(FabricLoader.getInstance().getConfigDir().toFile(), modContainer.getMetadata().getId() + "/" + configField.getAnnotation(GConfig.class).value() + ".json");
-            JsonObject rootJsonObject;
+            GlassYamlFile modConfigFile = new GlassYamlFile(new File(FabricLoader.getInstance().getConfigDir().toFile(), modContainer.getMetadata().getId() + "/" + configField.getAnnotation(GConfig.class).value() + ".yml"));
             if (jsonOverride == null) {
-                if (modConfigFile.exists()) {
-                    rootJsonObject = Jankson.builder().build().load(modConfigFile);
-                }
-                else {
-                    rootJsonObject = new JsonObject();
-                }
+                modConfigFile.createOrLoad();
             }
             else {
-                rootJsonObject = jsonOverride;
-                isMultiplayer = rootJsonObject.getBoolean("multiplayer", false);
+                modConfigFile.merge(jsonOverride);
+                isMultiplayer = modConfigFile.getBoolean("multiplayer", false);
                 // Try to catch mods reloading configs while on a server.
                 if(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT && !isMultiplayer) {
                     isMultiplayer = ((Minecraft) FabricLoader.getInstance().getGameInstance()).world.isRemote;
@@ -209,7 +202,7 @@ public class GCCore implements PreLaunchEntrypoint {
                 defaultEntry = DEFAULT_MOD_CONFIGS.get(configID);
             }
             net.modificationstation.stationapi.impl.config.object.ConfigCategory configCategory = new net.modificationstation.stationapi.impl.config.object.ConfigCategory(modContainer.getMetadata().getId(), configField.getAnnotation(GConfig.class).visibleName(), null, configField, objField, configField.isAnnotationPresent(MultiplayerSynced.class), HashMultimap.create(), true);
-            readDeeper(rootConfigObject, configField, rootJsonObject, configCategory, totalReadFields, totalReadCategories, isMultiplayer, defaultEntry);
+            readDeeper(rootConfigObject, configField, modConfigFile.path(""), configCategory, totalReadFields, totalReadCategories, isMultiplayer, defaultEntry);
             if (!loaded) {
                 MOD_CONFIGS.put(configID, BiTuple.of(MOD_CONFIGS.remove(configID).one(), configCategory));
             } else {
@@ -222,7 +215,7 @@ public class GCCore implements PreLaunchEntrypoint {
         }
     }
 
-    private static void readDeeper(Object rootConfigObject, Field configField, JsonObject rootJsonObject, net.modificationstation.stationapi.impl.config.object.ConfigCategory category, AtomicInteger totalReadFields, AtomicInteger totalReadCategories, boolean isMultiplayer, HashMap<String, Object> defaultConfig) throws IllegalAccessException {
+    private static void readDeeper(Object rootConfigObject, Field configField, GlassYamlWrapper rootJsonObject, net.modificationstation.stationapi.impl.config.object.ConfigCategory category, AtomicInteger totalReadFields, AtomicInteger totalReadCategories, boolean isMultiplayer, HashMap<String, Object> defaultConfig) throws IllegalAccessException {
         totalReadCategories.getAndIncrement();
         configField.setAccessible(true);
         Object objField = configField.get(rootConfigObject);
@@ -243,12 +236,17 @@ public class GCCore implements PreLaunchEntrypoint {
                 }
             }
             if (field.isAnnotationPresent(ConfigCategory.class)) {
-                JsonObject jsonCategory = rootJsonObject.getObject(field.getName());
-                if (jsonCategory == null) {
-                    jsonCategory = new JsonObject();
-                    rootJsonObject.put(field.getName(), jsonCategory);
-                }
-                net.modificationstation.stationapi.impl.config.object.ConfigCategory childCategory = new net.modificationstation.stationapi.impl.config.object.ConfigCategory(field.getName(), field.getAnnotation(ConfigCategory.class).value(), field.isAnnotationPresent(Comment.class)? field.getAnnotation(Comment.class).value() : null, field, objField, category.multiplayerSynced || field.isAnnotationPresent(MultiplayerSynced.class), HashMultimap.create(), false);
+                GlassYamlWrapper jsonCategory = rootJsonObject.path(field.getName());
+                net.modificationstation.stationapi.impl.config.object.ConfigCategory childCategory = new net.modificationstation.stationapi.impl.config.object.ConfigCategory(
+                        field.getName(),
+                        field.getAnnotation(ConfigCategory.class).value(),
+                        field.isAnnotationPresent(Comment.class)? field.getAnnotation(Comment.class).value() : null,
+                        field,
+                        objField,
+                        category.multiplayerSynced || field.isAnnotationPresent(MultiplayerSynced.class),
+                        HashMultimap.create(),
+                        false
+                );
                 category.values.put(ConfigCategory.class, childCategory);
                 HashMap<String, Object> childDefaultConfig;
                 if(!loaded) {
@@ -265,19 +263,36 @@ public class GCCore implements PreLaunchEntrypoint {
                 if (!field.isAnnotationPresent(ConfigName.class)) {
                     throw new RuntimeException("Config value \"" + field.getType().getName() + ";" + field.getName() + "\" has no ConfigName annotation!");
                 }
+                if (field.getType() == HashMap.class) {
+                    throw new RuntimeException("Config value \"" + field.getType().getName() + ";" + field.getName() + "\" is a HashMap! Create a new HashMap subclass, as the basic type is used in GCAPI internals!");
+                }
                 NonFunction<String, String, String, Field, Object, Boolean, Object, Object, MaxLength, ConfigEntry<?>> function = ConfigFactories.loadFactories.get(field.getType());
                 if (function == null) {
                     throw new RuntimeException("Config value \"" + field.getType().getName() + ";" + field.getName() + "\" has no config loader for it's type!");
+                }
+                if (Modifier.isStatic(field.getModifiers())) {
+                    throw new RuntimeException("Config value \"" + field.getType().getName() + ";" + field.getName() + "\" is static! Do not use static fields for configs, it can cause undocumented and unpredictable behavior!");
+                }
+                if (Modifier.isFinal(field.getModifiers())) {
+                    throw new RuntimeException("Config value \"" + field.getType().getName() + ";" + field.getName() + "\" is final! How am I meant to load configs into this?");
                 }
                 field.setAccessible(true);
                 if(!loaded) {
                     defaultConfig.put(field.getName(), field.get(objField));
                 }
-                //noinspection rawtypes
-                Class fieldType = ConfigFactories.loadTypeAdapterFactories.get(field.getType());
+                Class<?> fieldType = ConfigFactories.loadTypeAdapterFactories.get(field.getType());
                 fieldType = fieldType != null ? fieldType : field.getType();
-                //noinspection unchecked
-                ConfigEntry<?> configEntry = function.apply(field.getName(), field.getAnnotation(ConfigName.class).value(), field.isAnnotationPresent(Comment.class)? field.getAnnotation(Comment.class).value() : null, field, objField, category.multiplayerSynced || field.isAnnotationPresent(MultiplayerSynced.class), rootJsonObject.get(fieldType, field.getName()) != null? rootJsonObject.get(fieldType, field.getName()) : childObjField, defaultConfig.get(field.getName()), field.isAnnotationPresent(MaxLength.class)? field.getAnnotation(MaxLength.class) : MAX_LENGTH_SUPPLIER.get());
+                ConfigEntry<?> configEntry = function.apply(
+                        field.getName(),
+                        field.getAnnotation(ConfigName.class).value(),
+                        field.isAnnotationPresent(Comment.class)? field.getAnnotation(Comment.class).value() : null,
+                        field,
+                        objField,
+                        category.multiplayerSynced || field.isAnnotationPresent(MultiplayerSynced.class),
+                        rootJsonObject.getChild(field.getName(), fieldType) != null? rootJsonObject.getChild(field.getName(), fieldType) : childObjField,
+                        defaultConfig.get(field.getName()),
+                        field.isAnnotationPresent(MaxLength.class)? field.getAnnotation(MaxLength.class) : MAX_LENGTH_SUPPLIER.get()
+                );
                 configEntry.multiplayerLoaded = isMultiplayer && configEntry.multiplayerSynced;
                 category.values.put(field.getType(), configEntry);
                 configEntry.saveToField();
@@ -290,70 +305,59 @@ public class GCCore implements PreLaunchEntrypoint {
         try {
             AtomicInteger readValues = new AtomicInteger();
             AtomicInteger readCategories = new AtomicInteger();
-            File configFile = new File(FabricLoader.getInstance().getConfigDir().toFile(), container.getProvider().getMetadata().getId() + "/" + category.parentField.getAnnotation(GConfig.class).value() + ".json");
-            JsonObject newValues;
-            if (configFile.exists()) {
-                newValues = Jankson.builder().build().load(configFile);
-            }
-            else {
-                newValues = new JsonObject();
-            }
-            JsonObject serverExported = saveDeeper(newValues, category, category.parentField, readValues, readCategories);
+            GlassYamlFile configFile = new GlassYamlFile(new File(FabricLoader.getInstance().getConfigDir().toFile(), container.getProvider().getMetadata().getId() + "/" + category.parentField.getAnnotation(GConfig.class).value() + ".yml"));
+            configFile.createNewFile();
+            GlassYamlFile serverExported = new GlassYamlFile();
+            // The path("") is critical for saving a shitton of copy-paste snowflake code. Thank you library maker, for not being controlling.
+            saveDeeper(configFile.path(""), serverExported.path(""), category, category.parentField, readValues, readCategories);
 
             if (EventStorage.PRE_SAVE_LISTENERS.containsKey(container.getProvider().getMetadata().getId())) {
-                EventStorage.PRE_SAVE_LISTENERS.get(container.getProvider().getMetadata().getId()).getEntrypoint().onPreConfigSaved(source, configFile.exists() ? Jankson.builder().build().load(configFile) : new JsonObject(), newValues);
+                EventStorage.PRE_SAVE_LISTENERS.get(container.getProvider().getMetadata().getId()).getEntrypoint().onPreConfigSaved(source, new GlassYamlFile(configFile.getConfigurationFile()), configFile);
             }
 
-            if (!configFile.exists()) {
-                //noinspection ResultOfMethodCallIgnored
-                configFile.getParentFile().mkdirs();
-                //noinspection ResultOfMethodCallIgnored
-                configFile.createNewFile();
-            }
-
-            FileOutputStream fileOutputStream = (new FileOutputStream(configFile));
-            fileOutputStream.write(newValues.toJson(true, true).getBytes());
-            fileOutputStream.flush();
-            fileOutputStream.close();
+            configFile.save();
             log("Successfully saved " + readCategories + " categories, containing " + readValues.get() + " values for " + container.getProvider().getMetadata().getName() + "(" + container.getProvider().getMetadata().getId() + ").");
-            return serverExported.toJson();
+            return serverExported.saveToString();
         }
         catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static JsonObject saveDeeper(JsonObject newValues, net.modificationstation.stationapi.impl.config.object.ConfigCategory category, Field childField, AtomicInteger readValues, AtomicInteger readCategories) throws IllegalAccessException {
-        JsonObject serverExported = new JsonObject();
-
+    private static void saveDeeper(YamlFileWrapper newValues, YamlFileWrapper serverExported, net.modificationstation.stationapi.impl.config.object.ConfigCategory category, Field childField, AtomicInteger readValues, AtomicInteger readCategories) throws IllegalAccessException {
         for (ConfigBase entry : category.values.values()) {
             childField.setAccessible(true);
             if (entry instanceof net.modificationstation.stationapi.impl.config.object.ConfigCategory) {
-                JsonObject childCategory = new JsonObject();
-                newValues.put(entry.id, childCategory);
-                JsonObject returnedServerExported = saveDeeper(childCategory, (net.modificationstation.stationapi.impl.config.object.ConfigCategory) entry, entry.parentField, readValues, readCategories);
-                serverExported.put(entry.id, returnedServerExported);
+                saveDeeper(newValues.path(entry.id), serverExported.path(entry.id), (net.modificationstation.stationapi.impl.config.object.ConfigCategory) entry, entry.parentField, readValues, readCategories);
                 readCategories.getAndIncrement();
+                if (entry.parentField.getAnnotation(Comment.class) != null) {
+                    newValues.path(entry.id).comment(entry.parentField.getAnnotation(Comment.class).value());
+                }
             }
             else if (entry instanceof ConfigEntry) {
-                Function<Object, JsonElement> configFactory = ConfigFactories.saveFactories.get(((ConfigEntry<?>) entry).value.getClass());
+                Function<Object, Object> configFactory = ConfigFactories.saveFactories.get(entry.parentField.getType());
                 if (configFactory == null) {
                     throw new RuntimeException("Config value \"" + entry.parentObject.getClass().getName() + ";" + entry.id + "\" has no config saver for it's type!");
                 }
-                JsonElement jsonElement = configFactory.apply(((ConfigEntry<?>) entry).value);
+                Object jsonElement = configFactory.apply(((ConfigEntry<?>) entry).value);
                 if (!((ConfigEntry<?>) entry).multiplayerLoaded) {
-                    newValues.put(entry.id, jsonElement, entry.description);
+                    YamlFileWrapper child = newValues.setChild(entry.id, jsonElement);
+                    if (entry.description != null && !entry.description.isEmpty()) {
+                        child.comment(entry.description);
+                    }
                 }
                 if (entry.multiplayerSynced) {
-                    serverExported.put(entry.id, jsonElement, entry.description);
+                    serverExported.setChild(entry.id, jsonElement);
                 }
                 ((ConfigEntry<?>) entry).saveToField();
+                if (entry.parentField.getAnnotation(Comment.class) != null) {
+                    newValues.path(entry.id).comment(entry.parentField.getAnnotation(Comment.class).value());
+                }
                 readValues.getAndIncrement();
             }
             else {
                 throw new RuntimeException("What?! Config contains a non-serializable entry!");
             }
         }
-        return serverExported;
     }
 }

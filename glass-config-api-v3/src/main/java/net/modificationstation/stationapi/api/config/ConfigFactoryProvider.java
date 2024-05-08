@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.config;
 
-import blue.endless.jankson.JsonElement;
 import com.google.common.collect.ImmutableMap;
 import net.modificationstation.stationapi.impl.config.NonFunction;
 import net.modificationstation.stationapi.impl.config.object.ConfigEntry;
@@ -22,7 +21,7 @@ public interface ConfigFactoryProvider {
      * @param immutableBuilder Arguments for the Function are: value.
      *                         Should return a JsonElement containing the serialized value for your custom config type.
      */
-    void provideSaveFactories(ImmutableMap.Builder<Type, Function<Object, JsonElement>> immutableBuilder);
+    void provideSaveFactories(ImmutableMap.Builder<Type, Function<Object, Object>> immutableBuilder);
 
     /**
      * Return custom factories for certain config class types.

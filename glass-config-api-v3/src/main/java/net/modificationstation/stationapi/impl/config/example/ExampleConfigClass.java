@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.impl.config.example;
 
-import blue.endless.jankson.Comment;
+import net.modificationstation.stationapi.api.config.Comment;
 import net.modificationstation.stationapi.api.config.ConfigCategory;
 import net.modificationstation.stationapi.api.config.ConfigName;
 import net.modificationstation.stationapi.api.config.MultiplayerSynced;

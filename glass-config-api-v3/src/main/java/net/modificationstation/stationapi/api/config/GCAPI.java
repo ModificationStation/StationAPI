@@ -1,16 +1,15 @@
 package net.modificationstation.stationapi.api.config;
 
-import blue.endless.jankson.Jankson;
-import blue.endless.jankson.JsonObject;
-import blue.endless.jankson.api.SyntaxError;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.modificationstation.stationapi.impl.config.EventStorage;
 import net.modificationstation.stationapi.impl.config.GCCore;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.impl.config.GlassYamlFile;
 import net.modificationstation.stationapi.impl.config.object.ConfigCategory;
 import org.jetbrains.annotations.Nullable;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
+import java.io.*;
 import java.util.concurrent.atomic.*;
 
 /**
@@ -23,8 +22,8 @@ public class GCAPI {
      * @param configID Should be an identifier formatted like mymodid:mygconfigvalue
      * @param overrideConfigJson Optional config override JSON. Leave as null to do a plain config reload. JSON can be partial, and missing values from the JSON will be kept.
      */
-    public static void reloadConfig(Identifier configID, @Nullable String overrideConfigJson) throws SyntaxError {
-        reloadConfig(configID, Jankson.builder().build().load(overrideConfigJson));
+    public static void reloadConfig(Identifier configID, @Nullable String overrideConfigJson) throws IOException {
+        reloadConfig(configID, new GlassYamlFile(overrideConfigJson));
     }
 
     /**
@@ -33,7 +32,7 @@ public class GCAPI {
      * @param overrideConfigJson Optional config override JSON. Leave as null to do a plain config reload. JSON can be partial, and missing values from the JSON will be kept.
      */
     @SuppressWarnings("deprecation")
-    public static void reloadConfig(Identifier configID, @Nullable JsonObject overrideConfigJson) {
+    public static void reloadConfig(Identifier configID, @Nullable GlassYamlFile overrideConfigJson) {
         AtomicReference<Identifier> mod = new AtomicReference<>();
         GCCore.MOD_CONFIGS.keySet().forEach(modContainer -> {
             if (modContainer.toString().equals(configID.toString())) {
@@ -52,7 +51,7 @@ public class GCAPI {
      * @param configID Should be an identifier formatted like mymodid:mygconfigvalue
      */
     public static void reloadConfig(Identifier configID) {
-        reloadConfig(configID, (JsonObject) null);
+        reloadConfig(configID, (GlassYamlFile) null);
     }
 
 }

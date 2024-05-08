@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.impl.config.example;
 
-import blue.endless.jankson.JsonElement;
-import blue.endless.jankson.JsonPrimitive;
 import com.google.common.collect.ImmutableMap;
 import net.modificationstation.stationapi.api.config.ConfigFactoryProvider;
 import net.modificationstation.stationapi.api.config.MaxLength;
@@ -29,12 +27,7 @@ public class ExampleConfigEnumFactories implements ConfigFactoryProvider {
     }
 
     @Override
-    public void provideSaveFactories(ImmutableMap.Builder<Type, Function<Object, JsonElement>> immutableBuilder) {
-        immutableBuilder.put(ExampleConfigEnum.class, enumEntry -> new JsonPrimitive(((ExampleConfigEnum) enumEntry).ordinal()));
-    }
-
-    @Override
-    public void provideLoadTypeAdapterFactories(@SuppressWarnings("rawtypes") ImmutableMap.Builder<Type, Class> immutableBuilder) {
-        immutableBuilder.put(ExampleConfigEnum.class, Integer.class);
+    public void provideSaveFactories(ImmutableMap.Builder<Type, Function<Object, Object>> immutableBuilder) {
+        immutableBuilder.put(ExampleConfigEnum.class, enumEntry -> enumEntry);
     }
 }

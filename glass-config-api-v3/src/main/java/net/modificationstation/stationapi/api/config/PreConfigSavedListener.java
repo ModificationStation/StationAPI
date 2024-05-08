@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.config;
 
-import blue.endless.jankson.JsonObject;
+import net.modificationstation.stationapi.impl.config.GlassYamlFile;
 
 public interface PreConfigSavedListener {
 
@@ -13,5 +13,5 @@ public interface PreConfigSavedListener {
      * @param newValues the values that are about to be saved to the config file.
      * @see net.modificationstation.stationapi.impl.config.EventStorage.EventSource
      */
-    void onPreConfigSaved(int source, JsonObject oldValues, JsonObject newValues);
+    void onPreConfigSaved(int source, GlassYamlFile oldValues, GlassYamlFile newValues);
 }
