@@ -10,6 +10,9 @@ public class CelestialEvent {
     private float chance = 1;
     private int dayLength = 24000;
     private int dayOffset = 0;
+    private int startingDaytime = 0;
+    private int endingDaytime = 0;
+    private int extraDays = 0;
     private boolean active;
     private final List<CelestialEvent> incompatibleEvents = new LinkedList<>();
 
@@ -33,6 +36,11 @@ public class CelestialEvent {
         return this;
     }
 
+    public CelestialEvent setExtraDays(int extraDays) {
+        this.extraDays = extraDays;
+        return this;
+    }
+
     public boolean activateEvent(long worldTime, Random random) {
         if (active) {
             return true;
@@ -46,13 +54,29 @@ public class CelestialEvent {
         }
         long days = worldTime / dayLength + dayOffset;
         active = days % frequency == 0 && random.nextFloat() <= chance;
-        if (active) System.out.println("Starting event " + name);
+        if (active) System.out.println(name + " has begun");
         return active;
     }
 
+    public void updateEvent(long worldTime) {
+        if (!active) return;
+        worldTime -= startingDaytime;
+        worldTime += endingDaytime;
+        long days = worldTime / dayLength + dayOffset;
+        active = days % frequency <= extraDays;
+        if (!active) System.out.println(name + " is over");
+    }
+
     public void stopEvent() {
-        if (active) System.out.println("Stopping event " + name);
-        active = false;
+        if (active) {
+            System.out.println("Stopping event " + name);
+            active = false;
+        }
+    }
+
+    public void setInterval(int startingDaytime, int endingDaytime) {
+        this.startingDaytime = startingDaytime;
+        this.endingDaytime = endingDaytime;
     }
 
     public boolean isActive() {
