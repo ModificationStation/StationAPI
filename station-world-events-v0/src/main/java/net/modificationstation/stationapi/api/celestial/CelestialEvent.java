@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class CelestialEvent {
+    private final String name;
     private final int frequency;
     private final float chance;
     private final int dayLength;
@@ -12,26 +13,28 @@ public class CelestialEvent {
     private boolean active;
     private final List<CelestialEvent> incompatibleEvents = new LinkedList<>();
 
-    public CelestialEvent(int frequency, float chance, int dayLength, int dayOffset) {
+    public CelestialEvent(int frequency, float chance, int dayLength, int dayOffset, String name) {
         this.frequency = frequency;
         this.chance = chance;
         this.dayLength = dayLength;
         this.dayOffset = dayOffset;
+        this.name = name;
     }
 
-    public CelestialEvent(int frequency, float chance, int dayLength) {
-        this(frequency, chance, dayLength, 0);
+    public CelestialEvent(int frequency, float chance, int dayLength, String name) {
+        this(frequency, chance, dayLength, 0, name);
     }
 
-    public CelestialEvent(int frequency, float chance) {
-        this(frequency, chance, 24000);
+    public CelestialEvent(int frequency, float chance, String name) {
+        this(frequency, chance, 24000, name);
     }
 
-    public CelestialEvent(int frequency) {
-        this(frequency, 1);
+    public CelestialEvent(int frequency, String name) {
+        this(frequency, 1, name);
     }
 
     public boolean activateEvent(long worldTime, Random random) {
+        System.out.println("Attempt activation for event " + name);
         if (active) {
             return true;
         }
@@ -48,6 +51,7 @@ public class CelestialEvent {
     }
 
     public void stopEvent() {
+        System.out.println("Stopping event " + name);
         active = false;
     }
 
