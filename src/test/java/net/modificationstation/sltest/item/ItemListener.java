@@ -32,6 +32,8 @@ public class ItemListener {
         testShears = new TestShearsItem(NAMESPACE.id("test_shears")).setTranslationKey(NAMESPACE, "test_shears");
         pacifistSword = new PacifistSwordItem(NAMESPACE.id("pacifist_sword")).setTranslationKey(NAMESPACE, "pacifist_sword");
         dullPickaxe = new DullPickaxeItem(NAMESPACE.id("dull_pickaxe")).setTranslationKey(NAMESPACE, "dull_pickaxe");
+        celestialTestItem = new CelestialTestItem(NAMESPACE.id("test_celestial")).setTranslationKey(NAMESPACE, "test_celestial");
+        celestialToggleItem = new CelestialToggleItem(NAMESPACE.id("toggle_celestial")).setTranslationKey(NAMESPACE, "toggle_celestial");
     }
 
     public static Item testItem;
@@ -47,4 +49,6 @@ public class ItemListener {
     public static Item testShears;
     public static Item pacifistSword;
     public static Item dullPickaxe;
+    public static Item celestialTestItem;
+    public static Item celestialToggleItem;
 }
