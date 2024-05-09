@@ -12,16 +12,22 @@ public class CelestialListener {
 
     public static CelestialEvent flyingDimando;
     public static CelestialEvent fallingDimando;
+    public static CelestialEvent spinningDimando;
+    public static CelestialEvent burningDimando;
 
     @EventListener
     public void registerCelestialEvents(CelestialRegisterEvent event) {
         if (hasRegistered) return;
         hasRegistered = true;
         SLTest.LOGGER.info("Register celestial events for testing");
-        flyingDimando = new CelestialEvent(2, "Flying Dimando");
-        fallingDimando = new CelestialEvent(4, "Falling Dimando");
+        flyingDimando = new CelestialEvent(4, "Flying Dimando");
+        fallingDimando = new CelestialEvent(2, "Falling Dimando");
+        spinningDimando = new CelestialEvent(4, "Spinning Dimando").setDayOffset(1);
+        burningDimando = new CelestialEvent(2, "Burning Dimando").setDayOffset(1);
         flyingDimando.addIncompatibleEvent(fallingDimando);
         CelestialTimeManager.addMorningEvent(flyingDimando);
         CelestialTimeManager.addNoonEvent(fallingDimando);
+        CelestialTimeManager.addEveningEvent(spinningDimando);
+        CelestialTimeManager.addMidnightEvent(burningDimando);
     }
 }

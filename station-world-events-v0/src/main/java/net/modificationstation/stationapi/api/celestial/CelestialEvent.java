@@ -7,34 +7,33 @@ import java.util.Random;
 public class CelestialEvent {
     private final String name;
     private final int frequency;
-    private final float chance;
-    private final int dayLength;
-    private final int dayOffset;
+    private float chance = 1;
+    private int dayLength = 24000;
+    private int dayOffset = 0;
     private boolean active;
     private final List<CelestialEvent> incompatibleEvents = new LinkedList<>();
 
-    public CelestialEvent(int frequency, float chance, int dayLength, int dayOffset, String name) {
+    public CelestialEvent(int frequency, String name) {
         this.frequency = frequency;
-        this.chance = chance;
-        this.dayLength = dayLength;
-        this.dayOffset = dayOffset;
         this.name = name;
     }
 
-    public CelestialEvent(int frequency, float chance, int dayLength, String name) {
-        this(frequency, chance, dayLength, 0, name);
+    public CelestialEvent setChance(float chance) {
+        this.chance = chance;
+        return this;
     }
 
-    public CelestialEvent(int frequency, float chance, String name) {
-        this(frequency, chance, 24000, name);
+    public CelestialEvent setDayLength(int dayLength) {
+        this.dayLength = dayLength;
+        return this;
     }
 
-    public CelestialEvent(int frequency, String name) {
-        this(frequency, 1, name);
+    public CelestialEvent setDayOffset(int dayOffset) {
+        this.dayOffset = dayOffset;
+        return this;
     }
 
     public boolean activateEvent(long worldTime, Random random) {
-        System.out.println("Attempt activation for event " + name);
         if (active) {
             return true;
         }
@@ -47,11 +46,12 @@ public class CelestialEvent {
         }
         long days = worldTime / dayLength + dayOffset;
         active = days % frequency == 0 && random.nextFloat() <= chance;
+        if (active) System.out.println("Starting event " + name);
         return active;
     }
 
     public void stopEvent() {
-        System.out.println("Stopping event " + name);
+        if (active) System.out.println("Stopping event " + name);
         active = false;
     }
 
