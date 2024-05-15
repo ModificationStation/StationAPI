@@ -366,11 +366,11 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
         return BlockBrightness.light;
     }
     
-    @WrapWithCondition(method = "afterBreak", at = @At(
-        value = "INVOKE",
-        target = "Lnet/minecraft/entity/player/PlayerEntity;increaseStat(Lnet/minecraft/stat/Stat;I)V")
-    )
-    private boolean stationapi_temporalStatFix(PlayerEntity instance, Stat amount, int i) {
-        return id < Stats.MINE_BLOCK.length;
+    @Inject(method = "afterBreak", at = @At("HEAD"), cancellable = true)
+    private void stationapi_temporalStatFix(World world, PlayerEntity player, int x, int y, int z, int meta, CallbackInfo info) {
+        if (id < Stats.MINE_BLOCK.length) {
+            this.dropStacks(world, x, y, z, meta);
+            info.cancel();
+        }
     }
 }
