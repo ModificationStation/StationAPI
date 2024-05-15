@@ -368,9 +368,8 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     
     @Inject(method = "afterBreak", at = @At("HEAD"), cancellable = true)
     private void stationapi_temporalStatFix(World world, PlayerEntity player, int x, int y, int z, int meta, CallbackInfo info) {
-        if (id < Stats.MINE_BLOCK.length) {
-            this.dropStacks(world, x, y, z, meta);
-            info.cancel();
-        }
+        if (id < Stats.MINE_BLOCK.length) return;
+        this.dropStacks(world, x, y, z, meta);
+        info.cancel();
     }
 }
