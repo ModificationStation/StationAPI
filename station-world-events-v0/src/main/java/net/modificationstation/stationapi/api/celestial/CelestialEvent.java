@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.api.celestial;
 
+import net.minecraft.world.World;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -15,10 +17,12 @@ public class CelestialEvent {
     private int extraDays = 0;
     private boolean active;
     private final List<CelestialEvent> incompatibleEvents = new LinkedList<>();
+    public final World world;
 
-    public CelestialEvent(int frequency, String name) {
+    public CelestialEvent(int frequency, String name, World world) {
         this.frequency = frequency;
         this.name = name;
+        this.world = world;
     }
 
     public CelestialEvent setChance(float chance) {
@@ -54,20 +58,40 @@ public class CelestialEvent {
         }
         long days = worldTime / dayLength + dayOffset;
         active = days % frequency == 0 && random.nextFloat() <= chance;
-        if (active) System.out.println(name + " has begun");
+        if (active) {
+            onActivation();
+        }
         return active;
     }
 
+    public void onActivation() {
+    }
+
+    public void onDeactivation() {
+    }
+
     public void updateEvent(long worldTime) {
+        /*
+        This piece of code for saving the activity state should probably be moved somewhere else. It is also incomplete and not fully functional
+        CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
+        if (activityState == null) {
+            activityState = new CelestialEventActivityState(this.name);
+            this.world.setState(this.name, activityState);
+            System.out.println("Did not find activity state");
+        } else {
+            System.out.println("Found existing activity state");
+        }
+         */
         if (!active) return;
         worldTime -= startingDaytime;
         worldTime += endingDaytime;
         long days = worldTime / dayLength + dayOffset;
         active = days % frequency <= extraDays;
-        if (!active) System.out.println(name + " is over");
+        if (!active) onDeactivation();
     }
 
     public void stopEvent() {
+        onDeactivation();
         if (active) {
             System.out.println("Stopping event " + name);
             active = false;
@@ -81,6 +105,10 @@ public class CelestialEvent {
 
     public boolean isActive() {
         return active;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     /**

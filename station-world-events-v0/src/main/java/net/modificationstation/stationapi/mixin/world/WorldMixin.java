@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.mixin.world;
 
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.event.celestial.CelestialRegisterEvent;
 import net.modificationstation.stationapi.api.event.world.WorldEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,6 +21,9 @@ class WorldMixin {
     )
     private void stationapi_onCor1(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(WorldEvent.Init.builder().world(World.class.cast(this)).build());
+        StationAPI.EVENT_BUS.post(
+                CelestialRegisterEvent.builder().world(World.class.cast(this)).build()
+        );
     }
 	
 	@Inject(

@@ -8,8 +8,7 @@ import net.modificationstation.stationapi.api.celestial.DayQuarter;
 import net.modificationstation.stationapi.api.event.celestial.CelestialRegisterEvent;
 
 public class CelestialListener {
-
-    private boolean hasRegistered = false; // Workaround to prevent excessive registering
+    private boolean alreadyRegistered = false;
 
     public static CelestialEvent flyingDimando;
     public static CelestialEvent fallingDimando;
@@ -19,14 +18,14 @@ public class CelestialListener {
 
     @EventListener
     public void registerCelestialEvents(CelestialRegisterEvent event) {
-        if (hasRegistered) return;
-        hasRegistered = true;
+        if (alreadyRegistered) return;
+        alreadyRegistered = true;
         SLTest.LOGGER.info("Register celestial events for testing");
-        flyingDimando = new CelestialEvent(4, "Flying Dimando");
-        fallingDimando = new CelestialEvent(2, "Falling Dimando");
-        spinningDimando = new CelestialEvent(4, "Spinning Dimando").setDayOffset(1);
-        burningDimando = new CelestialEvent(2, "Burning Dimando").setDayOffset(1);
-        longDimando = new CelestialEvent(12, "Long Dimando").setExtraDays(4);
+        flyingDimando = new FlyingDimando(4, "flying_dimando", event.world);
+        fallingDimando = new DebugCelestialEvent(2, "falling_dimando", event.world);
+        spinningDimando = new DebugCelestialEvent(4, "spinning_dimando", event.world).setDayOffset(1);
+        burningDimando = new DebugCelestialEvent(2, "burning_dimando", event.world).setDayOffset(1);
+        longDimando = new DebugCelestialEvent(12, "long_dimando", event.world).setExtraDays(4);
         flyingDimando.addIncompatibleEvent(fallingDimando);
         spinningDimando.addIncompatibleEvent(burningDimando);
         CelestialTimeManager.addCelestialEvent(flyingDimando, DayQuarter.MORNING, DayQuarter.MORNING);
