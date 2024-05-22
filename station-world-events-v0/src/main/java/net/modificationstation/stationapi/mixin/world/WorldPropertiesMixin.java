@@ -49,16 +49,6 @@ public class WorldPropertiesMixin {
             method = "setTime",
             at = @At("HEAD")
     )
-    private void stationapi_postCelestialEvent(CallbackInfo ci) { // This gets called more than once. Does not really make sense with the way the events work
-        StationAPI.EVENT_BUS.post(
-                CelestialRegisterEvent.builder().build()
-        );
-    }
-
-    @Inject(
-            method = "setTime",
-            at = @At("HEAD")
-    )
     private void stationapi_celestialEventTimeManager(CallbackInfo ci) {
         long daytime = time % 24000;
         long currentDay = time / 24000;

@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.event.celestial;
 
 import lombok.experimental.SuperBuilder;
-import net.mine_diver.unsafeevents.Event;
+import net.modificationstation.stationapi.api.event.world.WorldEvent;
 
 @SuperBuilder
-public class CelestialRegisterEvent extends Event {}
+public class CelestialRegisterEvent extends WorldEvent {}

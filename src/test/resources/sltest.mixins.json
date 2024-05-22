@@ -8,7 +8,9 @@
     "MixinLevel",
     "MixinNetherLevelSource",
     "MixinObsidian",
-    "OverworldTestMixin"
+    "OverworldTestMixin",
+    "GrassBlockMixin",
+    "EntityMixin"
   ],
   "server": [
   ],
