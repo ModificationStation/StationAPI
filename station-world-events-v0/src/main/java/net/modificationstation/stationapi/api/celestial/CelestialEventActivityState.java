@@ -5,6 +5,7 @@ import net.minecraft.world.PersistentState;
 
 public class CelestialEventActivityState extends PersistentState {
     public boolean active;
+    public boolean attemptedActivation;
 
     public CelestialEventActivityState(String id) {
         super(id);
@@ -13,10 +14,12 @@ public class CelestialEventActivityState extends PersistentState {
     @Override
     public void readNbt(NbtCompound nbt) {
         this.active = nbt.getBoolean("active");
+        this.attemptedActivation = nbt.getBoolean("attemptedActivation");
     }
 
     @Override
     public void writeNbt(NbtCompound nbt) {
         nbt.putBoolean("active", active);
+        nbt.putBoolean("attemptedActivation", attemptedActivation);
     }
 }

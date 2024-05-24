@@ -93,4 +93,19 @@ public class CelestialTimeManager {
             celestialEvent.updateEvent(time);
         }
     }
+
+    public static void clearLists() {
+        MORNING_START.clear();
+        NOON_START.clear();
+        EVENING_START.clear();
+        MIDNIGHT_START.clear();
+        ALL_EVENTS.clear();
+    }
+
+    public static void initializeEvents() {
+        for (CelestialEvent celestialEvent : ALL_EVENTS) {
+            if (celestialEvent == null) continue;
+            celestialEvent.markForInitialization();
+        }
+    }
 }
