@@ -8,7 +8,6 @@ import net.modificationstation.stationapi.api.celestial.DayQuarter;
 import net.modificationstation.stationapi.api.event.celestial.CelestialRegisterEvent;
 
 public class CelestialListener {
-    private boolean alreadyRegistered = false;
 
     public static CelestialEvent flyingDimando;
     public static CelestialEvent fallingDimando;
@@ -18,8 +17,6 @@ public class CelestialListener {
 
     @EventListener
     public void registerCelestialEvents(CelestialRegisterEvent event) {
-        if (alreadyRegistered) return;
-        alreadyRegistered = true;
         SLTest.LOGGER.info("Register celestial events for testing");
         flyingDimando = new FlyingDimando(4, "flying_dimando", event.world);
         fallingDimando = new DebugCelestialEvent(2, "falling_dimando", event.world);

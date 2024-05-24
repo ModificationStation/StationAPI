@@ -47,19 +47,34 @@ public class CelestialEvent {
     }
 
     public boolean activateEvent(long worldTime, Random random) {
+        CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
+        if (initializationNeeded) {
+            activityState = initializeEvent(activityState);
+        }
         if (active) {
+            activityState.active = true;
+            activityState.attemptedActivation = true;
+            activityState.markDirty();
             return true;
         }
         for (CelestialEvent otherEvent : incompatibleEvents) {
             if (otherEvent == null) continue;
             if (otherEvent.isActive()) {
                 active = false;
+                activityState.active = false;
+                activityState.attemptedActivation = true;
+                activityState.markDirty();
                 return false;
             }
         }
         long days = worldTime / dayLength + dayOffset;
-        active = days % frequency == 0 && random.nextFloat() <= chance;
+        if (!activityState.attemptedActivation) {
+            active = days % frequency == 0 && random.nextFloat() <= chance;
+        }
         if (active) {
+            activityState.active = true;
+            activityState.attemptedActivation = true;
+            activityState.markDirty();
             onActivation();
         }
         return active;
@@ -76,14 +91,17 @@ public class CelestialEvent {
         if (initializationNeeded) {
             activityState = initializeEvent(activityState);
         }
-        if (!active) return;
+        if (!active && !activityState.active) return;
         worldTime -= startingDaytime;
         worldTime += endingDaytime;
         long days = worldTime / dayLength + dayOffset;
         active = days % frequency <= extraDays;
         activityState.active = active;
+        if (!active) {
+            onDeactivation();
+            activityState.attemptedActivation = false;
+        }
         activityState.markDirty();
-        if (!active) onDeactivation();
     }
 
     private CelestialEventActivityState initializeEvent(CelestialEventActivityState activityState) {
@@ -128,5 +146,11 @@ public class CelestialEvent {
         if (incompatibleEvents.contains(otherEvent)) return;
         incompatibleEvents.add(otherEvent);
         otherEvent.addIncompatibleEvent(this);
+    }
+
+    public void markForInitialization() {
+        CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
+        initializeEvent(activityState);
+        initializationNeeded = false;
     }
 }
