@@ -16,6 +16,7 @@ public class CelestialEvent {
     private int endingDaytime = 0;
     private int extraDays = 0;
     private boolean active;
+    private boolean initializationNeeded = true;
     private final List<CelestialEvent> incompatibleEvents = new LinkedList<>();
     public final World world;
 
@@ -71,23 +72,30 @@ public class CelestialEvent {
     }
 
     public void updateEvent(long worldTime) {
-        /*
-        This piece of code for saving the activity state should probably be moved somewhere else. It is also incomplete and not fully functional
         CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
-        if (activityState == null) {
-            activityState = new CelestialEventActivityState(this.name);
-            this.world.setState(this.name, activityState);
-            System.out.println("Did not find activity state");
-        } else {
-            System.out.println("Found existing activity state");
+        if (initializationNeeded) {
+            activityState = initializeEvent(activityState);
         }
-         */
         if (!active) return;
         worldTime -= startingDaytime;
         worldTime += endingDaytime;
         long days = worldTime / dayLength + dayOffset;
         active = days % frequency <= extraDays;
+        activityState.active = active;
+        activityState.markDirty();
         if (!active) onDeactivation();
+    }
+
+    private CelestialEventActivityState initializeEvent(CelestialEventActivityState activityState) {
+        initializationNeeded = false;
+        activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
+        if (activityState == null) {
+            activityState = new CelestialEventActivityState(this.name);
+            this.world.setState(this.name, activityState);
+        } else {
+            active = activityState.active;
+        }
+        return activityState;
     }
 
     public void stopEvent() {
