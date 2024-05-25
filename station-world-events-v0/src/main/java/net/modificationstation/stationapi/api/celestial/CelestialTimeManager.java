@@ -4,6 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Manages the activation and deactivation of celestial events.
+ * Has been injected into WorldProperties using the WorldPropertiesMixin in station-world-events, does not need to be handled by mods.
+ * Events need to be added during the registering process.
+ * Uses lists to schedule event updates during the correct time of day.
+ * Called four times per day.
+ */
 public class CelestialTimeManager {
     private static final List<CelestialEvent> MORNING_START = new LinkedList<>();
     private static final List<CelestialEvent> NOON_START = new LinkedList<>();
@@ -20,6 +27,13 @@ public class CelestialTimeManager {
 
     private static final Random RANDOM = new Random();
 
+    /**
+     * Add a celestial event to the time manager.
+     *
+     * @param celestialEvent Event to be added.
+     * @param start Time of day at which the event begins.
+     * @param stop Time of day at which the event ends.
+     */
     public static void addCelestialEvent(CelestialEvent celestialEvent, DayQuarter start, DayQuarter stop) {
         switch (start) {
             case MORNING -> MORNING_START.add(celestialEvent);
@@ -31,6 +45,12 @@ public class CelestialTimeManager {
         celestialEvent.setInterval(start.ordinal() * 6000, Math.abs(stop.ordinal() * 6000 - start.ordinal() * 6000));
     }
 
+    /**
+     * Attempts to start all morning events. Called once per day.
+     *
+     * @param time World time in ticks.
+     * @param currentDay Current day in the world.
+     */
     public static void startMorningEvents(long time, long currentDay) {
         if (morningActivation && lastCheckedDay == currentDay) return;
         lastCheckedDay = currentDay;
@@ -45,6 +65,12 @@ public class CelestialTimeManager {
         }
     }
 
+    /**
+     * Attempts to start all noon events. Called once per day.
+     *
+     * @param time World time in ticks.
+     * @param currentDay Current day in the world.
+     */
     public static void startNoonEvents(long time, long currentDay) {
         if (noonActivation && lastCheckedDay == currentDay) return;
         lastCheckedDay = currentDay;
@@ -59,6 +85,12 @@ public class CelestialTimeManager {
         }
     }
 
+    /**
+     * Attempts to start all evening events. Called once per day.
+     *
+     * @param time World time in ticks.
+     * @param currentDay Current day in the world.
+     */
     public static void startEveningEvents(long time, long currentDay) {
         if (eveningActivation && lastCheckedDay == currentDay) return;
         lastCheckedDay = currentDay;
@@ -73,6 +105,12 @@ public class CelestialTimeManager {
         }
     }
 
+    /**
+     * Attempts to start all midnight events. Called once per day.
+     *
+     * @param time World time in ticks.
+     * @param currentDay Current day in the world.
+     */
     public static void startMidnightEvents(long time, long currentDay) {
         if (midnightActivation && lastCheckedDay == currentDay) return;
         lastCheckedDay = currentDay;
@@ -87,6 +125,11 @@ public class CelestialTimeManager {
         }
     }
 
+    /**
+     * Updates activity state of all events. Called four times per day.
+     *
+     * @param time World time in ticks.
+     */
     public static void updateEvents(long time) {
         for (CelestialEvent celestialEvent : ALL_EVENTS) {
             if (celestialEvent == null) continue;
@@ -94,6 +137,9 @@ public class CelestialTimeManager {
         }
     }
 
+    /**
+     * Clears all lists. Ensures that no duplicates show up after switching worlds.
+     */
     public static void clearLists() {
         MORNING_START.clear();
         NOON_START.clear();
@@ -102,6 +148,9 @@ public class CelestialTimeManager {
         ALL_EVENTS.clear();
     }
 
+    /**
+     * Initializes all events when the world is loaded, ensures correct loading of active events.
+     */
     public static void initializeEvents() {
         for (CelestialEvent celestialEvent : ALL_EVENTS) {
             if (celestialEvent == null) continue;

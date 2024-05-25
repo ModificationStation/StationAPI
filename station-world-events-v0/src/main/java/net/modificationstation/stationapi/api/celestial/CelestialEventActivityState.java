@@ -3,6 +3,9 @@ package net.modificationstation.stationapi.api.celestial;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.PersistentState;
 
+/**
+ * Manages important NBT data to ensure correct saving and loading of active celestial events.
+ */
 public class CelestialEventActivityState extends PersistentState {
     public boolean active;
     public boolean attemptedActivation;
