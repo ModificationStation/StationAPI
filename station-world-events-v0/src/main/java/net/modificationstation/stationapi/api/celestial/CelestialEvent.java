@@ -39,6 +39,7 @@ public class CelestialEvent {
         this.frequency = frequency;
         this.name = name;
         this.world = world;
+        CelestialInitializer.addEvent(this);
     }
 
     /**
