@@ -147,14 +147,4 @@ public class CelestialTimeManager {
         MIDNIGHT_START.clear();
         ALL_EVENTS.clear();
     }
-
-    /**
-     * Initializes all events when the world is loaded, ensures correct loading of active events.
-     */
-    public static void initializeEvents() {
-        for (CelestialEvent celestialEvent : ALL_EVENTS) {
-            if (celestialEvent == null) continue;
-            celestialEvent.markForInitialization();
-        }
-    }
 }
