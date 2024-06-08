@@ -26,6 +26,7 @@ public class CelestialEvent {
     private boolean active;
     private boolean initializationNeeded = true;
     private final List<CelestialEvent> incompatibleEvents = new LinkedList<>();
+    private final List<CelestialEvent> dependencies = new LinkedList<>();
     public final World world;
 
     /**
@@ -118,9 +119,22 @@ public class CelestialEvent {
                 return false;
             }
         }
-        long days = worldTime / dayLength + dayOffset;
+        for (CelestialEvent otherEvent : dependencies) {
+            if (otherEvent == null) continue;
+            if (!otherEvent.isActive()) {
+                activityState.active = false;
+                activityState.attemptedActivation = true;
+                activityState.markDirty();
+                return false;
+            }
+        }
+        long days = (worldTime / dayLength) + dayOffset;
+        if (days % frequency > extraDays) {
+            activityState.attemptedActivation = false;
+            return false;
+        }
         if (!activityState.attemptedActivation) {
-            active = days % frequency == 0 && random.nextFloat() <= chance;
+            active = days % frequency <= extraDays && random.nextFloat() <= chance;
         }
         if (active) {
             activityState.active = true;
@@ -162,7 +176,7 @@ public class CelestialEvent {
         if (!active && !activityState.active) return;
         worldTime -= startingDaytime;
         worldTime += endingDaytime;
-        long days = worldTime / dayLength + dayOffset;
+        long days = (worldTime / dayLength) + dayOffset;
         active = days % frequency <= extraDays;
         activityState.active = active;
         if (!active) {
@@ -232,6 +246,17 @@ public class CelestialEvent {
         if (incompatibleEvents.contains(otherEvent)) return;
         incompatibleEvents.add(otherEvent);
         otherEvent.addIncompatibleEvent(this);
+    }
+
+    /**
+     * Adds dependency to an event, meaning another event has to happen for this one to happen.
+     * Dependency only gets added into one direction.
+     *
+     * @param dependency Event to be added to the dependencies list.
+     */
+    public void addDependency(CelestialEvent dependency) {
+        if (dependencies.contains(dependency)) return;
+        dependencies.add(dependency);
     }
 
     /**
