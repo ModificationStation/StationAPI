@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.effects",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MixinEntity"
+  ],
+  "client": [
+    "MixinInGameHud"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
