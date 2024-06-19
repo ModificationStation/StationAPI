@@ -11,6 +11,10 @@
     "MixinInventoryScreen",
     "MixinInGameHud"
   ],
+  "server": [
+    "MixinServerLoginNetworkHandler",
+    "MixinClass174"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

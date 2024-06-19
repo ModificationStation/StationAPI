@@ -61,6 +61,11 @@ public abstract class EntityEffect<E extends Entity> {
 		return I18n.getTranslation(descriptionTranslationKey, descriptionTranslationKey);
 	}
 	
+	@Environment(EnvType.CLIENT)
+	public final void setTicks(int ticks) {
+		this.ticks = ticks;
+	}
+	
 	public final void tick() {
 		if (!isInfinity() && ticks-- <= 0) {
 			entity.removeEffect(effectID);

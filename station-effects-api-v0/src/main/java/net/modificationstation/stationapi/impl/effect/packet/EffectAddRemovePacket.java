@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.effect;
+package net.modificationstation.stationapi.impl.effect.packet;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -14,20 +14,27 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class EffectRemoveAllPacket extends Packet implements IdentifiablePacket {
-	private static final Identifier PACKET_ID = StationAPI.NAMESPACE.id("effect_remove_all");
+public class EffectAddRemovePacket extends Packet implements IdentifiablePacket {
+	private static final Identifier PACKET_ID = StationAPI.NAMESPACE.id("effect_add_remove");
+	private Identifier effectID;
 	private int entityID;
+	private boolean add;
+	private int size = 8;
 	
-	public EffectRemoveAllPacket() {}
+	public EffectAddRemovePacket() {}
 	
-	public EffectRemoveAllPacket(int entityID) {
+	public EffectAddRemovePacket(int entityID, Identifier effectID, boolean add) {
+		this.effectID = effectID;
 		this.entityID = entityID;
+		this.add = add;
 	}
 	
 	@Override
 	public void read(DataInputStream stream) {
 		try {
 			entityID = stream.readInt();
+			effectID = Identifier.of(stream.readUTF());
+			add = stream.readBoolean();
 		}
 		catch (IOException e) {
 			throw new RuntimeException(e);
@@ -38,6 +45,9 @@ public class EffectRemoveAllPacket extends Packet implements IdentifiablePacket 
 	public void write(DataOutputStream stream) {
 		try {
 			stream.writeInt(entityID);
+			stream.writeUTF(effectID.toString());
+			stream.writeBoolean(add);
+			size = stream.size();
 		}
 		catch (IOException e) {
 			throw new RuntimeException(e);
@@ -49,12 +59,13 @@ public class EffectRemoveAllPacket extends Packet implements IdentifiablePacket 
 		if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;
 		AccessorClientNetworkHandler handler = (AccessorClientNetworkHandler) networkHandler;
 		Entity entity = handler.stationapi_getEntityByID(entityID);
-		entity.removeAllEffects();
+		if (add) entity.addEffect(effectID);
+		else entity.removeEffect(effectID);
 	}
 	
 	@Override
 	public int size() {
-		return 4;
+		return size;
 	}
 	
 	@Override
@@ -63,6 +74,6 @@ public class EffectRemoveAllPacket extends Packet implements IdentifiablePacket 
 	}
 	
 	public static void register() {
-		IdentifiablePacket.register(PACKET_ID, false, true, EffectRemoveAllPacket::new);
+		IdentifiablePacket.register(PACKET_ID, false, true, EffectAddRemovePacket::new);
 	}
 }

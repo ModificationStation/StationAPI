@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.effect;
 
+import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
@@ -31,6 +32,16 @@ public interface StationEffectEntity {
 	
 	@Environment(EnvType.CLIENT)
 	default Collection<EntityEffect<? extends Entity>> getRenderEffects() {
+		return Util.assertImpl();
+	}
+	
+	@Environment(EnvType.CLIENT)
+	default void addEffect(EntityEffect<? extends Entity> effect) {
+		Util.assertImpl();
+	}
+	
+	@Environment(EnvType.SERVER)
+	default Collection<Pair<Identifier, Integer>> getServerEffects() {
 		return Util.assertImpl();
 	}
 }

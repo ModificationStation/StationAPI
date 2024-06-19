@@ -20,7 +20,7 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.api.event.effect.EffectsRegisterListener"
+		"net.modificationstation.stationapi.impl.effect.EffectsRegisterListener"
     ]
   },
   "mixins": [

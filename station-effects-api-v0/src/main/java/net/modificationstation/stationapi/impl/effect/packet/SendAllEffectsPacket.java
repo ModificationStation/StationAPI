@@ -1,11 +1,14 @@
-package net.modificationstation.stationapi.impl.effect;
+package net.modificationstation.stationapi.impl.effect.packet;
 
+import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.effect.EffectRegistry;
+import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.mixin.effects.AccessorClientNetworkHandler;
@@ -13,28 +16,34 @@ import net.modificationstation.stationapi.mixin.effects.AccessorClientNetworkHan
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
-public class EffectAddRemovePacket extends Packet implements IdentifiablePacket {
-	private static final Identifier PACKET_ID = StationAPI.NAMESPACE.id("effect_add_remove");
-	private Identifier effectID;
+public class SendAllEffectsPacket extends Packet implements IdentifiablePacket {
+	private static final Identifier PACKET_ID = StationAPI.NAMESPACE.id("send_all_effects");
+	private Collection<Pair<Identifier, Integer>> effects;
 	private int entityID;
-	private boolean add;
 	private int size = 8;
 	
-	public EffectAddRemovePacket() {}
+	public SendAllEffectsPacket() {
+		effects = new ArrayList<>();
+	}
 	
-	public EffectAddRemovePacket(int entityID, Identifier effectID, boolean add) {
-		this.effectID = effectID;
+	public SendAllEffectsPacket(int entityID, Collection<Pair<Identifier, Integer>> effects) {
 		this.entityID = entityID;
-		this.add = add;
+		this.effects = effects;
 	}
 	
 	@Override
 	public void read(DataInputStream stream) {
 		try {
 			entityID = stream.readInt();
-			effectID = Identifier.of(stream.readUTF());
-			add = stream.readBoolean();
+			int count = stream.readShort();
+			for (int i = 0; i < count; i++) {
+				Identifier id = Identifier.of(stream.readUTF());
+				int ticks = stream.readInt();
+				effects.add(Pair.of(id, ticks));
+			}
 		}
 		catch (IOException e) {
 			throw new RuntimeException(e);
@@ -45,8 +54,11 @@ public class EffectAddRemovePacket extends Packet implements IdentifiablePacket 
 	public void write(DataOutputStream stream) {
 		try {
 			stream.writeInt(entityID);
-			stream.writeUTF(effectID.toString());
-			stream.writeBoolean(add);
+			stream.writeShort(effects.size());
+			for (Pair<Identifier, Integer> pair : effects) {
+				stream.writeUTF(pair.first().toString());
+				stream.writeInt(pair.second());
+			}
 			size = stream.size();
 		}
 		catch (IOException e) {
@@ -59,8 +71,11 @@ public class EffectAddRemovePacket extends Packet implements IdentifiablePacket 
 		if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;
 		AccessorClientNetworkHandler handler = (AccessorClientNetworkHandler) networkHandler;
 		Entity entity = handler.stationapi_getEntityByID(entityID);
-		if (add) entity.addEffect(effectID);
-		else entity.removeEffect(effectID);
+		for (Pair<Identifier, Integer> pair : effects) {
+			EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(entity, pair.first());
+			effect.setTicks(pair.second());
+			entity.addEffect(effect);
+		}
 	}
 	
 	@Override
@@ -74,6 +89,6 @@ public class EffectAddRemovePacket extends Packet implements IdentifiablePacket 
 	}
 	
 	public static void register() {
-		IdentifiablePacket.register(PACKET_ID, false, true, EffectAddRemovePacket::new);
+		IdentifiablePacket.register(PACKET_ID, false, true, SendAllEffectsPacket::new);
 	}
 }

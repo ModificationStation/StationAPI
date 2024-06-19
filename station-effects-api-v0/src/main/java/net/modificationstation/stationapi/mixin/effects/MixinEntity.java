@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.effects;
 
+import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,8 +13,8 @@ import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.effect.StationEffectEntity;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.impl.effect.EffectAddRemovePacket;
-import net.modificationstation.stationapi.impl.effect.EffectRemoveAllPacket;
+import net.modificationstation.stationapi.impl.effect.packet.EffectAddRemovePacket;
+import net.modificationstation.stationapi.impl.effect.packet.EffectRemoveAllPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,8 +22,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Mixin(Entity.class)
@@ -82,6 +85,24 @@ public class MixinEntity implements StationEffectEntity {
 	@Environment(EnvType.CLIENT)
 	public Collection<EntityEffect<? extends Entity>> getRenderEffects() {
 		return stationapi_effects == null ? null : stationapi_effects.values();
+	}
+	
+	@Override
+	@Environment(EnvType.CLIENT)
+	public void addEffect(EntityEffect<? extends Entity> effect) {
+		if (stationapi_effects == null) stationapi_effects = new Reference2ReferenceOpenHashMap<>();
+		stationapi_effects.put(effect.getEffectID(), effect);
+	}
+	
+	@Override
+	@Environment(EnvType.SERVER)
+	public Collection<Pair<Identifier, Integer>> getServerEffects() {
+		if (stationapi_effects == null || stationapi_effects.isEmpty()) return null;
+		List<Pair<Identifier, Integer>> effectPairs = new ArrayList<>(stationapi_effects.size());
+		for (EntityEffect<? extends Entity> effect : stationapi_effects.values()) {
+			effectPairs.add(Pair.of(effect.getEffectID(), effect.getTicks()));
+		}
+		return effectPairs;
 	}
 	
 	@Inject(method = "tick", at = @At("HEAD"))
