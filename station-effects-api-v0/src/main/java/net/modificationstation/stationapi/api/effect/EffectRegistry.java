@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.api.effect;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.entity.Entity;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.lang.reflect.Constructor;

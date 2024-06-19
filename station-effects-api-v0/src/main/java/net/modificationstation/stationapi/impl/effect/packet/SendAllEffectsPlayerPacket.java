@@ -86,11 +86,6 @@ public class SendAllEffectsPlayerPacket extends Packet implements IdentifiablePa
 		PlayerEntity player = ((Minecraft) FabricLoader.getInstance().getGameInstance()).player;
 		for (Pair<Identifier, Integer> pair : effects) {
 			EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(player, pair.first());
-			if (effect == null) {
-				assert StationAPI.LOGGER != null;
-				StationAPI.LOGGER.warn("Missing effect: " + pair.first());
-				continue;
-			}
 			effect.setTicks(pair.second());
 			player.addEffect(effect);
 		}
