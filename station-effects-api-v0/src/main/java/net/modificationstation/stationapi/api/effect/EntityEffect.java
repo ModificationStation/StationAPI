@@ -1,5 +1,9 @@
 package net.modificationstation.stationapi.api.effect;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.util.Identifier;
@@ -10,9 +14,19 @@ public abstract class EntityEffect<E extends Entity> {
 	protected E entity;
 	protected int ticks;
 	
+	@Environment(EnvType.CLIENT)
+	private String nameTranslationKey;
+	
+	@Environment(EnvType.CLIENT)
+	private String descriptionTranslationKey;
+	
 	public EntityEffect(Identifier effectID, E entity) {
 		this.effectID = effectID;
 		this.entity = entity;
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			nameTranslationKey = "gui.stationapi.effect." + effectID.namespace + "." + effectID.path + ".name";
+			descriptionTranslationKey = nameTranslationKey.substring(0, nameTranslationKey.length() - 4) + "desc";
+		}
 	}
 	
 	public abstract void onStart();
@@ -35,6 +49,16 @@ public abstract class EntityEffect<E extends Entity> {
 	
 	public boolean isInfinity() {
 		return ticks == INFINITY_TICKS;
+	}
+	
+	@Environment(EnvType.CLIENT)
+	public String getName() {
+		return I18n.getTranslation(nameTranslationKey, nameTranslationKey);
+	}
+	
+	@Environment(EnvType.CLIENT)
+	public String getDescription() {
+		return I18n.getTranslation(descriptionTranslationKey, descriptionTranslationKey);
 	}
 	
 	public final void tick() {

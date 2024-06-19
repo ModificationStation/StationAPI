@@ -18,3 +18,7 @@ item.@.variationBlockActive.name=Variation Block Active
 item.@.test_shears.name=Test Shears
 item.@.pacifist_sword.name=Pacifist Sword
 item.@.dull_pickaxe.name=Dull Pickaxe
+gui.stationapi.effect.@.test_effect.name=Test Effect
+gui.stationapi.effect.@.test_effect.desc=Just a simple test!
+gui.stationapi.effect.@.infinity_effect.name=§5Infinity
+gui.stationapi.effect.@.infinity_effect.desc=No timer!
