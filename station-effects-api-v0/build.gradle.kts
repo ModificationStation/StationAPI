@@ -4,5 +4,6 @@ base.archivesName.set("station-effects-api-v0")
 version = getSubprojectVersion(project, "1.0.0")
 
 addModuleDependencies(project,
-        "station-api-base"
+        "station-api-base",
+        "station-networking-v0"
 )

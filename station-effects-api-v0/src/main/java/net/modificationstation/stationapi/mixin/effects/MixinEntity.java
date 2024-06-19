@@ -3,14 +3,19 @@ package net.modificationstation.stationapi.mixin.effects;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.modificationstation.stationapi.api.effect.EffectRegistry;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.effect.StationEffectEntity;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.impl.effect.EffectAddRemovePacket;
+import net.modificationstation.stationapi.impl.effect.EffectRemoveAllPacket;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,8 +29,13 @@ import java.util.Map;
 public class MixinEntity implements StationEffectEntity {
 	@Unique private Map<Identifier, EntityEffect<? extends Entity>> stationapi_effects;
 	
+	@Shadow public int id;
+	
 	@Override
 	public void addEffect(Identifier effectID) {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+			PacketHelper.send(new EffectAddRemovePacket(id, effectID, true));
+		}
 		EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(Entity.class.cast(this), effectID);
 		if (effect == null) return;
 		if (stationapi_effects == null) {
@@ -37,6 +47,9 @@ public class MixinEntity implements StationEffectEntity {
 	
 	@Override
 	public void removeEffect(Identifier effectID) {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+			PacketHelper.send(new EffectAddRemovePacket(id, effectID, false));
+		}
 		if (stationapi_effects == null) return;
 		EntityEffect<? extends Entity> effect = stationapi_effects.get(effectID);
 		if (effect == null) return;
@@ -52,6 +65,9 @@ public class MixinEntity implements StationEffectEntity {
 	
 	@Override
 	public void removeAllEffects() {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+			PacketHelper.send(new EffectRemoveAllPacket());
+		}
 		if (stationapi_effects == null) return;
 		stationapi_effects = null;
 	}
