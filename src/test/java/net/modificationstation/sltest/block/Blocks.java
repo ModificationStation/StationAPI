@@ -24,7 +24,8 @@ public enum Blocks {
     VARIATION_BLOCK("variation_block", "variationBlock", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSoundGroup(Block.DEFAULT_SOUND_GROUP).disableAutoItemRegistration()),
     EMISSION_CHECKER("emission_checker", "emissionChecker", LampBlock::new),
     INDISPENSABLE_BLOCK("indispensable_block", "indispensableBlock", IndispensableBlock::new),
-    EFFECT_BLOCK("effect_block", "effectBlock", EffectBlock::new);
+    EFFECT_BLOCK("effect_block", "effectBlock", EffectBlock::new),
+    EFFECT_BLOCK_INF("effect_block_inf", "effectBlockInf", EffectBlockInf::new);
 
     private final Runnable register;
     private Block block;

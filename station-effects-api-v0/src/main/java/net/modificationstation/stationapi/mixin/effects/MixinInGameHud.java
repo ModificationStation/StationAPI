@@ -7,7 +7,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.lwjgl.opengl.GL11;
@@ -40,19 +39,31 @@ public class MixinInGameHud extends DrawContext {
 		
 		int py = 2;
 		for (EntityEffect<? extends Entity> effect : effects) {
-			float ticks = effect.getTicks() + (1.0F - delta);
-			int seconds = Math.round(ticks / 20.0F);
-			int minutes = seconds / 60;
-			String time = String.format("%02d:%02d", minutes, seconds);
-			stationapi_renderEffectBack(py, 26 + minecraft.textRenderer.getWidth(time));
-			minecraft.textRenderer.drawWithShadow(time, 24, py + 8, 0xFFFFFFFF);
+			if (effect.isInfinity()) {
+				stationapi_renderEffectBack(py, 24);
+			}
+			else {
+				String time = stationapi_getEffectTime(effect, delta);
+				stationapi_renderEffectBack(py, 28 + minecraft.textRenderer.getWidth(time));
+				minecraft.textRenderer.drawWithShadow(time, 26, py + 8, 0xFFFFFFFF);
+			}
+			
 			Identifier id = effect.getEffectID();
 			int texture = stationapi_effectIcons.computeIfAbsent(id, k ->
 				minecraft.textureManager.getTextureId("/assets/" + id.namespace + "/stationapi/textures/gui/effect/" + id.path + ".png")
 			);
+			
 			stationapi_renderEffectIcon(py + 4, texture);
 			py += 26;
 		}
+	}
+	
+	@Unique
+	private String stationapi_getEffectTime(EntityEffect<? extends Entity> effect, float delta) {
+		float ticks = effect.getTicks() + (1.0F - delta);
+		int seconds = Math.round(ticks / 20.0F);
+		int minutes = seconds / 60;
+		return String.format("%02d:%02d", minutes, seconds);
 	}
 	
 	@Unique
@@ -89,10 +100,12 @@ public class MixinInGameHud extends DrawContext {
 		int x2 = width + 2;
 		int x1 = x2 - 12;
 		
-		tessellator.vertex(14, y2, 0.0F, 0.5F, 1.0F);
-		tessellator.vertex(x1, y2, 0.0F, 0.5F, 1.0F);
-		tessellator.vertex(x1, y, 0.0F, 0.5F, 0.0F);
-		tessellator.vertex(14, y, 0.0F, 0.5F, 0.0F);
+		if (width > 24) {
+			tessellator.vertex(14, y2, 0.0F, 0.5F, 1.0F);
+			tessellator.vertex(x1, y2, 0.0F, 0.5F, 1.0F);
+			tessellator.vertex(x1, y, 0.0F, 0.5F, 0.0F);
+			tessellator.vertex(14, y, 0.0F, 0.5F, 0.0F);
+		}
 		
 		tessellator.vertex(x1, y2, 0.0F, 0.5F, 1.0F);
 		tessellator.vertex(x2, y2, 0.0F, 1.0F, 1.0F);

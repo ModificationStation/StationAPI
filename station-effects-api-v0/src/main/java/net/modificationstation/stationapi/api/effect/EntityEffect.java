@@ -1,12 +1,11 @@
 package net.modificationstation.stationapi.api.effect;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public abstract class EntityEffect<E extends Entity> {
+	protected static final int INFINITY_TICKS = -10;
 	private final Identifier effectID;
 	protected E entity;
 	protected int ticks;
@@ -34,9 +33,12 @@ public abstract class EntityEffect<E extends Entity> {
 		return ticks;
 	}
 	
+	public boolean isInfinity() {
+		return ticks == INFINITY_TICKS;
+	}
+	
 	public final void tick() {
-		if (ticks-- <= 0) {
-			onEnd();
+		if (!isInfinity() && ticks-- <= 0) {
 			entity.removeEffect(effectID);
 			return;
 		}

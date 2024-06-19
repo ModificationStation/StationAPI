@@ -6,7 +6,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.effect.EffectRegistry;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.effect.StationEffectEntity;
@@ -39,7 +38,10 @@ public class MixinEntity implements StationEffectEntity {
 	@Override
 	public void removeEffect(Identifier effectID) {
 		if (stationapi_effects == null) return;
-		stationapi_effects.remove(effectID);
+		EntityEffect<? extends Entity> effect = stationapi_effects.get(effectID);
+		if (effect == null) return;
+		effect.onEnd();
+		stationapi_effects.remove(effectID, effect);
 		if (stationapi_effects.isEmpty()) stationapi_effects = null;
 	}
 	
