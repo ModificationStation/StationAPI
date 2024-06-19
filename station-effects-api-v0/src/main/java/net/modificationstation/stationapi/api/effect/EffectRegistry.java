@@ -23,10 +23,9 @@ public class EffectRegistry {
 	
 	public static EntityEffect<? extends Entity> makeEffect(Entity entity, Identifier id) {
 		Constructor<? extends EntityEffect<? extends Entity>> constructor = EFFECTS.get(id);
-		EntityEffect<? extends Entity> effect = null;
+		EntityEffect<? extends Entity> effect;
 		if (constructor == null) {
-			assert StationAPI.LOGGER != null;
-			StationAPI.LOGGER.warn("Effect " + id + " is not registered");
+			throw new RuntimeException("Effect " + id + " is not registered");
 		}
 		else {
 			try {
