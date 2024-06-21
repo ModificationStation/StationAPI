@@ -40,4 +40,8 @@ public class EffectRegistry {
 	public static Identifier getID(EntityEffect<? extends Entity> effect) {
 		return EFFECTS_IDS.get(effect.getClass());
 	}
+	
+	public static boolean hasEffect(Identifier id) {
+		return EFFECTS.containsKey(id);
+	}
 }

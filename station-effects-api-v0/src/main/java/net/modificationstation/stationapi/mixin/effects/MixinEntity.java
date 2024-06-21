@@ -8,6 +8,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.effect.EffectRegistry;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.effect.StationEffectEntity;
@@ -133,6 +134,10 @@ public class MixinEntity implements StationEffectEntity {
 		for (int i = 0; i < effects.size(); i++) {
 			NbtCompound effectTag = (NbtCompound) effects.get(i);
 			Identifier id = Identifier.of(effectTag.getString("effect_id"));
+			if (!EffectRegistry.hasEffect(id)) {
+				StationAPI.LOGGER.warn("Effect " + id + " is not registered, skipping");
+				continue;
+			}
 			EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(Entity.class.cast(this), id);
 			effect.read(effectTag);
 			stationapi_effects.put(id, effect);
