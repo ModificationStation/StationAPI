@@ -36,10 +36,10 @@
       "net.modificationstation.stationapi.impl.config.example.ExampleEntryPointListeners"
     ],
     "stationapi:event_bus_server": [
-      "net.modificationstation.stationapi.impl.config.events.InitServerNetworking"
+      "net.modificationstation.stationapi.impl.config.event.InitServerNetworking"
     ],
     "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.config.events.InitClientNetworking"
+      "net.modificationstation.stationapi.impl.config.event.InitClientNetworking"
     ]
   },
   "custom": {

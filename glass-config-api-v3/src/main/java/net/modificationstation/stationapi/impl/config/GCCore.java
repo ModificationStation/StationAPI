@@ -8,30 +8,28 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
-import net.modificationstation.stationapi.api.config.Comment;
-import net.modificationstation.stationapi.api.config.ConfigCategory;
-import net.modificationstation.stationapi.api.config.ConfigFactoryProvider;
-import net.modificationstation.stationapi.api.config.ConfigName;
-import net.modificationstation.stationapi.api.config.GConfig;
-import net.modificationstation.stationapi.api.config.GeneratedConfig;
-import net.modificationstation.stationapi.api.config.MaxLength;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NbtCompound;
-import net.modificationstation.stationapi.api.config.MultiplayerSynced;
+import net.modificationstation.stationapi.api.config.ConfigCategory;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
+import net.modificationstation.stationapi.api.config.ConfigFactoryProvider;
+import net.modificationstation.stationapi.api.config.ConfigRoot;
+import net.modificationstation.stationapi.api.config.GeneratedConfig;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.ReflectionHelper;
-import net.modificationstation.stationapi.impl.config.object.ConfigBase;
-import net.modificationstation.stationapi.impl.config.object.ConfigEntry;
+import net.modificationstation.stationapi.impl.config.object.ConfigHandlerBase;
+import net.modificationstation.stationapi.impl.config.object.ConfigCategoryHandler;
+import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.simpleyaml.configuration.file.YamlFileWrapper;
-import org.simpleyaml.configuration.implementation.api.QuoteStyle;
+import uk.co.benjiweber.expressions.function.SeptFunction;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
+import uk.co.benjiweber.expressions.tuple.QuadTuple;
 
 import java.io.*;
-import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.atomic.*;
@@ -45,34 +43,12 @@ import java.util.function.*;
 @Deprecated
 public class GCCore implements PreLaunchEntrypoint {
     public static final ModContainer NAMESPACE = FabricLoader.getInstance().getModContainer("gcapi").orElseThrow(RuntimeException::new);
-    public static final HashMap<Identifier, BiTuple<EntrypointContainer<Object>, net.modificationstation.stationapi.impl.config.object.ConfigCategory>> MOD_CONFIGS = new HashMap<>();
+    public static final HashMap<Identifier, ConfigRootEntry> MOD_CONFIGS = new HashMap<>();
 
     public static final HashMap<Identifier, HashMap<String, Object>> DEFAULT_MOD_CONFIGS = new HashMap<>();
     private static boolean loaded = false;
     public static boolean isMultiplayer = false;
     private static final Logger LOGGER = LogManager.getFormatterLogger("GCAPI");
-
-    private static final Supplier<MaxLength> MAX_LENGTH_SUPPLIER = () -> new MaxLength() {
-        @Override
-        public Class<? extends Annotation> annotationType() {
-            return MaxLength.class;
-        }
-
-        @Override
-        public int value() {
-            return 32;
-        }
-
-        @Override
-        public int arrayValue() {
-            return -1;
-        }
-
-        @Override
-        public boolean fixedArray() {
-            return false;
-        }
-    };
 
     static {
         Configurator.setLevel("GCAPI", Level.INFO);
@@ -86,10 +62,10 @@ public class GCCore implements PreLaunchEntrypoint {
             }
         });
         if (mod.get() != null) {
-            BiTuple<EntrypointContainer<Object>, net.modificationstation.stationapi.impl.config.object.ConfigCategory> category = MOD_CONFIGS.get(mod.get());
-            saveConfig(category.one(), category.two(), EventStorage.EventSource.SERVER_JOIN | EventStorage.EventSource.MODDED_SERVER_JOIN);
+            ConfigRootEntry rootEntry = MOD_CONFIGS.get(mod.get());
+            saveConfig(rootEntry.modContainer(), rootEntry.configCategoryHandler(), EventStorage.EventSource.SERVER_JOIN | EventStorage.EventSource.MODDED_SERVER_JOIN);
             try {
-                loadModConfig(category.one().getEntrypoint(), category.one().getProvider(), category.two().parentField, mod.get(), new GlassYamlFile(string));
+                loadModConfig(rootEntry.configRoot(), rootEntry.modContainer(), rootEntry.configCategoryHandler().parentField, mod.get(), new GlassYamlFile(string));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -98,8 +74,8 @@ public class GCCore implements PreLaunchEntrypoint {
 
     public static void exportConfigsForServer(NbtCompound nbtCompound) {
         for (Identifier modContainer : MOD_CONFIGS.keySet()) {
-            BiTuple<EntrypointContainer<Object>, net.modificationstation.stationapi.impl.config.object.ConfigCategory> entry = MOD_CONFIGS.get(modContainer);
-            nbtCompound.putString(modContainer.toString(), saveConfig(entry.one(), entry.two(), EventStorage.EventSource.SERVER_EXPORT));
+            ConfigRootEntry entry = MOD_CONFIGS.get(modContainer);
+            nbtCompound.putString(modContainer.toString(), saveConfig(entry.modContainer(), entry.configCategoryHandler(), EventStorage.EventSource.SERVER_EXPORT));
         }
     }
 
@@ -126,7 +102,7 @@ public class GCCore implements PreLaunchEntrypoint {
 
         List<EntrypointContainer<ConfigFactoryProvider>> containers = FabricLoader.getInstance().getEntrypointContainers("gcapi:factory_provider", ConfigFactoryProvider.class);
 
-        ImmutableMap.Builder<Type, NonFunction<String, String, String, Field, Object, Boolean, Object, Object, MaxLength, ConfigEntry<?>>> loadImmutableBuilder = ImmutableMap.builder();
+        ImmutableMap.Builder<Type, SeptFunction<String, ConfigEntry, Field, Object, Boolean, Object, Object, ConfigEntryHandler<?>>> loadImmutableBuilder = ImmutableMap.builder();
         containers.forEach((customConfigFactoryProviderEntrypointContainer -> customConfigFactoryProviderEntrypointContainer.getEntrypoint().provideLoadFactories(loadImmutableBuilder)));
         ConfigFactories.loadFactories = loadImmutableBuilder.build();
         log(ConfigFactories.loadFactories.size() + " config load factories loaded.");
@@ -148,11 +124,11 @@ public class GCCore implements PreLaunchEntrypoint {
 
         FabricLoader.getInstance().getEntrypointContainers(NAMESPACE.getMetadata().getId(), Object.class).forEach((entrypointContainer -> {
             try {
-                for (Field field : ReflectionHelper.getFieldsWithAnnotation(entrypointContainer.getEntrypoint().getClass(), GConfig.class)) {
-                    Identifier configID = Identifier.of(entrypointContainer.getProvider().getMetadata().getId() + ":" + field.getAnnotation(GConfig.class).value());
-                    MOD_CONFIGS.put(configID, BiTuple.of(entrypointContainer, null));
+                for (Field field : ReflectionHelper.getFieldsWithAnnotation(entrypointContainer.getEntrypoint().getClass(), ConfigRoot.class)) {
+                    Identifier configID = Identifier.of(entrypointContainer.getProvider().getMetadata().getId() + ":" + field.getAnnotation(ConfigRoot.class).value());
+                    MOD_CONFIGS.put(configID, new ConfigRootEntry(entrypointContainer.getProvider(), field.getAnnotation(ConfigRoot.class), entrypointContainer.getEntrypoint(), null));
                     loadModConfig(entrypointContainer.getEntrypoint(), entrypointContainer.getProvider(), field, configID, null);
-                    saveConfig(entrypointContainer, MOD_CONFIGS.get(configID).two(), EventStorage.EventSource.GAME_LOAD);
+                    saveConfig(entrypointContainer.getProvider(), MOD_CONFIGS.get(configID).configCategoryHandler(), EventStorage.EventSource.GAME_LOAD);
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -175,7 +151,7 @@ public class GCCore implements PreLaunchEntrypoint {
                     return;
                 }
             }
-            GlassYamlFile modConfigFile = new GlassYamlFile(new File(FabricLoader.getInstance().getConfigDir().toFile(), modContainer.getMetadata().getId() + "/" + configField.getAnnotation(GConfig.class).value() + ".yml"));
+            GlassYamlFile modConfigFile = new GlassYamlFile(new File(FabricLoader.getInstance().getConfigDir().toFile(), modContainer.getMetadata().getId() + "/" + configField.getAnnotation(ConfigRoot.class).value() + ".yml"));
             if (jsonOverride == null) {
                 modConfigFile.createOrLoad();
             }
@@ -201,12 +177,14 @@ public class GCCore implements PreLaunchEntrypoint {
             else {
                 defaultEntry = DEFAULT_MOD_CONFIGS.get(configID);
             }
-            net.modificationstation.stationapi.impl.config.object.ConfigCategory configCategory = new net.modificationstation.stationapi.impl.config.object.ConfigCategory(modContainer.getMetadata().getId(), configField.getAnnotation(GConfig.class).visibleName(), null, configField, objField, configField.isAnnotationPresent(MultiplayerSynced.class), HashMultimap.create(), true);
+            ConfigRoot rootConfigAnnotation = configField.getAnnotation(ConfigRoot.class);
+            ConfigCategoryHandler configCategory = new ConfigCategoryHandler(modContainer.getMetadata().getId(), rootConfigAnnotation.visibleName(), null, configField, objField, rootConfigAnnotation.multiplayerSynced(), HashMultimap.create(), true);
             readDeeper(rootConfigObject, configField, modConfigFile.path(), configCategory, totalReadFields, totalReadCategories, isMultiplayer, defaultEntry);
             if (!loaded) {
-                MOD_CONFIGS.put(configID, BiTuple.of(MOD_CONFIGS.remove(configID).one(), configCategory));
+                ConfigRootEntry oldEntry = MOD_CONFIGS.remove(configID);
+                MOD_CONFIGS.put(configID, new ConfigRootEntry(oldEntry.modContainer(), oldEntry.configRoot(), oldEntry.configObject(), configCategory));
             } else {
-                MOD_CONFIGS.get(configID).two().values = configCategory.values;
+                MOD_CONFIGS.get(configID).configCategoryHandler().values = configCategory.values;
             }
             log("Successfully read \"" + configID + "\"'s mod configs, reading " + totalReadCategories.get() + " categories, and " + totalReadFields.get() + " values.");
 
@@ -215,7 +193,7 @@ public class GCCore implements PreLaunchEntrypoint {
         }
     }
 
-    private static void readDeeper(Object rootConfigObject, Field configField, GlassYamlWrapper rootJsonObject, net.modificationstation.stationapi.impl.config.object.ConfigCategory category, AtomicInteger totalReadFields, AtomicInteger totalReadCategories, boolean isMultiplayer, HashMap<String, Object> defaultConfig) throws IllegalAccessException {
+    private static void readDeeper(Object rootConfigObject, Field configField, GlassYamlWrapper rootJsonObject, ConfigCategoryHandler category, AtomicInteger totalReadFields, AtomicInteger totalReadCategories, boolean isMultiplayer, HashMap<String, Object> defaultConfig) throws IllegalAccessException {
         totalReadCategories.getAndIncrement();
         configField.setAccessible(true);
         Object objField = configField.get(rootConfigObject);
@@ -236,14 +214,15 @@ public class GCCore implements PreLaunchEntrypoint {
                 }
             }
             if (field.isAnnotationPresent(ConfigCategory.class)) {
+                ConfigCategory configCategoryAnnotation = field.getAnnotation(ConfigCategory.class);
                 GlassYamlWrapper jsonCategory = rootJsonObject.path(field.getName());
-                net.modificationstation.stationapi.impl.config.object.ConfigCategory childCategory = new net.modificationstation.stationapi.impl.config.object.ConfigCategory(
+                ConfigCategoryHandler childCategory = new ConfigCategoryHandler(
                         field.getName(),
-                        field.getAnnotation(ConfigCategory.class).value(),
-                        field.isAnnotationPresent(Comment.class)? field.getAnnotation(Comment.class).value() : null,
+                        configCategoryAnnotation.name(),
+                        configCategoryAnnotation.description(),
                         field,
                         objField,
-                        category.multiplayerSynced || field.isAnnotationPresent(MultiplayerSynced.class),
+                        category.multiplayerSynced || configCategoryAnnotation.multiplayerSynced(),
                         HashMultimap.create(),
                         false
                 );
@@ -260,13 +239,13 @@ public class GCCore implements PreLaunchEntrypoint {
                 readDeeper(objField, field, jsonCategory, childCategory, totalReadFields, totalReadCategories, isMultiplayer, childDefaultConfig);
             }
             else {
-                if (!field.isAnnotationPresent(ConfigName.class)) {
+                if (!field.isAnnotationPresent(ConfigEntry.class)) {
                     throw new RuntimeException("Config value \"" + field.getType().getName() + ";" + field.getName() + "\" has no ConfigName annotation!");
                 }
                 if (field.getType() == HashMap.class) {
                     throw new RuntimeException("Config value \"" + field.getType().getName() + ";" + field.getName() + "\" is a HashMap! Create a new HashMap subclass, as the basic type is used in GCAPI internals!");
                 }
-                NonFunction<String, String, String, Field, Object, Boolean, Object, Object, MaxLength, ConfigEntry<?>> function = ConfigFactories.loadFactories.get(field.getType());
+                SeptFunction<String, ConfigEntry, Field, Object, Boolean, Object, Object, ConfigEntryHandler<?>> function = ConfigFactories.loadFactories.get(field.getType());
                 if (function == null) {
                     throw new RuntimeException("Config value \"" + field.getType().getName() + ";" + field.getName() + "\" has no config loader for it's type!");
                 }
@@ -280,18 +259,17 @@ public class GCCore implements PreLaunchEntrypoint {
                 if(!loaded) {
                     defaultConfig.put(field.getName(), field.get(objField));
                 }
+                ConfigEntry configEntryAnnotation = field.getAnnotation(ConfigEntry.class);
                 Class<?> fieldType = ConfigFactories.loadTypeAdapterFactories.get(field.getType());
                 fieldType = fieldType != null ? fieldType : field.getType();
-                ConfigEntry<?> configEntry = function.apply(
+                ConfigEntryHandler<?> configEntry = function.apply(
                         field.getName(),
-                        field.getAnnotation(ConfigName.class).value(),
-                        field.isAnnotationPresent(Comment.class)? field.getAnnotation(Comment.class).value() : null,
+                        configEntryAnnotation,
                         field,
                         objField,
-                        category.multiplayerSynced || field.isAnnotationPresent(MultiplayerSynced.class),
+                        category.multiplayerSynced || configEntryAnnotation.multiplayerSynced(),
                         rootJsonObject.getChild(field.getName(), fieldType) != null? rootJsonObject.getChild(field.getName(), fieldType) : childObjField,
-                        defaultConfig.get(field.getName()),
-                        field.isAnnotationPresent(MaxLength.class)? field.getAnnotation(MaxLength.class) : MAX_LENGTH_SUPPLIER.get()
+                        defaultConfig.get(field.getName())
                 );
                 configEntry.multiplayerLoaded = isMultiplayer && configEntry.multiplayerSynced;
                 category.values.put(field.getType(), configEntry);
@@ -301,21 +279,21 @@ public class GCCore implements PreLaunchEntrypoint {
         }
     }
 
-    public static String saveConfig(EntrypointContainer<Object> container, net.modificationstation.stationapi.impl.config.object.ConfigCategory category, int source) {
+    public static String saveConfig(ModContainer mod, ConfigCategoryHandler category, int source) {
         try {
             AtomicInteger readValues = new AtomicInteger();
             AtomicInteger readCategories = new AtomicInteger();
-            GlassYamlFile configFile = new GlassYamlFile(new File(FabricLoader.getInstance().getConfigDir().toFile(), container.getProvider().getMetadata().getId() + "/" + category.parentField.getAnnotation(GConfig.class).value() + ".yml"));
+            GlassYamlFile configFile = new GlassYamlFile(new File(FabricLoader.getInstance().getConfigDir().toFile(), mod.getMetadata().getId() + "/" + category.parentField.getAnnotation(ConfigRoot.class).value() + ".yml"));
             configFile.createNewFile();
             GlassYamlFile serverExported = new GlassYamlFile();
             saveDeeper(configFile.path(), serverExported.path(), category, category.parentField, readValues, readCategories);
 
-            if (EventStorage.PRE_SAVE_LISTENERS.containsKey(container.getProvider().getMetadata().getId())) {
-                EventStorage.PRE_SAVE_LISTENERS.get(container.getProvider().getMetadata().getId()).getEntrypoint().onPreConfigSaved(source, new GlassYamlFile(configFile.getConfigurationFile()), configFile);
+            if (EventStorage.PRE_SAVE_LISTENERS.containsKey(mod.getMetadata().getId())) {
+                EventStorage.PRE_SAVE_LISTENERS.get(mod.getMetadata().getId()).getEntrypoint().onPreConfigSaved(source, new GlassYamlFile(configFile.getConfigurationFile()), configFile);
             }
 
             configFile.save();
-            log("Successfully saved " + readCategories + " categories, containing " + readValues.get() + " values for " + container.getProvider().getMetadata().getName() + "(" + container.getProvider().getMetadata().getId() + ").");
+            log("Successfully saved " + readCategories + " categories, containing " + readValues.get() + " values for " + mod.getMetadata().getName() + "(" + mod.getMetadata().getId() + ").");
             return serverExported.saveToString();
         }
         catch (Exception e) {
@@ -323,23 +301,25 @@ public class GCCore implements PreLaunchEntrypoint {
         }
     }
 
-    private static void saveDeeper(YamlFileWrapper newValues, YamlFileWrapper serverExported, net.modificationstation.stationapi.impl.config.object.ConfigCategory category, Field childField, AtomicInteger readValues, AtomicInteger readCategories) throws IllegalAccessException {
-        for (ConfigBase entry : category.values.values()) {
+    private static void saveDeeper(YamlFileWrapper newValues, YamlFileWrapper serverExported, ConfigCategoryHandler category, Field childField, AtomicInteger readValues, AtomicInteger readCategories) throws IllegalAccessException {
+        for (ConfigHandlerBase entry : category.values.values()) {
             childField.setAccessible(true);
-            if (entry instanceof net.modificationstation.stationapi.impl.config.object.ConfigCategory) {
-                saveDeeper(newValues.path(entry.id), serverExported.path(entry.id), (net.modificationstation.stationapi.impl.config.object.ConfigCategory) entry, entry.parentField, readValues, readCategories);
+            if (entry instanceof ConfigCategoryHandler) {
+                ConfigCategory configEntryAnnotation = entry.parentField.getAnnotation(ConfigCategory.class);
+                saveDeeper(newValues.path(entry.id), serverExported.path(entry.id), (ConfigCategoryHandler) entry, entry.parentField, readValues, readCategories);
                 readCategories.getAndIncrement();
-                if (entry.parentField.getAnnotation(Comment.class) != null) {
-                    newValues.path(entry.id).comment(entry.parentField.getAnnotation(Comment.class).value());
+                if (!configEntryAnnotation.comment().isEmpty()) {
+                    newValues.path(entry.id).comment(configEntryAnnotation.comment());
                 }
             }
-            else if (entry instanceof ConfigEntry) {
+            else if (entry instanceof ConfigEntryHandler) {
+                ConfigEntry configCategoryAnnotation = entry.parentField.getAnnotation(ConfigEntry.class);
                 Function<Object, Object> configFactory = ConfigFactories.saveFactories.get(entry.parentField.getType());
                 if (configFactory == null) {
                     throw new RuntimeException("Config value \"" + entry.parentObject.getClass().getName() + ";" + entry.id + "\" has no config saver for it's type!");
                 }
-                Object jsonElement = configFactory.apply(((ConfigEntry<?>) entry).value);
-                if (!((ConfigEntry<?>) entry).multiplayerLoaded) {
+                Object jsonElement = configFactory.apply(((ConfigEntryHandler<?>) entry).value);
+                if (!((ConfigEntryHandler<?>) entry).multiplayerLoaded) {
                     newValues.setChild(entry.id, jsonElement);
                     if (entry.description != null && !entry.description.isEmpty()) {
                         newValues.path(entry.id).comment(entry.description);
@@ -348,9 +328,9 @@ public class GCCore implements PreLaunchEntrypoint {
                 if (entry.multiplayerSynced) {
                     serverExported.setChild(entry.id, jsonElement);
                 }
-                ((ConfigEntry<?>) entry).saveToField();
-                if (entry.parentField.getAnnotation(Comment.class) != null) {
-                    newValues.path(entry.id).comment(entry.parentField.getAnnotation(Comment.class).value());
+                ((ConfigEntryHandler<?>) entry).saveToField();
+                if (!configCategoryAnnotation.comment().isEmpty()) {
+                    newValues.path(entry.id).comment(configCategoryAnnotation.comment());
                 }
                 readValues.getAndIncrement();
             }

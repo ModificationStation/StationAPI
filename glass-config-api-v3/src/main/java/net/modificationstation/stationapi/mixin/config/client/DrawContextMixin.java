@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.config.client;
 
-import net.modificationstation.stationapi.impl.config.DrawContextAccessor;
 import net.minecraft.client.gui.DrawContext;
+import net.modificationstation.stationapi.impl.config.DrawContextAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 

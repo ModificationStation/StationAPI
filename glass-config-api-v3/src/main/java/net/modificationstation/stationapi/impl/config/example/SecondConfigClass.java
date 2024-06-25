@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.impl.config.example;
 
-import net.modificationstation.stationapi.api.config.ConfigName;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
 
 public class SecondConfigClass {
 
-    @ConfigName("Test Boolean")
+    @ConfigEntry(name = "Test Boolean")
     public Boolean test1 = false;
 
-    @ConfigName("Test String")
+    @ConfigEntry(name = "Test String")
     public String test2 = "Hmmmm";
 }

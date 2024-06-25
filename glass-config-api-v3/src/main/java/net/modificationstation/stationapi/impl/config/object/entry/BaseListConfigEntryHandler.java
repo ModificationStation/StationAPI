@@ -3,12 +3,12 @@ package net.modificationstation.stationapi.impl.config.object.entry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.modificationstation.stationapi.api.config.ConfigEntryWithButton;
-import net.modificationstation.stationapi.api.config.HasDrawable;
-import net.modificationstation.stationapi.api.config.MaxLength;
-import net.modificationstation.stationapi.impl.config.object.ConfigEntry;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.modificationstation.stationapi.api.config.ConfigEntryWithButton;
+import net.modificationstation.stationapi.api.config.HasDrawable;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
+import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.screen.BaseListScreenBuilder;
 import net.modificationstation.stationapi.impl.config.screen.widget.FancyButtonWidget;
 import org.jetbrains.annotations.NotNull;
@@ -16,14 +16,14 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.*;
 import java.util.*;
 
-public abstract class BaseListConfigEntry<T> extends ConfigEntry<T[]> implements ConfigEntryWithButton {
+public abstract class BaseListConfigEntryHandler<T> extends ConfigEntryHandler<T[]> implements ConfigEntryWithButton {
     @Environment(EnvType.CLIENT)
     private BaseListScreenBuilder<T> listScreen;
     @Environment(EnvType.CLIENT)
     private FancyButtonWidget button;
 
-    public BaseListConfigEntry(String id, String name, String description, Field parentField, Object parentObject, boolean multiplayerSynced, T[] value, T[] defaultValue, MaxLength maxLength) {
-        super(id, name, description, parentField, parentObject, multiplayerSynced, value, defaultValue, maxLength);
+    public BaseListConfigEntryHandler(String id, ConfigEntry configEntry, Field parentField, Object parentObject, boolean multiplayerSynced, T[] value, T[] defaultValue) {
+        super(id, configEntry, parentField, parentObject, multiplayerSynced, value, defaultValue);
     }
 
     @Override
@@ -53,6 +53,11 @@ public abstract class BaseListConfigEntry<T> extends ConfigEntry<T[]> implements
         });
         //noinspection unchecked This class should only ever be used by arrays.
         return (T[]) list.toArray(new Object[0]);
+    }
+
+    @Override
+    public boolean isValueValid() {
+        return value.length < configEntry.maxArrayLength() && value.length > configEntry.minArrayLength();
     }
 
     @Override

@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.*;
 import java.util.*;
 
-public abstract class ConfigBase {
+public abstract class ConfigHandlerBase {
 
     public final String id;
 
@@ -29,7 +29,7 @@ public abstract class ConfigBase {
 
     public final boolean multiplayerSynced;
 
-    public ConfigBase(String id, String name, String description, Field parentField, Object parentObject, boolean multiplayerSynced) {
+    public ConfigHandlerBase(String id, String name, String description, Field parentField, Object parentObject, boolean multiplayerSynced) {
         this.id = id;
         this.name = name;
         this.description = description;

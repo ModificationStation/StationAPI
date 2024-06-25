@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.config.screen;
 
-import net.modificationstation.stationapi.api.config.MaxLength;
-import net.modificationstation.stationapi.impl.config.object.ConfigEntry;
 import net.minecraft.client.gui.screen.Screen;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
+import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.util.*;
@@ -10,7 +10,7 @@ import java.util.function.*;
 
 public class IntegerListScreenBuilder extends BaseListScreenBuilder<Integer> {
 
-    public IntegerListScreenBuilder(Screen parent, MaxLength maxLength, ConfigEntry<Integer[]> configEntry, Function<String, BiTuple<Boolean, List<String>>> validator) {
+    public IntegerListScreenBuilder(Screen parent, ConfigEntry maxLength, ConfigEntryHandler<Integer[]> configEntry, Function<String, List<String>> validator) {
         super(parent, maxLength, configEntry, validator);
     }
 

@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.config.client;
 
-import net.modificationstation.stationapi.api.config.HasDrawable;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.modificationstation.stationapi.api.config.HasDrawable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;

@@ -2,16 +2,18 @@ package net.modificationstation.stationapi.impl.config.factory;
 
 import com.google.common.collect.ImmutableMap;
 import net.modificationstation.stationapi.api.config.ConfigFactoryProvider;
-import net.modificationstation.stationapi.api.config.MaxLength;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
 import net.modificationstation.stationapi.impl.config.NonFunction;
-import net.modificationstation.stationapi.impl.config.object.ConfigEntry;
-import net.modificationstation.stationapi.impl.config.object.entry.BooleanConfigEntry;
-import net.modificationstation.stationapi.impl.config.object.entry.FloatConfigEntry;
-import net.modificationstation.stationapi.impl.config.object.entry.FloatListConfigEntry;
-import net.modificationstation.stationapi.impl.config.object.entry.IntegerConfigEntry;
-import net.modificationstation.stationapi.impl.config.object.entry.IntegerListConfigEntry;
-import net.modificationstation.stationapi.impl.config.object.entry.StringConfigEntry;
-import net.modificationstation.stationapi.impl.config.object.entry.StringListConfigEntry;
+import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
+import net.modificationstation.stationapi.impl.config.object.entry.BooleanConfigEntryHandler;
+import net.modificationstation.stationapi.impl.config.object.entry.FloatConfigEntryHandler;
+import net.modificationstation.stationapi.impl.config.object.entry.FloatListConfigEntryHandler;
+import net.modificationstation.stationapi.impl.config.object.entry.IntegerConfigEntryHandler;
+import net.modificationstation.stationapi.impl.config.object.entry.IntegerListConfigEntryHandler;
+import net.modificationstation.stationapi.impl.config.object.entry.StringConfigEntryHandler;
+import net.modificationstation.stationapi.impl.config.object.entry.StringListConfigEntryHandler;
+import uk.co.benjiweber.expressions.function.OctFunction;
+import uk.co.benjiweber.expressions.function.SeptFunction;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -21,14 +23,14 @@ public class DefaultFactoryProvider implements ConfigFactoryProvider {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void provideLoadFactories(ImmutableMap.Builder<Type, NonFunction<String, String, String, Field, Object, Boolean, Object, Object, MaxLength, ConfigEntry<?>>> immutableBuilder) {
-        immutableBuilder.put(String.class, ((id, name, description, parentField, parentObject, isMultiplayerSynced, value, defaultValue, maxLength) -> new StringConfigEntry(id, name, description, parentField, parentObject, isMultiplayerSynced, String.valueOf(value), String.valueOf(defaultValue), maxLength)));
-        immutableBuilder.put(Integer.class, ((id, name, description, parentField, parentObject, isMultiplayerSynced, value, defaultValue, maxLength) -> new IntegerConfigEntry(id, name, description, parentField, parentObject, isMultiplayerSynced, Integer.valueOf(String.valueOf(value)), Integer.valueOf(String.valueOf(defaultValue)), maxLength)));
-        immutableBuilder.put(Float.class, ((id, name, description, parentField, parentObject, isMultiplayerSynced, value, defaultValue, maxLength) -> new FloatConfigEntry(id, name, description, parentField, parentObject, isMultiplayerSynced, Float.valueOf(String.valueOf(value)), Float.valueOf(String.valueOf(defaultValue)), maxLength)));
-        immutableBuilder.put(Boolean.class, ((id, name, description, parentField, parentObject, isMultiplayerSynced, value, defaultValue, maxLength) -> new BooleanConfigEntry(id, name, description, parentField, parentObject, isMultiplayerSynced, (boolean) value, (boolean) defaultValue)));
-        immutableBuilder.put(String[].class, ((id, name, description, parentField, parentObject, isMultiplayerSynced, value, defaultValue, maxLength) -> new StringListConfigEntry(id, name, description, parentField, parentObject, isMultiplayerSynced, ((ArrayList<String>) value).toArray(new String[0]), (String[]) defaultValue, maxLength))); // the new ArrayList is required or it returns java.util.Arrays.ArrayList, which is fucking dumb.
-        immutableBuilder.put(Integer[].class, ((id, name, description, parentField, parentObject, isMultiplayerSynced, value, defaultValue, maxLength) -> new IntegerListConfigEntry(id, name, description, parentField, parentObject, isMultiplayerSynced, ((ArrayList<Integer>) value).toArray(new Integer[0]), (Integer[]) defaultValue, maxLength)));
-        immutableBuilder.put(Float[].class, ((id, name, description, parentField, parentObject, isMultiplayerSynced, value, defaultValue, maxLength) -> new FloatListConfigEntry(id, name, description, parentField, parentObject, isMultiplayerSynced, ((ArrayList<Float>) value).toArray(new Float[0]), (Float[]) defaultValue, maxLength)));
+    public void provideLoadFactories(ImmutableMap.Builder<Type, SeptFunction<String, ConfigEntry, Field, Object, Boolean, Object, Object, ConfigEntryHandler<?>>> immutableBuilder) {
+        immutableBuilder.put(String.class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new StringConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, String.valueOf(value), String.valueOf(defaultValue))));
+        immutableBuilder.put(Integer.class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new IntegerConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, Integer.valueOf(String.valueOf(value)), Integer.valueOf(String.valueOf(defaultValue)))));
+        immutableBuilder.put(Float.class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new FloatConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, Float.valueOf(String.valueOf(value)), Float.valueOf(String.valueOf(defaultValue)))));
+        immutableBuilder.put(Boolean.class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new BooleanConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, (boolean) value, (boolean) defaultValue)));
+        immutableBuilder.put(String[].class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new StringListConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, ((ArrayList<String>) value).toArray(new String[0]), (String[]) defaultValue))); // the new ArrayList is required or it returns java.util.Arrays.ArrayList, which is fucking dumb.
+        immutableBuilder.put(Integer[].class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new IntegerListConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, ((ArrayList<Integer>) value).toArray(new Integer[0]), (Integer[]) defaultValue)));
+        immutableBuilder.put(Float[].class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new FloatListConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, ((ArrayList<Float>) value).toArray(new Float[0]), (Float[]) defaultValue)));
     }
 
     @Override

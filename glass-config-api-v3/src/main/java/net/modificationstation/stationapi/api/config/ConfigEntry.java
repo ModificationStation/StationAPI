@@ -5,10 +5,10 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Documented
-public @interface ConfigCategory {
+public @interface ConfigEntry {
 
     /**
-     * The name you want to have on the button to access your category and at the top while it's open.
+     * This should be the visible name that you want users to see in the config GUI.
      * @return a string, supports colour codes.
      */
     String name();
@@ -32,7 +32,30 @@ public @interface ConfigCategory {
 
     /**
      * Syncs the config entry with the server upon join, and server config change.
-     * Will also be able to be edited by ops in-game at a later date.
+     * Will also be able to be edited by ops in-game.
      */
     boolean multiplayerSynced() default false;
+
+    /**
+     * The maximum length of this value.
+     * Default 32.
+     * Numeric values: the actual number value.
+     * Strings: how many characters.
+     * Applies to the contents of arrays, not the arrays themselves. See max and minArrayLength.
+     */
+    long maxLength() default 32;
+
+    /**
+     * The minimum length of this value.
+     * Default 0.
+     * Numeric values: the actual number value.
+     * Strings: how many characters.
+     * Applies to the contents of arrays, not the arrays themselves. See max and minArrayLength.
+     */
+    long minLength() default 0;
+
+    long maxArrayLength() default Short.MAX_VALUE;
+    long minArrayLength() default 0;
+
+
 }
