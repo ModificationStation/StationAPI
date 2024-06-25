@@ -13,7 +13,7 @@ import net.modificationstation.stationapi.api.util.API;
 public class FuelRegistry {
 
     private static final Reference2IntMap<TagKey<Item>> TAG_FUEL_TIME = new Reference2IntOpenHashMap<>();
-    private static final Reference2IntMap<Item> ITEM_FUEL_TIME = new Reference2IntOpenHashMap<>();
+    private static final Reference2IntMap<ItemStack> ITEM_FUEL_TIME = new Reference2IntOpenHashMap<>();
 
     private static final Reference2IntMap<ItemStack> FUELS = new Reference2IntOpenHashMap<>();
     private static final Reference2IntMap<ItemStack> FUELS_VIEW = Reference2IntMaps.unmodifiable(FUELS);
@@ -33,7 +33,13 @@ public class FuelRegistry {
     @API
     public static void addFuelItem(Item item, int fuelTime) {
         viewInvalidated = true;
-        ITEM_FUEL_TIME.put(item, fuelTime);
+        ITEM_FUEL_TIME.put(new ItemStack(item, 1), fuelTime);
+    }
+
+    @API
+    public static void addFuelItem(ItemStack itemStack, int fuelTime) {
+        viewInvalidated = true;
+        ITEM_FUEL_TIME.put(itemStack, fuelTime);
     }
 
     @API
@@ -41,7 +47,7 @@ public class FuelRegistry {
         if (viewInvalidated) {
             FUELS.clear();
             for (Reference2IntMap.Entry<TagKey<Item>> entry : TAG_FUEL_TIME.reference2IntEntrySet()) for (RegistryEntry<Item> item : ItemRegistry.INSTANCE.getOrCreateEntryList(entry.getKey())) FUELS.put(new ItemStack(item.value()), entry.getIntValue());
-            for (Reference2IntMap.Entry<Item> entry : ITEM_FUEL_TIME.reference2IntEntrySet()) FUELS.put(new ItemStack(entry.getKey()), entry.getIntValue());
+            for (Reference2IntMap.Entry<ItemStack> entry : ITEM_FUEL_TIME.reference2IntEntrySet()) FUELS.put(entry.getKey(), entry.getIntValue());
             viewInvalidated = false;
         }
         return FUELS_VIEW;
