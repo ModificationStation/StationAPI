@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.impl.config.screen.widget;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.modificationstation.stationapi.api.config.HasDrawable;
-import net.modificationstation.stationapi.api.config.HasToolTip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.modificationstation.stationapi.api.config.HasDrawable;
+import net.modificationstation.stationapi.api.config.HasToolTip;
 import org.lwjgl.opengl.GL11;
 
 import java.util.*;

@@ -1,13 +1,17 @@
 package net.modificationstation.stationapi.api.config;
 
+import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.impl.config.ConfigRootEntry;
 import net.modificationstation.stationapi.impl.config.EventStorage;
 import net.modificationstation.stationapi.impl.config.GCCore;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.config.GlassYamlFile;
-import net.modificationstation.stationapi.impl.config.object.ConfigCategory;
+import net.modificationstation.stationapi.impl.config.object.ConfigCategoryHandler;
 import org.jetbrains.annotations.Nullable;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
+import uk.co.benjiweber.expressions.tuple.QuadTuple;
+import uk.co.benjiweber.expressions.tuple.TriTuple;
 
 import java.io.*;
 import java.util.concurrent.atomic.*;
@@ -35,15 +39,12 @@ public class GCAPI {
     public static void reloadConfig(Identifier configID, @Nullable GlassYamlFile overrideConfigJson) {
         AtomicReference<Identifier> mod = new AtomicReference<>();
         GCCore.MOD_CONFIGS.keySet().forEach(modContainer -> {
-            if (modContainer.toString().equals(configID.toString())) {
-                mod.set(modContainer);
+            if (modContainer.equals(configID)) {
+                ConfigRootEntry category = GCCore.MOD_CONFIGS.get(mod.get());
+                GCCore.loadModConfig(category.configRoot(), category.modContainer(), category.configCategoryHandler().parentField, mod.get(), overrideConfigJson);
+                GCCore.saveConfig(category.modContainer(), category.configCategoryHandler(), EventStorage.EventSource.MOD_SAVE);
             }
         });
-        if (mod.get() != null) {
-            BiTuple<EntrypointContainer<Object>, ConfigCategory> category = GCCore.MOD_CONFIGS.get(mod.get());
-            GCCore.loadModConfig(category.one().getEntrypoint(), category.one().getProvider(), category.two().parentField, mod.get(), overrideConfigJson);
-            GCCore.saveConfig(category.one(), category.two(), EventStorage.EventSource.MOD_SAVE);
-        }
     }
 
     /**

@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.impl.config.screen.widget;
 
-import net.modificationstation.stationapi.impl.config.object.ConfigEntry;
+import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 
 import java.util.*;
 
 public class ResetConfigWidget extends IconWidget {
-    private final ConfigEntry<?> configEntry;
+    private final ConfigEntryHandler<?> configEntry;
 
-    public ResetConfigWidget(int x, int y, int width, int height, ConfigEntry<?> configEntry) {
+    public ResetConfigWidget(int x, int y, int width, int height, ConfigEntryHandler<?> configEntry) {
         super(x, y, width, height, "/assets/gcapi/reset.png");
         this.configEntry = configEntry;
     }

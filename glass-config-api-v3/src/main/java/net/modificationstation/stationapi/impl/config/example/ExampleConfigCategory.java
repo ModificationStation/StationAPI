@@ -1,8 +1,7 @@
 package net.modificationstation.stationapi.impl.config.example;
 
-import net.modificationstation.stationapi.api.config.Comment;
 import net.modificationstation.stationapi.api.config.ConfigCategory;
-import net.modificationstation.stationapi.api.config.ConfigName;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
 
 /**
  * An example config category. Note the use of @ConfigCategory for defining a category.
@@ -11,14 +10,13 @@ import net.modificationstation.stationapi.api.config.ConfigName;
 public class ExampleConfigCategory {
 
     // Same deal as before, this time it's inside a category.
-    @ConfigName("Oh No!")
+    @ConfigEntry(name = "Oh No!")
     public String ohNo = "reee";
 
     // And functioning integer config! MUST be the class, not the primitive!
-    @ConfigName("Example Integer!")
+    @ConfigEntry(name = "Example Integer!")
     public Integer ohYes = 0;
 
-    @Comment("Fancy values ahead!")
-    @ConfigCategory("Fancy Config Category")
+    @ConfigCategory(name = "Fancy Config Category", description = "Fancy values ahead!")
     public ExampleConfigCategoryTwo secondCategory = new ExampleConfigCategoryTwo();
 }

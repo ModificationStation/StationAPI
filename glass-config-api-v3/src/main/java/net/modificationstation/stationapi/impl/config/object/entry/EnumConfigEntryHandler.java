@@ -3,12 +3,13 @@ package net.modificationstation.stationapi.impl.config.object.entry;
 import com.google.common.collect.Iterables;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.config.CharacterUtils;
-import net.modificationstation.stationapi.api.config.ConfigEntryWithButton;
-import net.modificationstation.stationapi.api.config.HasDrawable;
-import net.modificationstation.stationapi.impl.config.object.ConfigEntry;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.modificationstation.stationapi.api.config.CharacterUtils;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
+import net.modificationstation.stationapi.api.config.ConfigEntryWithButton;
+import net.modificationstation.stationapi.api.config.HasDrawable;
+import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.screen.widget.FancyButtonWidget;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,12 +22,12 @@ import java.util.*;
  * This class is a bit of a crapshoot cause java's generic type handling is pitifully bad.
  * @param <T> The enum you want to use. Must have toString implemented. Also must be passed into the constructor.
  */
-public class EnumConfigEntry<T extends Enum<?>> extends ConfigEntry<Integer> implements ConfigEntryWithButton {
+public class EnumConfigEntryHandler<T extends Enum<?>> extends ConfigEntryHandler<Integer> implements ConfigEntryWithButton {
     private FancyButtonWidget button;
     public final Enum<?>[] parentEnumArray;
 
-    public EnumConfigEntry(String id, String name, String description, Field parentField, Object parentObject, boolean multiplayerSynced, Integer value, Integer defaultValue, @SuppressWarnings("rawtypes") Class parentEnum) {
-        super(id, name, description, parentField, parentObject, multiplayerSynced, value, defaultValue, null);
+    public EnumConfigEntryHandler(String id, ConfigEntry configEntry, Field parentField, Object parentObject, boolean multiplayerSynced, Integer value, Integer defaultValue, @SuppressWarnings("rawtypes") Class parentEnum) {
+        super(id, configEntry, parentField, parentObject, multiplayerSynced, value, defaultValue);
         //noinspection unchecked Fuck off
         parentEnumArray = (Enum<?>[]) Iterables.toArray(EnumSet.allOf(parentEnum), parentEnum);
     }

@@ -1,11 +1,9 @@
 package net.modificationstation.stationapi.impl.config.example;
 
-import net.modificationstation.stationapi.api.config.ConfigName;
-import net.modificationstation.stationapi.api.config.MultiplayerSynced;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
 
 public class ThirdConfigClass {
 
-    @MultiplayerSynced
-    @ConfigName("Reeee")
+    @ConfigEntry(name = "Reeee", multiplayerSynced = true)
     public String ohdeargod = "";
 }

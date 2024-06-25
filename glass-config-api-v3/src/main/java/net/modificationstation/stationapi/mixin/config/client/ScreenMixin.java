@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.mixin.config.client;
 
-import net.modificationstation.stationapi.api.config.CharacterUtils;
-import net.modificationstation.stationapi.api.config.HasToolTip;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.modificationstation.stationapi.api.config.CharacterUtils;
+import net.modificationstation.stationapi.api.config.HasToolTip;
 import net.modificationstation.stationapi.impl.config.screen.ScreenAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

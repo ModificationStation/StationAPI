@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.impl.config.screen.widget;
 
-import net.modificationstation.stationapi.api.config.CharacterUtils;
-import net.modificationstation.stationapi.api.config.HasDrawable;
-import net.modificationstation.stationapi.api.config.HasToolTip;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.Tessellator;
+import net.modificationstation.stationapi.api.config.CharacterUtils;
+import net.modificationstation.stationapi.api.config.HasDrawable;
+import net.modificationstation.stationapi.api.config.HasToolTip;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
@@ -42,7 +42,7 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
     public int errorBorderColour = CharacterUtils.getIntFromColour(new Color(200, 50, 50));
 
     private boolean doRenderUpdate = true;
-    private Function<String, BiTuple<Boolean, List<String>>> contentsValidator;
+    private Function<String, List<String>> contentsValidator;
 
     public ExtensibleTextFieldWidget(TextRenderer textRenderer) {
         this.textRenderer = textRenderer;
@@ -54,7 +54,7 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
 
     public boolean isValueValid() {
         if (contentsValidator != null) {
-            return contentsValidator.apply(getText()).one();
+            return contentsValidator.apply(getText()) == null;
         }
         return true;
     }
@@ -331,7 +331,7 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
     @Override
     public List<String> getTooltip() {
         if (contentsValidator != null) {
-            return contentsValidator.apply(getText()).two();
+            return contentsValidator.apply(getText());
         }
         return null;
     }
@@ -522,7 +522,7 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
         return enabled;
     }
 
-    public void setValidator(Function<String, BiTuple<Boolean, List<String>>> contentsValidator) {
+    public void setValidator(Function<String, List<String>> contentsValidator) {
         this.contentsValidator = contentsValidator;
     }
 }

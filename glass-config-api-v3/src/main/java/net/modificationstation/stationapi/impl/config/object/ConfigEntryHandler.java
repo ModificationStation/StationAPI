@@ -2,31 +2,31 @@ package net.modificationstation.stationapi.impl.config.object;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.config.DefaultOnVanillaServer;
-import net.modificationstation.stationapi.api.config.HasDrawable;
-import net.modificationstation.stationapi.api.config.MaxLength;
-import net.modificationstation.stationapi.api.config.TriBoolean;
-import net.modificationstation.stationapi.api.config.ValueOnVanillaServer;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.modificationstation.stationapi.api.config.DefaultOnVanillaServer;
+import net.modificationstation.stationapi.api.config.HasDrawable;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
+import net.modificationstation.stationapi.api.config.TriBoolean;
+import net.modificationstation.stationapi.api.config.ValueOnVanillaServer;
 import net.modificationstation.stationapi.impl.config.screen.widget.IconWidget;
 import net.modificationstation.stationapi.impl.config.screen.widget.ResetConfigWidget;
 
 import java.lang.reflect.*;
 import java.util.*;
 
-public abstract class ConfigEntry<T> extends ConfigBase {
+public abstract class ConfigEntryHandler<T> extends ConfigHandlerBase {
     public T value;
     public final T defaultValue;
     @Environment(EnvType.CLIENT)
     protected Screen parent;
     public boolean multiplayerLoaded = false;
-    protected MaxLength maxLength;
+    protected ConfigEntry configEntry;
     protected List<HasDrawable> drawableList = new ArrayList<>(){};;
 
-    public ConfigEntry(String id, String name, String description, Field parentField, Object parentObject, boolean multiplayerSynced, T value, T defaultValue, MaxLength maxLength) {
-        super(id, name, description, parentField, parentObject, multiplayerSynced);
-        this.maxLength = maxLength;
+    public ConfigEntryHandler(String id, ConfigEntry configEntry, Field parentField, Object parentObject, boolean multiplayerSynced, T value, T defaultValue) {
+        super(id, configEntry.name(), configEntry.description(), parentField, parentObject, multiplayerSynced);
+        this.configEntry = configEntry;
         this.value = value;
         this.defaultValue = defaultValue;
     }
@@ -49,8 +49,8 @@ public abstract class ConfigEntry<T> extends ConfigBase {
         parentField.set(parentObject, value);
     }
 
-    public MaxLength getMaxLength() {
-        return maxLength;
+    public ConfigEntry getMaxLength() {
+        return configEntry;
     }
 
     /**

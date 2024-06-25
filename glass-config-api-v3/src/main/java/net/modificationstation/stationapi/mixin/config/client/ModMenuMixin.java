@@ -2,9 +2,10 @@ package net.modificationstation.stationapi.mixin.config.client;
 
 import com.google.common.collect.ImmutableMap;
 import io.github.prospector.modmenu.ModMenu;
-import net.modificationstation.stationapi.api.config.GConfig;
-import net.modificationstation.stationapi.impl.config.GCCore;
 import net.minecraft.client.gui.screen.Screen;
+import net.modificationstation.stationapi.api.config.ConfigRoot;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.impl.config.GCCore;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,9 +25,9 @@ public class ModMenuMixin {
         Map<String, Function<Screen, ? extends Screen>> map = new HashMap<>();
         //noinspection deprecation
         GCCore.MOD_CONFIGS.forEach((key, value) -> {
-            if (!map.containsKey(key.namespace.toString()) || value.two().parentField.getAnnotation(GConfig.class).primary()) {
+            if (!map.containsKey(key.namespace.toString())) {
                 map.remove(key.namespace.toString());
-                map.put(key.namespace.toString(), (parent) -> value.two().getConfigScreen(parent, value.one()));
+                map.put(key.namespace.toString(), (parent) -> value.configCategoryHandler().getConfigScreen(parent, value.modContainer()));
             }
         });
         builder.putAll(map);

@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.api.config;
 
 import com.google.common.base.CharMatcher;
-import net.modificationstation.stationapi.impl.config.DrawContextAccessor;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.modificationstation.stationapi.impl.config.DrawContextAccessor;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 

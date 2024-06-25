@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.impl.config;
 
 import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.configuration.file.YamlFileWrapper;
-import org.simpleyaml.configuration.implementation.api.YamlImplementation;
 
 import java.util.*;
 

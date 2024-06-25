@@ -2,12 +2,13 @@ package net.modificationstation.stationapi.impl.config.object.entry;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.config.CharacterUtils;
-import net.modificationstation.stationapi.api.config.ConfigEntryWithButton;
-import net.modificationstation.stationapi.api.config.HasDrawable;
-import net.modificationstation.stationapi.impl.config.object.ConfigEntry;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.modificationstation.stationapi.api.config.CharacterUtils;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
+import net.modificationstation.stationapi.api.config.ConfigEntryWithButton;
+import net.modificationstation.stationapi.api.config.HasDrawable;
+import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.screen.widget.FancyButtonWidget;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,11 +16,11 @@ import java.awt.*;
 import java.lang.reflect.*;
 import java.util.List;
 
-public class BooleanConfigEntry extends ConfigEntry<Boolean> implements ConfigEntryWithButton {
+public class BooleanConfigEntryHandler extends ConfigEntryHandler<Boolean> implements ConfigEntryWithButton {
     private FancyButtonWidget button;
 
-    public BooleanConfigEntry(String id, String name, String description, Field parentField, Object parentObject, boolean multiplayerSynced, Boolean value, Boolean defaultValue) {
-        super(id, name, description, parentField, parentObject, multiplayerSynced, value, defaultValue, null);
+    public BooleanConfigEntryHandler(String id, ConfigEntry configEntry, Field parentField, Object parentObject, boolean multiplayerSynced, Boolean value, Boolean defaultValue) {
+        super(id, configEntry, parentField, parentObject, multiplayerSynced, value, defaultValue);
     }
 
     @Override

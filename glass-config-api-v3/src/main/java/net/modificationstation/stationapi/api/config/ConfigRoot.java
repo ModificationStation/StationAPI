@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Documented
-public @interface GConfig {
+public @interface ConfigRoot {
 
     /**
      * The identifier of this config entrypoint. !!!MUST BE UNIQUE FROM OTHER CONFIGS IN YOUR MOD!!!
@@ -18,7 +18,10 @@ public @interface GConfig {
     String visibleName();
 
     /**
-     * Make the config screen attached to the annotation the one that shows by default.
+     * The index this page uses. Those without a specified index will be added last.
      */
-    boolean primary() default false;
+    int index() default Integer.MAX_VALUE;
+
+
+    boolean multiplayerSynced() default false;
 }

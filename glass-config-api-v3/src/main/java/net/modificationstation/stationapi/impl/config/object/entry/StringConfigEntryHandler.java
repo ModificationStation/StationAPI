@@ -1,29 +1,28 @@
 package net.modificationstation.stationapi.impl.config.object.entry;
 
-import net.modificationstation.stationapi.api.config.HasDrawable;
-import net.modificationstation.stationapi.api.config.MaxLength;
-import net.modificationstation.stationapi.impl.config.object.ConfigEntry;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.modificationstation.stationapi.api.config.HasDrawable;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
+import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.screen.widget.ExtensibleTextFieldWidget;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.*;
 import java.util.*;
 
-public class StringConfigEntry extends ConfigEntry<String> {
+public class StringConfigEntryHandler extends ConfigEntryHandler<String> {
     private ExtensibleTextFieldWidget textbox;
 
-    public StringConfigEntry(String id, String name, String description, Field parentField, Object parentObject, boolean multiplayerSynced, String value, String defaultValue, MaxLength maxLength) {
-        super(id, name, description, parentField, parentObject, multiplayerSynced, value, defaultValue, maxLength);
-        this.maxLength = maxLength;
+    public StringConfigEntryHandler(String id, ConfigEntry configEntry, Field parentField, Object parentObject, boolean multiplayerSynced, String value, String defaultValue) {
+        super(id, configEntry, parentField, parentObject, multiplayerSynced, value, defaultValue);
     }
 
     @Override
     public void init(Screen parent, TextRenderer textRenderer) {
         super.init(parent, textRenderer);
         textbox = new ExtensibleTextFieldWidget(textRenderer);
-        textbox.setMaxLength(maxLength.value());
+        textbox.setMaxLength(Math.toIntExact(configEntry.maxLength()));
         textbox.setText(value);
         textbox.setEnabled(!multiplayerLoaded);
         drawableList.add(textbox);

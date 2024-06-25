@@ -1,26 +1,24 @@
-package net.modificationstation.stationapi.impl.config.events;
+package net.modificationstation.stationapi.impl.config.event;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.modificationstation.stationapi.api.client.event.network.MultiplayerLogoutEvent;
-import net.modificationstation.stationapi.api.client.event.network.ServerLoginSuccessEvent;
-import net.modificationstation.stationapi.api.config.GConfig;
-import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
-import net.modificationstation.stationapi.api.registry.Registry;
-import net.modificationstation.stationapi.impl.config.EventStorage;
-import net.modificationstation.stationapi.impl.config.GCCore;
-import net.modificationstation.stationapi.impl.config.object.ConfigCategory;
-import net.modificationstation.stationapi.impl.config.object.ConfigEntry;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
+import net.modificationstation.stationapi.api.client.event.network.MultiplayerLogoutEvent;
+import net.modificationstation.stationapi.api.client.event.network.ServerLoginSuccessEvent;
+import net.modificationstation.stationapi.api.config.ConfigRoot;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
-import net.modificationstation.stationapi.api.network.packet.MessagePacket;
-import net.modificationstation.stationapi.api.network.packet.PacketHelper;
+import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
+import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.ReflectionHelper;
+import net.modificationstation.stationapi.impl.config.EventStorage;
+import net.modificationstation.stationapi.impl.config.GCCore;
+import net.modificationstation.stationapi.impl.config.object.ConfigCategoryHandler;
+import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -52,8 +50,8 @@ public class InitClientNetworking {
         GCCore.log("Unloading server synced config!");
         FabricLoader.getInstance().getEntrypointContainers(GCCore.NAMESPACE.getMetadata().getId(), Object.class).forEach((entrypointContainer -> {
             try {
-                for (Field field : ReflectionHelper.getFieldsWithAnnotation(entrypointContainer.getEntrypoint().getClass(), GConfig.class)) {
-                    Identifier configID = Identifier.of(entrypointContainer.getProvider().getMetadata().getId() + ":" + field.getAnnotation(GConfig.class).value());
+                for (Field field : ReflectionHelper.getFieldsWithAnnotation(entrypointContainer.getEntrypoint().getClass(), ConfigRoot.class)) {
+                    Identifier configID = Identifier.of(entrypointContainer.getProvider().getMetadata().getId() + ":" + field.getAnnotation(ConfigRoot.class).value());
                     GCCore.loadModConfig(entrypointContainer.getEntrypoint(), entrypointContainer.getProvider(), field, configID, null);
                 }
             } catch (Exception e) {
@@ -66,17 +64,17 @@ public class InitClientNetworking {
     @EventListener
     private void onClientJoin(ServerLoginSuccessEvent event) {
         if(!((ModdedPacketHandler) event.clientNetworkHandler).isModded()) {
-            GCCore.MOD_CONFIGS.forEach((identifier, entrypointContainerConfigCategoryBiTuple) -> recursiveTriggerVanillaBehavior(entrypointContainerConfigCategoryBiTuple.two()));
+            GCCore.MOD_CONFIGS.forEach((identifier, configRootEntry) -> recursiveTriggerVanillaBehavior(configRootEntry.configCategoryHandler()));
         }
     }
 
-    private void recursiveTriggerVanillaBehavior(ConfigCategory configCategory) {
+    private void recursiveTriggerVanillaBehavior(ConfigCategoryHandler configCategory) {
         configCategory.values.forEach((aClass, configBase) -> {
-            if(configBase.getClass().isAssignableFrom(ConfigCategory.class)) {
-                recursiveTriggerVanillaBehavior((ConfigCategory) configBase);
+            if(configBase.getClass().isAssignableFrom(ConfigCategoryHandler.class)) {
+                recursiveTriggerVanillaBehavior((ConfigCategoryHandler) configBase);
             }
             else {
-                ((ConfigEntry<?>) configBase).vanillaServerBehavior();
+                ((ConfigEntryHandler<?>) configBase).vanillaServerBehavior();
             }
         });
     }

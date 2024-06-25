@@ -1,31 +1,30 @@
 package net.modificationstation.stationapi.impl.config.object.entry;
 
-import net.modificationstation.stationapi.api.config.CharacterUtils;
-import net.modificationstation.stationapi.api.config.HasDrawable;
-import net.modificationstation.stationapi.api.config.MaxLength;
-import net.modificationstation.stationapi.impl.config.object.ConfigEntry;
-import net.modificationstation.stationapi.impl.config.screen.widget.ExtensibleTextFieldWidget;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.modificationstation.stationapi.api.config.CharacterUtils;
+import net.modificationstation.stationapi.api.config.HasDrawable;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
+import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
+import net.modificationstation.stationapi.impl.config.screen.widget.ExtensibleTextFieldWidget;
 import org.jetbrains.annotations.NotNull;
 import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.lang.reflect.*;
 import java.util.*;
 
-public class FloatConfigEntry extends ConfigEntry<Float> {
+public class FloatConfigEntryHandler extends ConfigEntryHandler<Float> {
     private ExtensibleTextFieldWidget textbox;
 
-    public FloatConfigEntry(String id, String name, String description, Field parentField, Object parentObject, boolean multiplayerSynced, Float value, Float defaultValue, MaxLength maxLength) {
-        super(id, name, description, parentField, parentObject, multiplayerSynced, value, defaultValue, maxLength);
+    public FloatConfigEntryHandler(String id, ConfigEntry configEntry, Field parentField, Object parentObject, boolean multiplayerSynced, Float value, Float defaultValue) {
+        super(id, configEntry, parentField, parentObject, multiplayerSynced, value, defaultValue);
     }
 
     @Override
     public void init(Screen parent, TextRenderer textRenderer) {
         super.init(parent, textRenderer);
         textbox = new ExtensibleTextFieldWidget(textRenderer);
-        textbox.setValidator(str -> BiTuple.of(CharacterUtils.isFloat(str) && Float.parseFloat(str) <= maxLength.value(), multiplayerLoaded? Collections.singletonList("Server synced, you cannot change this value") : CharacterUtils.isFloat(str)? Float.parseFloat(str) > maxLength.value()? Collections.singletonList("Value is too high") : null : Collections.singletonList("Value is not a decimal number")));
-        textbox.setMaxLength(maxLength.value());
+        textbox.setValidator(str -> floatValidator(configEntry, multiplayerLoaded, str));
         textbox.setText(value.toString());
         textbox.setEnabled(!multiplayerLoaded);
         drawableList.add(textbox);
@@ -56,5 +55,21 @@ public class FloatConfigEntry extends ConfigEntry<Float> {
         value = (Float) defaultValue;
         setDrawableValue((Float) defaultValue);
         saveToField();
+    }
+
+    public static List<String> floatValidator(ConfigEntry configEntry, boolean multiplayerLoaded, String str) {
+        if (multiplayerLoaded) {
+            return Collections.singletonList("Server synced, you cannot change this value");
+        }
+        if (!CharacterUtils.isInteger(str)) {
+            return Collections.singletonList("Value is not a floating point number");
+        }
+        if (Integer.parseInt(str) > configEntry.maxLength()) {
+            return Collections.singletonList("Value is too high");
+        }
+        if (Integer.parseInt(str) < configEntry.minLength()) {
+            return Collections.singletonList("Value is too low");
+        }
+        return null;
     }
 }

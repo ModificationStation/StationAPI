@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.impl.config.screen;
 
-import net.modificationstation.stationapi.api.config.CharacterUtils;
-import net.modificationstation.stationapi.api.config.MaxLength;
-import net.modificationstation.stationapi.impl.config.object.ConfigEntry;
 import net.minecraft.class_35;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.resource.language.TranslationStorage;
+import net.modificationstation.stationapi.api.config.CharacterUtils;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
+import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.screen.widget.ExtensibleTextFieldWidget;
 import net.modificationstation.stationapi.impl.config.screen.widget.TexturedButtonWidget;
 import net.modificationstation.stationapi.mixin.config.client.EntryListWidgetAccessor;
@@ -27,15 +27,15 @@ public abstract class BaseListScreenBuilder<T> extends Screen {
     protected final Screen parent;
     protected int mouseX = -1;
     protected int mouseY = -1;
-    protected ConfigEntry<T[]> configEntry;
+    protected ConfigEntryHandler<T[]> configEntry;
     public final List<ExtensibleTextFieldWidget> textFieldWidgets = new ArrayList<>();
-    protected Function<String, BiTuple<Boolean, List<String>>> validator;
-    protected final MaxLength maxLength;
+    protected Function<String, List<String>> validator;
+    protected final ConfigEntry configAnnotation;
     private boolean isInUse = false;
 
-    protected BaseListScreenBuilder(Screen parent, MaxLength maxLength, ConfigEntry<T[]> configEntry, Function<String, BiTuple<Boolean, List<String>>> validator) {
+    protected BaseListScreenBuilder(Screen parent, ConfigEntry configAnnotation, ConfigEntryHandler<T[]> configEntry, Function<String, List<String>> validator) {
         this.parent = parent;
-        this.maxLength = maxLength;
+        this.configAnnotation = configAnnotation;
         this.configEntry = configEntry;
         this.validator = validator;
     }
@@ -45,7 +45,7 @@ public abstract class BaseListScreenBuilder<T> extends Screen {
         list.forEach((value) -> {
             ExtensibleTextFieldWidget textbox = new ExtensibleTextFieldWidget(textRenderer);
             textbox.setValidator(validator);
-            textbox.setMaxLength(maxLength.value());
+            textbox.setMaxLength(Math.toIntExact(configAnnotation.maxLength())); // This helper throws an exception if the number is too high for an int. Handy!
             textbox.setText(String.valueOf(value));
             textFieldWidgets.add(textbox);
         });
@@ -120,12 +120,10 @@ public abstract class BaseListScreenBuilder<T> extends Screen {
         textRenderer.drawWithShadow(configEntry.name, (width / 2) - (textRenderer.getWidth(configEntry.name) / 2), 4, 16777215);
         textRenderer.drawWithShadow(configEntry.description, (width / 2) - (textRenderer.getWidth(configEntry.description) / 2), 18, 8421504);
 
-        if (configEntry.parentField.isAnnotationPresent(MaxLength.class)) {
-            MaxLength maxLength = configEntry.parentField.getAnnotation(MaxLength.class);
-            if ((!maxLength.fixedArray() && maxLength.arrayValue() < textFieldWidgets.size()) || (maxLength.fixedArray() && maxLength.arrayValue() != textFieldWidgets.size())) {
-                String text = "Array is not the right size!";
-                textRenderer.drawWithShadow(text, (width / 2) - (textRenderer.getWidth(text) / 2), 34, CharacterUtils.getIntFromColour(Color.RED));
-            }
+        ConfigEntry maxLength = configEntry.parentField.getAnnotation(ConfigEntry.class);
+        if (maxLength.minArrayLength() < textFieldWidgets.size() || maxLength.maxArrayLength() > textFieldWidgets.size()) {
+            String text = "Array is not the right size! (" + textFieldWidgets.size() + " outside of " + maxLength.minArrayLength() + " / " + maxLength.maxArrayLength() + ")";
+            textRenderer.drawWithShadow(text, (width / 2) - (textRenderer.getWidth(text) / 2), 34, CharacterUtils.getIntFromColour(Color.RED));
         }
 
         List<String> tooltip = ((ScreenAccessor) this).getMouseTooltip(mouseX, mouseY, textFieldWidgets);
