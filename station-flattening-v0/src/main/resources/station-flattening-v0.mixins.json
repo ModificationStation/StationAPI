@@ -30,6 +30,8 @@
     "RegionFileAccessor",
     "SecondaryBlockItemMixin",
     "SkylandsChunkGeneratorMixin",
+    "StatMixin",
+    "StatsMixin",
     "WorldMixin",
     "WorldPropertiesMixin"
   ],
