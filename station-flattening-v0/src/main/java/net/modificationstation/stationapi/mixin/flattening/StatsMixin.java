@@ -8,19 +8,76 @@ import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.StatRegistryEvent;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.StatRegistry;
+import net.modificationstation.stationapi.api.registry.sync.trackers.ObjectArrayTracker;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Stats.class)
 class StatsMixin {
     @Shadow public static Stat[] CRAFTED;
+
+    @Shadow public static Stat[] MINE_BLOCK;
+
+    @Shadow public static Stat[] USED;
+
+    @Shadow public static Stat[] BROKEN;
+
+    @Shadow private static boolean hasExtendedItemStatsInitialized;
+
+    @Shadow private static boolean hasBasicItemStatsInitialized;
+
+    @Inject(
+            method = "<clinit>",
+            at = @At("HEAD")
+    )
+    private static void stationapi_syncMined(CallbackInfo ci) {
+        ObjectArrayTracker.register(BlockRegistry.INSTANCE, () -> MINE_BLOCK, array -> MINE_BLOCK = array);
+    }
+
+    @Inject(
+            method = "initializeItemStats",
+            at = @At("HEAD")
+    )
+    private static void stationapi_syncUsedAndBroken(CallbackInfo ci) {
+        if (!hasExtendedItemStatsInitialized) {
+            ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> USED, array -> USED = array);
+            ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> BROKEN, array -> BROKEN = array);
+        }
+    }
+
+    @Inject(
+            method = "initializeExtendedItemStats",
+            at = @At("HEAD")
+    )
+    private static void stationapi_syncUsedAndBrokenExtended(CallbackInfo ci) {
+        if (!hasBasicItemStatsInitialized) {
+            ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> USED, array -> USED = array);
+            ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> BROKEN, array -> BROKEN = array);
+        }
+    }
+
+    @Inject(
+            method = "initializeCraftedItemStats",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/stat/Stats;CRAFTED:[Lnet/minecraft/stat/Stat;",
+                    opcode = Opcodes.PUTSTATIC
+            )
+    )
+    private static void stationapi_syncCrafted(CallbackInfo ci) {
+        ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> CRAFTED, array -> CRAFTED = array);
+    }
 
     @Inject(
             method = "<clinit>",
@@ -99,5 +156,27 @@ class StatsMixin {
     ) {
         val stat = stats[index];
         Registry.register(StatRegistry.INSTANCE, stat.id, Item.ITEMS[index].getRegistryEntry().registryKey().getValue().withSuffixedPath("_broken"), stat);
+    }
+
+    @ModifyConstant(
+            method = "method_749",
+            constant = @Constant(intValue = 256)
+    )
+    private static int stationapi_getBlocksSize(int constant) {
+        return Block.BLOCKS.length;
+    }
+
+    @ModifyConstant(
+            method = {
+                    "initializeItemStats",
+                    "initializeExtendedItemStats",
+                    "initializeCraftedItemStats",
+                    "method_752",
+                    "initializeBrokenItemStats"
+            },
+            constant = @Constant(intValue = 32000)
+    )
+    private static int stationapi_getItemsSize(int constant) {
+        return Item.ITEMS.length;
     }
 }
