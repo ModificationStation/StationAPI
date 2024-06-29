@@ -24,7 +24,8 @@ Make sure to use Java 17 (disable Java compatibility checks in Prism if it compl
 
 ## Using This to Make Mods
 
-[See the wiki.](https://github.com/ModificationStation/StationAPI/wiki)
+[See the wiki.](https://github.com/ModificationStation/StationAPI/wiki)  
+[Using GCAPI](glass-config-api-v3/docs/Home.md)
 
 Proper code documentation coming eventually. There are some JavaDoc comments for some commonly used classes.
 
