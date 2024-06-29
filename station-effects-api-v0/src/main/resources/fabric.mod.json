@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "station-entities-v0",
+  "id": "station-effects-api-v0",
   "version": "${version}",
 
   "name": "Station Entities (v0)",
@@ -15,20 +15,16 @@
   },
 
   "license": "MIT",
-  "icon": "assets/station-entities-v0/icon.png",
+  "icon": "assets/station-effects-api-v0/icon.png",
 
   "environment": "*",
   "entrypoints": {
-    "stationapi:event_bus_server": [
-      "net.modificationstation.stationapi.impl.server.entity.CustomTrackingImpl",
-      "net.modificationstation.stationapi.impl.server.entity.TrackingParametersImpl"
-    ],
-    "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.client.network.EntityClientNetworkHandler"
+    "stationapi:event_bus": [
+		"net.modificationstation.stationapi.impl.effect.EffectsRegisterListener"
     ]
   },
   "mixins": [
-    "station-entities-v0.mixins.json"
+    "station-effects-api-v0.mixins.json"
   ],
 
   "depends": {
@@ -37,6 +33,11 @@
   },
 
   "custom": {
-    "modmenu:api": true
+    "modmenu:api": true,
+    "loom:injected_interfaces": {
+      "net/minecraft/class_57": [
+        "net/modificationstation/stationapi/api/effect/StationEffectEntity"
+      ]
+    }
   }
 }
