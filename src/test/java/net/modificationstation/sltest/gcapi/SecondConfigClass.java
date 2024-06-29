@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.config.example;
+package net.modificationstation.sltest.gcapi;
 
 import net.modificationstation.stationapi.api.config.ConfigEntry;
 

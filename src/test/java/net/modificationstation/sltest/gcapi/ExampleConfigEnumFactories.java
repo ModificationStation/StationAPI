@@ -1,13 +1,11 @@
-package net.modificationstation.stationapi.impl.config.example;
+package net.modificationstation.sltest.gcapi;
 
 import com.google.common.collect.ImmutableMap;
 import net.modificationstation.stationapi.api.config.ConfigFactoryProvider;
 import net.modificationstation.stationapi.api.config.ConfigEntry;
-import net.modificationstation.stationapi.impl.config.NonFunction;
 import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.object.entry.EnumConfigEntryHandler;
 import uk.co.benjiweber.expressions.function.SeptFunction;
-import uk.co.benjiweber.expressions.function.SexFunction;
 
 import java.lang.reflect.*;
 import java.util.function.*;
