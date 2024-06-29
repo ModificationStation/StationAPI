@@ -91,11 +91,11 @@ allprojects {
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
         "implementationOnly"("org.jetbrains:annotations:23.0.0")
 
-        modLocalRuntime("com.github.calmilamsy:ModMenu:${project.properties["modmenu_version"]}") {
+        modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}") {
             isTransitive = false
         }
 
-        compileOnlyApi("com.github.calmilamsy:ModMenu:${project.properties["modmenu_version"]}") {
+        compileOnlyApi("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}") {
             isTransitive = false
         }
 
