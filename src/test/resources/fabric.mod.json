@@ -51,7 +51,6 @@
       "net.modificationstation.sltest.gcapi.ExampleConfig"
     ],
     "gcapi:factory_provider": [
-      "net.modificationstation.stationapi.impl.config.factory.DefaultFactoryProvider",
       "net.modificationstation.sltest.gcapi.ExampleConfigEnumFactories"
     ],
     "gcapi:postload": [
