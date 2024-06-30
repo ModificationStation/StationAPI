@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.impl.config.example;
+package net.modificationstation.sltest.gcapi;
 
 public enum ExampleConfigEnum {
     YAY("Yay!"),

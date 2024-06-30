@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.impl.config.factory;
 import com.google.common.collect.ImmutableMap;
 import net.modificationstation.stationapi.api.config.ConfigFactoryProvider;
 import net.modificationstation.stationapi.api.config.ConfigEntry;
-import net.modificationstation.stationapi.impl.config.NonFunction;
 import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.object.entry.BooleanConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.object.entry.FloatConfigEntryHandler;
@@ -12,7 +11,6 @@ import net.modificationstation.stationapi.impl.config.object.entry.IntegerConfig
 import net.modificationstation.stationapi.impl.config.object.entry.IntegerListConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.object.entry.StringConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.object.entry.StringListConfigEntryHandler;
-import uk.co.benjiweber.expressions.function.OctFunction;
 import uk.co.benjiweber.expressions.function.SeptFunction;
 
 import java.lang.reflect.*;
@@ -28,9 +26,9 @@ public class DefaultFactoryProvider implements ConfigFactoryProvider {
         immutableBuilder.put(Integer.class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new IntegerConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, Integer.valueOf(String.valueOf(value)), Integer.valueOf(String.valueOf(defaultValue)))));
         immutableBuilder.put(Float.class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new FloatConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, Float.valueOf(String.valueOf(value)), Float.valueOf(String.valueOf(defaultValue)))));
         immutableBuilder.put(Boolean.class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new BooleanConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, (boolean) value, (boolean) defaultValue)));
-        immutableBuilder.put(String[].class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new StringListConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, ((ArrayList<String>) value).toArray(new String[0]), (String[]) defaultValue))); // the new ArrayList is required or it returns java.util.Arrays.ArrayList, which is fucking dumb.
-        immutableBuilder.put(Integer[].class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new IntegerListConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, ((ArrayList<Integer>) value).toArray(new Integer[0]), (Integer[]) defaultValue)));
-        immutableBuilder.put(Float[].class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new FloatListConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, ((ArrayList<Float>) value).toArray(new Float[0]), (Float[]) defaultValue)));
+        immutableBuilder.put(String[].class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new StringListConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, listOrArrayToArray(value, new String[0]), (String[]) defaultValue)));
+        immutableBuilder.put(Integer[].class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new IntegerListConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, listOrArrayToArray(value, new Integer[0]), (Integer[]) defaultValue)));
+        immutableBuilder.put(Float[].class, ((id, configEntry, parentField, parentObject, isMultiplayerSynced, value, defaultValue) -> new FloatListConfigEntryHandler(id, configEntry, parentField, parentObject, isMultiplayerSynced, listOrArrayToArray(value, new Float[0]), (Float[]) defaultValue)));
     }
 
     @Override
@@ -44,7 +42,15 @@ public class DefaultFactoryProvider implements ConfigFactoryProvider {
         immutableBuilder.put(Float[].class, DefaultFactoryProvider::justPass);
     }
 
-    private static <T> T justPass(T object) {
+    public static <T> T justPass(T object) {
         return object;
+    }
+
+    public static <T> T[] listOrArrayToArray(Object object, T[] type) {
+        if (object instanceof List<?> list) {
+            return list.toArray(type);
+        }
+        //noinspection unchecked // If this isn't right, we're fucked anyways
+        return (T[]) object;
     }
 }

@@ -48,6 +48,18 @@
     ],
     "preLaunch": [
       "net.modificationstation.sltest.PreLaunchTest"
+    ],
+    "gcapi": [
+      "net.modificationstation.sltest.gcapi.ExampleConfig"
+    ],
+    "gcapi:factory_provider": [
+      "net.modificationstation.sltest.gcapi.ExampleConfigEnumFactories"
+    ],
+    "gcapi:postload": [
+      "net.modificationstation.sltest.gcapi.ExampleEntryPointListeners"
+    ],
+    "gcapi:presave": [
+      "net.modificationstation.sltest.gcapi.ExampleEntryPointListeners"
     ]
   },
 

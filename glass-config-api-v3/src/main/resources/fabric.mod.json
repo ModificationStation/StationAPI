@@ -22,18 +22,8 @@
     "preLaunch": [
       "net.modificationstation.stationapi.impl.config.GCCore"
     ],
-    "gcapi": [
-      "net.modificationstation.stationapi.impl.config.example.ExampleConfig"
-    ],
     "gcapi:factory_provider": [
-      "net.modificationstation.stationapi.impl.config.factory.DefaultFactoryProvider",
-      "net.modificationstation.stationapi.impl.config.example.ExampleConfigEnumFactories"
-    ],
-    "gcapi:postload": [
-      "net.modificationstation.stationapi.impl.config.example.ExampleEntryPointListeners"
-    ],
-    "gcapi:presave": [
-      "net.modificationstation.stationapi.impl.config.example.ExampleEntryPointListeners"
+      "net.modificationstation.stationapi.impl.config.factory.DefaultFactoryProvider"
     ],
     "stationapi:event_bus_server": [
       "net.modificationstation.stationapi.impl.config.event.InitServerNetworking"
