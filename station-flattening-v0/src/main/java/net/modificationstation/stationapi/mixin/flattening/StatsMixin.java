@@ -12,6 +12,7 @@ import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.StatRegistry;
+import net.modificationstation.stationapi.api.registry.sync.trackers.Int2ObjectMapTracker;
 import net.modificationstation.stationapi.api.registry.sync.trackers.ObjectArrayTracker;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,6 +23,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Map;
 
 @Mixin(Stats.class)
 class StatsMixin {
@@ -37,11 +40,14 @@ class StatsMixin {
 
     @Shadow private static boolean hasBasicItemStatsInitialized;
 
+    @Shadow protected static Map<Integer, Stat> ID_TO_STAT;
+
     @Inject(
             method = "<clinit>",
             at = @At("HEAD")
     )
     private static void stationapi_syncMined(CallbackInfo ci) {
+        Int2ObjectMapTracker.register(StatRegistry.INSTANCE, "Stats.ID_TO_STAT", ID_TO_STAT, true);
         ObjectArrayTracker.register(BlockRegistry.INSTANCE, () -> MINE_BLOCK, array -> MINE_BLOCK = array);
     }
 
