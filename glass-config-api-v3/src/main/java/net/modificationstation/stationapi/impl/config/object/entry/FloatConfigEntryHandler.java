@@ -61,7 +61,7 @@ public class FloatConfigEntryHandler extends ConfigEntryHandler<Float> {
         if (multiplayerLoaded) {
             return Collections.singletonList("Server synced, you cannot change this value");
         }
-        if (!CharacterUtils.isInteger(str)) {
+        if (!CharacterUtils.isFloat(str)) {
             return Collections.singletonList("Value is not a floating point number");
         }
         if (Integer.parseInt(str) > configEntry.maxLength()) {
