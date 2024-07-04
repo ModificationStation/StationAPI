@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.config.DefaultOnVanillaServer;
 import net.modificationstation.stationapi.api.config.HasDrawable;
 import net.modificationstation.stationapi.api.config.ConfigEntry;
@@ -30,7 +31,7 @@ public abstract class ConfigEntryHandler<T> extends ConfigHandlerBase {
     protected Function<String, List<String>> textValidator;
 
     public ConfigEntryHandler(String id, ConfigEntry configEntry, Field parentField, Object parentObject, boolean multiplayerSynced, T value, T defaultValue) {
-        super(id, configEntry.name(), configEntry.description(), parentField, parentObject, multiplayerSynced);
+        super(id, TranslationStorage.getInstance().get(configEntry.name()), TranslationStorage.getInstance().get(configEntry.description()), parentField, parentObject, multiplayerSynced);
         this.configEntry = configEntry;
         this.value = value;
         this.defaultValue = defaultValue;

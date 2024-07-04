@@ -8,13 +8,13 @@ import java.lang.annotation.*;
 public @interface ConfigEntry {
 
     /**
-     * This should be the visible name that you want users to see in the config GUI.
+     * This should be the visible name that you want users to see in the config GUI. Supports translation keys.
      * @return a string, supports colour codes.
      */
     String name();
 
     /**
-     * The description shown to users in the scroll menu. ~30 chars max is recommended.
+     * The description shown to users in the scroll menu. ~30 chars max is recommended. Supports translation keys.
      * @return a string, supports colour codes.
      */
     String description() default "";

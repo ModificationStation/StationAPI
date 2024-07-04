@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.api.config;
 
+import net.modificationstation.stationapi.api.util.Identifier;
+
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -8,13 +10,13 @@ import java.lang.annotation.*;
 public @interface ConfigCategory {
 
     /**
-     * The name you want to have on the button to access your category and at the top while it's open.
+     * The name you want to have on the button to access your category and at the top while it's open. Supports translation keys.
      * @return a string, supports colour codes.
      */
     String name();
 
     /**
-     * The description shown to users in the scroll menu. ~30 chars max is recommended.
+     * The description shown to users in the scroll menu. ~30 chars max is recommended. Supports translation keys.
      * @return a string, supports colour codes.
      */
     String description() default "";
