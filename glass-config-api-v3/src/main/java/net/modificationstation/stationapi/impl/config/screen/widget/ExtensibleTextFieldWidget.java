@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.impl.config.screen.widget;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.Tessellator;
@@ -8,7 +10,6 @@ import net.modificationstation.stationapi.api.config.HasDrawable;
 import net.modificationstation.stationapi.api.config.HasToolTip;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.awt.*;
 import java.util.List;
@@ -26,17 +27,17 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
     private int y;
     private int width;
     private int height;
-    private String text = "";
-    private int maxLength = 32;
+    @Getter private String text = "";
+    @Getter private int maxLength = 32;
     private int focusedTicks;
     private boolean shouldDrawBackground = true;
-    private boolean enabled = true;
+    @Getter @Setter private boolean enabled = true;
     private boolean selected = false;
     @SuppressWarnings("FieldMayBeFinal")
     private boolean focusable = true;
     private int cursorPosition = 0;
-    private int cursorMax = 0;
-    private int cursorMin = 0;
+    @Getter private int cursorMax = 0;
+    @Getter private int cursorMin = 0;
     public int selectedTextColour = 14737632;
     public int deselectedTextColour = 7368816;
     public int errorBorderColour = CharacterUtils.getIntFromColour(new Color(200, 50, 50));
@@ -74,10 +75,6 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
         this.onTextChanged();
     }
 
-    public String getText() {
-        return this.text;
-    }
-
     public String getSelectedText() {
         int var1 = Math.min(this.cursorMax, this.cursorMin);
         int var2 = Math.max(this.cursorMax, this.cursorMin);
@@ -90,7 +87,7 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
         int var4 = Math.min(this.cursorMax, this.cursorMin);
         int var5 = Math.max(this.cursorMax, this.cursorMin);
         int var6 = this.maxLength - this.text.length() - (var4 - this.cursorMin);
-        if (this.text.length() > 0) {
+        if (!this.text.isEmpty()) {
             var2 = var2 + this.text.substring(0, var4);
         }
 
@@ -103,7 +100,7 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
             var8 = var3.length();
         }
 
-        if (this.text.length() > 0 && var5 < this.text.length()) {
+        if (!this.text.isEmpty() && var5 < this.text.length()) {
             var2 = var2 + this.text.substring(var5);
         }
 
@@ -112,7 +109,7 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
     }
 
     public void method_729(int i) {
-        if (this.text.length() != 0) {
+        if (!this.text.isEmpty()) {
             if (this.cursorMin != this.cursorMax) {
                 this.addText("");
             } else {
@@ -122,7 +119,7 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
     }
 
     public void method_735(int i) {
-        if (this.text.length() != 0) {
+        if (!this.text.isEmpty()) {
             if (this.cursorMin != this.cursorMax) {
                 this.addText("");
             } else {
@@ -365,7 +362,7 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
             var3 = var4.length();
         }
 
-        if (var4.length() > 0) {
+        if (!var4.isEmpty()) {
             String firstString = var5 ? var4.substring(0, var2) : var4;
             this.textRenderer.drawWithShadow(firstString, firstStringPos, textY, var1);
             secondStringPos += textRenderer.getWidth(firstString);
@@ -380,7 +377,7 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
             selectStart = --secondStringPos;
         }
 
-        if (var4.length() > 0 && var5 && var2 < var4.length()) {
+        if (!var4.isEmpty() && var5 && var2 < var4.length()) {
             this.textRenderer.drawWithShadow(var4.substring(var2), secondStringPos, textY, var1);
         }
 
@@ -436,14 +433,6 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
 
     }
 
-    public int getMaxLength() {
-        return this.maxLength;
-    }
-
-    public int getCursorMax() {
-        return this.cursorMax;
-    }
-
     public boolean shouldDrawBackground() {
         return this.shouldDrawBackground;
     }
@@ -464,10 +453,6 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
     @SuppressWarnings("unused")
     public boolean isSelected() {
         return this.selected;
-    }
-
-    public int getCursorMin() {
-        return this.cursorMin;
     }
 
     public int getBackgroundOffset() {
@@ -512,14 +497,6 @@ public class ExtensibleTextFieldWidget extends DrawContext implements HasDrawabl
             }
         }
 
-    }
-
-    public void setEnabled(boolean flag) {
-        this.enabled = flag;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
     }
 
     public void setValidator(Function<String, List<String>> contentsValidator) {

@@ -1,10 +1,8 @@
 package net.modificationstation.stationapi.api.config;
 
 import com.google.common.collect.ImmutableMap;
-import net.modificationstation.stationapi.impl.config.NonFunction;
 import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import uk.co.benjiweber.expressions.function.SeptFunction;
-import uk.co.benjiweber.expressions.function.SexFunction;
 
 import java.lang.reflect.*;
 import java.util.function.*;
