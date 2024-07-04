@@ -54,7 +54,7 @@ public @interface ConfigEntry {
      */
     long minLength() default 0;
 
-    long maxArrayLength() default Short.MAX_VALUE;
+    long maxArrayLength() default Byte.MAX_VALUE;
     long minArrayLength() default 0;
 
 
