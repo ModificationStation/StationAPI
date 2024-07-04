@@ -18,13 +18,14 @@ public class IntegerConfigEntryHandler extends ConfigEntryHandler<Integer> {
 
     public IntegerConfigEntryHandler(String id, ConfigEntry configEntry, Field parentField, Object parentObject, boolean multiplayerSynced, Integer value, Integer defaultValue) {
         super(id, configEntry, parentField, parentObject, multiplayerSynced, value, defaultValue);
+        textValidator = str -> integerValidator(configEntry, multiplayerLoaded, str);
     }
 
     @Override
     public void init(Screen parent, TextRenderer textRenderer) {
         super.init(parent, textRenderer);
         textbox = new ExtensibleTextFieldWidget(textRenderer);
-        textbox.setValidator((str) -> integerValidator(configEntry, multiplayerLoaded, str));
+        textbox.setValidator(textValidator);
         textbox.setMaxLength(Math.toIntExact(configEntry.maxLength()));
         textbox.setText(value.toString());
         textbox.setEnabled(!multiplayerLoaded);
@@ -43,7 +44,7 @@ public class IntegerConfigEntryHandler extends ConfigEntryHandler<Integer> {
 
     @Override
     public boolean isValueValid() {
-        return textbox.isValueValid();
+        return textValidator.apply(value.toString()) == null;
     }
 
     @Override

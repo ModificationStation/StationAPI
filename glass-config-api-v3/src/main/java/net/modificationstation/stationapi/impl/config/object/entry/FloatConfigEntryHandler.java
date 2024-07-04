@@ -18,13 +18,14 @@ public class FloatConfigEntryHandler extends ConfigEntryHandler<Float> {
 
     public FloatConfigEntryHandler(String id, ConfigEntry configEntry, Field parentField, Object parentObject, boolean multiplayerSynced, Float value, Float defaultValue) {
         super(id, configEntry, parentField, parentObject, multiplayerSynced, value, defaultValue);
+        textValidator = str -> floatValidator(configEntry, multiplayerLoaded, str);
     }
 
     @Override
     public void init(Screen parent, TextRenderer textRenderer) {
         super.init(parent, textRenderer);
         textbox = new ExtensibleTextFieldWidget(textRenderer);
-        textbox.setValidator(str -> floatValidator(configEntry, multiplayerLoaded, str));
+        textbox.setValidator(textValidator);
         textbox.setText(value.toString());
         textbox.setEnabled(!multiplayerLoaded);
         drawableList.add(textbox);
@@ -42,7 +43,7 @@ public class FloatConfigEntryHandler extends ConfigEntryHandler<Float> {
 
     @Override
     public boolean isValueValid() {
-        return textbox.isValueValid();
+        return textValidator.apply(value.toString()) == null;
     }
 
     @Override
@@ -64,10 +65,10 @@ public class FloatConfigEntryHandler extends ConfigEntryHandler<Float> {
         if (!CharacterUtils.isFloat(str)) {
             return Collections.singletonList("Value is not a floating point number");
         }
-        if (Integer.parseInt(str) > configEntry.maxLength()) {
+        if (Float.parseFloat(str) > configEntry.maxLength()) {
             return Collections.singletonList("Value is too high");
         }
-        if (Integer.parseInt(str) < configEntry.minLength()) {
+        if (Float.parseFloat(str) < configEntry.minLength()) {
             return Collections.singletonList("Value is too low");
         }
         return null;

@@ -31,12 +31,12 @@ public abstract class BaseListConfigEntryHandler<T> extends ConfigEntryHandler<T
         super.init(parent, textRenderer);
         button = new FancyButtonWidget(10, 0, 0, 0, 0, "Open List... (" + value.length + " values)");
         drawableList.add(button);
-        listScreen = createListScreen();
+        listScreen = createListScreen(parent);
         button.active = !multiplayerLoaded;
     }
 
     @Environment(EnvType.CLIENT)
-    public abstract BaseListScreenBuilder<T> createListScreen();
+    public abstract BaseListScreenBuilder<T> createListScreen(Screen parent);
 
     public abstract T strToVal(String str);
 
@@ -51,13 +51,20 @@ public abstract class BaseListConfigEntryHandler<T> extends ConfigEntryHandler<T
                 list.add(strToVal(val.getText()));
             }
         });
-        //noinspection unchecked This class should only ever be used by arrays.
-        return (T[]) list.toArray(new Object[0]);
+
+        return list.toArray(getTypedArray());
     }
+
+    public abstract T[] getTypedArray();
 
     @Override
     public boolean isValueValid() {
-        return value.length < configEntry.maxArrayLength() && value.length > configEntry.minArrayLength();
+//        return value.length <= configEntry.maxArrayLength() && value.length >= configEntry.minArrayLength() && listContentsValid();
+        return true;
+    }
+
+    public boolean listContentsValid() {
+        return Arrays.stream(value).noneMatch(aValue -> textValidator.apply(aValue.toString()) != null);
     }
 
     @Override
@@ -78,7 +85,7 @@ public abstract class BaseListConfigEntryHandler<T> extends ConfigEntryHandler<T
     }
 
     @Override
-    public void reset(Object defaultValue) throws IllegalAccessException { // !!OVERRIDE THIS AND DO A DEEP CLONE IF YOU'RE USING SOMETHING THAT ISN'T A PRIMITIVE!!
+    public void reset(Object defaultValue) throws IllegalAccessException { // !!OVERRIDE THIS AND DO A DEEP CLONE IF YOU'RE USING SOMETHING THAT ISN'T A PRIMITIVE/SINGLETON/OTHERWISE UNIQUE VALUE!!
         //noinspection unchecked
         value = ((T[]) defaultValue).clone();
         saveToField();

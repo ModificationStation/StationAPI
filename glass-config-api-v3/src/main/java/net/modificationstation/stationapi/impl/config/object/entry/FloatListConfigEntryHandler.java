@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.config.object.entry;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.Screen;
 import net.modificationstation.stationapi.api.config.CharacterUtils;
 import net.modificationstation.stationapi.api.config.ConfigEntry;
 import net.modificationstation.stationapi.impl.config.screen.BaseListScreenBuilder;
@@ -16,15 +17,16 @@ public class FloatListConfigEntryHandler extends BaseListConfigEntryHandler<Floa
 
     public FloatListConfigEntryHandler(String id, ConfigEntry configEntry, Field parentField, Object parentObject, boolean multiplayerSynced, Float[] value, Float[] defaultValue) {
         super(id, configEntry, parentField, parentObject, multiplayerSynced, value, defaultValue);
+        textValidator = str -> FloatConfigEntryHandler.floatValidator(configEntry, multiplayerLoaded, str);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public BaseListScreenBuilder<Float> createListScreen() {
+    public BaseListScreenBuilder<Float> createListScreen(Screen parent) {
         BaseListScreenBuilder<Float> listScreen = new FloatListScreenBuilder(parent,
                 configEntry,
                 this,
-                str -> FloatConfigEntryHandler.floatValidator(configEntry, multiplayerLoaded, str)
+                textValidator
         );
 
         listScreen.setValues(value);
@@ -34,6 +36,16 @@ public class FloatListConfigEntryHandler extends BaseListConfigEntryHandler<Floa
     @Override
     public Float strToVal(String str) {
         return Float.parseFloat(str);
+    }
+
+    @Override
+    public Float[] getTypedArray() {
+        return new Float[0];
+    }
+
+    @Override
+    public boolean listContentsValid() {
+        return Arrays.stream(value).noneMatch(aFloat -> textValidator.apply(aFloat.toString()) != null);
     }
 }
 

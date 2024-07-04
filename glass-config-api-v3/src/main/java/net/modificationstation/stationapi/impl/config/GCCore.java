@@ -271,6 +271,9 @@ public class GCCore implements PreLaunchEntrypoint {
                         rootJsonObject.getChild(field.getName(), fieldType) != null? rootJsonObject.getChild(field.getName(), fieldType) : childObjField,
                         defaultConfig.get(field.getName())
                 );
+                if(!configEntry.isValueValid()) {
+                    throw new RuntimeException("Config value for \"" + field.getName() + "\" inside of \"" + configField.getName() + " is invalid!");
+                }
                 configEntry.multiplayerLoaded = isMultiplayer && configEntry.multiplayerSynced;
                 category.values.put(field.getType(), configEntry);
                 configEntry.saveToField();

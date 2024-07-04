@@ -55,7 +55,7 @@ public class EnumConfigEntryHandler<T extends Enum<?>> extends ConfigEntryHandle
 
     @Override
     public boolean isValueValid() {
-        return true;
+        return value < parentEnumArray.length;
     }
 
     @Override

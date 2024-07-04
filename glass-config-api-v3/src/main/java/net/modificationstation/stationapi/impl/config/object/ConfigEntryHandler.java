@@ -14,15 +14,20 @@ import net.modificationstation.stationapi.impl.config.screen.widget.ResetConfigW
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.function.*;
 
 public abstract class ConfigEntryHandler<T> extends ConfigHandlerBase {
     public T value;
     public final T defaultValue;
     @Environment(EnvType.CLIENT)
-    protected Screen parent;
     public boolean multiplayerLoaded = false;
     protected ConfigEntry configEntry;
-    protected List<HasDrawable> drawableList = new ArrayList<>(){};;
+    protected List<HasDrawable> drawableList = new ArrayList<>(){};
+    /**
+     * Optional convenience field for when using text boxes.
+     * {@link net.modificationstation.stationapi.impl.config.screen.widget.ExtensibleTextFieldWidget}
+     */
+    protected Function<String, List<String>> textValidator;
 
     public ConfigEntryHandler(String id, ConfigEntry configEntry, Field parentField, Object parentObject, boolean multiplayerSynced, T value, T defaultValue) {
         super(id, configEntry.name(), configEntry.description(), parentField, parentObject, multiplayerSynced);
@@ -73,7 +78,7 @@ public abstract class ConfigEntryHandler<T> extends ConfigHandlerBase {
             else if (parentField.getAnnotation(ValueOnVanillaServer.class) != null) {
                 ValueOnVanillaServer valueOnVanillaServer = parentField.getAnnotation(ValueOnVanillaServer.class);
                 multiplayerLoaded = true;
-                if (!valueOnVanillaServer.stringValue().equals("")) {
+                if (!valueOnVanillaServer.stringValue().isEmpty()) {
                     reset(valueOnVanillaServer.stringValue());
                 }
                 else if (valueOnVanillaServer.booleanValue() != TriBoolean.DEFAULT) {

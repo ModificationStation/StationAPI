@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.config.object.entry;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.Screen;
 import net.modificationstation.stationapi.api.config.CharacterUtils;
 import net.modificationstation.stationapi.api.config.ConfigEntry;
 import net.modificationstation.stationapi.impl.config.screen.BaseListScreenBuilder;
@@ -15,12 +16,17 @@ public class StringListConfigEntryHandler extends BaseListConfigEntryHandler<Str
 
     public StringListConfigEntryHandler(String id, ConfigEntry configEntry, Field parentField, Object parentObject, boolean multiplayerSynced, String[] value, String[] defaultValue) {
         super(id, configEntry, parentField, parentObject, multiplayerSynced, value, defaultValue);
+        textValidator = str -> StringConfigEntryHandler.stringValidator(configEntry, multiplayerLoaded, str);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public BaseListScreenBuilder<String> createListScreen() {
-        BaseListScreenBuilder<String> listScreen = new StringListScreenBuilder(parent, configEntry, this, str -> stringValidator(configEntry, multiplayerLoaded, str));
+    public BaseListScreenBuilder<String> createListScreen(Screen parent) {
+        BaseListScreenBuilder<String> listScreen = new StringListScreenBuilder(parent,
+                configEntry,
+                this,
+                textValidator
+        );
         listScreen.setValues(value);
         return listScreen;
     }
@@ -30,17 +36,9 @@ public class StringListConfigEntryHandler extends BaseListConfigEntryHandler<Str
         return null;
     }
 
-    public static List<String> stringValidator(ConfigEntry configEntry, boolean multiplayerLoaded, String str) {
-        if (multiplayerLoaded) {
-            return Collections.singletonList("Server synced, you cannot change this value");
-        }
-        if (str.length() > configEntry.maxLength()) {
-            return Collections.singletonList("Too long");
-        }
-        if (str.length() < configEntry.minLength()) {
-            return Collections.singletonList("Too short");
-        }
-        return null;
+    @Override
+    public String[] getTypedArray() {
+        return new String[0];
     }
 }
 

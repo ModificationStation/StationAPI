@@ -46,9 +46,10 @@ public class BooleanConfigEntryHandler extends ConfigEntryHandler<Boolean> imple
 
     @Override
     public boolean isValueValid() {
-        return true;
+        return true; // If this is *somehow* not a boolean, there's fuck all that can be done. You've already crashed before this check. :)
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public @NotNull List<HasDrawable> getDrawables() {
         return drawableList;
