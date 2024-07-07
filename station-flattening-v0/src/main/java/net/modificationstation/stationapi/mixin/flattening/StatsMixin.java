@@ -1,26 +1,28 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import lombok.val;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.stat.ItemOrBlockStat;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.StatRegistryEvent;
+import net.modificationstation.stationapi.api.item.BlockItemForm;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.StatRegistry;
 import net.modificationstation.stationapi.api.registry.sync.trackers.Int2ObjectMapTracker;
 import net.modificationstation.stationapi.api.registry.sync.trackers.ObjectArrayTracker;
+import net.modificationstation.stationapi.impl.stat.VanillaIdHolder;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -184,5 +186,39 @@ class StatsMixin {
     )
     private static int stationapi_getItemsSize(int constant) {
         return Item.ITEMS.length;
+    }
+
+    @WrapOperation(
+            method = {
+                    "initializeCraftedItemStats",
+                    "method_749",
+                    "method_752",
+                    "initializeBrokenItemStats"
+            },
+            at = @At(
+                    value = "NEW",
+                    target = "(ILjava/lang/String;I)Lnet/minecraft/stat/ItemOrBlockStat;"
+            )
+    )
+    private static ItemOrBlockStat stationapi_replaceId(int id, String translationKey, int itemIdOrBlockId, Operation<ItemOrBlockStat> original) {
+        final ItemOrBlockStat stat = original.call(StatRegistry.AUTO_ID, translationKey, itemIdOrBlockId);
+        ((VanillaIdHolder) stat).setVanillaId(id);
+        return stat;
+    }
+
+    @Redirect(
+            method = "method_752",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/block/Block;BLOCKS:[Lnet/minecraft/block/Block;",
+                    opcode = Opcodes.GETSTATIC,
+                    args = "array=length"
+            )
+    )
+    private static int stationapi_fixBlockCheck(
+            Block[] array,
+            @Local(index = 5) int id
+    ) {
+        return Item.ITEMS[id] instanceof BlockItemForm ? id + 1 : id;
     }
 }

@@ -5,10 +5,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
+import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.template.block.TemplateBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.Arrays;
+import java.util.Random;
 import java.util.function.Function;
 
 import static net.modificationstation.sltest.SLTest.NAMESPACE;
@@ -41,16 +43,16 @@ public enum Blocks {
         private static void registerBlocks(BlockRegistryEvent event) {
 //            BlockBase.ALLOWS_GRASS_UNDER[BlockBase.STILL_WATER.id] = BlockBase.ALLOWS_GRASS_UNDER[BlockBase.FLOWING_WATER.id] = true;
             ((BlockBaseAccessor) Block.BEDROCK).invokeSetHardness(2);
-//            int blocksAmount = 100000;
-//            BLOCKS = new TemplateBlockBase[blocksAmount];
-//            Random random = new Random(42);
-//            for (int i = 0; i < blocksAmount; i++) {
-//                BlockBase block = new ColouredBlock(Material.DIRT, random.nextInt()).setHardness(0.8F).setSounds(BlockBase.GLASS_SOUNDS).setTranslationKey(MODID, "testBlock" + i);
-//                Registry.register(event.registry, of(MODID, "test_block_" + i), block);
-//            }
+            int blocksAmount = 3000;
+            BLOCKS = new TemplateBlock[blocksAmount];
+            Random random = new Random(42);
+            for (int i = 0; i < blocksAmount; i++) {
+                Block block = new ColouredBlock(Material.SOIL, random.nextInt()).setHardness(0.8F).setSoundGroup(Block.GLASS_SOUND_GROUP).setTranslationKey(NAMESPACE, "testBlock" + i);
+                Registry.register(event.registry, of(NAMESPACE, "test_block_" + i), block);
+            }
             Arrays.stream(values()).forEach(blocks -> blocks.register.run());
         }
 
-//        public static BlockBase[] BLOCKS;
+        public static Block[] BLOCKS;
     }
 }

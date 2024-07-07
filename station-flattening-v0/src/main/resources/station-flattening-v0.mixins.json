@@ -45,7 +45,8 @@
     "client.MultiplayerInteractionManagerMixin",
     "client.PlayerEntityRendererMixin",
     "client.SingleplayerInteractionManagerMixin",
-    "client.WorldRendererMixin"
+    "client.WorldRendererMixin",
+    "client.stats.BlockStatsListWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1
