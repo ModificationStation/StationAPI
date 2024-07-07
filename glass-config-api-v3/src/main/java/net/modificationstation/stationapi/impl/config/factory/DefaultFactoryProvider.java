@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.config.factory;
 
 import com.google.common.collect.ImmutableMap;
-import net.modificationstation.stationapi.api.config.ConfigFactoryProvider;
 import net.modificationstation.stationapi.api.config.ConfigEntry;
+import net.modificationstation.stationapi.api.config.ConfigFactoryProvider;
 import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.object.entry.BooleanConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.object.entry.FloatConfigEntryHandler;

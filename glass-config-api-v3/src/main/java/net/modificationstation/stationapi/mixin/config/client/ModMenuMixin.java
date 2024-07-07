@@ -3,8 +3,6 @@ package net.modificationstation.stationapi.mixin.config.client;
 import com.google.common.collect.ImmutableMap;
 import io.github.prospector.modmenu.ModMenu;
 import net.minecraft.client.gui.screen.Screen;
-import net.modificationstation.stationapi.api.config.ConfigRoot;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.config.GCCore;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

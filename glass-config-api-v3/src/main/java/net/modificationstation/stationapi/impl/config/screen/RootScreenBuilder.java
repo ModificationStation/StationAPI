@@ -2,19 +2,15 @@ package net.modificationstation.stationapi.impl.config.screen;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.modificationstation.stationapi.api.config.ConfigRoot;
 import net.modificationstation.stationapi.impl.config.ConfigRootEntry;
 import net.modificationstation.stationapi.impl.config.EventStorage;
 import net.modificationstation.stationapi.impl.config.GCCore;
 import net.modificationstation.stationapi.impl.config.object.ConfigCategoryHandler;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.util.*;
-import java.util.function.*;
 
 public class RootScreenBuilder extends ScreenBuilder {
 

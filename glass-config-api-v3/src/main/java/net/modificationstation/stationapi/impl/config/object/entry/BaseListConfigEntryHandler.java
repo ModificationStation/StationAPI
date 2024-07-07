@@ -5,9 +5,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
 import net.modificationstation.stationapi.api.config.ConfigEntryWithButton;
 import net.modificationstation.stationapi.api.config.HasDrawable;
-import net.modificationstation.stationapi.api.config.ConfigEntry;
 import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.screen.BaseListScreenBuilder;
 import net.modificationstation.stationapi.impl.config.screen.widget.FancyButtonWidget;
@@ -59,8 +59,13 @@ public abstract class BaseListConfigEntryHandler<T> extends ConfigEntryHandler<T
 
     @Override
     public boolean isValueValid() {
-//        return value.length <= configEntry.maxArrayLength() && value.length >= configEntry.minArrayLength() && listContentsValid();
-        return true;
+        if (value.length > configEntry.maxArrayLength()) {
+            return false;
+        }
+        if(value.length < configEntry.minArrayLength()) {
+            return false;
+        }
+        return listContentsValid();
     }
 
     public boolean listContentsValid() {

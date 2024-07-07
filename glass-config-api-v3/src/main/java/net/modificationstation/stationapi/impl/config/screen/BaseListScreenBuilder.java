@@ -13,7 +13,6 @@ import net.modificationstation.stationapi.impl.config.screen.widget.ExtensibleTe
 import net.modificationstation.stationapi.impl.config.screen.widget.TexturedButtonWidget;
 import net.modificationstation.stationapi.mixin.config.client.EntryListWidgetAccessor;
 import org.lwjgl.input.Mouse;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.awt.*;
 import java.util.List;
@@ -121,7 +120,7 @@ public abstract class BaseListScreenBuilder<T> extends Screen {
         textRenderer.drawWithShadow(configEntry.description, (width / 2) - (textRenderer.getWidth(configEntry.description) / 2), 18, 8421504);
 
         ConfigEntry maxLength = configEntry.parentField.getAnnotation(ConfigEntry.class);
-        if (maxLength.minArrayLength() < textFieldWidgets.size() || maxLength.maxArrayLength() > textFieldWidgets.size()) {
+        if (textFieldWidgets.size() < maxLength.minArrayLength() || textFieldWidgets.size() > maxLength.maxArrayLength()) {
             String text = "Array is not the right size! (" + textFieldWidgets.size() + " outside of " + maxLength.minArrayLength() + " / " + maxLength.maxArrayLength() + ")";
             textRenderer.drawWithShadow(text, (width / 2) - (textRenderer.getWidth(text) / 2), 34, CharacterUtils.getIntFromColour(Color.RED));
         }

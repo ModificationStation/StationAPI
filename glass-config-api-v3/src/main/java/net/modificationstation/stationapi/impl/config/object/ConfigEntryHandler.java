@@ -5,9 +5,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.TranslationStorage;
+import net.modificationstation.stationapi.api.config.ConfigEntry;
 import net.modificationstation.stationapi.api.config.DefaultOnVanillaServer;
 import net.modificationstation.stationapi.api.config.HasDrawable;
-import net.modificationstation.stationapi.api.config.ConfigEntry;
 import net.modificationstation.stationapi.api.config.TriBoolean;
 import net.modificationstation.stationapi.api.config.ValueOnVanillaServer;
 import net.modificationstation.stationapi.impl.config.screen.widget.IconWidget;
@@ -53,10 +53,6 @@ public abstract class ConfigEntryHandler<T> extends ConfigHandlerBase {
 
     public void saveToField() throws IllegalAccessException {
         parentField.set(parentObject, value);
-    }
-
-    public ConfigEntry getMaxLength() {
-        return configEntry;
     }
 
     /**

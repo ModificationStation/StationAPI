@@ -2,9 +2,8 @@ package net.modificationstation.stationapi.impl.config.object.entry;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.modificationstation.stationapi.api.config.CharacterUtils;
-import net.modificationstation.stationapi.api.config.HasDrawable;
 import net.modificationstation.stationapi.api.config.ConfigEntry;
+import net.modificationstation.stationapi.api.config.HasDrawable;
 import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
 import net.modificationstation.stationapi.impl.config.screen.widget.ExtensibleTextFieldWidget;
 import org.jetbrains.annotations.NotNull;

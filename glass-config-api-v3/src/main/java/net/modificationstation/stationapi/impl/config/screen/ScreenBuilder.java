@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.impl.config.screen;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -12,9 +11,9 @@ import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.config.CharacterUtils;
 import net.modificationstation.stationapi.api.config.ConfigEntryWithButton;
 import net.modificationstation.stationapi.api.config.HasDrawable;
-import net.modificationstation.stationapi.impl.config.object.ConfigHandlerBase;
 import net.modificationstation.stationapi.impl.config.object.ConfigCategoryHandler;
 import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
+import net.modificationstation.stationapi.impl.config.object.ConfigHandlerBase;
 import net.modificationstation.stationapi.mixin.config.client.EntryListWidgetAccessor;
 import org.lwjgl.input.Mouse;
 

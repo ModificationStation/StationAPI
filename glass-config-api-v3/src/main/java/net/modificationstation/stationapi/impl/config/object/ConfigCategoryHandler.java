@@ -4,7 +4,6 @@ import com.google.common.collect.Multimap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.gui.screen.Screen;
 import net.modificationstation.stationapi.api.config.HasDrawable;
 import net.modificationstation.stationapi.impl.config.screen.RootScreenBuilder;

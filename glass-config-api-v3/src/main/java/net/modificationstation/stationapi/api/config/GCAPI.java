@@ -1,17 +1,11 @@
 package net.modificationstation.stationapi.api.config;
 
-import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.config.ConfigRootEntry;
 import net.modificationstation.stationapi.impl.config.EventStorage;
 import net.modificationstation.stationapi.impl.config.GCCore;
 import net.modificationstation.stationapi.impl.config.GlassYamlFile;
-import net.modificationstation.stationapi.impl.config.object.ConfigCategoryHandler;
 import org.jetbrains.annotations.Nullable;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
-import uk.co.benjiweber.expressions.tuple.QuadTuple;
-import uk.co.benjiweber.expressions.tuple.TriTuple;
 
 import java.io.*;
 import java.util.concurrent.atomic.*;

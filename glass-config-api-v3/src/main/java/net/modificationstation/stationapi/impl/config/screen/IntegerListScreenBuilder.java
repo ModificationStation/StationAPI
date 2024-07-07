@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.impl.config.screen;
 import net.minecraft.client.gui.screen.Screen;
 import net.modificationstation.stationapi.api.config.ConfigEntry;
 import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.util.*;
 import java.util.function.*;

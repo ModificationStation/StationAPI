@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.api.config;
 
-import net.modificationstation.stationapi.api.util.Identifier;
-
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)

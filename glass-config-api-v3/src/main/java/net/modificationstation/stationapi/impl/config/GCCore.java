@@ -17,17 +17,15 @@ import net.modificationstation.stationapi.api.config.ConfigRoot;
 import net.modificationstation.stationapi.api.config.GeneratedConfig;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.ReflectionHelper;
-import net.modificationstation.stationapi.impl.config.object.ConfigHandlerBase;
 import net.modificationstation.stationapi.impl.config.object.ConfigCategoryHandler;
 import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
+import net.modificationstation.stationapi.impl.config.object.ConfigHandlerBase;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.simpleyaml.configuration.file.YamlFileWrapper;
 import uk.co.benjiweber.expressions.function.SeptFunction;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
-import uk.co.benjiweber.expressions.tuple.QuadTuple;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -276,7 +274,6 @@ public class GCCore implements PreLaunchEntrypoint {
                 }
                 configEntry.multiplayerLoaded = isMultiplayer && configEntry.multiplayerSynced;
                 category.values.put(field.getType(), configEntry);
-                configEntry.saveToField();
                 totalReadFields.getAndIncrement();
             }
         }
