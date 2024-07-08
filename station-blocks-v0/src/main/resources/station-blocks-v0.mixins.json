@@ -5,12 +5,19 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BlockItemMixin",
-    "BlockMixin",
+    "BlockMixinCorrectDrop",
+    "BlockMixinVoxelShapes",
     "FireBlockMixin",
     "SecondaryBlockItemMixin",
     "StatsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "server": [
+    "server.ServerPlayNetworkHandlerMixin"
+  ],
+  "client": [
+    "client.WorldRendererMixin"
+  ]
 }
