@@ -68,4 +68,3 @@ public class BoxToLinesConverter {
         lines.addAll(toAdd);
     }
 }
-
