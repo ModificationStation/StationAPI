@@ -27,6 +27,7 @@ import static net.modificationstation.stationapi.api.util.math.MathHelper.ceil;
 import static net.modificationstation.stationapi.api.util.math.MathHelper.lerp;
 import static org.lwjgl.opengl.GL11.*;
 
+@SuppressWarnings("UnstableApiUsage")
 class ReloadScreen extends Screen {
     private static final long
             MAX_FPS = 60,

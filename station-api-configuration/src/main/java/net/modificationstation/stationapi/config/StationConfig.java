@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi;
+package net.modificationstation.stationapi.config;
 
 import net.modificationstation.stationapi.api.config.ConfigRoot;
 
