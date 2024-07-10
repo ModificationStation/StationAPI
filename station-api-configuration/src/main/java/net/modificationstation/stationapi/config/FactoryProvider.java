@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.config;
 
 import com.google.common.collect.ImmutableMap;
-import net.modificationstation.stationapi.api.config.ConfigEntry;
-import net.modificationstation.stationapi.api.config.ConfigFactoryProvider;
-import net.modificationstation.stationapi.impl.config.factory.DefaultFactoryProvider;
-import net.modificationstation.stationapi.impl.config.object.ConfigEntryHandler;
-import net.modificationstation.stationapi.impl.config.object.entry.EnumConfigEntryHandler;
+import net.glasslauncher.mods.gcapi.api.ConfigEntry;
+import net.glasslauncher.mods.gcapi.api.ConfigFactoryProvider;
+import net.glasslauncher.mods.gcapi.impl.factory.DefaultFactoryProvider;
+import net.glasslauncher.mods.gcapi.impl.object.ConfigEntryHandler;
+import net.glasslauncher.mods.gcapi.impl.object.entry.EnumConfigEntryHandler;
 import uk.co.benjiweber.expressions.function.SeptFunction;
 
 import java.lang.reflect.*;

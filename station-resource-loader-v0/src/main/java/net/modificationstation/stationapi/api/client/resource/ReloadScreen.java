@@ -14,6 +14,8 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.resource.ResourceReload;
 import net.modificationstation.stationapi.api.util.math.ColorHelper;
+import net.modificationstation.stationapi.config.LoadingScreenOption;
+import net.modificationstation.stationapi.config.StationConfig;
 import net.modificationstation.stationapi.impl.client.resource.ReloadScreenManagerImpl;
 
 import java.util.Random;
@@ -29,7 +31,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 @SuppressWarnings("UnstableApiUsage")
 class ReloadScreen extends Screen {
-    private static final long
+    private static long
             MAX_FPS = 60,
             BACKGROUND_START = 0,
             BACKGROUND_FADE_IN = 1000,
@@ -125,6 +127,26 @@ class ReloadScreen extends Screen {
                 expression(this::renderProgressBar)
                 .before(this::renderLogo)
                 .partiallyApply(deltaFunc)::get;
+        if(StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.NO_ANIMATE)) {
+            MAX_FPS =
+            BACKGROUND_START =
+            BACKGROUND_FADE_IN =
+            STAGE_0_START =
+            STAGE_0_FADE_IN =
+            GLOBAL_FADE_OUT =
+            RELOAD_START =
+            EXCEPTION_TRANSFORM = 0;
+        }
+        else {
+            MAX_FPS = 60;
+            BACKGROUND_START = 0;
+            BACKGROUND_FADE_IN = 1000;
+            STAGE_0_START = BACKGROUND_START + BACKGROUND_FADE_IN;
+            STAGE_0_FADE_IN = 2000;
+            GLOBAL_FADE_OUT = 1000;
+            RELOAD_START = STAGE_0_START + STAGE_0_FADE_IN;
+            EXCEPTION_TRANSFORM = 500;
+        }
     }
 
     private void renderBackground(ToDoubleFunction<Object> deltaFunc) {

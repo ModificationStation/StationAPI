@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.config;
 
-import net.modificationstation.stationapi.api.config.ConfigEntry;
+import net.glasslauncher.mods.gcapi.api.ConfigEntry;
 
 public class StationConfigData {
 

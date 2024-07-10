@@ -91,14 +91,12 @@ allprojects {
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
         "implementationOnly"("org.jetbrains:annotations:23.0.0")
 
-        modLocalRuntime("com.github.calmilamsy:ModMenu:${project.properties["modmenu_version"]}") {
+        modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}") {
             isTransitive = false
         }
 
-        implementation("blue.endless:jankson:1.2.1")
-        modLocalRuntime("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") {
-            isTransitive = false
-        }
+
+        modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}")
         modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.properties["hmi_version"]}") {
             isTransitive = false
         }
