@@ -96,10 +96,13 @@ allprojects {
         }
 
 
-        modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}")
-        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.properties["hmi_version"]}") {
+        implementation("me.carleslc:Simple-Yaml:1.8.4")
+        modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") {
             isTransitive = false
         }
+//        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.properties["hmi_version"]}") {
+//            isTransitive = false
+//        }
         // Optional bugfix mod for testing qol. Remove the // to enable.
         //modLocalRuntime "maven.modrinth:mojangfix:${project.properties["mojangfix_version"]}"
     }
