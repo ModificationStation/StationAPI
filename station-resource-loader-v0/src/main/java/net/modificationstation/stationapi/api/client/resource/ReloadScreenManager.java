@@ -85,7 +85,7 @@ public class ReloadScreenManager {
     }
 
     public static boolean isReloadStarted() {
-        return reloadScreen != null && reloadScreen.isReloadStarted();
+        return reloadScreen != null;
     }
 
     public static boolean isReloadComplete() {
