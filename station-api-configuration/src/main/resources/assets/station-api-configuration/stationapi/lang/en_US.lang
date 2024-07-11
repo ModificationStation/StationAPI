@@ -1,6 +1,6 @@
 # Config Entries
 gui.config.stationapi.main=StationAPI Configuration
-gui.config.stationapi.main.loading_screen_option=Loading Screen Animation
+gui.config.stationapi.main.loading_screen_option=Loading Screen Style
 
 
 gui.config.stationapi.loadingscreen.show=Show

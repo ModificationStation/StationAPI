@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "station-achievements-v0",
+  "id": "station-api-configuration",
   "version": "${version}",
 
   "name": "Station API Configuration",
-  "description": "Provides systems for modded achievements, such as achievement pages.",
+  "description": "Configuration package for StationAPI.",
   "authors": [
     "Modification Station"
   ],
