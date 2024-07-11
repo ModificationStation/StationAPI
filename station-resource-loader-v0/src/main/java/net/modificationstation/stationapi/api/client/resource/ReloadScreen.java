@@ -31,40 +31,35 @@ import static org.lwjgl.opengl.GL11.*;
 
 @SuppressWarnings("UnstableApiUsage")
 class ReloadScreen extends Screen {
-    private static long
-            MAX_FPS = 60,
-            BACKGROUND_START = 0,
-            BACKGROUND_FADE_IN = 1000,
-            STAGE_0_START = BACKGROUND_START + BACKGROUND_FADE_IN,
-            STAGE_0_FADE_IN = 2000,
-            GLOBAL_FADE_OUT = 1000,
-            RELOAD_START = STAGE_0_START + STAGE_0_FADE_IN,
-            EXCEPTION_TRANSFORM = 500;
-    private static final int
-            BACKGROUND_COLOR_DEFAULT_RED = 0x35,
-            BACKGROUND_COLOR_DEFAULT_GREEN = 0x86,
-            BACKGROUND_COLOR_DEFAULT_BLUE = 0xE7,
-            BACKGROUND_COLOR_EXCEPTION_RED = 0xFF,
-            BACKGROUND_COLOR_EXCEPTION_GREEN = 0x29,
-            BACKGROUND_COLOR_EXCEPTION_BLUE = 0x29;
+    private static final long
+            MAX_FPS = 60;
+    private static long BACKGROUND_START = 0;
+    private static long BACKGROUND_FADE_IN = 1000;
+    private static long STAGE_0_START = BACKGROUND_START + BACKGROUND_FADE_IN;
+    private static long STAGE_0_FADE_IN = 2000;
+    private static long GLOBAL_FADE_OUT = 1000;
+    private static long RELOAD_START = STAGE_0_START + STAGE_0_FADE_IN;
+    private static long EXCEPTION_TRANSFORM = 500;
+    private static final int BACKGROUND_COLOR_DEFAULT_RED = 0x35;
+    private static final int BACKGROUND_COLOR_DEFAULT_GREEN = 0x86;
+    private static final int BACKGROUND_COLOR_DEFAULT_BLUE = 0xE7;
+    private static final int BACKGROUND_COLOR_EXCEPTION_RED = 0xFF;
+    private static final int BACKGROUND_COLOR_EXCEPTION_GREEN = 0x29;
+    private static final int BACKGROUND_COLOR_EXCEPTION_BLUE = 0x29;
 
-    private static final Object
-            BACKGROUND_DEFAULT_DELTA_KEY = new Object(),
-            BACKGROUND_EXCEPTION_DELTA_KEY = new Object(),
-            STAGE_0_DEFAULT_DELTA_KEY = new Object(),
-            STAGE_0_EXCEPTION_DELTA_KEY = new Object();
+    private static final Object BACKGROUND_DEFAULT_DELTA_KEY = new Object();
+    private static final Object BACKGROUND_EXCEPTION_DELTA_KEY = new Object();
+    private static final Object STAGE_0_DEFAULT_DELTA_KEY = new Object();
+    private static final Object STAGE_0_EXCEPTION_DELTA_KEY = new Object();
 
-    private static final Double2DoubleFunction
-            SIN_90_DELTA = delta -> MathHelper.sin((float) (delta * Math.PI / 2)),
-            COS_90_DELTA = delta -> MathHelper.cos((float) (delta * Math.PI / 2)),
-            INVERSE_DELTA = delta -> 1 - delta;
-    private static final Long2DoubleFunction
-            BACKGROUND_FADE_IN_DELTA = time -> (double) Longs.constrainToRange(time - BACKGROUND_START, 0, BACKGROUND_FADE_IN) / BACKGROUND_FADE_IN,
-            STAGE_0_FADE_IN_DELTA = time -> (double) Longs.constrainToRange(time - STAGE_0_START, 0, STAGE_0_FADE_IN) / STAGE_0_FADE_IN;
-    private static final Function<LongSupplier, Long2DoubleFunction>
-            GLOBAL_FADE_OUT_DELTA_FACTORY = fadeOutStartGetter -> INVERSE_DELTA.composeLong(time -> (double) Longs.constrainToRange(time - fadeOutStartGetter.getAsLong(), 0, GLOBAL_FADE_OUT) / GLOBAL_FADE_OUT),
-            BACKGROUND_EXCEPTION_FADE_IN_FACTORY = fadeInStartGetter -> time -> (double) Longs.constrainToRange(time - fadeInStartGetter.getAsLong(), 0, EXCEPTION_TRANSFORM) / EXCEPTION_TRANSFORM,
-            STAGE_0_EXCEPTION_TRANSFORM_FACTORY = transformStartGetter -> time -> (double) Longs.constrainToRange(time - transformStartGetter.getAsLong(), 0, EXCEPTION_TRANSFORM) / EXCEPTION_TRANSFORM;
+    private static final Double2DoubleFunction SIN_90_DELTA = delta -> MathHelper.sin((float) (delta * Math.PI / 2));
+    private static final Double2DoubleFunction COS_90_DELTA = delta -> MathHelper.cos((float) (delta * Math.PI / 2));
+    private static final Double2DoubleFunction INVERSE_DELTA = delta -> 1 - delta;
+    private static final Long2DoubleFunction BACKGROUND_FADE_IN_DELTA = time -> (double) Longs.constrainToRange(time - BACKGROUND_START, 0, BACKGROUND_FADE_IN) / BACKGROUND_FADE_IN;
+    private static final Long2DoubleFunction STAGE_0_FADE_IN_DELTA = time -> (double) Longs.constrainToRange(time - STAGE_0_START, 0, STAGE_0_FADE_IN) / STAGE_0_FADE_IN;
+    private static final Function<LongSupplier, Long2DoubleFunction> GLOBAL_FADE_OUT_DELTA_FACTORY = fadeOutStartGetter -> INVERSE_DELTA.composeLong(time -> (double) Longs.constrainToRange(time - fadeOutStartGetter.getAsLong(), 0, GLOBAL_FADE_OUT) / GLOBAL_FADE_OUT);
+    private static final Function<LongSupplier, Long2DoubleFunction> BACKGROUND_EXCEPTION_FADE_IN_FACTORY = fadeInStartGetter -> time -> (double) Longs.constrainToRange(time - fadeInStartGetter.getAsLong(), 0, EXCEPTION_TRANSFORM) / EXCEPTION_TRANSFORM;
+    private static final Function<LongSupplier, Long2DoubleFunction> STAGE_0_EXCEPTION_TRANSFORM_FACTORY = transformStartGetter -> time -> (double) Longs.constrainToRange(time - transformStartGetter.getAsLong(), 0, EXCEPTION_TRANSFORM) / EXCEPTION_TRANSFORM;
 
     private static final String
             LOGO_TEMPLATE = "/assets/station-resource-loader-v0/textures/gui/stationapi_reload%s.png";
@@ -80,9 +75,8 @@ class ReloadScreen extends Screen {
     private long initTimestamp;
     private long currentTime;
     private float progress;
-    private final Effect
-            backgroundEmitter,
-            stage0Emitter;
+    private final Effect backgroundEmitter;
+    private final Effect stage0Emitter;
     private boolean finished;
     private long fadeOutStart;
     private float scrollProgress;
@@ -128,17 +122,15 @@ class ReloadScreen extends Screen {
                 .before(this::renderLogo)
                 .partiallyApply(deltaFunc)::get;
         if(StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.NO_ANIMATE)) {
-            MAX_FPS =
             BACKGROUND_START =
             BACKGROUND_FADE_IN =
             STAGE_0_START =
             STAGE_0_FADE_IN =
             GLOBAL_FADE_OUT =
             RELOAD_START =
-            EXCEPTION_TRANSFORM = 0;
+            EXCEPTION_TRANSFORM = 1;
         }
         else {
-            MAX_FPS = 60;
             BACKGROUND_START = 0;
             BACKGROUND_FADE_IN = 1000;
             STAGE_0_START = BACKGROUND_START + BACKGROUND_FADE_IN;
