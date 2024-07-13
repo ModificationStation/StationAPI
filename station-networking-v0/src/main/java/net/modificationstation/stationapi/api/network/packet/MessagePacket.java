@@ -7,14 +7,12 @@ import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.entity.player.PlayerHelper;
 import net.modificationstation.stationapi.api.registry.MessageListenerRegistry;
 import net.modificationstation.stationapi.api.util.Identifier;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.function.BiConsumer;
-
-import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 /**
  * Universal packet class that can hold any kind of data,
@@ -39,8 +37,8 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
  *
  * @author mine_diver
  */
-public class MessagePacket extends Packet implements IdentifiablePacket {
-    public static final Identifier PACKET_ID = NAMESPACE.id("message");
+public class MessagePacket extends Packet implements ManagedPacket<MessagePacket> {
+    public static final PacketType<MessagePacket> TYPE = new PacketType<>(true, true, MessagePacket::new);
 
     /**
      * Message's identifier.
@@ -117,8 +115,7 @@ public class MessagePacket extends Packet implements IdentifiablePacket {
     /**
      * Internal Message constructor for initialization when received.
      */
-    @ApiStatus.Internal
-    public MessagePacket() {}
+    private MessagePacket() {}
 
     /**
      * Default Message constructor.
@@ -470,8 +467,8 @@ public class MessagePacket extends Packet implements IdentifiablePacket {
     }
 
     @Override
-    public Identifier getId() {
-        return PACKET_ID;
+    public @NotNull PacketType<MessagePacket> getType() {
+        return TYPE;
     }
 
     public Object[] deserializeObjects() {

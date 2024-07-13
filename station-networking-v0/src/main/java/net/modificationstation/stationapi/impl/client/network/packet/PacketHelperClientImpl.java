@@ -4,8 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.Packet;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.impl.network.packet.IdentifiablePacketImpl;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.impl.network.packet.PacketHelperImpl;
 
 public class PacketHelperClientImpl extends PacketHelperImpl {
@@ -15,12 +14,12 @@ public class PacketHelperClientImpl extends PacketHelperImpl {
         Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
         if (minecraft.world.isRemote)
             minecraft.getNetworkHandler().sendPacket(packet);
-        else packet.apply(packet instanceof IdentifiablePacket identifiablePacket ? IdentifiablePacketImpl.HANDLERS.get(identifiablePacket.getId()) : null);
+        else packet.apply(packet instanceof ManagedPacket<?> managedPacket ? managedPacket.getType().getHandler().orElse(null) : null);
     }
 
     @Override
     public void sendTo(PlayerEntity player, Packet packet) {
         if (!player.world.isRemote)
-            packet.apply(packet instanceof IdentifiablePacket identifiablePacket ? IdentifiablePacketImpl.HANDLERS.get(identifiablePacket.getId()) : null);
+            packet.apply(packet instanceof ManagedPacket<?> managedPacket ? managedPacket.getType().getHandler().orElse(null) : null);
     }
 }

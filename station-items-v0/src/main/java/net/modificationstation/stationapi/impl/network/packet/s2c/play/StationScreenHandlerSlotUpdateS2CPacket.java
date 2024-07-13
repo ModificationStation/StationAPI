@@ -4,22 +4,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.impl.item.StationNBTSetter;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+public class StationScreenHandlerSlotUpdateS2CPacket extends ScreenHandlerSlotUpdateS2CPacket implements ManagedPacket<StationScreenHandlerSlotUpdateS2CPacket> {
+    public static final PacketType<StationScreenHandlerSlotUpdateS2CPacket> TYPE = new PacketType<>(true, false, StationScreenHandlerSlotUpdateS2CPacket::new);
 
-public class StationScreenHandlerSlotUpdateS2CPacket extends ScreenHandlerSlotUpdateS2CPacket implements IdentifiablePacket {
-    public static final Identifier PACKET_ID = NAMESPACE.id("items/slot_update");
-
-    public StationScreenHandlerSlotUpdateS2CPacket() {
-        super();
-    }
+    private StationScreenHandlerSlotUpdateS2CPacket() {}
 
     public StationScreenHandlerSlotUpdateS2CPacket(int syncId, int slot, ItemStack stack) {
         super(syncId, slot, stack);
@@ -70,7 +67,7 @@ public class StationScreenHandlerSlotUpdateS2CPacket extends ScreenHandlerSlotUp
     }
 
     @Override
-    public Identifier getId() {
-        return PACKET_ID;
+    public @NotNull PacketType<StationScreenHandlerSlotUpdateS2CPacket> getType() {
+        return TYPE;
     }
 }

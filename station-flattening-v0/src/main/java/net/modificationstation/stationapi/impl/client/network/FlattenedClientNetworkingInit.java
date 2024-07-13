@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.impl.client.network;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.network.NetworkHandler;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkDataS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkSectionDataS2CPacket;
@@ -16,9 +15,9 @@ public class FlattenedClientNetworkingInit implements ClientModInitializer {
         // Overriding vanilla packet handler with the StationAPI one
         // for flattened packets
         NetworkHandler handler = new FlattenedClientPlayNetworkHandler();
-        IdentifiablePacket.setHandler(FlattenedChunkDataS2CPacket.PACKET_ID, handler);
-        IdentifiablePacket.setHandler(FlattenedMultiBlockChangeS2CPacket.PACKET_ID, handler);
-        IdentifiablePacket.setHandler(FlattenedBlockChangeS2CPacket.PACKET_ID, handler);
-        IdentifiablePacket.setHandler(FlattenedChunkSectionDataS2CPacket.PACKET_ID, handler);
+        FlattenedChunkDataS2CPacket.TYPE.setHandler(handler);
+        FlattenedMultiBlockChangeS2CPacket.TYPE.setHandler(handler);
+        FlattenedBlockChangeS2CPacket.TYPE.setHandler(handler);
+        FlattenedChunkSectionDataS2CPacket.TYPE.setHandler(handler);
     }
 }

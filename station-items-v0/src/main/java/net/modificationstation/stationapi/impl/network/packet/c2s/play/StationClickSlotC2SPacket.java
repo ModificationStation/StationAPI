@@ -4,22 +4,19 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.impl.item.StationNBTSetter;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+public class StationClickSlotC2SPacket extends ClickSlotC2SPacket implements ManagedPacket<StationClickSlotC2SPacket> {
+    public static final PacketType<StationClickSlotC2SPacket> TYPE = new PacketType<>(false, true, StationClickSlotC2SPacket::new);
 
-public class StationClickSlotC2SPacket extends ClickSlotC2SPacket implements IdentifiablePacket {
-    public static final Identifier PACKET_ID = NAMESPACE.id("items/slot");
-
-    @ApiStatus.Internal
-    public StationClickSlotC2SPacket() {}
+    private StationClickSlotC2SPacket() {}
 
     public StationClickSlotC2SPacket(int syncId, int slot, int button, boolean holdingShift, ItemStack stack, short actionType) {
         super(syncId, slot, button, holdingShift, stack, actionType);
@@ -52,7 +49,7 @@ public class StationClickSlotC2SPacket extends ClickSlotC2SPacket implements Ide
     }
 
     @Override
-    public Identifier getId() {
-        return PACKET_ID;
+    public @NotNull PacketType<StationClickSlotC2SPacket> getType() {
+        return TYPE;
     }
 }

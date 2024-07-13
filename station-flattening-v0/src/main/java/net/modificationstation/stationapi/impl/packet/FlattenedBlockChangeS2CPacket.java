@@ -6,25 +6,21 @@ import net.minecraft.block.Block;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.world.World;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
-
-public class FlattenedBlockChangeS2CPacket extends BlockUpdateS2CPacket implements IdentifiablePacket {
-
-    public static final Identifier PACKET_ID = NAMESPACE.id("flattening/block_change");
+public class FlattenedBlockChangeS2CPacket extends BlockUpdateS2CPacket implements ManagedPacket<FlattenedBlockChangeS2CPacket> {
+    public static final PacketType<FlattenedBlockChangeS2CPacket> TYPE = new PacketType<>(true, false, FlattenedBlockChangeS2CPacket::new);
 
     public int stateId;
 
-    @ApiStatus.Internal
-    public FlattenedBlockChangeS2CPacket() {}
+    private FlattenedBlockChangeS2CPacket() {}
 
     @Environment(EnvType.SERVER)
     public FlattenedBlockChangeS2CPacket(int x, int y, int z, World world) {
@@ -72,7 +68,7 @@ public class FlattenedBlockChangeS2CPacket extends BlockUpdateS2CPacket implemen
     }
 
     @Override
-    public Identifier getId() {
-        return PACKET_ID;
+    public @NotNull PacketType<FlattenedBlockChangeS2CPacket> getType() {
+        return TYPE;
     }
 }

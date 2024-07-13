@@ -4,30 +4,26 @@ import net.minecraft.block.Block;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.s2c.play.ChunkDeltaUpdateS2CPacket;
 import net.minecraft.world.World;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import net.modificationstation.stationapi.impl.util.math.ChunkSectionPos;
 import net.modificationstation.stationapi.impl.world.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
-import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
-
-public class FlattenedMultiBlockChangeS2CPacket extends ChunkDeltaUpdateS2CPacket implements IdentifiablePacket {
-
-    public static final Identifier PACKET_ID = NAMESPACE.id("flattening/multi_block_change");
+public class FlattenedMultiBlockChangeS2CPacket extends ChunkDeltaUpdateS2CPacket implements ManagedPacket<FlattenedMultiBlockChangeS2CPacket> {
+    public static final PacketType<FlattenedMultiBlockChangeS2CPacket> TYPE = new PacketType<>(true, false, FlattenedMultiBlockChangeS2CPacket::new);
 
     public int sectionIndex;
     public int[] stateArray;
 
-    @ApiStatus.Internal
-    public FlattenedMultiBlockChangeS2CPacket() {}
+    private FlattenedMultiBlockChangeS2CPacket() {}
 
     public FlattenedMultiBlockChangeS2CPacket(int chunkX, int chunkZ, int sectionIndex, short[] positions, int arraySize, World world) {
         this.x = chunkX;
@@ -93,7 +89,7 @@ public class FlattenedMultiBlockChangeS2CPacket extends ChunkDeltaUpdateS2CPacke
     }
 
     @Override
-    public Identifier getId() {
-        return PACKET_ID;
+    public @NotNull PacketType<FlattenedMultiBlockChangeS2CPacket> getType() {
+        return TYPE;
     }
 }
