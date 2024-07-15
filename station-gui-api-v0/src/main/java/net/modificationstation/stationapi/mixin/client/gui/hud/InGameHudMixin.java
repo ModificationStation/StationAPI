@@ -7,7 +7,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.option.GameOptions;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.hud.*;
 import org.lwjgl.opengl.GL11;
 import org.objectweb.asm.Opcodes;
@@ -15,6 +14,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+
+import static net.modificationstation.stationapi.api.StationAPI.EVENT_BUS;
 
 
 @Mixin(InGameHud.class)
@@ -35,8 +36,7 @@ abstract class InGameHudMixin extends DrawContext {
         if (Minecraft.failedSessionCheckTime > 0L) {
             GL11.glTranslatef(0.0F, 32.0F, 0.0F);
         }
-        var event = HudTextRenderEvent.builder().debug(options.debugHud).minecraft(minecraft).build();
-        StationAPI.EVENT_BUS.post(event);
+        var event = EVENT_BUS.post(HudTextRenderEvent.builder().debug(options.debugHud).minecraft(minecraft).build());
         var version = event.getVersion();
         if (version != null) tr.drawWithShadow(version.text, 2, 2, version.color);
         for (int i = 0, y = 2; i < event.left.size(); i++) {
