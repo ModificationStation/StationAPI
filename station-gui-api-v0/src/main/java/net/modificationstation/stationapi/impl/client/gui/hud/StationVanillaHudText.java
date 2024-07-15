@@ -9,6 +9,8 @@ import net.modificationstation.stationapi.api.client.event.gui.hud.HudTextLine;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
+import static net.modificationstation.stationapi.api.client.event.gui.hud.HudTextLine.GRAY;
+
 import java.util.Collections;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
@@ -21,18 +23,26 @@ public class StationVanillaHudText {
                 new HudTextLine(event.minecraft.method_2142()),
                 new HudTextLine(event.minecraft.method_2144()),
                 new HudTextLine(event.minecraft.method_2143()),
-                new HudTextLine("x: " + event.minecraft.player.x, 14737632, 22),
-                new HudTextLine("y: " + event.minecraft.player.y, 14737632, 8),
-                new HudTextLine("z: " + event.minecraft.player.y, 14737632, 8),
-                new HudTextLine("f: " + (MathHelper.floor((double)(event.minecraft.player.yaw * 4.0F / 360.0F) + 0.5) & 3), 14737632, 8)
+                new HudTextLine("x: " + event.minecraft.player.x, GRAY, 22),
+                new HudTextLine("y: " + event.minecraft.player.y, GRAY, 8),
+                new HudTextLine("z: " + event.minecraft.player.y, GRAY, 8),
+                new HudTextLine(
+                        "f: " + (MathHelper.floor((double)(event.minecraft.player.yaw * 4.0F / 360.0F) + 0.5) & 3),
+                        GRAY, 8
+                )
         );
         long max = Runtime.getRuntime().maxMemory();
         long total = Runtime.getRuntime().totalMemory();
         long free = Runtime.getRuntime().freeMemory();
         long used = total - free;
         Collections.addAll(event.right,
-                new HudTextLine("Used memory: " + used * 100L / max + "% (" + used / 1024L / 1024L + "MB) of " + max / 1024L / 1024L + "MB", 14737632),
-                new HudTextLine("Allocated memory: " + total * 100L / max + "% (" + total / 1024L / 1024L + "MB)", 14737632)
+                new HudTextLine(
+                        "Used memory: " + used * 100L / max + "% (" + used / 1024L / 1024L + "MB) of " +
+                                max / 1024L / 1024L + "MB", GRAY
+                ),
+                new HudTextLine(
+                        "Allocated memory: " + total * 100L / max + "% (" + total / 1024L / 1024L + "MB)", GRAY
+                )
         );
     }
 
