@@ -5,6 +5,7 @@ version = getSubprojectVersion(project, "1.0.0")
 
 addModuleDependencies(project,
         "station-api-base",
+        "station-gui-api-v0",
         "station-maths-v0",
         "station-registry-api-v0",
         "station-networking-v0",

@@ -1,13 +1,14 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.modificationstation.stationapi.mixin.gui",
+  "package": "net.modificationstation.stationapi.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
   ],
   "client": [
-    "client.ScreenAccessor",
-    "client.SelectWorldScreenMixin"
+    "client.gui.ScreenAccessor",
+    "client.gui.SelectWorldScreenMixin",
+    "client.gui.hud.InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

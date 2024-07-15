@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.gui.client;
+package net.modificationstation.stationapi.mixin.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
