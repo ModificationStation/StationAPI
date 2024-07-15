@@ -36,7 +36,6 @@
   "client": [
     "client.BlockRenderManagerMixin",
     "client.ClientWorldMixin",
-    "client.InGameHudMixin",
     "client.InteractionManagerMixin",
     "client.MinecraftMixin",
     "client.MultiplayerChunkCacheMixin",

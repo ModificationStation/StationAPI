@@ -23,7 +23,8 @@
       "net.modificationstation.stationapi.api.block.States",
       "net.modificationstation.stationapi.impl.block.PlacementStateImpl",
       "net.modificationstation.stationapi.impl.world.WorldDataVersionImpl",
-      "net.modificationstation.stationapi.impl.block.BlockInteractionImpl"
+      "net.modificationstation.stationapi.impl.block.BlockInteractionImpl",
+      "net.modificationstation.stationapi.impl.client.gui.hud.StationFlatteningHudText"
     ],
     "main": [
       "net.modificationstation.stationapi.impl.packet.StationFlatteningNetworkingImpl"
