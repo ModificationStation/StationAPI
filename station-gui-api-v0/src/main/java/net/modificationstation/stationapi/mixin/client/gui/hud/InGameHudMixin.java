@@ -41,12 +41,12 @@ abstract class InGameHudMixin extends DrawContext {
         if (version != null) tr.drawWithShadow(version.text, 2, 2, version.color);
         for (int i = 0, y = 2; i < event.left.size(); i++) {
             var line = event.left.get(i);
-            if (i > 0 || version != null) y += line.offset;
+            if (i > 0 || version != null) y += line.yOffset;
             tr.drawWithShadow(line.text, 2, y, line.color);
         }
         for (int i = 0, y = 2; i < event.right.size(); i++) {
             var line = event.right.get(i);
-            if (i > 0) y += line.offset;
+            if (i > 0) y += line.yOffset;
             tr.drawWithShadow(line.text, scaler.method_1857() - tr.getWidth(line.text) - 2, y, line.color);
         }
         GL11.glPopMatrix();

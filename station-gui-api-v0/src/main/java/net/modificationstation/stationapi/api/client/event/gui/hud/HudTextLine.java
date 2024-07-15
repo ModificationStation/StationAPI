@@ -11,8 +11,14 @@ public final class HudTextLine {
     public static final int GRAY = 0xE0E0E0;
 
     public String text;
+    /**
+     * @see net.glasslauncher.mods.api.gcapi.api.CharacterUtils#getIntFromColour(Color)
+     */
     public int color;
-    public int offset;
+    /**
+     * Y offset from the last rendered line.
+     */
+    public int yOffset;
 
     public HudTextLine(String text) {
         this(text, WHITE);

@@ -46,6 +46,7 @@ public class StationVanillaHudText {
         );
     }
 
+    // lowest default priority so other mods can overwrite it
     @EventListener(priority = ListenerPriority.LOWEST)
     private static void renderVanillaVersionText(HudTextRenderEvent event) {
         if (!event.debug) return;

@@ -4,32 +4,30 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.client.event.gui.hud.HudTextLine;
 import net.modificationstation.stationapi.api.client.event.gui.hud.HudTextRenderEvent;
 
-import java.util.Collections;
 import java.util.Random;
 
 public class TestHudText {
+    private static final int[] COLORS = {0x5BCEFA, 0xF5A9B8, 0xFFFFFF, 0xF5A9B8};
     private final Random random = new Random();
+    private int frames;
+    private int color;
+    private int verColor;
 
     @EventListener
     public void renderHudText(HudTextRenderEvent event) {
+        if (frames % 7 == 0) verColor = random.nextInt(0xFFFFFF + 1);
         event.setVersion(new HudTextLine(
-                "Statint api  2rd version ;)" + (event.debug ? "(" + event.minecraft.debugText + ")" : ""),
-                random.nextInt(0xFFFFFF + 1))
+                "Statint api  2rd ediction ;)" + (event.debug ? "(" + event.minecraft.debugText + ")" : ""),
+                verColor)
         );
-        Collections.addAll(event.left,
-                new HudTextLine("yippee :3"),
-                new HudTextLine("wahoo")
-        );
-        Collections.addAll(event.right,
-                new HudTextLine("gaming", 0x5BCEFA),
-                new HudTextLine("god has forsaken me", 0xF5A9B8,8),
-                new HudTextLine("waow :o", HudTextLine.WHITE, 8),
-                new HudTextLine("this is not a test", 0xF5A9B8, 8),
-                new HudTextLine("ok nvm now it is", 0x5BCEFA, 8)
-        );
+        if (frames > 0 && frames % 15 == 0) {
+            color = color + 1 < COLORS.length? color + 1 : 0;
+        }
+        event.right.add(new HudTextLine("gaming", COLORS[color]));
         if (event.debug) {
             event.left.add(new HudTextLine("This Texts only Shows In de Bugge ?!??! :0"));
-            event.right.add(new HudTextLine("this text has a rly big offsets", 0xFF0000, 47));
+            event.right.add(new HudTextLine("this text has a rly big offsets", 0xFF0000, 40));
         }
+        frames++;
     }
 }
