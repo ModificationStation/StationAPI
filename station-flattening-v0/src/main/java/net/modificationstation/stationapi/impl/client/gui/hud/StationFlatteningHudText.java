@@ -30,7 +30,7 @@ public class StationFlatteningHudText {
         if (hit == null || hit.type != HitResultType.BLOCK) return;
         BlockState state = event.minecraft.world.getBlockState(hit.blockX, hit.blockY, hit.blockZ);
         Collections.addAll(event.right,
-                new HudTextLine("Block: " + state.getBlock().getTranslatedName()),
+                new HudTextLine("Block: " + state.getBlock().getTranslatedName(), WHITE, 20),
                 new HudTextLine("Meta: " + event.minecraft.world.getBlockMeta(hit.blockX, hit.blockY, hit.blockZ))
         );
         Collection<Property<?>> properties = state.getProperties();
