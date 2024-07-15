@@ -39,9 +39,10 @@ public abstract class WorldRendererMixin {
             if (var7 > 0) {
                 Block.BLOCKS[var7].updateBoundingBox(this.world, hitResult.blockX, hitResult.blockY, hitResult.blockZ);
                 // field_1637, field_1638, field_1639 is lastTickX, lastTickY, lastTickZ respectively
-                double var8 = playerEntity.field_1637 + (playerEntity.x - playerEntity.field_1637) * (double)f;
-                double var10 = playerEntity.field_1638 + (playerEntity.y - playerEntity.field_1638) * (double)f;
-                double var12 = playerEntity.field_1639 + (playerEntity.z - playerEntity.field_1639) * (double)f;
+                // interpolates where to render based off player's old position + position change * frameDelta
+                double interpolatedX = playerEntity.field_1637 + (playerEntity.x - playerEntity.field_1637) * (double)f;
+                double interpolatedY = playerEntity.field_1638 + (playerEntity.y - playerEntity.field_1638) * (double)f;
+                double interpolatedZ = playerEntity.field_1639 + (playerEntity.z - playerEntity.field_1639) * (double)f;
 
                 Vec3d center = new Vec3d(hitResult.blockX + 0.5, hitResult.blockY + 0.5, hitResult.blockZ + 0.5);
                 List<Line> linePoints = convertBoxesToLines(block.getVoxelShape(world, hitResult.blockX, hitResult.blockY, hitResult.blockZ), center);
@@ -49,8 +50,8 @@ public abstract class WorldRendererMixin {
                 Tessellator tessellator = Tessellator.INSTANCE;
                 tessellator.start(1);
                 for (Line linePoint : linePoints) {
-                    tessellator.vertex(-var8 + linePoint.points[0].x, -var10 + linePoint.points[0].y, -var12 + linePoint.points[0].z);
-                    tessellator.vertex(-var8 + linePoint.points[1].x, -var10 + linePoint.points[1].y, -var12 + linePoint.points[1].z);
+                    tessellator.vertex(-interpolatedX + linePoint.points[0].x, -interpolatedY + linePoint.points[0].y, -interpolatedZ + linePoint.points[0].z);
+                    tessellator.vertex(-interpolatedX + linePoint.points[1].x, -interpolatedY + linePoint.points[1].y, -interpolatedZ + linePoint.points[1].z);
                 }
                 tessellator.draw();
             }

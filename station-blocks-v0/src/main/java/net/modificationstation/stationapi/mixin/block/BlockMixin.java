@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.block;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.Block;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
@@ -7,7 +9,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.HasCollisionVoxelShape;
 import net.modificationstation.stationapi.api.block.HasVoxelShape;
+import net.modificationstation.stationapi.api.block.StationBlock;
+import net.modificationstation.stationapi.api.util.Namespace;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,7 +23,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @Mixin(Block.class)
-public class BlockMixinVoxelShapes {
+abstract class BlockMixin implements StationBlock {
+    @Shadow public abstract Block setTranslationKey(String string);
+
+    @Override
+    public Block setTranslationKey(Namespace namespace, String translationKey) {
+        return setTranslationKey(namespace + "." + translationKey);
+    }
+
+    @WrapOperation(
+            method = "getDroppedItemId",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/block/Block;id:I"
+            )
+    )
+    private int stationapi_returnCorrectItem(Block instance, Operation<Integer> original) {
+        return instance.asItem().id;
+    }
+
     @Inject(method = "addIntersectingBoundingBox(Lnet/minecraft/world/World;IIILnet/minecraft/util/math/Box;Ljava/util/ArrayList;)V", at = @At("HEAD"), cancellable = true)
     private void  stationapi_addBlockVoxelShapesToCollision(World world, int x, int y, int z, Box box, ArrayList<Box> boxes, CallbackInfo ci) {
         if (this instanceof HasCollisionVoxelShape hasCollisionVoxelShape) {

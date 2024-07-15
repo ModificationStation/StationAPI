@@ -5,8 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BlockItemMixin",
-    "BlockMixinCorrectDrop",
-    "BlockMixinVoxelShapes",
+    "BlockMixin",
     "FireBlockMixin",
     "SecondaryBlockItemMixin",
     "StatsMixin"
