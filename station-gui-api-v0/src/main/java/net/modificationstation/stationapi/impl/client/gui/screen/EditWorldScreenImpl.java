@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.client.event.gui.screen.EditWorldS
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetDetachedContext;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.mixin.gui.client.ScreenAccessor;
+import net.modificationstation.stationapi.mixin.client.gui.ScreenAccessor;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)

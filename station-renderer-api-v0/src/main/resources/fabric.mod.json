@@ -20,7 +20,8 @@
   "environment": "client",
   "entrypoints": {
     "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.client.texture.StationRenderImpl"
+      "net.modificationstation.stationapi.impl.client.texture.StationRenderImpl",
+      "net.modificationstation.stationapi.impl.client.gui.hud.StationRendererHudText"
     ]
   },
   "mixins": [
