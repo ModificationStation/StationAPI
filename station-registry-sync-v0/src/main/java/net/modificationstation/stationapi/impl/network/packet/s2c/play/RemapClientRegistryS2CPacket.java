@@ -9,22 +9,26 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.network.RegistryPacketHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
-
-public class RemapClientRegistryS2CPacket extends Packet implements IdentifiablePacket {
-    public static final Identifier PACKET_ID = NAMESPACE.id("registry/remap_client");
+public class RemapClientRegistryS2CPacket extends Packet implements ManagedPacket<RemapClientRegistryS2CPacket> {
+    public static final PacketType<RemapClientRegistryS2CPacket> TYPE = PacketType
+            .builder(true, false, RemapClientRegistryS2CPacket::new)
+            .rawId(0)
+            .blocking()
+            .build();
 
     public Reference2ReferenceMap<Identifier, Reference2IntMap<Identifier>> map;
 
-    public RemapClientRegistryS2CPacket() {}
+    private RemapClientRegistryS2CPacket() {}
 
     @Environment(EnvType.SERVER)
     public RemapClientRegistryS2CPacket(Reference2ReferenceMap<Identifier, Reference2IntMap<Identifier>> map) {
@@ -94,7 +98,7 @@ public class RemapClientRegistryS2CPacket extends Packet implements Identifiable
     }
 
     @Override
-    public Identifier getId() {
-        return PACKET_ID;
+    public @NotNull PacketType<RemapClientRegistryS2CPacket> getType() {
+        return TYPE;
     }
 }

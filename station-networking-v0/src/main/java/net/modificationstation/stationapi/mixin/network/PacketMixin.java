@@ -3,10 +3,9 @@ package net.modificationstation.stationapi.mixin.network;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.network.packet.PacketRegisterEvent;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.registry.PacketTypeRegistry;
 import net.modificationstation.stationapi.api.util.Null;
-import net.modificationstation.stationapi.impl.network.packet.IdentifiablePacketImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,19 +17,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 @Mixin(Packet.class)
 abstract class PacketMixin {
     @Shadow
     static void register(int rawId, boolean clientBound, boolean serverBound, Class<? extends Packet> type) {}
-
-    @Shadow
-    public static void writeString(String string, DataOutputStream dataOutputStream) {}
-
-    @Shadow
-    public static String readString(DataInputStream dataInputStream, int i) {
-        return Null.get();
-    }
 
     @Shadow
     public static Packet create(int i) {
@@ -48,8 +40,8 @@ abstract class PacketMixin {
             cancellable = true
     )
     private void stationapi_ifIdentifiable(CallbackInfoReturnable<Integer> cir) {
-        if (this instanceof IdentifiablePacket)
-            cir.setReturnValue(IdentifiablePacket.PACKET_ID);
+        if (this instanceof ManagedPacket)
+            cir.setReturnValue(ManagedPacket.PACKET_ID);
     }
 
     @Inject(
@@ -59,9 +51,9 @@ abstract class PacketMixin {
                     target = "Lnet/minecraft/network/packet/Packet;write(Ljava/io/DataOutputStream;)V"
             )
     )
-    private static void stationapi_ifIdentifiable(Packet packet, DataOutputStream out, CallbackInfo ci) {
-        if (packet instanceof IdentifiablePacket idPacket)
-            writeString(idPacket.getId().toString(), out);
+    private static void stationapi_ifIdentifiable(Packet packet, DataOutputStream out, CallbackInfo ci) throws IOException {
+        if (packet instanceof ManagedPacket<?> managedPacket)
+            out.writeInt(PacketTypeRegistry.INSTANCE.getRawId(managedPacket.getType()));
     }
 
     @Redirect(
@@ -72,13 +64,13 @@ abstract class PacketMixin {
             )
     )
     private static Packet stationapi_ifIdentifiable(int id, DataInputStream in, boolean server) throws IOException {
-        if (id == IdentifiablePacket.PACKET_ID) {
-            Identifier identifier = Identifier.of(readString(in, Short.MAX_VALUE));
+        if (id == ManagedPacket.PACKET_ID) {
+            var packetType = Objects.requireNonNull(PacketTypeRegistry.INSTANCE.get(in.readInt()), "Received nonexistent managed packet!");
             if (
-                    server && !IdentifiablePacketImpl.SERVER_BOUND_PACKETS.contains(identifier) ||
-                            !server && !IdentifiablePacketImpl.CLIENT_BOUND_PACKETS.contains(identifier)
-            ) throw new IOException("Bad packet id " + identifier);
-            return IdentifiablePacket.create(identifier);
+                    server && !packetType.serverBound ||
+                            !server && !packetType.clientBound
+            ) throw new IOException("Bad packet id " + packetType.registryEntry.registryKey().getValue());
+            return packetType.factory.create();
         }
         return create(id);
     }

@@ -3,12 +3,13 @@ package net.modificationstation.stationapi.impl.packet;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.world.World;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import net.modificationstation.stationapi.impl.world.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -19,10 +20,8 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
-
-public class FlattenedChunkSectionDataS2CPacket extends Packet implements IdentifiablePacket {
-    public static final Identifier PACKET_ID = NAMESPACE.id("flattening/chunk_section_data");
+public class FlattenedChunkSectionDataS2CPacket extends Packet implements ManagedPacket<FlattenedChunkSectionDataS2CPacket> {
+    public static final PacketType<FlattenedChunkSectionDataS2CPacket> TYPE = PacketType.builder(true, false, FlattenedChunkSectionDataS2CPacket::new).build();
 
     public int chunkX, chunkZ, sectionIndex;
     private int sectionSize;
@@ -104,7 +103,7 @@ public class FlattenedChunkSectionDataS2CPacket extends Packet implements Identi
     }
 
     @Override
-    public Identifier getId() {
-        return PACKET_ID;
+    public @NotNull PacketType<FlattenedChunkSectionDataS2CPacket> getType() {
+        return TYPE;
     }
 }

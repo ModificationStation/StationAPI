@@ -5,12 +5,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
 import net.minecraft.world.World;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import net.modificationstation.stationapi.impl.world.chunk.ChunkSection;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -21,18 +21,14 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
-
-public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements IdentifiablePacket {
-
-    public static final Identifier PACKET_ID = NAMESPACE.id("flattening/chunk_data");
+public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements ManagedPacket<FlattenedChunkDataS2CPacket> {
+    public static final PacketType<FlattenedChunkDataS2CPacket> TYPE = PacketType.builder(true, false, FlattenedChunkDataS2CPacket::new).build();
 
     public int chunkX, chunkZ;
     private int sectionsSize;
     public byte[] sectionsData;
 
-    @ApiStatus.Internal
-    public FlattenedChunkDataS2CPacket() {}
+    private FlattenedChunkDataS2CPacket() {}
 
     @Environment(EnvType.SERVER)
     public FlattenedChunkDataS2CPacket(World world, int chunkX, int chunkZ) {
@@ -111,7 +107,7 @@ public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements I
     }
 
     @Override
-    public Identifier getId() {
-        return PACKET_ID;
+    public @NotNull PacketType<FlattenedChunkDataS2CPacket> getType() {
+        return TYPE;
     }
 }
