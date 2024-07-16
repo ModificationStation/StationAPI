@@ -1,27 +1,26 @@
 package net.modificationstation.stationapi.mixin.tools;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.ToolMaterial;
+import net.modificationstation.stationapi.api.item.tool.MiningLevelManager;
 import net.modificationstation.stationapi.api.item.tool.StationToolMaterial;
-import net.modificationstation.stationapi.api.tag.TagKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ToolMaterial.class)
 class ToolMaterialMixin implements StationToolMaterial {
     @Unique
-    private TagKey<Block> stationapi_miningLevelTag;
+    private MiningLevelManager.LevelNode stationapi_levelNode;
 
     @Override
     @Unique
-    public ToolMaterial miningLevelTag(TagKey<Block> tag) {
-        stationapi_miningLevelTag = tag;
+    public ToolMaterial miningLevelNode(MiningLevelManager.LevelNode levelNode) {
+        stationapi_levelNode = levelNode;
         return ToolMaterial.class.cast(this);
     }
 
     @Override
     @Unique
-    public TagKey<Block> getMiningLevelTag() {
-        return stationapi_miningLevelTag;
+    public MiningLevelManager.LevelNode getMiningLevelNode() {
+        return stationapi_levelNode;
     }
 }
