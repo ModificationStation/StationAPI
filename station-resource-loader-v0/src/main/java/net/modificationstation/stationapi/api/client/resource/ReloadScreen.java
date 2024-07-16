@@ -61,8 +61,8 @@ class ReloadScreen extends Screen {
     private static final Function<LongSupplier, Long2DoubleFunction> BACKGROUND_EXCEPTION_FADE_IN_FACTORY = fadeInStartGetter -> time -> (double) Longs.constrainToRange(time - fadeInStartGetter.getAsLong(), 0, EXCEPTION_TRANSFORM) / EXCEPTION_TRANSFORM;
     private static final Function<LongSupplier, Long2DoubleFunction> STAGE_0_EXCEPTION_TRANSFORM_FACTORY = transformStartGetter -> time -> (double) Longs.constrainToRange(time - transformStartGetter.getAsLong(), 0, EXCEPTION_TRANSFORM) / EXCEPTION_TRANSFORM;
 
-    private static final String
-            LOGO_TEMPLATE = "/assets/station-resource-loader-v0/textures/gui/stationapi_reload%s.png";
+    private static final String LOGO_TEMPLATE = "/assets/station-resource-loader-v0/textures/gui/stationapi_reload%s.png";
+    private static final String LOGO_MOJANG = "/title/mojang.png";
 
     private static UnaryOperator<Long2DoubleFunction> when(BooleanSupplier condition, Long2DoubleFunction ifTrue) {
         return ifFalse -> value -> (condition.getAsBoolean() ? ifTrue : ifFalse).applyAsDouble(value);
@@ -84,6 +84,7 @@ class ReloadScreen extends Screen {
     private boolean exceptionThrown;
     private long exceptionStart;
     private Exception exception;
+    private final String stapiLogo;
 
     ReloadScreen(
             Screen parent,
@@ -95,13 +96,22 @@ class ReloadScreen extends Screen {
         this.done = done;
         this.tessellator = tessellator;
 
-        logo = LOGO_TEMPLATE.formatted(
+        stapiLogo = LOGO_TEMPLATE.formatted(
                 switch (new Random().nextInt(100)) {
                     case 0 -> "_dimando";
                     case 1 -> "_old";
                     default -> "";
                 }
         );
+
+//        if(StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.FORGE) || StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.HIDE)) {
+//            logo = LOGO_MOJANG;
+//        }
+//        else {
+//            logo = stapiLogo;
+//        }
+
+        logo = stapiLogo;
 
         val globalFadeOutComposer = when(() -> finished, GLOBAL_FADE_OUT_DELTA_FACTORY.apply(() -> fadeOutStart));
         val deltaMap = of(
@@ -254,6 +264,34 @@ class ReloadScreen extends Screen {
     }
 
     private void renderLogo(ToDoubleFunction<Object> deltaFunc) {
+        if (StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.FORGE)) {
+            renderStapiLogo(deltaFunc, width * 0.6f, height * 0.6f, 0.5f, 0.5f);
+        }
+        if (StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.HIDE)) {
+            renderMojangLogo(deltaFunc);
+        }
+    }
+
+    private void renderMojangLogo(ToDoubleFunction<Object> deltaFunc) {
+        val delta = deltaFunc.applyAsDouble(STAGE_0_DEFAULT_DELTA_KEY);
+        if (delta == 0) return;
+        val v = 10 - delta * 10;
+        minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId(LOGO_MOJANG));
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        int vWidth = (width - 256) / 2;
+        double vHeight = (double) (height - 256) / 2 - v;
+        tessellator.startQuads();
+        tessellator.color(0xFF, 0xFF, 0xFF, (int) (0xFF * delta));
+        tessellator.vertex(vWidth, vHeight, 0, 0, 0);
+        tessellator.vertex(vWidth, vHeight, 0, 0, 1);
+        tessellator.vertex(vWidth, vHeight, 0, 1, 1);
+        tessellator.vertex(vWidth, vHeight, 0, 1, 0);
+        tessellator.draw();
+        glDisable(GL_BLEND);
+    }
+
+    private void renderStapiLogo(ToDoubleFunction<Object> deltaFunc, float x, float y, float heightMultiplyer, float widthMultiplier) {
         val delta = deltaFunc.applyAsDouble(STAGE_0_DEFAULT_DELTA_KEY);
         if (delta == 0) return;
         val v = 10 - delta * 10;
@@ -261,11 +299,13 @@ class ReloadScreen extends Screen {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         tessellator.startQuads();
+        tessellator.translate(x, y, 0);
         tessellator.color(0xFF, 0xFF, 0xFF, (int) (0xFF * delta));
         tessellator.vertex(width / 2D - 120, (height - 90D) / 2 - 20 - v, 0, 0, 0);
-        tessellator.vertex(width / 2D - 120, (height - 90D) / 2 + 20 - v, 0, 0, 1);
-        tessellator.vertex(width / 2D + 120, (height - 90D) / 2 + 20 - v, 0, 1, 1);
-        tessellator.vertex(width / 2D + 120, (height - 90D) / 2 - 20 - v, 0, 1, 0);
+        tessellator.vertex(width / 2D - 120, ((height - 90D) / 2 + 20 - v) * heightMultiplyer, 0, 0, 1);
+        tessellator.vertex((width / 2D + 120) * widthMultiplier, ((height - 90D) / 2 + 20 - v) * heightMultiplyer, 0, 1, 1);
+        tessellator.vertex((width / 2D + 120) * widthMultiplier, (height - 90D) / 2 - 20 - v, 0, 1, 0);
+        tessellator.translate(-x, -y, 0);
         tessellator.draw();
         glDisable(GL_BLEND);
     }
