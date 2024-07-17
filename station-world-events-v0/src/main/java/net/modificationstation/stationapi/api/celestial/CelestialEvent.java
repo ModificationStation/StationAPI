@@ -262,7 +262,7 @@ public class CelestialEvent {
      * Used by CelestialTimeManager to handle an edge-case where events would not be loaded when reloading the same world.
      */
     public void markForInitialization() {
-        CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
+        this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
         initializeEvent();
         initializationNeeded = false;
     }
