@@ -40,7 +40,8 @@
     "client.gui.AchievementsScreenMixin",
     "client.overlay.BlockOverlayMixin",
     "client.overlay.FireOverlayMixin",
-    "client.overlay.PortalOverlayMixin"
+    "client.overlay.PortalOverlayMixin",
+    "client.particle.ItemParticleMixin"
   ],
   "injectors": {
     "defaultRequire": 1,

@@ -6,6 +6,7 @@ tile.@.testAnimatedBlock0.name=Test Animated Block
 tile.@.testAnimatedBlock1.name=Charged Animated Block
 item.@.testPickaxe.name=Test Pickaxe
 tile.@.farlands_block.name=FarLands Block
+tile.@.indispensableBlock.name=Indispensable Block
 item.@.nbt_item.name=NBT Item
 tile.@.freezer.name=Freezer
 tile.@.altar.name=Altar
