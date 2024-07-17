@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "server": [
+  ],
+  "client": [
+    "config.client.DrawContextMixin",
+    "config.client.ModMenuMixin",
+    "config.client.ScreenMixin",
+    "config.client.TextFieldWidgetMixin",
+    "config.client.EntryListWidgetAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "plugin": "net.modificationstation.stationapi.impl.config.MixinConfig"
+}
