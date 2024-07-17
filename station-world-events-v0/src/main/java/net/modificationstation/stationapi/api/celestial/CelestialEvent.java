@@ -102,7 +102,7 @@ public class CelestialEvent {
     public boolean activateEvent(long worldTime, Random random) {
         CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
         if (initializationNeeded) {
-            activityState = initializeEvent(activityState);
+            activityState = initializeEvent();
         }
         if (active) {
             activityState.active = true;
@@ -171,7 +171,7 @@ public class CelestialEvent {
     public void updateEvent(long worldTime) {
         CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
         if (initializationNeeded) {
-            activityState = initializeEvent(activityState);
+            activityState = initializeEvent();
         }
         if (!active && !activityState.active) return;
         worldTime -= startingDaytime;
@@ -190,12 +190,11 @@ public class CelestialEvent {
      * Initializes the event by synchronizing it with NBT data.
      * Only used internally.
      *
-     * @param activityState CelestialEventActivityState (custom PersistentState) used for accessing NBT data.
      * @return The initialized CelestialEventActivityState.
      */
-    private CelestialEventActivityState initializeEvent(CelestialEventActivityState activityState) {
+    private CelestialEventActivityState initializeEvent() {
         initializationNeeded = false;
-        activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
+        CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
         if (activityState == null) {
             activityState = new CelestialEventActivityState(this.name);
             this.world.setState(this.name, activityState);
@@ -214,7 +213,7 @@ public class CelestialEvent {
         if (active) {
             CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
             if (initializationNeeded) {
-                activityState = initializeEvent(activityState);
+                activityState = initializeEvent();
             }
             activityState.active = false;
             activityState.markDirty();
@@ -264,7 +263,7 @@ public class CelestialEvent {
      */
     public void markForInitialization() {
         CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
-        initializeEvent(activityState);
+        initializeEvent();
         initializationNeeded = false;
     }
 }
