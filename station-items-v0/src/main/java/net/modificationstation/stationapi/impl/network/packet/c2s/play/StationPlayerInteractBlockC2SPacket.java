@@ -14,7 +14,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class StationPlayerInteractBlockC2SPacket extends PlayerInteractBlockC2SPacket implements ManagedPacket<StationPlayerInteractBlockC2SPacket> {
-    public static final PacketType<StationPlayerInteractBlockC2SPacket> TYPE = new PacketType<>(false, true, StationPlayerInteractBlockC2SPacket::new);
+    public static final PacketType<StationPlayerInteractBlockC2SPacket> TYPE = PacketType.builder(false, true, StationPlayerInteractBlockC2SPacket::new).build();
 
     private StationPlayerInteractBlockC2SPacket() {}
 

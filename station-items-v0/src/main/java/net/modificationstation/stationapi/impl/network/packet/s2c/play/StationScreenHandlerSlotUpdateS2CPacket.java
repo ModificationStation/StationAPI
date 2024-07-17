@@ -14,7 +14,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class StationScreenHandlerSlotUpdateS2CPacket extends ScreenHandlerSlotUpdateS2CPacket implements ManagedPacket<StationScreenHandlerSlotUpdateS2CPacket> {
-    public static final PacketType<StationScreenHandlerSlotUpdateS2CPacket> TYPE = new PacketType<>(true, false, StationScreenHandlerSlotUpdateS2CPacket::new);
+    public static final PacketType<StationScreenHandlerSlotUpdateS2CPacket> TYPE = PacketType.builder(true, false, StationScreenHandlerSlotUpdateS2CPacket::new).build();
 
     private StationScreenHandlerSlotUpdateS2CPacket() {}
 

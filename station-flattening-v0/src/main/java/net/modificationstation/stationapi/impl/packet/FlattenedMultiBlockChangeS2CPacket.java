@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class FlattenedMultiBlockChangeS2CPacket extends ChunkDeltaUpdateS2CPacket implements ManagedPacket<FlattenedMultiBlockChangeS2CPacket> {
-    public static final PacketType<FlattenedMultiBlockChangeS2CPacket> TYPE = new PacketType<>(true, false, FlattenedMultiBlockChangeS2CPacket::new);
+    public static final PacketType<FlattenedMultiBlockChangeS2CPacket> TYPE = PacketType.builder(true, false, FlattenedMultiBlockChangeS2CPacket::new).build();
 
     public int sectionIndex;
     public int[] stateArray;

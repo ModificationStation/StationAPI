@@ -20,7 +20,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class RemapClientRegistryS2CPacket extends Packet implements ManagedPacket<RemapClientRegistryS2CPacket> {
-    public static final PacketType<RemapClientRegistryS2CPacket> TYPE = new PacketType<>(true, false, RemapClientRegistryS2CPacket::new);
+    public static final PacketType<RemapClientRegistryS2CPacket> TYPE = PacketType
+            .builder(true, false, RemapClientRegistryS2CPacket::new)
+            .rawId(0)
+            .blocking()
+            .build();
 
     public Reference2ReferenceMap<Identifier, Reference2IntMap<Identifier>> map;
 

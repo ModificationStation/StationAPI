@@ -15,7 +15,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class StationEntityEquipmentUpdateS2CPacket extends EntityEquipmentUpdateS2CPacket implements ManagedPacket<StationEntityEquipmentUpdateS2CPacket> {
-    public static final PacketType<StationEntityEquipmentUpdateS2CPacket> TYPE = new PacketType<>(true, false, StationEntityEquipmentUpdateS2CPacket::new);
+    public static final PacketType<StationEntityEquipmentUpdateS2CPacket> TYPE = PacketType.builder(true, false, StationEntityEquipmentUpdateS2CPacket::new).build();
 
     public NbtCompound stationNbt;
 

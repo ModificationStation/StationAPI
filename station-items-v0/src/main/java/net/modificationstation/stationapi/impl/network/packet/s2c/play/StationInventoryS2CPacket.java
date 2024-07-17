@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class StationInventoryS2CPacket extends InventoryS2CPacket implements ManagedPacket<StationInventoryS2CPacket> {
-    public static final PacketType<StationInventoryS2CPacket> TYPE = new PacketType<>(true, false, StationInventoryS2CPacket::new);
+    public static final PacketType<StationInventoryS2CPacket> TYPE = PacketType.builder(true, false, StationInventoryS2CPacket::new).build();
 
     private StationInventoryS2CPacket() {}
 

@@ -14,7 +14,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class StationClickSlotC2SPacket extends ClickSlotC2SPacket implements ManagedPacket<StationClickSlotC2SPacket> {
-    public static final PacketType<StationClickSlotC2SPacket> TYPE = new PacketType<>(false, true, StationClickSlotC2SPacket::new);
+    public static final PacketType<StationClickSlotC2SPacket> TYPE = PacketType.builder(false, true, StationClickSlotC2SPacket::new).build();
 
     private StationClickSlotC2SPacket() {}
 

@@ -15,7 +15,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class StationItemEntitySpawnS2CPacket extends ItemEntitySpawnS2CPacket implements ManagedPacket<StationItemEntitySpawnS2CPacket> {
-    public static final PacketType<StationItemEntitySpawnS2CPacket> TYPE = new PacketType<>(true, false, StationItemEntitySpawnS2CPacket::new);
+    public static final PacketType<StationItemEntitySpawnS2CPacket> TYPE = PacketType.builder(true, false, StationItemEntitySpawnS2CPacket::new).build();
 
     public NbtCompound stationNbt;
 

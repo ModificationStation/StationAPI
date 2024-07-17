@@ -21,7 +21,7 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 public class FlattenedChunkSectionDataS2CPacket extends Packet implements ManagedPacket<FlattenedChunkSectionDataS2CPacket> {
-    public static final PacketType<FlattenedChunkSectionDataS2CPacket> TYPE = new PacketType<>(true, false, FlattenedChunkSectionDataS2CPacket::new);
+    public static final PacketType<FlattenedChunkSectionDataS2CPacket> TYPE = PacketType.builder(true, false, FlattenedChunkSectionDataS2CPacket::new).build();
 
     public int chunkX, chunkZ, sectionIndex;
     private int sectionSize;

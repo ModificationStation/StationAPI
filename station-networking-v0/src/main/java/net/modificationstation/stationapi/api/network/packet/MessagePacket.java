@@ -38,7 +38,7 @@ import java.util.function.BiConsumer;
  * @author mine_diver
  */
 public class MessagePacket extends Packet implements ManagedPacket<MessagePacket> {
-    public static final PacketType<MessagePacket> TYPE = new PacketType<>(true, true, MessagePacket::new);
+    public static final PacketType<MessagePacket> TYPE = PacketType.builder(true, true, MessagePacket::new).build();
 
     /**
      * Message's identifier.

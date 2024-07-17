@@ -16,7 +16,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class FlattenedBlockChangeS2CPacket extends BlockUpdateS2CPacket implements ManagedPacket<FlattenedBlockChangeS2CPacket> {
-    public static final PacketType<FlattenedBlockChangeS2CPacket> TYPE = new PacketType<>(true, false, FlattenedBlockChangeS2CPacket::new);
+    public static final PacketType<FlattenedBlockChangeS2CPacket> TYPE = PacketType.builder(true, false, FlattenedBlockChangeS2CPacket::new).build();
 
     public int stateId;
 
