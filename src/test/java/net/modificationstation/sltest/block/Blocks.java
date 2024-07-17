@@ -23,7 +23,8 @@ public enum Blocks {
     ALTAR("altar", "altar", id -> new BlockAltar(id, Material.STONE).setHardness(3)),
     VARIATION_BLOCK("variation_block", "variationBlock", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSoundGroup(Block.DEFAULT_SOUND_GROUP).disableAutoItemRegistration()),
     EMISSION_CHECKER("emission_checker", "emissionChecker", LampBlock::new),
-    INDISPENSABLE_BLOCK("indispensable_block", "indispensableBlock", IndispensableBlock::new);
+    INDISPENSABLE_BLOCK("indispensable_block", "indispensableBlock", IndispensableBlock::new),
+    TIME_MACHINE_BLOCK("time_machine_block", "timeMachineBlock", TimeMachineBlock::new);
 
     private final Runnable register;
     private Block block;
