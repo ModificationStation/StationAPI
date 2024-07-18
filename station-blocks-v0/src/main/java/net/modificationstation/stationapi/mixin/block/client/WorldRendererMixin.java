@@ -35,16 +35,10 @@ public abstract class WorldRendererMixin {
     @Unique
     List<Line> lines = null;
 
-    @Inject(method = "method_1554(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/hit/HitResult;ILnet/minecraft/item/ItemStack;F)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "method_1554(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/hit/HitResult;ILnet/minecraft/item/ItemStack;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlockId(III)I"), cancellable = true)
     private void stationapi_drawBlockVoxelShapesOutline(PlayerEntity playerEntity, HitResult hitResult, int i, ItemStack itemStack, float f, CallbackInfo ci) {
         BlockState blockState = world.getBlockState(hitResult.blockX, hitResult.blockY, hitResult.blockZ);
-        if (i == 0 && hitResult.type == HitResultType.BLOCK && blockState.getBlock() instanceof HasVoxelShape block) {
-            GL11.glEnable(3042);
-            GL11.glBlendFunc(770, 771);
-            GL11.glColor4f(0.0F, 0.0F, 0.0F, 0.4F);
-            GL11.glLineWidth(2.0F);
-            GL11.glDisable(3553);
-            GL11.glDepthMask(false);
+        if (blockState.getBlock() instanceof HasVoxelShape block) {
             int var7 = world.getBlockId(hitResult.blockX, hitResult.blockY, hitResult.blockZ);
             if (var7 > 0) {
                 Block.BLOCKS[var7].updateBoundingBox(this.world, hitResult.blockX, hitResult.blockY, hitResult.blockZ);
