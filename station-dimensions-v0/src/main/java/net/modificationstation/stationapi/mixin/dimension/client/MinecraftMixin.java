@@ -18,8 +18,8 @@ class MinecraftMixin {
     @Shadow public ClientPlayerEntity player;
 
     @Inject(
-            method = "init",
-            at = @At("RETURN")
+            method = "run",
+            at = @At("HEAD")
     )
     private void stationapi_initDimensions(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(new DimensionRegistryEvent());
