@@ -19,7 +19,8 @@ class MinecraftMixin {
 
     @Inject(
             method = "run",
-            at = @At("HEAD")
+            at = @At("HEAD"),
+            remap = false
     )
     private void stationapi_initDimensions(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(new DimensionRegistryEvent());
