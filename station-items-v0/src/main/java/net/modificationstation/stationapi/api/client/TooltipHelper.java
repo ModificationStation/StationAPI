@@ -28,6 +28,7 @@ public class TooltipHelper {
                 .tooltip(newTooltip)
                 .inventory(playerInventory)
                 .container(container)
+                .itemStack(itemStack)
                 .build()
         );
 
