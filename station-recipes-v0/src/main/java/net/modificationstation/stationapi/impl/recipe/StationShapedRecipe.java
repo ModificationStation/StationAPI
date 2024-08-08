@@ -9,8 +9,7 @@ import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Function;
 
 public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
@@ -18,7 +17,7 @@ public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
     private static final Random RANDOM = new Random();
 
     public final int width, height;
-    public final Either<TagKey<Item>, ItemStack>[] grid;
+    private final Either<TagKey<Item>, ItemStack>[] grid;
     public final ItemStack output;
 
     public StationShapedRecipe(int width, int height, Either<TagKey<Item>, ItemStack>[] grid, ItemStack output) {
@@ -102,5 +101,10 @@ public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
     @Override
     public ItemStack[] getOutputs() {
         return new ItemStack[] { output };
+    }
+
+    public Either<TagKey<Item>, ItemStack>[] getGrid() {
+        //noinspection unchecked
+        return (Either<TagKey<Item>, ItemStack>[]) Arrays.stream(grid).map(entry -> entry.mapRight(ItemStack::copy)).toArray(Either[]::new);
     }
 }
