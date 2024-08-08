@@ -97,6 +97,6 @@ public class StationShapelessRecipe implements CraftingRecipe, StationRecipe {
     @Deprecated
     public Either<TagKey<Item>, ItemStack>[] getInputs() {
         //noinspection unchecked
-        return (Either<TagKey<Item>, ItemStack>[]) Arrays.stream(ingredients).map(entry -> entry.mapRight(ItemStack::copy)).toArray(Either[]::new);
+        return (Either<TagKey<Item>, ItemStack>[]) Arrays.stream(ingredients).map(entry -> entry == null ? null : entry.mapRight(ItemStack::copy)).toArray(Either[]::new);
     }
 }
