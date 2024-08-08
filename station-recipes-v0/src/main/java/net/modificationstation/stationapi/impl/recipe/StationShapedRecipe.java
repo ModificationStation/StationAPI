@@ -17,9 +17,9 @@ public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
 
     private static final Random RANDOM = new Random();
 
-    private final int width, height;
-    private final Either<TagKey<Item>, ItemStack>[] grid;
-    private final ItemStack output;
+    public final int width, height;
+    public final Either<TagKey<Item>, ItemStack>[] grid;
+    public final ItemStack output;
 
     public StationShapedRecipe(int width, int height, Either<TagKey<Item>, ItemStack>[] grid, ItemStack output) {
         this.width = width;

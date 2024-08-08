@@ -18,9 +18,9 @@ public class StationShapelessRecipe implements CraftingRecipe, StationRecipe {
 
     private static final Random RANDOM = new Random();
 
-    private final Either<TagKey<Item>, ItemStack>[] ingredients;
-    private final ItemStack output;
-    private final BitSet matchedIngredients;
+    public final Either<TagKey<Item>, ItemStack>[] ingredients;
+    public final ItemStack output;
+    public final BitSet matchedIngredients;
 
     public StationShapelessRecipe(ItemStack output, Either<TagKey<Item>, ItemStack>[] ingredients) {
         this.ingredients = ingredients;
