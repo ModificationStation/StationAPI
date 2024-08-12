@@ -21,9 +21,14 @@ public class TooltipRenderEvent extends ItemStackEvent {
     public final HandledScreen container;
     public final TextRenderer textManager;
     public final PlayerInventory inventory;
+    /**
+     * These will be removed in a3, due to the fact the container var already exists.
+     */
+    @Deprecated(forRemoval = true)
     public final int
             containerX,
-            containerY,
+            containerY;
+    public final int
             mouseX,
             mouseY;
     public final float delta;
