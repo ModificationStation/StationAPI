@@ -81,7 +81,7 @@ public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
 
     @Override
     public ItemStack getOutput() {
-        return output;
+        return output.copy();
     }
 
     @Override
