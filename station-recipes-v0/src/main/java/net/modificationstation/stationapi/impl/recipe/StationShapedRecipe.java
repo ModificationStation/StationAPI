@@ -5,17 +5,11 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
-import net.modificationstation.stationapi.api.recipe.StationRecipe;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 
 import java.util.*;
-import java.util.function.Function;
 
-public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
-
-    private static final Random RANDOM = new Random();
-
+public class StationShapedRecipe implements CraftingRecipe {
     public final int width, height;
     private final Either<TagKey<Item>, ItemStack>[] grid;
     public final ItemStack output;
@@ -82,25 +76,6 @@ public class StationShapedRecipe implements CraftingRecipe, StationRecipe {
     @Override
     public ItemStack getOutput() {
         return output;
-    }
-
-    @Override
-    public ItemStack[] getIngredients() {
-        ItemStack[] stacks = new ItemStack[9];
-        for (int h = 0; h < height; h++)
-            for (int w = 0; w < width; w++) {
-                int localId = (h * width) + w;
-                Either<TagKey<Item>, ItemStack> ingredient = grid[localId];
-                if (ingredient == null) continue;
-                int id = (h * 3) + w;
-                stacks[id] = ingredient.map(tag -> new ItemStack(ItemRegistry.INSTANCE.getEntryList(tag).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + tag.id() + "\" has no entry in the tag registry!")).getRandom(RANDOM).orElseThrow().value()), Function.identity());
-            }
-        return stacks;
-    }
-
-    @Override
-    public ItemStack[] getOutputs() {
-        return new ItemStack[] { output };
     }
 
     public Either<TagKey<Item>, ItemStack>[] getGrid() {

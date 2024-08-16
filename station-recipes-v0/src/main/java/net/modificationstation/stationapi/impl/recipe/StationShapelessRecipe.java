@@ -5,14 +5,11 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
-import net.modificationstation.stationapi.api.recipe.StationRecipe;
-import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 
 import java.util.*;
-import java.util.function.Function;
 
-public class StationShapelessRecipe implements CraftingRecipe, StationRecipe {
+public class StationShapelessRecipe implements CraftingRecipe {
 
     private static final Random RANDOM = new Random();
 
@@ -78,24 +75,7 @@ public class StationShapelessRecipe implements CraftingRecipe, StationRecipe {
         return output;
     }
 
-    @Override
-    public ItemStack[] getIngredients() {
-        ItemStack[] inputs = new ItemStack[ingredients.length];
-        for (int i = 0, ingredientsLength = ingredients.length; i < ingredientsLength; i++)
-            inputs[i] = ingredients[i].map(tag -> new ItemStack(ItemRegistry.INSTANCE.getEntryList(tag).orElseThrow(() -> new RuntimeException("Identifier ingredient \"" + tag.id() + "\" has no entry in the tag registry!")).getRandom(RANDOM).orElseThrow().value()), Function.identity());
-        return inputs;
-    }
-
-    @Override
-    public ItemStack[] getOutputs() {
-        return new ItemStack[] { output };
-    }
-
-    /**
-     * To be renamed to getIngredients in a3, use with caution.
-     */
-    @Deprecated
-    public Either<TagKey<Item>, ItemStack>[] getInputs() {
+    public Either<TagKey<Item>, ItemStack>[] getIngredients() {
         //noinspection unchecked
         return (Either<TagKey<Item>, ItemStack>[]) Arrays.stream(ingredients).map(entry -> entry == null ? null : entry.mapRight(ItemStack::copy)).toArray(Either[]::new);
     }
