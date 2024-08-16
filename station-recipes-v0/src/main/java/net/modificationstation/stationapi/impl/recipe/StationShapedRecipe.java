@@ -75,7 +75,7 @@ public class StationShapedRecipe implements CraftingRecipe {
 
     @Override
     public ItemStack getOutput() {
-        return output;
+        return output.copy();
     }
 
     public Either<TagKey<Item>, ItemStack>[] getGrid() {

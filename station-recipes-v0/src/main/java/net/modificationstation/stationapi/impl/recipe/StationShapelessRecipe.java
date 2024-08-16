@@ -15,7 +15,7 @@ public class StationShapelessRecipe implements CraftingRecipe {
 
     private final Either<TagKey<Item>, ItemStack>[] ingredients;
     public final ItemStack output;
-    public final BitSet matchedIngredients;
+    private final BitSet matchedIngredients;
 
     public StationShapelessRecipe(ItemStack output, Either<TagKey<Item>, ItemStack>[] ingredients) {
         this.ingredients = ingredients;
@@ -72,7 +72,7 @@ public class StationShapelessRecipe implements CraftingRecipe {
 
     @Override
     public ItemStack getOutput() {
-        return output;
+        return output.copy();
     }
 
     public Either<TagKey<Item>, ItemStack>[] getIngredients() {
