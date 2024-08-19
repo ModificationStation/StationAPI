@@ -121,10 +121,16 @@ allprojects {
     }
 
     configure<ProcessResources>("processResources") {
-        inputs.property("version", project.properties["version"])
+        var ver = version
+
+        if (project.properties["override_version"] != null) {
+            ver = "${project.properties["mod_version"]}+${project.properties["override_version"]}"
+        }
+
+        inputs.property("version", ver)
 
         filesMatching("fabric.mod.json") {
-            expand(mapOf("version" to project.properties["version"]))
+            expand(mapOf("version" to ver))
         }
     }
 
