@@ -33,4 +33,9 @@ public class TooltipRenderEvent extends ItemStackEvent {
             mouseY;
     public final float delta;
     public final String originalTooltip;
+
+    @Override
+    public boolean isCancelable() {
+        return true;
+    }
 }
