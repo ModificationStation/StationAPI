@@ -5,24 +5,21 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.s2c.play.ItemEntitySpawnS2CPacket;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.impl.network.StationItemsNetworkHandler;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
-
-public class StationItemEntitySpawnS2CPacket extends ItemEntitySpawnS2CPacket implements IdentifiablePacket {
-    public static final Identifier PACKET_ID = NAMESPACE.id("items/entity_spawn");
+public class StationItemEntitySpawnS2CPacket extends ItemEntitySpawnS2CPacket implements ManagedPacket<StationItemEntitySpawnS2CPacket> {
+    public static final PacketType<StationItemEntitySpawnS2CPacket> TYPE = PacketType.builder(true, false, StationItemEntitySpawnS2CPacket::new).build();
 
     public NbtCompound stationNbt;
 
-    @ApiStatus.Internal
-    public StationItemEntitySpawnS2CPacket() {}
+    private StationItemEntitySpawnS2CPacket() {}
 
     public StationItemEntitySpawnS2CPacket(ItemEntity itemEntity) {
         super(itemEntity);
@@ -59,7 +56,7 @@ public class StationItemEntitySpawnS2CPacket extends ItemEntitySpawnS2CPacket im
     }
 
     @Override
-    public Identifier getId() {
-        return PACKET_ID;
+    public @NotNull PacketType<StationItemEntitySpawnS2CPacket> getType() {
+        return TYPE;
     }
 }

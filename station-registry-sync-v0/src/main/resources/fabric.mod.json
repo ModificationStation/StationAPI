@@ -27,7 +27,7 @@
       "net.modificationstation.stationapi.impl.client.registry.ClientServerRegistryRemapper",
       "net.modificationstation.stationapi.impl.client.registry.ClientRegistryRestorer"
     ],
-    "main": [
+    "stationapi:event_bus": [
       "net.modificationstation.stationapi.impl.network.RegistryNetworkingInit"
     ],
     "client": [
