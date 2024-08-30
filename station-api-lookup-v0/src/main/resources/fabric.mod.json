@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "station-audio-loader-v0",
+  "id": "station-api-lookup-v0",
   "version": "${version}",
 
-  "name": "Station Audio Loader (v0)",
-  "description": "Loads audio right from the mods jars.",
+  "name": "Station API Lookup (v0)",
+  "description": "Ability to dynamically extract APIs from BlockEntities and Items, inspired by Fabric.",
   "authors": [
     "Modification Station"
   ],
