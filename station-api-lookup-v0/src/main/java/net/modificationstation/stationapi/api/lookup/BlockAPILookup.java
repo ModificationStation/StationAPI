@@ -19,7 +19,10 @@ public final class BlockAPILookup {
     public <T> Optional<T> find(World world, BlockPos pos, Class<T> api) {
         var be = world.method_1777(pos.x, pos.y, pos.z);
         if (be != null) {
-            return BLOCK_ENTITY_API_LOOKUP.find(api, be);
+            var beApi = BLOCK_ENTITY_API_LOOKUP.find(api, be);
+            if (beApi.isPresent()) {
+                return beApi;
+            }
         }
         return BLOCK_API_LOOKUP.find(api, world.getBlockState(pos).getBlock());
     }
