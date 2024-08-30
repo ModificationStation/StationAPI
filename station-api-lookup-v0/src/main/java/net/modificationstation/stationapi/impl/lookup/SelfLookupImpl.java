@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.impl.lookup;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.lookup.block.BlockAPILookupEvent;
-import net.modificationstation.stationapi.api.lookup.blockentity.BlockEntityAPILookupEvent;
+import net.modificationstation.stationapi.api.lookup.block.BlockEntityAPILookupEvent;
 import net.modificationstation.stationapi.api.lookup.item.ItemAPILookupEvent;
 
 public class SelfLookupImpl {

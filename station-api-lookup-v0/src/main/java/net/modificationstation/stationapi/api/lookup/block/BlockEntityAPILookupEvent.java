@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.lookup.blockentity;
+package net.modificationstation.stationapi.api.lookup.block;
 
 import net.mine_diver.unsafeevents.event.Cancelable;
 import net.minecraft.block.entity.BlockEntity;
