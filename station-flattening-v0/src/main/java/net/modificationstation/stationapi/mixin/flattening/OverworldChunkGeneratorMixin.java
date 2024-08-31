@@ -1,12 +1,16 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import net.minecraft.class_415;
 import net.minecraft.class_538;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
+import net.modificationstation.stationapi.impl.world.CaveGenBaseImpl;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,6 +26,19 @@ class OverworldChunkGeneratorMixin {
     @Shadow private World field_2260;
     @Shadow private double[] field_2261;
     @Unique private double[] densityCache;
+
+    @WrapOperation(
+            method = "<init>",
+            at = @At(
+                    value = "NEW",
+                    target = "()Lnet/minecraft/class_415;"
+            )
+    )
+    private class_415 stationapi_setWorldForCaveGen(Operation<class_415> original, World world, long l) {
+        final class_415 caveGen = original.call();
+        ((CaveGenBaseImpl) caveGen).stationapi_setWorld(world);
+        return caveGen;
+    }
     
     @ModifyConstant(
             method = "method_1803",
