@@ -21,6 +21,7 @@
     "ItemMixin",
     "ItemStackMixin",
     "MobSpawnerLogicMixin",
+    "NetherCaveGenMixin",
     "NetherChunkGeneratorMixin",
     "OakTreeFeatureMixin",
     "OverworldChunkGeneratorMixin",
