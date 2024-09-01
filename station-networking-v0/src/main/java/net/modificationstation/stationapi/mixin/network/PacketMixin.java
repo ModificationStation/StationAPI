@@ -83,6 +83,6 @@ abstract class PacketMixin {
             ) throw new IOException("Bad packet id " + identifier);
             return IdentifiablePacket.create(identifier);
         }
-        return create(id);
+        return original.call(id);
     }
 }
