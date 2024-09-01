@@ -1,5 +1,8 @@
 package net.modificationstation.stationapi.mixin.network;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.network.packet.PacketRegisterEvent;
@@ -64,14 +67,14 @@ abstract class PacketMixin {
             writeString(idPacket.getId().toString(), out);
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "read(Ljava/io/DataInputStream;Z)Lnet/minecraft/network/packet/Packet;",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/network/packet/Packet;create(I)Lnet/minecraft/network/packet/Packet;"
             )
     )
-    private static Packet stationapi_ifIdentifiable(int id, DataInputStream in, boolean server) throws IOException {
+    private static Packet stationapi_ifIdentifiable(int id, Operation<Packet> original, @Local(argsOnly = true) DataInputStream in, @Local(argsOnly = true) boolean server) throws IOException {
         if (id == IdentifiablePacket.PACKET_ID) {
             Identifier identifier = Identifier.of(readString(in, Short.MAX_VALUE));
             if (
