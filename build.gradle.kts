@@ -243,7 +243,7 @@ subprojects {
 
     //Attach the subproject to the root project
     rootProject.dependencies {
-        "implementationOnly"(project(path = ":$name", configuration = "dev"))
+        implementation(project(path = ":$name", configuration = "dev"))
         testImplementation(project(path = ":$name", configuration = "test"))
         include(project(path = ":$name", configuration = "out"))
     }
