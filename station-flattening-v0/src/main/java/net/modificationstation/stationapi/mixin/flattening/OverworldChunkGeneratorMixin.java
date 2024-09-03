@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
@@ -21,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(class_538.class)
+@Mixin(value = class_538.class, priority = 4000)
 class OverworldChunkGeneratorMixin {
     @Shadow private World field_2260;
     @Shadow private double[] field_2261;
@@ -167,7 +168,26 @@ class OverworldChunkGeneratorMixin {
     
     @Inject(method = "method_1797", at = @At("HEAD"))
     private void stationapi_initLocals(int j, int bs, byte[] args, Biome[] par4, CallbackInfo ci, @Share("vertical2") LocalIntRef vertical2) {
-        vertical2.set(1 << MathHelper.ceilLog2(field_2260.getHeight()));
+        vertical2.set(MathHelper.smallestEncompassingPowerOfTwo(field_2260.getHeight()));
+    }
+
+    @ModifyExpressionValue(
+            method = "method_1797",
+            at = @At(
+                    value = "CONSTANT",
+                    args = "intValue=127"
+            )
+    )
+    private int stationapi_changeTopYM1(int constant) {
+        return field_2260.getTopY() - 1;
+    }
+
+    @ModifyConstant(
+            method = "method_1797",
+            constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_ZERO)
+    )
+    private int stationapi_changeBottomY(int constant) {
+        return field_2260.getBottomY();
     }
     
     @ModifyConstant(
@@ -176,6 +196,15 @@ class OverworldChunkGeneratorMixin {
     )
     private int stationapi_changeFillStep2(int original, @Share("vertical2") LocalIntRef vertical2) {
         return vertical2.get();
+    }
+
+    @ModifyVariable(
+            method = "method_1797",
+            at = @At("STORE"),
+            index = 18
+    )
+    private int stationapi_adjustForDepth(int value) {
+        return value - field_2260.getBottomY();
     }
     
     @ModifyConstant(
