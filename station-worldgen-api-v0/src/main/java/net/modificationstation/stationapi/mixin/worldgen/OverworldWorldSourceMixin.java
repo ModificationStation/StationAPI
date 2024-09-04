@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.worldgen;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.SandBlock;
 import net.minecraft.class_51;
@@ -12,12 +13,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(class_538.class)
+@Mixin(value = class_538.class, priority = 2000)
 class OverworldWorldSourceMixin {
     @Shadow
     private World field_2260;
@@ -44,12 +43,15 @@ class OverworldWorldSourceMixin {
         }
     }
 
-    @ModifyConstant(
+    @ModifyExpressionValue(
             method = "method_1797",
-            constant = @Constant(intValue = 127)
+            at = @At(
+                    value = "CONSTANT",
+                    args = "intValue=127"
+            )
     )
     private int stationapi_cancelSurfaceMaking(int constant, @Local Biome biome) {
-        return biome.noSurfaceRules() ? field_2260.getTopY() - 1 : -1;
+        return biome.noSurfaceRules() ? constant : Integer.MIN_VALUE;
     }
 
     @Inject(
