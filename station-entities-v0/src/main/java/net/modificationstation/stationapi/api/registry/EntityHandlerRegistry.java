@@ -1,15 +1,12 @@
 package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.entity.Entity;
-import net.minecraft.world.World;
-import uk.co.benjiweber.expressions.function.QuadFunction;
+import net.modificationstation.stationapi.api.client.entity.factory.EntityWorldAndPosFactory;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
-public final class EntityHandlerRegistry extends SimpleRegistry<QuadFunction<World, Double, Double, Double, Entity>> {
-
-    private static final QuadFunction<World, Double, Double, Double, Entity> EMPTY = (world, x, y, z) -> null;
+public final class EntityHandlerRegistry extends SimpleRegistry<EntityWorldAndPosFactory> {
+    private static final EntityWorldAndPosFactory EMPTY = (world, x, y, z) -> null;
     public static final RegistryKey<EntityHandlerRegistry> KEY = RegistryKey.ofRegistry(NAMESPACE.id("entity_handlers"));
     public static final EntityHandlerRegistry INSTANCE = Registries.create(KEY, new EntityHandlerRegistry(), registry -> EMPTY, Lifecycle.experimental());
 

@@ -5,6 +5,7 @@ import net.minecraft.client.network.ClientNetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.client.entity.factory.EntityWorldAndPosFactory;
 import net.modificationstation.stationapi.api.registry.EntityHandlerRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import uk.co.benjiweber.expressions.function.QuadFunction;
 
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
@@ -55,9 +55,9 @@ class ClientNetworkHandlerMixin {
             )
     )
     private Entity stationapi_onEntitySpawn(Entity entity, EntitySpawnS2CPacket packet) {
-        QuadFunction<World, Double, Double, Double, Entity> entityHandler = EntityHandlerRegistry.INSTANCE.get(of(String.valueOf(packet.entityType)));
+        EntityWorldAndPosFactory entityHandler = EntityHandlerRegistry.INSTANCE.get(of(String.valueOf(packet.entityType)));
         if (entityHandler != null)
-            entity = entityHandler.apply(field_1973, capturedX, capturedY, capturedZ);
+            entity = entityHandler.create(field_1973, capturedX, capturedY, capturedZ);
         return entity;
     }
 }

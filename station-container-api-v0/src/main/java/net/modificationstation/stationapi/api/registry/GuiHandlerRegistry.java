@@ -15,7 +15,6 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public final class GuiHandlerRegistry extends SimpleRegistry<BiTuple<TriFunction<PlayerEntity, Inventory, MessagePacket, Screen>, Supplier<Inventory>>> {
-
     private static final BiTuple<TriFunction<PlayerEntity, Inventory, MessagePacket, Screen>, Supplier<Inventory>> EMPTY = Tuple.tuple((playerBase, inventoryBase, message) -> null, () -> null);
     public static final RegistryKey<GuiHandlerRegistry> KEY = RegistryKey.ofRegistry(Identifier.of(StationAPI.NAMESPACE, "gui_handlers"));
     public static final GuiHandlerRegistry INSTANCE = Registries.create(KEY, new GuiHandlerRegistry(), registry -> EMPTY, Lifecycle.experimental());

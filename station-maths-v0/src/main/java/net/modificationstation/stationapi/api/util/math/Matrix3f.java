@@ -1,8 +1,7 @@
 package net.modificationstation.stationapi.api.util.math;
 
+import com.mojang.datafixers.util.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
-import uk.co.benjiweber.expressions.tuple.Tuple;
 
 import java.nio.FloatBuffer;
 
@@ -89,17 +88,17 @@ public final class Matrix3f {
         this.a22 = source.a22;
     }
 
-    private static BiTuple<Float, Float> getSinAndCosOfRotation(float upperLeft, float diagonalAverage, float lowerRight) {
+    private static Pair<Float, Float> getSinAndCosOfRotation(float upperLeft, float diagonalAverage, float lowerRight) {
         float f = 2.0F * (upperLeft - lowerRight);
         if (THREE_PLUS_TWO_SQRT_TWO * diagonalAverage * diagonalAverage < f * f) {
             float h = MathHelper.fastInverseSqrt(diagonalAverage * diagonalAverage + f * f);
-            return Tuple.tuple(h * diagonalAverage, h * f);
+            return new Pair<>(h * diagonalAverage, h * f);
         } else {
-            return Tuple.tuple(SIN_PI_OVER_EIGHT, COS_PI_OVER_EIGHT);
+            return new Pair<>(SIN_PI_OVER_EIGHT, COS_PI_OVER_EIGHT);
         }
     }
 
-    private static BiTuple<Float, Float> method_22848(float f, float g) {
+    private static Pair<Float, Float> method_22848(float f, float g) {
         float h = (float)Math.hypot(f, g);
         float i = h > 1.0E-6F ? g : 0.0F;
         float j = Math.abs(f) + Math.max(h, 1.0E-6F);
@@ -113,13 +112,13 @@ public final class Matrix3f {
         l = MathHelper.fastInverseSqrt(j * j + i * i);
         j *= l;
         i *= l;
-        return Tuple.tuple(i, j);
+        return new Pair<>(i, j);
     }
 
     private static Quaternion method_22857(Matrix3f matrix3f) {
         Matrix3f matrix3f2 = new Matrix3f();
         Quaternion quaternion = Quaternion.IDENTITY.copy();
-        BiTuple<Float, Float> pair3;
+        Pair<Float, Float> pair3;
         Float float4;
         Float float5;
         Quaternion quaternion4;
@@ -128,8 +127,8 @@ public final class Matrix3f {
         float o;
         if (matrix3f.a01 * matrix3f.a01 + matrix3f.a10 * matrix3f.a10 > 1.0E-6F) {
             pair3 = getSinAndCosOfRotation(matrix3f.a00, 0.5F * (matrix3f.a01 + matrix3f.a10), matrix3f.a11);
-            float4 = pair3.one();
-            float5 = pair3.two();
+            float4 = pair3.getFirst();
+            float5 = pair3.getSecond();
             quaternion4 = new Quaternion(0.0F, 0.0F, float4, float5);
             m = float5 * float5 - float4 * float4;
             n = -2.0F * float4 * float5;
@@ -149,8 +148,8 @@ public final class Matrix3f {
 
         if (matrix3f.a02 * matrix3f.a02 + matrix3f.a20 * matrix3f.a20 > 1.0E-6F) {
             pair3 = getSinAndCosOfRotation(matrix3f.a00, 0.5F * (matrix3f.a02 + matrix3f.a20), matrix3f.a22);
-            float i = -(Float)pair3.one();
-            float5 = pair3.two();
+            float i = -(Float)pair3.getFirst();
+            float5 = pair3.getSecond();
             quaternion4 = new Quaternion(0.0F, i, 0.0F, float5);
             m = float5 * float5 - i * i;
             n = -2.0F * i * float5;
@@ -170,8 +169,8 @@ public final class Matrix3f {
 
         if (matrix3f.a12 * matrix3f.a12 + matrix3f.a21 * matrix3f.a21 > 1.0E-6F) {
             pair3 = getSinAndCosOfRotation(matrix3f.a11, 0.5F * (matrix3f.a12 + matrix3f.a21), matrix3f.a22);
-            float4 = pair3.one();
-            float5 = pair3.two();
+            float4 = pair3.getFirst();
+            float5 = pair3.getSecond();
             quaternion4 = new Quaternion(float4, 0.0F, 0.0F, float5);
             m = float5 * float5 - float4 * float4;
             n = -2.0F * float4 * float5;
@@ -219,9 +218,9 @@ public final class Matrix3f {
         Matrix3f matrix3f2 = new Matrix3f(this);
         matrix3f2.multiply(new Matrix3f(quaternion2));
         float f = 1.0F;
-        BiTuple<Float, Float> pair = method_22848(matrix3f2.a00, matrix3f2.a10);
-        Float float_ = pair.one();
-        Float float2 = pair.two();
+        Pair<Float, Float> pair = method_22848(matrix3f2.a00, matrix3f2.a10);
+        Float float_ = pair.getFirst();
+        Float float2 = pair.getSecond();
         float g = float2 * float2 - float_ * float_;
         float h = -2.0F * float_ * float2;
         float j = float2 * float2 + float_ * float_;
@@ -237,8 +236,8 @@ public final class Matrix3f {
         f *= j;
         matrix3f3.multiply(matrix3f2);
         pair = method_22848(matrix3f3.a00, matrix3f3.a20);
-        float k = -(Float)pair.one();
-        Float float3 = pair.two();
+        float k = -(Float)pair.getFirst();
+        Float float3 = pair.getSecond();
         float l = float3 * float3 - k * k;
         float m = -2.0F * k * float3;
         float n = float3 * float3 + k * k;
@@ -254,8 +253,8 @@ public final class Matrix3f {
         f *= n;
         matrix3f4.multiply(matrix3f3);
         pair = method_22848(matrix3f4.a11, matrix3f4.a21);
-        Float float4 = pair.one();
-        Float float5 = pair.two();
+        Float float4 = pair.getFirst();
+        Float float5 = pair.getSecond();
         float o = float5 * float5 - float4 * float4;
         float p = -2.0F * float4 * float5;
         float q = float5 * float5 + float4 * float4;

@@ -1,13 +1,12 @@
 package net.modificationstation.stationapi.api.util.math;
 
 import com.google.common.collect.Maps;
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.booleans.BooleanList;
 import net.modificationstation.stationapi.api.util.StringIdentifiable;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.Nullable;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
-import uk.co.benjiweber.expressions.tuple.Tuple;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -72,7 +71,7 @@ public enum DirectionTransformation implements StringIdentifiable {
     private final boolean flipZ;
     private final AxisTransformation axisTransformation;
     private static final DirectionTransformation[][] COMBINATIONS = Util.make(new DirectionTransformation[values().length][values().length], (directionTransformations) -> {
-        Map<BiTuple<AxisTransformation, BooleanList>, DirectionTransformation> map = Arrays.stream(values()).collect(Collectors.toMap((directionTransformationx) -> Tuple.tuple(directionTransformationx.axisTransformation, directionTransformationx.getAxisFlips()), (directionTransformationx) -> directionTransformationx));
+        Map<Pair<AxisTransformation, BooleanList>, DirectionTransformation> map = Arrays.stream(values()).collect(Collectors.toMap((directionTransformationx) -> new Pair<>(directionTransformationx.axisTransformation, directionTransformationx.getAxisFlips()), (directionTransformationx) -> directionTransformationx));
         DirectionTransformation[] var2 = values();
 
         for (DirectionTransformation directionTransformation : var2) {
@@ -88,7 +87,7 @@ public enum DirectionTransformation implements StringIdentifiable {
                     booleanArrayList.add(booleanList.getBoolean(i) ^ booleanList2.getBoolean(directionTransformation.axisTransformation.map(i)));
                 }
 
-                directionTransformations[directionTransformation.ordinal()][directionTransformation2.ordinal()] = map.get(Tuple.tuple(axisTransformation, booleanArrayList));
+                directionTransformations[directionTransformation.ordinal()][directionTransformation2.ordinal()] = map.get(Pair.of(axisTransformation, booleanArrayList));
             }
         }
 

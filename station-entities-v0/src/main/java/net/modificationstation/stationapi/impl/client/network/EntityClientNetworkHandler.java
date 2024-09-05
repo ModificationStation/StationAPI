@@ -11,6 +11,7 @@ import net.minecraft.entity.data.DataTrackerEntry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.client.entity.factory.EntityWorldAndPosFactory;
 import net.modificationstation.stationapi.api.entity.HasOwner;
 import net.modificationstation.stationapi.api.event.registry.EntityHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
@@ -23,7 +24,6 @@ import net.modificationstation.stationapi.api.registry.MobHandlerRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.server.entity.StationSpawnDataProvider;
 import net.modificationstation.stationapi.mixin.entity.client.ClientNetworkHandlerAccessor;
-import uk.co.benjiweber.expressions.function.QuadFunction;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -47,7 +47,7 @@ public final class EntityClientNetworkHandler {
     }
 
     private static void handleEntitySpawn(PlayerEntity player, MessagePacket message) {
-        QuadFunction<World, Double, Double, Double, Entity> entityHandler = EntityHandlerRegistry.INSTANCE.get(of(message.strings[0]));
+        EntityWorldAndPosFactory entityHandler = EntityHandlerRegistry.INSTANCE.get(of(message.strings[0]));
         if (entityHandler != null) {
             double
                     x = message.ints[1] / 32D,
@@ -56,7 +56,7 @@ public final class EntityClientNetworkHandler {
             //noinspection deprecation
             ClientNetworkHandlerAccessor networkHandler = (ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
             class_454 world = networkHandler.getField_1973();
-            Entity entity = entityHandler.apply(world, x, y, z);
+            Entity entity = entityHandler.create(world, x, y, z);
             if (entity != null) {
                 entity.field_1654 = message.ints[1];
                 entity.field_1655 = message.ints[2];
