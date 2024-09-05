@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -7,6 +8,8 @@ import net.minecraft.block.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stat.Stat;
+import net.minecraft.stat.Stats;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -361,5 +364,12 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     )
     private int stationapi_getStateBrightness(int original) {
         return BlockBrightness.light;
+    }
+    
+    @Inject(method = "afterBreak", at = @At("HEAD"), cancellable = true)
+    private void stationapi_temporalStatFix(World world, PlayerEntity player, int x, int y, int z, int meta, CallbackInfo info) {
+        if (id < Stats.MINE_BLOCK.length) return;
+        this.dropStacks(world, x, y, z, meta);
+        info.cancel();
     }
 }
