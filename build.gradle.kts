@@ -95,6 +95,10 @@ allprojects {
         }
 
         implementation("blue.endless:jankson:1.2.1")
+        implementation("me.carleslc:Simple-Yaml:1.8.4")
+        modLocalRuntime("net.glasslauncher.mods:glass-networking:1.0.2") {
+            isTransitive = false
+        }
         modLocalRuntime("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") {
             isTransitive = false
         }
