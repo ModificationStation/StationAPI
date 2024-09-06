@@ -120,7 +120,7 @@ allprojects {
     }
 
     configure<ProcessResources>("processResources") {
-        var ver = version
+        var ver = project.properties["mod_version"]
 
         if (project.properties["override_version"] != null) {
             ver = "${project.properties["mod_version"]}+${project.properties["override_version"]}"
