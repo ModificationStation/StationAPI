@@ -12,5 +12,11 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "server": [
+    "server.ServerPlayNetworkHandlerMixin"
+  ],
+  "client": [
+    "client.WorldRendererMixin"
+  ]
 }

@@ -5,10 +5,12 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BlockBaseAccessor",
+    "FenceBlockMixin",
     "MixinLevel",
     "MixinNetherLevelSource",
     "MixinObsidian",
-    "OverworldTestMixin"
+    "OverworldTestMixin",
+    "StairMixin"
   ],
   "server": [
   ],
