@@ -30,6 +30,7 @@
     "client.ContainerScreenMixin",
     "client.DrawContextAccessor",
     "client.GameRendererMixin",
+    "client.HandledScreenAccessor",
     "client.InteractionManagerMixin",
     "client.ItemRendererMixin",
     "client.MultiplayerInteractionManagerMixin",
