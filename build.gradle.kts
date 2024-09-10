@@ -65,20 +65,15 @@ allprojects {
 
         modImplementation("babric:fabric-loader:${project.properties["loader_version"]}")
 
-//        implementation("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
-//        annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
-
         "transitiveImplementation"("org.apache.commons:commons-lang3:3.12.0")
         "transitiveImplementation"("commons-io:commons-io:2.11.0")
         "transitiveImplementation"("net.jodah:typetools:${project.properties["typetools_version"]}")
-//        "transitiveImplementation"("com.github.mineLdiver:expressions:${project.properties["expressions_version"]}")
         "transitiveImplementation"("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
         "transitiveImplementation"("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
         //noinspection GradlePackageUpdate
         "transitiveImplementation"("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
         "transitiveImplementation"("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
         "transitiveImplementation"("maven.modrinth:spasm:${project.properties["spasm_version"]}")
-//        "transitiveImplementation"("com.oath.cyclops:cyclops:${project.properties["cyclops_version"]}")
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
@@ -265,18 +260,12 @@ subprojects {
 }
 
 dependencies {
-//    include("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.properties["mixinextras_version"]}")
     include("net.jodah:typetools:${project.properties["typetools_version"]}")
-//    include("com.github.mineLdiver:expressions:${project.properties["expressions_version"]}")
     include("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
     include("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
     include("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
     include("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
     include("maven.modrinth:spasm:${project.properties["spasm_version"]}")
-//    include("com.oath.cyclops:cyclops:${project.properties["cyclops_version"]}")
-//    include("org.reactivestreams:reactive-streams:${project.properties["reactivestreams_version"]}")
-//    include("io.kindedj:kindedj:${project.properties["kindedj_version"]}")
-//    include("org.agrona:Agrona:${project.properties["agrona_version"]}")
 }
 
 // Makes java shut up
