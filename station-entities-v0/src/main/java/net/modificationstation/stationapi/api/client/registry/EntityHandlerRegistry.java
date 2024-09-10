@@ -1,7 +1,10 @@
-package net.modificationstation.stationapi.api.registry;
+package net.modificationstation.stationapi.api.client.registry;
 
 import com.mojang.serialization.Lifecycle;
 import net.modificationstation.stationapi.api.client.entity.factory.EntityWorldAndPosFactory;
+import net.modificationstation.stationapi.api.registry.Registries;
+import net.modificationstation.stationapi.api.registry.RegistryKey;
+import net.modificationstation.stationapi.api.registry.SimpleRegistry;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 

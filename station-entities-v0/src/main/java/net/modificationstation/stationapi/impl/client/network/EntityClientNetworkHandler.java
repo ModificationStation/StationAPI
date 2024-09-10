@@ -12,6 +12,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.entity.factory.EntityWorldAndPosFactory;
+import net.modificationstation.stationapi.api.client.registry.EntityHandlerRegistry;
+import net.modificationstation.stationapi.api.client.registry.MobHandlerRegistry;
 import net.modificationstation.stationapi.api.entity.HasOwner;
 import net.modificationstation.stationapi.api.event.registry.EntityHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
@@ -19,8 +21,6 @@ import net.modificationstation.stationapi.api.event.registry.MobHandlerRegistryE
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
-import net.modificationstation.stationapi.api.registry.EntityHandlerRegistry;
-import net.modificationstation.stationapi.api.registry.MobHandlerRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.server.entity.StationSpawnDataProvider;
 import net.modificationstation.stationapi.mixin.entity.client.ClientNetworkHandlerAccessor;
