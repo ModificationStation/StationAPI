@@ -78,7 +78,7 @@ public class RegistryEntryListCodec<E> implements Codec<RegistryEntryList<E>> {
                 }
                 return DataResult.error(() -> "Can't decode element " + registryEntry + " without registry");
             }
-            return DataResult.success(new Pair<>(RegistryEntryList.of(list), pair.getSecond()));
+            return DataResult.success(Pair.of(RegistryEntryList.of(list), pair.getSecond()));
         });
     }
 

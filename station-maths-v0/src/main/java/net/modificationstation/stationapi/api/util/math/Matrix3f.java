@@ -92,9 +92,9 @@ public final class Matrix3f {
         float f = 2.0F * (upperLeft - lowerRight);
         if (THREE_PLUS_TWO_SQRT_TWO * diagonalAverage * diagonalAverage < f * f) {
             float h = MathHelper.fastInverseSqrt(diagonalAverage * diagonalAverage + f * f);
-            return new Pair<>(h * diagonalAverage, h * f);
+            return Pair.of(h * diagonalAverage, h * f);
         } else {
-            return new Pair<>(SIN_PI_OVER_EIGHT, COS_PI_OVER_EIGHT);
+            return Pair.of(SIN_PI_OVER_EIGHT, COS_PI_OVER_EIGHT);
         }
     }
 
@@ -112,7 +112,7 @@ public final class Matrix3f {
         l = MathHelper.fastInverseSqrt(j * j + i * i);
         j *= l;
         i *= l;
-        return new Pair<>(i, j);
+        return Pair.of(i, j);
     }
 
     private static Quaternion method_22857(Matrix3f matrix3f) {

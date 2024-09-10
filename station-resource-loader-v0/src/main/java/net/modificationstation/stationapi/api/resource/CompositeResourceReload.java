@@ -19,7 +19,7 @@ public final class CompositeResourceReload implements ResourceReload {
 
     public void setWeight(Identifier id, float weight) {
         reloads.merge(
-                id, new Pair<>(Optional.empty(), weight),
+                id, Pair.of(Optional.empty(), weight),
                 (oldReload, newReload) -> Pair.of(oldReload.getFirst(), newReload.getSecond())
         );
     }

@@ -71,7 +71,7 @@ public enum DirectionTransformation implements StringIdentifiable {
     private final boolean flipZ;
     private final AxisTransformation axisTransformation;
     private static final DirectionTransformation[][] COMBINATIONS = Util.make(new DirectionTransformation[values().length][values().length], (directionTransformations) -> {
-        Map<Pair<AxisTransformation, BooleanList>, DirectionTransformation> map = Arrays.stream(values()).collect(Collectors.toMap((directionTransformationx) -> new Pair<>(directionTransformationx.axisTransformation, directionTransformationx.getAxisFlips()), (directionTransformationx) -> directionTransformationx));
+        Map<Pair<AxisTransformation, BooleanList>, DirectionTransformation> map = Arrays.stream(values()).collect(Collectors.toMap((directionTransformationx) -> Pair.of(directionTransformationx.axisTransformation, directionTransformationx.getAxisFlips()), (directionTransformationx) -> directionTransformationx));
         DirectionTransformation[] var2 = values();
 
         for (DirectionTransformation directionTransformation : var2) {
