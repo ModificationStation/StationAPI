@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.resource;
 
-import cyclops.function.Consumer3;
 import net.modificationstation.stationapi.api.util.Unit;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.profiler.DummyProfiler;
@@ -136,7 +135,7 @@ public class SimpleResourceReload<S> implements FutureResourceReload {
             final List<ResourceReloader> reloaders,
             Executor prepareExecutor,
             Executor applyExecutor,
-            Consumer3<ResourceReloader, String, String> profilerListener,
+            ProfiledResourceReload.ProfilerListener profilerListener,
             CompletableFuture<Unit> initialStage
     ) {
         return new ProfiledResourceReload(

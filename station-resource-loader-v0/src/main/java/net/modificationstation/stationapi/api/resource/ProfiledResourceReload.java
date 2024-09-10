@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.api.resource;
 
 import com.google.common.base.Stopwatch;
-import cyclops.function.Consumer3;
 import lombok.val;
 import net.modificationstation.stationapi.api.util.Unit;
 import net.modificationstation.stationapi.api.util.Util;
@@ -15,11 +14,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static cyclops.function.FluentFunctions.expression;
-import static cyclops.function.Function0.λ;
-import static cyclops.function.Function1.lazy;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.util.profiler.Profiler.union;
 
@@ -28,12 +26,17 @@ public class ProfiledResourceReload extends SimpleResourceReload<ProfiledResourc
 
     private final Stopwatch reloadTimer = Stopwatch.createUnstarted();
 
+    @FunctionalInterface
+    public interface ProfilerListener {
+        void push(ResourceReloader reloader, String prefix, String location);
+    }
+
     public ProfiledResourceReload(
             ResourceManager manager,
             List<ResourceReloader> reloaders,
             Executor prepareExecutor,
             Executor applyExecutor,
-            Consumer3<ResourceReloader, String, String> profilerListener,
+            ProfilerListener profilerListener,
             CompletableFuture<Unit> initialStage
     ) {
         super(prepareExecutor, applyExecutor, manager, reloaders, (synchronizer, resourceManager, reloader, prepare, apply) -> {
@@ -44,29 +47,17 @@ public class ProfiledResourceReload extends SimpleResourceReload<ProfiledResourc
                     .getResourceType()
                     .map(ResourceType::getDirectory)
                     .map(StringUtils::capitalize)
-                    .orElseGet(
-                            λ(resourceManager::getClass)
-                                    .andThen(Class::getSimpleName)
-                    );
+                    .orElseGet(() -> resourceManager.getClass().getSimpleName());
             val prepareProfiler = new ProfilerSystem(Util.nanoTimeSupplier, () -> 0, false);
             val applyProfiler = new ProfilerSystem(Util.nanoTimeSupplier, () -> 0, false);
+            final BiConsumer<String, String> reloaderListener = (prefix, location) -> profilerListener.push(reloader, prefix, location);
+            final Consumer<String> preparationListener = location -> reloaderListener.accept(LOCATION_FORMAT.formatted(managerName, "%s", "preparation"), location);
+            final Consumer<String> applicationListener = location -> reloaderListener.accept(LOCATION_FORMAT.formatted(managerName, "%s", "application"), location);
             return reloader.reload(
                     synchronizer,
                     resourceManager,
-                    union(
-                            prepareProfiler,
-                            (ListenableProfiler) expression(profilerListener.apply(
-                                    reloader,
-                                    LOCATION_FORMAT.formatted(managerName, "%s", "preparation")
-                            )).compose(lazy(prepareProfiler::getFullPath))::apply
-                    ),
-                    union(
-                            applyProfiler,
-                            (ListenableProfiler) expression(profilerListener.apply(
-                                    reloader,
-                                    LOCATION_FORMAT.formatted(managerName, "%s", "application")
-                            )).compose(lazy(applyProfiler::getFullPath))::apply
-                    ),
+                    union(prepareProfiler, (ListenableProfiler) location -> preparationListener.accept(prepareProfiler.getFullPath())),
+                    union(applyProfiler, (ListenableProfiler) location -> applicationListener.accept(applyProfiler.getFullPath())),
                     preparation -> prepare.execute(() -> {
                         long prepareStart = Util.getMeasuringTimeNano();
                         preparation.run();

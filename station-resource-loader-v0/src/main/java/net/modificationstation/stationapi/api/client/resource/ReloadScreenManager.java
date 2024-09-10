@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.api.client.resource;
 
-import cyclops.control.Option;
 import lombok.Getter;
 import lombok.val;
 import net.fabricmc.loader.api.FabricLoader;
@@ -27,20 +26,20 @@ import org.lwjgl.opengl.Drawable;
 import org.lwjgl.opengl.SharedDrawable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static cyclops.control.Option.none;
-import static cyclops.control.Option.some;
-import static cyclops.function.FluentFunctions.expression;
 import static org.lwjgl.opengl.GL11.*;
 
 public class ReloadScreenManager {
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Getter
-    private static @NotNull Option<Thread> thread = none();
+    private static @NotNull Optional<Thread> thread = Optional.empty();
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Getter
-    private static @NotNull Option<ResourceReload> currentReload = none();
+    private static @NotNull Optional<ResourceReload> currentReload = Optional.empty();
     static ReloadScreen reloadScreen;
     static final List<String> LOCATIONS = new CopyOnWriteArrayList<>();
     private static final Executor EMPTY_EXECUTOR = command -> {};
@@ -57,18 +56,17 @@ public class ReloadScreenManager {
     public static void openEarly() throws LWJGLException {
         ReloadScreenManagerImpl.isMinecraftDone = false;
         applicationExecutor = ReloadScreenApplicationExecutor.INSTANCE;
-        currentReload = some(new CompositeResourceReload());
+        currentReload = Optional.of(new CompositeResourceReload());
         //noinspection deprecation
-        thread = some(new Thread(expression(ReloadScreenManager::onStartup).partiallyApply(
-                (Minecraft) FabricLoader.getInstance().getGameInstance(),
-                new SharedDrawable(Display.getDrawable())
-        )::get));
-        thread.peek(Thread::start);
+        final Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
+        final Drawable drawable = new SharedDrawable(Display.getDrawable());
+        thread = Optional.of(new Thread(() -> ReloadScreenManager.onStartup(minecraft, drawable)));
+        thread.ifPresent(Thread::start);
     }
 
     public static void open() {
         applicationExecutor = TickScheduler.CLIENT_RENDER_END::distributed;
-        currentReload = some(new CompositeResourceReload());
+        currentReload = Optional.of(new CompositeResourceReload());
         TickScheduler.CLIENT_RENDER_START.immediate(
                 () -> {
                     //noinspection deprecation
@@ -76,7 +74,7 @@ public class ReloadScreenManager {
                     val parentScreen = minecraft.currentScreen;
                     val reloadScreen = new ReloadScreen(
                             parentScreen,
-                            expression(minecraft::setScreen).applyLazy(parentScreen)::apply,
+                            () -> minecraft.setScreen(parentScreen),
                             Tessellator.INSTANCE
                     );
                     minecraft.setScreen(reloadScreen);
@@ -100,7 +98,7 @@ public class ReloadScreenManager {
         reloadScreen = null;
         LOCATIONS.clear();
         applicationExecutor = ReloadScreenManager.EMPTY_EXECUTOR;
-        currentReload = none();
+        currentReload = Optional.empty();
     }
 
     private static void onStartup(
@@ -115,7 +113,7 @@ public class ReloadScreenManager {
         val done = new AtomicBoolean();
         val reloadScreen = new ReloadScreen(
                 minecraft.currentScreen,
-                expression(done::set).applyLazy(true)::apply,
+                () -> done.set(true),
                 ReloadScreenTessellatorHolder.reloadScreenTessellator = TessellatorAccessor.stationapi_create(48)
         );
         val screenScaler = new class_564(minecraft.options, minecraft.displayWidth, minecraft.displayHeight);
@@ -157,6 +155,6 @@ public class ReloadScreenManager {
         } catch (LWJGLException e) {
             throw new RuntimeException(e);
         }
-        thread = none();
+        thread = Optional.empty();
     }
 }

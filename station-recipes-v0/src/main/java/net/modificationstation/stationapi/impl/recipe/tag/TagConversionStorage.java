@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.impl.recipe.tag;
 
+import it.unimi.dsi.fastutil.objects.ReferenceIntPair;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 // TODO: replace in vanillafix by actually changing recipes
 public class TagConversionStorage {
 
-    public static final HashMap<BiTuple<Identifier, Integer>, Identifier> CONVERSION_TABLE = new HashMap<>();
+    public static final HashMap<ReferenceIntPair<Identifier>, Identifier> CONVERSION_TABLE = new HashMap<>();
 
     private static ArrayList<String> spammedNames = new ArrayList<>();
 
@@ -106,11 +106,11 @@ public class TagConversionStorage {
 //        }
 //    }
 
-    private static BiTuple<Identifier, Integer> getIdentifier(Object o, int meta) {
-        return o instanceof Block block ? BiTuple.of(BlockRegistry.INSTANCE.getId(block), meta) : BiTuple.of(ItemRegistry.INSTANCE.getId((Item) o), meta);
+    private static ReferenceIntPair<Identifier> getIdentifier(Object o, int meta) {
+        return o instanceof Block block ? ReferenceIntPair.of(BlockRegistry.INSTANCE.getId(block), meta) : ReferenceIntPair.of(ItemRegistry.INSTANCE.getId((Item) o), meta);
     }
 
-    private static BiTuple<Identifier, Integer> getIdentifier(Object o) {
+    private static ReferenceIntPair<Identifier> getIdentifier(Object o) {
         return getIdentifier(o, 0);
     }
 

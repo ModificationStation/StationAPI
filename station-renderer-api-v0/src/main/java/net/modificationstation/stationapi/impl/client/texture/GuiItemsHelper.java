@@ -2,12 +2,12 @@ package net.modificationstation.stationapi.impl.client.texture;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntIntPair;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.modificationstation.stationapi.api.client.texture.SpritesheetHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 import java.util.function.ObjIntConsumer;
 
@@ -149,7 +149,7 @@ final class GuiItemsHelper implements SpritesheetHelper {
     }
 
     @Override
-    public BiTuple<Integer, Integer> getResolutionMultiplier(int textureIndex) {
+    public IntIntPair getResolutionMultiplier(int textureIndex) {
         return DEFAULT_RESOLUTION_MULTIPLIER;
     }
 }

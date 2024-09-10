@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.impl.resource;
 
 import com.google.common.collect.Lists;
-import cyclops.function.Consumer3;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.resource.*;
@@ -68,7 +67,7 @@ public class ReloadableResourceManager implements ResourceManager, AutoCloseable
             Executor prepareExecutor,
             Executor applyExecutor,
             CompletableFuture<Unit> initialStage,
-            Consumer3<ResourceReloader, String, String> profilerListener,
+            ProfiledResourceReload.ProfilerListener profilerListener,
             List<ResourcePack> packs
     ) {
         LOGGER.info("Reloading ResourceManager: {}", () -> packs.stream().map(ResourcePack::getName).collect(Collectors.joining(", ")));

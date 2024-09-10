@@ -8,10 +8,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.tileentity.TileEntityFreezer;
+import net.modificationstation.stationapi.api.client.gui.screen.GuiHandler;
+import net.modificationstation.stationapi.api.client.registry.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
-import net.modificationstation.stationapi.api.registry.GuiHandlerRegistry;
+import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.Identifier;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
 
 public class GuiListener {
 
@@ -19,7 +20,7 @@ public class GuiListener {
     @EventListener
     public void registerGuiHandlers(GuiHandlerRegistryEvent event) {
         GuiHandlerRegistry registry = event.registry;
-        registry.registerValueNoMessage(Identifier.of(SLTest.NAMESPACE, "freezer"), BiTuple.of(this::openFreezer, TileEntityFreezer::new));
+        Registry.register(registry, Identifier.of(SLTest.NAMESPACE, "freezer"), new GuiHandler((GuiHandler.ScreenFactoryNoMessage) this::openFreezer, TileEntityFreezer::new));
     }
 
     @Environment(EnvType.CLIENT)

@@ -16,10 +16,9 @@ import net.modificationstation.stationapi.impl.resource.ResourcePackManager;
 import net.modificationstation.stationapi.impl.resource.TexturePackProvider;
 import net.modificationstation.stationapi.impl.resource.loader.ModResourcePackCreator;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static cyclops.control.Option.none;
-import static cyclops.control.Option.some;
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
@@ -40,11 +39,11 @@ public final class AssetsReloaderImpl {
     @EventListener
     private static void reloadResourceManager(final AssetsReloadEvent event) {
         RESOURCE_PACK_MANAGER.scanPacks();
+        if (ReloadScreenManager.getCurrentReload().isEmpty())
+            ReloadScreenManager.open();
         ReloadScreenManager.getCurrentReload()
-                .onEmpty(ReloadScreenManager::open);
-        ReloadScreenManager.getCurrentReload()
-                .flatMap(reload1 -> reload1 instanceof CompositeResourceReload composite ? some(composite) : none())
-                .peek(manager -> manager.scheduleReload(
+                .flatMap(reload1 -> reload1 instanceof CompositeResourceReload composite ? Optional.of(composite) : Optional.empty())
+                .ifPresent(manager -> manager.scheduleReload(
                         NAMESPACE.id("assets"),
                         () -> ReloadableAssetsManager.INSTANCE.reload(
                                 Util.getMainWorkerExecutor(),

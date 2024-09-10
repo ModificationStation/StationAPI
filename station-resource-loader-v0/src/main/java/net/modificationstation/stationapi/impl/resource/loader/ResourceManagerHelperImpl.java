@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.impl.resource.loader;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.loader.api.ModContainer;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.*;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.resource.ModNioResourcePack;
 import net.modificationstation.stationapi.impl.resource.ResourcePackProfile;
 import org.slf4j.Logger;
@@ -47,9 +47,9 @@ public class ResourceManagerHelperImpl implements ResourceManagerHelper {
         ModNioResourcePack dataPack = ModNioResourcePack.create(id, displayName, container, subPath, ResourceType.SERVER_DATA, activationType);
         if (resourcePack == null && dataPack == null) return false;
 
-        if (resourcePack != null) builtinResourcePacks.add(new Pair<>(displayName, resourcePack));
+        if (resourcePack != null) builtinResourcePacks.add(Pair.of(displayName, resourcePack));
 
-        if (dataPack != null) builtinResourcePacks.add(new Pair<>(displayName, dataPack));
+        if (dataPack != null) builtinResourcePacks.add(Pair.of(displayName, dataPack));
 
         return true;
     }

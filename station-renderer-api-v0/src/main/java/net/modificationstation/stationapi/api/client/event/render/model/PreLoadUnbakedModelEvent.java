@@ -5,13 +5,17 @@ import net.mine_diver.unsafeevents.Event;
 import net.modificationstation.stationapi.api.client.render.model.ModelLoader;
 import net.modificationstation.stationapi.api.client.render.model.UnbakedModel;
 import net.modificationstation.stationapi.api.util.Identifier;
-import uk.co.benjiweber.expressions.function.ExceptionalFunction;
 
 import java.io.IOException;
 
 @SuperBuilder
 public class PreLoadUnbakedModelEvent extends Event {
+    @FunctionalInterface
+    public interface Loader {
+        UnbakedModel load(Identifier identifier) throws IOException;
+    }
+
     public final Identifier identifier;
     public final ModelLoader modelLoader;
-    public ExceptionalFunction<Identifier, UnbakedModel, IOException> loader;
+    public Loader loader;
 }

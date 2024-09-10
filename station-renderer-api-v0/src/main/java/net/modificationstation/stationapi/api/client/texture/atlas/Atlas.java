@@ -14,7 +14,6 @@ import net.modificationstation.stationapi.api.client.texture.binder.StationTextu
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.ApiStatus;
-import uk.co.benjiweber.expressions.function.ObjIntFunction;
 
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -55,13 +54,18 @@ public abstract class Atlas {
         this.parent = parent;
     }
 
-    protected final <T> T applyInherited(int textureIndex, IntFunction<T> atlasBounds, ObjIntFunction<Atlas, T> parentBounds) {
+    @FunctionalInterface
+    protected interface ParentBoundsGetter<T> {
+        T getBounds(Atlas atlas, int texture);
+    }
+
+    protected final <T> T applyInherited(int textureIndex, IntFunction<T> atlasBounds, ParentBoundsGetter<T> parentBounds) {
         if (parent == null) {
             if (0 <= textureIndex && textureIndex < size)
                 return atlasBounds.apply(textureIndex);
         } else {
             if (textureIndex < parent.size)
-                return parentBounds.apply(parent, textureIndex);
+                return parentBounds.getBounds(parent, textureIndex);
             else if (textureIndex < size)
                 return atlasBounds.apply(textureIndex - parent.size);
         }

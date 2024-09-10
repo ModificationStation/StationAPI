@@ -2,9 +2,6 @@ package net.modificationstation.stationapi.api.client.resource;
 
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Longs;
-import cyclops.control.Option;
-import cyclops.function.Effect;
-import cyclops.function.FluentFunctions;
 import it.unimi.dsi.fastutil.doubles.Double2DoubleFunction;
 import it.unimi.dsi.fastutil.longs.Long2DoubleFunction;
 import lombok.val;
@@ -16,11 +13,11 @@ import net.modificationstation.stationapi.api.resource.ResourceReload;
 import net.modificationstation.stationapi.api.util.math.ColorHelper;
 import net.modificationstation.stationapi.impl.client.resource.ReloadScreenManagerImpl;
 
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletionException;
 import java.util.function.*;
 
-import static cyclops.function.FluentFunctions.expression;
 import static java.util.Map.of;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.util.math.MathHelper.ceil;
@@ -77,7 +74,7 @@ class ReloadScreen extends Screen {
     private long initTimestamp;
     private long currentTime;
     private float progress;
-    private final Effect
+    private final Runnable
             backgroundEmitter,
             stage0Emitter;
     private boolean finished;
@@ -116,14 +113,12 @@ class ReloadScreen extends Screen {
 
         ToDoubleFunction<Object> deltaFunc = key -> deltaMap.get(key).applyAsDouble(currentTime);
 
-        backgroundEmitter = FluentFunctions
-                .<ToDoubleFunction<Object>>expression(this::renderBackground)
-                .partiallyApply(deltaFunc)::get;
+        backgroundEmitter = () -> renderBackground(deltaFunc);
 
-        stage0Emitter =
-                expression(this::renderProgressBar)
-                .before(this::renderLogo)
-                .partiallyApply(deltaFunc)::get;
+        stage0Emitter = () -> {
+            renderLogo(deltaFunc);
+            renderProgressBar(deltaFunc);
+        };
     }
 
     private void renderBackground(ToDoubleFunction<Object> deltaFunc) {
@@ -275,7 +270,7 @@ class ReloadScreen extends Screen {
         val locationsSize = ReloadScreenManager.LOCATIONS.size();
         if (!exceptionThrown && !finished && !(scrollProgress + .1 < locationsSize) && !(progress + .1 < 1) && ReloadScreenManager.isReloadComplete()) {
             try {
-                ReloadScreenManager.getCurrentReload().peek(ResourceReload::throwException);
+                ReloadScreenManager.getCurrentReload().ifPresent(ResourceReload::throwException);
                 finished = true;
                 fadeOutStart = currentTime;
             } catch (CompletionException e) {
@@ -286,8 +281,8 @@ class ReloadScreen extends Screen {
             }
         }
         if (!partial) {
-            Option<ResourceReload> reload;
-            progress = Floats.constrainToRange(progress * .95F + (isReloadStarted() && (reload = ReloadScreenManager.getCurrentReload()).isPresent() ? reload.orElse(null/*safe*/).getProgress() : 0) * .05F, 0, 1);
+            Optional<ResourceReload> reload;
+            progress = Floats.constrainToRange(progress * .95F + (isReloadStarted() && (reload = ReloadScreenManager.getCurrentReload()).isPresent() ? reload.get().getProgress() : 0) * .05F, 0, 1);
             scrollProgress = Floats.constrainToRange(scrollProgress * .95F + locationsSize * .05F, 0, locationsSize);
         }
         if ((finished ? currentTime <= fadeOutStart + GLOBAL_FADE_OUT : currentTime < BACKGROUND_START + BACKGROUND_FADE_IN) && parent != null)

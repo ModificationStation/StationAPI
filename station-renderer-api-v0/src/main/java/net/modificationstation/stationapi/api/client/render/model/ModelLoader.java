@@ -27,11 +27,11 @@ import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.SpriteIdentifier;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.resource.ResourceFinder;
 import net.modificationstation.stationapi.api.state.StateManager;
 import net.modificationstation.stationapi.api.state.property.Property;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.math.AffineTransformation;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
@@ -316,7 +316,7 @@ public class ModelLoader {
                                                 .modelLoader(this)
                                                 .loader(this::loadModelFromJson)
                                                 .build()
-                                ).loader.apply(id)
+                                ).loader.load(id)
                         )
                         .build()
         ).model;

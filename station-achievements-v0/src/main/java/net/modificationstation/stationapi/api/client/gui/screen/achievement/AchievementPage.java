@@ -6,7 +6,6 @@ import it.unimi.dsi.fastutil.ints.IntLists;
 import net.minecraft.achievement.Achievement;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
-import uk.co.benjiweber.expressions.property.Named;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +16,7 @@ import java.util.Random;
  * Instantiates and adds an achievement page to the achievement page list.
  * @author calmilamsy
  */
-public class AchievementPage implements Named<AchievementPage> {
+public class AchievementPage {
     private static final List<AchievementPage> PAGES = new ArrayList<>();
     private static int currentPage = 0;
 
@@ -75,7 +74,6 @@ public class AchievementPage implements Named<AchievementPage> {
         return currentTexture;
     }
 
-    @Override
     public String name() {
         return translationKey;
     }

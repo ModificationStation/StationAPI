@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.mixin.resourceloader.client;
 
-import com.oath.cyclops.util.ExceptionSoftener;
 import lombok.val;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -116,6 +115,12 @@ class MinecraftMixin {
             val command = ReloadScreenApplicationExecutor.INSTANCE.poll();
             if (command != null) command.run();
         }
-        ReloadScreenManager.getThread().peek(ExceptionSoftener.softenConsumer(Thread::join));
+        ReloadScreenManager.getThread().ifPresent(thread -> {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

@@ -1,8 +1,11 @@
-package net.modificationstation.stationapi.api.registry;
+package net.modificationstation.stationapi.api.client.registry;
 
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.registry.Registries;
+import net.modificationstation.stationapi.api.registry.RegistryKey;
+import net.modificationstation.stationapi.api.registry.SimpleRegistry;
 
 import java.util.function.Function;
 
