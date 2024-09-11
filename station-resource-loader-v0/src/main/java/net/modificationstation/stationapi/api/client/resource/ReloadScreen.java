@@ -138,7 +138,7 @@ class ReloadScreen extends Screen {
             STAGE_0_FADE_IN =
             GLOBAL_FADE_OUT =
             RELOAD_START =
-            EXCEPTION_TRANSFORM = 1;
+            EXCEPTION_TRANSFORM = 0;
         }
         else {
             BACKGROUND_START = 0;
