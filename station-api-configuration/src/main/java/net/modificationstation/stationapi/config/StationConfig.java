@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.config;
 
-import net.glasslauncher.mods.gcapi.api.ConfigRoot;
+import net.glasslauncher.mods.gcapi3.api.ConfigRoot;
 
 public class StationConfig {
 
