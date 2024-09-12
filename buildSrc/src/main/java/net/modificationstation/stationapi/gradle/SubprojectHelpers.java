@@ -21,7 +21,7 @@ public class SubprojectHelpers {
         List<Dependency> modules = Arrays.stream(projectNames).map((it) -> project.getDependencies().project(Map.of("path", ":" + it, "configuration", "dev"))).collect(Collectors.toList());
 //        Arrays.stream(projectNames).forEach((it) -> project.getDependencies().project(Map.of("path", ":" + it, "configuration", "dev")));
 
-        modules.forEach(dependency -> project.getDependencies().add("implementationOnly", dependency));
+        modules.forEach(dependency -> project.getDependencies().add("implementation", dependency));
 
         MavenPublication publishing = (MavenPublication) project.getExtensions().getByType(PublishingExtension.class).getPublications().getByName("mavenJava");
         publishing.pom((e) -> e.withXml((f) -> {
