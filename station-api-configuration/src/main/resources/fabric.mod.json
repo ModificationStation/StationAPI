@@ -19,10 +19,10 @@
 
   "environment": "*",
   "entrypoints": {
-    "gcapi": [
+    "gcapi3": [
       "net.modificationstation.stationapi.config.StationConfig"
     ],
-    "gcapi:factory_provider": [
+    "gcapi3:factory_provider": [
       "net.modificationstation.stationapi.config.FactoryProvider"
     ]
   },
