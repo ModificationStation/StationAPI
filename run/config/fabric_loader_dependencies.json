@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "overrides": {
+    "alwaysmoreitems": {
+      "-depends": {
+        "stationapi": "IGNORED"
+      }
+    }
+  }
+}

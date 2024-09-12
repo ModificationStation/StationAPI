@@ -90,17 +90,20 @@ allprojects {
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
         implementation("org.jetbrains:annotations:23.0.0")
 
-        modLocalRuntime("com.github.calmilamsy:ModMenu:${project.properties["modmenu_version"]}") {
+        modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}") {
             isTransitive = false
         }
 
-        implementation("blue.endless:jankson:1.2.1")
-        modLocalRuntime("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") {
+
+        implementation("me.carleslc:Simple-Yaml:1.8.4")
+        modImplementation("net.glasslauncher.mods:glass-networking:1.0.2")
+        modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") {
             isTransitive = false
         }
-        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.properties["hmi_version"]}") {
-            isTransitive = false
-        }
+        // Requires gcapi
+//        modLocalRuntime("net.glasslauncher.mods:AlwaysMoreItems:${project.properties["ami_version"]}") {
+//            isTransitive = false
+//        }
         // Optional bugfix mod for testing qol. Remove the // to enable.
         //modLocalRuntime "maven.modrinth:mojangfix:${project.properties["mojangfix_version"]}"
     }

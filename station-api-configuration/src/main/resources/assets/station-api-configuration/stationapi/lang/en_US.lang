@@ -1,0 +1,10 @@
+# Config Entries
+gui.config.stationapi.main=StationAPI Configuration
+gui.config.stationapi.main.loading_screen_option=Loading Screen Style
+
+
+gui.config.stationapi.loadingscreen.show=Show
+gui.config.stationapi.loadingscreen.no_animate=Don't Animate
+gui.config.stationapi.loadingscreen.no_recolor=Don't Recolor
+gui.config.stationapi.loadingscreen.forge=Forge-Like
+gui.config.stationapi.loadingscreen.hide=Hide (Vanilla)
