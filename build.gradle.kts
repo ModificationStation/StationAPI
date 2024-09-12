@@ -101,9 +101,9 @@ allprojects {
             isTransitive = false
         }
         // Requires gcapi
-        modLocalRuntime("net.glasslauncher.mods:AlwaysMoreItems:${project.properties["ami_version"]}") {
-            isTransitive = false
-        }
+//        modLocalRuntime("net.glasslauncher.mods:AlwaysMoreItems:${project.properties["ami_version"]}") {
+//            isTransitive = false
+//        }
         // Optional bugfix mod for testing qol. Remove the // to enable.
         //modLocalRuntime "maven.modrinth:mojangfix:${project.properties["mojangfix_version"]}"
     }
