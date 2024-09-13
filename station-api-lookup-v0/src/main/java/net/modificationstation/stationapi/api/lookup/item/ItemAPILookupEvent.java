@@ -9,7 +9,7 @@ public class ItemAPILookupEvent extends ApiLookupEvent {
 
     public final ItemStack itemStack;
 
-    public ItemAPILookupEvent(ItemStack itemStack, Class<?> apiClass) {
+    public ItemAPILookupEvent(Class<?> apiClass, ItemStack itemStack) {
         super(apiClass);
         this.itemStack = itemStack;
     }

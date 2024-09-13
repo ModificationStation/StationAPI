@@ -17,8 +17,8 @@ public class SelfLookupImpl {
 
     @EventListener(priority = ListenerPriority.HIGH)
     private static void blockSelfRegister(BlockAPILookupEvent event) {
-        if (event.apiClass.isInstance(event.block)) {
-            event.found(event.block);
+        if (event.apiClass.isInstance(event.blockState.getBlock())) {
+            event.found(event.blockState.getBlock());
         }
     }
 
