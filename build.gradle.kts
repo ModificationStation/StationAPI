@@ -40,9 +40,8 @@ allprojects {
     }
 
     configurations {
-        val implementationOnly = create("implementationOnly") //A non-transitive implementation
-        runtimeClasspath.get().extendsFrom(implementationOnly)
-        compileClasspath.get().extendsFrom(implementationOnly)
+        val transitiveImplementation = create("transitiveImplementation")
+        implementation.get().extendsFrom(transitiveImplementation)
 
         // Required cause loom 0.14 for some reason doesn't remove asm-all 4.1. Ew.
         all {
@@ -56,7 +55,7 @@ allprojects {
         implementation("org.apache.logging.log4j:log4j-slf4j18-impl:2.17.2")
 
         implementation("org.apache.logging.log4j:log4j-core:2.17.2")
-        implementation("com.google.guava:guava:31.1-jre")
+        implementation("com.google.guava:guava:33.2.1-jre")
         implementation("com.google.code.gson:gson:2.9.0")
 
         //to change the versions see the gradle.properties file
@@ -69,17 +68,17 @@ allprojects {
         implementation("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
         annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
 
-        "implementationOnly"("org.apache.commons:commons-lang3:3.12.0")
-        "implementationOnly"("commons-io:commons-io:2.11.0")
-        implementation("net.jodah:typetools:${project.properties["typetools_version"]}")
-        implementation("com.github.mineLdiver:expressions:${project.properties["expressions_version"]}")
-        implementation("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
-        implementation("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
+        "transitiveImplementation"("org.apache.commons:commons-lang3:3.12.0")
+        "transitiveImplementation"("commons-io:commons-io:2.11.0")
+        "transitiveImplementation"("net.jodah:typetools:${project.properties["typetools_version"]}")
+        "transitiveImplementation"("com.github.mineLdiver:expressions:${project.properties["expressions_version"]}")
+        "transitiveImplementation"("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
+        "transitiveImplementation"("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
         //noinspection GradlePackageUpdate
-        implementation("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
-        implementation("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
-        implementation("maven.modrinth:spasm:${project.properties["spasm_version"]}")
-        implementation("com.oath.cyclops:cyclops:${project.properties["cyclops_version"]}")
+        "transitiveImplementation"("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
+        "transitiveImplementation"("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
+        "transitiveImplementation"("maven.modrinth:spasm:${project.properties["spasm_version"]}")
+        "transitiveImplementation"("com.oath.cyclops:cyclops:${project.properties["cyclops_version"]}")
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
@@ -89,7 +88,7 @@ allprojects {
         testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
 
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
-        "implementationOnly"("org.jetbrains:annotations:23.0.0")
+        implementation("org.jetbrains:annotations:23.0.0")
 
         modLocalRuntime("com.github.calmilamsy:ModMenu:${project.properties["modmenu_version"]}") {
             isTransitive = false
@@ -121,7 +120,7 @@ allprojects {
     }
 
     configure<ProcessResources>("processResources") {
-        var ver = version
+        var ver = project.properties["mod_version"]
 
         if (project.properties["override_version"] != null) {
             ver = "${project.properties["mod_version"]}+${project.properties["override_version"]}"
@@ -183,24 +182,14 @@ allprojects {
 
                 pom {
                     withXml {
+                        // Wipes dependency block, cause it's just hopelessly wrong, and also includes floader for some reason
                         val depsNode = asNode().appendNode("dependencies")
                         // Jank solution to an annoying issue
-                        val deps = arrayListOf<Array<String>>()
-                        deps.add(arrayOf("net.jodah", "typetools", "${project.properties["typetools_version"]}"))
-                        deps.add(arrayOf("com.github.mineLdiver", "expressions", "${project.properties["expressions_version"]}"))
-                        deps.add(arrayOf("com.github.mineLdiver", "UnsafeEvents", "${project.properties["unsafeevents_version"]}"))
-                        deps.add(arrayOf("it.unimi.dsi", "fastutil", "${project.properties["fastutil_version"]}"))
-                        deps.add(arrayOf("com.github.ben-manes.caffeine", "caffeine", "${project.properties["caffeine_version"]}"))
-                        deps.add(arrayOf("com.mojang", "datafixerupper", "${project.properties["dfu_version"]}"))
-                        deps.add(arrayOf("org.apache.commons", "commons-lang3", "3.5"))
-                        deps.add(arrayOf("commons-io", "commons-io", "2.5"))
-                        deps.add(arrayOf("maven.modrinth", "spasm", "${project.properties["spasm_version"]}"))
-                        deps.add(arrayOf("com.oath.cyclops", "cyclops", "${project.properties["cyclops_version"]}"))
-                        deps.forEach {
+                        configurations.getByName("transitiveImplementation").dependencies.forEach {
                             val depNode = depsNode.appendNode("dependency")
-                            depNode.appendNode("groupId", it[0])
-                            depNode.appendNode("artifactId", it[1])
-                            depNode.appendNode("version", it[2])
+                            depNode.appendNode("groupId", it.group)
+                            depNode.appendNode("artifactId", it.name)
+                            depNode.appendNode("version", it.version)
                             depNode.appendNode("scope", "compile")
                         }
                     }
@@ -254,7 +243,7 @@ subprojects {
 
     //Attach the subproject to the root project
     rootProject.dependencies {
-        "implementationOnly"(project(path = ":$name", configuration = "dev"))
+        implementation(project(path = ":$name", configuration = "dev"))
         testImplementation(project(path = ":$name", configuration = "test"))
         include(project(path = ":$name", configuration = "out"))
     }
