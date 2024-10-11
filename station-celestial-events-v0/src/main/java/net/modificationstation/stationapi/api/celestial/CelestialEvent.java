@@ -2,6 +2,8 @@ package net.modificationstation.stationapi.api.celestial;
 
 import lombok.Getter;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.Random;
  */
 public class CelestialEvent {
     @Getter
-    private final String name;
+    private final Identifier identifier;
     private final int frequency;
     private float chance = 1;
     private int dayLength = 24000;
@@ -27,29 +29,27 @@ public class CelestialEvent {
     private boolean initializationNeeded = true;
     private final List<CelestialEvent> incompatibleEvents = new LinkedList<>();
     private final List<CelestialEvent> dependencies = new LinkedList<>();
-    public final World world;
 
     /**
      * Primary constructor for the event, containing the required parameters.
      *
      * @param frequency Specifies how many day apart the events should be. The bigger the number, the longer the distance.
-     * @param name Event name, snake_casing is recommended.
-     * @param world World object, obtained from the register event.
+     * @param identifier Event identifier.
      */
-    public CelestialEvent(int frequency, String name, World world) {
+    public CelestialEvent(int frequency, Identifier identifier) {
         this.frequency = frequency;
-        this.name = name;
-        this.world = world;
-        CelestialInitializer.addEvent(this);
+        this.identifier = identifier;
+        Registry.register(CelestialEventRegistry.INSTANCE, identifier,this);
     }
 
     /**
      * Builder method for optional chance value.
      *
+     * @param world The world this event is being called on.
      * @param chance Value ranging from 0.0F to 1.0F, representing percentage chance.
      * @return The object itself.
      */
-    public CelestialEvent setChance(float chance) {
+    public CelestialEvent setChance(World world, float chance) {
         this.chance = chance;
         return this;
     }
@@ -59,10 +59,11 @@ public class CelestialEvent {
      * Intended to be used in dimensions where day time is different.
      * This will however need a custom time manager to account for the different day length.
      *
+     * @param world The world this event is being called on.
      * @param dayLength Length of day specified in ticks.
      * @return The object itself.
      */
-    public CelestialEvent setDayLength(int dayLength) {
+    public CelestialEvent setDayLength(World world, int dayLength) {
         this.dayLength = dayLength;
         return this;
     }
@@ -70,10 +71,11 @@ public class CelestialEvent {
     /**
      * Builder method for optional day offset.
      *
+     * @param world The world this event is being called on.
      * @param dayOffset Offsets the frequency by the specified number of days.
      * @return The object itself.
      */
-    public CelestialEvent setDayOffset(int dayOffset) {
+    public CelestialEvent setDayOffset(World world, int dayOffset) {
         this.dayOffset = dayOffset;
         return this;
     }
@@ -81,10 +83,11 @@ public class CelestialEvent {
     /**
      * Builder method for optional extra days.
      *
+     * @param world The world this event is being called on.
      * @param extraDays Extends the event duration by the specified number of days.
      * @return The object itself.
      */
-    public CelestialEvent setExtraDays(int extraDays) {
+    public CelestialEvent setExtraDays(World world, int extraDays) {
         this.extraDays = extraDays;
         return this;
     }
@@ -95,52 +98,45 @@ public class CelestialEvent {
      * Method gets called by CelestialTimeManager in case the event is added to it.
      * Can be called manually as well.
      *
+     * @param world The world this event is being called on.
      * @param worldTime Current time in the world measured in ticks.
      * @param random Locally used randomizer, seed is irrelevant.
      * @return True if the event met the criteria to be activated, otherwise false.
      */
-    public boolean activateEvent(long worldTime, Random random) {
-        CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
+    public boolean activateEvent(World world, long worldTime, Random random) {
+        CelestialEventActivityState activityState = ((CelestialActivityStateManager) world).getCelestialEvents();
         if (initializationNeeded) {
-            activityState = initializeEvent();
+            activityState = initializeEvent(world);
         }
         if (active) {
-            activityState.active = true;
-            activityState.attemptedActivation = true;
-            activityState.markDirty();
+            activityState.set(identifier, true, true);
             return true;
         }
         for (CelestialEvent otherEvent : incompatibleEvents) {
             if (otherEvent == null) continue;
             if (otherEvent.isActive()) {
-                activityState.active = false;
-                activityState.attemptedActivation = true;
-                activityState.markDirty();
+                activityState.set(identifier, false, true);
                 return false;
             }
         }
         for (CelestialEvent otherEvent : dependencies) {
             if (otherEvent == null) continue;
             if (!otherEvent.isActive()) {
-                activityState.active = false;
-                activityState.attemptedActivation = true;
-                activityState.markDirty();
+                activityState.set(identifier, false, true);
                 return false;
             }
         }
-        long days = (worldTime / dayLength) + dayOffset;
+        long days = (world.getTime() / dayLength) + dayOffset;
         if (days % frequency > extraDays) {
-            activityState.attemptedActivation = false;
+            activityState.setAttemptedActivate(identifier, false);
             return false;
         }
-        if (!activityState.attemptedActivation) {
+        if (!activityState.hasAttemptedActivation(identifier)) {
             active = days % frequency <= extraDays && random.nextFloat() <= chance;
-        }
-        if (active) {
-            activityState.active = true;
-            activityState.attemptedActivation = true;
-            activityState.markDirty();
-            onActivation();
+            if (active) {
+                activityState.set(identifier, true, true);
+                onActivation(world);
+            }
         }
         return active;
     }
@@ -149,16 +145,20 @@ public class CelestialEvent {
      * Called precisely on event activation.
      * Can be customized by inheriting from this class.
      * Has access to the world object for more versatility.
+     *
+     * @param world The world this event is being called on.
      */
-    public void onActivation() {
+    public void onActivation(World world) {
     }
 
     /**
      * Called precisely on event deactivation.
      * Can be customized by inheriting from this class.
      * Has access to the world object for more versatility.
+     *
+     * @param world The world this event is being called on.
      */
-    public void onDeactivation() {
+    public void onDeactivation(World world) {
     }
 
     /**
@@ -166,22 +166,23 @@ public class CelestialEvent {
      * Used by CelestialTimeManager 4 times per day.
      * Checks for validity of the time interval but not for chance and incompatibility.
      *
+     * @param world The world this event is being called on.
      * @param worldTime Current time in the world measured in ticks.
      */
-    public void updateEvent(long worldTime) {
-        CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
+    public void updateEvent(World world, long worldTime) {
+        CelestialEventActivityState activityState = ((CelestialActivityStateManager) world).getCelestialEvents();
         if (initializationNeeded) {
-            activityState = initializeEvent();
+            activityState = initializeEvent(world);
         }
-        if (!active && !activityState.active) return;
+        if (!active && !activityState.isActive(identifier)) return;
         worldTime -= startingDaytime;
         worldTime += endingDaytime;
         long days = (worldTime / dayLength) + dayOffset;
         active = days % frequency <= extraDays;
-        activityState.active = active;
+        activityState.setActive(identifier, active);
         if (!active) {
-            onDeactivation();
-            activityState.attemptedActivation = false;
+            onDeactivation(world);
+            activityState.setAttemptedActivate(identifier, false);
         }
         activityState.markDirty();
     }
@@ -190,34 +191,31 @@ public class CelestialEvent {
      * Initializes the event by synchronizing it with NBT data.
      * Only used internally.
      *
+     * @param world The world this event is being called on.
      * @return The initialized CelestialEventActivityState.
      */
-    private CelestialEventActivityState initializeEvent() {
+    private CelestialEventActivityState initializeEvent(World world) {
         initializationNeeded = false;
-        CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
-        if (activityState == null) {
-            activityState = new CelestialEventActivityState(this.name);
-            this.world.setState(this.name, activityState);
-        } else {
-            active = activityState.active;
-        }
+        CelestialEventActivityState activityState = ((CelestialActivityStateManager) world).getCelestialEvents();
+        active = activityState.isActive(identifier);
         return activityState;
     }
 
     /**
      * Manual way of stopping event.
      * Intended for command systems.
+     *
+     * @param world The world this event is being called on.
      */
-    public void stopEvent() {
-        onDeactivation();
+    public void stopEvent(World world) {
+        onDeactivation(world);
         if (active) {
-            CelestialEventActivityState activityState = (CelestialEventActivityState) this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
+            CelestialEventActivityState activityState = ((CelestialActivityStateManager) world).getCelestialEvents();
             if (initializationNeeded) {
-                activityState = initializeEvent();
+                activityState = initializeEvent(world);
             }
-            activityState.active = false;
-            activityState.markDirty();
-            System.out.println("Stopping event " + name);
+            activityState.setActive(identifier, false);
+            System.out.println("Stopping event " + identifier);
             active = false;
         }
     }
@@ -261,9 +259,8 @@ public class CelestialEvent {
     /**
      * Used by CelestialTimeManager to handle an edge-case where events would not be loaded when reloading the same world.
      */
-    public void markForInitialization() {
-        this.world.getOrCreateState(CelestialEventActivityState.class, this.name);
-        initializeEvent();
+    public void markForInitialization(World world) {
+        initializeEvent(world);
         initializationNeeded = false;
     }
 }

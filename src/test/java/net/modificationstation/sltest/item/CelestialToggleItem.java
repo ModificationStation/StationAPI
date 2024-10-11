@@ -15,17 +15,17 @@ public class CelestialToggleItem extends TemplateItem {
     @Override
     public ItemStack use(ItemStack item, World world, PlayerEntity player) {
         if (CelestialListener.fallingDimando.isActive()) {
-            CelestialListener.fallingDimando.stopEvent();
+            CelestialListener.fallingDimando.stopEvent(world);
             System.out.println("Stopping Falling Dimando");
-        } else if (CelestialListener.fallingDimando.activateEvent(world.getTime(), random)) {
+        } else if (CelestialListener.fallingDimando.activateEvent(world, world.getTime(), random)) {
             System.out.println("Activating Falling Dimando");
         } else {
             System.out.println("Falling Dimando not activated");
         }
         if (CelestialListener.flyingDimando.isActive()) {
-            CelestialListener.flyingDimando.stopEvent();
+            CelestialListener.flyingDimando.stopEvent(world);
             System.out.println("Stopping Flying Dimando");
-        } else if (CelestialListener.flyingDimando.activateEvent(world.getTime(), random)) {
+        } else if (CelestialListener.flyingDimando.activateEvent(world, world.getTime(), random)) {
             System.out.println("Activating Flying Dimando");
         } else {
             System.out.println("Flying Dimando not activated");

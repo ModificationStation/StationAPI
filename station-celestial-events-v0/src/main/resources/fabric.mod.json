@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "station-celestial-events-v0",
+  "version": "${version}",
+
+  "name": "Station Celestial Events (v0)",
+  "description": "Provides some events for time-related events.",
+  "authors": [
+    "Modification Station"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/repo/mod/stationapi",
+    "sources": "https://github.com/ModificationStation/StationAPI",
+    "issues": "https://github.com/ModificationStation/StationAPI/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/station-celestial-events-v0/icon.png",
+
+  "environment": "*",
+  "mixins": [
+    "station-celestial-events-v0.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  },
+
+  "custom": {
+    "modmenu:api": true,
+
+    "loom:injected_interfaces": {
+      "net/minecraft/class_18": ["net/modificationstation/stationapi/api/celestial/CelestialActivityStateManager"],
+      "net/minecraft/class_7": ["net/modificationstation/stationapi/api/celestial/WorldPropertiesWithWorld"]
+    }
+  }
+}

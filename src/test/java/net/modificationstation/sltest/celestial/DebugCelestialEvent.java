@@ -2,21 +2,22 @@ package net.modificationstation.sltest.celestial;
 
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.celestial.CelestialEvent;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public class DebugCelestialEvent extends CelestialEvent {
-    public DebugCelestialEvent(int frequency, String name, World world) {
-        super(frequency, name, world);
+    public DebugCelestialEvent(int frequency, Identifier name) {
+        super(frequency, name);
     }
 
     @Override
-    public void onActivation() {
-        super.onActivation();
-        System.out.println(this.getName() + " has begun");
+    public void onActivation(World world) {
+        super.onActivation(world);
+        System.out.println(this.getIdentifier() + " has begun");
     }
 
     @Override
-    public void onDeactivation() {
-        super.onDeactivation();
-        System.out.println(this.getName() + " is over");
+    public void onDeactivation(World world) {
+        super.onDeactivation(world);
+        System.out.println(this.getIdentifier() + " is over");
     }
 }

@@ -5,8 +5,8 @@ import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependency
 
 plugins {
     id("maven-publish")
-    id("fabric-loom") version "1.7.2"
-    id("babric-loom-extension") version "1.7.3"
+    id("fabric-loom") version "1.8.8"
+    id("babric-loom-extension") version "1.8.5"
 }
 
 // https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
