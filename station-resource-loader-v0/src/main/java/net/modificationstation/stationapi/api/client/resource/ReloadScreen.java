@@ -14,6 +14,8 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.resource.ResourceReload;
 import net.modificationstation.stationapi.api.util.math.ColorHelper;
+import net.modificationstation.stationapi.config.LoadingScreenOption;
+import net.modificationstation.stationapi.config.StationConfig;
 import net.modificationstation.stationapi.impl.client.resource.ReloadScreenManagerImpl;
 
 import java.util.Random;
@@ -27,44 +29,40 @@ import static net.modificationstation.stationapi.api.util.math.MathHelper.ceil;
 import static net.modificationstation.stationapi.api.util.math.MathHelper.lerp;
 import static org.lwjgl.opengl.GL11.*;
 
+@SuppressWarnings("UnstableApiUsage")
 class ReloadScreen extends Screen {
     private static final long
-            MAX_FPS = 60,
-            BACKGROUND_START = 0,
-            BACKGROUND_FADE_IN = 1000,
-            STAGE_0_START = BACKGROUND_START + BACKGROUND_FADE_IN,
-            STAGE_0_FADE_IN = 2000,
-            GLOBAL_FADE_OUT = 1000,
-            RELOAD_START = STAGE_0_START + STAGE_0_FADE_IN,
-            EXCEPTION_TRANSFORM = 500;
-    private static final int
-            BACKGROUND_COLOR_DEFAULT_RED = 0x35,
-            BACKGROUND_COLOR_DEFAULT_GREEN = 0x86,
-            BACKGROUND_COLOR_DEFAULT_BLUE = 0xE7,
-            BACKGROUND_COLOR_EXCEPTION_RED = 0xFF,
-            BACKGROUND_COLOR_EXCEPTION_GREEN = 0x29,
-            BACKGROUND_COLOR_EXCEPTION_BLUE = 0x29;
+            MAX_FPS = 60;
+    private static long BACKGROUND_START = 0;
+    private static long BACKGROUND_FADE_IN = 1000;
+    private static long STAGE_0_START = BACKGROUND_START + BACKGROUND_FADE_IN;
+    private static long STAGE_0_FADE_IN = 2000;
+    private static long GLOBAL_FADE_OUT = 1000;
+    private static long RELOAD_START = STAGE_0_START + STAGE_0_FADE_IN;
+    private static long EXCEPTION_TRANSFORM = 500;
+    private static final int BACKGROUND_COLOR_DEFAULT_RED = 0x35;
+    private static final int BACKGROUND_COLOR_DEFAULT_GREEN = 0x86;
+    private static final int BACKGROUND_COLOR_DEFAULT_BLUE = 0xE7;
+    private static final int BACKGROUND_COLOR_EXCEPTION_RED = 0xFF;
+    private static final int BACKGROUND_COLOR_EXCEPTION_GREEN = 0x29;
+    private static final int BACKGROUND_COLOR_EXCEPTION_BLUE = 0x29;
 
-    private static final Object
-            BACKGROUND_DEFAULT_DELTA_KEY = new Object(),
-            BACKGROUND_EXCEPTION_DELTA_KEY = new Object(),
-            STAGE_0_DEFAULT_DELTA_KEY = new Object(),
-            STAGE_0_EXCEPTION_DELTA_KEY = new Object();
+    private static final Object BACKGROUND_DEFAULT_DELTA_KEY = new Object();
+    private static final Object BACKGROUND_EXCEPTION_DELTA_KEY = new Object();
+    private static final Object STAGE_0_DEFAULT_DELTA_KEY = new Object();
+    private static final Object STAGE_0_EXCEPTION_DELTA_KEY = new Object();
 
-    private static final Double2DoubleFunction
-            SIN_90_DELTA = delta -> MathHelper.sin((float) (delta * Math.PI / 2)),
-            COS_90_DELTA = delta -> MathHelper.cos((float) (delta * Math.PI / 2)),
-            INVERSE_DELTA = delta -> 1 - delta;
-    private static final Long2DoubleFunction
-            BACKGROUND_FADE_IN_DELTA = time -> (double) Longs.constrainToRange(time - BACKGROUND_START, 0, BACKGROUND_FADE_IN) / BACKGROUND_FADE_IN,
-            STAGE_0_FADE_IN_DELTA = time -> (double) Longs.constrainToRange(time - STAGE_0_START, 0, STAGE_0_FADE_IN) / STAGE_0_FADE_IN;
-    private static final Function<LongSupplier, Long2DoubleFunction>
-            GLOBAL_FADE_OUT_DELTA_FACTORY = fadeOutStartGetter -> INVERSE_DELTA.composeLong(time -> (double) Longs.constrainToRange(time - fadeOutStartGetter.getAsLong(), 0, GLOBAL_FADE_OUT) / GLOBAL_FADE_OUT),
-            BACKGROUND_EXCEPTION_FADE_IN_FACTORY = fadeInStartGetter -> time -> (double) Longs.constrainToRange(time - fadeInStartGetter.getAsLong(), 0, EXCEPTION_TRANSFORM) / EXCEPTION_TRANSFORM,
-            STAGE_0_EXCEPTION_TRANSFORM_FACTORY = transformStartGetter -> time -> (double) Longs.constrainToRange(time - transformStartGetter.getAsLong(), 0, EXCEPTION_TRANSFORM) / EXCEPTION_TRANSFORM;
+    private static final Double2DoubleFunction SIN_90_DELTA = delta -> MathHelper.sin((float) (delta * Math.PI / 2));
+    private static final Double2DoubleFunction COS_90_DELTA = delta -> MathHelper.cos((float) (delta * Math.PI / 2));
+    private static final Double2DoubleFunction INVERSE_DELTA = delta -> 1 - delta;
+    private static final Long2DoubleFunction BACKGROUND_FADE_IN_DELTA = time -> (double) Longs.constrainToRange(time - BACKGROUND_START, 0, BACKGROUND_FADE_IN) / BACKGROUND_FADE_IN;
+    private static final Long2DoubleFunction STAGE_0_FADE_IN_DELTA = time -> (double) Longs.constrainToRange(time - STAGE_0_START, 0, STAGE_0_FADE_IN) / STAGE_0_FADE_IN;
+    private static final Function<LongSupplier, Long2DoubleFunction> GLOBAL_FADE_OUT_DELTA_FACTORY = fadeOutStartGetter -> INVERSE_DELTA.composeLong(time -> (double) Longs.constrainToRange(time - fadeOutStartGetter.getAsLong(), 0, GLOBAL_FADE_OUT) / GLOBAL_FADE_OUT);
+    private static final Function<LongSupplier, Long2DoubleFunction> BACKGROUND_EXCEPTION_FADE_IN_FACTORY = fadeInStartGetter -> time -> (double) Longs.constrainToRange(time - fadeInStartGetter.getAsLong(), 0, EXCEPTION_TRANSFORM) / EXCEPTION_TRANSFORM;
+    private static final Function<LongSupplier, Long2DoubleFunction> STAGE_0_EXCEPTION_TRANSFORM_FACTORY = transformStartGetter -> time -> (double) Longs.constrainToRange(time - transformStartGetter.getAsLong(), 0, EXCEPTION_TRANSFORM) / EXCEPTION_TRANSFORM;
 
-    private static final String
-            LOGO_TEMPLATE = "/assets/station-resource-loader-v0/textures/gui/stationapi_reload%s.png";
+    private static final String LOGO_TEMPLATE = "/assets/station-resource-loader-v0/textures/gui/stationapi_reload%s.png";
+    private static final String LOGO_MOJANG = "/title/mojang.png";
 
     private static UnaryOperator<Long2DoubleFunction> when(BooleanSupplier condition, Long2DoubleFunction ifTrue) {
         return ifFalse -> value -> (condition.getAsBoolean() ? ifTrue : ifFalse).applyAsDouble(value);
@@ -77,9 +75,8 @@ class ReloadScreen extends Screen {
     private long initTimestamp;
     private long currentTime;
     private float progress;
-    private final Effect
-            backgroundEmitter,
-            stage0Emitter;
+    private final Effect backgroundEmitter;
+    private final Effect stage0Emitter;
     private boolean finished;
     private long fadeOutStart;
     private float scrollProgress;
@@ -87,6 +84,7 @@ class ReloadScreen extends Screen {
     private boolean exceptionThrown;
     private long exceptionStart;
     private Exception exception;
+    private final String stapiLogo;
 
     ReloadScreen(
             Screen parent,
@@ -98,13 +96,38 @@ class ReloadScreen extends Screen {
         this.done = done;
         this.tessellator = tessellator;
 
-        logo = LOGO_TEMPLATE.formatted(
+        stapiLogo = LOGO_TEMPLATE.formatted(
                 switch (new Random().nextInt(100)) {
                     case 0 -> "_dimando";
                     case 1 -> "_old";
                     default -> "";
                 }
         );
+
+        logo = stapiLogo;
+
+        if(
+                StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.NO_ANIMATE) ||
+                StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.HIDE) ||
+                StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.FORGE)
+        ) {
+            BACKGROUND_START =
+            BACKGROUND_FADE_IN =
+            STAGE_0_START =
+            STAGE_0_FADE_IN =
+            GLOBAL_FADE_OUT =
+            RELOAD_START =
+            EXCEPTION_TRANSFORM = 1;
+        }
+        else {
+            BACKGROUND_START = 0;
+            BACKGROUND_FADE_IN = 1000;
+            STAGE_0_START = BACKGROUND_START + BACKGROUND_FADE_IN;
+            STAGE_0_FADE_IN = 2000;
+            GLOBAL_FADE_OUT = 1000;
+            RELOAD_START = STAGE_0_START + STAGE_0_FADE_IN;
+            EXCEPTION_TRANSFORM = 500;
+        }
 
         val globalFadeOutComposer = when(() -> finished, GLOBAL_FADE_OUT_DELTA_FACTORY.apply(() -> fadeOutStart));
         val deltaMap = of(
@@ -128,44 +151,66 @@ class ReloadScreen extends Screen {
 
     private void renderBackground(ToDoubleFunction<Object> deltaFunc) {
         val delta = deltaFunc.applyAsDouble(BACKGROUND_DEFAULT_DELTA_KEY);
+        int red = BACKGROUND_COLOR_DEFAULT_RED;
+        int green = BACKGROUND_COLOR_DEFAULT_GREEN;
+        int blue = BACKGROUND_COLOR_DEFAULT_BLUE;
+        if (
+                StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.HIDE) ||
+                StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.FORGE) ||
+                StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.NO_RECOLOR)
+        ) {
+            red = green = blue = 0xFF;
+        }
         final int color;
         if (exceptionThrown) {
             val exceptionDelta = deltaFunc.applyAsDouble(BACKGROUND_EXCEPTION_DELTA_KEY);
             color = ColorHelper.Argb.getArgb(
                     0xFF,
-                    lerp(exceptionDelta, BACKGROUND_COLOR_DEFAULT_RED, BACKGROUND_COLOR_EXCEPTION_RED),
-                    lerp(exceptionDelta, BACKGROUND_COLOR_DEFAULT_GREEN, BACKGROUND_COLOR_EXCEPTION_GREEN),
-                    lerp(exceptionDelta, BACKGROUND_COLOR_DEFAULT_BLUE, BACKGROUND_COLOR_EXCEPTION_BLUE)
+                    lerp(exceptionDelta, red, BACKGROUND_COLOR_EXCEPTION_RED),
+                    lerp(exceptionDelta, green, BACKGROUND_COLOR_EXCEPTION_GREEN),
+                    lerp(exceptionDelta, blue, BACKGROUND_COLOR_EXCEPTION_BLUE)
             );
         } else color = parent == null ?
                 finished ?
                         ColorHelper.Argb.getArgb(
                                 0xFF,
-                                lerp(delta, 0xFF, BACKGROUND_COLOR_DEFAULT_RED),
-                                lerp(delta, 0xFF, BACKGROUND_COLOR_DEFAULT_GREEN),
-                                lerp(delta, 0xFF, BACKGROUND_COLOR_DEFAULT_BLUE)
+                                lerp(delta, 0xFF, red),
+                                lerp(delta, 0xFF, green),
+                                lerp(delta, 0xFF, blue)
                         ) :
                         ColorHelper.Argb.getArgb(
                                 0xFF,
-                                (int) (delta * BACKGROUND_COLOR_DEFAULT_RED),
-                                (int) (delta * BACKGROUND_COLOR_DEFAULT_GREEN),
-                                (int) (delta * BACKGROUND_COLOR_DEFAULT_BLUE)
+                                (int) (delta * red),
+                                (int) (delta * green),
+                                (int) (delta * blue)
                         ) :
                 ColorHelper.Argb.getArgb(
                         (int) (delta * 0xFF),
-                        BACKGROUND_COLOR_DEFAULT_RED,
-                        BACKGROUND_COLOR_DEFAULT_GREEN,
-                        BACKGROUND_COLOR_DEFAULT_BLUE
+                        red,
+                        green,
+                        blue
                 );
         fill(0, 0, width, height, color);
     }
 
     private void renderProgressBar(ToDoubleFunction<Object> deltaFunc) {
+        if (StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.HIDE)) return;
+        if (StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.FORGE)) {
+            if(ReloadScreenManager.LOCATIONS.isEmpty()) return;
+            String text = ReloadScreenManager.LOCATIONS.get(ReloadScreenManager.LOCATIONS.size() - 1);
+            fill(3, height, textRenderer.getWidth(text) + 7, height - 12, -1073741824);
+            glEnable(GL_BLEND);
+            drawTextWithShadow(textRenderer, text, 5, height - 10, 0xFFFFFF);
+            glDisable(GL_BLEND);
+            return;
+        }
         val delta = deltaFunc.applyAsDouble(STAGE_0_DEFAULT_DELTA_KEY);
         if (delta == 0) return;
         val color = (int) (delta * 0xFF) << 24 | 0xFFFFFF;
         val v = (float) (10 - delta * 10);
         val ev = exceptionThrown ? (float) (10 - deltaFunc.applyAsDouble(STAGE_0_EXCEPTION_DELTA_KEY) * 10) * 3 - 1 : 0;
+        if (StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.NO_RECOLOR))
+            fill(38, height - 37 + (int) v, width - 38, (int) (height - 105 + v * 5), ColorHelper.Argb.getArgb(lerp(delta, 0, 192), 0, 0, 0));
         drawHorizontalLine(40, width - 40 - 1, (int) (height - 90 + v * 5), color);
         if (exceptionThrown) drawHorizontalLine(40, width - 40 - 1, (int) (height - 90 + v * 5 + ev), color);
         drawHorizontalLine(40, width - 40 - 1, (int) (height - 50 + v), color);
@@ -239,18 +284,79 @@ class ReloadScreen extends Screen {
     }
 
     private void renderLogo(ToDoubleFunction<Object> deltaFunc) {
+        if (
+                StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.SHOW) ||
+                StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.NO_ANIMATE) ||
+                StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.NO_RECOLOR)
+        ) {
+            int color = 0x000000;
+            if (StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.NO_RECOLOR)) {
+                color = 0xDD4F3B; // mojang colour
+            }
+            renderStapiLogo(deltaFunc, width - 50, height - 14, 48, 8, color);
+            renderStapiLogo(deltaFunc, (width / 2f), (height / 2f), 120, 20, color);
+        }
+
+        if (
+                StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.HIDE) ||
+                StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.FORGE)
+        ) {
+            renderMojangLogo(deltaFunc, width / 2f, height / 2f, width, height, 0, 0); // Draws the top left pixel of the logo, which is white, normally.
+            renderMojangLogo(deltaFunc, (width / 2f) - 1, (height / 2f) + 1, 128, 128, 1, 1);
+        }
+
+        if (StationConfig.stationConfigData.loadingScreenOption.equals(LoadingScreenOption.FORGE)) {
+            // Stapi logo is 6:1 aspect
+            int color;
+            if (exceptionThrown) {
+                val exceptionDelta = deltaFunc.applyAsDouble(BACKGROUND_EXCEPTION_DELTA_KEY);
+                color = ColorHelper.Argb.getArgb(
+                        0xFF,
+                        lerp(exceptionDelta, BACKGROUND_COLOR_DEFAULT_RED, BACKGROUND_COLOR_EXCEPTION_RED),
+                        lerp(exceptionDelta, BACKGROUND_COLOR_DEFAULT_GREEN, BACKGROUND_COLOR_EXCEPTION_GREEN),
+                        lerp(exceptionDelta, BACKGROUND_COLOR_DEFAULT_BLUE, BACKGROUND_COLOR_EXCEPTION_BLUE)
+                );
+            }
+            else {
+                color = ColorHelper.Argb.getArgb(0xFF, BACKGROUND_COLOR_DEFAULT_RED, BACKGROUND_COLOR_DEFAULT_GREEN, BACKGROUND_COLOR_DEFAULT_BLUE);
+            }
+            renderStapiLogo(deltaFunc, width - 50, height - 14, 48, 8, color);
+        }
+    }
+
+    private void renderMojangLogo(ToDoubleFunction<Object> deltaFunc, float x, float y, float w, float h, float u, float v) {
+        val delta = deltaFunc.applyAsDouble(STAGE_0_DEFAULT_DELTA_KEY);
+        if (delta == 0) return;
+        minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId(LOGO_MOJANG));
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        tessellator.startQuads();
+        tessellator.color(0xFF, 0xFF, 0xFF, 0xFF);
+        tessellator.vertex(x - w, y - h - v, 0, 0, 0);
+        tessellator.vertex(x - w, y + h - v, 0, 0, v);
+        tessellator.vertex(x + w, y + h - v, 0, u, v);
+        tessellator.vertex(x + w, y - h - v, 0, u, 0);
+        tessellator.draw();
+        glDisable(GL_BLEND);
+    }
+
+    private void renderStapiLogo(ToDoubleFunction<Object> deltaFunc, float x, float y, float w, float h, int color) {
         val delta = deltaFunc.applyAsDouble(STAGE_0_DEFAULT_DELTA_KEY);
         if (delta == 0) return;
         val v = 10 - delta * 10;
+        val a = (float)(color >> 24 & 0xFF) / 255.0f;
+        val r = (float)(color >> 16 & 0xFF) / 255.0f;
+        val g = (float)(color >> 8 & 0xFF) / 255.0f;
+        val b = (float)(color & 0xFF) / 255.0f;
         minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId(logo));
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         tessellator.startQuads();
-        tessellator.color(0xFF, 0xFF, 0xFF, (int) (0xFF * delta));
-        tessellator.vertex(width / 2D - 120, (height - 90D) / 2 - 20 - v, 0, 0, 0);
-        tessellator.vertex(width / 2D - 120, (height - 90D) / 2 + 20 - v, 0, 0, 1);
-        tessellator.vertex(width / 2D + 120, (height - 90D) / 2 + 20 - v, 0, 1, 1);
-        tessellator.vertex(width / 2D + 120, (height - 90D) / 2 - 20 - v, 0, 1, 0);
+        tessellator.color(r, g, b, (int) (a * delta));
+        tessellator.vertex(x - w, y - h - v, 0, 0, 0);
+        tessellator.vertex(x - w, y + h - v, 0, 0, 1);
+        tessellator.vertex(x + w, y + h - v, 0, 1, 1);
+        tessellator.vertex(x + w, y - h - v, 0, 1, 0);
         tessellator.draw();
         glDisable(GL_BLEND);
     }
