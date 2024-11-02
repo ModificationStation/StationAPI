@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.network;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.network.packet.PacketRegisterEvent;
@@ -23,11 +25,6 @@ import java.util.Objects;
 abstract class PacketMixin {
     @Shadow
     static void register(int rawId, boolean clientBound, boolean serverBound, Class<? extends Packet> type) {}
-
-    @Shadow
-    public static Packet create(int i) {
-        return Null.get();
-    }
 
     @Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/Packet;register(IZZLjava/lang/Class;)V", ordinal = 56, shift = At.Shift.AFTER))
     private static void stationapi_afterVanillaPackets(CallbackInfo ci) {
@@ -56,22 +53,22 @@ abstract class PacketMixin {
             out.writeInt(PacketTypeRegistry.INSTANCE.getRawId(managedPacket.getType()));
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "read(Ljava/io/DataInputStream;Z)Lnet/minecraft/network/packet/Packet;",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/network/packet/Packet;create(I)Lnet/minecraft/network/packet/Packet;"
             )
     )
-    private static Packet stationapi_ifIdentifiable(int id, DataInputStream in, boolean server) throws IOException {
-        if (id == ManagedPacket.PACKET_ID) {
-            var packetType = Objects.requireNonNull(PacketTypeRegistry.INSTANCE.get(in.readInt()), "Received nonexistent managed packet!");
+    private static Packet stationapi_ifIdentifiable(int rawId, Operation<Packet> original, DataInputStream stream, boolean bl) throws IOException {
+        if (rawId == ManagedPacket.PACKET_ID) {
+            var packetType = Objects.requireNonNull(PacketTypeRegistry.INSTANCE.get(stream.readInt()), "Received nonexistent managed packet!");
             if (
-                    server && !packetType.serverBound ||
-                            !server && !packetType.clientBound
+                    bl && !packetType.serverBound ||
+                            !bl && !packetType.clientBound
             ) throw new IOException("Bad packet id " + packetType.registryEntry.registryKey().getValue());
             return packetType.factory.create();
         }
-        return create(id);
+        return original.call(rawId);
     }
 }

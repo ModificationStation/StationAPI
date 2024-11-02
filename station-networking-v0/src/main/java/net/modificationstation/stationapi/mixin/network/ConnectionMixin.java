@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.network;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.network.Connection;
 import net.minecraft.network.NetworkHandler;
@@ -21,23 +23,23 @@ class ConnectionMixin {
     @Unique
     private static final AtomicBoolean STATIONAPI$BLOCKNG_PACKET = new AtomicBoolean();
 
-    @Redirect(
+    @WrapOperation(
             method = "method_1129",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/network/packet/Packet;apply(Lnet/minecraft/network/NetworkHandler;)V"
             )
     )
-    private void stationapi_ifIdentifiable(Packet instance, NetworkHandler packetHandler) {
+    private void stationapi_ifIdentifiable(Packet instance, NetworkHandler networkHandler, Operation<Void> original) {
         if (instance instanceof ManagedPacket<?> managedPacket) {
-            instance.apply(managedPacket.getType().getHandler().orElse(packetHandler));
+            instance.apply(managedPacket.getType().getHandler().orElse(networkHandler));
             if (managedPacket.getType().blocking) {
                 synchronized (STATIONAPI$PACKET_READ_LOCK) {
                     STATIONAPI$BLOCKNG_PACKET.set(false);
                     STATIONAPI$PACKET_READ_LOCK.notifyAll();
                 }
             }
-        } else instance.apply(packetHandler);
+        } else original.call(instance, networkHandler);
     }
 
     @Inject(
