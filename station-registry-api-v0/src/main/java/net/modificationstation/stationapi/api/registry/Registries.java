@@ -52,7 +52,6 @@ public class Registries {
 
     public static void bootstrap() {
         Registries.init();
-        Registries.freezeRegistries();
         Registries.validate(REGISTRIES);
     }
 
@@ -60,11 +59,6 @@ public class Registries {
         DEFAULT_ENTRIES.forEach((id, initializer) -> {
             if (initializer.get() == null) LOGGER.error("Unable to bootstrap registry '{}'", id);
         });
-    }
-
-    private static void freezeRegistries() {
-        REGISTRIES.freeze();
-        for (Registry<?> registry : REGISTRIES) registry.freeze();
     }
 
     private static <T extends Registry<?>> void validate(Registry<T> registries) {

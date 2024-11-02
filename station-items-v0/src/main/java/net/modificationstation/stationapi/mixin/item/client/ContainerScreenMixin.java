@@ -36,7 +36,6 @@ class ContainerScreenMixin extends Screen {
                         .container((HandledScreen) (Object) this)
                         .textManager(this.textRenderer)
                         .inventory(inventory)
-                        .containerX(containerX).containerY(containerY)
                         .mouseX(mouseX).mouseY(mouseY)
                         .delta(delta)
                         .originalTooltip(originalTooltip)
