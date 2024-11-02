@@ -47,7 +47,7 @@ public final class PacketHelper {
      * Registers the given packet.
      *
      * <p>For registering packets that use {@link Identifier} instead of a byte ID,
-     * refer to {@link IdentifiablePacket#register(Identifier, boolean, boolean, IdentifiablePacket.Factory)}
+     * refer to {@link ManagedPacket#register(Identifier, boolean, boolean, ManagedPacket.Factory)}
      *
      * @param rawId the packet ID that you want to use for the packet.
      *                 The ID is written as a byte, meaning it can be any number in the 0-255 (inclusive) range,

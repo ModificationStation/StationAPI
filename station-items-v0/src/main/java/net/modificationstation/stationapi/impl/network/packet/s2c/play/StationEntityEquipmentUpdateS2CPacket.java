@@ -5,24 +5,21 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.impl.network.StationItemsNetworkHandler;
-import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
-
-public class StationEntityEquipmentUpdateS2CPacket extends EntityEquipmentUpdateS2CPacket implements IdentifiablePacket {
-    public static final Identifier PACKET_ID = NAMESPACE.id("items/equipment");
+public class StationEntityEquipmentUpdateS2CPacket extends EntityEquipmentUpdateS2CPacket implements ManagedPacket<StationEntityEquipmentUpdateS2CPacket> {
+    public static final PacketType<StationEntityEquipmentUpdateS2CPacket> TYPE = PacketType.builder(true, false, StationEntityEquipmentUpdateS2CPacket::new).build();
 
     public NbtCompound stationNbt;
 
-    @ApiStatus.Internal
-    public StationEntityEquipmentUpdateS2CPacket() {}
+    private StationEntityEquipmentUpdateS2CPacket() {}
 
     public StationEntityEquipmentUpdateS2CPacket(int id, int slot, ItemStack itemStack) {
         super(id, slot, itemStack);
@@ -59,7 +56,7 @@ public class StationEntityEquipmentUpdateS2CPacket extends EntityEquipmentUpdate
     }
 
     @Override
-    public Identifier getId() {
-        return PACKET_ID;
+    public @NotNull PacketType<StationEntityEquipmentUpdateS2CPacket> getType() {
+        return TYPE;
     }
 }
