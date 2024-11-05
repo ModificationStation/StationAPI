@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.impl.item;
 
-import com.google.common.graph.GraphBuilder;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -9,7 +8,7 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.IsItemSuitableForStateEvent;
 import net.modificationstation.stationapi.api.event.item.ItemMiningSpeedMultiplierOnStateEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
-import net.modificationstation.stationapi.api.item.tool.MiningLevelManager;
+import net.modificationstation.stationapi.api.item.tool.StationTool;
 import net.modificationstation.stationapi.api.item.tool.ToolLevel;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -61,6 +60,11 @@ public class ToolEffectivenessImplV1 {
         if (VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getId(event.itemStack.getItem()))
                 && Objects.requireNonNull(BlockRegistry.INSTANCE.getId(event.state.getBlock())).namespace == Namespace.MINECRAFT) return;
 
+        // Disable custom tool logic if the tool doesn't provide its tool type tag
+        // This is done to allow tools to handle suitability and speed the vanilla way
+        if (event.itemStack.getItem() instanceof StationTool stationTool
+                && stationTool.getEffectiveBlocks(event.itemStack) == null) return;
+
         event.suitable = isSuitable(event.itemStack, event.state);
     }
 
@@ -71,15 +75,19 @@ public class ToolEffectivenessImplV1 {
         if (VANILLA_TOOLS.contains(ItemRegistry.INSTANCE.getId(event.itemStack.getItem()))
                 && Objects.requireNonNull(BlockRegistry.INSTANCE.getId(event.state.getBlock())).namespace == Namespace.MINECRAFT) return;
 
+        // Disable custom tool logic if the tool doesn't provide its tool type tag
+        // This is done to allow tools to handle suitability and speed the vanilla way
+        if (event.itemStack.getItem() instanceof StationTool stationTool
+                && stationTool.getEffectiveBlocks(event.itemStack) == null) return;
+
         if (!isSuitable(event.itemStack, event.state)) return;
 
-        GraphBuilder.directed().allowsSelfLoops(true).build();
-        event.miningSpeedMultiplier = ((ToolLevel) event.itemStack.getItem()).getMaterial(event.itemStack).getMiningSpeedMultiplier();
+        event.miningSpeedMultiplier = ((StationTool) event.itemStack.getItem()).getMaterial(event.itemStack).getMiningSpeedMultiplier();
     }
 
     private static boolean isSuitable(ItemStack item, BlockState state) {
-        return item.getItem() instanceof ToolLevel toolLevel
-                && state.isIn(toolLevel.getEffectiveBlocks(item))
-                && MiningLevelManager.isSuitable(toolLevel.getMaterial(item).getMiningLevelNode(), state);
+        return item.getItem() instanceof StationTool stationTool
+                && state.isIn(stationTool.getEffectiveBlocks(item))
+                && ToolLevel.isSuitable(stationTool.getMaterial(item).getToolLevel(), state);
     }
 }
