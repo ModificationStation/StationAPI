@@ -10,6 +10,7 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class ToolLevel {
     /**
@@ -50,12 +51,6 @@ public abstract class ToolLevel {
     public static final Set<ToolLevel> ALL_LEVELS = Collections.unmodifiableSet(ALL_LEVELS_MUTABLE);
     public static final MutableGraph<ToolLevel> GRAPH = GraphBuilder.directed().build();
 
-    protected final Reference2BooleanMap<BlockState> cache = new Reference2BooleanOpenHashMap<>();
-
-    protected ToolLevel() {
-        ALL_LEVELS_MUTABLE.add(this);
-    }
-
     public static boolean isSuitable(ToolLevel toolLevel, BlockState state) {
         if (toolLevel == null) {
             // Tool provides no level - can only mine blocks that don't require a level
@@ -65,10 +60,20 @@ public abstract class ToolLevel {
         return toolLevel.cache.computeIfAbsent(state, key -> {
             var failed = new ArrayList<Set<ToolLevel>>();
             var context = new TestContext(state, Optional.of(Collections.unmodifiableList(failed)));
-            var toolLevels = Set.of(toolLevel);
+            var toolLevels = new HashSet<ToolLevel>();
+            toolLevels.add(toolLevel);
 
             // Breadth-first search for a suitable level in the hierarchy
             while (!toolLevels.isEmpty()) {
+                // Add immediate siblings of levels that allow them
+                toolLevels.addAll(toolLevels.stream()
+                        .filter(level -> level.equivalentToImmediateSiblings)
+                        .flatMap(level -> Stream.concat(
+                                GRAPH.predecessors(level).stream().map(GRAPH::successors).flatMap(Set::stream),
+                                GRAPH.successors(level).stream().map(GRAPH::predecessors).flatMap(Set::stream)
+                        )).collect(Collectors.toSet())
+                );
+
                 var failedBuilder = ImmutableSet.<ToolLevel>builder();
                 var nextSet = new HashSet<ToolLevel>();
                 for (var level : toolLevels) {
@@ -87,6 +92,18 @@ public abstract class ToolLevel {
             var failedFlat = failed.stream().flatMap(Set::stream).collect(Collectors.toSet());
             return ALL_LEVELS.stream().filter(Predicate.not(failedFlat::contains)).noneMatch(level -> level.isSuitable(noFailedContext));
         });
+    }
+
+    protected final Reference2BooleanMap<BlockState> cache = new Reference2BooleanOpenHashMap<>();
+    protected boolean equivalentToImmediateSiblings;
+
+    protected ToolLevel() {
+        ALL_LEVELS_MUTABLE.add(this);
+    }
+
+    public ToolLevel equivalentToImmediateSiblings() {
+        equivalentToImmediateSiblings = true;
+        return this;
     }
 
     /**
