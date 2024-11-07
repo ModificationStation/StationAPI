@@ -9,6 +9,31 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import java.util.*;
 
 public abstract class ToolLevel {
+    /**
+     * @param blockState the block state the tool level is being tested against.
+     * @param failed a set of successor tool levels (as defined in {@link #GRAPH}) already tested in a run of
+     *               {@link #isSuitable(ToolLevel, BlockState)} that ended up being not suitable.
+     *               <p>Can be used for complex context-aware suitability testing - e.g. limiting suitability
+     *               to a fixed set of levels in the graph instead of making all succeeding levels also suitable.</p>
+     *               <p>Special cases:</p>
+     *               <ol>
+     *               <li>
+     *               Optional is empty - this means that the level is being tested in an unordered manner,
+     *               thus keeping track of failed levels would yield no useful context. For example, this is done
+     *               in {@link #isSuitable(ToolLevel, BlockState)} when the initial level's hierarchy was exhausted,
+     *               but no match was found. In this case we need to iterate through {@link #ALL_LEVELS}
+     *               in order to determine if the tested block state requires any level at all,
+     *               thus if a tool level performs a test involving the absent set,
+     *               it must assume the set matches the conditions, as to not hide a case where the level
+     *               can actually be suitable.
+     *               </li>
+     *               <li>
+     *               Set is empty - this means that this tool level is the first one to be tested,
+     *               thus it's also the one that the tool item was assigned to.
+     *               Shouldn't normally require any special handling.
+     *               </li>
+     *               </ol>
+     */
     protected record TestContext(
             BlockState blockState,
             Optional<Set<ToolLevel>> failed
@@ -54,5 +79,12 @@ public abstract class ToolLevel {
         });
     }
 
+    /**
+     * @param context the record containing available parameters for testing this tool level's suitability.
+     * @return whether this and only this tool level is suitable in the given context.
+     * Unless you know what you're doing, preceding tool levels must NOT be taken into account,
+     * as they will be tested directly, with their own implementation and better context,
+     * if this specific level isn't suitable.
+     */
     protected abstract boolean isSuitable(TestContext context);
 }
