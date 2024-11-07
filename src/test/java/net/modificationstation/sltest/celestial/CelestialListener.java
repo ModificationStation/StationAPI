@@ -1,26 +1,23 @@
 package net.modificationstation.sltest.celestial;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.modificationstation.sltest.MainTest;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.celestial.CelestialActivityStateManager;
-import net.modificationstation.stationapi.api.celestial.CelestialEvent;
-import net.modificationstation.stationapi.api.celestial.CelestialTimeManager;
 import net.modificationstation.stationapi.api.celestial.DayQuarter;
-import net.modificationstation.stationapi.api.event.celestial.CelestialRegisterEvent;
+import net.modificationstation.stationapi.api.event.celestial.CelestialEvent;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class CelestialListener {
 
-    public static CelestialEvent flyingDimando;
-    public static CelestialEvent fallingDimando;
-    public static CelestialEvent crashingDimando;
-    public static CelestialEvent spinningDimando;
-    public static CelestialEvent burningDimando;
-    public static CelestialEvent longDimando;
+    public static net.modificationstation.stationapi.api.celestial.CelestialEvent flyingDimando;
+    public static net.modificationstation.stationapi.api.celestial.CelestialEvent fallingDimando;
+    public static net.modificationstation.stationapi.api.celestial.CelestialEvent crashingDimando;
+    public static net.modificationstation.stationapi.api.celestial.CelestialEvent spinningDimando;
+    public static net.modificationstation.stationapi.api.celestial.CelestialEvent burningDimando;
+    public static net.modificationstation.stationapi.api.celestial.CelestialEvent longDimando;
 
     @EventListener
-    public void registerCelestialEvents(CelestialRegisterEvent event) {
+    public void registerCelestialEvents(CelestialEvent event) {
         SLTest.LOGGER.info("Register celestial events for testing");
         flyingDimando = new FlyingDimando(4, Identifier.of(SLTest.NAMESPACE, "flying_dimando"));
         fallingDimando = new DebugCelestialEvent(2, Identifier.of(SLTest.NAMESPACE, "falling_dimando"));

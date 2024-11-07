@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.world;
+package net.modificationstation.stationapi.mixin.celestial;
 
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;

@@ -1,16 +1,9 @@
-package net.modificationstation.stationapi.mixin.world;
+package net.modificationstation.stationapi.mixin.celestial;
 
 import net.minecraft.world.PersistentState;
-import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
-import net.modificationstation.stationapi.api.celestial.CelestialActivityStateManager;
-import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.celestial.CelestialEventActivityState;
-import net.modificationstation.stationapi.api.celestial.CelestialEventRegistry;
-import net.modificationstation.stationapi.api.celestial.CelestialTimeManager;
-import net.modificationstation.stationapi.api.celestial.WorldPropertiesWithWorld;
-import net.modificationstation.stationapi.api.event.celestial.CelestialRegisterEvent;
+import net.modificationstation.stationapi.api.celestial.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -47,7 +40,6 @@ class WorldMixin implements CelestialActivityStateManager {
         }
         celestialTimeManager = new CelestialTimeManager((World) (Object) this);
         setState(CelestialEventActivityState.ID, celestialEventActivityState);
-        StationAPI.EVENT_BUS.post(CelestialRegisterEvent.builder().world(World.class.cast(this)).build());
         CelestialEventRegistry.INSTANCE.initializeEvents((World) (Object) this);
     }
 

@@ -1,15 +1,13 @@
 package net.modificationstation.stationapi.api.celestial;
 
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMaps;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.world.PersistentState;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.mixin.world.NbtCompoundAccessor;
+import net.modificationstation.stationapi.mixin.celestial.NbtCompoundAccessor;
 
-import java.util.*;
+import java.util.HashMap;
 
 /**
  * Manages important NBT data to ensure correct saving and loading of active celestial events.
