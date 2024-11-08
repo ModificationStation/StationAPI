@@ -83,6 +83,13 @@ public abstract class ToolLevel {
                 }
                 failed.add(failedBuilder.build());
                 toolLevels = nextSet;
+
+                // Check for loops
+                var reoccurred = failed.stream().flatMap(Set::stream).filter(toolLevels::contains).collect(Collectors.toSet());
+                if (!reoccurred.isEmpty()) throw new IllegalStateException(
+                        "Infinite loop detected in tool levels graph. Tested level - %s, search depth - %d, reoccurred levels - %s"
+                                .formatted(toolLevel, failed.size(), reoccurred)
+                );
             }
 
             // Hierarchy exhausted, but no exit,

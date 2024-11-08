@@ -27,6 +27,7 @@ public class ItemListener {
         ToolLevel siblingNode = new TagToolLevel(TagKey.of(BlockRegistry.KEY, NAMESPACE.id("needs_tool_level_sibling"))).equivalentToImmediateSiblings();
         ToolLevel.GRAPH.putEdge(ToolMaterial.STONE.getToolLevel(), siblingNode);
         ToolLevel.GRAPH.putEdge(siblingNode, ToolMaterial.IRON.getToolLevel());
+        ToolLevel.GRAPH.removeEdge(ToolMaterial.STONE.getToolLevel(), ToolMaterial.IRON.getToolLevel());
 
         testItem = new ModdedItem(NAMESPACE.id("test_item")).setTranslationKey(NAMESPACE, "testItem"); //8475
         testMaterial = ToolMaterialFactory.create("testMaterial", 3, Integer.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE - 2).toolLevel(siblingNode);

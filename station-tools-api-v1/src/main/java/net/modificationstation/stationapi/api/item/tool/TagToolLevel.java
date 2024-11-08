@@ -22,4 +22,9 @@ public class TagToolLevel extends ToolLevel {
     protected boolean isSuitable(TestContext context) {
         return context.blockState().isIn(tag);
     }
+
+    @Override
+    public String toString() {
+        return tag.toString();
+    }
 }
