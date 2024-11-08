@@ -2,8 +2,11 @@ package net.modificationstation.stationapi.api.item;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.api.registry.RemappableRawIdHolder;
@@ -32,12 +35,12 @@ public interface StationFlatteningItem extends RemappableRawIdHolder, ItemConver
     }
 
     @Override
-    default boolean isSuitableFor(ItemStack itemStack, BlockState state) {
+    default boolean isSuitableFor(PlayerEntity player, ItemStack itemStack, BlockView blockView, BlockPos blockPos, BlockState state) {
         return Util.assertImpl();
     }
 
     @Override
-    default float getMiningSpeedMultiplier(ItemStack itemStack, BlockState state) {
+    default float getMiningSpeedMultiplier(PlayerEntity player, ItemStack itemStack, BlockView blockView, BlockPos blockPos, BlockState state) {
         return Util.assertImpl();
     }
 }

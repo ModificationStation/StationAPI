@@ -1,8 +1,11 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
@@ -64,13 +67,13 @@ abstract class ItemMixin implements StationFlatteningItem {
 
     @Override
     @Unique
-    public boolean isSuitableFor(ItemStack itemStack, BlockState state) {
+    public boolean isSuitableFor(PlayerEntity player, ItemStack itemStack, BlockView blockView, BlockPos blockPos, BlockState state) {
         return isSuitableFor(state.getBlock());
     }
 
     @Override
     @Unique
-    public float getMiningSpeedMultiplier(ItemStack itemStack, BlockState state) {
+    public float getMiningSpeedMultiplier(PlayerEntity player, ItemStack itemStack, BlockView blockView, BlockPos blockPos, BlockState state) {
         return getMiningSpeedMultiplier(itemStack, state.getBlock());
     }
 

@@ -3,6 +3,8 @@ package net.modificationstation.stationapi.mixin.flattening;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.entity.player.StationFlatteningPlayerInventory;
@@ -24,14 +26,16 @@ abstract class PlayerInventoryMixin implements StationFlatteningPlayerInventory 
 
     @Override
     @Unique
-    public float getBlockBreakingSpeed(BlockState state) {
+    public float getBlockBreakingSpeed(BlockView blockView, BlockPos blockPos, BlockState state) {
         return StationAPI.EVENT_BUS.post(PlayerStrengthOnBlockEvent.builder()
                 .player(player)
+                .blockView(blockView)
+                .blockPos(blockPos)
                 .blockState(state)
                 .resultProvider(() -> {
                     float var2 = 1.0F;
                     if (main[selectedSlot] != null)
-                        var2 *= main[this.selectedSlot].getMiningSpeedMultiplier(state);
+                        var2 *= main[this.selectedSlot].getMiningSpeedMultiplier(player, blockView, blockPos, state);
                     return var2;
                 })
                 .build()
@@ -40,14 +44,16 @@ abstract class PlayerInventoryMixin implements StationFlatteningPlayerInventory 
 
     @Override
     @Unique
-    public boolean canHarvest(BlockState state) {
+    public boolean canHarvest(BlockView blockView, BlockPos blockPos, BlockState state) {
         return StationAPI.EVENT_BUS.post(IsPlayerUsingEffectiveToolEvent.builder()
                 .player(player)
+                .blockView(blockView)
+                .blockPos(blockPos)
                 .blockState(state)
                 .resultProvider(() -> {
                     if (state.isToolRequired()) {
                         ItemStack var2 = getStack(this.selectedSlot);
-                        return var2 != null && var2.isSuitableFor(state);
+                        return var2 != null && var2.isSuitableFor(player, blockView, blockPos, state);
                     } else return true;
                 })
                 .build()

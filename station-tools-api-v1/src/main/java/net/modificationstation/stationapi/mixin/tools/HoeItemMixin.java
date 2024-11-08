@@ -1,10 +1,13 @@
 package net.modificationstation.stationapi.mixin.tools;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.HoeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.item.tool.StationHoeItem;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
@@ -50,14 +53,14 @@ class HoeItemMixin extends Item implements StationHoeItem {
     }
 
     @Override
-    public boolean isSuitableFor(ItemStack itemStack, BlockState state) {
+    public boolean isSuitableFor(PlayerEntity player, ItemStack itemStack, BlockView blockView, BlockPos blockPos, BlockState state) {
         return ToolEffectivenessImpl.shouldApplyCustomLogic(itemStack, state)
-                ? ToolEffectivenessImpl.isSuitableFor(itemStack, state) : super.isSuitableFor(itemStack, state);
+                ? ToolEffectivenessImpl.isSuitableFor(itemStack, state) : super.isSuitableFor(player, itemStack, blockView, blockPos, state);
     }
 
     @Override
-    public float getMiningSpeedMultiplier(ItemStack itemStack, BlockState state) {
+    public float getMiningSpeedMultiplier(PlayerEntity player, ItemStack itemStack, BlockView blockView, BlockPos blockPos, BlockState state) {
         return ToolEffectivenessImpl.shouldApplyCustomLogic(itemStack, state) && ToolEffectivenessImpl.isSuitableFor(itemStack, state)
-                ? ToolEffectivenessImpl.getMiningSpeedMultiplier(itemStack) : super.getMiningSpeedMultiplier(itemStack, state);
+                ? ToolEffectivenessImpl.getMiningSpeedMultiplier(itemStack) : super.getMiningSpeedMultiplier(player, itemStack, blockView, blockPos, state);
     }
 }
