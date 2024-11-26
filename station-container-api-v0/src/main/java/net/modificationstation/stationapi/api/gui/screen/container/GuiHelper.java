@@ -5,7 +5,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.ScreenHandler;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
-import net.modificationstation.stationapi.api.registry.GuiHandlerRegistry;
+import net.modificationstation.stationapi.api.client.registry.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.util.API;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.SideUtil;

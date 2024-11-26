@@ -6,6 +6,7 @@
   "mixins": [
     "BlockMixin",
     "DyeItemMixin",
+    "EntityAccessor",
     "EntityMixin",
     "InventoryS2CPacketMixin",
     "ItemMixin",
@@ -13,7 +14,9 @@
     "PlayerEntityMixin",
     "PlayerInventoryMixin",
     "ScreenHandlerMixin",
-    "StatsMixin"
+    "StatsMixin",
+    "dispenser.block.DispenserBlockMixin",
+    "dispenser.block.entity.DispenserBlockEntityMixin"
   ],
   "server": [
     "server.class_70Mixin",
@@ -27,6 +30,7 @@
     "client.ContainerScreenMixin",
     "client.DrawContextAccessor",
     "client.GameRendererMixin",
+    "client.HandledScreenAccessor",
     "client.InteractionManagerMixin",
     "client.ItemRendererMixin",
     "client.MultiplayerInteractionManagerMixin",
