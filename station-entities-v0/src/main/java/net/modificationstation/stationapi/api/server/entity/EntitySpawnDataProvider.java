@@ -9,25 +9,37 @@ import net.modificationstation.stationapi.api.entity.HasOwner;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.util.Identifier;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+
 public interface EntitySpawnDataProvider extends StationSpawnDataProvider {
 
     @Override
     default Packet getSpawnData() {
-        Entity entityBase = (Entity) this;
+        Entity entity = (Entity) this;
         int ownerId = 0;
-        if (entityBase instanceof HasOwner hasOwner) {
+        if (entity instanceof HasOwner hasOwner) {
             Entity owner = hasOwner.getOwner();
-            owner = owner == null ? entityBase : owner;
+            owner = owner == null ? entity : owner;
             ownerId = owner.id;
         }
         MessagePacket message = new MessagePacket(Identifier.of(StationAPI.NAMESPACE, "spawn_entity"));
         message.strings = new String[] { getHandlerIdentifier().toString() };
-        message.ints = new int[] { entityBase.id, MathHelper.floor(entityBase.x * 32), MathHelper.floor(entityBase.y * 32), MathHelper.floor(entityBase.z * 32), ownerId };
+        message.ints = new int[] { entity.id, MathHelper.floor(entity.x * 32), MathHelper.floor(entity.y * 32), MathHelper.floor(entity.z * 32), ownerId };
         if (ownerId > 0) {
             double var10 = 3.9D;
-            message.shorts = new short[] { (short) (Doubles.constrainToRange(entityBase.velocityX, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entityBase.velocityY, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entityBase.velocityZ, -var10, var10) * 8000) };
+            message.shorts = new short[] { (short) (Doubles.constrainToRange(entity.velocityX, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entity.velocityY, -var10, var10) * 8000), (short) (Doubles.constrainToRange(entity.velocityZ, -var10, var10) * 8000) };
+        }
+        if (syncTrackerAtSpawn()) {
+            var stream = new ByteArrayOutputStream();
+            entity.method_1331().writeAllEntries(new DataOutputStream(stream));
+            message.bytes = stream.toByteArray();
         }
         writeToMessage(message);
         return message;
+    }
+
+    default boolean syncTrackerAtSpawn() {
+        return false;
     }
 }
