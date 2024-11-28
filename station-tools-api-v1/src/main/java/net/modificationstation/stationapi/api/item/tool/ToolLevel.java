@@ -5,12 +5,18 @@ import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanOpenHashMap;
+import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.util.Util;
 
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 public abstract class ToolLevel {
     /**
@@ -50,6 +56,30 @@ public abstract class ToolLevel {
     private static final Set<ToolLevel> ALL_LEVELS_MUTABLE = Collections.newSetFromMap(new WeakHashMap<>());
     public static final Set<ToolLevel> ALL_LEVELS = Collections.unmodifiableSet(ALL_LEVELS_MUTABLE);
     public static final MutableGraph<ToolLevel> GRAPH = GraphBuilder.directed().build();
+    private static final List<ToolLevel> NUMERIC_LEVELS = Util.make(new ArrayList<>(), list -> {
+        var stone = new TagToolLevel(TagKey.of(BlockRegistry.KEY, of("needs_stone_tool")));
+        var iron = new TagToolLevel(TagKey.of(BlockRegistry.KEY, of("needs_iron_tool")));
+        var diamond = new TagToolLevel(TagKey.of(BlockRegistry.KEY, of("needs_diamond_tool")));
+        list.add(null);
+        list.add(stone);
+        list.add(iron);
+        list.add(diamond);
+        GRAPH.putEdge(stone, iron);
+        GRAPH.putEdge(iron, diamond);
+        ToolMaterial.STONE.toolLevel(stone);
+        ToolMaterial.IRON.toolLevel(iron);
+        ToolMaterial.DIAMOND.toolLevel(diamond);
+    });
+
+    public static ToolLevel getNumeric(int level) {
+        if (level >= NUMERIC_LEVELS.size())
+            for (int i = NUMERIC_LEVELS.size(); i < level + 1; i++) {
+                var toolLevel = new TagToolLevel(TagKey.of(BlockRegistry.KEY, of("needs_tool_level_" + i)));
+                NUMERIC_LEVELS.add(toolLevel);
+                GRAPH.putEdge(NUMERIC_LEVELS.get(i - 1), toolLevel);
+            }
+        return NUMERIC_LEVELS.get(level);
+    }
 
     public static boolean isSuitable(ToolLevel toolLevel, BlockState state) {
         if (toolLevel == null) {
