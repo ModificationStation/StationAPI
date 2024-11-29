@@ -20,7 +20,6 @@
   "environment": "client",
   "entrypoints": {
     "stationapi:event_bus_client": [
-      "net.modificationstation.stationapi.impl.client.gui.GuiImpl",
       "net.modificationstation.stationapi.impl.client.gui.screen.EditWorldScreenImpl"
     ]
   },

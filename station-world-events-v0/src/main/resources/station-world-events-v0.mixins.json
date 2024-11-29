@@ -14,5 +14,8 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "server": [
+    "server.class_79Mixin"
+  ]
 }

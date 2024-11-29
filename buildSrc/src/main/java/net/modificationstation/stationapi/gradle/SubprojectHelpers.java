@@ -21,7 +21,7 @@ public class SubprojectHelpers {
         List<Dependency> modules = Arrays.stream(projectNames).map((it) -> project.getDependencies().project(Map.of("path", ":" + it, "configuration", "dev"))).collect(Collectors.toList());
 //        Arrays.stream(projectNames).forEach((it) -> project.getDependencies().project(Map.of("path", ":" + it, "configuration", "dev")));
 
-        modules.forEach(dependency -> project.getDependencies().add("implementationOnly", dependency));
+        modules.forEach(dependency -> project.getDependencies().add("implementation", dependency));
 
         MavenPublication publishing = (MavenPublication) project.getExtensions().getByType(PublishingExtension.class).getPublications().getByName("mavenJava");
         publishing.pom((e) -> e.withXml((f) -> {
@@ -29,21 +29,14 @@ public class SubprojectHelpers {
         }));
     }
 
-    private static Object whyIsGroovyXMLLikeThis(String key, Node node) {
-        return ((Node) ((NodeList) node.get(key)).get(0)).value();
-    }
-
-    public static void addDependencyXML(Node xml, String scope, XmlProvider dependency) {
+    public static void addDependencyXML(Node xml, String scope, Project dependency) {
         Node depsNode = GroovyXmlUtil.getOrCreateNode(xml, "dependencies");
-        Node dep = dependency.asNode();
 
         Node appNode = depsNode.appendNode("dependency");
-        appNode.appendNode("groupId", whyIsGroovyXMLLikeThis("groupId", dep));
-        appNode.appendNode("artifactId", whyIsGroovyXMLLikeThis("artifactId", dep));
-        appNode.appendNode("version", whyIsGroovyXMLLikeThis("version", dep));
+        appNode.appendNode("groupId", dependency.getGroup());
+        appNode.appendNode("artifactId", dependency.getName());
+        appNode.appendNode("version", dependency.getVersion());
         appNode.appendNode("scope", scope);
-
-        System.out.println(XmlUtil.serialize(appNode));
     }
 
     public static void addDependencies(Node xml, String scope, List<Dependency> dependencies) {

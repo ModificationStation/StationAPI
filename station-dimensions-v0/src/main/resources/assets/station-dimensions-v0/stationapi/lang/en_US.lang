@@ -1,0 +1,4 @@
+gui.stationapi.entering=Entering the %s
+gui.stationapi.leaving=Leaving the %s
+gui.stationapi.enteringNether=Entering the Nether
+gui.stationapi.leavingNether=Leaving the Nether

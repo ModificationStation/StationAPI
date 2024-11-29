@@ -11,8 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 class MinecraftMixin {
     @Inject(
             method = "run",
-            at = @At("HEAD"),
-            remap = false
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;init()V", shift = At.Shift.AFTER)
     )
     private void stationapi_freeze(CallbackInfo ci) {
         Registries.bootstrap();

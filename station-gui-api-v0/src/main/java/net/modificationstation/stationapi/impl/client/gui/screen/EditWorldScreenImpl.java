@@ -19,7 +19,7 @@ public final class EditWorldScreenImpl {
     private static void registerRenameWorld(EditWorldScreenEvent.ScrollableButtonContextRegister event) {
         event.contexts.add(screen -> new ButtonWidgetDetachedContext(
                 id -> new ButtonWidget(id, 0, 0, I18n.getTranslation("selectWorld.rename")),
-                button -> ((ScreenAccessor) screen).getMinecraft().setScreen(new EditWorldScreen(screen, screen.worldData.method_1958()))
+                button -> ((ScreenAccessor) screen).getMinecraft().setScreen(new EditWorldScreen(screen, screen.worldData.method_1956()))
         ));
     }
 }

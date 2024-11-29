@@ -28,8 +28,8 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class EditWorldScreenImpl {
     private static final String
-            ROOT_KEY = "selectWorld",
-            CONVERT_TO_MCREGION_KEY = ROOT_KEY + "." + NAMESPACE.id("convertToMcRegion");
+            ROOT_KEY = "selectWorld." + NAMESPACE,
+            CONVERT_TO_MCREGION_KEY = ROOT_KEY + ".convertToMcRegion";
 
     @EventListener(priority = LOW)
     private static void registerConversionButton(EditWorldScreenEvent.ScrollableButtonContextRegister event) {
@@ -45,7 +45,7 @@ public final class EditWorldScreenImpl {
                     FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.method_2127();
                     mc.field_2817.method_1491("Converting World to " + worldStorage.getPreviousWorldFormat());
                     mc.field_2817.method_1796("This may take a while :)");
-                    worldStorage.convertWorld(screen.worldData.method_1958(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(NAMESPACE.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.field_2817);
+                    worldStorage.convertWorld(screen.worldData.method_1956(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(NAMESPACE.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.field_2817);
                     mc.setScreen(screen);
                 }, WorldConversionWarning.TO_MCREGION_EXPLANATION_KEY, WorldConversionWarning.CONVERT_KEY))
         ));

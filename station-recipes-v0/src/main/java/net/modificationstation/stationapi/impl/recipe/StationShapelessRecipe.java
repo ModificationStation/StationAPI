@@ -9,9 +9,7 @@ import net.modificationstation.stationapi.api.recipe.StationRecipe;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 
-import java.util.BitSet;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Function;
 
 public class StationShapelessRecipe implements CraftingRecipe, StationRecipe {
@@ -19,7 +17,7 @@ public class StationShapelessRecipe implements CraftingRecipe, StationRecipe {
     private static final Random RANDOM = new Random();
 
     private final Either<TagKey<Item>, ItemStack>[] ingredients;
-    private final ItemStack output;
+    public final ItemStack output;
     private final BitSet matchedIngredients;
 
     public StationShapelessRecipe(ItemStack output, Either<TagKey<Item>, ItemStack>[] ingredients) {
@@ -77,7 +75,7 @@ public class StationShapelessRecipe implements CraftingRecipe, StationRecipe {
 
     @Override
     public ItemStack getOutput() {
-        return output;
+        return output.copy();
     }
 
     @Override
@@ -91,5 +89,14 @@ public class StationShapelessRecipe implements CraftingRecipe, StationRecipe {
     @Override
     public ItemStack[] getOutputs() {
         return new ItemStack[] { output };
+    }
+
+    /**
+     * To be renamed to getIngredients in a3, use with caution.
+     */
+    @Deprecated
+    public Either<TagKey<Item>, ItemStack>[] getInputs() {
+        //noinspection unchecked
+        return (Either<TagKey<Item>, ItemStack>[]) Arrays.stream(ingredients).map(entry -> entry == null ? null : entry.mapRight(ItemStack::copy)).toArray(Either[]::new);
     }
 }
