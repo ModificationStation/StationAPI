@@ -73,7 +73,7 @@ public class FuelRegistry {
                     FUELS.put(new ItemStack(item.value()), entry.getIntValue());
             for (Map.Entry<Item, Int2IntMap> item2Meta2FuelValues : ITEM_FUEL_TIME.reference2ObjectEntrySet())
                 for (Int2IntMap.Entry meta2FuelValues : item2Meta2FuelValues.getValue().int2IntEntrySet())
-                    FUELS.put(new ItemStack(item2Meta2FuelValues.getKey(), meta2FuelValues.getIntKey()), meta2FuelValues.getIntValue());
+                    FUELS.put(new ItemStack(item2Meta2FuelValues.getKey(), 1, meta2FuelValues.getIntKey()), meta2FuelValues.getIntValue());
             viewInvalidated = false;
         }
         return FUELS_VIEW;
