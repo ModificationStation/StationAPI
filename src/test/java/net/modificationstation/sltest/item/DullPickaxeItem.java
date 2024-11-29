@@ -1,11 +1,15 @@
 package net.modificationstation.sltest.item;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.template.item.TemplatePickaxeItem;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.math.Direction;
 
 public class DullPickaxeItem extends TemplatePickaxeItem {
     public DullPickaxeItem(Identifier identifier) {
@@ -22,5 +26,17 @@ public class DullPickaxeItem extends TemplatePickaxeItem {
             player.inventory.setStack(player.inventory.selectedSlot, null);
         }
         return false;
+    }
+
+    @Override
+    public boolean useOnBlock(ItemStack stack, PlayerEntity user, World world, int x, int y, int z, int side) {
+        if (side != Direction.UP.ordinal()) return false;
+        if (!world.isRemote) {
+            Entity entity = EntityRegistry.create("sltest:test", world);
+            entity.method_1340(x + 0.5, y + 1, z + 0.5);
+            world.method_210(entity);
+        }
+        stack.bobbingAnimationTime = 20;
+        return true;
     }
 }

@@ -4,6 +4,7 @@
   "package": "net.modificationstation.stationapi.mixin.lifecycle",
   "compatibilityLevel": "JAVA_17",
   "server": [
+    "server.MinecraftServerInitMixin",
     "server.MinecraftServerMixin",
     "server.ServerLoginNetworkHandlerMixin",
     "server.ServerPlayNetworkHandlerMixin"
@@ -12,6 +13,7 @@
     "client.ClientNetworkHandlerMixin",
     "client.ClientWorldMixin",
     "client.GameOptionsMixin",
+    "client.MinecraftInitMixin",
     "client.MinecraftMixin",
     "client.TextureManagerMixin"
   ],

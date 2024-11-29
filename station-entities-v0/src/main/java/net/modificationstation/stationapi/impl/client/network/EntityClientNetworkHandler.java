@@ -70,6 +70,8 @@ public final class EntityClientNetworkHandler {
                         hasOwner.setOwner(networkHandler.invokeMethod_1645(message.ints[4]));
                     entity.method_1365((double) message.shorts[0] / 8000.0D, (double) message.shorts[1] / 8000.0D, (double) message.shorts[2] / 8000.0D);
                 }
+                if (message.bytes != null)
+                    entity.method_1331().writeUpdatedEntries(DataTracker.readEntries(new DataInputStream(new ByteArrayInputStream(message.bytes))));
                 if (entity instanceof StationSpawnDataProvider provider)
                     provider.readFromMessage(message);
             }
