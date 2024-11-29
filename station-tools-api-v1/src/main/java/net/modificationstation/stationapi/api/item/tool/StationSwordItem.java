@@ -6,7 +6,7 @@ import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
 
-public interface StationSwordItem extends ToolLevel {
+public interface StationSwordItem extends StationTool {
     @Override
     default void setEffectiveBlocks(TagKey<Block> effectiveBlocks) {
         Util.assertImpl();

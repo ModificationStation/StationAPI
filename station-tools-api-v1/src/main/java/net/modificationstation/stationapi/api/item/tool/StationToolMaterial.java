@@ -4,11 +4,11 @@ import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.util.Util;
 
 public interface StationToolMaterial {
-    default ToolMaterial miningLevelNode(MiningLevelManager.LevelNode levelNode) {
+    default ToolMaterial toolLevel(ToolLevel toolLevel) {
         return Util.assertImpl();
     }
 
-    default MiningLevelManager.LevelNode getMiningLevelNode() {
+    default ToolLevel getToolLevel() {
         return Util.assertImpl();
     }
 }
