@@ -8,13 +8,9 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.API;
-import net.modificationstation.stationapi.api.util.Identifier;
-import org.jetbrains.annotations.ApiStatus;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.OptionalInt;
-import java.util.function.Supplier;
 
 public class FuelRegistry {
 
@@ -55,20 +51,13 @@ public class FuelRegistry {
 
     @API
     public static void addFuelItem(Item item, int fuelTime) {
-        viewInvalidated = true;
-        ITEM_FUEL_TIME.computeIfAbsent(item, (o) -> new Int2IntOpenHashMap()).put(-1, fuelTime);
+        addFuelItem(item, -1, fuelTime);
     }
 
     @API
-    public static void addFuelItem(ItemStack itemStack, int fuelTime) {
+    public static void addFuelItem(Item item, int metadata, int fuelTime) {
         viewInvalidated = true;
-        ITEM_FUEL_TIME.computeIfAbsent(itemStack.getItem(), (o) -> new Int2IntOpenHashMap()).put(itemStack.getDamage(), fuelTime);
-    }
-
-    private static Int2IntMap addNewMapToFuels(Item item) {
-        Int2IntMap newMap = new Int2IntOpenHashMap();
-        ITEM_FUEL_TIME.put(item, newMap);
-        return newMap;
+        ITEM_FUEL_TIME.computeIfAbsent(item, (o) -> new Int2IntOpenHashMap()).put(metadata, fuelTime);
     }
 
     @API

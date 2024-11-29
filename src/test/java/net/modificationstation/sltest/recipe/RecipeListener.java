@@ -42,7 +42,7 @@ public class RecipeListener {
                 ItemStack itemInstance = new ItemStack(ItemListener.testNBTItem);
                 StationItemNbt.class.cast(itemInstance).getStationNbt().putInt(of(NAMESPACE, "rand_num").toString(), 10);
                 SmeltingRegistry.addSmeltingRecipe(ItemListener.testItem.id, itemInstance);
-                FuelRegistry.addFuelItem(new ItemStack(Block.LEAVES, 1, 1), 500);
+                FuelRegistry.addFuelItem(Item.ITEMS[Block.LEAVES.id], 1, 500);
             }
         }
     }
