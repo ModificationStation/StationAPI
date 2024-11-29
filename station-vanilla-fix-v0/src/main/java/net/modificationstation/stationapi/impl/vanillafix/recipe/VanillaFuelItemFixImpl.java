@@ -23,8 +23,7 @@ public final class VanillaFuelItemFixImpl {
                     FuelRegistry.addFuelItem(Item.ITEMS[block.id], 300);
             FuelRegistry.addFuelItem(Item.STICK, 100);
             FuelRegistry.addFuelTag(ItemTags.COALS, 1600);
-            FuelRegistry.addFuelItem(new ItemStack(Item.LAVA_BUCKET, 1), 20000);
-            FuelRegistry.addFuelItem(new ItemStack(Block.SLAB.asItem(), 1, 0), 100);
+            FuelRegistry.addFuelItem(Item.LAVA_BUCKET, 20000);
             FuelRegistry.addFuelTag(ItemTags.SAPLINGS, 100);
         }
     }

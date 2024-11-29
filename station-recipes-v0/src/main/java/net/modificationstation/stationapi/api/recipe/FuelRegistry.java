@@ -33,11 +33,18 @@ public class FuelRegistry {
         if (stack == null)
             return 0;
 
+        // First see if a tag matches, and if so, use that
         OptionalInt foundKey = stack.getRegistryEntry().streamTags().mapToInt(TAG_FUEL_TIME::getInt).filter(value -> value > 0).findFirst();
         if (foundKey.isPresent())
             return foundKey.getAsInt();
 
-        return ITEM_FUEL_TIME.get(stack.getItem()).getOrDefault(stack.getDamage(), 0);
+        // Then check if the item has a specific entry
+        int fuelTime = ITEM_FUEL_TIME.get(stack.getItem()).getOrDefault(stack.getDamage(), 0);
+        if (fuelTime != 0)
+            return fuelTime;
+
+        // Finally check if there's a wildcard
+        return ITEM_FUEL_TIME.get(stack.getItem()).getOrDefault(-1, 0);
     }
 
     @API
@@ -49,13 +56,13 @@ public class FuelRegistry {
     @API
     public static void addFuelItem(Item item, int fuelTime) {
         viewInvalidated = true;
-        ITEM_FUEL_TIME.getOrDefault(item, addNewMapToFuels(item)).put(0, fuelTime);
+        ITEM_FUEL_TIME.computeIfAbsent(item, (o) -> new Int2IntOpenHashMap()).put(-1, fuelTime);
     }
 
     @API
     public static void addFuelItem(ItemStack itemStack, int fuelTime) {
         viewInvalidated = true;
-        ITEM_FUEL_TIME.getOrDefault(itemStack.getItem(), addNewMapToFuels(itemStack.getItem())).put(itemStack.getDamage(), fuelTime);
+        ITEM_FUEL_TIME.computeIfAbsent(itemStack.getItem(), (o) -> new Int2IntOpenHashMap()).put(itemStack.getDamage(), fuelTime);
     }
 
     private static Int2IntMap addNewMapToFuels(Item item) {
