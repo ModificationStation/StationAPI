@@ -9,6 +9,7 @@ import net.modificationstation.sltest.item.ItemListener;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.item.StationItemNbt;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
+import net.modificationstation.stationapi.api.recipe.FuelRegistry;
 import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
 
 import static net.modificationstation.sltest.SLTest.NAMESPACE;
@@ -41,6 +42,7 @@ public class RecipeListener {
                 ItemStack itemInstance = new ItemStack(ItemListener.testNBTItem);
                 StationItemNbt.class.cast(itemInstance).getStationNbt().putInt(of(NAMESPACE, "rand_num").toString(), 10);
                 SmeltingRegistry.addSmeltingRecipe(ItemListener.testItem.id, itemInstance);
+                FuelRegistry.addFuelItem(new ItemStack(Block.LEAVES, 1, 1), 500);
             }
         }
     }
