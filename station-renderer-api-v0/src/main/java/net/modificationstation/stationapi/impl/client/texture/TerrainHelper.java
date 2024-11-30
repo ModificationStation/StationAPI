@@ -2,13 +2,12 @@ package net.modificationstation.stationapi.impl.client.texture;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntIntPair;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.modificationstation.stationapi.api.client.texture.SpritesheetHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
-import uk.co.benjiweber.expressions.tuple.Tuple;
 
 import java.util.function.ObjIntConsumer;
 
@@ -184,11 +183,11 @@ final class TerrainHelper implements SpritesheetHelper {
         f.accept("destroy_stage_9", 249);
     });
 
-    private static final Int2ObjectMap<BiTuple<Integer, Integer>> RESOLUTION_MULTIPLIERS = Util.make(new Int2ObjectOpenHashMap<>(), map -> {
+    private static final Int2ObjectMap<IntIntPair> RESOLUTION_MULTIPLIERS = Util.make(new Int2ObjectOpenHashMap<>(), map -> {
         map.defaultReturnValue(DEFAULT_RESOLUTION_MULTIPLIER);
-        ObjIntConsumer<BiTuple<Integer, Integer>> f = (resMul, index) -> map.put(index, resMul);
-        f.accept(Tuple.tuple(2, 2), 206);
-        f.accept(Tuple.tuple(2, 2), 238);
+        ObjIntConsumer<IntIntPair> f = (resMul, index) -> map.put(index, resMul);
+        f.accept(IntIntPair.of(2, 2), 206);
+        f.accept(IntIntPair.of(2, 2), 238);
     });
 
     @Override
@@ -197,7 +196,7 @@ final class TerrainHelper implements SpritesheetHelper {
     }
 
     @Override
-    public BiTuple<Integer, Integer> getResolutionMultiplier(int textureIndex) {
+    public IntIntPair getResolutionMultiplier(int textureIndex) {
         return RESOLUTION_MULTIPLIERS.get(textureIndex);
     }
 }

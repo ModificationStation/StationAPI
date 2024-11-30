@@ -1,6 +1,9 @@
 package net.modificationstation.stationapi.api.item;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -17,12 +20,12 @@ public interface StationFlatteningItemStack extends ItemStackStrengthWithBlockSt
     }
 
     @Override
-    default boolean isSuitableFor(BlockState state) {
+    default boolean isSuitableFor(PlayerEntity player, BlockView blockView, BlockPos blockPos, BlockState state) {
         return Util.assertImpl();
     }
 
     @Override
-    default float getMiningSpeedMultiplier(BlockState state) {
+    default float getMiningSpeedMultiplier(PlayerEntity player, BlockView blockView, BlockPos blockPos, BlockState state) {
         return Util.assertImpl();
     }
 

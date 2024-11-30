@@ -1,10 +1,9 @@
 package net.modificationstation.stationapi.api.util.math;
 
+import com.mojang.datafixers.util.Pair;
 import net.modificationstation.stationapi.api.util.Util;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
-import uk.co.benjiweber.expressions.tuple.Tuple;
 
 import java.util.Objects;
 
@@ -67,9 +66,9 @@ public final class AffineTransformation {
 
     private void init() {
         if (!this.initialized) {
-            BiTuple<Matrix3f, Vec3f> pair = getLinearTransformationAndTranslationFromAffine(this.matrix);
-            Triple<Quaternion, Vec3f, Quaternion> triple = pair.one().decomposeLinearTransformation();
-            this.translation = pair.two();
+            Pair<Matrix3f, Vec3f> pair = getLinearTransformationAndTranslationFromAffine(this.matrix);
+            Triple<Quaternion, Vec3f, Quaternion> triple = pair.getFirst().decomposeLinearTransformation();
+            this.translation = pair.getSecond();
             this.rotation2 = triple.getLeft();
             this.scale = triple.getMiddle();
             this.rotation1 = triple.getRight();
@@ -102,11 +101,11 @@ public final class AffineTransformation {
         return matrix4f;
     }
 
-    public static BiTuple<Matrix3f, Vec3f> getLinearTransformationAndTranslationFromAffine(Matrix4f affineTransform) {
+    public static Pair<Matrix3f, Vec3f> getLinearTransformationAndTranslationFromAffine(Matrix4f affineTransform) {
         affineTransform.multiply(1.0F / affineTransform.a33);
         Vec3f vector3f = new Vec3f(affineTransform.a03, affineTransform.a13, affineTransform.a23);
         Matrix3f matrix3f = new Matrix3f(affineTransform);
-        return Tuple.tuple(matrix3f, vector3f);
+        return Pair.of(matrix3f, vector3f);
     }
 
     public Matrix4f getMatrix() {

@@ -4,23 +4,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.packet.s2c.play.InventoryS2CPacket;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
-import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.impl.item.StationNBTSetter;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
+public class StationInventoryS2CPacket extends InventoryS2CPacket implements ManagedPacket<StationInventoryS2CPacket> {
+    public static final PacketType<StationInventoryS2CPacket> TYPE = PacketType.builder(true, false, StationInventoryS2CPacket::new).build();
 
-public class StationInventoryS2CPacket extends InventoryS2CPacket implements IdentifiablePacket {
-    public static final Identifier PACKET_ID = NAMESPACE.id("items/inventory");
-
-    public StationInventoryS2CPacket() {
-        super();
-    }
+    private StationInventoryS2CPacket() {}
 
     public StationInventoryS2CPacket(int syncId, List<ItemStack> contents) {
         super(syncId, contents);
@@ -76,7 +73,7 @@ public class StationInventoryS2CPacket extends InventoryS2CPacket implements Ide
     }
 
     @Override
-    public Identifier getId() {
-        return PACKET_ID;
+    public @NotNull PacketType<StationInventoryS2CPacket> getType() {
+        return TYPE;
     }
 }

@@ -6,9 +6,13 @@ import net.minecraft.item.ToolMaterial;
 import net.modificationstation.sltest.block.Blocks;
 import net.modificationstation.sltest.block.VariationBlock;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
+import net.modificationstation.stationapi.api.item.tool.TagToolLevel;
+import net.modificationstation.stationapi.api.item.tool.ToolLevel;
 import net.modificationstation.stationapi.api.item.tool.ToolMaterialFactory;
+import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.template.item.BlockStateItem;
 
 import static net.modificationstation.sltest.SLTest.NAMESPACE;
@@ -17,8 +21,16 @@ public class ItemListener {
 
     @EventListener
     public void registerItems(ItemRegistryEvent event) {
+        ToolLevel moddedNode = new TagToolLevel(TagKey.of(BlockRegistry.KEY, NAMESPACE.id("needs_tool_level_modded")));
+        ToolLevel.GRAPH.putEdge(ToolMaterial.STONE.getToolLevel(), moddedNode);
+        ToolLevel.GRAPH.putEdge(moddedNode, ToolMaterial.IRON.getToolLevel());
+        ToolLevel siblingNode = new TagToolLevel(TagKey.of(BlockRegistry.KEY, NAMESPACE.id("needs_tool_level_sibling"))).equivalentToImmediateSiblings();
+        ToolLevel.GRAPH.putEdge(ToolMaterial.STONE.getToolLevel(), siblingNode);
+        ToolLevel.GRAPH.putEdge(siblingNode, ToolMaterial.IRON.getToolLevel());
+        ToolLevel.GRAPH.removeEdge(ToolMaterial.STONE.getToolLevel(), ToolMaterial.IRON.getToolLevel());
+
         testItem = new ModdedItem(NAMESPACE.id("test_item")).setTranslationKey(NAMESPACE, "testItem"); //8475
-        testMaterial = ToolMaterialFactory.create("testMaterial", 3, Integer.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE - 2);
+        testMaterial = ToolMaterialFactory.create("testMaterial", 3, Integer.MAX_VALUE, Float.MAX_VALUE, Integer.MAX_VALUE - 2).toolLevel(siblingNode);
         testPickaxe = new ModdedPickaxeItem(NAMESPACE.id("test_pickaxe"), testMaterial).setTranslationKey(NAMESPACE, "testPickaxe"); //8476
         testNBTItem = new NBTItem(NAMESPACE.id("nbt_item")).setTranslationKey(NAMESPACE, "nbt_item"); //8477
         testModelItem = new ModelItem(NAMESPACE.id("model_item")).setMaxCount(1).setTranslationKey(NAMESPACE, "idkSomething");
@@ -30,6 +42,8 @@ public class ItemListener {
         testShears = new TestShearsItem(NAMESPACE.id("test_shears")).setTranslationKey(NAMESPACE, "test_shears");
         pacifistSword = new PacifistSwordItem(NAMESPACE.id("pacifist_sword")).setTranslationKey(NAMESPACE, "pacifist_sword");
         dullPickaxe = new DullPickaxeItem(NAMESPACE.id("dull_pickaxe")).setTranslationKey(NAMESPACE, "dull_pickaxe");
+
+
     }
 
     public static Item testItem;

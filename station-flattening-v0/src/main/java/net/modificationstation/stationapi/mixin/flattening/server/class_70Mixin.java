@@ -8,6 +8,7 @@ import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,6 +25,8 @@ class class_70Mixin {
 
     @Unique
     private BlockState stationapi_method_1834_state;
+    @Unique
+    private final MutableBlockPos stationapi_blockPos = new MutableBlockPos();
 
     @Redirect(
             method = "method_1828",
@@ -77,8 +80,8 @@ class class_70Mixin {
                     target = "Lnet/minecraft/entity/player/PlayerEntity;method_514(Lnet/minecraft/block/Block;)Z"
             )
     )
-    private boolean stationapi_canRemoveBlock(PlayerEntity playerBase, Block arg) {
-        return playerBase.canHarvest(stationapi_method_1834_state);
+    private boolean stationapi_canRemoveBlock(PlayerEntity playerBase, Block arg, int i, int j, int k) {
+        return playerBase.canHarvest(field_2310, stationapi_blockPos.set(i, j, k), stationapi_method_1834_state);
     }
 
     @Redirect(

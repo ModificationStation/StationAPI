@@ -20,7 +20,6 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.item.ToolEffectivenessImplV1",
       "net.modificationstation.stationapi.impl.item.HijackShearsImplV1"
     ]
   },
