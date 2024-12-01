@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,6 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 class SingleplayerInteractionManagerMixin extends InteractionManager {
     @Unique
     private BlockState stationapi_method_1716_state;
+    @Unique
+    private final MutableBlockPos stationapi_blockPos = new MutableBlockPos();
 
     private SingleplayerInteractionManagerMixin(Minecraft minecraft) {
         super(minecraft);
@@ -58,8 +61,8 @@ class SingleplayerInteractionManagerMixin extends InteractionManager {
                     target = "Lnet/minecraft/entity/player/ClientPlayerEntity;method_514(Lnet/minecraft/block/Block;)Z"
             )
     )
-    private boolean stationapi_canRemoveBlock(ClientPlayerEntity abstractClientPlayer, Block arg) {
-        return abstractClientPlayer.canHarvest(stationapi_method_1716_state);
+    private boolean stationapi_canRemoveBlock(ClientPlayerEntity abstractClientPlayer, Block arg, int i, int j, int k, int l) {
+        return abstractClientPlayer.canHarvest(minecraft.world, stationapi_blockPos.set(i, j, k), stationapi_method_1716_state);
     }
 
     @Redirect(

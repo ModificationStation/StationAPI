@@ -23,7 +23,6 @@
       "net.modificationstation.stationapi.impl.vanillafix.block.VanillaBlockFixImpl",
       "net.modificationstation.stationapi.impl.vanillafix.item.VanillaItemFixImpl",
       "net.modificationstation.stationapi.impl.vanillafix.dimension.VanillaDimensionFixImpl",
-      "net.modificationstation.stationapi.impl.vanillafix.item.tool.VanillaToolFixImpl",
       "net.modificationstation.stationapi.impl.vanillafix.recipe.VanillaFuelItemFixImpl",
       "net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl",
       "net.modificationstation.stationapi.impl.vanillafix.stat.VanillaStatFixImpl",

@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -8,7 +7,6 @@ import net.minecraft.block.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -247,8 +245,8 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     public float calcBlockBreakingDelta(BlockState state, PlayerEntity player, BlockView world, BlockPos pos) {
         float hardness = getHardness(state, world, pos);
         if (hardness < 0.0f) return 0.0f;
-        if (!player.canHarvest(state)) return 1.0f / hardness / 100.0f;
-        return player.getBlockBreakingSpeed(state) / hardness / 30.0f;
+        if (!player.canHarvest(world, pos, state)) return 1.0f / hardness / 100.0f;
+        return player.getBlockBreakingSpeed(world, pos, state) / hardness / 30.0f;
     }
 
     @Override
