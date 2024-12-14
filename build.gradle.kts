@@ -5,8 +5,8 @@ import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependency
 
 plugins {
     id("maven-publish")
-    id("fabric-loom") version "1.7.2"
-    id("babric-loom-extension") version "1.7.3"
+    id("fabric-loom") version "1.9-SNAPSHOT"
+    id("babric-loom-extension") version "1.9.2"
 }
 
 // https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
@@ -63,7 +63,7 @@ allprojects {
 
         mappings("net.glasslauncher:biny:${project.properties["yarn_mappings"]}:v2")
 
-        modImplementation("babric:fabric-loader:${project.properties["loader_version"]}")
+        modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
 
         "transitiveImplementation"("org.apache.commons:commons-lang3:3.12.0")
         "transitiveImplementation"("commons-io:commons-io:2.11.0")
@@ -102,6 +102,8 @@ allprojects {
         }
         // Optional bugfix mod for testing qol. Remove the // to enable.
         //modLocalRuntime "maven.modrinth:mojangfix:${project.properties["mojangfix_version"]}"
+
+        annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.1")
     }
 
     loom {
