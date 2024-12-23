@@ -2,11 +2,9 @@ package net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc;
 
 import net.minecraft.block.Block;
 import net.minecraft.world.BlockView;
-import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
-import net.modificationstation.stationapi.impl.client.arsenic.renderer.mesh.MutableQuadViewImpl;
 
 import java.util.Arrays;
 
@@ -112,17 +110,6 @@ public final class LightingCalculatorImpl {
         light[1] = MathHelper.lerp(emission, light[1], 1F);
         light[2] = MathHelper.lerp(emission, light[2], 1F);
         light[3] = MathHelper.lerp(emission, light[3], 1F);
-    }
-
-    public void calculateForQuad(MutableQuadViewImpl q) {
-        calculateForQuad(
-                q.lightFace(),
-                x + q.x(0), y + q.y(0), z + q.z(0),
-                x + q.x(1), y + q.y(1), z + q.z(1),
-                x + q.x(2), y + q.y(2), z + q.z(2),
-                x + q.x(3), y + q.y(3), z + q.z(3),
-                q.hasShade()
-        );
     }
 
     private void calculateForQuad(
@@ -458,7 +445,7 @@ public final class LightingCalculatorImpl {
                     case X -> Math.abs(mX - x);
                     case Y -> Math.abs(mY - y);
                     case Z -> Math.abs(mZ - z);
-                } < QuadEmitter.CULL_FACE_EPSILON ?
+                } < 0.00001f ?
                         light(floor(mX) + face.getOffsetX(), floor(mY) + face.getOffsetY(), floor(mZ) + face.getOffsetZ()) :
                         light(floor(mX), floor(mY), floor(mZ));
     }
