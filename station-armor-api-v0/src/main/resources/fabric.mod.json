@@ -19,9 +19,6 @@
 
   "environment": "*",
   "entrypoints": {
-    "stationapi:event_bus": [
-      "net.modificationstation.stationapi.impl.item.CustomArmorValuesImpl"
-    ]
   },
   "mixins": [
     "station-armor-api-v0.mixins.json"
