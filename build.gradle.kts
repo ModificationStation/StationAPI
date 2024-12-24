@@ -5,8 +5,8 @@ import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependency
 
 plugins {
     id("maven-publish")
-    id("fabric-loom") version "1.7.2"
-    id("babric-loom-extension") version "1.7.3"
+    id("fabric-loom") version "1.9-SNAPSHOT"
+    id("babric-loom-extension") version "1.9.2"
 }
 
 // https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
@@ -63,7 +63,7 @@ allprojects {
 
         mappings("net.glasslauncher:biny:${project.properties["yarn_mappings"]}:v2")
 
-        modImplementation("babric:fabric-loader:${project.properties["loader_version"]}")
+        modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
 
         "transitiveImplementation"("org.apache.commons:commons-lang3:3.12.0")
         "transitiveImplementation"("commons-io:commons-io:2.11.0")
@@ -88,20 +88,11 @@ allprojects {
         modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}") {
             isTransitive = false
         }
+        modLocalRuntime("maven.modrinth:retrocommands:${project.properties["rc_version"]}") {
+            isTransitive = false
+        }
 
-        implementation("blue.endless:jankson:1.2.1")
-        implementation("me.carleslc:Simple-Yaml:1.8.4")
-        modLocalRuntime("net.glasslauncher.mods:glass-networking:1.0.2") {
-            isTransitive = false
-        }
-        modLocalRuntime("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") {
-            isTransitive = false
-        }
-        modLocalRuntime("net.glasslauncher:HowManyItems-Fabric-Unofficial:${project.properties["hmi_version"]}") {
-            isTransitive = false
-        }
-        // Optional bugfix mod for testing qol. Remove the // to enable.
-        //modLocalRuntime "maven.modrinth:mojangfix:${project.properties["mojangfix_version"]}"
+        annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.1")
     }
 
     loom {
