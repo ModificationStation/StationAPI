@@ -4,6 +4,7 @@ import com.mojang.serialization.Dynamic;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
@@ -20,6 +21,8 @@ import net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataF
 import net.modificationstation.stationapi.impl.world.storage.FlattenedWorldStorage;
 import net.modificationstation.stationapi.mixin.vanillafix.client.ScreenAccessor;
 
+import java.lang.invoke.MethodHandles;
+
 import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
@@ -27,6 +30,10 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class EditWorldScreenImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     private static final String
             ROOT_KEY = "selectWorld." + NAMESPACE,
             CONVERT_TO_MCREGION_KEY = ROOT_KEY + ".convertToMcRegion";

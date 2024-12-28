@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.vanillafix.client.color.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.block.Block;
 import net.minecraft.class_287;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -9,9 +10,15 @@ import net.modificationstation.stationapi.api.client.event.color.block.BlockColo
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
+import java.lang.invoke.MethodHandles;
+
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaBlockColorProviders {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     @EventListener
     private static void registerBlockColors(BlockColorsRegisterEvent event) {
         event.blockColors.registerColorProvider(

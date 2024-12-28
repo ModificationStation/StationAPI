@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.client.gui.screen.achievement;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.achievement.Achievement;
 import net.minecraft.achievement.Achievements;
 import net.minecraft.client.Minecraft;
@@ -12,6 +13,7 @@ import net.modificationstation.stationapi.api.event.achievement.AchievementRegis
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
@@ -19,6 +21,10 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class AchievementPageImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     @EventListener
     private static void replaceBackgroundTexture(AchievementsScreenEvent.BackgroundTextureRender event) {
         event.backgroundTexture = AchievementPage.getCurrentPage().getBackgroundTexture(event.random, event.column, event.row, event.randomizedRow, event.backgroundTexture);

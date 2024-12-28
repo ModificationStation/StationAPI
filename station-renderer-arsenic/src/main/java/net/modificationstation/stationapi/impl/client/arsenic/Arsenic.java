@@ -22,12 +22,16 @@ import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class Arsenic {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
 
     @Entrypoint.Logger("Arsenic")
     public static final Logger LOGGER = Null.get();

@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.client.gui.screen.container;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.client.gui.DrawContext;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.TooltipHelper;
@@ -10,12 +11,17 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.mixin.item.client.DrawContextAccessor;
 import net.modificationstation.stationapi.mixin.item.client.HandledScreenAccessor;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class CustomTooltipRendererImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     private static final DrawContext CONTEXT = new DrawContext();
 
     @EventListener
