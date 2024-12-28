@@ -23,8 +23,8 @@ import net.modificationstation.stationapi.api.client.render.model.json.ModelTran
 import net.modificationstation.stationapi.api.client.render.model.json.Transformation;
 import net.modificationstation.stationapi.api.client.texture.StationTextureManager;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.crash.CrashException;
 import net.modificationstation.stationapi.api.util.crash.CrashReport;
@@ -60,8 +60,6 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     });
     private final BlockColors blockColors = StationRenderAPI.getBlockColors();
     private final ItemColors itemColors = StationRenderAPI.getItemColors();
-    private final ThreadLocal<BlockRenderContext> BLOCK_CONTEXTS = ThreadLocal.withInitial(BlockRenderContext::new);
-    private final ThreadLocal<ItemRenderContext> ITEM_CONTEXTS = ThreadLocal.withInitial(() -> new ItemRenderContext(itemColors));
     private boolean damage;
 
     @Override
@@ -85,29 +83,25 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     public boolean render(BlockView world, BakedModel model, BlockState state, BlockPos pos, boolean cull, Random random, long seed) {
         boolean rendered = false;
         model = Objects.requireNonNull(model.getOverrides().apply(model, state, world, pos, (int) seed));
-        if (!model.isVanillaAdapter()) {
-            rendered = BLOCK_CONTEXTS.get().render(world, model, state, pos, random, seed);
-        } else {
-            Block block = state.getBlock();
-            light.initialize(
-                    block,
-                    world, pos.x, pos.y, pos.z,
-                    Minecraft.method_2148() && model.useAmbientOcclusion()
-            );
-            ImmutableList<BakedQuad> qs;
-            BakedQuad q;
-            float[] qlight = light.light;
-            for (int quadSet = 0, size = DIRECTIONS.length; quadSet < size; quadSet++) {
-                Direction face = DIRECTIONS[quadSet];
-                random.setSeed(seed);
-                qs = model.getQuads(state, face, random);
-                if (!qs.isEmpty() && (face == null || block.isSideVisible(world, pos.x + face.getOffsetX(), pos.y + face.getOffsetY(), pos.z + face.getOffsetZ(), quadSet))) {
-                    rendered = true;
-                    for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
-                        q = qs.get(j);
-                        light.calculateForQuad(q);
-                        renderQuad(world, state, pos, q, qlight);
-                    }
+        Block block = state.getBlock();
+        light.initialize(
+                block,
+                world, pos.x, pos.y, pos.z,
+                Minecraft.method_2148() && model.useAmbientOcclusion()
+        );
+        ImmutableList<BakedQuad> qs;
+        BakedQuad q;
+        float[] qlight = light.light;
+        for (int quadSet = 0, size = DIRECTIONS.length; quadSet < size; quadSet++) {
+            Direction face = DIRECTIONS[quadSet];
+            random.setSeed(seed);
+            qs = model.getQuads(state, face, random);
+            if (!qs.isEmpty() && (face == null || block.isSideVisible(world, pos.x + face.getOffsetX(), pos.y + face.getOffsetY(), pos.z + face.getOffsetZ(), quadSet))) {
+                rendered = true;
+                for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
+                    q = qs.get(j);
+                    light.calculateForQuad(q);
+                    renderQuad(world, state, pos, q, qlight);
                 }
             }
         }
@@ -206,29 +200,25 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     @Override
     public void renderItem(ItemStack stack, ModelTransformation.Mode renderMode, float brightness, BakedModel model) {
         if (stack == null || stack.itemId == 0) return;
-        if (model.isVanillaAdapter()) {
-            Transformation transformation = model.getTransformation().getTransformation(renderMode);
-            transformation.apply();
-            boolean side = model.isSideLit();
-            if (side && renderMode == ModelTransformation.Mode.GUI) {
-                float angle = transformation.rotation.getY() - 315;
-                if (angle != 0) {
-                    class_583.method_1927();
-                    glPushMatrix();
-                    glRotatef(angle, 0, 1, 0);
-                    class_583.method_1930();
-                    glPopMatrix();
-                }
+        Transformation transformation = model.getTransformation().getTransformation(renderMode);
+        transformation.apply();
+        boolean side = model.isSideLit();
+        if (side && renderMode == ModelTransformation.Mode.GUI) {
+            float angle = transformation.rotation.getY() - 315;
+            if (angle != 0) {
+                class_583.method_1927();
+                glPushMatrix();
+                glRotatef(angle, 0, 1, 0);
+                class_583.method_1930();
+                glPopMatrix();
             }
-            glTranslatef(-0.5F, -0.5F, -0.5F);
-            if (model.isBuiltin()) return;
-            if (!side && renderMode == ModelTransformation.Mode.GROUND)
-                renderBakedItemModelFlat(model, stack, brightness);
-            else
-                renderBakedItemModel(model, stack, brightness);
-        } else {
-            ITEM_CONTEXTS.get().renderModel(stack, renderMode, model, this::renderBakedItemModel);
         }
+        glTranslatef(-0.5F, -0.5F, -0.5F);
+        if (model.isBuiltin()) return;
+        if (!side && renderMode == ModelTransformation.Mode.GROUND)
+            renderBakedItemModelFlat(model, stack, brightness);
+        else
+            renderBakedItemModel(model, stack, brightness);
     }
 
     private void renderBakedItemQuads(List<BakedQuad> quads, ItemStack stack, float brightness) {
