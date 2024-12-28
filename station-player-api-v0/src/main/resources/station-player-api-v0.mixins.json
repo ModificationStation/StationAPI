@@ -3,14 +3,8 @@
   "minVersion": "0.8",
   "package": "net.modificationstation.stationapi.mixin.player",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "PlayerEntityMixin"
-  ],
   "server": [
     "server.ServerPlayNetworkHandlerAccessor"
-  ],
-  "client": [
-    "client.ClientPlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
