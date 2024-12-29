@@ -8,7 +8,13 @@ import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedE
 import net.modificationstation.stationapi.api.registry.ListenableRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 
+import java.lang.invoke.MethodHandles;
+
 public final class BlockItemTracker {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     private BlockItemTracker() { }
 
     public static <R extends Registry<Item> & ListenableRegistry> void register(R registry) {

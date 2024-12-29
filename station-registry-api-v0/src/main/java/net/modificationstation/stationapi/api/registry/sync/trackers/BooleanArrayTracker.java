@@ -10,12 +10,17 @@ import net.modificationstation.stationapi.api.registry.ListenableRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class BooleanArrayTracker<T> {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     private final Supplier<boolean[]> arrayGetter;
     private final Consumer<boolean[]> arraySetter;
 

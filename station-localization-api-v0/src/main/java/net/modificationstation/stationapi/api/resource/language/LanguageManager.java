@@ -6,6 +6,7 @@ import lombok.val;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.resource.AssetsResourceReloaderRegisterEvent;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -41,6 +43,10 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @Entrypoint(eventBus = @EventBusPolicy(registerStatic = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class LanguageManager extends SinglePreparationResourceReloader<Map<Object, Object>> implements IdentifiableResourceReloadListener {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     public static final Identifier LANGUAGES = NAMESPACE.id("languages");
     @Entrypoint.Instance
     private static final LanguageManager INSTANCE = Null.get();

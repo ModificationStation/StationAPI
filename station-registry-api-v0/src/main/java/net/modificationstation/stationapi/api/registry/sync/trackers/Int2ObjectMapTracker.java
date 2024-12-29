@@ -16,6 +16,7 @@ import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.RemappableRawIdHolder;
 import net.modificationstation.stationapi.api.util.Identifier;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,10 @@ import java.util.function.Function;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 public class Int2ObjectMapTracker<V, OV> {
+	static {
+		Listener.registerLookup(MethodHandles.lookup());
+	}
+
 	@FunctionalInterface private interface Put<T> { T put(int key, T value); }
 	@FunctionalInterface private interface ContainsKey { boolean containsKey(int key); }
 

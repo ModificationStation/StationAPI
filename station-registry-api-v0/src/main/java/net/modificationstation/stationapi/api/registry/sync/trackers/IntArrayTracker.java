@@ -10,12 +10,17 @@ import net.modificationstation.stationapi.api.registry.ListenableRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class IntArrayTracker<T> {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     private final Supplier<int[]> arrayGetter;
     private final Consumer<int[]> arraySetter;
 

@@ -1,12 +1,11 @@
 package net.modificationstation.stationapi.api.client.texture;
 
 import lombok.Getter;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.crash.CrashException;
 import net.modificationstation.stationapi.api.util.crash.CrashReport;
 import net.modificationstation.stationapi.api.util.crash.CrashReportSection;
-import net.modificationstation.stationapi.impl.client.render.SpriteFinderImpl;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -29,7 +28,6 @@ public class SpriteAtlasTexture extends AbstractTexture implements DynamicTextur
     private int width;
     @Getter
     private int height;
-    private SpriteFinderImpl spriteFinder = null;
 
     public SpriteAtlasTexture(Identifier id) {
         this.id = id;
@@ -65,7 +63,6 @@ public class SpriteAtlasTexture extends AbstractTexture implements DynamicTextur
         }
         this.spritesToLoad = List.copyOf(list);
         this.animatedSprites = List.copyOf(list2);
-        spriteFinder = null;
     }
 
     @Override
@@ -117,15 +114,6 @@ public class SpriteAtlasTexture extends AbstractTexture implements DynamicTextur
 
     public void applyTextureFilter(SpriteLoader.StitchResult data) {
         this.setFilter(false, false);
-    }
-
-    public SpriteFinderImpl spriteFinder() {
-        SpriteFinderImpl result = spriteFinder;
-        if (result == null) {
-            result = new SpriteFinderImpl(sprites, this);
-            spriteFinder = result;
-        }
-        return result;
     }
 }
 
