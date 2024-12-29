@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.vanillafix.achievement;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.achievement.Achievement;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.achievement.AchievementRegisterEvent;
@@ -9,12 +10,18 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.StatRegistry;
 
+import java.lang.invoke.MethodHandles;
+
 import static net.minecraft.achievement.Achievements.*;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaAchievementFixImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     @EventListener
     private static void registerStats(AchievementRegisterEvent event) {
         register("open_inventory", OPEN_INVENTORY);

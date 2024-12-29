@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.vanillafix.stat;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -10,11 +11,17 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.StatRegistry;
 
+import java.lang.invoke.MethodHandles;
+
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaStatFixImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     @EventListener
     private static void registerStats(StatRegistryEvent event) {
         StatRegistry registry = event.registry;

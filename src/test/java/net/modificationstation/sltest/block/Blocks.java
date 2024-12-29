@@ -49,7 +49,7 @@ public enum Blocks {
         private static void registerBlocks(BlockRegistryEvent event) {
 //            BlockBase.ALLOWS_GRASS_UNDER[BlockBase.STILL_WATER.id] = BlockBase.ALLOWS_GRASS_UNDER[BlockBase.FLOWING_WATER.id] = true;
             ((BlockBaseAccessor) Block.BEDROCK).invokeSetHardness(2);
-            int blocksAmount = 3000;
+            int blocksAmount = 10000;
             BLOCKS = new TemplateBlock[blocksAmount];
             Random random = new Random(42);
             for (int i = 0; i < blocksAmount; i++) {
