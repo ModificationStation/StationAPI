@@ -33,6 +33,8 @@
       "net.modificationstation.sltest.datafixer.DataFixerListener",
       "net.modificationstation.sltest.worldgen.TestWorldgenListener",
       "net.modificationstation.sltest.bonemeal.BonemealListener",
+      "net.modificationstation.sltest.dispenser.DispenserListener",
+      "net.modificationstation.sltest.effect.TestEffectListener",
       "net.modificationstation.sltest.dispenser.DispenserListener"
     ],
     "stationapi:event_bus_client": [
