@@ -29,28 +29,28 @@ public class EffectsRenderer {
 				);
 				
 				if (effect.isInfinity()) {
-					renderEffectBack(minecraft, py, 28 + width);
-					minecraft.textRenderer.drawWithShadow(name, 26, py + 4, 0xFFFFFFFF);
-					minecraft.textRenderer.drawWithShadow(desc, 26, py + 13, 0xFFFFFFFF);
+					renderEffectBack(minecraft, py, 30 + width);
+					minecraft.textRenderer.drawWithShadow(name, 26, py + 5, 0xFFFFFFFF);
+					minecraft.textRenderer.drawWithShadow(desc, 26, py + 14, 0xFFFFFFFF);
 				}
 				else {
 					String time = getEffectTime(effect, delta);
 					int timeWidth = minecraft.textRenderer.getWidth(time);
-					renderEffectBack(minecraft, py, 30 + width + timeWidth);
-					minecraft.textRenderer.drawWithShadow(time, 26, py + 8, 0xFFFFFFFF);
+					renderEffectBack(minecraft, py, 32 + width + timeWidth);
+					minecraft.textRenderer.drawWithShadow(time, 26, py + 9, 0xFFFFFFFF);
 					int x = 28 + timeWidth;
-					minecraft.textRenderer.drawWithShadow(name, x, py + 4, 0xFFFFFFFF);
-					minecraft.textRenderer.drawWithShadow(desc, x, py + 13, 0xFFFFFFFF);
+					minecraft.textRenderer.drawWithShadow(name, x, py + 5, 0xFFFFFFFF);
+					minecraft.textRenderer.drawWithShadow(desc, x, py + 14, 0xFFFFFFFF);
 				}
 			}
 			else {
 				if (effect.isInfinity()) {
-					renderEffectBack(minecraft, py, 24);
+					renderEffectBack(minecraft, py, 26);
 				}
 				else {
 					String time = getEffectTime(effect, delta);
-					renderEffectBack(minecraft, py, 28 + minecraft.textRenderer.getWidth(time));
-					minecraft.textRenderer.drawWithShadow(time, 26, py + 8, 0xFFFFFFFF);
+					renderEffectBack(minecraft, py, 30 + minecraft.textRenderer.getWidth(time));
+					minecraft.textRenderer.drawWithShadow(time, 26, py + 9, 0xFFFFFFFF);
 				}
 			}
 			
@@ -59,8 +59,8 @@ public class EffectsRenderer {
 				minecraft.textureManager.getTextureId("/assets/" + id.namespace + "/stationapi/textures/gui/effect/" + id.path + ".png")
 			);
 			
-			renderEffectIcon(py + 4, texture);
-			py += 26;
+			renderEffectIcon(py + 5, texture);
+			py += 28;
 		}
 	}
 	
@@ -79,10 +79,10 @@ public class EffectsRenderer {
 		
 		int y2 = y + 16;
 		
-		tessellator.vertex(6, y2, 0.0F, 0.0F, 1.0F);
-		tessellator.vertex(22, y2, 0.0F, 1.0F, 1.0F);
-		tessellator.vertex(22, y, 0.0F, 1.0F, 0.0F);
-		tessellator.vertex(6, y, 0.0F, 0.0F, 0.0F);
+		tessellator.vertex(7, y2, 0.0F, 0.0F, 1.0F);
+		tessellator.vertex(23, y2, 0.0F, 1.0F, 1.0F);
+		tessellator.vertex(23, y, 0.0F, 1.0F, 0.0F);
+		tessellator.vertex(7, y, 0.0F, 0.0F, 0.0F);
 		
 		tessellator.draw();
 	}
@@ -93,7 +93,7 @@ public class EffectsRenderer {
 		Tessellator tessellator = Tessellator.INSTANCE;
 		tessellator.startQuads();
 		
-		int y2 = y + 24;
+		int y2 = y + 26;
 		
 		tessellator.vertex(2, y2, 0.0F, 0.0F, 1.0F);
 		tessellator.vertex(14, y2, 0.0F, 0.5F, 1.0F);
@@ -101,9 +101,9 @@ public class EffectsRenderer {
 		tessellator.vertex(2, y, 0.0F, 0.0F, 0.0F);
 		
 		int x2 = width + 2;
-		int x1 = x2 - 12;
+		int x1 = x2 - 14;
 		
-		if (width > 24) {
+		if (width > 26) {
 			tessellator.vertex(14, y2, 0.0F, 0.5F, 1.0F);
 			tessellator.vertex(x1, y2, 0.0F, 0.5F, 1.0F);
 			tessellator.vertex(x1, y, 0.0F, 0.5F, 0.0F);
