@@ -12,8 +12,10 @@ import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.effect.EffectRegistry;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.api.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -21,7 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class SendAllEffectsPlayerPacket extends Packet implements IdentifiablePacket {
+public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<SendAllEffectsPlayerPacket> {
+	public static final PacketType<SendAllEffectsPlayerPacket> TYPE = PacketType.builder(true, true, SendAllEffectsPlayerPacket::new).build();
+	private static final String STATION_ID = StationAPI.NAMESPACE.id("id").toString();
 	private static final Identifier PACKET_ID = StationAPI.NAMESPACE.id("send_all_effects_player");
 	private Collection<Pair<Identifier, Integer>> effects;
 	private int size = 8;
@@ -75,11 +79,6 @@ public class SendAllEffectsPlayerPacket extends Packet implements IdentifiablePa
 		return size;
 	}
 	
-	@Override
-	public Identifier getId() {
-		return PACKET_ID;
-	}
-	
 	@Environment(EnvType.CLIENT)
 	private void applyEffects() {
 		@SuppressWarnings("deprecation")
@@ -90,8 +89,8 @@ public class SendAllEffectsPlayerPacket extends Packet implements IdentifiablePa
 			player.addEffect(effect);
 		}
 	}
-	
-	public static void register() {
-		IdentifiablePacket.register(PACKET_ID, true, true, SendAllEffectsPlayerPacket::new);
+
+	public @NotNull PacketType<SendAllEffectsPlayerPacket> getType() {
+		return TYPE;
 	}
 }

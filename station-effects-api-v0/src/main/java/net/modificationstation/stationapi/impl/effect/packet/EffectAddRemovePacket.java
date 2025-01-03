@@ -6,15 +6,19 @@ import net.minecraft.entity.Entity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.network.packet.IdentifiablePacket;
+import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
+import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.mixin.effects.AccessorClientNetworkHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class EffectAddRemovePacket extends Packet implements IdentifiablePacket {
+public class EffectAddRemovePacket extends Packet implements ManagedPacket<EffectAddRemovePacket> {
+	public static final PacketType<EffectAddRemovePacket> TYPE = PacketType.builder(false, true, EffectAddRemovePacket::new).build();
+	private static final String STATION_ID = StationAPI.NAMESPACE.id("id").toString();
 	private static final Identifier PACKET_ID = StationAPI.NAMESPACE.id("effect_add_remove");
 	private Identifier effectID;
 	private int entityID;
@@ -67,13 +71,8 @@ public class EffectAddRemovePacket extends Packet implements IdentifiablePacket 
 	public int size() {
 		return size;
 	}
-	
-	@Override
-	public Identifier getId() {
-		return PACKET_ID;
-	}
-	
-	public static void register() {
-		IdentifiablePacket.register(PACKET_ID, false, true, EffectAddRemovePacket::new);
+
+	public @NotNull PacketType<EffectAddRemovePacket> getType() {
+		return TYPE;
 	}
 }
