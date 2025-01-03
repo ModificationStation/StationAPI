@@ -25,8 +25,7 @@ public enum Blocks {
     EMISSION_CHECKER("emission_checker", "emissionChecker", LampBlock::new),
     INDISPENSABLE_BLOCK("indispensable_block", "indispensableBlock", IndispensableBlock::new),
     EFFECT_BLOCK("effect_block", "effectBlock", EffectBlock::new),
-    EFFECT_BLOCK_INF("effect_block_inf", "effectBlockInf", EffectBlockInf::new),
-    INDISPENSABLE_BLOCK("indispensable_block", "indispensableBlock", IndispensableBlock::new);
+    EFFECT_BLOCK_INF("effect_block_inf", "effectBlockInf", EffectBlockInf::new);
 
     private final Runnable register;
     private Block block;
