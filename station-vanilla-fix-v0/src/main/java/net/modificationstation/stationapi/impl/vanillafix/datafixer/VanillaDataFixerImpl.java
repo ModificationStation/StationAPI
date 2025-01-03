@@ -5,12 +5,12 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.DataFixerBuilder;
 import com.mojang.datafixers.schemas.Schema;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.event.datafixer.DataFixerRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.vanillafix.datadamager.damage.StationFlatteningToMcRegionChunkDamage;
@@ -34,7 +34,7 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaDataFixerImpl {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     public static final String STATION_ID = NAMESPACE.id("id").toString();

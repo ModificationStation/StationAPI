@@ -1,5 +1,8 @@
 package net.modificationstation.stationapi.api.mod.entrypoint;
 
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
+import lombok.val;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.mine_diver.unsafeevents.Event;
@@ -7,11 +10,8 @@ import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.ReflectionHelper;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.message.ParameterizedMessageFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.function.Consumer;
 
@@ -20,6 +20,13 @@ import java.util.function.Consumer;
  * @author mine_diver
  */
 public class EntrypointManager {
+    private static final Reference2ReferenceMap<Class<?>, MethodHandles.Lookup> LOOKUPS = new Reference2ReferenceOpenHashMap<>();
+
+    public static void registerLookup(MethodHandles.Lookup lookup) {
+        Listener.registerLookup(lookup);
+        LOOKUPS.put(lookup.lookupClass(), lookup);
+    }
+
     /**
      * Performs the setup of entrypoint, such as:
      * - Registration of EventBus listeners.
@@ -79,19 +86,18 @@ public class EntrypointManager {
                                 .listener(o)
                                 .build()
                 );
+            val lookup = LOOKUPS.getOrDefault(o.getClass(), MethodHandles.publicLookup());
             try {
-                ReflectionHelper.setFieldsWithAnnotation(o, Entrypoint.Instance.class, o);
-                ReflectionHelper.setFieldsWithAnnotation(o, Entrypoint.Namespace.class, namespace -> namespace.value().isEmpty() ? Namespace.of(modContainer) : Namespace.of(namespace.value()));
-                ReflectionHelper.setFieldsWithAnnotation(o, Entrypoint.Logger.class, logger -> {
-                    String name = logger.value().isEmpty() ? modContainer.getMetadata().getId() + "|Mod" : logger.value();
-                    org.apache.logging.log4j.Logger log = LogManager.getLogger(name, ParameterizedMessageFactory.INSTANCE);
-                    Configurator.setLevel(name, Level.INFO);
-                    return log;
+                ReflectionHelper.setFieldsWithAnnotation(lookup, o, Entrypoint.Instance.class, o);
+                ReflectionHelper.setFieldsWithAnnotation(lookup, o, Entrypoint.Namespace.class, namespace -> namespace.value().isEmpty() ? Namespace.of(modContainer) : Namespace.of(namespace.value()));
+                ReflectionHelper.setFieldsWithAnnotation(lookup, o, Entrypoint.Logger.class, logger -> {
+                    val namespace = Namespace.of(modContainer);
+                    val name = logger.value();
+                    return name.isEmpty() ? namespace.getLogger() : namespace.getLogger(name);
                 });
-            } catch (IllegalAccessException e) {
+            } catch (IllegalAccessException | NoSuchFieldException e) {
                 throw new RuntimeException(e);
             }
         }
     }
-
 }

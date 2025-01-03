@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.impl.client.network;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.class_454;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -20,6 +19,7 @@ import net.modificationstation.stationapi.api.event.registry.EntityHandlerRegist
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.MobHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.registry.Registry;
@@ -40,7 +40,7 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class EntityClientNetworkHandler {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     @EventListener

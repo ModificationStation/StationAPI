@@ -6,6 +6,7 @@ import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedEvent;
 import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.registry.ListenableRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.RemappableRawIdHolder;
@@ -18,7 +19,7 @@ import java.util.function.Supplier;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class RemappableEntryArrayTracker<T extends RemappableRawIdHolder> {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     private final Supplier<T[]> arrayGetter;
