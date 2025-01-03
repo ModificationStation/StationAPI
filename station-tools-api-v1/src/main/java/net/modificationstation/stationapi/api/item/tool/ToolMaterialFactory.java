@@ -1,14 +1,12 @@
 package net.modificationstation.stationapi.api.item.tool;
 
 import net.minecraft.item.ToolMaterial;
-import net.modificationstation.stationapi.api.factory.EnumFactory;
+import net.modificationstation.stationapi.mixin.tools.ToolMaterialAccessor;
 
 public class ToolMaterialFactory {
+    private static int nextId = ToolMaterial.values().length;
+
     public static ToolMaterial create(String materialName, int miningLevel, int durability, float miningSpeed, int attackDamage) {
-        return EnumFactory.addEnum(
-                ToolMaterial.class, materialName,
-                new Class[] { int.class, int.class, float.class, int.class },
-                miningLevel, durability, miningSpeed, attackDamage
-        );
+        return ToolMaterialAccessor.stationapi_create(materialName, nextId++, miningLevel, durability, miningSpeed, attackDamage);
     }
 }
