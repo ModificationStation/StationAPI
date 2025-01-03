@@ -25,6 +25,6 @@ public class MixinInGameHud {
 	))
 	private void stationapi_renderEffects(float delta, boolean i, int j, int par4, CallbackInfo ci) {
 		if (minecraft.options.debugHud) return;
-		stationapi_effectRenderer.renderEffects(minecraft, 2, delta, false);
+		stationapi_effectRenderer.renderEffects(minecraft, delta, false);
 	}
 }

@@ -20,7 +20,6 @@ public abstract class MixinInventoryScreen extends HandledScreen {
 	
 	@Inject(method = "drawBackground", at = @At("TAIL"))
 	private void stationapi_renderEffects(float delta, CallbackInfo info) {
-		int offset = /*FabricLoader.getInstance().isModLoaded("hmifabric") ? 24 :*/ 2;
-		stationapi_effectRenderer.renderEffects(minecraft, offset, delta, true);
+		stationapi_effectRenderer.renderEffects(minecraft, delta, true);
 	}
 }

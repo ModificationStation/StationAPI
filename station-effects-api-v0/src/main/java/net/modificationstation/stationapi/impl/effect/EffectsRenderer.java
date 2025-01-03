@@ -14,10 +14,11 @@ import java.util.Collection;
 public class EffectsRenderer {
 	private final Reference2IntMap<Identifier> effectIcons = new Reference2IntOpenHashMap<>();
 	
-	public void renderEffects(Minecraft minecraft, int py, float delta, boolean extended) {
+	public void renderEffects(Minecraft minecraft, float delta, boolean extended) {
 		Collection<EntityEffect<? extends Entity>> effects = minecraft.player.getRenderEffects();
 		if (effects == null || effects.isEmpty()) return;
 		
+		int py = 2;
 		for (EntityEffect<? extends Entity> effect : effects) {
 			if (extended) {
 				String name = effect.getName();
