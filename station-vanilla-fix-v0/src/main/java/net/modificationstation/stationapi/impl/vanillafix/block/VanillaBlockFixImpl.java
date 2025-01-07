@@ -16,7 +16,6 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.Util;
 
@@ -28,7 +27,6 @@ import java.util.function.Supplier;
 import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
 import static net.minecraft.block.Block.*;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
-import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
@@ -151,10 +149,6 @@ public final class VanillaBlockFixImpl {
         LOGGER.info("Added vanilla blocks to the registry.");
     }
 
-    private static void register(Registry<Block> registry, String id, Block block) {
-        Registry.register(registry, block.id, of(id), block);
-    }
-
     @EventListener(priority = LOW)
     private static void disableAutomaticBlockItemRegistration(BlockRegistryEvent event) {
         Consumer<Block> c = StationBlockItemsBlock::disableAutoItemRegistration;
@@ -164,7 +158,7 @@ public final class VanillaBlockFixImpl {
 
     @EventListener
     private static void registerBlockItems(BlockItemRegistryEvent event) {
-        Consumer<Block> c = block -> Registry.register(ItemRegistry.INSTANCE, BlockRegistry.INSTANCE.getId(block), Item.ITEMS[block.id]);
+        Consumer<Block> c = block -> event.register(BlockRegistry.INSTANCE.getId(block), Item.ITEMS[block.id]);
 
         c.accept(Block.WOOL);
         c.accept(Block.LOG);
@@ -174,6 +168,6 @@ public final class VanillaBlockFixImpl {
         c.accept(Block.PISTON);
         c.accept(Block.STICKY_PISTON);
 
-        COLLISION_BLOCKS.get().forEach(block -> Registry.register(ItemRegistry.INSTANCE, Objects.requireNonNull(BlockRegistry.INSTANCE.getId(block)).withSuffixedPath("_unobtainable"), new BlockItem(ItemRegistry.SHIFTED_ID.get(block.id))));
+        COLLISION_BLOCKS.get().forEach(block -> event.register(Objects.requireNonNull(BlockRegistry.INSTANCE.getId(block)).withSuffixedPath("_unobtainable"), new BlockItem(ItemRegistry.SHIFTED_ID.get(block.id))));
     }
 }

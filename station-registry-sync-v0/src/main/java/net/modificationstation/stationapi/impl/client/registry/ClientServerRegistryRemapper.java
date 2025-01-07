@@ -9,7 +9,6 @@ import net.modificationstation.stationapi.api.event.registry.MessageListenerRegi
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
-import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.legacy.WorldLegacyRegistry;
 
 import java.io.ByteArrayInputStream;
@@ -27,7 +26,7 @@ public class ClientServerRegistryRemapper {
 
     @EventListener
     private static void registerListeners(MessageListenerRegistryEvent event) {
-        Registry.register(event.registry, NAMESPACE.id("server_registry_sync"), ClientServerRegistryRemapper::remapRegistries);
+        event.register(NAMESPACE.id("server_registry_sync"), ClientServerRegistryRemapper::remapRegistries);
     }
 
     private static void remapRegistries(PlayerEntity player, MessagePacket message) {
