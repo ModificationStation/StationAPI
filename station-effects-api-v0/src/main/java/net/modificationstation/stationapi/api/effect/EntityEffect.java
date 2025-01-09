@@ -105,7 +105,6 @@ public abstract class EntityEffect<E extends Entity> {
 			if (ticks == 0) {
 				entity.removeEffect(effectID);
 			}
-			return;
 		}
 	}
 	
