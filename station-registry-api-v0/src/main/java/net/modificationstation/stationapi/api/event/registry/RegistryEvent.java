@@ -39,17 +39,17 @@ public abstract class RegistryEvent<REGISTRY extends Registry<?>> extends Event 
 
         @Contract(pure = true)
         public BulkBiConsumer<Identifier, ENTRY> register() {
-            return BulkBiConsumer.of(this::register);
+            return Registry.register(registry);
         }
 
         @Contract(pure = true)
         public BulkBiConsumer<String, ENTRY> register(Namespace namespace) {
-            return BulkBiConsumer.of((id, entry) -> register(namespace.id(id), entry));
+            return Registry.register(registry, namespace);
         }
 
         @Contract(pure = true)
         public BulkBiConsumer<String, ENTRY> register(Namespace namespace, ToIntFunction<ENTRY> rawIdGetter) {
-            return BulkBiConsumer.of((id, entry) -> register(rawIdGetter.applyAsInt(entry), namespace.id(id), entry));
+            return Registry.register(registry, namespace, rawIdGetter);
         }
     }
 }

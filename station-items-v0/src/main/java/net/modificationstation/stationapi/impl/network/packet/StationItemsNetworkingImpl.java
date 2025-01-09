@@ -1,10 +1,8 @@
 package net.modificationstation.stationapi.impl.network.packet;
 
 import net.fabricmc.api.ModInitializer;
-import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.api.registry.PacketTypeRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
-import net.modificationstation.stationapi.api.util.function.BulkBiConsumer;
 import net.modificationstation.stationapi.impl.network.packet.c2s.play.StationClickSlotC2SPacket;
 import net.modificationstation.stationapi.impl.network.packet.c2s.play.StationPlayerInteractBlockC2SPacket;
 import net.modificationstation.stationapi.impl.network.packet.s2c.play.StationEntityEquipmentUpdateS2CPacket;
@@ -17,7 +15,7 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 public class StationItemsNetworkingImpl implements ModInitializer {
     @Override
     public void onInitialize() {
-        BulkBiConsumer.of((String id, PacketType<?> type) -> Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id(id), type))
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE)
                 .accept("items/slot", StationClickSlotC2SPacket.TYPE)
                 .accept("items/equipment", StationEntityEquipmentUpdateS2CPacket.TYPE)
                 .accept("items/inventory", StationInventoryS2CPacket.TYPE)
