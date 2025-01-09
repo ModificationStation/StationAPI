@@ -46,7 +46,7 @@ public class MixinEntity implements StationEffectEntity {
 			stationapi_effects = new Reference2ReferenceOpenHashMap<>();
 		}
 		stationapi_effects.put(effectID, effect);
-		effect.onStart();
+		effect.onAdded();
 	}
 	
 	@Override
@@ -57,7 +57,7 @@ public class MixinEntity implements StationEffectEntity {
 		if (stationapi_effects == null) return;
 		EntityEffect<? extends Entity> effect = stationapi_effects.get(effectID);
 		if (effect == null) return;
-		effect.onEnd();
+		effect.onRemoved();
 		stationapi_effects.remove(effectID, effect);
 		if (stationapi_effects.isEmpty()) stationapi_effects = null;
 	}

@@ -14,16 +14,16 @@ public class TestPlayerEffect extends EntityEffect<PlayerEntity> {
 	}
 	
 	@Override
-	public void onStart() {
+	public void onAdded() {
 		originalHealth = entity.health;
 		entity.health = 5;
 	}
 	
 	@Override
-	public void process() {}
+	public void onTick() {}
 	
 	@Override
-	public void onEnd() {
+	public void onRemoved() {
 		entity.health = originalHealth;
 	}
 	

@@ -9,7 +9,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public abstract class EntityEffect<E extends Entity> {
-	protected static final int INFINITY_TICKS = -10;
+	protected static final int INFINITY_TICKS = -1;
 	private final Identifier effectID;
 	protected E entity;
 	protected int ticks;
@@ -29,49 +29,81 @@ public abstract class EntityEffect<E extends Entity> {
 		}
 	}
 	
-	public abstract void onStart();
+	/**
+	 * This method is called once when the effect is just applied to the entity.
+	 */
+	public abstract void onAdded();
 	
-	public abstract void process();
+	/**
+	 * This method is called on each entity tick.
+	 */
+	public abstract void onTick();
 	
-	public abstract void onEnd();
+	/**
+	 * This method is called once when the effect is just removed from the entity.
+	 */
+	public abstract void onRemoved();
 	
+	/**
+	 * Allows to write any custom data to the tag storage.
+	 * @param tag effect data root tag
+	 */
 	protected abstract void writeCustomData(NbtCompound tag);
 	
+	/**
+	 * Allows to read any custom data from the tag storage.
+	 * @param tag effect data root tag
+	 */
 	protected abstract void readCustomData(NbtCompound tag);
 	
 	public Identifier getEffectID() {
 		return effectID;
 	}
 	
+	/**
+	 * Get remaining effect ticks.
+	 */
 	public int getTicks() {
 		return ticks;
 	}
 	
+	/**
+	 * Check if effect is infinity.
+	 */
 	public boolean isInfinity() {
 		return ticks == INFINITY_TICKS;
 	}
 	
+	/**
+	 * Get translated effect name, client side only.
+	 */
 	@Environment(EnvType.CLIENT)
 	public String getName() {
 		return I18n.getTranslation(nameTranslationKey, nameTranslationKey);
 	}
 	
+	/**
+	 * Get translated effect description, client side only.
+	 */
 	@Environment(EnvType.CLIENT)
 	public String getDescription() {
 		return I18n.getTranslation(descriptionTranslationKey, descriptionTranslationKey);
 	}
 	
+	/**
+	 * Set how much ticks effect will stay.
+	 */
 	@Environment(EnvType.CLIENT)
 	public final void setTicks(int ticks) {
 		this.ticks = ticks;
 	}
 	
 	public final void tick() {
-		if (!isInfinity() && ticks-- <= 0) {
+		if (!isInfinity() && ticks-- == 0) {
 			entity.removeEffect(effectID);
 			return;
 		}
-		process();
+		onTick();
 	}
 	
 	public final NbtCompound write() {

@@ -12,13 +12,13 @@ public class TestPlayerInfEffect extends EntityEffect<PlayerEntity> {
 	}
 	
 	@Override
-	public void onStart() {}
+	public void onAdded() {}
 	
 	@Override
-	public void process() {}
+	public void onTick() {}
 	
 	@Override
-	public void onEnd() {}
+	public void onRemoved() {}
 	
 	@Override
 	protected void writeCustomData(NbtCompound tag) {}
