@@ -30,7 +30,7 @@ public abstract class EntityEffect<E extends Entity> {
 	}
 	
 	/**
-	 * This method is called once when the effect is just applied to the entity.
+	 * This method is called immediately when the effect is added.
 	 */
 	public abstract void onAdded();
 	
@@ -40,7 +40,7 @@ public abstract class EntityEffect<E extends Entity> {
 	public abstract void onTick();
 	
 	/**
-	 * This method is called once when the effect is just removed from the entity.
+	 * This method is called immediately when the effect is removed.
 	 */
 	public abstract void onRemoved();
 	
