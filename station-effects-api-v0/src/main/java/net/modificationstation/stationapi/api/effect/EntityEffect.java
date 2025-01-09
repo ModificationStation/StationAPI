@@ -91,7 +91,7 @@ public abstract class EntityEffect<E extends Entity> {
 	}
 	
 	/**
-	 * Set how much ticks effect will stay.
+	 * Set how much ticks effect will stay. Used only by packets.
 	 */
 	@Environment(EnvType.CLIENT)
 	public final void setTicks(int ticks) {
@@ -99,11 +99,14 @@ public abstract class EntityEffect<E extends Entity> {
 	}
 	
 	public final void tick() {
-		if (!isInfinity() && ticks-- == 0) {
-			entity.removeEffect(effectID);
+		onTick();
+		if (!isInfinity()) {
+			ticks--;
+			if (ticks == 0) {
+				entity.removeEffect(effectID);
+			}
 			return;
 		}
-		onTick();
 	}
 	
 	public final NbtCompound write() {
