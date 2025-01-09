@@ -6,7 +6,8 @@ public class StationConfig {
 
     @ConfigRoot(
             value = "config",
-            visibleName = "gui.config.stationapi.main"
+            visibleName = "StationAPI Configuration",
+            nameKey = "gui.config.stationapi.main"
     )
     public static StationConfigData stationConfigData = new StationConfigData();
 }
