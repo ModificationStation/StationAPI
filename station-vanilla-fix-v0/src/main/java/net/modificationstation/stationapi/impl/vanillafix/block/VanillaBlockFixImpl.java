@@ -48,7 +48,7 @@ public final class VanillaBlockFixImpl {
 
     @EventListener
     private static void registerBlocks(BlockRegistryEvent event) {
-        event.register(Namespace.MINECRAFT, block -> block.id)
+        event.register(block -> block.id, Namespace.MINECRAFT)
                 .accept("stone", STONE)
                 .accept("grass_block", GRASS_BLOCK)
                 .accept("dirt", DIRT)

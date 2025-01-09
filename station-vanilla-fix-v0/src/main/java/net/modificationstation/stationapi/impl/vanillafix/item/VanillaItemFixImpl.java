@@ -22,7 +22,7 @@ public final class VanillaItemFixImpl {
 
     @EventListener
     private static void registerItems(ItemRegistryEvent event) {
-        event.register(Namespace.MINECRAFT, item -> item.id)
+        event.register(item -> item.id, Namespace.MINECRAFT)
                 .accept("iron_shovel", IRON_SHOVEL)
                 .accept("iron_pickaxe", IRON_PICKAXE)
                 .accept("iron_axe", IRON_AXE)

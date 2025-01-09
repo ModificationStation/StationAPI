@@ -358,7 +358,7 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
     }
 
     @Contract(pure = true)
-    static <ENTRY> BulkBiConsumer<String, ENTRY> register(Registry<ENTRY> registry, Namespace namespace, ToIntFunction<ENTRY> rawIdGetter) {
+    static <ENTRY> BulkBiConsumer<String, ENTRY> register(Registry<ENTRY> registry, ToIntFunction<ENTRY> rawIdGetter, Namespace namespace) {
         return BulkBiConsumer.of((id, entry) -> register(registry, rawIdGetter.applyAsInt(entry), namespace.id(id), entry));
     }
 

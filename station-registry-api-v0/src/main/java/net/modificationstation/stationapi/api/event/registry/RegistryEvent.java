@@ -48,8 +48,8 @@ public abstract class RegistryEvent<REGISTRY extends Registry<?>> extends Event 
         }
 
         @Contract(pure = true)
-        public BulkBiConsumer<String, ENTRY> register(Namespace namespace, ToIntFunction<ENTRY> rawIdGetter) {
-            return Registry.register(registry, namespace, rawIdGetter);
+        public BulkBiConsumer<String, ENTRY> register(ToIntFunction<ENTRY> rawIdGetter, Namespace namespace) {
+            return Registry.register(registry, rawIdGetter, namespace);
         }
     }
 }
