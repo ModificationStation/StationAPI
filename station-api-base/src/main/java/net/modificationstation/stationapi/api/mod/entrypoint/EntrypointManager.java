@@ -22,6 +22,34 @@ import java.util.function.Consumer;
 public class EntrypointManager {
     private static final Reference2ReferenceMap<Class<?>, MethodHandles.Lookup> LOOKUPS = new Reference2ReferenceOpenHashMap<>();
 
+    /**
+     * By registering a lookup via this method, an entrypoint class gives StationAPI and UnsafeEvents safe access to
+     * its non-public fields and methods.
+     *
+     * <p>
+     *     This is useful if you wish to keep your
+     *     {@link net.mine_diver.unsafeevents.listener.EventListener listener methods} or utility fields
+     *     (such as {@link net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint.Instance},
+     *     {@link net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint.Namespace},
+     *     and {@link net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint.Logger}) private.
+     * </p>
+     *
+     * <p>
+     *     It's best to perform the registration as soon as possible in the static initializer of the class,
+     *     for example:
+     *     <pre><code>
+     *         public class ExampleEntrypoint {
+     *             static {
+     *                 EntrypointManager.registerLookup(MethodHandles.lookup());
+     *             }
+     *
+     *             // ... the rest of the entrypoint code ...
+     *         }
+     *     </code></pre>
+     * </p>
+     *
+     * @param lookup an entrypoint class's lookup obtained via {@link MethodHandles#lookup()}.
+     */
     public static void registerLookup(MethodHandles.Lookup lookup) {
         Listener.registerLookup(lookup);
         LOOKUPS.put(lookup.lookupClass(), lookup);
