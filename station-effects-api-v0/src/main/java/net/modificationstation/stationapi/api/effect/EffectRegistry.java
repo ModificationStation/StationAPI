@@ -20,7 +20,7 @@ public class EffectRegistry {
 		EFFECTS_IDS.put(effectClass, id);
 	}
 	
-	public static EntityEffect<? extends Entity> makeEffect(Entity entity, Identifier id) {
+	public static EntityEffect<? extends Entity> makeEffect(Entity entity, Identifier id, int ticks) {
 		Constructor<? extends EntityEffect<? extends Entity>> constructor = EFFECTS.get(id);
 		EntityEffect<? extends Entity> effect;
 		if (constructor == null) {
@@ -28,7 +28,7 @@ public class EffectRegistry {
 		}
 		else {
 			try {
-				effect = constructor.newInstance(id, entity);
+				effect = constructor.newInstance(id, entity, ticks);
 			}
 			catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
 				throw new RuntimeException(e);

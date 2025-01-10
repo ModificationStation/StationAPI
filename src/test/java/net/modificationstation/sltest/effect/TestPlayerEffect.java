@@ -8,9 +8,8 @@ import net.modificationstation.stationapi.api.util.Identifier;
 public class TestPlayerEffect extends EntityEffect<PlayerEntity> {
 	private int originalHealth;
 	
-	public TestPlayerEffect(Identifier id, PlayerEntity entity) {
-		super(id, entity);
-		ticks = 100;
+	public TestPlayerEffect(Identifier id, PlayerEntity entity, int ticks) {
+		super(id, entity, ticks);
 	}
 	
 	@Override

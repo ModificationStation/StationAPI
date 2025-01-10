@@ -36,11 +36,11 @@ public class MixinEntity implements StationEffectEntity {
 	@Shadow public int id;
 	
 	@Override
-	public void addEffect(Identifier effectID) {
+	public void addEffect(Identifier effectID, int ticks) {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-			PacketHelper.send(new EffectAddRemovePacket(id, effectID, true));
+			PacketHelper.send(new EffectAddRemovePacket(id, effectID, ticks));
 		}
-		EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(Entity.class.cast(this), effectID);
+		EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(Entity.class.cast(this), effectID, ticks);
 		if (effect == null) return;
 		if (stationapi_effects == null) {
 			stationapi_effects = new Reference2ReferenceOpenHashMap<>();
@@ -52,7 +52,7 @@ public class MixinEntity implements StationEffectEntity {
 	@Override
 	public void removeEffect(Identifier effectID) {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-			PacketHelper.send(new EffectAddRemovePacket(id, effectID, false));
+			PacketHelper.send(new EffectAddRemovePacket(id, effectID, 0));
 		}
 		if (stationapi_effects == null) return;
 		EntityEffect<? extends Entity> effect = stationapi_effects.get(effectID);
@@ -120,7 +120,8 @@ public class MixinEntity implements StationEffectEntity {
 		NbtList effects = new NbtList();
 		stationapi_effects.forEach((id, effect) -> {
 			NbtCompound effectTag = effect.write();
-			effectTag.putString("effect_id", id.toString());
+			effectTag.putString("id", id.toString());
+			effectTag.putInt("ticks", effect.getTicks());
 			effects.add(effectTag);
 		});
 		tag.put("stationapi_effects", effects);
@@ -133,12 +134,13 @@ public class MixinEntity implements StationEffectEntity {
 		if (stationapi_effects == null) stationapi_effects = new Reference2ReferenceOpenHashMap<>();
 		for (int i = 0; i < effects.size(); i++) {
 			NbtCompound effectTag = (NbtCompound) effects.get(i);
-			Identifier id = Identifier.of(effectTag.getString("effect_id"));
+			Identifier id = Identifier.of(effectTag.getString("id"));
 			if (!EffectRegistry.hasEffect(id)) {
 				StationAPI.LOGGER.warn("Effect " + id + " is not registered, skipping");
 				continue;
 			}
-			EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(Entity.class.cast(this), id);
+			int ticks = effectTag.getInt("ticks");
+			EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(Entity.class.cast(this), id, ticks);
 			effect.read(effectTag);
 			stationapi_effects.put(id, effect);
 		}

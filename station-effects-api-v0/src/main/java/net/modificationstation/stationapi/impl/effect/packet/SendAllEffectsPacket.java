@@ -76,8 +76,7 @@ public class SendAllEffectsPacket extends Packet implements ManagedPacket<SendAl
 		AccessorClientNetworkHandler handler = (AccessorClientNetworkHandler) networkHandler;
 		Entity entity = handler.stationapi_getEntityByID(entityID);
 		for (Pair<Identifier, Integer> pair : effects) {
-			EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(entity, pair.first());
-			effect.setTicks(pair.second());
+			EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(entity, pair.first(), pair.second());
 			entity.addEffect(effect);
 		}
 	}

@@ -25,7 +25,7 @@ public class EffectBlockInf extends TemplateBlock {
 
     @Override
     public boolean onUse(World level, int x, int y, int z, PlayerEntity player) {
-        player.addEffect(SLTest.NAMESPACE.id("infinity_effect"));
+        player.addInfinityEffect(SLTest.NAMESPACE.id("infinity_effect"));
         return true;
     }
 }

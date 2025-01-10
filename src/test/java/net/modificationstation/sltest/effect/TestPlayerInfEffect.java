@@ -6,9 +6,8 @@ import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TestPlayerInfEffect extends EntityEffect<PlayerEntity> {
-	public TestPlayerInfEffect(Identifier id, PlayerEntity entity) {
-		super(id, entity);
-		ticks = INFINITY_TICKS;
+	public TestPlayerInfEffect(Identifier id, PlayerEntity entity, int ticks) {
+		super(id, entity, ticks);
 	}
 	
 	@Override

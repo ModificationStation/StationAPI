@@ -84,8 +84,7 @@ public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<
 		@SuppressWarnings("deprecation")
 		PlayerEntity player = ((Minecraft) FabricLoader.getInstance().getGameInstance()).player;
 		for (Pair<Identifier, Integer> pair : effects) {
-			EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(player, pair.first());
-			effect.setTicks(pair.second());
+			EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(player, pair.first(), pair.second());
 			player.addEffect(effect);
 		}
 	}

@@ -22,15 +22,15 @@ public class EffectAddRemovePacket extends Packet implements ManagedPacket<Effec
 	private static final Identifier PACKET_ID = StationAPI.NAMESPACE.id("effect_add_remove");
 	private Identifier effectID;
 	private int entityID;
-	private boolean add;
-	private int size = 8;
+	private int ticks;
+	private int size = 11;
 	
 	public EffectAddRemovePacket() {}
 	
-	public EffectAddRemovePacket(int entityID, Identifier effectID, boolean add) {
+	public EffectAddRemovePacket(int entityID, Identifier effectID, int ticks) {
 		this.effectID = effectID;
 		this.entityID = entityID;
-		this.add = add;
+		this.ticks = ticks;
 	}
 	
 	@Override
@@ -38,7 +38,7 @@ public class EffectAddRemovePacket extends Packet implements ManagedPacket<Effec
 		try {
 			entityID = stream.readInt();
 			effectID = Identifier.of(stream.readUTF());
-			add = stream.readBoolean();
+			ticks = stream.readInt();
 		}
 		catch (IOException e) {
 			throw new RuntimeException(e);
@@ -50,7 +50,7 @@ public class EffectAddRemovePacket extends Packet implements ManagedPacket<Effec
 		try {
 			stream.writeInt(entityID);
 			stream.writeUTF(effectID.toString());
-			stream.writeBoolean(add);
+			stream.writeInt(ticks);
 			size = stream.size();
 		}
 		catch (IOException e) {
@@ -63,7 +63,7 @@ public class EffectAddRemovePacket extends Packet implements ManagedPacket<Effec
 		if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;
 		AccessorClientNetworkHandler handler = (AccessorClientNetworkHandler) networkHandler;
 		Entity entity = handler.stationapi_getEntityByID(entityID);
-		if (add) entity.addEffect(effectID);
+		if (ticks != 0) entity.addEffect(effectID, ticks);
 		else entity.removeEffect(effectID);
 	}
 	

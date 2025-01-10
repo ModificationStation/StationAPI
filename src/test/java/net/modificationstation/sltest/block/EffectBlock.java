@@ -31,7 +31,7 @@ public class EffectBlock extends TemplateBlock {
 		assert SLTest.NAMESPACE != null;
 		Identifier effectID = SLTest.NAMESPACE.id("test_effect");
         if (player.hasEffect(effectID)) return false;
-        player.addEffect(effectID);
+        player.addEffect(effectID, 200); // Effect for 10 seconds
         return true;
     }
 }

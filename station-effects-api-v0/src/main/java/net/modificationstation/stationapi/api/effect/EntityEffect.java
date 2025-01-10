@@ -12,7 +12,7 @@ public abstract class EntityEffect<E extends Entity> {
 	protected static final int INFINITY_TICKS = -1;
 	private final Identifier effectID;
 	protected E entity;
-	protected int ticks;
+	private int ticks;
 	
 	@Environment(EnvType.CLIENT)
 	private String nameTranslationKey;
@@ -20,9 +20,10 @@ public abstract class EntityEffect<E extends Entity> {
 	@Environment(EnvType.CLIENT)
 	private String descriptionTranslationKey;
 	
-	public EntityEffect(Identifier effectID, E entity) {
+	public EntityEffect(Identifier effectID, E entity, int ticks) {
 		this.effectID = effectID;
 		this.entity = entity;
+		this.ticks = ticks;
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 			nameTranslationKey = "gui.stationapi.effect." + effectID.namespace + "." + effectID.path + ".name";
 			descriptionTranslationKey = nameTranslationKey.substring(0, nameTranslationKey.length() - 4) + "desc";

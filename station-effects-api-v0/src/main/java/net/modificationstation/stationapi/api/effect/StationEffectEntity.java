@@ -10,14 +10,35 @@ import net.modificationstation.stationapi.api.util.Util;
 import java.util.Collection;
 
 public interface StationEffectEntity {
-	default void addEffect(Identifier effectID) {
+	/**
+	 * Adds specified effect to the entity, effect will last for infinity - it will be applied until manually removed.
+	 * @param effectID {@link Identifier} effect ID.
+	 */
+	default void addInfinityEffect(Identifier effectID) {
+		addEffect(effectID, EntityEffect.INFINITY_TICKS);
+	}
+	
+	/**
+	 * Adds specified effect to the entity.
+	 * @param effectID {@link Identifier} effect ID.
+	 * @param ticks ticks for effect to be applied.
+	 */
+	default void addEffect(Identifier effectID, int ticks) {
 		Util.assertImpl();
 	}
 	
+	/**
+	 * Removes specified effect from entity if the effect exists.
+	 * @param effectID {@link Identifier} effect ID.
+	 */
 	default void removeEffect(Identifier effectID) {
 		Util.assertImpl();
 	}
 	
+	/**
+	 * Get all entity effects.
+	 * @return {@link Collection} of effect {@link Identifier} ID
+	 */
 	default Collection<Identifier> getEffects() {
 		return Util.assertImpl();
 	}
@@ -26,6 +47,10 @@ public interface StationEffectEntity {
 		Util.assertImpl();
 	}
 	
+	/**
+	 * Check if entity has specified effect.
+	 * @param effectID {@link Identifier} effect ID.
+	 */
 	default boolean hasEffect(Identifier effectID) {
 		return Util.assertImpl();
 	}
