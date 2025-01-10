@@ -96,8 +96,6 @@ allprojects {
         }
 
         annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.1")
-            isTransitive = false
-        }
         
 //        modLocalRuntime("net.glasslauncher.mods:AlwaysMoreItems:${project.properties["ami_version"]}") {
 //            isTransitive = false
