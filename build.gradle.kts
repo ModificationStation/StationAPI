@@ -5,8 +5,8 @@ import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependency
 
 plugins {
     id("maven-publish")
-    id("fabric-loom") version "1.7.2"
-    id("babric-loom-extension") version "1.7.3"
+    id("fabric-loom") version "1.9-SNAPSHOT"
+    id("babric-loom-extension") version "1.9.2"
 }
 
 // https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
@@ -63,22 +63,20 @@ allprojects {
 
         mappings("net.glasslauncher:biny:${project.properties["yarn_mappings"]}:v2")
 
-        modImplementation("babric:fabric-loader:${project.properties["loader_version"]}")
-
-        implementation("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
-        annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.properties["mixinextras_version"]}")
+        modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
 
         "transitiveImplementation"("org.apache.commons:commons-lang3:3.12.0")
         "transitiveImplementation"("commons-io:commons-io:2.11.0")
         "transitiveImplementation"("net.jodah:typetools:${project.properties["typetools_version"]}")
-        "transitiveImplementation"("com.github.mineLdiver:expressions:${project.properties["expressions_version"]}")
         "transitiveImplementation"("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
         "transitiveImplementation"("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
         //noinspection GradlePackageUpdate
         "transitiveImplementation"("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
         "transitiveImplementation"("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
         "transitiveImplementation"("maven.modrinth:spasm:${project.properties["spasm_version"]}")
-        "transitiveImplementation"("com.oath.cyclops:cyclops:${project.properties["cyclops_version"]}")
+        "transitiveImplementation"("me.carleslc:Simple-Yaml:1.8.4")
+        "transitiveImplementation"("net.glasslauncher.mods:glass-networking:1.0.2")
+        "transitiveImplementation"("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}")
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
@@ -93,14 +91,14 @@ allprojects {
         modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}") {
             isTransitive = false
         }
-
-
-        implementation("me.carleslc:Simple-Yaml:1.8.4")
-        modImplementation("net.glasslauncher.mods:glass-networking:1.0.2")
-        modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") {
+        modLocalRuntime("maven.modrinth:retrocommands:${project.properties["rc_version"]}") {
             isTransitive = false
         }
-        // Requires gcapi
+
+        annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.1")
+            isTransitive = false
+        }
+        
 //        modLocalRuntime("net.glasslauncher.mods:AlwaysMoreItems:${project.properties["ami_version"]}") {
 //            isTransitive = false
 //        }
@@ -264,18 +262,12 @@ subprojects {
 }
 
 dependencies {
-    include("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.properties["mixinextras_version"]}")
     include("net.jodah:typetools:${project.properties["typetools_version"]}")
-    include("com.github.mineLdiver:expressions:${project.properties["expressions_version"]}")
     include("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
     include("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
     include("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
     include("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
     include("maven.modrinth:spasm:${project.properties["spasm_version"]}")
-    include("com.oath.cyclops:cyclops:${project.properties["cyclops_version"]}")
-    include("org.reactivestreams:reactive-streams:${project.properties["reactivestreams_version"]}")
-    include("io.kindedj:kindedj:${project.properties["kindedj_version"]}")
-    include("org.agrona:Agrona:${project.properties["agrona_version"]}")
 }
 
 // Makes java shut up

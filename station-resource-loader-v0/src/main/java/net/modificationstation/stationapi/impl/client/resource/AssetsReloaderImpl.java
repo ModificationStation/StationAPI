@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.client.resource;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.resource.AssetsReloadEvent;
 import net.modificationstation.stationapi.api.client.event.resource.TexturePackLoadedEvent;
@@ -16,15 +17,19 @@ import net.modificationstation.stationapi.impl.resource.ResourcePackManager;
 import net.modificationstation.stationapi.impl.resource.TexturePackProvider;
 import net.modificationstation.stationapi.impl.resource.loader.ModResourcePackCreator;
 
+import java.lang.invoke.MethodHandles;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static cyclops.control.Option.none;
-import static cyclops.control.Option.some;
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class AssetsReloaderImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     public static final ResourcePackManager RESOURCE_PACK_MANAGER = new ResourcePackManager(
             new DefaultResourcePackProvider(),
             ModResourcePackCreator.CLIENT_RESOURCE_PACK_PROVIDER,
@@ -40,11 +45,11 @@ public final class AssetsReloaderImpl {
     @EventListener
     private static void reloadResourceManager(final AssetsReloadEvent event) {
         RESOURCE_PACK_MANAGER.scanPacks();
+        if (ReloadScreenManager.getCurrentReload().isEmpty())
+            ReloadScreenManager.open();
         ReloadScreenManager.getCurrentReload()
-                .onEmpty(ReloadScreenManager::open);
-        ReloadScreenManager.getCurrentReload()
-                .flatMap(reload1 -> reload1 instanceof CompositeResourceReload composite ? some(composite) : none())
-                .peek(manager -> manager.scheduleReload(
+                .flatMap(reload1 -> reload1 instanceof CompositeResourceReload composite ? Optional.of(composite) : Optional.empty())
+                .ifPresent(manager -> manager.scheduleReload(
                         NAMESPACE.id("assets"),
                         () -> ReloadableAssetsManager.INSTANCE.reload(
                                 Util.getMainWorkerExecutor(),

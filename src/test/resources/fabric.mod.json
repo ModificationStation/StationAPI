@@ -25,7 +25,6 @@
       "net.modificationstation.sltest.SLTest",
       "net.modificationstation.sltest.recipe.RecipeListener",
       "net.modificationstation.sltest.achievement.AchievementListener",
-      "net.modificationstation.sltest.entity.player.PlayerHandlerListener",
       "net.modificationstation.sltest.level.gen.ChunkListener",
       "net.modificationstation.sltest.entity.EntityListener",
       "net.modificationstation.sltest.tileentity.TileEntityListener",

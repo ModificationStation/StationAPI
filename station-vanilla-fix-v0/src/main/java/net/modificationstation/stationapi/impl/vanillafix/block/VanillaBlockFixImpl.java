@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -18,6 +19,7 @@ import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.Util;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -30,6 +32,10 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaBlockFixImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     public static final Supplier<ReferenceSet<Block>> COLLISION_BLOCKS = Suppliers.memoize(() -> Util.make(new ReferenceOpenHashSet<>(), s -> {
         s.add(BED);
         s.add(WHEAT);

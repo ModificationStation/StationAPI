@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.server.registry;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -13,6 +14,7 @@ import net.modificationstation.stationapi.api.registry.legacy.WorldLegacyRegistr
 import net.modificationstation.stationapi.api.server.event.network.PlayerPacketHandlerSetEvent;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.invoke.MethodHandles;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
@@ -21,6 +23,9 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class ServerRegistrySender {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
 
     @EventListener
     private static void sendWorldRegistry(PlayerPacketHandlerSetEvent event) {

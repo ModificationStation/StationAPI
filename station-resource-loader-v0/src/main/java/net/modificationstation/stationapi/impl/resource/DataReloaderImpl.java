@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.impl.resource;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.resource.ReloadScreenManager;
 import net.modificationstation.stationapi.api.event.resource.DataReloadEvent;
@@ -16,18 +17,22 @@ import net.modificationstation.stationapi.api.util.Unit;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.impl.resource.loader.ModResourcePackCreator;
 
+import java.lang.invoke.MethodHandles;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static cyclops.control.Option.none;
-import static cyclops.control.Option.some;
 import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class DataReloaderImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     private static final ResourcePackManager DATA_PACK_MANAGER = new ResourcePackManager(consumer -> consumer.accept(ResourcePackProfile.create("vanilla", "fixText", true, name -> new DefaultResourcePack(), ResourceType.SERVER_DATA, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.BUILTIN)), new ModResourcePackCreator(ResourceType.SERVER_DATA));
     private static final Queue<Runnable> TASKS = new ConcurrentLinkedQueue<>();
     private static final CompletableFuture<Unit> COMPLETED_UNIT_FUTURE = CompletableFuture.completedFuture(Unit.INSTANCE);
@@ -59,8 +64,8 @@ public class DataReloaderImpl {
     @EventListener(priority = LOW)
     private static void reloadResourceManagerClient(DataReloadEvent event) {
         ReloadScreenManager.getCurrentReload()
-                .flatMap(reload1 -> reload1 instanceof CompositeResourceReload composite ? some(composite) : none())
-                .peek(manager -> manager.scheduleReload(
+                .flatMap(reload1 -> reload1 instanceof CompositeResourceReload composite ? Optional.of(composite) : Optional.empty())
+                .ifPresent(manager -> manager.scheduleReload(
                         NAMESPACE.id("data"),
                         () -> DataManager.INSTANCE.reload(
                                 Util.getMainWorkerExecutor(),

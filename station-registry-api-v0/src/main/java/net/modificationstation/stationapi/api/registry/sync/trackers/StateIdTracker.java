@@ -11,6 +11,7 @@ import net.modificationstation.stationapi.api.registry.ListenableRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.collection.IdList;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -18,6 +19,10 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class StateIdTracker<T, S> {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     private final Registry<T> registry;
     private final IdList<S> stateList;
     private final Function<T, Collection<S>> stateGetter;

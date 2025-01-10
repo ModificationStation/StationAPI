@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.block;
 
 import com.google.common.base.Suppliers;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.block.Block;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
@@ -10,6 +11,7 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.collection.IdList;
 
+import java.lang.invoke.MethodHandles;
 import java.util.function.Supplier;
 
 import static net.modificationstation.stationapi.api.util.Identifier.of;
@@ -17,6 +19,9 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class States {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
 
     private static final Supplier<Block> AIR_BLOCK = Suppliers.memoize(() -> new Air(0));
 

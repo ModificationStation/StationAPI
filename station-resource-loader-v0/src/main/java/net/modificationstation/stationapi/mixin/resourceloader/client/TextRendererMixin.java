@@ -1,7 +1,6 @@
 package net.modificationstation.stationapi.mixin.resourceloader.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import cyclops.function.FluentFunctions;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.modificationstation.stationapi.api.client.resource.ReloadScreenManager;
@@ -23,6 +22,6 @@ class TextRendererMixin {
             )
     )
     private Tessellator stationapi_changeTessellatorIfNecessary(Tessellator instance) {
-        return ReloadScreenManager.getThread().map(FluentFunctions.of(Objects::equals).partiallyApply(Thread.currentThread())).orElse(false) ? ReloadScreenTessellatorHolder.reloadScreenTessellator : instance;
+        return ReloadScreenManager.getThread().map(thread -> Objects.equals(thread, Thread.currentThread())).orElse(false) ? ReloadScreenTessellatorHolder.reloadScreenTessellator : instance;
     }
 }

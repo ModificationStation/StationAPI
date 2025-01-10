@@ -1,7 +1,9 @@
 package net.modificationstation.stationapi.impl.client.texture;
 
+import com.mojang.datafixers.util.Pair;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.class_285;
 import net.minecraft.client.Minecraft;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -26,9 +28,8 @@ import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
 import org.apache.logging.log4j.Logger;
-import uk.co.benjiweber.expressions.tuple.BiTuple;
-import uk.co.benjiweber.expressions.tuple.Tuple;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -39,6 +40,9 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class StationRenderImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
 
     @Entrypoint.Namespace
     public static final Namespace NAMESPACE = Null.get();
@@ -115,7 +119,7 @@ public class StationRenderImpl {
             }
         });
         abstract class SPIResourceReloader<T> extends SinglePreparationResourceReloader<T> implements IdentifiableResourceReloadListener {}
-        helper.registerReloadListener(new SPIResourceReloader<BiTuple<ExpandableAtlas, ExpandableAtlas>>() {
+        helper.registerReloadListener(new SPIResourceReloader<Pair<ExpandableAtlas, ExpandableAtlas>>() {
 
             @Override
             public String getName() {
@@ -133,7 +137,7 @@ public class StationRenderImpl {
             }
 
             @Override
-            protected BiTuple<ExpandableAtlas, ExpandableAtlas> prepare(ResourceManager manager, Profiler profiler) {
+            protected Pair<ExpandableAtlas, ExpandableAtlas> prepare(ResourceManager manager, Profiler profiler) {
                 profiler.startTick();
                 profiler.push("legacy_atlases");
                 ExpandableAtlas
@@ -143,13 +147,13 @@ public class StationRenderImpl {
                 guiItems.addSpritesheet(16, GuiItemsHelper.INSTANCE);
                 profiler.pop();
                 profiler.endTick();
-                return Tuple.tuple(terrain, guiItems);
+                return Pair.of(terrain, guiItems);
             }
 
             @Override
-            protected void apply(BiTuple<ExpandableAtlas, ExpandableAtlas> prepared, ResourceManager manager, Profiler profiler) {
-                TERRAIN = prepared.one();
-                GUI_ITEMS = prepared.two();
+            protected void apply(Pair<ExpandableAtlas, ExpandableAtlas> prepared, ResourceManager manager, Profiler profiler) {
+                TERRAIN = prepared.getFirst();
+                GUI_ITEMS = prepared.getSecond();
                 profiler.startTick();
                 profiler.push("mod_textures");
                 StationAPI.EVENT_BUS.post(TextureRegisterEvent.builder().build());

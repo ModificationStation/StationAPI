@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.entity.player;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -9,9 +10,15 @@ import net.modificationstation.stationapi.api.item.CustomReachProvider;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
+import java.lang.invoke.MethodHandles;
+
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class ItemCustomReachImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     @EventListener
     private static void getReach(PlayerEvent.Reach event) {
         ItemStack stack = event.player.getHand();

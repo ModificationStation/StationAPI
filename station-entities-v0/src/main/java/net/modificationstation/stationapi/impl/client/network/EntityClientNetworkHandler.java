@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.client.network;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.class_454;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -11,6 +12,9 @@ import net.minecraft.entity.data.DataTrackerEntry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.client.entity.factory.EntityWorldAndPosFactory;
+import net.modificationstation.stationapi.api.client.registry.EntityHandlerRegistry;
+import net.modificationstation.stationapi.api.client.registry.MobHandlerRegistry;
 import net.modificationstation.stationapi.api.entity.HasOwner;
 import net.modificationstation.stationapi.api.event.registry.EntityHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
@@ -18,15 +22,13 @@ import net.modificationstation.stationapi.api.event.registry.MobHandlerRegistryE
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
-import net.modificationstation.stationapi.api.registry.EntityHandlerRegistry;
-import net.modificationstation.stationapi.api.registry.MobHandlerRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.server.entity.StationSpawnDataProvider;
 import net.modificationstation.stationapi.mixin.entity.client.ClientNetworkHandlerAccessor;
-import uk.co.benjiweber.expressions.function.QuadFunction;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -37,6 +39,9 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class EntityClientNetworkHandler {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
 
     @EventListener
     private static void registerMessageListeners(MessageListenerRegistryEvent event) {
@@ -47,7 +52,7 @@ public final class EntityClientNetworkHandler {
     }
 
     private static void handleEntitySpawn(PlayerEntity player, MessagePacket message) {
-        QuadFunction<World, Double, Double, Double, Entity> entityHandler = EntityHandlerRegistry.INSTANCE.get(of(message.strings[0]));
+        EntityWorldAndPosFactory entityHandler = EntityHandlerRegistry.INSTANCE.get(of(message.strings[0]));
         if (entityHandler != null) {
             double
                     x = message.ints[1] / 32D,
@@ -56,7 +61,7 @@ public final class EntityClientNetworkHandler {
             //noinspection deprecation
             ClientNetworkHandlerAccessor networkHandler = (ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
             class_454 world = networkHandler.getField_1973();
-            Entity entity = entityHandler.apply(world, x, y, z);
+            Entity entity = entityHandler.create(world, x, y, z);
             if (entity != null) {
                 entity.field_1654 = message.ints[1];
                 entity.field_1655 = message.ints[2];
@@ -70,6 +75,8 @@ public final class EntityClientNetworkHandler {
                         hasOwner.setOwner(networkHandler.invokeMethod_1645(message.ints[4]));
                     entity.method_1365((double) message.shorts[0] / 8000.0D, (double) message.shorts[1] / 8000.0D, (double) message.shorts[2] / 8000.0D);
                 }
+                if (message.bytes != null)
+                    entity.method_1331().writeUpdatedEntries(DataTracker.readEntries(new DataInputStream(new ByteArrayInputStream(message.bytes))));
                 if (entity instanceof StationSpawnDataProvider provider)
                     provider.readFromMessage(message);
             }

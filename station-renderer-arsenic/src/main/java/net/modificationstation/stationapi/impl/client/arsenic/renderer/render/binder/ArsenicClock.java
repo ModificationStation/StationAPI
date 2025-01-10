@@ -33,7 +33,7 @@ public class ArsenicClock extends StationTextureBinder {
                 square = textureWidth * textureHeight;
         dialTexture = new int[square];
         clockTexture = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(staticReference.getId()).getContents().getBaseFrame().makePixelArray();
-        BufferedImage var2 = TextureHelper.getTexture("/misc/dial.png");
+        BufferedImage var2 = TextureHelper.scaleImage(TextureHelper.getTexture("/misc/dial.png"), textureWidth, textureHeight);
         var2.getRGB(0, 0, textureWidth, textureHeight, this.dialTexture, 0, textureWidth);
         field_1411 = new byte[square * 4];
     }

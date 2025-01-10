@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -28,6 +29,10 @@ import java.util.function.IntFunction;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class HasCustomBlockItemFactoryImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     /**
      * Processes {@link HasCustomBlockItemFactory} annotation if present via {@link BlockItemFactoryEvent} hook.
      * @param event blockitemfactory callback.

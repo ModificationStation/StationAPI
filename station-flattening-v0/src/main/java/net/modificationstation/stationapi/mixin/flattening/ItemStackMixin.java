@@ -3,13 +3,13 @@ package net.modificationstation.stationapi.mixin.flattening;
 import lombok.val;
 import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.modificationstation.stationapi.api.StationAPI;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.event.item.IsItemSuitableForStateEvent;
-import net.modificationstation.stationapi.api.event.item.ItemMiningSpeedMultiplierOnStateEvent;
 import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEvent;
 import net.modificationstation.stationapi.api.item.StationFlatteningItemStack;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
@@ -124,26 +124,14 @@ abstract class ItemStackMixin implements StationFlatteningItemStack {
 
     @Override
     @Unique
-    public boolean isSuitableFor(BlockState state) {
-        return StationAPI.EVENT_BUS.post(
-                IsItemSuitableForStateEvent.builder()
-                        .itemStack(ItemStack.class.cast(this))
-                        .state(state)
-                        .suitable(getItem().isSuitableFor(ItemStack.class.cast(this), state))
-                        .build()
-        ).suitable;
+    public boolean isSuitableFor(PlayerEntity player, BlockView blockView, BlockPos blockPos, BlockState state) {
+        return getItem().isSuitableFor(player, ItemStack.class.cast(this), blockView, blockPos, state);
     }
 
     @Override
     @Unique
-    public float getMiningSpeedMultiplier(BlockState state) {
-        return StationAPI.EVENT_BUS.post(
-                ItemMiningSpeedMultiplierOnStateEvent.builder()
-                        .itemStack(ItemStack.class.cast(this))
-                        .state(state)
-                        .miningSpeedMultiplier(getItem().getMiningSpeedMultiplier(ItemStack.class.cast(this), state))
-                        .build()
-        ).miningSpeedMultiplier;
+    public float getMiningSpeedMultiplier(PlayerEntity player, BlockView blockView, BlockPos blockPos, BlockState state) {
+        return getItem().getMiningSpeedMultiplier(player, ItemStack.class.cast(this), blockView, blockPos, state);
     }
 
     @Override

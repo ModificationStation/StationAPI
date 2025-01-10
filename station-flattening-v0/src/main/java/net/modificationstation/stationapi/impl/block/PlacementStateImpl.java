@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -10,9 +11,14 @@ import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
+import java.lang.invoke.MethodHandles;
+
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class PlacementStateImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
 
     @EventListener
     private static void handleBlockPlacement(BlockEvent.BeforePlacedByItem event) {
