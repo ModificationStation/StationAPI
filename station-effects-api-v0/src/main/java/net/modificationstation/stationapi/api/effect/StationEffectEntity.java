@@ -11,10 +11,10 @@ import java.util.Collection;
 
 public interface StationEffectEntity {
 	/**
-	 * Adds specified effect to the entity, effect will last for infinity - it will be applied until manually removed.
+	 * Adds specified effect to the entity, effect will be infinite - it will be applied until manually removed.
 	 * @param effectID {@link Identifier} effect ID.
 	 */
-	default void addInfinityEffect(Identifier effectID) {
+	default void addInfiniteEffect(Identifier effectID) {
 		addEffect(effectID, EntityEffect.INFINITY_TICKS);
 	}
 	

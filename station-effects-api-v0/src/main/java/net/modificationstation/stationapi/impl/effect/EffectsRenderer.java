@@ -48,7 +48,7 @@ public class EffectsRenderer extends DrawContext {
 					textRenderer.getWidth(desc)
 				);
 				
-				if (effect.isInfinity()) {
+				if (effect.isInfinite()) {
 					renderEffectBack(minecraft, py, 30 + width);
 					textRenderer.drawWithShadow(name, 26, py + 5, 0xFFFFFFFF);
 					textRenderer.drawWithShadow(desc, 26, py + 14, 0xFFFFFFFF);
@@ -64,7 +64,7 @@ public class EffectsRenderer extends DrawContext {
 				}
 			}
 			else {
-				if (effect.isInfinity()) {
+				if (effect.isInfinite()) {
 					renderEffectBack(minecraft, py, 26);
 				}
 				else {
@@ -127,7 +127,7 @@ public class EffectsRenderer extends DrawContext {
 	}
 	
 	private int getEffectWidth(EntityEffect<? extends Entity> effect) {
-		if (effect.isInfinity()) return 26;
+		if (effect.isInfinite()) return 26;
 		String name = effect.getName();
 		String desc = effect.getDescription();
 		return Math.max(

@@ -69,9 +69,9 @@ public abstract class EntityEffect<E extends Entity> {
 	}
 	
 	/**
-	 * Check if effect is infinity.
+	 * Check if effect is infinite.
 	 */
-	public boolean isInfinity() {
+	public boolean isInfinite() {
 		return ticks == INFINITY_TICKS;
 	}
 	
@@ -101,7 +101,7 @@ public abstract class EntityEffect<E extends Entity> {
 	
 	public final void tick() {
 		onTick();
-		if (!isInfinity()) {
+		if (!isInfinite()) {
 			ticks--;
 			if (ticks == 0) {
 				entity.removeEffect(effectID);
