@@ -83,6 +83,12 @@ public class MixinEntity implements StationEffectEntity {
 	}
 	
 	@Override
+	public int getEffectTicks(Identifier effectID) {
+		EntityEffect<? extends Entity> effect = stationapi_effects.get(effectID);
+		return effect == null ? 0 : effect.getTicks();
+	}
+	
+	@Override
 	@Environment(EnvType.CLIENT)
 	public Collection<EntityEffect<? extends Entity>> getRenderEffects() {
 		return stationapi_effects == null ? null : stationapi_effects.values();

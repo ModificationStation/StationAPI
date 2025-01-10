@@ -55,6 +55,14 @@ public interface StationEffectEntity {
 		return Util.assertImpl();
 	}
 	
+	/**
+	 * Get an amount of remaining ticks that effect will stay on entity. If there is no effect will return 0.
+	 * If effect is infinity will return {@code EntityEffect.INFINITY_TICKS}
+	 */
+	default int getEffectTicks(Identifier effectID) {
+		return Util.assertImpl();
+	}
+	
 	@Environment(EnvType.CLIENT)
 	default Collection<EntityEffect<? extends Entity>> getRenderEffects() {
 		return Util.assertImpl();
