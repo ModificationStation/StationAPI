@@ -193,7 +193,7 @@ class ReloadScreen extends Screen {
         if (isScreenType(LoadingScreenOption.FORGE)) {
             if(ReloadScreenManager.LOCATIONS.isEmpty()) return;
             String text = ReloadScreenManager.LOCATIONS.get(ReloadScreenManager.LOCATIONS.size() - 1);
-            fill(3, height, textRenderer.getWidth(text) + 7, height - 12, -1073741824);
+            fill(3, height, textRenderer.getWidth(text) + 7, height - 14, -1073741824);
             glEnable(GL_BLEND);
             drawTextWithShadow(textRenderer, text, 5, height - 10, 0xFFFFFF);
             glDisable(GL_BLEND);
