@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.impl.effect;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.entity.Entity;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
@@ -11,7 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.Collection;
 
-public class EffectsRenderer {
+public class EffectsRenderer extends DrawContext {
 	private final Reference2IntMap<Identifier> effectIcons = new Reference2IntOpenHashMap<>();
 	
 	public void renderEffects(Minecraft minecraft, float delta, boolean extended) {
@@ -88,33 +89,21 @@ public class EffectsRenderer {
 	}
 	
 	private void renderEffectBack(Minecraft minecraft, int y, int width) {
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.textureManager.getTextureId("/assets/stationapi/textures/gui/effect_back.png"));
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.textureManager.getTextureId("/achievement/bg.png"));
 		
-		Tessellator tessellator = Tessellator.INSTANCE;
-		tessellator.startQuads();
+		int x = width - 12;
+		int y2 = y + 13;
 		
-		int y2 = y + 26;
-		
-		tessellator.vertex(2, y2, 0.0F, 0.0F, 1.0F);
-		tessellator.vertex(14, y2, 0.0F, 0.5F, 1.0F);
-		tessellator.vertex(14, y, 0.0F, 0.5F, 0.0F);
-		tessellator.vertex(2, y, 0.0F, 0.0F, 0.0F);
-		
-		int x2 = width + 2;
-		int x1 = x2 - 14;
+		drawTexture(2, y, 96, 202, 13, 13);
+		drawTexture(2, y2, 96, 233 - 13, 13, 13);
 		
 		if (width > 26) {
-			tessellator.vertex(14, y2, 0.0F, 0.5F, 1.0F);
-			tessellator.vertex(x1, y2, 0.0F, 0.5F, 1.0F);
-			tessellator.vertex(x1, y, 0.0F, 0.5F, 0.0F);
-			tessellator.vertex(14, y, 0.0F, 0.5F, 0.0F);
+			width -= 26;
+			drawTexture(15, y, 109, 202, width, 13);
+			drawTexture(15, y + 13, 109, 220, width, 13);
 		}
 		
-		tessellator.vertex(x1, y2, 0.0F, 0.5F, 1.0F);
-		tessellator.vertex(x2, y2, 0.0F, 1.0F, 1.0F);
-		tessellator.vertex(x2, y, 0.0F, 1.0F, 0.0F);
-		tessellator.vertex(x1, y, 0.0F, 0.5F, 0.0F);
-		
-		tessellator.draw();
+		drawTexture(x, y, 242, 202, 13, 13);
+		drawTexture(x, y2, 242, 220, 13, 13);
 	}
 }
