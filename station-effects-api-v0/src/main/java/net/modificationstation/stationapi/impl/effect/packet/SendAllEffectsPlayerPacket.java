@@ -9,7 +9,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.effect.EffectRegistry;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
@@ -25,8 +24,6 @@ import java.util.Collection;
 
 public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<SendAllEffectsPlayerPacket> {
 	public static final PacketType<SendAllEffectsPlayerPacket> TYPE = PacketType.builder(true, true, SendAllEffectsPlayerPacket::new).build();
-	private static final String STATION_ID = StationAPI.NAMESPACE.id("id").toString();
-	private static final Identifier PACKET_ID = StationAPI.NAMESPACE.id("send_all_effects_player");
 	private Collection<Pair<Identifier, Integer>> effects;
 	private int size = 8;
 	

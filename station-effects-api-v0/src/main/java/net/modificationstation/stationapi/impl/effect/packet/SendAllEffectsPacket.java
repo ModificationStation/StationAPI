@@ -6,7 +6,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.effect.EffectRegistry;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
@@ -23,8 +22,6 @@ import java.util.Collection;
 
 public class SendAllEffectsPacket extends Packet implements ManagedPacket<SendAllEffectsPacket> {
 	public static final PacketType<SendAllEffectsPacket> TYPE = PacketType.builder(false, true, SendAllEffectsPacket::new).build();
-	private static final String STATION_ID = StationAPI.NAMESPACE.id("id").toString();
-	private static final Identifier PACKET_ID = StationAPI.NAMESPACE.id("send_all_effects");
 	private Collection<Pair<Identifier, Integer>> effects;
 	private int entityID;
 	private int size = 8;

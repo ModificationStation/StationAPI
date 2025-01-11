@@ -14,20 +14,15 @@ public abstract class EntityEffect<E extends Entity> {
 	protected E entity;
 	private int ticks;
 	
-	@Environment(EnvType.CLIENT)
-	private String nameTranslationKey;
-	
-	@Environment(EnvType.CLIENT)
-	private String descriptionTranslationKey;
+	private final String nameTranslationKey;
+	private final String descriptionTranslationKey;
 	
 	public EntityEffect(Identifier effectID, E entity, int ticks) {
 		this.effectID = effectID;
 		this.entity = entity;
 		this.ticks = ticks;
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			nameTranslationKey = "gui.stationapi.effect." + effectID.namespace + "." + effectID.path + ".name";
-			descriptionTranslationKey = nameTranslationKey.substring(0, nameTranslationKey.length() - 4) + "desc";
-		}
+		nameTranslationKey = "gui.stationapi.effect." + effectID.namespace + "." + effectID.path + ".name";
+		descriptionTranslationKey = nameTranslationKey.substring(0, nameTranslationKey.length() - 4) + "desc";
 	}
 	
 	/**
@@ -57,21 +52,21 @@ public abstract class EntityEffect<E extends Entity> {
 	 */
 	protected abstract void readCustomData(NbtCompound tag);
 	
-	public Identifier getEffectID() {
+	public final Identifier getEffectID() {
 		return effectID;
 	}
 	
 	/**
 	 * Get remaining effect ticks.
 	 */
-	public int getTicks() {
+	public final int getTicks() {
 		return ticks;
 	}
 	
 	/**
 	 * Check if effect is infinite.
 	 */
-	public boolean isInfinite() {
+	public final boolean isInfinite() {
 		return ticks == INFINITY_TICKS;
 	}
 	
@@ -79,7 +74,7 @@ public abstract class EntityEffect<E extends Entity> {
 	 * Get translated effect name, client side only.
 	 */
 	@Environment(EnvType.CLIENT)
-	public String getName() {
+	public final String getName() {
 		return I18n.getTranslation(nameTranslationKey, nameTranslationKey);
 	}
 	
@@ -87,7 +82,7 @@ public abstract class EntityEffect<E extends Entity> {
 	 * Get translated effect description, client side only.
 	 */
 	@Environment(EnvType.CLIENT)
-	public String getDescription() {
+	public final String getDescription() {
 		return I18n.getTranslation(descriptionTranslationKey, descriptionTranslationKey);
 	}
 	

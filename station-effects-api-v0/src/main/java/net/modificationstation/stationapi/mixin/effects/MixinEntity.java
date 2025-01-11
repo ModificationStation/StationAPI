@@ -132,13 +132,13 @@ public class MixinEntity implements StationEffectEntity {
 			effectTag.putInt("ticks", effect.getTicks());
 			effects.add(effectTag);
 		});
-		tag.put("stationapi_effects", effects);
+		tag.put("stationapi:effects", effects);
 	}
 	
 	@Inject(method = "read", at = @At("HEAD"))
 	private void stationapi_readEntityEffect(NbtCompound tag, CallbackInfo info) {
-		if (!tag.contains("stationapi_effects")) return;
-		NbtList effects = tag.getList("stationapi_effects");
+		if (!tag.contains("stationapi:effects")) return;
+		NbtList effects = tag.getList("stationapi:effects");
 		if (stationapi_effects == null) stationapi_effects = new Reference2ReferenceOpenHashMap<>();
 		for (int i = 0; i < effects.size(); i++) {
 			NbtCompound effectTag = (NbtCompound) effects.get(i);

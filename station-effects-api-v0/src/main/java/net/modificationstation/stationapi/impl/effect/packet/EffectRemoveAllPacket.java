@@ -5,10 +5,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
-import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.mixin.effects.AccessorClientNetworkHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,8 +16,6 @@ import java.io.IOException;
 
 public class EffectRemoveAllPacket extends Packet implements ManagedPacket<EffectRemoveAllPacket> {
 	public static final PacketType<EffectRemoveAllPacket> TYPE = PacketType.builder(false, true, EffectRemoveAllPacket::new).build();
-	private static final String STATION_ID = StationAPI.NAMESPACE.id("id").toString();
-	private static final Identifier PACKET_ID = StationAPI.NAMESPACE.id("effect_remove_all");
 	private int entityID;
 	
 	public EffectRemoveAllPacket() {}
