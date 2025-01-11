@@ -2,22 +2,21 @@ package net.modificationstation.stationapi.api.effect;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.util.Identifier;
 
-public abstract class EntityEffect<E extends Entity> {
+public abstract class EntityEffect {
 	protected static final int INFINITY_TICKS = -1;
 	private final Identifier effectID;
-	protected E entity;
+	protected Entity entity;
 	private int ticks;
 	
 	private final String nameTranslationKey;
 	private final String descriptionTranslationKey;
 	
-	public EntityEffect(Identifier effectID, E entity, int ticks) {
+	public EntityEffect(Identifier effectID, Entity entity, int ticks) {
 		this.effectID = effectID;
 		this.entity = entity;
 		this.ticks = ticks;

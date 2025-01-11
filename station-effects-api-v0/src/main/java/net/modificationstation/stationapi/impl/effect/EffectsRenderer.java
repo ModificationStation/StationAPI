@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.entity.Entity;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.lwjgl.opengl.GL11;
@@ -18,10 +17,10 @@ import java.util.List;
 
 public class EffectsRenderer extends DrawContext {
 	private final Reference2IntMap<Identifier> effectIcons = new Reference2IntOpenHashMap<>();
-	private final List<EntityEffect<? extends Entity>> renderEffects = new ArrayList<>();
+	private final List<EntityEffect> renderEffects = new ArrayList<>();
 	private TextRenderer textRenderer;
 	
-	private final Comparator<EntityEffect<? extends Entity>> comparator = (e1, e2) -> {
+	private final Comparator<EntityEffect> comparator = (e1, e2) -> {
 		int l1 = getEffectWidth(e1);
 		int l2 = getEffectWidth(e2);
 		if (l1 == l2) return e1.getEffectID().compareTo(e2.getEffectID());
@@ -29,7 +28,7 @@ public class EffectsRenderer extends DrawContext {
 	};
 	
 	public void renderEffects(Minecraft minecraft, float delta, boolean extended) {
-		Collection<EntityEffect<? extends Entity>> effects = minecraft.player.getRenderEffects();
+		Collection<EntityEffect> effects = minecraft.player.getRenderEffects();
 		if (effects == null || effects.isEmpty()) return;
 		
 		textRenderer = minecraft.textRenderer;
@@ -39,7 +38,7 @@ public class EffectsRenderer extends DrawContext {
 		renderEffects.sort(comparator);
 		
 		int py = 2;
-		for (EntityEffect<? extends Entity> effect : renderEffects) {
+		for (EntityEffect effect : renderEffects) {
 			if (extended) {
 				String name = effect.getName();
 				String desc = effect.getDescription();
@@ -84,7 +83,7 @@ public class EffectsRenderer extends DrawContext {
 		}
 	}
 	
-	private String getEffectTime(EntityEffect<? extends Entity> effect, float delta) {
+	private String getEffectTime(EntityEffect effect, float delta) {
 		float ticks = effect.getTicks() + (1.0F - delta);
 		int seconds = Math.round(ticks / 20.0F);
 		int minutes = seconds / 60;
@@ -126,7 +125,7 @@ public class EffectsRenderer extends DrawContext {
 		drawTexture(x, y2, 242, 220, 13, 13);
 	}
 	
-	private int getEffectWidth(EntityEffect<? extends Entity> effect) {
+	private int getEffectWidth(EntityEffect effect) {
 		if (effect.isInfinite()) return 26;
 		String name = effect.getName();
 		String desc = effect.getDescription();

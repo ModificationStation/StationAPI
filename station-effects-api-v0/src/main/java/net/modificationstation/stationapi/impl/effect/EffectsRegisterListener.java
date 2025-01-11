@@ -17,7 +17,7 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 public class EffectsRegisterListener {
 	@EventListener(phase = InitEvent.POST_INIT_PHASE)
 	public void onInit(InitEvent event) {
-		StationAPI.EVENT_BUS.post(EffectRegistryEvent.builder().build());
+		StationAPI.EVENT_BUS.post(new EffectRegistryEvent());
 	}
 
 	@EventListener

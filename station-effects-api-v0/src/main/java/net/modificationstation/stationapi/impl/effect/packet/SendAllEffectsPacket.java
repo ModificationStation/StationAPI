@@ -6,8 +6,9 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
-import net.modificationstation.stationapi.api.effect.EffectRegistry;
+import net.modificationstation.stationapi.api.effect.EnitityEffectRegistry;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
+import net.modificationstation.stationapi.api.effect.EntityEffectFactory;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.api.util.Identifier;
@@ -73,7 +74,11 @@ public class SendAllEffectsPacket extends Packet implements ManagedPacket<SendAl
 		AccessorClientNetworkHandler handler = (AccessorClientNetworkHandler) networkHandler;
 		Entity entity = handler.stationapi_getEntityByID(entityID);
 		for (Pair<Identifier, Integer> pair : effects) {
-			EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(entity, pair.first(), pair.second());
+			EntityEffectFactory factory = EnitityEffectRegistry.INSTANCE.get(pair.first());
+			if (factory == null) {
+				throw new RuntimeException("Effect with ID " + pair.first() + " is not registered");
+			}
+			EntityEffect effect = factory.create(pair.first(), entity, pair.second());
 			entity.addEffect(effect);
 		}
 	}

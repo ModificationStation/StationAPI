@@ -1,12 +1,12 @@
 package net.modificationstation.sltest.effect;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.util.Identifier;
 
-public class TestPlayerInfEffect extends EntityEffect<PlayerEntity> {
-	public TestPlayerInfEffect(Identifier id, PlayerEntity entity, int ticks) {
+public class TestPlayerInfEffect extends EntityEffect {
+	public TestPlayerInfEffect(Identifier id, Entity entity, int ticks) {
 		super(id, entity, ticks);
 	}
 	

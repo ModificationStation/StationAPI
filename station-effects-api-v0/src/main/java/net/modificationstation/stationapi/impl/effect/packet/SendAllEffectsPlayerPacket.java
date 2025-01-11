@@ -5,12 +5,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
-import net.modificationstation.stationapi.api.effect.EffectRegistry;
+import net.modificationstation.stationapi.api.effect.EnitityEffectRegistry;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
+import net.modificationstation.stationapi.api.effect.EntityEffectFactory;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.api.util.Identifier;
@@ -81,7 +81,11 @@ public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<
 		@SuppressWarnings("deprecation")
 		PlayerEntity player = ((Minecraft) FabricLoader.getInstance().getGameInstance()).player;
 		for (Pair<Identifier, Integer> pair : effects) {
-			EntityEffect<? extends Entity> effect = EffectRegistry.makeEffect(player, pair.first(), pair.second());
+			EntityEffectFactory factory = EnitityEffectRegistry.INSTANCE.get(pair.first());
+			if (factory == null) {
+				throw new RuntimeException("Effect with ID " + pair.first() + " is not registered");
+			}
+			EntityEffect effect = factory.create(pair.first(), player, pair.second());
 			player.addEffect(effect);
 		}
 	}

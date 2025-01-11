@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.api.effect;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.Entity;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 
@@ -64,12 +63,12 @@ public interface StationEffectEntity {
 	}
 	
 	@Environment(EnvType.CLIENT)
-	default Collection<EntityEffect<? extends Entity>> getRenderEffects() {
+	default Collection<EntityEffect> getRenderEffects() {
 		return Util.assertImpl();
 	}
 	
 	@Environment(EnvType.CLIENT)
-	default void addEffect(EntityEffect<? extends Entity> effect) {
+	default void addEffect(EntityEffect effect) {
 		Util.assertImpl();
 	}
 	

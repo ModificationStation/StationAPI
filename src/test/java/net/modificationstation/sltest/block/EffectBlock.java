@@ -5,9 +5,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.modificationstation.sltest.SLTest;
-import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.effect.EffectRegistry;
-import net.modificationstation.stationapi.api.effect.StationEffectEntity;
 import net.modificationstation.stationapi.api.template.block.TemplateBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
