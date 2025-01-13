@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.impl.effect.packet;
 
-import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.objects.ReferenceIntPair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
@@ -23,7 +23,7 @@ import java.util.Collection;
 
 public class SendAllEffectsPacket extends Packet implements ManagedPacket<SendAllEffectsPacket> {
     public static final PacketType<SendAllEffectsPacket> TYPE = PacketType.builder(false, true, SendAllEffectsPacket::new).build();
-    private Collection<Pair<Identifier, Integer>> effects;
+    private Collection<ReferenceIntPair<Identifier>> effects;
     private int entityID;
     private int size = 8;
     
@@ -31,7 +31,7 @@ public class SendAllEffectsPacket extends Packet implements ManagedPacket<SendAl
         effects = new ArrayList<>();
     }
     
-    public SendAllEffectsPacket(int entityID, Collection<Pair<Identifier, Integer>> effects) {
+    public SendAllEffectsPacket(int entityID, Collection<ReferenceIntPair<Identifier>> effects) {
         this.entityID = entityID;
         this.effects = effects;
     }
@@ -44,7 +44,7 @@ public class SendAllEffectsPacket extends Packet implements ManagedPacket<SendAl
             for (int i = 0; i < count; i++) {
                 Identifier id = Identifier.of(stream.readUTF());
                 int ticks = stream.readInt();
-                effects.add(Pair.of(id, ticks));
+                effects.add(ReferenceIntPair.of(id, ticks));
             }
         }
         catch (IOException e) {
@@ -57,9 +57,9 @@ public class SendAllEffectsPacket extends Packet implements ManagedPacket<SendAl
         try {
             stream.writeInt(entityID);
             stream.writeShort(effects.size());
-            for (Pair<Identifier, Integer> pair : effects) {
+            for (ReferenceIntPair<Identifier> pair : effects) {
                 stream.writeUTF(pair.first().toString());
-                stream.writeInt(pair.second());
+                stream.writeInt(pair.secondInt());
             }
             size = stream.size();
         }
@@ -73,12 +73,12 @@ public class SendAllEffectsPacket extends Packet implements ManagedPacket<SendAl
         if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;
         AccessorClientNetworkHandler handler = (AccessorClientNetworkHandler) networkHandler;
         Entity entity = handler.stationapi_getEntityByID(entityID);
-        for (Pair<Identifier, Integer> pair : effects) {
+        for (ReferenceIntPair<Identifier> pair : effects) {
             EntityEffectFactory factory = EnitityEffectRegistry.INSTANCE.get(pair.first());
             if (factory == null) {
                 throw new RuntimeException("Effect with ID " + pair.first() + " is not registered");
             }
-            EntityEffect effect = factory.create(pair.first(), entity, pair.second());
+            EntityEffect effect = factory.create(pair.first(), entity, pair.secondInt());
             entity.addEffect(effect);
         }
     }

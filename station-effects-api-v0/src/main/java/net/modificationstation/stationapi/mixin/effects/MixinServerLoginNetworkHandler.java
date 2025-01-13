@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.effects;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.objects.ReferenceIntPair;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.packet.login.LoginHelloPacket;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
@@ -24,7 +24,7 @@ public class MixinServerLoginNetworkHandler {
         shift = Shift.BEFORE
     ))
     private void stationapi_updatePlayerEffects(LoginHelloPacket packet, CallbackInfo info, @Local ServerPlayerEntity player) {
-        Collection<Pair<Identifier, Integer>> effects = player.getServerEffects();
+        Collection<ReferenceIntPair<Identifier>> effects = player.getServerEffects();
         if (effects == null) return;
         PacketHelper.sendTo(player, new SendAllEffectsPlayerPacket(effects));
     }

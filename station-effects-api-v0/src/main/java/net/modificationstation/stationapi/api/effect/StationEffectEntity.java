@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.api.effect;
 
-import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.objects.ReferenceIntPair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.util.Identifier;
@@ -73,7 +73,7 @@ public interface StationEffectEntity {
     }
     
     @Environment(EnvType.SERVER)
-    default Collection<Pair<Identifier, Integer>> getServerEffects() {
+    default Collection<ReferenceIntPair<Identifier>> getServerEffects() {
         return Util.assertImpl();
     }
 }

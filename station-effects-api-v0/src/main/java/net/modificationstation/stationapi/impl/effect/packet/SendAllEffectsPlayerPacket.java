@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.impl.effect.packet;
 
-import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.objects.ReferenceIntPair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -24,14 +24,14 @@ import java.util.Collection;
 
 public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<SendAllEffectsPlayerPacket> {
     public static final PacketType<SendAllEffectsPlayerPacket> TYPE = PacketType.builder(true, true, SendAllEffectsPlayerPacket::new).build();
-    private Collection<Pair<Identifier, Integer>> effects;
+    private Collection<ReferenceIntPair<Identifier>> effects;
     private int size = 8;
     
     public SendAllEffectsPlayerPacket() {
         effects = new ArrayList<>();
     }
     
-    public SendAllEffectsPlayerPacket(Collection<Pair<Identifier, Integer>> effects) {
+    public SendAllEffectsPlayerPacket(Collection<ReferenceIntPair<Identifier>> effects) {
         this.effects = effects;
     }
     
@@ -42,7 +42,7 @@ public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<
             for (int i = 0; i < count; i++) {
                 Identifier id = Identifier.of(stream.readUTF());
                 int ticks = stream.readInt();
-                effects.add(Pair.of(id, ticks));
+                effects.add(ReferenceIntPair.of(id, ticks));
             }
         }
         catch (IOException e) {
@@ -54,9 +54,9 @@ public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<
     public void write(DataOutputStream stream) {
         try {
             stream.writeShort(effects.size());
-            for (Pair<Identifier, Integer> pair : effects) {
+            for (ReferenceIntPair<Identifier> pair : effects) {
                 stream.writeUTF(pair.first().toString());
-                stream.writeInt(pair.second());
+                stream.writeInt(pair.secondInt());
             }
             size = stream.size();
         }
@@ -80,12 +80,12 @@ public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<
     private void applyEffects() {
         @SuppressWarnings("deprecation")
         PlayerEntity player = ((Minecraft) FabricLoader.getInstance().getGameInstance()).player;
-        for (Pair<Identifier, Integer> pair : effects) {
+        for (ReferenceIntPair<Identifier> pair : effects) {
             EntityEffectFactory factory = EnitityEffectRegistry.INSTANCE.get(pair.first());
             if (factory == null) {
                 throw new RuntimeException("Effect with ID " + pair.first() + " is not registered");
             }
-            EntityEffect effect = factory.create(pair.first(), player, pair.second());
+            EntityEffect effect = factory.create(pair.first(), player, pair.secondInt());
             player.addEffect(effect);
         }
     }

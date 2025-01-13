@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.effects;
 
-import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ReferenceIntPair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -24,11 +24,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Mixin(Entity.class)
 public class MixinEntity implements StationEffectEntity {
@@ -109,11 +105,11 @@ public class MixinEntity implements StationEffectEntity {
     
     @Override
     @Environment(EnvType.SERVER)
-    public Collection<Pair<Identifier, Integer>> getServerEffects() {
+    public Collection<ReferenceIntPair<Identifier>> getServerEffects() {
         if (stationapi_effects == null || stationapi_effects.isEmpty()) return null;
-        List<Pair<Identifier, Integer>> effectPairs = new ArrayList<>(stationapi_effects.size());
+        List<ReferenceIntPair<Identifier>> effectPairs = new ArrayList<>(stationapi_effects.size());
         for (EntityEffect effect : stationapi_effects.values()) {
-            effectPairs.add(Pair.of(effect.getEffectID(), effect.getTicks()));
+            effectPairs.add(ReferenceIntPair.of(effect.getEffectID(), effect.getTicks()));
         }
         return effectPairs;
     }

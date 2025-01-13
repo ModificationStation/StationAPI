@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.effects;
 
-import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.objects.ReferenceIntPair;
 import net.minecraft.class_174;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -26,7 +26,7 @@ public class MixinClass174 {
         shift = Shift.AFTER, ordinal = 0
     ))
     private void stationapi_updateEntities(ServerPlayerEntity player, CallbackInfo info) {
-        Collection<Pair<Identifier, Integer>> effects = field_597.getServerEffects();
+        Collection<ReferenceIntPair<Identifier>> effects = field_597.getServerEffects();
         if (effects == null) return;
         PacketHelper.sendTo(player, new SendAllEffectsPacket(field_597.id, effects));
     }
