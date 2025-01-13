@@ -23,74 +23,74 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<SendAllEffectsPlayerPacket> {
-	public static final PacketType<SendAllEffectsPlayerPacket> TYPE = PacketType.builder(true, true, SendAllEffectsPlayerPacket::new).build();
-	private Collection<Pair<Identifier, Integer>> effects;
-	private int size = 8;
-	
-	public SendAllEffectsPlayerPacket() {
-		effects = new ArrayList<>();
-	}
-	
-	public SendAllEffectsPlayerPacket(Collection<Pair<Identifier, Integer>> effects) {
-		this.effects = effects;
-	}
-	
-	@Override
-	public void read(DataInputStream stream) {
-		try {
-			int count = stream.readShort();
-			for (int i = 0; i < count; i++) {
-				Identifier id = Identifier.of(stream.readUTF());
-				int ticks = stream.readInt();
-				effects.add(Pair.of(id, ticks));
-			}
-		}
-		catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	@Override
-	public void write(DataOutputStream stream) {
-		try {
-			stream.writeShort(effects.size());
-			for (Pair<Identifier, Integer> pair : effects) {
-				stream.writeUTF(pair.first().toString());
-				stream.writeInt(pair.second());
-			}
-			size = stream.size();
-		}
-		catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	@Override
-	public void apply(NetworkHandler networkHandler) {
-		if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;
-		applyEffects();
-	}
-	
-	@Override
-	public int size() {
-		return size;
-	}
-	
-	@Environment(EnvType.CLIENT)
-	private void applyEffects() {
-		@SuppressWarnings("deprecation")
-		PlayerEntity player = ((Minecraft) FabricLoader.getInstance().getGameInstance()).player;
-		for (Pair<Identifier, Integer> pair : effects) {
-			EntityEffectFactory factory = EnitityEffectRegistry.INSTANCE.get(pair.first());
-			if (factory == null) {
-				throw new RuntimeException("Effect with ID " + pair.first() + " is not registered");
-			}
-			EntityEffect effect = factory.create(pair.first(), player, pair.second());
-			player.addEffect(effect);
-		}
-	}
+    public static final PacketType<SendAllEffectsPlayerPacket> TYPE = PacketType.builder(true, true, SendAllEffectsPlayerPacket::new).build();
+    private Collection<Pair<Identifier, Integer>> effects;
+    private int size = 8;
+    
+    public SendAllEffectsPlayerPacket() {
+        effects = new ArrayList<>();
+    }
+    
+    public SendAllEffectsPlayerPacket(Collection<Pair<Identifier, Integer>> effects) {
+        this.effects = effects;
+    }
+    
+    @Override
+    public void read(DataInputStream stream) {
+        try {
+            int count = stream.readShort();
+            for (int i = 0; i < count; i++) {
+                Identifier id = Identifier.of(stream.readUTF());
+                int ticks = stream.readInt();
+                effects.add(Pair.of(id, ticks));
+            }
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    @Override
+    public void write(DataOutputStream stream) {
+        try {
+            stream.writeShort(effects.size());
+            for (Pair<Identifier, Integer> pair : effects) {
+                stream.writeUTF(pair.first().toString());
+                stream.writeInt(pair.second());
+            }
+            size = stream.size();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    @Override
+    public void apply(NetworkHandler networkHandler) {
+        if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;
+        applyEffects();
+    }
+    
+    @Override
+    public int size() {
+        return size;
+    }
+    
+    @Environment(EnvType.CLIENT)
+    private void applyEffects() {
+        @SuppressWarnings("deprecation")
+        PlayerEntity player = ((Minecraft) FabricLoader.getInstance().getGameInstance()).player;
+        for (Pair<Identifier, Integer> pair : effects) {
+            EntityEffectFactory factory = EnitityEffectRegistry.INSTANCE.get(pair.first());
+            if (factory == null) {
+                throw new RuntimeException("Effect with ID " + pair.first() + " is not registered");
+            }
+            EntityEffect effect = factory.create(pair.first(), player, pair.second());
+            player.addEffect(effect);
+        }
+    }
 
-	public @NotNull PacketType<SendAllEffectsPlayerPacket> getType() {
-		return TYPE;
-	}
+    public @NotNull PacketType<SendAllEffectsPlayerPacket> getType() {
+        return TYPE;
+    }
 }

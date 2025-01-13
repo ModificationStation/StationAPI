@@ -12,14 +12,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InventoryScreen.class)
 public abstract class MixinInventoryScreen extends HandledScreen {
-	@Unique private final EffectsRenderer stationapi_effectRenderer = new EffectsRenderer();
-	
-	public MixinInventoryScreen(ScreenHandler container) {
-		super(container);
-	}
-	
-	@Inject(method = "drawBackground", at = @At("TAIL"))
-	private void stationapi_renderEffects(float delta, CallbackInfo info) {
-		stationapi_effectRenderer.renderEffects(minecraft, delta, true);
-	}
+    @Unique private final EffectsRenderer stationapi_effectRenderer = new EffectsRenderer();
+    
+    public MixinInventoryScreen(ScreenHandler container) {
+        super(container);
+    }
+    
+    @Inject(method = "drawBackground", at = @At("TAIL"))
+    private void stationapi_renderEffects(float delta, CallbackInfo info) {
+        stationapi_effectRenderer.renderEffects(minecraft, delta, true);
+    }
 }

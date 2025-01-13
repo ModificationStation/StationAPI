@@ -15,16 +15,16 @@ import net.modificationstation.stationapi.impl.effect.packet.SendAllEffectsPlaye
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public class EffectsRegisterListener {
-	@EventListener(phase = InitEvent.POST_INIT_PHASE)
-	public void onInit(InitEvent event) {
-		StationAPI.EVENT_BUS.post(new EffectRegistryEvent());
-	}
+    @EventListener(phase = InitEvent.POST_INIT_PHASE)
+    public void onInit(InitEvent event) {
+        StationAPI.EVENT_BUS.post(new EffectRegistryEvent());
+    }
 
-	@EventListener
-	public static void registerPackets(PacketRegisterEvent event){
-		Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("effects/effect_add_remove"), EffectAddRemovePacket.TYPE);
-		Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("effects/effect_remove_all"), EffectRemoveAllPacket.TYPE);
-		Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("effects/send_all_effects"), SendAllEffectsPacket.TYPE);
-		Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("effects/send_all_effects_player"), SendAllEffectsPlayerPacket.TYPE);
-	}
+    @EventListener
+    public static void registerPackets(PacketRegisterEvent event){
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("effects/effect_add_remove"), EffectAddRemovePacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("effects/effect_remove_all"), EffectRemoveAllPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("effects/send_all_effects"), SendAllEffectsPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("effects/send_all_effects_player"), SendAllEffectsPlayerPacket.TYPE);
+    }
 }

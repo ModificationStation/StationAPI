@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.event.registry.RegistryEvent;
 
 @EventPhases(StationAPI.INTERNAL_PHASE)
 public class EffectRegistryEvent extends RegistryEvent<EnitityEffectRegistry> {
-	public EffectRegistryEvent() {
-		super(EnitityEffectRegistry.INSTANCE);
-	}
+    public EffectRegistryEvent() {
+        super(EnitityEffectRegistry.INSTANCE);
+    }
 }

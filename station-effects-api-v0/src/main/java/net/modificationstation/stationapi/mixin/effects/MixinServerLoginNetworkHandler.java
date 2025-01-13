@@ -18,14 +18,14 @@ import java.util.Collection;
 
 @Mixin(ServerLoginNetworkHandler.class)
 public class MixinServerLoginNetworkHandler {
-	@Inject(method = "accept", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/entity/player/ServerPlayerEntity;method_317()V",
-		shift = Shift.BEFORE
-	))
-	private void stationapi_updatePlayerEffects(LoginHelloPacket packet, CallbackInfo info, @Local ServerPlayerEntity player) {
-		Collection<Pair<Identifier, Integer>> effects = player.getServerEffects();
-		if (effects == null) return;
-		PacketHelper.sendTo(player, new SendAllEffectsPlayerPacket(effects));
-	}
+    @Inject(method = "accept", at = @At(
+        value = "INVOKE",
+        target = "Lnet/minecraft/entity/player/ServerPlayerEntity;method_317()V",
+        shift = Shift.BEFORE
+    ))
+    private void stationapi_updatePlayerEffects(LoginHelloPacket packet, CallbackInfo info, @Local ServerPlayerEntity player) {
+        Collection<Pair<Identifier, Integer>> effects = player.getServerEffects();
+        if (effects == null) return;
+        PacketHelper.sendTo(player, new SendAllEffectsPlayerPacket(effects));
+    }
 }

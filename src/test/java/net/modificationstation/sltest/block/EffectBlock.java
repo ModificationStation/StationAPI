@@ -25,8 +25,8 @@ public class EffectBlock extends TemplateBlock {
 
     @Override
     public boolean onUse(World level, int x, int y, int z, PlayerEntity player) {
-		assert SLTest.NAMESPACE != null;
-		Identifier effectID = SLTest.NAMESPACE.id("test_effect");
+        assert SLTest.NAMESPACE != null;
+        Identifier effectID = SLTest.NAMESPACE.id("test_effect");
         if (player.hasEffect(effectID)) return false;
         player.addEffect(effectID, 200); // Effect for 10 seconds
         return true;

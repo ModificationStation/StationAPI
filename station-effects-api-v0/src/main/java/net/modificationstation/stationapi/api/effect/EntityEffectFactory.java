@@ -5,5 +5,5 @@ import net.modificationstation.stationapi.api.util.Identifier;
 
 @FunctionalInterface
 public interface EntityEffectFactory {
-	EntityEffect create(Identifier id, Entity entity, int ticks);
+    EntityEffect create(Identifier id, Entity entity, int ticks);
 }
