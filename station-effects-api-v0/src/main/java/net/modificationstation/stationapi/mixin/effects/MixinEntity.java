@@ -9,7 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.effect.EnitityEffectRegistry;
+import net.modificationstation.stationapi.api.effect.EntityEffectRegistry;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.effect.EntityEffectFactory;
 import net.modificationstation.stationapi.api.effect.StationEffectEntity;
@@ -34,7 +34,7 @@ public class MixinEntity implements StationEffectEntity {
     
     @Override
     public void addEffect(Identifier effectID, int ticks) {
-        EntityEffectFactory factory = EnitityEffectRegistry.INSTANCE.get(effectID);
+        EntityEffectFactory factory = EntityEffectRegistry.INSTANCE.get(effectID);
         if (factory == null) {
             throw new RuntimeException("Effect with ID " + effectID + " is not registered");
         }
@@ -143,7 +143,7 @@ public class MixinEntity implements StationEffectEntity {
         for (int i = 0; i < effects.size(); i++) {
             NbtCompound effectTag = (NbtCompound) effects.get(i);
             Identifier id = Identifier.of(effectTag.getString("id"));
-            EntityEffectFactory factory = EnitityEffectRegistry.INSTANCE.get(id);
+            EntityEffectFactory factory = EntityEffectRegistry.INSTANCE.get(id);
             if (factory == null) {
                 StationAPI.LOGGER.warn("Effect " + id + " is not registered, skipping");
                 continue;
