@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.mod;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
 import net.modificationstation.stationapi.api.event.mod.PostInitEvent;
@@ -8,9 +9,15 @@ import net.modificationstation.stationapi.api.event.mod.PreInitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
+import java.lang.invoke.MethodHandles;
+
 @SuppressWarnings("deprecation")
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 public final class DeprecatedInitEventsImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     @EventListener(phase = InitEvent.PRE_INIT_PHASE)
     private static void postPreInit(InitEvent event) {
         StationAPI.EVENT_BUS.post(PreInitEvent.builder().build());

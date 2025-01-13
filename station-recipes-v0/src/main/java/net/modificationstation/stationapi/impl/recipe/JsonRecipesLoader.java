@@ -2,19 +2,21 @@ package net.modificationstation.stationapi.impl.recipe;
 
 import com.google.gson.Gson;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.mod.PreInitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.registry.JsonRecipesRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.resource.Filters;
 import net.modificationstation.stationapi.api.resource.ResourceHelper;
+import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.exception.MissingModException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Objects;
@@ -25,6 +27,9 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class JsonRecipesLoader {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
 
     @EventListener
     private static void loadJsonRecipes(PreInitEvent event) {

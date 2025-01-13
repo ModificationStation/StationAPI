@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.server.entity;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.class_488;
 import net.minecraft.class_80;
 import net.minecraft.entity.Entity;
@@ -13,6 +14,8 @@ import net.modificationstation.stationapi.api.server.entity.TrackingParametersPr
 import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEvent;
 import net.modificationstation.stationapi.api.util.TriState;
 
+import java.lang.invoke.MethodHandles;
+
 /**
  * {@link TrackingParametersProvider} implementation class.
  * @author mine_diver
@@ -24,6 +27,9 @@ import net.modificationstation.stationapi.api.util.TriState;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class TrackingParametersImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
 
     /**
      * Handles entity's {@link HasTrackingParameters} annotation if it's present via {@link TrackEntityEvent} hook.

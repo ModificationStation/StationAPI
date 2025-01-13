@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.impl.server.entity;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.class_488;
 import net.minecraft.class_80;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -10,6 +11,8 @@ import net.modificationstation.stationapi.api.server.entity.CustomTracking;
 import net.modificationstation.stationapi.api.server.entity.HasTrackingParameters;
 import net.modificationstation.stationapi.api.server.entity.TrackingParametersProvider;
 import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEvent;
+
+import java.lang.invoke.MethodHandles;
 
 /**
  * {@link CustomTracking} implementation class.
@@ -22,6 +25,9 @@ import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEve
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class CustomTrackingImpl {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
 
     /**
      * Invokes {@link CustomTracking#track(class_488, class_80)} in entity if it's instance of {@link CustomTracking} via {@link TrackEntityEvent} hook.

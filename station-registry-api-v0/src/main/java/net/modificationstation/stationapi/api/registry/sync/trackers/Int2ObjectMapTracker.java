@@ -14,12 +14,17 @@ import net.modificationstation.stationapi.api.registry.ListenableRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.Identifier;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 public class Int2ObjectMapTracker<V, OV> {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
+
     private final String name;
     private final Int2ObjectMap<OV> mappers;
     private final Reference2ObjectMap<Identifier, OV> removedMapperCache = new Reference2ObjectOpenHashMap<>();

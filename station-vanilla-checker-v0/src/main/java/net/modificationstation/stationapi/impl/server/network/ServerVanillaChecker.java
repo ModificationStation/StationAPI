@@ -4,6 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -14,6 +15,7 @@ import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.server.event.network.PlayerAttemptLoginEvent;
 import net.modificationstation.stationapi.impl.network.ModdedPacketHandlerSetter;
 
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,6 +28,9 @@ import static net.modificationstation.stationapi.impl.network.VanillaChecker.MAS
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class ServerVanillaChecker {
+    static {
+        Listener.registerLookup(MethodHandles.lookup());
+    }
 
     @EventListener
     private static void onPlayerLogin(PlayerAttemptLoginEvent event) {
