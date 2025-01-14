@@ -28,32 +28,32 @@ import groovy.util.Node;
 import groovy.xml.QName;
 
 public final class GroovyXmlUtil {
-	private GroovyXmlUtil() { }
+    private GroovyXmlUtil() { }
 
-	public static Node getOrCreateNode(Node parent, String name) {
-		for (Object object : parent.children()) {
-			if (object instanceof Node node && isSameName(node.name(), name)) {
-				return node;
-			}
-		}
+    public static Node getOrCreateNode(Node parent, String name) {
+        for (Object object : parent.children()) {
+            if (object instanceof Node node && isSameName(node.name(), name)) {
+                return node;
+            }
+        }
 
-		return parent.appendNode(name);
-	}
+        return parent.appendNode(name);
+    }
 
-	private static boolean isSameName(Object nodeName, String givenName) {
-		if (nodeName instanceof String) {
-			return nodeName.equals(givenName);
-		}
+    private static boolean isSameName(Object nodeName, String givenName) {
+        if (nodeName instanceof String) {
+            return nodeName.equals(givenName);
+        }
 
-		if (nodeName instanceof QName qName) {
-			return qName.matches(givenName);
-		}
+        if (nodeName instanceof QName qName) {
+            return qName.matches(givenName);
+        }
 
-		// New groovy 3 (gradle 7) class
-		if (nodeName instanceof groovy.namespace.QName qName) {
-			return qName.matches(givenName);
-		}
+        // New groovy 3 (gradle 7) class
+        if (nodeName instanceof groovy.namespace.QName qName) {
+            return qName.matches(givenName);
+        }
 
-		throw new UnsupportedOperationException("Cannot determine if " + nodeName.getClass() + " is the same as a String");
-	}
+        throw new UnsupportedOperationException("Cannot determine if " + nodeName.getClass() + " is the same as a String");
+    }
 }
