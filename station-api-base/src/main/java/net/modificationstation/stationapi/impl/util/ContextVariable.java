@@ -8,6 +8,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * A substitute for Java's preview feature "ScopedValue".
@@ -21,6 +22,8 @@ public final class ContextVariable<T> {
         <T> ContextBuilder where(ContextVariable<T> variable, T value);
 
         void run(Runnable runnable);
+
+        <R> R get(Supplier<R> supplier);
     }
 
     public static <T> ContextBuilder where(ContextVariable<T> variable, T value) {
@@ -41,6 +44,16 @@ public final class ContextVariable<T> {
                 binds.stream().map(Pair::first).forEach(Runnable::run);
                 try {
                     runnable.run();
+                } finally {
+                    binds.stream().map(Pair::second).forEach(Runnable::run);
+                }
+            }
+
+            @Override
+            public <R> R get(Supplier<R> supplier) {
+                binds.stream().map(Pair::first).forEach(Runnable::run);
+                try {
+                    return supplier.get();
                 } finally {
                     binds.stream().map(Pair::second).forEach(Runnable::run);
                 }
