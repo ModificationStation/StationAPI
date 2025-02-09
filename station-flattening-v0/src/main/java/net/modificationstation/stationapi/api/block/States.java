@@ -8,7 +8,6 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.collection.IdList;
 
 import java.lang.invoke.MethodHandles;
@@ -35,6 +34,6 @@ public final class States {
 
     @EventListener
     private static void registerBlocks(BlockRegistryEvent event) {
-        Registry.register(event.registry, of("air"), AIR_BLOCK.get());
+        event.register(of("air"), AIR_BLOCK.get());
     }
 }
