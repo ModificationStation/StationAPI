@@ -6,21 +6,13 @@ import net.mine_diver.unsafeevents.EventBus;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.ListenerPriority;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
-import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.util.Namespace;
-import net.modificationstation.stationapi.api.util.Null;
 import org.apache.logging.log4j.Logger;
 
 public class SLTest {
+    public static final Namespace NAMESPACE = Namespace.resolve();
 
-    @Entrypoint.Logger
-    public static final Logger LOGGER = Null.get();
-
-    @Entrypoint.Instance
-    public static final SLTest INSTANCE = Null.get();
-
-    @Entrypoint.Namespace
-    public static final Namespace NAMESPACE = Null.get();
+    public static final Logger LOGGER = NAMESPACE.getLogger();
 
     @EventListener
     public void init(InitEvent event) {

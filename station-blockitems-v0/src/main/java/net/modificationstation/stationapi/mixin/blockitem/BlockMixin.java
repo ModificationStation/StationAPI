@@ -13,7 +13,6 @@ import net.modificationstation.stationapi.api.item.BlockItemForm;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
-import net.modificationstation.stationapi.impl.block.BlockFormOnlyHandler;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -65,7 +64,7 @@ class BlockMixin implements StationBlockItemsBlock {
                         .build()
         );
         return event.isCanceled() ?
-                BlockFormOnlyHandler.EMPTY_BLOCK_ITEM.get() :
+                null :
                 Registry.register(
                         ItemRegistry.INSTANCE,
                         BlockRegistry.INSTANCE.getId(block),

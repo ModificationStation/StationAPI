@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.impl.vanillafix.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.util.Namespace;
 
@@ -17,7 +17,7 @@ import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaItemFixImpl {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     @EventListener

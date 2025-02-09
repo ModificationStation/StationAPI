@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.impl.network;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.network.packet.PacketRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.PacketTypeRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
@@ -19,7 +19,7 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @EventListener(phase = StationAPI.INTERNAL_PHASE, priority = HIGH)
 public final class RegistryNetworkingInit {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     @EventListener

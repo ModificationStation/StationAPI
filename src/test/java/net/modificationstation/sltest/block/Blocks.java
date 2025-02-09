@@ -1,11 +1,11 @@
 package net.modificationstation.sltest.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.template.block.TemplateBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
@@ -40,7 +40,7 @@ public enum Blocks {
 
     public static class Init {
         static {
-            Listener.registerLookup(MethodHandles.lookup());
+            EntrypointManager.registerLookup(MethodHandles.lookup());
         }
 
         @EventListener

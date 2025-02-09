@@ -3,12 +3,12 @@ package net.modificationstation.stationapi.impl.recipe;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.event.registry.JsonRecipeParserRegistryEvent;
 import net.modificationstation.stationapi.api.item.json.JsonItemKey;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
@@ -30,7 +30,7 @@ import java.util.function.Function;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class JsonRecipeParserInit {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     @EventListener

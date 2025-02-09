@@ -4,7 +4,6 @@ import com.mojang.serialization.Dynamic;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
@@ -14,6 +13,7 @@ import net.modificationstation.stationapi.api.client.event.gui.screen.EditWorldS
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetDetachedContext;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
@@ -31,7 +31,7 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class EditWorldScreenImpl {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     private static final String

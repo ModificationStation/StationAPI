@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.impl.server.registry;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
@@ -24,7 +24,7 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class ServerRegistrySender {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     @EventListener

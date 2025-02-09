@@ -3,11 +3,11 @@ package net.modificationstation.stationapi.impl.resource;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.resource.ReloadScreenManager;
 import net.modificationstation.stationapi.api.event.resource.DataReloadEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.resource.CompositeResourceReload;
 import net.modificationstation.stationapi.api.resource.DataManager;
@@ -30,7 +30,7 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class DataReloaderImpl {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     private static final ResourcePackManager DATA_PACK_MANAGER = new ResourcePackManager(consumer -> consumer.accept(ResourcePackProfile.create("vanilla", "fixText", true, name -> new DefaultResourcePack(), ResourceType.SERVER_DATA, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.BUILTIN)), new ModResourcePackCreator(ResourceType.SERVER_DATA));

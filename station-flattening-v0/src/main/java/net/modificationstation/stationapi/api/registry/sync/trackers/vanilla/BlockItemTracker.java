@@ -5,6 +5,7 @@ import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.registry.ListenableRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 
@@ -12,7 +13,7 @@ import java.lang.invoke.MethodHandles;
 
 public final class BlockItemTracker {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     private BlockItemTracker() { }
