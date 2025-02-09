@@ -14,7 +14,6 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
-import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.lang.invoke.MethodHandles;
@@ -30,7 +29,7 @@ public final class GuiClientNetworkHandler {
 
     @EventListener
     private static void registerMessageListeners(MessageListenerRegistryEvent event) {
-        Registry.register(event.registry, NAMESPACE.id("open_gui"), GuiClientNetworkHandler::handleGui);
+        event.register(NAMESPACE.id("open_gui"), GuiClientNetworkHandler::handleGui);
         StationAPI.EVENT_BUS.post(new GuiHandlerRegistryEvent());
     }
 

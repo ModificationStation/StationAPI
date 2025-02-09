@@ -22,7 +22,6 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
-import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.server.entity.StationSpawnDataProvider;
 import net.modificationstation.stationapi.mixin.entity.client.ClientNetworkHandlerAccessor;
 
@@ -45,9 +44,9 @@ public final class EntityClientNetworkHandler {
 
     @EventListener
     private static void registerMessageListeners(MessageListenerRegistryEvent event) {
-        Registry.register(event.registry, NAMESPACE.id("spawn_entity"), EntityClientNetworkHandler::handleEntitySpawn);
+        event.register(NAMESPACE.id("spawn_entity"), EntityClientNetworkHandler::handleEntitySpawn);
         StationAPI.EVENT_BUS.post(new EntityHandlerRegistryEvent());
-        Registry.register(event.registry, NAMESPACE.id("spawn_mob"), EntityClientNetworkHandler::handleMobSpawn);
+        event.register(NAMESPACE.id("spawn_mob"), EntityClientNetworkHandler::handleMobSpawn);
         StationAPI.EVENT_BUS.post(new MobHandlerRegistryEvent());
     }
 

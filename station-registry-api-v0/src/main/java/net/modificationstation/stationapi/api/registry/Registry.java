@@ -7,12 +7,16 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
+import net.modificationstation.stationapi.api.util.function.BulkBiConsumer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -341,6 +345,21 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
     static <V, T extends V> T register(Registry<V> registry, int rawId, Identifier id, T entry) {
         ((MutableRegistry<V>)registry).set(rawId, RegistryKey.of(registry.getKey(), id), entry, Lifecycle.stable());
         return entry;
+    }
+
+    @Contract(pure = true)
+    static <ENTRY> BulkBiConsumer<Identifier, ENTRY> register(Registry<ENTRY> registry) {
+        return BulkBiConsumer.of((id, entry) -> register(registry, id, entry));
+    }
+
+    @Contract(pure = true)
+    static <ENTRY> BulkBiConsumer<String, ENTRY> register(Registry<ENTRY> registry, Namespace namespace) {
+        return BulkBiConsumer.of((id, entry) -> register(registry, namespace.id(id), entry));
+    }
+
+    @Contract(pure = true)
+    static <ENTRY> BulkBiConsumer<String, ENTRY> register(Registry<ENTRY> registry, ToIntFunction<ENTRY> rawIdGetter, Namespace namespace) {
+        return BulkBiConsumer.of((id, entry) -> register(registry, rawIdGetter.applyAsInt(entry), namespace.id(id), entry));
     }
 
     Registry<T> freeze();

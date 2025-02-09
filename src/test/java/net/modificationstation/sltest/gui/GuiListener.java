@@ -9,9 +9,7 @@ import net.minecraft.inventory.Inventory;
 import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.tileentity.TileEntityFreezer;
 import net.modificationstation.stationapi.api.client.gui.screen.GuiHandler;
-import net.modificationstation.stationapi.api.client.registry.GuiHandlerRegistry;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
-import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class GuiListener {
@@ -19,8 +17,7 @@ public class GuiListener {
     @Environment(EnvType.CLIENT)
     @EventListener
     public void registerGuiHandlers(GuiHandlerRegistryEvent event) {
-        GuiHandlerRegistry registry = event.registry;
-        Registry.register(registry, Identifier.of(SLTest.NAMESPACE, "freezer"), new GuiHandler((GuiHandler.ScreenFactoryNoMessage) this::openFreezer, TileEntityFreezer::new));
+        event.register(Identifier.of(SLTest.NAMESPACE, "freezer"), new GuiHandler((GuiHandler.ScreenFactoryNoMessage) this::openFreezer, TileEntityFreezer::new));
     }
 
     @Environment(EnvType.CLIENT)

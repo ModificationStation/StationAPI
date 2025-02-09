@@ -11,7 +11,6 @@ import net.modificationstation.stationapi.api.item.tool.ToolLevel;
 import net.modificationstation.stationapi.api.item.tool.ToolMaterialFactory;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.template.item.BlockStateItem;
 
@@ -34,8 +33,8 @@ public class ItemListener {
         testPickaxe = new ModdedPickaxeItem(NAMESPACE.id("test_pickaxe"), testMaterial).setTranslationKey(NAMESPACE, "testPickaxe"); //8476
         testNBTItem = new NBTItem(NAMESPACE.id("nbt_item")).setTranslationKey(NAMESPACE, "nbt_item"); //8477
         testModelItem = new ModelItem(NAMESPACE.id("model_item")).setMaxCount(1).setTranslationKey(NAMESPACE, "idkSomething");
-        ironOre = Registry.register(event.registry, NAMESPACE.id("ironOre"), new Item(ItemRegistry.AUTO_ID)).setTranslationKey(NAMESPACE.id("ironOre"));
-        generatedItem = Registry.register(event.registry, NAMESPACE.id("generated_item"), new Item(ItemRegistry.AUTO_ID)).setTranslationKey(NAMESPACE.id("generatedItem"));
+        ironOre = event.register(NAMESPACE.id("ironOre"), new Item(ItemRegistry.AUTO_ID)).setTranslationKey(NAMESPACE.id("ironOre"));
+        generatedItem = event.register(NAMESPACE.id("generated_item"), new Item(ItemRegistry.AUTO_ID)).setTranslationKey(NAMESPACE.id("generatedItem"));
         variationBlockIdle = new BlockStateItem(NAMESPACE.id("variation_block_idle"), Blocks.VARIATION_BLOCK.get().getDefaultState()).setTranslationKey(NAMESPACE, "variationBlockIdle");
         variationBlockPassive = new BlockStateItem(NAMESPACE.id("variation_block_passive"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.PASSIVE)).setTranslationKey(NAMESPACE, "variationBlockPassive");
         variationBlockActive = new BlockStateItem(NAMESPACE.id("variation_block_active"), Blocks.VARIATION_BLOCK.get().getDefaultState().with(VariationBlock.VARIANT, VariationBlock.Variant.ACTIVE)).setTranslationKey(NAMESPACE, "variationBlockActive");
