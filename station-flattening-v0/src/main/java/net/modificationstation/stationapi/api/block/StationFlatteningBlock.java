@@ -108,4 +108,8 @@ public interface StationFlatteningBlock extends
     default Block setLuminance(ToIntFunction<BlockState> provider) {
         return Util.assertImpl();
     }
+
+    default void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState) {
+        Util.assertImpl();
+    }
 }
