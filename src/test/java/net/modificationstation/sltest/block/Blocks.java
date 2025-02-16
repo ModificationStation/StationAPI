@@ -5,9 +5,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.template.block.TemplateBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.function.Function;
 
@@ -37,6 +39,9 @@ public enum Blocks {
     }
 
     public static class Init {
+        static {
+            EntrypointManager.registerLookup(MethodHandles.lookup());
+        }
 
         @EventListener
         private static void registerBlocks(BlockRegistryEvent event) {

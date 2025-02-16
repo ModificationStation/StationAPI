@@ -7,6 +7,7 @@ import net.modificationstation.stationapi.api.client.event.resource.TexturePackL
 import net.modificationstation.stationapi.api.client.resource.ReloadScreenManager;
 import net.modificationstation.stationapi.api.client.resource.ReloadableAssetsManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.resource.CompositeResourceReload;
 import net.modificationstation.stationapi.api.util.Unit;
@@ -16,6 +17,7 @@ import net.modificationstation.stationapi.impl.resource.ResourcePackManager;
 import net.modificationstation.stationapi.impl.resource.TexturePackProvider;
 import net.modificationstation.stationapi.impl.resource.loader.ModResourcePackCreator;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -24,6 +26,10 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class AssetsReloaderImpl {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
+
     public static final ResourcePackManager RESOURCE_PACK_MANAGER = new ResourcePackManager(
             new DefaultResourcePackProvider(),
             ModResourcePackCreator.CLIENT_RESOURCE_PACK_PROVIDER,

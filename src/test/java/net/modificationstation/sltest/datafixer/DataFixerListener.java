@@ -3,12 +3,18 @@ package net.modificationstation.sltest.datafixer;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.event.datafixer.DataFixerRegisterEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.util.Util;
+
+import java.lang.invoke.MethodHandles;
 
 import static net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema.putItem;
 import static net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema.putState;
 
 public class DataFixerListener {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
 
     @EventListener
     private static void registerFixer(DataFixerRegisterEvent event) {

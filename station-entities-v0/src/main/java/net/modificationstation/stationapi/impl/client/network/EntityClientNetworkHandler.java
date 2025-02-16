@@ -19,14 +19,15 @@ import net.modificationstation.stationapi.api.event.registry.EntityHandlerRegist
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.MobHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
-import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.server.entity.StationSpawnDataProvider;
 import net.modificationstation.stationapi.mixin.entity.client.ClientNetworkHandlerAccessor;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
@@ -37,12 +38,15 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class EntityClientNetworkHandler {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
 
     @EventListener
     private static void registerMessageListeners(MessageListenerRegistryEvent event) {
-        Registry.register(event.registry, NAMESPACE.id("spawn_entity"), EntityClientNetworkHandler::handleEntitySpawn);
+        event.register(NAMESPACE.id("spawn_entity"), EntityClientNetworkHandler::handleEntitySpawn);
         StationAPI.EVENT_BUS.post(new EntityHandlerRegistryEvent());
-        Registry.register(event.registry, NAMESPACE.id("spawn_mob"), EntityClientNetworkHandler::handleMobSpawn);
+        event.register(NAMESPACE.id("spawn_mob"), EntityClientNetworkHandler::handleMobSpawn);
         StationAPI.EVENT_BUS.post(new MobHandlerRegistryEvent());
     }
 

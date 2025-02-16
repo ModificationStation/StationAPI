@@ -7,13 +7,20 @@ import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.recipe.FuelRegistry;
 import net.modificationstation.stationapi.api.registry.tag.ItemTags;
 
+import java.lang.invoke.MethodHandles;
+
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaFuelItemFixImpl {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
+
     @EventListener
     private static void registerFuel(RecipeRegisterEvent event) {
         if (RecipeRegisterEvent.Vanilla.SMELTING.type() == event.recipeId) {

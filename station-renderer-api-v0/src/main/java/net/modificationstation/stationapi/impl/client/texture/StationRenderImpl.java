@@ -20,14 +20,15 @@ import net.modificationstation.stationapi.api.client.texture.TextureUtil;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.resource.*;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
-import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -38,12 +39,13 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class StationRenderImpl {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
 
-    @Entrypoint.Namespace
-    public static final Namespace NAMESPACE = Null.get();
+    public static final Namespace NAMESPACE = Namespace.resolve();
 
-    @Entrypoint.Logger("StationRenderer|API")
-    public static final Logger LOGGER = Null.get();
+    public static final Logger LOGGER = NAMESPACE.getLogger("StationRenderer|API");
 
     public static ExpandableAtlas getTerrain() {
         return TERRAIN;

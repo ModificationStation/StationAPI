@@ -8,33 +8,37 @@ import net.modificationstation.stationapi.api.event.recipe.RecipeRegisterEvent;
 import net.modificationstation.stationapi.api.event.registry.JsonRecipeParserRegistryEvent;
 import net.modificationstation.stationapi.api.item.json.JsonItemKey;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.recipe.CraftingRegistry;
 import net.modificationstation.stationapi.api.recipe.SmeltingRegistry;
 import net.modificationstation.stationapi.api.registry.JsonRecipeParserRegistry;
 import net.modificationstation.stationapi.api.registry.JsonRecipesRegistry;
-import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.util.Namespace;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static net.modificationstation.stationapi.api.util.Identifier.of;
-
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class JsonRecipeParserInit {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
 
     @EventListener
     private static void registerJsonRecipeParsers(JsonRecipeParserRegistryEvent event) {
-        Registry.register(event.registry, of("crafting_shaped"), JsonRecipeParserInit::parseCraftingShaped);
-        Registry.register(event.registry, of("crafting_shapeless"), JsonRecipeParserInit::parseCraftingShapeless);
-        Registry.register(event.registry, of("smelting"), JsonRecipeParserInit::parseSmelting);
+        event.register(Namespace.MINECRAFT)
+                .accept("crafting_shaped", JsonRecipeParserInit::parseCraftingShaped)
+                .accept("crafting_shapeless", JsonRecipeParserInit::parseCraftingShapeless)
+                .accept("smelting", JsonRecipeParserInit::parseSmelting);
     }
 
     @EventListener

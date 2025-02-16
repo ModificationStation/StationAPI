@@ -8,12 +8,18 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.screen.EditWorldScreenEvent;
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetDetachedContext;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.mixin.gui.client.ScreenAccessor;
+
+import java.lang.invoke.MethodHandles;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class EditWorldScreenImpl {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
 
     @EventListener
     private static void registerRenameWorld(EditWorldScreenEvent.ScrollableButtonContextRegister event) {

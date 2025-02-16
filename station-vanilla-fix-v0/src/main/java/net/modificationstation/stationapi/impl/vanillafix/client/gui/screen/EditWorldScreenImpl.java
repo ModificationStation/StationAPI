@@ -13,12 +13,15 @@ import net.modificationstation.stationapi.api.client.event.gui.screen.EditWorldS
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetDetachedContext;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.nbt.NbtOps;
 import net.modificationstation.stationapi.impl.vanillafix.datafixer.VanillaDataFixerImpl;
 import net.modificationstation.stationapi.impl.world.storage.FlattenedWorldStorage;
 import net.modificationstation.stationapi.mixin.vanillafix.client.ScreenAccessor;
+
+import java.lang.invoke.MethodHandles;
 
 import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
@@ -27,6 +30,10 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class EditWorldScreenImpl {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
+
     private static final String
             ROOT_KEY = "selectWorld." + NAMESPACE,
             CONVERT_TO_MCREGION_KEY = ROOT_KEY + ".convertToMcRegion";

@@ -7,6 +7,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.*;
 import net.modificationstation.stationapi.api.event.block.BlockItemFactoryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
 import java.lang.invoke.LambdaMetafactory;
@@ -28,6 +29,10 @@ import java.util.function.IntFunction;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class HasCustomBlockItemFactoryImpl {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
+
     /**
      * Processes {@link HasCustomBlockItemFactory} annotation if present via {@link BlockItemFactoryEvent} hook.
      * @param event blockitemfactory callback.

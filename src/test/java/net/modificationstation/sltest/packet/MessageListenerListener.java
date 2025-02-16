@@ -8,18 +8,14 @@ import net.modificationstation.sltest.SLTest;
 import net.modificationstation.sltest.item.ModdedItem;
 import net.modificationstation.stationapi.api.event.registry.MessageListenerRegistryEvent;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
-import net.modificationstation.stationapi.api.registry.Registry;
-import net.modificationstation.stationapi.api.util.Identifier;
-
-import java.util.function.BiConsumer;
 
 public class MessageListenerListener {
 
     @EventListener
     public void registerMessageListeners(MessageListenerRegistryEvent event) {
-        Registry<BiConsumer<PlayerEntity, MessagePacket>> registry = event.registry;
-        Registry.register(registry, Identifier.of(SLTest.NAMESPACE, "give_me_diamonds"), this::handleGiveMeDiamonds);
-        Registry.register(registry, Identifier.of(SLTest.NAMESPACE, "send_an_object"), this::handleSendCoords);
+        event.register(SLTest.NAMESPACE)
+                .accept("give_me_diamonds", this::handleGiveMeDiamonds)
+                .accept("send_an_object", this::handleSendCoords);
     }
 
     public void handleGiveMeDiamonds(PlayerEntity playerBase, MessagePacket message) {

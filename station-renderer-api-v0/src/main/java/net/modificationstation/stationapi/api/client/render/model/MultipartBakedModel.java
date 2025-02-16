@@ -5,11 +5,7 @@ import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.client.render.RenderContext;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -23,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class MultipartBakedModel implements BakedModel {
@@ -35,7 +30,6 @@ public class MultipartBakedModel implements BakedModel {
     protected final ModelTransformation transformations;
     protected final ModelOverrideList itemPropertyOverrides;
     private final Map<BlockState, BitSet> stateCache = new Object2ObjectOpenCustomHashMap<>(Util.identityHashStrategy());
-    private final boolean isVanilla;
 
     public MultipartBakedModel(List<Pair<Predicate<BlockState>, BakedModel>> components) {
         this.components = components;
@@ -46,46 +40,6 @@ public class MultipartBakedModel implements BakedModel {
         this.sprite = bakedModel.getSprite();
         this.transformations = bakedModel.getTransformation();
         this.itemPropertyOverrides = bakedModel.getOverrides();
-        boolean isVanilla = true;
-        for (Pair<Predicate<BlockState>, BakedModel> component : components)
-            if (!component.getRight().isVanillaAdapter()) {
-                isVanilla = false;
-                break;
-            }
-        this.isVanilla = isVanilla;
-    }
-
-    @Override
-    public boolean isVanillaAdapter() {
-        return isVanilla;
-    }
-
-    @Override
-    public void emitBlockQuads(BlockView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-        BitSet bitSet = this.stateCache.get(state);
-
-        if (bitSet == null) {
-            bitSet = new BitSet();
-
-            for (int i = 0; i < this.components.size(); i++) {
-                Pair<Predicate<BlockState>, BakedModel> pair = components.get(i);
-
-                if (pair.getLeft().test(state)) {
-                    pair.getRight().emitBlockQuads(blockView, state, pos, randomSupplier, context);
-                    bitSet.set(i);
-                }
-            }
-
-            stateCache.put(state, bitSet);
-        } else
-            for (int i = 0; i < this.components.size(); i++)
-                if (bitSet.get(i))
-                    components.get(i).getRight().emitBlockQuads(blockView, state, pos, randomSupplier, context);
-    }
-
-    @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-        // Vanilla doesn't use MultipartBakedModel for items.
     }
 
     @Override

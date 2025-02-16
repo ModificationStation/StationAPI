@@ -12,12 +12,14 @@ import net.modificationstation.stationapi.api.block.StationBlockItemsBlock;
 import net.modificationstation.stationapi.api.event.registry.BlockItemRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
-import net.modificationstation.stationapi.api.registry.Registry;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.Util;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -25,11 +27,14 @@ import java.util.function.Supplier;
 import static net.mine_diver.unsafeevents.listener.ListenerPriority.LOW;
 import static net.minecraft.block.Block.*;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
-import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaBlockFixImpl {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
+
     public static final Supplier<ReferenceSet<Block>> COLLISION_BLOCKS = Suppliers.memoize(() -> Util.make(new ReferenceOpenHashSet<>(), s -> {
         s.add(BED);
         s.add(WHEAT);
@@ -43,110 +48,105 @@ public final class VanillaBlockFixImpl {
 
     @EventListener
     private static void registerBlocks(BlockRegistryEvent event) {
-        BlockRegistry registry = event.registry;
-
-        register(registry, "stone", STONE);
-        register(registry, "grass_block", GRASS_BLOCK);
-        register(registry, "dirt", DIRT);
-        register(registry, "cobblestone", COBBLESTONE);
-        register(registry, "oak_planks", PLANKS);
-        register(registry, "sapling", SAPLING);
-        register(registry, "bedrock", BEDROCK);
-        register(registry, "flowing_water", FLOWING_WATER);
-        register(registry, "water", WATER);
-        register(registry, "flowing_lava", FLOWING_LAVA);
-        register(registry, "lava", LAVA);
-        register(registry, "sand", SAND);
-        register(registry, "gravel", GRAVEL);
-        register(registry, "gold_ore", GOLD_ORE);
-        register(registry, "iron_ore", IRON_ORE);
-        register(registry, "coal_ore", COAL_ORE);
-        register(registry, "log", LOG);
-        register(registry, "leaves", LEAVES);
-        register(registry, "sponge", SPONGE);
-        register(registry, "glass", GLASS);
-        register(registry, "lapis_ore", LAPIS_ORE);
-        register(registry, "lapis_block", LAPIS_BLOCK);
-        register(registry, "dispenser", DISPENSER);
-        register(registry, "sandstone", SANDSTONE);
-        register(registry, "note_block", NOTE_BLOCK);
-        register(registry, "red_bed", BED);
-        register(registry, "powered_rail", POWERED_RAIL);
-        register(registry, "detector_rail", DETECTOR_RAIL);
-        register(registry, "sticky_piston", STICKY_PISTON);
-        register(registry, "cobweb", COBWEB);
-        register(registry, "grass", GRASS);
-        register(registry, "dead_bush", DEAD_BUSH);
-        register(registry, "piston", PISTON);
-        register(registry, "piston_head", PISTON_HEAD);
-        register(registry, "wool", WOOL);
-        register(registry, "moving_piston", MOVING_PISTON);
-        register(registry, "dandelion", DANDELION);
-        register(registry, "rose", ROSE);
-        register(registry, "brown_mushroom", BROWN_MUSHROOM);
-        register(registry, "red_mushroom", RED_MUSHROOM);
-        register(registry, "gold_block", GOLD_BLOCK);
-        register(registry, "iron_block", IRON_BLOCK);
-        register(registry, "double_slab", DOUBLE_SLAB);
-        register(registry, "slab", SLAB);
-        register(registry, "bricks", BRICKS);
-        register(registry, "tnt", TNT);
-        register(registry, "bookshelf", BOOKSHELF);
-        register(registry, "mossy_cobblestone", MOSSY_COBBLESTONE);
-        register(registry, "obsidian", OBSIDIAN);
-        register(registry, "torch", TORCH);
-        register(registry, "fire", FIRE);
-        register(registry, "spawner", SPAWNER);
-        register(registry, "oak_stairs", WOODEN_STAIRS);
-        register(registry, "chest", CHEST);
-        register(registry, "redstone_wire", REDSTONE_WIRE);
-        register(registry, "diamond_ore", DIAMOND_ORE);
-        register(registry, "diamond_block", DIAMOND_BLOCK);
-        register(registry, "crafting_table", CRAFTING_TABLE);
-        register(registry, "wheat", WHEAT);
-        register(registry, "farmland", FARMLAND);
-        register(registry, "furnace", FURNACE);
-        register(registry, "furnace_lit", LIT_FURNACE);
-        register(registry, "oak_sign", SIGN);
-        register(registry, "oak_door", DOOR);
-        register(registry, "ladder", LADDER);
-        register(registry, "rail", RAIL);
-        register(registry, "cobblestone_stairs", COBBLESTONE_STAIRS);
-        register(registry, "oak_wall_sign", WALL_SIGN);
-        register(registry, "lever", LEVER);
-        register(registry, "oak_pressure_plate", STONE_PRESSURE_PLATE);
-        register(registry, "iron_door", IRON_DOOR);
-        register(registry, "stone_pressure_plate", WOODEN_PRESSURE_PLATE);
-        register(registry, "redstone_ore", REDSTONE_ORE);
-        register(registry, "redstone_ore_lit", LIT_REDSTONE_ORE);
-        register(registry, "redstone_torch", REDSTONE_TORCH);
-        register(registry, "redstone_torch_lit", LIT_REDSTONE_TORCH);
-        register(registry, "stone_button", BUTTON);
-        register(registry, "snow", SNOW);
-        register(registry, "ice", ICE);
-        register(registry, "snow_block", SNOW_BLOCK);
-        register(registry, "cactus", CACTUS);
-        register(registry, "clay", CLAY);
-        register(registry, "sugar_cane", SUGAR_CANE);
-        register(registry, "jukebox", JUKEBOX);
-        register(registry, "oak_fence", FENCE);
-        register(registry, "carved_pumpkin", PUMPKIN);
-        register(registry, "netherrack", NETHERRACK);
-        register(registry, "soul_sand", SOUL_SAND);
-        register(registry, "glowstone", GLOWSTONE);
-        register(registry, "nether_portal", NETHER_PORTAL);
-        register(registry, "jack_o_lantern", JACK_O_LANTERN);
-        register(registry, "cake", CAKE);
-        register(registry, "repeater", REPEATER);
-        register(registry, "repeater_lit", POWERED_REPEATER);
-        register(registry, "locked_chest", LOCKED_CHEST);
-        register(registry, "oak_trapdoor", TRAPDOOR);
+        event.register(block -> block.id, Namespace.MINECRAFT)
+                .accept("stone", STONE)
+                .accept("grass_block", GRASS_BLOCK)
+                .accept("dirt", DIRT)
+                .accept("cobblestone", COBBLESTONE)
+                .accept("oak_planks", PLANKS)
+                .accept("sapling", SAPLING)
+                .accept("bedrock", BEDROCK)
+                .accept("flowing_water", FLOWING_WATER)
+                .accept("water", WATER)
+                .accept("flowing_lava", FLOWING_LAVA)
+                .accept("lava", LAVA)
+                .accept("sand", SAND)
+                .accept("gravel", GRAVEL)
+                .accept("gold_ore", GOLD_ORE)
+                .accept("iron_ore", IRON_ORE)
+                .accept("coal_ore", COAL_ORE)
+                .accept("log", LOG)
+                .accept("leaves", LEAVES)
+                .accept("sponge", SPONGE)
+                .accept("glass", GLASS)
+                .accept("lapis_ore", LAPIS_ORE)
+                .accept("lapis_block", LAPIS_BLOCK)
+                .accept("dispenser", DISPENSER)
+                .accept("sandstone", SANDSTONE)
+                .accept("note_block", NOTE_BLOCK)
+                .accept("red_bed", BED)
+                .accept("powered_rail", POWERED_RAIL)
+                .accept("detector_rail", DETECTOR_RAIL)
+                .accept("sticky_piston", STICKY_PISTON)
+                .accept("cobweb", COBWEB)
+                .accept("grass", GRASS)
+                .accept("dead_bush", DEAD_BUSH)
+                .accept("piston", PISTON)
+                .accept("piston_head", PISTON_HEAD)
+                .accept("wool", WOOL)
+                .accept("moving_piston", MOVING_PISTON)
+                .accept("dandelion", DANDELION)
+                .accept("rose", ROSE)
+                .accept("brown_mushroom", BROWN_MUSHROOM)
+                .accept("red_mushroom", RED_MUSHROOM)
+                .accept("gold_block", GOLD_BLOCK)
+                .accept("iron_block", IRON_BLOCK)
+                .accept("double_slab", DOUBLE_SLAB)
+                .accept("slab", SLAB)
+                .accept("bricks", BRICKS)
+                .accept("tnt", TNT)
+                .accept("bookshelf", BOOKSHELF)
+                .accept("mossy_cobblestone", MOSSY_COBBLESTONE)
+                .accept("obsidian", OBSIDIAN)
+                .accept("torch", TORCH)
+                .accept("fire", FIRE)
+                .accept("spawner", SPAWNER)
+                .accept("oak_stairs", WOODEN_STAIRS)
+                .accept("chest", CHEST)
+                .accept("redstone_wire", REDSTONE_WIRE)
+                .accept("diamond_ore", DIAMOND_ORE)
+                .accept("diamond_block", DIAMOND_BLOCK)
+                .accept("crafting_table", CRAFTING_TABLE)
+                .accept("wheat", WHEAT)
+                .accept("farmland", FARMLAND)
+                .accept("furnace", FURNACE)
+                .accept("furnace_lit", LIT_FURNACE)
+                .accept("oak_sign", SIGN)
+                .accept("oak_door", DOOR)
+                .accept("ladder", LADDER)
+                .accept("rail", RAIL)
+                .accept("cobblestone_stairs", COBBLESTONE_STAIRS)
+                .accept("oak_wall_sign", WALL_SIGN)
+                .accept("lever", LEVER)
+                .accept("oak_pressure_plate", STONE_PRESSURE_PLATE)
+                .accept("iron_door", IRON_DOOR)
+                .accept("stone_pressure_plate", WOODEN_PRESSURE_PLATE)
+                .accept("redstone_ore", REDSTONE_ORE)
+                .accept("redstone_ore_lit", LIT_REDSTONE_ORE)
+                .accept("redstone_torch", REDSTONE_TORCH)
+                .accept("redstone_torch_lit", LIT_REDSTONE_TORCH)
+                .accept("stone_button", BUTTON)
+                .accept("snow", SNOW)
+                .accept("ice", ICE)
+                .accept("snow_block", SNOW_BLOCK)
+                .accept("cactus", CACTUS)
+                .accept("clay", CLAY)
+                .accept("sugar_cane", SUGAR_CANE)
+                .accept("jukebox", JUKEBOX)
+                .accept("oak_fence", FENCE)
+                .accept("carved_pumpkin", PUMPKIN)
+                .accept("netherrack", NETHERRACK)
+                .accept("soul_sand", SOUL_SAND)
+                .accept("glowstone", GLOWSTONE)
+                .accept("nether_portal", NETHER_PORTAL)
+                .accept("jack_o_lantern", JACK_O_LANTERN)
+                .accept("cake", CAKE)
+                .accept("repeater", REPEATER)
+                .accept("repeater_lit", POWERED_REPEATER)
+                .accept("locked_chest", LOCKED_CHEST)
+                .accept("oak_trapdoor", TRAPDOOR);
 
         LOGGER.info("Added vanilla blocks to the registry.");
-    }
-
-    private static void register(Registry<Block> registry, String id, Block block) {
-        Registry.register(registry, block.id, of(id), block);
     }
 
     @EventListener(priority = LOW)
@@ -158,7 +158,7 @@ public final class VanillaBlockFixImpl {
 
     @EventListener
     private static void registerBlockItems(BlockItemRegistryEvent event) {
-        Consumer<Block> c = block -> Registry.register(ItemRegistry.INSTANCE, BlockRegistry.INSTANCE.getId(block), Item.ITEMS[block.id]);
+        Consumer<Block> c = block -> event.register(BlockRegistry.INSTANCE.getId(block), Item.ITEMS[block.id]);
 
         c.accept(Block.WOOL);
         c.accept(Block.LOG);
@@ -168,6 +168,6 @@ public final class VanillaBlockFixImpl {
         c.accept(Block.PISTON);
         c.accept(Block.STICKY_PISTON);
 
-        COLLISION_BLOCKS.get().forEach(block -> Registry.register(ItemRegistry.INSTANCE, Objects.requireNonNull(BlockRegistry.INSTANCE.getId(block)).withSuffixedPath("_unobtainable"), new BlockItem(ItemRegistry.SHIFTED_ID.get(block.id))));
+        COLLISION_BLOCKS.get().forEach(block -> event.register(Objects.requireNonNull(BlockRegistry.INSTANCE.getId(block)).withSuffixedPath("_unobtainable"), new BlockItem(ItemRegistry.SHIFTED_ID.get(block.id))));
     }
 }

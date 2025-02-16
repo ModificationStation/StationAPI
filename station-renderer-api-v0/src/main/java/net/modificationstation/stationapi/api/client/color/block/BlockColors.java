@@ -11,6 +11,7 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.event.color.block.BlockColorsRegisterEvent;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
+import net.modificationstation.stationapi.api.registry.sync.trackers.IdListTracker;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.util.collection.IdList;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +29,10 @@ public class BlockColors {
         BlockColors blockColors = new BlockColors();
         StationAPI.EVENT_BUS.post(BlockColorsRegisterEvent.builder().blockColors(blockColors).build());
         return blockColors;
+    }
+
+    public BlockColors() {
+        IdListTracker.register(BlockRegistry.INSTANCE, "BlockColors.providers", providers);
     }
 
     public int getColor(BlockState state, BlockView world, BlockPos pos) {

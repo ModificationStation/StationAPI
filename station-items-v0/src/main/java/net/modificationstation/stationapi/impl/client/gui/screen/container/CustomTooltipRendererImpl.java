@@ -6,16 +6,22 @@ import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.TooltipHelper;
 import net.modificationstation.stationapi.api.client.event.gui.screen.container.TooltipRenderEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.mixin.item.client.DrawContextAccessor;
 import net.modificationstation.stationapi.mixin.item.client.HandledScreenAccessor;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class CustomTooltipRendererImpl {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
+
     private static final DrawContext CONTEXT = new DrawContext();
 
     @EventListener

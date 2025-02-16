@@ -10,6 +10,7 @@ import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.event.datafixer.DataFixerRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.vanillafix.datadamager.damage.StationFlatteningToMcRegionChunkDamage;
@@ -23,6 +24,7 @@ import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.McRegi
 import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningChunkSchema;
 import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -31,6 +33,10 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class VanillaDataFixerImpl {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
+
     public static final String STATION_ID = NAMESPACE.id("id").toString();
     public static final int CURRENT_VERSION = 69421;
     public static final int HIGHEST_VERSION = Integer.MAX_VALUE / 10;

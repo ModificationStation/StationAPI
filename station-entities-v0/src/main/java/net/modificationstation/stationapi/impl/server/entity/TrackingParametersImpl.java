@@ -6,12 +6,15 @@ import net.minecraft.class_80;
 import net.minecraft.entity.Entity;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.server.entity.CustomTracking;
 import net.modificationstation.stationapi.api.server.entity.HasTrackingParameters;
 import net.modificationstation.stationapi.api.server.entity.TrackingParametersProvider;
 import net.modificationstation.stationapi.api.server.event.entity.TrackEntityEvent;
 import net.modificationstation.stationapi.api.util.TriState;
+
+import java.lang.invoke.MethodHandles;
 
 /**
  * {@link TrackingParametersProvider} implementation class.
@@ -24,6 +27,9 @@ import net.modificationstation.stationapi.api.util.TriState;
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class TrackingParametersImpl {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
 
     /**
      * Handles entity's {@link HasTrackingParameters} annotation if it's present via {@link TrackEntityEvent} hook.

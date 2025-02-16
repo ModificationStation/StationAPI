@@ -10,7 +10,6 @@ import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
-import net.modificationstation.stationapi.api.util.Null;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -26,19 +25,11 @@ import org.jetbrains.annotations.ApiStatus;
 ))
 public class StationAPI implements PreLaunchEntrypoint {
     /**
-     * StationAPI's instance.
-     */
-    @Entrypoint.Instance
-    public static final StationAPI INSTANCE = Null.get();
-
-    /**
      * StationAPI's namespace.
      */
-    @Entrypoint.Namespace
     public static final Namespace NAMESPACE = Namespace.of("stationapi");
 
-    @Entrypoint.Logger("Station|API")
-    public static final Logger LOGGER = Null.get();
+    public static final Logger LOGGER = NAMESPACE.getLogger("Station|API");
 
     @ApiStatus.Internal
     public static final String INTERNAL_PHASE = "stationapi:internal";
@@ -53,7 +44,6 @@ public class StationAPI implements PreLaunchEntrypoint {
      */
     @Override
     public void onPreLaunch() {
-        FabricLoader.getInstance().getModContainer("stationapi").ifPresent(modContainer -> EntrypointManager.setup(this, modContainer));
         String name = NAMESPACE.getName();
         LOGGER.info("Initializing " + name + "...");
         Configurator.setLevel("mixin", Level.TRACE);

@@ -6,17 +6,23 @@ import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedEvent;
 import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.registry.ListenableRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.RemappableRawIdHolder;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class ObjectArrayTracker<T, V> {
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
+
     private final Supplier<V[]> arrayGetter;
     private final Consumer<V[]> arraySetter;
 
