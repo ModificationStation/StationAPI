@@ -74,6 +74,9 @@ allprojects {
         "transitiveImplementation"("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
         "transitiveImplementation"("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
         "transitiveImplementation"("maven.modrinth:spasm:${project.properties["spasm_version"]}")
+        "transitiveImplementation"("me.carleslc:Simple-Yaml:1.8.4")
+        "transitiveImplementation"("net.glasslauncher.mods:glass-networking:1.0.2")
+        "transitiveImplementation"("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}")
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
@@ -93,6 +96,12 @@ allprojects {
         }
 
         annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.1")
+        
+//        modLocalRuntime("net.glasslauncher.mods:AlwaysMoreItems:${project.properties["ami_version"]}") {
+//            isTransitive = false
+//        }
+        // Optional bugfix mod for testing qol. Remove the // to enable.
+        //modLocalRuntime "maven.modrinth:mojangfix:${project.properties["mojangfix_version"]}"
     }
 
     loom {
