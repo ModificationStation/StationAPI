@@ -13,6 +13,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.metadata.ModMetadata;
+import net.fabricmc.loader.impl.util.FileSystemUtil;
 import net.modificationstation.stationapi.api.util.exception.MissingModException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -77,7 +77,9 @@ public final class Namespace implements Comparable<@NotNull Namespace> {
                     // i'm so sorry
                     if (Files.isRegularFile(callerPath)) { // regular case
                         final URI callerRoot;
-                        try (val fs = FileSystems.newFileSystem(callerPath)) {
+                        try {
+                            // do NOT close - the same FileSystem may be used by Fabric Loader!
+                            val fs = FileSystemUtil.getJarFileSystem(callerPath, false).get();
                             callerRoot = fs.getPath("/").toUri();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
