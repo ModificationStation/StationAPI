@@ -18,13 +18,11 @@ import net.modificationstation.stationapi.impl.item.AbstractToolMaterialImpl;
 import net.modificationstation.stationapi.impl.item.ToolEffectivenessImpl;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ToolItem.class)
 class ToolItemMixin extends Item implements StationToolItem {
-    @Shadow protected ToolMaterial toolMaterial;
     @Unique
     private TagKey<Block> stationapi_effectiveBlocks;
 
