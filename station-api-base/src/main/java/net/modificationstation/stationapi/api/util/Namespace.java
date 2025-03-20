@@ -13,7 +13,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.fabricmc.loader.impl.util.FileSystemUtil;
 import net.modificationstation.stationapi.api.util.exception.MissingModException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -26,16 +25,18 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.util.Collections;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+import java.util.zip.ZipError;
 
 @Slf4j
 public final class Namespace implements Comparable<@NotNull Namespace> {
     private static final boolean CHECK_MISSING_MODS = false;
+    private static final Map<String, String> CREATE_FILESYSTEM_ARGS = Collections.singletonMap("create", "true");
 
     @NotNull
     private static final Cache<@NotNull String, @NotNull Namespace> CACHE = Caffeine.newBuilder().softValues().build();
@@ -77,11 +78,20 @@ public final class Namespace implements Comparable<@NotNull Namespace> {
                     // i'm so sorry
                     if (Files.isRegularFile(callerPath)) { // regular case
                         final URI callerRoot;
+                        val uri = callerPath.toUri();
                         try {
-                            // do NOT close - the same FileSystem may be used by Fabric Loader!
-                            val fs = FileSystemUtil.getJarFileSystem(callerPath, false).get();
+                            FileSystem fs;
+                            val jarUri = new URI("jar:" + uri.getScheme(), uri.getHost(), uri.getPath(), uri.getFragment());
+                            try {
+                                //noinspection resource Don't close this, cause fabric may or may not be using this filesystem due to how java works.
+                                fs = FileSystems.newFileSystem(jarUri, CREATE_FILESYSTEM_ARGS);
+                            } catch (FileSystemAlreadyExistsException ignore2) {
+                                fs = FileSystems.getFileSystem(jarUri);
+                            } catch (IOException | ZipError e) {
+                                throw new IOException("Error accessing " + uri + ": " + e, e);
+                            }
                             callerRoot = fs.getPath("/").toUri();
-                        } catch (IOException e) {
+                        } catch (IOException | URISyntaxException e) {
                             throw new RuntimeException(e);
                         }
                         candidates = mods
