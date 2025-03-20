@@ -2,7 +2,6 @@ package net.modificationstation.stationapi.api.item.tool;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolMaterial;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
 
@@ -18,7 +17,7 @@ public interface StationHoeItem extends StationTool {
     }
 
     @Override
-    default ToolMaterial getMaterial(ItemStack stack) {
+    default AbstractToolMaterial getMaterial(ItemStack stack) {
         return Util.assertImpl();
     }
 }

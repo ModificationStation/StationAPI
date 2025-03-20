@@ -9,6 +9,7 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.item.tool.AbstractToolMaterial;
 import net.modificationstation.stationapi.api.item.tool.StationShearsItem;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
@@ -48,7 +49,7 @@ class ShearsItemMixin extends Item implements StationShearsItem {
     }
 
     @Override
-    public ToolMaterial getMaterial(ItemStack stack) {
+    public AbstractToolMaterial getMaterial(ItemStack stack) {
         return stationapi_toolMaterial;
     }
 

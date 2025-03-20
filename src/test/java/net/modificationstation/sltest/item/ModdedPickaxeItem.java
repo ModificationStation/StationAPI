@@ -4,17 +4,17 @@ import net.minecraft.entity.EntityRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolMaterial;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.dispenser.ItemDispenseContext;
 import net.modificationstation.stationapi.api.item.CustomDispenseBehavior;
+import net.modificationstation.stationapi.api.item.tool.AbstractToolMaterial;
 import net.modificationstation.stationapi.api.template.item.TemplatePickaxeItem;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 public class ModdedPickaxeItem extends TemplatePickaxeItem implements CustomDispenseBehavior {
 
-    public ModdedPickaxeItem(Identifier identifier, ToolMaterial material) {
+    public ModdedPickaxeItem(Identifier identifier, AbstractToolMaterial material) {
         super(identifier, material);
     }
 

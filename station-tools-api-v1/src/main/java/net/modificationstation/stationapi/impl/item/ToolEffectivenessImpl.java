@@ -25,10 +25,10 @@ public class ToolEffectivenessImpl {
     public static boolean isSuitableFor(ItemStack item, BlockState state) {
         return item.getItem() instanceof StationTool stationTool
                 && state.isIn(stationTool.getEffectiveBlocks(item))
-                && ToolLevel.isSuitable(stationTool.getMaterial(item).getToolLevel(), state);
+                && ToolLevel.isSuitable(stationTool.getMaterial(item).toolLevel(), state);
     }
 
     public static float getMiningSpeedMultiplier(ItemStack item) {
-        return ((StationTool) item.getItem()).getMaterial(item).getMiningSpeedMultiplier();
+        return ((StationTool) item.getItem()).getMaterial(item).miningSpeed();
     }
 }
