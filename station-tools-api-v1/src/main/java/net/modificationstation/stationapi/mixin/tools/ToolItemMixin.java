@@ -45,11 +45,12 @@ class ToolItemMixin extends Item implements StationToolItem {
     )
     private void stationapi_assignAbstractToolMaterial(ToolItem instance, ToolMaterial value, Operation<Void> original) {
         stationapi_abstractToolMaterial = AbstractToolMaterialImpl.popAbstractToolMaterial();
-        if (value != null && stationapi_abstractToolMaterial != null)
-            throw new IllegalStateException("Received both an AbstractToolMaterial and a vanilla ToolMaterial! Only one is allowed.");
-        else if (value != null)
+        if (value != null) {
+            if (stationapi_abstractToolMaterial != null) throw new IllegalStateException(
+                    "Received both an AbstractToolMaterial and a vanilla ToolMaterial! Only one is allowed."
+            );
             stationapi_abstractToolMaterial = value;
-        else if (stationapi_abstractToolMaterial != null && stationapi_abstractToolMaterial instanceof ToolMaterial material)
+        } else if (stationapi_abstractToolMaterial instanceof ToolMaterial material)
             value = material;
         original.call(instance, value);
     }

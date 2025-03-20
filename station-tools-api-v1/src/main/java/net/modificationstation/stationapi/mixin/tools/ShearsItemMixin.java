@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ShearsItem.class)
 class ShearsItemMixin extends Item implements StationShearsItem {
     @Unique
-    private ToolMaterial stationapi_toolMaterial;
+    private AbstractToolMaterial stationapi_abstractToolMaterial;
     @Unique
     private TagKey<Block> stationapi_effectiveBlocks;
 
@@ -34,7 +34,7 @@ class ShearsItemMixin extends Item implements StationShearsItem {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void stationapi_captureToolMaterial(int i, CallbackInfo ci) {
-        stationapi_toolMaterial = ToolMaterial.IRON;
+        stationapi_abstractToolMaterial = ToolMaterial.IRON;
         setEffectiveBlocks(TagKey.of(BlockRegistry.INSTANCE.getKey(), Identifier.of("mineable/shears")));
     }
 
@@ -50,7 +50,7 @@ class ShearsItemMixin extends Item implements StationShearsItem {
 
     @Override
     public AbstractToolMaterial getMaterial(ItemStack stack) {
-        return stationapi_toolMaterial;
+        return stationapi_abstractToolMaterial;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.tools;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -14,6 +16,7 @@ import net.modificationstation.stationapi.api.item.tool.StationSwordItem;
 import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.impl.item.AbstractToolMaterialImpl;
 import net.modificationstation.stationapi.impl.item.ToolEffectivenessImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(SwordItem.class)
 class SwordItemMixin extends Item implements StationSwordItem {
     @Unique
-    private ToolMaterial stationapi_toolMaterial;
+    private AbstractToolMaterial stationapi_abstractToolMaterial;
     @Unique
     private TagKey<Block> stationapi_effectiveBlocks;
 
@@ -32,10 +35,41 @@ class SwordItemMixin extends Item implements StationSwordItem {
         super(id);
     }
 
-    @Inject(method = "<init>", at = @At("RETURN"))
+    @Inject(
+            method = "<init>",
+            at = @At("CTOR_HEAD")
+    )
     private void stationapi_captureToolMaterial(int i, ToolMaterial arg, CallbackInfo ci) {
-        stationapi_toolMaterial = arg;
+        stationapi_abstractToolMaterial = AbstractToolMaterialImpl.popAbstractToolMaterial();
+        if (arg != null) {
+            if (stationapi_abstractToolMaterial != null) throw new IllegalStateException(
+                    "Received both an AbstractToolMaterial and a vanilla ToolMaterial! Only one is allowed."
+            );
+            stationapi_abstractToolMaterial = arg;
+        }
         setEffectiveBlocks(TagKey.of(BlockRegistry.INSTANCE.getKey(), Identifier.of("mineable/sword")));
+    }
+
+    @WrapOperation(
+            method = "<init>",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/item/ToolMaterial;getDurability()I"
+            )
+    )
+    private int stationapi_interceptGetDurability(ToolMaterial instance, Operation<Integer> original) {
+        return instance == null ? stationapi_abstractToolMaterial.itemDurability() : original.call(instance);
+    }
+
+    @WrapOperation(
+            method = "<init>",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/item/ToolMaterial;getAttackDamage()I"
+            )
+    )
+    private int stationapi_interceptGetAttackDamage(ToolMaterial instance, Operation<Integer> original) {
+        return instance == null ? stationapi_abstractToolMaterial.attackDamage() : original.call(instance);
     }
 
     @Override
@@ -50,7 +84,7 @@ class SwordItemMixin extends Item implements StationSwordItem {
 
     @Override
     public AbstractToolMaterial getMaterial(ItemStack stack) {
-        return stationapi_toolMaterial;
+        return stationapi_abstractToolMaterial;
     }
 
     @Override
