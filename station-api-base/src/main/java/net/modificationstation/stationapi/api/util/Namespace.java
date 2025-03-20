@@ -81,16 +81,20 @@ public final class Namespace implements Comparable<@NotNull Namespace> {
                         val uri = callerPath.toUri();
                         try {
                             FileSystem fs;
+                            boolean created = false;
                             val jarUri = new URI("jar:" + uri.getScheme(), uri.getHost(), uri.getPath(), uri.getFragment());
                             try {
-                                //noinspection resource Don't close this, cause fabric may or may not be using this filesystem due to how java works.
                                 fs = FileSystems.newFileSystem(jarUri, CREATE_FILESYSTEM_ARGS);
+                                created = true;
                             } catch (FileSystemAlreadyExistsException ignore2) {
                                 fs = FileSystems.getFileSystem(jarUri);
                             } catch (IOException | ZipError e) {
                                 throw new IOException("Error accessing " + uri + ": " + e, e);
                             }
                             callerRoot = fs.getPath("/").toUri();
+                            if (created) {
+                                fs.close();
+                            }
                         } catch (IOException | URISyntaxException e) {
                             throw new RuntimeException(e);
                         }
