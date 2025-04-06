@@ -1,21 +1,26 @@
 package net.modificationstation.stationapi.mixin.item;
 
-import net.minecraft.block.CropBlock;
+import net.minecraft.block.SaplingBlock;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.StationBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(CropBlock.class)
-public abstract class CropBlockMixin implements StationBlock {
+import java.util.Random;
 
-    @Shadow public abstract void method_996(World world, int i, int j, int k);
+@Mixin(SaplingBlock.class)
+public abstract class SaplingBlockMixin implements StationBlock {
+    @Unique
+    private static final Random RANDOM = new Random();
+
+    @Shadow public abstract void method_533(World world, int x, int y, int z, Random random);
 
     @Override
     public boolean onBonemealUse(World world, int x, int y, int z, BlockState state) {
         if (!world.isRemote) {
-            method_996(world, x, y, z); // Full grows crop.
+            method_533(world, x, y, z, RANDOM);
         }
         return true;
     }
