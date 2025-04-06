@@ -28,20 +28,43 @@ class TessellatorMixin implements StationTessellator, VertexConsumer {
         stationapi$stationTessellatorImpl.ensureBufferCapacity(criticalCapacity);
     }
 
-    @Override @Shadow
-    public abstract void vertex(double x, double y, double z);
-
     @Override
-    public void vertex(float x, float y, float z) {
-        vertex((double) x, (double) y, (double) z);
+    public VertexConsumer setVertex(float x, float y, float z) {
+        vertex(x, y, z);
+        return this;
     }
 
-    @Override @Shadow
+    @Override
+    public VertexConsumer setColor(int red, int green, int blue, int alpha) {
+        color(red, green, blue, alpha);
+        return this;
+    }
+
+    @Override
+    public VertexConsumer setTexture(float u, float v) {
+        texture(u, v);
+        return this;
+    }
+
+    @Override
+    public VertexConsumer setLight(int u, int v) {
+        return this;
+    }
+
+    @Override
+    public VertexConsumer setOverlay(int u, int v) {
+        return this;
+    }
+
+    @Shadow
+    public abstract void vertex(double x, double y, double z);
+
+    @Shadow
     public abstract void color(int red, int green, int blue, int alpha);
 
-    @Override @Shadow
+    @Shadow
     public abstract void texture(double u, double v);
 
-    @Override @Shadow
+    @Shadow
     public abstract void normal(float x, float y, float z);
 }
