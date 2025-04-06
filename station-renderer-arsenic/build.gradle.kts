@@ -12,5 +12,5 @@ addModuleDependencies(project,
         "station-lifecycle-events-v0",
         "station-flattening-v0",
         "station-resource-loader-v0",
-        "station-renderer-api-v0"
+        "station-renderer-api-v1"
 )

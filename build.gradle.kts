@@ -27,6 +27,7 @@ allprojects {
         maven(url = "https://maven.glass-launcher.net/babric")
         maven(url = "https://maven.glass-launcher.net/snapshots")
         maven(url = "https://maven.glass-launcher.net/releases")
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots/")
         maven(url = "https://jitpack.io/")
         mavenCentral()
         exclusiveContent {
@@ -74,6 +75,7 @@ allprojects {
         "transitiveImplementation"("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
         "transitiveImplementation"("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
         "transitiveImplementation"("maven.modrinth:spasm:${project.properties["spasm_version"]}")
+        "transitiveImplementation"("org.joml:joml:${project.properties["joml_version"]}")
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
@@ -257,6 +259,7 @@ dependencies {
     include("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
     include("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
     include("maven.modrinth:spasm:${project.properties["spasm_version"]}")
+    include("org.joml:joml:${project.properties["joml_version"]}")
 }
 
 // Makes java shut up

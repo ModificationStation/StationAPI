@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.util.math;
 
 import com.google.common.collect.Iterators;
 import com.google.gson.annotations.SerializedName;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -12,8 +13,11 @@ import net.modificationstation.stationapi.api.util.StringIdentifiable;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.*;
 
+import java.lang.Math;
 import java.util.*;
+import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,7 +39,7 @@ public enum Direction implements StringIdentifiable {
     @SerializedName("south")
     SOUTH(5, 4, 3, "south", AxisDirection.POSITIVE, X, new Vec3i(1, 0, 0));
 
-    public static final Codec<Direction> CODEC;
+    public static final EnumCodec<Direction> CODEC;
     public static final com.mojang.serialization.Codec<Direction> VERTICAL_CODEC;
     private final int id;
     private final int idOpposite;
@@ -44,6 +48,7 @@ public enum Direction implements StringIdentifiable {
     private final Axis axis;
     private final AxisDirection direction;
     private final Vec3i vector;
+    private final Vector3f floatVector;
     private final int offsetX, offsetY, offsetZ;
     private static final Direction[] ALL;
     private static final Direction[] VALUES;
@@ -58,14 +63,15 @@ public enum Direction implements StringIdentifiable {
         this.axis = axis;
         this.direction = direction;
         this.vector = vector;
+        this.floatVector = new Vector3f((float) vector.getX(), (float) vector.getY(), (float) vector.getZ());
         offsetX = vector.getX();
         offsetY = vector.getY();
         offsetZ = vector.getZ();
     }
 
     public static Direction[] getEntityFacingOrder(Entity entity) {
-        final float f = entity.pitch * ((float)Math.PI / 180);
-        final float g = -entity.yaw * ((float)Math.PI / 180);
+        final float f = entity.pitch * ((float) Math.PI / 180);
+        final float g = -entity.yaw * ((float) Math.PI / 180);
         final float h = net.minecraft.util.math.MathHelper.sin(f);
         final float i = net.minecraft.util.math.MathHelper.cos(f);
         final float j = net.minecraft.util.math.MathHelper.sin(g);
@@ -91,11 +97,10 @@ public enum Direction implements StringIdentifiable {
         return new Direction[]{first, second, third, third.getOpposite(), second.getOpposite(), first.getOpposite()};
     }
 
-    public static Direction transform(Matrix4f matrix, Direction direction) {
-        Vec3i vec3i = direction.getVector();
-        Vector4f vector4f = new Vector4f(vec3i.getX(), vec3i.getY(), vec3i.getZ(), 0.0f);
-        vector4f.transform(matrix);
-        return Direction.getFacing(vector4f.getX(), vector4f.getY(), vector4f.getZ());
+    public static Direction transform(Matrix4fc matrix, Direction direction) {
+        Vector3f vector4f = matrix.transformDirection(direction.floatVector, new Vector3f());
+
+        return Direction.getFacing(vector4f.x(), vector4f.y(), vector4f.z());
     }
 
     public static Collection<Direction> shuffle(Random random) {
@@ -106,24 +111,14 @@ public enum Direction implements StringIdentifiable {
         return Stream.of(ALL);
     }
 
-    public Quaternion getRotationQuaternion() {
-        Quaternion quaternion = Vec3f.POSITIVE_X.getDegreesQuaternion(90.0f);
+    public Quaternionf getRotationQuaternion() {
         return switch (this) {
-            case DOWN -> Vec3f.POSITIVE_X.getDegreesQuaternion(180.0f);
-            case UP -> Quaternion.IDENTITY.copy();
-            case EAST -> {
-                quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0f));
-                yield quaternion;
-            }
-            case WEST -> quaternion;
-            case NORTH -> {
-                quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(-90.0f));
-                yield quaternion;
-            }
-            case SOUTH -> {
-                quaternion.hamiltonProduct(Vec3f.POSITIVE_Z.getDegreesQuaternion(90.0f));
-                yield quaternion;
-            }
+            case DOWN -> new Quaternionf().rotationX((float) Math.PI);
+            case UP -> new Quaternionf();
+            case EAST -> new Quaternionf().rotationXYZ(((float) Math.PI / 2F), 0.0F, (float) Math.PI);
+            case WEST -> new Quaternionf().rotationX(((float) Math.PI / 2F));
+            case NORTH -> new Quaternionf().rotationXYZ(((float) Math.PI / 2F), 0.0F, ((float) Math.PI / 2F));
+            case SOUTH -> new Quaternionf().rotationXYZ(((float) Math.PI / 2F), 0.0F, (-(float) Math.PI / 2F));
         };
     }
 
@@ -239,8 +234,8 @@ public enum Direction implements StringIdentifiable {
         return offsetZ;
     }
 
-    public Vec3f getUnitVector() {
-        return new Vec3f(getOffsetX(), getOffsetY(), getOffsetZ());
+    public Vector3f getUnitVector() {
+        return new Vector3f(getOffsetX(), getOffsetY(), getOffsetZ());
     }
 
     public String getName() {
@@ -252,11 +247,11 @@ public enum Direction implements StringIdentifiable {
     }
 
     @Nullable
-    public static Direction byName(@Nullable String name) {
+    public static Direction byId(@Nullable String name) {
         return CODEC.byId(name);
     }
 
-    public static Direction byId(int id) {
+    public static Direction byIndex(int id) {
         return VALUES[Math.abs(id % VALUES.length)];
     }
 
@@ -295,14 +290,14 @@ public enum Direction implements StringIdentifiable {
     }
 
     public static Direction getFacing(double x, double y, double z) {
-        return Direction.getFacing((float)x, (float)y, (float)z);
+        return Direction.getFacing((float) x, (float) y, (float) z);
     }
 
     public static Direction getFacing(float x, float y, float z) {
         Direction direction = NORTH;
         float f = Float.MIN_VALUE;
         for (Direction direction2 : ALL) {
-            float g = x * (float)direction2.vector.getX() + y * (float)direction2.vector.getY() + z * (float)direction2.vector.getZ();
+            float g = x * (float) direction2.vector.getX() + y * (float) direction2.vector.getY() + z * (float) direction2.vector.getZ();
             if (!(g > f)) continue;
             f = g;
             direction = direction2;
@@ -335,6 +330,10 @@ public enum Direction implements StringIdentifiable {
         return vector;
     }
 
+    public Vector3fc getFloatVector() {
+        return this.floatVector;
+    }
+
     /**
      * {@return whether the given yaw points to the direction}
      *
@@ -343,10 +342,10 @@ public enum Direction implements StringIdentifiable {
      * <p>This always returns {@code false} for vertical directions.
      */
     public boolean pointsTo(float yaw) {
-        float f = yaw * ((float)Math.PI / 180);
+        float f = yaw * ((float) Math.PI / 180);
         float g = -net.minecraft.util.math.MathHelper.sin(f);
         float h = net.minecraft.util.math.MathHelper.cos(f);
-        return (float)vector.getX() * g + (float)vector.getZ() * h > 0.0f;
+        return (float) vector.getX() * g + (float) vector.getZ() * h > 0.0f;
     }
 
     static {
@@ -361,10 +360,8 @@ public enum Direction implements StringIdentifiable {
     }
 
     public enum Axis implements StringIdentifiable,
-            Predicate<Direction>
-    {
-        X("x"){
-
+            Predicate<Direction> {
+        X("x") {
             @Override
             public int choose(int x, int y, int z) {
                 return x;
@@ -375,8 +372,7 @@ public enum Direction implements StringIdentifiable {
                 return x;
             }
         },
-        Y("y"){
-
+        Y("y") {
             @Override
             public int choose(int x, int y, int z) {
                 return y;
@@ -387,8 +383,7 @@ public enum Direction implements StringIdentifiable {
                 return y;
             }
         },
-        Z("z"){
-
+        Z("z") {
             @Override
             public int choose(int x, int y, int z) {
                 return z;
@@ -401,7 +396,7 @@ public enum Direction implements StringIdentifiable {
         };
 
         public static final Axis[] VALUES;
-        public static final StringIdentifiable.Codec<Axis> CODEC;
+        public static final StringIdentifiable.EnumCodec<Axis> CODEC;
         private final String name;
 
         Axis(String name) {
@@ -490,8 +485,7 @@ public enum Direction implements StringIdentifiable {
     }
 
     public enum Type implements Iterable<Direction>,
-            Predicate<Direction>
-    {
+            Predicate<Direction> {
         HORIZONTAL(new Direction[]{NORTH, EAST, SOUTH, WEST}, new Axis[]{Axis.X, Axis.Z}),
         VERTICAL(new Direction[]{UP, DOWN}, new Axis[]{Axis.Y});
 

@@ -79,29 +79,29 @@ public final class LightingCalculatorImpl {
     }
 
     public void calculateForQuad(BakedQuad q) {
-        float emission = q.getEmission();
+        float emission = q.lightEmission();
         
         if (emission == 1) {
             System.arraycopy(FULL_BRIGHTNESS, 0, light, 0, light.length);
             return;
         }
         
-        Direction face = q.getFace();
+        Direction face = q.face();
         calculateForQuad(
                 face,
-                x + Float.intBitsToFloat(q.getVertexData()[0]),
-                y + Float.intBitsToFloat(q.getVertexData()[1]),
-                z + Float.intBitsToFloat(q.getVertexData()[2]),
-                x + Float.intBitsToFloat(q.getVertexData()[8]),
-                y + Float.intBitsToFloat(q.getVertexData()[9]),
-                z + Float.intBitsToFloat(q.getVertexData()[10]),
-                x + Float.intBitsToFloat(q.getVertexData()[16]),
-                y + Float.intBitsToFloat(q.getVertexData()[17]),
-                z + Float.intBitsToFloat(q.getVertexData()[18]),
-                x + Float.intBitsToFloat(q.getVertexData()[24]),
-                y + Float.intBitsToFloat(q.getVertexData()[25]),
-                z + Float.intBitsToFloat(q.getVertexData()[26]),
-                q.hasShade()
+                x + Float.intBitsToFloat(q.vertexData()[0]),
+                y + Float.intBitsToFloat(q.vertexData()[1]),
+                z + Float.intBitsToFloat(q.vertexData()[2]),
+                x + Float.intBitsToFloat(q.vertexData()[8]),
+                y + Float.intBitsToFloat(q.vertexData()[9]),
+                z + Float.intBitsToFloat(q.vertexData()[10]),
+                x + Float.intBitsToFloat(q.vertexData()[16]),
+                y + Float.intBitsToFloat(q.vertexData()[17]),
+                z + Float.intBitsToFloat(q.vertexData()[18]),
+                x + Float.intBitsToFloat(q.vertexData()[24]),
+                y + Float.intBitsToFloat(q.vertexData()[25]),
+                z + Float.intBitsToFloat(q.vertexData()[26]),
+                q.shade()
         );
     
         if (emission == 0) return;

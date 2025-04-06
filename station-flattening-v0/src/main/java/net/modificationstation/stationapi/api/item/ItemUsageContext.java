@@ -38,7 +38,7 @@ public class ItemUsageContext {
     }
 
     public Direction getSide() {
-        return Direction.byId(this.hit.side);
+        return Direction.byIndex(this.hit.side);
     }
 
     public Vec3d getHitPos() {

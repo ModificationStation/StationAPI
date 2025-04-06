@@ -24,7 +24,7 @@ extends ItemUsageContext {
 
     protected ItemPlacementContext(World world, @Nullable PlayerEntity playerEntity, ItemStack itemStack, HitResult blockHitResult) {
         super(world, playerEntity, itemStack, blockHitResult);
-        this.placementPos = new BlockPos(blockHitResult.blockX, blockHitResult.blockY, blockHitResult.blockZ).offset(Direction.byId(blockHitResult.side));
+        this.placementPos = new BlockPos(blockHitResult.blockX, blockHitResult.blockY, blockHitResult.blockZ).offset(Direction.byIndex(blockHitResult.side));
         this.canReplaceExisting = world.getBlockState(blockHitResult.blockX, blockHitResult.blockY, blockHitResult.blockZ).canReplace(this);
     }
 

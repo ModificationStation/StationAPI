@@ -31,7 +31,7 @@ class SecondaryBlockItemMixin {
                         .world(world)
                         .player(player)
                         .x(x).y(y).z(z)
-                        .side(Direction.byId(side))
+                        .side(Direction.byIndex(side))
                         .block(BlockRegistry.INSTANCE.get(id))
                         .blockItem(blockItem)
                         .placeFunction(() -> placeFunction.call(world, x, y, z, id))

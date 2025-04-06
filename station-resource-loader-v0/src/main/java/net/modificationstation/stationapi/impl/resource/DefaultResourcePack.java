@@ -51,7 +51,7 @@ public class DefaultResourcePack implements ResourcePack {
 
     @Override
     public @Nullable InputSupplier<InputStream> open(ResourceType type, Identifier id) {
-        return PathUtil.split(id.path).get().map(segments -> {
+        return PathUtil.split(id.path).mapOrElse(segments -> {
             String string = id.namespace.toString();
             if (NAMESPACE_PATHS.containsKey(type)) for (Path path : NAMESPACE_PATHS.get(type)) {
                 Path path2 = PathUtil.getPath(path.resolve(string), segments);
@@ -68,7 +68,7 @@ public class DefaultResourcePack implements ResourcePack {
     @Override
     public void findResources(ResourceType type, Namespace namespace, String prefix, ResultConsumer consumer) {
         val atRoot = prefix.startsWith("/");
-        PathUtil.split(atRoot ? prefix.substring(1) : prefix).get().ifLeft(segments -> {
+        PathUtil.split(atRoot ? prefix.substring(1) : prefix).ifSuccess(segments -> {
             final List<Path> paths;
             if (namespace == Namespace.MINECRAFT && atRoot) {
                 paths = ROOT_PATHS;
@@ -88,7 +88,7 @@ public class DefaultResourcePack implements ResourcePack {
                     map.forEach(consumer);
                 }
             }
-        }).ifRight(result -> LOGGER.error("Invalid path {}: {}", prefix, result.message()));
+        }).ifError(result -> LOGGER.error("Invalid path {}: {}", prefix, result.message()));
     }
 
     private static void collectIdentifiers(ResultConsumer consumer, Namespace namespace, Path root, List<String> prefixSegments, boolean atRoot) {

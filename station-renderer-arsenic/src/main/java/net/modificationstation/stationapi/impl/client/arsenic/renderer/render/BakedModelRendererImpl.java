@@ -17,6 +17,7 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
 import net.modificationstation.stationapi.api.client.color.item.ItemColors;
+import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.item.ItemModels;
 import net.modificationstation.stationapi.api.client.render.model.*;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
@@ -32,6 +33,7 @@ import net.modificationstation.stationapi.api.util.crash.CrashReportSection;
 import net.modificationstation.stationapi.api.util.exception.CrashReportSectionBlockState;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
+import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc.LightingCalculatorImpl;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,13 +65,13 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     private boolean damage;
 
     @Override
-    public boolean renderBlock(BlockState state, BlockPos pos, BlockView world, boolean cull, Random random) {
+    public boolean renderBlock(VertexConsumer consumer, BlockState state, BlockPos pos, BlockView world, boolean cull, Random random) {
         try {
 //            BlockRenderType blockRenderType = state.getRenderType();
 //            if (blockRenderType != BlockRenderType.MODEL) {
 //                return false;
 //            }
-            return render(world, StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state), state, pos, cull, random, state.getRenderingSeed(pos));
+            return render(consumer, world, StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state), state, pos, cull, random, state.getRenderingSeed(pos));
         }
         catch (Throwable throwable) {
             CrashReport crashReport = CrashReport.create(throwable, "Tesselating block in world");
@@ -80,7 +82,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     }
 
     @Override
-    public boolean render(BlockView world, BakedModel model, BlockState state, BlockPos pos, boolean cull, Random random, long seed) {
+    public boolean render(VertexConsumer consumer, BlockView world, BakedModel model, BlockState state, BlockPos pos, boolean cull, Random random, long seed) {
         boolean rendered = false;
         model = Objects.requireNonNull(model.getOverrides().apply(model, state, world, pos, (int) seed));
         Block block = state.getBlock();
@@ -101,7 +103,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
                 for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
                     q = qs.get(j);
                     light.calculateForQuad(q);
-                    renderQuad(world, state, pos, q, qlight);
+                    renderQuad(null, consumer, world, state, pos, q, qlight);
                 }
             }
         }
@@ -132,7 +134,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     }
 
     @Override
-    public void renderDamage(BlockState state, BlockPos pos, BlockView world, float progress) {
+    public void renderDamage(VertexConsumer consumer, BlockState state, BlockPos pos, BlockView world, float progress) {
 //        if (state.getRenderType() != BlockRenderType.MODEL) {
 //            return;
 //        }
@@ -141,13 +143,13 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         damage = true;
         //noinspection deprecation
         StationTextureManager.get(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager).getTexture(ModelLoader.BLOCK_DESTRUCTION_STAGE_TEXTURES.get((int) (progress * 10))).bindTexture();
-        render(world, bakedModel, state, pos, true, this.random, l);
+        render(consumer, world, bakedModel, state, pos, true, this.random, l);
         damage = false;
     }
 
-    private void renderQuad(BlockView world, BlockState state, BlockPos pos, BakedQuad quad, float[] brightness) {
-        if (quad.hasColor()) {
-            int i = blockColors.getColor(state, world, pos, quad.getColorIndex());
+    private void renderQuad(MatrixStack.Entry entry, VertexConsumer consumer, BlockView world, BlockState state, BlockPos pos, BakedQuad quad, float[] brightness) {
+        if (quad.hasTint()) {
+            int i = blockColors.getColor(state, world, pos, quad.tintIndex());
             float
                     r = redI2F(i),
                     g = greenI2F(i),
@@ -189,9 +191,9 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         random.setSeed(42L);
         boolean bl = stack != null && stack.itemId != 0 && stack.count > 0;
         for (BakedQuad bakedQuad : model.getQuads(null, null, random)) {
-            if (bakedQuad.getFace() != Direction.WEST) continue;
-            int i = bl && bakedQuad.hasColor() ? this.itemColors.getColor(stack, bakedQuad.getColorIndex()) : -1;
-            float light = MathHelper.lerp(bakedQuad.getEmission(), brightness, 1F);
+            if (bakedQuad.face() != Direction.WEST) continue;
+            int i = bl && bakedQuad.hasTint() ? this.itemColors.getColor(stack, bakedQuad.tintIndex()) : -1;
+            float light = MathHelper.lerp(bakedQuad.lightEmission(), brightness, 1F);
             i = colorF2I(redI2F(i) * light, greenI2F(i) * light, blueI2F(i) * light);
             tessellator.quad(bakedQuad, 0, 0, 0, i, i, i, i, 0, 1, 0, false);
         }
@@ -204,7 +206,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         transformation.apply();
         boolean side = model.isSideLit();
         if (side && renderMode == ModelTransformation.Mode.GUI) {
-            float angle = transformation.rotation.getY() - 315;
+            float angle = transformation.rotation.y() - 315;
             if (angle != 0) {
                 class_583.method_1927();
                 glPushMatrix();
@@ -224,10 +226,10 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     private void renderBakedItemQuads(List<BakedQuad> quads, ItemStack stack, float brightness) {
         boolean bl = stack != null && stack.itemId != 0 && stack.count > 0;
         for (BakedQuad bakedQuad : quads) {
-            int i = bl && bakedQuad.hasColor() ? this.itemColors.getColor(stack, bakedQuad.getColorIndex()) : -1;
-            float light = MathHelper.lerp(bakedQuad.getEmission(), brightness, 1F);
+            int i = bl && bakedQuad.hasTint() ? this.itemColors.getColor(stack, bakedQuad.tintIndex()) : -1;
+            float light = MathHelper.lerp(bakedQuad.lightEmission(), brightness, 1F);
             i = colorF2I(redI2F(i) * light, greenI2F(i) * light, blueI2F(i) * light);
-            Direction face = bakedQuad.getFace();
+            Direction face = bakedQuad.face();
             tessellator.quad(bakedQuad, 0, 0, 0, i, i, i, i, face.getOffsetX(), face.getOffsetY(), face.getOffsetZ(), false);
         }
     }

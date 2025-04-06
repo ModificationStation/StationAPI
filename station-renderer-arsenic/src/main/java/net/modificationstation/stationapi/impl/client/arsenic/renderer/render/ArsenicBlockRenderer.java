@@ -1,11 +1,13 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.BlockRenderManager;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithInventoryRenderer;
 import net.modificationstation.stationapi.api.client.model.block.BlockWithWorldRenderer;
+import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
@@ -98,20 +100,20 @@ public final class ArsenicBlockRenderer {
         blockRendererAccessor = (BlockRenderManagerAccessor) blockRenderer;
     }
 
-    public void renderWorld(Block block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
+    public void renderWorld(VertexConsumer consumer, Block block, int x, int y, int z, CallbackInfoReturnable<Boolean> cir) {
         BlockState state = ((BlockStateView) blockRendererAccessor.getBlockView()).getBlockState(x, y, z);
         BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state);
         if (!model.isBuiltin()) {
-            cir.setReturnValue(RendererHolder.RENDERER.renderBlock(state, blockPos.set(x, y, z), blockRendererAccessor.getBlockView(), !blockRendererAccessor.getSkipFaceCulling(), random));
+            cir.setReturnValue(RendererHolder.RENDERER.renderBlock(consumer, state, blockPos.set(x, y, z), blockRendererAccessor.getBlockView(), !blockRendererAccessor.getSkipFaceCulling(), random));
         } else //noinspection deprecation
             if (block instanceof BlockWithWorldRenderer renderer) {
                 block.updateBoundingBox(blockRendererAccessor.getBlockView(), x, y, z);
                 //noinspection deprecation
-                cir.setReturnValue(renderer.renderWorld(blockRenderer, blockRendererAccessor.getBlockView(), x, y, z));
+                cir.setReturnValue(renderer.renderWorld(consumer, blockRenderer, blockRendererAccessor.getBlockView(), x, y, z));
         }
     }
 
-    public void renderInventory(Block block, int meta, float brightness, CallbackInfo ci) {
+    public void renderInventory(VertexConsumer consumer, Block block, int meta, float brightness, CallbackInfo ci) {
         if (block instanceof BlockWithInventoryRenderer renderer) {
             if (blockRenderer.inventoryColorEnabled) {
                 int var5 = block.getColor(meta);
@@ -120,7 +122,7 @@ public final class ArsenicBlockRenderer {
                 float var8 = (float)(var5 & 255) / 255.0F;
                 GL11.glColor4f(var6 * brightness, var7 * brightness, var8 * brightness, 1.0F);
             }
-            renderer.renderInventory(blockRenderer, meta);
+            renderer.renderInventory(consumer, blockRenderer, meta);
             ci.cancel();
         }
     }
