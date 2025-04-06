@@ -26,7 +26,7 @@ class ItemParticleMixin extends Particle {
     )
     private void stationapi_initializeSprite(
             Tessellator f, float g, float h, float i, float j, float k, float par7, CallbackInfo ci,
-            @Share("spriteId") LocalRef<Sprite> spriteRef
+            @Share("sprite") LocalRef<Sprite> spriteRef
     ) {
         spriteRef.set(Atlases.getGuiItems().getTexture(field_2635).getSprite());
     }
@@ -38,7 +38,7 @@ class ItemParticleMixin extends Particle {
     )
     private float stationapi_modStartU(
             float value,
-            @Share("spriteId") LocalRef<Sprite> spriteRef
+            @Share("sprite") LocalRef<Sprite> spriteRef
     ) {
         Sprite sprite = spriteRef.get();
         return sprite.getMinU() + (sprite.getMaxU() - sprite.getMinU()) * field_2636 / 4;
@@ -53,7 +53,7 @@ class ItemParticleMixin extends Particle {
     )
     private float stationapi_modEndU(
             float constant,
-            @Share("spriteId") LocalRef<Sprite> spriteRef
+            @Share("sprite") LocalRef<Sprite> spriteRef
     ) {
         Sprite sprite = spriteRef.get();
         return (sprite.getMaxU() - sprite.getMinU()) / 3.996F;
@@ -66,7 +66,7 @@ class ItemParticleMixin extends Particle {
     )
     private float stationapi_modStartV(
             float value,
-            @Share("spriteId") LocalRef<Sprite> spriteRef
+            @Share("sprite") LocalRef<Sprite> spriteRef
     ) {
         Sprite sprite = spriteRef.get();
         return sprite.getMinV() + (sprite.getMaxV() - sprite.getMinV()) * field_2637 / 4;
@@ -81,7 +81,7 @@ class ItemParticleMixin extends Particle {
     )
     private float stationapi_modEndV(
             float constant,
-            @Share("spriteId") LocalRef<Sprite> spriteRef
+            @Share("sprite") LocalRef<Sprite> spriteRef
     ) {
         Sprite sprite = spriteRef.get();
         return (sprite.getMaxV() - sprite.getMinV()) / 3.996F;

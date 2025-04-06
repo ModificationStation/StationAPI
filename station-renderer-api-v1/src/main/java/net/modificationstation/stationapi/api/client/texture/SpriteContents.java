@@ -53,11 +53,11 @@ public class SpriteContents implements TextureStitcher.Stitchable, AutoCloseable
                 AnimationFrame animationFrame = iterator.next();
                 boolean bl = true;
                 if (animationFrame.time <= 0) {
-                    LOGGER.warn("Invalid frame duration on spriteId {} frame {}: {}", id, l, animationFrame.time);
+                    LOGGER.warn("Invalid frame duration on sprite {} frame {}: {}", id, l, animationFrame.time);
                     bl = false;
                 }
                 if (animationFrame.index < 0 || animationFrame.index >= k) {
-                    LOGGER.warn("Invalid frame index on spriteId {} frame {}: {}", id, l, animationFrame.index);
+                    LOGGER.warn("Invalid frame index on sprite {} frame {}: {}", id, l, animationFrame.index);
                     bl = false;
                 }
                 if (bl) intSet.add(animationFrame.index);
@@ -66,7 +66,7 @@ public class SpriteContents implements TextureStitcher.Stitchable, AutoCloseable
             }
             int[] is = IntStream.range(0, k).filter(i -> !intSet.contains(i)).toArray();
             if (is.length > 0)
-                LOGGER.warn("Unused frames in spriteId {}: {}", id, Arrays.toString(is));
+                LOGGER.warn("Unused frames in sprite {}: {}", id, Arrays.toString(is));
         }
         if (list.size() <= 1) return null;
         return new Animation(ImmutableList.copyOf(list), i2, metadata.shouldInterpolate());
