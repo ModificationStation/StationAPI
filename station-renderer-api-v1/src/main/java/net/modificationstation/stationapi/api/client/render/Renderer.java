@@ -35,4 +35,6 @@ public interface Renderer {
      *
      */
     BakedModelRenderer bakedModelRenderer();
+
+    StateManager stateManager();
 }

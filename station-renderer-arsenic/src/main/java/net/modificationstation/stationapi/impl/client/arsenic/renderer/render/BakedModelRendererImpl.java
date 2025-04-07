@@ -17,6 +17,8 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.color.block.BlockColors;
 import net.modificationstation.stationapi.api.client.color.item.ItemColors;
+import net.modificationstation.stationapi.api.client.render.Renderer;
+import net.modificationstation.stationapi.api.client.render.StateManager;
 import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.item.ItemModels;
 import net.modificationstation.stationapi.api.client.render.model.*;
@@ -42,8 +44,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class BakedModelRendererImpl implements BakedModelRenderer {
 
@@ -202,6 +202,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     @Override
     public void renderItem(ItemStack stack, ModelTransformation.Mode renderMode, float brightness, BakedModel model) {
         if (stack == null || stack.itemId == 0) return;
+        StateManager states = Renderer.get().stateManager();
         Transformation transformation = model.getTransformation().getTransformation(renderMode);
         transformation.apply();
         boolean side = model.isSideLit();
@@ -209,13 +210,13 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
             float angle = transformation.rotation.y() - 315;
             if (angle != 0) {
                 class_583.method_1927();
-                glPushMatrix();
-                glRotatef(angle, 0, 1, 0);
+                states.pushMatrix();
+                states.rotate(angle, 0, 1, 0);
                 class_583.method_1930();
-                glPopMatrix();
+                states.popMatrix();
             }
         }
-        glTranslatef(-0.5F, -0.5F, -0.5F);
+        states.translate(-0.5F, -0.5F, -0.5F);
         if (model.isBuiltin()) return;
         if (!side && renderMode == ModelTransformation.Mode.GROUND)
             renderBakedItemModelFlat(model, stack, brightness);
@@ -251,26 +252,27 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
 
     protected void renderGuiItemModel(ItemStack stack, int x, int y, BakedModel model) {
         StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).setFilter(false, false);
-        glPushMatrix();
-        glTranslated(x, y, 14.5 /* approximate. should probably be replaced later with a value properly calculated against vanilla's transformations */);
-        glTranslatef(8, 8, 0);
-        glScalef(1, -1, 1);
-        glScalef(16, 16, 16);
+        StateManager states = Renderer.get().stateManager();
+        states.pushMatrix();
+        states.translate(x, y, 14.5F /* approximate. should probably be replaced later with a value properly calculated against vanilla's transformations */);
+        states.translate(8, 8, 0);
+        states.scale(1, -1, 1);
+        states.scale(16, 16, 16);
         boolean flat = !model.isSideLit();
-        if (flat) glDisable(GL_LIGHTING);
+        if (flat) states.disableLighting();
         tessellator.startQuads();
         this.renderItem(stack, ModelTransformation.Mode.GUI, 1, model);
         tessellator.draw();
-        if (flat) glEnable(GL_LIGHTING);
-        glPopMatrix();
+        if (flat) states.enableLighting();
+        states.popMatrix();
         if (!flat) {
             class_583.method_1927();
-            glPushMatrix();
-            glRotatef(120.0f, 1.0f, 0.0f, 0.0f);
+            states.pushMatrix();
+            states.rotate(120.0f, 1.0f, 0.0f, 0.0f);
             class_583.method_1930();
-            glPopMatrix();
+            states.popMatrix();
         }
-        glEnable(GL_CULL_FACE);
+        states.disableCull();
     }
 
     /**

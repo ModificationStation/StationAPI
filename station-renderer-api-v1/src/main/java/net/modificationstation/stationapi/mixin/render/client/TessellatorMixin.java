@@ -47,6 +47,12 @@ class TessellatorMixin implements StationTessellator, VertexConsumer {
     }
 
     @Override
+    public VertexConsumer setNormal(float x, float y, float z) {
+        normal(x, y, z);
+        return this;
+    }
+
+    @Override
     public VertexConsumer setLight(int u, int v) {
         return this;
     }
