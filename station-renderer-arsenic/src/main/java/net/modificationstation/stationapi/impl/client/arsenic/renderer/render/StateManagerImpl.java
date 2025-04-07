@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.client.render.StateManager;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
