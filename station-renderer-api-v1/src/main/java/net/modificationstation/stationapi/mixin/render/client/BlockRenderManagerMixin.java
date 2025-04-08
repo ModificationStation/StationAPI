@@ -38,10 +38,11 @@ abstract class BlockRenderManagerMixin implements StationRendererBlockRenderMana
     @Unique
     public void renderAllSides(VertexConsumer consumer, BlockState state, int x, int y, int z) {
         delegator.setDelegate(consumer);
-        if (StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state) instanceof VanillaBakedModel)
+        if (StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state) instanceof VanillaBakedModel) {
             renderWithoutCulling(state.getBlock(), x, y, z);
-        else
+        } else {
             Renderer.get().bakedModelRenderer().renderBlock(consumer, state, stationapi_pos.set(x, y, z), blockView, false, stationapi_random);
+        }
         delegator.setDelegate(Tessellator.INSTANCE);
     }
 

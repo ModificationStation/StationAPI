@@ -1,18 +1,16 @@
 package net.modificationstation.stationapi.api.client.render.model;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.Util;
-import net.modificationstation.stationapi.api.util.math.Direction;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.BitSet;
 import java.util.List;
@@ -43,36 +41,35 @@ public class MultipartBakedModel implements BakedModel {
     }
 
     @Override
-    public ImmutableList<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
-        if (state == null) {
-            return ImmutableList.of();
-        } else {
-            BitSet bitSet = this.stateCache.get(state);
-            if (bitSet == null) {
-                bitSet = new BitSet();
+    public void emitBlockQuads(BlockInputContext input, QuadEmitter output) {
+        BlockState state = input.blockState();
+        BitSet bitSet = this.stateCache.get(state);
+        if (bitSet == null) {
+            bitSet = new BitSet();
 
-                for(int i = 0; i < this.components.size(); ++i) {
-                    Pair<Predicate<BlockState>, BakedModel> pair = this.components.get(i);
-                    if (pair.getLeft().test(state)) {
-                        bitSet.set(i);
-                    }
-                }
-
-                this.stateCache.put(state, bitSet);
-            }
-
-            ImmutableList.Builder<BakedQuad> list = ImmutableList.builder();
-            long l = random.nextLong();
-
-            for(int j = 0; j < bitSet.length(); ++j) {
-                if (bitSet.get(j)) {
-                    list.addAll((this.components.get(j)).getRight().getQuads(state, face, new Random(l)));
+            for(int i = 0; i < this.components.size(); ++i) {
+                Pair<Predicate<BlockState>, BakedModel> pair = this.components.get(i);
+                if (pair.getLeft().test(state)) {
+                    bitSet.set(i);
                 }
             }
 
-            return list.build();
+            this.stateCache.put(state, bitSet);
+        }
+
+        Random random = input.random();
+        long seed = random.nextLong();
+        random.setSeed(seed);
+
+        for(int i = 0; i < bitSet.length(); ++i) {
+            if (bitSet.get(i)) {
+                this.components.get(i).getRight().emitBlockQuads(input, output);
+            }
         }
     }
+
+    @Override
+    public void emitItemQuads(ItemInputContext input, QuadEmitter output) {}
 
     public boolean useAmbientOcclusion() {
         return this.ambientOcclusion;

@@ -22,4 +22,8 @@ public interface MaterialView {
      * @see MaterialFinder#shadeMode(ShadeMode)
      */
     ShadeMode shadeMode();
+
+    default int renderLayer() {
+        return 1;
+    }
 }

@@ -2,6 +2,10 @@ package net.modificationstation.stationapi.api.client.render.model;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.modificationstation.stationapi.api.client.render.Renderer;
+import net.modificationstation.stationapi.api.client.render.material.MaterialFinder;
+import net.modificationstation.stationapi.api.client.render.mesh.MutableQuadView;
+import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelElementFace;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelElementTexture;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -17,7 +21,7 @@ public class BakedQuadFactory {
     private static final float MIN_SCALE = 1.0F / (float)Math.cos(0.39269909262657166D) - 1.0F;
     private static final float MAX_SCALE = 1.0F / (float)Math.cos(0.7853981852531433D) - 1.0F;
 
-    public BakedQuad bake(Vector3f from, Vector3f to, ModelElementFace face, Sprite texture, Direction side, ModelBakeSettings settings, @Nullable ModelRotation rotation, boolean shade, Identifier modelId) {
+    public void emitQuad(QuadEmitter emitter, Vector3f from, Vector3f to, ModelElementFace face, Sprite texture, Direction side, ModelBakeSettings settings, @Nullable ModelRotation rotation, boolean shade, Identifier modelId) {
         ModelElementTexture modelElementTexture = face.textureData;
         if (settings.isUvLocked()) {
             modelElementTexture = uvLock(face.textureData, side, settings.getRotation(), modelId);
@@ -32,14 +36,30 @@ public class BakedQuadFactory {
         modelElementTexture.uvs[2] = MathHelper.lerp(f, modelElementTexture.uvs[2], g);
         modelElementTexture.uvs[1] = MathHelper.lerp(f, modelElementTexture.uvs[1], h);
         modelElementTexture.uvs[3] = MathHelper.lerp(f, modelElementTexture.uvs[3], h);
-        int[] is = this.packVertexData(modelElementTexture, texture, side, this.getPositionMatrix(from, to), settings.getRotation(), rotation, shade);
-        Direction direction = decodeDirection(is);
+        int[] quadData = this.packVertexData(modelElementTexture, texture, side, this.getPositionMatrix(from, to), settings.getRotation(), rotation, shade);
+        emitter.fromVanilla(quadData, 0);
+        Direction direction = decodeDirection(quadData);
         System.arraycopy(fs, 0, modelElementTexture.uvs, 0, fs.length);
         if (rotation == null) {
-            this.encodeDirection(is, direction);
+            emitter.nominalFace(direction);
         }
 
-        return new BakedQuad(is, face.tintIndex, direction, texture, shade, face.emission);
+        emitter.tintIndex(face.tintIndex);
+
+        MaterialFinder finder = Renderer.get().materialFinder();
+
+        if (!shade) {
+            finder.disableDiffuse(true);
+        }
+
+        if (face.cullFace != null)
+            emitter.cullFace(Direction.transform(settings.getRotation().copyMatrix(), face.cullFace));
+
+        emitter.spriteBake(texture, MutableQuadView.BAKE_ROTATE_NONE);
+        emitter.material(finder.find());
+        emitter.tag(0);
+
+        emitter.emit();
     }
 
     public static ModelElementTexture uvLock(ModelElementTexture texture, Direction orientation, AffineTransformation rotation, Identifier modelId) {

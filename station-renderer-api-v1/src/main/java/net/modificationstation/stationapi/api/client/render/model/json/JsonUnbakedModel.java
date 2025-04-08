@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.api.client.render.model.*;
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -136,28 +137,27 @@ public final class JsonUnbakedModel implements UnbakedModel {
     }
 
     public BakedModel bake(Baker baker, JsonUnbakedModel parent, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings settings, Identifier id, boolean hasDepth) {
-        Sprite sprite = textureGetter.apply(this.resolveSprite("particle"));
+        Sprite particle = textureGetter.apply(this.resolveSprite("particle"));
         if (this.getRootModel() == ModelLoader.BLOCK_ENTITY_MARKER)
-            return new BuiltinBakedModel(this.getTransformations(), this.compileOverrides(baker, parent), sprite, this.getGuiLight().isSide());
+            return new BuiltinBakedModel(this.getTransformations(), this.compileOverrides(baker, parent), particle, this.getGuiLight().isSide());
         else if (getRootModel() == ModelLoader.VANILLA_MARKER) return new VanillaBakedModel();
         else {
-            BasicBakedModel.Builder builder = new BasicBakedModel.Builder(this, this.compileOverrides(baker, parent), hasDepth).setParticle(sprite);
+            // Create a mesh for us to emit quads to
+            BasicBakedModel.Builder builder = new BasicBakedModel.Builder(this, this.compileOverrides(baker, parent), hasDepth).setParticle(particle);
+            QuadEmitter emitter = builder.quadEmitter();
             for (ModelElement modelElement : this.getElements())
                 for (Direction direction : modelElement.faces.keySet()) {
                     ModelElementFace modelElementFace = modelElement.faces.get(direction);
-                    Sprite sprite2 = textureGetter.apply(this.resolveSprite(modelElementFace.textureId));
-                    if (modelElementFace.cullFace == null)
-                        builder.addQuad(createQuad(modelElement, modelElementFace, sprite2, direction, settings, id));
-                    else
-                        builder.addQuad(Direction.transform(settings.getRotation().copyMatrix(), modelElementFace.cullFace), createQuad(modelElement, modelElementFace, sprite2, direction, settings, id));
+                    Sprite sprite = textureGetter.apply(this.resolveSprite(modelElementFace.textureId));
+                    emitQuad(emitter, modelElement, modelElementFace, sprite, direction, settings, id);
                 }
 
             return builder.build();
         }
     }
 
-    private static BakedQuad createQuad(ModelElement element, ModelElementFace elementFace, Sprite sprite, Direction side, ModelBakeSettings settings, Identifier id) {
-        return QUAD_FACTORY.bake(element.from, element.to, elementFace, sprite, side, settings, element.rotation, element.shade, id);
+    private static void emitQuad(QuadEmitter emitter, ModelElement element, ModelElementFace elementFace, Sprite sprite, Direction side, ModelBakeSettings settings, Identifier id) {
+        QUAD_FACTORY.emitQuad(emitter, element.from, element.to, elementFace, sprite, side, settings, element.rotation, element.shade, id);
     }
 
     public boolean textureExists(String name) {
@@ -255,25 +255,25 @@ public final class JsonUnbakedModel implements UnbakedModel {
 
     @Environment(EnvType.CLIENT)
     public static class Deserializer implements JsonDeserializer<JsonUnbakedModel> {
-        public JsonUnbakedModel deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            JsonObject jsonObject = jsonElement.getAsJsonObject();
-            List<ModelElement> list = this.deserializeElements(jsonDeserializationContext, jsonObject);
-            String string = this.deserializeParent(jsonObject);
-            Map<String, Either<SpriteIdentifier, String>> map = this.deserializeTextures(jsonObject);
-            boolean bl = this.deserializeAmbientOcclusion(jsonObject);
-            ModelTransformation modelTransformation = ModelTransformation.NONE;
-            if (jsonObject.has("display")) {
-                JsonObject jsonObject2 = JsonHelper.getObject(jsonObject, "display");
-                modelTransformation = jsonDeserializationContext.deserialize(jsonObject2, ModelTransformation.class);
+        public JsonUnbakedModel deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject modelObj = json.getAsJsonObject();
+            List<ModelElement> modelElements = this.deserializeElements(context, modelObj);
+            String parent = this.deserializeParent(modelObj);
+            Map<String, Either<SpriteIdentifier, String>> textureMap = this.deserializeTextures(modelObj);
+            boolean ambientOcclusion = this.deserializeAmbientOcclusion(modelObj);
+            ModelTransformation transformation = ModelTransformation.NONE;
+            if (modelObj.has("display")) {
+                JsonObject displayObj = JsonHelper.getObject(modelObj, "display");
+                transformation = context.deserialize(displayObj, ModelTransformation.class);
             }
 
-            List<ModelOverride> list2 = this.deserializeOverrides(jsonDeserializationContext, jsonObject);
+            List<ModelOverride> modelOverrides = this.deserializeOverrides(context, modelObj);
             JsonUnbakedModel.GuiLight guiLight = null;
-            if (jsonObject.has("gui_light"))
-                guiLight = GuiLight.deserialize(JsonHelper.getString(jsonObject, "gui_light"));
+            if (modelObj.has("gui_light"))
+                guiLight = GuiLight.deserialize(JsonHelper.getString(modelObj, "gui_light"));
 
-            Identifier identifier = string.isEmpty() ? null : Identifier.of(string);
-            return new JsonUnbakedModel(identifier, list, map, bl, guiLight, modelTransformation, list2);
+            Identifier parentId = parent.isEmpty() ? null : Identifier.of(parent);
+            return new JsonUnbakedModel(parentId, modelElements, textureMap, ambientOcclusion, guiLight, transformation, modelOverrides);
         }
 
         protected List<ModelOverride> deserializeOverrides(JsonDeserializationContext context, JsonObject object) {

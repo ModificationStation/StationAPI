@@ -8,7 +8,6 @@ import net.modificationstation.stationapi.api.util.TriState;
 public interface MaterialFinder extends MaterialView {
     /**
      * When true, sprite texture and color will be rendered at full brightness.
-     * Lightmap values provided via {@link QuadEmitter#lightmap(int)} will be ignored.
      *
      * <p>This is the preferred method for emissive lighting effects. Some renderers
      * with advanced lighting pipelines may not use block lightmaps and this method will

@@ -1,22 +1,18 @@
 package net.modificationstation.stationapi.api.client.render.model;
 
-import com.google.common.collect.ImmutableList;
-import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
+import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
-import net.modificationstation.stationapi.api.util.math.Direction;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Random;
 
 public final class VanillaBakedModel implements BakedModel {
 
     @Override
-    public ImmutableList<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
-        return ImmutableList.of();
-    }
+    public void emitBlockQuads(BlockInputContext input, QuadEmitter output) {}
+
+    @Override
+    public void emitItemQuads(ItemInputContext input, QuadEmitter output) {}
 
     @Override
     public boolean useAmbientOcclusion() {

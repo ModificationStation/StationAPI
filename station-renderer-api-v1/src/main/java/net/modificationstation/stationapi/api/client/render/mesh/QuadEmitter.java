@@ -70,15 +70,6 @@ public interface QuadEmitter extends MutableQuadView {
     }
 
     @Override
-    QuadEmitter lightmap(int vertexIndex, int lightmap);
-
-    @Override
-    default QuadEmitter lightmap(int b0, int b1, int b2, int b3) {
-        MutableQuadView.super.lightmap(b0, b1, b2, b3);
-        return this;
-    }
-
-    @Override
     QuadEmitter normal(int vertexIndex, float x, float y, float z);
 
     @Override
@@ -110,8 +101,8 @@ public interface QuadEmitter extends MutableQuadView {
 
     QuadEmitter copyFrom(QuadView quad);
 
-//    @Override
-//    QuadEmitter fromVanilla(int[] quadData, int startIndex);
+    @Override
+    QuadEmitter fromVanilla(int[] quadData, int startIndex);
 //
 //    @Override
 //    QuadEmitter fromVanilla(BakedQuad quad, RenderMaterial material, @Nullable Direction cullFace);

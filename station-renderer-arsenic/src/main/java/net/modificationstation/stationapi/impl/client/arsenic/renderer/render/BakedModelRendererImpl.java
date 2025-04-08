@@ -83,31 +83,12 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
 
     @Override
     public boolean render(VertexConsumer consumer, BlockView world, BakedModel model, BlockState state, BlockPos pos, boolean cull, Random random, long seed) {
-        boolean rendered = false;
-        model = Objects.requireNonNull(model.getOverrides().apply(model, state, world, pos, (int) seed));
-        Block block = state.getBlock();
-        light.initialize(
-                block,
-                world, pos.x, pos.y, pos.z,
-                Minecraft.method_2148() && model.useAmbientOcclusion()
-        );
-        ImmutableList<BakedQuad> qs;
-        BakedQuad q;
-        float[] qlight = light.light;
-        for (int quadSet = 0, size = DIRECTIONS.length; quadSet < size; quadSet++) {
-            Direction face = DIRECTIONS[quadSet];
-            random.setSeed(seed);
-            qs = model.getQuads(state, face, random);
-            if (!qs.isEmpty() && (face == null || block.isSideVisible(world, pos.x + face.getOffsetX(), pos.y + face.getOffsetY(), pos.z + face.getOffsetZ(), quadSet))) {
-                rendered = true;
-                for (int j = 0, quadSize = qs.size(); j < quadSize; j++) {
-                    q = qs.get(j);
-                    light.calculateForQuad(q);
-                    renderQuad(null, consumer, world, state, pos, q, qlight);
-                }
-            }
-        }
-        return rendered;
+        TerrainRenderContext renderer = TerrainRenderContext.POOL.get();
+        renderer.prepare(world, random, renderLayer -> Tessellator.INSTANCE);
+        renderer.bufferModel(StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state), state, pos);
+        renderer.release();
+
+        return true;
     }
 
     private float redI2F(int color) {
@@ -179,24 +160,24 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     }
 
     private void renderBakedItemModel(BakedModel model, ItemStack stack, float brightness) {
-        for (Direction direction : Direction.values()) {
-            random.setSeed(42L);
-            renderBakedItemQuads(model.getQuads(null, direction, random), stack, brightness);
-        }
-        random.setSeed(42L);
-        renderBakedItemQuads(model.getQuads(null, null, random), stack, brightness);
+//        for (Direction direction : Direction.values()) {
+//            random.setSeed(42L);
+//            renderBakedItemQuads(model.getQuads(null, direction, random), stack, brightness);
+//        }
+//        random.setSeed(42L);
+//        renderBakedItemQuads(model.getQuads(null, null, random), stack, brightness);
     }
 
     private void renderBakedItemModelFlat(BakedModel model, ItemStack stack, float brightness) {
-        random.setSeed(42L);
-        boolean bl = stack != null && stack.itemId != 0 && stack.count > 0;
-        for (BakedQuad bakedQuad : model.getQuads(null, null, random)) {
-            if (bakedQuad.face() != Direction.WEST) continue;
-            int i = bl && bakedQuad.hasTint() ? this.itemColors.getColor(stack, bakedQuad.tintIndex()) : -1;
-            float light = MathHelper.lerp(bakedQuad.lightEmission(), brightness, 1F);
-            i = colorF2I(redI2F(i) * light, greenI2F(i) * light, blueI2F(i) * light);
-            tessellator.quad(bakedQuad, 0, 0, 0, i, i, i, i, 0, 1, 0, false);
-        }
+//        random.setSeed(42L);
+//        boolean bl = stack != null && stack.itemId != 0 && stack.count > 0;
+//        for (BakedQuad bakedQuad : model.getQuads(null, null, random)) {
+//            if (bakedQuad.face() != Direction.WEST) continue;
+//            int i = bl && bakedQuad.hasTint() ? this.itemColors.getColor(stack, bakedQuad.tintIndex()) : -1;
+//            float light = MathHelper.lerp(bakedQuad.lightEmission(), brightness, 1F);
+//            i = colorF2I(redI2F(i) * light, greenI2F(i) * light, blueI2F(i) * light);
+//            tessellator.quad(bakedQuad, 0, 0, 0, i, i, i, i, 0, 1, 0, false);
+//        }
     }
 
     @Override

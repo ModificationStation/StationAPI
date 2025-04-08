@@ -20,7 +20,7 @@ import org.joml.Vector3fc;
  */
 public interface QuadView {
     /** Count of integers in a conventional (un-modded) block or item vertex. */
-    int VANILLA_VERTEX_STRIDE = VertexFormats.BLOCK.getVertexSize() / 4;
+    int VANILLA_VERTEX_STRIDE = 8;//VertexFormats.BLOCK.getVertexSize() / 4;
 
     /** Count of integers in a conventional (un-modded) block or item quad. */
     int VANILLA_QUAD_STRIDE = VANILLA_VERTEX_STRIDE * 4;
@@ -71,11 +71,6 @@ public interface QuadView {
      * Otherwise returns a new instance.
      */
     Vector2f copyUv(int vertexIndex, @Nullable Vector2f target);
-
-    /**
-     * Minimum block brightness. Zero if not set.
-     */
-    int lightmap(int vertexIndex);
 
     /**
      * If false, no vertex normal was provided.
@@ -164,41 +159,4 @@ public interface QuadView {
      * at least {@link #VANILLA_QUAD_STRIDE} elements available at this index.
      */
     void toVanilla(int[] target, int targetIndex);
-
-    /**
-     * Generates a new BakedQuad instance with texture
-     * coordinates and colors from the given sprite.
-     *
-     * @param sprite {@link QuadView} does not serialize sprites
-     * so the sprite must be provided by the caller.
-     *
-     * @return A new baked quad instance with the closest-available appearance
-     * supported by vanilla features. Will retain emissive light maps, for example,
-     * but the standard Minecraft renderer will not use them.
-     */
-    @Deprecated
-    default BakedQuad toBakedQuad(Sprite sprite) {
-        int[] vertexData = new int[VANILLA_QUAD_STRIDE];
-        toVanilla(vertexData, 0);
-
-        // Mimic material properties to the largest possible extent
-        boolean outputShade = !material().disableDiffuse();
-        // The output light emission is equal to the minimum of all four sky light values and all four block light values.
-        int outputLightEmission = 15;
-
-        for (int i = 0; i < 4; i++) {
-            int lightmap = lightmap(i);
-
-            if (lightmap == 0) {
-                outputLightEmission = 0;
-                break;
-            }
-
-            int blockLight = lightmap >>> 4 & 15;
-            int skyLight = lightmap >>> 20 & 15;
-            outputLightEmission = Math.min(outputLightEmission, lightmap);
-        }
-
-        return new BakedQuad(vertexData, tintIndex(), lightFace(), sprite, outputShade, outputLightEmission);
-    }
 }

@@ -15,10 +15,7 @@ import net.modificationstation.stationapi.api.client.model.block.BlockModelPredi
 import net.modificationstation.stationapi.api.client.model.item.ItemModelPredicateProvider;
 import net.modificationstation.stationapi.api.client.registry.BlockModelPredicateProviderRegistry;
 import net.modificationstation.stationapi.api.client.registry.ItemModelPredicateProviderRegistry;
-import net.modificationstation.stationapi.api.client.render.model.BakedModel;
-import net.modificationstation.stationapi.api.client.render.model.Baker;
-import net.modificationstation.stationapi.api.client.render.model.ModelBakeRotation;
-import net.modificationstation.stationapi.api.client.render.model.UnbakedModel;
+import net.modificationstation.stationapi.api.client.render.model.*;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,17 +37,17 @@ public class ModelOverrideList {
 
     public ModelOverrideList(Baker baker, JsonUnbakedModel parent, Function<Identifier, UnbakedModel> unbakedModelGetter, List<ModelOverride> overrides) {
         this.conditionTypes = overrides.stream().flatMap(ModelOverride::streamConditions).map(ModelOverride.Condition::getType).distinct().toArray(Identifier[]::new);
-        Object2IntOpenHashMap<Identifier> object2IntMap = new Object2IntOpenHashMap<>();
+        Object2IntOpenHashMap<Identifier> overrideTypes = new Object2IntOpenHashMap<>();
         for (int i = 0; i < this.conditionTypes.length; ++i) {
-            object2IntMap.put(this.conditionTypes[i], i);
+            overrideTypes.put(this.conditionTypes[i], i);
         }
         ArrayList<BakedOverride> list = Lists.newArrayList();
         for (int j = overrides.size() - 1; j >= 0; --j) {
             ModelOverride modelOverride = overrides.get(j);
             BakedModel bakedModel = this.bakeOverridingModel(baker, parent, unbakedModelGetter, modelOverride);
             InlinedCondition[] inlinedConditions = modelOverride.streamConditions().map(condition -> {
-                int i = object2IntMap.getInt(condition.getType());
-                return new InlinedCondition(i, condition.getThreshold());
+                int index = overrideTypes.getInt(condition.getType());
+                return new InlinedCondition(index, condition.getThreshold());
             }).toArray(InlinedCondition[]::new);
             list.add(new BakedOverride(inlinedConditions, bakedModel));
         }
@@ -70,15 +67,15 @@ public class ModelOverrideList {
     public BakedModel apply(BakedModel model, BlockState state, @Nullable BlockView world, @Nullable BlockPos pos, int seed) {
         if (this.overrides.length != 0) {
             Block block = state.getBlock();
-            int i = this.conditionTypes.length;
-            float[] fs = new float[i];
-            for (int j = 0; j < i; ++j) {
-                Identifier identifier = this.conditionTypes[j];
-                BlockModelPredicateProvider modelPredicateProvider = BlockModelPredicateProviderRegistry.INSTANCE.get(block, identifier);
-                fs[j] = modelPredicateProvider != null ? modelPredicateProvider.call(state, world, pos, seed) : Float.NEGATIVE_INFINITY;
+            int conditionsLength = this.conditionTypes.length;
+            float[] values = new float[conditionsLength];
+            for (int i = 0; i < conditionsLength; ++i) {
+                Identifier id = this.conditionTypes[i];
+                BlockModelPredicateProvider provider = BlockModelPredicateProviderRegistry.INSTANCE.get(block, id);
+                values[i] = provider != null ? provider.call(state, world, pos, seed) : Float.NEGATIVE_INFINITY;
             }
             for (BakedOverride bakedOverride : this.overrides) {
-                if (!bakedOverride.test(fs)) continue;
+                if (!bakedOverride.test(values)) continue;
                 BakedModel bakedModel = bakedOverride.model;
                 if (bakedModel == null) {
                     return model;
@@ -93,15 +90,15 @@ public class ModelOverrideList {
     public BakedModel apply(BakedModel model, ItemStack stack, @Nullable BlockView world, @Nullable LivingEntity entity, int seed) {
         if (this.overrides.length != 0) {
             Item item = stack.getItem();
-            int i = this.conditionTypes.length;
-            float[] fs = new float[i];
-            for (int j = 0; j < i; ++j) {
-                Identifier identifier = this.conditionTypes[j];
-                ItemModelPredicateProvider modelPredicateProvider = ItemModelPredicateProviderRegistry.INSTANCE.get(item, identifier);
-                fs[j] = modelPredicateProvider != null ? modelPredicateProvider.call(stack, world, entity, seed) : Float.NEGATIVE_INFINITY;
+            int conditionsLength = this.conditionTypes.length;
+            float[] values = new float[conditionsLength];
+            for (int i = 0; i < conditionsLength; ++i) {
+                Identifier id = this.conditionTypes[i];
+                ItemModelPredicateProvider provider = ItemModelPredicateProviderRegistry.INSTANCE.get(item, id);
+                values[i] = provider != null ? provider.call(stack, world, entity, seed) : Float.NEGATIVE_INFINITY;
             }
             for (BakedOverride bakedOverride : this.overrides) {
-                if (!bakedOverride.test(fs)) continue;
+                if (!bakedOverride.test(values)) continue;
                 BakedModel bakedModel = bakedOverride.model;
                 if (bakedModel == null) {
                     return model;

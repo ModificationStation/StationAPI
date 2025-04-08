@@ -7,7 +7,6 @@ import static net.modificationstation.stationapi.impl.client.arsenic.renderer.re
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.HEADER_TINT_INDEX;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.QUAD_STRIDE;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.VERTEX_COLOR;
-import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.VERTEX_LIGHTMAP;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.VERTEX_NORMAL;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.VERTEX_STRIDE;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.VERTEX_U;
@@ -135,11 +134,6 @@ public class QuadViewImpl implements QuadView {
         final int index = baseIndex + vertexIndex * VERTEX_STRIDE + VERTEX_U;
         target.set(Float.intBitsToFloat(data[index]), Float.intBitsToFloat(data[index + 1]));
         return target;
-    }
-
-    @Override
-    public final int lightmap(int vertexIndex) {
-        return data[baseIndex + vertexIndex * VERTEX_STRIDE + VERTEX_LIGHTMAP];
     }
 
     public final int normalFlags() {

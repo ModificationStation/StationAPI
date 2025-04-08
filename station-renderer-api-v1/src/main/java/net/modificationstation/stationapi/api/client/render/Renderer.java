@@ -1,14 +1,23 @@
 package net.modificationstation.stationapi.api.client.render;
 
+import net.minecraft.client.render.block.BlockRenderManager;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
+import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.render.material.MaterialFinder;
 import net.modificationstation.stationapi.api.client.render.material.RenderMaterial;
 import net.modificationstation.stationapi.api.client.render.mesh.MutableMesh;
+import net.modificationstation.stationapi.api.client.render.model.BakedModel;
 import net.modificationstation.stationapi.api.client.render.model.BakedModelRenderer;
 import net.modificationstation.stationapi.api.client.render.model.SpriteFinder;
 import net.modificationstation.stationapi.api.client.texture.SpriteAtlasTexture;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import net.modificationstation.stationapi.impl.client.render.RendererManager;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.IntFunction;
 
 /**
  * Interface for rendering plug-ins that provide enhanced capabilities
@@ -81,4 +90,22 @@ public interface Renderer {
     BakedModelRenderer bakedModelRenderer();
 
     StateManager stateManager();
+
+    /**
+     * @see FabricBlockModelRenderer#render(BlockRenderView, BlockStateModel, BlockState, BlockPos, MatrixStack, VertexConsumerProvider, boolean, long)
+     */
+    @ApiStatus.OverrideOnly
+    void render(BakedModelRenderer modelRenderer, BlockView blockView, BakedModel model, BlockState state, BlockPos pos, MatrixStack matrices, IntFunction<VertexConsumer> vertexConsumers, boolean cull, long seed);
+
+    /**
+     * @see FabricBlockModelRenderer#render(MatrixStack, VertexConsumerProvider, BlockStateModel, float, float, float, int, int, BlockRenderView, BlockPos, BlockState)
+     */
+    @ApiStatus.OverrideOnly
+    void render(MatrixStack matrices, IntFunction<VertexConsumer> vertexConsumers, BakedModel model, float red, float green, float blue, int light, int overlay, BlockView blockView, BlockPos pos, BlockState state);
+
+    /**
+     * @see FabricBlockRenderManager#renderBlockAsEntity(BlockState, MatrixStack, VertexConsumerProvider, int, int, BlockRenderView, BlockPos)
+     */
+    @ApiStatus.OverrideOnly
+    void renderBlockAsEntity(BakedModelRenderer renderManager, BlockState state, MatrixStack matrices, IntFunction<VertexConsumer> vertexConsumers, int light, int overlay, BlockView blockView, BlockPos pos);
 }

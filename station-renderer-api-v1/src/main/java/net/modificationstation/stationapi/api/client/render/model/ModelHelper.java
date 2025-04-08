@@ -1,12 +1,7 @@
 package net.modificationstation.stationapi.api.client.render.model;
 
 import java.util.Arrays;
-import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-import net.modificationstation.stationapi.api.client.StationRenderAPI;
-import net.modificationstation.stationapi.api.client.render.mesh.Mesh;
-import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,40 +36,5 @@ public final class ModelHelper {
     @Nullable
     public static Direction faceFromIndex(int faceIndex) {
         return FACES[faceIndex];
-    }
-
-    /**
-     * Converts a mesh into an array of lists of vanilla baked quads.
-     * Useful for creating vanilla baked models when required for compatibility.
-     * The array indexes correspond to {@link Direction#getId()} with the
-     * addition of {@link #NULL_FACE_ID}.
-     *
-     * <p>Retrieves sprites from the block texture atlas via {@link SpriteFinder}.
-     */
-    public static List<BakedQuad>[] toQuadLists(Mesh mesh) {
-        SpriteFinder finder = SpriteFinder.get(StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE));
-
-        @SuppressWarnings("unchecked")
-        final ImmutableList.Builder<BakedQuad>[] builders = new ImmutableList.Builder[7];
-
-        for (int i = 0; i < 7; i++) {
-            builders[i] = ImmutableList.builder();
-        }
-
-        if (mesh != null) {
-            mesh.forEach(q -> {
-                Direction cullFace = q.cullFace();
-                builders[cullFace == null ? NULL_FACE_ID : cullFace.getId()].add(q.toBakedQuad(finder.find(q)));
-            });
-        }
-
-        @SuppressWarnings("unchecked")
-        List<BakedQuad>[] result = new List[7];
-
-        for (int i = 0; i < 7; i++) {
-            result[i] = builders[i].build();
-        }
-
-        return result;
     }
 }

@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh;
 
 import static  net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.HEADER_BITS;
+import static  net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.HEADER_STRIDE;
 import static  net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.HEADER_TAG;
 import static  net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.HEADER_TINT_INDEX;
 import static  net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.VERTEX_COLOR;
-import static  net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.VERTEX_LIGHTMAP;
 import static  net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.VERTEX_NORMAL;
 import static  net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.VERTEX_STRIDE;
 import static  net.modificationstation.stationapi.impl.client.arsenic.renderer.render.mesh.EncodingFormat.VERTEX_U;
@@ -18,6 +18,7 @@ import net.modificationstation.stationapi.api.client.render.mesh.QuadView;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.ArsenicRenderer;
+import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.helper.ColorHelper;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.helper.NormalHelper;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.helper.TextureHelper;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.material.RenderMaterialImpl;
@@ -105,12 +106,6 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
         return this;
     }
 
-    @Override
-    public final MutableQuadViewImpl lightmap(int vertexIndex, int lightmap) {
-        data[baseIndex + vertexIndex * VERTEX_STRIDE + VERTEX_LIGHTMAP] = lightmap;
-        return this;
-    }
-
     protected final void normalFlags(int flags) {
         data[baseIndex + HEADER_BITS] = EncodingFormat.normalFlags(data[baseIndex + HEADER_BITS], flags);
     }
@@ -186,54 +181,30 @@ public abstract class MutableQuadViewImpl extends QuadViewImpl implements QuadEm
         return this;
     }
 
-//    @Override
-//    public final MutableQuadViewImpl fromVanilla(int[] quadData, int startIndex) {
-//        System.arraycopy(quadData, startIndex, data, baseIndex + HEADER_STRIDE, VANILLA_QUAD_STRIDE);
-//        isGeometryInvalid = true;
-//
-//        int normalFlags = 0;
-//        int colorIndex = baseIndex + VERTEX_COLOR;
-//        int normalIndex = baseIndex + VERTEX_NORMAL;
-//
-//        for (int i = 0; i < 4; i++) {
-//            data[colorIndex] = ColorHelper.fromVanillaColor(data[colorIndex]);
-//
-//            // Set normal flag if normal is not zero, ignoring W component
-//            if ((data[normalIndex] & 0xFFFFFF) != 0) {
-//                normalFlags |= 1 << i;
-//            }
-//
-//            colorIndex += VERTEX_STRIDE;
-//            normalIndex += VERTEX_STRIDE;
-//        }
-//
-//        normalFlags(normalFlags);
-//        return this;
-//    }
-//
-//    @Override
-//    public final MutableQuadViewImpl fromVanilla(BakedQuad quad, RenderMaterial material, @Nullable Direction cullFace) {
-//        fromVanilla(quad.vertexData(), 0);
-//        cullFace(cullFace);
-//        nominalFace(quad.face());
-//        tintIndex(quad.tintIndex());
-//
-//        if (!quad.shade()) {
-//            material = RenderMaterialImpl.setDisableDiffuse((RenderMaterialImpl) material, true);
-//        }
-//
-//        int lightEmission = quad.lightEmission();
-//
-//        if (lightEmission > 0) {
-//            for (int i = 0; i < 4; i++) {
-////                lightmap(i, LightmapTextureManager.applyEmission(lightmap(i), lightEmission));
-//            }
-//        }
-//
-//        material(material);
-//        tag(0);
-//        return this;
-//    }
+    @Override
+    public final MutableQuadViewImpl fromVanilla(int[] quadData, int startIndex) {
+        System.arraycopy(quadData, startIndex, data, baseIndex + HEADER_STRIDE, VANILLA_QUAD_STRIDE);
+        isGeometryInvalid = true;
+
+        int normalFlags = 0;
+        int colorIndex = baseIndex + VERTEX_COLOR;
+        int normalIndex = baseIndex + VERTEX_NORMAL;
+
+        for (int i = 0; i < 4; i++) {
+            data[colorIndex] = ColorHelper.fromVanillaColor(data[colorIndex]);
+
+            // Set normal flag if normal is not zero, ignoring W component
+            if ((data[normalIndex] & 0xFFFFFF) != 0) {
+                normalFlags |= 1 << i;
+            }
+
+            colorIndex += VERTEX_STRIDE;
+            normalIndex += VERTEX_STRIDE;
+        }
+
+        normalFlags(normalFlags);
+        return this;
+    }
 
     @Override
     public void pushTransform(QuadTransform transform) {

@@ -1,20 +1,16 @@
 package net.modificationstation.stationapi.api.client.render.model;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.util.collection.WeightedPicker;
-import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 
 @Environment(EnvType.CLIENT)
 public class WeightedBakedModel implements BakedModel {
@@ -29,8 +25,19 @@ public class WeightedBakedModel implements BakedModel {
    }
 
    @Override
-   public ImmutableList<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
-      return Objects.requireNonNull(WeightedPicker.getAt(this.models, Math.abs((int) random.nextLong()) % this.totalWeight)).model.getQuads(state, face, random);
+   public void emitBlockQuads(BlockInputContext input, QuadEmitter output) {
+      WeightedBakedModel.Entry selected = WeightedPicker.getAt(this.models, Math.abs((int) input.random().nextLong()) % this.totalWeight);
+      if (selected != null) {
+         selected.model.emitBlockQuads(input, output);
+      }
+   }
+
+   @Override
+   public void emitItemQuads(ItemInputContext input, QuadEmitter output) {
+      WeightedBakedModel.Entry selected = WeightedPicker.getAt(this.models, Math.abs((int) input.random().nextLong()) % this.totalWeight);
+      if (selected != null) {
+         selected.model.emitItemQuads(input, output);
+      }
    }
 
    public boolean useAmbientOcclusion() {

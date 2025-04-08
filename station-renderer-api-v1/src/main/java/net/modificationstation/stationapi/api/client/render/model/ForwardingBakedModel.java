@@ -1,13 +1,9 @@
 package net.modificationstation.stationapi.api.client.render.model;
 
-import com.google.common.collect.ImmutableList;
-import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
-import net.modificationstation.stationapi.api.util.math.Direction;
-
-import java.util.Random;
 
 /**
  * Base class for specialized model implementations that need to wrap other baked models.
@@ -19,8 +15,13 @@ public abstract class ForwardingBakedModel implements BakedModel {
     protected BakedModel wrapped;
 
     @Override
-    public ImmutableList<BakedQuad> getQuads(BlockState blockState, Direction face, Random rand) {
-        return wrapped.getQuads(blockState, face, rand);
+    public void emitBlockQuads(BlockInputContext input, QuadEmitter output) {
+        this.wrapped.emitBlockQuads(input, output);
+    }
+
+    @Override
+    public void emitItemQuads(ItemInputContext input, QuadEmitter output) {
+        this.wrapped.emitItemQuads(input, output);
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.client.render;
 
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.util.math.ColorHelper;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -73,6 +74,35 @@ public interface VertexConsumer {
     VertexConsumer setLight(int u, int v);
 
     VertexConsumer setNormal(float x, float y, float z);
+
+    default void vertex(float x, float y, float z, int color, float u, float v, int overlay, int light, float normalX, float normalY, float normalZ) {
+        setVertex(x, y, z);
+        setColor(color);
+        setTexture(u, v);
+//        setOverlay(overlay);
+//        setLight(light);
+        setNormal(normalX, normalY, normalZ);
+    }
+
+    default void vertex(float x, float y, float z, int color, float u, float v, float normalX, float normalY, float normalZ) {
+        setVertex(x, y, z);
+        setColor(color);
+        setTexture(u, v);
+        setNormal(normalX, normalY, normalZ);
+    }
+
+    default VertexConsumer setColor(float red, float green, float blue, float alpha) {
+        return this.setColor((int)(red * 255.0F), (int)(green * 255.0F), (int)(blue * 255.0F), (int)(alpha * 255.0F));
+    }
+
+    default VertexConsumer setColor(int argb) {
+        return this.setColor(ColorHelper.Abgr.getRed(argb), ColorHelper.Abgr.getGreen(argb), ColorHelper.Abgr.getBlue(argb), ColorHelper.Abgr.getAlpha(argb));
+    }
+
+    default VertexConsumer setColorRgb(int rgb) {
+        return this.setColor(ColorHelper.Abgr.withAlpha(rgb, -1));
+    }
+
 
     // TODO
     default VertexConsumer quad(MatrixStack.Entry entry, BakedQuad quad, int colour0, int colour1, int colour2, int colour3, float normalX, float normalY, float normalZ, boolean spreadUV) {

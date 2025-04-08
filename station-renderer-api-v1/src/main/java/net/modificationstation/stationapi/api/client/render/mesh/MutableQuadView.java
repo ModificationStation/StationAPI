@@ -144,29 +144,6 @@ public interface MutableQuadView extends QuadView {
     MutableQuadView spriteBake(Sprite sprite, int bakeFlags);
 
     /**
-     * Accept vanilla lightmap values.  Input values will override lightmap values
-     * computed from world state if input values are higher. Exposed for completeness
-     * but some rendering implementations with non-standard lighting model may not honor it.
-     *
-     * <p>For emissive rendering, it is better to use {@link MaterialFinder#emissive(boolean)}.
-     */
-    MutableQuadView lightmap(int vertexIndex, int lightmap);
-
-    /**
-     * Convenience: set lightmap for all vertices at once.
-     *
-     * <p>For emissive rendering, it is better to use {@link MaterialFinder#emissive(boolean)}.
-     * See {@link #lightmap(int, int)}.
-     */
-    default MutableQuadView lightmap(int b0, int b1, int b2, int b3) {
-        lightmap(0, b0);
-        lightmap(1, b1);
-        lightmap(2, b2);
-        lightmap(3, b3);
-        return this;
-    }
-
-    /**
      * Adds a vertex normal. Models that have per-vertex
      * normals should include them to get correct lighting when it matters.
      * Computed face normal is used when no vertex normal is provided.
@@ -248,4 +225,14 @@ public interface MutableQuadView extends QuadView {
      * <p>Calling this method does not emit the quad.
      */
     MutableQuadView copyFrom(QuadView quad);
+
+    /**
+     * Enables bulk vertex data transfer using the standard Minecraft vertex formats.
+     * Only the {@link BakedQuad#vertexData() quad vertex data} is copied.
+     * This method should be performant whenever caller's vertex representation makes it feasible.
+     *
+     *
+     * <p>Calling this method does not emit the quad.
+     */
+    MutableQuadView fromVanilla(int[] quadData, int startIndex);
 }

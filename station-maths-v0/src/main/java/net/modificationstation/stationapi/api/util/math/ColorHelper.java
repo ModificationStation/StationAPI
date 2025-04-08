@@ -59,6 +59,15 @@ public class ColorHelper {
         public static int mixColor(int first, int second) {
             return Argb.getArgb(Argb.getAlpha(first) * Argb.getAlpha(second) / 255, Argb.getRed(first) * Argb.getRed(second) / 255, Argb.getGreen(first) * Argb.getGreen(second) / 255, Argb.getBlue(first) * Argb.getBlue(second) / 255);
         }
+
+        public static int scaleRgb(int argb, float redScale, float greenScale, float blueScale) {
+            return getArgb(
+                    getAlpha(argb),
+                    MathHelper.clamp((int)(getRed(argb) * redScale), 0, 255),
+                    MathHelper.clamp((int)(getGreen(argb) * greenScale), 0, 255),
+                    MathHelper.clamp((int)(getBlue(argb) * blueScale), 0, 255)
+            );
+        }
     }
 }
 
