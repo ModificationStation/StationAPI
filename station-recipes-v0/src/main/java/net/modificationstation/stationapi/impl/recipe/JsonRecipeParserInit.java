@@ -45,8 +45,8 @@ public class JsonRecipeParserInit {
     private static void parseAndRegisterRecipe(RecipeRegisterEvent event) {
         Consumer<URL> jsonRecipeParser = JsonRecipeParserRegistry.INSTANCE.get(event.recipeId);
         Set<URL> jsonRecipes = JsonRecipesRegistry.INSTANCE.get(event.recipeId);
-//        if (jsonRecipeParser != null && jsonRecipes != null)
-//            jsonRecipes.forEach(jsonRecipeParser);
+        if (jsonRecipeParser != null && jsonRecipes != null)
+            jsonRecipes.forEach(jsonRecipeParser);
     }
 
     private static void parseCraftingShaped(URL recipe) {
