@@ -40,12 +40,12 @@ public class TerrainRenderContext extends AbstractTerrainRenderContext {
         this.random = random;
         this.bufferFunc = bufferFunc;
 
-        // Retrieve OpenGL's model matrix and set it to the MatrixStack
-        FloatBuffer openglMatrix = ByteBuffer.allocateDirect(Float.BYTES * 16).asFloatBuffer();
-        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, openglMatrix);
-
-        // Convert the OpenGL matrix to Matrix4f and apply it to the MatrixStack
-        matrixStack.peek().getPositionMatrix().set(openglMatrix);
+//        // Retrieve OpenGL's model matrix and set it to the MatrixStack
+//        FloatBuffer openglMatrix = ByteBuffer.allocateDirect(Float.BYTES * 16).asFloatBuffer();
+//        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, openglMatrix);
+//
+//        // Convert the OpenGL matrix to Matrix4f and apply it to the MatrixStack
+//        matrixStack.peek().getPositionMatrix().set(openglMatrix);
     }
 
     public void release() {
@@ -62,7 +62,7 @@ public class TerrainRenderContext extends AbstractTerrainRenderContext {
         matrixStack.push();
 
         try {
-            matrixStack.translate(ChunkSectionPos.getLocalCoord(blockPos.getX()), ChunkSectionPos.getLocalCoord(blockPos.getY()), ChunkSectionPos.getLocalCoord(blockPos.getZ()));
+            matrixStack.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             if (blockState.hasModelOffset()) {
                 Vec3d offset = blockState.getModelOffset(blockPos);
                 matrixStack.translate(offset.x, offset.y, offset.z);
