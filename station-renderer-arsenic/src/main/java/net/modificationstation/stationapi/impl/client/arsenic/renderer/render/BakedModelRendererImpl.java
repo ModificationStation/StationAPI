@@ -160,6 +160,8 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     }
 
     private void renderBakedItemModel(BakedModel model, ItemStack stack, float brightness) {
+        ItemRenderContext context = ItemRenderContext.POOL.get();
+        context.renderItem(Tessellator.INSTANCE, stack, model, random, brightness);
 //        for (Direction direction : Direction.values()) {
 //            random.setSeed(42L);
 //            renderBakedItemQuads(model.getQuads(null, direction, random), stack, brightness);
@@ -169,7 +171,9 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     }
 
     private void renderBakedItemModelFlat(BakedModel model, ItemStack stack, float brightness) {
-//        random.setSeed(42L);
+        ItemRenderContext context = ItemRenderContext.POOL.get();
+        context.renderItem(Tessellator.INSTANCE, stack, model, random, brightness);
+        random.setSeed(42L);
 //        boolean bl = stack != null && stack.itemId != 0 && stack.count > 0;
 //        for (BakedQuad bakedQuad : model.getQuads(null, null, random)) {
 //            if (bakedQuad.face() != Direction.WEST) continue;

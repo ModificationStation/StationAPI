@@ -2,11 +2,13 @@ package net.modificationstation.stationapi.api.client.render.model;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelOverrideList;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelTransformation;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
+import org.jetbrains.annotations.Nullable;
 
 public interface BakedModel {
 
@@ -38,5 +40,9 @@ public interface BakedModel {
 
     interface ItemInputContext extends InputContext {
         ItemStack itemStack();
+
+        @Nullable
+        @Override
+        BlockView blockView();
     }
 }
