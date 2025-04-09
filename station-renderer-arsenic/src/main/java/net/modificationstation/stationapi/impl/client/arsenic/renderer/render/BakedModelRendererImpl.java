@@ -120,11 +120,11 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
 //            return;
 //        }
         BakedModel bakedModel = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state);
-        long l = state.getRenderingSeed(pos);
+        long seed = state.getRenderingSeed(pos);
         damage = true;
         //noinspection deprecation
         StationTextureManager.get(((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager).getTexture(ModelLoader.BLOCK_DESTRUCTION_STAGE_TEXTURES.get((int) (progress * 10))).bindTexture();
-        render(consumer, world, bakedModel, state, pos, true, this.random, l);
+        render(consumer, world, bakedModel, state, pos, true, this.random, seed);
         damage = false;
     }
 

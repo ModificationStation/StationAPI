@@ -10,11 +10,7 @@ import net.modificationstation.stationapi.api.util.crash.CrashException;
 import net.modificationstation.stationapi.api.util.crash.CrashReport;
 import net.modificationstation.stationapi.api.util.crash.CrashReportSection;
 import net.modificationstation.stationapi.api.util.math.MatrixStack;
-import net.modificationstation.stationapi.impl.util.math.ChunkSectionPos;
-import org.lwjgl.opengl.GL11;
 
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.util.Random;
 import java.util.function.IntFunction;
 
@@ -39,13 +35,6 @@ public class TerrainRenderContext extends AbstractTerrainRenderContext {
 
         this.random = random;
         this.bufferFunc = bufferFunc;
-
-//        // Retrieve OpenGL's model matrix and set it to the MatrixStack
-//        FloatBuffer openglMatrix = ByteBuffer.allocateDirect(Float.BYTES * 16).asFloatBuffer();
-//        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, openglMatrix);
-//
-//        // Convert the OpenGL matrix to Matrix4f and apply it to the MatrixStack
-//        matrixStack.peek().getPositionMatrix().set(openglMatrix);
     }
 
     public void release() {

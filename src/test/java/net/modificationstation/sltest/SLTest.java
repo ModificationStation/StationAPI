@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.util.Namespace;
 import org.apache.logging.log4j.Logger;
 
 public class SLTest {
-    public static final Namespace NAMESPACE = Namespace.resolve();
+    public static final Namespace NAMESPACE = Namespace.of("sltest");
 
     public static final Logger LOGGER = NAMESPACE.getLogger();
 

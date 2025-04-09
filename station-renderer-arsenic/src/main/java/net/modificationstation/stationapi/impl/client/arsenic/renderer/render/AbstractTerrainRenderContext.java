@@ -4,6 +4,7 @@ import com.google.common.primitives.Ints;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.render.VertexConsumer;
 import net.modificationstation.stationapi.api.client.render.material.RenderMaterial;
 import net.modificationstation.stationapi.api.client.render.material.ShadeMode;
@@ -94,19 +95,18 @@ public abstract class AbstractTerrainRenderContext extends AbstractRenderContext
     }
 
     private void shadeQuad(MutableQuadViewImpl quad, boolean ao, boolean emissive, boolean vanillaShade) {
-        float[] light = aoCalc.light;
+        aoCalc.calculateForQuad(quad);
+
+        int color = quad.tintIndex();
+        float[] brightness = aoCalc.light;
+        
+        float
+                r = redI2F(color),
+                g = greenI2F(color),
+                b = blueI2F(color);
 
         for (int i = 0; i < 4; i++) {
-            float brightnessFactor = ao ? light[i] : 1.0F; // Apply ambient occlusion light scaling if enabled
-            if (emissive) {
-                brightnessFactor = 1.0F; // Force maximum brightness if the material is emissive
-            }
-
-            float red = redI2F(quad.color(i)) * brightnessFactor;
-            float green = greenI2F(quad.color(i)) * brightnessFactor;
-            float blue = blueI2F(quad.color(i)) * brightnessFactor;
-
-            quad.color(i, colorF2I(red, green, blue)); // Update the vertex color with adjusted brightness
+            quad.color(i, colorF2I(r * brightness[0], g * brightness[0], b * brightness[0]));
         }
     }
 

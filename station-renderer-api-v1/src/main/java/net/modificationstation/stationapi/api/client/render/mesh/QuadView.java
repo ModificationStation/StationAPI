@@ -20,7 +20,7 @@ import org.joml.Vector3fc;
  */
 public interface QuadView {
     /** Count of integers in a conventional (un-modded) block or item vertex. */
-    int VANILLA_VERTEX_STRIDE = 8;//VertexFormats.BLOCK.getVertexSize() / 4;
+    int VANILLA_VERTEX_STRIDE = VertexFormats.BLOCK.getVertexSize() / 4;
 
     /** Count of integers in a conventional (un-modded) block or item quad. */
     int VANILLA_QUAD_STRIDE = VANILLA_VERTEX_STRIDE * 4;

@@ -6,6 +6,7 @@ import net.modificationstation.stationapi.api.client.render.Renderer;
 import net.modificationstation.stationapi.api.client.render.material.MaterialFinder;
 import net.modificationstation.stationapi.api.client.render.mesh.MutableQuadView;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadEmitter;
+import net.modificationstation.stationapi.api.client.render.mesh.QuadView;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelElementFace;
 import net.modificationstation.stationapi.api.client.render.model.json.ModelElementTexture;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -36,9 +37,9 @@ public class BakedQuadFactory {
         modelElementTexture.uvs[2] = MathHelper.lerp(f, modelElementTexture.uvs[2], g);
         modelElementTexture.uvs[1] = MathHelper.lerp(f, modelElementTexture.uvs[1], h);
         modelElementTexture.uvs[3] = MathHelper.lerp(f, modelElementTexture.uvs[3], h);
-        int[] quadData = this.packVertexData(modelElementTexture, texture, side, this.getPositionMatrix(from, to), settings.getRotation(), rotation, shade);
-        emitter.fromVanilla(quadData, 0);
-        Direction direction = decodeDirection(quadData);
+        this.packVertexData(emitter, modelElementTexture, texture, side, this.getPositionMatrix(from, to), settings.getRotation(), rotation, shade);
+
+        Direction direction = decodeDirection(emitter);
         System.arraycopy(fs, 0, modelElementTexture.uvs, 0, fs.length);
         if (rotation == null) {
             emitter.nominalFace(direction);
@@ -55,7 +56,7 @@ public class BakedQuadFactory {
         if (face.cullFace != null)
             emitter.cullFace(Direction.transform(settings.getRotation().copyMatrix(), face.cullFace));
 
-        emitter.spriteBake(texture, MutableQuadView.BAKE_ROTATE_NONE);
+//        emitter.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV);
         emitter.material(finder.find());
         emitter.tag(0);
 
@@ -101,14 +102,10 @@ public class BakedQuadFactory {
         return new ModelElementTexture(new float[]{p, t, q, u}, w);
     }
 
-    private int[] packVertexData(ModelElementTexture texture, Sprite sprite, Direction direction, float[] positionMatrix, AffineTransformation orientation, @Nullable ModelRotation rotation, boolean shaded) {
-        int[] is = new int[32];
-
+    private void packVertexData(QuadEmitter emitter, ModelElementTexture texture, Sprite sprite, Direction direction, float[] positionMatrix, AffineTransformation orientation, @Nullable ModelRotation rotation, boolean shaded) {
         for(int i = 0; i < 4; ++i) {
-            this.packVertexData(is, i, direction, texture, positionMatrix, sprite, orientation, rotation, shaded);
+            this.packVertexData(emitter, i, direction, texture, positionMatrix, sprite, orientation, rotation, shaded);
         }
-
-        return is;
     }
 
     private float[] getPositionMatrix(Vector3f from, Vector3f to) {
@@ -122,25 +119,21 @@ public class BakedQuadFactory {
         return fs;
     }
 
-    private void packVertexData(int[] vertices, int cornerIndex, Direction direction, ModelElementTexture texture, float[] positionMatrix, Sprite sprite, AffineTransformation orientation, @Nullable ModelRotation rotation, boolean shaded) {
+    private void packVertexData(QuadEmitter emitter, int cornerIndex, Direction direction, ModelElementTexture texture, float[] positionMatrix, Sprite sprite, AffineTransformation orientation, @Nullable ModelRotation rotation, boolean shaded) {
         CubeFace.Corner corner = CubeFace.getFace(direction).getCorner(cornerIndex);
         Vector3f vector3f = new Vector3f(positionMatrix[corner.xSide], positionMatrix[corner.ySide], positionMatrix[corner.zSide]);
         this.rotateVertex(vector3f, rotation);
         this.transformVertex(vector3f, orientation);
-        this.packVertexData(vertices, cornerIndex, vector3f, sprite, texture);
+        this.packVertexData(emitter, cornerIndex, vector3f, sprite, texture);
     }
 
-    private void packVertexData(int[] vertices, int cornerIndex, Vector3f position, Sprite sprite, ModelElementTexture modelElementTexture) {
-        int i = cornerIndex * 8;
-        vertices[i] = Float.floatToRawIntBits(position.x());
-        vertices[i + 1] = Float.floatToRawIntBits(position.y());
-        vertices[i + 2] = Float.floatToRawIntBits(position.z());
-//      vertices[i + 3] = -1;
-        vertices[i + 3] = Float.floatToRawIntBits(sprite.getFrameU(modelElementTexture.getU(cornerIndex)));
-        vertices[i + 3 + 1] = Float.floatToRawIntBits(sprite.getFrameV(modelElementTexture.getV(cornerIndex)));
+    private void packVertexData(QuadEmitter emitter, int vertexIndex, Vector3f position, Sprite sprite, ModelElementTexture modelElementTexture) {
+        emitter.pos(vertexIndex, position);
+
+        emitter.uv(vertexIndex, sprite.getFrameU(modelElementTexture.getU(vertexIndex)), sprite.getFrameV(modelElementTexture.getV(vertexIndex)));
     }
 
-    private void rotateVertex(Vector3f vector, @Nullable ModelRotation rotation) {
+    private void rotateVertex(Vector3f position, @Nullable ModelRotation rotation) {
         if (rotation != null) {
             Vector3f axis;
             Vector3f scale;
@@ -160,7 +153,7 @@ public class BakedQuadFactory {
                 default -> throw new IllegalArgumentException("There are only 3 axes");
             }
 
-            Quaternionf quaternion = (new Quaternionf()).rotationAxis(rotation.angle() * ((float)Math.PI / 180F), axis);
+            Quaternionf quat = new Quaternionf().rotationAxis(rotation.angle() * ((float)Math.PI / 180F), axis);
             if (rotation.rescale()) {
                 if (Math.abs(rotation.angle()) == 22.5F) {
                     scale.mul(MIN_SCALE);
@@ -173,40 +166,40 @@ public class BakedQuadFactory {
                 scale.set(1.0F, 1.0F, 1.0F);
             }
 
-            this.transformVertex(vector, new Vector3f(rotation.origin()), new Matrix4f().rotation(quaternion), scale);
+            this.transformVertex(position, new Vector3f(rotation.origin()), new Matrix4f().rotation(quat), scale);
         }
     }
 
-    public void transformVertex(Vector3f vertex, AffineTransformation transformation) {
+    public void transformVertex(Vector3f position, AffineTransformation transformation) {
         if (transformation != AffineTransformation.identity()) {
-            this.transformVertex(vertex, new Vector3f(0.5F, 0.5F, 0.5F), transformation.getMatrix(), new Vector3f(1.0F, 1.0F, 1.0F));
+            this.transformVertex(position, new Vector3f(0.5F, 0.5F, 0.5F), transformation.getMatrix(), new Vector3f(1.0F, 1.0F, 1.0F));
         }
     }
 
-    private void transformVertex(Vector3f vertex, Vector3fc origin, Matrix4fc transformationMatrix, Vector3fc scale) {
-        Vector4f vector4f = transformationMatrix.transform(new Vector4f(vertex.x() - origin.x(), vertex.y() - origin.y(), vertex.z() - origin.z(), 1.0F));
+    private void transformVertex(Vector3f position, Vector3fc origin, Matrix4fc transformationMatrix, Vector3fc scale) {
+        Vector4f vector4f = transformationMatrix.transform(new Vector4f(position.x() - origin.x(), position.y() - origin.y(), position.z() - origin.z(), 1.0F));
         vector4f.mul(new Vector4f(scale, 1));
-        vertex.set(vector4f.x() + origin.x(), vector4f.y() + origin.y(), vector4f.z() + origin.z());
+        position.set(vector4f.x() + origin.x(), vector4f.y() + origin.y(), vector4f.z() + origin.z());
     }
 
-    private static Direction decodeDirection(int[] rotationMatrix) {
-        Vector3f vector3f = bakeVectors(rotationMatrix, 0);
-        Vector3f vector3f2 = bakeVectors(rotationMatrix, 8);
-        Vector3f vector3f3 = bakeVectors(rotationMatrix, 16);
-        Vector3f vector3f4 = (new Vector3f(vector3f)).sub(vector3f2);
-        Vector3f vector3f5 = (new Vector3f(vector3f3)).sub(vector3f2);
-        Vector3f vector3f6 = (new Vector3f(vector3f5)).cross(vector3f4).normalize();
+    private static Direction decodeDirection(QuadView quad) {
+        Vector3f pos1 = new Vector3f(quad.x(0), quad.y(0), quad.z(0));
+        Vector3f pos2 = new Vector3f(quad.x(1), quad.y(1), quad.z(1));
+        Vector3f pos3 = new Vector3f(quad.x(2), quad.y(2), quad.z(2));
+        Vector3f vector3f4 = new Vector3f(pos1).sub(pos2);
+        Vector3f vector3f5 = new Vector3f(pos3).sub(pos2);
+        Vector3f vector3f6 = new Vector3f(vector3f5).cross(vector3f4).normalize();
         if (!vector3f6.isFinite()) {
             return Direction.UP;
         } else {
             Direction direction = null;
             float f = 0.0F;
 
-            for(Direction direction2 : Direction.values()) {
-                float g = vector3f6.dot(direction2.getFloatVector());
+            for(Direction dir : Direction.values()) {
+                float g = vector3f6.dot(dir.getFloatVector());
                 if (g >= 0.0F && g > f) {
                     f = g;
-                    direction = direction2;
+                    direction = dir;
                 }
             }
 
@@ -218,8 +211,8 @@ public class BakedQuadFactory {
         }
     }
 
-    private static float bakeVectorX(int[] is, int i) {
-        return Float.intBitsToFloat(is[i]);
+    private static float bakeVectorX(int[] rotationMatrix, int cornerIndex) {
+        return Float.intBitsToFloat(rotationMatrix[cornerIndex]);
     }
 
     private static float bakeVectorY(int[] is, int i) {
@@ -228,10 +221,6 @@ public class BakedQuadFactory {
 
     private static float bakeVectorZ(int[] is, int i) {
         return Float.intBitsToFloat(is[i + 2]);
-    }
-
-    private static Vector3f bakeVectors(int[] is, int i) {
-        return new Vector3f(bakeVectorX(is, i), bakeVectorY(is, i), bakeVectorZ(is, i));
     }
 
     private static void encodeDirection(int[] rotationMatrix, Direction direction) {

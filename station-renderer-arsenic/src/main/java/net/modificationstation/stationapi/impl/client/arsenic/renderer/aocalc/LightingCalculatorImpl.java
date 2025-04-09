@@ -2,6 +2,9 @@ package net.modificationstation.stationapi.impl.client.arsenic.renderer.aocalc;
 
 import net.minecraft.block.Block;
 import net.minecraft.world.BlockView;
+import net.modificationstation.stationapi.api.client.render.material.MaterialView;
+import net.modificationstation.stationapi.api.client.render.material.RenderMaterial;
+import net.modificationstation.stationapi.api.client.render.mesh.QuadView;
 import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
@@ -78,30 +81,31 @@ public final class LightingCalculatorImpl {
         return ((x + cacheRadius) * cacheDiameter + y + cacheRadius) * cacheDiameter + z + cacheRadius;
     }
 
-    public void calculateForQuad(BakedQuad q) {
-        float emission = q.lightEmission();
+    public void calculateForQuad(QuadView q) {
+        float emission = 0;//q.lightEmission();
+        MaterialView material = q.material();
         
-        if (emission == 1) {
+        if (material.emissive()) {
             System.arraycopy(FULL_BRIGHTNESS, 0, light, 0, light.length);
             return;
         }
         
-        Direction face = q.face();
+        Direction face = q.nominalFace();
         calculateForQuad(
                 face,
-                x + Float.intBitsToFloat(q.vertexData()[0]),
-                y + Float.intBitsToFloat(q.vertexData()[1]),
-                z + Float.intBitsToFloat(q.vertexData()[2]),
-                x + Float.intBitsToFloat(q.vertexData()[8]),
-                y + Float.intBitsToFloat(q.vertexData()[9]),
-                z + Float.intBitsToFloat(q.vertexData()[10]),
-                x + Float.intBitsToFloat(q.vertexData()[16]),
-                y + Float.intBitsToFloat(q.vertexData()[17]),
-                z + Float.intBitsToFloat(q.vertexData()[18]),
-                x + Float.intBitsToFloat(q.vertexData()[24]),
-                y + Float.intBitsToFloat(q.vertexData()[25]),
-                z + Float.intBitsToFloat(q.vertexData()[26]),
-                q.shade()
+                x + q.x(0),
+                y + q.y(0),
+                z + q.z(0),
+                x + q.x(1),
+                y + q.y(1),
+                z + q.z(1),
+                x + q.x(2),
+                y + q.y(2),
+                z + q.z(2),
+                x + q.x(3),
+                y + q.y(3),
+                z + q.z(3),
+                !material.disableDiffuse()
         );
     
         if (emission == 0) return;

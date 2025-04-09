@@ -85,9 +85,9 @@ public interface VertexConsumer {
     }
 
     default void vertex(float x, float y, float z, int color, float u, float v, float normalX, float normalY, float normalZ) {
+        setTexture(u, v);
         setVertex(x, y, z);
         setColor(color);
-        setTexture(u, v);
         setNormal(normalX, normalY, normalZ);
     }
 
