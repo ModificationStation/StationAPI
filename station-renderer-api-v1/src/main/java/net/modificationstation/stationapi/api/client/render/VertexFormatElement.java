@@ -16,12 +16,12 @@ public record VertexFormatElement(int id, int index, Type type, Usage usage, int
     private static final VertexFormatElement[] BY_ID = new VertexFormatElement[MAX_COUNT];
     private static final List<VertexFormatElement> ELEMENTS = new ArrayList<>(MAX_COUNT);
 
-    public static final VertexFormatElement POSITION = register(0, 0, VertexFormatElement.Type.FLOAT, VertexFormatElement.Usage.POSITION, 3);
-    public static final VertexFormatElement COLOR = register(1, 0, VertexFormatElement.Type.UBYTE, VertexFormatElement.Usage.COLOR, 4);
-    public static final VertexFormatElement UV0 = register(2, 0, VertexFormatElement.Type.FLOAT, VertexFormatElement.Usage.UV, 2);
-    public static final VertexFormatElement UV1 = register(3, 1, VertexFormatElement.Type.SHORT, VertexFormatElement.Usage.UV, 2);
-    public static final VertexFormatElement UV2 = register(4, 2, VertexFormatElement.Type.SHORT, VertexFormatElement.Usage.UV, 2);
-    public static final VertexFormatElement NORMAL = register(5, 0, VertexFormatElement.Type.BYTE, VertexFormatElement.Usage.NORMAL, 3);
+    public static final VertexFormatElement POSITION = register(0, 0, Type.FLOAT, Usage.POSITION, 3);
+    public static final VertexFormatElement COLOR = register(1, 0, Type.INT, VertexFormatElement.Usage.COLOR, 1);
+    public static final VertexFormatElement UV0 = register(2, 0, Type.FLOAT, Usage.UV, 2);
+    public static final VertexFormatElement UV1 = register(3, 1, Type.SHORT, Usage.UV, 2);
+    public static final VertexFormatElement UV2 = register(4, 2, Type.SHORT, Usage.UV, 2);
+    public static final VertexFormatElement NORMAL = register(5, 0, Type.INT, Usage.NORMAL, 1);
 
     public VertexFormatElement(int id, int index, Type type, Usage usage, int count) {
         if (id < 0 || id >= BY_ID.length) {

@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.client.arsenic.renderer.render.m
 
 import com.google.common.base.Preconditions;
 import net.modificationstation.stationapi.api.client.render.VertexFormat;
+import net.modificationstation.stationapi.api.client.render.VertexFormatElement;
 import net.modificationstation.stationapi.api.client.render.VertexFormats;
 import net.modificationstation.stationapi.api.client.render.mesh.QuadView;
 import net.modificationstation.stationapi.api.client.render.model.ModelHelper;
@@ -29,9 +30,10 @@ public final class EncodingFormat {
     static final int VERTEX_X;
     static final int VERTEX_Y;
     static final int VERTEX_Z;
-    static final int VERTEX_COLOR;
+
     static final int VERTEX_U;
     static final int VERTEX_V;
+    static final int VERTEX_COLOR;
     static final int VERTEX_NORMAL;
     public static final int VERTEX_STRIDE;
 
@@ -41,14 +43,15 @@ public final class EncodingFormat {
 
     static {
         final VertexFormat format = VertexFormats.BLOCK;
-        VERTEX_X = HEADER_STRIDE + 0;
-        VERTEX_Y = HEADER_STRIDE + 1;
-        VERTEX_Z = HEADER_STRIDE + 2;
-        VERTEX_COLOR = HEADER_STRIDE + 3;
-        VERTEX_U = HEADER_STRIDE + 4;
+        VERTEX_X = HEADER_STRIDE + format.getOffset(VertexFormatElement.POSITION) / 4;
+        VERTEX_Y = VERTEX_X + 1;
+        VERTEX_Z = VERTEX_Y + 1;
+
+        VERTEX_U = HEADER_STRIDE + format.getOffset(VertexFormatElement.UV0) / 4;
         VERTEX_V = VERTEX_U + 1;
-        VERTEX_NORMAL = HEADER_STRIDE + 7;
-        VERTEX_STRIDE = 8;//format.getVertexSize() / 4;
+        VERTEX_COLOR = HEADER_STRIDE + format.getOffset(VertexFormatElement.COLOR) / 4;
+        VERTEX_NORMAL = HEADER_STRIDE + format.getOffset(VertexFormatElement.NORMAL) / 4;
+        VERTEX_STRIDE = format.getVertexSize() / 4;
         QUAD_STRIDE = VERTEX_STRIDE * 4;
         QUAD_STRIDE_BYTES = QUAD_STRIDE * 4;
         TOTAL_STRIDE = HEADER_STRIDE + QUAD_STRIDE;
