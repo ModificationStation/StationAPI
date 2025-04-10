@@ -21,6 +21,6 @@ class FallingBlockEntityMixin {
             )
     )
     private boolean stationapi_redirectCanPlace(World world, int blockId, int x, int y, int z, boolean skipEntityCollisionCheck, int side) {
-        return StationAPI.EVENT_BUS.post(IsBlockReplaceableEvent.builder().context(new AutomaticItemPlacementContext(world, new BlockPos(x, y, z), Direction.DOWN, null, Direction.byId(side))).build()).context.canPlace();
+        return StationAPI.EVENT_BUS.post(IsBlockReplaceableEvent.builder().context(new AutomaticItemPlacementContext(world, new BlockPos(x, y, z), Direction.DOWN, null, Direction.byIndex(side))).build()).context.canPlace();
     }
 }

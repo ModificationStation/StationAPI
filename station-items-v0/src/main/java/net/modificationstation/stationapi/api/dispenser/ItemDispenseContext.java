@@ -31,7 +31,7 @@ public class ItemDispenseContext {
         this.dispenser = dispenser;
         this.itemStack = itemStack;
         this.slot = slot;
-        direction = Direction.byId(dispenser.world.getBlockMeta(dispenser.x, dispenser.y, dispenser.z));
+        direction = Direction.byIndex(dispenser.world.getBlockMeta(dispenser.x, dispenser.y, dispenser.z));
     }
 
     public static void genericShootEntity(Entity entity, double velX, double velY, double velZ, float pitch, float yaw) {

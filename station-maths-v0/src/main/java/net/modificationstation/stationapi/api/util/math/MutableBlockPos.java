@@ -75,6 +75,10 @@ public class MutableBlockPos extends BlockPos {
         return set(axis.choose(x, y, z, Direction.Axis.X), axis.choose(x, y, z, Direction.Axis.Y), axis.choose(x, y, z, Direction.Axis.Z));
     }
 
+    public MutableBlockPos set(BlockPos pos, Direction direction) {
+        return set(pos.getX() + direction.getOffsetX(), pos.getY() + direction.getOffsetY(), pos.getZ() + direction.getOffsetZ());
+    }
+
     public MutableBlockPos set(Vec3i pos, Direction direction) {
         return set(pos.getX() + direction.getOffsetX(), pos.getY() + direction.getOffsetY(), pos.getZ() + direction.getOffsetZ());
     }

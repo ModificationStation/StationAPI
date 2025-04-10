@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.util;
 
+import com.mojang.serialization.Codec;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.DirectionTransformation;
 

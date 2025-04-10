@@ -20,5 +20,5 @@ addModuleDependencies(project,
         "station-nbt-v0",
         "station-localization-api-v0",
         "station-gui-api-v0",
-        "station-renderer-api-v0"
+        "station-renderer-api-v1"
 )

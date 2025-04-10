@@ -60,7 +60,7 @@ class BlockItemMixin extends Item implements StationFlatteningBlockItem {
             World argWorld, int blockID, int argX, int argY, int argZ, boolean checkCollision, int argSide,
             ItemStack itemStack, PlayerEntity player, World world, int x, int y, int z, int side
     ) {
-        Direction direction = Direction.byId(side);
+        Direction direction = Direction.byIndex(side);
         Box box = Block.BLOCKS[blockID].getCollisionShape(world, x, y, z);
         return (box == null || world.canSpawnEntity(box)) && StationAPI.EVENT_BUS.post(
                 IsBlockReplaceableEvent.builder()

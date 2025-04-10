@@ -52,16 +52,15 @@ public class TagGroupLoader<T> {
                     Reader reader = resource.getReader();
 
                     try {
-                        JsonElement jsonElement = JsonParser.parseReader(reader);
-                        List<TrackedEntry> list = map.computeIfAbsent(identifier2, identifierx -> new ArrayList<>());
-                        DataResult<TagFile> var10000 = TagFile.CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, jsonElement));
-                        Logger var10002 = LOGGER;
-                        Objects.requireNonNull(var10002);
-                        TagFile tagFile = var10000.getOrThrow(false, var10002::error);
-                        if (tagFile.replace()) list.clear();
+                        JsonElement json = JsonParser.parseReader(reader);
+                        List<TrackedEntry> list = map.computeIfAbsent(identifier2, id -> new ArrayList<>());
+                        TagFile tagFile = TagFile.CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, json)).getOrThrow();
 
-                        String string2 = resource.getResourcePackName();
-                        tagFile.entries().forEach(tagEntry -> list.add(new TrackedEntry(tagEntry, string2)));
+                        if (tagFile.replace())
+                            list.clear();
+
+                        String source = resource.getResourcePackName();
+                        tagFile.entries().forEach(tagEntry -> list.add(new TrackedEntry(tagEntry, source)));
                     } catch (Throwable var16) {
                         if (reader != null) try {
                             reader.close();

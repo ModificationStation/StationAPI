@@ -31,7 +31,7 @@ class BlockItemMixin {
                         .world(world)
                         .player(player)
                         .x(x).y(y).z(z)
-                        .side(Direction.byId(side))
+                        .side(Direction.byIndex(side))
                         .block(BlockRegistry.INSTANCE.get(id))
                         .meta(meta)
                         .blockItem(blockItem)

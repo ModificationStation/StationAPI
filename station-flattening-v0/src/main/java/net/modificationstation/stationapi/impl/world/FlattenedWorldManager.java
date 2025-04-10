@@ -45,7 +45,7 @@ public class FlattenedWorldManager {
             if (!ChunkSection.isEmpty(section)) {
                 NbtCompound sectionTag = new NbtCompound();
                 sectionTag.putByte(HEIGHT_KEY, (byte)sectionY);
-                sectionTag.put("block_states", CODEC.encodeStart(NbtOps.INSTANCE, section.getBlockStateContainer()).getOrThrow(false, LOGGER::error));
+                sectionTag.put("block_states", CODEC.encodeStart(NbtOps.INSTANCE, section.getBlockStateContainer()).getOrThrow());
                 sectionTag.put(METADATA_KEY, section.getMetadataArray().toTag());
                 sectionTag.put(SKY_LIGHT_KEY, section.getLightArray(LightType.SKY).toTag());
                 sectionTag.put(BLOCK_LIGHT_KEY, section.getLightArray(LightType.BLOCK).toTag());
@@ -87,7 +87,7 @@ public class FlattenedWorldManager {
                 int sectionY = sectionTag.getByte(HEIGHT_KEY);
                 int index = world.sectionCoordToIndex(sectionY);
                 if (index < 0 || index >= sections.length) continue;
-                PalettedContainer<BlockState> blockStates = sectionTag.contains("block_states") ? CODEC.parse(NbtOps.INSTANCE, sectionTag.getCompound("block_states")).promotePartial(errorMessage -> logRecoverableError(xPos, zPos, sectionY, errorMessage)).getOrThrow(false, LOGGER::error) : new PalettedContainer<>(Block.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
+                PalettedContainer<BlockState> blockStates = sectionTag.contains("block_states") ? CODEC.parse(NbtOps.INSTANCE, sectionTag.getCompound("block_states")).promotePartial(errorMessage -> logRecoverableError(xPos, zPos, sectionY, errorMessage)).getOrThrow() : new PalettedContainer<>(Block.STATE_IDS, States.AIR.get(), PalettedContainer.PaletteProvider.BLOCK_STATE);
                 ChunkSection chunkSection = new ChunkSection(sectionY, blockStates);
                 chunkSection.getMetadataArray().copyArray(sectionTag.getByteArray(METADATA_KEY));
                 chunkSection.getLightArray(LightType.SKY).copyArray(sectionTag.getByteArray(SKY_LIGHT_KEY));

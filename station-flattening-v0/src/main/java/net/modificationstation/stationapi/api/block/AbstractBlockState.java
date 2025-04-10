@@ -9,6 +9,7 @@ import net.minecraft.block.Material;
 import net.minecraft.class_259;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
@@ -18,6 +19,7 @@ import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.block.StationFlatteningBlockInternal;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -29,6 +31,8 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
     private final boolean toolRequired;
     private final boolean opaque;
     private int luminance = -1;
+    @Nullable
+    private final Offsetter offsetter;
 
     protected AbstractBlockState(Block block, ImmutableMap<Property<?>, Comparable<?>> propertyMap, MapCodec<BlockState> mapCodec) {
         super(block, propertyMap, mapCodec);
@@ -37,6 +41,7 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
         this.materialColor = block.material.field_973;
         this.toolRequired = !block.material.method_898();
         this.opaque = block.isOpaque();
+        this.offsetter = block.getOffsetter();
     }
 
     public Block getBlock() {
@@ -108,14 +113,27 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
         return Block.BLOCKS_RANDOM_TICK[getBlock().id];
     }
 
-    @Environment(EnvType.CLIENT)
     public long getRenderingSeed(BlockPos pos) {
         return MathHelper.hashCode(pos.x, pos.y, pos.z);
+    }
+
+    public Vec3d getModelOffset(BlockPos pos) {
+        Offsetter offsetter = this.offsetter;
+        return offsetter != null ? offsetter.evaluate(this.asBlockState(), pos) : Vec3d.create(0, 0, 0);
+    }
+
+    public boolean hasModelOffset() {
+        return this.offsetter != null;
     }
 
     protected abstract BlockState asBlockState();
 
     public boolean isToolRequired() {
         return this.toolRequired;
+    }
+
+    @FunctionalInterface
+    public interface Offsetter {
+        Vec3d evaluate(BlockState state, BlockPos pos);
     }
 }

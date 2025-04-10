@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.Block;
 import net.minecraft.client.render.block.BlockRenderManager;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
+import net.modificationstation.stationapi.api.client.render.block.StationRendererBlockRenderManager;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer;
@@ -18,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
 @Mixin(BlockRenderManager.class)
-class BlockRenderManagerMixin {
+class BlockRenderManagerMixin implements StationRendererBlockRenderManager {
     @Inject(
             method = {
                     "renderBottomFace",
@@ -503,7 +504,7 @@ class BlockRenderManagerMixin {
             cancellable = true
     )
     private void stationapi_onRenderInWorld(Block block, int blockX, int blockY, int blockZ, CallbackInfoReturnable<Boolean> cir) {
-        arsenic_plugin.renderWorld(block, blockX, blockY, blockZ, cir);
+        arsenic_plugin.renderWorld(getVertexConsumer(), block, blockX, blockY, blockZ, cir);
     }
 
     @Inject(
@@ -514,7 +515,7 @@ class BlockRenderManagerMixin {
             ),
             cancellable = true
     )
-    private void stationapi_onRenderInInventory(Block arg, int meta, float brightness, CallbackInfo ci) {
-        arsenic_plugin.renderInventory(arg, meta, brightness, ci);
+    private void stationapi_onRenderInInventory(Block block, int meta, float brightness, CallbackInfo ci) {
+        arsenic_plugin.renderInventory(getVertexConsumer(), block, meta, brightness, ci);
     }
 }

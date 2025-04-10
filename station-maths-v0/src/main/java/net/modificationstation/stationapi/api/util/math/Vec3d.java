@@ -1,5 +1,8 @@
 package net.modificationstation.stationapi.api.util.math;
 
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
+
 import java.util.EnumSet;
 
 import static net.minecraft.util.math.MathHelper.*;
@@ -99,8 +102,8 @@ public class Vec3d implements Position {
     /**
      * Copies the given vector.
      */
-    public Vec3d(Vec3f vec) {
-        this(vec.getX(), vec.getY(), vec.getZ());
+    public Vec3d(Vector3fc vec) {
+        this(vec.x(), vec.y(), vec.z());
     }
 
     /**

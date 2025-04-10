@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
-import net.modificationstation.stationapi.api.client.render.RendererAccess;
+import net.modificationstation.stationapi.api.client.render.Renderer;
 import net.modificationstation.stationapi.api.client.render.model.VanillaBakedModel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -36,6 +37,6 @@ class WorldRendererMixin {
         if (StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state) instanceof VanillaBakedModel)
             instance.renderWithTexture(block, j, k, l, texture);
         else
-            Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer().renderDamage(state, new BlockPos(j, k, l), world, field_1803);
+            Objects.requireNonNull(Renderer.get()).bakedModelRenderer().renderDamage(Tessellator.INSTANCE, state, new BlockPos(j, k, l), world, field_1803);
     }
 }

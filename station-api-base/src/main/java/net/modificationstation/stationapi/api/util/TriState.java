@@ -27,6 +27,17 @@ public enum TriState {
         return value;
     }
 
+    /**
+     * Gets the value of this tri-state.
+     * If the value is {@link TriState#UNSET} then use the supplied value.
+     *
+     * @param value the value to fall back to
+     * @return the value of the tri-state or the supplied value if {@link TriState#UNSET}.
+     */
+    public boolean orElse(boolean value) {
+        return this == UNSET ? value : this.getBool();
+    }
+
     @API
     public boolean getBool() {
         Boolean b = getBoolObj();

@@ -7,6 +7,8 @@ import it.unimi.dsi.fastutil.booleans.BooleanList;
 import net.modificationstation.stationapi.api.util.StringIdentifiable;
 import net.modificationstation.stationapi.api.util.Util;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3f;
+import org.joml.Matrix3fc;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -62,7 +64,7 @@ public enum DirectionTransformation implements StringIdentifiable {
     ROT_90_REF_Z_NEG("rot_90_ref_z_neg", AxisTransformation.P213, false, true, true),
     ROT_90_REF_Z_POS("rot_90_ref_z_pos", AxisTransformation.P213, true, false, true);
 
-    private final Matrix3f matrix;
+    private final Matrix3fc matrix;
     private final String name;
     @Nullable
     private Map<Direction, Direction> mappings;
@@ -100,11 +102,9 @@ public enum DirectionTransformation implements StringIdentifiable {
         this.flipY = flipY;
         this.flipZ = flipZ;
         this.axisTransformation = axisTransformation;
-        this.matrix = new Matrix3f();
-        this.matrix.a00 = flipX ? -1.0F : 1.0F;
-        this.matrix.a11 = flipY ? -1.0F : 1.0F;
-        this.matrix.a22 = flipZ ? -1.0F : 1.0F;
-        this.matrix.multiply(axisTransformation.getMatrix());
+        Matrix3f matrix3f = (new Matrix3f()).scaling(flipX ? -1.0F : 1.0F, flipY ? -1.0F : 1.0F, flipZ ? -1.0F : 1.0F);
+        matrix3f.mul(axisTransformation.getMatrix());
+        this.matrix = matrix3f;
     }
 
     private BooleanList getAxisFlips() {

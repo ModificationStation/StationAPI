@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.resource.TexturePackLoadedEvent;
 import net.modificationstation.stationapi.api.client.event.texture.TextureRegisterEvent;
-import net.modificationstation.stationapi.api.client.render.RendererAccess;
+import net.modificationstation.stationapi.api.client.render.Renderer;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
@@ -45,7 +45,7 @@ public class Arsenic {
                 LOGGER.info("Compatibility mode enabled.");
             }
 
-            RendererAccess.INSTANCE.registerRenderer(ArsenicRenderer.INSTANCE);
+            Renderer.register(ArsenicRenderer.INSTANCE);
             StationAPI.EVENT_BUS.register(Listener.<TextureRegisterEvent>simple()
                     .listener(Arsenic::registerTextures)
                     .build());

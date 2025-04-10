@@ -8,10 +8,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceMap;
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceMaps;
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.objects.*;
 import net.fabricmc.loader.api.FabricLoader;
 import net.modificationstation.stationapi.api.util.crash.CrashException;
 import org.apache.commons.io.IOUtils;
@@ -291,6 +288,22 @@ public class Util {
         for (int j = list.size(); j > 1; --j) {
             int k = random.nextInt(j);
             list.set(j - 1, list.set(k, list.get(j - 1)));
+        }
+    }
+
+    public static <T> ToIntFunction<T> lastIndexGetter(List<T> values) {
+        int i = values.size();
+        if (i < 8) {
+            return values::indexOf;
+        } else {
+            Object2IntMap<T> object2IntMap = new Object2IntOpenHashMap<>(i);
+            object2IntMap.defaultReturnValue(-1);
+
+            for (int j = 0; j < i; j++) {
+                object2IntMap.put((T)values.get(j), j);
+            }
+
+            return object2IntMap;
         }
     }
 
