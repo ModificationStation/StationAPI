@@ -51,7 +51,7 @@ public abstract class AbstractTexture implements AutoCloseable {
    public abstract void load(ResourceManager manager) throws IOException;
 
    public void bindTexture() {
-      GL11.glBindTexture(3553, this.getGlId());
+      GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.getGlId());
    }
 
    public void registerTexture(TextureManager textureManager, ResourceManager resourceManager, Identifier identifier, Executor executor) {

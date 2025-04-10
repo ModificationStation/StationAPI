@@ -9,6 +9,8 @@ import net.modificationstation.stationapi.api.client.texture.StationTextureManag
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 public class LightmapTextureManager {
     /**
@@ -31,11 +33,32 @@ public class LightmapTextureManager {
     private final NativeImage image;
     private final Identifier textureIdentifier;
     private final Minecraft client;
+    private final StationTextureManager textureManager;
+
+    private void disable() {
+        GL13.glClientActiveTexture(GL13.GL_TEXTURE2);
+        GL13.glActiveTexture(GL13.GL_TEXTURE2);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL13.glClientActiveTexture(GL13.GL_TEXTURE0);
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+    }
+
+    public void enable() {
+        GL13.glClientActiveTexture(GL13.GL_TEXTURE2);
+        GL13.glActiveTexture(GL13.GL_TEXTURE2);
+        this.textureManager.bindTexture(this.textureIdentifier);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL13.glClientActiveTexture(GL13.GL_TEXTURE0);
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+    }
 
     public LightmapTextureManager(Minecraft client) {
         StationTextureManager textureManager = StationTextureManager.get(client.textureManager);
 
         this.client = client;
+        this.textureManager = textureManager;
 
         this.texture = new NativeImageBackedTexture(16, 16, false);
         this.textureIdentifier = textureManager.registerDynamicTexture("light_map", this.texture);
