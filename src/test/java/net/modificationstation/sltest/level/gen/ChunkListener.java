@@ -15,8 +15,8 @@ public class ChunkListener {
 //                    event.level.setTile(event.x + x, 90, event.z + z, BlockBase.DIAMOND_BLOCK.id);
         // Modded leaves and log test
         event.world.setBlock(event.x, 100, event.z, Blocks.MODDED_LOG.get().id);
-        event.world.setBlock(event.x + 1, 100, event.z, Block.LEAVES.id);
-        event.world.setBlock(event.x + 2, 100, event.z, Blocks.MODDED_LEAVES.get().id);
-        event.world.setBlock(event.x + 3, 100, event.z, Block.LEAVES.id);
+//        event.world.setBlock(event.x + 1, 100, event.z, Block.LEAVES.id);
+//        event.world.setBlock(event.x + 2, 100, event.z, Blocks.MODDED_LEAVES.get().id);
+//        event.world.setBlock(event.x + 3, 100, event.z, Block.LEAVES.id);
     }
 }
