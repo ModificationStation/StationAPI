@@ -12,8 +12,9 @@ import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.event.mod.InitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.util.Null;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.ArsenicRenderer;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder.*;
 import net.modificationstation.stationapi.mixin.render.client.TextureManagerAccessor;
@@ -30,11 +31,10 @@ import java.util.Map;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class Arsenic {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
-    @Entrypoint.Logger("Arsenic")
-    public static final Logger LOGGER = Null.get();
+    public static final Logger LOGGER = Namespace.resolve().getLogger("Arsenic");
 
     @EventListener
     private static void init(InitEvent event) {

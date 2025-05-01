@@ -10,6 +10,7 @@ import net.minecraft.class_259;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.item.ItemPlacementContext;
 import net.modificationstation.stationapi.api.registry.RegistryEntryList;
 import net.modificationstation.stationapi.api.state.State;
@@ -73,6 +74,10 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
 
     public boolean isOpaque() {
         return this.opaque;
+    }
+
+    public void onStateReplaced(World world, BlockPos pos, BlockState state) {
+        this.getBlock().onStateReplaced(this.asBlockState(), world, pos, state);
     }
 
     public boolean canReplace(ItemPlacementContext context) {

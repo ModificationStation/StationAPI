@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.impl.server.registry;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.server.event.network.PlayerPacketHandlerSetEvent;
 import net.modificationstation.stationapi.impl.registry.sync.RegistrySyncManager;
@@ -14,7 +14,7 @@ import java.lang.invoke.MethodHandles;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class ServerRegistrySynchronizer {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     @EventListener

@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.impl.client.render.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.render.item.ItemOverlayRenderEvent;
 import net.modificationstation.stationapi.api.client.item.CustomItemOverlay;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 
 import java.lang.invoke.MethodHandles;
@@ -14,7 +14,7 @@ import java.lang.invoke.MethodHandles;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class CustomItemOverlayImpl {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     @EventListener

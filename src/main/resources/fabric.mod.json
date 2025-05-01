@@ -20,7 +20,7 @@
   "environment": "*",
 
   "depends": {
-    "java": "17",
+    "java": ">=17",
     "fabricloader": "*",
     "minecraft": "1.0.0-beta.7.3",
     "station-api-configuration": "*",

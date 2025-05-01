@@ -76,6 +76,8 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     @Mutable
     @Shadow @Final public int id;
 
+    @Shadow public abstract void onBreak(World world, int x, int y, int z);
+
     @Unique
     private RegistryEntry.Reference<Block> stationapi_registryEntry;
 
@@ -369,5 +371,12 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
         if (id < Stats.MINE_BLOCK.length) return;
         this.dropStacks(world, x, y, z, meta);
         info.cancel();
+    }
+
+    @Override
+    @Unique
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState) {
+        if (!newState.isOf((Block) (Object) this))
+            onBreak(world, pos.x, pos.y, pos.z);
     }
 }

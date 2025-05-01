@@ -7,6 +7,7 @@
     "BlockItemMixin",
     "BlockMixin",
     "BlockWithEntityMixin",
+    "BucketItemMixin",
     "CaveGenBaseMixin",
     "CaveGenMixin",
     "ChunkAccessor",

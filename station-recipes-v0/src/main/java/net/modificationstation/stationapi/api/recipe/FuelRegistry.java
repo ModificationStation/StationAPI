@@ -1,7 +1,9 @@
 package net.modificationstation.stationapi.api.recipe;
 
-import it.unimi.dsi.fastutil.ints.*;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.*;
+import lombok.val;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
@@ -34,13 +36,18 @@ public class FuelRegistry {
         if (foundKey.isPresent())
             return foundKey.getAsInt();
 
-        // Then check if the item has a specific entry
-        int fuelTime = ITEM_FUEL_TIME.get(stack.getItem()).getOrDefault(stack.getDamage(), 0);
+        // Then check if the item has an entry
+        val metaToFuel = ITEM_FUEL_TIME.get(stack.getItem());
+        if (metaToFuel == null)
+            return 0;
+
+        // And then check if there's a meta-specific entry
+        int fuelTime = metaToFuel.get(stack.getDamage());
         if (fuelTime != 0)
             return fuelTime;
 
         // Finally check if there's a wildcard
-        return ITEM_FUEL_TIME.get(stack.getItem()).getOrDefault(-1, 0);
+        return metaToFuel.get(-1);
     }
 
     @API

@@ -12,9 +12,10 @@ public class StationFlatteningNetworkingImpl implements ModInitializer {
     public void onInitialize() {
 
         // Registering packets for flattened save format
-        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("flattening/chunk_data"), FlattenedChunkDataS2CPacket.TYPE);
-        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("flattening/multi_block_change"), FlattenedMultiBlockChangeS2CPacket.TYPE);
-        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("flattening/block_change"), FlattenedBlockChangeS2CPacket.TYPE);
-        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("flattening/chunk_section_data"), FlattenedChunkSectionDataS2CPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE)
+                .accept("flattening/chunk_data", FlattenedChunkDataS2CPacket.TYPE)
+                .accept("flattening/multi_block_change", FlattenedMultiBlockChangeS2CPacket.TYPE)
+                .accept("flattening/block_change", FlattenedBlockChangeS2CPacket.TYPE)
+                .accept("flattening/chunk_section_data", FlattenedChunkSectionDataS2CPacket.TYPE);
     }
 }

@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.impl.server.entity;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.class_488;
 import net.minecraft.class_80;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.server.entity.CustomTracking;
 import net.modificationstation.stationapi.api.server.entity.HasTrackingParameters;
@@ -26,7 +26,7 @@ import java.lang.invoke.MethodHandles;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class CustomTrackingImpl {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     /**

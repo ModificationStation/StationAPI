@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.impl.client.texture;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.class_285;
 import net.minecraft.client.Minecraft;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -21,11 +20,11 @@ import net.modificationstation.stationapi.api.client.texture.TextureUtil;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.resource.*;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
-import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
 import org.apache.logging.log4j.Logger;
 
@@ -41,14 +40,12 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class StationRenderImpl {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
-    @Entrypoint.Namespace
-    public static final Namespace NAMESPACE = Null.get();
+    public static final Namespace NAMESPACE = Namespace.resolve();
 
-    @Entrypoint.Logger("StationRenderer|API")
-    public static final Logger LOGGER = Null.get();
+    public static final Logger LOGGER = NAMESPACE.getLogger("StationRenderer|API");
 
     public static ExpandableAtlas getTerrain() {
         return TERRAIN;
