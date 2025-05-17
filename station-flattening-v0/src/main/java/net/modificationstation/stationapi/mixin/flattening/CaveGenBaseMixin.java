@@ -20,6 +20,9 @@ class CaveGenBaseMixin implements CaveGenBaseImpl {
     @Override
     @Unique
     public World stationapi_getWorld() {
+        if (stationapi_world == null) {
+            throw new RuntimeException("stationapi_world is null, use CaveGenBaseImpl.stationapi_setWorld in your custom ChunkSource constructor to fix.");
+        }
         return stationapi_world;
     }
 }
