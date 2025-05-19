@@ -1,6 +1,7 @@
 package net.modificationstation.sltest.item;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
+import net.minecraft.block.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ToolMaterial;
 import net.modificationstation.sltest.block.Blocks;
@@ -13,6 +14,7 @@ import net.modificationstation.stationapi.api.registry.BlockRegistry;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.template.item.BlockStateItem;
+import net.modificationstation.stationapi.api.template.item.TemplateDoorItem;
 
 import static net.modificationstation.sltest.SLTest.NAMESPACE;
 
@@ -41,7 +43,7 @@ public class ItemListener {
         testShears = new TestShearsItem(NAMESPACE.id("test_shears")).setTranslationKey(NAMESPACE, "test_shears");
         pacifistSword = new PacifistSwordItem(NAMESPACE.id("pacifist_sword")).setTranslationKey(NAMESPACE, "pacifist_sword");
         dullPickaxe = new DullPickaxeItem(NAMESPACE.id("dull_pickaxe")).setTranslationKey(NAMESPACE, "dull_pickaxe");
-
+        fancyDoor = new TemplateDoorItem(NAMESPACE.id("fancy_wood_door"), Material.WOOD, Blocks.FANCY_WOOD_DOOR.get()).setTranslationKey(NAMESPACE, "fancyWoodDoor");
 
     }
 
@@ -58,4 +60,5 @@ public class ItemListener {
     public static Item testShears;
     public static Item pacifistSword;
     public static Item dullPickaxe;
+    public static Item fancyDoor;
 }
