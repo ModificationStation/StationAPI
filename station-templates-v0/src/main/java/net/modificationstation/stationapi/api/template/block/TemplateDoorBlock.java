@@ -45,7 +45,7 @@ public class TemplateDoorBlock extends DoorBlock implements BlockTemplate {
 
     @Override
     public int getDroppedItemId(int blockMeta, Random random) {
-        if ((blockMeta & 8) != 0) {
+        if (isTop(blockMeta)) {
             return 0;
         } else {
             return doorItem.id;
