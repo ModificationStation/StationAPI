@@ -2,11 +2,14 @@ package net.modificationstation.stationapi.mixin.flattening.client;
 
 import net.minecraft.block.Block;
 import net.minecraft.class_454;
+import net.minecraft.client.network.ClientNetworkHandler;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionData;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
 import net.modificationstation.stationapi.impl.client.world.ClientBlockChange;
+import net.modificationstation.stationapi.impl.world.StationClientWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,11 +20,23 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.LinkedList;
 
 @Mixin(class_454.class)
-abstract class ClientWorldMixin extends World {
+abstract class ClientWorldMixin extends World implements StationClientWorld {
+    @Unique boolean isModded = false;
+
     @Shadow private LinkedList field_1722;
 
     private ClientWorldMixin(DimensionData arg, String string, Dimension arg2, long l) {
         super(arg, string, arg2, l);
+    }
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    void mpCrashWorkaround(ClientNetworkHandler handler, long l, int i, CallbackInfo ci) {
+        isModded = ((ModdedPacketHandler) handler).isModded();
+    }
+
+    @Override
+    public boolean stationAPI$isModded() {
+        return isModded;
     }
 
     @ModifyConstant(method = "method_1494(IIZ)V", constant = @Constant(intValue = 0))
