@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BlockMixin",
+    "CropBlockMixin",
     "DyeItemMixin",
     "EntityAccessor",
     "EntityMixin",
@@ -13,6 +14,7 @@
     "ItemStackMixin",
     "PlayerEntityMixin",
     "PlayerInventoryMixin",
+    "SaplingBlockMixin",
     "ScreenHandlerMixin",
     "StatsMixin",
     "dispenser.block.DispenserBlockMixin",
