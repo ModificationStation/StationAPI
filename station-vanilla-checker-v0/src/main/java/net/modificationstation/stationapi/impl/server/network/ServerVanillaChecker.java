@@ -35,7 +35,7 @@ public class ServerVanillaChecker {
     private static void onPlayerLogin(PlayerAttemptLoginEvent event) {
         if ((event.loginHelloPacket.worldSeed & MASK) == MASK) {
             Map<String, String> mods = new HashMap<>();
-            FabricLoader.getInstance().getAllMods().forEach(modContainer -> mods.put(modContainer.getMetadata().getName(), modContainer.getMetadata().getVersion().getFriendlyString()));
+            FabricLoader.getInstance().getAllMods().forEach(modContainer -> mods.put(modContainer.getMetadata().getId(), modContainer.getMetadata().getVersion().getFriendlyString()));
             ((ModdedPacketHandlerSetter) event.serverLoginNetworkHandler).setModded(mods);
         }
         else if (!CLIENT_REQUIRED_MODS.isEmpty()) {
