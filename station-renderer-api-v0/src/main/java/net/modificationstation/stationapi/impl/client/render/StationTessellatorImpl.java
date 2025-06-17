@@ -7,7 +7,7 @@ import net.modificationstation.stationapi.api.client.render.model.BakedQuad;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import net.modificationstation.stationapi.api.util.math.Matrix4f;
 import net.modificationstation.stationapi.api.util.math.Vec3f;
-import net.modificationstation.stationapi.api.util.math.Vector4f;
+import net.modificationstation.stationapi.api.util.math.Vec4f;
 import net.modificationstation.stationapi.mixin.render.client.TessellatorAccessor;
 
 import java.nio.ByteBuffer;
@@ -20,7 +20,7 @@ public class StationTessellatorImpl implements StationTessellator {
     private final Tessellator self;
     private final TessellatorAccessor access;
     private final int[] fastVertexData = new int[32];
-    private final Vector4f damageUV = new Vector4f();
+    private final Vec4f damageUV = new Vec4f();
 
     public StationTessellatorImpl(Tessellator tessellator) {
         self = tessellator;

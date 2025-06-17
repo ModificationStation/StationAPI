@@ -45,13 +45,13 @@ public class BakedQuadFactory {
         Matrix4f matrix4f = AffineTransformations.uvLock(rotation, orientation, () -> "Unable to resolve UVLock for model: " + modelId).getMatrix();
         float f = texture.getU(texture.getDirectionIndex(0));
         float g = texture.getV(texture.getDirectionIndex(0));
-        Vector4f vector4f = new Vector4f(f / 16.0F, g / 16.0F, 0.0F, 1.0F);
+        Vec4f vector4f = new Vec4f(f / 16.0F, g / 16.0F, 0.0F, 1.0F);
         vector4f.transform(matrix4f);
         float h = 16.0F * vector4f.getX();
         float i = 16.0F * vector4f.getY();
         float j = texture.getU(texture.getDirectionIndex(2));
         float k = texture.getV(texture.getDirectionIndex(2));
-        Vector4f vector4f2 = new Vector4f(j / 16.0F, k / 16.0F, 0.0F, 1.0F);
+        Vec4f vector4f2 = new Vec4f(j / 16.0F, k / 16.0F, 0.0F, 1.0F);
         vector4f2.transform(matrix4f);
         float l = 16.0F * vector4f2.getX();
         float m = 16.0F * vector4f2.getY();
@@ -166,7 +166,7 @@ public class BakedQuadFactory {
     }
 
     private void transformVertex(Vec3f vertex, Vec3f origin, Matrix4f transformationMatrix, Vec3f scale) {
-        Vector4f vector4f = new Vector4f(vertex.getX() - origin.getX(), vertex.getY() - origin.getY(), vertex.getZ() - origin.getZ(), 1.0F);
+        Vec4f vector4f = new Vec4f(vertex.getX() - origin.getX(), vertex.getY() - origin.getY(), vertex.getZ() - origin.getZ(), 1.0F);
         vector4f.transform(transformationMatrix);
         vector4f.multiplyComponentwise(scale);
         vertex.set(vector4f.getX() + origin.getX(), vector4f.getY() + origin.getY(), vector4f.getZ() + origin.getZ());
