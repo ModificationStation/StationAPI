@@ -14,7 +14,7 @@ public class ChunkListener {
 //                if ((event.biome == Biome.FOREST || event.biome == Biome.SEASONAL_FOREST) && event.random.nextBoolean())
 //                    event.level.setTile(event.x + x, 90, event.z + z, BlockBase.DIAMOND_BLOCK.id);
         // Modded leaves and log test
-        event.world.setBlock(event.x, 100, event.z, Blocks.MODDED_LOG.get().id);
+        event.world.setBlock(event.x + 8, 100, event.z + 8, Blocks.MODDED_LOG.get().id);
 //        event.world.setBlock(event.x + 1, 100, event.z, Block.LEAVES.id);
 //        event.world.setBlock(event.x + 2, 100, event.z, Blocks.MODDED_LEAVES.get().id);
 //        event.world.setBlock(event.x + 3, 100, event.z, Block.LEAVES.id);
