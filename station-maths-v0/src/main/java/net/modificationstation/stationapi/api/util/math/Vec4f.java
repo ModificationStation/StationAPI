@@ -1,21 +1,21 @@
 package net.modificationstation.stationapi.api.util.math;
 
-public class Vector4f {
+public class Vec4f {
     private float x;
     private float y;
     private float z;
     private float w;
 
-    public Vector4f() {}
+    public Vec4f() {}
 
-    public Vector4f(float x, float y, float z, float w) {
+    public Vec4f(float x, float y, float z, float w) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
     }
 
-    public Vector4f(Vec3f vector) {
+    public Vec4f(Vec3f vector) {
         this(vector.getX(), vector.getY(), vector.getZ(), 1.0F);
     }
 
@@ -23,7 +23,7 @@ public class Vector4f {
         if (this == o) {
             return true;
         } else if (o != null && this.getClass() == o.getClass()) {
-            Vector4f vector4f = (Vector4f)o;
+            Vec4f vector4f = (Vec4f)o;
             if (Float.compare(vector4f.x, this.x) != 0) {
                 return false;
             } else if (Float.compare(vector4f.y, this.y) != 0) {
@@ -75,7 +75,7 @@ public class Vector4f {
         this.w = w;
     }
 
-    public float dotProduct(Vector4f other) {
+    public float dotProduct(Vec4f other) {
         return this.x * other.x + this.y * other.y + this.z * other.z + this.w * other.w;
     }
 

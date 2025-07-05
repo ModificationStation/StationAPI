@@ -23,7 +23,7 @@ public final class Vec3f {
         this.z = z;
     }
 
-    public Vec3f(Vector4f vec) {
+    public Vec3f(Vec4f vec) {
         this(vec.getX(), vec.getY(), vec.getZ());
     }
 

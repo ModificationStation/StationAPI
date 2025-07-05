@@ -7,6 +7,8 @@ import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.template.block.TemplateBlock;
+import net.modificationstation.stationapi.api.template.block.TemplateLeavesBlock;
+import net.modificationstation.stationapi.api.template.block.TemplateLogBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.lang.invoke.MethodHandles;
@@ -25,7 +27,9 @@ public enum Blocks {
     ALTAR("altar", "altar", id -> new BlockAltar(id, Material.STONE).setHardness(3)),
     VARIATION_BLOCK("variation_block", "variationBlock", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSoundGroup(Block.DEFAULT_SOUND_GROUP).disableAutoItemRegistration()),
     EMISSION_CHECKER("emission_checker", "emissionChecker", LampBlock::new),
-    INDISPENSABLE_BLOCK("indispensable_block", "indispensableBlock", IndispensableBlock::new);
+    INDISPENSABLE_BLOCK("indispensable_block", "indispensableBlock", IndispensableBlock::new),
+    MODDED_LEAVES("modded_leaves", "moddedLeaves", id -> new TemplateLeavesBlock(id, 52)),
+    MODDED_LOG("modded_log", "moddedLog", TemplateLogBlock::new);
 
     private final Runnable register;
     private Block block;
