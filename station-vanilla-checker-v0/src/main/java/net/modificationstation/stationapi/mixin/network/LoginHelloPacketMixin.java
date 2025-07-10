@@ -10,7 +10,6 @@ import net.minecraft.network.packet.login.LoginHelloPacket;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
 import net.modificationstation.stationapi.impl.network.ModListHelloPacket;
-import net.modificationstation.stationapi.impl.network.ModdedPacketHandlerSetter;
 import net.modificationstation.stationapi.mixin.network.client.ConnectScreenAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

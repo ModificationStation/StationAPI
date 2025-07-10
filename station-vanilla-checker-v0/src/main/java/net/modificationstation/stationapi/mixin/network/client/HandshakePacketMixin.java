@@ -1,14 +1,10 @@
 package net.modificationstation.stationapi.mixin.network.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.network.ClientNetworkHandler;
-import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.handshake.HandshakePacket;
 import net.minecraft.network.packet.play.DisconnectPacket;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -23,7 +19,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static net.modificationstation.stationapi.impl.network.VanillaChecker.SERVER_REQUIRED_MODS;
 
@@ -55,9 +53,13 @@ class HandshakePacketMixin {
 
             for (ModContainer clientMod : SERVER_REQUIRED_MODS) {
                 String serverModVersion = modList.get(clientMod.getMetadata().getId());
-                if (serverModVersion == null || !serverModVersion.equals(clientMod.getMetadata().getVersion().getFriendlyString())) {
+                if (serverModVersion == null) {
                     networkHandler.method_1646(new DisconnectPacket("Quitting"));
-                    minecraft.setScreen(new DisconnectedScreen("disconnect.lost", String.format("Server is missing mod or has the wrong version: %s %s (they have %s)", clientMod.getMetadata().getId(), clientMod.getMetadata().getVersion().getFriendlyString(), serverModVersion)));
+                    minecraft.setScreen(new DisconnectedScreen("disconnect.lost", String.format("Server is missing mod %s %s", clientMod.getMetadata().getId(), clientMod.getMetadata().getVersion().getFriendlyString())));
+                }
+                else if (!serverModVersion.equals(clientMod.getMetadata().getVersion().getFriendlyString())) {
+                    networkHandler.method_1646(new DisconnectPacket("Quitting"));
+                    minecraft.setScreen(new DisconnectedScreen("disconnect.lost", String.format("Server has the wrong version of mod %s %s (they have %s)", clientMod.getMetadata().getId(), clientMod.getMetadata().getVersion().getFriendlyString(), serverModVersion)));
                 }
             }
 
