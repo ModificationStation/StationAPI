@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "station-api-configuration",
+  "version": "${version}",
+
+  "name": "Station API Configuration",
+  "description": "Configuration package for StationAPI.",
+  "authors": [
+    "Modification Station"
+  ],
+  "contact": {
+    "homepage": "https://glass-launcher.net/repo/mod/stationapi",
+    "sources": "https://github.com/ModificationStation/StationAPI",
+    "issues": "https://github.com/ModificationStation/StationAPI/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/station-api-configuration/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "gcapi3": [
+      "net.modificationstation.stationapi.config.StationConfig"
+    ],
+    "gcapi3:factory_provider": [
+      "net.modificationstation.stationapi.config.FactoryProvider"
+    ]
+  },
+
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "1.0.0-beta.7.3"
+  },
+
+  "custom": {
+    "modmenu:showIfContained": true
+  }
+}
