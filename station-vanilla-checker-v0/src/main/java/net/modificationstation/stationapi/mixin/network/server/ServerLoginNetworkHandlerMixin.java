@@ -7,7 +7,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.packet.handshake.HandshakePacket;
 import net.minecraft.network.packet.login.LoginHelloPacket;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
@@ -22,14 +21,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.impl.network.VanillaChecker.CLIENT_REQUIRED_MODS;
-import static net.modificationstation.stationapi.impl.network.VanillaChecker.SERVER_REQUIRED_MODS;
 
 @Mixin(ServerLoginNetworkHandler.class)
 abstract class ServerLoginNetworkHandlerMixin implements ModdedPacketHandler, ModdedPacketHandlerSetter {
