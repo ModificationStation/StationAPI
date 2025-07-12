@@ -4,13 +4,16 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
-import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.effect.EntityEffectType;
 
-public class TestPlayerEffect extends EntityEffect {
+public class TestPlayerEffect extends EntityEffect<TestPlayerEffect> {
+    public static final EntityEffectType<TestPlayerEffect> TYPE = EntityEffectType
+            .builder(TestPlayerEffect::new).build();
+
     private int originalHealth;
     
-    public TestPlayerEffect(Identifier id, Entity entity, int ticks) {
-        super(id, entity, ticks);
+    public TestPlayerEffect(Entity entity, int ticks) {
+        super(entity, ticks);
         if (!(entity instanceof PlayerEntity)) {
             throw new RuntimeException("Effect can be applied only on player");
         }
@@ -39,5 +42,10 @@ public class TestPlayerEffect extends EntityEffect {
     @Override
     protected void readCustomData(NbtCompound tag) {
         originalHealth = tag.getInt("original_health");
+    }
+
+    @Override
+    public EntityEffectType<TestPlayerEffect> getType() {
+        return TYPE;
     }
 }

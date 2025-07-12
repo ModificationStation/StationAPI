@@ -63,12 +63,12 @@ public interface StationEffectEntity {
     }
     
     @Environment(EnvType.CLIENT)
-    default Collection<EntityEffect> getRenderEffects() {
+    default Collection<EntityEffect<?>> getRenderEffects() {
         return Util.assertImpl();
     }
     
     @Environment(EnvType.CLIENT)
-    default void addEffect(EntityEffect effect) {
+    default void addEffect(EntityEffect<?> effect) {
         Util.assertImpl();
     }
     

@@ -5,22 +5,20 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
-import net.modificationstation.stationapi.api.util.Identifier;
 
-public abstract class EntityEffect {
+public abstract class EntityEffect<THIS extends EntityEffect<THIS>> {
     protected static final int INFINITY_TICKS = -1;
-    private final Identifier effectID;
     protected Entity entity;
     private int ticks;
     
     private final String nameTranslationKey;
     private final String descriptionTranslationKey;
     
-    public EntityEffect(Identifier effectID, Entity entity, int ticks) {
-        this.effectID = effectID;
+    protected EntityEffect(Entity entity, int ticks) {
         this.entity = entity;
         this.ticks = ticks;
-        nameTranslationKey = "gui.stationapi.effect." + effectID.namespace + "." + effectID.path + ".name";
+        var effectId =  getType().registryEntry.registryKey().getValue();
+        nameTranslationKey = "gui.stationapi.effect." + effectId.namespace + "." + effectId.path + ".name";
         descriptionTranslationKey = nameTranslationKey.substring(0, nameTranslationKey.length() - 4) + "desc";
     }
     
@@ -50,10 +48,8 @@ public abstract class EntityEffect {
      * @param tag effect data root tag
      */
     protected abstract void readCustomData(NbtCompound tag);
-    
-    public final Identifier getEffectID() {
-        return effectID;
-    }
+
+    public abstract EntityEffectType<THIS> getType();
     
     /**
      * Get remaining effect ticks.
@@ -98,7 +94,7 @@ public abstract class EntityEffect {
         if (!isInfinite()) {
             ticks--;
             if (ticks == 0) {
-                entity.removeEffect(effectID);
+                entity.removeEffect(getType().registryEntry.registryKey().getValue());
             }
         }
     }
@@ -113,5 +109,10 @@ public abstract class EntityEffect {
     public final void read(NbtCompound tag) {
         ticks = tag.getInt("ticks");
         readCustomData(tag);
+    }
+
+    @FunctionalInterface
+    public interface Factory<EFFECT_INSTANCE extends EntityEffect<EFFECT_INSTANCE>> {
+        EFFECT_INSTANCE create(Entity entity, int ticks);
     }
 }

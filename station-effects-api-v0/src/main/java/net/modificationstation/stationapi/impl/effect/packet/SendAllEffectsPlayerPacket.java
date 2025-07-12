@@ -8,9 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
-import net.modificationstation.stationapi.api.effect.EntityEffectRegistry;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
-import net.modificationstation.stationapi.api.effect.EntityEffectFactory;
+import net.modificationstation.stationapi.api.effect.EntityEffectTypeRegistry;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.api.util.Identifier;
@@ -81,11 +80,12 @@ public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<
         @SuppressWarnings("deprecation")
         PlayerEntity player = ((Minecraft) FabricLoader.getInstance().getGameInstance()).player;
         for (ReferenceIntPair<Identifier> pair : effects) {
-            EntityEffectFactory factory = EntityEffectRegistry.INSTANCE.get(pair.first());
+            EntityEffect.Factory<?> factory = EntityEffectTypeRegistry.INSTANCE.getOrEmpty(pair.first())
+                    .orElseThrow().factory;
             if (factory == null) {
                 throw new RuntimeException("Effect with ID " + pair.first() + " is not registered");
             }
-            EntityEffect effect = factory.create(pair.first(), player, pair.secondInt());
+            EntityEffect<?> effect = factory.create(player, pair.secondInt());
             player.addEffect(effect);
         }
     }
