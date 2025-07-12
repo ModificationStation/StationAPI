@@ -75,6 +75,7 @@ public class MixinEntity implements StationEffectEntity {
             PacketHelper.send(new EffectRemoveAllPacket());
         }
         if (stationapi_effects == null) return;
+        stationapi_effects.values().forEach(EntityEffect::onRemoved);
         stationapi_effects = null;
     }
     
