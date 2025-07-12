@@ -12,6 +12,7 @@
     "ShovelItemMixin",
     "SwordItemMixin",
     "ToolItemMixin",
+    "ToolMaterialAccessor",
     "ToolMaterialMixin"
   ],
   "server": [

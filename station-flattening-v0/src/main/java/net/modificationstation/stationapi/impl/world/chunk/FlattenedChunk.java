@@ -11,18 +11,21 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.event.block.BlockEvent;
 import net.modificationstation.stationapi.api.event.world.BlockSetEvent;
 import net.modificationstation.stationapi.api.event.world.MetaSetEvent;
+import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
 import net.modificationstation.stationapi.mixin.flattening.ChunkAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FlattenedChunk extends Chunk {
+    private static final ThreadLocal<MutableBlockPos> CACHED_BLOCK_POS = ThreadLocal.withInitial(MutableBlockPos::new);
 
     public final ChunkSection[] sections;
     public final short firstBlock;
@@ -142,7 +145,7 @@ public class FlattenedChunk extends Chunk {
     @Override
     public int getLight(int x, int y, int z, int light) {
         ChunkSection section = getSection(y);
-        int lightLevel = section == null ? 15 : section.getLight(LightType.SKY, x, y & 15, z);
+        int lightLevel = section == null ? (world.dimension.field_2177 /* hasCeiling */ ? 0 : 15) : section.getLight(LightType.SKY, x, y & 15, z);
         if (lightLevel > 0) {
             field_953 = true;
         }
@@ -389,7 +392,7 @@ public class FlattenedChunk extends Chunk {
         ) return null;
         section.setBlockState(x, y & 15, z, state);
         if (!world.isRemote)
-            oldBlock.onBreak(this.world, worldX, y, worldZ);
+            oldState.onStateReplaced(world, CACHED_BLOCK_POS.get().set(worldX, y, worldZ), state);
         section.setMeta(x, y & 15, z, meta);
 
         if (!this.world.dimension.field_2177) {
@@ -440,7 +443,7 @@ public class FlattenedChunk extends Chunk {
                 ).isCanceled()
         ) return null;
         section.setBlockState(x, y & 15, z, state);
-        oldBlock.onBreak(this.world, worldX, y, worldZ);
+        oldState.onStateReplaced(world, CACHED_BLOCK_POS.get().set(worldX, y, worldZ), state);
         section.setMeta(x, y & 15, z, 0);
         if (Block.BLOCKS_LIGHT_OPACITY[state.getBlock().id] != 0) {
             if (y >= topY)

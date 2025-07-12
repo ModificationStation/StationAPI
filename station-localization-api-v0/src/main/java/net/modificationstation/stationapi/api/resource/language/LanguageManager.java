@@ -6,7 +6,6 @@ import lombok.val;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.resource.AssetsResourceReloaderRegisterEvent;
@@ -14,13 +13,13 @@ import net.modificationstation.stationapi.api.client.resource.ReloadableAssetsMa
 import net.modificationstation.stationapi.api.event.resource.DataReloadEvent;
 import net.modificationstation.stationapi.api.event.resource.language.TranslationInvalidationEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
 import net.modificationstation.stationapi.api.resource.IdentifiableResourceReloadListener;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.resource.SinglePreparationResourceReloader;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
-import net.modificationstation.stationapi.api.util.Null;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.profiler.DummyProfiler;
 import net.modificationstation.stationapi.api.util.profiler.Profiler;
@@ -44,12 +43,12 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public class LanguageManager extends SinglePreparationResourceReloader<Map<Object, Object>> implements IdentifiableResourceReloadListener {
     static {
-        Listener.registerLookup(MethodHandles.lookup());
+        EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
     public static final Identifier LANGUAGES = NAMESPACE.id("languages");
     @Entrypoint.Instance
-    private static final LanguageManager INSTANCE = Null.get();
+    private static LanguageManager instance;
     @NotNull
     private static Predicate<String> pathPredicate = buildPathPredicate("en_US");
     private static final Object2ReferenceMap<String, Namespace> LANG_PATHS = Util.make(new Object2ReferenceOpenHashMap<>(), paths -> {
@@ -66,7 +65,7 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
 
     public static void changeLanguage(String langDef) {
         pathPredicate = buildPathPredicate(langDef);
-        INSTANCE.reload();
+        instance.reload();
     }
 
     public static void addPath(String path) {
@@ -90,8 +89,8 @@ public class LanguageManager extends SinglePreparationResourceReloader<Map<Objec
     }
 
     private void reload() {
-        INSTANCE.apply(
-                INSTANCE.prepare(
+        instance.apply(
+                instance.prepare(
                         ReloadableAssetsManager.INSTANCE,
                         DummyProfiler.INSTANCE
                 ),

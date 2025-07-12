@@ -7,6 +7,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
+import net.modificationstation.stationapi.impl.world.StationClientWorld;
 import net.modificationstation.stationapi.impl.world.chunk.FlattenedChunk;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,8 +29,7 @@ class MultiplayerChunkCacheMixin {
             cancellable = true
     )
     public void stationapi_loadChunk(int i, int j, CallbackInfoReturnable<Chunk> cir) {
-        //noinspection deprecation
-        if (!((ModdedPacketHandler) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler()).isModded())
+        if (!((StationClientWorld) field_2555).stationAPI$isModded())
             return;
         ChunkPos vec2i = new ChunkPos(i, j);
         FlattenedChunk chunk = new FlattenedChunk(this.field_2555, i, j);

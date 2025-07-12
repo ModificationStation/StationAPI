@@ -10,14 +10,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.util.GlAllocationUtils;
-import net.modificationstation.stationapi.api.util.UnsafeProvider;
 import net.modificationstation.stationapi.api.util.Util;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.MemoryUtil;
 import org.lwjgl.opengl.GL11;
-import sun.misc.Unsafe;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -39,9 +37,6 @@ import java.util.function.IntUnaryOperator;
 @Environment(EnvType.CLIENT)
 public final class NativeImage
 implements AutoCloseable {
-
-    private static final Unsafe UNSAFE = UnsafeProvider.theUnsafe;
-
     private static final Int2IntMap BUFFERED_TO_NATIVE = Int2IntMaps.unmodifiable(Util.make(new Int2IntOpenHashMap(), map -> {
         map.defaultReturnValue(-1);
         map.put(BufferedImage.TYPE_INT_ARGB, 0);
@@ -171,8 +166,7 @@ implements AutoCloseable {
 
     @Override
     public void close() {
-        if (buffer != null)
-            UNSAFE.invokeCleaner(buffer);
+        // GC should be able to take care of this
         buffer = null;
     }
 

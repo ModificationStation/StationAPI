@@ -1,12 +1,14 @@
 package net.modificationstation.sltest.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.mine_diver.unsafeevents.listener.Listener;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.template.block.TemplateBlock;
+import net.modificationstation.stationapi.api.template.block.TemplateLeavesBlock;
+import net.modificationstation.stationapi.api.template.block.TemplateLogBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.lang.invoke.MethodHandles;
@@ -26,6 +28,8 @@ public enum Blocks {
     VARIATION_BLOCK("variation_block", "variationBlock", id -> new VariationBlock(id, Material.STONE).setHardness(.5F).setSoundGroup(Block.DEFAULT_SOUND_GROUP).disableAutoItemRegistration()),
     EMISSION_CHECKER("emission_checker", "emissionChecker", LampBlock::new),
     INDISPENSABLE_BLOCK("indispensable_block", "indispensableBlock", IndispensableBlock::new),
+    MODDED_LEAVES("modded_leaves", "moddedLeaves", id -> new TemplateLeavesBlock(id, 52)),
+    MODDED_LOG("modded_log", "moddedLog", TemplateLogBlock::new),
     EFFECT_BLOCK("effect_block", "effectBlock", EffectBlock::new),
     EFFECT_BLOCK_INF("effect_block_inf", "effectBlockInf", EffectBlockInf::new),
     EFFECT_BLOCK_CLEAR("effect_block_clear", "effectBlockClear", EffectBlockClear::new);
@@ -43,7 +47,7 @@ public enum Blocks {
 
     public static class Init {
         static {
-            Listener.registerLookup(MethodHandles.lookup());
+            EntrypointManager.registerLookup(MethodHandles.lookup());
         }
 
         @EventListener

@@ -8,6 +8,7 @@ import net.modificationstation.stationapi.api.client.color.block.BlockColors;
 import net.modificationstation.stationapi.api.client.event.color.item.ItemColorsRegisterEvent;
 import net.modificationstation.stationapi.api.item.ItemConvertible;
 import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.registry.sync.trackers.IdListTracker;
 import net.modificationstation.stationapi.api.util.collection.IdList;
 
 @Environment(value=EnvType.CLIENT)
@@ -24,6 +25,10 @@ public class ItemColors {
                         .build()
         );
         return itemColors;
+    }
+
+    public ItemColors() {
+        IdListTracker.register(ItemRegistry.INSTANCE, "ItemColors.providers", providers);
     }
 
     public int getColor(ItemStack item, int tintIndex) {

@@ -15,7 +15,7 @@ import java.util.function.BiConsumer;
  * @author mine_diver
  */
 @EventPhases(StationAPI.INTERNAL_PHASE)
-public class MessageListenerRegistryEvent extends RegistryEvent<Registry<BiConsumer<PlayerEntity, MessagePacket>>> {
+public class MessageListenerRegistryEvent extends RegistryEvent.EntryTypeBound<BiConsumer<PlayerEntity, MessagePacket>, Registry<BiConsumer<PlayerEntity, MessagePacket>>> {
     public MessageListenerRegistryEvent() {
         super(MessageListenerRegistry.INSTANCE);
     }

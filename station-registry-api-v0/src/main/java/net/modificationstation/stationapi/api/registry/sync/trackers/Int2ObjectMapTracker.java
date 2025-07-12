@@ -10,6 +10,7 @@ import net.mine_diver.unsafeevents.listener.EventListener;
 import net.mine_diver.unsafeevents.listener.Listener;
 import net.modificationstation.stationapi.api.event.registry.RegistryEntryAddedEvent;
 import net.modificationstation.stationapi.api.event.registry.RegistryIdRemapEvent;
+import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.registry.ListenableRegistry;
 import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.util.Identifier;
@@ -21,9 +22,9 @@ import java.util.List;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 public class Int2ObjectMapTracker<V, OV> {
-    static {
-        Listener.registerLookup(MethodHandles.lookup());
-    }
+	static {
+		EntrypointManager.registerLookup(MethodHandles.lookup());
+	}
 
     private final String name;
     private final Int2ObjectMap<OV> mappers;
