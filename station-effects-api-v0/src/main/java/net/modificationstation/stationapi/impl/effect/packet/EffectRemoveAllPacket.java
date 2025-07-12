@@ -15,7 +15,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class EffectRemoveAllPacket extends Packet implements ManagedPacket<EffectRemoveAllPacket> {
-    public static final PacketType<EffectRemoveAllPacket> TYPE = PacketType.builder(false, true, EffectRemoveAllPacket::new).build();
+    public static final PacketType<EffectRemoveAllPacket> TYPE = PacketType.builder(true, false, EffectRemoveAllPacket::new).build();
     private int entityID;
     
     public EffectRemoveAllPacket() {}

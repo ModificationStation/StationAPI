@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class SendAllEffectsPacket extends Packet implements ManagedPacket<SendAllEffectsPacket> {
-    public static final PacketType<SendAllEffectsPacket> TYPE = PacketType.builder(false, true, SendAllEffectsPacket::new).build();
+    public static final PacketType<SendAllEffectsPacket> TYPE = PacketType.builder(true, false, SendAllEffectsPacket::new).build();
     private Collection<ReferenceIntPair<Identifier>> effects;
     private int entityID;
     private int size = 8;

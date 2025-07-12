@@ -16,7 +16,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class EffectAddRemovePacket extends Packet implements ManagedPacket<EffectAddRemovePacket> {
-    public static final PacketType<EffectAddRemovePacket> TYPE = PacketType.builder(false, true, EffectAddRemovePacket::new).build();
+    public static final PacketType<EffectAddRemovePacket> TYPE = PacketType.builder(true, false, EffectAddRemovePacket::new).build();
     private Identifier effectID;
     private int entityID;
     private int ticks;

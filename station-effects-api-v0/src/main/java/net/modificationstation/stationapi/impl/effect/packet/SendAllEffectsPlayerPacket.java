@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<SendAllEffectsPlayerPacket> {
-    public static final PacketType<SendAllEffectsPlayerPacket> TYPE = PacketType.builder(true, true, SendAllEffectsPlayerPacket::new).build();
+    public static final PacketType<SendAllEffectsPlayerPacket> TYPE = PacketType.builder(true, false, SendAllEffectsPlayerPacket::new).build();
     private Collection<ReferenceIntPair<Identifier>> effects;
     private int size = 8;
     
