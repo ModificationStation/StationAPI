@@ -260,7 +260,8 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     @Override
     @Unique
     public void onBlockPlaced(World world, int x, int y, int z, BlockState replacedState) {
-        onPlaced(world, x, y, z);
+        if (!replacedState.isOf((Block) (Object) this))
+            onPlaced(world, x, y, z);
     }
 
     @ModifyVariable(
