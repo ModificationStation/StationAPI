@@ -64,7 +64,7 @@ public class Registries {
     private static <T extends Registry<?>> void validate(Registry<T> registries) {
         registries.forEach(registry -> {
             if (registry.getIds().isEmpty())
-                Util.error("Registry '" + registries.getId(registry) + "' was empty after loading");
+                LOGGER.warn("Registry '" + registries.getId(registry) + "' was empty after loading");
             if (registry instanceof DefaultedRegistry<?> defaultedRegistry) {
                 Identifier identifier = defaultedRegistry.getDefaultId();
                 Validate.notNull(registry.get(identifier), "Missing default of DefaultedMappedRegistry: " + identifier);
