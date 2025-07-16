@@ -38,12 +38,13 @@ public class MixinEntity implements StationEffectEntity {
         if (effectType == null) {
             throw new RuntimeException("Effect with ID " + effectID + " is not registered");
         }
-        EntityEffect<?> effect = effectType.factory.create(Entity.class.cast(this), ticks);
+        Entity thiz = Entity.class.cast(this);
+        EntityEffect<?> effect = effectType.factory.create(thiz, ticks);
         if (stationapi_effects == null) {
             stationapi_effects = new Reference2ReferenceOpenHashMap<>();
         }
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            PacketHelper.send(new EffectAddRemovePacket(id, effectID, ticks));
+            PacketHelper.sendToAllTracking(thiz, new EffectAddRemovePacket(id, effectID, ticks));
         }
         stationapi_effects.put(effectID, effect);
         effect.onAdded();
@@ -55,7 +56,7 @@ public class MixinEntity implements StationEffectEntity {
         EntityEffect<?> effect = stationapi_effects.get(effectID);
         if (effect == null) return;
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            PacketHelper.send(new EffectAddRemovePacket(id, effectID, 0));
+            PacketHelper.sendToAllTracking(Entity.class.cast(this), new EffectAddRemovePacket(id, effectID, 0));
         }
         effect.onRemoved();
         if (stationapi_effects != null) {
@@ -72,7 +73,7 @@ public class MixinEntity implements StationEffectEntity {
     @Override
     public void removeAllEffects() {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            PacketHelper.send(new EffectRemoveAllPacket());
+            PacketHelper.sendToAllTracking(Entity.class.cast(this), new EffectRemoveAllPacket(id));
         }
         if (stationapi_effects == null) return;
         stationapi_effects.values().forEach(EntityEffect::onRemoved);
