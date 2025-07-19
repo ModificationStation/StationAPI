@@ -1,6 +1,8 @@
 package net.modificationstation.stationapi.api.effect;
 
 import com.mojang.serialization.Lifecycle;
+import net.modificationstation.stationapi.api.event.registry.RegistryAttribute;
+import net.modificationstation.stationapi.api.event.registry.RegistryAttributeHolder;
 import net.modificationstation.stationapi.api.registry.Registries;
 import net.modificationstation.stationapi.api.registry.RegistryKey;
 import net.modificationstation.stationapi.api.registry.SimpleRegistry;
@@ -13,5 +15,6 @@ public class EntityEffectTypeRegistry extends SimpleRegistry<EntityEffectType<?>
     
     private EntityEffectTypeRegistry() {
         super(KEY, Lifecycle.experimental(), true);
+        RegistryAttributeHolder.get(this).addAttribute(RegistryAttribute.SYNCED);
     }
 }

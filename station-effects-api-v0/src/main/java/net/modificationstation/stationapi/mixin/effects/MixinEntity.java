@@ -28,45 +28,39 @@ import java.util.*;
 
 @Mixin(Entity.class)
 public class MixinEntity implements StationEffectEntity {
-    @Unique private Map<Identifier, EntityEffect<?>> stationapi_effects;
+    @Unique private Map<EntityEffectType<?>, EntityEffect<?>> stationapi_effects;
     
     @Shadow public int id;
     
     @Override
-    public void addEffect(Identifier effectID, int ticks) {
-        EntityEffectType<?> effectType = EntityEffectTypeRegistry.INSTANCE.get(effectID);
-        if (effectType == null) {
-            throw new RuntimeException("Effect with ID " + effectID + " is not registered");
-        }
+    public void addEffect(EntityEffectType<?> effectType, int ticks) {
         Entity thiz = Entity.class.cast(this);
         EntityEffect<?> effect = effectType.factory.create(thiz, ticks);
-        if (stationapi_effects == null) {
+        if (stationapi_effects == null)
             stationapi_effects = new Reference2ReferenceOpenHashMap<>();
-        }
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            PacketHelper.sendToAllTracking(thiz, new EffectAddRemovePacket(id, effectID, ticks));
-        }
-        stationapi_effects.put(effectID, effect);
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+            PacketHelper.sendToAllTracking(thiz, new EffectAddRemovePacket(id, effectType, ticks));
+        stationapi_effects.put(effectType, effect);
         effect.onAdded();
     }
     
     @Override
-    public void removeEffect(Identifier effectID) {
+    public void removeEffect(EntityEffectType<?> effectType) {
         if (stationapi_effects == null) return;
-        EntityEffect<?> effect = stationapi_effects.get(effectID);
+        EntityEffect<?> effect = stationapi_effects.get(effectType);
         if (effect == null) return;
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            PacketHelper.sendToAllTracking(Entity.class.cast(this), new EffectAddRemovePacket(id, effectID, 0));
+            PacketHelper.sendToAllTracking(Entity.class.cast(this), new EffectAddRemovePacket(id, effectType, 0));
         }
         effect.onRemoved();
         if (stationapi_effects != null) {
-            stationapi_effects.remove(effectID, effect);
+            stationapi_effects.remove(effectType, effect);
             if (stationapi_effects.isEmpty()) stationapi_effects = null;
         }
     }
     
     @Override
-    public Collection<Identifier> getEffects() {
+    public Collection<EntityEffectType<?>> getEffects() {
         return stationapi_effects == null ? Collections.emptySet() : stationapi_effects.keySet();
     }
     
@@ -81,14 +75,14 @@ public class MixinEntity implements StationEffectEntity {
     }
     
     @Override
-    public boolean hasEffect(Identifier effectID) {
+    public boolean hasEffect(EntityEffectType<?> effectType) {
         if (stationapi_effects == null) return false;
-        return stationapi_effects.containsKey(effectID);
+        return stationapi_effects.containsKey(effectType);
     }
     
     @Override
-    public int getEffectTicks(Identifier effectID) {
-        EntityEffect<?> effect = stationapi_effects.get(effectID);
+    public int getEffectTicks(EntityEffectType<?> effectType) {
+        EntityEffect<?> effect = stationapi_effects.get(effectType);
         return effect == null ? 0 : effect.getTicks();
     }
     
@@ -102,16 +96,16 @@ public class MixinEntity implements StationEffectEntity {
     @Environment(EnvType.CLIENT)
     public void addEffect(EntityEffect<?> effect) {
         if (stationapi_effects == null) stationapi_effects = new Reference2ReferenceOpenHashMap<>();
-        stationapi_effects.put(effect.getType().registryEntry.registryKey().getValue(), effect);
+        stationapi_effects.put(effect.getType(), effect);
     }
     
     @Override
     @Environment(EnvType.SERVER)
-    public Collection<ReferenceIntPair<Identifier>> getServerEffects() {
+    public Collection<ReferenceIntPair<EntityEffectType<?>>> getServerEffects() {
         if (stationapi_effects == null || stationapi_effects.isEmpty()) return null;
-        List<ReferenceIntPair<Identifier>> effectPairs = new ArrayList<>(stationapi_effects.size());
+        List<ReferenceIntPair<EntityEffectType<?>>> effectPairs = new ArrayList<>(stationapi_effects.size());
         for (EntityEffect<?> effect : stationapi_effects.values()) {
-            effectPairs.add(ReferenceIntPair.of(effect.getType().registryEntry.registryKey().getValue(), effect.getTicks()));
+            effectPairs.add(ReferenceIntPair.of(effect.getType(), effect.getTicks()));
         }
         return effectPairs;
     }
@@ -128,9 +122,9 @@ public class MixinEntity implements StationEffectEntity {
     private void stationapi_writeEntityEffect(NbtCompound tag, CallbackInfo info) {
         if (stationapi_effects == null || stationapi_effects.isEmpty()) return;
         NbtList effects = new NbtList();
-        stationapi_effects.forEach((id, effect) -> {
+        stationapi_effects.forEach((type, effect) -> {
             NbtCompound effectTag = effect.write();
-            effectTag.putString("id", id.toString());
+            effectTag.putString("id", type.registryEntry.registryKey().getValue().toString());
             effectTag.putInt("ticks", effect.getTicks());
             effects.add(effectTag);
         });
@@ -153,7 +147,7 @@ public class MixinEntity implements StationEffectEntity {
             int ticks = effectTag.getInt("ticks");
             EntityEffect<?> effect = effectType.factory.create(Entity.class.cast(this), ticks);
             effect.read(effectTag);
-            stationapi_effects.put(id, effect);
+            stationapi_effects.put(effectType, effect);
         }
     }
 }

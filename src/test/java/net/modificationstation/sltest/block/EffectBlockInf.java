@@ -4,7 +4,7 @@ import net.minecraft.block.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.modificationstation.sltest.SLTest;
+import net.modificationstation.sltest.effect.TestPlayerInfEffect;
 import net.modificationstation.stationapi.api.template.block.TemplateBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 
@@ -25,7 +25,7 @@ public class EffectBlockInf extends TemplateBlock {
 
     @Override
     public boolean onUse(World level, int x, int y, int z, PlayerEntity player) {
-        player.addInfiniteEffect(SLTest.NAMESPACE.id("infinity_effect"));
+        player.addInfiniteEffect(TestPlayerInfEffect.TYPE);
         return true;
     }
 }

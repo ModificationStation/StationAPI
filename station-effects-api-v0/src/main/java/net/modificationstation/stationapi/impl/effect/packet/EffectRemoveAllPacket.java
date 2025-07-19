@@ -15,7 +15,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class EffectRemoveAllPacket extends Packet implements ManagedPacket<EffectRemoveAllPacket> {
-    public static final PacketType<EffectRemoveAllPacket> TYPE = PacketType.builder(true, false, EffectRemoveAllPacket::new).build();
+    public static final PacketType<EffectRemoveAllPacket> TYPE = PacketType
+            .builder(true, false, EffectRemoveAllPacket::new).build();
+
     private int entityID;
     
     public EffectRemoveAllPacket() {}
@@ -28,8 +30,7 @@ public class EffectRemoveAllPacket extends Packet implements ManagedPacket<Effec
     public void read(DataInputStream stream) {
         try {
             entityID = stream.readInt();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -38,8 +39,7 @@ public class EffectRemoveAllPacket extends Packet implements ManagedPacket<Effec
     public void write(DataOutputStream stream) {
         try {
             stream.writeInt(entityID);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

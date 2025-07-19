@@ -3,7 +3,6 @@ package net.modificationstation.stationapi.api.effect;
 import it.unimi.dsi.fastutil.objects.ReferenceIntPair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 
 import java.util.Collection;
@@ -11,34 +10,38 @@ import java.util.Collection;
 public interface StationEffectEntity {
     /**
      * Adds specified effect to the entity, effect will be infinite - it will be applied until manually removed.
-     * @param effectID {@link Identifier} effect ID.
+     *
+     * @param effectType {@link EntityEffectType} effect ID.
      */
-    default void addInfiniteEffect(Identifier effectID) {
-        addEffect(effectID, EntityEffect.INFINITY_TICKS);
+    default void addInfiniteEffect(EntityEffectType<?> effectType) {
+        addEffect(effectType, EntityEffect.INFINITY_TICKS);
     }
     
     /**
      * Adds specified effect to the entity.
-     * @param effectID {@link Identifier} effect ID.
-     * @param ticks ticks for effect to be applied.
+     *
+     * @param effectType {@link EntityEffectType} effect ID.
+     * @param ticks      ticks for effect to be applied.
      */
-    default void addEffect(Identifier effectID, int ticks) {
+    default void addEffect(EntityEffectType<?> effectType, int ticks) {
         Util.assertImpl();
     }
     
     /**
      * Removes specified effect from entity if the effect exists.
-     * @param effectID {@link Identifier} effect ID.
+     *
+     * @param effectType {@link EntityEffectType} effect ID.
      */
-    default void removeEffect(Identifier effectID) {
+    default void removeEffect(EntityEffectType<?> effectType) {
         Util.assertImpl();
     }
     
     /**
      * Get all entity effects.
-     * @return {@link Collection} of effect {@link Identifier} ID
+     *
+     * @return {@link Collection} of effect {@link EntityEffectType} ID
      */
-    default Collection<Identifier> getEffects() {
+    default Collection<EntityEffectType<?>> getEffects() {
         return Util.assertImpl();
     }
     
@@ -48,9 +51,10 @@ public interface StationEffectEntity {
     
     /**
      * Check if entity has specified effect.
-     * @param effectID {@link Identifier} effect ID.
+     *
+     * @param effectType {@link EntityEffectType} effect ID.
      */
-    default boolean hasEffect(Identifier effectID) {
+    default boolean hasEffect(EntityEffectType<?> effectType) {
         return Util.assertImpl();
     }
     
@@ -58,7 +62,7 @@ public interface StationEffectEntity {
      * Get an amount of remaining ticks that effect will stay on entity. If there is no effect will return 0.
      * If effect is infinity will return {@code EntityEffect.INFINITY_TICKS}
      */
-    default int getEffectTicks(Identifier effectID) {
+    default int getEffectTicks(EntityEffectType<?> effectType) {
         return Util.assertImpl();
     }
     
@@ -73,7 +77,7 @@ public interface StationEffectEntity {
     }
     
     @Environment(EnvType.SERVER)
-    default Collection<ReferenceIntPair<Identifier>> getServerEffects() {
+    default Collection<ReferenceIntPair<EntityEffectType<?>>> getServerEffects() {
         return Util.assertImpl();
     }
 }

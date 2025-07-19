@@ -94,7 +94,7 @@ public abstract class EntityEffect<THIS extends EntityEffect<THIS>> {
         if (!isInfinite()) {
             ticks--;
             if (ticks == 0) {
-                entity.removeEffect(getType().registryEntry.registryKey().getValue());
+                entity.removeEffect(getType());
             }
         }
     }
