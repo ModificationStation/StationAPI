@@ -70,7 +70,6 @@ public class SendAllEffectsPlayerS2CPacket extends Packet implements ManagedPack
     
     @Override
     public void apply(NetworkHandler networkHandler) {
-        if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;
         applyEffects();
     }
     

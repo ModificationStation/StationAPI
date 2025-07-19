@@ -46,7 +46,6 @@ public class EffectRemoveAllS2CPacket extends Packet implements ManagedPacket<Ef
     
     @Override
     public void apply(NetworkHandler networkHandler) {
-        if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;
         ClientNetworkHandlerAccessor handler = (ClientNetworkHandlerAccessor) networkHandler;
         Entity entity = handler.stationapi_getEntityByID(entityID);
         entity.removeAllEffects();

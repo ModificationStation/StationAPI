@@ -73,7 +73,6 @@ public class SendAllEffectsS2CPacket extends Packet implements ManagedPacket<Sen
     
     @Override
     public void apply(NetworkHandler networkHandler) {
-        if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;
         ClientNetworkHandlerAccessor handler = (ClientNetworkHandlerAccessor) networkHandler;
         Entity entity = handler.stationapi_getEntityByID(entityID);
         for (IdAndTicksPair pair : effects)
