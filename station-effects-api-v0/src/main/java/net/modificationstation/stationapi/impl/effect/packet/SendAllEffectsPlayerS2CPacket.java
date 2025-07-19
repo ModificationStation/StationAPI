@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.impl.effect.packet;
 
-import it.unimi.dsi.fastutil.objects.ReferenceIntPair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -8,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
-import net.modificationstation.stationapi.api.effect.EntityEffectType;
+import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.effect.EntityEffectTypeRegistry;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
@@ -29,16 +28,16 @@ public class SendAllEffectsPlayerS2CPacket extends Packet implements ManagedPack
     private final Collection<IdAndTicksPair> effects;
     private int size = 8;
     
-    public SendAllEffectsPlayerS2CPacket() {
+    private SendAllEffectsPlayerS2CPacket() {
         effects = new ArrayList<>();
     }
     
-    public SendAllEffectsPlayerS2CPacket(Collection<ReferenceIntPair<EntityEffectType<?>>> effects) {
+    public SendAllEffectsPlayerS2CPacket(Collection<EntityEffect<?>> effects) {
         this.effects = effects
                 .stream()
-                .map(pair -> new IdAndTicksPair(
-                        EntityEffectTypeRegistry.INSTANCE.getRawId(pair.first()),
-                        pair.secondInt()
+                .map(effect -> new IdAndTicksPair(
+                        EntityEffectTypeRegistry.INSTANCE.getRawId(effect.getType()),
+                        effect.getTicks()
                 ))
                 .toList();
     }

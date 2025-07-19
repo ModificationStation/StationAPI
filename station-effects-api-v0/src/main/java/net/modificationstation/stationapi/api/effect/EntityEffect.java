@@ -7,7 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 
 public abstract class EntityEffect<THIS extends EntityEffect<THIS>> {
-    protected static final int INFINITY_TICKS = -1;
+    public static final int INFINITY_TICKS = -1;
     protected Entity entity;
     private int ticks;
     

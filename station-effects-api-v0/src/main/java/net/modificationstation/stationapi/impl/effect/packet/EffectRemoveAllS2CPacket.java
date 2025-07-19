@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.impl.effect.packet;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
@@ -20,7 +18,7 @@ public class EffectRemoveAllS2CPacket extends Packet implements ManagedPacket<Ef
 
     private int entityID;
     
-    public EffectRemoveAllS2CPacket() {}
+    private EffectRemoveAllS2CPacket() {}
     
     public EffectRemoveAllS2CPacket(int entityID) {
         this.entityID = entityID;

@@ -22,7 +22,7 @@ public class Class174Mixin {
         shift = Shift.AFTER, ordinal = 0
     ))
     private void stationapi_updateEntities(ServerPlayerEntity player, CallbackInfo info) {
-        var effects = field_597.getServerEffects();
+        var effects = field_597.getEffects();
         if (effects == null) return;
         PacketHelper.sendTo(player, new SendAllEffectsS2CPacket(field_597.id, effects));
     }

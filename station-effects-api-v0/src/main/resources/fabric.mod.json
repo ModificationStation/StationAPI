@@ -36,7 +36,7 @@
     "modmenu:api": true,
     "loom:injected_interfaces": {
       "net/minecraft/class_57": [
-        "net/modificationstation/stationapi/api/effect/StationEffectEntity"
+        "net/modificationstation/stationapi/api/entity/StationEffectsEntity"
       ]
     }
   }

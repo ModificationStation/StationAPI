@@ -1,13 +1,14 @@
-package net.modificationstation.stationapi.api.effect;
+package net.modificationstation.stationapi.api.entity;
 
-import it.unimi.dsi.fastutil.objects.ReferenceIntPair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.modificationstation.stationapi.api.effect.EntityEffect;
+import net.modificationstation.stationapi.api.effect.EntityEffectType;
 import net.modificationstation.stationapi.api.util.Util;
 
 import java.util.Collection;
 
-public interface StationEffectEntity {
+public interface StationEffectsEntity {
     /**
      * Adds specified effect to the entity, effect will be infinite - it will be applied until manually removed.
      *
@@ -41,7 +42,7 @@ public interface StationEffectEntity {
      *
      * @return {@link Collection} of effect {@link EntityEffectType} ID
      */
-    default Collection<EntityEffectType<?>> getEffects() {
+    default Collection<EntityEffect<?>> getEffects() {
         return Util.assertImpl();
     }
     
@@ -67,17 +68,7 @@ public interface StationEffectEntity {
     }
     
     @Environment(EnvType.CLIENT)
-    default Collection<EntityEffect<?>> getRenderEffects() {
-        return Util.assertImpl();
-    }
-    
-    @Environment(EnvType.CLIENT)
     default void addEffect(EntityEffect<?> effect) {
         Util.assertImpl();
-    }
-    
-    @Environment(EnvType.SERVER)
-    default Collection<ReferenceIntPair<EntityEffectType<?>>> getServerEffects() {
-        return Util.assertImpl();
     }
 }

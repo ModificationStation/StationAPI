@@ -1,7 +1,5 @@
 package net.modificationstation.stationapi.impl.effect.packet;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
@@ -25,7 +23,7 @@ public class EffectAddRemoveS2CPacket extends Packet implements ManagedPacket<Ef
     private int ticks;
     private int size = 11;
     
-    public EffectAddRemoveS2CPacket() {}
+    private EffectAddRemoveS2CPacket() {}
     
     public EffectAddRemoveS2CPacket(int entityId, EntityEffectType<?> effectType, int ticks) {
         this.effectId = EntityEffectTypeRegistry.INSTANCE.getRawId(effectType);

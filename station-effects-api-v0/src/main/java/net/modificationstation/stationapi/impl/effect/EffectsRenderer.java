@@ -28,8 +28,8 @@ public class EffectsRenderer extends DrawContext {
     };
     
     public void renderEffects(Minecraft minecraft, float delta, boolean extended) {
-        Collection<EntityEffect<?>> effects = minecraft.player.getRenderEffects();
-        if (effects == null || effects.isEmpty()) return;
+        Collection<EntityEffect<?>> effects = minecraft.player.getEffects();
+        if (effects.isEmpty()) return;
         
         textRenderer = minecraft.textRenderer;
         
