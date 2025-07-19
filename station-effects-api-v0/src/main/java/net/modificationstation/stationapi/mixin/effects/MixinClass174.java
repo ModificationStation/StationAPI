@@ -4,7 +4,7 @@ import net.minecraft.class_174;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
-import net.modificationstation.stationapi.impl.effect.packet.SendAllEffectsPacket;
+import net.modificationstation.stationapi.impl.effect.packet.SendAllEffectsS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,6 +24,6 @@ public class MixinClass174 {
     private void stationapi_updateEntities(ServerPlayerEntity player, CallbackInfo info) {
         var effects = field_597.getServerEffects();
         if (effects == null) return;
-        PacketHelper.sendTo(player, new SendAllEffectsPacket(field_597.id, effects));
+        PacketHelper.sendTo(player, new SendAllEffectsS2CPacket(field_597.id, effects));
     }
 }

@@ -14,15 +14,15 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class EffectRemoveAllPacket extends Packet implements ManagedPacket<EffectRemoveAllPacket> {
-    public static final PacketType<EffectRemoveAllPacket> TYPE = PacketType
-            .builder(true, false, EffectRemoveAllPacket::new).build();
+public class EffectRemoveAllS2CPacket extends Packet implements ManagedPacket<EffectRemoveAllS2CPacket> {
+    public static final PacketType<EffectRemoveAllS2CPacket> TYPE = PacketType
+            .builder(true, false, EffectRemoveAllS2CPacket::new).build();
 
     private int entityID;
     
-    public EffectRemoveAllPacket() {}
+    public EffectRemoveAllS2CPacket() {}
     
-    public EffectRemoveAllPacket(int entityID) {
+    public EffectRemoveAllS2CPacket(int entityID) {
         this.entityID = entityID;
     }
     
@@ -57,7 +57,7 @@ public class EffectRemoveAllPacket extends Packet implements ManagedPacket<Effec
         return 4;
     }
 
-    public @NotNull PacketType<EffectRemoveAllPacket> getType() {
+    public @NotNull PacketType<EffectRemoveAllS2CPacket> getType() {
         return TYPE;
     }
 }

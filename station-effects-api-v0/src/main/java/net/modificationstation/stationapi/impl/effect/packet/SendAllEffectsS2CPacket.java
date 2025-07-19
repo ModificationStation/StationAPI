@@ -2,16 +2,15 @@ package net.modificationstation.stationapi.impl.effect.packet;
 
 import it.unimi.dsi.fastutil.objects.ReferenceIntPair;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.effect.EntityEffectType;
 import net.modificationstation.stationapi.api.effect.EntityEffectTypeRegistry;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
+import net.modificationstation.stationapi.mixin.effects.AccessorClientNetworkHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
@@ -20,20 +19,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<SendAllEffectsPlayerPacket> {
+public class SendAllEffectsS2CPacket extends Packet implements ManagedPacket<SendAllEffectsS2CPacket> {
     private record IdAndTicksPair(int id, int ticks) {}
 
-    public static final PacketType<SendAllEffectsPlayerPacket> TYPE = PacketType
-            .builder(true, false, SendAllEffectsPlayerPacket::new).build();
+    public static final PacketType<SendAllEffectsS2CPacket> TYPE = PacketType
+            .builder(true, false, SendAllEffectsS2CPacket::new).build();
 
     private final Collection<IdAndTicksPair> effects;
+    private int entityID;
     private int size = 8;
     
-    public SendAllEffectsPlayerPacket() {
+    public SendAllEffectsS2CPacket() {
         effects = new ArrayList<>();
     }
     
-    public SendAllEffectsPlayerPacket(Collection<ReferenceIntPair<EntityEffectType<?>>> effects) {
+    public SendAllEffectsS2CPacket(int entityID, Collection<ReferenceIntPair<EntityEffectType<?>>> effects) {
+        this.entityID = entityID;
         this.effects = effects
                 .stream()
                 .map(pair -> new IdAndTicksPair(
@@ -46,6 +47,7 @@ public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<
     @Override
     public void read(DataInputStream stream) {
         try {
+            entityID = stream.readInt();
             int count = stream.readShort();
             for (int i = 0; i < count; i++)
                 effects.add(new IdAndTicksPair(stream.readInt(), stream.readInt()));
@@ -57,6 +59,7 @@ public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<
     @Override
     public void write(DataOutputStream stream) {
         try {
+            stream.writeInt(entityID);
             stream.writeShort(effects.size());
             for (IdAndTicksPair pair : effects) {
                 stream.writeInt(pair.id);
@@ -71,23 +74,18 @@ public class SendAllEffectsPlayerPacket extends Packet implements ManagedPacket<
     @Override
     public void apply(NetworkHandler networkHandler) {
         if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;
-        applyEffects();
+        AccessorClientNetworkHandler handler = (AccessorClientNetworkHandler) networkHandler;
+        Entity entity = handler.stationapi_getEntityByID(entityID);
+        for (IdAndTicksPair pair : effects)
+            entity.addEffect(EntityEffectTypeRegistry.INSTANCE.getOrThrow(pair.id).factory.create(entity, pair.ticks));
     }
     
     @Override
     public int size() {
         return size;
     }
-    
-    @Environment(EnvType.CLIENT)
-    private void applyEffects() {
-        @SuppressWarnings("deprecation")
-        PlayerEntity player = ((Minecraft) FabricLoader.getInstance().getGameInstance()).player;
-        for (IdAndTicksPair pair : effects)
-            player.addEffect(EntityEffectTypeRegistry.INSTANCE.getOrThrow(pair.id).factory.create(player, pair.ticks));
-    }
 
-    public @NotNull PacketType<SendAllEffectsPlayerPacket> getType() {
+    public @NotNull PacketType<SendAllEffectsS2CPacket> getType() {
         return TYPE;
     }
 }

@@ -15,8 +15,8 @@ import net.modificationstation.stationapi.api.effect.EntityEffectTypeRegistry;
 import net.modificationstation.stationapi.api.effect.StationEffectEntity;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.impl.effect.packet.EffectAddRemovePacket;
-import net.modificationstation.stationapi.impl.effect.packet.EffectRemoveAllPacket;
+import net.modificationstation.stationapi.impl.effect.packet.EffectAddRemoveS2CPacket;
+import net.modificationstation.stationapi.impl.effect.packet.EffectRemoveAllS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -39,7 +39,7 @@ public class MixinEntity implements StationEffectEntity {
         if (stationapi_effects == null)
             stationapi_effects = new Reference2ReferenceOpenHashMap<>();
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-            PacketHelper.sendToAllTracking(thiz, new EffectAddRemovePacket(id, effectType, ticks));
+            PacketHelper.sendToAllTracking(thiz, new EffectAddRemoveS2CPacket(id, effectType, ticks));
         stationapi_effects.put(effectType, effect);
         effect.onAdded();
     }
@@ -50,7 +50,7 @@ public class MixinEntity implements StationEffectEntity {
         EntityEffect<?> effect = stationapi_effects.get(effectType);
         if (effect == null) return;
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            PacketHelper.sendToAllTracking(Entity.class.cast(this), new EffectAddRemovePacket(id, effectType, 0));
+            PacketHelper.sendToAllTracking(Entity.class.cast(this), new EffectAddRemoveS2CPacket(id, effectType, 0));
         }
         effect.onRemoved();
         if (stationapi_effects != null) {
@@ -67,7 +67,7 @@ public class MixinEntity implements StationEffectEntity {
     @Override
     public void removeAllEffects() {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            PacketHelper.sendToAllTracking(Entity.class.cast(this), new EffectRemoveAllPacket(id));
+            PacketHelper.sendToAllTracking(Entity.class.cast(this), new EffectRemoveAllS2CPacket(id));
         }
         if (stationapi_effects == null) return;
         stationapi_effects.values().forEach(EntityEffect::onRemoved);

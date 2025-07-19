@@ -5,7 +5,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.packet.login.LoginHelloPacket;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
-import net.modificationstation.stationapi.impl.effect.packet.SendAllEffectsPlayerPacket;
+import net.modificationstation.stationapi.impl.effect.packet.SendAllEffectsPlayerS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
@@ -22,6 +22,6 @@ public class MixinServerLoginNetworkHandler {
     private void stationapi_updatePlayerEffects(LoginHelloPacket packet, CallbackInfo info, @Local ServerPlayerEntity player) {
         var effects = player.getServerEffects();
         if (effects == null) return;
-        PacketHelper.sendTo(player, new SendAllEffectsPlayerPacket(effects));
+        PacketHelper.sendTo(player, new SendAllEffectsPlayerS2CPacket(effects));
     }
 }

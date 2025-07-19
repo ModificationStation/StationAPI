@@ -16,18 +16,18 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class EffectAddRemovePacket extends Packet implements ManagedPacket<EffectAddRemovePacket> {
-    public static final PacketType<EffectAddRemovePacket> TYPE = PacketType
-            .builder(true, false, EffectAddRemovePacket::new).build();
+public class EffectAddRemoveS2CPacket extends Packet implements ManagedPacket<EffectAddRemoveS2CPacket> {
+    public static final PacketType<EffectAddRemoveS2CPacket> TYPE = PacketType
+            .builder(true, false, EffectAddRemoveS2CPacket::new).build();
 
     private int effectId;
     private int entityId;
     private int ticks;
     private int size = 11;
     
-    public EffectAddRemovePacket() {}
+    public EffectAddRemoveS2CPacket() {}
     
-    public EffectAddRemovePacket(int entityId, EntityEffectType<?> effectType, int ticks) {
+    public EffectAddRemoveS2CPacket(int entityId, EntityEffectType<?> effectType, int ticks) {
         this.effectId = EntityEffectTypeRegistry.INSTANCE.getRawId(effectType);
         this.entityId = entityId;
         this.ticks = ticks;
@@ -71,7 +71,7 @@ public class EffectAddRemovePacket extends Packet implements ManagedPacket<Effec
         return size;
     }
 
-    public @NotNull PacketType<EffectAddRemovePacket> getType() {
+    public @NotNull PacketType<EffectAddRemoveS2CPacket> getType() {
         return TYPE;
     }
 }
