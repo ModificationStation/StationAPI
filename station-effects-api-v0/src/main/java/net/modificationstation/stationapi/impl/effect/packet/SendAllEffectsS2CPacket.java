@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.api.effect.EntityEffectType;
 import net.modificationstation.stationapi.api.effect.EntityEffectTypeRegistry;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
-import net.modificationstation.stationapi.mixin.effects.AccessorClientNetworkHandler;
+import net.modificationstation.stationapi.mixin.effects.ClientNetworkHandlerAccessor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
@@ -74,7 +74,7 @@ public class SendAllEffectsS2CPacket extends Packet implements ManagedPacket<Sen
     @Override
     public void apply(NetworkHandler networkHandler) {
         if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;
-        AccessorClientNetworkHandler handler = (AccessorClientNetworkHandler) networkHandler;
+        ClientNetworkHandlerAccessor handler = (ClientNetworkHandlerAccessor) networkHandler;
         Entity entity = handler.stationapi_getEntityByID(entityID);
         for (IdAndTicksPair pair : effects)
             entity.addEffect(EntityEffectTypeRegistry.INSTANCE.getOrThrow(pair.id).factory.create(entity, pair.ticks));

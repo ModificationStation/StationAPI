@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(class_174.class)
-public class MixinClass174 {
+public class Class174Mixin {
     @Shadow public Entity field_597;
     
     @Inject(method = "method_601", at = @At(

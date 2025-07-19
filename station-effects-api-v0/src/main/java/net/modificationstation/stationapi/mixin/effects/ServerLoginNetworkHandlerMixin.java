@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerLoginNetworkHandler.class)
-public class MixinServerLoginNetworkHandler {
+public class ServerLoginNetworkHandlerMixin {
     @Inject(method = "accept", at = @At(
         value = "INVOKE",
         target = "Lnet/minecraft/entity/player/ServerPlayerEntity;method_317()V",

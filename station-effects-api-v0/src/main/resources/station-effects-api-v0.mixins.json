@@ -4,16 +4,16 @@
   "package": "net.modificationstation.stationapi.mixin.effects",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "MixinEntity"
+    "EntityMixin"
   ],
   "client": [
-    "AccessorClientNetworkHandler",
-    "MixinInventoryScreen",
-    "MixinInGameHud"
+    "ClientNetworkHandlerAccessor",
+    "InventoryScreenMixin",
+    "InGameHudMixin"
   ],
   "server": [
-    "MixinServerLoginNetworkHandler",
-    "MixinClass174"
+    "ServerLoginNetworkHandlerMixin",
+    "Class174Mixin"
   ],
   "injectors": {
     "defaultRequire": 1

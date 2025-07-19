@@ -11,10 +11,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InventoryScreen.class)
-public abstract class MixinInventoryScreen extends HandledScreen {
+public abstract class InventoryScreenMixin extends HandledScreen {
     @Unique private final EffectsRenderer stationapi_effectRenderer = new EffectsRenderer();
     
-    public MixinInventoryScreen(ScreenHandler container) {
+    public InventoryScreenMixin(ScreenHandler container) {
         super(container);
     }
     

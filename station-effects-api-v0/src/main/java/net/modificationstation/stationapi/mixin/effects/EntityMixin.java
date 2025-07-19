@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.*;
 
 @Mixin(Entity.class)
-public class MixinEntity implements StationEffectEntity {
+public class EntityMixin implements StationEffectEntity {
     @Unique private Map<EntityEffectType<?>, EntityEffect<?>> stationapi_effects;
     
     @Shadow public int id;

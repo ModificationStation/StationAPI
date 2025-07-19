@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.effect.EntityEffectType;
 import net.modificationstation.stationapi.api.effect.EntityEffectTypeRegistry;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
-import net.modificationstation.stationapi.mixin.effects.AccessorClientNetworkHandler;
+import net.modificationstation.stationapi.mixin.effects.ClientNetworkHandlerAccessor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
@@ -59,7 +59,7 @@ public class EffectAddRemoveS2CPacket extends Packet implements ManagedPacket<Ef
     @Override
     public void apply(NetworkHandler networkHandler) {
         if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) return;
-        AccessorClientNetworkHandler handler = (AccessorClientNetworkHandler) networkHandler;
+        ClientNetworkHandlerAccessor handler = (ClientNetworkHandlerAccessor) networkHandler;
         Entity entity = handler.stationapi_getEntityByID(entityId);
         var effectType = EntityEffectTypeRegistry.INSTANCE.get(effectId);
         if (ticks != 0) entity.addEffect(effectType, ticks);
