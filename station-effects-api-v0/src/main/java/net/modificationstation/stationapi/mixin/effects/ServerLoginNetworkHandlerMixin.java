@@ -21,7 +21,7 @@ public class ServerLoginNetworkHandlerMixin {
     ))
     private void stationapi_updatePlayerEffects(LoginHelloPacket packet, CallbackInfo info, @Local ServerPlayerEntity player) {
         var effects = player.getEffects();
-        if (effects == null) return;
+        if (effects.isEmpty()) return;
         PacketHelper.sendTo(player, new SendAllEffectsPlayerS2CPacket(effects));
     }
 }

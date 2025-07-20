@@ -1,12 +1,16 @@
 package net.modificationstation.stationapi.impl.effect.packet;
 
-import net.minecraft.entity.Entity;
+import com.mojang.datafixers.util.Pair;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
+import net.modificationstation.stationapi.api.effect.EntityEffectType;
 import net.modificationstation.stationapi.api.effect.EntityEffectTypeRegistry;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
+import net.modificationstation.stationapi.api.util.SideUtil;
 import net.modificationstation.stationapi.mixin.effects.ClientNetworkHandlerAccessor;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,37 +21,33 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class SendAllEffectsS2CPacket extends Packet implements ManagedPacket<SendAllEffectsS2CPacket> {
-    private record IdAndTicksPair(int id, int ticks) {}
-
     public static final PacketType<SendAllEffectsS2CPacket> TYPE = PacketType
             .builder(true, false, SendAllEffectsS2CPacket::new).build();
 
-    private final Collection<IdAndTicksPair> effects;
-    private int entityID;
-    private int size = 8;
+    private int entityId;
+    private final Collection<Pair<EntityEffectType<?>, NbtCompound>> effects;
     
     private SendAllEffectsS2CPacket() {
         effects = new ArrayList<>();
     }
     
-    public SendAllEffectsS2CPacket(int entityID, Collection<EntityEffect<?>> effects) {
-        this.entityID = entityID;
-        this.effects = effects
-                .stream()
-                .map(effect -> new IdAndTicksPair(
-                        EntityEffectTypeRegistry.INSTANCE.getRawId(effect.getType()),
-                        effect.getTicks()
-                ))
-                .toList();
+    public SendAllEffectsS2CPacket(int entityId, Collection<EntityEffect<?>> effects) {
+        this.entityId = entityId;
+        this.effects = effects.stream().map(effect -> Pair
+                .<EntityEffectType<?>, NbtCompound>of(effect.getType(), effect.write())
+        ).toList();
     }
     
     @Override
     public void read(DataInputStream stream) {
         try {
-            entityID = stream.readInt();
+            entityId = stream.readInt();
             int count = stream.readShort();
             for (int i = 0; i < count; i++)
-                effects.add(new IdAndTicksPair(stream.readInt(), stream.readInt()));
+                effects.add(Pair.of(
+                        EntityEffectTypeRegistry.INSTANCE.getOrThrow(stream.readInt()),
+                        NbtIo.read(stream)
+                ));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -56,13 +56,12 @@ public class SendAllEffectsS2CPacket extends Packet implements ManagedPacket<Sen
     @Override
     public void write(DataOutputStream stream) {
         try {
-            stream.writeInt(entityID);
+            stream.writeInt(entityId);
             stream.writeShort(effects.size());
-            for (IdAndTicksPair pair : effects) {
-                stream.writeInt(pair.id);
-                stream.writeInt(pair.ticks);
+            for (Pair<EntityEffectType<?>, NbtCompound> pair : effects) {
+                stream.writeInt(EntityEffectTypeRegistry.INSTANCE.getRawId(pair.getFirst()));
+                NbtIo.write(pair.getSecond(), stream);
             }
-            size = stream.size();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -70,15 +69,21 @@ public class SendAllEffectsS2CPacket extends Packet implements ManagedPacket<Sen
     
     @Override
     public void apply(NetworkHandler networkHandler) {
-        ClientNetworkHandlerAccessor handler = (ClientNetworkHandlerAccessor) networkHandler;
-        Entity entity = handler.stationapi_getEntityByID(entityID);
-        for (IdAndTicksPair pair : effects)
-            entity.addEffect(EntityEffectTypeRegistry.INSTANCE.getOrThrow(pair.id).factory.create(entity, pair.ticks));
+        var entity = SideUtil.get(
+                () -> ((ClientNetworkHandlerAccessor) networkHandler).stationapi_getEntityByID(entityId),
+                () -> null
+        );
+        effects.forEach(pair -> {
+            var effect = pair.getFirst().factory.create(entity, 0);
+            effect.read(pair.getSecond());
+            entity.addEffect(effect);
+            effect.onAdded();
+        });
     }
     
     @Override
     public int size() {
-        return size;
+        return 0;
     }
 
     public @NotNull PacketType<SendAllEffectsS2CPacket> getType() {

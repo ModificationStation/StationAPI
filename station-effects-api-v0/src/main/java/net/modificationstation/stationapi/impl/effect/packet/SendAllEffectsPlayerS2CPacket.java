@@ -1,16 +1,19 @@
 package net.modificationstation.stationapi.impl.effect.packet;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import com.mojang.datafixers.util.Pair;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
+import net.modificationstation.stationapi.api.effect.EntityEffectType;
 import net.modificationstation.stationapi.api.effect.EntityEffectTypeRegistry;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
+import net.modificationstation.stationapi.api.util.SideUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
@@ -20,26 +23,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class SendAllEffectsPlayerS2CPacket extends Packet implements ManagedPacket<SendAllEffectsPlayerS2CPacket> {
-    private record IdAndTicksPair(int id, int ticks) {}
-
     public static final PacketType<SendAllEffectsPlayerS2CPacket> TYPE = PacketType
             .builder(true, false, SendAllEffectsPlayerS2CPacket::new).build();
 
-    private final Collection<IdAndTicksPair> effects;
-    private int size = 8;
+    private final Collection<Pair<EntityEffectType<?>, NbtCompound>> effects;
     
     private SendAllEffectsPlayerS2CPacket() {
         effects = new ArrayList<>();
     }
     
     public SendAllEffectsPlayerS2CPacket(Collection<EntityEffect<?>> effects) {
-        this.effects = effects
-                .stream()
-                .map(effect -> new IdAndTicksPair(
-                        EntityEffectTypeRegistry.INSTANCE.getRawId(effect.getType()),
-                        effect.getTicks()
-                ))
-                .toList();
+        this.effects = effects.stream().map(effect -> Pair
+                .<EntityEffectType<?>, NbtCompound>of(effect.getType(), effect.write())
+        ).toList();
     }
     
     @Override
@@ -47,7 +43,10 @@ public class SendAllEffectsPlayerS2CPacket extends Packet implements ManagedPack
         try {
             int count = stream.readShort();
             for (int i = 0; i < count; i++)
-                effects.add(new IdAndTicksPair(stream.readInt(), stream.readInt()));
+                effects.add(Pair.of(
+                        EntityEffectTypeRegistry.INSTANCE.getOrThrow(stream.readInt()),
+                        NbtIo.read(stream)
+                ));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -57,11 +56,10 @@ public class SendAllEffectsPlayerS2CPacket extends Packet implements ManagedPack
     public void write(DataOutputStream stream) {
         try {
             stream.writeShort(effects.size());
-            for (IdAndTicksPair pair : effects) {
-                stream.writeInt(pair.id);
-                stream.writeInt(pair.ticks);
+            for (var pair : effects) {
+                stream.writeInt(EntityEffectTypeRegistry.INSTANCE.getRawId(pair.getFirst()));
+                NbtIo.write(pair.getSecond(), stream);
             }
-            size = stream.size();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -69,20 +67,21 @@ public class SendAllEffectsPlayerS2CPacket extends Packet implements ManagedPack
     
     @Override
     public void apply(NetworkHandler networkHandler) {
-        applyEffects();
+        @SuppressWarnings("deprecation") PlayerEntity player = SideUtil.get(
+                () -> ((Minecraft) FabricLoader.getInstance().getGameInstance()).player,
+                () -> null
+        );
+        effects.forEach(pair -> {
+            var effect = pair.getFirst().factory.create(player, 0);
+            effect.read(pair.getSecond());
+            player.addEffect(effect);
+            effect.onAdded();
+        });
     }
     
     @Override
     public int size() {
-        return size;
-    }
-    
-    @Environment(EnvType.CLIENT)
-    private void applyEffects() {
-        @SuppressWarnings("deprecation")
-        PlayerEntity player = ((Minecraft) FabricLoader.getInstance().getGameInstance()).player;
-        for (IdAndTicksPair pair : effects)
-            player.addEffect(EntityEffectTypeRegistry.INSTANCE.getOrThrow(pair.id).factory.create(player, pair.ticks));
+        return 0;
     }
 
     public @NotNull PacketType<SendAllEffectsPlayerS2CPacket> getType() {

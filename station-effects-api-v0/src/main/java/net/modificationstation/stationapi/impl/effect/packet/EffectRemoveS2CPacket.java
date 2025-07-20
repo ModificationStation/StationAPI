@@ -2,6 +2,8 @@ package net.modificationstation.stationapi.impl.effect.packet;
 
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
+import net.modificationstation.stationapi.api.effect.EntityEffectType;
+import net.modificationstation.stationapi.api.effect.EntityEffectTypeRegistry;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
 import net.modificationstation.stationapi.mixin.effects.ClientNetworkHandlerAccessor;
@@ -11,47 +13,52 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class EffectRemoveAllS2CPacket extends Packet implements ManagedPacket<EffectRemoveAllS2CPacket> {
-    public static final PacketType<EffectRemoveAllS2CPacket> TYPE = PacketType
-            .builder(true, false, EffectRemoveAllS2CPacket::new).build();
+public class EffectRemoveS2CPacket extends Packet implements ManagedPacket<EffectRemoveS2CPacket> {
+    public static final PacketType<EffectRemoveS2CPacket> TYPE = PacketType
+            .builder(true, false, EffectRemoveS2CPacket::new).build();
 
     private int entityId;
-    
-    private EffectRemoveAllS2CPacket() {}
-    
-    public EffectRemoveAllS2CPacket(int entityId) {
+    private EntityEffectType<?> effectType;
+
+    private EffectRemoveS2CPacket() {}
+
+    public EffectRemoveS2CPacket(int entityId, EntityEffectType<?> effectType) {
         this.entityId = entityId;
+        this.effectType = effectType;
     }
-    
+
     @Override
     public void read(DataInputStream stream) {
         try {
-            entityId = stream.readInt();
+            this.entityId = stream.readInt();
+            this.effectType = EntityEffectTypeRegistry.INSTANCE.getOrThrow(stream.readInt());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void write(DataOutputStream stream) {
         try {
             stream.writeInt(entityId);
+            stream.writeInt(EntityEffectTypeRegistry.INSTANCE.getRawId(effectType));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void apply(NetworkHandler networkHandler) {
-        ((ClientNetworkHandlerAccessor) networkHandler).stationapi_getEntityByID(entityId).removeAllEffects();
-    }
-    
-    @Override
-    public int size() {
-        return 4;
+        ((ClientNetworkHandlerAccessor) networkHandler).stationapi_getEntityByID(entityId).removeEffect(effectType);
     }
 
-    public @NotNull PacketType<EffectRemoveAllS2CPacket> getType() {
+    @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
+    public @NotNull PacketType<EffectRemoveS2CPacket> getType() {
         return TYPE;
     }
 }

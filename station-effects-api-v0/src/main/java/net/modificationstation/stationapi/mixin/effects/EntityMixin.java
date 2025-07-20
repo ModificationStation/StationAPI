@@ -14,8 +14,9 @@ import net.modificationstation.stationapi.api.effect.EntityEffectTypeRegistry;
 import net.modificationstation.stationapi.api.entity.StationEffectsEntity;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.impl.effect.packet.EffectAddRemoveS2CPacket;
+import net.modificationstation.stationapi.impl.effect.packet.EffectAddS2CPacket;
 import net.modificationstation.stationapi.impl.effect.packet.EffectRemoveAllS2CPacket;
+import net.modificationstation.stationapi.impl.effect.packet.EffectRemoveS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -37,7 +38,7 @@ public class EntityMixin implements StationEffectsEntity {
         Entity thiz = Entity.class.cast(this);
         EntityEffect<?> effect = effectType.factory.create(thiz, ticks);
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-            PacketHelper.sendToAllTracking(thiz, new EffectAddRemoveS2CPacket(id, effectType, ticks));
+            PacketHelper.sendToAllTracking(thiz, new EffectAddS2CPacket(id, effect));
         stationapi_effects.put(effectType, effect);
         effect.onAdded();
     }
@@ -47,7 +48,7 @@ public class EntityMixin implements StationEffectsEntity {
         EntityEffect<?> effect = stationapi_effects.get(effectType);
         if (effect == null) return;
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            PacketHelper.sendToAllTracking(Entity.class.cast(this), new EffectAddRemoveS2CPacket(id, effectType, 0));
+            PacketHelper.sendToAllTracking(Entity.class.cast(this), new EffectRemoveS2CPacket(id, effectType));
         }
         effect.onRemoved();
         stationapi_effects.remove(effectType, effect);
