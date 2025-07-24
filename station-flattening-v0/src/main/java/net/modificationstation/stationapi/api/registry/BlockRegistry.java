@@ -15,5 +15,6 @@ public final class BlockRegistry extends SimpleRegistry<Block> {
     private BlockRegistry() {
         super(KEY, Lifecycle.experimental(), true);
         RegistryAttributeHolder.get(this).addAttribute(RegistryAttribute.SYNCED);
+        nextId = 256;
     }
 }

@@ -9,5 +9,9 @@ public abstract class PacketHelperImpl {
 
     public abstract void sendTo(PlayerEntity player, Packet packet);
 
+    public abstract void dispatchLocallyAndSendTo(PlayerEntity player, Packet packet);
+
     public abstract void sendToAllTracking(Entity entity, Packet packet);
+
+    public abstract void dispatchLocallyAndToAllTracking(Entity entity, Packet packet);
 }

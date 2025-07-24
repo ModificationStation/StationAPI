@@ -1,5 +1,6 @@
 {
   "values": [
-    "sltest:test_block"
+    "sltest:test_block",
+    "sltest:variation_block"
   ]
 }

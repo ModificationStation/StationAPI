@@ -46,6 +46,17 @@ public final class PacketHelper {
 
     /**
      * On client, ignores the packet if the current game is multiplayer, or handles the packet locally if the current game is singleplayer.
+     * On server, both handles the packet locally and sends the packet to the player's client.
+     * @param player the player to send the packet to.
+     * @param packet the packet to send/handle.
+     */
+    @API
+    public static void dispatchLocallyAndSendTo(PlayerEntity player, Packet packet) {
+        INSTANCE.dispatchLocallyAndSendTo(player, packet);
+    }
+
+    /**
+     * On client, ignores the packet if the current game is multiplayer, or handles the packet locally if the current game is singleplayer.
      * On server, sends the packet to all players tracking the given entity.
      * @param entity the entity whose tracking players to send the packet to.
      * @param packet the packet to send/handle.
@@ -53,6 +64,17 @@ public final class PacketHelper {
     @API
     public static void sendToAllTracking(Entity entity, Packet packet) {
         INSTANCE.sendToAllTracking(entity, packet);
+    }
+
+    /**
+     * On client, ignores the packet if the current game is multiplayer, or handles the packet locally if the current game is singleplayer.
+     * On server, both handles the packet locally and sends the packet to all players tracking the given entity.
+     * @param entity the entity whose tracking players to send the packet to.
+     * @param packet the packet to send/handle.
+     */
+    @API
+    public static void dispatchLocallyAndToAllTracking(Entity entity, Packet packet) {
+        INSTANCE.dispatchLocallyAndToAllTracking(entity, packet);
     }
 
     /**
