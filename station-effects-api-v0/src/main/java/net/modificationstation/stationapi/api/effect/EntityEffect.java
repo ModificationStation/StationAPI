@@ -44,13 +44,13 @@ public abstract class EntityEffect<THIS extends EntityEffect<THIS>> {
      * Allows to write any custom data to the tag storage.
      * @param tag effect data root tag
      */
-    protected abstract void writeCustomData(NbtCompound tag);
+    protected abstract void writeNbt(NbtCompound tag);
     
     /**
      * Allows to read any custom data from the tag storage.
      * @param tag effect data root tag
      */
-    protected abstract void readCustomData(NbtCompound tag);
+    protected abstract void readNbt(NbtCompound tag);
 
     public abstract EntityEffectType<THIS> getType();
     
@@ -83,15 +83,7 @@ public abstract class EntityEffect<THIS extends EntityEffect<THIS>> {
     public final String getDescription() {
         return I18n.getTranslation(descriptionTranslationKey, descriptionTranslationKey);
     }
-    
-    /**
-     * Set how much ticks effect will stay. Used only by packets.
-     */
-    @Environment(EnvType.CLIENT)
-    public final void setTicks(int ticks) {
-        this.ticks = ticks;
-    }
-    
+
     public final void tick() {
         onTick();
         if (!isInfinite()) {
@@ -102,16 +94,14 @@ public abstract class EntityEffect<THIS extends EntityEffect<THIS>> {
         }
     }
     
-    public final NbtCompound write() {
-        NbtCompound tag = new NbtCompound();
-        tag.putInt("ticks", ticks);
-        writeCustomData(tag);
-        return tag;
+    public final void write(NbtCompound nbt) {
+        nbt.putInt("ticks", ticks);
+        writeNbt(nbt);
     }
     
-    public final void read(NbtCompound tag) {
-        ticks = tag.getInt("ticks");
-        readCustomData(tag);
+    public final void read(NbtCompound nbt) {
+        ticks = nbt.getInt("ticks");
+        readNbt(nbt);
     }
 
     @FunctionalInterface

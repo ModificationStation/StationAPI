@@ -33,9 +33,11 @@ public class SendAllEffectsS2CPacket extends Packet implements ManagedPacket<Sen
     
     public SendAllEffectsS2CPacket(int entityId, Collection<EntityEffect<?>> effects) {
         this.entityId = entityId;
-        this.effects = effects.stream().map(effect -> Pair
-                .<EntityEffectType<?>, NbtCompound>of(effect.getType(), effect.write())
-        ).toList();
+        this.effects = effects.stream().map(effect -> {
+            var nbt = new NbtCompound();
+            effect.write(nbt);
+            return Pair.<EntityEffectType<?>, NbtCompound>of(effect.getType(), nbt);
+        }).toList();
     }
     
     @Override

@@ -100,10 +100,11 @@ public class EntityMixin implements StationEffectsEntity {
         if (stationapi_effects.isEmpty()) return;
         NbtList effects = new NbtList();
         stationapi_effects.forEach((type, effect) -> {
-            NbtCompound effectTag = effect.write();
-            effectTag.putString("id", type.registryEntry.registryKey().getValue().toString());
-            effectTag.putInt("ticks", effect.getTicks());
-            effects.add(effectTag);
+            var nbt = new NbtCompound();
+            effect.write(nbt);
+            nbt.putString("id", type.registryEntry.registryKey().getValue().toString());
+            nbt.putInt("ticks", effect.getTicks());
+            effects.add(nbt);
         });
         tag.put("stationapi:effects", effects);
     }

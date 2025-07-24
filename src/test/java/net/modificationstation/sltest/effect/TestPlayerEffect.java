@@ -35,12 +35,12 @@ public class TestPlayerEffect extends EntityEffect<TestPlayerEffect> {
     }
     
     @Override
-    protected void writeCustomData(NbtCompound tag) {
+    protected void writeNbt(NbtCompound tag) {
         tag.putInt("original_health", originalHealth);
     }
     
     @Override
-    protected void readCustomData(NbtCompound tag) {
+    protected void readNbt(NbtCompound tag) {
         originalHealth = tag.getInt("original_health");
     }
 

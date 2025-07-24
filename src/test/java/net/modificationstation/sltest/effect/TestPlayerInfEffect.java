@@ -29,10 +29,10 @@ public class TestPlayerInfEffect extends EntityEffect<TestPlayerInfEffect> {
     public void onRemoved() {}
     
     @Override
-    protected void writeCustomData(NbtCompound tag) {}
+    protected void writeNbt(NbtCompound tag) {}
     
     @Override
-    protected void readCustomData(NbtCompound tag) {}
+    protected void readNbt(NbtCompound tag) {}
 
     @Override
     public EntityEffectType<TestPlayerInfEffect> getType() {

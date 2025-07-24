@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.effect.packet;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
@@ -55,7 +56,9 @@ public class EffectAddS2CPacket extends Packet implements ManagedPacket<EffectAd
         try {
             stream.writeInt(entityId);
             stream.writeInt(EntityEffectTypeRegistry.INSTANCE.getRawId(effect.getType()));
-            NbtIo.write(effect.write(), stream);
+            var nbt = new NbtCompound();
+            effect.write(nbt);
+            NbtIo.write(nbt, stream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
