@@ -25,9 +25,21 @@ public class PacketHelperServerImpl extends PacketHelperImpl {
     }
 
     @Override
+    public void dispatchLocallyAndSendTo(PlayerEntity player, Packet packet) {
+        send(packet);
+        sendTo(player, packet);
+    }
+
+    @Override
     public void sendToAllTracking(Entity entity, Packet packet) {
         //noinspection deprecation
         ((MinecraftServer) FabricLoader.getInstance().getGameInstance())
                 .method_2165(entity.world.dimension.id).method_1670(entity, packet);
+    }
+
+    @Override
+    public void dispatchLocallyAndToAllTracking(Entity entity, Packet packet) {
+        send(packet);
+        sendToAllTracking(entity, packet);
     }
 }
