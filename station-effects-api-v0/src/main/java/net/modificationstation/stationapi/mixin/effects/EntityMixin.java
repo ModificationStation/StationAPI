@@ -34,6 +34,7 @@ public class EntityMixin implements StationEffectsEntity {
     @Shadow public int id;
     
     @Override
+    @Unique
     public void addEffect(EntityEffectType<?> effectType, int ticks) {
         Entity thiz = Entity.class.cast(this);
         EntityEffect<?> effect = effectType.factory.create(thiz, ticks);
@@ -42,8 +43,30 @@ public class EntityMixin implements StationEffectsEntity {
         stationapi_effects.put(effectType, effect);
         effect.onAdded(true);
     }
-    
+
     @Override
+    @Unique
+    public <EFFECT_INSTANCE extends EntityEffect<EFFECT_INSTANCE>> EFFECT_INSTANCE getEffect(
+            EntityEffectType<EFFECT_INSTANCE> effectType
+    ) {
+        //noinspection unchecked
+        return (EFFECT_INSTANCE) stationapi_effects.get(effectType);
+    }
+
+    @Override
+    @Unique
+    public Collection<EntityEffect<?>> getEffects() {
+        return stationapi_effects.values();
+    }
+
+    @Override
+    @Unique
+    public boolean hasEffect(EntityEffectType<?> effectType) {
+        return stationapi_effects.containsKey(effectType);
+    }
+
+    @Override
+    @Unique
     public void removeEffect(EntityEffectType<?> effectType) {
         EntityEffect<?> effect = stationapi_effects.get(effectType);
         if (effect == null) return;
@@ -52,12 +75,6 @@ public class EntityMixin implements StationEffectsEntity {
         }
         effect.onRemoved();
         stationapi_effects.remove(effectType, effect);
-    }
-
-    @Override
-    @Unique
-    public Collection<EntityEffect<?>> getEffects() {
-        return stationapi_effects.values();
     }
     
     @Override
@@ -69,20 +86,7 @@ public class EntityMixin implements StationEffectsEntity {
         stationapi_effects.values().forEach(EntityEffect::onRemoved);
         stationapi_effects.clear();
     }
-    
-    @Override
-    @Unique
-    public boolean hasEffect(EntityEffectType<?> effectType) {
-        return stationapi_effects.containsKey(effectType);
-    }
-    
-    @Override
-    @Unique
-    public int getEffectTicks(EntityEffectType<?> effectType) {
-        EntityEffect<?> effect = stationapi_effects.get(effectType);
-        return effect == null ? 0 : effect.getTicks();
-    }
-    
+
     @Override
     @Unique
     @Environment(EnvType.CLIENT)

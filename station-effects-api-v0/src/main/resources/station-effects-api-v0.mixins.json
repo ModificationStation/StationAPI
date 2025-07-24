@@ -8,12 +8,12 @@
   ],
   "client": [
     "ClientNetworkHandlerAccessor",
-    "InventoryScreenMixin",
-    "InGameHudMixin"
+    "InGameHudMixin",
+    "InventoryScreenMixin"
   ],
   "server": [
-    "ServerLoginNetworkHandlerMixin",
-    "Class174Mixin"
+    "class_174Mixin",
+    "ServerLoginNetworkHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
