@@ -64,7 +64,7 @@ public class EffectAddS2CPacket extends Packet implements ManagedPacket<EffectAd
     @Override
     public void apply(NetworkHandler networkHandler) {
         ((ClientNetworkHandlerAccessor) networkHandler).stationapi_getEntityByID(entityId).addEffect(effect);
-        effect.onAdded();
+        effect.onAdded(true);
     }
     
     @Override

@@ -20,7 +20,7 @@ public class TestPlayerEffect extends EntityEffect<TestPlayerEffect> {
     }
     
     @Override
-    public void onAdded() {
+    public void onAdded(boolean appliedNow) {
         PlayerEntity player = (PlayerEntity) entity;
         originalHealth = player.health;
         player.health = 5;

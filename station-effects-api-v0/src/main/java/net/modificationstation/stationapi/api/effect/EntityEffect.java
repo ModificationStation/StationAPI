@@ -24,8 +24,11 @@ public abstract class EntityEffect<THIS extends EntityEffect<THIS>> {
     
     /**
      * This method is called immediately when the effect is added.
+     *
+     * @param appliedNow whether the effect was just inflicted on the entity
+     *                   or synchronized from the server later.
      */
-    public abstract void onAdded();
+    public abstract void onAdded(boolean appliedNow);
     
     /**
      * This method is called on each entity tick.

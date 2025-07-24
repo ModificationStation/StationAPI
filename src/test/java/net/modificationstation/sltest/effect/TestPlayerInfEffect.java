@@ -1,5 +1,7 @@
 package net.modificationstation.sltest.effect;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
@@ -14,10 +16,14 @@ public class TestPlayerInfEffect extends EntityEffect<TestPlayerInfEffect> {
     }
     
     @Override
-    public void onAdded() {}
+    public void onAdded(boolean appliedNow) {}
     
     @Override
-    public void onTick() {}
+    public void onTick() {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            entity.world.addParticle("heart", entity.x, entity.y + entity.eyeHeight + 1, entity.z, 0, 0.5, 0);
+        }
+    }
     
     @Override
     public void onRemoved() {}

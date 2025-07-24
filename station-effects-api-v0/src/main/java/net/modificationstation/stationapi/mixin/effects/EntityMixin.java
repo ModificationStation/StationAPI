@@ -40,7 +40,7 @@ public class EntityMixin implements StationEffectsEntity {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
             PacketHelper.sendToAllTracking(thiz, new EffectAddS2CPacket(id, effect));
         stationapi_effects.put(effectType, effect);
-        effect.onAdded();
+        effect.onAdded(true);
     }
     
     @Override

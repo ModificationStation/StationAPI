@@ -77,7 +77,7 @@ public class SendAllEffectsS2CPacket extends Packet implements ManagedPacket<Sen
             var effect = pair.getFirst().factory.create(entity, 0);
             effect.read(pair.getSecond());
             entity.addEffect(effect);
-            effect.onAdded();
+            effect.onAdded(false);
         });
     }
     

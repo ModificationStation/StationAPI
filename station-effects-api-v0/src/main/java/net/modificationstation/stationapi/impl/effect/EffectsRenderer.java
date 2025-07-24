@@ -112,17 +112,17 @@ public class EffectsRenderer extends DrawContext {
         int x = width - 12;
         int y2 = y + 13;
         
-        drawTexture(2, y, 96, 202, 13, 13);
-        drawTexture(2, y2, 96, 233 - 13, 13, 13);
+        drawTexture(2, y, 96, 202, 14, 14);
+        drawTexture(2, y2, 96, 233 - 13, 14, 14);
         
         if (width > 26) {
             width -= 26;
-            drawTexture(15, y, 109, 202, width, 13);
-            drawTexture(15, y + 13, 109, 220, width, 13);
+            drawTexture(15, y, 109, 202, width + 1, 14);
+            drawTexture(15, y + 13, 109, 220, width + 1, 14);
         }
         
-        drawTexture(x, y, 242, 202, 13, 13);
-        drawTexture(x, y2, 242, 220, 13, 13);
+        drawTexture(x, y, 242, 202, 14, 14);
+        drawTexture(x, y2, 242, 220, 14, 14);
     }
     
     private int getEffectWidth(EntityEffect<?> effect) {

@@ -75,7 +75,7 @@ public class SendAllEffectsPlayerS2CPacket extends Packet implements ManagedPack
             var effect = pair.getFirst().factory.create(player, 0);
             effect.read(pair.getSecond());
             player.addEffect(effect);
-            effect.onAdded();
+            effect.onAdded(false);
         });
     }
     
