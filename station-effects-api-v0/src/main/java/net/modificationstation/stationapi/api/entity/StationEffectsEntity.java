@@ -1,11 +1,8 @@
 package net.modificationstation.stationapi.api.entity;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.modificationstation.stationapi.api.effect.EntityEffect;
 import net.modificationstation.stationapi.api.effect.EntityEffectType;
 import net.modificationstation.stationapi.api.util.Util;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Collection;
 
@@ -63,13 +60,6 @@ public interface StationEffectsEntity {
     }
     
     default void removeAllEffects() {
-        Util.assertImpl();
-    }
-
-    @Environment(EnvType.CLIENT)
-    @Deprecated
-    @ApiStatus.Internal
-    default void addEffect(EntityEffect<?> effect) {
         Util.assertImpl();
     }
 }

@@ -1,9 +1,6 @@
 package net.modificationstation.stationapi.mixin.effects;
 
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -14,6 +11,7 @@ import net.modificationstation.stationapi.api.effect.EntityEffectTypeRegistry;
 import net.modificationstation.stationapi.api.entity.StationEffectsEntity;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.impl.effect.StationEffectsEntityImpl;
 import net.modificationstation.stationapi.impl.effect.packet.EffectAddS2CPacket;
 import net.modificationstation.stationapi.impl.effect.packet.EffectRemoveAllS2CPacket;
 import net.modificationstation.stationapi.impl.effect.packet.EffectRemoveS2CPacket;
@@ -28,7 +26,7 @@ import java.util.Collection;
 import java.util.Map;
 
 @Mixin(Entity.class)
-public class EntityMixin implements StationEffectsEntity {
+public class EntityMixin implements StationEffectsEntity, StationEffectsEntityImpl {
     @Unique private final Map<EntityEffectType<?>, EntityEffect<?>> stationapi_effects = new Reference2ReferenceOpenHashMap<>();
     
     @Shadow public int id;
@@ -37,11 +35,9 @@ public class EntityMixin implements StationEffectsEntity {
     @Unique
     public void addEffect(EntityEffectType<?> effectType, int ticks) {
         Entity thiz = Entity.class.cast(this);
-        EntityEffect<?> effect = effectType.factory.create(thiz, ticks);
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-            PacketHelper.sendToAllTracking(thiz, new EffectAddS2CPacket(id, effect));
-        stationapi_effects.put(effectType, effect);
-        effect.onAdded(true);
+        PacketHelper.dispatchLocallyAndToAllTracking(
+                thiz, new EffectAddS2CPacket(thiz, effectType.factory.create(thiz, ticks))
+        );
     }
 
     @Override
@@ -68,32 +64,39 @@ public class EntityMixin implements StationEffectsEntity {
     @Override
     @Unique
     public void removeEffect(EntityEffectType<?> effectType) {
-        EntityEffect<?> effect = stationapi_effects.get(effectType);
-        if (effect == null) return;
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            PacketHelper.sendToAllTracking(Entity.class.cast(this), new EffectRemoveS2CPacket(id, effectType));
-        }
-        effect.onRemoved();
-        stationapi_effects.remove(effectType, effect);
+        if (!stationapi_effects.containsKey(effectType)) return;
+        PacketHelper.dispatchLocallyAndToAllTracking(
+                Entity.class.cast(this), new EffectRemoveS2CPacket((Entity) (Object) this, effectType)
+        );
     }
     
     @Override
     @Unique
     public void removeAllEffects() {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            PacketHelper.sendToAllTracking(Entity.class.cast(this), new EffectRemoveAllS2CPacket(id));
-        }
-        stationapi_effects.values().forEach(EntityEffect::onRemoved);
-        stationapi_effects.clear();
+        PacketHelper.dispatchLocallyAndToAllTracking(
+                Entity.class.cast(this), new EffectRemoveAllS2CPacket((Entity) (Object) this)
+        );
     }
 
     @Override
     @Unique
-    @Environment(EnvType.CLIENT)
-    public void addEffect(EntityEffect<?> effect) {
+    public void stationapi_addEffect(EntityEffect<?> effect, boolean appliedNow) {
         stationapi_effects.put(effect.getType(), effect);
+        effect.onAdded(appliedNow);
     }
-    
+
+    @Override
+    @Unique
+    public void stationapi_removeAllEffects() {
+        stationapi_effects.keySet().stream().map(stationapi_effects::remove).forEach(EntityEffect::onRemoved);
+    }
+
+    @Override
+    @Unique
+    public void stationapi_removeEffect(EntityEffectType<?> effectType) {
+        stationapi_effects.remove(effectType).onRemoved();
+    }
+
     @Inject(method = "tick", at = @At("HEAD"))
     private void stationapi_tickEffects(CallbackInfo info) {
         stationapi_effects.values().forEach(EntityEffect::tick);

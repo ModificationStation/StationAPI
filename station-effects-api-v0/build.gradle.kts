@@ -8,5 +8,6 @@ addModuleDependencies(project,
         "station-api-base",
         "station-registry-api-v0",
         "station-networking-v0",
-        "station-items-v0"
+        "station-items-v0",
+        "station-player-api-v0"
 )
