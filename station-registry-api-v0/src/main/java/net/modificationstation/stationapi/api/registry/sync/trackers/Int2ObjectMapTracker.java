@@ -22,9 +22,9 @@ import java.util.List;
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
 public class Int2ObjectMapTracker<V, OV> {
-	static {
-		EntrypointManager.registerLookup(MethodHandles.lookup());
-	}
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
 
     private final String name;
     private final Int2ObjectMap<OV> mappers;
