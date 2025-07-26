@@ -6,11 +6,10 @@ import net.modificationstation.stationapi.impl.network.ModdedPacketHandlerSetter
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.util.*;
+import java.util.Map;
 
 @Mixin(NetworkHandler.class)
 class NetworkHandlerMixin implements ModdedPacketHandler, ModdedPacketHandlerSetter {
-
     @Unique
     private Map<String, String> mods;
     @Unique
