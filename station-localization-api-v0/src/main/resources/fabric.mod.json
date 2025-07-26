@@ -19,7 +19,7 @@
 
   "environment": "*",
   "entrypoints": {
-    "stationapi:event_bus": [
+    "stationapi:event_bus_client": [
       "net.modificationstation.stationapi.api.resource.language.LanguageManager"
     ]
   },
