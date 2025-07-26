@@ -27,14 +27,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(LoginHelloPacket.class)
-public class LoginHelloPacketMixin implements ModListHelloPacket {
+class LoginHelloPacketMixin implements ModListHelloPacket {
     @Shadow public String username;
     @Unique
     private HashMap<String, String> modList;
 
     @Environment(EnvType.CLIENT)
     @WrapOperation(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/login/LoginHelloPacket;writeString(Ljava/lang/String;Ljava/io/DataOutputStream;)V"))
-    private void giveTheSauce(String s, DataOutputStream dataOutputStream, Operation<Void> original) {
+    private void stationapi_giveTheSauce(String s, DataOutputStream dataOutputStream, Operation<Void> original) {
         //noinspection deprecation
         if (((ModdedPacketHandler) ((ConnectScreenAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).currentScreen).getNetworkHandler()).isModded()) {
             StringBuilder builder = new StringBuilder(";");
@@ -47,7 +47,7 @@ public class LoginHelloPacketMixin implements ModListHelloPacket {
 
     @Environment(EnvType.SERVER)
     @Inject(method = "read", at = @At("TAIL"))
-    private void readTheSauce(DataInputStream par1, CallbackInfo ci) {
+    private void stationapi_readTheSauce(DataInputStream par1, CallbackInfo ci) {
         if (username.contains(";")) {
             modList = new HashMap<>();
             Arrays.asList(username.split(";")).forEach(modString -> {
