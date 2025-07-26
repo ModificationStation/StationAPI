@@ -29,10 +29,7 @@ import static net.modificationstation.stationapi.impl.network.VanillaChecker.CLI
 
 @Mixin(ServerLoginNetworkHandler.class)
 abstract class ServerLoginNetworkHandlerMixin implements ModdedPacketHandler, ModdedPacketHandlerSetter {
-
     @Shadow public abstract void disconnect(String reason);
-
-    @Shadow private String username;
 
     @WrapOperation(method = "onHandshake", at = @At(value = "NEW", target = "(Ljava/lang/String;)Lnet/minecraft/network/packet/handshake/HandshakePacket;"))
     private HandshakePacket stationapi_tellThemIModToo(String s, Operation<HandshakePacket> original, @Local(argsOnly = true) HandshakePacket handshakePacket) {
@@ -49,8 +46,8 @@ abstract class ServerLoginNetworkHandlerMixin implements ModdedPacketHandler, Mo
     @Inject(method = "accept", at = @At(value = "HEAD"), cancellable = true)
     private void stationapi_setAndCheckModList(LoginHelloPacket arg, CallbackInfo ci) {
         ModListHelloPacket modListHelloPacket = (ModListHelloPacket) arg;
-        if (((ModListHelloPacket) arg).stationAPI$getModList() != null) {
-            setModded(modListHelloPacket.stationAPI$getModList());
+        if (((ModListHelloPacket) arg).stationapi_getModList() != null) {
+            setModded(modListHelloPacket.stationapi_getModList());
             StationAPI.LOGGER.info("Applied modlist from client.");
         }
         if (!isModded()) {

@@ -1,6 +1,5 @@
 package net.modificationstation.stationapi.impl.network;
 
-import com.google.common.hash.Hashing;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -25,8 +24,6 @@ public class VanillaChecker {
         EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
-    public static final long MASK = Hashing.sipHash24().hashUnencodedChars(NAMESPACE.toString()).asLong();
-
     /**
      * A set of mods that are required client side when joining a server.
      */
@@ -39,7 +36,7 @@ public class VanillaChecker {
 
     @EventListener
     private static void init(InitFinishedEvent event) {
-        LOGGER.info("Gathering mods that require client verification...");
+        LOGGER.info("Checking mod metadata for client/server-side requirements...");
 
         String oldVerifyClientKey = NAMESPACE + ":verify_client";
         String requiredOnClientKey = NAMESPACE + ":required_on_client";

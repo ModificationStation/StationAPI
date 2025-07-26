@@ -62,7 +62,7 @@ class LoginHelloPacketMixin implements ModListHelloPacket {
     }
 
     @Override
-    public Map<String, String> stationAPI$getModList() {
+    public Map<String, String> stationapi_getModList() {
         return modList;
     }
 
