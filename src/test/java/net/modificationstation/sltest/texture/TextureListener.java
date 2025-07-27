@@ -56,11 +56,8 @@ public class TextureListener {
 //        farlandsBlockModel = JsonUnbakedModel.get(of(MODID, "farlandsBlock"));
 //        testItemModel = JsonUnbakedModel.get(of(MODID, "item/testItem"));
 
-        // I'm using hardcoded IDs because something's fucked up with the order of the texture registry event so I can't get textures.
-        ((TemplateDoorBlock) FANCY_WOOD_DOOR.get()).topTextureId = 81;
-        ((TemplateDoorBlock) FANCY_WOOD_DOOR.get()).bottomTextureId = 97;
-//        ((TemplateDoorBlock) FANCY_WOOD_DOOR.get()).topTextureId = terrain.getTexture(Namespace.MINECRAFT.id("block/oak_door_top")).index;
-//        ((TemplateDoorBlock) FANCY_WOOD_DOOR.get()).bottomTextureId = terrain.getTexture(Namespace.MINECRAFT.id("block/oak_door_bottom")).index;
+        ((TemplateDoorBlock) FANCY_WOOD_DOOR.get()).topTextureId = terrain.getTexture(Namespace.MINECRAFT.id("block/oak_door_top")).index;
+        ((TemplateDoorBlock) FANCY_WOOD_DOOR.get()).bottomTextureId = terrain.getTexture(Namespace.MINECRAFT.id("block/oak_door_bottom")).index;
     }
 
     public static final int[] altarTextures = new int[6];
