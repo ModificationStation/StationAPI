@@ -32,7 +32,8 @@
       "net.modificationstation.sltest.datafixer.DataFixerListener",
       "net.modificationstation.sltest.worldgen.TestWorldgenListener",
       "net.modificationstation.sltest.bonemeal.BonemealListener",
-      "net.modificationstation.sltest.dispenser.DispenserListener"
+      "net.modificationstation.sltest.dispenser.DispenserListener",
+      "net.modificationstation.sltest.effect.TestEffectListener"
     ],
     "stationapi:event_bus_client": [
       "net.modificationstation.sltest.gui.GuiListener",
@@ -58,6 +59,7 @@
     "stationapi": "*"
   },
   "custom": {
-    "stationapi:verify_client": true
+    "stationapi:required_on_client": true,
+    "stationapi:required_on_server": true
   }
 }

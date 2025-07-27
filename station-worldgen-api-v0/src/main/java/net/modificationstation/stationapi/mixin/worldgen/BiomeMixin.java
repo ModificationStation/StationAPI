@@ -136,7 +136,7 @@ class BiomeMixin implements StationBiome {
     
     @Override
     public void setNoDimensionFeatures(boolean noDimensionFeatures) {
-        this.noDimensionFeatures = false;
+        this.noDimensionFeatures = noDimensionFeatures;
     }
     
     @Override

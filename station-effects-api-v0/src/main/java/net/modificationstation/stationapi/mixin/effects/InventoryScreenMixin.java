@@ -1,0 +1,25 @@
+package net.modificationstation.stationapi.mixin.effects;
+
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.screen.ScreenHandler;
+import net.modificationstation.stationapi.impl.effect.EffectsRenderer;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(InventoryScreen.class)
+public abstract class InventoryScreenMixin extends HandledScreen {
+    @Unique private final EffectsRenderer stationapi_effectRenderer = new EffectsRenderer();
+    
+    public InventoryScreenMixin(ScreenHandler container) {
+        super(container);
+    }
+    
+    @Inject(method = "drawBackground", at = @At("TAIL"))
+    private void stationapi_renderEffects(float delta, CallbackInfo info) {
+        stationapi_effectRenderer.renderEffects(minecraft, delta, true);
+    }
+}

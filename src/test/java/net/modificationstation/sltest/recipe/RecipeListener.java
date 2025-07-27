@@ -24,6 +24,8 @@ public class RecipeListener {
             case CRAFTING_SHAPELESS -> {
                 CraftingRegistry.addShapelessRecipe(new ItemStack(ItemListener.testItem), new ItemStack(Block.DIRT));
                 CraftingRegistry.addShapelessRecipe(new ItemStack(Blocks.TEST_BLOCK.get()), new ItemStack(Block.SAND));
+                CraftingRegistry.addShapelessRecipe(new ItemStack(Blocks.EFFECT_BLOCK.get()), new ItemStack(Block.PLANKS));
+                CraftingRegistry.addShapelessRecipe(new ItemStack(Blocks.EFFECT_BLOCK_INF.get()), new ItemStack(Blocks.EFFECT_BLOCK.get()));
                 CraftingRegistry.addShapelessRecipe(new ItemStack(Item.FLINT_AND_STEEL), new ItemStack(Blocks.TEST_BLOCK.get()));
                 CraftingRegistry.addShapelessRecipe(new ItemStack(Block.REDSTONE_WIRE), new ItemStack(Item.FLINT_AND_STEEL));
                 CraftingRegistry.addShapelessRecipe(new ItemStack(Block.RAIL), new ItemStack(Block.REDSTONE_WIRE));

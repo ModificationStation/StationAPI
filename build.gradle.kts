@@ -1,12 +1,12 @@
 // tl;dr, tells us off for using properties for versions. Too bad, we don't like trawling this file for version numbers.
 @file:Suppress("GradlePackageVersionRange")
 
-import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependencyXML
+import babric.SubprojectHelpers.addDependencyXML
 
 plugins {
     id("maven-publish")
     id("fabric-loom") version "1.9-SNAPSHOT"
-    id("babric-loom-extension") version "1.9.2"
+    id("babric-loom-extension") version "1.9.4"
 }
 
 // https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
@@ -40,13 +40,8 @@ allprojects {
     }
 
     configurations {
-        val transitiveImplementation = create("transitiveImplementation")
-        implementation.get().extendsFrom(transitiveImplementation)
-
-        // Required cause loom 0.14 for some reason doesn't remove asm-all 4.1. Ew.
         all {
-            exclude(group = "org.ow2.asm", module = "asm-debug-all")
-            exclude(group = "org.ow2.asm", module = "asm-all")
+            exclude(group = "babric")
         }
     }
 
@@ -65,15 +60,16 @@ allprojects {
 
         modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
 
-        "transitiveImplementation"("org.apache.commons:commons-lang3:3.12.0")
-        "transitiveImplementation"("commons-io:commons-io:2.11.0")
-        "transitiveImplementation"("net.jodah:typetools:${project.properties["typetools_version"]}")
-        "transitiveImplementation"("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
-        "transitiveImplementation"("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
-        //noinspection GradlePackageUpdate
-        "transitiveImplementation"("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
-        "transitiveImplementation"("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
-        "transitiveImplementation"("maven.modrinth:spasm:${project.properties["spasm_version"]}")
+        transitiveImplementation(modImplementation("org.apache.commons:commons-lang3:3.12.0") as Dependency)
+        transitiveImplementation(modImplementation("commons-io:commons-io:2.11.0") as Dependency)
+        transitiveImplementation(modImplementation("net.jodah:typetools:${project.properties["typetools_version"]}") as Dependency)
+        transitiveImplementation(modImplementation("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}") as Dependency)
+        transitiveImplementation(modImplementation("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}") as Dependency)
+        transitiveImplementation(modImplementation("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}") as Dependency)
+        transitiveImplementation(modImplementation("com.mojang:datafixerupper:${project.properties["dfu_version"]}") as Dependency)
+        transitiveImplementation(modImplementation("maven.modrinth:spasm:${project.properties["spasm_version"]}") as Dependency)
+        transitiveImplementation(modImplementation("me.carleslc:Simple-Yaml:1.8.4") as Dependency)
+        transitiveImplementation(modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") as Dependency)
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
@@ -85,21 +81,15 @@ allprojects {
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
         implementation("org.jetbrains:annotations:23.0.0")
 
-        modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}") {
-            isTransitive = false
-        }
+        modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}")
         modLocalRuntime("maven.modrinth:retrocommands:${project.properties["rc_version"]}") {
             isTransitive = false
         }
 
         annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.1")
-    }
 
-    loom {
-        @Suppress("UnstableApiUsage") // Too bad, this is needed.
-        mixin {
-            useLegacyMixinAp.set(true)
-        }
+        // Optional bugfix mod for testing qol. Remove the // to enable.
+        //modLocalRuntime "maven.modrinth:mojangfix:${project.properties["mojangfix_version"]}"
     }
 
     sourceSets {
@@ -169,20 +159,9 @@ allprojects {
                     artifact(tasks.getByName("remapJar")).builtBy(tasks.getByName("remapJar"))
                     artifact(tasks.getByName("remapSourcesJar")).builtBy(tasks.getByName("remapJar"))
                 }
-
-                pom {
-                    withXml {
-                        // Wipes dependency block, cause it's just hopelessly wrong, and also includes floader for some reason
-                        val depsNode = asNode().appendNode("dependencies")
-                        // Jank solution to an annoying issue
-                        configurations.getByName("transitiveImplementation").dependencies.forEach {
-                            val depNode = depsNode.appendNode("dependency")
-                            depNode.appendNode("groupId", it.group)
-                            depNode.appendNode("artifactId", it.name)
-                            depNode.appendNode("version", it.version)
-                            depNode.appendNode("scope", "compile")
-                        }
-                    }
+                // Remove this once I fix a **weird** edge case bug in babric.
+                pom.withXml {
+                    this.asNode().appendNode("dependencies")
                 }
             }
         }
@@ -291,4 +270,9 @@ tasks.register<Jar>("testJar") {
     from(sourceSets["test"].output)
     archiveClassifier.convention("test")
     archiveClassifier.set("test")
+}
+
+// Gradle I swear to fuck stop trying to do bullshit to the maven - calm
+tasks.withType<GenerateModuleMetadata> {
+    enabled = false
 }

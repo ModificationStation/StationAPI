@@ -11,6 +11,7 @@ import net.modificationstation.stationapi.api.util.Identifier;
 public final class BlockTags {
     public static final TagKey<Block>
             LOGS = of("logs"),
+            LEAVES = of("leaves"),
             PLANKS = of("planks"),
             INFINIBURN = of("infiniburn");
 
