@@ -14,9 +14,8 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
  */
 public final class JsonRecipeParserRegistry extends SimpleRegistry<Consumer<URL>> {
 
-    private static final Consumer<URL> EMPTY = url -> {};
     public static final RegistryKey<JsonRecipeParserRegistry> KEY = RegistryKey.ofRegistry(NAMESPACE.id("json_recipe_parsers"));
-    public static final JsonRecipeParserRegistry INSTANCE = Registries.create(KEY, new JsonRecipeParserRegistry(), registry -> EMPTY, Lifecycle.experimental());
+    public static final JsonRecipeParserRegistry INSTANCE = Registries.create(KEY, new JsonRecipeParserRegistry(), Lifecycle.experimental());
 
     private JsonRecipeParserRegistry() {
         super(KEY, Lifecycle.experimental(), false);

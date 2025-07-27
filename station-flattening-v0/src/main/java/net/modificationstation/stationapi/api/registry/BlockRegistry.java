@@ -10,7 +10,7 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 public final class BlockRegistry extends SimpleRegistry<Block> {
 
     public static final RegistryKey<Registry<Block>> KEY = RegistryKey.ofRegistry(NAMESPACE.id("blocks"));
-    public static final BlockRegistry INSTANCE = Registries.create(KEY, new BlockRegistry(), registry -> Block.BLOCKS[0], Lifecycle.experimental());
+    public static final BlockRegistry INSTANCE = Registries.create(KEY, new BlockRegistry(), Lifecycle.experimental());
 
     private BlockRegistry() {
         super(KEY, Lifecycle.experimental(), true);
