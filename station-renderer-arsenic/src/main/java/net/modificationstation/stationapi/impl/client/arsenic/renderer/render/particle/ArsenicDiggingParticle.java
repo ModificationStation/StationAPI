@@ -45,10 +45,10 @@ public class ArsenicDiggingParticle {
                 startV = texture.getMinV() + (particleBaseAccessor.getField_2637() / 4) * (texture.getMaxV() - texture.getMinV()),
                 endV = startV + 0.24975F * (texture.getMaxV() - texture.getMinV()),
                 randomMultiplier = 0.1F * particleBaseAccessor.getScale(),
-                renderX = (float)(digging.prevX + (digging.x - digging.prevX) * (double)delta - Particle.field_2645),
-                renderY = (float)(digging.prevY + (digging.y - digging.prevY) * (double)delta - Particle.field_2646),
-                renderZ = (float)(digging.prevZ + (digging.z - digging.prevZ) * (double)delta - Particle.field_2647),
-                brightness = digging.method_1394(delta);
+                renderX = (float)(digging.prevX + (digging.x - digging.prevX) * (double)delta - Particle.xOffset),
+                renderY = (float)(digging.prevY + (digging.y - digging.prevY) * (double)delta - Particle.yOffset),
+                renderZ = (float)(digging.prevZ + (digging.z - digging.prevZ) * (double)delta - Particle.zOffset),
+                brightness = digging.getBrightnessAtEyes(delta);
         tessellator.color(brightness * particleBaseAccessor.getRed(), brightness * particleBaseAccessor.getGreen(), brightness * particleBaseAccessor.getBlue());
         tessellator.vertex(renderX - yawX * randomMultiplier - pitchY1 * randomMultiplier, renderY - pitchX * randomMultiplier, renderZ - yawY * randomMultiplier - pitchY2 * randomMultiplier, startU, endV);
         tessellator.vertex(renderX - yawX * randomMultiplier + pitchY1 * randomMultiplier, renderY + pitchX * randomMultiplier, renderZ - yawY * randomMultiplier + pitchY2 * randomMultiplier, startU, startV);

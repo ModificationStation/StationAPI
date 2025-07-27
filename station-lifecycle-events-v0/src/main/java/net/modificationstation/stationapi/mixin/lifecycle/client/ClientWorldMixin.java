@@ -1,16 +1,16 @@
 package net.modificationstation.stationapi.mixin.lifecycle.client;
 
-import net.minecraft.class_454;
 import net.minecraft.client.network.ClientNetworkHandler;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.play.DisconnectPacket;
+import net.minecraft.world.ClientWorld;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.network.MultiplayerLogoutEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(class_454.class)
+@Mixin(ClientWorld.class)
 class ClientWorldMixin {
     @Redirect(
             method = "method_293",
@@ -27,6 +27,6 @@ class ClientWorldMixin {
                         .dropped(false)
                         .build()
         );
-        clientPlayNetworkHandler.method_1646(arg);
+        clientPlayNetworkHandler.sendPacketAndDisconnect(arg);
     }
 }

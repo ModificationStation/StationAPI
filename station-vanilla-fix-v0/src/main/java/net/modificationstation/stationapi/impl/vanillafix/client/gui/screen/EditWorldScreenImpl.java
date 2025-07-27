@@ -43,7 +43,7 @@ public final class EditWorldScreenImpl {
         event.contexts.add(screen -> new ButtonWidgetDetachedContext(
                 id -> {
                     ButtonWidget button = new ButtonWidget(id, 0, 0, I18n.getTranslation(CONVERT_TO_MCREGION_KEY));
-                    button.active = NbtHelper.getDataVersions(((FlattenedWorldStorage) ((ScreenAccessor) screen).getMinecraft().method_2127()).getWorldTag(screen.worldData.method_1956())).contains(NAMESPACE.toString());
+                    button.active = NbtHelper.getDataVersions(((FlattenedWorldStorage) ((ScreenAccessor) screen).getMinecraft().getWorldStorageSource()).getWorldTag(screen.worldData.getSaveName())).contains(NAMESPACE.toString());
                     return button;
                 },
                 button -> ((ScreenAccessor) screen).getMinecraft().setScreen(new WarningScreen(screen, () -> {

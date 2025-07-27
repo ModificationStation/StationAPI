@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.dimension.server;
 
-import net.minecraft.class_166;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.PlayerManager;
 import net.modificationstation.stationapi.api.entity.HasTeleportationManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,7 +16,7 @@ abstract class ServerPlayerEntityMixin implements HasTeleportationManager {
                     target = "Lnet/minecraft/class_166;method_578(Lnet/minecraft/entity/player/ServerPlayerEntity;)V"
             )
     )
-    private void stationapi_overrideSwitchDimensions(class_166 serverPlayerConnectionManager, ServerPlayerEntity serverPlayer) {
+    private void stationapi_overrideSwitchDimensions(PlayerManager serverPlayerConnectionManager, ServerPlayerEntity serverPlayer) {
         //noinspection DataFlowIssue
         getTeleportationManager().switchDimension((ServerPlayerEntity) (Object) this);
     }

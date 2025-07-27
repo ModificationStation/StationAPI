@@ -67,7 +67,7 @@ public class ItemUsageContext {
     }
 
     public boolean shouldCancelInteraction() {
-        return this.player != null && this.player.method_1373();
+        return this.player != null && this.player.isSneaking();
     }
 
     public float getPlayerYaw() {

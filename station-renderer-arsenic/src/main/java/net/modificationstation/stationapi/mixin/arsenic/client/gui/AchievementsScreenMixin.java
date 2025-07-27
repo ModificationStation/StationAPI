@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.gui;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.gui.screen.AchievementsScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.achievement.AchievementsScreen;
 import net.minecraft.client.render.Tessellator;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;

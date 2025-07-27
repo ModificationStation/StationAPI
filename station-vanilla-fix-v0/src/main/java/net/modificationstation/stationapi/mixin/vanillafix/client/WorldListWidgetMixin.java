@@ -16,6 +16,6 @@ class WorldListWidgetMixin {
             )
     )
     private void stationapi_warn(SelectWorldScreen instance, int i) {
-        WorldConversionWarning.warnIfMcRegion(((ScreenAccessor) instance).getMinecraft(), instance, ((SelectWorldScreenAccessor) instance).getField_2436().get(i), () -> instance.method_1891(i));
+        WorldConversionWarning.warnIfMcRegion(((ScreenAccessor) instance).getMinecraft(), instance, ((SelectWorldScreenAccessor) instance).getField_2436().get(i), () -> instance.selectWorld(i));
     }
 }

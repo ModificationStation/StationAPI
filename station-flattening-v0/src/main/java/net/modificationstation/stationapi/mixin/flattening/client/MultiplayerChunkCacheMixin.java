@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.class_455;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.chunk.MultiplayerChunkCache;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
-@Mixin(class_455.class)
+@Mixin(MultiplayerChunkCache.class)
 class MultiplayerChunkCacheMixin {
     @Shadow private Map<ChunkPos, Chunk> field_2553;
 
@@ -34,7 +34,7 @@ class MultiplayerChunkCacheMixin {
         ChunkPos vec2i = new ChunkPos(i, j);
         FlattenedChunk chunk = new FlattenedChunk(this.field_2555, i, j);
         this.field_2553.put(vec2i, chunk);
-        chunk.field_955 = true;
+        chunk.loaded = true;
         cir.setReturnValue(chunk);
     }
 }

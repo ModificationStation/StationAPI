@@ -1,14 +1,14 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.class_417;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.light.LightUpdate;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(class_417.class)
+@Mixin(LightUpdate.class)
 class class_417Mixin {
     @Unique private short maxBlock;
     @Unique private short minBlock;

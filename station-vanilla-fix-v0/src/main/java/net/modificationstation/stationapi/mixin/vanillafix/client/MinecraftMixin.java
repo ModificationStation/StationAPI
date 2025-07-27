@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.vanillafix.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.class_182;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.storage.WorldStorageSource;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.util.Namespace;
@@ -24,7 +24,7 @@ import static net.modificationstation.stationapi.impl.vanillafix.datafixer.Vanil
 @Mixin(Minecraft.class)
 class MinecraftMixin {
     @Shadow
-    private class_182 field_2792;
+    private WorldStorageSource field_2792;
 
     @ModifyArg(
             method = "method_2125",

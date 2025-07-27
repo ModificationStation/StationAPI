@@ -33,7 +33,7 @@ public class FlattenedMultiBlockChangeS2CPacket extends ChunkDeltaUpdateS2CPacke
         this.positions = new short[arraySize];
         stateArray = new int[arraySize];
         blockMetadata = new byte[arraySize];
-        ChunkSection section = Objects.requireNonNullElse(((FlattenedChunk) world.method_214(chunkX, chunkZ)).sections[sectionIndex], ChunkSection.EMPTY);
+        ChunkSection section = Objects.requireNonNullElse(((FlattenedChunk) world.getChunk(chunkX, chunkZ)).sections[sectionIndex], ChunkSection.EMPTY);
         for (int i = 0; i < arraySize; i++) {
             short position = positions[i];
             this.positions[i] = position;

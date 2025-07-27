@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.world;
 
-import net.minecraft.class_81;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.WorldProperties;
+import net.minecraft.world.storage.AlphaWorldStorage;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.world.WorldPropertiesEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.io.File;
 
-@Mixin(class_81.class)
+@Mixin(AlphaWorldStorage.class)
 class DimensionFileMixin {
     @Inject(
             method = "method_1737",

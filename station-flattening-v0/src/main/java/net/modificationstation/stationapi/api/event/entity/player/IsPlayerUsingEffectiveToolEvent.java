@@ -21,7 +21,7 @@ public final class IsPlayerUsingEffectiveToolEvent extends Event {
      *
      * <p>
      *     Initially, the field contains a reimplementation of the vanilla
-     *     {@link net.minecraft.entity.player.PlayerInventory#method_679(Block)}.
+     *     {@link net.minecraft.entity.player.PlayerInventory#isUsingEffectiveTool(Block)}.
      * </p>
      * <p>
      *     The field is non-final to allow full control over the outcome of the event, including completely

@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
 import net.minecraft.block.Block;
-import net.minecraft.class_454;
 import net.minecraft.client.network.ClientNetworkHandler;
+import net.minecraft.world.ClientWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
-import net.minecraft.world.dimension.DimensionData;
+import net.minecraft.world.storage.WorldStorage;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.network.ModdedPacketHandler;
 import net.modificationstation.stationapi.impl.client.world.ClientBlockChange;
@@ -19,13 +19,13 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.LinkedList;
 
-@Mixin(class_454.class)
+@Mixin(ClientWorld.class)
 abstract class ClientWorldMixin extends World implements StationClientWorld {
     @Unique boolean isModded = false;
 
     @Shadow private LinkedList field_1722;
 
-    private ClientWorldMixin(DimensionData arg, String string, Dimension arg2, long l) {
+    private ClientWorldMixin(WorldStorage arg, String string, Dimension arg2, long l) {
         super(arg, string, arg2, l);
     }
 
@@ -60,7 +60,7 @@ abstract class ClientWorldMixin extends World implements StationClientWorld {
                     target = "(Lnet/minecraft/class_454;IIIII)Lnet/minecraft/class_454$class_456;"
             )
     )
-    private class_454.class_456 stationapi_storeBlockState(class_454 world, int x, int y, int z, int blockId, int metadata) {
+    private ClientWorld.BlockReset stationapi_storeBlockState(ClientWorld world, int x, int y, int z, int blockId, int metadata) {
         return new ClientBlockChange(world, x, y, z, world.getBlockState(x, y, z), metadata);
     }
 
@@ -72,12 +72,12 @@ abstract class ClientWorldMixin extends World implements StationClientWorld {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void stationapi_captureClientBlockChange(CallbackInfo ci, int var1, int var2, class_454.class_456 var3) {
+    private void stationapi_captureClientBlockChange(CallbackInfo ci, int var1, int var2, ClientWorld.BlockReset var3) {
         stationapi_clientBlockChange = var3;
     }
 
     @Unique
-    private class_454.class_456 stationapi_clientBlockChange;
+    private ClientWorld.BlockReset stationapi_clientBlockChange;
 
     @Redirect(
             method = "method_242",
@@ -100,7 +100,7 @@ abstract class ClientWorldMixin extends World implements StationClientWorld {
         BlockState result = super.setBlockState(x, y, z, blockState);
         if (result != null) {
             //noinspection unchecked,DataFlowIssue
-            this.field_1722.add(new ClientBlockChange((class_454) (Object) this, x, y, z, n, n2));
+            this.field_1722.add(new ClientBlockChange((ClientWorld) (Object) this, x, y, z, n, n2));
         }
         return result;
     }

@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.item.client;
 
-import net.minecraft.class_555;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.util.hit.HitResultType;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(class_555.class)
+@Mixin(GameRenderer.class)
 class GameRendererMixin {
     @Shadow
     private Minecraft field_2349;

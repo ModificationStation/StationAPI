@@ -5,8 +5,8 @@ import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
-import net.minecraft.class_259;
+import net.minecraft.block.MapColor;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 public abstract class AbstractBlockState extends State<Block, BlockState> {
     private final boolean isAir;
     private final Material material;
-    private final class_259 materialColor;
+    private final MapColor materialColor;
     private final boolean toolRequired;
     private final boolean opaque;
     private int luminance = -1;
@@ -34,8 +34,8 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
         super(block, propertyMap, mapCodec);
         this.isAir = block.material == Material.AIR;
         this.material = block.material;
-        this.materialColor = block.material.field_973;
-        this.toolRequired = !block.material.method_898();
+        this.materialColor = block.material.mapColor;
+        this.toolRequired = !block.material.isHandHarvestable();
         this.opaque = block.isOpaque();
     }
 
@@ -60,7 +60,7 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
         return this.isAir;
     }
 
-    public class_259 getTopMaterialColor(BlockView world, BlockPos pos) {
+    public MapColor getTopMaterialColor(BlockView world, BlockPos pos) {
         return this.materialColor;
     }
 

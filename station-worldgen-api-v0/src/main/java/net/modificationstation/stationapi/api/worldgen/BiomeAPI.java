@@ -99,7 +99,7 @@ public class BiomeAPI {
     public static void init(World world, long seed) {
         // Call this to force biome registry event happen before init of regions
         //noinspection ResultOfMethodCallIgnored
-        Biome.method_786(0, 0);
+        Biome.getBiome(0, 0);
 
         if (overworldProvider == null) {
             List<BiomeProvider> biomes = overworldProviders

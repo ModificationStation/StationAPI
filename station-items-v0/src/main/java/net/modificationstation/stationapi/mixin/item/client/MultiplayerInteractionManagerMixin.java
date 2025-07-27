@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.item.client;
 
-import net.minecraft.MultiplayerInteractionManager;
 import net.minecraft.client.InteractionManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.MultiplayerInteractionManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.HitResultType;
 import net.modificationstation.stationapi.api.StationAPI;

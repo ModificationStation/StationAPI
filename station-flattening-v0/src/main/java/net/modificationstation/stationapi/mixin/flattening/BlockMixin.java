@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -257,7 +257,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     @Override
     @Unique
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
-        return material.method_896() && (context.getStack() == null || !context.getStack().isOf(asItem()));
+        return material.isReplaceable() && (context.getStack() == null || !context.getStack().isOf(asItem()));
     }
 
     @Override

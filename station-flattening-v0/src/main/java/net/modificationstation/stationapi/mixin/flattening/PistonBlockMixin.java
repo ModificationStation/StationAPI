@@ -3,10 +3,10 @@ package net.modificationstation.stationapi.mixin.flattening;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.block.PistonBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.class_283;
+import net.minecraft.block.entity.PistonBlockEntity;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.impl.block.StationFlatteningMovingPistonImpl;
@@ -49,7 +49,7 @@ class PistonBlockMixin extends Block {
     )
     private void stationapi_getPushedBlockState2(
             World world, int x, int y, int z, int direction, int meta, CallbackInfo ci,
-            int var7, BlockEntity var8, int pushedX, int pushedY, int pushedZ, int var12, int var13, int var14, BlockEntity var15, class_283 pistonBlockEntity,
+            int var7, BlockEntity var8, int pushedX, int pushedY, int pushedZ, int var12, int var13, int var14, BlockEntity var15, PistonBlockEntity pistonBlockEntity,
             @Share("blockState") LocalRef<BlockState> blockStateRef
     ) {
         blockStateRef.set(pistonBlockEntity.getPushedBlockState());

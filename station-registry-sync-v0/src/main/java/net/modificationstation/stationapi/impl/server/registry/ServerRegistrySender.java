@@ -29,7 +29,7 @@ public class ServerRegistrySender {
 
     @EventListener
     private static void sendWorldRegistry(PlayerPacketHandlerSetEvent event) {
-        if (((ModdedPacketHandler) event.player.field_255).isModded()) {
+        if (((ModdedPacketHandler) event.player.networkHandler).isModded()) {
             LOGGER.info("Sending level registries to \"" + event.player.name + "\"...");
             NbtCompound registries = new NbtCompound();
             WorldLegacyRegistry.saveAll(registries);

@@ -19,7 +19,7 @@ class NetherDimensionMixin extends Dimension {
             at = @At("TAIL")
     )
     private void stationapi_setNetherBiomeSource(CallbackInfo info) {
-        this.field_2174 = NetherBiomeSourceImpl.getInstance();
+        this.biomeSource = NetherBiomeSourceImpl.getInstance();
     }
     
     @Override

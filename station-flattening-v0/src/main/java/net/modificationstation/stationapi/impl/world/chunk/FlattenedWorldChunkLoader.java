@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.impl.world.chunk;
 
-import net.minecraft.class_243;
-import net.minecraft.class_379;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.storage.ChunkStorage;
+import net.minecraft.world.chunk.storage.RegionIo;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.impl.world.FlattenedWorldManager;
@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import static net.modificationstation.stationapi.impl.world.FlattenedWorldManager.SECTIONS;
 
-public class FlattenedWorldChunkLoader implements class_243 {
+public class FlattenedWorldChunkLoader implements ChunkStorage {
 
     protected final File dimFolder;
 
@@ -28,8 +28,8 @@ public class FlattenedWorldChunkLoader implements class_243 {
     }
 
     @Override
-    public Chunk method_811(World arg, int i, int j) {
-        DataInputStream dataInputStream = class_379.method_1215(dimFolder, i, j);
+    public Chunk loadChunk(World arg, int i, int j) {
+        DataInputStream dataInputStream = RegionIo.getChunkInputStream(dimFolder, i, j);
         if (dataInputStream == null)
             return null;
         NbtCompound compoundTag = NbtIo.read(dataInputStream);
@@ -49,15 +49,15 @@ public class FlattenedWorldChunkLoader implements class_243 {
             compoundTag.putInt("zPos", j);
             chunk = FlattenedWorldManager.loadChunk(arg, compoundTag.getCompound("Level"));
         }
-        chunk.method_890();
+        chunk.fill();
         return chunk;
     }
 
     @Override
-    public void method_812(World world, Chunk oldChunk) {
+    public void saveChunk(World world, Chunk oldChunk) {
         if (!(oldChunk instanceof FlattenedChunk chunk)) throw new IllegalStateException(getClass().getSimpleName() + " can't save chunk of type \"" + oldChunk.getClass().getName() + "\"!");
-        world.method_251();
-        DataOutputStream dataOutputStream = class_379.method_1216(dimFolder, chunk.x, chunk.z);
+        world.checkSessionLock();
+        DataOutputStream dataOutputStream = RegionIo.getChunkOutputStream(dimFolder, chunk.x, chunk.z);
         NbtCompound compoundTag = new NbtCompound();
         NbtCompound compoundTag2 = new NbtCompound();
         compoundTag.put("Level", (NbtElement) compoundTag2);
@@ -69,16 +69,16 @@ public class FlattenedWorldChunkLoader implements class_243 {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        WorldProperties worldProperties = world.method_262();
-        worldProperties.setSizeOnDisk(worldProperties.getSizeOnDisk() + (long) class_379.method_1214(dimFolder, chunk.x, chunk.z));
+        WorldProperties worldProperties = world.getProperties();
+        worldProperties.setSizeOnDisk(worldProperties.getSizeOnDisk() + (long) RegionIo.getChunkSize(dimFolder, chunk.x, chunk.z));
     }
 
     @Override
-    public void method_814(World arg, Chunk arg2) {}
+    public void saveEntities(World arg, Chunk arg2) {}
 
     @Override
-    public void method_810() {}
+    public void tick() {}
 
     @Override
-    public void method_813() {}
+    public void flush() {}
 }

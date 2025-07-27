@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
-import net.minecraft.class_519;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.source.BiomeSource;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeColorProvider;
 
 import java.util.function.Function;
@@ -23,7 +23,7 @@ public class BiomeColorInterpolator {
         this.provider = provider;
     }
 
-    public int getColor(class_519 source, double x, double z) {
+    public int getColor(BiomeSource source, double x, double z) {
         int x1 = MathHelper.floor(x / side);
         int z1 = MathHelper.floor(z / side);
 
@@ -41,10 +41,10 @@ public class BiomeColorInterpolator {
             int x2 = x1 + side;
             int z2 = z1 + side;
 
-            colors[0] = provider.apply(source.method_1787(x1, z1)).getColor(source, x1, z1);
-            colors[1] = provider.apply(source.method_1787(x2, z1)).getColor(source, x2, z1);
-            colors[2] = provider.apply(source.method_1787(x1, z2)).getColor(source, x1, z2);
-            colors[3] = provider.apply(source.method_1787(x2, z2)).getColor(source, x2, z2);
+            colors[0] = provider.apply(source.getBiome(x1, z1)).getColor(source, x1, z1);
+            colors[1] = provider.apply(source.getBiome(x2, z1)).getColor(source, x2, z1);
+            colors[2] = provider.apply(source.getBiome(x1, z2)).getColor(source, x1, z2);
+            colors[3] = provider.apply(source.getBiome(x2, z2)).getColor(source, x2, z2);
         }
 
         int a = lerp(colors[0], colors[1], dx);

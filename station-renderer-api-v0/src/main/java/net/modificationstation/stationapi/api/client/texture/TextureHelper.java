@@ -20,7 +20,7 @@ public class TextureHelper {
 
     public static InputStream getTextureStream(String path) {
         //noinspection deprecation
-        return ((Minecraft) FabricLoader.getInstance().getGameInstance()).field_2768.field_1175.method_976(path);
+        return ((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePacks.selected.getResource(path);
     }
 
     public static BufferedImage scaleImage(BufferedImage image, int width, int height) {

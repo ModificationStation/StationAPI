@@ -24,7 +24,7 @@ abstract class ClientPlayerEntityMixin extends PlayerEntity implements HasTelepo
             constant = @Constant(intValue = 0)
     )
     private int stationapi_getRespawnDimension(int constant) {
-        return world.dimension.method_1766() ? dimensionId : DimensionRegistry.INSTANCE.getLegacyId(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Couldn't find overworld dimension in the registry!"));
+        return world.dimension.hasWorldSpawn() ? dimensionId : DimensionRegistry.INSTANCE.getLegacyId(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Couldn't find overworld dimension in the registry!"));
     }
 
     @Redirect(

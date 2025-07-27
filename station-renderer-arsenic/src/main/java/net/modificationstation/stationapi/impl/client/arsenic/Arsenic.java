@@ -74,7 +74,7 @@ public class Arsenic {
     private static void beforeTexturePackApplied(TexturePackLoadedEvent.Before event) {
         Map<String, Integer> textureMap = ((TextureManagerAccessor) event.textureManager).getTextures();
         new HashMap<>(textureMap).keySet().stream().filter(s -> {
-            try (InputStream textureStream = event.newTexturePack.method_976(s)) {
+            try (InputStream textureStream = event.newTexturePack.getResource(s)) {
                 return textureStream == null;
             } catch (IOException e) {
                 throw new RuntimeException(e);

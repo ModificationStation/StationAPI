@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.template.block;
 
 import net.minecraft.block.GlowstoneBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class TemplateGlowstoneBlock extends GlowstoneBlock implements BlockTemplate {

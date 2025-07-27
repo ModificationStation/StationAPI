@@ -21,7 +21,7 @@ public class PacketHelperServerImpl extends PacketHelperImpl {
 
     @Override
     public void sendTo(PlayerEntity player, Packet packet) {
-        ((ServerPlayerEntity) player).field_255.method_835(packet);
+        ((ServerPlayerEntity) player).networkHandler.sendPacket(packet);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class PacketHelperServerImpl extends PacketHelperImpl {
     public void sendToAllTracking(Entity entity, Packet packet) {
         //noinspection deprecation
         ((MinecraftServer) FabricLoader.getInstance().getGameInstance())
-                .method_2165(entity.world.dimension.id).method_1670(entity, packet);
+                .getEntityTracker(entity.world.dimension.id).sendToAround(entity, packet);
     }
 
     @Override

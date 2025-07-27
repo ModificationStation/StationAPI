@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.vanillafix.client;
 
-import net.minecraft.class_591;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
+import net.minecraft.world.storage.WorldSaveInfo;
 import net.modificationstation.stationapi.impl.vanillafix.client.gui.screen.WorldConversionWarning;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Mixin(SelectWorldScreen.class)
 class SelectWorldScreenMixin extends Screen {
-    @Shadow private List<class_591> field_2436;
+    @Shadow private List<WorldSaveInfo> field_2436;
 
     @Redirect(
             method = "buttonClicked",
@@ -23,6 +23,6 @@ class SelectWorldScreenMixin extends Screen {
             )
     )
     private void stationapi_warn(SelectWorldScreen instance, int i) {
-        WorldConversionWarning.warnIfMcRegion(minecraft, instance, field_2436.get(i), () -> instance.method_1891(i));
+        WorldConversionWarning.warnIfMcRegion(minecraft, instance, field_2436.get(i), () -> instance.selectWorld(i));
     }
 }

@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
-import net.minecraft.class_519;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.source.BiomeSource;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 
 public class WorldGeneratorImpl {
@@ -16,7 +16,7 @@ public class WorldGeneratorImpl {
         cx <<= 4;
         cz <<= 4;
     
-        class_519 biomeSource = world.method_1781();
+        BiomeSource biomeSource = world.method_1781();
         int sideY = (1 << (MathHelper.ceilLog2(world.getHeight()) - 3)) + 1;
         int bottom = world.getBottomY() >> 3;
         int dx = sideY * 5;

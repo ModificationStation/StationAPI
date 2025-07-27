@@ -3,11 +3,11 @@ package net.modificationstation.stationapi.mixin.flattening.client;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.class_564;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.util.ScreenScaler;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.hit.HitResultType;
 import net.modificationstation.stationapi.api.block.BlockState;
@@ -36,8 +36,8 @@ abstract class InGameHudMixin extends DrawContext {
             ),
             locals = LocalCapture.CAPTURE_FAILSOFT
     )
-    private void stationapi_renderHud(float bl, boolean i, int j, int par4, CallbackInfo ci, class_564 scaler, int var6, int var7, TextRenderer var8) {
-        HitResult hit = minecraft.field_2823;
+    private void stationapi_renderHud(float bl, boolean i, int j, int par4, CallbackInfo ci, ScreenScaler scaler, int var6, int var7, TextRenderer var8) {
+        HitResult hit = minecraft.crosshairTarget;
         int offset = 22;
         if (hit != null && hit.type == HitResultType.BLOCK) {
             BlockState state = minecraft.world.getBlockState(hit.blockX, hit.blockY, hit.blockZ);
@@ -71,7 +71,7 @@ abstract class InGameHudMixin extends DrawContext {
             }
 
             if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-                BlockEntity entity = minecraft.world.method_1777(hit.blockX, hit.blockY, hit.blockZ);
+                BlockEntity entity = minecraft.world.getBlockEntity(hit.blockX, hit.blockY, hit.blockZ);
                 if (entity != null) {
                     String className = entity.getClass().getName();
                     text = "Tile Entity: " + className.substring(className.lastIndexOf('.') + 1);

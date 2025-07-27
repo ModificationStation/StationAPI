@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.worldgen.biome;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.minecraft.class_458;
+import net.minecraft.util.math.noise.OctaveSimplexNoiseSampler;
 import net.minecraft.world.biome.Biome;
 import net.modificationstation.stationapi.impl.worldgen.IDVoronoiNoise;
 
@@ -15,8 +15,8 @@ public class VoronoiBiomeProvider implements BiomeProvider {
     private final double[] buffer = new double[1];
 
     private IDVoronoiNoise idNoise;
-    private class_458 distortX;
-    private class_458 distortZ;
+    private OctaveSimplexNoiseSampler distortX;
+    private OctaveSimplexNoiseSampler distortZ;
     private final double distortion;
     private final double s1;
     private final double s2;
@@ -41,8 +41,8 @@ public class VoronoiBiomeProvider implements BiomeProvider {
 
     @Override
     public Biome getBiome(int x, int z, float temperature, float downfall) {
-        double px = x * s1 + distortX.method_1516(buffer, x, z, 1, 1, s2, s2, 0.25)[0] * distortion;
-        double pz = z * s1 + distortZ.method_1516(buffer, x, z, 1, 1, s2, s2, 0.25)[0] * distortion;
+        double px = x * s1 + distortX.sample(buffer, x, z, 1, 1, s2, s2, 0.25)[0] * distortion;
+        double pz = z * s1 + distortZ.sample(buffer, x, z, 1, 1, s2, s2, 0.25)[0] * distortion;
         int id = idNoise.getID(px, pz, biomes.size());
         return biomes.get(id);
     }
@@ -58,7 +58,7 @@ public class VoronoiBiomeProvider implements BiomeProvider {
     public void setSeed(long seed) {
         Random random = new Random(seed);
         idNoise = new IDVoronoiNoise(random.nextInt());
-        distortX = new class_458(new Random(random.nextLong()), 2);
-        distortZ = new class_458(new Random(random.nextLong()), 2);
+        distortX = new OctaveSimplexNoiseSampler(new Random(random.nextLong()), 2);
+        distortZ = new OctaveSimplexNoiseSampler(new Random(random.nextLong()), 2);
     }
 }

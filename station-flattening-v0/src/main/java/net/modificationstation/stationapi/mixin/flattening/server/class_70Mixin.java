@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.mixin.flattening.server;
 
 import net.minecraft.block.Block;
-import net.minecraft.class_70;
-import net.minecraft.class_73;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
+import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.math.MutableBlockPos;
@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(class_70.class)
+@Mixin(ServerPlayerInteractionManager.class)
 class class_70Mixin {
-    @Shadow private class_73 field_2310;
+    @Shadow private ServerWorld field_2310;
     @Shadow private int field_2318;
     @Shadow private int field_2319;
     @Shadow private int field_2320;

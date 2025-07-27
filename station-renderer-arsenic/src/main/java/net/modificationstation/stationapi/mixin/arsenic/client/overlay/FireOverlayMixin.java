@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.overlay;
 
 import net.minecraft.block.Block;
-import net.minecraft.class_556;
+import net.minecraft.client.render.item.HeldItemRenderer;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicBlockRenderer.*;
 
-@Mixin(class_556.class)
+@Mixin(HeldItemRenderer.class)
 class FireOverlayMixin {
     @Unique
     private Atlas stationapi_fire_atlas;
