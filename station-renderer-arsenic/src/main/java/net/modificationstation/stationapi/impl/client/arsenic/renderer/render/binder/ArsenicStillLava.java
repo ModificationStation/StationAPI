@@ -7,10 +7,10 @@ import net.modificationstation.stationapi.api.client.texture.binder.StationTextu
 
 public class ArsenicStillLava extends StationTextureBinder {
 
-    protected float[] field_2701;
-    protected float[] field_2702;
-    protected float[] field_2703;
-    protected float[] field_2704;
+    protected float[] current;
+    protected float[] next;
+    protected float[] heat;
+    protected float[] heatDelta;
 
     public ArsenicStillLava(Atlas.Sprite staticReference) {
         super(staticReference);
@@ -19,10 +19,10 @@ public class ArsenicStillLava extends StationTextureBinder {
     @Override
     public void reloadFromTexturePack(TexturePack newTexturePack) {
         int square = getStaticReference().getWidth() * getStaticReference().getHeight();
-        field_2701 = new float[square];
-        field_2702 = new float[square];
-        field_2703 = new float[square];
-        field_2704 = new float[square];
+        current = new float[square];
+        next = new float[square];
+        heat = new float[square];
+        heatDelta = new float[square];
         pixels = new byte[square * 4];
     }
 
@@ -41,33 +41,33 @@ public class ArsenicStillLava extends StationTextureBinder {
                     for(int var7 = var2 - 1; var7 <= var2 + 1; ++var7) {
                         int var8 = var6 + var4 & (textureHeight - 1);
                         int var9 = var7 + var5 & (textureWidth - 1);
-                        var3 += this.field_2701[var8 + var9 * textureWidth];
+                        var3 += this.current[var8 + var9 * textureWidth];
                     }
                 }
 
-                this.field_2702[var1 + var2 * textureWidth] = var3 / 10.0F + (
-                        this.field_2703[(var1 & (textureWidth - 1)) + (var2 & (textureHeight - 1)) * textureWidth] +
-                                this.field_2703[(var1 + 1 & (textureWidth - 1)) + (var2 & (textureHeight - 1)) * textureWidth] +
-                                this.field_2703[(var1 + 1 & (textureWidth - 1)) + (var2 + 1 & (textureHeight - 1)) * textureWidth] +
-                                this.field_2703[(var1 & (textureWidth - 1)) + (var2 + 1 & (textureHeight - 1)) * textureWidth]) / 4.0F * 0.8F;
-                this.field_2703[var1 + var2 * textureWidth] += this.field_2704[var1 + var2 * textureWidth] * 0.01F;
-                if (this.field_2703[var1 + var2 * textureWidth] < 0.0F) {
-                    this.field_2703[var1 + var2 * textureWidth] = 0.0F;
+                this.next[var1 + var2 * textureWidth] = var3 / 10.0F + (
+                        this.heat[(var1 & (textureWidth - 1)) + (var2 & (textureHeight - 1)) * textureWidth] +
+                                this.heat[(var1 + 1 & (textureWidth - 1)) + (var2 & (textureHeight - 1)) * textureWidth] +
+                                this.heat[(var1 + 1 & (textureWidth - 1)) + (var2 + 1 & (textureHeight - 1)) * textureWidth] +
+                                this.heat[(var1 & (textureWidth - 1)) + (var2 + 1 & (textureHeight - 1)) * textureWidth]) / 4.0F * 0.8F;
+                this.heat[var1 + var2 * textureWidth] += this.heatDelta[var1 + var2 * textureWidth] * 0.01F;
+                if (this.heat[var1 + var2 * textureWidth] < 0.0F) {
+                    this.heat[var1 + var2 * textureWidth] = 0.0F;
                 }
 
-                this.field_2704[var1 + var2 * textureWidth] -= 0.06F;
+                this.heatDelta[var1 + var2 * textureWidth] -= 0.06F;
                 if (Math.random() < 0.005D) {
-                    this.field_2704[var1 + var2 * textureWidth] = 1.5F;
+                    this.heatDelta[var1 + var2 * textureWidth] = 1.5F;
                 }
             }
         }
 
-        float[] var11 = this.field_2702;
-        this.field_2702 = this.field_2701;
-        this.field_2701 = var11;
+        float[] var11 = this.next;
+        this.next = this.current;
+        this.current = var11;
 
         for(int var12 = 0; var12 < textureWidth * textureHeight; ++var12) {
-            float var13 = this.field_2701[var12] * 2.0F;
+            float var13 = this.current[var12] * 2.0F;
             if (var13 > 1.0F) {
                 var13 = 1.0F;
             }

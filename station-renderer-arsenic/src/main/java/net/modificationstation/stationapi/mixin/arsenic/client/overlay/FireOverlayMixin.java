@@ -21,7 +21,7 @@ class FireOverlayMixin {
     private Sprite stationapi_fire_texture;
 
     @Inject(
-            method = "method_1867",
+            method = "renderFireOverlay",
             at = @At("HEAD")
     )
     private void stationapi_fire_captureAtlas(float par1, CallbackInfo ci) {
@@ -29,7 +29,7 @@ class FireOverlayMixin {
     }
 
     @ModifyVariable(
-            method = "method_1867",
+            method = "renderFireOverlay",
             index = 5,
             at = @At("STORE")
     )
@@ -39,7 +39,7 @@ class FireOverlayMixin {
     }
 
     @ModifyVariable(
-            method = "method_1867",
+            method = "renderFireOverlay",
             index = 6,
             at = @At("STORE")
     )
@@ -49,7 +49,7 @@ class FireOverlayMixin {
 
     @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
-            method = "method_1867",
+            method = "renderFireOverlay",
             index = 7,
             at = @At("STORE")
     )
@@ -58,7 +58,7 @@ class FireOverlayMixin {
     }
 
     @ModifyConstant(
-            method = "method_1867",
+            method = "renderFireOverlay",
             constant = {
                     @Constant(
                             floatValue = ATLAS_SIZE,
@@ -75,7 +75,7 @@ class FireOverlayMixin {
     }
 
     @ModifyConstant(
-            method = "method_1867",
+            method = "renderFireOverlay",
             constant = @Constant(
                     floatValue = ADJUSTED_TEX_SIZE,
                     ordinal = 0
@@ -86,7 +86,7 @@ class FireOverlayMixin {
     }
 
     @ModifyConstant(
-            method = "method_1867",
+            method = "renderFireOverlay",
             constant = {
                     @Constant(
                             floatValue = ATLAS_SIZE,
@@ -103,7 +103,7 @@ class FireOverlayMixin {
     }
 
     @ModifyConstant(
-            method = "method_1867",
+            method = "renderFireOverlay",
             constant = @Constant(
                     floatValue = ADJUSTED_TEX_SIZE,
                     ordinal = 1
@@ -114,7 +114,7 @@ class FireOverlayMixin {
     }
 
     @Inject(
-            method = "method_1867",
+            method = "renderFireOverlay",
             at = @At("RETURN")
     )
     private void stationapi_fire_releaseCaptured(float par1, CallbackInfo ci) {

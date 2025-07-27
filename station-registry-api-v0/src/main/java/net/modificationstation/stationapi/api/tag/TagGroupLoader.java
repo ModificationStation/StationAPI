@@ -81,26 +81,26 @@ public class TagGroupLoader<T> {
         return map;
     }
 
-    private static void method_32839(Map<Identifier, List<TrackedEntry>> map, Multimap<Identifier, Identifier> multimap, Set<Identifier> set, Identifier identifier, BiConsumer<Identifier, List<TrackedEntry>> biConsumer) {
+    private static void getEntity39(Map<Identifier, List<TrackedEntry>> map, Multimap<Identifier, Identifier> multimap, Set<Identifier> set, Identifier identifier, BiConsumer<Identifier, List<TrackedEntry>> biConsumer) {
         if (set.add(identifier)) {
-            multimap.get(identifier).forEach(identifierx -> method_32839(map, multimap, set, identifierx, biConsumer));
+            multimap.get(identifier).forEach(identifierx -> getEntity39(map, multimap, set, identifierx, biConsumer));
             List<TrackedEntry> list = map.get(identifier);
             if (list != null) biConsumer.accept(identifier, list);
 
         }
     }
 
-    private static boolean method_32836(Multimap<Identifier, Identifier> multimap, Identifier identifier, Identifier identifier2) {
+    private static boolean getEntity36(Multimap<Identifier, Identifier> multimap, Identifier identifier, Identifier identifier2) {
         Collection<Identifier> collection = multimap.get(identifier2);
-        return collection.contains(identifier) || collection.stream().anyMatch(identifier2x -> method_32836(multimap, identifier, identifier2x));
+        return collection.contains(identifier) || collection.stream().anyMatch(identifier2x -> getEntity36(multimap, identifier, identifier2x));
     }
 
-    private static void method_32844(Multimap<Identifier, Identifier> multimap, Identifier identifier, Identifier identifier2) {
-        if (!method_32836(multimap, identifier, identifier2)) multimap.put(identifier, identifier2);
+    private static void getEntity44(Multimap<Identifier, Identifier> multimap, Identifier identifier, Identifier identifier2) {
+        if (!getEntity36(multimap, identifier, identifier2)) multimap.put(identifier, identifier2);
 
     }
 
-    private Either<Collection<TrackedEntry>, Collection<T>> method_43952(TagEntry.ValueGetter<T> valueGetter, List<TrackedEntry> list) {
+    private Either<Collection<TrackedEntry>, Collection<T>> getTextureId52(TagEntry.ValueGetter<T> valueGetter, List<TrackedEntry> list) {
         ImmutableSet.Builder<T> builder = ImmutableSet.builder();
         List<TrackedEntry> list2 = new ArrayList<>();
 
@@ -127,10 +127,10 @@ public class TagGroupLoader<T> {
             }
         };
         Multimap<Identifier, Identifier> multimap = HashMultimap.create();
-        map.forEach((identifier, list) -> list.forEach(trackedEntry -> trackedEntry.entry.forEachRequiredTagId(identifier2 -> method_32844(multimap, identifier, identifier2))));
-        map.forEach((identifier, list) -> list.forEach(trackedEntry -> trackedEntry.entry.forEachOptionalTagId(identifier2 -> method_32844(multimap, identifier, identifier2))));
+        map.forEach((identifier, list) -> list.forEach(trackedEntry -> trackedEntry.entry.forEachRequiredTagId(identifier2 -> getEntity44(multimap, identifier, identifier2))));
+        map.forEach((identifier, list) -> list.forEach(trackedEntry -> trackedEntry.entry.forEachOptionalTagId(identifier2 -> getEntity44(multimap, identifier, identifier2))));
         Set<Identifier> set = Sets.newHashSet();
-        map.keySet().forEach(identifier -> method_32839(map, multimap, set, identifier, (identifierx, list) -> this.method_43952(valueGetter, list).ifLeft(collection -> LOGGER.error("Couldn't load tag {} as it is missing following references: {}", identifierx, collection.stream().map(Objects::toString).collect(Collectors.joining(", ")))).ifRight(collection -> map2.put(identifierx, collection))));
+        map.keySet().forEach(identifier -> getEntity39(map, multimap, set, identifier, (identifierx, list) -> this.getTextureId52(valueGetter, list).ifLeft(collection -> LOGGER.error("Couldn't load tag {} as it is missing following references: {}", identifierx, collection.stream().map(Objects::toString).collect(Collectors.joining(", ")))).ifRight(collection -> map2.put(identifierx, collection))));
         return map2;
     }
 

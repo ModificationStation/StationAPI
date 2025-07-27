@@ -1,10 +1,10 @@
 package net.modificationstation.stationapi.impl.util;
 
 public class CuboidBlockIterator {
-    public static final int field_33084 = 0;
-    public static final int field_33085 = 1;
-    public static final int field_33086 = 2;
-    public static final int field_33087 = 3;
+    public static final int range84 = 0;
+    public static final int range85 = 1;
+    public static final int range86 = 2;
+    public static final int range87 = 3;
     private final int startX;
     private final int startY;
     private final int startZ;

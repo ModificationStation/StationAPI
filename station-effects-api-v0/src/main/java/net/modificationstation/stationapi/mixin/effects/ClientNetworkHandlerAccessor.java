@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(ClientNetworkHandler.class)
 public interface ClientNetworkHandlerAccessor {
-    @Invoker("method_1645")
+    @Invoker("getEntity")
     Entity stationapi_getEntityByID(int id);
 }

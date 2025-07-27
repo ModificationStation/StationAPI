@@ -28,7 +28,7 @@ class PlayerRendererMixin extends LivingEntityRenderer {
 
     // TODO: refactor. this seems a bit off in some places
     @WrapOperation(
-            method = "method_825",
+            method = "bindTexture",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/render/entity/PlayerEntityRenderer;bindTexture(Ljava/lang/String;)V"

@@ -20,7 +20,7 @@ public class ServerRegistrySynchronizer {
     @EventListener
     private static void sendWorldRegistry(PlayerPacketHandlerSetEvent event) {
         // only StAPI clients can join StAPI servers anyway, at least at the moment
-//        if (((ModdedPacketHandler) event.player.field_255).isModded())
+//        if (((ModdedPacketHandler) event.player.networkHandler).isModded())
         RegistrySyncManager.configureClient(event.player);
     }
 }

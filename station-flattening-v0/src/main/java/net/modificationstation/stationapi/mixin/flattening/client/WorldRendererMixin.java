@@ -15,7 +15,7 @@ class WorldRendererMixin {
     @Shadow private Minecraft client;
 
     @ModifyConstant(
-            method = "method_1544",
+            method = "renderEntities",
             constant = @Constant(expandZeroConditions = Constant.Condition.GREATER_THAN_OR_EQUAL_TO_ZERO)
     )
     private int stationapi_changeMinHeight(int value) {
@@ -23,7 +23,7 @@ class WorldRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_1544",
+            method = "renderEntities",
             constant = @Constant(
                     intValue = 0,
                     ordinal = 5
@@ -34,7 +34,7 @@ class WorldRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_1544",
+            method = "renderEntities",
             constant = @Constant(intValue = 128)
     )
     private int stationapi_changeMaxHeight(int value) {
@@ -42,7 +42,7 @@ class WorldRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_1544",
+            method = "renderEntities",
             constant = @Constant(intValue = 127)
     )
     private int stationapi_changeMaxBlockHeight(int value) {
@@ -50,7 +50,7 @@ class WorldRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_1537",
+            method = "reload",
             constant = @Constant(intValue = 8)
     )
     private int stationapi_changeSectionCount(int value) {
@@ -58,7 +58,7 @@ class WorldRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_1152",
+            method = "worldEvent",
             constant = @Constant(
                     intValue = 0xFF,
                     ordinal = 0
@@ -70,7 +70,7 @@ class WorldRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_1152",
+            method = "worldEvent",
             constant = @Constant(
                     intValue = 0xFF,
                     ordinal = 1
@@ -82,7 +82,7 @@ class WorldRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_1152",
+            method = "worldEvent",
             constant = @Constant(
                     intValue = 0xFF,
                     ordinal = 2
@@ -93,7 +93,7 @@ class WorldRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_1152",
+            method = "worldEvent",
             constant = @Constant(intValue = 8)
     )
     private int stationapi_changeMetaBitshift(int value) {
@@ -102,7 +102,7 @@ class WorldRendererMixin {
     }
 
     @ModifyArg(
-            method = "method_1537",
+            method = "reload",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/render/chunk/ChunkBuilder;<init>(Lnet/minecraft/world/World;Ljava/util/List;IIIII)V"
@@ -114,7 +114,7 @@ class WorldRendererMixin {
     }
 
     @ModifyArg(
-            method = "method_1553(III)V",
+            method = "sortChunks(III)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/render/chunk/ChunkBuilder;setPosition(III)V"
@@ -126,7 +126,7 @@ class WorldRendererMixin {
     }
 
     @ModifyVariable(
-            method = "method_1543(IIIIII)V",
+            method = "markDirty(IIIIII)V",
             at = @At("HEAD"),
             index = 2,
             argsOnly = true
@@ -136,7 +136,7 @@ class WorldRendererMixin {
     }
 
     @ModifyVariable(
-            method = "method_1543(IIIIII)V",
+            method = "markDirty(IIIIII)V",
             at = @At("HEAD"),
             index = 5,
             argsOnly = true

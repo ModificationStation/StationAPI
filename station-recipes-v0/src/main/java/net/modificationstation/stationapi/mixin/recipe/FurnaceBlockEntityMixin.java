@@ -21,8 +21,8 @@ class FurnaceBlockEntityMixin {
 
     @Redirect(
             method = {
-                    "method_1283",
-                    "method_1282"
+                    "canAcceptRecipeOutput",
+                    "craftRecipe"
             },
             at = @At(
                     value = "INVOKE",
@@ -43,7 +43,7 @@ class FurnaceBlockEntityMixin {
     }
 
     @Inject(
-            method = "method_1282",
+            method = "craftRecipe",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/item/ItemStack;count:I",
@@ -61,7 +61,7 @@ class FurnaceBlockEntityMixin {
     private ItemStack capturedItemStack;
 
     @ModifyConstant(
-            method = "method_1282",
+            method = "craftRecipe",
             constant = @Constant(
                     intValue = 1,
                     ordinal = 0
@@ -72,7 +72,7 @@ class FurnaceBlockEntityMixin {
     }
 
     @Inject(
-            method = "method_1283",
+            method = "canAcceptRecipeOutput",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/item/ItemStack;count:I",
@@ -89,7 +89,7 @@ class FurnaceBlockEntityMixin {
     private ItemStack capturedItemStack2ElectricBoogaloo;
 
     @Redirect(
-            method = "method_1283",
+            method = "canAcceptRecipeOutput",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/item/ItemStack;count:I",

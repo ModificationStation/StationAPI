@@ -7,5 +7,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Chunk.class)
 public interface ChunkAccessor {
     @Invoker
-    void invokeMethod_887(int i, int j);
+    void invokeLightGaps(int i, int j);
 }

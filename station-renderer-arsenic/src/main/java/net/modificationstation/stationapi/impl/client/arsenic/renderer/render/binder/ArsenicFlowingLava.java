@@ -7,11 +7,11 @@ import net.modificationstation.stationapi.api.client.texture.binder.StationTextu
 
 public class ArsenicFlowingLava extends StationTextureBinder {
 
-    protected float[] field_1166;
-    protected float[] field_1167;
-    protected float[] field_1168;
-    protected float[] field_1169;
-    int field_1170 = 0;
+    protected float[] current;
+    protected float[] next;
+    protected float[] heat;
+    protected float[] heatDelta;
+    int ticks = 0;
 
     public ArsenicFlowingLava(Atlas.Sprite staticReference) {
         super(staticReference);
@@ -21,10 +21,10 @@ public class ArsenicFlowingLava extends StationTextureBinder {
     @Override
     public void reloadFromTexturePack(TexturePack newTexturePack) {
         int square = (getStaticReference().getWidth() / replicate) * (getStaticReference().getHeight() / replicate);
-        field_1166 = new float[square];
-        field_1167 = new float[square];
-        field_1168 = new float[square];
-        field_1169 = new float[square];
+        current = new float[square];
+        next = new float[square];
+        heat = new float[square];
+        heatDelta = new float[square];
         pixels = new byte[square * 4];
     }
 
@@ -33,7 +33,7 @@ public class ArsenicFlowingLava extends StationTextureBinder {
         int
                 textureWidth = getStaticReference().getWidth() / replicate,
                 textureHeight = getStaticReference().getHeight() / replicate;
-        ++this.field_1170;
+        ++this.ticks;
 
         for(int var1 = 0; var1 < textureWidth; ++var1) {
             for(int var2 = 0; var2 < textureHeight; ++var2) {
@@ -45,33 +45,33 @@ public class ArsenicFlowingLava extends StationTextureBinder {
                     for(int var7 = var2 - 1; var7 <= var2 + 1; ++var7) {
                         int var8 = var6 + var4 & (textureHeight - 1);
                         int var9 = var7 + var5 & (textureWidth - 1);
-                        var3 += this.field_1166[var8 + var9 * textureWidth];
+                        var3 += this.current[var8 + var9 * textureWidth];
                     }
                 }
 
-                this.field_1167[var1 + var2 * textureWidth] = var3 / 10.0F + (
-                        this.field_1168[(var1 & (textureWidth - 1)) + (var2 & (textureHeight - 1)) * textureWidth] +
-                                this.field_1168[(var1 + 1 & (textureWidth - 1)) + (var2 & (textureHeight - 1)) * textureWidth] +
-                                this.field_1168[(var1 + 1 & (textureWidth - 1)) + (var2 + 1 & (textureHeight - 1)) * textureWidth] +
-                                this.field_1168[(var1 & (textureWidth - 1)) + (var2 + 1 & (textureHeight - 1)) * textureWidth]) / 4.0F * 0.8F;
-                this.field_1168[var1 + var2 * textureWidth] += this.field_1169[var1 + var2 * textureWidth] * 0.01F;
-                if (this.field_1168[var1 + var2 * textureWidth] < 0.0F) {
-                    this.field_1168[var1 + var2 * textureWidth] = 0.0F;
+                this.next[var1 + var2 * textureWidth] = var3 / 10.0F + (
+                        this.heat[(var1 & (textureWidth - 1)) + (var2 & (textureHeight - 1)) * textureWidth] +
+                                this.heat[(var1 + 1 & (textureWidth - 1)) + (var2 & (textureHeight - 1)) * textureWidth] +
+                                this.heat[(var1 + 1 & (textureWidth - 1)) + (var2 + 1 & (textureHeight - 1)) * textureWidth] +
+                                this.heat[(var1 & (textureWidth - 1)) + (var2 + 1 & (textureHeight - 1)) * textureWidth]) / 4.0F * 0.8F;
+                this.heat[var1 + var2 * textureWidth] += this.heatDelta[var1 + var2 * textureWidth] * 0.01F;
+                if (this.heat[var1 + var2 * textureWidth] < 0.0F) {
+                    this.heat[var1 + var2 * textureWidth] = 0.0F;
                 }
 
-                this.field_1169[var1 + var2 * textureWidth] -= 0.06F;
+                this.heatDelta[var1 + var2 * textureWidth] -= 0.06F;
                 if (Math.random() < 0.005D) {
-                    this.field_1169[var1 + var2 * textureWidth] = 1.5F;
+                    this.heatDelta[var1 + var2 * textureWidth] = 1.5F;
                 }
             }
         }
 
-        float[] var11 = this.field_1167;
-        this.field_1167 = this.field_1166;
-        this.field_1166 = var11;
+        float[] var11 = this.next;
+        this.next = this.current;
+        this.current = var11;
 
         for(int var12 = 0; var12 < textureWidth * textureHeight; ++var12) {
-            float var13 = this.field_1166[var12 - this.field_1170 / 3 * textureWidth & (textureWidth * textureHeight - 1)] * 2.0F;
+            float var13 = this.current[var12 - this.ticks / 3 * textureWidth & (textureWidth * textureHeight - 1)] * 2.0F;
             if (var13 > 1.0F) {
                 var13 = 1.0F;
             }

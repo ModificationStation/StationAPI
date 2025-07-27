@@ -41,7 +41,7 @@ public class StationItemsClientNetworkHandler extends StationItemsNetworkHandler
     @Override
     public void onEntityEquipmentUpdate(StationEntityEquipmentUpdateS2CPacket packet) {
         //noinspection deprecation
-        Entity entity = ((ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler()).stationapi_method_1645(packet.id);
+        Entity entity = ((ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler()).stationapi_getEntity(packet.id);
         if (entity != null) {
             final ItemStack stack;
             if (packet.itemRawId < 0)

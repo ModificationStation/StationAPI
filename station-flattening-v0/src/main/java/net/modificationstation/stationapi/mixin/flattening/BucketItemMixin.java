@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BucketItem.class)
 class BucketItemMixin {
-    @Shadow private int field_842;
+    @Shadow private int fluidBlockId;
 
     @Inject(
             method = "<init>",
@@ -22,7 +22,7 @@ class BucketItemMixin {
     )
     private void stationapi_registerCallback(int i, int par2, CallbackInfo ci) {
         BlockRegistry.INSTANCE.getEventBus().register(Listener.<RegistryIdRemapEvent<Block>>simple()
-                .listener(event -> field_842 = event.state.getRawIdChangeMap().getOrDefault(field_842, field_842))
+                .listener(event -> fluidBlockId = event.state.getRawIdChangeMap().getOrDefault(fluidBlockId, fluidBlockId))
                 .phase(StationAPI.INTERNAL_PHASE)
                 .build());
     }

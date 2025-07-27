@@ -27,7 +27,7 @@ class BlockParticleMixin {
     }
 
     @Inject(
-            method = "method_1856",
+            method = "color",
             at = @At("HEAD")
     )
     private void stationapi_checkBlockCoords(int i, int j, int k, CallbackInfoReturnable<BlockParticle> cir) {
@@ -39,7 +39,7 @@ class BlockParticleMixin {
      * @author mine_diver
      */
     @Overwrite
-    public void method_2002(Tessellator arg, float f, float f1, float f2, float f3, float f4, float f5) {
+    public void render(Tessellator arg, float f, float f1, float f2, float f3, float f4, float f5) {
         stationapi$arsenicDiggingParticle.render(arg, f, f1, f2, f3, f4, f5);
     }
 }

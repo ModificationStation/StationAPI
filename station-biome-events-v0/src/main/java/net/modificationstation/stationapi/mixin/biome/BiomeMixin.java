@@ -25,7 +25,7 @@ class BiomeMixin {
     }
 
     @ModifyReturnValue(
-            method = "method_787",
+            method = "locateBiome",
             at = @At("RETURN")
     )
     private static Biome stationapi_getBiome(Biome currentBiome, float temperature, float downfall) {

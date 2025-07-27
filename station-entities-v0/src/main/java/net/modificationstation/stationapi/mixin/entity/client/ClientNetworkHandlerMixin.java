@@ -21,7 +21,7 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @Mixin(ClientNetworkHandler.class)
 class ClientNetworkHandlerMixin {
     @Shadow
-    private ClientWorld field_1973;
+    private ClientWorld world;
     @Unique
     private double
             capturedX,
@@ -56,7 +56,7 @@ class ClientNetworkHandlerMixin {
     private Entity stationapi_onEntitySpawn(Entity entity, EntitySpawnS2CPacket packet) {
         EntityWorldAndPosFactory entityHandler = EntityHandlerRegistry.INSTANCE.get(of(String.valueOf(packet.entityType)));
         if (entityHandler != null)
-            entity = entityHandler.create(field_1973, capturedX, capturedY, capturedZ);
+            entity = entityHandler.create(world, capturedX, capturedY, capturedZ);
         return entity;
     }
 }

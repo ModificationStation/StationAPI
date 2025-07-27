@@ -9,5 +9,5 @@ import net.minecraft.client.resource.pack.ZippedTexturePack;
 @Mixin(ZippedTexturePack.class)
 public interface ZipTexturePackAccessor {
     @Accessor
-    ZipFile getField_2562();
+    ZipFile getZip();
 }

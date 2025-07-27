@@ -15,7 +15,7 @@ public class TexturePackProvider implements ResourcePackProvider {
         //noinspection deprecation
         TexturePack texturePack = ((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePacks.selected;
         if (texturePack instanceof ZippedTexturePack zipTexturePack) {
-            String fileName = ((ZipTexturePackAccessor) zipTexturePack).getField_2562().getName();
+            String fileName = ((ZipTexturePackAccessor) zipTexturePack).getZip().getName();
             ResourcePackProfile resourcePackProfile = ResourcePackProfile.create(
                     "file/" + fileName,
                     /*Text.literal(string)*/fileName,

@@ -23,7 +23,7 @@ import java.util.LinkedList;
 abstract class ClientWorldMixin extends World implements StationClientWorld {
     @Unique boolean isModded = false;
 
-    @Shadow private LinkedList field_1722;
+    @Shadow private LinkedList blockResets;
 
     private ClientWorldMixin(WorldStorage arg, String string, Dimension arg2, long l) {
         super(arg, string, arg2, l);
@@ -39,21 +39,21 @@ abstract class ClientWorldMixin extends World implements StationClientWorld {
         return isModded;
     }
 
-    @ModifyConstant(method = "method_1494(IIZ)V", constant = @Constant(intValue = 0))
+    @ModifyConstant(method = "updateChunk(IIZ)V", constant = @Constant(intValue = 0))
     private int stationapi_changeMinHeight(int value) {
         return getBottomY();
     }
 
-    @ModifyConstant(method = "method_1494(IIZ)V", constant = @Constant(intValue = 128))
+    @ModifyConstant(method = "updateChunk(IIZ)V", constant = @Constant(intValue = 128))
     private int stationapi_changeMaxHeight(int value) {
         return getTopY();
     }
 
     @Redirect(
             method = {
-                    "method_223",
-                    "method_154",
-                    "method_200"
+                    "setBlockMetaWithoutNotifyingNeighbors",
+                    "setBlockWithoutNotifyingNeighbors",
+                    "setBlockWithoutNotifyingNeighbors"
             },
             at = @At(
                     value = "NEW",
@@ -65,10 +65,10 @@ abstract class ClientWorldMixin extends World implements StationClientWorld {
     }
 
     @Inject(
-            method = "method_242",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;method_154(IIIII)Z"
+                    target = "Lnet/minecraft/world/World;setBlockWithoutNotifyingNeighbors(IIIII)Z"
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
@@ -80,10 +80,10 @@ abstract class ClientWorldMixin extends World implements StationClientWorld {
     private ClientWorld.BlockReset stationapi_clientBlockChange;
 
     @Redirect(
-            method = "method_242",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;method_154(IIIII)Z"
+                    target = "Lnet/minecraft/world/World;setBlockWithoutNotifyingNeighbors(IIIII)Z"
             )
     )
     private boolean stationapi_useBlockState(World instance, int x, int y, int z, int blockId, int metadata) {
@@ -100,7 +100,7 @@ abstract class ClientWorldMixin extends World implements StationClientWorld {
         BlockState result = super.setBlockState(x, y, z, blockState);
         if (result != null) {
             //noinspection unchecked,DataFlowIssue
-            this.field_1722.add(new ClientBlockChange((ClientWorld) (Object) this, x, y, z, n, n2));
+            this.blockResets.add(new ClientBlockChange((ClientWorld) (Object) this, x, y, z, n, n2));
         }
         return result;
     }

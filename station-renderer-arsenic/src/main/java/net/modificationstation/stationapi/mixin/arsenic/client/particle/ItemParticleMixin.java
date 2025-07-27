@@ -21,7 +21,7 @@ class ItemParticleMixin extends Particle {
     }
 
     @Inject(
-            method = "method_2002",
+            method = "render",
             at = @At("HEAD")
     )
     private void stationapi_initializeSprite(
@@ -32,7 +32,7 @@ class ItemParticleMixin extends Particle {
     }
 
     @ModifyVariable(
-            method = "method_2002",
+            method = "render",
             at = @At("STORE"),
             index = 8
     )
@@ -45,7 +45,7 @@ class ItemParticleMixin extends Particle {
     }
 
     @ModifyConstant(
-            method = "method_2002",
+            method = "render",
             constant = @Constant(
                     floatValue = 3.996F / ATLAS_SIZE,
                     ordinal = 0
@@ -60,7 +60,7 @@ class ItemParticleMixin extends Particle {
     }
 
     @ModifyVariable(
-            method = "method_2002",
+            method = "render",
             at = @At("STORE"),
             index = 10
     )
@@ -73,7 +73,7 @@ class ItemParticleMixin extends Particle {
     }
 
     @ModifyConstant(
-            method = "method_2002",
+            method = "render",
             constant = @Constant(
                     floatValue = 3.996F / ATLAS_SIZE,
                     ordinal = 1

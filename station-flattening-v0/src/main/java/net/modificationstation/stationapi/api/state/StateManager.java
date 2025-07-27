@@ -31,7 +31,7 @@ public class StateManager<O, S extends State<O, S>> {
       MapCodec<S> mapCodec = MapCodec.of(Encoder.empty(), Decoder.unit(supplier));
 
       Entry<String, Property<?>> entry;
-      for(UnmodifiableIterator<Entry<String, Property<?>>> var7 = this.properties.entrySet().iterator(); var7.hasNext(); mapCodec = method_30040(mapCodec, supplier, entry.getKey(), entry.getValue())) {
+      for(UnmodifiableIterator<Entry<String, Property<?>>> var7 = this.properties.entrySet().iterator(); var7.hasNext(); mapCodec = updateFrustum40(mapCodec, supplier, entry.getKey(), entry.getValue())) {
          entry = var7.next();
       }
 
@@ -62,7 +62,7 @@ public class StateManager<O, S extends State<O, S>> {
       this.states = ImmutableList.copyOf(list);
    }
 
-   private static <S extends State<?, S>, T extends Comparable<T>> MapCodec<S> method_30040(MapCodec<S> mapCodec, Supplier<S> supplier, String string, Property<T> property) {
+   private static <S extends State<?, S>, T extends Comparable<T>> MapCodec<S> updateFrustum40(MapCodec<S> mapCodec, Supplier<S> supplier, String string, Property<T> property) {
       return Codec.mapPair(mapCodec, property.getValueCodec().fieldOf(string).setPartial(() -> property.createValue(supplier.get()))).xmap((pair) -> pair.getFirst().with(property, pair.getSecond().getValue()), (state) -> Pair.of(state, property.createValue(state)));
    }
 

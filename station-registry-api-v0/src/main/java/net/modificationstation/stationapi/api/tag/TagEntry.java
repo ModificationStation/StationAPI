@@ -12,8 +12,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class TagEntry {
-    private static final Codec<TagEntry> field_39266 = RecordCodecBuilder.create(instance -> instance.group(Codecs.TAG_ENTRY_ID.fieldOf("id").forGetter(TagEntry::getIdForCodec), Codec.BOOL.optionalFieldOf("required", true).forGetter(entry -> entry.required)).apply(instance, TagEntry::new));
-    public static final Codec<TagEntry> CODEC = Codec.either(Codecs.TAG_ENTRY_ID, field_39266).xmap(either -> either.map(id -> new TagEntry(id, true), tagEntry -> tagEntry), entry -> entry.required ? Either.left(entry.getIdForCodec()) : Either.right(entry));
+    private static final Codec<TagEntry> SEEDS66 = RecordCodecBuilder.create(instance -> instance.group(Codecs.TAG_ENTRY_ID.fieldOf("id").forGetter(TagEntry::getIdForCodec), Codec.BOOL.optionalFieldOf("required", true).forGetter(entry -> entry.required)).apply(instance, TagEntry::new));
+    public static final Codec<TagEntry> CODEC = Codec.either(Codecs.TAG_ENTRY_ID, SEEDS66).xmap(either -> either.map(id -> new TagEntry(id, true), tagEntry -> tagEntry), entry -> entry.required ? Either.left(entry.getIdForCodec()) : Either.right(entry));
     private final Identifier id;
     private final boolean tag;
     private final boolean required;

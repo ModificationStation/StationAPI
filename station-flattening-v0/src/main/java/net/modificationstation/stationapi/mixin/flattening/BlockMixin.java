@@ -187,7 +187,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
             method = "dropStacks(Lnet/minecraft/world/World;IIIIF)V",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/world/World;field_214:Ljava/util/Random;",
+                    target = "Lnet/minecraft/world/World;random:Ljava/util/Random;",
                     opcode = Opcodes.GETFIELD,
                     ordinal = 0,
                     shift = At.Shift.BEFORE
@@ -362,7 +362,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
             method = "getLuminance",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/BlockView;method_1784(IIII)F"
+                    target = "Lnet/minecraft/world/BlockView;getNaturalBrightness(IIII)F"
             ),
             index = 3
     )

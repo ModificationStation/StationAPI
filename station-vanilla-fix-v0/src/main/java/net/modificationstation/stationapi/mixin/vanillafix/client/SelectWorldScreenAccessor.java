@@ -10,5 +10,5 @@ import java.util.List;
 @Mixin(SelectWorldScreen.class)
 public interface SelectWorldScreenAccessor {
     @Accessor
-    List<WorldSaveInfo> getField_2436();
+    List<WorldSaveInfo> getSaves();
 }

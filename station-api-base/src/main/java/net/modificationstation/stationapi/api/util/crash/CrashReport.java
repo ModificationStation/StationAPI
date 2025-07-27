@@ -232,7 +232,7 @@ public class CrashReport {
                 }
             }
 
-            this.hasStackTrace = crashReportSection.method_584(stackTraceElement, stackTraceElement2);
+            this.hasStackTrace = crashReportSection.isOperator(stackTraceElement, stackTraceElement2);
             if (i > 0 && !this.otherSections.isEmpty()) {
                 CrashReportSection crashReportSection2 = this.otherSections.get(this.otherSections.size() - 1);
                 crashReportSection2.trimStackTraceEnd(i);

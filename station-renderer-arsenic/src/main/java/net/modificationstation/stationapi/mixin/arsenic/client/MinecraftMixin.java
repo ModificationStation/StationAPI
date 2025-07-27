@@ -13,7 +13,7 @@ class MinecraftMixin {
             method = "init",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/texture/TextureManager;method_1087(Lnet/minecraft/class_336;)V"
+                    target = "Lnet/minecraft/client/texture/TextureManager;addDynamicTexture(Lnet/minecraft/class_336;)V"
             )
     )
     private void stationapi_stopVanillaTextureBinders(TextureManager textureManager, DynamicTexture arg) {}

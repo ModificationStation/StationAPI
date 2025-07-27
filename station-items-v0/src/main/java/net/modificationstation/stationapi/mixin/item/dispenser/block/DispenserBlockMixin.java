@@ -25,7 +25,7 @@ import java.util.Random;
 @Mixin(DispenserBlock.class)
 class DispenserBlockMixin {
     @Inject(
-            method = "method_1774",
+            method = "dispense",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/item/ItemStack;itemId:I",
@@ -50,7 +50,7 @@ class DispenserBlockMixin {
     }
 
     @WrapOperation(
-            method = "method_1774",
+            method = "dispense",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/item/Item;id:I"

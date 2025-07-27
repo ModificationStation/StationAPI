@@ -33,12 +33,12 @@ class PistonBlockEntityMixin implements StationFlatteningPistonBlockEntity, Stat
 
     @Redirect(
             method = {
-                    "method_1523",
-                    "method_1076"
+                    "finish",
+                    "tick"
             },
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;method_201(IIIII)Z"
+                    target = "Lnet/minecraft/world/World;setBlock(IIIII)Z"
             )
     )
     private boolean stationapi_setPushedBlockState(World world, int x, int y, int z, int blockId, int blockMeta) {

@@ -17,14 +17,14 @@ import java.util.Random;
 
 @Mixin(FireBlock.class)
 abstract class FireBlockMixin {
-    @Shadow protected abstract void method_1822(int i, int j, int k);
+    @Shadow protected abstract void registerFlammableBlock(int i, int j, int k);
 
     @Inject(
             method = "init",
             at = @At("RETURN")
     )
     private void stationapi_postBurnableRegister(CallbackInfo ci) {
-        StationAPI.EVENT_BUS.post(FireBurnableRegisterEvent.builder().addBurnable(this::method_1822).build());
+        StationAPI.EVENT_BUS.post(FireBurnableRegisterEvent.builder().addBurnable(this::registerFlammableBlock).build());
     }
 
     @ModifyConstant(

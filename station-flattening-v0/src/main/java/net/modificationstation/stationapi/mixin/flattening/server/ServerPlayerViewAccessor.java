@@ -9,5 +9,5 @@ import net.minecraft.server.ChunkMap;
 @Mixin(ChunkMap.class)
 public interface ServerPlayerViewAccessor {
     @Accessor
-    List<ChunkMap.TrackedChunk> getField_2131();
+    List<ChunkMap.TrackedChunk> getChunksToUpdate();
 }

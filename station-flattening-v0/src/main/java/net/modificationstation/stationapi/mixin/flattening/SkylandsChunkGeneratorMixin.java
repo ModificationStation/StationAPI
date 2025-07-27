@@ -31,7 +31,7 @@ class SkylandsChunkGeneratorMixin {
     }
 
     @Redirect(
-            method = "method_1806",
+            method = "getChunk",
             at = @At(
                     value = "NEW",
                     target = "(Lnet/minecraft/world/World;[BII)Lnet/minecraft/world/chunk/Chunk;"
@@ -42,10 +42,10 @@ class SkylandsChunkGeneratorMixin {
     }
 
     @Inject(
-            method = "method_1806",
+            method = "getChunk",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/chunk/Chunk;method_873()V"
+                    target = "Lnet/minecraft/world/chunk/Chunk;populateHeightMap()V"
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )

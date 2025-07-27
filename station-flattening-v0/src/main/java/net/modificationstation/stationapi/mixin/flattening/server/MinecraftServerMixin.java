@@ -12,7 +12,7 @@ import java.io.File;
 @Mixin(MinecraftServer.class)
 class MinecraftServerMixin {
     @Redirect(
-            method = "method_2159",
+            method = "loadWorld",
             at = @At(
                     value = "NEW",
                     target = "(Ljava/io/File;Ljava/lang/String;Z)Lnet/minecraft/class_294;"

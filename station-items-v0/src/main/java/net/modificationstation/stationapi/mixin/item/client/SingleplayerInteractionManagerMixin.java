@@ -20,7 +20,7 @@ abstract class SingleplayerInteractionManagerMixin extends InteractionManager {
     }
 
     @Inject(
-            method = "method_1715",
+            method = "getReachDistance",
             at = @At("RETURN"),
             cancellable = true
     )
@@ -35,14 +35,14 @@ abstract class SingleplayerInteractionManagerMixin extends InteractionManager {
     }
 
     @Inject(
-            method = "method_1721",
+            method = "processBlockBreakingAction",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;getHardness(Lnet/minecraft/entity/player/PlayerEntity;)F"
             ),
             cancellable = true
     )
-    private void stationapi_method_1721_preMine(int x, int y, int z, int side, CallbackInfo ci){
+    private void stationapi_processBlockBreakingAction_preMine(int x, int y, int z, int side, CallbackInfo ci){
         ItemStack stack = this.minecraft.player.inventory.getSelectedItem();
         if (stack != null && !stack.preMine(this.minecraft.player.world.getBlockState(x, y, z), x, y, z, side, this.minecraft.player))
             ci.cancel();

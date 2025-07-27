@@ -224,7 +224,7 @@ public class FlattenedChunk extends Chunk {
         this.minHeightmapValue = minHeight;
 
         for (short i = 0; i < 256; i++) {
-            ((ChunkAccessor) this).invokeMethod_887(i & 15, i >> 4);
+            ((ChunkAccessor) this).invokeLightGaps(i & 15, i >> 4);
         }
 
         this.dirty = true;
@@ -406,7 +406,7 @@ public class FlattenedChunk extends Chunk {
         }
 
         this.world.queueLightUpdate(LightType.BLOCK, worldX, y, worldZ, worldX, y, worldZ);
-        ((ChunkAccessor) this).invokeMethod_887(x, z);
+        ((ChunkAccessor) this).invokeLightGaps(x, z);
         section.setMeta(x, y & 15, z, meta);
         state.getBlock().onBlockPlaced(this.world, worldX, y, worldZ, oldState);
 
@@ -452,7 +452,7 @@ public class FlattenedChunk extends Chunk {
             this.updateHeightMap(x, y, z);
         this.world.queueLightUpdate(LightType.SKY, worldX, y, worldZ, worldX, y, worldZ);
         this.world.queueLightUpdate(LightType.BLOCK, worldX, y, worldZ, worldX, y, worldZ);
-        ((ChunkAccessor) this).invokeMethod_887(x, z);
+        ((ChunkAccessor) this).invokeLightGaps(x, z);
         if (!this.world.isRemote) {
             state.getBlock().onBlockPlaced(this.world, worldX, y, worldZ, oldState);
         }

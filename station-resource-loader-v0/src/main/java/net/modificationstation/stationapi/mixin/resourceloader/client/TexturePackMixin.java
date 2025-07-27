@@ -14,7 +14,7 @@ import java.io.InputStream;
 @Mixin(TexturePack.class)
 class TexturePackMixin {
     @Inject(
-            method = "method_976",
+            method = "getResource",
             at = @At("HEAD"),
             cancellable = true
     )

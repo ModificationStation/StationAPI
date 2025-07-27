@@ -13,7 +13,7 @@ class InteractionManagerMixin {
     @Shadow @Final protected Minecraft minecraft;
 
     @ModifyConstant(
-            method = "method_1716",
+            method = "breakBlock",
             constant = @Constant(intValue = 256)
     )
     private int stationapi_changeMetaShift(int value) {

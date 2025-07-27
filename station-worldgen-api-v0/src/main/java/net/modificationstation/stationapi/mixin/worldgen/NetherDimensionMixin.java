@@ -15,7 +15,7 @@ import java.util.Collection;
 @Mixin(NetherDimension.class)
 class NetherDimensionMixin extends Dimension {
     @Inject(
-            method = "method_1769",
+            method = "initBiomeSource",
             at = @At("TAIL")
     )
     private void stationapi_setNetherBiomeSource(CallbackInfo info) {

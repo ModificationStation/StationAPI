@@ -49,10 +49,10 @@ public final class EditWorldScreenImpl {
                 button -> ((ScreenAccessor) screen).getMinecraft().setScreen(new WarningScreen(screen, () -> {
                     Minecraft mc = ((ScreenAccessor) screen).getMinecraft();
                     mc.setScreen(null);
-                    FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.method_2127();
-                    mc.field_2817.method_1491("Converting World to " + worldStorage.getPreviousWorldFormat());
-                    mc.field_2817.method_1796("This may take a while :)");
-                    worldStorage.convertWorld(screen.worldData.method_1956(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(NAMESPACE.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.field_2817);
+                    FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.getWorldStorageSource();
+                    mc.progressRenderer.progressStart("Converting World to " + worldStorage.getPreviousWorldFormat());
+                    mc.progressRenderer.progressStage("This may take a while :)");
+                    worldStorage.convertWorld(screen.worldData.getSaveName(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(NAMESPACE.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.progressRenderer);
                     mc.setScreen(screen);
                 }, WorldConversionWarning.TO_MCREGION_EXPLANATION_KEY, WorldConversionWarning.CONVERT_KEY))
         ));

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(EntityTrackerEntry.class)
 class class_174Mixin {
     @Redirect(
-            method = "method_601",
+            method = "updateListener",
             at = @At(
                     value = "NEW",
                     target = "(IILnet/minecraft/item/ItemStack;)Lnet/minecraft/network/packet/s2c/play/EntityEquipmentUpdateS2CPacket;"
@@ -25,7 +25,7 @@ class class_174Mixin {
     }
 
     @Redirect(
-            method = "method_600",
+            method = "createAddEntityPacket",
             at = @At(
                     value = "NEW",
                     target = "(Lnet/minecraft/entity/ItemEntity;)Lnet/minecraft/network/packet/s2c/play/ItemEntitySpawnS2CPacket;"

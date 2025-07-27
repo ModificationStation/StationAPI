@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerLoginNetworkHandlerMixin {
     @Inject(method = "accept", at = @At(
         value = "INVOKE",
-        target = "Lnet/minecraft/entity/player/ServerPlayerEntity;method_317()V",
+        target = "Lnet/minecraft/entity/player/ServerPlayerEntity;initScreenHandler()V",
         shift = Shift.BEFORE
     ))
     private void stationapi_updatePlayerEffects(LoginHelloPacket packet, CallbackInfo info, @Local ServerPlayerEntity player) {

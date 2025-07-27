@@ -10,8 +10,8 @@ import java.util.Random;
 @Mixin(ItemRenderer.class)
 public interface ItemRendererAccessor {
     @Accessor
-    Random getField_1709();
+    Random getRandom();
 
     @Accessor
-    BlockRenderManager getField_1708();
+    BlockRenderManager getBlockRenderer();
 }

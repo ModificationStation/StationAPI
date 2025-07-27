@@ -11,5 +11,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(ServerPlayNetworkHandler.class)
 public interface ServerPlayNetworkHandlerAccessor {
     @Accessor
-    ServerPlayerEntity getField_920();
+    ServerPlayerEntity getPlayer();
 }

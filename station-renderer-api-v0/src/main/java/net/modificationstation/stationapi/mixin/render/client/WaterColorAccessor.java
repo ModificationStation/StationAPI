@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(WaterColors.class)
 public interface WaterColorAccessor {
-    @Accessor("field_1129")
+    @Accessor("colorMap")
     static int[] stationapi$getMap() {
         return Util.assertMixin();
     }

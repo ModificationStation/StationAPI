@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(ServerPlayNetworkHandler.class)
 class ServerPlayNetworkHandlerMixin {
     @Shadow
-    private ServerPlayerEntity field_920;
+    private ServerPlayerEntity player;
 
     @ModifyConstant(
             method = "handlePlayerAction",
@@ -22,7 +22,7 @@ class ServerPlayNetworkHandlerMixin {
     private double stationapi_getBlockReach(double originalReach) {
         return Math.pow(StationAPI.EVENT_BUS.post(
                 PlayerEvent.Reach.builder()
-                        .player(field_920)
+                        .player(player)
                         .type(HitResultType.BLOCK)
                         .currentReach(Math.sqrt(originalReach))
                         .build()
@@ -36,7 +36,7 @@ class ServerPlayNetworkHandlerMixin {
     private double stationapi_getEntityReach(double originalReach) {
         return Math.pow(StationAPI.EVENT_BUS.post(
                 PlayerEvent.Reach.builder()
-                        .player(field_920)
+                        .player(player)
                         .type(HitResultType.ENTITY)
                         .currentReach(Math.sqrt(originalReach))
                         .build()

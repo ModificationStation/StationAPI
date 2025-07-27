@@ -24,7 +24,7 @@ public final class ArsenicTextureManager {
     }
 
     public void ensureBufferCapacity(int expectedCapacity) {
-        if (expectedCapacity > access.getField_1250().capacity())
-            access.setField_1250(GlAllocationUtils.allocateByteBuffer(expectedCapacity));
+        if (expectedCapacity > access.getImageBuffer().capacity())
+            access.setImageBuffer(GlAllocationUtils.allocateByteBuffer(expectedCapacity));
     }
 }

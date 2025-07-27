@@ -18,8 +18,8 @@ class MultiplayerInteractionManagerMixin extends InteractionManager {
 
     @Redirect(
             method = {
-                    "method_1707(IIII)V",
-                    "method_1721(IIII)V"
+                    "attackBlock(IIII)V",
+                    "processBlockBreakingAction(IIII)V"
             },
             at = @At(
                     value = "INVOKE",

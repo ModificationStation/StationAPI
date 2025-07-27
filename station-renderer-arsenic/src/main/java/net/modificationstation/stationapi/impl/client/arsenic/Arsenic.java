@@ -80,6 +80,6 @@ public class Arsenic {
                 throw new RuntimeException(e);
             }
         }).forEach(s -> GL11.glDeleteTextures(textureMap.remove(s)));
-        ((TextureManagerAccessor) event.textureManager).getField_1251().clear();
+        ((TextureManagerAccessor) event.textureManager).getDynamicTextures().clear();
     }
 }

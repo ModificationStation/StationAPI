@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(InteractionManager.class)
 class InteractionManagerMixin {
     @Inject(
-            method = "method_1713",
+            method = "interactBlock",
             at = @At("HEAD"),
             cancellable = true
     )

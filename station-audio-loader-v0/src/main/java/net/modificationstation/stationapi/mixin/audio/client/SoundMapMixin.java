@@ -14,13 +14,13 @@ import java.util.Map;
 
 @Mixin(SoundEntry.class)
 class SoundMapMixin implements CustomSoundMap {
-    @Shadow public boolean field_1087;
+    @Shadow public boolean isRandom;
 
-    @Shadow private Map<String, List<Sound>> field_1089;
+    @Shadow private Map<String, List<Sound>> weightedSoundSet;
 
-    @Shadow private List<Sound> field_1090;
+    @Shadow private List<Sound> loadedSounds;
 
-    @Shadow public int field_1086;
+    @Shadow public int loadedSoundCount;
 
     @Override
     @Unique
@@ -32,19 +32,19 @@ class SoundMapMixin implements CustomSoundMap {
         String filename = id;
         id = id.split("\\.")[0];
         id = id.replaceAll("/", ".");
-        if (this.field_1087) {
+        if (this.isRandom) {
             while(Character.isDigit(id.charAt(id.length() - 1))) {
                 id = id.substring(0, id.length() - 1);
             }
         }
-        if (!this.field_1089.containsKey(id)) {
-            this.field_1089.put(id, new ArrayList<>());
+        if (!this.weightedSoundSet.containsKey(id)) {
+            this.weightedSoundSet.put(id, new ArrayList<>());
         }
         Sound var4 = new Sound(filename, url);
 
-        this.field_1089.get(id).add(var4);
-        this.field_1090.add(var4);
-        ++this.field_1086;
+        this.weightedSoundSet.get(id).add(var4);
+        this.loadedSounds.add(var4);
+        ++this.loadedSoundCount;
         return var4;
     }
 }

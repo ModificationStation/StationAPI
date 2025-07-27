@@ -17,7 +17,7 @@ class FallingBlockEntityMixin {
             method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;method_156(IIIIZI)Z"
+                    target = "Lnet/minecraft/world/World;canPlace(IIIIZI)Z"
             )
     )
     private boolean stationapi_redirectCanPlace(World world, int blockId, int x, int y, int z, boolean skipEntityCollisionCheck, int side) {

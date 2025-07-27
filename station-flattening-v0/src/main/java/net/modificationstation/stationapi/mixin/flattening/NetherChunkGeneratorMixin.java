@@ -31,7 +31,7 @@ class NetherChunkGeneratorMixin {
     }
 
     @Redirect(
-            method = "method_1806",
+            method = "getChunk",
             at = @At(
                     value = "NEW",
                     target = "(Lnet/minecraft/world/World;[BII)Lnet/minecraft/world/chunk/Chunk;"
@@ -42,7 +42,7 @@ class NetherChunkGeneratorMixin {
     }
 
     @Inject(
-            method = "method_1806",
+            method = "getChunk",
             at = @At("RETURN"),
             locals = LocalCapture.CAPTURE_FAILHARD
     )

@@ -29,9 +29,9 @@ class ServerPlayerEntityMixin {
 
     @Redirect(
             method = {
-                    "method_2100",
-                    "method_2101",
-                    "method_319"
+                    "onSlotUpdate",
+                    "onContentsUpdate",
+                    "updateCursorStack"
             },
             at = @At(
                     value = "NEW",
@@ -43,7 +43,7 @@ class ServerPlayerEntityMixin {
     }
 
     @Redirect(
-            method = "method_2101",
+            method = "onContentsUpdate",
             at = @At(
                     value = "NEW",
                     target = "(ILjava/util/List;)Lnet/minecraft/network/packet/s2c/play/InventoryS2CPacket;"

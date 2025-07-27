@@ -60,7 +60,7 @@ class StatsMixin {
     @WrapOperation(
             method = {
                     "initializeCraftedItemStats",
-                    "method_752",
+                    "initItemsUsedStats",
                     "initializeBrokenItemStats"
             },
             at = @At(
@@ -77,7 +77,7 @@ class StatsMixin {
     }
 
     @WrapOperation(
-            method = "method_749",
+            method = "initBlocksMined",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;getTranslatedName()Ljava/lang/String;"
@@ -94,8 +94,8 @@ class StatsMixin {
     @WrapOperation(
             method = {
                     "initializeCraftedItemStats",
-                    "method_749",
-                    "method_752",
+                    "initBlocksMined",
+                    "initItemsUsedStats",
                     "initializeBrokenItemStats"
             },
             at = @At(
@@ -114,8 +114,8 @@ class StatsMixin {
     @ModifyExpressionValue(
             method = {
                     "initializeCraftedItemStats",
-                    "method_749",
-                    "method_752",
+                    "initBlocksMined",
+                    "initItemsUsedStats",
                     "initializeBrokenItemStats"
             },
             at = @At(

@@ -15,7 +15,7 @@ import java.io.InputStream;
 @Mixin(ZippedTexturePack.class)
 class ZipTexturePackMixin extends TexturePack {
     @Inject(
-            method = "method_976",
+            method = "getResource",
             at = @At("HEAD"),
             cancellable = true
     )
