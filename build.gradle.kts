@@ -2,6 +2,13 @@
 @file:Suppress("GradlePackageVersionRange")
 
 import babric.SubprojectHelpers.addDependencyXML
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+import org.gradle.internal.impldep.kotlinx.serialization.json.Json
+import java.lang.Exception
+
+val remapping = JsonSlurper().parse(file("t.json")) as Map<String, String>
+val remappingKeys = remapping.keys.sortedBy { try {return@sortedBy it.replace("method_", "").replace("field_", "").toInt()} catch (_: Exception) { return@sortedBy 0 } } .reversed()
 
 plugins {
     id("maven-publish")
@@ -164,6 +171,23 @@ allprojects {
                     this.asNode().appendNode("dependencies")
                 }
             }
+        }
+    }
+
+    tasks.register("remapMixins") {
+        file("src/main/java").walk().forEach {
+            if (it.isDirectory) {
+                return@forEach
+            }
+
+            var text = it.readText()
+            remappingKeys.forEach { k ->
+                val v = remapping[k]!!
+                text = text
+                    .replace(k.first().uppercaseChar().toString() + k.substring(1), v.first().uppercaseChar() + v.substring(1))
+                    .replace(k, v)
+            }
+            it.writeText(text)
         }
     }
 }
