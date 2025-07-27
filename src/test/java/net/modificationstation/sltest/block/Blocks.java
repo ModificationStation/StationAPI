@@ -29,7 +29,10 @@ public enum Blocks {
     EMISSION_CHECKER("emission_checker", "emissionChecker", LampBlock::new),
     INDISPENSABLE_BLOCK("indispensable_block", "indispensableBlock", IndispensableBlock::new),
     MODDED_LEAVES("modded_leaves", "moddedLeaves", id -> new TemplateLeavesBlock(id, 52)),
-    MODDED_LOG("modded_log", "moddedLog", TemplateLogBlock::new);
+    MODDED_LOG("modded_log", "moddedLog", TemplateLogBlock::new),
+    EFFECT_BLOCK("effect_block", "effectBlock", EffectBlock::new),
+    EFFECT_BLOCK_INF("effect_block_inf", "effectBlockInf", EffectBlockInf::new),
+    EFFECT_BLOCK_CLEAR("effect_block_clear", "effectBlockClear", EffectBlockClear::new);
 
     private final Runnable register;
     private Block block;

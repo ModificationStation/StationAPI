@@ -49,6 +49,7 @@
     "station-dimensions-v0": "*",
     "station-tools-api-v1": "*",
     "station-flattening-v0": "*",
-    "station-renderer-arsenic": "*"
+    "station-renderer-arsenic": "*",
+    "station-effects-api-v0": "*"
   }
 }
