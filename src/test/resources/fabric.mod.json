@@ -19,34 +19,34 @@
   "entrypoints": {
     "stationapi:event_bus": [
       "net.modificationstation.sltest.block.Blocks$Init",
-      "sltest.item.ItemListener",
-      "sltest.packet.MessageListenerListener",
-      "sltest.MainTest",
-      "sltest.SLTest",
-      "sltest.recipe.RecipeListener",
-      "sltest.achievement.AchievementListener",
-      "sltest.level.gen.ChunkListener",
-      "sltest.entity.EntityListener",
-      "sltest.tileentity.TileEntityListener",
-      "sltest.item.tool.ToolListener",
-      "sltest.datafixer.DataFixerListener",
-      "sltest.worldgen.TestWorldgenListener",
-      "sltest.bonemeal.BonemealListener",
-      "sltest.dispenser.DispenserListener",
-      "sltest.effect.TestEffectListener"
+      "net.modificationstation.sltest.item.ItemListener",
+      "net.modificationstation.sltest.packet.MessageListenerListener",
+      "net.modificationstation.sltest.MainTest",
+      "net.modificationstation.sltest.SLTest",
+      "net.modificationstation.sltest.recipe.RecipeListener",
+      "net.modificationstation.sltest.achievement.AchievementListener",
+      "net.modificationstation.sltest.level.gen.ChunkListener",
+      "net.modificationstation.sltest.entity.EntityListener",
+      "net.modificationstation.sltest.tileentity.TileEntityListener",
+      "net.modificationstation.sltest.item.tool.ToolListener",
+      "net.modificationstation.sltest.datafixer.DataFixerListener",
+      "net.modificationstation.sltest.worldgen.TestWorldgenListener",
+      "net.modificationstation.sltest.bonemeal.BonemealListener",
+      "net.modificationstation.sltest.dispenser.DispenserListener",
+      "net.modificationstation.sltest.effect.TestEffectListener"
     ],
     "stationapi:event_bus_client": [
-      "sltest.gui.GuiListener",
-      "sltest.option.OptionListener",
-      "sltest.keyboard.KeyboardListener",
-      "sltest.texture.TextureListener",
-      "sltest.render.entity.EntityRendererListener"
+      "net.modificationstation.sltest.gui.GuiListener",
+      "net.modificationstation.sltest.option.OptionListener",
+      "net.modificationstation.sltest.keyboard.KeyboardListener",
+      "net.modificationstation.sltest.texture.TextureListener",
+      "net.modificationstation.sltest.render.entity.EntityRendererListener"
     ],
     "main": [
-      "sltest.MainTest"
+      "net.modificationstation.sltest.MainTest"
     ],
     "preLaunch": [
-      "sltest.PreLaunchTest"
+      "net.modificationstation.sltest.PreLaunchTest"
     ]
   },
 

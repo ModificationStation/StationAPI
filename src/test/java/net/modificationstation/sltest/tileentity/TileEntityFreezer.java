@@ -155,7 +155,7 @@ public class TileEntityFreezer extends BlockEntity
     }
 
     @Override
-    public void method_1076()
+    public void tick()
     {
         if(frozenPowerRemaining > 0)
         {
@@ -218,12 +218,12 @@ public class TileEntityFreezer extends BlockEntity
 
     public boolean canPlayerUse(PlayerEntity entityplayer)
     {
-        if(world.method_1777(x, y, z) != this)
+        if(world.getBlockEntity(x, y, z) != this)
         {
             return false;
         } else
         {
-            return entityplayer.method_1347((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D) <= 64D;
+            return entityplayer.getSquaredDistance((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D) <= 64D;
         }
     }
 
