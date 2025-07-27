@@ -4,6 +4,7 @@ import net.minecraft.block.DoorBlock;
 import net.minecraft.block.Material;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.util.Identifier;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Random;
 
@@ -11,6 +12,7 @@ public class TemplateDoorBlock extends DoorBlock implements BlockTemplate {
     public int topTextureId = 0;
     public int bottomTextureId = 0;
 
+    @ApiStatus.Internal
     public Item doorItem = null;
 
     public TemplateDoorBlock(Identifier identifier, Material material) {
@@ -26,6 +28,7 @@ public class TemplateDoorBlock extends DoorBlock implements BlockTemplate {
         return (meta & 8) != 0;
     }
 
+    @Override
     public int getTexture(int side, int meta) {
         if (side == 0 || side == 1) {
             return bottomTextureId;
