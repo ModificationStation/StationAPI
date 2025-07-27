@@ -18,6 +18,9 @@
   "icon": "assets/station-templates-v0/icon.png",
 
   "environment": "*",
+  "mixins": [
+    "station-templates-v0.mixins.json"
+  ],
 
   "depends": {
     "fabricloader": "*",

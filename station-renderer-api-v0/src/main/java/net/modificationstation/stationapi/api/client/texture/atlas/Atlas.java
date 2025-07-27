@@ -79,7 +79,7 @@ public abstract class Atlas {
 
     public final <T extends Atlas> T of(Identifier texture) {
         Atlas atlas = this;
-        do if (atlas.getTexture(texture).id != atlas.getMissingTexture().id)
+        do if (atlas.idToTex.containsKey(texture))
             //noinspection unchecked
             return (T) atlas;
         while ((atlas = atlas.parent) != null);
