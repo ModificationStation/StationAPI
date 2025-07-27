@@ -24,7 +24,7 @@ class DoorItemMixin extends Item {
 
     // Why do you only hit ordinal 1, this shit's so fucking annoying
     @ModifyVariable(method = "useOnBlock", at = @At(value = "STORE"))
-    private Block hijackBlock(Block value) {
+    private Block stationapi_hijackBlock(Block value) {
         if (TemplateDoorItem.class.isAssignableFrom(getClass())) {
             //noinspection DataFlowIssue
             return ((TemplateDoorItem) (Object) this).getDoorBlock();
@@ -34,7 +34,7 @@ class DoorItemMixin extends Item {
 
     // Workaround for said angry comment.
     @WrapOperation(method = "useOnBlock", at = @At(value = "FIELD", target = "Lnet/minecraft/item/DoorItem;material:Lnet/minecraft/block/Material;"))
-    private Material hijackPlacement(DoorItem instance, Operation<Material> original) {
+    private Material stationapi_hijackPlacement(DoorItem instance, Operation<Material> original) {
         if (TemplateDoorItem.class.isAssignableFrom(getClass())) {
             return UNUSED_MATERIAL; // To ensure mods doing something similar to vanilla aren't broken by this.
         }
