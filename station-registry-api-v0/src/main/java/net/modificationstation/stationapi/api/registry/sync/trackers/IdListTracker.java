@@ -17,33 +17,33 @@ import java.lang.invoke.MethodHandles;
 
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
 public final class IdListTracker<V, OV> {
-	static {
-		EntrypointManager.registerLookup(MethodHandles.lookup());
-	}
+    static {
+        EntrypointManager.registerLookup(MethodHandles.lookup());
+    }
 
-	private final String name;
-	private final IdList<OV> mappers;
-	private final Reference2ReferenceMap<Identifier, OV> removedMapperCache = new Reference2ReferenceOpenHashMap<>();
+    private final String name;
+    private final IdList<OV> mappers;
+    private final Reference2ReferenceMap<Identifier, OV> removedMapperCache = new Reference2ReferenceOpenHashMap<>();
 
-	private IdListTracker(String name, IdList<OV> mappers) {
-		this.name = name;
-		this.mappers = mappers;
-	}
+    private IdListTracker(String name, IdList<OV> mappers) {
+        this.name = name;
+        this.mappers = mappers;
+    }
 
-	public static <V, OV, R extends Registry<V> & ListenableRegistry> void register(R registry, String name, IdList<OV> mappers) {
-		IdListTracker<V, OV> tracker = new IdListTracker<>(name, mappers);
-		registry.getEventBus().register(Listener.object()
-				.listener(tracker)
-				.build());
-	}
+    public static <V, OV, R extends Registry<V> & ListenableRegistry> void register(R registry, String name, IdList<OV> mappers) {
+        IdListTracker<V, OV> tracker = new IdListTracker<>(name, mappers);
+        registry.getEventBus().register(Listener.object()
+                .listener(tracker)
+                .build());
+    }
 
-	@EventListener
-	private void onEntryAdded(RegistryEntryAddedEvent<V> event) {
-		if (removedMapperCache.containsKey(event.id)) mappers.set(removedMapperCache.get(event.id), event.rawId);
-	}
+    @EventListener
+    private void onEntryAdded(RegistryEntryAddedEvent<V> event) {
+        if (removedMapperCache.containsKey(event.id)) mappers.set(removedMapperCache.get(event.id), event.rawId);
+    }
 
-	@EventListener
-	private void onRemap(RegistryIdRemapEvent<V> event) {
-		mappers.remapIds(event.state.getRawIdChangeMap());
-	}
+    @EventListener
+    private void onRemap(RegistryIdRemapEvent<V> event) {
+        mappers.remapIds(event.state.getRawIdChangeMap());
+    }
 }

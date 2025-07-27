@@ -45,7 +45,7 @@ public final class DimensionRegistry extends AbstractInt2ObjectMapBackedLegacyRe
 
     private static final DimensionContainer<OverworldDimension> OVERWORLD = new DimensionContainer<>(OverworldDimension::new);
     public static final RegistryKey<DimensionRegistry> KEY = RegistryKey.ofRegistry(NAMESPACE.id("dimensions"));
-    public static final DimensionRegistry INSTANCE = Registries.create(KEY, new DimensionRegistry(), registry -> OVERWORLD, Lifecycle.experimental());
+    public static final DimensionRegistry INSTANCE = Registries.create(KEY, new DimensionRegistry(), Lifecycle.experimental());
 
     /**
      * {@link DimensionRegistry#serialView} backend.

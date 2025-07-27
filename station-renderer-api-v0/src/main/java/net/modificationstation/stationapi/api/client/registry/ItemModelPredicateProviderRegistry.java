@@ -18,9 +18,8 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public final class ItemModelPredicateProviderRegistry extends SimpleRegistry<ItemModelPredicateProvider> {
 
-    private static final ItemModelPredicateProvider EMPTY = (stack, world, entity, seed) -> 0;
     public static final RegistryKey<ItemModelPredicateProviderRegistry> KEY = RegistryKey.ofRegistry(NAMESPACE.id("item_model_predicate_providers"));
-    public static final ItemModelPredicateProviderRegistry INSTANCE = Registries.create(KEY, new ItemModelPredicateProviderRegistry(), registry -> EMPTY, Lifecycle.experimental());
+    public static final ItemModelPredicateProviderRegistry INSTANCE = Registries.create(KEY, new ItemModelPredicateProviderRegistry(), Lifecycle.experimental());
 
     private static final Identifier DAMAGED_ID = Identifier.of("damaged");
     private static final Identifier DAMAGE_ID = Identifier.of("damage");

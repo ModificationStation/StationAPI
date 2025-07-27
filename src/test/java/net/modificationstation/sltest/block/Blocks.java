@@ -7,6 +7,7 @@ import net.modificationstation.sltest.mixin.BlockBaseAccessor;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.template.block.TemplateBlock;
+import net.modificationstation.stationapi.api.template.block.TemplateDoorBlock;
 import net.modificationstation.stationapi.api.template.block.TemplateLeavesBlock;
 import net.modificationstation.stationapi.api.template.block.TemplateLogBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
@@ -29,7 +30,11 @@ public enum Blocks {
     EMISSION_CHECKER("emission_checker", "emissionChecker", LampBlock::new),
     INDISPENSABLE_BLOCK("indispensable_block", "indispensableBlock", IndispensableBlock::new),
     MODDED_LEAVES("modded_leaves", "moddedLeaves", id -> new TemplateLeavesBlock(id, 52)),
-    MODDED_LOG("modded_log", "moddedLog", TemplateLogBlock::new);
+    MODDED_LOG("modded_log", "moddedLog", TemplateLogBlock::new),
+    EFFECT_BLOCK("effect_block", "effectBlock", EffectBlock::new),
+    EFFECT_BLOCK_INF("effect_block_inf", "effectBlockInf", EffectBlockInf::new),
+    EFFECT_BLOCK_CLEAR("effect_block_clear", "effectBlockClear", EffectBlockClear::new),
+    FANCY_WOOD_DOOR("fancy_wood_door_block", "fancyWoodDoor", id -> new TemplateDoorBlock(id, Material.WOOD));
 
     private final Runnable register;
     private Block block;

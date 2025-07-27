@@ -18,7 +18,6 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MessageListenerRegistry {
-    private static final BiConsumer<PlayerEntity, MessagePacket> EMPTY = (player, message) -> {};
     public static final RegistryKey<Registry<BiConsumer<PlayerEntity, MessagePacket>>> KEY = RegistryKey.ofRegistry(NAMESPACE.id("message_listeners"));
-    public static final Registry<BiConsumer<PlayerEntity, MessagePacket>> INSTANCE = Registries.create(KEY, registry -> EMPTY);
+    public static final Registry<BiConsumer<PlayerEntity, MessagePacket>> INSTANCE = Registries.create(KEY);
 }

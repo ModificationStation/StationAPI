@@ -123,6 +123,8 @@ public final class Namespace implements Comparable<@NotNull Namespace> {
 
                                             // Gradle build path test
                                             if (nameCount > 2) {
+                                                if (!path.getFileName().equals(callerPath.getFileName()))
+                                                    return false;
                                                 val resources = path.getParent();
                                                 pathName = resources.getFileName();
                                                 if (pathName.toString().equals("resources")) {

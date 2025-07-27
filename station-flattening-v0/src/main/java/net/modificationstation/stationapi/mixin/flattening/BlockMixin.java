@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -7,6 +9,7 @@ import net.minecraft.block.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -260,7 +263,8 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     @Override
     @Unique
     public void onBlockPlaced(World world, int x, int y, int z, BlockState replacedState) {
-        onPlaced(world, x, y, z);
+        if (!replacedState.isOf((Block) (Object) this))
+            onPlaced(world, x, y, z);
     }
 
     @ModifyVariable(
@@ -365,12 +369,29 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     private int stationapi_getStateBrightness(int original) {
         return BlockBrightness.light;
     }
-    
-    @Inject(method = "afterBreak", at = @At("HEAD"), cancellable = true)
-    private void stationapi_temporalStatFix(World world, PlayerEntity player, int x, int y, int z, int meta, CallbackInfo info) {
-        if (id < Stats.MINE_BLOCK.length) return;
-        this.dropStacks(world, x, y, z, meta);
-        info.cancel();
+
+    @Redirect(
+            method = "afterBreak",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/stat/Stats;MINE_BLOCK:[Lnet/minecraft/stat/Stat;",
+                    args = "array=get"
+            )
+    )
+    private Stat stationapi_tmpFixStats1(Stat[] array, int index) {
+        return index < array.length ? array[index] : null;
+    }
+
+    @WrapOperation(
+            method = "afterBreak",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/player/PlayerEntity;increaseStat(Lnet/minecraft/stat/Stat;I)V"
+            )
+    )
+    private void stationapi_tmpFixStats2(PlayerEntity instance, Stat amount, int i, Operation<Void> original) {
+        if (id < Stats.MINE_BLOCK.length)
+            original.call(instance, amount, i);
     }
 
     @Override

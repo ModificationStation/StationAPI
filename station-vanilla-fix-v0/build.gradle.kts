@@ -1,5 +1,5 @@
 import net.modificationstation.stationapi.gradle.SubprojectHelpers.getSubprojectVersion
-import net.modificationstation.stationapi.gradle.SubprojectHelpers.addModuleDependencies
+import babric.SubprojectHelpers.addModuleDependencies
 base.archivesName.set("station-vanilla-fix-v0")
 version = getSubprojectVersion(project, "1.0.0")
 

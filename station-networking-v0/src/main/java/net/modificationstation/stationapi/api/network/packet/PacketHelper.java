@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.network.packet;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.util.API;
@@ -44,10 +45,43 @@ public final class PacketHelper {
     }
 
     /**
+     * On client, ignores the packet if the current game is multiplayer, or handles the packet locally if the current game is singleplayer.
+     * On server, both handles the packet locally and sends the packet to the player's client.
+     * @param player the player to send the packet to.
+     * @param packet the packet to send/handle.
+     */
+    @API
+    public static void dispatchLocallyAndSendTo(PlayerEntity player, Packet packet) {
+        INSTANCE.dispatchLocallyAndSendTo(player, packet);
+    }
+
+    /**
+     * On client, ignores the packet if the current game is multiplayer, or handles the packet locally if the current game is singleplayer.
+     * On server, sends the packet to all players tracking the given entity.
+     * @param entity the entity whose tracking players to send the packet to.
+     * @param packet the packet to send/handle.
+     */
+    @API
+    public static void sendToAllTracking(Entity entity, Packet packet) {
+        INSTANCE.sendToAllTracking(entity, packet);
+    }
+
+    /**
+     * On client, ignores the packet if the current game is multiplayer, or handles the packet locally if the current game is singleplayer.
+     * On server, both handles the packet locally and sends the packet to all players tracking the given entity.
+     * @param entity the entity whose tracking players to send the packet to.
+     * @param packet the packet to send/handle.
+     */
+    @API
+    public static void dispatchLocallyAndToAllTracking(Entity entity, Packet packet) {
+        INSTANCE.dispatchLocallyAndToAllTracking(entity, packet);
+    }
+
+    /**
      * Registers the given packet.
      *
      * <p>For registering packets that use {@link Identifier} instead of a byte ID,
-     * refer to {@link ManagedPacket#register(Identifier, boolean, boolean, ManagedPacket.Factory)}
+     * refer to {@link net.modificationstation.stationapi.api.registry.PacketTypeRegistry}
      *
      * @param rawId the packet ID that you want to use for the packet.
      *                 The ID is written as a byte, meaning it can be any number in the 0-255 (inclusive) range,
