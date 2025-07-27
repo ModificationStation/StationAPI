@@ -21,7 +21,7 @@ public class TestEntity extends Entity implements EntitySpawnDataProvider {
 
     public TestEntity(World world, double x, double y, double z) {
         this(world);
-        method_1340(x, y + eyeHeight, z);
+        setPosition(x, y + standingEyeHeight, z);
         prevX = x;
         prevY = y;
         prevZ = z;
@@ -43,7 +43,7 @@ public class TestEntity extends Entity implements EntitySpawnDataProvider {
     }
 
     @Override
-    public boolean method_1356() {
+    public boolean isCollidable() {
         return true;
     }
 
@@ -54,8 +54,8 @@ public class TestEntity extends Entity implements EntitySpawnDataProvider {
     }
 
     @Override
-    public boolean method_1323(PlayerEntity playerEntity) {
-        super.method_1323(playerEntity);
+    public boolean interact(PlayerEntity playerEntity) {
+        super.interact(playerEntity);
         dataTracker.set(16, dataTracker.getInt(16) + 1);
         return true;
     }

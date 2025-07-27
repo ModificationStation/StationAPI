@@ -19,8 +19,8 @@ public class MessageListenerListener {
     }
 
     public void handleGiveMeDiamonds(PlayerEntity playerBase, MessagePacket message) {
-        playerBase.method_490("Have a diamond!");
-        playerBase.inventory.method_671(new ItemStack(Item.DIAMOND));
+        playerBase.sendMessage("Have a diamond!");
+        playerBase.inventory.addStack(new ItemStack(Item.DIAMOND));
     }
 
     public void handleSendCoords(PlayerEntity playerBase, MessagePacket message) {

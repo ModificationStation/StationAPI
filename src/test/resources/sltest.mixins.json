@@ -4,18 +4,18 @@
   "package": "net.modificationstation.sltest.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "sltest.mixin.BlockBaseAccessor",
-    "sltest.mixin.MixinLevel",
-    "sltest.mixin.MixinNetherLevelSource",
-    "sltest.mixin.MixinObsidian",
-    "sltest.mixin.OverworldTestMixin"
+    "BlockBaseAccessor",
+    "MixinLevel",
+    "MixinNetherLevelSource",
+    "MixinObsidian",
+    "OverworldTestMixin"
   ],
   "server": [
   ],
   "client": [
-    "sltest.mixin.MixinScreenBase",
-    "sltest.mixin.MixinScrollableBase",
-    "sltest.mixin.MixinWorldRenderer"
+    "MixinScreenBase",
+    "MixinScrollableBase",
+    "MixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

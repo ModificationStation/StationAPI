@@ -29,7 +29,7 @@ public class PoorGuy extends AnimalEntity implements MobSpawnDataProvider {
 //    }
 
     @Override
-    protected int method_914() {
+    protected int getDroppedItemId() {
         return Item.WHEAT.id;
     }
 

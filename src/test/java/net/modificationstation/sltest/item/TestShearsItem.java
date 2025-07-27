@@ -16,7 +16,7 @@ public class TestShearsItem extends TemplateShearsItem {
 
     @Override
     public boolean useOnBlock(ItemStack item, PlayerEntity player, World level, int x, int y, int z, int facing) {
-        if (player.method_1373()) {
+        if (player.isSneaking()) {
             if (!level.isRemote) {
                 level.setBlock(x, y, z, 0);
             }
@@ -25,9 +25,9 @@ public class TestShearsItem extends TemplateShearsItem {
         } else if (facing == Direction.UP.ordinal()) {
             if (!level.isRemote) {
                 LivingEntity entity = (LivingEntity) EntityRegistry.create("Sheep", level);
-                entity.method_1340(x + 0.5, y + 1, z + 0.5);
-                level.method_210(entity);
-                entity.method_919();
+                entity.setPosition(x + 0.5, y + 1, z + 0.5);
+                level.spawnEntity(entity);
+                entity.animateSpawn();
             }
             item.bobbingAnimationTime = 20;
             return true;

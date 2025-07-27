@@ -18,7 +18,7 @@ public class PacifistSwordItem extends TemplateSwordItem {
         if(player.world.isRemote){
             return false;
         }
-        player.method_490("You tried to hurt this innocent " + EntityRegistry.getId(otherEntity));
+        player.sendMessage("You tried to hurt this innocent " + EntityRegistry.getId(otherEntity));
         return false;
     }
 }

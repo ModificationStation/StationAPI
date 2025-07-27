@@ -1,7 +1,7 @@
 package net.modificationstation.sltest.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.BlockView;
 
 public class ColouredBlock extends Block {

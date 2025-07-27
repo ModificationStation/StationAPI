@@ -1,6 +1,6 @@
 package net.modificationstation.sltest.block;
 
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.modificationstation.sltest.item.IndispensableBlockItem;
 import net.modificationstation.stationapi.api.block.HasCustomBlockItemFactory;
 import net.modificationstation.stationapi.api.template.block.TemplateBlock;

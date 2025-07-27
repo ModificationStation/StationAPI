@@ -3,7 +3,7 @@ package net.modificationstation.sltest.dispenser;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -27,13 +27,13 @@ public class DispenserListener {
 
             // Make buckets pickup liquids
             if (context.itemStack.itemId == Item.BUCKET.id) {
-                if (world.method_1779(facing.x, facing.y, facing.z) == Material.WATER && world.getBlockMeta(facing.x, facing.y, facing.z) == 0) {
+                if (world.getMaterial(facing.x, facing.y, facing.z) == Material.WATER && world.getBlockMeta(facing.x, facing.y, facing.z) == 0) {
                     world.setBlock(facing.x, facing.y, facing.z, 0);
                     context.dispenser.setStack(context.slot, new ItemStack(Item.WATER_BUCKET));
                     event.cancel();
                 }
 
-                if (world.method_1779(facing.x, facing.y, facing.z) == Material.LAVA && world.getBlockMeta(facing.x, facing.y, facing.z) == 0) {
+                if (world.getMaterial(facing.x, facing.y, facing.z) == Material.LAVA && world.getBlockMeta(facing.x, facing.y, facing.z) == 0) {
                     world.setBlock(facing.x, facing.y, facing.z, 0);
                     context.dispenser.setStack(context.slot, new ItemStack(Item.LAVA_BUCKET));
                     event.cancel();
@@ -42,7 +42,7 @@ public class DispenserListener {
 
             // Make water buckets place water
             if (context.itemStack.itemId == Item.WATER_BUCKET.id) {
-                if (world.method_1779(facing.x, facing.y, facing.z) == Material.AIR) {
+                if (world.getMaterial(facing.x, facing.y, facing.z) == Material.AIR) {
                     world.setBlockStateWithNotify(facing.x, facing.y, facing.z, Block.WATER.getDefaultState());
                     context.dispenser.setStack(context.slot, new ItemStack(Item.BUCKET));
                     event.cancel();
@@ -51,7 +51,7 @@ public class DispenserListener {
 
             // Make lava buckets place lava
             if (context.itemStack.itemId == Item.LAVA_BUCKET.id) {
-                if (world.method_1779(facing.x, facing.y, facing.z) == Material.AIR) {
+                if (world.getMaterial(facing.x, facing.y, facing.z) == Material.AIR) {
                     world.setBlockStateWithNotify(facing.x, facing.y, facing.z, Block.LAVA.getDefaultState());
                     context.dispenser.setStack(context.slot, new ItemStack(Item.BUCKET));
                     event.cancel();

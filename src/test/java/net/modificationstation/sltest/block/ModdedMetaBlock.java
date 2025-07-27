@@ -2,7 +2,7 @@ package net.modificationstation.sltest.block;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.block.HasMetaNamedBlockItem;
 import net.modificationstation.stationapi.api.util.Identifier;

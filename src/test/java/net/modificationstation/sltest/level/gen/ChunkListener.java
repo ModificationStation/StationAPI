@@ -1,7 +1,6 @@
 package net.modificationstation.sltest.level.gen;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.block.Block;
 import net.modificationstation.sltest.block.Blocks;
 import net.modificationstation.stationapi.api.event.world.gen.WorldGenEvent;
 
