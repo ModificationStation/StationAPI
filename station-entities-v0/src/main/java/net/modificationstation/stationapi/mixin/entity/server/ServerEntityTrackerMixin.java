@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityTracker.class)
 class ServerEntityTrackerMixin {
-    @Shadow private IntHashMap field_2005;
+    @Shadow private IntHashMap entriesById;
 
     @Inject(
-            method = "method_1665",
+            method = "onEntityAdded",
             at = @At("RETURN")
     )
     private void stationapi_afterVanillaEntries(Entity arg, CallbackInfo ci) {
@@ -24,7 +24,7 @@ class ServerEntityTrackerMixin {
         StationAPI.EVENT_BUS.post(
                 TrackEntityEvent.builder()
                         .entityTracker((EntityTracker) (Object) this)
-                        .trackedEntities(field_2005)
+                        .trackedEntities(entriesById)
                         .entityToTrack(arg)
                         .build()
         );

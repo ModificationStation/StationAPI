@@ -13,15 +13,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(EntityTrackerEntry.class)
 class TrackedEntityMixin {
     @Shadow
-    public Entity field_597;
+    public Entity currentTrackedEntity;
 
     @Inject(
-            method = "method_600",
+            method = "createAddEntityPacket",
             at = @At("HEAD"),
             cancellable = true
     )
     private void stationapi_getSpawnData(CallbackInfoReturnable<Packet> cir) {
-        if (this.field_597 instanceof CustomSpawnDataProvider provider)
+        if (this.currentTrackedEntity instanceof CustomSpawnDataProvider provider)
             cir.setReturnValue(provider.getSpawnData());
     }
 }

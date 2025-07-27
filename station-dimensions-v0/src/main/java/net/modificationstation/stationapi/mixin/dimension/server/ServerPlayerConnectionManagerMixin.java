@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(PlayerManager.class)
 class ServerPlayerConnectionManagerMixin {
-    @Shadow private ChunkMap[] field_580;
+    @Shadow private ChunkMap[] chunkMaps;
 
     @ModifyConstant(
             method = "<init>(Lnet/minecraft/server/MinecraftServer;)V",
@@ -39,11 +39,11 @@ class ServerPlayerConnectionManagerMixin {
         IntSortedSet dimensions = DimensionRegistry.INSTANCE.serialView.keySet();
         int[] otherDimensions = dimensions.tailSet(dimensions.toIntArray()[2]).toIntArray();
         for (int i = 0; i < otherDimensions.length; i++)
-            field_580[i + 2] = new ChunkMap(server, otherDimensions[i], var2);
+            chunkMaps[i + 2] = new ChunkMap(server, otherDimensions[i], var2);
     }
 
     @Inject(
-            method = "method_554(Lnet/minecraft/entity/player/ServerPlayerEntity;)V",
+            method = "updatePlayerAfterDimensionChange(Lnet/minecraft/entity/player/ServerPlayerEntity;)V",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/entity/player/ServerPlayerEntity;dimensionId:I",
@@ -56,7 +56,7 @@ class ServerPlayerConnectionManagerMixin {
         IntSortedSet dimensions = DimensionRegistry.INSTANCE.serialView.keySet();
         int[] otherDimensions = dimensions.tailSet(dimensions.toIntArray()[2]).toIntArray();
         for (int i = 0; i < otherDimensions.length; i++)
-            field_580[i + 2].removePlayer(player);
+            chunkMaps[i + 2].removePlayer(player);
     }
 
     /**
@@ -64,7 +64,7 @@ class ServerPlayerConnectionManagerMixin {
      * @author mine_diver
      */
     @Overwrite
-    private ChunkMap method_551(int dimension) {
-        return field_580[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), dimension, DimensionRegistry.DIMENSIONS_COMPARATOR)];
+    private ChunkMap getChunkMap(int dimension) {
+        return chunkMaps[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), dimension, DimensionRegistry.DIMENSIONS_COMPARATOR)];
     }
 }

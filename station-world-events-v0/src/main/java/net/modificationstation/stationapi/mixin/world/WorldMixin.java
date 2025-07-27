@@ -23,7 +23,7 @@ class WorldMixin {
     }
     
     @Inject(
-            method = "method_195",
+            method = "saveWithLoadingDisplay",
             at = @At("HEAD")
     )
     private void stationapi_onLevelSave(CallbackInfo ci) {

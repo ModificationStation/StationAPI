@@ -53,7 +53,7 @@ class BlockItemMixin extends Item implements StationFlatteningBlockItem {
             method = "useOnBlock",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;method_156(IIIIZI)Z"
+                    target = "Lnet/minecraft/world/World;canPlace(IIIIZI)Z"
             )
     )
     private boolean stationapi_canReplace(

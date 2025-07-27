@@ -19,9 +19,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MinecraftServer.class)
 class MinecraftServerMixin {
-    @Shadow public EntityTracker[] field_2847;
+    @Shadow public EntityTracker[] entityTrackers;
 
-    @Shadow public ServerWorld[] field_2841;
+    @Shadow public ServerWorld[] worlds;
 
     @ModifyConstant(
             method = "<init>()V",
@@ -33,7 +33,7 @@ class MinecraftServerMixin {
     }
 
     @Inject(
-            method = "method_2166",
+            method = "init",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/System;nanoTime()J",
@@ -47,11 +47,11 @@ class MinecraftServerMixin {
         int[] otherDimensions = dimensions.tailSet(dimensions.toIntArray()[2]).toIntArray();
         for (int i = 0; i < otherDimensions.length; i++)
             //noinspection DataFlowIssue
-            field_2847[i + 2] = new EntityTracker((MinecraftServer) (Object) this, otherDimensions[i]);
+            entityTrackers[i + 2] = new EntityTracker((MinecraftServer) (Object) this, otherDimensions[i]);
     }
 
     @ModifyConstant(
-            method = "method_2159",
+            method = "loadWorld",
             constant = @Constant(
                     intValue = 2,
                     ordinal = 0
@@ -62,7 +62,7 @@ class MinecraftServerMixin {
     }
 
     @ModifyVariable(
-            method = "method_2159",
+            method = "loadWorld",
             index = 6,
             at = @At(
                     value = "LOAD",
@@ -77,7 +77,7 @@ class MinecraftServerMixin {
     private int stationapi_capturedIndex;
 
     @ModifyConstant(
-            method = "method_2159",
+            method = "loadWorld",
             constant = @Constant(
                     intValue = 0,
                     ordinal = 1
@@ -88,7 +88,7 @@ class MinecraftServerMixin {
     }
 
     @Redirect(
-            method = "method_2159",
+            method = "loadWorld",
             at = @At(
                     value = "NEW",
                     target = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;IJLnet/minecraft/class_73;)Lnet/minecraft/class_120;"
@@ -103,8 +103,8 @@ class MinecraftServerMixin {
      * @author mine_diver
      */
     @Overwrite
-    public ServerWorld method_2157(int index) {
-        return field_2841[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), index, DimensionRegistry.DIMENSIONS_COMPARATOR)];
+    public ServerWorld getWorld(int index) {
+        return worlds[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), index, DimensionRegistry.DIMENSIONS_COMPARATOR)];
     }
 
     /**
@@ -112,7 +112,7 @@ class MinecraftServerMixin {
      * @author mine_diver
      */
     @Overwrite
-    public EntityTracker method_2165(int i) {
-        return field_2847[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), i, DimensionRegistry.DIMENSIONS_COMPARATOR)];
+    public EntityTracker getEntityTracker(int i) {
+        return entityTrackers[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), i, DimensionRegistry.DIMENSIONS_COMPARATOR)];
     }
 }

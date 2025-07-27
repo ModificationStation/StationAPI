@@ -20,29 +20,29 @@ public interface TextureManagerAccessor {
     GameOptions getGameOptions();
 
     @Accessor
-    List<DynamicTexture> getField_1251();
+    List<DynamicTexture> getDynamicTextures();
 
     @Accessor
     HashMap<String, Integer> getTextures();
 
     @Accessor
-    ByteBuffer getField_1250();
+    ByteBuffer getImageBuffer();
 
     @Accessor
-    void setField_1250(ByteBuffer byteBuffer);
+    void setImageBuffer(ByteBuffer byteBuffer);
 
     @Invoker
-    BufferedImage invokeMethod_1091(InputStream var1);
+    BufferedImage invokeReadImage(InputStream var1);
 
-    @Accessor("field_1255")
+    @Accessor("blur")
     boolean stationapi$isBlurTexture();
 
-    @Accessor("field_1254")
+    @Accessor("clamp")
     boolean stationapi$isClampTexture();
 
-    @Invoker("method_1098")
-    int stationapi$method_1098(int i, int j);
+    @Invoker("crispBlend")
+    int stationapi$crispBlend(int i, int j);
 
-    @Accessor("field_1256")
+    @Accessor("texturePacks")
     TexturePacks stationapi$getTexturePackManager();
 }

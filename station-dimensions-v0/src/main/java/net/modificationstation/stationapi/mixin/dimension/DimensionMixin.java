@@ -13,7 +13,7 @@ class DimensionMixin {
     @Shadow public int id;
 
     @Inject(
-            method = "method_1767",
+            method = "fromId",
             at = @At("HEAD"),
             cancellable = true
     )

@@ -42,7 +42,7 @@ class TextureManagerMixin {
     }
 
     @Inject(
-            method = "method_1089",
+            method = "load",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/nio/ByteBuffer;clear()Ljava/nio/Buffer;",
@@ -55,7 +55,7 @@ class TextureManagerMixin {
     }
 
     @Inject(
-            method = "method_1095",
+            method = "bind",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/nio/ByteBuffer;clear()Ljava/nio/Buffer;",
@@ -68,7 +68,7 @@ class TextureManagerMixin {
     }
 
     @Inject(
-            method = "method_1084",
+            method = "tick",
             at = @At("HEAD")
     )
     private void stationapi_tick_onTickStart(CallbackInfo ci) {
@@ -81,7 +81,7 @@ class TextureManagerMixin {
     }
 
     @Inject(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/nio/ByteBuffer;clear()Ljava/nio/Buffer;",
@@ -95,10 +95,10 @@ class TextureManagerMixin {
     }
 
     @Redirect(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_336;method_1206(Lnet/minecraft/client/texture/TextureManager;)V"
+                    target = "Lnet/minecraft/class_336;bind(Lnet/minecraft/client/texture/TextureManager;)V"
             )
     )
     private void stationapi_tick_preventBindingTextureAndCheckCustomBinder(DynamicTexture instance, TextureManager manager) {
@@ -125,7 +125,7 @@ class TextureManagerMixin {
             stationapi_binderScaledHeight;
 
     @Inject(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "CONSTANT",
                     args = "intValue=3553",
@@ -139,7 +139,7 @@ class TextureManagerMixin {
     }
 
     @ModifyArg(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glTexSubImage2D(IIIIIIIILjava/nio/ByteBuffer;)V",
@@ -153,7 +153,7 @@ class TextureManagerMixin {
     }
 
     @ModifyArg(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glTexSubImage2D(IIIIIIIILjava/nio/ByteBuffer;)V",
@@ -167,7 +167,7 @@ class TextureManagerMixin {
     }
 
     @ModifyArg(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glTexSubImage2D(IIIIIIIILjava/nio/ByteBuffer;)V",
@@ -181,7 +181,7 @@ class TextureManagerMixin {
     }
 
     @ModifyArg(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glTexSubImage2D(IIIIIIIILjava/nio/ByteBuffer;)V",

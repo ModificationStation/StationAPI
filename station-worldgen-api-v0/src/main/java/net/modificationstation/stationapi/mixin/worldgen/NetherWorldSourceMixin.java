@@ -15,23 +15,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(NetherChunkGenerator.class)
 class NetherWorldSourceMixin {
-    @Shadow private World field_1350;
+    @Shadow private World world;
 
     @Inject(
-            method = "method_1803",
+            method = "decorate",
             at = @At("HEAD")
     )
     private void stationapi_makeSurface(ChunkSource source, int cx, int cz, CallbackInfo info) {
-        WorldDecoratorImpl.decorate(this.field_1350, cx, cz);
+        WorldDecoratorImpl.decorate(this.world, cx, cz);
     }
     
     @Inject(
-        method = "method_1803",
-        at = @At(value = "FIELD", target = "Lnet/minecraft/block/SandBlock;field_375:Z", ordinal = 0, shift = Shift.BEFORE),
+        method = "decorate",
+        at = @At(value = "FIELD", target = "Lnet/minecraft/block/SandBlock;fallInstantly:Z", ordinal = 0, shift = Shift.BEFORE),
         cancellable = true
     )
     private void stationapi_cancelFeatureGeneration(ChunkSource source, int cx, int cz, CallbackInfo info) {
-        Biome biome = this.field_1350.method_1781().getBiome(cx + 16, cz + 16);
+        Biome biome = this.world.method_1781().getBiome(cx + 16, cz + 16);
         if (biome.isNoDimensionFeatures()) {
             SandBlock.fallInstantly = false;
             info.cancel();

@@ -18,7 +18,7 @@ class WorldMixin {
         method = "<init>(Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/world/dimension/Dimension;)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/dimension/Dimension;method_1768(Lnet/minecraft/world/World;)V",
+            target = "Lnet/minecraft/world/dimension/Dimension;setWorld(Lnet/minecraft/world/World;)V",
             shift = Shift.BEFORE
         )
     )
@@ -33,7 +33,7 @@ class WorldMixin {
         method = "<init>(Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;Lnet/minecraft/world/dimension/Dimension;J)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/dimension/Dimension;method_1768(Lnet/minecraft/world/World;)V",
+            target = "Lnet/minecraft/world/dimension/Dimension;setWorld(Lnet/minecraft/world/World;)V",
             shift = Shift.BEFORE
         )
     )
@@ -49,7 +49,7 @@ class WorldMixin {
         method = "<init>(Lnet/minecraft/world/World;Lnet/minecraft/world/dimension/Dimension;)V",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/dimension/Dimension;method_1768(Lnet/minecraft/world/World;)V",
+            target = "Lnet/minecraft/world/dimension/Dimension;setWorld(Lnet/minecraft/world/World;)V",
             shift = Shift.BEFORE
         )
     )

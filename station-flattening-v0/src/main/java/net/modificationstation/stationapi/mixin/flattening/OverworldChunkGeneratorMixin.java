@@ -24,8 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(value = OverworldChunkGenerator.class, priority = 4000)
 class OverworldChunkGeneratorMixin {
-    @Shadow private World field_2260;
-    @Shadow private double[] field_2261;
+    @Shadow private World world;
+    @Shadow private double[] heightMap;
     @Unique private double[] densityCache;
 
     @WrapOperation(
@@ -42,15 +42,15 @@ class OverworldChunkGeneratorMixin {
     }
     
     @ModifyConstant(
-            method = "method_1803",
+            method = "decorate",
             constant = @Constant(intValue = 128)
     )
     private int stationapi_changeMaxHeight(int value) {
-        return field_2260.getTopY();
+        return world.getTopY();
     }
 
     @Redirect(
-            method = "method_1806",
+            method = "getChunk",
             at = @At(
                     value = "NEW",
                     target = "(Lnet/minecraft/world/World;[BII)Lnet/minecraft/world/chunk/Chunk;"
@@ -61,10 +61,10 @@ class OverworldChunkGeneratorMixin {
     }
 
     @Inject(
-            method = "method_1806",
+            method = "getChunk",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/chunk/Chunk;method_873()V"
+                    target = "Lnet/minecraft/world/chunk/Chunk;populateHeightMap()V"
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
@@ -73,66 +73,66 @@ class OverworldChunkGeneratorMixin {
     }
     
     @ModifyConstant(
-            method = "method_1806",
+            method = "getChunk",
             constant = @Constant(intValue = 32768)
     )
     private int stationapi_changeArrayCapacity(int original) {
-        return 1 << (MathHelper.ceilLog2(field_2260.getHeight()) + 8);
+        return 1 << (MathHelper.ceilLog2(world.getHeight()) + 8);
     }
     
     @Inject(
-            method = "method_1798",
+            method = "buildTerrain",
             at = @At("HEAD")
     )
     private void stationapi_initChunkLocals(
         int j, int bs, byte[] args, Biome[] ds, double[] par5, CallbackInfo ci,
         @Share("offsetX") LocalIntRef offsetX, @Share("offsetZ") LocalIntRef offsetZ, @Share("vertical") LocalIntRef vertical, @Share("height") LocalIntRef height
     ) {
-        int dz = MathHelper.ceilLog2(field_2260.getHeight());
+        int dz = MathHelper.ceilLog2(world.getHeight());
         height.set(1 << dz);
         offsetZ.set(dz);
         offsetX.set(dz + 4);
         int heightPacked = 1 << (dz - 3);
         vertical.set(heightPacked);
         int length = (heightPacked + 1) * 25;
-        if (field_2261 == null || field_2261.length < length) {
-            field_2261 = new double[length];
+        if (heightMap == null || heightMap.length < length) {
+            heightMap = new double[length];
         }
     }
     
     @Inject(
-            method = "method_1798",
+            method = "buildTerrain",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_538;method_1799([DIIIIII)[D",
+                    target = "Lnet/minecraft/class_538;generateHeightMap([DIIIIII)[D",
                     shift = Shift.AFTER
             )
     )
     private void stationapi_fixNoiseValues(int j, int bs, byte[] args, Biome[] ds, double[] par5, CallbackInfo ci, @Share("vertical") LocalIntRef vertical) {
         int height = vertical.get() + 1;
         int length = height * 25;
-        int bottom = field_2260.getBottomY() >> 3;
+        int bottom = world.getBottomY() >> 3;
         
         if (densityCache == null || densityCache.length != length) {
-            densityCache = new double[field_2261.length];
+            densityCache = new double[heightMap.length];
         }
-        System.arraycopy(field_2261, 0, densityCache, 0, field_2261.length);
+        System.arraycopy(heightMap, 0, densityCache, 0, heightMap.length);
         
         for (int i = 0; i < length; i++) {
             int y = (i % height) + bottom;
             y = MathHelper.clamp(y, 0, 16);
             int zx = i / height;
             int index = zx * 17 + y;
-            field_2261[i] = densityCache[index];
+            heightMap[i] = densityCache[index];
         }
     }
     
     @ModifyArg(
-            method = "method_1798",
+            method = "buildTerrain",
             index = 5,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_538;method_1799([DIIIIII)[D"
+                    target = "Lnet/minecraft/class_538;generateHeightMap([DIIIIII)[D"
             )
     )
     private int stationapi_preventArgChanges(int original) {
@@ -140,7 +140,7 @@ class OverworldChunkGeneratorMixin {
     }
     
     @ModifyConstant(
-            method = "method_1798",
+            method = "buildTerrain",
             constant = @Constant(intValue = 17)
     )
     private int stationapi_changeVerticalArraySize(int original, @Share("vertical") LocalIntRef vertical) {
@@ -148,7 +148,7 @@ class OverworldChunkGeneratorMixin {
     }
     
     @ModifyConstant(
-            method = "method_1798",
+            method = "buildTerrain",
             constant = @Constant(
                     intValue = 16,
                     ordinal = 0
@@ -159,39 +159,39 @@ class OverworldChunkGeneratorMixin {
     }
     
     @ModifyConstant(
-            method = "method_1798",
+            method = "buildTerrain",
             constant = @Constant(intValue = 128)
     )
     private int stationapi_changeFillStep(int original, @Share("height") LocalIntRef height) {
         return height.get();
     }
     
-    @Inject(method = "method_1797", at = @At("HEAD"))
+    @Inject(method = "buildSurfaces", at = @At("HEAD"))
     private void stationapi_initLocals(int j, int bs, byte[] args, Biome[] par4, CallbackInfo ci, @Share("vertical2") LocalIntRef vertical2) {
-        vertical2.set(MathHelper.smallestEncompassingPowerOfTwo(field_2260.getHeight()));
+        vertical2.set(MathHelper.smallestEncompassingPowerOfTwo(world.getHeight()));
     }
 
     @ModifyExpressionValue(
-            method = "method_1797",
+            method = "buildSurfaces",
             at = @At(
                     value = "CONSTANT",
                     args = "intValue=127"
             )
     )
     private int stationapi_changeTopYM1(int constant) {
-        return field_2260.getTopY() - 1;
+        return world.getTopY() - 1;
     }
 
     @ModifyConstant(
-            method = "method_1797",
+            method = "buildSurfaces",
             constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_ZERO)
     )
     private int stationapi_changeBottomY(int constant) {
-        return field_2260.getBottomY();
+        return world.getBottomY();
     }
     
     @ModifyConstant(
-        method = "method_1797",
+        method = "buildSurfaces",
         constant = @Constant(intValue = 128)
     )
     private int stationapi_changeFillStep2(int original, @Share("vertical2") LocalIntRef vertical2) {
@@ -199,16 +199,16 @@ class OverworldChunkGeneratorMixin {
     }
 
     @ModifyVariable(
-            method = "method_1797",
+            method = "buildSurfaces",
             at = @At("STORE"),
             index = 18
     )
     private int stationapi_adjustForDepth(int value) {
-        return value - field_2260.getBottomY();
+        return value - world.getBottomY();
     }
     
     @ModifyConstant(
-            method = "method_1798",
+            method = "buildTerrain",
             constant = @Constant(intValue = 7)
     )
     private int stationapi_changeZOffset(int original, @Share("offsetZ") LocalIntRef offsetZ) {
@@ -216,7 +216,7 @@ class OverworldChunkGeneratorMixin {
     }
     
     @ModifyConstant(
-            method = "method_1798",
+            method = "buildTerrain",
             constant = @Constant(intValue = 11)
     )
     private int stationapi_changeXOffset(int original, @Share("offsetX") LocalIntRef offsetX) {
@@ -224,10 +224,10 @@ class OverworldChunkGeneratorMixin {
     }
     
     @ModifyConstant(
-            method = "method_1798",
+            method = "buildTerrain",
             constant = @Constant(intValue = 64)
     )
     private int stationapi_changeOceanHeight(int original) {
-        return 64 - field_2260.getBottomY();
+        return 64 - world.getBottomY();
     }
 }

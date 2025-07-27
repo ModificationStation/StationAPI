@@ -42,7 +42,7 @@ public final class ArsenicItemRenderer {
     }
 
     public void render(ItemEntity item, double x, double y, double z, float rotation, float delta) {
-        itemRendererAccessor.getField_1709().setSeed(187L);
+        itemRendererAccessor.getRandom().setSeed(187L);
         ItemStack var10 = item.stack;
         float var11 = MathHelper.sin(((float)item.itemAge + delta) / 10.0F + item.initialRotationAngle) * 0.1F + 0.1F;
         float var12 = (((float)item.itemAge + delta) / 20.0F + item.initialRotationAngle) * (180F / (float)Math.PI);
@@ -79,13 +79,13 @@ public final class ArsenicItemRenderer {
             for (int var29 = 0; var29 < renderedAmount; ++var29) {
                 glPushMatrix();
                 if (var29 > 0) {
-                    float var30 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
-                    float var31 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
-                    float var32 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
+                    float var30 = (itemRendererAccessor.getRandom().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
+                    float var31 = (itemRendererAccessor.getRandom().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
+                    float var32 = (itemRendererAccessor.getRandom().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
                     glTranslatef(var30, var31, var32);
                 }
 
-                itemRendererAccessor.getField_1708().render(block, var10.getDamage(), item.getBrightnessAtEyes(delta));
+                itemRendererAccessor.getBlockRenderer().render(block, var10.getDamage(), item.getBrightnessAtEyes(delta));
                 glPopMatrix();
             }
         } else {
@@ -110,9 +110,9 @@ public final class ArsenicItemRenderer {
             for (int var33 = 0; var33 < renderedAmount; ++var33) {
                 glPushMatrix();
                 if (var33 > 0) {
-                    float var34 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.3F;
-                    float var35 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.3F;
-                    float var36 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var34 = (itemRendererAccessor.getRandom().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var35 = (itemRendererAccessor.getRandom().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var36 = (itemRendererAccessor.getRandom().nextFloat() * 2.0F - 1.0F) * 0.3F;
                     glTranslatef(var34, var35, var36);
                 }
 
@@ -144,9 +144,9 @@ public final class ArsenicItemRenderer {
             glPushMatrix();
             if (var29 > 0)
                 glTranslatef(
-                        (itemRendererAccessor.getField_1709().nextFloat() * 2 - 1) * .2F,
-                        (itemRendererAccessor.getField_1709().nextFloat() * 2 - 1) * .2F,
-                        (itemRendererAccessor.getField_1709().nextFloat() * 2 - 1) * .2F
+                        (itemRendererAccessor.getRandom().nextFloat() * 2 - 1) * .2F,
+                        (itemRendererAccessor.getRandom().nextFloat() * 2 - 1) * .2F,
+                        (itemRendererAccessor.getRandom().nextFloat() * 2 - 1) * .2F
                 );
 
             if (!sideLit)
@@ -200,9 +200,9 @@ public final class ArsenicItemRenderer {
             }
 
             glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-            itemRendererAccessor.getField_1708().inventoryColorEnabled = itemRenderer.useCustomDisplayColor;
-            itemRendererAccessor.getField_1708().render(block, damage, 1.0F);
-            itemRendererAccessor.getField_1708().inventoryColorEnabled = true;
+            itemRendererAccessor.getBlockRenderer().inventoryColorEnabled = itemRenderer.useCustomDisplayColor;
+            itemRendererAccessor.getBlockRenderer().render(block, damage, 1.0F);
+            itemRendererAccessor.getBlockRenderer().inventoryColorEnabled = true;
             glPopMatrix();
         } else if (texture >= 0) {
             glDisable(GL_LIGHTING);

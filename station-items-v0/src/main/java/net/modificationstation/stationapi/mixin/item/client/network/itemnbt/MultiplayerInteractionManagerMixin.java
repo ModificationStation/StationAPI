@@ -20,8 +20,8 @@ class MultiplayerInteractionManagerMixin {
 
     @WrapOperation(
             method = {
-                    "method_1713",
-                    "method_1712"
+                    "interactBlock",
+                    "interactItem"
             },
             at = @At(
                     value = "NEW",

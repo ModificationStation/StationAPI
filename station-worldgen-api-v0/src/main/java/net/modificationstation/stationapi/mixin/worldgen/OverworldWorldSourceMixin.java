@@ -19,20 +19,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = OverworldChunkGenerator.class, priority = 2000)
 class OverworldWorldSourceMixin {
     @Shadow
-    private World field_2260;
+    private World world;
     @Shadow
-    private double[] field_2261;
+    private double[] heightMap;
 
     @Inject(
-            method = "method_1803",
+            method = "decorate",
             at = @At("HEAD")
     )
     private void stationapi_decorateSurface(ChunkSource source, int cx, int cz, CallbackInfo info) {
-        WorldDecoratorImpl.decorate(this.field_2260, cx, cz);
+        WorldDecoratorImpl.decorate(this.world, cx, cz);
     }
     
     @Inject(
-        method = "method_1803",
+        method = "decorate",
         at = @At(value = "INVOKE", target = "Ljava/util/Random;setSeed(J)V", ordinal = 0, shift = Shift.BEFORE),
         cancellable = true
     )
@@ -44,7 +44,7 @@ class OverworldWorldSourceMixin {
     }
 
     @ModifyExpressionValue(
-            method = "method_1797",
+            method = "buildSurfaces",
             at = @At(
                     value = "CONSTANT",
                     args = "intValue=127"
@@ -55,14 +55,14 @@ class OverworldWorldSourceMixin {
     }
 
     @Inject(
-            method = "method_1798",
+            method = "buildTerrain",
             at = @At(
                     value = "INVOKE_ASSIGN",
-                    target = "Lnet/minecraft/class_538;method_1799([DIIIIII)[D",
+                    target = "Lnet/minecraft/class_538;generateHeightMap([DIIIIII)[D",
                     shift = Shift.AFTER
             )
     )
     private void stationapi_changeHeight(int cx, int cz, byte[] args, Biome[] biomes, double[] par5, CallbackInfo info) {
-        WorldGeneratorImpl.updateNoise(field_2260, cx, cz, this.field_2261);
+        WorldGeneratorImpl.updateNoise(world, cx, cz, this.heightMap);
     }
 }

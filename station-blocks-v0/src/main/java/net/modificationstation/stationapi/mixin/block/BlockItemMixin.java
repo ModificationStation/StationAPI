@@ -19,7 +19,7 @@ class BlockItemMixin {
             method = "useOnBlock",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;method_201(IIIII)Z"
+                    target = "Lnet/minecraft/world/World;setBlock(IIIII)Z"
             )
     )
     private boolean stationapi_handlePlace(

@@ -12,15 +12,15 @@ import net.minecraft.util.math.noise.SimplexNoiseSampler;
 
 @Mixin(OctaveSimplexNoiseSampler.class)
 class SimplexOctaveNoiseMixin {
-    @Shadow private SimplexNoiseSampler[] field_1746;
-    @Shadow private int field_1747;
+    @Shadow private SimplexNoiseSampler[] octaveSamplers;
+    @Shadow private int octaves;
 
     // Noise fill optimisation
     // Required for advanced worldgen
     // Speeds up data generation up to 100+ times
     // Yes, it is a fix for manual array filling for the whole length, that solves all issues
     @Inject(
-            method = "method_1517",
+            method = "sample",
             at = @At("HEAD"),
             cancellable = true
     )
@@ -38,8 +38,8 @@ class SimplexOctaveNoiseMixin {
         double d2 = 1.0;
         double d3 = 1.0;
 
-        for (short index = 0; index < this.field_1747; index++) {
-            this.field_1746[index].create(data, x, y, dx, dy, f * d3, g * d3, 0.55 / d2);
+        for (short index = 0; index < this.octaves; index++) {
+            this.octaveSamplers[index].create(data, x, y, dx, dy, f * d3, g * d3, 0.55 / d2);
             d3 *= h;
             d2 *= k;
         }

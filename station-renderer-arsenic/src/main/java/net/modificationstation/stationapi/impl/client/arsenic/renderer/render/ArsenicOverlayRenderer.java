@@ -51,7 +51,7 @@ public final class ArsenicOverlayRenderer {
     private void renderVanilla(LivingEntity entity, ItemStack item, SpriteAtlasTexture atlas) {
         Block block;
         if (item.getItem() instanceof BlockItemForm blockItemForm && BlockRenderManager.isSideLit((block = blockItemForm.getBlock()).getRenderType()))
-            access.stationapi$getField_2405().render(block, item.getDamage(), entity.getBrightnessAtEyes(1.0F));
+            access.stationapi$getBlockRenderManager().render(block, item.getDamage(), entity.getBrightnessAtEyes(1.0F));
         else {
             Tessellator var3 = Tessellator.INSTANCE;
             int var4 = entity.getItemStackTextureId(item);
@@ -170,16 +170,16 @@ public final class ArsenicOverlayRenderer {
     }
 
     public void renderItem(float f) {
-        float var2 = access.stationapi$getField_2404() + (access.stationapi$getField_2403() - access.stationapi$getField_2404()) * f;
-        ClientPlayerEntity var3 = access.stationapi$getField_2401().player;
+        float var2 = access.stationapi$getPrevHeight() + (access.stationapi$getHeight() - access.stationapi$getPrevHeight()) * f;
+        ClientPlayerEntity var3 = access.stationapi$getMinecraft().player;
         float var4 = var3.prevPitch + (var3.pitch - var3.prevPitch) * f;
         glPushMatrix();
         glRotatef(var4, 1.0F, 0.0F, 0.0F);
         glRotatef(var3.prevYaw + (var3.yaw - var3.prevYaw) * f, 0.0F, 1.0F, 0.0F);
         Lighting.turnOn();
         glPopMatrix();
-        ItemStack var5 = access.stationapi$getField_2402();
-        float var6 = access.stationapi$getField_2401().world.method_1782(MathHelper.floor(var3.x), MathHelper.floor(var3.y), MathHelper.floor(var3.z));
+        ItemStack var5 = access.stationapi$getStack();
+        float var6 = access.stationapi$getMinecraft().world.method_1782(MathHelper.floor(var3.x), MathHelper.floor(var3.y), MathHelper.floor(var3.z));
         if (var5 != null) {
             int var7 = Item.ITEMS[var5.itemId].getColorMultiplier(var5.getDamage());
             float var8 = (float)(var7 >> 16 & 255) / 255.0F;
@@ -215,7 +215,7 @@ public final class ArsenicOverlayRenderer {
         glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
         glRotatef(var23 * -85.0F, 0.0F, 0.0F, 1.0F);
         glEnable(GL_RESCALE_NORMAL);
-        glBindTexture(3553, access.stationapi$getField_2401().textureManager.downloadTexture(access.stationapi$getField_2401().player.skinUrl, access.stationapi$getField_2401().player.getTexture()));
+        glBindTexture(3553, access.stationapi$getMinecraft().textureManager.downloadTexture(access.stationapi$getMinecraft().player.skinUrl, access.stationapi$getMinecraft().player.getTexture()));
 
         for (int var32 = 0; var32 < 2; ++var32) {
             int var41 = var32 * 2 - 1;
@@ -225,7 +225,7 @@ public final class ArsenicOverlayRenderer {
             glRotatef(-90.0F, 0.0F, 0.0F, 1.0F);
             glRotatef(59.0F, 0.0F, 0.0F, 1.0F);
             glRotatef((float) (-65 * var41), 0.0F, 1.0F, 0.0F);
-            EntityRenderer var11 = EntityRenderDispatcher.INSTANCE.get(access.stationapi$getField_2401().player);
+            EntityRenderer var11 = EntityRenderDispatcher.INSTANCE.get(access.stationapi$getMinecraft().player);
             PlayerEntityRenderer var12 = (PlayerEntityRenderer) var11;
             float var13 = 1.0F;
             glScalef(var13, var13, var13);
@@ -246,7 +246,7 @@ public final class ArsenicOverlayRenderer {
         glTranslatef(-1.0F, -1.0F, 0.0F);
         var40 = 0.015625F;
         glScalef(var40, var40, var40);
-        access.stationapi$getField_2401().textureManager.bindTexture(access.stationapi$getField_2401().textureManager.getTextureId("/misc/mapbg.png"));
+        access.stationapi$getMinecraft().textureManager.bindTexture(access.stationapi$getMinecraft().textureManager.getTextureId("/misc/mapbg.png"));
         Tessellator var45 = Tessellator.INSTANCE;
         glNormal3f(0.0F, 0.0F, -1.0F);
         var45.startQuads();
@@ -256,8 +256,8 @@ public final class ArsenicOverlayRenderer {
         var45.vertex(128 + var46, -var46, 0.0D, 1.0D, 0.0D);
         var45.vertex(-var46, -var46, 0.0D, 0.0D, 0.0D);
         var45.draw();
-        MapState var47 = Item.MAP.getSavedMapState(var5, access.stationapi$getField_2401().world);
-        access.stationapi$getField_2406().render(access.stationapi$getField_2401().player, access.stationapi$getField_2401().textureManager, var47);
+        MapState var47 = Item.MAP.getSavedMapState(var5, access.stationapi$getMinecraft().world);
+        access.stationapi$getMapRenderer().render(access.stationapi$getMinecraft().player, access.stationapi$getMinecraft().textureManager, var47);
         glPopMatrix();
     }
 
@@ -321,14 +321,14 @@ public final class ArsenicOverlayRenderer {
         var37 = MathHelper.sin(MathHelper.sqrt(var20) * (float) Math.PI);
         glRotatef(var37 * 70.0F, 0.0F, 1.0F, 0.0F);
         glRotatef(-var28 * 20.0F, 0.0F, 0.0F, 1.0F);
-        glBindTexture(0xde1, access.stationapi$getField_2401().textureManager.downloadTexture(access.stationapi$getField_2401().player.skinUrl, access.stationapi$getField_2401().player.getTexture()));
+        glBindTexture(0xde1, access.stationapi$getMinecraft().textureManager.downloadTexture(access.stationapi$getMinecraft().player.skinUrl, access.stationapi$getMinecraft().player.getTexture()));
         glTranslatef(-1.0F, 3.6F, 3.5F);
         glRotatef(120.0F, 0.0F, 0.0F, 1.0F);
         glRotatef(200.0F, 1.0F, 0.0F, 0.0F);
         glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
         glScalef(1.0F, 1.0F, 1.0F);
         glTranslatef(5.6F, 0.0F, 0.0F);
-        EntityRenderer var22 = EntityRenderDispatcher.INSTANCE.get(access.stationapi$getField_2401().player);
+        EntityRenderer var22 = EntityRenderDispatcher.INSTANCE.get(access.stationapi$getMinecraft().player);
         PlayerEntityRenderer var30 = (PlayerEntityRenderer) var22;
         var37 = 1.0F;
         glScalef(var37, var37, var37);

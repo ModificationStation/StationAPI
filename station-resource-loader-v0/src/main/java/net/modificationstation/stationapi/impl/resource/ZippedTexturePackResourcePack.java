@@ -25,7 +25,7 @@ public class ZippedTexturePackResourcePack extends AbstractFileResourcePack {
     private final ZipTexturePackAccessor texturePackAccessor;
 
     public ZippedTexturePackResourcePack(ZippedTexturePack texturePack, boolean alwaysStable) {
-        super(((ZipTexturePackAccessor) texturePack).getField_2562().getName(), alwaysStable);
+        super(((ZipTexturePackAccessor) texturePack).getZip().getName(), alwaysStable);
         this.texturePack = texturePack;
         this.texturePackAccessor = (ZipTexturePackAccessor) texturePack;
     }
@@ -46,7 +46,7 @@ public class ZippedTexturePackResourcePack extends AbstractFileResourcePack {
 
     @Nullable
     private InputSupplier<InputStream> openFile(String path) {
-        ZipFile zipFile = texturePackAccessor.getField_2562();
+        ZipFile zipFile = texturePackAccessor.getZip();
         if (zipFile == null) return null;
         ZipEntry zipEntry = zipFile.getEntry(path);
         if (zipEntry == null) return switch (path) {
@@ -61,7 +61,7 @@ public class ZippedTexturePackResourcePack extends AbstractFileResourcePack {
 
     @Override
     public void findResources(ResourceType type, Namespace namespace, String prefix, ResultConsumer consumer) {
-        ZipFile zipFile = texturePackAccessor.getField_2562();
+        ZipFile zipFile = texturePackAccessor.getZip();
         if (zipFile == null) return;
         Enumeration<? extends ZipEntry> enumeration = zipFile.entries();
         String string = type.getDirectory() + "/" + namespace + "/";
@@ -78,7 +78,7 @@ public class ZippedTexturePackResourcePack extends AbstractFileResourcePack {
 
     @Override
     public Set<Namespace> getNamespaces(ResourceType type) {
-        ZipFile zipFile = texturePackAccessor.getField_2562();
+        ZipFile zipFile = texturePackAccessor.getZip();
         if (zipFile == null) return Set.of();
         Enumeration<? extends ZipEntry> enumeration = zipFile.entries();
         HashSet<Namespace> set = new HashSet<>();

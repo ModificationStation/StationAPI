@@ -16,7 +16,7 @@ import java.io.File;
 @Mixin(AlphaWorldStorage.class)
 class DimensionFileMixin {
     @Inject(
-            method = "method_1737",
+            method = "loadProperties",
             at = @At(
                     value = "RETURN",
                     ordinal = 0
@@ -33,7 +33,7 @@ class DimensionFileMixin {
     }
 
     @Inject(
-            method = "method_1737",
+            method = "loadProperties",
             at = @At(
                     value = "RETURN",
                     ordinal = 1

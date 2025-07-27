@@ -17,11 +17,11 @@ import static net.modificationstation.stationapi.api.client.gui.screen.EditWorld
 
 @Mixin(SelectWorldScreen.class)
 class SelectWorldScreenMixin extends Screen {
-    @Shadow private List<WorldSaveInfo> field_2436;
-    @Shadow private int field_2435;
+    @Shadow private List<WorldSaveInfo> saves;
+    @Shadow private int selectedWorldId;
 
     @ModifyConstant(
-            method = "method_1896",
+            method = "addButton",
             constant = @Constant(stringValue = "selectWorld.rename")
     )
     private String stationapi_replaceRenameWithEdit(String constant) {
@@ -38,6 +38,6 @@ class SelectWorldScreenMixin extends Screen {
             index = 0
     )
     private Screen stationapi_openEditWorld(Screen arg) {
-        return new EditWorldScreen(this, field_2436.get(field_2435));
+        return new EditWorldScreen(this, saves.get(selectedWorldId));
     }
 }

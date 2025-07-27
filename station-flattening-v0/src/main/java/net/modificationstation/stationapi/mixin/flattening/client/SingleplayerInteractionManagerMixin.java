@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SingleplayerInteractionManager.class)
 class SingleplayerInteractionManagerMixin extends InteractionManager {
     @Unique
-    private BlockState stationapi_method_1716_state;
+    private BlockState stationapi_breakBlock_state;
     @Unique
     private final MutableBlockPos stationapi_blockPos = new MutableBlockPos();
 
@@ -30,8 +30,8 @@ class SingleplayerInteractionManagerMixin extends InteractionManager {
 
     @Redirect(
             method = {
-                    "method_1707(IIII)V",
-                    "method_1721(IIII)V"
+                    "attackBlock(IIII)V",
+                    "processBlockBreakingAction(IIII)V"
             },
             at = @At(
                     value = "INVOKE",
@@ -43,44 +43,44 @@ class SingleplayerInteractionManagerMixin extends InteractionManager {
     }
 
     @Inject(
-            method = "method_1716(IIII)Z",
+            method = "breakBlock(IIII)Z",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/InteractionManager;method_1716(IIII)Z",
+                    target = "Lnet/minecraft/client/InteractionManager;breakBlock(IIII)Z",
                     shift = At.Shift.BEFORE
             )
     )
     private void stationapi_cacheBlockState(int x, int y, int z, int distance, CallbackInfoReturnable<Boolean> cir) {
-        stationapi_method_1716_state = minecraft.world.getBlockState(x, y, z);
+        stationapi_breakBlock_state = minecraft.world.getBlockState(x, y, z);
     }
 
     @Redirect(
-            method = "method_1716(IIII)Z",
+            method = "breakBlock(IIII)Z",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/ClientPlayerEntity;method_514(Lnet/minecraft/block/Block;)Z"
+                    target = "Lnet/minecraft/entity/player/ClientPlayerEntity;canHarvest(Lnet/minecraft/block/Block;)Z"
             )
     )
     private boolean stationapi_canRemoveBlock(ClientPlayerEntity abstractClientPlayer, Block arg, int i, int j, int k, int l) {
-        return abstractClientPlayer.canHarvest(minecraft.world, stationapi_blockPos.set(i, j, k), stationapi_method_1716_state);
+        return abstractClientPlayer.canHarvest(minecraft.world, stationapi_blockPos.set(i, j, k), stationapi_breakBlock_state);
     }
 
     @Redirect(
-            method = "method_1716(IIII)Z",
+            method = "breakBlock(IIII)Z",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/block/Block;afterBreak(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;IIII)V"
             )
     )
     private void stationapi_redirectAfterBreak(Block block, World world, PlayerEntity player, int x, int y, int z, int meta) {
-        block.afterBreak(world, player, x, y, z, stationapi_method_1716_state, meta);
+        block.afterBreak(world, player, x, y, z, stationapi_breakBlock_state, meta);
     }
 
     @Inject(
-            method = "method_1716(IIII)Z",
+            method = "breakBlock(IIII)Z",
             at = @At("RETURN")
     )
     private void stationapi_clearCache(int x, int y, int z, int distance, CallbackInfoReturnable<Boolean> cir) {
-        stationapi_method_1716_state = null;
+        stationapi_breakBlock_state = null;
     }
 }

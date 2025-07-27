@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(ClientNetworkHandler.class)
 public interface ClientNetworkHandlerAccessor {
     @Accessor
-    ClientWorld getField_1973();
+    ClientWorld getWorld();
 
     @Invoker
-    Entity invokeMethod_1645(int entityId);
+    Entity invokeGetEntity(int entityId);
 }

@@ -24,17 +24,17 @@ import static net.modificationstation.stationapi.impl.vanillafix.datafixer.Vanil
 @Mixin(Minecraft.class)
 class MinecraftMixin {
     @Shadow
-    private WorldStorageSource field_2792;
+    private WorldStorageSource worldStorageSource;
 
     @ModifyArg(
-            method = "method_2125",
+            method = "convertAndSaveWorld",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_452;method_1491(Ljava/lang/String;)V"
+                    target = "Lnet/minecraft/class_452;progressStart(Ljava/lang/String;)V"
             )
     )
     private String stationapi_changeProgressListenerTitle(String string, @Local(ordinal = 0) String worldName) {
-        NbtCompound worldTag = ((FlattenedWorldStorage) this.field_2792).getWorldTag(worldName);
+        NbtCompound worldTag = ((FlattenedWorldStorage) this.worldStorageSource).getWorldTag(worldName);
 
         Set<DataFixers.UpdateData> updateList = NbtHelper.getUpdateList(worldTag);
 
@@ -48,14 +48,14 @@ class MinecraftMixin {
     }
 
     @ModifyArg(
-            method = "method_2125",
+            method = "convertAndSaveWorld",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_452;method_1796(Ljava/lang/String;)V"
+                    target = "Lnet/minecraft/class_452;progressStage(Ljava/lang/String;)V"
             )
     )
     private String stationapi_changeProgressListenerDesc(String string, @Local(ordinal = 0) String worldName) {
-        NbtCompound worldTag = ((FlattenedWorldStorage) this.field_2792).getWorldTag(worldName);
+        NbtCompound worldTag = ((FlattenedWorldStorage) this.worldStorageSource).getWorldTag(worldName);
 
         Set<DataFixers.UpdateData> updateList = NbtHelper.getUpdateList(worldTag);
 

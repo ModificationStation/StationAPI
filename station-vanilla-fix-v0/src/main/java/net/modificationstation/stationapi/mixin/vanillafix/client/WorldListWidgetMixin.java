@@ -12,10 +12,10 @@ class WorldListWidgetMixin {
             method = "entryClicked(IZ)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screen/world/SelectWorldScreen;method_1891(I)V"
+                    target = "Lnet/minecraft/client/gui/screen/world/SelectWorldScreen;selectWorld(I)V"
             )
     )
     private void stationapi_warn(SelectWorldScreen instance, int i) {
-        WorldConversionWarning.warnIfMcRegion(((ScreenAccessor) instance).getMinecraft(), instance, ((SelectWorldScreenAccessor) instance).getField_2436().get(i), () -> instance.selectWorld(i));
+        WorldConversionWarning.warnIfMcRegion(((ScreenAccessor) instance).getMinecraft(), instance, ((SelectWorldScreenAccessor) instance).getSaves().get(i), () -> instance.selectWorld(i));
     }
 }

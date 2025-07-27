@@ -83,7 +83,7 @@ class MinecraftMixin {
             method = "init",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/texture/TextureManager;method_1092(Ljava/lang/String;)[I",
+                    target = "Lnet/minecraft/client/texture/TextureManager;getColors(Ljava/lang/String;)[I",
                     ordinal = 0
             )
     )
@@ -106,7 +106,7 @@ class MinecraftMixin {
             method = "init",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/Minecraft;method_2150()V"
+                    target = "Lnet/minecraft/client/Minecraft;renderLoadingScreen()V"
             )
     )
     private void stationapi_applyReloadsAndWait(CallbackInfo ci) {

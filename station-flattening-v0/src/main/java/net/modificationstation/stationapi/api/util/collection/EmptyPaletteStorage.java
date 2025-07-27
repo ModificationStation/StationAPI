@@ -59,7 +59,7 @@ public class EmptyPaletteStorage implements PaletteStorage {
     }
 
     @Override
-    public void method_39892(int[] is) {
+    public void applyBrightness92(int[] is) {
         Arrays.fill(is, 0, this.size, 0);
     }
 

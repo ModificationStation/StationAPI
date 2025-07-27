@@ -21,7 +21,7 @@ class class_556Mixin {
      * @author mine_diver
      */
     @Overwrite
-    public void method_1862(LivingEntity entity, ItemStack item) {
+    public void renderItem(LivingEntity entity, ItemStack item) {
         arsenic_plugin.renderItem3D(entity, item);
     }
 
@@ -30,7 +30,7 @@ class class_556Mixin {
      * @author mine_diver
      */
     @Overwrite
-    public void method_1860(float f) {
+    public void render(float f) {
         arsenic_plugin.renderItem(f);
     }
 }

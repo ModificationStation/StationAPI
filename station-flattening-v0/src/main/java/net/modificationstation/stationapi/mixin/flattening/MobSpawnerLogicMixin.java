@@ -18,24 +18,24 @@ class MobSpawnerLogicMixin {
     @Unique private static World currentWorld;
 
     @Inject(
-            method = "method_1869",
+            method = "spawnMonstersAndWakePlayers",
             at = @At("HEAD")
     )
-    private static void stationapi_method_1869(World world, List<?> list, CallbackInfoReturnable<Boolean> info) {
+    private static void stationapi_spawnMonstersAndWakePlayers(World world, List<?> list, CallbackInfoReturnable<Boolean> info) {
         currentWorld = world;
     }
 
     @Inject(
-            method = "method_1868",
+            method = "getRandomPosInChunk",
             at = @At("HEAD")
     )
-    private static void stationapi_method_1869(World world, int px, int pz, CallbackInfoReturnable<BlockPos> info) {
+    private static void stationapi_spawnMonstersAndWakePlayers(World world, int px, int pz, CallbackInfoReturnable<BlockPos> info) {
         currentWorld = world;
     }
 
     @ModifyConstant(method = {
-            "method_1869",
-            "method_1868"
+            "spawnMonstersAndWakePlayers",
+            "getRandomPosInChunk"
     }, constant = @Constant(intValue = 128))
     private static int stationapi_changeMaxHeight(int value) {
         return currentWorld.getHeight();

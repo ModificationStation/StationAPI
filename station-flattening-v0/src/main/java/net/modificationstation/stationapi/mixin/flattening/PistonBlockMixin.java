@@ -43,7 +43,7 @@ class PistonBlockMixin extends Block {
             method = "onBlockAction",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_283;method_1518()I"
+                    target = "Lnet/minecraft/class_283;getPushedBlockId()I"
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
@@ -59,7 +59,7 @@ class PistonBlockMixin extends Block {
             method = "onBlockAction",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;method_1533(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
+                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;createPistonBlockEntity(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
                     ordinal = 0
             )
     )
@@ -73,7 +73,7 @@ class PistonBlockMixin extends Block {
             method = "onBlockAction",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;method_1533(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
+                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;createPistonBlockEntity(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
                     ordinal = 1
             )
     )
@@ -85,7 +85,7 @@ class PistonBlockMixin extends Block {
     }
 
     @Inject(
-            method = "method_766",
+            method = "push",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/World;getBlockId(III)I",
@@ -102,10 +102,10 @@ class PistonBlockMixin extends Block {
     }
 
     @Inject(
-            method = "method_766",
+            method = "push",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;method_1533(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
+                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;createPistonBlockEntity(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
                     ordinal = 0
             )
     )
@@ -114,10 +114,10 @@ class PistonBlockMixin extends Block {
     }
 
     @Inject(
-            method = "method_766",
+            method = "push",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;method_1533(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
+                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;createPistonBlockEntity(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
                     ordinal = 1
             )
     )

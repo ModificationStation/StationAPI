@@ -21,23 +21,23 @@ import java.util.stream.StreamSupport;
 
 public class ChunkSectionPos
         extends Vec3i {
-    public static final int field_33096 = 4;
-    public static final int field_33097 = 16;
-    public static final int field_33100 = 15;
-    public static final int field_33098 = 8;
-    public static final int field_33099 = 15;
-    private static final int field_33101 = 22;
-    private static final int field_33102 = 20;
-    private static final int field_33103 = 22;
-    private static final long field_33104 = 0x3FFFFFL;
-    private static final long field_33105 = 1048575L;
-    private static final long field_33106 = 0x3FFFFFL;
-    private static final int field_33107 = 0;
-    private static final int field_33108 = 20;
-    private static final int field_33109 = 42;
-    private static final int field_33110 = 8;
-    private static final int field_33111 = 0;
-    private static final int field_33112 = 4;
+    public static final int range96 = 4;
+    public static final int range97 = 16;
+    public static final int random00 = 15;
+    public static final int range98 = 8;
+    public static final int range99 = 15;
+    private static final int random01 = 22;
+    private static final int random02 = 20;
+    private static final int random03 = 22;
+    private static final long random04 = 0x3FFFFFL;
+    private static final long random05 = 1048575L;
+    private static final long random06 = 0x3FFFFFL;
+    private static final int random07 = 0;
+    private static final int random08 = 20;
+    private static final int random09 = 42;
+    private static final int random10 = 8;
+    private static final int random11 = 0;
+    private static final int random12 = 4;
 
     ChunkSectionPos(int i, int j, int k) {
         super(i, j, k);
@@ -308,9 +308,9 @@ public class ChunkSectionPos
 
     public static long asLong(int x, int y, int z) {
         long l = 0L;
-        l |= ((long)x & field_33104) << 42;
-        l |= ((long) y & field_33105);
-        return l |= ((long)z & field_33106) << 20;
+        l |= ((long)x & random04) << 42;
+        l |= ((long) y & random05);
+        return l |= ((long)z & random06) << 20;
     }
 
     public long asLong() {

@@ -11,13 +11,13 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(ServerPlayNetworkHandler.class)
 class ServerPlayNetworkHandlerMixin {
-    @Shadow private ServerPlayerEntity field_920;
+    @Shadow private ServerPlayerEntity player;
 
     @ModifyConstant(
             method = "onPlayerRespawn",
             constant = @Constant(intValue = 0)
     )
     private int stationapi_modifyRespawnDimension(int original) {
-        return field_920.world.dimension.hasWorldSpawn() ? field_920.dimensionId : DimensionRegistry.INSTANCE.getLegacyId(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Overworld not found!"));
+        return player.world.dimension.hasWorldSpawn() ? player.dimensionId : DimensionRegistry.INSTANCE.getLegacyId(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Overworld not found!"));
     }
 }

@@ -26,11 +26,11 @@ import java.nio.file.Paths;
 // TODO: look into refactoring this, although not necessary.
 @Mixin(SoundManager.class)
 class SoundManagerMixin {
-    @Shadow private SoundEntry field_2668;
+    @Shadow private SoundEntry sounds;
 
-    @Shadow private SoundEntry field_2669;
+    @Shadow private SoundEntry streamingSounds;
 
-    @Shadow private SoundEntry field_2670;
+    @Shadow private SoundEntry music;
 
     @Unique
     @Environment(EnvType.CLIENT)
@@ -54,12 +54,12 @@ class SoundManagerMixin {
 
     @Environment(EnvType.CLIENT)
     @Inject(
-            method = "method_2012",
+            method = "loadSounds",
             at = @At("TAIL")
     )
     private void stationapi_loadModAudio(GameOptions paramkv, CallbackInfo ci) {
-        stationapi_loadModAudio(this.field_2668, "sound");
-        stationapi_loadModAudio(this.field_2669, "streaming");
-        stationapi_loadModAudio(this.field_2670, "music");
+        stationapi_loadModAudio(this.sounds, "sound");
+        stationapi_loadModAudio(this.streamingSounds, "streaming");
+        stationapi_loadModAudio(this.music, "music");
     }
 }

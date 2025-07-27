@@ -14,10 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayerInteractionManager.class)
 class class_70Mixin {
-    @Shadow public PlayerEntity field_2309;
+    @Shadow public PlayerEntity player;
 
     @Inject(
-            method = "method_1832",
+            method = "interactBlock",
             at = @At("HEAD"),
             cancellable = true
     )
@@ -27,16 +27,16 @@ class class_70Mixin {
     }
 
     @Inject(
-            method = "method_1830",
+            method = "onBlockBreakingAction",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/class_73;getBlockId(III)I"
             ),
             cancellable = true
     )
-    public void stationapi_method_1830_preMine(int x, int y, int z, int side, CallbackInfo ci){
-        ItemStack stack = this.field_2309.inventory.getSelectedItem();
-        if (stack != null && !stack.preMine(this.field_2309.world.getBlockState(x, y, z), x, y, z, side, this.field_2309))
+    public void stationapi_onBlockBreakingAction_preMine(int x, int y, int z, int side, CallbackInfo ci){
+        ItemStack stack = this.player.inventory.getSelectedItem();
+        if (stack != null && !stack.preMine(this.player.world.getBlockState(x, y, z), x, y, z, side, this.player))
             ci.cancel();
     }
 }

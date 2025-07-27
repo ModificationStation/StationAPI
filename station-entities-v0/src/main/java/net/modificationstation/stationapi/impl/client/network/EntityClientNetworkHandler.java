@@ -59,7 +59,7 @@ public final class EntityClientNetworkHandler {
                     z = message.ints[3] / 32D;
             //noinspection deprecation
             ClientNetworkHandlerAccessor networkHandler = (ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-            ClientWorld world = networkHandler.getField_1973();
+            ClientWorld world = networkHandler.getWorld();
             Entity entity = entityHandler.create(world, x, y, z);
             if (entity != null) {
                 entity.trackedPosX = message.ints[1];
@@ -71,7 +71,7 @@ public final class EntityClientNetworkHandler {
                 world.forceEntity(message.ints[0], entity);
                 if (message.ints[4] > 0) {
                     if (entity instanceof HasOwner hasOwner)
-                        hasOwner.setOwner(networkHandler.invokeMethod_1645(message.ints[4]));
+                        hasOwner.setOwner(networkHandler.invokeGetEntity(message.ints[4]));
                     entity.setVelocityClient((double) message.shorts[0] / 8000.0D, (double) message.shorts[1] / 8000.0D, (double) message.shorts[2] / 8000.0D);
                 }
                 if (message.bytes != null)
@@ -93,7 +93,7 @@ public final class EntityClientNetworkHandler {
             float pitch = (float)(message.bytes[1] * 360) / 256.0F;
             //noinspection deprecation
             ClientNetworkHandlerAccessor networkHandler = (ClientNetworkHandlerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).getNetworkHandler();
-            ClientWorld world = networkHandler.getField_1973();
+            ClientWorld world = networkHandler.getWorld();
             LivingEntity mob = mobHandler.apply(world);
             if (mob != null) {
                 mob.trackedPosX = message.ints[1];

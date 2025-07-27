@@ -157,7 +157,7 @@ public class FlattenedWorldStorage extends RegionWorldStorageSource {
         List<IntSet> existingChunks = new ArrayList<>();
         int totalChunks = 0;
         for (RegionFile region : regions) {
-            int[] offsets = ((RegionFileAccessor) region).getField_1318();
+            int[] offsets = ((RegionFileAccessor) region).getChunkBlockInfo();
             IntSet chunks = new IntOpenHashSet(offsets.length);
             for (int i = 0; i < offsets.length; i++)
                 if (offsets[i] != 0)

@@ -17,18 +17,18 @@ import java.util.Random;
 @Mixin(ChunkCache.class)
 class ServerChunkCacheMixin {
     @Shadow
-    private World field_1231;
+    private World world;
 
     @Shadow
-    private ChunkSource field_1227;
+    private ChunkSource generator;
     @Unique
     private Random modRandom;
 
     @Inject(
-            method = "method_1803",
+            method = "decorate",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_51;method_1803(Lnet/minecraft/class_51;II)V",
+                    target = "Lnet/minecraft/class_51;decorate(Lnet/minecraft/class_51;II)V",
                     shift = At.Shift.AFTER
             )
     )
@@ -37,15 +37,15 @@ class ServerChunkCacheMixin {
         int blockZ = chunkZ * 16;
         if (modRandom == null)
             modRandom = new Random();
-        modRandom.setSeed(field_1231.getSeed());
+        modRandom.setSeed(world.getSeed());
         long xRandomMultiplier = (modRandom.nextLong() / 2L) * 2L + 1L;
         long zRandomMultiplier = (modRandom.nextLong() / 2L) * 2L + 1L;
-        modRandom.setSeed((long) chunkX * xRandomMultiplier + (long) chunkZ * zRandomMultiplier ^ field_1231.getSeed());
+        modRandom.setSeed((long) chunkX * xRandomMultiplier + (long) chunkZ * zRandomMultiplier ^ world.getSeed());
         StationAPI.EVENT_BUS.post(
                 WorldGenEvent.ChunkDecoration.builder()
-                        .world(field_1231)
-                        .worldSource(this.field_1227)
-                        .biome(field_1231.method_1781().getBiome(blockX + 16, blockZ + 16))
+                        .world(world)
+                        .worldSource(this.generator)
+                        .biome(world.method_1781().getBiome(blockX + 16, blockZ + 16))
                         .x(blockX).z(blockZ)
                         .random(modRandom)
                         .build()

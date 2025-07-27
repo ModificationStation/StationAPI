@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(NetherCaveCarver.class)
 abstract class NetherCaveGenMixin implements CaveGenBaseImpl {
     @ModifyConstant(
-            method = "method_1146",
+            method = "carveTunnels",
             constant = {
                     @Constant(intValue = 1, ordinal = 8),
                     @Constant(intValue = 1, ordinal = 9)
@@ -23,7 +23,7 @@ abstract class NetherCaveGenMixin implements CaveGenBaseImpl {
     }
 
     @ModifyConstant(
-            method = "method_1146",
+            method = "carveTunnels",
             constant = @Constant(intValue = 120)
     )
     private int stationapi_changeTopYM8Cap(int constant) {
@@ -31,7 +31,7 @@ abstract class NetherCaveGenMixin implements CaveGenBaseImpl {
     }
 
     @ModifyConstant(
-            method = "method_1146",
+            method = "carveTunnels",
             constant = {
                     @Constant(intValue = 128, ordinal = 0),
                     @Constant(intValue = 128, ordinal = 2)
@@ -42,7 +42,7 @@ abstract class NetherCaveGenMixin implements CaveGenBaseImpl {
     }
 
     @ModifyVariable(
-            method = "method_1146",
+            method = "carveTunnels",
             at = @At(value = "STORE", ordinal = 0),
             index = 43
     )
@@ -51,7 +51,7 @@ abstract class NetherCaveGenMixin implements CaveGenBaseImpl {
     }
 
     @ModifyVariable(
-            method = "method_1146",
+            method = "carveTunnels",
             at = @At(value = "STORE", ordinal = 0),
             index = 46
     )

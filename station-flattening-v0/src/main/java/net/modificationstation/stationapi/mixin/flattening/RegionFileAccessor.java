@@ -7,5 +7,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(RegionFile.class)
 public interface RegionFileAccessor {
     @Accessor
-    int[] getField_1318();
+    int[] getChunkBlockInfo();
 }

@@ -13,14 +13,14 @@ public class GuiHelperServerImpl extends GuiHelperImpl {
     @Override
     protected void sideDependentPacket(PlayerEntity player, Inventory inventory, MessagePacket message) {
         message.objects = new Object[] { null };
-        ((ServerPlayerEntityAccessor) player).invokeMethod_314();
-        message.ints = new int[] { ((ServerPlayerEntityAccessor) player).getField_260() };
+        ((ServerPlayerEntityAccessor) player).invokeIncrementScreenHandlerSyncId();
+        message.ints = new int[] { ((ServerPlayerEntityAccessor) player).getScreenHandlerSyncId() };
     }
 
     @Override
     protected void afterPacketSent(PlayerEntity player, ScreenHandler container) {
         player.currentScreenHandler = container;
-        container.syncId = ((ServerPlayerEntityAccessor) player).getField_260();
+        container.syncId = ((ServerPlayerEntityAccessor) player).getScreenHandlerSyncId();
         container.addListener((ScreenHandlerListener) player);
     }
 }

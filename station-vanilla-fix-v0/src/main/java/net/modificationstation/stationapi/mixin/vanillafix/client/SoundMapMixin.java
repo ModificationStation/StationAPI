@@ -18,7 +18,7 @@ public class SoundMapMixin {
      */
     @Environment(EnvType.CLIENT)
     @Inject(
-            method = "method_959",
+            method = "loadStatic",
             at = @At("HEAD"),
             cancellable = true
     )

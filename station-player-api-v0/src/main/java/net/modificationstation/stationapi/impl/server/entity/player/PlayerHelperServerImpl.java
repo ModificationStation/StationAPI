@@ -15,6 +15,6 @@ public class PlayerHelperServerImpl extends PlayerHelperImpl {
 
     @Override
     public PlayerEntity getPlayerFromPacketHandler(NetworkHandler packetHandler) {
-        return packetHandler instanceof ServerPlayNetworkHandler ? ((ServerPlayNetworkHandlerAccessor) packetHandler).getField_920() : getPlayerFromGame();
+        return packetHandler instanceof ServerPlayNetworkHandler ? ((ServerPlayNetworkHandlerAccessor) packetHandler).getPlayer() : getPlayerFromGame();
     }
 }

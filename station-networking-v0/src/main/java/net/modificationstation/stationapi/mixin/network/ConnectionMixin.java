@@ -24,7 +24,7 @@ class ConnectionMixin {
     private static final AtomicBoolean STATIONAPI$BLOCKNG_PACKET = new AtomicBoolean();
 
     @WrapOperation(
-            method = "method_1129",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/network/packet/Packet;apply(Lnet/minecraft/network/NetworkHandler;)V"
@@ -43,7 +43,7 @@ class ConnectionMixin {
     }
 
     @Inject(
-            method = "method_1139",
+            method = "read",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/util/List;add(Ljava/lang/Object;)Z",

@@ -13,16 +13,16 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(GameRenderer.class)
 class GameRendererMixin {
     @Shadow
-    private Minecraft field_2349;
+    private Minecraft client;
 
     @ModifyConstant(
-            method = "method_1838(F)V",
+            method = "updateTargetedEntity(F)V",
             constant = @Constant(doubleValue = 3)
     )
     private double stationapi_getEntityReach(double originalReach) {
         return StationAPI.EVENT_BUS.post(
                 PlayerEvent.Reach.builder()
-                        .player(field_2349.player)
+                        .player(client.player)
                         .type(HitResultType.ENTITY)
                         .currentReach(originalReach)
                         .build()

@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ServerPlayerEntity.class)
 abstract class ServerPlayerEntityMixin implements HasTeleportationManager {
     @Redirect(
-            method = "method_313",
+            method = "playerTick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_166;method_578(Lnet/minecraft/entity/player/ServerPlayerEntity;)V"
+                    target = "Lnet/minecraft/class_166;changePlayerDimension(Lnet/minecraft/entity/player/ServerPlayerEntity;)V"
             )
     )
     private void stationapi_overrideSwitchDimensions(PlayerManager serverPlayerConnectionManager, ServerPlayerEntity serverPlayer) {

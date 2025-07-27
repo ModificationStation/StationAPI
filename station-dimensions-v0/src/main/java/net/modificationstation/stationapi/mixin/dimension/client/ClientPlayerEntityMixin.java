@@ -28,10 +28,10 @@ abstract class ClientPlayerEntityMixin extends PlayerEntity implements HasTelepo
     }
 
     @Redirect(
-            method = "method_937",
+            method = "tickMovement",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/Minecraft;method_2139()V"
+                    target = "Lnet/minecraft/client/Minecraft;changeDimension()V"
             )
     )
     private void stationapi_overrideSwitchDimensions(Minecraft minecraft) {

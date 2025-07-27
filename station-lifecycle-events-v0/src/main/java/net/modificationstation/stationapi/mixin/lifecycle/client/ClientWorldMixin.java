@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ClientWorld.class)
 class ClientWorldMixin {
     @Redirect(
-            method = "method_293",
+            method = "disconnect",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/network/ClientNetworkHandler;method_1646(Lnet/minecraft/network/packet/Packet;)V"
+                    target = "Lnet/minecraft/client/network/ClientNetworkHandler;sendPacketAndDisconnect(Lnet/minecraft/network/packet/Packet;)V"
             )
     )
     private void stationapi_onDisconnect(ClientNetworkHandler clientPlayNetworkHandler, Packet arg) {

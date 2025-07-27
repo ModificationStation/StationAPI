@@ -24,11 +24,11 @@ public class ArsenicDiggingParticle {
     public ArsenicDiggingParticle(BlockParticle digging) {
         this.digging = digging;
         particleBaseAccessor = (ParticleAccessor) digging;
-        texture = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(((BlockParticleAccessor) digging).getField_2383().getAtlas().getTexture(particleBaseAccessor.getField_2635()).getId());
+        texture = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(((BlockParticleAccessor) digging).getBlock().getAtlas().getTexture(particleBaseAccessor.getTextureId()).getId());
     }
 
     public void checkBlockCoords(int x, int y, int z) {
-        Block block = ((BlockParticleAccessor) digging).getField_2383();
+        Block block = ((BlockParticleAccessor) digging).getBlock();
         if (block instanceof BlockWorldModelProvider provider)
             texture = provider.getCustomWorldModel(digging.world, x, y, z).getBaked().getSprite();
         else {
@@ -40,9 +40,9 @@ public class ArsenicDiggingParticle {
 
     public void render(Tessellator tessellator, float delta, float yawX, float pitchX, float yawY, float pitchY1, float pitchY2) {
         float
-                startU = texture.getMinU() + (particleBaseAccessor.getField_2636() / 4) * (texture.getMaxU() - texture.getMinU()),
+                startU = texture.getMinU() + (particleBaseAccessor.getPrevU() / 4) * (texture.getMaxU() - texture.getMinU()),
                 endU = startU + 0.24975F * (texture.getMaxU() - texture.getMinU()),
-                startV = texture.getMinV() + (particleBaseAccessor.getField_2637() / 4) * (texture.getMaxV() - texture.getMinV()),
+                startV = texture.getMinV() + (particleBaseAccessor.getPrevV() / 4) * (texture.getMaxV() - texture.getMinV()),
                 endV = startV + 0.24975F * (texture.getMaxV() - texture.getMinV()),
                 randomMultiplier = 0.1F * particleBaseAccessor.getScale(),
                 renderX = (float)(digging.prevX + (digging.x - digging.prevX) * (double)delta - Particle.xOffset),

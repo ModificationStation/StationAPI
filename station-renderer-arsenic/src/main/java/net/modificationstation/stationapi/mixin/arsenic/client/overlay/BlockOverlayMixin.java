@@ -19,24 +19,24 @@ import static net.modificationstation.stationapi.impl.client.arsenic.renderer.re
 
 @Mixin(HeldItemRenderer.class)
 class BlockOverlayMixin {
-    @Shadow private Minecraft field_2401;
+    @Shadow private Minecraft minecraft;
     @Unique
     private Atlas stationapi_block_atlas;
     @Unique
     private Sprite stationapi_block_texture;
 
     @Inject(
-            method = "method_1864",
+            method = "renderScreenOverlays",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_556;method_1861(FI)V"
+                    target = "Lnet/minecraft/class_556;renderTexturedOverlay(FI)V"
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     private void stationapi_overlay_overrideAtlas(
             float par1, CallbackInfo ci, int x, int y, int z, int var5, int blockId
     ) {
-        BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(field_2401.world.getBlockState(x, y, z));
+        BakedModel model = StationRenderAPI.getBakedModelManager().getBlockModels().getModel(minecraft.world.getBlockState(x, y, z));
         if (model.isBuiltin())
             stationapi_block_atlas = Block.BLOCKS[blockId].getAtlas();
         else
@@ -44,7 +44,7 @@ class BlockOverlayMixin {
     }
 
     @Inject(
-            method = "method_1861",
+            method = "renderTexturedOverlay",
             at = @At("HEAD")
     )
     private void stationapi_block_captureTexture(float i, int texture, CallbackInfo ci) {
@@ -56,7 +56,7 @@ class BlockOverlayMixin {
     }
 
     @ModifyConstant(
-            method = "method_1861",
+            method = "renderTexturedOverlay",
             constant = @Constant(floatValue = 2F / ATLAS_SIZE)
     )
     private float stationapi_block_modTextureCoordOffset(float constant) {
@@ -64,7 +64,7 @@ class BlockOverlayMixin {
     }
 
     @ModifyVariable(
-            method = "method_1861",
+            method = "renderTexturedOverlay",
             index = 2,
             at = @At(
                     value = "LOAD",
@@ -77,7 +77,7 @@ class BlockOverlayMixin {
     }
 
     @ModifyConstant(
-            method = "method_1861",
+            method = "renderTexturedOverlay",
             constant = {
                     @Constant(
                             intValue = TEX_SIZE,
@@ -94,7 +94,7 @@ class BlockOverlayMixin {
     }
 
     @ModifyConstant(
-            method = "method_1861",
+            method = "renderTexturedOverlay",
             constant = {
                     @Constant(
                             floatValue = ATLAS_SIZE,
@@ -111,7 +111,7 @@ class BlockOverlayMixin {
     }
 
     @ModifyConstant(
-            method = "method_1861",
+            method = "renderTexturedOverlay",
             constant = @Constant(
                     floatValue = ADJUSTED_TEX_SIZE,
                     ordinal = 0
@@ -122,7 +122,7 @@ class BlockOverlayMixin {
     }
 
     @ModifyVariable(
-            method = "method_1861",
+            method = "renderTexturedOverlay",
             index = 2,
             at = @At(
                     value = "LOAD",
@@ -135,7 +135,7 @@ class BlockOverlayMixin {
     }
 
     @ModifyConstant(
-            method = "method_1861",
+            method = "renderTexturedOverlay",
             constant = {
                     @Constant(
                             intValue = TEX_SIZE,
@@ -152,7 +152,7 @@ class BlockOverlayMixin {
     }
 
     @ModifyConstant(
-            method = "method_1861",
+            method = "renderTexturedOverlay",
             constant = {
                     @Constant(
                             floatValue = ATLAS_SIZE,
@@ -169,7 +169,7 @@ class BlockOverlayMixin {
     }
 
     @ModifyConstant(
-            method = "method_1861",
+            method = "renderTexturedOverlay",
             constant = @Constant(
                     floatValue = ADJUSTED_TEX_SIZE,
                     ordinal = 1
@@ -180,7 +180,7 @@ class BlockOverlayMixin {
     }
 
     @Inject(
-            method = "method_1861",
+            method = "renderTexturedOverlay",
             at = @At("RETURN")
     )
     private void stationapi_block_releaseCaptured(float i, int par2, CallbackInfo ci) {

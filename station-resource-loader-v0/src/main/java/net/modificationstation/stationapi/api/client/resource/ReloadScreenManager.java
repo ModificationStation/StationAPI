@@ -117,15 +117,15 @@ public class ReloadScreenManager {
                 ReloadScreenTessellatorHolder.reloadScreenTessellator = TessellatorAccessor.stationapi_create(48)
         );
         val screenScaler = new ScreenScaler(minecraft.options, minecraft.displayWidth, minecraft.displayHeight);
-        val width = screenScaler.method_1857();
-        val height = screenScaler.method_1858();
+        val width = screenScaler.getScaledWidth();
+        val height = screenScaler.getScaledHeight();
         reloadScreen.init(minecraft, width, height);
         reloadScreen.setTextRenderer(new TextRenderer(minecraft.options, "/font/default.png", minecraft.textureManager));
         val timer = ((MinecraftAccessor) minecraft).getTimer();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(0.0, screenScaler.field_2389, screenScaler.field_2390, 0.0, 1000.0, 3000.0);
+        glOrtho(0.0, screenScaler.rawScaledWidth, screenScaler.rawScaledHeight, 0.0, 1000.0, 3000.0);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
         glTranslatef(0.0f, 0.0f, -2000.0f);
@@ -137,12 +137,12 @@ public class ReloadScreenManager {
         while (!done.get()) {
             while (true) if (!Mouse.next()) break;
             while (true) if (!Keyboard.next()) break;
-            val f = timer.field_2370;
-            timer.method_1853();
-            timer.field_2370 = f;
+            val f = timer.partialTick;
+            timer.advance();
+            timer.partialTick = f;
             val mouseX = Mouse.getX() * width / minecraft.displayWidth;
             val mouseY = height - Mouse.getY() * height / minecraft.displayHeight - 1;
-            reloadScreen.render(mouseX, mouseY, timer.field_2370);
+            reloadScreen.render(mouseX, mouseY, timer.partialTick);
             Display.update();
         }
         glDisable(GL_LIGHTING);

@@ -21,7 +21,7 @@ class PlayerInventoryMixin {
     public ItemStack[] main;
 
     @Inject(
-            method = "method_685",
+            method = "combineStacks",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/item/ItemStack;<init>(III)V",
@@ -35,7 +35,7 @@ class PlayerInventoryMixin {
     }
 
     @Redirect(
-            method = "method_683",
+            method = "indexOf",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/item/ItemStack;count:I",
@@ -56,7 +56,7 @@ class PlayerInventoryMixin {
     private boolean notchGodDamnit;
 
     @Redirect(
-            method = "method_683",
+            method = "indexOf",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/entity/player/PlayerInventory;getMaxCountPerStack()I"
