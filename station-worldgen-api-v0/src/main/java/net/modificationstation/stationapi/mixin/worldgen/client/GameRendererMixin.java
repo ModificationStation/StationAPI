@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.mixin.worldgen.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.block.Material;
-import net.minecraft.class_555;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.impl.worldgen.FogRendererImpl;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(class_555.class)
+@Mixin(GameRenderer.class)
 class GameRendererMixin {
     @Unique private float stationapi_multiplierA;
     @Unique private float stationapi_multiplierB;
@@ -62,7 +62,7 @@ class GameRendererMixin {
             at = @At("HEAD")
     )
     private void stationapi_changeFogColor(int i, float delta, CallbackInfo info) {
-        LivingEntity livingEntity = this.field_2349.field_2807;
+        LivingEntity livingEntity = this.field_2349.camera;
         if (!livingEntity.isInFluid(Material.WATER) && !livingEntity.isInFluid(Material.LAVA)) {
             FogRendererImpl.setupFog(field_2349, delta);
             field_2346 = FogRendererImpl.getR() * stationapi_multiplierA;
@@ -81,7 +81,7 @@ class GameRendererMixin {
             )
     )
     private void stationapi_clearWithFogColor(float delta, CallbackInfo info) {
-        LivingEntity livingEntity = this.field_2349.field_2807;
+        LivingEntity livingEntity = this.field_2349.camera;
         if (!livingEntity.isInFluid(Material.WATER) && !livingEntity.isInFluid(Material.LAVA)) {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
             GL11.glClearColor(

@@ -35,7 +35,7 @@ public enum DyeColor implements StringIdentifiable {
     DyeColor(int id, String name) {
         this.id = id;
         this.name = name;
-        int color = DyeItem.colors[WoolBlock.method_1(id)];
+        int color = DyeItem.colors[WoolBlock.getBlockMeta(id)];
         int j = (color & 0xFF0000) >> 16;
         int k = (color & 0xFF00) >> 8;
         int l = (color & 0xFF);

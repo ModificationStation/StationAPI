@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
 import net.minecraft.world.World;
+import net.minecraft.world.WorldRegion;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkCache;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorldPopulationRegion;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(ChunkCache.class)
+@Mixin(WorldRegion.class)
 class ChunkCacheMixin implements StationFlatteningWorldPopulationRegion {
     @Shadow private int minX;
     @Shadow private int minZ;

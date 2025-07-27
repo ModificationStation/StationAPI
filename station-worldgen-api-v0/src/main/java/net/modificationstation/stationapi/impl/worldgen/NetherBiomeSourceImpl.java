@@ -1,11 +1,11 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
-import net.minecraft.class_152;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.source.FixedBiomeSource;
 import net.modificationstation.stationapi.api.worldgen.BiomeAPI;
 import net.modificationstation.stationapi.api.worldgen.biome.BiomeProvider;
 
-public class NetherBiomeSourceImpl extends class_152 {
+public class NetherBiomeSourceImpl extends FixedBiomeSource {
     private static final NetherBiomeSourceImpl INSTANCE = new NetherBiomeSourceImpl();
     private static final Biome[] BUFFER = new Biome[1];
 
@@ -14,13 +14,13 @@ public class NetherBiomeSourceImpl extends class_152 {
     }
     
     @Override
-    public Biome method_1787(int x, int z) {
-        return method_1791(BUFFER, x, z, 1, 1)[0];
+    public Biome getBiome(int x, int z) {
+        return getBiomesInArea(BUFFER, x, z, 1, 1)[0];
     }
     
     @Override
-    public Biome[] method_1791(Biome[] data, int x, int z, int dx, int dz) {
-        data = super.method_1791(data, x, z, dx, dz);
+    public Biome[] getBiomesInArea(Biome[] data, int x, int z, int dx, int dz) {
+        data = super.getBiomesInArea(data, x, z, dx, dz);
 
         BiomeProvider provider = BiomeAPI.getNetherProvider();
 

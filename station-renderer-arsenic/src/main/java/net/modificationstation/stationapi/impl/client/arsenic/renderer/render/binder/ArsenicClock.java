@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.class_285;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resource.pack.TexturePack;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.TextureHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
@@ -25,7 +25,7 @@ public class ArsenicClock extends StationTextureBinder {
     }
 
     @Override
-    public void reloadFromTexturePack(class_285 newTexturePack) {
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
         Atlas.Sprite staticReference = getStaticReference();
         int
                 textureWidth = staticReference.getWidth(),
@@ -35,11 +35,11 @@ public class ArsenicClock extends StationTextureBinder {
         clockTexture = StationRenderAPI.getBakedModelManager().getAtlas(Atlases.GAME_ATLAS_TEXTURE).getSprite(staticReference.getId()).getContents().getBaseFrame().makePixelArray();
         BufferedImage var2 = TextureHelper.scaleImage(TextureHelper.getTexture("/misc/dial.png"), textureWidth, textureHeight);
         var2.getRGB(0, 0, textureWidth, textureHeight, this.dialTexture, 0, textureWidth);
-        field_1411 = new byte[square * 4];
+        pixels = new byte[square * 4];
     }
 
     @Override
-    public void method_1205() {
+    public void tick() {
         Atlas.Sprite staticReference = getStaticReference();
         int
                 textureWidth = staticReference.getWidth(),
@@ -47,9 +47,9 @@ public class ArsenicClock extends StationTextureBinder {
                 square = textureWidth * textureHeight;
         double var1 = 0.0D;
         if (this.minecraft.world != null && this.minecraft.player != null) {
-            float var3 = this.minecraft.world.method_198(1.0F);
+            float var3 = this.minecraft.world.getTime(1.0F);
             var1 = -var3 * (float)Math.PI * 2.0F;
-            if (this.minecraft.world.dimension.field_2175) {
+            if (this.minecraft.world.dimension.isNether) {
                 var1 = Math.random() * (double)(float)Math.PI * 2.0D;
             }
         }
@@ -96,7 +96,7 @@ public class ArsenicClock extends StationTextureBinder {
                 a = this.dialTexture[var21] >> 24 & 255;
             }
 
-            if (this.field_1413) {
+            if (this.anaglyph) {
                 int var23 = (r * 30 + g * 59 + b * 11) / 100;
                 int var15 = (r * 30 + g * 70) / 100;
                 int var24 = (r * 30 + b * 70) / 100;
@@ -105,10 +105,10 @@ public class ArsenicClock extends StationTextureBinder {
                 b = var24;
             }
 
-            this.field_1411[var9 * 4] = (byte)r;
-            this.field_1411[var9 * 4 + 1] = (byte)g;
-            this.field_1411[var9 * 4 + 2] = (byte)b;
-            this.field_1411[var9 * 4 + 3] = (byte)a;
+            this.pixels[var9 * 4] = (byte)r;
+            this.pixels[var9 * 4 + 1] = (byte)g;
+            this.pixels[var9 * 4 + 2] = (byte)b;
+            this.pixels[var9 * 4 + 3] = (byte)a;
         }
     }
 }

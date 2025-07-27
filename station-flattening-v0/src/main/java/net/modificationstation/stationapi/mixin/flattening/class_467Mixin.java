@@ -1,13 +1,13 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.class_467;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.PortalForcer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(class_467.class)
+@Mixin(PortalForcer.class)
 class class_467Mixin {
     @ModifyConstant(
             method = {

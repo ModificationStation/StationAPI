@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.impl.client.network;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
-import net.minecraft.class_454;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.ClientWorld;
 import net.minecraft.world.chunk.Chunk;
 import net.modificationstation.stationapi.impl.network.StationFlatteningPacketHandler;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
@@ -25,33 +25,33 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
     @Override
     public void onMapChunk(FlattenedChunkDataS2CPacket packet) {
         //noinspection deprecation
-        class_454 world = (class_454) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
+        ClientWorld world = (ClientWorld) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
         int fromX = packet.chunkX << 4;
         int fromZ = packet.chunkZ << 4;
-        world.method_1498(fromX, world.getBottomY(), fromZ, fromX + 15, world.getTopY() - 1, fromZ + 15);
-        Chunk chunk = world.method_214(packet.chunkX, packet.chunkZ);
+        world.clearBlockResets(fromX, world.getBottomY(), fromZ, fromX + 15, world.getTopY() - 1, fromZ + 15);
+        Chunk chunk = world.getChunk(packet.chunkX, packet.chunkZ);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
             ByteBuffer buf = ByteBuffer.wrap(packet.sectionsData);
             for (int i = 0; i < world.countVerticalSections(); i++)
                 flatteningChunk.getOrCreateSection(world.sectionIndexToCoord(i) << 4, true).readDataPacket(buf);
         }
-        chunk.populateHeightmap();
-        world.method_202(fromX, world.getBottomY(), fromZ, fromX + 16, world.getTopY(), fromZ + 16);
+        chunk.populateHeightMapOnly();
+        world.setBlocksDirty(fromX, world.getBottomY(), fromZ, fromX + 16, world.getTopY(), fromZ + 16);
     }
 
     @Override
     public void onBlockChange(FlattenedBlockChangeS2CPacket packet) {
         //noinspection deprecation
-        class_454 world = (class_454) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
-        world.method_1498(packet.x, packet.y, packet.z, packet.x, packet.y, packet.z);
+        ClientWorld world = (ClientWorld) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
+        world.clearBlockResets(packet.x, packet.y, packet.z, packet.x, packet.y, packet.z);
         world.setBlockStateWithMetadataWithNotify(packet.x, packet.y, packet.z, Block.STATE_IDS.get(packet.stateId), packet.blockMetadata);
     }
 
     @Override
     public void onMultiBlockChange(FlattenedMultiBlockChangeS2CPacket packet) {
         //noinspection deprecation
-        class_454 world = (class_454) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
-        Chunk chunk = world.method_214(packet.x, packet.z);
+        ClientWorld world = (ClientWorld) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
+        Chunk chunk = world.getChunk(packet.x, packet.z);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
             flatteningChunk.getOrCreateSection(world.sectionIndexToCoord(packet.sectionIndex), true);
             int
@@ -73,8 +73,8 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
                         updateX = x + localX,
                         updateY = y + localY,
                         updateZ = z + localZ;
-                world.method_1498(updateX, updateY, updateZ, updateX, updateY, updateZ);
-                world.method_202(updateX, updateY, updateZ, updateX, updateY, updateZ);
+                world.clearBlockResets(updateX, updateY, updateZ, updateX, updateY, updateZ);
+                world.setBlocksDirty(updateX, updateY, updateZ, updateX, updateY, updateZ);
             }
         }
     }
@@ -82,17 +82,17 @@ public class FlattenedClientPlayNetworkHandler extends StationFlatteningPacketHa
     @Override
     public void onChunkSection(FlattenedChunkSectionDataS2CPacket packet) {
         //noinspection deprecation
-        class_454 world = (class_454) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
+        ClientWorld world = (ClientWorld) ((Minecraft) FabricLoader.getInstance().getGameInstance()).world;
         int fromX = packet.chunkX << 4;
         int fromY = world.sectionIndexToCoord(packet.sectionIndex) << 4;
         int fromZ = packet.chunkZ << 4;
-        world.method_1498(fromX, fromY, fromZ, fromX + 15, fromY + 15, fromZ + 15);
-        Chunk chunk = world.method_214(packet.chunkX, packet.chunkZ);
+        world.clearBlockResets(fromX, fromY, fromZ, fromX + 15, fromY + 15, fromZ + 15);
+        Chunk chunk = world.getChunk(packet.chunkX, packet.chunkZ);
         if (chunk instanceof FlattenedChunk flatteningChunk) {
             ByteBuffer buf = ByteBuffer.wrap(packet.sectionData);
             flatteningChunk.getOrCreateSection(fromY, true).readDataPacket(buf);
         }
-        chunk.populateHeightmap();
-        world.method_202(fromX, fromY, fromZ, fromX + 16, fromY + 16, fromZ + 16);
+        chunk.populateHeightMapOnly();
+        world.setBlocksDirty(fromX, fromY, fromZ, fromX + 16, fromY + 16, fromZ + 16);
     }
 }

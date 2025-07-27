@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
-import net.minecraft.SingleplayerInteractionManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.InteractionManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.SingleplayerInteractionManager;
 import net.minecraft.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;

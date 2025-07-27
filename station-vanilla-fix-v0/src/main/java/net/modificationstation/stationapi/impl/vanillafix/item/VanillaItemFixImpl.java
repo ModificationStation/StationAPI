@@ -42,7 +42,7 @@ public final class VanillaItemFixImpl {
                 .accept("stone_sword", STONE_SWORD)
                 .accept("stone_shovel", STONE_SHOVEL)
                 .accept("stone_pickaxe", STONE_PICKAXE)
-                .accept("stone_axe", STONE_HATCHET)
+                .accept("stone_axe", STONE_AXE)
                 .accept("diamond_sword", DIAMOND_SWORD)
                 .accept("diamond_shovel", DIAMOND_SHOVEL)
                 .accept("diamond_pickaxe", DIAMOND_PICKAXE)

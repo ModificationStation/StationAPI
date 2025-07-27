@@ -16,7 +16,7 @@ public abstract class SaplingBlockMixin implements StationBlock {
     @Override
     public boolean onBonemealUse(World world, int x, int y, int z, BlockState state) {
         if (!world.isRemote) {
-            method_533(world, x, y, z, world.field_214);
+            method_533(world, x, y, z, world.random);
         }
         return true;
     }

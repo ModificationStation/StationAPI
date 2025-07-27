@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.class_344;
+import net.minecraft.world.gen.carver.NetherCaveCarver;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.world.CaveGenBaseImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(class_344.class)
+@Mixin(NetherCaveCarver.class)
 abstract class NetherCaveGenMixin implements CaveGenBaseImpl {
     @ModifyConstant(
             method = "method_1146",

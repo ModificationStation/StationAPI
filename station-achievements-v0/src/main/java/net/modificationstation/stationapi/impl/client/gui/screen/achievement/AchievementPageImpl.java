@@ -54,7 +54,7 @@ public class AchievementPageImpl {
 
     private static boolean checkHidden(Achievement achievement) {
         //noinspection deprecation
-        return !((Minecraft) FabricLoader.getInstance().getGameInstance()).field_2773.method_1988(achievement)
+        return !((Minecraft) FabricLoader.getInstance().getGameInstance()).stats.hasAchievement(achievement)
                 && achievement.parent != null && checkHidden(achievement.parent);
     }
 }

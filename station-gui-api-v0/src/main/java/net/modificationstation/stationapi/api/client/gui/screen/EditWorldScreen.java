@@ -3,13 +3,13 @@ package net.modificationstation.stationapi.api.client.gui.screen;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.class_591;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.gui.widget.OptionButtonWidget;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.world.storage.WorldSaveInfo;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.event.gui.screen.EditWorldScreenEvent;
 import net.modificationstation.stationapi.api.client.gui.widget.ButtonWidgetAttachedContext;
@@ -32,10 +32,10 @@ public class EditWorldScreen extends StationScreen {
     private static final ImmutableList<ButtonWidgetDeferredDetachedContext<EditWorldScreen>> CUSTOM_EDIT_BUTTONS = StationAPI.EVENT_BUS.post(EditWorldScreenEvent.ScrollableButtonContextRegister.builder().contexts(ImmutableList.builder()).build()).contexts.build();
 
     protected final Screen parent;
-    public final class_591 worldData;
+    public final WorldSaveInfo worldData;
     protected EditButtonList buttonMenu;
 
-    public EditWorldScreen(Screen parent, class_591 worldData) {
+    public EditWorldScreen(Screen parent, WorldSaveInfo worldData) {
         this.parent = parent;
         this.worldData = worldData;
     }
@@ -67,7 +67,7 @@ public class EditWorldScreen extends StationScreen {
 
         public EditButtonList() {
             super(minecraft, EditWorldScreen.this.width, EditWorldScreen.this.height, 32, EditWorldScreen.this.height - 64, 24);
-            method_1260(false);
+            setRenderSelectionHighlight(false);
         }
 
         @Override
@@ -81,7 +81,7 @@ public class EditWorldScreen extends StationScreen {
             ButtonWidget button = entry.button();
             if (button.isMouseOver(minecraft, mouseX, mouseY)) {
                 lastClickedButton = button;
-                minecraft.soundManager.method_2009("random.click", 1.0f, 1.0f);
+                minecraft.soundManager.playSound("random.click", 1.0f, 1.0f);
                 entry.action().onPress(button);
             }
         }

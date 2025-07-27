@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.class_259;
+import net.minecraft.block.MapColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -40,8 +40,8 @@ public class BlockColors {
         if (blockColorProvider != null) {
             return blockColorProvider.getColor(state, null, null, 0);
         } else {
-            class_259 materialColor = state.getTopMaterialColor(world, pos);
-            return materialColor != null ? materialColor.field_2752 : -1;
+            MapColor materialColor = state.getTopMaterialColor(world, pos);
+            return materialColor != null ? materialColor.color : -1;
         }
     }
 

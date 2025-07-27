@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.template.block;
 
 import net.minecraft.block.DoorBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
@@ -38,7 +38,7 @@ public class TemplateDoorBlock extends DoorBlock implements BlockTemplate {
             return bottomTextureId;
         }
 
-        int var3 = this.method_839(meta);
+        int var3 = this.setOpen(meta);
         if ((var3 == 0 || var3 == 2) ^ side <= 3) {
             return this.bottomTextureId;
         } else {

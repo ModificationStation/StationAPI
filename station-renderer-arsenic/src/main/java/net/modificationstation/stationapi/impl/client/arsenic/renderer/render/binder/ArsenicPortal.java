@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder;
 
-import net.minecraft.class_285;
+import net.minecraft.client.resource.pack.TexturePack;
 import net.minecraft.util.math.MathHelper;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
@@ -16,13 +16,13 @@ public class ArsenicPortal extends StationTextureBinder {
     }
 
     @Override
-    public void reloadFromTexturePack(class_285 newTexturePack) {
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
         int
                 textureWidth = getStaticReference().getWidth(),
                 textureHeight = getStaticReference().getHeight();
         Random var1 = new Random(100L);
 
-        field_1411 = new byte[textureWidth * textureHeight * 4];
+        pixels = new byte[textureWidth * textureHeight * 4];
 
         for(int var2 = 0; var2 < 32; ++var2) {
             texture[var2] = new byte[textureWidth * textureHeight * 4];
@@ -74,7 +74,7 @@ public class ArsenicPortal extends StationTextureBinder {
     }
 
     @Override
-    public void method_1205() {
+    public void tick() {
         ++this.updatesRan;
         byte[] var1 = this.texture[this.updatesRan & 31];
 
@@ -83,7 +83,7 @@ public class ArsenicPortal extends StationTextureBinder {
             int var4 = var1[var2 * 4 + 1] & 255;
             int var5 = var1[var2 * 4 + 2] & 255;
             int var6 = var1[var2 * 4 + 3] & 255;
-            if (this.field_1413) {
+            if (this.anaglyph) {
                 int var7 = (var3 * 30 + var4 * 59 + var5 * 11) / 100;
                 int var8 = (var3 * 30 + var4 * 70) / 100;
                 int var9 = (var3 * 30 + var5 * 70) / 100;
@@ -92,10 +92,10 @@ public class ArsenicPortal extends StationTextureBinder {
                 var5 = var9;
             }
 
-            this.field_1411[var2 * 4] = (byte)var3;
-            this.field_1411[var2 * 4 + 1] = (byte)var4;
-            this.field_1411[var2 * 4 + 2] = (byte)var5;
-            this.field_1411[var2 * 4 + 3] = (byte)var6;
+            this.pixels[var2 * 4] = (byte)var3;
+            this.pixels[var2 * 4 + 1] = (byte)var4;
+            this.pixels[var2 * 4 + 2] = (byte)var5;
+            this.pixels[var2 * 4 + 3] = (byte)var6;
         }
     }
 }

@@ -40,6 +40,6 @@ public final class GuiClientNetworkHandler {
             //noinspection deprecation
             ((Minecraft) FabricLoader.getInstance().getGameInstance()).setScreen(guiHandler.screenFactory().create(player, isClient ? guiHandler.inventoryFactory().create() : (Inventory) message.objects[0], message));
         if (isClient)
-            player.container.syncId = message.ints[0];
+            player.currentScreenHandler.syncId = message.ints[0];
     }
 }

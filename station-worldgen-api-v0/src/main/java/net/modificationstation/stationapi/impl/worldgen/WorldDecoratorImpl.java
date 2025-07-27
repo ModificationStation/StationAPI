@@ -12,21 +12,21 @@ public class WorldDecoratorImpl {
     private static final Random RANDOM = new Random();
 
     public static void decorate(World world, int cx, int cz) {
-        SandBlock.field_375 = true;
+        SandBlock.fallInstantly = true;
         
         int x1 = cx << 4 | 8;
         int z1 = cz << 4 | 8;
         int x2 = x1 + 16;
         int z2 = z1 + 16;
         
-        world.method_1781().method_1791(BIOMES, x1, z1, 16, 16);
+        world.method_1781().getBiomesInArea(BIOMES, x1, z1, 16, 16);
 
         int index = 0;
         for (int x = x1; x < x2; x++) {
             for (int z = z1; z < z2; z++) {
                 Biome biome = BIOMES[index++];
                 int minY = world.getBottomY();
-                int maxY = world.dimension.field_2177 ? world.getTopY() : world.getTopY(x, z);
+                int maxY = world.dimension.hasCeiling ? world.getTopY() : world.getTopY(x, z);
                 for (int y = minY; y < maxY; y++) {
                     BlockState state = world.getBlockState(x, y, z);
                     biome.applySurfaceRules(world, x, y, z, state);

@@ -21,7 +21,7 @@ public final class PlayerStrengthOnBlockEvent extends Event {
      *
      * <p>
      *     Initially, the field contains a reimplementation of the vanilla
-     *     {@link net.minecraft.entity.player.PlayerInventory#method_674(Block)}.
+     *     {@link net.minecraft.entity.player.PlayerInventory#getStrengthOnBlock(Block)}.
      * </p>
      * <p>
      *     The field is non-final to allow full control over the outcome of the event, including completely

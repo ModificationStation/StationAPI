@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -32,7 +32,7 @@ abstract class PlayerEntityMixin extends LivingEntity implements StationFlatteni
     public float getBlockBreakingSpeed(BlockView blockView, BlockPos blockPos, BlockState state) {
         float f = inventory.getBlockBreakingSpeed(blockView, blockPos, state);
         if (isInFluid(Material.WATER)) f /= 5.0f;
-        if (!field_1623) f /= 5.0f;
+        if (!onGround) f /= 5.0f;
         return f;
     }
 }

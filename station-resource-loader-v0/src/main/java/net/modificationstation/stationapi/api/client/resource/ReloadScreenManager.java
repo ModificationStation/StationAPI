@@ -3,10 +3,10 @@ package net.modificationstation.stationapi.api.client.resource;
 import lombok.Getter;
 import lombok.val;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.class_564;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.util.ScreenScaler;
 import net.modificationstation.stationapi.api.resource.CompositeResourceReload;
 import net.modificationstation.stationapi.api.resource.ResourceReload;
 import net.modificationstation.stationapi.api.resource.ResourceReloader;
@@ -116,7 +116,7 @@ public class ReloadScreenManager {
                 () -> done.set(true),
                 ReloadScreenTessellatorHolder.reloadScreenTessellator = TessellatorAccessor.stationapi_create(48)
         );
-        val screenScaler = new class_564(minecraft.options, minecraft.displayWidth, minecraft.displayHeight);
+        val screenScaler = new ScreenScaler(minecraft.options, minecraft.displayWidth, minecraft.displayHeight);
         val width = screenScaler.method_1857();
         val height = screenScaler.method_1858();
         reloadScreen.init(minecraft, width, height);

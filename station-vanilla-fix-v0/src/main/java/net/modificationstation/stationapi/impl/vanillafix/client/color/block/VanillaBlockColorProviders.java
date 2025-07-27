@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.impl.vanillafix.client.color.block;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.Block;
-import net.minecraft.class_287;
+import net.minecraft.client.color.world.GrassColors;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.client.color.world.BiomeColors;
 import net.modificationstation.stationapi.api.client.event.color.block.BlockColorsRegisterEvent;
@@ -22,7 +22,7 @@ public final class VanillaBlockColorProviders {
     @EventListener
     private static void registerBlockColors(BlockColorsRegisterEvent event) {
         event.blockColors.registerColorProvider(
-                (state, world, pos, tintIndex) -> world == null || pos == null ? class_287.method_981(0.5, 1.0) : BiomeColors.getGrassColor(world, pos),
+                (state, world, pos, tintIndex) -> world == null || pos == null ? GrassColors.getColor(0.5, 1.0) : BiomeColors.getGrassColor(world, pos),
                 Block.GRASS_BLOCK, Block.GRASS
         );
         event.blockColors.registerColorProvider(

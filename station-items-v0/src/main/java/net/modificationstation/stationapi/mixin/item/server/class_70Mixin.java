@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.item.server;
 
-import net.minecraft.class_70;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.item.UseOnBlockFirst;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(class_70.class)
+@Mixin(ServerPlayerInteractionManager.class)
 class class_70Mixin {
     @Shadow public PlayerEntity field_2309;
 

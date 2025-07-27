@@ -32,7 +32,7 @@ public interface EntitySpawnDataProvider extends StationSpawnDataProvider {
         }
         if (syncTrackerAtSpawn()) {
             var stream = new ByteArrayOutputStream();
-            entity.method_1331().writeAllEntries(new DataOutputStream(stream));
+            entity.getDataTracker().writeAllEntries(new DataOutputStream(stream));
             message.bytes = stream.toByteArray();
         }
         writeToMessage(message);

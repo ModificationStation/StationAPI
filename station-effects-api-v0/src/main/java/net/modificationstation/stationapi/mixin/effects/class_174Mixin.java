@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.effects;
 
-import net.minecraft.class_174;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.entity.EntityTrackerEntry;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.impl.effect.packet.SendAllEffectsS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(class_174.class)
+@Mixin(EntityTrackerEntry.class)
 public class class_174Mixin {
     @Shadow public Entity field_597;
     

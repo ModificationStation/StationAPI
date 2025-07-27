@@ -35,7 +35,7 @@ public class BlockDropListImpl {
                                         .build()
                         ).isCanceled()
                 ) drops.forEach(drop -> {
-                    if (!(world.field_214.nextFloat() > chance) && drop.itemId > 0) dropFunc.drop(world, x, y, z, drop);
+                    if (!(world.random.nextFloat() > chance) && drop.itemId > 0) dropFunc.drop(world, x, y, z, drop);
                 });
                 return true;
             }

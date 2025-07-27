@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.world;
 
-import net.minecraft.class_326;
-import net.minecraft.class_51;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.ChunkCache;
+import net.minecraft.world.chunk.ChunkSource;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.world.gen.WorldGenEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,13 +14,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
 
-@Mixin(class_326.class)
+@Mixin(ChunkCache.class)
 class ServerChunkCacheMixin {
     @Shadow
     private World field_1231;
 
     @Shadow
-    private class_51 field_1227;
+    private ChunkSource field_1227;
     @Unique
     private Random modRandom;
 
@@ -32,7 +32,7 @@ class ServerChunkCacheMixin {
                     shift = At.Shift.AFTER
             )
     )
-    private void stationapi_onPopulate(class_51 worldSource, int chunkX, int chunkZ, CallbackInfo ci) {
+    private void stationapi_onPopulate(ChunkSource worldSource, int chunkX, int chunkZ, CallbackInfo ci) {
         int blockX = chunkX * 16;
         int blockZ = chunkZ * 16;
         if (modRandom == null)
@@ -45,7 +45,7 @@ class ServerChunkCacheMixin {
                 WorldGenEvent.ChunkDecoration.builder()
                         .world(field_1231)
                         .worldSource(this.field_1227)
-                        .biome(field_1231.method_1781().method_1787(blockX + 16, blockZ + 16))
+                        .biome(field_1231.method_1781().getBiome(blockX + 16, blockZ + 16))
                         .x(blockX).z(blockZ)
                         .random(modRandom)
                         .build()

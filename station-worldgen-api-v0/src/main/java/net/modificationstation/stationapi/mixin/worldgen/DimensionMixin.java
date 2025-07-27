@@ -15,7 +15,7 @@ public class DimensionMixin {
 
     @Inject(method = "method_1770", at = @At("HEAD"), cancellable = true)
     private void fixSpawnPosition(int x, int z, CallbackInfoReturnable<Boolean> info) {
-        int blockID = this.world.method_152(x, z);
+        int blockID = this.world.getSpawnBlockId(x, z);
         Block block = Block.BLOCKS[blockID];
         info.setReturnValue(block != null && block.isFullCube() && block.isOpaque());
     }

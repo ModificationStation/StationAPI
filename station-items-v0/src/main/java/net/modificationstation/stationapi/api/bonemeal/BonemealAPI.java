@@ -36,7 +36,7 @@ public class BonemealAPI {
     public static boolean generate(World world, int x, int y, int z, BlockState state, int side) {
         updateCache(state);
         if (CACHE.isEmpty()) return false;
-        Random random = world.field_214;
+        Random random = world.random;
         Direction offset = Direction.byId(side);
         CACHE.get(random).generate(
                 world,
@@ -95,7 +95,7 @@ public class BonemealAPI {
             if (!worldState.isAir()) return false;
             if (STATE.getBlock().canPlaceAt(world, x, y, z)) {
                 world.setBlockState(x, y, z, STATE);
-                world.method_215(x, y, z, 1);
+                world.setBlockMeta(x, y, z, 1);
                 return true;
             }
             return false;

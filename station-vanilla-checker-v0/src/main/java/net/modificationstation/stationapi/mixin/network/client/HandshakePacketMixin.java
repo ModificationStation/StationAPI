@@ -54,11 +54,11 @@ class HandshakePacketMixin {
             for (ModContainer clientMod : SERVER_REQUIRED_MODS) {
                 String serverModVersion = modList.get(clientMod.getMetadata().getId());
                 if (serverModVersion == null) {
-                    networkHandler.method_1646(new DisconnectPacket("Quitting"));
+                    networkHandler.sendPacketAndDisconnect(new DisconnectPacket("Quitting"));
                     minecraft.setScreen(new DisconnectedScreen("disconnect.lost", String.format("Server is missing mod %s %s", clientMod.getMetadata().getId(), clientMod.getMetadata().getVersion().getFriendlyString())));
                 }
                 else if (!serverModVersion.equals(clientMod.getMetadata().getVersion().getFriendlyString())) {
-                    networkHandler.method_1646(new DisconnectPacket("Quitting"));
+                    networkHandler.sendPacketAndDisconnect(new DisconnectPacket("Quitting"));
                     minecraft.setScreen(new DisconnectedScreen("disconnect.lost", String.format("Server has the wrong version of mod %s %s (they have %s)", clientMod.getMetadata().getId(), clientMod.getMetadata().getVersion().getFriendlyString(), serverModVersion)));
                 }
             }

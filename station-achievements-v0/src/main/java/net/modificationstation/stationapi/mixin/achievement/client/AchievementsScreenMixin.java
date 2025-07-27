@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.mixin.achievement.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.achievement.Achievement;
+import net.minecraft.client.gui.screen.AchievementsScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.achievement.AchievementsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.modificationstation.stationapi.api.StationAPI;

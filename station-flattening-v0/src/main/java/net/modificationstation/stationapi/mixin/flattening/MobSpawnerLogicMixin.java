@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.class_567;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.NaturalSpawner;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Mixin(class_567.class)
+@Mixin(NaturalSpawner.class)
 class MobSpawnerLogicMixin {
     @Unique private static World currentWorld;
 

@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.class_285;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resource.pack.TexturePack;
 import net.minecraft.util.math.Vec3i;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
@@ -20,18 +20,18 @@ public class ArsenicCompass extends StationTextureBinder {
     }
 
     @Override
-    public void reloadFromTexturePack(class_285 newTexturePack) {
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
         Atlas.Sprite staticReference = getStaticReference();
         int
                 textureWidth = staticReference.getWidth(),
                 textureHeight = staticReference.getHeight(),
                 square = textureWidth * textureHeight;
         compassTexture = staticReference.getSprite().getContents().getBaseFrame().makePixelArray();
-        field_1411 = new byte[square * 4];
+        pixels = new byte[square * 4];
     }
 
     @Override
-    public void method_1205() {
+    public void tick() {
         Atlas.Sprite staticReference = getStaticReference();
         int
                 textureWidth = staticReference.getWidth(),
@@ -41,7 +41,7 @@ public class ArsenicCompass extends StationTextureBinder {
             int g = this.compassTexture[var1] >> 8 & 255;
             int b = this.compassTexture[var1] >> 16 & 255;
             int a = this.compassTexture[var1] >> 24 & 255;
-            if (this.field_1413) {
+            if (this.anaglyph) {
                 int var6 = (r * 30 + g * 59 + b * 11) / 100;
                 int var7 = (r * 30 + g * 70) / 100;
                 int var8 = (r * 30 + b * 70) / 100;
@@ -50,10 +50,10 @@ public class ArsenicCompass extends StationTextureBinder {
                 b = var8;
             }
 
-            this.field_1411[var1 * 4] = (byte)r;
-            this.field_1411[var1 * 4 + 1] = (byte)g;
-            this.field_1411[var1 * 4 + 2] = (byte)b;
-            this.field_1411[var1 * 4 + 3] = (byte)a;
+            this.pixels[var1 * 4] = (byte)r;
+            this.pixels[var1 * 4 + 1] = (byte)g;
+            this.pixels[var1 * 4 + 2] = (byte)b;
+            this.pixels[var1 * 4 + 3] = (byte)a;
         }
 
         double var20 = 0.0D;
@@ -62,7 +62,7 @@ public class ArsenicCompass extends StationTextureBinder {
             double var23 = (double)var21.x - this.minecraft.player.x;
             double var25 = (double)var21.z - this.minecraft.player.z;
             var20 = (double)(this.minecraft.player.yaw - 90.0F) * Math.PI / 180.0D - Math.atan2(var25, var23);
-            if (this.minecraft.world.dimension.field_2175) {
+            if (this.minecraft.world.dimension.isNether) {
                 var20 = Math.random() * (double)(float)Math.PI * 2.0D;
             }
         }
@@ -98,7 +98,7 @@ public class ArsenicCompass extends StationTextureBinder {
             int var14 = 100;
             int var15 = 100;
             short var16 = 255;
-            if (this.field_1413) {
+            if (this.anaglyph) {
                 int var17 = (var13 * 30 + var14 * 59 + var15 * 11) / 100;
                 int var18 = (var13 * 30 + var14 * 70) / 100;
                 int var19 = (var13 * 30 + var15 * 70) / 100;
@@ -107,10 +107,10 @@ public class ArsenicCompass extends StationTextureBinder {
                 var15 = var19;
             }
 
-            this.field_1411[var12 * 4] = (byte)var13;
-            this.field_1411[var12 * 4 + 1] = (byte)var14;
-            this.field_1411[var12 * 4 + 2] = (byte)var15;
-            this.field_1411[var12 * 4 + 3] = (byte)var16;
+            this.pixels[var12 * 4] = (byte)var13;
+            this.pixels[var12 * 4 + 1] = (byte)var14;
+            this.pixels[var12 * 4 + 2] = (byte)var15;
+            this.pixels[var12 * 4 + 3] = (byte)var16;
         }
 
         for(int var27 = -textureWidth / 2; var27 <= textureWidth; ++var27) {
@@ -121,7 +121,7 @@ public class ArsenicCompass extends StationTextureBinder {
             int var32 = var27 >= 0 ? 20 : 100;
             int var33 = var27 >= 0 ? 20 : 100;
             short var34 = 255;
-            if (this.field_1413) {
+            if (this.anaglyph) {
                 int var35 = (var31 * 30 + var32 * 59 + var33 * 11) / 100;
                 int var36 = (var31 * 30 + var32 * 70) / 100;
                 int var37 = (var31 * 30 + var33 * 70) / 100;
@@ -130,10 +130,10 @@ public class ArsenicCompass extends StationTextureBinder {
                 var33 = var37;
             }
 
-            this.field_1411[var30 * 4] = (byte)var31;
-            this.field_1411[var30 * 4 + 1] = (byte)var32;
-            this.field_1411[var30 * 4 + 2] = (byte)var33;
-            this.field_1411[var30 * 4 + 3] = (byte)var34;
+            this.pixels[var30 * 4] = (byte)var31;
+            this.pixels[var30 * 4 + 1] = (byte)var32;
+            this.pixels[var30 * 4 + 2] = (byte)var33;
+            this.pixels[var30 * 4 + 3] = (byte)var34;
         }
     }
 }

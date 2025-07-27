@@ -37,7 +37,7 @@ public class FlattenedChunkSectionDataS2CPacket extends Packet implements Manage
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
         this.sectionIndex = sectionIndex;
-        FlattenedChunk chunk = (FlattenedChunk) world.method_214(chunkX, chunkZ);
+        FlattenedChunk chunk = (FlattenedChunk) world.getChunk(chunkX, chunkZ);
         ChunkSection section = Objects.requireNonNullElse(chunk.sections[sectionIndex], ChunkSection.EMPTY);
         byte[] sectionData = new byte[section.getPacketSize()];
         ByteBuffer buf = ByteBuffer.wrap(sectionData);

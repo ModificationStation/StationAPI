@@ -14,9 +14,9 @@ public interface ColorResolver {
 
         @Override
         default int getColor(BlockView world, double x, double y, double z) {
-            world.method_1781().method_1788(MathHelper.floor(x), MathHelper.floor(z), 1, 1);
-            double temperature = world.method_1781().field_2235[0];
-            double rainfall = world.method_1781().field_2236[0];
+            world.method_1781().getBiomesInArea(MathHelper.floor(x), MathHelper.floor(z), 1, 1);
+            double temperature = world.method_1781().temperatureMap[0];
+            double rainfall = world.method_1781().downfallMap[0];
             return getColour(temperature, rainfall);
         }
 
@@ -28,7 +28,7 @@ public interface ColorResolver {
 
         @Override
         default int getColor(BlockView blockView, double x, double y, double z) {
-            return getColour(blockView.method_1781().method_1787(MathHelper.floor(x), MathHelper.floor(z)), x, z);
+            return getColour(blockView.method_1781().getBiome(MathHelper.floor(x), MathHelper.floor(z)), x, z);
         }
 
         int getColour(Biome biome, double x, double z);

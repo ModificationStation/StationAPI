@@ -54,7 +54,7 @@ abstract class ItemMixin implements StationRendererItem {
     @Unique
     public <E extends StationTextureBinder> E setTextureBinder(Identifier staticReference, Function<Atlas.Sprite, E> initializer) {
         E textureBinder = ((ExpandableAtlas) getAtlas()).addTextureBinder(staticReference, initializer);
-        setTextureId(textureBinder.field_1412);
+        setTextureId(textureBinder.sprite);
         return textureBinder;
     }
 }

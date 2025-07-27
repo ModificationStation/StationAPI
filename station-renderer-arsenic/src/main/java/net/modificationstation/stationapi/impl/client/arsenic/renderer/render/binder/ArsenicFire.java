@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render.binder;
 
-import net.minecraft.class_285;
+import net.minecraft.client.resource.pack.TexturePack;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.api.client.texture.binder.StationTextureBinder;
 
@@ -13,17 +13,17 @@ public class ArsenicFire extends StationTextureBinder {
     }
 
     @Override
-    public void reloadFromTexturePack(class_285 newTexturePack) {
+    public void reloadFromTexturePack(TexturePack newTexturePack) {
         int
                 textureWidth = getStaticReference().getWidth(),
                 textureHeight = getStaticReference().getHeight();
         currentFireFrame = new float[textureWidth * ((int) (textureHeight * 1.25))];
         lastFireFrame = new float[textureWidth * ((int) (textureHeight * 1.25))];
-        field_1411 = new byte[textureWidth * textureHeight * 4];
+        pixels = new byte[textureWidth * textureHeight * 4];
     }
 
     @Override
-    public void method_1205() {
+    public void tick() {
         int
                 textureWidth = getStaticReference().getWidth(),
                 textureHeight = getStaticReference().getHeight();
@@ -71,7 +71,7 @@ public class ArsenicFire extends StationTextureBinder {
                 var8 = 0;
             }
 
-            if (this.field_1413) {
+            if (this.anaglyph) {
                 int var9 = (var16 * 30 + var17 * 59 + var7 * 11) / 100;
                 int var10 = (var16 * 30 + var17 * 70) / 100;
                 int var11 = (var16 * 30 + var7 * 70) / 100;
@@ -80,10 +80,10 @@ public class ArsenicFire extends StationTextureBinder {
                 var7 = var11;
             }
 
-            this.field_1411[var13 * 4] = (byte)var16;
-            this.field_1411[var13 * 4 + 1] = (byte)var17;
-            this.field_1411[var13 * 4 + 2] = (byte)var7;
-            this.field_1411[var13 * 4 + 3] = (byte)var8;
+            this.pixels[var13 * 4] = (byte)var16;
+            this.pixels[var13 * 4 + 1] = (byte)var17;
+            this.pixels[var13 * 4 + 2] = (byte)var7;
+            this.pixels[var13 * 4 + 3] = (byte)var8;
         }
 
     }

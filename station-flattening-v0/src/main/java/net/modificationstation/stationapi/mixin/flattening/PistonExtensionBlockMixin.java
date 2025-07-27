@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import net.minecraft.block.PistonExtensionBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.PistonExtensionBlock;
 import net.modificationstation.stationapi.impl.block.StationFlatteningMovingPistonImpl;
 import net.modificationstation.stationapi.impl.block.StationFlatteningPistonBlockEntityImpl;
 import org.spongepowered.asm.mixin.Mixin;

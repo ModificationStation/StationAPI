@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.api.client.texture.atlas;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import lombok.Getter;
-import net.minecraft.class_285;
-import net.minecraft.class_336;
+import net.minecraft.client.render.texture.DynamicTexture;
+import net.minecraft.client.resource.pack.TexturePack;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.MissingSprite;
@@ -33,7 +33,7 @@ public abstract class Atlas {
     public final Map<Identifier, Sprite> idToTex = new IdentityHashMap<>();
     private final Sprite missing = new Sprite(MissingSprite.getMissingSpriteId(), -1);
     protected final Int2ObjectMap<Sprite> textures = Util.make(new Int2ObjectOpenHashMap<>(), map -> map.defaultReturnValue(missing));
-    public final List<class_336> textureBinders = new CopyOnWriteArrayList<>();
+    public final List<DynamicTexture> textureBinders = new CopyOnWriteArrayList<>();
 
     Atlas(final Identifier id, final String spritesheet, final int size, final boolean fixedSize) {
         this(id, spritesheet, size, fixedSize, null);
@@ -109,11 +109,11 @@ public abstract class Atlas {
         return textureBinder;
     }
 
-    public void registerTextureBinders(TextureManager textureManager, class_285 texturePack) {
+    public void registerTextureBinders(TextureManager textureManager, TexturePack texturePack) {
         textureBinders.stream().filter(textureBinder -> !(textureBinder instanceof StaticReferenceProvider provider) || provider.getStaticReference().getSprite().getContents().getAnimation() == null).forEach(arg -> {
             if (arg instanceof TexturePackDependent dependent)
                 dependent.reloadFromTexturePack(texturePack);
-            textureManager.method_1087(arg);
+            textureManager.addDynamicTexture(arg);
         });
     }
 
