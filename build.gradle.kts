@@ -5,8 +5,8 @@ import babric.SubprojectHelpers.addDependencyXML
 
 plugins {
     id("maven-publish")
-    id("fabric-loom") version "1.9-SNAPSHOT"
-    id("babric-loom-extension") version "1.9.4"
+    id("fabric-loom") version "1.10-SNAPSHOT"
+    id("babric-loom-extension") version "1.10.2"
 }
 
 // https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
