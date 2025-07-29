@@ -20,7 +20,7 @@ class SimplexOctaveNoiseMixin {
     // Speeds up data generation up to 100+ times
     // Yes, it is a fix for manual array filling for the whole length, that solves all issues
     @Inject(
-            method = "sample",
+            method = "sample([DDDIIDDDD)[D",
             at = @At("HEAD"),
             cancellable = true
     )

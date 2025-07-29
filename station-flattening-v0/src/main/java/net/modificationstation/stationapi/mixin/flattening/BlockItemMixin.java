@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BlockItem.class)
 class BlockItemMixin extends Item implements StationFlatteningBlockItem {
-    @Shadow private int itemId;
+    @Shadow private int blockId;
     @Unique private short maxHeight;
 
     protected BlockItemMixin(int i) {
@@ -84,7 +84,7 @@ class BlockItemMixin extends Item implements StationFlatteningBlockItem {
     )
     private void stationapi_registerCallback(int par1, CallbackInfo ci) {
         BlockRegistry.INSTANCE.getEventBus().register(Listener.<RegistryIdRemapEvent<Block>>simple()
-                .listener(event -> itemId = event.state.getRawIdChangeMap().getOrDefault(itemId, itemId))
+                .listener(event -> blockId = event.state.getRawIdChangeMap().getOrDefault(blockId, blockId))
                 .phase(StationAPI.INTERNAL_PHASE)
                 .build());
     }
@@ -92,13 +92,13 @@ class BlockItemMixin extends Item implements StationFlatteningBlockItem {
     @Override
     @Unique
     public Block getBlock() {
-        return Block.BLOCKS[itemId];
+        return Block.BLOCKS[blockId];
     }
 
     @Override
     @Unique
     public void setBlock(Block block) {
-        itemId = block.id;
+        blockId = block.id;
         setTextureId(block.getTexture(2));
     }
 

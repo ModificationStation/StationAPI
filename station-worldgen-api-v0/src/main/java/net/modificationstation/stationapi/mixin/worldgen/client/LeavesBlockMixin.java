@@ -15,7 +15,7 @@ class LeavesBlockMixin {
             method = "getColorMultiplier",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/BlockView;method_1781()Lnet/minecraft/class_519;",
+                    target = "Lnet/minecraft/world/BlockView;method_1781()Lnet/minecraft/world/biome/source/BiomeSource;",
                     ordinal = 0,
                     shift = Shift.BEFORE
             ),

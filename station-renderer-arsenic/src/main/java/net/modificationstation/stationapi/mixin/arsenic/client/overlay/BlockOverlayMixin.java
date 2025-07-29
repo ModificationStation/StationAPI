@@ -29,7 +29,7 @@ class BlockOverlayMixin {
             method = "renderScreenOverlays",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_556;renderTexturedOverlay(FI)V"
+                    target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderTexturedOverlay(FI)V"
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )

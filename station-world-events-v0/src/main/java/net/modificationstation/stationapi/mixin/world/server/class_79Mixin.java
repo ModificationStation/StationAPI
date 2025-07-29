@@ -25,7 +25,7 @@ class class_79Mixin {
             method = "decorate",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_51;decorate(Lnet/minecraft/class_51;II)V",
+                    target = "Lnet/minecraft/world/chunk/ChunkSource;decorate(Lnet/minecraft/world/chunk/ChunkSource;II)V",
                     shift = At.Shift.AFTER
             )
     )

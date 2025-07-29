@@ -10,11 +10,11 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BlockItem.class)
 class BlockItemMixin implements CustomAtlasProvider {
-    @Shadow private int itemId;
+    @Shadow private int blockId;
 
     @Override
     @Unique
     public Atlas getAtlas() {
-        return Block.BLOCKS[itemId].getAtlas();
+        return Block.BLOCKS[blockId].getAtlas();
     }
 }

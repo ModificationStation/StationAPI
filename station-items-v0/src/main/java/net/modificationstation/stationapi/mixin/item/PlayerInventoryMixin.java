@@ -35,7 +35,7 @@ class PlayerInventoryMixin {
     }
 
     @Redirect(
-            method = "indexOf",
+            method = "indexOf(Lnet/minecraft/item/ItemStack;)I",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/item/ItemStack;count:I",
@@ -56,7 +56,7 @@ class PlayerInventoryMixin {
     private boolean notchGodDamnit;
 
     @Redirect(
-            method = "indexOf",
+            method = "indexOf(Lnet/minecraft/item/ItemStack;)I",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/entity/player/PlayerInventory;getMaxCountPerStack()I"

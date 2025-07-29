@@ -24,7 +24,7 @@ class CraftingResultMixin {
     private Inventory input;
 
     @Inject(
-            method = "onCrafted",
+            method = "onTakeItem",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/inventory/Inventory;setStack(ILnet/minecraft/item/ItemStack;)V",

@@ -30,7 +30,7 @@ class MinecraftMixin {
             method = "convertAndSaveWorld",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_452;progressStart(Ljava/lang/String;)V"
+                    target = "Lnet/minecraft/client/render/ProgressRenderer;progressStart(Ljava/lang/String;)V"
             )
     )
     private String stationapi_changeProgressListenerTitle(String string, @Local(ordinal = 0) String worldName) {
@@ -51,7 +51,7 @@ class MinecraftMixin {
             method = "convertAndSaveWorld",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_452;progressStage(Ljava/lang/String;)V"
+                    target = "Lnet/minecraft/client/render/ProgressRenderer;progressStage(Ljava/lang/String;)V"
             )
     )
     private String stationapi_changeProgressListenerDesc(String string, @Local(ordinal = 0) String worldName) {

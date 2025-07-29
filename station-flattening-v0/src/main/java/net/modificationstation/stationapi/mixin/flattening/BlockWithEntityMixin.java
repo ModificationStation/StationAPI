@@ -14,11 +14,11 @@ class BlockWithEntityMixin extends Block {
     }
 
     @ModifyVariable(
-            method = "<init>(ILnet/minecraft/block/Material;)V",
+            method = "<init>(ILnet/minecraft/block/material/Material;)V",
             index = 1,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/Block;<init>(ILnet/minecraft/block/Material;)V",
+                    target = "Lnet/minecraft/block/Block;<init>(ILnet/minecraft/block/material/Material;)V",
                     shift = At.Shift.AFTER
             ),
             argsOnly = true
@@ -28,11 +28,11 @@ class BlockWithEntityMixin extends Block {
     }
 
     @ModifyVariable(
-            method = "<init>(IILnet/minecraft/block/Material;)V",
+            method = "<init>(IILnet/minecraft/block/material/Material;)V",
             index = 1,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/Block;<init>(IILnet/minecraft/block/Material;)V",
+                    target = "Lnet/minecraft/block/Block;<init>(IILnet/minecraft/block/material/Material;)V",
                     shift = At.Shift.AFTER
             ),
             argsOnly = true

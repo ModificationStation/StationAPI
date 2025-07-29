@@ -91,7 +91,7 @@ class MinecraftServerMixin {
             method = "loadWorld",
             at = @At(
                     value = "NEW",
-                    target = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;IJLnet/minecraft/class_73;)Lnet/minecraft/class_120;"
+                    target = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/storage/WorldStorage;Ljava/lang/String;IJLnet/minecraft/world/ServerWorld;)Lnet/minecraft/server/world/ReadOnlyServerWorld;"
             )
     )
     private ReadOnlyServerWorld stationapi_instantiateOtherServerWorld(MinecraftServer minecraftServer, WorldStorage arg, String string, int i, long l, ServerWorld arg1) {

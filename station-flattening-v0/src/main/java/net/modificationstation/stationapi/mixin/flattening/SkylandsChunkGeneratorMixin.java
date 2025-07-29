@@ -21,7 +21,7 @@ class SkylandsChunkGeneratorMixin {
             method = "<init>",
             at = @At(
                     value = "NEW",
-                    target = "()Lnet/minecraft/class_415;"
+                    target = "()Lnet/minecraft/world/gen/carver/CaveCarver;"
             )
     )
     private CaveCarver stationapi_setWorldForCaveGen(Operation<CaveCarver> original, World world, long l) {
