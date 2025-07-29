@@ -32,7 +32,7 @@ class OverworldChunkGeneratorMixin {
             method = "<init>",
             at = @At(
                     value = "NEW",
-                    target = "()Lnet/minecraft/class_415;"
+                    target = "()Lnet/minecraft/world/gen/carver/CaveCarver;"
             )
     )
     private CaveCarver stationapi_setWorldForCaveGen(Operation<CaveCarver> original, World world, long l) {
@@ -104,7 +104,7 @@ class OverworldChunkGeneratorMixin {
             method = "buildTerrain",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_538;generateHeightMap([DIIIIII)[D",
+                    target = "Lnet/minecraft/world/gen/chunk/OverworldChunkGenerator;generateHeightMap([DIIIIII)[D",
                     shift = Shift.AFTER
             )
     )
@@ -132,7 +132,7 @@ class OverworldChunkGeneratorMixin {
             index = 5,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_538;generateHeightMap([DIIIIII)[D"
+                    target = "Lnet/minecraft/world/gen/chunk/OverworldChunkGenerator;generateHeightMap([DIIIIII)[D"
             )
     )
     private int stationapi_preventArgChanges(int original) {

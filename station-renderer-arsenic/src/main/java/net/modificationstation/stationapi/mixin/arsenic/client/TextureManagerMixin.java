@@ -42,7 +42,7 @@ class TextureManagerMixin {
     }
 
     @Inject(
-            method = "load",
+            method = "load(Ljava/awt/image/BufferedImage;I)V",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/nio/ByteBuffer;clear()Ljava/nio/Buffer;",
@@ -98,7 +98,7 @@ class TextureManagerMixin {
             method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_336;bind(Lnet/minecraft/client/texture/TextureManager;)V"
+                    target = "Lnet/minecraft/client/render/texture/DynamicTexture;bind(Lnet/minecraft/client/texture/TextureManager;)V"
             )
     )
     private void stationapi_tick_preventBindingTextureAndCheckCustomBinder(DynamicTexture instance, TextureManager manager) {

@@ -15,7 +15,7 @@ class MinecraftServerMixin {
             method = "loadWorld",
             at = @At(
                     value = "NEW",
-                    target = "(Ljava/io/File;Ljava/lang/String;Z)Lnet/minecraft/class_294;"
+                    target = "(Ljava/io/File;Ljava/lang/String;Z)Lnet/minecraft/world/storage/RegionWorldStorage;"
             )
     )
     private RegionWorldStorage stationapi_flatten(File file, String string, boolean bl) {

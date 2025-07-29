@@ -16,7 +16,7 @@ class AchievementsScreenMixin extends Screen {
             method = "renderIcons",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screen/achievement/AchievementsScreen;drawTexture(IIIIII)V",
+                    target = "Lnet/minecraft/client/gui/screen/AchievementsScreen;drawTexture(IIIIII)V",
                     ordinal = 0
             )
     )

@@ -21,7 +21,7 @@ class NetherChunkGeneratorMixin {
             method = "<init>",
             at = @At(
                     value = "NEW",
-                    target = "()Lnet/minecraft/class_344;"
+                    target = "()Lnet/minecraft/world/gen/carver/NetherCaveCarver;"
             )
     )
     private NetherCaveCarver stationapi_setWorldForCaveGen(Operation<NetherCaveCarver> original, World world, long l) {

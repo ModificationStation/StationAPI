@@ -32,7 +32,7 @@ class PlayerEntityRendererMixin {
             method = "renderMore(Lnet/minecraft/entity/player/PlayerEntity;F)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_556;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;)V",
+                    target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;)V",
                     ordinal = 1
             ),
             locals = LocalCapture.CAPTURE_FAILHARD

@@ -30,7 +30,7 @@ class class_70Mixin {
             method = "onBlockBreakingAction",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_73;getBlockId(III)I"
+                    target = "Lnet/minecraft/world/ServerWorld;getBlockId(III)I"
             ),
             cancellable = true
     )

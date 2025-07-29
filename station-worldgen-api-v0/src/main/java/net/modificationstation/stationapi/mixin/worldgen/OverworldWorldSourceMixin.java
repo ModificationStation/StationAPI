@@ -58,7 +58,7 @@ class OverworldWorldSourceMixin {
             method = "buildTerrain",
             at = @At(
                     value = "INVOKE_ASSIGN",
-                    target = "Lnet/minecraft/class_538;generateHeightMap([DIIIIII)[D",
+                    target = "Lnet/minecraft/world/gen/chunk/OverworldChunkGenerator;generateHeightMap([DIIIIII)[D",
                     shift = Shift.AFTER
             )
     )

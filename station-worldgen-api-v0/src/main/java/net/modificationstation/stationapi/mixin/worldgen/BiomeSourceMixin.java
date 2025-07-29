@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BiomeSource.class)
 class BiomeSourceMixin {
     @Inject(
-            method = "getBiomesInArea",
+            method = "getBiomesInArea([Lnet/minecraft/world/biome/Biome;IIII)[Lnet/minecraft/world/biome/Biome;",
             at = @At("HEAD")
     )
     private void stationapi_capturePosition(
@@ -29,7 +29,7 @@ class BiomeSourceMixin {
     }
 
     @WrapOperation(
-            method = "getBiomesInArea",
+            method = "getBiomesInArea([Lnet/minecraft/world/biome/Biome;IIII)[Lnet/minecraft/world/biome/Biome;",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/biome/Biome;getBiome(DD)Lnet/minecraft/world/biome/Biome;"

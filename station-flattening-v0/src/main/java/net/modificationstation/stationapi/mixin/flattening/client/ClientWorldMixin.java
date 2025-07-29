@@ -52,12 +52,12 @@ abstract class ClientWorldMixin extends World implements StationClientWorld {
     @Redirect(
             method = {
                     "setBlockMetaWithoutNotifyingNeighbors",
-                    "setBlockWithoutNotifyingNeighbors",
-                    "setBlockWithoutNotifyingNeighbors"
+                    "setBlockWithoutNotifyingNeighbors(IIIII)Z",
+                    "setBlockWithoutNotifyingNeighbors(IIII)Z"
             },
             at = @At(
                     value = "NEW",
-                    target = "(Lnet/minecraft/class_454;IIIII)Lnet/minecraft/class_454$class_456;"
+                    target = "(Lnet/minecraft/world/ClientWorld;IIIII)Lnet/minecraft/world/ClientWorld$BlockReset;"
             )
     )
     private ClientWorld.BlockReset stationapi_storeBlockState(ClientWorld world, int x, int y, int z, int blockId, int metadata) {

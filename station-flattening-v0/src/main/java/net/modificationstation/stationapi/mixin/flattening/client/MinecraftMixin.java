@@ -15,7 +15,7 @@ class MinecraftMixin {
             method = "init",
             at = @At(
                     value = "NEW",
-                    target = "(Ljava/io/File;)Lnet/minecraft/class_157;"
+                    target = "(Ljava/io/File;)Lnet/minecraft/world/storage/RegionWorldStorageSource;"
             )
     )
     private RegionWorldStorageSource stationapi_injectCustomWorldStorage(File saves) {

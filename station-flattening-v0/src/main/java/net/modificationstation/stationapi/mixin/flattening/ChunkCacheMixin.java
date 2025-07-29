@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(WorldRegion.class)
 class ChunkCacheMixin implements StationFlatteningWorldPopulationRegion {
-    @Shadow private int minX;
-    @Shadow private int minZ;
+    @Shadow private int chunkX;
+    @Shadow private int chunkZ;
     @Shadow private Chunk[][] chunks;
     @Shadow private World world;
 
@@ -23,8 +23,8 @@ class ChunkCacheMixin implements StationFlatteningWorldPopulationRegion {
     @Unique
     public BlockState getBlockState(int x, int y, int z) {
         if (y >= world.getBottomY() && y < world.getTopY()) {
-            int var4 = (x >> 4) - this.minX;
-            int var5 = (z >> 4) - this.minZ;
+            int var4 = (x >> 4) - this.chunkX;
+            int var5 = (z >> 4) - this.chunkZ;
             if (var4 >= 0 && var4 < this.chunks.length && var5 >= 0 && var5 < this.chunks[var4].length) {
                 Chunk var6 = this.chunks[var4][var5];
                 return var6 == null ? States.AIR.get() : var6.getBlockState(x & 15, y, z & 15);

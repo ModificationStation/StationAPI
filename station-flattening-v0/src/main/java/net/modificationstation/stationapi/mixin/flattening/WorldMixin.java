@@ -199,7 +199,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     }
 
     @ModifyConstant(method = {
-        "raycast"
+        "raycast(Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Vec3d;ZZ)Lnet/minecraft/util/hit/HitResult;"
     }, constant = @Constant(intValue = 200))
     private int stationapi_changeMaxEntityCalcHeight(int value) {
         return getTopY() + 64;

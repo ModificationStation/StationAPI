@@ -43,7 +43,7 @@ class PistonBlockMixin extends Block {
             method = "onBlockAction",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_283;getPushedBlockId()I"
+                    target = "Lnet/minecraft/block/entity/PistonBlockEntity;getPushedBlockId()I"
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
@@ -59,7 +59,7 @@ class PistonBlockMixin extends Block {
             method = "onBlockAction",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;createPistonBlockEntity(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
+                    target = "Lnet/minecraft/block/PistonExtensionBlock;createPistonBlockEntity(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
                     ordinal = 0
             )
     )
@@ -73,7 +73,7 @@ class PistonBlockMixin extends Block {
             method = "onBlockAction",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;createPistonBlockEntity(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
+                    target = "Lnet/minecraft/block/PistonExtensionBlock;createPistonBlockEntity(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
                     ordinal = 1
             )
     )
@@ -105,7 +105,7 @@ class PistonBlockMixin extends Block {
             method = "push",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;createPistonBlockEntity(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
+                    target = "Lnet/minecraft/block/PistonExtensionBlock;createPistonBlockEntity(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
                     ordinal = 0
             )
     )
@@ -117,7 +117,7 @@ class PistonBlockMixin extends Block {
             method = "push",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/block/entity/PistonExtensionBlock;createPistonBlockEntity(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
+                    target = "Lnet/minecraft/block/PistonExtensionBlock;createPistonBlockEntity(IIIZZ)Lnet/minecraft/block/entity/BlockEntity;",
                     ordinal = 1
             )
     )

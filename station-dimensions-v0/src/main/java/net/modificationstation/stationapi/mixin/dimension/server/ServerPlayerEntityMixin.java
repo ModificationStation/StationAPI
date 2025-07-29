@@ -13,7 +13,7 @@ abstract class ServerPlayerEntityMixin implements HasTeleportationManager {
             method = "playerTick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_166;changePlayerDimension(Lnet/minecraft/entity/player/ServerPlayerEntity;)V"
+                    target = "Lnet/minecraft/server/PlayerManager;changePlayerDimension(Lnet/minecraft/entity/player/ServerPlayerEntity;)V"
             )
     )
     private void stationapi_overrideSwitchDimensions(PlayerManager serverPlayerConnectionManager, ServerPlayerEntity serverPlayer) {
