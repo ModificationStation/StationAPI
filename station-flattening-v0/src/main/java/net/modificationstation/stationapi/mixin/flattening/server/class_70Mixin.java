@@ -65,7 +65,7 @@ class class_70Mixin {
             method = "tryBreakBlock",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_70;finishMining(III)Z",
+                    target = "Lnet/minecraft/server/network/ServerPlayerInteractionManager;finishMining(III)Z",
                     shift = At.Shift.BEFORE
             )
     )

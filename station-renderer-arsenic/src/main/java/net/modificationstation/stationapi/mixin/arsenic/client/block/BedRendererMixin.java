@@ -63,7 +63,6 @@ class BedRendererMixin {
         return texture.get().getX();
     }
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
             method = "renderBed",
             index = 28,
@@ -213,7 +212,6 @@ class BedRendererMixin {
         return texture.get().getX();
     }
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
             method = "renderBed",
             index = 29,

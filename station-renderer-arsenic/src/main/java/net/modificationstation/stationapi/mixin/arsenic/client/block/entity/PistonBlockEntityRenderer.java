@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(net.minecraft.client.render.block.entity.PistonBlockEntityRenderer.class)
 class PistonBlockEntityRenderer {
     @Redirect(
-            method = "render(Lnet/minecraft/class_283;DDDF)V",
+            method = "render(Lnet/minecraft/block/entity/PistonBlockEntity;DDDF)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/render/block/BlockRenderManager;renderWithoutCulling(Lnet/minecraft/block/Block;III)V"

@@ -35,7 +35,6 @@ class RepeaterRendererMixin {
         texture.set(block.getAtlas().getTexture(textureId).getSprite());
     }
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
             method = "renderRepeater",
             index = 21,
@@ -51,7 +50,6 @@ class RepeaterRendererMixin {
         return texture.get().getX();
     }
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
             method = "renderRepeater",
             index = 22,
