@@ -15,7 +15,7 @@ public interface AbstractPacketAccessor {
         return Util.assertMixin();
     }
 
-    @Accessor("C2s")
+    @Accessor("C2S")
     static Set<Integer> getServerBoundPackets() {
         return Util.assertMixin();
     }

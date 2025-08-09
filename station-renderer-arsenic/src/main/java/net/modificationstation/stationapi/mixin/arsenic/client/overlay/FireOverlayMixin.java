@@ -47,7 +47,6 @@ class FireOverlayMixin {
         return stationapi_fire_texture.getX();
     }
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
             method = "renderFireOverlay",
             index = 7,

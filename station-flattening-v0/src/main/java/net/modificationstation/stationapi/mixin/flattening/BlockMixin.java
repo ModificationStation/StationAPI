@@ -131,7 +131,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     }
 
     @Inject(
-            method = "<init>(ILnet/minecraft/block/Material;)V",
+            method = "<init>(ILnet/minecraft/block/material/Material;)V",
             at = @At("RETURN")
     )
     private void stationapi_onInit(int material, Material par2, CallbackInfo ci) {
@@ -299,7 +299,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     }
 
     @ModifyVariable(
-            method = "<init>(ILnet/minecraft/block/Material;)V",
+            method = "<init>(ILnet/minecraft/block/material/Material;)V",
             index = 1,
             at = @At(
                     value = "CONSTANT",

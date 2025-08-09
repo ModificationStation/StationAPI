@@ -41,7 +41,7 @@ abstract class ItemRendererMixin extends EntityRenderer {
     }
 
     @Inject(
-            method = "renderGuiItem",
+            method = "renderGuiItem(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/client/texture/TextureManager;Lnet/minecraft/item/ItemStack;II)V",
             at = @At("HEAD"),
             cancellable = true
     )

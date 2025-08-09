@@ -119,17 +119,17 @@ abstract class WorldMixin implements StationFlatteningWorld {
     @ModifyConstant(method = {
         "getBlockId",
         "isPosLoaded",
-        "isRegionLoaded",
-        "setBlockWithoutNotifyingNeighbors",
-        "setBlockWithoutNotifyingNeighbors",
+        "isRegionLoaded(IIIIII)Z",
+        "setBlockWithoutNotifyingNeighbors(IIII)Z",
+        "setBlockWithoutNotifyingNeighbors(IIIII)Z",
         "getBlockMeta",
         "setBlockMetaWithoutNotifyingNeighbors",
         "isTopY",
-        "getBrightness",
-        "getLightLevel",
-        "getBrightness",
+        "getBrightness(III)I",
+        "getLightLevel(IIIZ)I",
+        "getBrightness(Lnet/minecraft/world/LightType;III)I",
         "setLight",
-        "updateEntity",
+        "updateEntity(Lnet/minecraft/entity/Entity;Z)V",
         "manageChunkUpdatesAndEvents"
     }, constant = @Constant(intValue = 128))
     private int stationapi_changeMaxHeight(int value) {
@@ -138,14 +138,14 @@ abstract class WorldMixin implements StationFlatteningWorld {
 
     @ModifyConstant(method = {
             "getBlockId",
-            "setBlockWithoutNotifyingNeighbors",
-            "setBlockWithoutNotifyingNeighbors",
+            "setBlockWithoutNotifyingNeighbors(IIII)Z",
+            "setBlockWithoutNotifyingNeighbors(IIIII)Z",
             "getBlockMeta",
             "setBlockMetaWithoutNotifyingNeighbors",
             "isTopY",
-            "getBrightness",
-            "getLightLevel",
-            "getBrightness",
+            "getBrightness(III)I",
+            "getLightLevel(IIIZ)I",
+            "getBrightness(Lnet/minecraft/world/LightType;III)I",
             "setLight"
     }, constant = @Constant(expandZeroConditions = Constant.Condition.GREATER_THAN_OR_EQUAL_TO_ZERO))
     private int stationapi_changeBottomYGE(int value) {
@@ -154,9 +154,9 @@ abstract class WorldMixin implements StationFlatteningWorld {
 
     @ModifyConstant(method = {
             "isPosLoaded",
-            "isRegionLoaded",
+            "isRegionLoaded(IIIIII)Z",
             "manageChunkUpdatesAndEvents",
-            "raycast"
+            "raycast(Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Vec3d;ZZ)Lnet/minecraft/util/hit/HitResult;"
     }, constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_ZERO))
     private int stationapi_changeBottomYLT(int value) {
         return getBottomY();
@@ -170,8 +170,8 @@ abstract class WorldMixin implements StationFlatteningWorld {
     }
 
     @ModifyConstant(method = {
-            "updateEntity",
-            "getBrightness"
+            "updateEntity(Lnet/minecraft/entity/Entity;Z)V",
+            "getBrightness(Lnet/minecraft/world/LightType;III)I"
     }, constant = @Constant(intValue = 0, ordinal = 0))
     private int stationapi_changeBottomYFirst(int value) {
         return getBottomY();
@@ -186,9 +186,9 @@ abstract class WorldMixin implements StationFlatteningWorld {
 
     @ModifyConstant(
             method = {
-                    "getBrightness",
-                    "getLightLevel",
-                    "getBrightness",
+                    "getBrightness(III)I",
+                    "getLightLevel(IIIZ)I",
+                    "getBrightness(Lnet/minecraft/world/LightType;III)I",
                     "getTopSolidBlockY",
                     "manageChunkUpdatesAndEvents"
             },

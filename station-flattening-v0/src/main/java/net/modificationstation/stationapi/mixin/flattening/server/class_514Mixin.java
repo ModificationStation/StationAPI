@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.*;
 abstract class class_514Mixin {
     @Shadow
     @Final
-    ChunkMap difficulty6;
+    ChunkMap field_2136;
 
     @Shadow
     private int chunkX;
@@ -16,7 +16,7 @@ abstract class class_514Mixin {
     private int chunkZ;
 
     @Unique
-    private final ChunkSectionTracker[] stationapi_sectionTrackers = new ChunkSectionTracker[difficulty6.getWorld().countVerticalSections()];
+    private final ChunkSectionTracker[] stationapi_sectionTrackers = new ChunkSectionTracker[field_2136.getWorld().countVerticalSections()];
 
     /**
      * @author mine_diver
@@ -24,10 +24,10 @@ abstract class class_514Mixin {
      */
     @Overwrite
     public void updatePlayerChunks(int x, int y, int z) {
-        int sectionIndex = difficulty6.getWorld().getSectionIndex(y);
+        int sectionIndex = field_2136.getWorld().getSectionIndex(y);
         if (stationapi_sectionTrackers[sectionIndex] == null)
             //noinspection DataFlowIssue
-            stationapi_sectionTrackers[sectionIndex] = new ChunkSectionTracker(difficulty6, (ChunkMap.TrackedChunk) (Object) this, chunkX, chunkZ, sectionIndex);
+            stationapi_sectionTrackers[sectionIndex] = new ChunkSectionTracker(field_2136, (ChunkMap.TrackedChunk) (Object) this, chunkX, chunkZ, sectionIndex);
         stationapi_sectionTrackers[sectionIndex].queueUpdate(x, y & 15, z);
     }
 

@@ -34,7 +34,7 @@ class ChunkCacheMixin implements StationFlatteningWorldPopulationRegion {
     }
     
     @ModifyConstant(method = {
-            "getRawBrightness",
+            "getRawBrightness(IIIZ)I",
             "getBlockId",
             "getBlockMeta"
     }, constant = @Constant(intValue = 128))
@@ -43,7 +43,7 @@ class ChunkCacheMixin implements StationFlatteningWorldPopulationRegion {
     }
 
     @ModifyConstant(method = {
-            "getRawBrightness",
+            "getRawBrightness(IIIZ)I",
             "getBlockId",
             "getBlockMeta"
     }, constant = @Constant(expandZeroConditions = Constant.Condition.GREATER_THAN_OR_EQUAL_TO_ZERO, ordinal = 0))
