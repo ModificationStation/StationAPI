@@ -1,4 +1,4 @@
-import babric.SubprojectHelpers.addModuleDependencies
+import net.modificationstation.stationapi.gradle.SubprojectHelpers.addModuleDependencies
 import net.modificationstation.stationapi.gradle.SubprojectHelpers.getSubprojectVersion
 
 base.archivesName.set("station-items-v0")
