@@ -1,11 +1,12 @@
 package net.modificationstation.stationapi.impl.network;
 
+import com.google.common.hash.Hashing;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.event.init.InitFinishedEvent;
+import net.modificationstation.stationapi.api.event.mod.PreInitEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
@@ -24,32 +25,21 @@ public class VanillaChecker {
         EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
+    public static final long MASK = Hashing.sipHash24().hashUnencodedChars(NAMESPACE.toString()).asLong();
+
     /**
-     * A set of mods that are required client side when joining a server.
+     * A set of mods that need client-side verification when the client joins server.
      */
     public static final Set<ModContainer> CLIENT_REQUIRED_MODS = new HashSet<>();
 
-    /**
-     * A set of mods that are required on the server side when joining a server.
-     */
-    public static final Set<ModContainer> SERVER_REQUIRED_MODS = new HashSet<>();
-
     @EventListener
-    private static void init(InitFinishedEvent event) {
-        LOGGER.info("Checking mod metadata for client/server-side requirements...");
-
-        String oldVerifyClientKey = NAMESPACE + ":verify_client";
-        String requiredOnClientKey = NAMESPACE + ":required_on_client";
-        String requiredOnServerKey = NAMESPACE + ":required_on_server";
+    private static void init(PreInitEvent event) {
+        LOGGER.info("Gathering mods that require client verification...");
+        String value = NAMESPACE + ":verify_client";
         FabricLoader.getInstance().getAllMods().forEach(modContainer -> {
             ModMetadata modMetadata = modContainer.getMetadata();
-            if (modMetadata.containsCustomValue(requiredOnClientKey) && modMetadata.getCustomValue(requiredOnClientKey).getAsBoolean())
+            if (modMetadata.containsCustomValue(value) && modMetadata.getCustomValue(value).getAsBoolean())
                 CLIENT_REQUIRED_MODS.add(modContainer);
-            else if (modMetadata.containsCustomValue(oldVerifyClientKey) && modMetadata.getCustomValue(oldVerifyClientKey).getAsBoolean())
-                CLIENT_REQUIRED_MODS.add(modContainer);
-            if (modMetadata.containsCustomValue(requiredOnServerKey) && modMetadata.getCustomValue(requiredOnServerKey).getAsBoolean())
-                SERVER_REQUIRED_MODS.add(modContainer);
         });
-        LOGGER.info("Found {} mods required on client, {} mods required on server.", CLIENT_REQUIRED_MODS.size(), SERVER_REQUIRED_MODS.size());
     }
 }

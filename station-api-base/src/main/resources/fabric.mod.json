@@ -36,7 +36,6 @@
   },
 
   "custom": {
-    "modmenu:api": true,
-    "stationapi:required_on_client": true
+    "modmenu:api": true
   }
 }
