@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.modificationstation.stationapi.mixin.render",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BlockItemMixin",
+    "BlockMixin",
+    "ItemMixin",
+    "WorldMixin"
+  ],
+  "client": [
+    "client.BlockRenderManagerAccessor",
+    "client.BlockRenderManagerMixin",
+    "client.InGameHudMixin",
+    "client.TessellatorAccessor",
+    "client.TessellatorMixin",
+    "client.TextureManagerAccessor",
+    "client.TextureManagerMixin",
+    "client.WaterColorAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

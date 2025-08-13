@@ -8,7 +8,7 @@ addModuleDependencies(project,
         "station-registry-api-v0",
         "station-blocks-v0",
         "station-items-v0",
-        "station-renderer-api-v0",
+        "station-renderer-api-v1",
         "station-templates-v0",
         "station-flattening-v0"
 )

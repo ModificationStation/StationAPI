@@ -133,7 +133,7 @@ public final class ArsenicItemRenderer {
     private void renderModel(ItemEntity item, float x, float y, float z, float delta, ItemStack var10, float var11, float var12, byte renderedAmount, SpriteAtlasTexture atlas, BakedModel model) {
         glPushMatrix();
         atlas.bindTexture();
-        glTranslatef(x, y + var11 + 0.25F * model.getTransformation().getTransformation(ModelTransformation.Mode.GROUND).scale.getY(), z);
+        glTranslatef(x, y + var11 + 0.25F * model.getTransformation().getTransformation(ModelTransformation.Mode.GROUND).scale.y(), z);
 
         val sideLit = model.isSideLit();
         Tessellator tessellator = Tessellator.INSTANCE;

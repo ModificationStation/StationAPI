@@ -112,4 +112,8 @@ public interface StationFlatteningBlock extends
     default void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState) {
         Util.assertImpl();
     }
+
+    default AbstractBlockState.Offsetter getOffsetter() {
+        return null;
+    }
 }

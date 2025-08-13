@@ -1,14 +1,19 @@
 package net.modificationstation.stationapi.api.util.dynamic;
 
 import com.google.common.base.Suppliers;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.floats.FloatArrayList;
+import it.unimi.dsi.fastutil.floats.FloatList;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.util.Uuids;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.joml.*;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +32,50 @@ import java.util.stream.Stream;
  */
 public class Codecs {
     public static final Codec<UUID> UUID = Uuids.CODEC;
+    public static final Codec<Vector3f> VECTOR_3F = Codec.FLOAT
+            .listOf()
+            .comapFlatMap(
+                    list -> Util.toArray(list, 3).map(elements -> new Vector3f(elements.get(0), elements.get(1), elements.get(2))),
+                    vec -> List.of(vec.x(), vec.y(), vec.z())
+            );
+    public static final Codec<Vector4f> VECTOR_4F = Codec.FLOAT
+            .listOf()
+            .comapFlatMap(
+                    list -> Util.toArray(list, 4).map(elements -> new Vector4f(elements.get(0), elements.get(1), elements.get(2), elements.get(3))),
+                    vec -> List.of(vec.x(), vec.y(), vec.z(), vec.w())
+            );
+    public static final Codec<Quaternionf> QUATERNION_F = Codec.FLOAT
+            .listOf()
+            .comapFlatMap(
+                    list -> Util.toArray(list, 4)
+                            .map(elements -> new Quaternionf(elements.get(0), elements.get(1), elements.get(2), elements.get(3)).normalize()),
+                    quaternion -> List.of(quaternion.x, quaternion.y, quaternion.z, quaternion.w)
+            );
+    public static final Codec<AxisAngle4f> AXIS_ANGLE_4F = RecordCodecBuilder.create(
+            instance -> instance.group(
+                            Codec.FLOAT.fieldOf("angle").forGetter(axisAngle4f -> axisAngle4f.angle),
+                            VECTOR_3F.fieldOf("axis").forGetter(axisAngle4f -> new Vector3f(axisAngle4f.x, axisAngle4f.y, axisAngle4f.z))
+                    )
+                    .apply(instance, AxisAngle4f::new)
+    );
+    public static final Codec<Quaternionf> ROTATION = Codec.withAlternative(QUATERNION_F, AXIS_ANGLE_4F.xmap(Quaternionf::new, AxisAngle4f::new));
+    public static final Codec<Matrix4fc> MATRIX_4F = Codec.FLOAT.listOf().comapFlatMap(list -> Util.toArray(list, 16).map(elements -> {
+        Matrix4f matrix4f = new Matrix4f();
+
+        for (int i = 0; i < elements.size(); i++) {
+            matrix4f.setRowColumn(i >> 2, i & 3, elements.get(i));
+        }
+
+        return matrix4f.determineProperties();
+    }), matrix4f -> {
+        FloatList floatList = new FloatArrayList(16);
+
+        for (int i = 0; i < 16; i++) {
+            floatList.add(matrix4f.getRowColumn(i >> 2, i & 3));
+        }
+
+        return floatList;
+    });
     public static final Codec<Integer> NONNEGATIVE_INT = Codecs.rangedInt(0, Integer.MAX_VALUE, v -> "Value must be non-negative: " + v);
     public static final Codec<Integer> POSITIVE_INT = Codecs.rangedInt(1, Integer.MAX_VALUE, v -> "Value must be positive: " + v);
     public static final Codec<Float> POSITIVE_FLOAT = Codecs.rangedFloat(0.0f, Float.MAX_VALUE, v -> "Value must be positive: " + v);
@@ -116,8 +165,14 @@ public class Codecs {
         });
     }
 
-    public static <E> Codec<E> idChecked(Function<E, String> elementToId, Function<String, E> idToElement) {
-        return Codec.STRING.flatXmap(id -> Optional.ofNullable(idToElement.apply(id)).map(DataResult::success).orElseGet(() -> DataResult.error(() -> "Unknown element name:" + id)), element -> Optional.ofNullable(elementToId.apply(element)).map(DataResult::success).orElseGet(() -> DataResult.error(() -> "Element with unknown name: " + element)));
+    public static <I, E> Codec<E> idChecked(Codec<I> idCodec, Function<I, E> idToElement, Function<E, I> elementToId) {
+        return idCodec.flatXmap(id -> {
+            E object = (E)idToElement.apply(id);
+            return object == null ? DataResult.error(() -> "Unknown element id: " + id) : DataResult.success(object);
+        }, element -> {
+            I object = (I)elementToId.apply(element);
+            return object == null ? DataResult.error(() -> "Element with unknown id: " + element) : DataResult.success(object);
+        });
     }
 
     public static <E> Codec<E> orCompressed(final Codec<E> uncompressedCodec, final Codec<E> compressedCodec) {
@@ -391,6 +446,26 @@ public class Codecs {
         @Override
         public <T> DataResult<T> encode(A input, DynamicOps<T> ops, T prefix) {
             return this.delegate.get().encode(input, ops, prefix);
+        }
+    }
+
+    public static class IdMapper<I, V> {
+        private final BiMap<I, V> values = HashBiMap.create();
+
+        public Codec<V> getCodec(Codec<I> idCodec) {
+            BiMap<V, I> biMap = this.values.inverse();
+            return Codecs.idChecked(idCodec, this.values::get, biMap::get);
+        }
+
+        public Codecs.IdMapper<I, V> put(I id, V value) {
+            Objects.requireNonNull(value, () -> "Value for " + id + " is null");
+            this.values.put(id, value);
+            return this;
+        }
+
+        public V putIfAbsent(I id, V value) {
+            Objects.requireNonNull(value, () -> "Value for " + id + " is null");
+            return this.values.putIfAbsent(id, value);
         }
     }
 

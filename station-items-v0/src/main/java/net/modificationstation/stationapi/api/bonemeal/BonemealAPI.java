@@ -37,7 +37,7 @@ public class BonemealAPI {
         updateCache(state);
         if (CACHE.isEmpty()) return false;
         Random random = world.field_214;
-        Direction offset = Direction.byId(side);
+        Direction offset = Direction.byIndex(side);
         CACHE.get(random).generate(
                 world,
                 random,

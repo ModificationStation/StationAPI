@@ -91,7 +91,7 @@ public class RegistryLoader {
             try (BufferedReader reader = resource.getReader()) {
                 JsonElement jsonElement = JsonParser.parseReader(reader);
                 DataResult<E> dataResult = decoder.parse(registryOps, jsonElement);
-                E object = dataResult.getOrThrow(false, error -> {});
+                E object = dataResult.getOrThrow();
                 newRegistry.add(registryKey, object, resource.isAlwaysStable() ? Lifecycle.stable() : dataResult.lifecycle());
             } catch (Exception exception) {
                 exceptions.put(registryKey, new IllegalStateException(String.format(Locale.ROOT, "Failed to parse %s from pack %s", identifier, resource.getResourcePackName()), exception));

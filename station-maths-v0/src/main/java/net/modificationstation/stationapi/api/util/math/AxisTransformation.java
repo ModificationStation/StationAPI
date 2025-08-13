@@ -1,6 +1,7 @@
 package net.modificationstation.stationapi.api.util.math;
 
 import net.modificationstation.stationapi.api.util.Util;
+import org.joml.Matrix3f;
 
 import java.util.Arrays;
 
@@ -34,10 +35,10 @@ public enum AxisTransformation {
 
     AxisTransformation(int xMapping, int yMapping, int zMapping) {
         this.mappings = new int[]{xMapping, yMapping, zMapping};
-        this.matrix = new Matrix3f();
-        this.matrix.set(0, this.map(0), 1.0F);
-        this.matrix.set(1, this.map(1), 1.0F);
-        this.matrix.set(2, this.map(2), 1.0F);
+        this.matrix = new Matrix3f().zero();
+        this.matrix.set(this.map(0), 0, 1.0F);
+        this.matrix.set(this.map(1), 1, 1.0F);
+        this.matrix.set(this.map(2), 2, 1.0F);
     }
 
     public AxisTransformation prepend(AxisTransformation transformation) {

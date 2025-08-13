@@ -2,11 +2,11 @@ package net.modificationstation.stationapi.api.worldgen.surface.condition;
 
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
-import net.modificationstation.stationapi.api.util.math.Vec3f;
+import org.joml.Vector3f;
 
 public class SlopeSurfaceCondition implements SurfaceCondition {
-    private final Vec3f a = new Vec3f();
-    private final Vec3f b = new Vec3f();
+    private final Vector3f a = new Vector3f();
+    private final Vector3f b = new Vector3f();
     private final boolean greater;
     private final float angle;
 
@@ -26,7 +26,7 @@ public class SlopeSurfaceCondition implements SurfaceCondition {
         a.cross(b);
         a.normalize();
 
-        b.set(a.getX(), 0, a.getZ());
+        b.set(a.x(), 0, a.z());
         b.normalize();
 
         float dot = a.dot(b);
