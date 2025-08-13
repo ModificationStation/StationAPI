@@ -1,9 +1,7 @@
 package net.modificationstation.stationapi.impl.client.arsenic.renderer.render;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
 import net.minecraft.class_454;
 import net.minecraft.class_583;
 import net.minecraft.client.Minecraft;
@@ -42,7 +40,6 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public class BakedModelRendererImpl implements BakedModelRenderer {
@@ -84,7 +81,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     @Override
     public boolean render(VertexConsumer consumer, BlockView world, BakedModel model, BlockState state, BlockPos pos, boolean cull, Random random, long seed) {
         TerrainRenderContext renderer = TerrainRenderContext.POOL.get();
-        renderer.prepare(world, random, renderLayer -> Tessellator.INSTANCE);
+        renderer.prepare(world, random, renderLayer -> consumer);
         renderer.bufferModel(StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state), state, pos);
         renderer.release();
 

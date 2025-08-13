@@ -36,6 +36,9 @@
   "custom": {
     "modmenu:api": true,
     "loom:injected_interfaces": {
+      "net/minecraft/class_18": [
+        "net/modificationstation/stationapi/api/client/world/LightmapGetter"
+      ],
       "net/minecraft/class_17": [
         "net/modificationstation/stationapi/api/client/block/StationRendererBlock"
       ],

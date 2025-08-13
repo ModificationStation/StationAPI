@@ -6,7 +6,8 @@
   "mixins": [
     "BlockItemMixin",
     "BlockMixin",
-    "ItemMixin"
+    "ItemMixin",
+    "WorldMixin"
   ],
   "client": [
     "client.BlockRenderManagerAccessor",
