@@ -8,6 +8,8 @@ import net.modificationstation.stationapi.api.client.event.texture.TextureRegist
 import net.modificationstation.stationapi.api.client.render.model.json.JsonUnbakedModel;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
 import net.modificationstation.stationapi.api.client.texture.atlas.ExpandableAtlas;
+import net.modificationstation.stationapi.api.template.block.TemplateDoorBlock;
+import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import static net.modificationstation.sltest.SLTest.NAMESPACE;
@@ -53,6 +55,9 @@ public class TextureListener {
 
 //        farlandsBlockModel = JsonUnbakedModel.get(of(MODID, "farlandsBlock"));
 //        testItemModel = JsonUnbakedModel.get(of(MODID, "item/testItem"));
+
+        ((TemplateDoorBlock) FANCY_WOOD_DOOR.get()).topTextureId = terrain.getTexture(Namespace.MINECRAFT.id("block/oak_door_top")).index;
+        ((TemplateDoorBlock) FANCY_WOOD_DOOR.get()).bottomTextureId = terrain.getTexture(Namespace.MINECRAFT.id("block/oak_door_bottom")).index;
     }
 
     public static final int[] altarTextures = new int[6];

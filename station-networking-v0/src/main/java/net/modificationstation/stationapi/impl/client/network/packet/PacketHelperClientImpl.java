@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.impl.client.network.packet;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.Packet;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
@@ -21,5 +22,21 @@ public class PacketHelperClientImpl extends PacketHelperImpl {
     public void sendTo(PlayerEntity player, Packet packet) {
         if (!player.world.isRemote)
             packet.apply(packet instanceof ManagedPacket<?> managedPacket ? managedPacket.getType().getHandler().orElse(null) : null);
+    }
+
+    @Override
+    public void dispatchLocallyAndSendTo(PlayerEntity player, Packet packet) {
+        sendTo(player, packet);
+    }
+
+    @Override
+    public void sendToAllTracking(Entity entity, Packet packet) {
+        //noinspection deprecation
+        sendTo(((Minecraft) FabricLoader.getInstance().getGameInstance()).player, packet);
+    }
+
+    @Override
+    public void dispatchLocallyAndToAllTracking(Entity entity, Packet packet) {
+        sendToAllTracking(entity, packet);
     }
 }

@@ -48,6 +48,7 @@ allprojects {
         all {
             exclude(group = "org.ow2.asm", module = "asm-debug-all")
             exclude(group = "org.ow2.asm", module = "asm-all")
+            exclude(group = "babric")
         }
     }
 
@@ -71,10 +72,11 @@ allprojects {
         "transitiveImplementation"("net.jodah:typetools:${project.properties["typetools_version"]}")
         "transitiveImplementation"("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
         "transitiveImplementation"("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
-        //noinspection GradlePackageUpdate
         "transitiveImplementation"("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
         "transitiveImplementation"("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
         "transitiveImplementation"("maven.modrinth:spasm:${project.properties["spasm_version"]}")
+        "transitiveImplementation"("me.carleslc:Simple-Yaml:1.8.4")
+        "transitiveImplementation"("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}")
         "transitiveImplementation"("org.joml:joml:${project.properties["joml_version"]}")
 
         // convenience stuff
@@ -87,21 +89,15 @@ allprojects {
         // adds some useful annotations for miscellaneous uses. does not add any dependencies, though people without the lib will be missing some useful context hints.
         implementation("org.jetbrains:annotations:23.0.0")
 
-        modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}") {
-            isTransitive = false
-        }
+        modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}")
         modLocalRuntime("maven.modrinth:retrocommands:${project.properties["rc_version"]}") {
             isTransitive = false
         }
 
         annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.1")
-    }
 
-    loom {
-        @Suppress("UnstableApiUsage") // Too bad, this is needed.
-        mixin {
-            useLegacyMixinAp.set(true)
-        }
+        // Optional bugfix mod for testing qol. Remove the // to enable.
+        //modLocalRuntime "maven.modrinth:mojangfix:${project.properties["mojangfix_version"]}"
     }
 
     sourceSets {
@@ -294,4 +290,9 @@ tasks.register<Jar>("testJar") {
     from(sourceSets["test"].output)
     archiveClassifier.convention("test")
     archiveClassifier.set("test")
+}
+
+// Gradle I swear to fuck stop trying to do bullshit to the maven - calm
+tasks.withType<GenerateModuleMetadata> {
+    enabled = false
 }

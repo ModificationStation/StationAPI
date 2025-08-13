@@ -1,0 +1,5 @@
+# This json is important cause some mods require a specific version of stapi, but during dev runs, stapi has no version.
+/**
+!config
+!config/fabric_loader_dependencies.json
+!.gitignore

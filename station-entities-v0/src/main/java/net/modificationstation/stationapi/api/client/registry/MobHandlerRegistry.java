@@ -13,9 +13,8 @@ import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 
 public final class MobHandlerRegistry extends SimpleRegistry<Function<World, LivingEntity>> {
 
-    private static final Function<World, LivingEntity> EMPTY = world -> null;
     public static final RegistryKey<MobHandlerRegistry> KEY = RegistryKey.ofRegistry(NAMESPACE.id("mob_handlers"));
-    public static final MobHandlerRegistry INSTANCE = Registries.create(KEY, new MobHandlerRegistry(), registry -> EMPTY, Lifecycle.experimental());
+    public static final MobHandlerRegistry INSTANCE = Registries.create(KEY, new MobHandlerRegistry(), Lifecycle.experimental());
 
     private MobHandlerRegistry() {
         super(KEY, Lifecycle.experimental(), false);
