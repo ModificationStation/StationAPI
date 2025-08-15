@@ -23,8 +23,10 @@
       "net.modificationstation.stationapi.impl.network.VanillaChecker"
     ],
     "stationapi:event_bus_server": [
+      "net.modificationstation.stationapi.impl.server.network.ServerVanillaChecker"
     ],
     "stationapi:event_bus_client": [
+      "net.modificationstation.stationapi.impl.client.network.ClientVanillaChecker"
     ]
   },
   "mixins": [

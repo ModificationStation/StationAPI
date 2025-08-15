@@ -59,7 +59,6 @@
     "stationapi": "*"
   },
   "custom": {
-    "stationapi:required_on_client": true,
-    "stationapi:required_on_server": true
+    "stationapi:verify_client": true
   }
 }

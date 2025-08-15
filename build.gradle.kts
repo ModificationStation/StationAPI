@@ -39,9 +39,9 @@ allprojects {
         }
     }
 
+    @Suppress("UnstableApiUsage")
     configurations {
-        val transitiveImplementation = create("transitiveImplementation")
-        implementation.get().extendsFrom(transitiveImplementation)
+        create("transitiveImplementation")
 
         // Required cause loom 0.14 for some reason doesn't remove asm-all 4.1. Ew.
         all {
@@ -66,16 +66,16 @@ allprojects {
 
         modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
 
-        "transitiveImplementation"("org.apache.commons:commons-lang3:3.12.0")
-        "transitiveImplementation"("commons-io:commons-io:2.11.0")
-        "transitiveImplementation"("net.jodah:typetools:${project.properties["typetools_version"]}")
-        "transitiveImplementation"("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}")
-        "transitiveImplementation"("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}")
-        "transitiveImplementation"("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}")
-        "transitiveImplementation"("com.mojang:datafixerupper:${project.properties["dfu_version"]}")
-        "transitiveImplementation"("maven.modrinth:spasm:${project.properties["spasm_version"]}")
-        "transitiveImplementation"("me.carleslc:Simple-Yaml:1.8.4")
-        "transitiveImplementation"("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}")
+        "transitiveImplementation"(implementation("org.apache.commons:commons-lang3:3.12.0") as Dependency)
+        "transitiveImplementation"(implementation("commons-io:commons-io:2.11.0") as Dependency)
+        "transitiveImplementation"(implementation("net.jodah:typetools:${project.properties["typetools_version"]}") as Dependency)
+        "transitiveImplementation"(implementation("com.github.mineLdiver:UnsafeEvents:${project.properties["unsafeevents_version"]}") as Dependency)
+        "transitiveImplementation"(implementation("it.unimi.dsi:fastutil:${project.properties["fastutil_version"]}") as Dependency)
+        "transitiveImplementation"(implementation("com.github.ben-manes.caffeine:caffeine:${project.properties["caffeine_version"]}") as Dependency)
+        "transitiveImplementation"(implementation("com.mojang:datafixerupper:${project.properties["dfu_version"]}") as Dependency)
+        "transitiveImplementation"(implementation("maven.modrinth:spasm:${project.properties["spasm_version"]}") as Dependency)
+        "transitiveImplementation"(implementation("me.carleslc:Simple-Yaml:1.8.4") as Dependency)
+        "transitiveImplementation"(modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") as Dependency)
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
