@@ -11,8 +11,6 @@
     "server.ServerLoginNetworkHandlerMixin"
   ],
   "client": [
-    "client.ConnectScreenAccessor",
-    "client.HandshakePacketMixin"
   ],
   "injectors": {
     "defaultRequire": 1
