@@ -3,6 +3,7 @@ package net.modificationstation.stationapi.api.network.packet;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.Packet;
+import net.modificationstation.stationapi.api.network.PacketByteBuf;
 import net.modificationstation.stationapi.api.util.API;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.SideUtil;
@@ -22,6 +23,10 @@ public final class PacketHelper {
      */
     @SuppressWarnings("Convert2MethodRef") // Method references load their target classes on both sides, causing crashes.
     private static final PacketHelperImpl INSTANCE = SideUtil.get(() -> new PacketHelperClientImpl(), () -> new PacketHelperServerImpl());
+
+    public static <P> Packet createPayloadPacket(PayloadType<? extends PacketByteBuf, P> type, P payload) {
+        return null;
+    }
 
     /**
      * On client, sends the packet to the server if the current game is multiplayer, or handles the packet locally if the current game is singleplayer.

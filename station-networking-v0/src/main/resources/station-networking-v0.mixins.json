@@ -5,10 +5,17 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AbstractPacketAccessor",
+    "ConnectionHelperMixin",
     "ConnectionMixin",
+    "HandshakePacketMixin",
     "PacketMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "server": [
+    "MinecraftServerMixin",
+    "ServerConnectionListenerMixin",
+    "ServerLoginNetworkHandlerMixin"
+  ]
 }
