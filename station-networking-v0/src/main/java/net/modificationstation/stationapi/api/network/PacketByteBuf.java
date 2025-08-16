@@ -1,9 +1,10 @@
 package net.modificationstation.stationapi.api.network;
 
 import net.minecraft.util.math.BlockPos;
+import net.modificationstation.stationapi.api.network.codec.StreamDecoder;
+import net.modificationstation.stationapi.api.network.codec.StreamEncoder;
 import net.modificationstation.stationapi.api.util.math.StationBlockPos;
 
-import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -16,45 +17,16 @@ public class PacketByteBuf {
         this.source = source;
     }
 
-    public DataInputStream getInputStream() {
-        return new DataInputStream(new InputStream() {
-            @Override
-            public int read() {
-                if (!source.hasRemaining()) {
-                    return -1;
-                }
-                return source.get() & 0xFF;
-            }
-
-            @Override
-            public int read(byte[] bytes, int off, int len) {
-                if (!source.hasRemaining()) {
-                    return -1;
-                }
-
-                len = Math.min(len, source.remaining());
-                source.get(bytes, off, len);
-                return len;
-            }
-        });
-    }
-    
-    public DataOutputStream getOutputStream() {
-        return new DataOutputStream(new OutputStream() {
-            @Override
-            public void write(int b) {
-                source.put((byte) b);
-            }
-
-            @Override
-            public void write(byte[] bytes, int off, int len) {
-                source.put(bytes, off, len);
-            }
-        });
-    }
-
     public ByteBuffer getSource() {
         return source;
+    }
+
+    public <T> void write(StreamEncoder<PacketByteBuf, T> encoder, T value) {
+        encoder.encode(this, value);
+    }
+
+    public <T> T read(StreamDecoder<PacketByteBuf, T> decoder) {
+        return decoder.decode(this);
     }
 
     public void writeBoolean(boolean value) {

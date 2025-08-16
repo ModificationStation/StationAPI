@@ -78,9 +78,9 @@ public class StationServerConnectionListener {
 
             try {
                 listener.tick();
-            } catch (Exception var5) {
+            } catch (Exception e) {
                 listener.disconnect("Internal server error");
-                class_9.LOGGER.log(Level.WARNING, "Failed to handle packet: " + var5, var5);
+                class_9.LOGGER.log(Level.WARNING, "Failed to handle packet: " + e, e);
             }
 
             if (listener.closed) {
@@ -100,7 +100,7 @@ public class StationServerConnectionListener {
                 listener.method_833("Internal server error"); // disconnect
             }
 
-            if (listener.field_918) { // stopped
+            if (listener.field_918) { // closed
                 this.connections.remove(i--);
             }
 

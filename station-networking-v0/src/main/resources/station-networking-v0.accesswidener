@@ -4,3 +4,6 @@ transitive-extendable	method	net/minecraft/network/Connection method_1137 ()Z #w
 transitive-extendable	method	net/minecraft/network/Connection method_1139 ()Z #readTick
 
 accessible field net/minecraft/class_166 field_581 I
+
+accessible field net/minecraft/network/Connection field_1290 Z
+accessible field net/minecraft/network/Connection field_1280 Ljava/lang/Object;
