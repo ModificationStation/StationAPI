@@ -125,7 +125,7 @@ public class PalettedContainer<T>
         return data.palette.get(data.storage.get(index));
     }
 
-    public void render93(Consumer<T> consumer) {
+    public void forEachValue(Consumer<T> consumer) {
         Palette<T> palette = this.data.palette();
         IntArraySet intSet = new IntArraySet();
         this.data.storage.forEach(intSet::add);
@@ -178,8 +178,8 @@ public class PalettedContainer<T>
                     BiMapPalette<T> palette = new BiMapPalette<>(idList, j, (i, object) -> 0, list);
                     PackedIntegerArray packedIntegerArray = new PackedIntegerArray(j, i2, ls);
                     int[] is = new int[i2];
-                    packedIntegerArray.applyBrightness92(is);
-                    PalettedContainer.applyBrightness94(is, i -> idList.getRawId(palette.get(i)));
+                    packedIntegerArray.writePaletteIndices(is);
+                    PalettedContainer.applyEach(is, i -> idList.getRawId(palette.get(i)));
                     paletteStorage = new PackedIntegerArray(dataProvider.bits(), i2, is);
                 } else paletteStorage = new PackedIntegerArray(dataProvider.bits(), i2, ls);
             }
@@ -233,7 +233,7 @@ public class PalettedContainer<T>
         return new PalettedContainer.Serialized<>(elements, data);
     }
 
-    private static void applyBrightness94(int[] is, IntUnaryOperator intUnaryOperator) {
+    private static void applyEach(int[] is, IntUnaryOperator intUnaryOperator) {
         int i = -1;
         int j = -1;
         for (int k = 0; k < is.length; ++k) {

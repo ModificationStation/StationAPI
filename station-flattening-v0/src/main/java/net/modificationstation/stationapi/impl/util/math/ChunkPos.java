@@ -11,20 +11,20 @@ import net.minecraft.util.math.BlockPos;
 
 public class ChunkPos {
 
-    private static final int loginPacket99 = 1056;
+    private static final int field_36299 = 1056;
     public static final long MARKER = ChunkPos.toLong(1875066, 1875066);
     public static final ChunkPos ORIGIN = new ChunkPos(0, 0);
-    private static final long stats53 = 32L;
-    private static final long stats54 = 0xFFFFFFFFL;
-    private static final int stats55 = 5;
-    public static final int GOLDEN_PICKAXE24 = 32;
-    private static final int stats56 = 31;
-    public static final int GOLDEN_PICKAXE25 = 31;
+    private static final long field_30953 = 32L;
+    private static final long field_30954 = 0xFFFFFFFFL;
+    private static final int field_30955 = 5;
+    public static final int field_38224 = 32;
+    private static final int field_30956 = 31;
+    public static final int field_38225 = 31;
     public final int x;
     public final int z;
-    private static final int stats57 = 1664525;
-    private static final int stats58 = 1013904223;
-    private static final int stats59 = -559038737;
+    private static final int field_30957 = 1664525;
+    private static final int field_30958 = 1013904223;
+    private static final int field_30959 = -559038737;
 
     public ChunkPos(int x, int z) {
         this.x = x;
@@ -54,7 +54,7 @@ public class ChunkPos {
     }
 
     public static long toLong(int chunkX, int chunkZ) {
-        return (long)chunkX & stats54 | ((long)chunkZ & stats54) << 32;
+        return (long)chunkX & field_30954 | ((long)chunkZ & field_30954) << 32;
     }
 
     public static long toLong(BlockPos pos) {
@@ -62,11 +62,11 @@ public class ChunkPos {
     }
 
     public static int getPackedX(long pos) {
-        return (int)(pos & stats54);
+        return (int)(pos & field_30954);
     }
 
     public static int getPackedZ(long pos) {
-        return (int)(pos >>> 32 & stats54);
+        return (int)(pos >>> 32 & field_30954);
     }
 
     public int hashCode() {
@@ -74,8 +74,8 @@ public class ChunkPos {
     }
 
     public static int hashCode(int x, int z) {
-        int i = stats57 * x + stats58;
-        int j = stats57 * (z ^ stats59) + stats58;
+        int i = field_30957 * x + field_30958;
+        int j = field_30957 * (z ^ field_30959) + field_30958;
         return i ^ j;
     }
 

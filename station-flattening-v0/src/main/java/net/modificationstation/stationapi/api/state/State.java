@@ -89,7 +89,7 @@ public abstract class State<O, S> {
         }
     }
 
-    public <T extends Comparable<T>> Optional<T> saveWorldData00(Property<T> property) {
+    public <T extends Comparable<T>> Optional<T> getOrEmpty(Property<T> property) {
         Comparable<?> comparable = this.entries.get(property);
         return comparable == null ? Optional.empty() : Optional.of(property.getType().cast(comparable));
     }
