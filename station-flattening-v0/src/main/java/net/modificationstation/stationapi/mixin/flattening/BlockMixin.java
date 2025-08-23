@@ -400,11 +400,4 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
         if (!newState.isOf((Block) (Object) this))
             onBreak(world, pos.x, pos.y, pos.z);
     }
-
-    @Override
-    @Unique
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState) {
-        if (!newState.isOf((Block) (Object) this))
-            onBreak(world, pos.x, pos.y, pos.z);
-    }
 }
