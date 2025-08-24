@@ -98,7 +98,7 @@ public final class Matrix3f {
         }
     }
 
-    private static Pair<Float, Float> getTopSolidBlockY48(float f, float g) {
+    private static Pair<Float, Float> method_22848(float f, float g) {
         float h = (float)Math.hypot(f, g);
         float i = h > 1.0E-6F ? g : 0.0F;
         float j = Math.abs(f) + Math.max(h, 1.0E-6F);
@@ -115,7 +115,7 @@ public final class Matrix3f {
         return Pair.of(i, j);
     }
 
-    private static Quaternion getTopSolidBlockY57(Matrix3f matrix3f) {
+    private static Quaternion method_22857(Matrix3f matrix3f) {
         Matrix3f matrix3f2 = new Matrix3f();
         Quaternion quaternion = Quaternion.IDENTITY.copy();
         Pair<Float, Float> pair3;
@@ -211,14 +211,14 @@ public final class Matrix3f {
         matrix3f.multiply(this);
 
         for(int i = 0; i < 5; ++i) {
-            quaternion2.hamiltonProduct(getTopSolidBlockY57(matrix3f));
+            quaternion2.hamiltonProduct(method_22857(matrix3f));
         }
 
         quaternion2.normalize();
         Matrix3f matrix3f2 = new Matrix3f(this);
         matrix3f2.multiply(new Matrix3f(quaternion2));
         float f = 1.0F;
-        Pair<Float, Float> pair = getTopSolidBlockY48(matrix3f2.a00, matrix3f2.a10);
+        Pair<Float, Float> pair = method_22848(matrix3f2.a00, matrix3f2.a10);
         Float float_ = pair.getFirst();
         Float float2 = pair.getSecond();
         float g = float2 * float2 - float_ * float_;
@@ -235,7 +235,7 @@ public final class Matrix3f {
         matrix3f3.a22 = j;
         f *= j;
         matrix3f3.multiply(matrix3f2);
-        pair = getTopSolidBlockY48(matrix3f3.a00, matrix3f3.a20);
+        pair = method_22848(matrix3f3.a00, matrix3f3.a20);
         float k = -(Float)pair.getFirst();
         Float float3 = pair.getSecond();
         float l = float3 * float3 - k * k;
@@ -252,7 +252,7 @@ public final class Matrix3f {
         matrix3f4.a11 = n;
         f *= n;
         matrix3f4.multiply(matrix3f3);
-        pair = getTopSolidBlockY48(matrix3f4.a11, matrix3f4.a21);
+        pair = method_22848(matrix3f4.a11, matrix3f4.a21);
         Float float4 = pair.getFirst();
         Float float5 = pair.getSecond();
         float o = float5 * float5 - float4 * float4;
