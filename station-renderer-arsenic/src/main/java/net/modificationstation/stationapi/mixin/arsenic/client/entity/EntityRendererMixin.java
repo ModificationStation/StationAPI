@@ -20,7 +20,7 @@ import static net.modificationstation.stationapi.impl.client.arsenic.renderer.re
 @Mixin(EntityRenderer.class)
 class EntityRendererMixin {
     @ModifyVariable(
-            method = "method_2028",
+            method = "renderOnFire",
             at = @At("STORE"),
             index = 10
     )
@@ -36,7 +36,7 @@ class EntityRendererMixin {
     }
 
     @ModifyVariable(
-            method = "method_2028",
+            method = "renderOnFire",
             at = @At("STORE"),
             index = 11
     )
@@ -48,7 +48,7 @@ class EntityRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_2028",
+            method = "renderOnFire",
             constant = {
                     @Constant(
                             floatValue = ATLAS_SIZE,
@@ -81,7 +81,7 @@ class EntityRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_2028",
+            method = "renderOnFire",
             constant = {
                     @Constant(
                             floatValue = ADJUSTED_TEX_SIZE,
@@ -101,7 +101,7 @@ class EntityRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_2028",
+            method = "renderOnFire",
             constant = {
                     @Constant(
                             floatValue = ATLAS_SIZE,
@@ -134,7 +134,7 @@ class EntityRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_2028",
+            method = "renderOnFire",
             constant = {
                     @Constant(
                             floatValue = ADJUSTED_TEX_SIZE,
@@ -154,7 +154,7 @@ class EntityRendererMixin {
     }
 
     @ModifyVariable(
-            method = "method_2028",
+            method = "renderOnFire",
             at = @At(
                     value = "LOAD",
                     ordinal = 2
@@ -169,7 +169,7 @@ class EntityRendererMixin {
     }
 
     @ModifyVariable(
-            method = "method_2028",
+            method = "renderOnFire",
             at = @At(
                     value = "LOAD",
                     ordinal = 2
@@ -184,7 +184,7 @@ class EntityRendererMixin {
     }
 
     @ModifyVariable(
-            method = "method_2028",
+            method = "renderOnFire",
             at = @At(
                     value = "LOAD",
                     ordinal = 4
@@ -199,7 +199,7 @@ class EntityRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_2028",
+            method = "renderOnFire",
             constant = {
                     @Constant(
                             floatValue = ADJUSTED_TEX_SIZE,
@@ -215,7 +215,7 @@ class EntityRendererMixin {
     }
 
     @ModifyVariable(
-            method = "method_2028",
+            method = "renderOnFire",
             at = @At(
                     value = "LOAD",
                     ordinal = 4
@@ -230,7 +230,7 @@ class EntityRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_2028",
+            method = "renderOnFire",
             constant = @Constant(intValue = TEX_SIZE)
     )
     private int stationapi_fire_removeTexture2Offset1(int constant) {
@@ -238,7 +238,7 @@ class EntityRendererMixin {
     }
 
     @ModifyConstant(
-            method = "method_2028",
+            method = "renderOnFire",
             constant = {
                     @Constant(
                             floatValue = ADJUSTED_TEX_SIZE,

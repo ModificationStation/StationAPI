@@ -21,7 +21,7 @@ public class TestPlayerInfEffect extends EntityEffect<TestPlayerInfEffect> {
     @Override
     public void onTick() {
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            entity.world.addParticle("heart", entity.x, entity.y + entity.eyeHeight + 1, entity.z, 0, 0.5, 0);
+            entity.world.addParticle("heart", entity.x, entity.y + entity.standingEyeHeight + 1, entity.z, 0, 0.5, 0);
         }
     }
     

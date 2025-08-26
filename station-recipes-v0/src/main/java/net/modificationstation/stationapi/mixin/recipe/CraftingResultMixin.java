@@ -21,10 +21,10 @@ class CraftingResultMixin {
 
     @Shadow
     @Final
-    private Inventory field_2366;
+    private Inventory input;
 
     @Inject(
-            method = "onCrafted",
+            method = "onTakeItem",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/inventory/Inventory;setStack(ILnet/minecraft/item/ItemStack;)V",
@@ -37,7 +37,7 @@ class CraftingResultMixin {
         StationAPI.EVENT_BUS.post(
                 ItemUsedInCraftingEvent.builder()
                         .player(player)
-                        .craftingMatrix(field_2366)
+                        .craftingMatrix(input)
                         .itemOrdinal(var2)
                         .itemCrafted(arg)
                         .itemUsed(var3)

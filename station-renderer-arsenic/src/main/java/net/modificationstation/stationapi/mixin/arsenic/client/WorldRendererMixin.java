@@ -22,10 +22,10 @@ import java.util.Objects;
 @Mixin(WorldRenderer.class)
 class WorldRendererMixin {
     @Shadow private World world;
-    @Shadow public float field_1803;
+    @Shadow public float miningProgress;
 
     @Redirect(
-            method = "method_1547",
+            method = "renderMiningProgress",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/render/block/BlockRenderManager;renderWithTexture(Lnet/minecraft/block/Block;IIII)V"
@@ -36,6 +36,6 @@ class WorldRendererMixin {
         if (StationRenderAPI.getBakedModelManager().getBlockModels().getModel(state) instanceof VanillaBakedModel)
             instance.renderWithTexture(block, j, k, l, texture);
         else
-            Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer().renderDamage(state, new BlockPos(j, k, l), world, field_1803);
+            Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer()).bakedModelRenderer().renderDamage(state, new BlockPos(j, k, l), world, miningProgress);
     }
 }

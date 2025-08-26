@@ -11,12 +11,12 @@ import java.util.Random;
 
 @Mixin(SaplingBlock.class)
 public abstract class SaplingBlockMixin implements StationBlock {
-    @Shadow public abstract void method_533(World world, int x, int y, int z, Random random);
+    @Shadow public abstract void generate(World world, int x, int y, int z, Random random);
 
     @Override
     public boolean onBonemealUse(World world, int x, int y, int z, BlockState state) {
         if (!world.isRemote) {
-            method_533(world, x, y, z, world.field_214);
+            generate(world, x, y, z, world.random);
         }
         return true;
     }

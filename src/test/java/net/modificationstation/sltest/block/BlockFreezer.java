@@ -6,8 +6,8 @@
 package net.modificationstation.sltest.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +36,7 @@ public class BlockFreezer extends TemplateBlockWithEntity
 
     protected BlockFreezer(Identifier blockID)
     {
-        super(blockID, Material.field_998);
+        super(blockID, Material.SNOW_LAYER);
         FrozenRand = new Random();
     }
 
@@ -74,14 +74,14 @@ public class BlockFreezer extends TemplateBlockWithEntity
         {
             byte0 = 4;
         }
-        world.method_215(i, j, k, byte0);
+        world.setBlockMeta(i, j, k, byte0);
     }
 
     @Override
     public void randomDisplayTick(World world, int i, int j, int k, Random random)
     {
-        TileEntityFreezer tileentity = (TileEntityFreezer)world.method_1777(i, j, k);
-        if(world.isRemote ? tileentity.method_1069() == 1 : tileentity.isBurning())
+        TileEntityFreezer tileentity = (TileEntityFreezer)world.getBlockEntity(i, j, k);
+        if(world.isRemote ? tileentity.getPushedBlockData() == 1 : tileentity.isBurning())
         {
             float f = (float)i + 0.5F;
             float f1 = (float)j + 1.0F + (random.nextFloat() * 6F) / 16F;
@@ -112,7 +112,7 @@ public class BlockFreezer extends TemplateBlockWithEntity
     @Override
     public boolean onUse(World world, int i, int j, int k, PlayerEntity entityplayer)
     {
-        BlockEntity tileentityFreezer = world.method_1777(i, j, k);
+        BlockEntity tileentityFreezer = world.getBlockEntity(i, j, k);
         if (tileentityFreezer instanceof TileEntityFreezer freezer)
             GuiHelper.openGUI(entityplayer, of(NAMESPACE, "freezer"), freezer, new ContainerFreezer(entityplayer.inventory, freezer));
         return true;
@@ -121,9 +121,9 @@ public class BlockFreezer extends TemplateBlockWithEntity
     public static void updateFreezerBlockState(boolean flag, World world, int i, int j, int k)
     {
         int l = world.getBlockMeta(i, j, k);
-        BlockEntity tileentity = world.method_1777(i, j, k);
+        BlockEntity tileentity = world.getBlockEntity(i, j, k);
         world.setBlock(i, j, k, l);
-        world.method_157(i, j, k, tileentity);
+        world.setBlockEntity(i, j, k, tileentity);
     }
 
     @Override
@@ -138,26 +138,26 @@ public class BlockFreezer extends TemplateBlockWithEntity
         int l = MathHelper.floor((double)((entityliving.yaw * 4F) / 360F) + 0.5D) & 3;
         if(l == 0)
         {
-            world.method_215(i, j, k, 2);
+            world.setBlockMeta(i, j, k, 2);
         }
         if(l == 1)
         {
-            world.method_215(i, j, k, 5);
+            world.setBlockMeta(i, j, k, 5);
         }
         if(l == 2)
         {
-            world.method_215(i, j, k, 3);
+            world.setBlockMeta(i, j, k, 3);
         }
         if(l == 3)
         {
-            world.method_215(i, j, k, 4);
+            world.setBlockMeta(i, j, k, 4);
         }
     }
 
     @Override
     public void onBreak(World world, int i, int j, int k)
     {
-        TileEntityFreezer tileentityFreezer = (TileEntityFreezer)world.method_1777(i, j, k);
+        TileEntityFreezer tileentityFreezer = (TileEntityFreezer)world.getBlockEntity(i, j, k);
 label0:
         for(int l = 0; l < tileentityFreezer.size(); l++)
         {
@@ -186,7 +186,7 @@ label0:
                 entityitem.velocityX = (float)FrozenRand.nextGaussian() * f3;
                 entityitem.velocityY = (float)FrozenRand.nextGaussian() * f3 + 0.2F;
                 entityitem.velocityZ = (float)FrozenRand.nextGaussian() * f3;
-                world.method_210(entityitem);
+                world.spawnEntity(entityitem);
             } while(true);
         }
 

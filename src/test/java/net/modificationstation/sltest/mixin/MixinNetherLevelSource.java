@@ -1,10 +1,10 @@
 package net.modificationstation.sltest.mixin;
 
 import net.minecraft.block.Block;
-import net.minecraft.class_209;
-import net.minecraft.class_359;
+import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.chunk.NetherChunkGenerator;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.world.HeightLimitView;
@@ -21,17 +21,17 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.IntStream;
 
-@Mixin(class_359.class)
+@Mixin(NetherChunkGenerator.class)
 public class MixinNetherLevelSource {
-    @Shadow private class_209 field_1347;
-    @Shadow private World field_1350;
+    @Shadow private OctavePerlinNoiseSampler perlinNoise1;
+    @Shadow private World world;
 
     @Unique
     private ForkJoinPool customPool = new ForkJoinPool(8);
 
-    @Inject(method = "method_1806", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
+    @Inject(method = "getChunk", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> info, byte[] blocks, Chunk chunk) {
-        short height = (short) ((HeightLimitView) field_1350).getTopY();
+        short height = (short) ((HeightLimitView) world).getTopY();
         if (height < 129) return;
 
         BlockState netherrack = BlockStateHolder.class.cast(Block.NETHERRACK).getDefaultState();
@@ -108,7 +108,7 @@ public class MixinNetherLevelSource {
 
     @Unique
     private float getNoise(double x, double z) {
-        float noise = (float) field_1347.method_1513(x, z);
+        float noise = (float) perlinNoise1.sample(x, z);
         return (noise + 128) / 256F;
     }
 
@@ -127,6 +127,6 @@ public class MixinNetherLevelSource {
 
     @Unique
     private boolean canApply() {
-        return field_1350.getHeight() != 128;
+        return world.getHeight() != 128;
     }
 }

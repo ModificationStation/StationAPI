@@ -26,10 +26,10 @@ class MinecraftMixin {
     }
 
     @Redirect(
-            method = "method_2122(ZI)V",
+            method = "respawnPlayer(ZI)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/Minecraft;method_2139()V"
+                    target = "Lnet/minecraft/client/Minecraft;changeDimension()V"
             )
     )
     private void stationapi_switchDimension(Minecraft minecraft) {

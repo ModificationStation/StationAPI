@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.flattening.server;
 
-import net.minecraft.class_294;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.storage.RegionWorldStorage;
 import net.modificationstation.stationapi.impl.world.dimension.FlattenedDimensionFile;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,13 +12,13 @@ import java.io.File;
 @Mixin(MinecraftServer.class)
 class MinecraftServerMixin {
     @Redirect(
-            method = "method_2159",
+            method = "loadWorld",
             at = @At(
                     value = "NEW",
-                    target = "(Ljava/io/File;Ljava/lang/String;Z)Lnet/minecraft/class_294;"
+                    target = "(Ljava/io/File;Ljava/lang/String;Z)Lnet/minecraft/world/storage/RegionWorldStorage;"
             )
     )
-    private class_294 stationapi_flatten(File file, String string, boolean bl) {
+    private RegionWorldStorage stationapi_flatten(File file, String string, boolean bl) {
         return new FlattenedDimensionFile(file, string, bl);
     }
 }

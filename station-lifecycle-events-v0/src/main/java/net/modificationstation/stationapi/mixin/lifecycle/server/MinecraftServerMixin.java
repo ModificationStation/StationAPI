@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftServer.class)
 class MinecraftServerMixin {
     @Inject(
-            method = "method_2171",
+            method = "tick",
             at = @At("RETURN")
     )
     private void stationapi_endTick(CallbackInfo ci) {

@@ -36,7 +36,7 @@ class MinecraftMixin {
             method = "init",
             at = @At(
                     value = "NEW",
-                    target = "(Lnet/minecraft/client/Minecraft;Ljava/io/File;)Lnet/minecraft/class_303;"
+                    target = "(Lnet/minecraft/client/Minecraft;Ljava/io/File;)Lnet/minecraft/client/resource/pack/TexturePacks;"
             )
     )
     private void stationapi_location_textureManager(CallbackInfo ci) {
@@ -83,7 +83,7 @@ class MinecraftMixin {
             method = "init",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/texture/TextureManager;method_1092(Ljava/lang/String;)[I",
+                    target = "Lnet/minecraft/client/texture/TextureManager;getColors(Ljava/lang/String;)[I",
                     ordinal = 0
             )
     )
@@ -95,7 +95,7 @@ class MinecraftMixin {
             method = "init",
             at = @At(
                     value = "NEW",
-                    target = "(Lnet/minecraft/client/util/Session;Ljava/io/File;)Lnet/minecraft/class_96;"
+                    target = "(Lnet/minecraft/client/util/Session;Ljava/io/File;)Lnet/minecraft/stat/PlayerStats;"
             )
     )
     private void stationapi_location_stats(CallbackInfo ci) {
@@ -106,7 +106,7 @@ class MinecraftMixin {
             method = "init",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/Minecraft;method_2150()V"
+                    target = "Lnet/minecraft/client/Minecraft;renderLoadingScreen()V"
             )
     )
     private void stationapi_applyReloadsAndWait(CallbackInfo ci) {

@@ -7,7 +7,7 @@ public class MetaBlockItem extends TemplateBlockItem {
     }
 
     @Override
-    public int method_470(int i) {
+    public int getPlacementMetadata(int i) {
         return i;
     }
 }

@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.item.client.network.itemnbt;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.MultiplayerInteractionManager;
+import net.minecraft.client.MultiplayerInteractionManager;
 import net.minecraft.client.network.ClientNetworkHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
@@ -20,8 +20,8 @@ class MultiplayerInteractionManagerMixin {
 
     @WrapOperation(
             method = {
-                    "method_1713",
-                    "method_1712"
+                    "interactBlock",
+                    "interactItem"
             },
             at = @At(
                     value = "NEW",

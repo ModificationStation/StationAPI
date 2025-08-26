@@ -16,24 +16,24 @@ import org.spongepowered.asm.mixin.injection.*;
 
 @Mixin(World.class)
 abstract class WorldMixin implements StationFlatteningWorld {
-    @Shadow public abstract Chunk method_199(int x, int z);
+    @Shadow public abstract Chunk getChunkFromPos(int x, int z);
 
     @Shadow @Final public Dimension dimension;
 
-    @Shadow protected abstract void method_235(int i, int j, int k, int l);
+    @Shadow protected abstract void blockUpdate(int i, int j, int k, int l);
     
     @Shadow public abstract int getBlockId(int x, int y, int z);
     
     @Override
     @Unique
     public BlockState getBlockState(int x, int y, int z) {
-        return method_199(x, z).getBlockState(x & 15, y, z & 15);
+        return getChunkFromPos(x, z).getBlockState(x & 15, y, z & 15);
     }
 
     @Override
     @Unique
     public BlockState setBlockState(int x, int y, int z, BlockState blockState) {
-        return method_199(x, z).setBlockState(x & 15, y, z & 15, blockState);
+        return getChunkFromPos(x, z).setBlockState(x & 15, y, z & 15, blockState);
     }
 
     @Override
@@ -41,7 +41,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     public BlockState setBlockStateWithNotify(int x, int y, int z, BlockState blockState) {
         BlockState oldBlockState = setBlockState(x, y, z, blockState);
         if (oldBlockState != null) {
-            method_235(x, y, z, blockState.getBlock().id);
+            blockUpdate(x, y, z, blockState.getBlock().id);
             return oldBlockState;
         }
         return null;
@@ -50,7 +50,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     @Override
     @Unique
     public BlockState setBlockStateWithMetadata(int x, int y, int z, BlockState blockState, int meta) {
-        return method_199(x, z).setBlockStateWithMetadata(x & 0xF, y, z & 0xF, blockState, meta);
+        return getChunkFromPos(x, z).setBlockStateWithMetadata(x & 0xF, y, z & 0xF, blockState, meta);
     }
 
     @Override
@@ -58,14 +58,14 @@ abstract class WorldMixin implements StationFlatteningWorld {
     public BlockState setBlockStateWithMetadataWithNotify(int x, int y, int z, BlockState blockState, int meta) {
         BlockState oldBlockState = setBlockStateWithMetadata(x, y, z, blockState, meta);
         if (oldBlockState != null) {
-            method_235(x, y, z, blockState.getBlock().id);
+            blockUpdate(x, y, z, blockState.getBlock().id);
             return oldBlockState;
         }
         return null;
     }
 
     @ModifyVariable(
-            method = "method_248",
+            method = "manageChunkUpdatesAndEvents",
             at = @At(
                     value = "STORE",
                     ordinal = 0
@@ -77,7 +77,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     }
 
     @ModifyVariable(
-            method = "method_248",
+            method = "manageChunkUpdatesAndEvents",
             at = @At(
                     value = "STORE",
                     ordinal = 2
@@ -89,7 +89,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     }
 
     @Redirect(
-            method = "method_248()V",
+            method = "manageChunkUpdatesAndEvents()V",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/world/chunk/Chunk;blocks:[B",
@@ -101,7 +101,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     }
 
     @ModifyVariable(
-            method = "method_248",
+            method = "manageChunkUpdatesAndEvents",
             at = @At(
                     value = "STORE",
                     ordinal = 1
@@ -118,19 +118,19 @@ abstract class WorldMixin implements StationFlatteningWorld {
 
     @ModifyConstant(method = {
         "getBlockId",
-        "method_239",
-        "method_155",
-        "method_154",
-        "method_200",
+        "isPosLoaded",
+        "isRegionLoaded(IIIIII)Z",
+        "setBlockWithoutNotifyingNeighbors(IIII)Z",
+        "setBlockWithoutNotifyingNeighbors(IIIII)Z",
         "getBlockMeta",
-        "method_223",
-        "method_257",
-        "method_252",
-        "method_158",
-        "method_164",
-        "method_205",
-        "method_193",
-        "method_248"
+        "setBlockMetaWithoutNotifyingNeighbors",
+        "isTopY",
+        "getBrightness(III)I",
+        "getLightLevel(IIIZ)I",
+        "getBrightness(Lnet/minecraft/world/LightType;III)I",
+        "setLight",
+        "updateEntity(Lnet/minecraft/entity/Entity;Z)V",
+        "manageChunkUpdatesAndEvents"
     }, constant = @Constant(intValue = 128))
     private int stationapi_changeMaxHeight(int value) {
         return getTopY();
@@ -138,40 +138,40 @@ abstract class WorldMixin implements StationFlatteningWorld {
 
     @ModifyConstant(method = {
             "getBlockId",
-            "method_154",
-            "method_200",
+            "setBlockWithoutNotifyingNeighbors(IIII)Z",
+            "setBlockWithoutNotifyingNeighbors(IIIII)Z",
             "getBlockMeta",
-            "method_223",
-            "method_257",
-            "method_252",
-            "method_158",
-            "method_164",
-            "method_205"
+            "setBlockMetaWithoutNotifyingNeighbors",
+            "isTopY",
+            "getBrightness(III)I",
+            "getLightLevel(IIIZ)I",
+            "getBrightness(Lnet/minecraft/world/LightType;III)I",
+            "setLight"
     }, constant = @Constant(expandZeroConditions = Constant.Condition.GREATER_THAN_OR_EQUAL_TO_ZERO))
     private int stationapi_changeBottomYGE(int value) {
         return getBottomY();
     }
 
     @ModifyConstant(method = {
-            "method_239",
-            "method_155",
-            "method_248",
-            "method_162"
+            "isPosLoaded",
+            "isRegionLoaded(IIIIII)Z",
+            "manageChunkUpdatesAndEvents",
+            "raycast(Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Vec3d;ZZ)Lnet/minecraft/util/hit/HitResult;"
     }, constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_ZERO))
     private int stationapi_changeBottomYLT(int value) {
         return getBottomY();
     }
 
     @ModifyConstant(method = {
-            "method_228"
+            "getTopSolidBlockY"
     }, constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_OR_EQUAL_TO_ZERO))
     private int stationapi_changeBottomYLE(int value) {
         return getBottomY();
     }
 
     @ModifyConstant(method = {
-            "method_193",
-            "method_164"
+            "updateEntity(Lnet/minecraft/entity/Entity;Z)V",
+            "getBrightness(Lnet/minecraft/world/LightType;III)I"
     }, constant = @Constant(intValue = 0, ordinal = 0))
     private int stationapi_changeBottomYFirst(int value) {
         return getBottomY();
@@ -186,11 +186,11 @@ abstract class WorldMixin implements StationFlatteningWorld {
 
     @ModifyConstant(
             method = {
-                    "method_252",
-                    "method_158",
-                    "method_164",
-                    "method_228",
-                    "method_248"
+                    "getBrightness(III)I",
+                    "getLightLevel(IIIZ)I",
+                    "getBrightness(Lnet/minecraft/world/LightType;III)I",
+                    "getTopSolidBlockY",
+                    "manageChunkUpdatesAndEvents"
             },
             constant = @Constant(intValue = 127)
     )
@@ -199,7 +199,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     }
 
     @ModifyConstant(method = {
-        "method_162"
+        "raycast(Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Vec3d;ZZ)Lnet/minecraft/util/hit/HitResult;"
     }, constant = @Constant(intValue = 200))
     private int stationapi_changeMaxEntityCalcHeight(int value) {
         return getTopY() + 64;
@@ -217,7 +217,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     }
 
     @ModifyVariable(
-            method = "method_156",
+            method = "canPlace",
             index = 8,
             at = @At(
                     value = "LOAD",
@@ -229,7 +229,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
     }
 
     @ModifyVariable(
-            method = "method_165",
+            method = "updateLight",
             at = @At(
                     value = "STORE",
                     ordinal = 1
@@ -241,7 +241,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
         return Math.max(getBlockState(x, y, z).getLuminance(), light);
     }
     
-    /*@Inject(method = "method_152", at = @At("HEAD"), cancellable = true)
+    /*@Inject(method = "getSpawnBlockId", at = @At("HEAD"), cancellable = true)
     private void fixHeightSearch(int x, int z, CallbackInfoReturnable<Integer> info) {
         int top = getTopY() - 1;
         int id = this.getBlockId(x, 63, z);

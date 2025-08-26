@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemRenderer.class)
 class ItemRendererMixin {
     @Inject(
-            method = "method_1488",
+            method = "renderGuiItemDecoration",
             at = @At(value = "RETURN")
     )
     private void stationapi_fancyItemOverlays(TextRenderer arg, TextureManager arg1, ItemStack item, int i, int j, CallbackInfo ci) {

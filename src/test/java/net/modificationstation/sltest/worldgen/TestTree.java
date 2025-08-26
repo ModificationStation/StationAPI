@@ -43,7 +43,7 @@ public class TestTree extends Feature {
 
         for (int i = 0; i < height; ++i) {
             BlockState state = level.getBlockState(x, y + i, z);
-            if (!state.isAir() && !state.getMaterial().method_896() && state.isOf(Block.LEAVES)) continue;
+            if (!state.isAir() && !state.getMaterial().isReplaceable() && state.isOf(Block.LEAVES)) continue;
             level.setBlockState(x, y + i, z, log);
         }
 

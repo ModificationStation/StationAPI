@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.entity.client;
 
-import net.minecraft.class_454;
 import net.minecraft.client.network.ClientNetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.world.ClientWorld;
 import net.modificationstation.stationapi.api.client.entity.factory.EntityWorldAndPosFactory;
 import net.modificationstation.stationapi.api.client.registry.EntityHandlerRegistry;
 import org.objectweb.asm.Opcodes;
@@ -21,7 +21,7 @@ import static net.modificationstation.stationapi.api.util.Identifier.of;
 @Mixin(ClientNetworkHandler.class)
 class ClientNetworkHandlerMixin {
     @Shadow
-    private class_454 field_1973;
+    private ClientWorld world;
     @Unique
     private double
             capturedX,
@@ -56,7 +56,7 @@ class ClientNetworkHandlerMixin {
     private Entity stationapi_onEntitySpawn(Entity entity, EntitySpawnS2CPacket packet) {
         EntityWorldAndPosFactory entityHandler = EntityHandlerRegistry.INSTANCE.get(of(String.valueOf(packet.entityType)));
         if (entityHandler != null)
-            entity = entityHandler.create(field_1973, capturedX, capturedY, capturedZ);
+            entity = entityHandler.create(world, capturedX, capturedY, capturedZ);
         return entity;
     }
 }

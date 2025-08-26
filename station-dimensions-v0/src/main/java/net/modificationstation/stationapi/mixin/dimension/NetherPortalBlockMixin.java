@@ -16,7 +16,7 @@ class NetherPortalBlockMixin implements TeleportationManager {
             method = "onEntityCollision",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/Entity;method_1388()V"
+                    target = "Lnet/minecraft/entity/Entity;tickPortalCooldown()V"
             )
     )
     private void stationapi_onEntityCollision(World world, int x, int y, int z, Entity entityBase, CallbackInfo ci) {

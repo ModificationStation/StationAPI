@@ -13,7 +13,7 @@ class StatsMixin {
             method = "initializeItemStats",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/stat/Stats;method_752([Lnet/minecraft/stat/Stat;Ljava/lang/String;III)[Lnet/minecraft/stat/Stat;"
+                    target = "Lnet/minecraft/stat/Stats;initItemsUsedStats([Lnet/minecraft/stat/Stat;Ljava/lang/String;III)[Lnet/minecraft/stat/Stat;"
             )
     )
     private static Stat[] stationapi_stop1(Stat[] statArray, String translationKey, int startId, int statAmount, int arrayLength) {
@@ -35,7 +35,7 @@ class StatsMixin {
             method = "initializeExtendedItemStats",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/stat/Stats;method_752([Lnet/minecraft/stat/Stat;Ljava/lang/String;III)[Lnet/minecraft/stat/Stat;"
+                    target = "Lnet/minecraft/stat/Stats;initItemsUsedStats([Lnet/minecraft/stat/Stat;Ljava/lang/String;III)[Lnet/minecraft/stat/Stat;"
             )
     )
     private static Stat[] stationapi_stop3(Stat[] statArray, String translationKey, int startId, int statAmount, int arrayLength) {

@@ -5,11 +5,11 @@
 
 package net.modificationstation.sltest.inventory;
 
-import net.minecraft.class_633;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.screen.slot.FurnaceOutputSlot;
 import net.minecraft.screen.slot.Slot;
 import net.modificationstation.sltest.tileentity.TileEntityFreezer;
@@ -47,24 +47,24 @@ public class ContainerFreezer extends ScreenHandler
     }
 
     @Override
-    protected void method_2081(ItemStack itemstack1, int k, int l, boolean flag1)
+    protected void insertItem(ItemStack itemstack1, int k, int l, boolean flag1)
     {
     }
 
     @Override
-    public void method_2075()
+    public void sendContentUpdates()
     {
-        super.method_2075();
+        super.sendContentUpdates();
         for (Object o : listeners) {
-            class_633 icrafting = (class_633) o;
+            ScreenHandlerListener icrafting = (ScreenHandlerListener) o;
             if (cookTime != freezer.frozenTimeForItem) {
-                icrafting.method_2099(this, 0, freezer.frozenTimeForItem);
+                icrafting.onPropertyUpdate(this, 0, freezer.frozenTimeForItem);
             }
             if (burnTime != freezer.frozenProgress) {
-                icrafting.method_2099(this, 1, freezer.frozenProgress);
+                icrafting.onPropertyUpdate(this, 1, freezer.frozenProgress);
             }
             if (itemBurnTime != freezer.frozenPowerRemaining) {
-                icrafting.method_2099(this, 2, freezer.frozenPowerRemaining);
+                icrafting.onPropertyUpdate(this, 2, freezer.frozenPowerRemaining);
             }
         }
 
@@ -74,7 +74,7 @@ public class ContainerFreezer extends ScreenHandler
     }
 
     @Override
-    public void method_2077(int i, int j)
+    public void setProperty(int i, int j)
     {
         if(i == 0)
         {
@@ -97,7 +97,7 @@ public class ContainerFreezer extends ScreenHandler
     }
 
     @Override
-    public ItemStack getStackInSlot(int i)
+    public ItemStack quickMove(int i)
     {
         ItemStack itemstack = null;
         Slot slot = (Slot)slots.get(i);
@@ -107,18 +107,18 @@ public class ContainerFreezer extends ScreenHandler
             itemstack = itemstack1.copy();
             if(i == 2)
             {
-                method_2081(itemstack1, 3, 39, true);
+                insertItem(itemstack1, 3, 39, true);
             } else
             if(i >= 3 && i < 30)
             {
-                method_2081(itemstack1, 30, 39, false);
+                insertItem(itemstack1, 30, 39, false);
             } else
             if(i >= 30 && i < 39)
             {
-                method_2081(itemstack1, 3, 30, false);
+                insertItem(itemstack1, 3, 30, false);
             } else
             {
-                method_2081(itemstack1, 3, 39, false);
+                insertItem(itemstack1, 3, 39, false);
             }
             if(itemstack1.count == 0)
             {
@@ -129,7 +129,7 @@ public class ContainerFreezer extends ScreenHandler
             }
             if(itemstack1.count != itemstack.count)
             {
-                slot.onCrafted(itemstack1);
+                slot.onTakeItem(itemstack1);
             } else
             {
                 return null;
@@ -139,11 +139,11 @@ public class ContainerFreezer extends ScreenHandler
     }
 
     @Override
-    public void addListener(class_633 crafting) {
+    public void addListener(ScreenHandlerListener crafting) {
         super.addListener(crafting);
-        crafting.method_2099(this, 0, freezer.frozenTimeForItem);
-        crafting.method_2099(this, 1, freezer.frozenProgress);
-        crafting.method_2099(this, 2, freezer.frozenPowerRemaining);
+        crafting.onPropertyUpdate(this, 0, freezer.frozenTimeForItem);
+        crafting.onPropertyUpdate(this, 1, freezer.frozenProgress);
+        crafting.onPropertyUpdate(this, 2, freezer.frozenPowerRemaining);
     }
 
     private TileEntityFreezer freezer;

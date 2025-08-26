@@ -42,7 +42,7 @@ public final class ArsenicItemRenderer {
     }
 
     public void render(ItemEntity item, double x, double y, double z, float rotation, float delta) {
-        itemRendererAccessor.getField_1709().setSeed(187L);
+        itemRendererAccessor.getRandom().setSeed(187L);
         ItemStack var10 = item.stack;
         float var11 = MathHelper.sin(((float)item.itemAge + delta) / 10.0F + item.initialRotationAngle) * 0.1F + 0.1F;
         float var12 = (((float)item.itemAge + delta) / 20.0F + item.initialRotationAngle) * (180F / (float)Math.PI);
@@ -79,13 +79,13 @@ public final class ArsenicItemRenderer {
             for (int var29 = 0; var29 < renderedAmount; ++var29) {
                 glPushMatrix();
                 if (var29 > 0) {
-                    float var30 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
-                    float var31 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
-                    float var32 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
+                    float var30 = (itemRendererAccessor.getRandom().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
+                    float var31 = (itemRendererAccessor.getRandom().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
+                    float var32 = (itemRendererAccessor.getRandom().nextFloat() * 2.0F - 1.0F) * 0.2F / var28;
                     glTranslatef(var30, var31, var32);
                 }
 
-                itemRendererAccessor.getField_1708().render(block, var10.getDamage(), item.method_1394(delta));
+                itemRendererAccessor.getBlockRenderer().render(block, var10.getDamage(), item.getBrightnessAtEyes(delta));
                 glPopMatrix();
             }
         } else {
@@ -98,25 +98,25 @@ public final class ArsenicItemRenderer {
             float var20 = 1.0F;
             float var21 = 0.5F;
             float var22 = 0.25F;
-            if (itemRenderer.field_1707) {
-                int var23 = Item.ITEMS[var10.itemId].method_440(var10.getDamage());
+            if (itemRenderer.useCustomDisplayColor) {
+                int var23 = Item.ITEMS[var10.itemId].getColorMultiplier(var10.getDamage());
                 float var24 = (float) ((var23 >> 16) & 255) / 255.0F;
                 float var25 = (float) ((var23 >> 8) & 255) / 255.0F;
                 float var26 = (float) (var23 & 255) / 255.0F;
-                float var27 = item.method_1394(delta);
+                float var27 = item.getBrightnessAtEyes(delta);
                 glColor4f(var24 * var27, var25 * var27, var26 * var27, 1.0F);
             }
 
             for (int var33 = 0; var33 < renderedAmount; ++var33) {
                 glPushMatrix();
                 if (var33 > 0) {
-                    float var34 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.3F;
-                    float var35 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.3F;
-                    float var36 = (itemRendererAccessor.getField_1709().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var34 = (itemRendererAccessor.getRandom().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var35 = (itemRendererAccessor.getRandom().nextFloat() * 2.0F - 1.0F) * 0.3F;
+                    float var36 = (itemRendererAccessor.getRandom().nextFloat() * 2.0F - 1.0F) * 0.3F;
                     glTranslatef(var34, var35, var36);
                 }
 
-                glRotatef(180.0F - entityRendererAccessor.getDispatcher().field_2497, 0.0F, 1.0F, 0.0F);
+                glRotatef(180.0F - entityRendererAccessor.getDispatcher().yaw, 0.0F, 1.0F, 0.0F);
                 var15.startQuads();
                 var15.normal(0.0F, 1.0F, 0.0F);
                 var15.vertex(0.0F - var21, 0.0F - var22, 0.0D, texture.getMinU(), texture.getMaxV());
@@ -144,16 +144,16 @@ public final class ArsenicItemRenderer {
             glPushMatrix();
             if (var29 > 0)
                 glTranslatef(
-                        (itemRendererAccessor.getField_1709().nextFloat() * 2 - 1) * .2F,
-                        (itemRendererAccessor.getField_1709().nextFloat() * 2 - 1) * .2F,
-                        (itemRendererAccessor.getField_1709().nextFloat() * 2 - 1) * .2F
+                        (itemRendererAccessor.getRandom().nextFloat() * 2 - 1) * .2F,
+                        (itemRendererAccessor.getRandom().nextFloat() * 2 - 1) * .2F,
+                        (itemRendererAccessor.getRandom().nextFloat() * 2 - 1) * .2F
                 );
 
             if (!sideLit)
-                glRotatef(180 - entityRendererAccessor.getDispatcher().field_2497, 0, 1, 0);
+                glRotatef(180 - entityRendererAccessor.getDispatcher().yaw, 0, 1, 0);
 
             tessellator.startQuads();
-            RendererHolder.RENDERER.renderItem(var10, ModelTransformation.Mode.GROUND, item.method_1394(delta), model);
+            RendererHolder.RENDERER.renderItem(var10, ModelTransformation.Mode.GROUND, item.getBrightnessAtEyes(delta), model);
             tessellator.draw();
             glPopMatrix();
         }
@@ -191,29 +191,29 @@ public final class ArsenicItemRenderer {
             glScalef(1.0F, 1.0F, -1.0F);
             glRotatef(210.0F, 1.0F, 0.0F, 0.0F);
             glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
-            int var15 = item.method_440(damage);
+            int var15 = item.getColorMultiplier(damage);
             float var16 = (float)((var15 >> 16) & 255) / 255.0F;
             float var12 = (float)((var15 >> 8) & 255) / 255.0F;
             float var13 = (float)(var15 & 255) / 255.0F;
-            if (itemRenderer.field_1707) {
+            if (itemRenderer.useCustomDisplayColor) {
                 glColor4f(var16, var12, var13, 1.0F);
             }
 
             glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-            itemRendererAccessor.getField_1708().inventoryColorEnabled = itemRenderer.field_1707;
-            itemRendererAccessor.getField_1708().render(block, damage, 1.0F);
-            itemRendererAccessor.getField_1708().inventoryColorEnabled = true;
+            itemRendererAccessor.getBlockRenderer().inventoryColorEnabled = itemRenderer.useCustomDisplayColor;
+            itemRendererAccessor.getBlockRenderer().render(block, damage, 1.0F);
+            itemRendererAccessor.getBlockRenderer().inventoryColorEnabled = true;
             glPopMatrix();
         } else if (texture >= 0) {
             glDisable(GL_LIGHTING);
             atlas.bindTexture();
             Sprite sprite = atlas.getSprite(((CustomAtlasProvider) item).getAtlas().getTexture(texture).getId());
 
-            int var8 = item.method_440(damage);
+            int var8 = item.getColorMultiplier(damage);
             float var9 = (float)((var8 >> 16) & 255) / 255.0F;
             float var10 = (float)((var8 >> 8) & 255) / 255.0F;
             float var11 = (float)(var8 & 255) / 255.0F;
-            if (itemRenderer.field_1707) {
+            if (itemRenderer.useCustomDisplayColor) {
                 glColor4f(var9, var10, var11, 1.0F);
             }
 

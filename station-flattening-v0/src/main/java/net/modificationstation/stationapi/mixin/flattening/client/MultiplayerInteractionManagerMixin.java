@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
-import net.minecraft.MultiplayerInteractionManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.InteractionManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.MultiplayerInteractionManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,8 +18,8 @@ class MultiplayerInteractionManagerMixin extends InteractionManager {
 
     @Redirect(
             method = {
-                    "method_1707(IIII)V",
-                    "method_1721(IIII)V"
+                    "attackBlock(IIII)V",
+                    "processBlockBreakingAction(IIII)V"
             },
             at = @At(
                     value = "INVOKE",

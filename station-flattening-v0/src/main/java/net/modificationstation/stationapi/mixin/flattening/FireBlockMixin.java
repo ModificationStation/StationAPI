@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FireBlock.class)
 class FireBlockMixin {
-    @Shadow private int[] field_2307;
+    @Shadow private int[] burnChances;
 
-    @Shadow private int[] field_2308;
+    @Shadow private int[] spreadChances;
 
     @ModifyConstant(
             method = "<init>",
@@ -32,7 +32,7 @@ class FireBlockMixin {
     )
     private void stationapi_setupTrackers(int j, int par2, CallbackInfo ci) {
         BlockRegistry registry = BlockRegistry.INSTANCE;
-        IntArrayTracker.register(registry, () -> field_2307, array -> field_2307 = array);
-        IntArrayTracker.register(registry, () -> field_2308, array -> field_2308 = array);
+        IntArrayTracker.register(registry, () -> burnChances, array -> burnChances = array);
+        IntArrayTracker.register(registry, () -> spreadChances, array -> spreadChances = array);
     }
 }

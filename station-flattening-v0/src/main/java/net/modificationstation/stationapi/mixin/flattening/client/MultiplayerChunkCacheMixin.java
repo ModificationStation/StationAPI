@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.class_455;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.chunk.MultiplayerChunkCache;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -17,24 +17,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
-@Mixin(class_455.class)
+@Mixin(MultiplayerChunkCache.class)
 class MultiplayerChunkCacheMixin {
-    @Shadow private Map<ChunkPos, Chunk> field_2553;
+    @Shadow private Map<ChunkPos, Chunk> chunksByPos;
 
-    @Shadow private World field_2555;
+    @Shadow private World world;
 
     @Inject(
-            method = "method_1807",
+            method = "loadChunk",
             at = @At("HEAD"),
             cancellable = true
     )
     public void stationapi_loadChunk(int i, int j, CallbackInfoReturnable<Chunk> cir) {
-        if (!((StationClientWorld) field_2555).stationAPI$isModded())
+        if (!((StationClientWorld) world).stationAPI$isModded())
             return;
         ChunkPos vec2i = new ChunkPos(i, j);
-        FlattenedChunk chunk = new FlattenedChunk(this.field_2555, i, j);
-        this.field_2553.put(vec2i, chunk);
-        chunk.field_955 = true;
+        FlattenedChunk chunk = new FlattenedChunk(this.world, i, j);
+        this.chunksByPos.put(vec2i, chunk);
+        chunk.loaded = true;
         cir.setReturnValue(chunk);
     }
 }

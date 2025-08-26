@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.api.template.item;
 
 import lombok.Getter;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.DoorItem;
 import net.modificationstation.stationapi.api.template.block.TemplateDoorBlock;
 import net.modificationstation.stationapi.api.util.Identifier;

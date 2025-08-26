@@ -75,7 +75,7 @@ public class MixinWorldRenderer {
             float l = (float) ((light.x + light.y + light.z) / 3);
             var21.colour(l, l, l);*/
 
-            float light = world.dimension.field_2178[15 - world.field_202];
+            float light = world.dimension.lightLevelToLuminance[15 - world.ambientDarkness];
             var21.color(light, light, light);
 
             if (var22 == 2) {

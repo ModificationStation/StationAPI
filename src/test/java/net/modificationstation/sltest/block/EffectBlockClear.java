@@ -1,10 +1,9 @@
 package net.modificationstation.sltest.block;
 
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.modificationstation.sltest.SLTest;
 import net.modificationstation.stationapi.api.template.block.TemplateBlock;
 import net.modificationstation.stationapi.api.util.Identifier;
 

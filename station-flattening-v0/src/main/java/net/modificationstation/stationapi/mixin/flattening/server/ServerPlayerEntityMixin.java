@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ServerPlayerEntity.class)
 class ServerPlayerEntityMixin {
     @Redirect(
-            method = "method_313",
+            method = "playerTick",
             at = @At(
                     value = "NEW",
                     target = "(IIIIIILnet/minecraft/world/World;)Lnet/minecraft/network/packet/s2c/play/ChunkDataS2CPacket;"

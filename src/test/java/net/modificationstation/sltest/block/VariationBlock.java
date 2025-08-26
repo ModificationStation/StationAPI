@@ -1,7 +1,7 @@
 package net.modificationstation.sltest.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.modificationstation.sltest.item.ItemListener;

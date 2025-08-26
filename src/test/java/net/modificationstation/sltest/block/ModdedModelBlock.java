@@ -9,7 +9,7 @@ import net.modificationstation.stationapi.api.util.math.Direction;
 import static net.modificationstation.stationapi.api.state.property.Properties.HORIZONTAL_FACING;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;

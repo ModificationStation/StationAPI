@@ -5,8 +5,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.minecraft.class_266;
 import net.minecraft.client.option.GameOptions;
+import net.minecraft.client.sound.SoundEntry;
 import net.minecraft.client.sound.SoundManager;
 import net.modificationstation.stationapi.api.client.sound.CustomSoundMap;
 import net.modificationstation.stationapi.api.resource.RecursiveReader;
@@ -26,15 +26,15 @@ import java.nio.file.Paths;
 // TODO: look into refactoring this, although not necessary.
 @Mixin(SoundManager.class)
 class SoundManagerMixin {
-    @Shadow private class_266 field_2668;
+    @Shadow private SoundEntry sounds;
 
-    @Shadow private class_266 field_2669;
+    @Shadow private SoundEntry streamingSounds;
 
-    @Shadow private class_266 field_2670;
+    @Shadow private SoundEntry music;
 
     @Unique
     @Environment(EnvType.CLIENT)
-    private static void stationapi_loadModAudio(class_266 array, String channel) {
+    private static void stationapi_loadModAudio(SoundEntry array, String channel) {
         try {
             for (ModContainer modContainer : FabricLoader.getInstance().getAllMods()) {
                 ModMetadata stationMod = modContainer.getMetadata();
@@ -54,12 +54,12 @@ class SoundManagerMixin {
 
     @Environment(EnvType.CLIENT)
     @Inject(
-            method = "method_2012",
+            method = "loadSounds",
             at = @At("TAIL")
     )
     private void stationapi_loadModAudio(GameOptions paramkv, CallbackInfo ci) {
-        stationapi_loadModAudio(this.field_2668, "sound");
-        stationapi_loadModAudio(this.field_2669, "streaming");
-        stationapi_loadModAudio(this.field_2670, "music");
+        stationapi_loadModAudio(this.sounds, "sound");
+        stationapi_loadModAudio(this.streamingSounds, "streaming");
+        stationapi_loadModAudio(this.music, "music");
     }
 }

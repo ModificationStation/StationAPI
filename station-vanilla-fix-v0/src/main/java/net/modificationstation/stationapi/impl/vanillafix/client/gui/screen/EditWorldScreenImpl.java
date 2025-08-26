@@ -43,16 +43,16 @@ public final class EditWorldScreenImpl {
         event.contexts.add(screen -> new ButtonWidgetDetachedContext(
                 id -> {
                     ButtonWidget button = new ButtonWidget(id, 0, 0, I18n.getTranslation(CONVERT_TO_MCREGION_KEY));
-                    button.active = NbtHelper.getDataVersions(((FlattenedWorldStorage) ((ScreenAccessor) screen).getMinecraft().method_2127()).getWorldTag(screen.worldData.method_1956())).contains(NAMESPACE.toString());
+                    button.active = NbtHelper.getDataVersions(((FlattenedWorldStorage) ((ScreenAccessor) screen).getMinecraft().getWorldStorageSource()).getWorldTag(screen.worldData.getSaveName())).contains(NAMESPACE.toString());
                     return button;
                 },
                 button -> ((ScreenAccessor) screen).getMinecraft().setScreen(new WarningScreen(screen, () -> {
                     Minecraft mc = ((ScreenAccessor) screen).getMinecraft();
                     mc.setScreen(null);
-                    FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.method_2127();
-                    mc.field_2817.method_1491("Converting World to " + worldStorage.getPreviousWorldFormat());
-                    mc.field_2817.method_1796("This may take a while :)");
-                    worldStorage.convertWorld(screen.worldData.method_1956(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(NAMESPACE.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.field_2817);
+                    FlattenedWorldStorage worldStorage = (FlattenedWorldStorage) mc.getWorldStorageSource();
+                    mc.progressRenderer.progressStart("Converting World to " + worldStorage.getPreviousWorldFormat());
+                    mc.progressRenderer.progressStage("This may take a while :)");
+                    worldStorage.convertWorld(screen.worldData.getSaveName(), (type, compound) -> (NbtCompound) VanillaDataFixerImpl.DATA_DAMAGER.get().update(type, new Dynamic<>(NbtOps.INSTANCE, compound).remove(DataFixers.DATA_VERSIONS), VanillaDataFixerImpl.HIGHEST_VERSION - NbtHelper.getDataVersions(compound).getInt(NAMESPACE.toString()), VanillaDataFixerImpl.VANILLA_VERSION).getValue(), mc.progressRenderer);
                     mc.setScreen(screen);
                 }, WorldConversionWarning.TO_MCREGION_EXPLANATION_KEY, WorldConversionWarning.CONVERT_KEY))
         ));

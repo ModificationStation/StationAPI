@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.item.client;
 
-import net.minecraft.class_555;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.util.hit.HitResultType;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.event.entity.player.PlayerEvent;
@@ -10,19 +10,19 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(class_555.class)
+@Mixin(GameRenderer.class)
 class GameRendererMixin {
     @Shadow
-    private Minecraft field_2349;
+    private Minecraft client;
 
     @ModifyConstant(
-            method = "method_1838(F)V",
+            method = "updateTargetedEntity(F)V",
             constant = @Constant(doubleValue = 3)
     )
     private double stationapi_getEntityReach(double originalReach) {
         return StationAPI.EVENT_BUS.post(
                 PlayerEvent.Reach.builder()
-                        .player(field_2349.player)
+                        .player(client.player)
                         .type(HitResultType.ENTITY)
                         .currentReach(originalReach)
                         .build()

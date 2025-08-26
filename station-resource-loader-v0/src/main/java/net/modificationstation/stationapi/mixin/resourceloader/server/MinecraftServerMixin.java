@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(MinecraftServer.class)
 class MinecraftServerMixin {
     @Inject(
-            method = "method_2166",
+            method = "init",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/util/logging/Logger;info(Ljava/lang/String;)V",

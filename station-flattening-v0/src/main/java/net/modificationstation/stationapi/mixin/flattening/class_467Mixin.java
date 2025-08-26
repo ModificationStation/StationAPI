@@ -1,18 +1,18 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.class_467;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.PortalForcer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(class_467.class)
+@Mixin(PortalForcer.class)
 class class_467Mixin {
     @ModifyConstant(
             method = {
-                    "method_1531",
-                    "method_1532"
+                    "teleportToValidPortal",
+                    "createPortal"
             },
             constant = @Constant(intValue = 127)
     )
@@ -22,8 +22,8 @@ class class_467Mixin {
 
     @ModifyConstant(
             method = {
-                    "method_1531",
-                    "method_1532"
+                    "teleportToValidPortal",
+                    "createPortal"
             },
             constant = @Constant(
                     expandZeroConditions = Constant.Condition.LESS_THAN_ZERO,
@@ -35,7 +35,7 @@ class class_467Mixin {
     }
 
     @ModifyConstant(
-            method = "method_1532",
+            method = "createPortal",
             constant = @Constant(
                     expandZeroConditions = Constant.Condition.LESS_THAN_ZERO,
                     ordinal = 3
@@ -46,7 +46,7 @@ class class_467Mixin {
     }
 
     @ModifyConstant(
-            method = "method_1532",
+            method = "createPortal",
             constant = @Constant(intValue = 70)
     )
     private int stationapi_changeNearMidY(int constant, World world, Entity entity) {
@@ -55,7 +55,7 @@ class class_467Mixin {
     }
 
     @ModifyConstant(
-            method = "method_1532",
+            method = "createPortal",
             constant = @Constant(intValue = 118)
     )
     private int stationapi_changeNearTopY(int constant, World world, Entity entity) {

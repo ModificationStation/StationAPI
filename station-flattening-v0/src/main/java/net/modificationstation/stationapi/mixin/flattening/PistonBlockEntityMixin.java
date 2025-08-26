@@ -1,6 +1,6 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
-import net.minecraft.class_283;
+import net.minecraft.block.entity.PistonBlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(class_283.class)
+@Mixin(PistonBlockEntity.class)
 class PistonBlockEntityMixin implements StationFlatteningPistonBlockEntity, StationFlatteningPistonBlockEntityImpl {
     @Unique
     private BlockState stationapi_pushedBlockState;
@@ -33,12 +33,12 @@ class PistonBlockEntityMixin implements StationFlatteningPistonBlockEntity, Stat
 
     @Redirect(
             method = {
-                    "method_1523",
-                    "method_1076"
+                    "finish",
+                    "tick"
             },
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/World;method_201(IIIII)Z"
+                    target = "Lnet/minecraft/world/World;setBlock(IIIII)Z"
             )
     )
     private boolean stationapi_setPushedBlockState(World world, int x, int y, int z, int blockId, int blockMeta) {

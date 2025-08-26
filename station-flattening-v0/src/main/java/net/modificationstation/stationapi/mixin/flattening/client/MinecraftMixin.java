@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.flattening.client;
 
-import net.minecraft.class_157;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.storage.RegionWorldStorageSource;
 import net.modificationstation.stationapi.impl.world.storage.FlattenedWorldStorage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,10 +15,10 @@ class MinecraftMixin {
             method = "init",
             at = @At(
                     value = "NEW",
-                    target = "(Ljava/io/File;)Lnet/minecraft/class_157;"
+                    target = "(Ljava/io/File;)Lnet/minecraft/world/storage/RegionWorldStorageSource;"
             )
     )
-    private class_157 stationapi_injectCustomWorldStorage(File saves) {
+    private RegionWorldStorageSource stationapi_injectCustomWorldStorage(File saves) {
         return new FlattenedWorldStorage(saves);
     }
 }

@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.gui.client;
 
-import net.minecraft.class_591;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.SelectWorldScreen;
+import net.minecraft.world.storage.WorldSaveInfo;
 import net.modificationstation.stationapi.api.client.gui.screen.EditWorldScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,11 +17,11 @@ import static net.modificationstation.stationapi.api.client.gui.screen.EditWorld
 
 @Mixin(SelectWorldScreen.class)
 class SelectWorldScreenMixin extends Screen {
-    @Shadow private List<class_591> field_2436;
-    @Shadow private int field_2435;
+    @Shadow private List<WorldSaveInfo> saves;
+    @Shadow private int selectedWorldId;
 
     @ModifyConstant(
-            method = "method_1896",
+            method = "addButton",
             constant = @Constant(stringValue = "selectWorld.rename")
     )
     private String stationapi_replaceRenameWithEdit(String constant) {
@@ -38,6 +38,6 @@ class SelectWorldScreenMixin extends Screen {
             index = 0
     )
     private Screen stationapi_openEditWorld(Screen arg) {
-        return new EditWorldScreen(this, field_2436.get(field_2435));
+        return new EditWorldScreen(this, saves.get(selectedWorldId));
     }
 }

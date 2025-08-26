@@ -39,9 +39,9 @@ public class PalettedPermutationsAtlasSource implements AtlasSource {
 
     @Override
     public void load(ResourceManager resourceManager, AtlasSource.SpriteRegions regions) {
-        Supplier<int[]> supplier = Suppliers.memoize(() -> PalettedPermutationsAtlasSource.method_48486(resourceManager, this.paletteKey));
+        Supplier<int[]> supplier = Suppliers.memoize(() -> PalettedPermutationsAtlasSource.open(resourceManager, this.paletteKey));
         Map<String, Supplier<IntUnaryOperator>> map = new HashMap<>();
-        this.permutations.forEach((string, identifier) -> map.put(string, Suppliers.memoize(() -> PalettedPermutationsAtlasSource.method_48492(supplier.get(), PalettedPermutationsAtlasSource.method_48486(resourceManager, identifier)))));
+        this.permutations.forEach((string, identifier) -> map.put(string, Suppliers.memoize(() -> PalettedPermutationsAtlasSource.toMapper(supplier.get(), PalettedPermutationsAtlasSource.open(resourceManager, identifier)))));
         for (Identifier identifier2 : this.textures) {
             Identifier identifier22 = RESOURCE_FINDER.toResourcePath(identifier2);
             Optional<Resource> optional = resourceManager.getResource(identifier22);
@@ -57,7 +57,7 @@ public class PalettedPermutationsAtlasSource implements AtlasSource {
         }
     }
 
-    private static IntUnaryOperator method_48492(int[] is, int[] js) {
+    private static IntUnaryOperator toMapper(int[] is, int[] js) {
         if (js.length != is.length) {
             LOGGER.warn("Palette mapping has different sizes: {} and {}", is.length, js.length);
             throw new IllegalArgumentException();
@@ -78,7 +78,7 @@ public class PalettedPermutationsAtlasSource implements AtlasSource {
         };
     }
 
-    public static int[] method_48486(ResourceManager resourceManager, Identifier identifier) {
+    public static int[] open(ResourceManager resourceManager, Identifier identifier) {
         Optional<Resource> optional = resourceManager.getResource(RESOURCE_FINDER.toResourcePath(identifier));
         if (optional.isEmpty()) {
             LOGGER.error("Failed to load palette image {}", identifier);

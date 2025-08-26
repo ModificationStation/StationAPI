@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.arsenic.client.gui;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.client.gui.screen.AchievementsScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.achievement.AchievementsScreen;
 import net.minecraft.client.render.Tessellator;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlases;
@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(AchievementsScreen.class)
 class AchievementsScreenMixin extends Screen {
     @Redirect(
-            method = "method_1998",
+            method = "renderIcons",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screen/achievement/AchievementsScreen;drawTexture(IIIIII)V",
+                    target = "Lnet/minecraft/client/gui/screen/AchievementsScreen;drawTexture(IIIIII)V",
                     ordinal = 0
             )
     )

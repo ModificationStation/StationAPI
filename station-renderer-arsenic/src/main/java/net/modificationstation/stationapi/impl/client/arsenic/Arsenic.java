@@ -74,12 +74,12 @@ public class Arsenic {
     private static void beforeTexturePackApplied(TexturePackLoadedEvent.Before event) {
         Map<String, Integer> textureMap = ((TextureManagerAccessor) event.textureManager).getTextures();
         new HashMap<>(textureMap).keySet().stream().filter(s -> {
-            try (InputStream textureStream = event.newTexturePack.method_976(s)) {
+            try (InputStream textureStream = event.newTexturePack.getResource(s)) {
                 return textureStream == null;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }).forEach(s -> GL11.glDeleteTextures(textureMap.remove(s)));
-        ((TextureManagerAccessor) event.textureManager).getField_1251().clear();
+        ((TextureManagerAccessor) event.textureManager).getDynamicTextures().clear();
     }
 }

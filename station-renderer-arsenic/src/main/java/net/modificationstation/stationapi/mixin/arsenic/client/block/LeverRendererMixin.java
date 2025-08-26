@@ -37,7 +37,6 @@ class LeverRendererMixin {
         texture.set(block.getAtlas().getTexture(textureId).getSprite());
     }
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
             method = "renderLever",
             index = 15,
@@ -53,7 +52,6 @@ class LeverRendererMixin {
         return texture.get().getX();
     }
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
             method = "renderLever",
             index = 16,

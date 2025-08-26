@@ -145,7 +145,7 @@ implements PaletteStorage, CompactingPackedIntegerArray {
     }
 
     @Override
-    public void method_39892(int[] is) {
+    public void writePaletteIndices(int[] is) {
         int m;
         long l;
         int k;

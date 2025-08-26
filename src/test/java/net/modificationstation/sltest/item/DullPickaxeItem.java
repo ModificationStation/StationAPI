@@ -33,8 +33,8 @@ public class DullPickaxeItem extends TemplatePickaxeItem {
         if (side != Direction.UP.ordinal()) return false;
         if (!world.isRemote) {
             Entity entity = EntityRegistry.create("sltest:test", world);
-            entity.method_1340(x + 0.5, y + 1, z + 0.5);
-            world.method_210(entity);
+            entity.setPosition(x + 0.5, y + 1, z + 0.5);
+            world.spawnEntity(entity);
         }
         stack.bobbingAnimationTime = 20;
         return true;
