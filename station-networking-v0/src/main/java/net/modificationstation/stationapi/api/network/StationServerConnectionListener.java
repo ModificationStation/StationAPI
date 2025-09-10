@@ -35,22 +35,20 @@ public class StationServerConnectionListener {
     private final List<ServerPlayNetworkHandler> connections;
     private final List<ServerLoginNetworkHandler> pendingConnections;
 
-    public StationServerConnectionListener(MinecraftServer server, InetAddress address, int port) throws IOException {
+    public StationServerConnectionListener(MinecraftServer server, SocketAddress address) throws IOException {
         this.server = server;
         ProtocolFamily family;
-        // TODO: Unix addresses?
-        if (address instanceof Inet4Address)
-            family = StandardProtocolFamily.INET;
-        else if (address instanceof Inet6Address)
-            family = StandardProtocolFamily.INET6;
-        else if (address == null)
-            family = null;
-        else
-            throw new RuntimeException("Unsupported address family: " + address.getHostAddress());
+        if (address instanceof InetSocketAddress inetAddress) {
+            family = inetAddress.getAddress().getAddress().length == 4 ? StandardProtocolFamily.INET : StandardProtocolFamily.INET6;
+        } else if (address instanceof UnixDomainSocketAddress) {
+            family = StandardProtocolFamily.UNIX;
+        } else {
+            throw new RuntimeException("Unsupported socket address: " + address);
+        }
         int maxPlayers = server.field_2840.method_1246("max-players", 20);
         this.pendingConnections = new ArrayList<>(maxPlayers);
         this.connections = new ArrayList<>(maxPlayers);
-        this.socketChannel = NioNetworkPlugin.INSTANCE.openServer(new InetSocketAddress(address, port), family);
+        this.socketChannel = NioNetworkPlugin.INSTANCE.openServer(address, family);
         this.socketChannel.configureBlocking(false);
         this.selector = Selector.open();
         this.socketChannel.register(selector, SelectionKey.OP_ACCEPT);

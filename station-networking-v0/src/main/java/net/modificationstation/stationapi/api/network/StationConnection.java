@@ -8,15 +8,10 @@ import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.Payload;
 import net.modificationstation.stationapi.api.network.packet.PayloadType;
 import net.modificationstation.stationapi.api.registry.PayloadTypeRegistry;
-import org.spongepowered.asm.mixin.Unique;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
-import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,19 +26,14 @@ public class StationConnection extends Connection {
     protected List<Consumer<PacketByteBuf>> outgoingPayloadsDelayed = Collections.synchronizedList(new ArrayList<>());
     protected SocketChannel socketChannel;
     protected PacketByteBuf readBuffer;
-    protected PacketByteBuf writeBuffer;
-    private DataInputStream inputStream;
-    private DataOutputStream outputStream;
 
     public StationConnection(SocketChannel socket, String name, NetworkHandler networkHandler) {
         super(socket.socket(), name, networkHandler);
         this.socketChannel = socket;
         this.readBuffer = PacketByteBuf.pooled();
-        this.writeBuffer = PacketByteBuf.pooled();
+//        this.writeBuffer = PacketByteBuf.pooled();
 
-        this.inputStream = readBuffer.getInputStream();
-        this.outputStream = writeBuffer.getOutputStream();
-
+        // TODO make these virtual threads when we update to J21+
 //        this.field_1292 = new Thread(this::packetReadLoop, "Station" + name + " read thread");
 //        this.field_1291 = new Thread(this::packetWriteLoop, "Station" + name + " write thread");
 //        this.field_1292.start();
@@ -88,6 +78,7 @@ public class StationConnection extends Connection {
 
     @Override
     public void method_1129() { // tick
+        // We don't maintain packet size stuff anymore
 //        if (this.field_1297 > 1048576) {
 //            this.disconnect("disconnect.overflow");
 //        }
@@ -135,7 +126,7 @@ public class StationConnection extends Connection {
             synchronized(this.field_1280) {
                 packet = packets.remove(0);
             }
-            Packet.write(packet, outputStream);
+            Packet.write(packet, buf.getOutputStream());
             return true;
         }
         return false;
@@ -178,7 +169,7 @@ public class StationConnection extends Connection {
 
         readBuffer.getSource().position(oldPos);
 
-        Packet packet = Packet.read(inputStream, this.field_1289.isServerSide());
+        Packet packet = Packet.read(readBuffer.getInputStream(), this.field_1289.isServerSide());
         if (packet != null) {
             field_1286.add(packet);
             if (packet instanceof ManagedPacket<?> managedPacket && managedPacket.getType().blocking) {
@@ -201,19 +192,14 @@ public class StationConnection extends Connection {
         try {
             if(this.field_1285) {
                 // Poll packets til there is none left
-                PacketByteBuf buf = writeBuffer;//PacketByteBuf.pooled();
+                PacketByteBuf buf = PacketByteBuf.pooled();
                 while(pollWrite(buf)) {
                 }
 
-                try {
-                    Thread.sleep(100L);
-                } catch (InterruptedException e) {
-                }
 
                 try {
-                    buf.flush(socketChannel);
-//                    if (buf.flush(socketChannel))
-//                        PacketByteBuf.BUFFER_POOL.offer(buf.getSource());
+                    if (buf.flush(socketChannel))
+                        PacketByteBuf.BUFFER_POOL.offer(buf.getSource());
                 } catch (ClosedChannelException ignored) {
                 } catch (EOFException e) {
                     disconnect("disconnect.endOfStream");
@@ -248,11 +234,6 @@ public class StationConnection extends Connection {
                     pollRead();
                 }
                 readBuffer.getSource().compact();
-
-                try {
-                    Thread.sleep(100L);
-                } catch (InterruptedException var13) {
-                }
             }
         } catch (Exception e) {
             disconnect(e);

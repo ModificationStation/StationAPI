@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin implements StationMinecraftServer {
@@ -20,7 +21,7 @@ public class MinecraftServerMixin implements StationMinecraftServer {
 
     @WrapOperation(method = "method_2166", at = @At(value = "NEW", target = "(Lnet/minecraft/server/MinecraftServer;Ljava/net/InetAddress;I)Lnet/minecraft/class_9;"))
     private class_9 createStationConnectionListener(MinecraftServer inetAddress, InetAddress address, int port, Operation<class_9> original) throws IOException {
-        this.stationapi_listener = new StationServerConnectionListener((MinecraftServer) (Object) this, address, port);
+        this.stationapi_listener = new StationServerConnectionListener((MinecraftServer) (Object) this, new InetSocketAddress(address, port));
         return null;
     }
 
