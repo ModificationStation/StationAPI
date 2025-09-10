@@ -6,7 +6,6 @@ import net.minecraft.class_9;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.modificationstation.stationapi.api.network.nio.NioNetworkPlugin;
 import net.modificationstation.stationapi.impl.network.server.StationServerLoginNetworkHandler;
 
 import java.io.IOException;
@@ -48,7 +47,8 @@ public class StationServerConnectionListener {
         int maxPlayers = server.field_2840.method_1246("max-players", 20);
         this.pendingConnections = new ArrayList<>(maxPlayers);
         this.connections = new ArrayList<>(maxPlayers);
-        this.socketChannel = NioNetworkPlugin.INSTANCE.openServer(address, family);
+        this.socketChannel = ServerSocketChannel.open(family);
+        this.socketChannel.bind(address);
         this.socketChannel.configureBlocking(false);
         this.selector = Selector.open();
         this.socketChannel.register(selector, SelectionKey.OP_ACCEPT);
