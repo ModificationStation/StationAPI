@@ -16,5 +16,8 @@
     "MinecraftServerMixin",
     "ServerConnectionListenerMixin",
     "ServerLoginNetworkHandlerMixin"
+  ],
+  "client": [
+    "client.ClientNetworkHandlerMixin"
   ]
 }

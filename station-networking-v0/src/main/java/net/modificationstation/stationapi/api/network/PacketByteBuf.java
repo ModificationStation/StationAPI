@@ -4,14 +4,25 @@ import net.minecraft.util.math.BlockPos;
 import net.modificationstation.stationapi.api.network.codec.StreamDecoder;
 import net.modificationstation.stationapi.api.network.codec.StreamEncoder;
 import net.modificationstation.stationapi.api.util.math.StationBlockPos;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
+import java.nio.channels.WritableByteChannel;
 import java.nio.charset.StandardCharsets;
 
 public class PacketByteBuf {
+    public static final BufferPool BUFFER_POOL = new BufferPool();
     public static final short MAX_STRING_LENGTH = 32767;
 
     protected final ByteBuffer source;
+
+    @ApiStatus.Experimental
+    public static PacketByteBuf pooled() {
+        return new PacketByteBuf(BUFFER_POOL.get());
+    }
 
     public PacketByteBuf(ByteBuffer source) {
         this.source = source;
@@ -19,6 +30,67 @@ public class PacketByteBuf {
 
     public ByteBuffer getSource() {
         return source;
+    }
+
+    public PacketByteBuf flip() {
+        source.flip();
+        return this;
+    }
+
+//    public PacketByteBuf resize(int newSize) {
+//    }
+
+    public PacketByteBuf slice(int index, int length) {
+        return new PacketByteBuf(source.slice(index, length));
+    }
+
+    public DataInputStream getInputStream() {
+        return new DataInputStream(new InputStream() {
+            @Override
+            public int read() throws IOException {
+                if (!source.hasRemaining())
+                    return -1;
+                return ((int) source.get()) & 0xff;
+            }
+            @Override
+            public int read(byte[] b, int off, int len) throws IOException {
+                if (!source.hasRemaining())
+                    return -1;
+                len = Math.min(len, source.remaining());
+                source.get(b, off, len);
+                return len;
+            }
+        });
+    }
+
+    public DataOutputStream getOutputStream() {
+        return new DataOutputStream(new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                source.put((byte) b);
+            }
+
+            @Override
+            public void write(@NotNull byte[] b, int off, int len) throws IOException {
+                source.put(b, off, len);
+            }
+        });
+    }
+
+    public int read(SocketChannel channel) throws IOException {
+        int count = channel.read(source);
+        if (count == -1)
+            throw new EOFException("End of stream");
+        return count;
+    }
+
+    public boolean flush(WritableByteChannel channel) throws IOException {
+        if (source.position() == 0)
+            return true;
+        int count = channel.write(source.slice(0, source.position()));
+        if (count == -1)
+            throw new EOFException("End of stream");
+        return true;
     }
 
     public <T> void write(StreamEncoder<PacketByteBuf, T> encoder, T value) {
@@ -66,7 +138,7 @@ public class PacketByteBuf {
     }
 
     public int readInt() {
-        return source.getInt();
+        return source.getInt(0);
     }
 
     public void writeLong(long value) {

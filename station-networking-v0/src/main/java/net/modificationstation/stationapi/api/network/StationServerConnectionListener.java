@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.api.network;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.class_9;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
@@ -9,17 +11,23 @@ import net.modificationstation.stationapi.impl.network.server.StationServerLogin
 
 import java.io.IOException;
 import java.net.*;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 /**
  * Replaces {@link class_9} in accepting network connections
  */
+@Environment(EnvType.SERVER)
 public class StationServerConnectionListener {
     private ServerSocketChannel socketChannel;
+    private Selector selector;
     private final MinecraftServer server;
     private final Thread listenerThread;
     private volatile boolean listening;
@@ -43,6 +51,9 @@ public class StationServerConnectionListener {
         this.pendingConnections = new ArrayList<>(maxPlayers);
         this.connections = new ArrayList<>(maxPlayers);
         this.socketChannel = NioNetworkPlugin.INSTANCE.openServer(new InetSocketAddress(address, port), family);
+        this.socketChannel.configureBlocking(false);
+        this.selector = Selector.open();
+        this.socketChannel.register(selector, SelectionKey.OP_ACCEPT);
         this.listening = true;
         this.listenerThread = new Thread(this::listen, "Station-Listener-Thread");
         this.listenerThread.start();
@@ -51,9 +62,37 @@ public class StationServerConnectionListener {
     public void listen() {
         while (listening) {
             try {
-                SocketChannel socket = this.socketChannel.accept();
+                int readyKeys = selector.select();
+                if (readyKeys == 0) continue;
+                Set<SelectionKey> keys = selector.selectedKeys();
+                Iterator<SelectionKey> iterator = keys.iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey key = iterator.next();
+                    if (key.isValid() && key.isAcceptable()) {
+                        SocketChannel socket = this.socketChannel.accept();
+                        socket.setOption(StandardSocketOptions.TCP_NODELAY, true); // Vanilla doesn't do this, but I think it can improve networking performance, Probably look into RFC1122 which the java doc refers to
 
-                addPendingConnection(new StationServerLoginNetworkHandler(this.server, socket, "Connection #" + this.connectionCounter++));
+                        var pendingConnection = new StationServerLoginNetworkHandler(this.server, socket, "Connection #" + this.connectionCounter++);
+                        socket.configureBlocking(false);
+                        socket.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE, pendingConnection.connection);
+                        addPendingConnection(pendingConnection);
+                    }
+
+                    if (key.isValid() && key.isReadable()) {
+                        if (key.attachment() instanceof StationConnection connection) {
+                            connection.packetRead();
+                        }
+                    }
+
+                    if (key.isValid() && key.isWritable()) {
+                        if (key.attachment() instanceof StationConnection connection) {
+                            connection.packetWrite();
+                        }
+                    }
+
+                    iterator.remove();
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

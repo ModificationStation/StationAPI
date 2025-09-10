@@ -12,8 +12,8 @@ import java.net.ServerSocket;
 
 @Mixin(class_9.class)
 public class ServerConnectionListenerMixin {
-    @WrapOperation(method = "<init>", at = @At(value = "NEW", target = "(IILjava/net/InetAddress;)Ljava/net/ServerSocket;"))
-    private ServerSocket createServerSocket(int port, int backlog, InetAddress address, Operation<ServerSocket> original) throws IOException {
-        return null;
-    }
+//    @WrapOperation(method = "<init>", at = @At(value = "NEW", target = "(IILjava/net/InetAddress;)Ljava/net/ServerSocket;"))
+//    private ServerSocket createServerSocket(int port, int backlog, InetAddress address, Operation<ServerSocket> original) throws IOException {
+//        return null;
+//    }
 }
