@@ -1,9 +1,12 @@
 package net.modificationstation.stationapi.api.network;
 
+import com.google.common.collect.ImmutableMap;
+import lombok.Getter;
 import net.minecraft.network.Connection;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.play.UpdateSignPacket;
+import net.modificationstation.stationapi.api.StationAPI;
+import net.modificationstation.stationapi.api.event.network.payload.PayloadHandlerRegisterEvent;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.Payload;
 import net.modificationstation.stationapi.api.network.packet.PayloadType;
@@ -21,23 +24,40 @@ import java.util.function.Function;
 public class StationConnection extends Connection {
     private static final Object STATIONAPI$PACKET_READ_LOCK = new Object();
     private static final AtomicBoolean STATIONAPI$BLOCKNG_PACKET = new AtomicBoolean();
-    protected List<Payload> incomingPayloads = Collections.synchronizedList(new ArrayList<>());
+    @Getter
+    private Map<PayloadType<PacketByteBuf, ? extends Payload<?>>, PayloadHandler> handlers;
+    protected List<Payload<?>> incomingPayloads = Collections.synchronizedList(new ArrayList<>());
     protected List<Consumer<PacketByteBuf>> outgoingPayloads = Collections.synchronizedList(new ArrayList<>());
     protected List<Consumer<PacketByteBuf>> outgoingPayloadsDelayed = Collections.synchronizedList(new ArrayList<>());
     protected SocketChannel socketChannel;
     protected PacketByteBuf readBuffer;
+    private boolean blocking;
 
     public StationConnection(SocketChannel socket, String name, NetworkHandler networkHandler) {
         super(socket.socket(), name, networkHandler);
+        initHandlers();
         this.socketChannel = socket;
         this.readBuffer = PacketByteBuf.pooled();
-//        this.writeBuffer = PacketByteBuf.pooled();
 
         // TODO make these virtual threads when we update to J21+
 //        this.field_1292 = new Thread(this::packetReadLoop, "Station" + name + " read thread");
 //        this.field_1291 = new Thread(this::packetWriteLoop, "Station" + name + " write thread");
 //        this.field_1292.start();
 //        this.field_1291.start();
+    }
+
+    @Override
+    public void method_1128(NetworkHandler networkHandler) { // setHandler
+        super.method_1128(networkHandler);
+        initHandlers();
+    }
+
+    public void initHandlers() {
+        Map<PayloadType<PacketByteBuf, ? extends Payload<?>>, PayloadHandler> handlers = new HashMap<>();
+
+        StationAPI.EVENT_BUS.post(PayloadHandlerRegisterEvent.builder().networkHandler(this.field_1289).handlers(handlers).build());
+
+        this.handlers = ImmutableMap.copyOf(handlers);
     }
 
     protected Function<PacketByteBuf, ? extends Payload> getPayloadDecoder() {
@@ -60,7 +80,7 @@ public class StationConnection extends Connection {
         };
     }
 
-    public <P extends Payload> void sendPayload(PayloadType<PacketByteBuf, P> type, P payload) {
+    public <P extends Payload<?>> void sendPayload(PayloadType<PacketByteBuf, P> type, P payload) {
         if (!this.field_1290) { // this.closed
             Consumer<PacketByteBuf> encoder = getPayloadEncoder(type, payload);
             if (type.delayed())
@@ -91,27 +111,27 @@ public class StationConnection extends Connection {
             this.field_1296 = 0;
         }
 
-        int var1 = 100;
+        while (!this.incomingPayloads.isEmpty()) {
+            Payload<PayloadHandler> payload = (Payload<PayloadHandler>) this.incomingPayloads.remove(0);
+            var type = payload.type();
+            payload.handle(this.handlers.get(type));
+            if (type.blocking())
+                // I have no idea why station api has this behavior, but we are on one thread now so we can't really be blocking the entire server network thread
+                blocking = false;
+        }
 
-        while (!this.field_1286.isEmpty() && var1-- >= 0) {
+        int packetLimit = 100;
+
+        while (!this.field_1286.isEmpty() && packetLimit-- >= 0) {
             Packet packet = (Packet)this.field_1286.remove(0);
             if (packet instanceof ManagedPacket<?> managedPacket) {
                 packet.apply(managedPacket.getType().getHandler().orElse(this.field_1289));
-                if (managedPacket.getType().blocking) {
-                    synchronized (STATIONAPI$PACKET_READ_LOCK) {
-                        STATIONAPI$BLOCKNG_PACKET.set(false);
-                        STATIONAPI$PACKET_READ_LOCK.notifyAll();
-                    }
-                }
+                if (managedPacket.getType().blocking)
+                    // I have no idea why station api has this behavior, but we are on one thread now so we can't really be blocking the entire server network thread
+                    blocking = false;
             } else {
-                if (packet instanceof UpdateSignPacket updateSignPacket) {
-                    if (updateSignPacket.x == 0 && updateSignPacket.y == -1 && updateSignPacket.z == 0) {
-                        continue;
-                    }
-                }
                 packet.apply(this.field_1289);
             }
-
         }
 
         this.method_1122();
@@ -172,15 +192,8 @@ public class StationConnection extends Connection {
         Packet packet = Packet.read(readBuffer.getInputStream(), this.field_1289.isServerSide());
         if (packet != null) {
             field_1286.add(packet);
-            if (packet instanceof ManagedPacket<?> managedPacket && managedPacket.getType().blocking) {
-                synchronized (STATIONAPI$PACKET_READ_LOCK) {
-                    STATIONAPI$BLOCKNG_PACKET.set(true);
-                    while (STATIONAPI$BLOCKNG_PACKET.get()) try {
-                        STATIONAPI$PACKET_READ_LOCK.wait();
-                    } catch (InterruptedException ignored) {
-                    }
-                }
-            }
+            if (packet instanceof ManagedPacket<?> managedPacket)
+                blocking = managedPacket.getType().blocking;
             return true;
         } else {
             disconnect("disconnect.endOfStream");
@@ -188,7 +201,7 @@ public class StationConnection extends Connection {
         return false;
     }
 
-    public void packetWrite() {
+    public void writePackets() {
         try {
             if(this.field_1285) {
                 // Poll packets til there is none left
@@ -216,7 +229,9 @@ public class StationConnection extends Connection {
         }
     }
 
-    public void packetRead() {
+    public void readPackets() {
+        if (blocking)
+            return;
         try {
             if(this.field_1285 && !this.field_1290) {
                 try {

@@ -14,7 +14,7 @@ public class PayloadTypeRegistry extends SimpleRegistry<PayloadType<? extends Pa
     public static final Registry<PayloadType<? extends PacketByteBuf, ? extends Payload>> INSTANCE = Registries.create(KEY, new PayloadTypeRegistry(), Lifecycle.experimental());
 
     private PayloadTypeRegistry() {
-        super(KEY, Lifecycle.experimental(), true);
+        super(KEY, Lifecycle.experimental(), false);
         RegistryAttributeHolder.get(this).addAttribute(RegistryAttribute.SYNCED);
     }
 }

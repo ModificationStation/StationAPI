@@ -1,11 +1,12 @@
 package net.modificationstation.stationapi.api.network.packet;
 
 import net.modificationstation.stationapi.api.network.PacketByteBuf;
+import net.modificationstation.stationapi.api.network.PayloadHandler;
 
-public interface Payload<HANDLER> {
-    int PACKET_ID = 253;
+public interface Payload<H extends PayloadHandler> {
+    int PACKET_ID = 252;
 
     PayloadType<? extends PacketByteBuf, ? extends Payload> type();
 
-    void apply(HANDLER handler);
+    void handle(H handler);
 }

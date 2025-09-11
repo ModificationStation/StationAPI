@@ -13,11 +13,14 @@
     "defaultRequire": 1
   },
   "server": [
-    "MinecraftServerMixin",
-    "ServerConnectionListenerMixin",
-    "ServerLoginNetworkHandlerMixin"
+    "server.EntityTrackerEntryMixin",
+    "server.EntityTrackerMixin",
+    "server.MinecraftServerMixin",
+    "server.ServerLoginNetworkHandlerMixin",
+    "server.ServerPlayNetworkHandlerMixin"
   ],
   "client": [
+    "client.ClientNetworkHandlerAccessor",
     "client.ClientNetworkHandlerMixin"
   ]
 }

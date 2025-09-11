@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.api.network.codec;
 
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.network.PacketByteBuf;
 
 /**
@@ -15,4 +16,5 @@ public interface StreamCodecs {
             buf.writeBoolean(bool);
         }
     };
+
 }

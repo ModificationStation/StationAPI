@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.mixin.network;
+package net.modificationstation.stationapi.mixin.network.server;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

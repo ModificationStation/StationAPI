@@ -8,7 +8,7 @@
     "NetworkHandlerMixin"
   ],
   "server": [
-    "server.ServerLoginNetworkHandlerMixin"
+    "server.CheckerServerLoginNetworkHandlerMixin"
   ],
   "client": [
   ],

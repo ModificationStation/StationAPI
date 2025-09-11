@@ -7,7 +7,11 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.client.network.ClientNetworkHandler;
 import net.minecraft.network.Connection;
 import net.minecraft.network.NetworkHandler;
+import net.modificationstation.stationapi.api.client.network.StationClientNetworkHandler;
+import net.modificationstation.stationapi.api.network.PacketByteBuf;
 import net.modificationstation.stationapi.api.network.StationConnection;
+import net.modificationstation.stationapi.api.network.packet.Payload;
+import net.modificationstation.stationapi.api.network.packet.PayloadType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +27,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 @Mixin(ClientNetworkHandler.class)
-public abstract class ClientNetworkHandlerMixin {
+public abstract class ClientNetworkHandlerMixin implements StationClientNetworkHandler {
     @Shadow private boolean disconnected;
 
     @Shadow private Connection connection;
@@ -52,6 +56,13 @@ public abstract class ClientNetworkHandlerMixin {
         return new StationConnection(socket, "Station " + name, networkHandler);
     }
 
+    @Override
+    public <P extends Payload<?>> void sendPayload(PayloadType<PacketByteBuf, P> type, P payload) {
+        if (!this.disconnected) {
+            ((StationConnection) this.connection).sendPayload(type, payload);
+        }
+    }
+
     private void stationapi_listen() {
         while (!this.disconnected) {
             if (connection == null)
@@ -65,11 +76,11 @@ public abstract class ClientNetworkHandlerMixin {
                     SelectionKey key = iterator.next();
 
                     if (key.isValid() && key.isReadable()) {
-                        ((StationConnection) this.connection).packetRead();
+                        ((StationConnection) this.connection).readPackets();
                     }
 
                     if (key.isValid() && key.isWritable()) {
-                        ((StationConnection) this.connection).packetWrite();
+                        ((StationConnection) this.connection).writePackets();
                     }
                     iterator.remove();
                 }

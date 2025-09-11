@@ -1,11 +1,16 @@
 package net.modificationstation.sltest;
 
 import net.fabricmc.api.ModInitializer;
+import net.modificationstation.sltest.network.ExamplePayload;
+import net.modificationstation.stationapi.api.registry.PayloadTypeRegistry;
+import net.modificationstation.stationapi.api.registry.Registry;
 
 public class MainTest implements ModInitializer {
     @Override
     public void onInitialize() {
 //        new Exception().printStackTrace();
+        Registry.register(PayloadTypeRegistry.INSTANCE, SLTest.NAMESPACE)
+                .accept("example_payload", ExamplePayload.TYPE);
     }
 
 //    @EventListener

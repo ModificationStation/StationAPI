@@ -42,6 +42,9 @@
       "net.modificationstation.sltest.texture.TextureListener",
       "net.modificationstation.sltest.render.entity.EntityRendererListener"
     ],
+    "stationapi:event_bus_server": [
+      "net.modificationstation.sltest.network.NetworkListener"
+    ],
     "main": [
       "net.modificationstation.sltest.MainTest"
     ],

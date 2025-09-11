@@ -1,4 +1,4 @@
-package net.modificationstation.stationapi.api.network;
+package net.modificationstation.stationapi.api.server.network;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -6,6 +6,7 @@ import net.minecraft.class_9;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.modificationstation.stationapi.api.network.StationConnection;
 import net.modificationstation.stationapi.impl.network.server.StationServerLoginNetworkHandler;
 
 import java.io.IOException;
@@ -66,26 +67,30 @@ public class StationServerConnectionListener {
                 Iterator<SelectionKey> iterator = keys.iterator();
                 while (iterator.hasNext()) {
                     SelectionKey key = iterator.next();
-                    if (key.isValid() && key.isAcceptable()) {
-                        SocketChannel socket = this.socketChannel.accept();
-                        socket.setOption(StandardSocketOptions.TCP_NODELAY, true); // Vanilla doesn't do this, but I think it can improve networking performance, Probably look into RFC1122 which the java doc refers to
+                    try {
+                        if (key.isValid() && key.isAcceptable()) {
+                            SocketChannel socket = this.socketChannel.accept();
+                            socket.setOption(StandardSocketOptions.TCP_NODELAY, true); // Vanilla doesn't do this, but I think it can improve networking performance, Probably look into RFC1122 which the java doc refers to
 
-                        var pendingConnection = new StationServerLoginNetworkHandler(this.server, socket, "Connection #" + this.connectionCounter++);
-                        socket.configureBlocking(false);
-                        socket.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE, pendingConnection.connection);
-                        addPendingConnection(pendingConnection);
-                    }
-
-                    if (key.isValid() && key.isReadable()) {
-                        if (key.attachment() instanceof StationConnection connection) {
-                            connection.packetRead();
+                            var pendingConnection = new StationServerLoginNetworkHandler(this.server, socket, "Connection #" + this.connectionCounter++);
+                            socket.configureBlocking(false);
+                            socket.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE, pendingConnection.connection);
+                            addPendingConnection(pendingConnection);
                         }
-                    }
 
-                    if (key.isValid() && key.isWritable()) {
-                        if (key.attachment() instanceof StationConnection connection) {
-                            connection.packetWrite();
+                        if (key.isValid() && key.isReadable()) {
+                            if (key.attachment() instanceof StationConnection connection) {
+                                connection.readPackets();
+                            }
                         }
+
+                        if (key.isValid() && key.isWritable()) {
+                            if (key.attachment() instanceof StationConnection connection) {
+                                connection.writePackets();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     iterator.remove();

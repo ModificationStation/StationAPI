@@ -37,9 +37,6 @@ public class PacketByteBuf {
         return this;
     }
 
-//    public PacketByteBuf resize(int newSize) {
-//    }
-
     public PacketByteBuf slice(int index, int length) {
         return new PacketByteBuf(source.slice(index, length));
     }

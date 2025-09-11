@@ -1,12 +1,11 @@
-package net.modificationstation.stationapi.mixin.network;
+package net.modificationstation.stationapi.mixin.network.server;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.class_9;
 import net.minecraft.server.MinecraftServer;
-import net.modificationstation.stationapi.api.network.StationMinecraftServer;
-import net.modificationstation.stationapi.api.network.StationServerConnectionListener;
+import net.modificationstation.stationapi.api.server.StationMinecraftServer;
+import net.modificationstation.stationapi.api.server.network.StationServerConnectionListener;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 

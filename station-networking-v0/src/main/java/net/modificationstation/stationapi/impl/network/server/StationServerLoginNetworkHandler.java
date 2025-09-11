@@ -4,7 +4,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerLoginNetworkHandler;
 import net.modificationstation.stationapi.api.network.StationConnection;
 
-import java.net.Socket;
 import java.nio.channels.SocketChannel;
 
 public class StationServerLoginNetworkHandler extends ServerLoginNetworkHandler {
