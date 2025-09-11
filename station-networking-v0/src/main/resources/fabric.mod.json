@@ -29,6 +29,7 @@
   "mixins": [
     "station-networking-v0.mixins.json"
   ],
+  "accessWidener" : "station-networking-v0.accesswidener",
 
   "depends": {
     "fabricloader": "*",
@@ -36,6 +37,23 @@
   },
 
   "custom": {
-    "modmenu:api": true
+    "modmenu:api": true,
+    "loom:injected_interfaces": {
+      "net/minecraft/client/network/ClientNetworkHandler": [
+        "net/modificationstation/stationapi/api/client/network/StationClientNetworkHandler"
+      ],
+      "net/minecraft/server/MinecraftServer": [
+        "net/modificationstation/stationapi/api/server/StationMinecraftServer"
+      ],
+      "net/minecraft/server/network/ServerPlayNetworkHandler": [
+        "net/modificationstation/stationapi/api/server/network/StationServerPlayNetworkHandler"
+      ],
+      "net/minecraft/class_488": [
+        "net/modificationstation/stationapi/api/server/StationEntityTracker"
+      ],
+      "net/minecraft/class_174": [
+        "net/modificationstation/stationapi/api/server/StationEntityTrackerEntry"
+      ]
+    }
   }
 }

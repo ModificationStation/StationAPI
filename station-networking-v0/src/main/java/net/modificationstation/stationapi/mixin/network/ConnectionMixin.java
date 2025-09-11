@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.network.Connection;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
+import net.modificationstation.stationapi.api.network.StationConnection;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -22,6 +23,13 @@ class ConnectionMixin {
     private static final Object STATIONAPI$PACKET_READ_LOCK = new Object();
     @Unique
     private static final AtomicBoolean STATIONAPI$BLOCKNG_PACKET = new AtomicBoolean();
+
+    @WrapOperation(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/lang/Thread;start()V"))
+    private void stationapi_preventVanillaThreadFromStarting(Thread instance, Operation<Void> original) {
+        if (!((Object) this instanceof StationConnection)) {
+            original.call(instance);
+        }
+    }
 
     @WrapOperation(
             method = "method_1129",

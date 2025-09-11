@@ -1,6 +1,7 @@
 item.@.testItem.name=Test Item
 item.@.idkSomething.name=IDK Something
 key.@.testBind=Diamonds!
+key.@.testBind2=Duplicate!
 tile.@.testBlock.name=Test Block
 tile.@.testAnimatedBlock0.name=Test Animated Block
 tile.@.testAnimatedBlock1.name=Charged Animated Block

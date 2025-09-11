@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ServerLoginNetworkHandler.class)
-class ServerLoginNetworkHandlerMixin {
+class CheckerServerLoginNetworkHandlerMixin {
     @Inject(
             method = "accept",
             at = @At(

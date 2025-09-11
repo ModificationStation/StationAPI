@@ -88,7 +88,7 @@ allprojects {
         implementation("org.jetbrains:annotations:23.0.0")
 
         modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}")
-        modLocalRuntime("maven.modrinth:retrocommands:${project.properties["rc_version"]}") {
+        modImplementation("maven.modrinth:retrocommands:${project.properties["rc_version"]}") {
             isTransitive = false
         }
 
