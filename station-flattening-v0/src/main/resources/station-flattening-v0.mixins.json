@@ -21,6 +21,7 @@
     "FireBlockMixin",
     "ItemMixin",
     "ItemStackMixin",
+    "MapItemMixin",
     "MobSpawnerLogicMixin",
     "NetherCaveGenMixin",
     "NetherChunkGeneratorMixin",
