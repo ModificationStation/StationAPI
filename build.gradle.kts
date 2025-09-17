@@ -75,7 +75,9 @@ allprojects {
         "transitiveImplementation"(implementation("com.mojang:datafixerupper:${project.properties["dfu_version"]}") as Dependency)
         "transitiveImplementation"(implementation("maven.modrinth:spasm:${project.properties["spasm_version"]}") as Dependency)
         "transitiveImplementation"(implementation("me.carleslc:Simple-Yaml:1.8.4") as Dependency)
-        "transitiveImplementation"(modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}") as Dependency)
+
+        // not a runtime dependency unless we use something outside its events.
+        modImplementation("net.glasslauncher.mods:GlassConfigAPI:${project.properties["gcapi_version"]}")
 
         // convenience stuff
         // adds some useful annotations for data classes. does not add any dependencies
