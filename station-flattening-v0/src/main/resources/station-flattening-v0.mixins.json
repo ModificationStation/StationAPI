@@ -35,6 +35,8 @@
     "RegionFileAccessor",
     "SecondaryBlockItemMixin",
     "SkylandsChunkGeneratorMixin",
+    "StatMixin",
+    "StatsMixin",
     "WorldMixin",
     "WorldPropertiesMixin"
   ],
@@ -48,7 +50,8 @@
     "client.MultiplayerInteractionManagerMixin",
     "client.PlayerEntityRendererMixin",
     "client.SingleplayerInteractionManagerMixin",
-    "client.WorldRendererMixin"
+    "client.WorldRendererMixin",
+    "client.stats.BlockStatsListWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

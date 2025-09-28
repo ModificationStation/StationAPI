@@ -8,8 +8,7 @@
     "BlockMixin",
     "FireBlockMixin",
     "LeavesBlockMixin",
-    "SecondaryBlockItemMixin",
-    "StatsMixin"
+    "SecondaryBlockItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1
