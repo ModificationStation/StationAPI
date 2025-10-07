@@ -46,10 +46,27 @@ class StatsMixin {
 
     @Inject(
             method = "<clinit>",
-            at = @At("HEAD")
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/stat/Stats;ID_TO_STAT:Ljava/util/Map;",
+                    opcode = Opcodes.PUTSTATIC,
+                    shift = At.Shift.AFTER
+            )
+    )
+    private static void stationapi_syncMap(CallbackInfo ci) {
+        Int2ObjectMapTracker.register(StatRegistry.INSTANCE, "Stats.ID_TO_STAT", ID_TO_STAT, true);
+    }
+
+    @Inject(
+            method = "<clinit>",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/stat/Stats;MINE_BLOCK:[Lnet/minecraft/stat/Stat;",
+                    opcode = Opcodes.PUTSTATIC,
+                    shift = At.Shift.AFTER
+            )
     )
     private static void stationapi_syncMined(CallbackInfo ci) {
-        Int2ObjectMapTracker.register(StatRegistry.INSTANCE, "Stats.ID_TO_STAT", ID_TO_STAT, true);
         ObjectArrayTracker.register(BlockRegistry.INSTANCE, () -> MINE_BLOCK, array -> MINE_BLOCK = array);
     }
 
@@ -64,6 +81,20 @@ class StatsMixin {
         }
     }
 
+    @Redirect(
+            method = "initializeItemStats",
+            at = @At(
+                    value = "FIELD",
+                    target = "Lnet/minecraft/block/Block;BLOCKS:[Lnet/minecraft/block/Block;",
+                    opcode = Opcodes.GETSTATIC,
+                    args = "array=length",
+                    ordinal = 0
+            )
+    )
+    private static int stationapi_initAll(Block[] blocks) {
+        return Item.ITEMS.length;
+    }
+
     @Inject(
             method = "initializeExtendedItemStats",
             at = @At("HEAD")
@@ -73,6 +104,17 @@ class StatsMixin {
             ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> USED, array -> USED = array);
             ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> BROKEN, array -> BROKEN = array);
         }
+    }
+
+    @WrapOperation(
+            method = "initializeExtendedItemStats",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/stat/Stats;initItemsUsedStats([Lnet/minecraft/stat/Stat;Ljava/lang/String;III)[Lnet/minecraft/stat/Stat;"
+            )
+    )
+    private static Stat[] stationapi_stopBlockUsedStats(Stat[] stats, String name, int id, int minId, int maxId, Operation<Stat[]> original) {
+        return new Stat[maxId];
     }
 
     @Inject(
