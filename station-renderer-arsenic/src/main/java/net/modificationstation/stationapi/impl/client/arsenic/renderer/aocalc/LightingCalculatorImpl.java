@@ -280,31 +280,31 @@ public final class LightingCalculatorImpl {
                     case POSITIVE -> {
                         light[0] = MathHelper.interpolate3D(
                                 v00dx, v00dy, v00dz,
-                                light(v00x0, v00y0, v00z0), light(v00x1, v00y0, v00z0),
-                                light(v00x0, v00y1, v00z0), light(v00x1, v00y1, v00z0),
-                                light(v00x0, v00y0, v00z1), light(v00x1, v00y0, BLOCKS_ALLOW_VISION[id(v00x0, v00y0, v00z1)] || BLOCKS_ALLOW_VISION[id(v00x1, v00y0, v00z0)] ? v00z1 : v00z0),
-                                light(v00x0, v00y1, v00z1), light(v00x1, v00y1, BLOCKS_ALLOW_VISION[id(v00x0, v00y1, v00z1)] || BLOCKS_ALLOW_VISION[id(v00x1, v00y1, v00z0)] ? v00z1 : v00z0)
+                                light(v00x0, v00y0, BLOCKS_ALLOW_VISION[id(v00x0, v00y0, v00z1)] || BLOCKS_ALLOW_VISION[id(v00x1, v00y0, v00z0)] ? v00z0 : v00z1), light(v00x1, v00y0, v00z0),
+                                light(v00x0, v00y1, BLOCKS_ALLOW_VISION[id(v00x0, v00y1, v00z1)] || BLOCKS_ALLOW_VISION[id(v00x1, v00y1, v00z0)] ? v00z0 : v00z1), light(v00x1, v00y1, v00z0),
+                                light(v00x0, v00y0, v00z1), light(v00x1, v00y0, v00z1),
+                                light(v00x0, v00y1, v00z1), light(v00x1, v00y1, v00z1)
                         );
                         light[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
-                                light(v01x0, v01y0, v01z0), light(v01x1, v01y0, BLOCKS_ALLOW_VISION[id(v01x0, v01y0, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y0, v01z1)] ? v01z0 : v01z1),
-                                light(v01x0, v01y1, v01z0), light(v01x1, v01y1, BLOCKS_ALLOW_VISION[id(v01x0, v01y1, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y1, v01z1)] ? v01z0 : v01z1),
-                                light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1),
-                                light(v01x0, v01y1, v01z1), light(v01x1, v01y1, v01z1)
+                                light(v01x0, v01y0, v01z0), light(v01x1, v01y0, v01z0),
+                                light(v01x0, v01y1, v01z0), light(v01x1, v01y1, v01z0),
+                                light(v01x0, v01y0, BLOCKS_ALLOW_VISION[id(v01x0, v01y0, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y0, v01z1)] ? v01z1 : v01z0), light(v01x1, v01y0, v01z1),
+                                light(v01x0, v01y1, BLOCKS_ALLOW_VISION[id(v01x0, v01y1, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y1, v01z1)] ? v01z1 : v01z0), light(v01x1, v01y1, v01z1)
                         );
                         light[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
-                                light(v11x0, v11y0, BLOCKS_ALLOW_VISION[id(v11x1, v11y0, v11z0)] || BLOCKS_ALLOW_VISION[id(v11x0, v11y0, v11z1)] ? v11z0 : v11z1), light(v11x1, v11y0, v11z0),
-                                light(v11x0, v11y1, BLOCKS_ALLOW_VISION[id(v11x1, v11y1, v11z0)] || BLOCKS_ALLOW_VISION[id(v11x0, v11y1, v11z1)] ? v11z0 : v11z1), light(v11x1, v11y1, v11z0),
-                                light(v11x0, v11y0, v11z1), light(v11x1, v11y0, v11z1),
-                                light(v11x0, v11y1, v11z1), light(v11x1, v11y1, v11z1)
+                                light(v11x0, v11y0, v11z0), light(v11x1, v11y0, v11z0),
+                                light(v11x0, v11y1, v11z0), light(v11x1, v11y1, v11z0),
+                                light(v11x0, v11y0, v11z1), light(v11x1, v11y0, BLOCKS_ALLOW_VISION[id(v11x1, v11y0, v11z0)] || BLOCKS_ALLOW_VISION[id(v11x0, v11y0, v11z1)] ? v11z1 : v11z0),
+                                light(v11x0, v11y1, v11z1), light(v11x1, v11y1, BLOCKS_ALLOW_VISION[id(v11x1, v11y1, v11z0)] || BLOCKS_ALLOW_VISION[id(v11x0, v11y1, v11z1)] ? v11z1 : v11z0)
                         );
                         light[3] = MathHelper.interpolate3D(
                                 v10dx, v10dy, v10dz,
-                                light(v10x0, v10y0, v10z0), light(v10x1, v10y0, v10z0),
-                                light(v10x0, v10y1, v10z0), light(v10x1, v10y1, v10z0),
-                                light(v10x0, v10y0, BLOCKS_ALLOW_VISION[id(v10x1, v10y0, v10z1)] || BLOCKS_ALLOW_VISION[id(v10x0, v10y0, v10z0)] ? v10z1 : v10z0), light(v10x1, v10y0, v10z1),
-                                light(v10x0, v10y1, BLOCKS_ALLOW_VISION[id(v10x1, v10y1, v10z1)] || BLOCKS_ALLOW_VISION[id(v10x0, v10y1, v10z0)] ? v10z1 : v10z0), light(v10x1, v10y1, v10z1)
+                                light(v10x0, v10y0, v10z0), light(v10x1, v10y0, BLOCKS_ALLOW_VISION[id(v10x1, v10y0, v10z1)] || BLOCKS_ALLOW_VISION[id(v10x0, v10y0, v10z0)] ? v10z0 : v10z1),
+                                light(v10x0, v10y1, v10z0), light(v10x1, v10y1, BLOCKS_ALLOW_VISION[id(v10x1, v10y1, v10z1)] || BLOCKS_ALLOW_VISION[id(v10x0, v10y1, v10z0)] ? v10z0 : v10z1),
+                                light(v10x0, v10y0, v10z1), light(v10x1, v10y0, v10z1),
+                                light(v10x0, v10y1, v10z1), light(v10x1, v10y1, v10z1)
                         );
                     }
                     case NEGATIVE -> {
