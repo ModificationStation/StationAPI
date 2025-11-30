@@ -367,10 +367,10 @@ public final class LightingCalculatorImpl {
                         );
                         light[1] = MathHelper.interpolate3D(
                                 v01dx, v01dy, v01dz,
-                                light(v01x0, v01y0, v01z0), light(v01x1, v01y0, v01z0),
-                                light(v01x0, BLOCKS_ALLOW_VISION[id(v01x0, v01y0, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y1, v01z0)] ? v01y1 : v01y0, v01z0), light(v01x1, v01y1, v01z0),
-                                light(v01x0, v01y0, v01z1), light(v01x1, v01y0, v01z1),
-                                light(v01x0, BLOCKS_ALLOW_VISION[id(v01x0, v01y0, v01z1)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y1, v01z1)] ? v01y1 : v01y0, v01z1), light(v01x1, v01y1, v01z1)
+                                light(v01x0, BLOCKS_ALLOW_VISION[id(v01x0, v01y1, v01z0)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y0, v01z0)] ? v01y0 : v01y1, v01z0), light(v01x1, v01y0, v01z0),
+                                light(v01x0, v01y1, v01z0), light(v01x1, v01y1, v01z0),
+                                light(v01x0, BLOCKS_ALLOW_VISION[id(v01x0, v01y1, v01z1)] || BLOCKS_ALLOW_VISION[id(v01x1, v01y0, v01z1)] ? v01y0 : v01y1, v01z1), light(v01x1, v01y0, v01z1),
+                                light(v01x0, v01y1, v01z1), light(v01x1, v01y1, v01z1)
                         );
                         light[2] = MathHelper.interpolate3D(
                                 v11dx, v11dy, v11dz,
