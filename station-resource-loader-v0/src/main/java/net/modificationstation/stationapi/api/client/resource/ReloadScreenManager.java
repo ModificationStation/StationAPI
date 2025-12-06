@@ -151,7 +151,6 @@ public class ReloadScreenManager {
         glAlphaFunc(GL_GREATER, 0.1f);
         try {
             drawable.releaseContext();
-            drawable.destroy();
         } catch (LWJGLException e) {
             throw new RuntimeException(e);
         }
