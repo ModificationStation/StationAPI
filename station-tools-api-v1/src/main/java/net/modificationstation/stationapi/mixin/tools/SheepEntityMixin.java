@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(SheepEntity.class)
 class SheepEntityMixin {
     @Redirect(
-            method = "method_1323",
+            method = "interact",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/item/ItemStack;itemId:I",

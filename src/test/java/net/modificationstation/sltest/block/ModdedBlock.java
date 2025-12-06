@@ -1,7 +1,7 @@
 package net.modificationstation.sltest.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 
 public class ModdedBlock extends Block {
 

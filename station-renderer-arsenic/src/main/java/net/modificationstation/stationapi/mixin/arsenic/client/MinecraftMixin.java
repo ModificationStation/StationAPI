@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.arsenic.client;
 
-import net.minecraft.class_336;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.render.texture.DynamicTexture;
 import net.minecraft.client.texture.TextureManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,8 +13,8 @@ class MinecraftMixin {
             method = "init",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/texture/TextureManager;method_1087(Lnet/minecraft/class_336;)V"
+                    target = "Lnet/minecraft/client/texture/TextureManager;addDynamicTexture(Lnet/minecraft/client/render/texture/DynamicTexture;)V"
             )
     )
-    private void stationapi_stopVanillaTextureBinders(TextureManager textureManager, class_336 arg) {}
+    private void stationapi_stopVanillaTextureBinders(TextureManager textureManager, DynamicTexture arg) {}
 }

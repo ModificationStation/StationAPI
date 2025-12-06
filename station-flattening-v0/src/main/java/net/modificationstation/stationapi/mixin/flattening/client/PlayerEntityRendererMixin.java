@@ -16,7 +16,7 @@ class PlayerEntityRendererMixin {
     private BlockItemForm stationapi_blockItemForm;
 
     @Redirect(
-            method = "method_827(Lnet/minecraft/entity/player/PlayerEntity;F)V",
+            method = "renderMore(Lnet/minecraft/entity/player/PlayerEntity;F)V",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/item/Item;id:I"
@@ -31,7 +31,7 @@ class PlayerEntityRendererMixin {
     }
 
     @Redirect(
-            method = "method_827(Lnet/minecraft/entity/player/PlayerEntity;F)V",
+            method = "renderMore(Lnet/minecraft/entity/player/PlayerEntity;F)V",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/item/ItemStack;itemId:I",
@@ -47,7 +47,7 @@ class PlayerEntityRendererMixin {
     }
 
     @Redirect(
-            method = "method_827(Lnet/minecraft/entity/player/PlayerEntity;F)V",
+            method = "renderMore(Lnet/minecraft/entity/player/PlayerEntity;F)V",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/block/Block;BLOCKS:[Lnet/minecraft/block/Block;",

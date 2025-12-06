@@ -25,13 +25,13 @@ class DyeItemMixin {
     private void stationapi_onBonemealUse(ItemStack item, PlayerEntity player, World world, int x, int y, int z, int side, CallbackInfoReturnable<Boolean> info) {
         BlockState state = world.getBlockState(x, y, z);
         if (state.getBlock().onBonemealUse(world, x, y, z, state)) {
-            world.method_202(x, y, z, x, y, z);
+            world.setBlocksDirty(x, y, z, x, y, z);
             info.setReturnValue(true);
             item.count--;
             return;
         }
         if (BonemealAPI.generate(world, x, y, z, state, side)) {
-            world.method_202(x - 8, y - 8, z - 8, x + 8, y + 8, z + 8);
+            world.setBlocksDirty(x - 8, y - 8, z - 8, x + 8, y + 8, z + 8);
             info.setReturnValue(true);
             item.count--;
         }

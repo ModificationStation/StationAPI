@@ -12,9 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 class WorldMixin {
     @Inject(
             method = {
-                    "<init>(Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;Lnet/minecraft/world/dimension/Dimension;J)V",
+                    "<init>(Lnet/minecraft/world/storage/WorldStorage;Ljava/lang/String;Lnet/minecraft/world/dimension/Dimension;J)V",
                     "<init>(Lnet/minecraft/world/World;Lnet/minecraft/world/dimension/Dimension;)V",
-                    "<init>(Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/world/dimension/Dimension;)V"
+                    "<init>(Lnet/minecraft/world/storage/WorldStorage;Ljava/lang/String;JLnet/minecraft/world/dimension/Dimension;)V"
             },
             at = @At("RETURN")
     )
@@ -23,7 +23,7 @@ class WorldMixin {
     }
     
     @Inject(
-            method = "method_195",
+            method = "saveWithLoadingDisplay",
             at = @At("HEAD")
     )
     private void stationapi_onLevelSave(CallbackInfo ci) {

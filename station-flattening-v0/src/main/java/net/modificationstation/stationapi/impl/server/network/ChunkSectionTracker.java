@@ -3,8 +3,8 @@ package net.modificationstation.stationapi.impl.server.network;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.class_167;
-import net.minecraft.class_73;
+import net.minecraft.server.ChunkMap;
+import net.minecraft.world.ServerWorld;
 import net.modificationstation.stationapi.impl.packet.FlattenedBlockChangeS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedChunkSectionDataS2CPacket;
 import net.modificationstation.stationapi.impl.packet.FlattenedMultiBlockChangeS2CPacket;
@@ -16,8 +16,8 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class ChunkSectionTracker {
-    private final class_167 playerView;
-    private final class_167.class_514 chunkTracker;
+    private final ChunkMap playerView;
+    private final ChunkMap.TrackedChunk chunkTracker;
     private final int
             chunkX,
             chunkZ,
@@ -34,7 +34,7 @@ public class ChunkSectionTracker {
 
     public void queueUpdate(int x, int y, int z) {
         if (this.updatesCount == 0) {
-            ((ServerPlayerViewAccessor) playerView).getField_2131().add(chunkTracker);
+            ((ServerPlayerViewAccessor) playerView).getChunksToUpdate().add(chunkTracker);
             this.minX = this.maxX = x;
             this.minY = this.maxY = y;
             this.minZ = this.maxZ = z;
@@ -68,7 +68,7 @@ public class ChunkSectionTracker {
     }
 
     public void sendQueue() {
-        class_73 world = playerView.method_1741();
+        ServerWorld world = playerView.getWorld();
         int sectionY = world.sectionIndexToCoord(sectionIndex);
         if (this.updatesCount == 0) {
             return;
@@ -77,9 +77,9 @@ public class ChunkSectionTracker {
             int x = (this.chunkX << 4) + this.minX;
             int y = (sectionY << 4) + this.minY;
             int z = (this.chunkZ << 4) + this.minZ;
-            chunkTracker.method_1755(new FlattenedBlockChangeS2CPacket(x, y, z, world));
+            chunkTracker.sendPacketToPlayers(new FlattenedBlockChangeS2CPacket(x, y, z, world));
             if (Block.BLOCKS_WITH_ENTITY[world.getBlockId(x, y, z)]) {
-                ((class_514Accessor) chunkTracker).invokeMethod_1756(world.method_1777(x, y, z));
+                ((class_514Accessor) chunkTracker).invokeSendBlockEntityUpdate(world.getBlockEntity(x, y, z));
             }
         } else if (this.updatesCount == 10) {
             this.minY = this.minY / 2 * 2;
@@ -90,21 +90,21 @@ public class ChunkSectionTracker {
             int sizeX = this.maxX - this.minX + 1;
             int sizeY = this.maxY - this.minY + 2;
             int sizeZ = this.maxZ - this.minZ + 1;
-            chunkTracker.method_1755(new FlattenedChunkSectionDataS2CPacket(world, chunkX, chunkZ, sectionIndex));
+            chunkTracker.sendPacketToPlayers(new FlattenedChunkSectionDataS2CPacket(world, chunkX, chunkZ, sectionIndex));
             //noinspection unchecked
-            List<BlockEntity> list = world.method_330(x, y, z, x + sizeX, y + sizeY, z + sizeZ);
+            List<BlockEntity> list = world.getBlockEntities(x, y, z, x + sizeX, y + sizeY, z + sizeZ);
             for (int i = 0; i < list.size(); ++i) {
-                ((class_514Accessor) chunkTracker).invokeMethod_1756(list.get(i));
+                ((class_514Accessor) chunkTracker).invokeSendBlockEntityUpdate(list.get(i));
             }
         } else {
-            chunkTracker.method_1755(new FlattenedMultiBlockChangeS2CPacket(this.chunkX, this.chunkZ, sectionIndex, this.updates, this.updatesCount, world));
+            chunkTracker.sendPacketToPlayers(new FlattenedMultiBlockChangeS2CPacket(this.chunkX, this.chunkZ, sectionIndex, this.updates, this.updatesCount, world));
             for (int i = 0; i < this.updatesCount; ++i) {
                 int n = this.chunkX * 16 + (this.updatesCount >> 12 & 0xF);
                 int n9 = this.updatesCount & 0xFF;
                 int n10 = this.chunkZ * 16 + (this.updatesCount >> 8 & 0xF);
                 if (!Block.BLOCKS_WITH_ENTITY[world.getBlockId(n, n9, n10)]) continue;
                 System.out.println("Sending!");
-                ((class_514Accessor) chunkTracker).invokeMethod_1756(world.method_1777(n, n9, n10));
+                ((class_514Accessor) chunkTracker).invokeSendBlockEntityUpdate(world.getBlockEntity(n, n9, n10));
             }
         }
         this.updatesCount = 0;

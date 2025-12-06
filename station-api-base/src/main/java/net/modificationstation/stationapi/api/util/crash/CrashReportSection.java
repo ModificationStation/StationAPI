@@ -114,7 +114,7 @@ public class CrashReportSection {
         }
     }
 
-    public boolean method_584(StackTraceElement stackTraceElement, StackTraceElement stackTraceElement2) {
+    public boolean shouldGenerateStackTrace(StackTraceElement stackTraceElement, StackTraceElement stackTraceElement2) {
         if (this.stackTrace.length != 0 && stackTraceElement != null) {
             StackTraceElement stackTraceElement3 = this.stackTrace[0];
             if (stackTraceElement3.isNativeMethod() == stackTraceElement.isNativeMethod() && stackTraceElement3.getClassName().equals(stackTraceElement.getClassName()) && Objects.equals(stackTraceElement3.getFileName(), stackTraceElement.getFileName()) && stackTraceElement3.getMethodName().equals(stackTraceElement.getMethodName())) {

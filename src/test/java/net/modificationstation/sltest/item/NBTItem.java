@@ -25,7 +25,7 @@ public class NBTItem extends TemplateItem implements CustomTooltipProvider {
         NbtCompound nbt = StationItemNbt.class.cast(item).getStationNbt();
         if (!nbt.contains(of(NAMESPACE, "rand_num").toString()))
             nbt.putInt(of(NAMESPACE, "rand_num").toString(), new Random().nextInt(3));
-        player.method_490("Woah: " + nbt.getInt(of(NAMESPACE, "rand_num").toString()));
+        player.sendMessage("Woah: " + nbt.getInt(of(NAMESPACE, "rand_num").toString()));
         return true;
     }
 

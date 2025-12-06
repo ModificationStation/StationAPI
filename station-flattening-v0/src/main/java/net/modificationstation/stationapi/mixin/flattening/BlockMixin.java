@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -131,7 +131,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     }
 
     @Inject(
-            method = "<init>(ILnet/minecraft/block/Material;)V",
+            method = "<init>(ILnet/minecraft/block/material/Material;)V",
             at = @At("RETURN")
     )
     private void stationapi_onInit(int material, Material par2, CallbackInfo ci) {
@@ -187,7 +187,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
             method = "dropStacks(Lnet/minecraft/world/World;IIIIF)V",
             at = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/world/World;field_214:Ljava/util/Random;",
+                    target = "Lnet/minecraft/world/World;random:Ljava/util/Random;",
                     opcode = Opcodes.GETFIELD,
                     ordinal = 0,
                     shift = At.Shift.BEFORE
@@ -257,7 +257,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     @Override
     @Unique
     public boolean canReplace(BlockState state, ItemPlacementContext context) {
-        return material.method_896() && (context.getStack() == null || !context.getStack().isOf(asItem()));
+        return material.isReplaceable() && (context.getStack() == null || !context.getStack().isOf(asItem()));
     }
 
     @Override
@@ -299,7 +299,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     }
 
     @ModifyVariable(
-            method = "<init>(ILnet/minecraft/block/Material;)V",
+            method = "<init>(ILnet/minecraft/block/material/Material;)V",
             index = 1,
             at = @At(
                     value = "CONSTANT",
@@ -362,7 +362,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
             method = "getLuminance",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/BlockView;method_1784(IIII)F"
+                    target = "Lnet/minecraft/world/BlockView;getNaturalBrightness(IIII)F"
             ),
             index = 3
     )

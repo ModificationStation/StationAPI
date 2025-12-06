@@ -10,12 +10,12 @@ import java.util.Set;
 
 @Mixin(Packet.class)
 public interface AbstractPacketAccessor {
-    @Accessor
+    @Accessor("S2C")
     static Set<Integer> getClientBoundPackets() {
         return Util.assertMixin();
     }
 
-    @Accessor
+    @Accessor("C2S")
     static Set<Integer> getServerBoundPackets() {
         return Util.assertMixin();
     }

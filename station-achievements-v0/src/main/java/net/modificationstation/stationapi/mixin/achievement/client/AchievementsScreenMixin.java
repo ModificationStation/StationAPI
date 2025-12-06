@@ -2,8 +2,8 @@ package net.modificationstation.stationapi.mixin.achievement.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.achievement.Achievement;
+import net.minecraft.client.gui.screen.AchievementsScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.achievement.AchievementsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.modificationstation.stationapi.api.StationAPI;
@@ -53,7 +53,7 @@ class AchievementsScreenMixin extends Screen {
     }
 
     @Inject(
-            method = "method_1999",
+            method = "setTitle",
             at = @At("TAIL")
     )
     private void stationapi_doDrawTitle(CallbackInfo ci) {
@@ -64,7 +64,7 @@ class AchievementsScreenMixin extends Screen {
     }
 
     @ModifyVariable(
-            method = "method_1998",
+            method = "renderIcons",
             index = 26,
             at = @At(
                     value = "FIELD",
@@ -96,7 +96,7 @@ class AchievementsScreenMixin extends Screen {
     }
 
     @Redirect(
-            method = "method_1998",
+            method = "renderIcons",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/achievement/Achievement;parent:Lnet/minecraft/achievement/Achievement;",
@@ -115,7 +115,7 @@ class AchievementsScreenMixin extends Screen {
     }
 
     @ModifyConstant(
-            method = "method_1998",
+            method = "renderIcons",
             constant = @Constant(
                     intValue = 0,
                     ordinal = 4
@@ -126,7 +126,7 @@ class AchievementsScreenMixin extends Screen {
     }
 
     @ModifyVariable(
-            method = "method_1998",
+            method = "renderIcons",
             index = 14,
             at = @At(
                     value = "INVOKE",

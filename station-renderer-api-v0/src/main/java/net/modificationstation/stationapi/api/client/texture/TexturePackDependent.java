@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.api.client.texture;
 
-import net.minecraft.class_285;
+import net.minecraft.client.resource.pack.TexturePack;
 
 public interface TexturePackDependent {
 
-    void reloadFromTexturePack(class_285 newTexturePack);
+    void reloadFromTexturePack(TexturePack newTexturePack);
 }

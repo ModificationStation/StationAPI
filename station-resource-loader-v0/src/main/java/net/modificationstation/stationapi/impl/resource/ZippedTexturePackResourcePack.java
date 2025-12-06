@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.impl.resource;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
-import net.minecraft.class_592;
+import net.minecraft.client.resource.pack.ZippedTexturePack;
 import net.modificationstation.stationapi.api.resource.InputSupplier;
 import net.modificationstation.stationapi.api.resource.ResourceType;
 import net.modificationstation.stationapi.api.util.Identifier;
@@ -21,11 +21,11 @@ import static net.modificationstation.stationapi.impl.resource.ZipResourcePack.T
 
 public class ZippedTexturePackResourcePack extends AbstractFileResourcePack {
 
-    private final class_592 texturePack;
+    private final ZippedTexturePack texturePack;
     private final ZipTexturePackAccessor texturePackAccessor;
 
-    public ZippedTexturePackResourcePack(class_592 texturePack, boolean alwaysStable) {
-        super(((ZipTexturePackAccessor) texturePack).getField_2562().getName(), alwaysStable);
+    public ZippedTexturePackResourcePack(ZippedTexturePack texturePack, boolean alwaysStable) {
+        super(((ZipTexturePackAccessor) texturePack).getZip().getName(), alwaysStable);
         this.texturePack = texturePack;
         this.texturePackAccessor = (ZipTexturePackAccessor) texturePack;
     }
@@ -46,12 +46,12 @@ public class ZippedTexturePackResourcePack extends AbstractFileResourcePack {
 
     @Nullable
     private InputSupplier<InputStream> openFile(String path) {
-        ZipFile zipFile = texturePackAccessor.getField_2562();
+        ZipFile zipFile = texturePackAccessor.getZip();
         if (zipFile == null) return null;
         ZipEntry zipEntry = zipFile.getEntry(path);
         if (zipEntry == null) return switch (path) {
             case "pack.mcmeta" -> () -> {
-                String metadata = ModResourcePackUtil.serializeMetadata(13, texturePack.field_1138);
+                String metadata = ModResourcePackUtil.serializeMetadata(13, texturePack.descriptionLine1);
                 return IOUtils.toInputStream(metadata, Charsets.UTF_8);
             };
             default -> null;
@@ -61,7 +61,7 @@ public class ZippedTexturePackResourcePack extends AbstractFileResourcePack {
 
     @Override
     public void findResources(ResourceType type, Namespace namespace, String prefix, ResultConsumer consumer) {
-        ZipFile zipFile = texturePackAccessor.getField_2562();
+        ZipFile zipFile = texturePackAccessor.getZip();
         if (zipFile == null) return;
         Enumeration<? extends ZipEntry> enumeration = zipFile.entries();
         String string = type.getDirectory() + "/" + namespace + "/";
@@ -78,7 +78,7 @@ public class ZippedTexturePackResourcePack extends AbstractFileResourcePack {
 
     @Override
     public Set<Namespace> getNamespaces(ResourceType type) {
-        ZipFile zipFile = texturePackAccessor.getField_2562();
+        ZipFile zipFile = texturePackAccessor.getZip();
         if (zipFile == null) return Set.of();
         Enumeration<? extends ZipEntry> enumeration = zipFile.entries();
         HashSet<Namespace> set = new HashSet<>();

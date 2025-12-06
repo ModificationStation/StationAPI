@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.mixin.resourceloader.client;
 
-import net.minecraft.class_285;
-import net.minecraft.class_592;
+import net.minecraft.client.resource.pack.TexturePack;
+import net.minecraft.client.resource.pack.ZippedTexturePack;
 import net.modificationstation.stationapi.api.client.resource.ReloadableAssetsManager;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,10 +12,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.io.IOException;
 import java.io.InputStream;
 
-@Mixin(class_592.class)
-class ZipTexturePackMixin extends class_285 {
+@Mixin(ZippedTexturePack.class)
+class ZipTexturePackMixin extends TexturePack {
     @Inject(
-            method = "method_976",
+            method = "getResource",
             at = @At("HEAD"),
             cancellable = true
     )

@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(PlayerEntityRenderer.class)
 class PlayerEntityRendererMixin {
     @Inject(
-            method = "method_827(Lnet/minecraft/entity/player/PlayerEntity;F)V",
+            method = "renderMore(Lnet/minecraft/entity/player/PlayerEntity;F)V",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/item/ItemStack;itemId:I",
@@ -29,10 +29,10 @@ class PlayerEntityRendererMixin {
     }
 
     @Inject(
-            method = "method_827(Lnet/minecraft/entity/player/PlayerEntity;F)V",
+            method = "renderMore(Lnet/minecraft/entity/player/PlayerEntity;F)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_556;method_1862(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;)V",
+                    target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;)V",
                     ordinal = 1
             ),
             locals = LocalCapture.CAPTURE_FAILHARD

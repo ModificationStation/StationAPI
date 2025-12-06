@@ -49,7 +49,6 @@ class PistonHeadRendererMixin {
         texture.set(Objects.requireNonNullElseGet(stationapi_pistonHead_atlas, Atlases::getTerrain).getTexture(textureId).getSprite());
     }
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
             method = {
                     "renderPistonHeadYAxis",
@@ -69,7 +68,6 @@ class PistonHeadRendererMixin {
         return texture.get().getX();
     }
 
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(
             method = {
                     "renderPistonHeadYAxis",

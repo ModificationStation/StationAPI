@@ -104,7 +104,7 @@ class ScreenHandlerMixin {
     }
 
     @Redirect(
-            method = "method_2081",
+            method = "insertItem",
             at = @At(
                     value = "FIELD",
                     target = "Lnet/minecraft/item/ItemStack;itemId:I",

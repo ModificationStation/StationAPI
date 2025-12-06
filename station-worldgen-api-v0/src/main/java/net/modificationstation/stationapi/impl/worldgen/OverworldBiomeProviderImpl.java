@@ -14,13 +14,13 @@ public class OverworldBiomeProviderImpl extends ClimateBiomeProvider {
     @Override
     public Biome getBiome(int x, int z, float temperature, float downfall) {
         Biome biome = getBiome(temperature, downfall);
-        return biome == null ? Biome.method_786(temperature, downfall) : biome;
+        return biome == null ? Biome.getBiome(temperature, downfall) : biome;
     }
 
     @Override
     protected Biome getBiome(float temperature, float downfall) {
         Biome biome = super.getBiome(temperature, downfall);
-        return biome == null ? Biome.method_786(temperature, downfall) : biome;
+        return biome == null ? Biome.getBiome(temperature, downfall) : biome;
     }
     
     @Override

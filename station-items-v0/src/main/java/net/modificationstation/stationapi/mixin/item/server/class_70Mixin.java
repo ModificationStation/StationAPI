@@ -1,8 +1,8 @@
 package net.modificationstation.stationapi.mixin.item.server;
 
-import net.minecraft.class_70;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.item.UseOnBlockFirst;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(class_70.class)
+@Mixin(ServerPlayerInteractionManager.class)
 class class_70Mixin {
-    @Shadow public PlayerEntity field_2309;
+    @Shadow public PlayerEntity player;
 
     @Inject(
-            method = "method_1832",
+            method = "interactBlock",
             at = @At("HEAD"),
             cancellable = true
     )
@@ -27,16 +27,16 @@ class class_70Mixin {
     }
 
     @Inject(
-            method = "method_1830",
+            method = "onBlockBreakingAction",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_73;getBlockId(III)I"
+                    target = "Lnet/minecraft/world/ServerWorld;getBlockId(III)I"
             ),
             cancellable = true
     )
-    public void stationapi_method_1830_preMine(int x, int y, int z, int side, CallbackInfo ci){
-        ItemStack stack = this.field_2309.inventory.getSelectedItem();
-        if (stack != null && !stack.preMine(this.field_2309.world.getBlockState(x, y, z), x, y, z, side, this.field_2309))
+    public void stationapi_onBlockBreakingAction_preMine(int x, int y, int z, int side, CallbackInfo ci){
+        ItemStack stack = this.player.inventory.getSelectedItem();
+        if (stack != null && !stack.preMine(this.player.world.getBlockState(x, y, z), x, y, z, side, this.player))
             ci.cancel();
     }
 }

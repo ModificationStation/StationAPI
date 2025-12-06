@@ -1,9 +1,9 @@
 package net.modificationstation.stationapi.mixin.vanillafix.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.minecraft.class_182;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.storage.WorldStorageSource;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.util.Namespace;
@@ -24,17 +24,17 @@ import static net.modificationstation.stationapi.impl.vanillafix.datafixer.Vanil
 @Mixin(Minecraft.class)
 class MinecraftMixin {
     @Shadow
-    private class_182 field_2792;
+    private WorldStorageSource worldStorageSource;
 
     @ModifyArg(
-            method = "method_2125",
+            method = "convertAndSaveWorld",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_452;method_1491(Ljava/lang/String;)V"
+                    target = "Lnet/minecraft/client/render/ProgressRenderer;progressStart(Ljava/lang/String;)V"
             )
     )
     private String stationapi_changeProgressListenerTitle(String string, @Local(ordinal = 0) String worldName) {
-        NbtCompound worldTag = ((FlattenedWorldStorage) this.field_2792).getWorldTag(worldName);
+        NbtCompound worldTag = ((FlattenedWorldStorage) this.worldStorageSource).getWorldTag(worldName);
 
         Set<DataFixers.UpdateData> updateList = NbtHelper.getUpdateList(worldTag);
 
@@ -48,14 +48,14 @@ class MinecraftMixin {
     }
 
     @ModifyArg(
-            method = "method_2125",
+            method = "convertAndSaveWorld",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_452;method_1796(Ljava/lang/String;)V"
+                    target = "Lnet/minecraft/client/render/ProgressRenderer;progressStage(Ljava/lang/String;)V"
             )
     )
     private String stationapi_changeProgressListenerDesc(String string, @Local(ordinal = 0) String worldName) {
-        NbtCompound worldTag = ((FlattenedWorldStorage) this.field_2792).getWorldTag(worldName);
+        NbtCompound worldTag = ((FlattenedWorldStorage) this.worldStorageSource).getWorldTag(worldName);
 
         Set<DataFixers.UpdateData> updateList = NbtHelper.getUpdateList(worldTag);
 

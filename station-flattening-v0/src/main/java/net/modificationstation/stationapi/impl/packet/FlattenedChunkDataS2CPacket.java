@@ -34,7 +34,7 @@ public class FlattenedChunkDataS2CPacket extends ChunkDataS2CPacket implements M
     public FlattenedChunkDataS2CPacket(World world, int chunkX, int chunkZ) {
         this.chunkX = chunkX;
         this.chunkZ = chunkZ;
-        FlattenedChunk chunk = (FlattenedChunk) world.method_214(chunkX, chunkZ);
+        FlattenedChunk chunk = (FlattenedChunk) world.getChunk(chunkX, chunkZ);
         ChunkSection[] sections = chunk.sections;
         byte[] sectionsData = new byte[getSectionsPacketSize(chunk)];
         ByteBuffer buf = ByteBuffer.wrap(sectionsData);

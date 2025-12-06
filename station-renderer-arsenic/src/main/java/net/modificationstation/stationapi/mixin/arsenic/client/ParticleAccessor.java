@@ -7,13 +7,13 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(Particle.class)
 public interface ParticleAccessor {
     @Accessor
-    int getField_2635();
+    int getTextureId();
 
     @Accessor
-    float getField_2636();
+    float getPrevU();
 
     @Accessor
-    float getField_2637();
+    float getPrevV();
 
     @Accessor
     float getScale();

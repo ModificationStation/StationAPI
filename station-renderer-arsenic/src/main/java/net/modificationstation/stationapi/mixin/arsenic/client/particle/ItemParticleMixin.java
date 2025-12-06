@@ -21,18 +21,18 @@ class ItemParticleMixin extends Particle {
     }
 
     @Inject(
-            method = "method_2002",
+            method = "render",
             at = @At("HEAD")
     )
     private void stationapi_initializeSprite(
             Tessellator f, float g, float h, float i, float j, float k, float par7, CallbackInfo ci,
             @Share("sprite") LocalRef<Sprite> spriteRef
     ) {
-        spriteRef.set(Atlases.getGuiItems().getTexture(field_2635).getSprite());
+        spriteRef.set(Atlases.getGuiItems().getTexture(textureId).getSprite());
     }
 
     @ModifyVariable(
-            method = "method_2002",
+            method = "render",
             at = @At("STORE"),
             index = 8
     )
@@ -41,11 +41,11 @@ class ItemParticleMixin extends Particle {
             @Share("sprite") LocalRef<Sprite> spriteRef
     ) {
         Sprite sprite = spriteRef.get();
-        return sprite.getMinU() + (sprite.getMaxU() - sprite.getMinU()) * field_2636 / 4;
+        return sprite.getMinU() + (sprite.getMaxU() - sprite.getMinU()) * prevU / 4;
     }
 
     @ModifyConstant(
-            method = "method_2002",
+            method = "render",
             constant = @Constant(
                     floatValue = 3.996F / ATLAS_SIZE,
                     ordinal = 0
@@ -60,7 +60,7 @@ class ItemParticleMixin extends Particle {
     }
 
     @ModifyVariable(
-            method = "method_2002",
+            method = "render",
             at = @At("STORE"),
             index = 10
     )
@@ -69,11 +69,11 @@ class ItemParticleMixin extends Particle {
             @Share("sprite") LocalRef<Sprite> spriteRef
     ) {
         Sprite sprite = spriteRef.get();
-        return sprite.getMinV() + (sprite.getMaxV() - sprite.getMinV()) * field_2637 / 4;
+        return sprite.getMinV() + (sprite.getMaxV() - sprite.getMinV()) * prevV / 4;
     }
 
     @ModifyConstant(
-            method = "method_2002",
+            method = "render",
             constant = @Constant(
                     floatValue = 3.996F / ATLAS_SIZE,
                     ordinal = 1

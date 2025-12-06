@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 
 public class ChunkSection {
 
-    private static final byte[] INITIAL_SKY_LIGHT = Util.make(new byte[2048], array -> Arrays.fill(array, (byte) (LightType.SKY.defaultValue << 4 | LightType.SKY.defaultValue)));
+    private static final byte[] INITIAL_SKY_LIGHT = Util.make(new byte[2048], array -> Arrays.fill(array, (byte) (LightType.SKY.lightValue << 4 | LightType.SKY.lightValue)));
     public static final ChunkSection EMPTY = Util.make(new ChunkSection(0), ChunkSection::initSkyLight);
     private final short yOffset;
     private short nonEmptyBlockCount;

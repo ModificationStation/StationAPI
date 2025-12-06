@@ -54,7 +54,7 @@ public class ServerVanillaChecker {
                 String serverStationVersion = NAMESPACE.getVersion().getFriendlyString();
                 if (!version.equals(serverStationVersion)) {
                     LOGGER.error("Player \"" + player.name + "\" has a mismatching " + NAMESPACE.getName() + " version \"" + version + "\", disconnecting.");
-                    serverPlayer.field_255.method_833(I18n.getTranslation("disconnect." + NAMESPACE + ".stationVersionMismatch", serverStationVersion, version));
+                    serverPlayer.networkHandler.disconnect(I18n.getTranslation("disconnect." + NAMESPACE + ".stationVersionMismatch", serverStationVersion, version));
                     return;
                 }
                 Map<String, String> clientMods = new HashMap<>();
@@ -72,12 +72,12 @@ public class ServerVanillaChecker {
                         clientVersion = clientMods.get(modid);
                         if (clientVersion == null || !clientVersion.equals(serverVersion)) {
                             LOGGER.error("Player \"" + player.name + "\" has a mismatching " + modMetadata.getName() + " (" + modid + ")" + " version \"" + clientVersion + "\", disconnecting.");
-                            serverPlayer.field_255.method_833(I18n.getTranslation("disconnect." + NAMESPACE + ".modVersionMismatch", modMetadata.getName(), modid, serverVersion, clientVersion == null ? "null" : clientVersion));
+                            serverPlayer.networkHandler.disconnect(I18n.getTranslation("disconnect." + NAMESPACE + ".modVersionMismatch", modMetadata.getName(), modid, serverVersion, clientVersion == null ? "null" : clientVersion));
                             return;
                         }
                     } else {
                         LOGGER.error("Player \"" + player.name + "\" has a missing mod " + modMetadata.getName() + " (" + modid + "), disconnecting.");
-                        serverPlayer.field_255.method_833(I18n.getTranslation("disconnect." + NAMESPACE + ".missingMod", modMetadata.getName(), modid, serverVersion));
+                        serverPlayer.networkHandler.disconnect(I18n.getTranslation("disconnect." + NAMESPACE + ".missingMod", modMetadata.getName(), modid, serverVersion));
                         return;
                     }
                 }

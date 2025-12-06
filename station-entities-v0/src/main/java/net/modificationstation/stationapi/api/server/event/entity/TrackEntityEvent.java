@@ -3,9 +3,9 @@ package net.modificationstation.stationapi.api.server.event.entity;
 import lombok.experimental.SuperBuilder;
 import net.mine_diver.unsafeevents.Event;
 import net.mine_diver.unsafeevents.event.EventPhases;
-import net.minecraft.class_488;
-import net.minecraft.class_80;
 import net.minecraft.entity.Entity;
+import net.minecraft.server.entity.EntityTracker;
+import net.minecraft.util.IntHashMap;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.server.entity.CustomTracking;
 import net.modificationstation.stationapi.api.server.entity.HasTrackingParameters;
@@ -25,12 +25,12 @@ public class TrackEntityEvent extends Event {
     /**
      * The dimension's tracker instance. Can be used to (un)track entities.
      */
-    public final class_488 entityTracker;
+    public final EntityTracker entityTracker;
 
     /**
      * The set of tracked entities. Can be used to check if entity is already tracked.
      */
-    public final class_80 trackedEntities;
+    public final IntHashMap trackedEntities;
 
     /**
      * The entity that server tries to track.
@@ -43,7 +43,7 @@ public class TrackEntityEvent extends Event {
      */
     @API
     public boolean isTracked() {
-        return trackedEntities.method_777(entityToTrack.id);
+        return trackedEntities.containsKey(entityToTrack.id);
     }
 
     /**
@@ -51,7 +51,7 @@ public class TrackEntityEvent extends Event {
      */
     @API
     public void untrack() {
-        entityTracker.method_1669(entityToTrack);
+        entityTracker.onEntityRemoved(entityToTrack);
     }
 
     /**
@@ -62,7 +62,7 @@ public class TrackEntityEvent extends Event {
      */
     @API
     public void track(int trackingDistance, int updatePeriod) {
-        entityTracker.method_1666(entityToTrack, trackingDistance, updatePeriod);
+        entityTracker.startTracking(entityToTrack, trackingDistance, updatePeriod);
     }
 
     /**
@@ -74,6 +74,6 @@ public class TrackEntityEvent extends Event {
      */
     @API
     public void track(int trackingDistance, int updatePeriod, boolean sendVelocity) {
-        entityTracker.method_1667(entityToTrack, trackingDistance, updatePeriod, sendVelocity);
+        entityTracker.startTracking(entityToTrack, trackingDistance, updatePeriod, sendVelocity);
     }
 }

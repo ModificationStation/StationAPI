@@ -1,11 +1,11 @@
 package net.modificationstation.sltest.mixin;
 
 import net.minecraft.block.Block;
-import net.minecraft.class_209;
-import net.minecraft.class_538;
+import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.chunk.OverworldChunkGenerator;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.BlockStateHolder;
 import net.modificationstation.stationapi.api.world.HeightLimitView;
@@ -23,20 +23,20 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.concurrent.ForkJoinPool;
 import java.util.stream.IntStream;
 
-@Mixin(class_538.class)
+@Mixin(OverworldChunkGenerator.class)
 public class MixinOverworldLevelSource {
-    @Shadow private class_209 field_2257;
-    @Shadow private World field_2260;
+    @Shadow private OctavePerlinNoiseSampler perlinNoise1;
+    @Shadow private World world;
 
     @Unique
     private ForkJoinPool customPool = new ForkJoinPool(8);
 
-    @Inject(method = "method_1806", at = @At(
+    @Inject(method = "getChunk", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/class_538;method_1798(II[B[Lnet/minecraft/world/biome/Biome;[D)V"
+            target = "Lnet/minecraft/world/gen/chunk/OverworldChunkGenerator;buildTerrain(II[B[Lnet/minecraft/world/biome/Biome;[D)V"
     ), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onGetChunk(int chunkX, int chunkZ, CallbackInfoReturnable<Chunk> info, byte[] blocks, Chunk chunk, double[] var5) {
-        short height = (short) ((HeightLimitView) field_2260).getTopY();
+        short height = (short) ((HeightLimitView) world).getTopY();
         if (height < 129) return;
 
         BlockState stone = ((BlockStateHolder) Block.STONE).getDefaultState();
@@ -137,14 +137,14 @@ public class MixinOverworldLevelSource {
         }));
     }
 
-    @Inject(method = "method_1798", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "buildTerrain", at = @At("HEAD"), cancellable = true)
     private void disableShapeChunk(int chunkX, int chunkZ, byte[] tiles, Biome[] biomes, double[] temperatures, CallbackInfo info) {
         if (canApply()) {
             info.cancel();
         }
     }
 
-    @Inject(method = "method_1797", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "buildSurfaces", at = @At("HEAD"), cancellable = true)
     private void disableBuildSurface(int chunkX, int chunkZ, byte[] tiles, Biome[] biomes, CallbackInfo info) {
         if (canApply()) {
             info.cancel();
@@ -153,7 +153,7 @@ public class MixinOverworldLevelSource {
 
     @Unique
     private float getNoise(double x, double z) {
-        float noise = (float) field_2257.method_1513(x, z);
+        float noise = (float) perlinNoise1.sample(x, z);
         return (noise + 150.0F) / 300.0F;
     }
 
@@ -172,6 +172,6 @@ public class MixinOverworldLevelSource {
 
     @Unique
     private boolean canApply() {
-        return ((HeightLimitView) field_2260).getTopY() > 128;
+        return ((HeightLimitView) world).getTopY() > 128;
     }
 }

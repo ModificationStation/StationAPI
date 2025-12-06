@@ -15,7 +15,7 @@ class WorldMixin {
     @Shadow protected WorldProperties properties;
 
     @Redirect(
-            method = "<init>(Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/world/dimension/Dimension;)V",
+            method = "<init>(Lnet/minecraft/world/storage/WorldStorage;Ljava/lang/String;JLnet/minecraft/world/dimension/Dimension;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/WorldProperties;getDimensionId()I"
@@ -26,7 +26,7 @@ class WorldMixin {
     }
 
     @ModifyConstant(
-            method = "<init>(Lnet/minecraft/world/dimension/DimensionData;Ljava/lang/String;JLnet/minecraft/world/dimension/Dimension;)V",
+            method = "<init>(Lnet/minecraft/world/storage/WorldStorage;Ljava/lang/String;JLnet/minecraft/world/dimension/Dimension;)V",
             constant = @Constant(
                     intValue = -1,
                     ordinal = 1

@@ -1,7 +1,7 @@
 package net.modificationstation.stationapi.api.client.color.world;
 
 import net.minecraft.block.Block;
-import net.minecraft.class_334;
+import net.minecraft.client.color.world.FoliageColors;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.modificationstation.stationapi.api.client.world.ColorResolver;
@@ -10,7 +10,7 @@ import net.modificationstation.stationapi.mixin.render.client.WaterColorAccessor
 public class BiomeColors {
 
     public static final ColorResolver.ByBlockCoordinates GRASS_COLOR = Block.GRASS_BLOCK::getColorMultiplier;
-    public static final ColorResolver.ByTemperatureAndRainfall FOLIAGE_COLOR = class_334::method_1080;
+    public static final ColorResolver.ByTemperatureAndRainfall FOLIAGE_COLOR = FoliageColors::getColor;
     public static final ColorResolver.ByTemperatureAndRainfall WATER_COLOR = (temperature, rainfall) -> {
         rainfall *= temperature;
         int var4 = (int)((1.0D - temperature) * 255.0D);

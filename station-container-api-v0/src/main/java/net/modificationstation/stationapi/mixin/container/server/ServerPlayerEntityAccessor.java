@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(ServerPlayerEntity.class)
 public interface ServerPlayerEntityAccessor {
     @Invoker
-    void invokeMethod_314();
+    void invokeIncrementScreenHandlerSyncId();
 
     @Accessor
-    int getField_260();
+    int getScreenHandlerSyncId();
 }

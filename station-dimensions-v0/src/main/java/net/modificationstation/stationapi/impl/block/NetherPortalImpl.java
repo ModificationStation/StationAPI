@@ -19,12 +19,12 @@ public class NetherPortalImpl {
     @Environment(EnvType.SERVER)
     private static void switchDimensionServer(PlayerEntity player) {
         //noinspection deprecation
-        ((MinecraftServer) FabricLoader.getInstance().getGameInstance()).field_2842.method_578((ServerPlayerEntity) player);
+        ((MinecraftServer) FabricLoader.getInstance().getGameInstance()).playerManager.changePlayerDimension((ServerPlayerEntity) player);
     }
 
     @Environment(EnvType.CLIENT)
     private static void switchDimensionClient() {
         //noinspection deprecation
-        ((Minecraft) FabricLoader.getInstance().getGameInstance()).method_2139();
+        ((Minecraft) FabricLoader.getInstance().getGameInstance()).changeDimension();
     }
 }

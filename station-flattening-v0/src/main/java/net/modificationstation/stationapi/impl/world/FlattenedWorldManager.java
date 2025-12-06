@@ -32,7 +32,7 @@ public class FlattenedWorldManager {
     private static final String HEIGHT_KEY = "y";
 
     public static void saveChunk(FlattenedChunk chunk, World world, NbtCompound chunkTag) {
-        world.method_251();
+        world.checkSessionLock();
         chunkTag.putInt("xPos", chunk.x);
         chunkTag.putInt("zPos", chunk.z);
         chunkTag.putLong("LastUpdate", world.getTime());
@@ -54,14 +54,14 @@ public class FlattenedWorldManager {
         }
         chunkTag.put(SECTIONS, sectionTags);
         chunkTag.putByteArray(HEIGHTMAP_KEY, chunk.getStoredHeightmap());
-        chunkTag.putBoolean("TerrainPopulated", chunk.field_966);
-        chunk.field_969 = false;
+        chunkTag.putBoolean("TerrainPopulated", chunk.terrainPopulated);
+        chunk.lastSaveHadEntities = false;
         NbtList entityTags = new NbtList();
         for (int i = 0; i < chunk.entities.length; ++i) {
             for (Object object : chunk.entities[i]) {
-                chunk.field_969 = true;
+                chunk.lastSaveHadEntities = true;
                 NbtCompound entityTag = new NbtCompound();
-                if (!((Entity)object).method_1343(entityTag)) continue;
+                if (!((Entity)object).saveSelfNbt(entityTag)) continue;
                 entityTags.add(entityTag);
             }
         }
@@ -96,13 +96,13 @@ public class FlattenedWorldManager {
             }
         }
         chunk.loadStoredHeightmap(chunkTag.getByteArray(HEIGHTMAP_KEY));
-        chunk.field_966 = chunkTag.getBoolean("TerrainPopulated");
+        chunk.terrainPopulated = chunkTag.getBoolean("TerrainPopulated");
         NbtList entityTags = chunkTag.getList("Entities");
         if (entityTags != null) {
             for (int i = 0; i < entityTags.size(); ++i) {
                 NbtCompound compoundTag = (NbtCompound) entityTags.get(i);
                 Entity object = EntityRegistry.getEntityFromNbt(compoundTag, world);
-                chunk.field_969 = true;
+                chunk.lastSaveHadEntities = true;
                 if (object == null) continue;
                 chunk.addEntity(object);
             }
@@ -111,7 +111,7 @@ public class FlattenedWorldManager {
         if (tileEntityTags != null) {
             for (int i = 0; i < tileEntityTags.size(); ++i) {
                 NbtCompound object = (NbtCompound) tileEntityTags.get(i);
-                BlockEntity tileEntityBase = BlockEntity.method_1068(object);
+                BlockEntity tileEntityBase = BlockEntity.createFromNbt(object);
                 if (tileEntityBase == null) continue;
                 chunk.addBlockEntity(tileEntityBase);
             }

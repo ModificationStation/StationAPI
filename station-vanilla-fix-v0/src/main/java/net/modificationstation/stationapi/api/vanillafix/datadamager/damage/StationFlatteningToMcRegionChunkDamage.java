@@ -28,8 +28,8 @@ public class StationFlatteningToMcRegionChunkDamage extends DataFix {
     private final static byte[] DEFAULT_BLOCK_LIGHT = new byte[CHUNK_SIZE >> 1];
     private final static byte[] DEFAULT_SKY_LIGHT = new byte[CHUNK_SIZE >> 1];
     static {
-        Arrays.fill(DEFAULT_BLOCK_LIGHT, (byte) (LightType.BLOCK.defaultValue << 4 | LightType.BLOCK.defaultValue));
-        Arrays.fill(DEFAULT_SKY_LIGHT, (byte) (LightType.SKY.defaultValue << 4 | LightType.SKY.defaultValue));
+        Arrays.fill(DEFAULT_BLOCK_LIGHT, (byte) (LightType.BLOCK.lightValue << 4 | LightType.BLOCK.lightValue));
+        Arrays.fill(DEFAULT_SKY_LIGHT, (byte) (LightType.SKY.lightValue << 4 | LightType.SKY.lightValue));
     }
 
     private final String name;

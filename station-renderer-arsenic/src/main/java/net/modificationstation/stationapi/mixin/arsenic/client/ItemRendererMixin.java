@@ -36,12 +36,12 @@ abstract class ItemRendererMixin extends EntityRenderer {
      * @author mine_diver
      */
     @Overwrite
-    public void method_1486(TextRenderer textRenderer, TextureManager textureManagerArg, int itemId, int damage, int textureIndex, int textureX, int textureY) {
+    public void renderGuiItem(TextRenderer textRenderer, TextureManager textureManagerArg, int itemId, int damage, int textureIndex, int textureX, int textureY) {
         arsenic_plugin.renderItemOnGui(textRenderer, textureManagerArg, itemId, damage, textureIndex, textureX, textureY);
     }
 
     @Inject(
-            method = "method_1487",
+            method = "renderGuiItem(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/client/texture/TextureManager;Lnet/minecraft/item/ItemStack;II)V",
             at = @At("HEAD"),
             cancellable = true
     )
@@ -54,7 +54,7 @@ abstract class ItemRendererMixin extends EntityRenderer {
      * @author mine_diver
      */
     @Overwrite
-    public void method_1483(int i, int j, int k, int i1, int j1, int k1) {
+    public void drawTexture(int i, int j, int k, int i1, int j1, int k1) {
         arsenic_plugin.renderItemQuad(i, j, k, i1, j1, k1);
     }
 }

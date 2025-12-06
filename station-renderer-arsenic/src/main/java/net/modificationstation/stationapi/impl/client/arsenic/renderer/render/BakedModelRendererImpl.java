@@ -4,14 +4,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
-import net.minecraft.class_454;
-import net.minecraft.class_583;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.platform.Lighting;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.ClientWorld;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
@@ -87,7 +87,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         light.initialize(
                 block,
                 world, pos.x, pos.y, pos.z,
-                Minecraft.method_2148() && model.useAmbientOcclusion()
+                Minecraft.isAmbientOcclusionEnabled() && model.useAmbientOcclusion()
         );
         ImmutableList<BakedQuad> qs;
         BakedQuad q;
@@ -206,10 +206,10 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         if (side && renderMode == ModelTransformation.Mode.GUI) {
             float angle = transformation.rotation.getY() - 315;
             if (angle != 0) {
-                class_583.method_1927();
+                Lighting.turnOff();
                 glPushMatrix();
                 glRotatef(angle, 0, 1, 0);
-                class_583.method_1930();
+                Lighting.turnOn();
                 glPopMatrix();
             }
         }
@@ -235,7 +235,7 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
     @Override
     public BakedModel getModel(ItemStack stack, @Nullable World world, @Nullable LivingEntity entity, int seed) {
         BakedModel bakedModel = this.itemModels.getModel(stack);
-        class_454 clientWorld = world instanceof class_454 ? (class_454) world : null;
+        ClientWorld clientWorld = world instanceof ClientWorld ? (ClientWorld) world : null;
         BakedModel bakedModel2 = bakedModel.getOverrides().apply(bakedModel, stack, clientWorld, entity, seed);
         return bakedModel2 == null ? this.itemModels.getModelManager().getMissingModel() : bakedModel2;
     }
@@ -262,10 +262,10 @@ public class BakedModelRendererImpl implements BakedModelRenderer {
         if (flat) glEnable(GL_LIGHTING);
         glPopMatrix();
         if (!flat) {
-            class_583.method_1927();
+            Lighting.turnOff();
             glPushMatrix();
             glRotatef(120.0f, 1.0f, 0.0f, 0.0f);
-            class_583.method_1930();
+            Lighting.turnOn();
             glPopMatrix();
         }
         glEnable(GL_CULL_FACE);

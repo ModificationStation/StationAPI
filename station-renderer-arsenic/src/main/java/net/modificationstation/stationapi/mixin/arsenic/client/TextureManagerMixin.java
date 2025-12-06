@@ -2,7 +2,7 @@ package net.modificationstation.stationapi.mixin.arsenic.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.class_336;
+import net.minecraft.client.render.texture.DynamicTexture;
 import net.minecraft.client.texture.TextureManager;
 import net.modificationstation.stationapi.api.client.StationRenderAPI;
 import net.modificationstation.stationapi.api.client.texture.Sprite;
@@ -42,7 +42,7 @@ class TextureManagerMixin {
     }
 
     @Inject(
-            method = "method_1089",
+            method = "load(Ljava/awt/image/BufferedImage;I)V",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/nio/ByteBuffer;clear()Ljava/nio/Buffer;",
@@ -55,7 +55,7 @@ class TextureManagerMixin {
     }
 
     @Inject(
-            method = "method_1095",
+            method = "bind",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/nio/ByteBuffer;clear()Ljava/nio/Buffer;",
@@ -68,7 +68,7 @@ class TextureManagerMixin {
     }
 
     @Inject(
-            method = "method_1084",
+            method = "tick",
             at = @At("HEAD")
     )
     private void stationapi_tick_onTickStart(CallbackInfo ci) {
@@ -81,7 +81,7 @@ class TextureManagerMixin {
     }
 
     @Inject(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/nio/ByteBuffer;clear()Ljava/nio/Buffer;",
@@ -90,26 +90,26 @@ class TextureManagerMixin {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void stationapi_tick_ensureBufferCapacity(CallbackInfo ci, int var1, class_336 var2) {
-        arsenic_plugin.ensureBufferCapacity(var2.field_1411.length);
+    private void stationapi_tick_ensureBufferCapacity(CallbackInfo ci, int var1, DynamicTexture var2) {
+        arsenic_plugin.ensureBufferCapacity(var2.pixels.length);
     }
 
     @Redirect(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/class_336;method_1206(Lnet/minecraft/client/texture/TextureManager;)V"
+                    target = "Lnet/minecraft/client/render/texture/DynamicTexture;bind(Lnet/minecraft/client/texture/TextureManager;)V"
             )
     )
-    private void stationapi_tick_preventBindingTextureAndCheckCustomBinder(class_336 instance, TextureManager manager) {
+    private void stationapi_tick_preventBindingTextureAndCheckCustomBinder(DynamicTexture instance, TextureManager manager) {
         if (instance instanceof StaticReferenceProvider provider) {
             final Sprite staticReference = provider.getStaticReference().getSprite();
             final SpriteContents contents = staticReference.getContents();
             stationapi_customBinder = true;
             stationapi_customBinderX = staticReference.getX();
             stationapi_customBinderY = staticReference.getY();
-            stationapi_binderScaledWidth = contents.getWidth() / instance.field_1415;
-            stationapi_binderScaledHeight = contents.getHeight() / instance.field_1415;
+            stationapi_binderScaledWidth = contents.getWidth() / instance.replicate;
+            stationapi_binderScaledHeight = contents.getHeight() / instance.replicate;
         } else stationapi_customBinder = false;
     }
 
@@ -125,7 +125,7 @@ class TextureManagerMixin {
             stationapi_binderScaledHeight;
 
     @Inject(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "CONSTANT",
                     args = "intValue=3553",
@@ -133,13 +133,13 @@ class TextureManagerMixin {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private void stationapi_tick_captureCurrentBinderOffsets(CallbackInfo ci, int var1, class_336 var2, int var3, int var4) {
+    private void stationapi_tick_captureCurrentBinderOffsets(CallbackInfo ci, int var1, DynamicTexture var2, int var3, int var4) {
         stationapi_binderXOffset = var3;
         stationapi_binderYOffset = var4;
     }
 
     @ModifyArg(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glTexSubImage2D(IIIIIIIILjava/nio/ByteBuffer;)V",
@@ -153,7 +153,7 @@ class TextureManagerMixin {
     }
 
     @ModifyArg(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glTexSubImage2D(IIIIIIIILjava/nio/ByteBuffer;)V",
@@ -167,7 +167,7 @@ class TextureManagerMixin {
     }
 
     @ModifyArg(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glTexSubImage2D(IIIIIIIILjava/nio/ByteBuffer;)V",
@@ -181,7 +181,7 @@ class TextureManagerMixin {
     }
 
     @ModifyArg(
-            method = "method_1084",
+            method = "tick",
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/lwjgl/opengl/GL11;glTexSubImage2D(IIIIIIIILjava/nio/ByteBuffer;)V",

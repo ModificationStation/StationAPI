@@ -15,12 +15,12 @@ public class TextureHelper {
 
     public static BufferedImage readTextureStream(InputStream stream) {
         //noinspection deprecation
-        return ((TextureManagerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager).invokeMethod_1091(stream);
+        return ((TextureManagerAccessor) ((Minecraft) FabricLoader.getInstance().getGameInstance()).textureManager).invokeReadImage(stream);
     }
 
     public static InputStream getTextureStream(String path) {
         //noinspection deprecation
-        return ((Minecraft) FabricLoader.getInstance().getGameInstance()).field_2768.field_1175.method_976(path);
+        return ((Minecraft) FabricLoader.getInstance().getGameInstance()).texturePacks.selected.getResource(path);
     }
 
     public static BufferedImage scaleImage(BufferedImage image, int width, int height) {

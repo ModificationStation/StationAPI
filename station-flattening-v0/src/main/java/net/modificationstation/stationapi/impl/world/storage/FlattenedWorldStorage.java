@@ -7,11 +7,16 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.*;
+import net.minecraft.client.gui.screen.LoadingDisplay;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.WorldProperties;
-import net.minecraft.world.dimension.DimensionData;
+import net.minecraft.world.chunk.storage.RegionFile;
+import net.minecraft.world.chunk.storage.RegionIo;
+import net.minecraft.world.storage.RegionWorldStorageSource;
+import net.minecraft.world.storage.WorldSaveInfo;
+import net.minecraft.world.storage.WorldStorage;
 import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.nbt.NbtHelper;
 import net.modificationstation.stationapi.api.util.Util;
@@ -25,7 +30,7 @@ import java.util.function.BiFunction;
 
 import static net.modificationstation.stationapi.api.StationAPI.LOGGER;
 
-public class FlattenedWorldStorage extends class_157 {
+public class FlattenedWorldStorage extends RegionWorldStorageSource {
 
     public FlattenedWorldStorage(File file) {
         super(file);
@@ -33,33 +38,33 @@ public class FlattenedWorldStorage extends class_157 {
 
     @Environment(value=EnvType.CLIENT)
     @Override
-    public String method_1001() {
-        return "Modded " + super.method_1001();
+    public String getName() {
+        return "Modded " + super.getName();
     }
 
     @Environment(value=EnvType.CLIENT)
     public String getPreviousWorldFormat() {
-        return super.method_1001();
+        return super.getName();
     }
 
     @Environment(value=EnvType.CLIENT)
-    public List<class_591> method_1002() {
-        ArrayList<class_591> worlds = new ArrayList<>();
-        for (File worldPath : Objects.requireNonNull(this.field_1706.listFiles())) {
+    public List<WorldSaveInfo> getAll() {
+        ArrayList<WorldSaveInfo> worlds = new ArrayList<>();
+        for (File worldPath : Objects.requireNonNull(this.dir.listFiles())) {
             String worldFolder;
             WorldProperties data;
             if (!worldPath.isDirectory() || (data = this.method_1004(worldFolder = worldPath.getName())) == null) continue;
             NbtCompound worldTag = getWorldTag(worldFolder);
             boolean requiresUpdating = data.getVersion() != 19132 || NbtHelper.requiresUpdating(worldTag);
             String worldName = data.getName();
-            if (worldName == null || MathHelper.isNullOrEmtpy(worldName)) worldName = worldFolder;
-            worlds.add(new class_591(worldFolder, worldName, data.setLastPlayed(), data.getSizeOnDisk(), requiresUpdating));
+            if (worldName == null || MathHelper.isNullOrEmpty(worldName)) worldName = worldFolder;
+            worlds.add(new WorldSaveInfo(worldFolder, worldName, data.setLastPlayed(), data.getSizeOnDisk(), requiresUpdating));
         }
         return worlds;
     }
 
     public NbtCompound getWorldTag(String worldFolder) {
-        File worldPath = new File(field_1706, worldFolder);
+        File worldPath = new File(dir, worldFolder);
         if (!worldPath.exists()) return null;
         File worldData = new File(worldPath, "level.dat");
         if (worldData.exists()) try {
@@ -76,38 +81,38 @@ public class FlattenedWorldStorage extends class_157 {
     }
 
     @Override
-    public DimensionData method_1009(String string, boolean bl) {
-        return new FlattenedDimensionFile(this.field_1706, string, bl);
+    public WorldStorage method_1009(String string, boolean bl) {
+        return new FlattenedDimensionFile(this.dir, string, bl);
     }
 
     @Override
-    public boolean method_1007(String string) {
-        if (super.method_1007(string))
+    public boolean needsConversion(String string) {
+        if (super.needsConversion(string))
             return true;
         NbtCompound worldTag = getWorldTag(string);
         return worldTag != null && NbtHelper.requiresUpdating(worldTag);
     }
 
     @Override
-    public boolean method_1008(String worldFolder, class_62 progress) {
+    public boolean convert(String worldFolder, LoadingDisplay progress) {
         return convertWorld(worldFolder, (type, compound) -> NbtHelper.addDataVersions(NbtHelper.update(type, compound)), progress);
     }
 
-    public boolean convertWorld(String worldFolder, BiFunction<DSL.TypeReference, NbtCompound, NbtCompound> convertFunction, class_62 progress) {
-        class_379.method_1212();
+    public boolean convertWorld(String worldFolder, BiFunction<DSL.TypeReference, NbtCompound, NbtCompound> convertFunction, LoadingDisplay progress) {
+        RegionIo.flush();
         LOGGER.info("Creating a backup of world \"" + worldFolder + "\"...");
-        File worldFile = new File(field_1706, worldFolder);
+        File worldFile = new File(dir, worldFolder);
         try {
-            Util.pack(worldFile.toPath(), new File(field_1706, worldFolder + "-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".zip").toPath());
+            Util.pack(worldFile.toPath(), new File(dir, worldFolder + "-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".zip").toPath());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if (super.method_1007(worldFolder)) {
-            LOGGER.info("Converting to \"" + super.method_1001() + "\" first...");
-            super.method_1008(worldFolder, progress);
+        if (super.needsConversion(worldFolder)) {
+            LOGGER.info("Converting to \"" + super.getName() + "\" first...");
+            super.convert(worldFolder, progress);
         }
-        progress.method_1794(0);
-        List<class_353> regions = new ArrayList<>();
+        progress.progressStagePercentage(0);
+        List<RegionFile> regions = new ArrayList<>();
         LOGGER.info("Scanning folders...");
         scanDimensionDir(worldFile, regions);
         File[] dims = worldFile.listFiles((dir, name) -> new File(dir, name).isDirectory() && name.startsWith("DIM"));
@@ -141,18 +146,18 @@ public class FlattenedWorldStorage extends class_157 {
         return true;
     }
 
-    private void scanDimensionDir(File dimensionFolder, List<class_353> regions) {
+    private void scanDimensionDir(File dimensionFolder, List<RegionFile> regions) {
         File regionFolder = new File(dimensionFolder, "region");
         File[] regionFiles = regionFolder.listFiles((dir, name) -> new File(dir, name).isFile() && name.endsWith(".mcr"));
         if (regionFiles != null)
-            Arrays.stream(regionFiles).map(class_353::new).forEach(regions::add);
+            Arrays.stream(regionFiles).map(RegionFile::new).forEach(regions::add);
     }
 
-    private void convertChunks(List<class_353> regions, BiFunction<DSL.TypeReference, NbtCompound, NbtCompound> convertFunction, class_62 progress) {
+    private void convertChunks(List<RegionFile> regions, BiFunction<DSL.TypeReference, NbtCompound, NbtCompound> convertFunction, LoadingDisplay progress) {
         List<IntSet> existingChunks = new ArrayList<>();
         int totalChunks = 0;
-        for (class_353 region : regions) {
-            int[] offsets = ((RegionFileAccessor) region).getField_1318();
+        for (RegionFile region : regions) {
+            int[] offsets = ((RegionFileAccessor) region).getChunkBlockInfo();
             IntSet chunks = new IntOpenHashSet(offsets.length);
             for (int i = 0; i < offsets.length; i++)
                 if (offsets[i] != 0)
@@ -163,14 +168,14 @@ public class FlattenedWorldStorage extends class_157 {
         LOGGER.info("Total conversion count is " + totalChunks);
         int updatedChunks = 0;
         for (int i = 0; i < regions.size(); i++) {
-            class_353 region = regions.get(i);
+            RegionFile region = regions.get(i);
             IntSet chunks = existingChunks.get(i);
             IntIterator it = chunks.iterator();
             while (it.hasNext()) {
                 int index = it.nextInt();
                 int x = index & 0b11111;
                 int z = index >> 5;
-                DataInputStream stream = region.method_1159(x, z);
+                DataInputStream stream = region.getChunkInputStream(x, z);
                 if (stream != null) {
                     NbtCompound chunkTag = NbtIo.read(stream);
                     try {
@@ -179,15 +184,15 @@ public class FlattenedWorldStorage extends class_157 {
                         throw new RuntimeException(e);
                     }
                     NbtCompound updatedChunkTag = convertFunction.apply(TypeReferences.CHUNK, chunkTag);
-                    try (DataOutputStream outStream = region.method_1167(x, z)) {
+                    try (DataOutputStream outStream = region.getChunkOutputStream(x, z)) {
                         NbtIo.write(updatedChunkTag, outStream);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 }
-                progress.method_1794(++updatedChunks * 100 / totalChunks);
+                progress.progressStagePercentage(++updatedChunks * 100 / totalChunks);
             }
-            region.method_1166();
+            region.close();
         }
     }
 }

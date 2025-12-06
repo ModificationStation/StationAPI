@@ -63,11 +63,11 @@ public class ItemDispenseContext {
     }
 
     public void shootEntity(Entity entity, ShootEntityFunction shootFunc) {
-        entity.method_1340(dispenser.x + 0.5, dispenser.y + 0.5, dispenser.z + 0.5);
+        entity.setPosition(dispenser.x + 0.5, dispenser.y + 0.5, dispenser.z + 0.5);
         shootFunc.shoot(entity, direction.getOffsetX(), direction.getOffsetY() + 0.1, direction.getOffsetZ(), 1.1F, 6.0F);
-        dispenser.world.method_210(entity);
-        dispenser.world.method_230(1002, dispenser.x, dispenser.y, dispenser.z, 0);
-        dispenser.world.method_230(2000, dispenser.x, dispenser.y, dispenser.z, direction.getOffsetX() + 1 + (direction.getOffsetZ() + 1) * 3);
+        dispenser.world.spawnEntity(entity);
+        dispenser.world.worldEvent(1002, dispenser.x, dispenser.y, dispenser.z, 0);
+        dispenser.world.worldEvent(2000, dispenser.x, dispenser.y, dispenser.z, direction.getOffsetX() + 1 + (direction.getOffsetZ() + 1) * 3);
     }
 
     public BlockPos getFacingBlockPos() {

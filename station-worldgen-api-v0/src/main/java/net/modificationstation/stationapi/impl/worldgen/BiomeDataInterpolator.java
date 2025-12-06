@@ -1,9 +1,8 @@
 package net.modificationstation.stationapi.impl.worldgen;
 
-import net.minecraft.class_519;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.biome.Biome;
-
+import net.minecraft.world.biome.source.BiomeSource;
 import java.util.function.Function;
 
 public class BiomeDataInterpolator {
@@ -28,7 +27,7 @@ public class BiomeDataInterpolator {
         this.provider = provider;
     }
 
-    public float get(class_519 source, int x, int z) {
+    public float get(BiomeSource source, int x, int z) {
         int x1 = x >> bitShift;
         int z1 = z >> bitShift;
 
@@ -58,11 +57,11 @@ public class BiomeDataInterpolator {
         return net.modificationstation.stationapi.api.util.math.MathHelper.lerp(dz, a, b);
     }
 
-    private float getInArea(class_519 source, int x, int z) {
+    private float getInArea(BiomeSource source, int x, int z) {
         float value = 0;
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dz = -radius; dz <= radius; dz++) {
-                Biome biome = source.method_1787(x + dx * distance, z + dz * distance);
+                Biome biome = source.getBiome(x + dx * distance, z + dz * distance);
                 value += provider.apply(biome).floatValue();
             }
         }
