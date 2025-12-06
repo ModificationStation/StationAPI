@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.SandBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.ChunkSource;
 import net.minecraft.world.gen.chunk.OverworldChunkGenerator;
 import net.modificationstation.stationapi.impl.worldgen.WorldDecoratorImpl;
@@ -63,6 +64,9 @@ class OverworldWorldSourceMixin {
             )
     )
     private void stationapi_changeHeight(int cx, int cz, byte[] args, Biome[] biomes, double[] par5, CallbackInfo info) {
+        BiomeSource biomeSource = world.method_1781();
+        biomeSource.temperatureMap = biomeSource.downfallMap = biomeSource.weirdnessMap = null;
+        biomeSource.biomes = null;
         WorldGeneratorImpl.updateNoise(world, cx, cz, this.heightMap);
     }
 }
