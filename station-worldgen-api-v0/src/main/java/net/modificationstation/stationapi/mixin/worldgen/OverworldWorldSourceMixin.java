@@ -63,8 +63,10 @@ class OverworldWorldSourceMixin {
             )
     )
     private void stationapi_changeHeight(int chunkX, int chunkZ, byte[] blocks, Biome[] biomes, double[] temperatures, CallbackInfo info) {
-        if (128 != world.getHeight()) {
+        if (0 < temperatures.length) {
+            double fixBufferOverrun = temperatures[0];
             WorldGeneratorImpl.updateNoise(world, chunkX, chunkZ, this.heightMap);
+            temperatures[0] = fixBufferOverrun;
         }
     }
 }
