@@ -81,7 +81,7 @@ public class FlattenedChunk extends Chunk {
         else {
             for (short i = 0; i < 256; i++) {
                 int index = i << 1;
-                stationHeightmap[i] = (short) (heightmap[index] | (heightmap[index | 1] << 8));
+                stationHeightmap[i] = (short) (Byte.toUnsignedInt(heightmap[index]) | (heightmap[index | 1] << 8));
             }
         }
     }
