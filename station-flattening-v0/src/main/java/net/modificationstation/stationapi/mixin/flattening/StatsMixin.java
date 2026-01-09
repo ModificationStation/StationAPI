@@ -18,7 +18,7 @@ import net.modificationstation.stationapi.api.registry.Registry;
 import net.modificationstation.stationapi.api.registry.StatRegistry;
 import net.modificationstation.stationapi.api.registry.sync.trackers.Int2ObjectMapTracker;
 import net.modificationstation.stationapi.api.registry.sync.trackers.ObjectArrayTracker;
-import net.modificationstation.stationapi.impl.stat.VanillaIdHolder;
+import net.modificationstation.stationapi.api.util.Namespace;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -233,7 +233,6 @@ class StatsMixin {
     @WrapOperation(
             method = {
                     "initializeCraftedItemStats",
-                    "initBlocksMined",
                     "initItemsUsedStats",
                     "initializeBrokenItemStats"
             },
@@ -242,10 +241,35 @@ class StatsMixin {
                     target = "(ILjava/lang/String;I)Lnet/minecraft/stat/ItemOrBlockStat;"
             )
     )
-    private static ItemOrBlockStat stationapi_replaceId(int id, String translationKey, int itemIdOrBlockId, Operation<ItemOrBlockStat> original) {
-        final ItemOrBlockStat stat = original.call(StatRegistry.AUTO_ID, translationKey, itemIdOrBlockId);
-        ((VanillaIdHolder) stat).setVanillaId(id);
-        return stat;
+    private static ItemOrBlockStat stationapi_removeIdReservationFromModdedItemStats(
+            int rawId, String translationKey, int itemIdOrBlockId, Operation<ItemOrBlockStat> original
+    ) {
+        return original.call(
+                ItemRegistry.INSTANCE.getId(itemIdOrBlockId).orElseThrow().getNamespace() == Namespace.MINECRAFT
+                        ? rawId
+                        : StatRegistry.AUTO_ID,
+                translationKey,
+                itemIdOrBlockId
+        );
+    }
+
+    @WrapOperation(
+            method = "initBlocksMined",
+            at = @At(
+                    value = "NEW",
+                    target = "(ILjava/lang/String;I)Lnet/minecraft/stat/ItemOrBlockStat;"
+            )
+    )
+    private static ItemOrBlockStat stationapi_removeIdReservationFromModdedBlockStats(
+            int rawId, String translationKey, int itemIdOrBlockId, Operation<ItemOrBlockStat> original
+    ) {
+        return original.call(
+                BlockRegistry.INSTANCE.getId(itemIdOrBlockId).orElseThrow().getNamespace() == Namespace.MINECRAFT
+                        ? rawId
+                        : StatRegistry.AUTO_ID,
+                translationKey,
+                itemIdOrBlockId
+        );
     }
 
     @Redirect(

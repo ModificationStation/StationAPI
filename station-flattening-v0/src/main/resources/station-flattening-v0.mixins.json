@@ -51,7 +51,8 @@
     "client.PlayerEntityRendererMixin",
     "client.SingleplayerInteractionManagerMixin",
     "client.WorldRendererMixin",
-    "client.stats.BlockItemFormTranslationMixin"
+    "client.stats.BlockItemFormTranslationMixin",
+    "client.stats.PlayerStatsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -4,23 +4,22 @@ import net.minecraft.achievement.Achievement;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.modificationstation.stationapi.api.template.stat.StatTemplate;
 import net.modificationstation.stationapi.api.util.Identifier;
 
-public class TemplateAchievement extends Achievement implements StatTemplate {
+public class TemplateAchievement extends Achievement implements AchievementTemplate {
     public TemplateAchievement(Identifier identifier, String key, int column, int row, Item displayItem, Achievement parent) {
-        this(StatTemplate.getNextId(), key, column, row, displayItem, parent);
-        StatTemplate.onConstructor(this, identifier);
+        this(AchievementTemplate.getNextId(), key, column, row, displayItem, parent);
+        AchievementTemplate.onConstructor(this, identifier);
     }
 
     public TemplateAchievement(Identifier identifier, String key, int column, int row, Block displayBlock, Achievement parent) {
-        this(StatTemplate.getNextId(), key, column, row, displayBlock, parent);
-        StatTemplate.onConstructor(this, identifier);
+        this(AchievementTemplate.getNextId(), key, column, row, displayBlock, parent);
+        AchievementTemplate.onConstructor(this, identifier);
     }
 
     public TemplateAchievement(Identifier identifier, String key, int column, int row, ItemStack icon, Achievement parent) {
-        this(StatTemplate.getNextId(), key, column, row, icon, parent);
-        StatTemplate.onConstructor(this, identifier);
+        this(AchievementTemplate.getNextId(), key, column, row, icon, parent);
+        AchievementTemplate.onConstructor(this, identifier);
     }
 
     public TemplateAchievement(int id, String key, int column, int row, Item displayItem, Achievement parent) {
