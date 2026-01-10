@@ -67,7 +67,7 @@ class StatsMixin {
             )
     )
     private static void stationapi_syncMined(CallbackInfo ci) {
-        ObjectArrayTracker.register(BlockRegistry.INSTANCE, () -> MINE_BLOCK, array -> MINE_BLOCK = array);
+        ObjectArrayTracker.register(BlockRegistry.INSTANCE, () -> MINE_BLOCK, array -> MINE_BLOCK = array, false);
     }
 
     @Inject(
@@ -76,8 +76,8 @@ class StatsMixin {
     )
     private static void stationapi_syncUsedAndBroken(CallbackInfo ci) {
         if (!hasExtendedItemStatsInitialized) {
-            ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> USED, array -> USED = array);
-            ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> BROKEN, array -> BROKEN = array);
+            ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> USED, array -> USED = array, false);
+            ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> BROKEN, array -> BROKEN = array, false);
         }
     }
 
@@ -101,8 +101,8 @@ class StatsMixin {
     )
     private static void stationapi_syncUsedAndBrokenExtended(CallbackInfo ci) {
         if (!hasBasicItemStatsInitialized) {
-            ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> USED, array -> USED = array);
-            ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> BROKEN, array -> BROKEN = array);
+            ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> USED, array -> USED = array, false);
+            ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> BROKEN, array -> BROKEN = array, false);
         }
     }
 
@@ -126,7 +126,7 @@ class StatsMixin {
             )
     )
     private static void stationapi_syncCrafted(CallbackInfo ci) {
-        ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> CRAFTED, array -> CRAFTED = array);
+        ObjectArrayTracker.register(ItemRegistry.INSTANCE, () -> CRAFTED, array -> CRAFTED = array, false);
     }
 
     @Inject(
