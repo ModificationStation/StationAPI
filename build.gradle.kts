@@ -130,7 +130,7 @@ allprojects {
 
     // Include license inside of the mod jar
     configure<Jar>("jar") {
-        from("LICENSE") {
+        from(rootProject.file("LICENSE")) {
             rename { "${it}_${project.properties["archivesBaseName"]}" }
         }
     }
