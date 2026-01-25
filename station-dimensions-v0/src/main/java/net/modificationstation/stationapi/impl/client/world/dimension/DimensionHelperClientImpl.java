@@ -8,24 +8,22 @@ import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.PortalForcer;
 import net.modificationstation.stationapi.api.client.world.dimension.TravelMessageProvider;
-import net.modificationstation.stationapi.api.registry.DimensionRegistry;
-import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.dimension.v1.DimensionType;
+import net.modificationstation.stationapi.api.dimension.v1.registry.DimensionTypeRegistry;
 import net.modificationstation.stationapi.impl.world.dimension.DimensionHelperImpl;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.api.world.dimension.VanillaDimensions.OVERWORLD;
 
 public class DimensionHelperClientImpl extends DimensionHelperImpl {
-
     @Override
-    public void switchDimension(PlayerEntity player, Identifier destination, double scale, PortalForcer travelAgent) {
-
-        DimensionRegistry dimensions = DimensionRegistry.INSTANCE;
+    public void switchDimension(PlayerEntity player, DimensionType<?> destination, double scale, PortalForcer portalForcer) {
+        final var dimensions = DimensionTypeRegistry.INSTANCE;
 
         //noinspection deprecation
         Minecraft game = (Minecraft) FabricLoader.getInstance().getGameInstance();
-        int overworldSerial = dimensions.getLegacyId(OVERWORLD).orElseThrow(() -> new IllegalStateException("Couldn't find overworld dimension in the registry!"));
-        int destinationSerial = dimensions.getLegacyId(destination).orElseThrow(() -> new IllegalArgumentException("Unknown dimension: " + destination + "!"));
+        int overworldSerial = dimensions.getLogicalId(DimensionTypeRegistry.INSTANCE.get(OVERWORLD));
+        int destinationSerial = dimensions.getLogicalId(destination);
 
         player.dimensionId = player.dimensionId == destinationSerial ? overworldSerial : destinationSerial;
 
@@ -60,7 +58,7 @@ public class DimensionHelperClientImpl extends DimensionHelperImpl {
         if (player.isAlive()) {
             player.setPositionAndAnglesKeepPrevAngles(var1, player.y, var3, player.yaw, player.pitch);
             game.world.updateEntity(player, false);
-            travelAgent.moveToPortal(game.world, player);
+            portalForcer.moveToPortal(game.world, player);
         }
     }
 }

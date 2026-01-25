@@ -1,20 +1,24 @@
 package net.modificationstation.stationapi.mixin.dimension.server;
 
-import it.unimi.dsi.fastutil.ints.IntArrays;
-import it.unimi.dsi.fastutil.ints.IntSortedSet;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.entity.EntityTracker;
 import net.minecraft.server.world.ReadOnlyServerWorld;
 import net.minecraft.world.ServerWorld;
 import net.minecraft.world.storage.WorldStorage;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.event.registry.DimensionRegistryEvent;
-import net.modificationstation.stationapi.api.registry.DimensionRegistry;
+import net.modificationstation.stationapi.api.dimension.v1.event.registry.DimensionTypeRegistryEvent;
+import net.modificationstation.stationapi.api.dimension.v1.registry.DimensionTypeRegistry;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MinecraftServer.class)
@@ -28,8 +32,8 @@ class MinecraftServerMixin {
             constant = @Constant(intValue = 2)
     )
     private int stationapi_modifyServerEntityTrackersSize(int original) {
-        StationAPI.EVENT_BUS.post(new DimensionRegistryEvent());
-        return DimensionRegistry.INSTANCE.serialView.size();
+        StationAPI.EVENT_BUS.post(new DimensionTypeRegistryEvent());
+        return DimensionTypeRegistry.INSTANCE.size();
     }
 
     @Inject(
@@ -37,17 +41,20 @@ class MinecraftServerMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/System;nanoTime()J",
-                    shift = At.Shift.BEFORE,
                     ordinal = 0,
                     remap = false
             )
     )
     private void stationapi_registerServerEntityTrackers(CallbackInfoReturnable<Boolean> cir) {
-        IntSortedSet dimensions = DimensionRegistry.INSTANCE.serialView.keySet();
-        int[] otherDimensions = dimensions.tailSet(dimensions.toIntArray()[2]).toIntArray();
-        for (int i = 0; i < otherDimensions.length; i++)
+        final var registry = DimensionTypeRegistry.INSTANCE;
+
+        if (registry.size() < 3)
+            return;
+
+        final var dimensions = registry.stream().mapToInt(registry::getLogicalId).toArray();
+        for (int i = 2; i < dimensions.length; i++)
             //noinspection DataFlowIssue
-            entityTrackers[i + 2] = new EntityTracker((MinecraftServer) (Object) this, otherDimensions[i]);
+            entityTrackers[i] = new EntityTracker((MinecraftServer) (Object) this, dimensions[i]);
     }
 
     @ModifyConstant(
@@ -58,23 +65,8 @@ class MinecraftServerMixin {
             )
     )
     private int stationapi_modifyDimensionsSize(int original) {
-        return DimensionRegistry.INSTANCE.serialView.size();
+        return DimensionTypeRegistry.INSTANCE.size();
     }
-
-    @ModifyVariable(
-            method = "loadWorld",
-            index = 6,
-            at = @At(
-                    value = "LOAD",
-                    ordinal = 1
-            )
-    )
-    private int stationapi_captureDimensionIndex(int index) {
-        return stationapi_capturedIndex = index;
-    }
-
-    @Unique
-    private int stationapi_capturedIndex;
 
     @ModifyConstant(
             method = "loadWorld",
@@ -83,36 +75,49 @@ class MinecraftServerMixin {
                     ordinal = 1
             )
     )
-    private int stationapi_modifyOverworldId(int original) {
-        return DimensionRegistry.INSTANCE.serialView.keySet().toIntArray()[stationapi_capturedIndex];
+    private int stationapi_modifyOverworldId(
+            int original,
+            @Local(index = 6) int worldIndex
+    ) {
+        final var registry = DimensionTypeRegistry.INSTANCE;
+        return registry.getLogicalId(registry.get(worldIndex));
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "loadWorld",
             at = @At(
                     value = "NEW",
                     target = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/storage/WorldStorage;Ljava/lang/String;IJLnet/minecraft/world/ServerWorld;)Lnet/minecraft/server/world/ReadOnlyServerWorld;"
             )
     )
-    private ReadOnlyServerWorld stationapi_instantiateOtherServerWorld(MinecraftServer minecraftServer, WorldStorage arg, String string, int i, long l, ServerWorld arg1) {
-        return new ReadOnlyServerWorld(minecraftServer, arg, string, DimensionRegistry.INSTANCE.serialView.keySet().toIntArray()[stationapi_capturedIndex], l, arg1);
+    private ReadOnlyServerWorld stationapi_instantiateOtherServerWorld(
+            MinecraftServer server, WorldStorage storage, String saveName, int dimension, long seed,
+            ServerWorld delegate, Operation<ReadOnlyServerWorld> original,
+            @Local(index = 6) int worldIndex
+    ) {
+        final var registry = DimensionTypeRegistry.INSTANCE;
+        return original.call(
+                server, storage, saveName, registry.getLogicalId(registry.get(worldIndex)), seed, delegate
+        );
     }
 
-    /**
-     * @reason There's no point injecting into that code, because I'd have to cancel its entire logic either way.
-     * @author mine_diver
-     */
-    @Overwrite
-    public ServerWorld getWorld(int index) {
-        return worlds[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), index, DimensionRegistry.DIMENSIONS_COMPARATOR)];
+    @WrapMethod(method = "getWorld")
+    private ServerWorld stationapi_getWorld(int index, Operation<ServerWorld> original) {
+        final var registry = DimensionTypeRegistry.INSTANCE;
+        return registry.getEntryByLogicalId(index)
+                .map(RegistryEntry::value)
+                .map(registry::getRawId)
+                .map(id -> worlds[id])
+                .orElseGet(() -> original.call(index));
     }
 
-    /**
-     * @reason There's no point injecting into that code, because I'd have to cancel its entire logic either way.
-     * @author mine_diver
-     */
-    @Overwrite
-    public EntityTracker getEntityTracker(int i) {
-        return entityTrackers[IntArrays.binarySearch(DimensionRegistry.INSTANCE.serialView.keySet().toIntArray(), i, DimensionRegistry.DIMENSIONS_COMPARATOR)];
+    @WrapMethod(method = "getEntityTracker")
+    private EntityTracker stationapi_getEntityTracker(int index, Operation<EntityTracker> original) {
+        final var registry = DimensionTypeRegistry.INSTANCE;
+        return registry.getEntryByLogicalId(index)
+                .map(RegistryEntry::value)
+                .map(registry::getRawId)
+                .map(id -> entityTrackers[id])
+                .orElseGet(() -> original.call(index));
     }
 }

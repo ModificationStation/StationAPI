@@ -1,23 +1,26 @@
 package net.modificationstation.stationapi.mixin.dimension;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.world.dimension.Dimension;
-import net.modificationstation.stationapi.api.registry.DimensionRegistry;
+import net.modificationstation.stationapi.api.dimension.v1.DimensionType;
+import net.modificationstation.stationapi.api.dimension.v1.registry.DimensionTypeRegistry;
+import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.function.Supplier;
 
 @Mixin(Dimension.class)
 class DimensionMixin {
     @Shadow public int id;
 
-    @Inject(
-            method = "fromId",
-            at = @At("HEAD"),
-            cancellable = true
-    )
-    private static void stationapi_getDimension(int id, CallbackInfoReturnable<Dimension> cir) {
-        cir.setReturnValue(DimensionRegistry.INSTANCE.getByLegacyId(id).map(dimensionFactory -> dimensionFactory.factory.get()).orElse(null));
+    @WrapMethod(method = "fromId")
+    private static Dimension stationapi_getDimension(int id, Operation<Dimension> original) {
+        return DimensionTypeRegistry.INSTANCE.getEntryByLogicalId(id)
+                .map(RegistryEntry::value)
+                .map(DimensionType::upcastedFactory)
+                .map(Supplier::get)
+                .orElseGet(() -> original.call(id));
     }
 }

@@ -15,5 +15,7 @@ public class KeyboardListener {
     public static void keyStateChange(KeyStateChangedEvent event) {
         if (event.environment == KeyStateChangedEvent.Environment.IN_GAME && Keyboard.getEventKey() == OptionListener.testBind.code)
             PacketHelper.send(new MessagePacket(Identifier.of(SLTest.NAMESPACE, "give_me_diamonds")));
+        if (event.environment == KeyStateChangedEvent.Environment.IN_GAME && Keyboard.getEventKey() == OptionListener.skylandsBind.code && Keyboard.getEventKeyState())
+            PacketHelper.send(new MessagePacket(Identifier.of(SLTest.NAMESPACE, "skylands_switch")));
     }
 }

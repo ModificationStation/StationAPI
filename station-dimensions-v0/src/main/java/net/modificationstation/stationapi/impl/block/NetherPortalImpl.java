@@ -10,7 +10,6 @@ import net.minecraft.server.MinecraftServer;
 import net.modificationstation.stationapi.api.util.SideUtil;
 
 public class NetherPortalImpl {
-
     public static void switchDimension(PlayerEntity player) {
         //noinspection Convert2MethodRef
         SideUtil.run(() -> switchDimensionClient(), () -> switchDimensionServer(player));

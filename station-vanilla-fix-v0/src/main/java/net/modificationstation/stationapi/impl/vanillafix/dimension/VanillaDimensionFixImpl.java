@@ -1,23 +1,18 @@
 package net.modificationstation.stationapi.impl.vanillafix.dimension;
 
 import net.mine_diver.unsafeevents.listener.EventListener;
-import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.NetherDimension;
 import net.minecraft.world.dimension.OverworldDimension;
 import net.minecraft.world.dimension.SkylandsDimension;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.event.registry.DimensionRegistryEvent;
+import net.modificationstation.stationapi.api.dimension.v1.DimensionType;
+import net.modificationstation.stationapi.api.dimension.v1.event.registry.DimensionTypeRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.registry.DimensionContainer;
-import net.modificationstation.stationapi.api.util.Identifier;
-import org.jetbrains.annotations.NotNull;
+import net.modificationstation.stationapi.api.world.dimension.VanillaDimensions;
 
 import java.lang.invoke.MethodHandles;
-import java.util.function.Supplier;
-
-import static net.modificationstation.stationapi.api.world.dimension.VanillaDimensions.*;
 
 @Entrypoint(eventBus = @EventBusPolicy(registerInstance = false))
 @EventListener(phase = StationAPI.INTERNAL_PHASE)
@@ -26,13 +21,10 @@ public final class VanillaDimensionFixImpl {
         EntrypointManager.registerLookup(MethodHandles.lookup());
     }
 
-    @FunctionalInterface
-    interface DimensionRegister { void accept(final @NotNull Identifier id, final int serialID, final @NotNull Supplier<@NotNull Dimension> factory); }
     @EventListener
-    private static void registerDimensions(DimensionRegistryEvent event) {
-        DimensionRegister r = (id, serialID, factory) -> event.registry.register(id, serialID, new DimensionContainer<>(factory));
-        r.accept(THE_NETHER, -1, NetherDimension::new);
-        r.accept(OVERWORLD, 0, OverworldDimension::new);
-        r.accept(SKYLANDS, 1, SkylandsDimension::new);
+    private static void registerDimensions(DimensionTypeRegistryEvent event) {
+        event.registerLogical(1, -1, VanillaDimensions.THE_NETHER, DimensionType.builder(NetherDimension::new).build());
+        event.register(0, VanillaDimensions.OVERWORLD, DimensionType.builder(OverworldDimension::new).build());
+        event.registerLogical(2, 1, VanillaDimensions.SKYLANDS, DimensionType.builder(SkylandsDimension::new).build());
     }
 }

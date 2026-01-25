@@ -4,8 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.dimension.v1.registry.DimensionTypeRegistry;
 import net.modificationstation.stationapi.api.entity.HasTeleportationManager;
-import net.modificationstation.stationapi.api.registry.DimensionRegistry;
 import net.modificationstation.stationapi.api.world.dimension.VanillaDimensions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +24,10 @@ abstract class ClientPlayerEntityMixin extends PlayerEntity implements HasTelepo
             constant = @Constant(intValue = 0)
     )
     private int stationapi_getRespawnDimension(int constant) {
-        return world.dimension.hasWorldSpawn() ? dimensionId : DimensionRegistry.INSTANCE.getLegacyId(VanillaDimensions.OVERWORLD).orElseThrow(() -> new IllegalStateException("Couldn't find overworld dimension in the registry!"));
+        final var registry = DimensionTypeRegistry.INSTANCE;
+        return world.dimension.hasWorldSpawn()
+                ? dimensionId
+                : registry.getLogicalId(registry.get(VanillaDimensions.OVERWORLD));
     }
 
     @Redirect(

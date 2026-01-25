@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public interface TravelMessageProvider {
-
     String getEnteringTranslationKey();
 
     String getLeavingTranslationKey();
