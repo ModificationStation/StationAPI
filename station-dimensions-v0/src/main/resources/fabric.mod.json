@@ -28,6 +28,11 @@
   },
 
   "custom": {
-    "modmenu:api": true
+    "modmenu:api": true,
+    "loom:injected_interfaces": {
+      "net/minecraft/class_50": [
+        "net/modificationstation/stationapi/api/dimension/v1/StationDimension"
+      ]
+    }
   }
 }

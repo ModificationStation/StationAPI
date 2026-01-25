@@ -23,8 +23,22 @@ public final class VanillaDimensionFixImpl {
 
     @EventListener
     private static void registerDimensions(DimensionTypeRegistryEvent event) {
-        event.registerLogical(1, -1, VanillaDimensions.THE_NETHER, DimensionType.builder(NetherDimension::new).build());
-        event.register(0, VanillaDimensions.OVERWORLD, DimensionType.builder(OverworldDimension::new).build());
-        event.registerLogical(2, 1, VanillaDimensions.SKYLANDS, DimensionType.builder(SkylandsDimension::new).build());
+        event.registerLogical(
+                1,
+                -1,
+                VanillaDimensions.THE_NETHER,
+                DimensionType.builder(type -> new NetherDimension()).build()
+        );
+        event.register(
+                0,
+                VanillaDimensions.OVERWORLD,
+                DimensionType.builder(type -> new OverworldDimension()).build()
+        );
+        event.registerLogical(
+                2,
+                1,
+                VanillaDimensions.SKYLANDS,
+                DimensionType.builder(type -> new SkylandsDimension()).build()
+        );
     }
 }

@@ -16,6 +16,6 @@ public class DimensionListener {
 
     @EventListener
     private static void registerDimensions(DimensionTypeRegistryEvent event) {
-        event.register(NAMESPACE.id("test_dimension"), DimensionType.builder(TestDimension::new).build());
+        event.register(NAMESPACE.id("test_dimension"), DimensionType.builder(type -> new TestDimension()).build());
     }
 }
