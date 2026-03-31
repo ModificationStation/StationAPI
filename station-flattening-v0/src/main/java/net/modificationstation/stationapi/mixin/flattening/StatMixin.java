@@ -13,7 +13,7 @@ class StatMixin implements StationFlatteningStat {
     @Mutable
     @Shadow @Final public int id;
     @Unique
-    private RegistryEntry.Reference<Stat> stationapi_registryEntry;
+    private RegistryEntry.Reference.IntrusiveReserved<Stat> stationapi_registryEntry;
 
     @ModifyVariable(
             method = "<init>(ILjava/lang/String;Lnet/minecraft/stat/StatFormatter;)V",
