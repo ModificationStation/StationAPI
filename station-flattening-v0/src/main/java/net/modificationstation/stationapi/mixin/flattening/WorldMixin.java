@@ -8,6 +8,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
+import net.modificationstation.stationapi.api.block.StationFlatteningBlock;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 import org.spongepowered.asm.mixin.Final;
@@ -15,6 +16,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(World.class)
 abstract class WorldMixin implements StationFlatteningWorld {
@@ -263,7 +266,62 @@ abstract class WorldMixin implements StationFlatteningWorld {
     private int stationapi_getStateLuminance(int original, @Local(index = 2) int x, @Local(index = 3) int y, @Local(index = 4) int z, @Local(index = 5) int light) {
         return Math.max(getBlockState(x, y, z).getLuminance(), light);
     }
-    
+
+    /**
+     * Provides support for redstone in flattened StationAPI blocks, by checking for StationAPI block states if the
+     * vanilla redstone check returns false.
+     */
+    @Inject(
+            method = "canTransferPowerInDirection",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/World;getBlockId(III)I",
+                    shift = At.Shift.AFTER /* after getBlockId ISTORE */
+            ),
+            cancellable = true
+    )
+    private void stationapi_canTransferPowerInDirection(
+            int x,
+            int y,
+            int z,
+            int direction,
+            CallbackInfoReturnable<Boolean> cir
+    ) {
+        var state = getBlockState(x, y, z);
+        if (state != null) {
+            var world = (World) (Object) this;
+            cir.setReturnValue(state.getBlock().canTransferPowerInDirection(world, x, y, z, direction));
+        }
+    }
+
+
+    /**
+     * Provides support for redstone in flattened StationAPI blocks, by checking for StationAPI block states if the
+     * vanilla redstone check returns false.
+     */
+    @Inject(
+            method = "isEmittingRedstonePowerInDirection",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/World;getBlockId(III)I",
+                    shift = At.Shift.AFTER /* after getBlockId ISTORE */
+            ),
+            cancellable = true
+    )
+    private void stationapi_isEmittingRedstonePowerInDirection(
+            int x,
+            int y,
+            int z,
+            int direction,
+            CallbackInfoReturnable<Boolean> cir
+    ) {
+        var state = getBlockState(x, y, z);
+        if (state != null) {
+            var world = (World) (Object) this;
+            cir.setReturnValue(state.getBlock().isEmittingRedstonePowerInDirection(world, x, y, z, direction));
+        }
+    }
+
     /*@Inject(method = "getSpawnBlockId", at = @At("HEAD"), cancellable = true)
     private void fixHeightSearch(int x, int z, CallbackInfoReturnable<Integer> info) {
         int top = getTopY() - 1;
