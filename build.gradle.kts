@@ -5,8 +5,8 @@ import net.modificationstation.stationapi.gradle.SubprojectHelpers.addDependency
 
 plugins {
     id("maven-publish")
-    id("fabric-loom") version "1.9-SNAPSHOT"
-    id("babric-loom-extension") version "1.9.2"
+    id("fabric-loom") version "1.11.7"
+    id("babric-loom-extension") version "1.11.9"
 }
 
 // https://stackoverflow.com/a/40101046 - Even with kotlin, gradle can't get it's shit together.
@@ -41,8 +41,6 @@ allprojects {
 
     @Suppress("UnstableApiUsage")
     configurations {
-        create("transitiveImplementation")
-
         // Required cause loom 0.14 for some reason doesn't remove asm-all 4.1. Ew.
         all {
             exclude(group = "org.ow2.asm", module = "asm-debug-all")
@@ -91,6 +89,10 @@ allprojects {
 
         modLocalRuntime("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}")
         modLocalRuntime("maven.modrinth:retrocommands:${project.properties["rc_version"]}") {
+            isTransitive = false
+        }
+
+        modImplementation("net.glasslauncher.mods:AlwaysMoreItems:${project.properties["alwaysmoreitems_version"]}") {
             isTransitive = false
         }
 
