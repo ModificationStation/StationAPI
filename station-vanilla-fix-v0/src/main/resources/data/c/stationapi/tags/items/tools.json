@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "#c:tools/axes",
+      "required": false
+    },
+    {
+      "id": "#c:tools/hoes",
+      "required": false
+    },
+    {
+      "id": "#c:tools/pickaxes",
+      "required": false
+    },
+    {
+      "id": "#c:tools/shovels",
+      "required": false
+    },
+    {
+      "id": "#c:tools/swords",
+      "required": false
+    }
+  ]
+}

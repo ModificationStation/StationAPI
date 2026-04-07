@@ -1,0 +1,24 @@
+{
+  "values": [
+    {
+      "id": "#c:armors/leggings/leather",
+      "required": false
+    },
+    {
+      "id": "#c:armors/leggings/chainmail",
+      "required": false
+    },
+    {
+      "id": "#c:armors/leggings/iron",
+      "required": false
+    },
+    {
+      "id": "#c:armors/leggings/gold",
+      "required": false
+    },
+    {
+      "id": "#c:armors/leggings/diamond",
+      "required": false
+    }
+  ]
+}
