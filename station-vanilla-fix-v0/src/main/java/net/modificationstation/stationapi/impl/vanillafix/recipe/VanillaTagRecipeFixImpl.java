@@ -16,6 +16,7 @@ public class VanillaTagRecipeFixImpl {
         builder.put(Block.COBBLESTONE.asItem(), ItemTags.NORMAL_COBBLESTONE);
         builder.put(Block.SAND.asItem(), ItemTags.NORMAL_SAND);
         builder.put(Block.CHEST.asItem(), ItemTags.WOODEN_CHESTS);
+        builder.put(Block.WOOL.asItem(), ItemTags.WOOLS);
         builder.put(Item.IRON_INGOT, ItemTags.IRON_INGOT);
         builder.put(Item.GOLD_INGOT, ItemTags.GOLD_INGOT);
         builder.put(Item.GLOWSTONE_DUST, ItemTags.GLOWSTONE_DUST);

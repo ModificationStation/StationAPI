@@ -17,6 +17,7 @@ public final class ItemTags {
             NORMAL_COBBLESTONE = of("c:cobblestones/normal"),
             NORMAL_SAND = of("c:sands/normal"),
             WOODEN_CHESTS = of("c:chests/wooden"),
+            WOOLS = of("c:wools"),
             IRON_INGOT = of("c:ingots/iron"),
             GOLD_INGOT = of("c:ingots/gold"),
             GLOWSTONE_DUST = of("c:dusts/glowstone"),

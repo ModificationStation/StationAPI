@@ -3,10 +3,6 @@
     {
       "id": "#c:gems/diamond",
       "required": false
-    },
-    {
-      "id": "#c:gems/lapis",
-      "required": false
     }
   ]
 }
