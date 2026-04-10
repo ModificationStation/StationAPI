@@ -25,13 +25,15 @@ public class ObjectArrayTracker<T, V> {
 
     private final Supplier<V[]> arrayGetter;
     private final Consumer<V[]> arraySetter;
+    private final boolean remapValues;
 
     public static <T, V, R extends Registry<T> & ListenableRegistry> void register(
             R registry,
             Supplier<V[]> arrayGetter,
-            Consumer<V[]> arraySetter
+            Consumer<V[]> arraySetter,
+            boolean remapValues
     ) {
-        ObjectArrayTracker<T, V> tracker = new ObjectArrayTracker<>(arrayGetter, arraySetter);
+        ObjectArrayTracker<T, V> tracker = new ObjectArrayTracker<>(arrayGetter, arraySetter, remapValues);
         registry.getEventBus().register(Listener.object()
                 .listener(tracker)
                 .build());
@@ -39,10 +41,12 @@ public class ObjectArrayTracker<T, V> {
 
     private ObjectArrayTracker(
             Supplier<V[]> arrayGetter,
-            Consumer<V[]> arraySetter
+            Consumer<V[]> arraySetter,
+            boolean remapValues
     ) {
         this.arrayGetter = arrayGetter;
         this.arraySetter = arraySetter;
+        this.remapValues = remapValues;
     }
 
     public static <V> boolean shouldGrow(V[] array, int highestExpectedRawId) {
@@ -74,7 +78,7 @@ public class ObjectArrayTracker<T, V> {
             if (shouldGrow(array, newId))
                 array = grow(array, newId);
             array[newId] = value;
-            if (value instanceof RemappableRawIdHolder holder)
+            if (remapValues && value instanceof RemappableRawIdHolder holder)
                 holder.setRawId(newId);
         }
 

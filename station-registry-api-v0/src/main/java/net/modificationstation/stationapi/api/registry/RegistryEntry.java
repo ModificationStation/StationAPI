@@ -1,8 +1,6 @@
 package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.datafixers.util.Either;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +25,8 @@ public interface RegistryEntry<T> {
     boolean isIn(TagKey<T> tag);
 
     Stream<TagKey<T>> streamTags();
+
+    Set<TagKey<T>> getTags();
 
     Either<RegistryKey<T>, T> getKeyOrValue();
 
@@ -95,65 +95,22 @@ public interface RegistryEntry<T> {
         public Stream<TagKey<T>> streamTags() {
             return Stream.of();
         }
-    }
-
-    class Reference<T> implements RegistryEntry<T> {
-        private final RegistryEntryOwner<T> owner;
-        private Set<TagKey<T>> tags = Set.of();
-        private final net.modificationstation.stationapi.api.registry.RegistryEntry.Reference.Type referenceType;
-        /**
-         * Isn't actually used for storing the raw ID.
-         * The only purpose for this field is to be able
-         * to override raw IDs from {@link Block}
-         * or {@link Item} constructors before actually
-         * registering them.
-         */
-        private int reservedRawId;
-        @Nullable
-        private RegistryKey<T> registryKey;
-        @Nullable
-        private T value;
-
-        private Reference(net.modificationstation.stationapi.api.registry.RegistryEntry.Reference.Type referenceType, RegistryEntryOwner<T> owner, int reservedRawId, @Nullable RegistryKey<T> registryKey, @Nullable T value) {
-            this.owner = owner;
-            this.referenceType = referenceType;
-            this.reservedRawId = reservedRawId;
-            this.registryKey = registryKey;
-            this.value = value;
-        }
-
-        public static <T> Reference<T> standAlone(RegistryEntryOwner<T> owner, RegistryKey<T> registryKey) {
-            return new Reference<>(RegistryEntry.Reference.Type.STAND_ALONE, owner, -1, registryKey, null);
-        }
-
-        /** @deprecated */
-        @Deprecated
-        public static <T> Reference<T> intrusive(RegistryEntryOwner<T> owner, @Nullable T value) {
-            return new Reference<>(RegistryEntry.Reference.Type.INTRUSIVE, owner, -1, null, value);
-        }
-
-        static <T> Reference<T> intrusive(RegistryEntryOwner<T> owner, int reservedRawId, @Nullable T value) {
-            return new Reference<>(net.modificationstation.stationapi.api.registry.RegistryEntry.Reference.Type.INTRUSIVE, owner, reservedRawId, null, value);
-        }
-
-        public int reservedRawId() {
-            if (this.reservedRawId < 0)
-                throw new IllegalStateException("Trying to access unbound value '" + (value == null ? registryKey : value) + "' from registry " + this.owner);
-            else return reservedRawId;
-        }
-
-        public RegistryKey<T> registryKey() {
-            if (this.registryKey == null)
-                throw new IllegalStateException("Trying to access unbound value '" + this.value + "' from registry " + this.owner);
-            else return registryKey;
-        }
 
         @Override
-        public T value() {
-            if (value == null)
-                throw new IllegalStateException("Trying to access unbound value '" + registryKey + "' from registry " + owner);
-            else return value;
+        public Set<TagKey<T>> getTags() {
+            return Set.of();
         }
+    }
+
+    abstract class Reference<ENTRY> implements RegistryEntry<ENTRY> {
+        final RegistryEntryOwner<ENTRY> owner;
+        private Set<TagKey<ENTRY>> tags = Set.of();
+
+        private Reference(RegistryEntryOwner<ENTRY> owner) {
+            this.owner = owner;
+        }
+
+        public abstract RegistryKey<ENTRY> registryKey();
 
         @Override
         public boolean matchesId(Identifier id) {
@@ -161,77 +118,163 @@ public interface RegistryEntry<T> {
         }
 
         @Override
-        public boolean matchesKey(RegistryKey<T> key) {
+        public boolean matchesKey(RegistryKey<ENTRY> key) {
             return registryKey() == key;
         }
 
         @Override
-        public boolean isIn(TagKey<T> tag) {
+        public boolean isIn(TagKey<ENTRY> tag) {
             return tags.contains(tag);
         }
 
         @Override
-        public boolean matches(Predicate<RegistryKey<T>> predicate) {
+        public boolean matches(Predicate<RegistryKey<ENTRY>> predicate) {
             return predicate.test(registryKey());
         }
 
         @Override
-        public boolean ownerEquals(RegistryEntryOwner<T> owner) {
+        public boolean ownerEquals(RegistryEntryOwner<ENTRY> owner) {
             return this.owner.ownerEquals(owner);
         }
 
         @Override
-        public Either<RegistryKey<T>, T> getKeyOrValue() {
+        public Either<RegistryKey<ENTRY>, ENTRY> getKeyOrValue() {
             return Either.left(registryKey());
         }
 
         @Override
-        public Optional<RegistryKey<T>> getKey() {
+        public Optional<RegistryKey<ENTRY>> getKey() {
             return Optional.of(registryKey());
         }
 
         @Override
-        public RegistryEntry.Type getType() {
-            return RegistryEntry.Type.REFERENCE;
+        public Type getType() {
+            return Type.REFERENCE;
         }
 
-        boolean hasRawId() {
-            return reservedRawId >= 0;
-        }
+        abstract void setRegistryKey(RegistryKey<ENTRY> registryKey);
 
-        @Override
-        public boolean hasKeyAndValue() {
-            return registryKey != null && value != null;
-        }
+        abstract void setValue(ENTRY value);
 
-        void setRegistryKey(RegistryKey<T> registryKey) {
-            if (this.registryKey != null && registryKey != this.registryKey)
-                throw new IllegalStateException("Can't change holder key: existing=" + this.registryKey + ", new=" + registryKey);
-            else this.registryKey = registryKey;
-        }
-
-        void setValue(T value) {
-            if (this.referenceType == RegistryEntry.Reference.Type.INTRUSIVE && this.value != value)
-                throw new IllegalStateException("Can't change holder " + this.registryKey + " value: existing=" + this.value + ", new=" + value);
-            else this.value = value;
-        }
-
-        void setTags(Collection<TagKey<T>> tags) {
+        void setTags(Collection<TagKey<ENTRY>> tags) {
             this.tags = Set.copyOf(tags);
         }
 
         @Override
-        public Stream<TagKey<T>> streamTags() {
+        public Stream<TagKey<ENTRY>> streamTags() {
             return this.tags.stream();
         }
 
-        public String toString() {
-            return "Reference{" + this.registryKey + "=" + this.value + "}";
+        @Override
+        public Set<TagKey<ENTRY>> getTags() {
+            return tags;
         }
 
-        enum Type {
-            STAND_ALONE,
-            INTRUSIVE
+        public String toString() {
+            return "Reference{" + registryKey() + "=" + value() + "}";
+        }
+
+        static <ENTRY> Reference<ENTRY> standAlone(RegistryEntryOwner<ENTRY> owner, RegistryKey<ENTRY> registryKey) {
+            return new StandAlone<>(owner, registryKey);
+        }
+
+        static <ENTRY> Reference<ENTRY> intrusive(RegistryEntryOwner<ENTRY> owner, ENTRY value) {
+            return new Intrusive<>(owner, value);
+        }
+
+        static <ENTRY> Reference<ENTRY> intrusive(RegistryEntryOwner<ENTRY> owner, ENTRY value, int reservedRawId) {
+            return new IntrusiveReserved<>(owner, value, reservedRawId);
+        }
+
+        public static class StandAlone<ENTRY> extends Reference<ENTRY> {
+            private final RegistryKey<ENTRY> registryKey;
+            private @Nullable ENTRY value;
+
+            private StandAlone(RegistryEntryOwner<ENTRY> owner, RegistryKey<ENTRY> registryKey) {
+                super(owner);
+                this.registryKey = registryKey;
+            }
+
+            @Override
+            public RegistryKey<ENTRY> registryKey() {
+                return registryKey;
+            }
+
+            @Override
+            public ENTRY value() {
+                if (value == null)
+                    throw new IllegalStateException("Trying to access unbound value '" + registryKey + "' from registry " + owner);
+                return value;
+            }
+
+            @Override
+            public boolean hasKeyAndValue() {
+                return registryKey != null && value != null;
+            }
+
+            @Override
+            void setRegistryKey(RegistryKey<ENTRY> registryKey) {
+                if (registryKey != this.registryKey)
+                    throw new IllegalStateException("Can't change holder key: existing=" + this.registryKey + ", new=" + registryKey);
+            }
+
+            @Override
+            void setValue(@Nullable ENTRY value) {
+                this.value = value;
+            }
+        }
+
+        public static class Intrusive<ENTRY> extends Reference<ENTRY> {
+            private @Nullable RegistryKey<ENTRY> registryKey;
+            private final ENTRY value;
+
+            private Intrusive(RegistryEntryOwner<ENTRY> owner, ENTRY value) {
+                super(owner);
+                this.value = value;
+            }
+
+            @Override
+            public RegistryKey<ENTRY> registryKey() {
+                if (this.registryKey == null)
+                    throw new IllegalStateException("Trying to access unbound value '" + this.value + "' from registry " + this.owner);
+                return registryKey;
+            }
+
+            @Override
+            void setRegistryKey(RegistryKey<ENTRY> registryKey) {
+                if (this.registryKey != null && registryKey != this.registryKey)
+                    throw new IllegalStateException("Can't change holder key: existing=" + this.registryKey + ", new=" + registryKey);
+                this.registryKey = registryKey;
+            }
+
+            @Override
+            void setValue(ENTRY value) {
+                if (this.value != value)
+                    throw new IllegalStateException("Can't change holder " + this.registryKey + " value: existing=" + this.value + ", new=" + value);
+            }
+
+            @Override
+            public ENTRY value() {
+                return value;
+            }
+
+            @Override
+            public boolean hasKeyAndValue() {
+                return registryKey != null && value != null;
+            }
+        }
+
+        public static class IntrusiveReserved<ENTRY> extends Intrusive<ENTRY> {
+            private final int reservedRawId;
+
+            private IntrusiveReserved(RegistryEntryOwner<ENTRY> owner, ENTRY value, int reservedRawId) {
+                super(owner, value);
+                this.reservedRawId = reservedRawId;
+            }
+
+            public int reservedRawId() {
+                return reservedRawId;
+            }
         }
     }
 

@@ -377,7 +377,7 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
      * @param value the value
      * @return reference containing the reserved raw ID
      */
-    RegistryEntry.Reference<T> createReservedEntry(int rawId, T value);
+    RegistryEntry.Reference.IntrusiveReserved<T> createReservedEntry(int rawId, T value);
 
     /**
      * {@return the reference registry entry for the value assigned {@code rawId}, or an

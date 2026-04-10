@@ -97,7 +97,7 @@ abstract class ClientWorldMixin extends World implements StationClientWorld {
     public BlockState setBlockState(int x, int y, int z, BlockState blockState) {
         BlockState n = this.getBlockState(x, y, z);
         int n2 = this.getBlockMeta(x, y, z);
-        BlockState result = super.setBlockState(x, y, z, blockState);
+        BlockState result = super.setBlockStateWithoutNotifyingNeighbors(x, y, z, blockState);
         if (result != null) {
             //noinspection unchecked,DataFlowIssue
             this.blockResets.add(new ClientBlockChange((ClientWorld) (Object) this, x, y, z, n, n2));

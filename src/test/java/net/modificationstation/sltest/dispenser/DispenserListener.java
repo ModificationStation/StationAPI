@@ -43,7 +43,7 @@ public class DispenserListener {
             // Make water buckets place water
             if (context.itemStack.itemId == Item.WATER_BUCKET.id) {
                 if (world.getMaterial(facing.x, facing.y, facing.z) == Material.AIR) {
-                    world.setBlockStateWithNotify(facing.x, facing.y, facing.z, Block.WATER.getDefaultState());
+                    world.setBlockState(facing.x, facing.y, facing.z, Block.WATER.getDefaultState());
                     context.dispenser.setStack(context.slot, new ItemStack(Item.BUCKET));
                     event.cancel();
                 }
@@ -52,7 +52,7 @@ public class DispenserListener {
             // Make lava buckets place lava
             if (context.itemStack.itemId == Item.LAVA_BUCKET.id) {
                 if (world.getMaterial(facing.x, facing.y, facing.z) == Material.AIR) {
-                    world.setBlockStateWithNotify(facing.x, facing.y, facing.z, Block.LAVA.getDefaultState());
+                    world.setBlockState(facing.x, facing.y, facing.z, Block.LAVA.getDefaultState());
                     context.dispenser.setStack(context.slot, new ItemStack(Item.BUCKET));
                     event.cancel();
                 }

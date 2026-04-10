@@ -159,8 +159,8 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
                 throw new AssertionError("Missing intrusive holder for " + registryKey + ":" + value);
 
             reference.setRegistryKey(registryKey);
-            if (reference.hasRawId()) {
-                int reservedRawId = reference.reservedRawId();
+            if (reference instanceof Reference.IntrusiveReserved<?> reserved) {
+                int reservedRawId = reserved.reservedRawId();
                 if (checkReservation && reservedRawId != rawId)
                     throw new RuntimeException("Attempted to register a reserved entry with raw ID " + reservedRawId + " under a different raw ID " + rawId + "!");
                 rawId = reservedRawId;
@@ -194,8 +194,23 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
         this.keyToEntry.put(registryKey, reference);
         this.idToEntry.put(registryKey.getValue(), reference);
         this.valueToEntry.put(value, reference);
-        this.rawIdToEntry.size(Math.max(this.rawIdToEntry.size(), rawId + 1));
-        this.rawIdToEntry.set(rawId, reference);
+
+        int size = rawIdToEntry.size();
+        if (rawId == size) {
+            // If we're appending a new element, use add() to allow ReferenceArrayList to efficiently grow the capacity
+            // by at least 50% if necessary, and avoid memory leaks by resizing on each insertion.
+            rawIdToEntry.add(reference);
+        } else if (rawId > size) {
+            // Grow the array to the required size first by adding nulls. Calls grow() internally, growing it by at
+            // least 50%. More efficient than addElements, which takes an array and only uses size(), potentially
+            // incurring unnecessary additional array copies internally.
+            rawIdToEntry.addAll(Collections.nCopies(rawId - size, null));
+            rawIdToEntry.add(reference); // This may also call grow() internally, but ideally shouldn't.
+        } else {
+            // Otherwise, just use set() to change the existing value in the registry directly.
+            rawIdToEntry.set(rawId, reference);
+        }
+
         this.entryToRawId.put(value, rawId);
         if (this.nextId <= rawId) this.nextId = rawId + 1;
 
@@ -414,18 +429,18 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     public Reference<T> createEntry(T value) {
         assertIntrusive();
         assertNotFrozen();
-        //noinspection unchecked,deprecation,DataFlowIssue
+        //noinspection unchecked,DataFlowIssue
         return intrusiveValueToEntry.computeIfAbsent(value, valuex -> Reference.intrusive(getReadOnlyWrapper(), (T) valuex));
     }
 
     @Override
-    public Reference<T> createReservedEntry(int rawId, T value) {
+    public Reference.IntrusiveReserved<T> createReservedEntry(int rawId, T value) {
         assertIntrusive();
         assertNotFrozen();
         final int newRawId = rawId < 0 ? nextId : rawId;
         if (this.nextId <= newRawId) this.nextId = newRawId + 1;
         //noinspection unchecked,DataFlowIssue
-        return intrusiveValueToEntry.computeIfAbsent(value, valuex -> Reference.intrusive(getReadOnlyWrapper(), newRawId, (T) valuex));
+        return (Reference.IntrusiveReserved<T>) intrusiveValueToEntry.computeIfAbsent(value, valuex -> Reference.intrusive(getReadOnlyWrapper(), (T) valuex, newRawId));
     }
 
     @Override
@@ -615,8 +630,22 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
             }
 
             // Add the new object, increment nextId to match.
-            rawIdToEntry.size(Math.max(this.rawIdToEntry.size(), id + 1));
-            rawIdToEntry.set(id, object);
+            int size = rawIdToEntry.size();
+            if (id == size) {
+                // If we're appending a new element, use add() to allow ReferenceArrayList to efficiently grow the
+                // capacity by at least 50% if necessary, and avoid memory leaks by resizing on each insertion.
+                rawIdToEntry.add(object);
+            } else if (id > size) {
+                // Grow the array to the required size first by adding nulls. Calls grow() internally, growing it by at
+                // least 50%. More efficient than addElements, which takes an array and only uses size(), potentially
+                // incurring unnecessary additional array copies internally.
+                rawIdToEntry.addAll(Collections.nCopies(id - size, null));
+                rawIdToEntry.add(object); // This may also call grow() internally, but ideally shouldn't.
+            } else {
+                // Otherwise, just use set() to change the existing value in the registry directly.
+                rawIdToEntry.set(id, object);
+            }
+
             entryToRawId.put(object.value(), id);
             if (nextId <= id) nextId = id + 1;
         }

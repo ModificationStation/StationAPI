@@ -100,18 +100,6 @@ public class MessagePacket extends Packet implements ManagedPacket<MessagePacket
      */
     public String[] strings;
 
-    private String[] objectsInternal;
-
-    /**
-     * Array of objects to send.
-     *
-     * <p>All objects are converted to JSON strings using GSON to be sent over to the other side.
-     * Object's classes must also be present on the receiver side.
-     *
-     * <p>Objects won't go through GSON if the packet is processed locally.
-     */
-    public Object[] objects;
-
     /**
      * Internal Message constructor for initialization when received.
      */
@@ -244,7 +232,6 @@ public class MessagePacket extends Packet implements ManagedPacket<MessagePacket
             identifier = Identifier.of(readString(in, 32767));
             short s = in.readShort();
             boolean[] present = new boolean[]{
-                    (s & 512) != 0,
                     (s & 256) != 0,
                     (s & 128) != 0,
                     (s & 64) != 0,
@@ -314,12 +301,6 @@ public class MessagePacket extends Packet implements ManagedPacket<MessagePacket
                 for (int i = 0; i < length; i++)
                     strings[i] = readString(in, 32767);
             }
-            if (present[9]) {
-                length = in.readInt();
-                objectsInternal = new String[length * 2];
-                for (int i = 0; i < length * 2; i++)
-                    objectsInternal[i] = readString(in, 32767);
-            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -343,19 +324,18 @@ public class MessagePacket extends Packet implements ManagedPacket<MessagePacket
                     longs == null,
                     floats == null,
                     doubles == null,
-                    strings == null,
-                    objects == null
+                    strings == null
             };
-            out.writeShort((short) ((absent[0] ? 0 : 512) +
-                    (absent[1] ? 0 : 256) +
-                    (absent[2] ? 0 : 128) +
-                    (absent[3] ? 0 : 64) +
-                    (absent[4] ? 0 : 32) +
-                    (absent[5] ? 0 : 16) +
-                    (absent[6] ? 0 : 8) +
-                    (absent[7] ? 0 : 4) +
-                    (absent[8] ? 0 : 2) +
-                    (absent[9] ? 0 : 1)));
+            out.writeShort((short) (
+                    (absent[0] ? 0 : 256) +
+                    (absent[1] ? 0 : 128) +
+                    (absent[2] ? 0 : 64) +
+                    (absent[3] ? 0 : 32) +
+                    (absent[4] ? 0 : 16) +
+                    (absent[5] ? 0 : 8) +
+                    (absent[6] ? 0 : 4) +
+                    (absent[7] ? 0 : 2) +
+                    (absent[8] ? 0 : 1)));
             if (!absent[0]) {
                 int length = booleans.length;
                 out.writeInt(length);
@@ -419,14 +399,6 @@ public class MessagePacket extends Packet implements ManagedPacket<MessagePacket
                 for (String s : strings)
                     writeString(s, out);
             }
-            if (!absent[9]) {
-                out.writeInt(objects.length);
-                Gson gson = new Gson();
-                for (Object o : objects) {
-                    writeString(gson.toJson(o), out);
-                    writeString(o == null ? "null" : o.getClass().getName(), out);
-                }
-            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -462,26 +434,11 @@ public class MessagePacket extends Packet implements ManagedPacket<MessagePacket
                 (longs == null ? 0 : size(longs)) +
                 (floats == null ? 0 : size(floats)) +
                 (doubles == null ? 0 : size(doubles)) +
-                (strings == null ? 0 : size(strings)) +
-                (objects == null ? 0 : size(objects));
+                (strings == null ? 0 : size(strings));
     }
 
     @Override
     public @NotNull PacketType<MessagePacket> getType() {
         return TYPE;
-    }
-
-    public Object[] deserializeObjects() {
-        objects = new Object[objectsInternal.length / 2];
-        Gson gson = new Gson();
-        for (int i = 0; i < objectsInternal.length; i+=2)
-            try {
-                String objectJson = objectsInternal[0];
-                String className = objectsInternal[1];
-                objects[i] = className.equals("null") ? null : gson.fromJson(objectJson, Class.forName(className));
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        return objects;
     }
 }

@@ -2,9 +2,9 @@ package net.modificationstation.stationapi.api.util.collection;
 
 import net.modificationstation.stationapi.api.world.chunk.CompactingPackedIntegerArray;
 import net.modificationstation.stationapi.impl.world.chunk.Palette;
-import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.function.IntConsumer;
 
 public class PackedIntegerArray
@@ -59,7 +59,7 @@ implements PaletteStorage, CompactingPackedIntegerArray {
     }
 
     public PackedIntegerArray(int elementBits, int size, @SuppressWarnings("NullableProblems") @Nullable long[] data) {
-        Validate.inclusiveBetween(1L, 32L, elementBits);
+        Objects.checkIndex(elementBits - 1, 32);
         this.size = size;
         this.elementBits = elementBits;
         this.maxValue = (1L << elementBits) - 1L;
@@ -87,8 +87,8 @@ implements PaletteStorage, CompactingPackedIntegerArray {
 
     @Override
     public int swap(int index, int value) {
-        Validate.inclusiveBetween(0L, this.size - 1, index);
-        Validate.inclusiveBetween(0L, this.maxValue, value);
+        Objects.checkIndex(index, this.size);
+        Objects.checkIndex(value, this.maxValue + 1);
         int i = this.getStorageIndex(index);
         long l = this.data[i];
         int j = (index - i * this.elementsPerLong) * this.elementBits;
@@ -99,8 +99,8 @@ implements PaletteStorage, CompactingPackedIntegerArray {
 
     @Override
     public void set(int index, int value) {
-        Validate.inclusiveBetween(0L, this.size - 1, index);
-        Validate.inclusiveBetween(0L, this.maxValue, value);
+        Objects.checkIndex(index, this.size);
+        Objects.checkIndex(value, this.maxValue + 1);
         int i = this.getStorageIndex(index);
         long l = this.data[i];
         int j = (index - i * this.elementsPerLong) * this.elementBits;
@@ -109,7 +109,7 @@ implements PaletteStorage, CompactingPackedIntegerArray {
 
     @Override
     public int get(int index) {
-        Validate.inclusiveBetween(0L, this.size - 1, index);
+        Objects.checkIndex(index, this.size);
         int i = this.getStorageIndex(index);
         long l = this.data[i];
         int j = (index - i * this.elementsPerLong) * this.elementBits;
