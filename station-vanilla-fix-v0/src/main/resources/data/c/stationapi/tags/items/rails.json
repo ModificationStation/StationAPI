@@ -1,0 +1,16 @@
+{
+  "values": [
+    {
+      "id": "#c:rails/normal",
+      "required": false
+    },
+    {
+      "id": "#c:rails/powered",
+      "required": false
+    },
+    {
+      "id": "#c:rails/detector",
+      "required": false
+    }
+  ]
+}
