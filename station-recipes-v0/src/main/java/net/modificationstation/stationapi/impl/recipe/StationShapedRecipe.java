@@ -78,10 +78,6 @@ public class StationShapedRecipe implements CraftingRecipe {
         return output.copy();
     }
 
-    public ItemStack method_2073() {
-        return output.copy();
-    }
-
     public Either<TagKey<Item>, ItemStack>[] getGrid() {
         //noinspection unchecked
         return (Either<TagKey<Item>, ItemStack>[]) Arrays.stream(grid).map(entry -> entry == null ? null : entry.mapRight(ItemStack::copy)).toArray(Either[]::new);
