@@ -1,5 +1,6 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
@@ -7,6 +8,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.dimension.Dimension;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.block.States;
+import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.api.world.StationFlatteningWorld;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,14 +34,14 @@ abstract class WorldMixin implements StationFlatteningWorld {
 
     @Override
     @Unique
-    public BlockState setBlockState(int x, int y, int z, BlockState blockState) {
+    public BlockState setBlockStateWithoutNotifyingNeighbors(int x, int y, int z, BlockState blockState) {
         return getChunkFromPos(x, z).setBlockState(x & 15, y, z & 15, blockState);
     }
 
     @Override
     @Unique
-    public BlockState setBlockStateWithNotify(int x, int y, int z, BlockState blockState) {
-        BlockState oldBlockState = setBlockState(x, y, z, blockState);
+    public BlockState setBlockState(int x, int y, int z, BlockState blockState) {
+        BlockState oldBlockState = setBlockStateWithoutNotifyingNeighbors(x, y, z, blockState);
         if (oldBlockState != null) {
             blockUpdate(x, y, z, blockState.getBlock().id);
             return oldBlockState;
@@ -76,6 +78,28 @@ abstract class WorldMixin implements StationFlatteningWorld {
         return y + getBottomY();
     }
 
+    @ModifyExpressionValue(
+            method = "manageChunkUpdatesAndEvents",
+            at = @At(
+                    value = "CONSTANT",
+                    args = "intValue=80"
+            )
+    )
+    private int stationapi_scaleRandomTicksWithWorldHeight(int original) {
+        return (int) (original * ((double) getHeight() / 128));
+    }
+
+    @ModifyExpressionValue(
+            method = "manageChunkUpdatesAndEvents",
+            at = @At(
+                    value = "CONSTANT",
+                    args = "intValue=127"
+            )
+    )
+    private int stationapi_changeTotalHeightBitMask(int original) {
+        return MathHelper.smallestEncompassingPowerOfTwo(getHeight()) - 1;
+    }
+
     @ModifyVariable(
             method = "manageChunkUpdatesAndEvents",
             at = @At(
@@ -85,7 +109,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
             index = 10
     )
     private int stationapi_changeTickY(int y) {
-        return y + getBottomY();
+        return (y % getHeight()) + getBottomY();
     }
 
     @Redirect(
@@ -189,8 +213,7 @@ abstract class WorldMixin implements StationFlatteningWorld {
                     "getBrightness(III)I",
                     "getLightLevel(IIIZ)I",
                     "getBrightness(Lnet/minecraft/world/LightType;III)I",
-                    "getTopSolidBlockY",
-                    "manageChunkUpdatesAndEvents"
+                    "getTopSolidBlockY"
             },
             constant = @Constant(intValue = 127)
     )

@@ -1,5 +1,7 @@
 package net.modificationstation.stationapi.mixin.flattening;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.block.Block;
@@ -12,7 +14,9 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.impl.block.StationFlatteningMovingPistonImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -126,5 +130,57 @@ class PistonBlockMixin extends Block {
             @Share("blockState") LocalRef<BlockState> blockStateRef
     ) {
         StationFlatteningMovingPistonImpl.pushedBlockState = blockStateRef.get();
+    }
+
+    // Not ModifyExpressionValue because MixinExtras apparently doesn't support expandZeroConditions
+    @ModifyConstant(
+            method = "canExtend",
+            constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_OR_EQUAL_TO_ZERO)
+    )
+    private static int stationapi_canExtend_changeBottomYCheck(
+            int original,
+            @Local(index = 0, argsOnly = true) World world
+    ) {
+        return world.getBottomY();
+    }
+
+    @ModifyExpressionValue(
+            method = "canExtend",
+            at = @At(
+                    value = "CONSTANT",
+                    args = "intValue=127"
+            )
+    )
+    private static int stationapi_canExtend_changeTopYCheck(
+            int original,
+            @Local(index = 0, argsOnly = true) World world
+    ) {
+        return world.getTopY() - 1;
+    }
+
+    // Not ModifyExpressionValue because MixinExtras apparently doesn't support expandZeroConditions
+    @ModifyConstant(
+            method = "push",
+            constant = @Constant(expandZeroConditions = Constant.Condition.LESS_THAN_OR_EQUAL_TO_ZERO)
+    )
+    private int stationapi_push_changeBottomYCheck(
+            int original,
+            @Local(index = 1, argsOnly = true) World world
+    ) {
+        return world.getBottomY();
+    }
+
+    @ModifyExpressionValue(
+            method = "push",
+            at = @At(
+                    value = "CONSTANT",
+                    args = "intValue=127"
+            )
+    )
+    private int stationapi_push_changeTopYCheck(
+            int original,
+            @Local(index = 1, argsOnly = true) World world
+    ) {
+        return world.getTopY() - 1;
     }
 }

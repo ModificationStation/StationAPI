@@ -65,7 +65,7 @@ public class BlockStateItem extends TemplateItem {
                     .side(direction)
                     .block(block)
                     .blockItem(itemStack)
-                    .placeFunction(() -> world.setBlockStateWithNotify(x, y, z, blockState) != null)
+                    .placeFunction(() -> world.setBlockState(x, y, z, blockState) != null)
                     .build()).placeFunction.getAsBoolean()
             ) {
                 block.onPlaced(world, x, y, z, direction.getId());

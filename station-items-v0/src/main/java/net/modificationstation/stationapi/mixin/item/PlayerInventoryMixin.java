@@ -1,5 +1,8 @@
 package net.modificationstation.stationapi.mixin.item;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.impl.item.StationNBTSetter;
@@ -8,10 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Objects;
 
@@ -20,18 +20,20 @@ class PlayerInventoryMixin {
     @Shadow
     public ItemStack[] main;
 
-    @Inject(
+    @WrapOperation(
             method = "combineStacks",
             at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/item/ItemStack;<init>(III)V",
-                    shift = At.Shift.BY,
-                    by = 2
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+                    value = "NEW",
+                    target = "(III)Lnet/minecraft/item/ItemStack;"
+            )
     )
-    private void stationapi_newItemStack(ItemStack par1, CallbackInfoReturnable<Integer> cir, int var2, int var3, int var4) {
-        StationNBTSetter.cast(main[var4]).setStationNbt(par1.getStationNbt());
+    private ItemStack stationapi_newItemStack(
+            int id, int count, int damage, Operation<ItemStack> original,
+            @Local(index = 1, argsOnly = true) ItemStack stack
+    ) {
+        final var newStack = original.call(id, count, damage);
+        StationNBTSetter.cast(newStack).setStationNbt(stack.getStationNbt());
+        return newStack;
     }
 
     @Redirect(

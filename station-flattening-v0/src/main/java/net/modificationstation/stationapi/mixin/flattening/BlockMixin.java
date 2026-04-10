@@ -82,7 +82,7 @@ abstract class BlockMixin implements StationFlatteningBlock, StationFlatteningBl
     @Shadow public abstract void onBreak(World world, int x, int y, int z);
 
     @Unique
-    private RegistryEntry.Reference<Block> stationapi_registryEntry;
+    private RegistryEntry.Reference.IntrusiveReserved<Block> stationapi_registryEntry;
 
     @Override
     @Unique

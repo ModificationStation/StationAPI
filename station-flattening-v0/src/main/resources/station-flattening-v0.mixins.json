@@ -16,6 +16,7 @@
     "class_417Mixin",
     "class_467Mixin",
     "DimensionMixin",
+    "DoorBlockMixin",
     "EntityMixin",
     "FallingBlockEntityMixin",
     "FireBlockMixin",
@@ -23,6 +24,7 @@
     "ItemStackMixin",
     "MapItemMixin",
     "MobSpawnerLogicMixin",
+    "MushroomPlantBlockMixin",
     "NetherCaveGenMixin",
     "NetherChunkGeneratorMixin",
     "OakTreeFeatureMixin",
@@ -35,6 +37,8 @@
     "RegionFileAccessor",
     "SecondaryBlockItemMixin",
     "SkylandsChunkGeneratorMixin",
+    "StatMixin",
+    "StatsMixin",
     "WorldMixin",
     "WorldPropertiesMixin"
   ],
@@ -48,7 +52,9 @@
     "client.MultiplayerInteractionManagerMixin",
     "client.PlayerEntityRendererMixin",
     "client.SingleplayerInteractionManagerMixin",
-    "client.WorldRendererMixin"
+    "client.WorldRendererMixin",
+    "client.stats.BlockItemFormTranslationMixin",
+    "client.stats.PlayerStatsMixin"
   ],
   "injectors": {
     "defaultRequire": 1
