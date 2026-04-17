@@ -48,7 +48,7 @@ public final class VanillaDataFixerImpl {
         builder.addFixer(new StationFlatteningToMcRegionChunkDamage(schema69420, "StationFlatteningToMcRegionChunkDamage"));
         Schema schema19132 = builder.addSchema(VANILLA_VERSION, McRegionItemStackDamagerSchema::new);
         builder.addFixer(new StationFlatteningToMcRegionItemStackDamage(schema19132, "StationFlatteningToMcRegionItemStackDamage"));
-        return builder.buildOptimized(Set.of(TypeReferences.LEVEL), Util.getBootstrapExecutor());
+        return builder.build().fixer();
     });
 
     @EventListener
@@ -60,7 +60,7 @@ public final class VanillaDataFixerImpl {
             builder.addFixer(new McRegionToStationFlatteningItemStackFix(schema69420, "McRegionToStationFlatteningItemStackFix"));
             Schema schema69421 = builder.addSchema(69421, StationFlatteningChunkSchema::new);
             builder.addFixer(new McRegionToStationFlatteningChunkFix(schema69421, "McRegionToStationFlatteningChunkFix"));
-            return builder.buildOptimized(Set.of(TypeReferences.LEVEL), executor);
+            return builder.build().fixer();
         }, CURRENT_VERSION);
     }
 }

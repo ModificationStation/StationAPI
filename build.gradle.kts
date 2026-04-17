@@ -28,6 +28,14 @@ allprojects {
         maven(url = "https://maven.glass-launcher.net/snapshots")
         maven(url = "https://maven.glass-launcher.net/releases")
         maven(url = "https://jitpack.io/")
+
+        maven("https://libraries.minecraft.net") {
+            name = "Mojang"
+            content {
+                includeModule("com.mojang", "datafixerupper") // https://github.com/Mojang/DataFixerUpper
+            }
+        }
+
         mavenCentral()
         exclusiveContent {
             forRepository {

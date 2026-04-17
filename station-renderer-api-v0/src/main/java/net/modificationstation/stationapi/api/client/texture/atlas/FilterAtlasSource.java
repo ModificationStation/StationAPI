@@ -1,12 +1,12 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
 import net.modificationstation.stationapi.api.resource.metadata.BlockEntry;
 
 public class FilterAtlasSource implements AtlasSource {
-    public static final Codec<FilterAtlasSource> CODEC = RecordCodecBuilder.create(instance -> instance.group(BlockEntry.CODEC.fieldOf("pattern").forGetter(filterAtlasSource -> filterAtlasSource.pattern)).apply(instance, FilterAtlasSource::new));
+    public static final MapCodec<FilterAtlasSource> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(BlockEntry.CODEC.fieldOf("pattern").forGetter(filterAtlasSource -> filterAtlasSource.pattern)).apply(instance, FilterAtlasSource::new));
     private final BlockEntry pattern;
 
     public FilterAtlasSource(BlockEntry pattern) {

@@ -4,6 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class AtlasSourceManager {
     public static Codec<AtlasSource> TYPE_CODEC = CODEC.dispatch(AtlasSource::getType, AtlasSourceType::codec);
     public static Codec<List<AtlasSource>> LIST_CODEC = TYPE_CODEC.listOf().fieldOf("sources").codec();
 
-    private static AtlasSourceType register(String id, Codec<? extends AtlasSource> codec) {
+    private static AtlasSourceType register(String id, MapCodec<? extends AtlasSource> codec) {
         Identifier identifier = Identifier.of(id);
         AtlasSourceType atlasSourceType = new AtlasSourceType(codec);
         AtlasSourceType atlasSourceType2 = SOURCE_TYPE_BY_ID.putIfAbsent(identifier, atlasSourceType);

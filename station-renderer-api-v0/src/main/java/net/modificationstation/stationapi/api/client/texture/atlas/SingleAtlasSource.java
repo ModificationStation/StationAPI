@@ -1,17 +1,17 @@
 package net.modificationstation.stationapi.api.client.texture.atlas;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.resource.Resource;
 import net.modificationstation.stationapi.api.resource.ResourceManager;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.Optional;
 
 import static net.modificationstation.stationapi.impl.client.texture.StationRenderImpl.LOGGER;
 
 public class SingleAtlasSource implements AtlasSource {
-    public static final Codec<SingleAtlasSource> CODEC = RecordCodecBuilder.create(instance -> instance.group(Identifier.CODEC.fieldOf("resource").forGetter(singleAtlasSource -> singleAtlasSource.resource), Identifier.CODEC.optionalFieldOf("sprite").forGetter(singleAtlasSource -> singleAtlasSource.sprite)).apply(instance, SingleAtlasSource::new));
+    public static final MapCodec<SingleAtlasSource> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(Identifier.CODEC.fieldOf("resource").forGetter(singleAtlasSource -> singleAtlasSource.resource), Identifier.CODEC.optionalFieldOf("sprite").forGetter(singleAtlasSource -> singleAtlasSource.sprite)).apply(instance, SingleAtlasSource::new));
     private final Identifier resource;
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private final Optional<Identifier> sprite;

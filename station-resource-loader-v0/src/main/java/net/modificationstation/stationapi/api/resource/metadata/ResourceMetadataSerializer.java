@@ -18,12 +18,12 @@ public interface ResourceMetadataSerializer<T> extends ResourceMetadataReader<T>
 
             @Override
             public T fromJson(JsonObject json) {
-                return codec.parse(JsonOps.INSTANCE, json).getOrThrow(false, error -> {});
+                return codec.parse(JsonOps.INSTANCE, json).getOrThrow();
             }
 
             @Override
             public JsonObject toJson(T metadata) {
-                return codec.encodeStart(JsonOps.INSTANCE, metadata).getOrThrow(false, error -> {}).getAsJsonObject();
+                return codec.encodeStart(JsonOps.INSTANCE, metadata).getOrThrow().getAsJsonObject();
             }
         };
     }
