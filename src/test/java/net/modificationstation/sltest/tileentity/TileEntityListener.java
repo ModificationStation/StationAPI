@@ -9,6 +9,6 @@ public class TileEntityListener {
     @EventListener
     public void registerTileEntities(BlockEntityRegisterEvent event) {
         SLTest.LOGGER.info("reeee tile entiites");
-        event.register(TileEntityFreezer.class, "sltest:freezer");
+        event.register("sltest:freezer", TileEntityFreezer.class);
     }
 }

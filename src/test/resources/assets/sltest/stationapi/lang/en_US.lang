@@ -1,6 +1,7 @@
 item.@.test_item.name=Test Item
 item.@.model_item.name=IDK Something
 key.@.testBind=Diamonds!
+key.@.mine_l_moment=Mine L Moment
 tile.@.test_block.name=Test Block
 tile.@.test_animated_block0.name=Test Animated Block
 tile.@.test_animated_block1.name=Charged Animated Block

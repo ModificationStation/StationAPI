@@ -3,7 +3,7 @@ package net.modificationstation.stationapi.mixin.entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityRegistry;
 import net.modificationstation.stationapi.api.StationAPI;
-import net.modificationstation.stationapi.api.event.entity.EntityRegister;
+import net.modificationstation.stationapi.api.event.entity.EntityRegisterEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +24,7 @@ class EntityRegistryMixin {
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void stationapi_onEntityRegister(CallbackInfo ci) {
         StationAPI.EVENT_BUS.post(
-                EntityRegister.builder()
+                EntityRegisterEvent.builder()
                         .register(EntityRegistryMixin::register)
                         .registerNoID((aClass, s) -> {
                             idToClass.put(s, aClass);
