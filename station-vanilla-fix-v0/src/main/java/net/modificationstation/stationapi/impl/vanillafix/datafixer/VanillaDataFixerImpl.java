@@ -7,12 +7,10 @@ import com.mojang.datafixers.schemas.Schema;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.datafixer.DataFixers;
-import net.modificationstation.stationapi.api.datafixer.TypeReferences;
 import net.modificationstation.stationapi.api.event.datafixer.DataFixerRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.mod.entrypoint.EntrypointManager;
 import net.modificationstation.stationapi.api.mod.entrypoint.EventBusPolicy;
-import net.modificationstation.stationapi.api.util.Util;
 import net.modificationstation.stationapi.api.vanillafix.datadamager.damage.StationFlatteningToMcRegionChunkDamage;
 import net.modificationstation.stationapi.api.vanillafix.datadamager.damage.StationFlatteningToMcRegionItemStackDamage;
 import net.modificationstation.stationapi.api.vanillafix.datadamager.schema.McRegionChunkDamagerSchema;
@@ -25,7 +23,6 @@ import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.Statio
 import net.modificationstation.stationapi.api.vanillafix.datafixer.schema.StationFlatteningItemStackSchema;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
