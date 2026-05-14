@@ -8,6 +8,9 @@ import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.registry.RegistryEntry;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.util.context.Context;
+
+import java.util.stream.Stream;
 
 public interface StationFlatteningItemStack extends ItemStackStrengthWithBlockState {
 
@@ -16,7 +19,19 @@ public interface StationFlatteningItemStack extends ItemStackStrengthWithBlockSt
     }
 
     default boolean isIn(TagKey<Item> tag) {
-        return getRegistryEntry().isIn(tag);
+        return isIn(tag, Context.EMPTY);
+    }
+
+    default boolean isIn(TagKey<Item> tag, Context context) {
+        return Util.assertImpl();
+    }
+
+    default Stream<TagKey<Item>> streamTags() {
+        return streamTags(Context.ANY);
+    }
+
+    default Stream<TagKey<Item>> streamTags(Context context) {
+        return Util.assertImpl();
     }
 
     @Override

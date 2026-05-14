@@ -2,7 +2,10 @@ package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.datafixers.util.Either;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.tag.TagMatchGroup;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.util.context.Context;
+import net.modificationstation.stationapi.api.util.context.Condition;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 
@@ -24,14 +27,39 @@ import java.util.stream.Stream;
  */
 public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
     /**
+     * This method implicitly uses {@link Context#ANY}, meaning it will stream all registry entries
+     * in this list, bypassing all conditional checks.
      * {@return a stream of registry entries in this list}
      */
-    Stream<RegistryEntry<T>> stream();
+    default Stream<RegistryEntry<T>> stream() {
+        return stream(Context.ANY);
+    }
 
     /**
+     * {@return a stream of registry entries in this list, including match groups that pass the given context}
+     */
+    Stream<RegistryEntry<T>> stream(Context context);
+
+    /**
+     * {@return an iterable of registry entries in this list, including match groups that pass the given context}
+     */
+    default Iterable<RegistryEntry<T>> iterable(Context context) {
+        return () -> stream(context).iterator();
+    }
+
+    /**
+     * This method implicitly uses {@link Context#ANY}, meaning it will count all registry entries
+     * in this list, bypassing all conditional checks.
      * {@return the number of entries in this list}
      */
-    int size();
+    default int size() {
+        return size(Context.ANY);
+    }
+
+    /**
+     * {@return the number of entries in this list, including match groups that pass the given context}
+     */
+    int size(Context context);
 
     /**
      * {@return the object that identifies this registry entry list}
@@ -41,21 +69,53 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
     Either<TagKey<T>, List<RegistryEntry<T>>> getStorage();
 
     /**
+     * This method implicitly uses {@link Context#ANY}, meaning it may return any registry entry
+     * in this list, bypassing all conditional checks.
      * {@return a random entry of the list, or an empty optional if this list is empty}
      */
-    Optional<RegistryEntry<T>> getRandom(Random var1);
+    default Optional<RegistryEntry<T>> getRandom(Random var1) {
+        return getRandom(var1, Context.ANY);
+    }
 
     /**
+     * {@return a random entry of the list matching the context, or an empty optional if this list is empty}
+     */
+    Optional<RegistryEntry<T>> getRandom(Random var1, Context context);
+
+    /**
+     * This method implicitly uses {@link Context#ANY}, meaning it operates on the flattened list of all registry entries
+     * in this list, bypassing all conditional checks.
      * {@return the registry entry at {@code index}}
      * 
      * @throws IndexOutOfBoundsException if the index is out of bounds
      */
-    RegistryEntry<T> get(int var1);
+    default RegistryEntry<T> get(int var1) {
+        return get(var1, Context.ANY);
+    }
+
+    /**
+     * {@return the registry entry at {@code index} matching the context}
+     * 
+     * @throws IndexOutOfBoundsException if the index is out of bounds
+     */
+    RegistryEntry<T> get(int var1, Context context);
 
     /**
      * {@return whether {@code entry} is in this list}
+     *
+     * @deprecated Use {@link #contains(RegistryEntry, Context)} instead.
+     * <p>This method implicitly uses {@link Context#EMPTY}, meaning it will only evaluate to {@code true}
+     * for unconditional tag references.
      */
-    boolean contains(RegistryEntry<T> var1);
+    @Deprecated
+    default boolean contains(RegistryEntry<T> entry) {
+        return contains(entry, Context.EMPTY);
+    }
+
+    /**
+     * {@return whether {@code entry} is in this list, evaluating match groups with the given context}
+     */
+    boolean contains(RegistryEntry<T> var1, Context context);
 
     boolean ownerEquals(RegistryEntryOwner<T> var1);
 
@@ -100,15 +160,17 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
     class Named<T> extends ListBacked<T> {
         private final RegistryEntryOwner<T> owner;
         private final TagKey<T> tag;
-        private List<RegistryEntry<T>> entries = List.of();
+        private List<RegistryEntry<T>> allEntries = List.of();
+        private List<TagMatchGroup<RegistryEntry<T>>> matchGroups = List.of();
 
         Named(RegistryEntryOwner<T> owner, TagKey<T> tag) {
             this.owner = owner;
             this.tag = tag;
         }
 
-        void copyOf(List<RegistryEntry<T>> entries) {
-            this.entries = List.copyOf(entries);
+        void copyOf(Collection<TagMatchGroup<RegistryEntry<T>>> matchGroups) {
+            this.matchGroups = List.copyOf(matchGroups);
+            this.allEntries = this.matchGroups.stream().flatMap(c -> c.baseItems().stream()).distinct().toList();
         }
 
         public TagKey<T> getTag() {
@@ -117,7 +179,27 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
 
         @Override
         protected List<RegistryEntry<T>> getEntries() {
-            return this.entries;
+            return this.allEntries;
+        }
+
+        @Override
+        public Stream<RegistryEntry<T>> stream(Context context) {
+            if (context.matchesAll()) return this.getEntries().stream();
+
+            return this.matchGroups.stream()
+                    .filter(matchGroup -> {
+                        for (Condition<?> condition : matchGroup.conditions())
+                            if (!condition.test(context)) return false;
+                        return true;
+                    })
+                    .flatMap(matchGroup -> matchGroup.baseItems().stream())
+                    .distinct();
+        }
+
+        @Override
+        public int size(Context context) {
+            if (context.matchesAll()) return this.allEntries.size();
+            return (int) this.stream(context).count();
         }
 
         @Override
@@ -131,12 +213,14 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         }
 
         @Override
-        public boolean contains(RegistryEntry<T> entry) {
-            return entry.isIn(this.tag);
+        public boolean contains(RegistryEntry<T> entry, Context context) {
+            return entry.isIn(this.tag, context);
         }
 
         public String toString() {
-            return "NamedSet(" + this.tag + ")[" + this.entries + "]";
+            return "NamedSet(" + this.tag + ")["
+                    + this.allEntries + (matchGroups.isEmpty() ? "" : ", matchGroups=" + matchGroups.size())
+                    + "]";
         }
 
         @Override
@@ -170,7 +254,7 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         }
 
         @Override
-        public boolean contains(RegistryEntry<T> entry) {
+        public boolean contains(RegistryEntry<T> entry, Context context) {
             if (this.entrySet == null) this.entrySet = Set.copyOf(this.entries);
             return this.entrySet.contains(entry);
         }
@@ -184,33 +268,34 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         protected abstract List<RegistryEntry<T>> getEntries();
 
         @Override
-        public int size() {
+        public int size(Context context) {
             return this.getEntries().size();
         }
 
         @Override
         public Spliterator<RegistryEntry<T>> spliterator() {
-            return this.getEntries().spliterator();
+            return this.stream(Context.ANY).spliterator();
         }
 
         @Override
         public Iterator<RegistryEntry<T>> iterator() {
-            return this.getEntries().iterator();
+            return this.stream(Context.ANY).iterator();
         }
 
         @Override
-        public Stream<RegistryEntry<T>> stream() {
+        public Stream<RegistryEntry<T>> stream(Context context) {
             return this.getEntries().stream();
         }
 
         @Override
-        public Optional<RegistryEntry<T>> getRandom(Random random) {
-            return Util.getRandomOrEmpty(this.getEntries(), random);
+        public Optional<RegistryEntry<T>> getRandom(Random random, Context context) {
+            return Util.getRandomOrEmpty(this.stream(context).toList(), random);
         }
 
         @Override
-        public RegistryEntry<T> get(int index) {
-            return this.getEntries().get(index);
+        public RegistryEntry<T> get(int index, Context context) {
+            return this.stream(context).skip(index).findFirst()
+                    .orElseThrow(() -> new IndexOutOfBoundsException("Index out of bounds: " + index));
         }
 
         @Override
@@ -219,4 +304,3 @@ public interface RegistryEntryList<T> extends Iterable<RegistryEntry<T>> {
         }
     }
 }
-

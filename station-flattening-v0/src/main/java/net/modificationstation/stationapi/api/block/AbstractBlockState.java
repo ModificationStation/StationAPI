@@ -16,6 +16,7 @@ import net.modificationstation.stationapi.api.registry.RegistryEntryList;
 import net.modificationstation.stationapi.api.state.State;
 import net.modificationstation.stationapi.api.state.property.Property;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.util.context.Context;
 import net.modificationstation.stationapi.api.util.math.MathHelper;
 import net.modificationstation.stationapi.impl.block.StationFlatteningBlockInternal;
 
@@ -30,7 +31,8 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
     private final boolean opaque;
     private int luminance = -1;
 
-    protected AbstractBlockState(Block block, ImmutableMap<Property<?>, Comparable<?>> propertyMap, MapCodec<BlockState> mapCodec) {
+    protected AbstractBlockState(Block block, ImmutableMap<Property<?>, Comparable<?>> propertyMap,
+            MapCodec<BlockState> mapCodec) {
         super(block, propertyMap, mapCodec);
         this.isAir = block.material == Material.AIR;
         this.material = block.material;
@@ -51,9 +53,10 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
      * Returns the light level emitted by this block state.
      */
     public int getLuminance() {
-        return luminance == -1 ?
-                luminance = ((StationFlatteningBlockInternal) owner).stationapi_getLuminanceProvider().applyAsInt(asBlockState()) :
-                luminance;
+        return luminance == -1
+                ? luminance = ((StationFlatteningBlockInternal) owner).stationapi_getLuminanceProvider()
+                        .applyAsInt(asBlockState())
+                : luminance;
     }
 
     public boolean isAir() {
@@ -84,20 +87,39 @@ public abstract class AbstractBlockState extends State<Block, BlockState> {
         return this.getBlock().canReplace(this.asBlockState(), context);
     }
 
+    @Deprecated
     public boolean isIn(TagKey<Block> tag) {
-        return getBlock().getRegistryEntry().isIn(tag);
+        return this.isIn(tag, Context.EMPTY);
     }
 
+    public boolean isIn(TagKey<Block> tag, Context context) {
+        return getBlock().getRegistryEntry().isIn(tag, context);
+    }
+
+    @Deprecated
     public boolean isIn(TagKey<Block> tag, Predicate<AbstractBlockState> predicate) {
-        return this.isIn(tag) && predicate.test(this);
+        return this.isIn(tag, Context.EMPTY, predicate);
     }
 
+    public boolean isIn(TagKey<Block> tag, Context context, Predicate<AbstractBlockState> predicate) {
+        return this.isIn(tag, context) && predicate.test(this);
+    }
+
+    @Deprecated
     public boolean isIn(RegistryEntryList<Block> blocks) {
-        return blocks.contains(getBlock().getRegistryEntry());
+        return this.isIn(blocks, Context.EMPTY);
+    }
+
+    public boolean isIn(RegistryEntryList<Block> blocks, Context context) {
+        return blocks.contains(getBlock().getRegistryEntry(), context);
     }
 
     public Stream<TagKey<Block>> streamTags() {
-        return getBlock().getRegistryEntry().streamTags();
+        return this.streamTags(Context.ANY);
+    }
+
+    public Stream<TagKey<Block>> streamTags(Context context) {
+        return getBlock().getRegistryEntry().streamTags(context);
     }
 
     public boolean isOf(Block block) {

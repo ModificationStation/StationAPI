@@ -2,7 +2,9 @@ package net.modificationstation.stationapi.api.registry;
 
 import com.google.common.collect.*;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.Lifecycle;
+import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ReferenceMap;
@@ -15,14 +17,22 @@ import net.modificationstation.stationapi.api.registry.RegistryEntry.Reference;
 import net.modificationstation.stationapi.api.registry.RegistryEntryList.Named;
 import net.modificationstation.stationapi.api.registry.RegistryWrapper.Impl;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.tag.TagMatchGroup;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Util;
+import net.modificationstation.stationapi.api.util.context.Condition;
+import net.modificationstation.stationapi.api.util.context.ConditionType;
+import net.modificationstation.stationapi.api.util.context.Context;
 import net.modificationstation.stationapi.impl.registry.sync.RemapStateImpl;
 import org.apache.commons.lang3.Validate;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,6 +50,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     private final Reference2ReferenceMap<T, Lifecycle> entryToLifecycle = new Reference2ReferenceOpenHashMap<>();
     private Lifecycle lifecycle;
     private volatile Reference2ReferenceMap<TagKey<T>, Named<T>> tagToEntryList = new Reference2ReferenceOpenHashMap<>();
+    private final Reference2ReferenceMap<Identifier, ConditionType<?>> tagConditionTypes = new Reference2ReferenceOpenHashMap<>();
     private boolean frozen;
     @Nullable
     private Reference2ReferenceMap<T, Reference<T>> intrusiveValueToEntry;
@@ -49,6 +60,17 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     private final Impl<T> wrapper;
     private Reference2IntMap<Identifier> prevIndexedEntries;
     private BiMap<Identifier, Reference<T>> prevEntries;
+
+    private final Codec<Condition<?>> tagConditionCodec = Identifier.CODEC.dispatch(
+            "type",
+            condition -> condition.type().id(),
+            id -> {
+                ConditionType<?> type = tagConditionTypes.get(id);
+                if (type == null)
+                    throw new IllegalArgumentException("Unknown condition type: " + id + " in registry " + getKey());
+                return type.conditionCodec();
+            }
+    );
 
     private @Nullable MutableEventBus eventBus;
 
@@ -315,7 +337,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public Iterator<T> iterator() {
+    public @NotNull Iterator<T> iterator() {
         return Iterators.transform(this.getEntries().iterator(), RegistryEntry::value);
     }
 
@@ -449,28 +471,51 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     }
 
     @Override
-    public void populateTags(Map<TagKey<T>, List<RegistryEntry<T>>> tagEntries) {
-        Map<Reference<T>, List<TagKey<T>>> map = new IdentityHashMap<>();
-        keyToEntry.values().forEach(entry -> map.put(entry, new ArrayList<>()));
-        tagEntries.forEach((tag, entries) -> {
+    public void populateTags(@UnknownNullability Map<TagKey<T>, Collection<TagMatchGroup<RegistryEntry<T>>>> tagEntries) {
+        Map<Reference<T>, Map<TagKey<T>, Predicate<Context>>> map = new IdentityHashMap<>();
 
-            for (RegistryEntry<T> entry : entries) {
-                if (!entry.ownerEquals(getReadOnlyWrapper()))
-                    throw new IllegalStateException("Can't create named set " + tag + " containing value " + entry + " from outside registry " + this);
+        keyToEntry.values().forEach(entry -> map.put(
+                entry, new Reference2ReferenceOpenHashMap<>())
+        );
 
-                if (!(entry instanceof Reference<T> reference))
-                    throw new IllegalStateException("Found direct holder " + entry + " value in tag " + tag);
+        tagEntries.forEach((tag, resolvedTag) -> {
+            for (TagMatchGroup<RegistryEntry<T>> matchGroup : resolvedTag) {
+                Predicate<Context> predicate = matchGroup.conditions().isEmpty()
+                        ? ctx -> true
+                        : ctx -> {
+                            for (Condition<?> condition : matchGroup.conditions())
+                                if (!condition.test(ctx)) return false;
+                            return true;
+                        };
 
-                map.get(reference).add(tag);
+                for (RegistryEntry<T> entry : matchGroup.baseItems()) {
+                    if (!entry.ownerEquals(getReadOnlyWrapper()))
+                        throw new IllegalStateException(
+                                "Can't create named set " + tag + " containing value "
+                                + entry + " from outside registry " + this
+                        );
+
+                    if (!(entry instanceof Reference<T> reference))
+                        throw new IllegalStateException(
+                                "Found direct holder " + entry + " value in tag " + tag
+                        );
+
+                    map.get(reference).merge(tag, predicate, Predicate::or);
+                }
             }
-
         });
         Set<TagKey<T>> set = Sets.difference(this.tagToEntryList.keySet(), tagEntries.keySet());
         if (!set.isEmpty())
             LOGGER.warn("Not all defined tags for registry {} are present in data pack: {}", this.getKey(), set.stream().map(tag -> tag.id().toString()).sorted().collect(Collectors.joining(", ")));
 
         Reference2ReferenceMap<TagKey<T>, Named<T>> map2 = new Reference2ReferenceOpenHashMap<>(this.tagToEntryList);
-        tagEntries.forEach((tag, entries) -> map2.computeIfAbsent(tag, this::createNamedEntryList).copyOf(entries));
+
+        tagEntries.forEach(
+                (tag, resolvedTag) -> map2.computeIfAbsent(
+                        tag, this::createNamedEntryList
+                ).copyOf(resolvedTag)
+        );
+
         map.forEach(Reference::setTags);
         this.tagToEntryList = map2;
     }
@@ -478,7 +523,7 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
     @Override
     public void clearTags() {
         this.tagToEntryList.values().forEach(entryList -> entryList.copyOf(List.of()));
-        this.keyToEntry.values().forEach(entry -> entry.setTags(Set.of()));
+        this.keyToEntry.values().forEach(entry -> entry.setTags(Map.of()));
     }
 
     @Override
@@ -684,5 +729,15 @@ public class SimpleRegistry<T> implements MutableRegistry<T>, RemappableRegistry
             prevIndexedEntries = null;
             prevEntries = null;
         }
+    }
+
+    @Override
+    public <DATA> void registerTagCondition(Identifier id, MapCodec<DATA> codec, BiPredicate<DATA, Context> condition) {
+        tagConditionTypes.put(id, new ConditionType<>(id, codec, condition));
+    }
+
+    @Override
+    public Codec<Condition<?>> getTagConditionCodec() {
+        return tagConditionCodec;
     }
 }

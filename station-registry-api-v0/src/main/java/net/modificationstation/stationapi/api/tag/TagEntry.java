@@ -4,30 +4,63 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.context.Condition;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class TagEntry {
-    private static final Codec<TagEntry> ENTRY_CODEC = RecordCodecBuilder.create(instance -> instance.group(Codecs.TAG_ENTRY_ID.fieldOf("id").forGetter(TagEntry::getIdForCodec), Codec.BOOL.optionalFieldOf("required", true).forGetter(entry -> entry.required)).apply(instance, TagEntry::new));
-    public static final Codec<TagEntry> CODEC = Codec.either(Codecs.TAG_ENTRY_ID, ENTRY_CODEC).xmap(either -> either.map(id -> new TagEntry(id, true), tagEntry -> tagEntry), entry -> entry.required ? Either.left(entry.getIdForCodec()) : Either.right(entry));
+    public static Codec<TagEntry> createCodec(Codec<Condition<?>> tagConditionCodec) {
+        return Codec.either(
+                Codecs.TAG_ENTRY_ID,
+                RecordCodecBuilder.<TagEntry>create(
+                        instance -> instance.group(
+                                Codecs.TAG_ENTRY_ID.fieldOf("id")
+                                        .forGetter(TagEntry::getIdForCodec),
+                                Codec.BOOL.optionalFieldOf("required", true)
+                                        .forGetter(entry -> entry.required),
+                                tagConditionCodec.listOf().optionalFieldOf("conditions", List.of())
+                                        .forGetter(entry -> entry.conditions)
+                        ).apply(instance, TagEntry::new)
+                )
+        ).xmap(
+                either -> either.map(
+                        id -> new TagEntry(id, true),
+                        tagEntry -> tagEntry
+                ),
+                entry -> entry.required ? Either.left(entry.getIdForCodec()) : Either.right(entry)
+        );
+    }
+
     private final Identifier id;
     private final boolean tag;
     private final boolean required;
+    private final List<Condition<?>> conditions;
 
     private TagEntry(Identifier id, boolean tag, boolean required) {
         this.id = id;
         this.tag = tag;
         this.required = required;
+        this.conditions = List.of();
     }
 
     private TagEntry(Codecs.TagEntryId id, boolean required) {
         this.id = id.id();
-        this.tag = id.tag();
+        tag = id.tag();
         this.required = required;
+        conditions = List.of();
+    }
+
+    private TagEntry(Codecs.TagEntryId id, boolean required, List<Condition<?>> conditions) {
+        this.id = id.id();
+        tag = id.tag();
+        this.required = required;
+        this.conditions = List.copyOf(conditions);
     }
 
     private Codecs.TagEntryId getIdForCodec() {
@@ -50,19 +83,27 @@ public class TagEntry {
         return new TagEntry(id, true, false);
     }
 
-    public <T> boolean resolve(ValueGetter<T> valueGetter, Consumer<T> consumer) {
+    public <T> boolean resolve(
+            ValueGetter<T> getter,
+            Consumer<TagMatchGroup<T>> matchGroupConsumer
+    ) {
         if (this.tag) {
-            Collection<T> collection = valueGetter.tag(this.id);
-            if (collection == null) {
-                return !this.required;
+            Collection<TagMatchGroup<T>> refTag = getter.tag(this.id);
+            if (refTag == null) return !this.required;
+
+            for (TagMatchGroup<T> refMatchGroup : refTag) {
+                List<Condition<?>> mergedConditions = new ArrayList<>(refMatchGroup.conditions());
+
+                if (!this.conditions.isEmpty()) mergedConditions.addAll(this.conditions);
+
+                matchGroupConsumer.accept(new TagMatchGroup<>(refMatchGroup.baseItems(), mergedConditions));
             }
-            collection.forEach(consumer);
+
         } else {
-            T object = valueGetter.direct(this.id);
-            if (object == null) {
-                return !this.required;
-            }
-            consumer.accept(object);
+            T value = getter.direct(this.id);
+            if (value == null) return !this.required;
+
+            matchGroupConsumer.accept(new TagMatchGroup<>(List.of(value), this.conditions));
         }
         return true;
     }
@@ -96,9 +137,9 @@ public class TagEntry {
     }
 
     public interface ValueGetter<T> {
-        @Nullable T direct(Identifier var1);
+        @Nullable T direct(Identifier id);
 
-        @Nullable Collection<T> tag(Identifier var1);
+        @Nullable Collection<TagMatchGroup<T>> tag(Identifier id);
     }
 }
 

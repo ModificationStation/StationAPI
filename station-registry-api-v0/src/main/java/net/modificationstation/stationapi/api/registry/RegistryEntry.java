@@ -3,11 +3,10 @@ package net.modificationstation.stationapi.api.registry;
 import com.mojang.datafixers.util.Either;
 import net.modificationstation.stationapi.api.tag.TagKey;
 import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.context.Context;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -22,9 +21,29 @@ public interface RegistryEntry<T> {
 
     boolean matches(Predicate<RegistryKey<T>> predicate);
 
-    boolean isIn(TagKey<T> tag);
+    /**
+     * @deprecated Use {@link #isIn(TagKey, Context)} instead.
+     * <p>This method implicitly uses {@link Context#EMPTY}, meaning it will only evaluate to {@code true}
+     * for unconditional tag references.
+     */
+    @Deprecated
+    default boolean isIn(TagKey<T> tag) {
+        return isIn(tag, Context.EMPTY);
+    }
 
-    Stream<TagKey<T>> streamTags();
+    boolean isIn(TagKey<T> tag, Context context);
+
+    /**
+     * @deprecated Use {@link #streamTags(Context)} instead.
+     * <p>This method implicitly uses {@link Context#ANY}, meaning it will yield all tag keys
+     * this entry belongs to, bypassing all conditional checks.
+     */
+    @Deprecated
+    default Stream<TagKey<T>> streamTags() {
+        return streamTags(Context.ANY);
+    }
+
+    Stream<TagKey<T>> streamTags(Context context);
 
     Set<TagKey<T>> getTags();
 
@@ -57,7 +76,7 @@ public interface RegistryEntry<T> {
         }
 
         @Override
-        public boolean isIn(TagKey<T> tag) {
+        public boolean isIn(TagKey<T> tag, Context context) {
             return false;
         }
 
@@ -92,7 +111,7 @@ public interface RegistryEntry<T> {
         }
 
         @Override
-        public Stream<TagKey<T>> streamTags() {
+        public Stream<TagKey<T>> streamTags(Context context) {
             return Stream.of();
         }
 
@@ -104,7 +123,7 @@ public interface RegistryEntry<T> {
 
     abstract class Reference<ENTRY> implements RegistryEntry<ENTRY> {
         final RegistryEntryOwner<ENTRY> owner;
-        private Set<TagKey<ENTRY>> tags = Set.of();
+        private Map<TagKey<ENTRY>, Predicate<Context>> tags = Map.of();
 
         private Reference(RegistryEntryOwner<ENTRY> owner) {
             this.owner = owner;
@@ -123,8 +142,10 @@ public interface RegistryEntry<T> {
         }
 
         @Override
-        public boolean isIn(TagKey<ENTRY> tag) {
-            return tags.contains(tag);
+        public boolean isIn(TagKey<ENTRY> tag, Context context) {
+            if (context.matchesAll()) return tags.containsKey(tag);
+            Predicate<Context> predicate = tags.get(tag);
+            return predicate != null && predicate.test(context);
         }
 
         @Override
@@ -156,18 +177,22 @@ public interface RegistryEntry<T> {
 
         abstract void setValue(ENTRY value);
 
-        void setTags(Collection<TagKey<ENTRY>> tags) {
-            this.tags = Set.copyOf(tags);
+        void setTags(Map<TagKey<ENTRY>, Predicate<Context>> tags) {
+            this.tags = Map.copyOf(tags);
         }
 
         @Override
-        public Stream<TagKey<ENTRY>> streamTags() {
-            return this.tags.stream();
+        public Stream<TagKey<ENTRY>> streamTags(Context context) {
+            if (context.matchesAll()) return this.tags.keySet().stream();
+            return this.tags.entrySet().stream()
+                    .filter(entry -> entry.getValue().test(context))
+                    .map(Map.Entry::getKey);
         }
 
         @Override
+        @Deprecated
         public Set<TagKey<ENTRY>> getTags() {
-            return tags;
+            return Set.copyOf(this.tags.keySet());
         }
 
         public String toString() {

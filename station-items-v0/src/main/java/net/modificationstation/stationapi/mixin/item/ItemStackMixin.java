@@ -9,7 +9,11 @@ import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.StationAPI;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.event.item.ItemStackEvent;
+import net.modificationstation.stationapi.api.item.StationFlatteningItemStack;
 import net.modificationstation.stationapi.api.item.StationItemStack;
+import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.tag.conditional.ItemContext;
+import net.modificationstation.stationapi.api.util.context.Context;
 import net.modificationstation.stationapi.impl.item.StationNBTSetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,12 +25,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import static net.modificationstation.stationapi.api.StationAPI.NAMESPACE;
 import static net.modificationstation.stationapi.api.util.Identifier.of;
 
 @Mixin(ItemStack.class)
-abstract class ItemStackMixin implements StationItemStack, StationNBTSetter {
+abstract class ItemStackMixin implements StationItemStack, StationNBTSetter, StationFlatteningItemStack {
     @Shadow
     public int itemId;
 
@@ -167,5 +172,17 @@ abstract class ItemStackMixin implements StationItemStack, StationNBTSetter {
     @Unique
     public void setStationNbt(NbtCompound stationNbt) {
         this.stationapi_stationNbt = stationNbt;
+    }
+
+    @Override
+    @Unique
+    public boolean isIn(TagKey<Item> tag, Context context) {
+        return getRegistryEntry().isIn(tag, ItemContext.of((ItemStack) (Object) this).with(context));
+    }
+
+    @Override
+    @Unique
+    public Stream<TagKey<Item>> streamTags(Context context) {
+        return getRegistryEntry().streamTags(ItemContext.of((ItemStack) (Object) this).with(context));
     }
 }

@@ -6,15 +6,19 @@ import com.mojang.serialization.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.tag.TagMatchGroup;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.collection.IndexedIterable;
+import net.modificationstation.stationapi.api.util.context.Condition;
+import net.modificationstation.stationapi.api.util.context.Context;
 import net.modificationstation.stationapi.api.util.dynamic.Codecs;
 import net.modificationstation.stationapi.api.util.function.BulkBiConsumer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
@@ -436,7 +440,7 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
 
     void clearTags();
 
-    void populateTags(Map<TagKey<T>, List<RegistryEntry<T>>> var1);
+    void populateTags(Map<TagKey<T>, Collection<TagMatchGroup<RegistryEntry<T>>>> var1);
 
     default IndexedIterable<RegistryEntry<T>> getIndexedEntries() {
         return new IndexedIterable<>() {
@@ -499,5 +503,10 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
             }
         };
     }
-}
 
+    <DATA> void registerTagCondition(
+            Identifier id, MapCodec<DATA> codec, BiPredicate<DATA, Context> condition
+    );
+
+    Codec<Condition<?>> getTagConditionCodec();
+}
