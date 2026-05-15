@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.tag.conditional.BlockContext;
 
 public class TagSurfaceCondition implements SurfaceCondition {
     private final TagKey<Block> tag;
@@ -14,6 +15,6 @@ public class TagSurfaceCondition implements SurfaceCondition {
 
     @Override
     public boolean canApply(World world, int x, int y, int z, BlockState state) {
-        return state.isIn(tag);
+        return state.isIn(tag, BlockContext.of(world, x, y, z));
     }
 }
