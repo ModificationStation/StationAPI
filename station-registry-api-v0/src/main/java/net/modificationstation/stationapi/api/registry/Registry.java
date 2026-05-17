@@ -2,6 +2,7 @@ package net.modificationstation.stationapi.api.registry;
 
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -502,6 +504,10 @@ public interface Registry<T> extends Keyable, IndexedIterable<T> {
                 return Registry.this.getOrCreateEntryList(tag);
             }
         };
+    }
+
+    default void registerTagCondition(Identifier id, Predicate<Context> condition) {
+        registerTagCondition(id, MapCodec.unit(Unit.INSTANCE), (data, ctx) -> condition.test(ctx));
     }
 
     <DATA> void registerTagCondition(
